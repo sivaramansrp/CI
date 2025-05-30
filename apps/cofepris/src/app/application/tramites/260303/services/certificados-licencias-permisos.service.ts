@@ -14,7 +14,6 @@ import { JSONResponse } from '@libs/shared/data-access-user/src/core/models/shar
 // Definición de la clase del servicio para certificados, licencias y permisos.
 export class CertificadosLicenciasPermisosService {
 
-
   /**
    * Constructor del servicio para manejar solicitudes HTTP relacionadas con 
    * certificados, licencias y permisos.
@@ -138,9 +137,10 @@ export class CertificadosLicenciasPermisosService {
     this.tramite260303Store.SetTercerosRelacionadosCorreoElectronico(DATOS.tercerosRelacionadosCorreoElectronico);
   }
 
+
   /**
    * Recupera los datos del estado desde un archivo JSON local.
-   * @returns Un `Observable` de tipo `JSONResponse` que contiene los datos del estado.
+   * @returns Un `Observable` de tipo `EstadoCatalogResponse` que contiene los datos del estado.
    *          Si ocurre un error durante la solicitud HTTP, propagará el error.
    */
   public getEstadoDatos(): Observable<EstadoCatalogResponse> {
@@ -152,8 +152,8 @@ export class CertificadosLicenciasPermisosService {
   }
 
   /**
-   * Recupera los datos del estado desde un archivo JSON local.
-   * @returns Un `Observable` de tipo `JSONResponse` que contiene los datos del estado.
+   * Recupera los datos del catálogo SCIAN desde un archivo JSON local.
+   * @returns Un `Observable` de tipo `ScianDatos[]` que contiene los datos del catálogo SCIAN.
    *          Si ocurre un error durante la solicitud HTTP, propagará el error.
    */
   public getScianDatos(): Observable<ScianDatos[]> {
@@ -164,9 +164,10 @@ export class CertificadosLicenciasPermisosService {
     );
   }
 
+
   /**
-   * Recupera los datos del estado desde un archivo JSON local.
-   * @returns Un `Observable` de tipo `JSONResponse` que contiene los datos del estado.
+   * Recupera los datos del catálogo de claves desde un archivo JSON local.
+   * @returns Un `Observable` de tipo `EstadoCatalogResponse` que contiene los datos del catálogo de claves.
    *          Si ocurre un error durante la solicitud HTTP, propagará el error.
    */
   public getClaveDatos(): Observable<EstadoCatalogResponse> {
@@ -177,9 +178,10 @@ export class CertificadosLicenciasPermisosService {
     );
   }
 
-    /**
-   * Recupera los datos del estado desde un archivo JSON local.
-   * @returns Un `Observable` de tipo `JSONResponse` que contiene los datos del estado.
+
+  /**
+   * Recupera los datos del catálogo de régimen desde un archivo JSON local.
+   * @returns Un `Observable` de tipo `EstadoCatalogResponse` que contiene los datos del catálogo de régimen.
    *          Si ocurre un error durante la solicitud HTTP, propagará el error.
    */
   public getRegimenDatos(): Observable<EstadoCatalogResponse> {
@@ -190,9 +192,9 @@ export class CertificadosLicenciasPermisosService {
     );
   }
 
-    /**
-   * Recupera los datos del estado desde un archivo JSON local.
-   * @returns Un `Observable` de tipo `JSONResponse` que contiene los datos del estado.
+  /**
+   * Recupera los datos de mercancías desde un archivo JSON local.
+   * @returns Un `Observable` de tipo `MercanciasDatos[]` que contiene los datos de las mercancías.
    *          Si ocurre un error durante la solicitud HTTP, propagará el error.
    */
   public getMercanciasDatos(): Observable<MercanciasDatos[]> {
@@ -203,9 +205,9 @@ export class CertificadosLicenciasPermisosService {
     );
   }
 
-    /**
-   * Recupera los datos del estado desde un archivo JSON local.
-   * @returns Un `Observable` de tipo `JSONResponse` que contiene los datos del estado.
+  /**
+   * Recupera los datos del catálogo de tipo de producto desde un archivo JSON local.
+   * @returns Un `Observable` de tipo `EstadoCatalogResponse` que contiene los datos del catálogo de tipo de producto.
    *          Si ocurre un error durante la solicitud HTTP, propagará el error.
    */
   public getTipoDeProductoDatos(): Observable<EstadoCatalogResponse> {
@@ -216,9 +218,10 @@ export class CertificadosLicenciasPermisosService {
     );
   }
 
+
   /**
-   * Recupera los datos del estado desde un archivo JSON local.
-   * @returns Un `Observable` de tipo `JSONResponse` que contiene los datos del estado.
+   * Recupera los datos del catálogo de país de procedencia desde un archivo JSON local.
+   * @returns Un `Observable` de tipo `EstadoCatalogResponse` que contiene los datos del catálogo de país de procedencia.
    *          Si ocurre un error durante la solicitud HTTP, propagará el error.
    */
   public getPaisDeProcedenciaDatos(): Observable<EstadoCatalogResponse> {
@@ -229,7 +232,11 @@ export class CertificadosLicenciasPermisosService {
     );
   }
 
-
+  /**
+   * Recupera los datos del catálogo de fabricantes desde un archivo JSON local.
+   * @returns Un `Observable` de tipo `Fabricante[]` que contiene los datos de los fabricantes.
+   *          Si ocurre un error durante la solicitud HTTP, propagará el error.
+   */
   public getFabricanteDatos(): Observable<Fabricante[]> {
     return this.http.get<Fabricante[]>('assets/json/260303/fabricante-tabla.json').pipe(
       catchError((error) => {
@@ -238,7 +245,11 @@ export class CertificadosLicenciasPermisosService {
     );
   }
 
-
+  /**
+   * Recupera los datos del catálogo de facturadores desde un archivo JSON local.
+   * @returns Un `Observable` de tipo `Fabricante[]` que contiene los datos de los facturadores.
+   *          Si ocurre un error durante la solicitud HTTP, propagará el error.
+   */
   public getFacturadorDatos(): Observable<Fabricante[]> {
     return this.http.get<Fabricante[]>('assets/json/260303/facturador-tabla.json').pipe(
       catchError((error) => {
@@ -247,6 +258,11 @@ export class CertificadosLicenciasPermisosService {
     );
   }
 
+  /**
+   * Recupera los datos del catálogo de proveedores desde un archivo JSON local.
+   * @returns Un `Observable` de tipo `Fabricante[]` que contiene los datos de los proveedores.
+   *          Si ocurre un error durante la solicitud HTTP, propagará el error.
+   */
   public getProveedorDatos(): Observable<Fabricante[]> {
     return this.http.get<Fabricante[]>('assets/json/260303/proveedor-tabla.json').pipe(
       catchError((error) => {
@@ -255,6 +271,11 @@ export class CertificadosLicenciasPermisosService {
     );
   }
 
+  /**
+   * Recupera los datos del catálogo de certificados analíticos desde un archivo JSON local.
+   * @returns Un `Observable` de tipo `Fabricante[]` que contiene los datos de los certificados analíticos.
+   *          Si ocurre un error durante la solicitud HTTP, propagará el error.
+   */
   public getCertificadoDatos(): Observable<Fabricante[]> {
     return this.http.get<Fabricante[]>('assets/json/260303/certificado-analitico-tabla.json').pipe(
       catchError((error) => {
@@ -263,7 +284,11 @@ export class CertificadosLicenciasPermisosService {
     );
   }
 
-
+  /**
+   * Recupera los datos del catálogo de otros desde un archivo JSON local.
+   * @returns Un `Observable` de tipo `Otros[]` que contiene los datos de otros.
+   *          Si ocurre un error durante la solicitud HTTP, propagará el error.
+   */
   public getOtrosDatos(): Observable<Otros[]> {
     return this.http.get<Otros[]>('assets/json/260303/otros-tabla.json').pipe(
       catchError((error) => {
