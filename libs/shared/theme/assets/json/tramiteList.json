@@ -241,7 +241,7 @@
     "id": 35,
     "tramite": 90201,
     "linkDashboard": "/se/expansion-de-productores/registrar-solicitud",
-    "linkDepartment": "/se/expansion-de-productores/registrar-solicitud",
+    "linkDepartment": "/pago/expansion-de-productores/registrar-solicitud",
     "department": "se"
   },
   {
@@ -2004,8 +2004,8 @@
   {
     "id": 287,
     "tramite": 80105,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/modalidad-terciarizacion/action",
+    "linkDepartment": "/pago/modalidad-terciarizacion/action",
     "department": "se"
   },
   {
