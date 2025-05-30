@@ -6,11 +6,13 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { DomicilioState } from '../../estados/stores/domicilio.store';
 
-import { DomicilioStore } from '../../estados/stores/domicilio.store'; 
+import { DomicilioStore } from '../../estados/stores/domicilio.store';
 
 import { DomicilioQuery } from '../../../shared/estados/queries/domicilio.query';
 
 import { Subject, map, takeUntil } from 'rxjs';
+
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 /**
  * @description
@@ -26,6 +28,12 @@ import { Subject, map, takeUntil } from 'rxjs';
   styleUrl: './representante-legal.component.scss',
 })
 export class RepresentanteLegalComponent implements OnInit {
+
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  esFormularioSoloLectura: boolean = false;
   /**
    * @description
    * Formulario reactivo para capturar los datos del representante legal.
@@ -54,7 +62,8 @@ export class RepresentanteLegalComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private domicilioStore: DomicilioStore,
-    private domicilioquery: DomicilioQuery
+    private domicilioquery: DomicilioQuery,
+    private consultaioQuery: ConsultaioQuery,
   ) {
     // Constructor
   }
@@ -65,6 +74,38 @@ export class RepresentanteLegalComponent implements OnInit {
    * Configura el formulario reactivo y sus valores iniciales basados en el estado de la solicitud.
    */
   ngOnInit(): void {
+this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
+this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+
+  }
+  /**
+  * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+  * Suscribe al estado almacenado en el store mediante el query `domicilioquery.selectSolicitud$`
+  * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+  * con el valor inicial obtenido del store.
+  */
+
+  inicializarFormulario(): void {
     this.domicilioquery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -105,13 +146,29 @@ export class RepresentanteLegalComponent implements OnInit {
     });
   }
 
+
   /**
-   * @description
-   * Método que actualiza el estado del store con los valores del formulario.
-   * @param form Formulario reactivo.
-   * @param campo Campo del formulario que se desea actualizar.
-   * @param metodoNombre Nombre del método del store que se invocará.
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.representanteLegalForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.representanteLegalForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  /**
+     * @description
+     * Método que actualiza el estado del store con los valores del formulario.
+     * @param form Formulario reactivo.
+     * @param campo Campo del formulario que se desea actualizar.
+     * @param metodoNombre Nombre del método del store que se invocará.
+     */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof DomicilioStore): void {
     const VALOR = form.get(campo)?.value;
     (this.domicilioStore[metodoNombre] as (value: string | number) => void)(VALOR);
