@@ -152,6 +152,9 @@ export class ProcesoProductivoComponent implements OnInit , OnDestroy{
     } else {
       this.sobreElCambioDeSeleccion('1', 'indicar')
     }
+    if (this.consultaState.readonly) {
+      this.procesoProductivoForm.get('indicar')?.disable();
+    }
   }
 
   /**
