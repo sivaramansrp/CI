@@ -1,13 +1,10 @@
 import { AfterViewInit, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, FormularioDinamico } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ContenedorComponent } from '../../components/contenedor/contenedor.component';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
 import { Input } from '@angular/core';
-import { PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
 import { Subject } from 'rxjs';
 import { Tramite11201Store } from '../../../../core/estados/tramites/tramite11201.store';
 import { ViewChild } from '@angular/core';
@@ -35,20 +32,6 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
    * Esta propiedad almacena el tipo de persona como un número.
    */
   tipoPersona!: number;
-
-  /**
-   * Lista de formularios dinámicos para la persona.
-   * 
-   * Esta propiedad contiene un array de objetos `FormularioDinamico` que representan los formularios dinámicos de la persona.
-   */
-  persona: FormularioDinamico[] = [];
-
-  /**
-   * Lista de formularios dinámicos para el domicilio fiscal.
-   * 
-   * Esta propiedad contiene un array de objetos `FormularioDinamico` que representan los formularios dinámicos del domicilio fiscal.
-   */
-  domicilioFiscal: FormularioDinamico[] = [];
 
   /**
    * Índice del paso actual en el wizard.
@@ -85,6 +68,18 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
    */
   @Input() datosNroPedimento!: unknown;
   /**
+   * Mensaje de campos obligatorios.
+   */
+  mensajeCamposObligatorios: string = '* Campos obligatorios';
+  /**
+   * @property {ContenedorComponent} contenedorComponent
+   * @description Referencia al componente `ContenedorComponent`.
+   * 
+   * Esta propiedad utiliza el decorador `@ViewChild` para obtener una instancia del componente `ContenedorComponent`.
+   * Permite acceder a los métodos y propiedades del componente hijo desde el componente padre.
+   */
+  @ViewChild(ContenedorComponent) contenedorComponent!: ContenedorComponent;
+  /**
    * @property {Subject<void>} destroyNotifier$
    * @description Subject utilizado para notificar y completar las suscripciones activas al destruir el componente, evitando fugas de memoria.
    */
@@ -118,8 +113,7 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
   * Gancho de ciclo de vida angular que se llama después de que la vista del componente se haya inicializado por completo.
   */
   ngAfterViewInit(): void {
-    this.persona = PERSONA_MORAL_NACIONAL;
-    this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
+    this.obtenerTipoPersona();
   }
   /**
    * Selecciona una pestaña.
@@ -151,8 +145,10 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
    * que el usuario ha decidido cancelar la operación.
    */
   cancelar(): void {
+    this.contenedorComponent.solicitudForm.reset();
     this.indice = 1;
     this.cancelarEvento.emit();
+    this.obtenerTipoPersona();
   }
   /**
    * @method fetchGetDatosConsulta
@@ -194,5 +190,18 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+  /**
+   * @method obtenerTipoPersona
+   * @description Obtiene el tipo de persona y lo establece en el componente `SolicitanteComponent`.
+   * 
+   * Este método utiliza un `setTimeout` para ejecutar la función `obtenerTipoPersona` del componente `SolicitanteComponent` con el valor `TIPO_PERSONA.MORAL_NACIONAL`.
+   * 
+   * @returns {void}
+   */
+  obtenerTipoPersona(): void {
+    setTimeout(() => {
+      this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+    }, 50);
   }
 }

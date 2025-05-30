@@ -9,7 +9,6 @@ import { Component, } from '@angular/core';
 import { DatosDelContenedor } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
 import { ENCABEZADO_TABLA_CONTENEDOR } from '../../enum/solicitante.enum';
-import { EventEmitter } from '@angular/core';
 import { FECHA_INGRESO } from '../../../../core/enums/11201/tramite11201.enum';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -20,7 +19,6 @@ import { InputFecha, } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent, } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
 import { REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
 import { REGEX_REEMPLAZAR } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -104,13 +102,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   radioManifesto: boolean = false;
 
   /**
-   * Evento emitido cuando se solicita la cancelación de la acción actual.
-   * 
-   * Este evento no emite ningún valor y puede ser utilizado por componentes padres
-   * para manejar la lógica de cancelación, como cerrar diálogos o limpiar formularios.
-   */
-  @Output() cancelarEvento = new EventEmitter<void>();
-  /**
    * Representa la fecha de inicio ingresada por el usuario.
    *
    * @type {InputFecha}
@@ -163,11 +154,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   mostrarMensaje: boolean = false;
 
   /**
-   * Mensaje de campos obligatorios.
-   */
-  mensajeCamposObligatorios: string = '* Campos obligatorios';
-
-  /**
    * Lista de aduanas.
    */
   aduanaList: {
@@ -184,11 +170,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     labelNombre: string;
     primerOpcion: string;
   };
-
-  /**
-   * Bandera para requerir guardado parcial.
-   */
-  requiereGuardadoParcial: boolean = false;
 
   /**
    * Índice actual.
@@ -296,10 +277,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   @ViewChild('plantillademodelo') plantillaDeModelo!: TemplateRef<Element>;
 
-  /**
-   * Evento para continuar.
-   */
-  @Output() continuarEvento = new EventEmitter<string>();
   /**
    * @property {ConsultaioState} consultaDatos
    * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
@@ -898,16 +875,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Emite un evento para continuar.
-   *
-   * Este método emite un evento para indicar que se debe continuar con el siguiente paso.
-   * @returns {void}
-   */
-  continuar(): void {
-    this.continuarEvento.emit('');
-  }
-
-  /**
    * Actualiza la fecha de ingreso en el formulario de solicitud.
    *
    * @param nuevo_valor - El nuevo valor de la fecha de ingreso en formato de cadena.
@@ -1001,16 +968,5 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       txtBtnCancelar: '',
     };
     this.elementoParaEliminar = i;
-  }
-
-  /**
-   * Cancela la operación actual.
-   * 
-   * Este método restablece el formulario de solicitud a su estado inicial
-   * y emite un evento para notificar al componente padre que la acción de cancelar ha sido solicitada.
-   */
-  cancelar(): void {
-    this.solicitudForm.reset();
-    this.cancelarEvento.emit();
   }
 }
