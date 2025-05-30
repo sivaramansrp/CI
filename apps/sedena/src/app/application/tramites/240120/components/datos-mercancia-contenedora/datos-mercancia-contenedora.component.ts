@@ -28,7 +28,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit, OnDestroy {
    * Identificador del procedimiento asociado al trámite.
    * @type {number}
    */
-  public readonly idProcedimiento: number = NUMERO_TRAMITE.TRAMITE_240118;
+  public readonly idProcedimiento: number = NUMERO_TRAMITE.TRAMITE_240120;
 
   /**
    * Notificador para destruir las suscripciones y evitar fugas de memoria.
@@ -42,43 +42,43 @@ export class DatosMercanciaContenedoraComponent implements OnInit, OnDestroy {
    */
   public mercanciaDatos!: MercanciaDetalle | null | undefined;
 
-  /**
+ /**
    * Constructor del componente.
    *
-   * @method constructor
    * @param {Tramite240120Store} tramiteStore - Store de Akita para actualizar el estado de la tabla de mercancías.
-   * @returns {void}
+   * @param {Tramite240120Query} tramiteQuery - Query de Akita para obtener el estado de la mercancía.
    */
-  // eslint-disable-next-line no-empty-function
   constructor(private tramiteStore: Tramite240120Store,
     private tramiteQuery: Tramite240120Query,
   ) {}
 
-
+/**
+   * Hook de inicialización del componente.
+   */
   ngOnInit(): void {
     this.getMercanciaTablaDatos();
   }
+ 
   /**
    * Actualiza los datos de la tabla de mercancía en el store.
    *
-   * @method updateMercanciaDetalle
    * @param {MercanciaDetalle[]} event - Lista de mercancías actualizada desde el formulario.
-   * @returns {void}
    */
   updateMercanciaDetalle(event: MercanciaDetalle[]): void {
     this.tramiteStore.updateMercanciaTablaDatos(event);
   }
 
+  
   /**
    * Actualiza una mercancía existente en el store.
    *
-   * @param event Lista de mercancías modificadas.
+   * @param {MercanciaDetalle[]} event - Lista de mercancías modificadas.
    */
    actualizaExistenteEnDatosMercancias(event: MercanciaDetalle[]): void {
     this.tramiteStore.actualizarMercanciasdatos(event);
   }
 
-  /**
+   /**
    * Cancela la edición de la mercancía y limpia el estado correspondiente en el store.
    */
   cancelarClickeado(): void {
