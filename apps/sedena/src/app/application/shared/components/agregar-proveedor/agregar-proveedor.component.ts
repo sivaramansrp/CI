@@ -1,4 +1,4 @@
-import { CAMPO_OBLIGATORIO_PROVEEDOR, TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
+import { AGREGARPROVEEDORFORM, CAMPO_OBLIGATORIO_PROVEEDOR, TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
 import { CommonModule, Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
@@ -156,10 +156,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     this.crearFormaulario();
     this.campoObligatorio = CAMPO_OBLIGATORIO_PROVEEDOR.includes(this.idProcedimiento)
     this.campoObligatorioChange();
-        if (this.idProcedimiento === 240118) {
-      this.agregarProveedorForm.enable();
-    } 
-    else if (this.idProcedimiento === 240120) {
+        if (AGREGARPROVEEDORFORM.includes(this.idProcedimiento)) {
       this.agregarProveedorForm.enable();
     }
     else {

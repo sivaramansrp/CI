@@ -201,6 +201,18 @@ export const MOSTRAR_INFORMACION = [240118];
 export const CAMPO_OBLIGATORIO_PROVEEDOR = [240111];
 
 /**
+ * Constante que representa los campos obligatorios para el formulario de agregar proveedor.
+ * 
+ * @const AGREGARPROVEEDORFORM
+ * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos que indican 
+ * los campos que son requeridos para el formulario de agregar proveedor en el sistema.
+ * Estos identificadores se utilizan para validar y mostrar los campos correspondientes
+ * en el formulario de proveedores.
+ */
+export const AGREGARPROVEEDORFORM =[240118, 240120];
+
+/**
  * Constante que representa los campos obligatorios para los derechos.
  * 
  * @const CAMPO_OBLIGATORIO_DERECHOS
