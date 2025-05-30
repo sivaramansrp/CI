@@ -540,17 +540,17 @@
         "numeroDeProcedimiento": "250103"
     },
     {
-        "id": 230401,
-        "tipoDeTramite": "Solicitud de cs Permiso",
+        "id": 120602,
+        "tipoDeTramite": "Solicitud de Permiso",
         "fecha": "2023-10-01",
         "fechaActualizacion": "2023-10-05",
         "diasTranscurridos": "4",
-        "departamento": "SEMARNAT",
-        "numeroDeProcedimiento": "230401"
+        "departamento": "SE",
+        "numeroDeProcedimiento": "120602"
     },
     {
         "id": 220202,
-        "tipoDeTramite": "Solicitud de cs Permiso",
+        "tipoDeTramite": "Solicitud de Permiso",
         "fecha": "2023-10-01",
         "fechaActualizacion": "2023-10-05",
         "diasTranscurridos": "4",
