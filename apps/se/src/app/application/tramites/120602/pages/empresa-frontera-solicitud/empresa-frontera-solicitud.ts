@@ -4,7 +4,7 @@ import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { EMPRESA_FRONTERA } from '@ng-mf/data-access-user';
 
 import { DatosPasos } from '@ng-mf/data-access-user';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 import { PASOS } from '@ng-mf/data-access-user';
 
