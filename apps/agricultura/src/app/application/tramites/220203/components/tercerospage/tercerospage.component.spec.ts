@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TercerospageComponent } from './tercerospage.component';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('TercerospageComponent', () => {
   let component: TercerospageComponent;
@@ -7,7 +8,7 @@ describe('TercerospageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [TercerospageComponent],
+      imports: [TercerospageComponent, HttpClientModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TercerospageComponent);
