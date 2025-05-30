@@ -95,7 +95,7 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
  public paisData: CatalogosSelect = PAIS_DATA;
 
   /** Filas seleccionadas en la tabla */
-   selectedRows: any;
+   selectedRows: Set<number> = new Set<number>();
 
   /** Indica si el formulario es visible */
    esFormularioVisible = false;
@@ -295,6 +295,10 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.datosGenerales = data as unknown as SociosYAccionistasData[];
+        this.datosGenerales = this.datosGenerales.map((item, index) => ({
+          ...item,
+          id: item.id || index, 
+        }));
       });
   }
 
@@ -365,28 +369,32 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
       }
     });
   }
+  
   /** Método para manejar el cambio de filas seleccionadas en la tabla */
   onSelectedRowsChange(selectedRows: (SociosYAccionistasData | SociosYAccionistasExtranjerosData)[]): void {
     this.selectedRows = new Set(selectedRows.map((row) => row.id));
     this.esFormularioVisible = false;
+    
   }
 
   /** Método para eliminar filas seleccionadas de la tabla de datos generales */
   onDelete(): void{
-    if (this.selectedRows && this.selectedRows.size > 0) {
+    if (this.selectedRows && this.selectedRows.size === 1) {
       this.datosGenerales = this.datosGenerales.filter((fila) => !this.selectedRows.has(fila.id));
       this.selectedRows.clear();
       this.esFormularioVisible = false;
     }
   }
+
   /** Método para eliminar filas seleccionadas de la tabla de datos extranjeros */
   onEliminar(): void{
-    if (this.selectedRows && this.selectedRows.size > 0) {
+    if (this.selectedRows.size > 0) {
       this.datosTablaExtranjeros = this.datosTablaExtranjeros.filter((fila) => !this.selectedRows.has(fila.id));
       this.selectedRows.clear();
       this.esFormularioVisible = false;
     }
   }
+
 
   /** Método para establecer valores en el store de la solicitud */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud120603Store): void {
