@@ -631,7 +631,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       dosSemestre: event,
     });
   }
-  
   /**
    * @method ngOnDestroy
    * @description Hook de destrucción del componente. Libera las suscripciones activas.
