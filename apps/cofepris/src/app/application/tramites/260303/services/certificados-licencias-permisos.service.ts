@@ -141,8 +141,8 @@ export class CertificadosLicenciasPermisosService {
    * @returns Un `Observable` de tipo `JSONResponse` que contiene los datos del estado.
    *          Si ocurre un error durante la solicitud HTTP, propagará el error.
    */
-  public getEstadoDatos(): Observable<Solicitud260303State> {
-    return this.http.get<Solicitud260303State>('assets/json/260303/estado-catalog.json').pipe(
+  public getEstadoDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/260303/estado-catalog.json').pipe(
       catchError((error) => {
         return throwError(() => error);
       })
