@@ -12,7 +12,7 @@
             [label]="opcionDeImportador.labelNombre"
             [required]="opcionDeImportador.required"
             name="opcionDeImportador"
-            [isDisabled]="true"
+            [isDisabled]="esFormularioSoloLectura"
             (selectionChange)="mostrarOcultarPanelTramite($event)"
           ></app-catalogo-select>
         </div>
@@ -32,7 +32,7 @@
             [label]="tomaMuestraDespacho.labelNombre"
             [required]="tomaMuestraDespacho.required"
             name="tomaMuestraDespacho"
-            [isDisabled]="true"
+            [isDisabled]="esFormularioSoloLectura"
             (selectionChange)="cambiaEstadoMotivo($event)"
           ></app-catalogo-select>
         </div>
@@ -66,6 +66,7 @@
             [required]="fraccionArancelariaAga.required"
             name="comboFraccionConcatenada"
             (selectionChange)="mostrarDescFraccArancelaria($event)"
+            [isDisabled]="esFormularioSoloLectura"
           ></app-catalogo-select>
         </div>
       </div>
@@ -94,6 +95,7 @@
             [label]="nico.labelNombre"
             [required]="nico.required"
             name="comboNicos"
+            [isDisabled]="esFormularioSoloLectura"
             (selectionChange)="setNino($event)"
           ></app-catalogo-select>
         </div>
@@ -165,7 +167,7 @@
             [required]="ideGenerica.required"
             name="ideGenerica1"
             formControlName="ideGenerica"
-            [isDisabled]="true"
+            [isDisabled]="esFormularioSoloLectura"
           ></app-catalogo-select>
         </div>
       </div>
