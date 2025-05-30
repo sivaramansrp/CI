@@ -493,7 +493,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       if (this.mercanciaTablaSeleccionada.length > 0) {
         this.eliminarMercanciaFinalEvent.emit(this.mercanciaTablaSeleccionada[0]);
       } else {
-        console.error('No row selected for deletion.');
+        console.error('No se ha seleccionado ninguna fila para eliminar.');
       }
     }
   /**

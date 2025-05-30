@@ -16,16 +16,28 @@ import { StoreConfig } from '@datorama/akita';
  * @property {PagoDerechosFormState} pagoDerechos - Información del formulario de pago de derechos.
  * @property {MercanciaDetalle[]} merccancialTablaDatos - Lista de mercancías registradas.
  * @property {DatosDelTramiteFormState} datosDelTramite - Información general del formulario de datos del trámite.
+ * @property {DestinoFinal | null} [modificarDestinarioDatos] - Destinatario final que está siendo editado actualmente, o null si no hay ninguno.
+ * @property {Proveedor | null} [modificarProveedorDatos] - Proveedor que está siendo editado actualmente, o null si no hay ninguno.
+ * @property {MercanciaDetalle | null} [modificarMercanciasDatos] - Mercancía que está siendo editada actualmente, o null si no hay ninguna.
  */
 export interface Tramite240120State {
+  /** Pestaña actualmente activa en el flujo del trámite */
   tabSeleccionado?: number;
+  /** Lista de destinatarios finales registrados */
   destinatarioFinalTablaDatos: DestinoFinal[];
+  /** Lista de proveedores registrados */
   proveedorTablaDatos: Proveedor[];
+  /** Información del formulario de pago de derechos */
   pagoDerechos: PagoDerechosFormState;
+  /** Lista de mercancías registradas */
   merccancialTablaDatos: MercanciaDetalle[];
+  /** Información general del formulario de datos del trámite */
   datosDelTramite: DatosDelTramiteFormState;
+  /** Destinatario final que está siendo editado actualmente, o null si no hay ninguno */
   modificarDestinarioDatos?: DestinoFinal | null;
+  /** Proveedor que está siendo editado actualmente, o null si no hay ninguno */
   modificarProveedorDatos?: Proveedor | null;
+  /** Mercancía que está siendo editada actualmente, o null si no hay ninguna */
   modificarMercanciasDatos?: MercanciaDetalle | null;
 }
 
@@ -204,32 +216,41 @@ export class Tramite240120Store extends Store<Tramite240120State> {
   }
     
 
-  /**
+   /**
    * Elimina uno o varios destinatarios de la tabla de destinatarios finales.
-   * La comparación se realiza por `tableindex` si está disponible, o por todas las claves del objeto.
-   * @param {DestinoFinal[] | DestinoFinal} destinatarioFinal - Destinatario(s) a eliminar.
+   *
+   * @method eliminarDestinatarioMultiple
+   * @description
+   * Permite eliminar múltiples destinatarios finales del estado. La comparación para eliminar se realiza
+   * preferentemente por la propiedad `tableindex` si está disponible en ambos objetos, de lo contrario,
+   * se comparan todos los campos del objeto para determinar coincidencia.
+   *
+   * @param {DestinoFinal[] | DestinoFinal} destinatarioFinal - Uno o varios destinatarios a eliminar.
+   * Puede ser un solo objeto o un arreglo de objetos `DestinoFinal`.
+   *
+   * @returns {void}
    */
   eliminarDestinatarioMultiple(destinatarioFinal: DestinoFinal[] | DestinoFinal): void {
     this.update(state => {
       const TO_DELETE_ARRAY: DestinoFinal[] = Array.isArray(destinatarioFinal) ? destinatarioFinal : [destinatarioFinal];
       const UPDATEDDESTINARIOS = state.destinatarioFinalTablaDatos.filter(itemState => {
-        // Try to find a match in toDeleteArray
+        //Intenta encontrar una coincidencia en toDeleteArray
         const MATCH = TO_DELETE_ARRAY.find(itemToDelete => {
-          // Prefer tableindex if available
+          // Preferir el índice de tabla si está disponible
           if (
             itemToDelete.tableindex !== undefined &&
             itemState.tableindex !== undefined
           ) {
             return itemToDelete.tableindex === itemState.tableindex;
           }
-          // Fallback: compare all keys
+          // Por defecto: compara todas las claves
           return Object.keys(itemToDelete).every(
             key =>
               itemToDelete[key as keyof DestinoFinal] ===
               itemState[key as keyof DestinoFinal]
           );
         });
-        // Keep if not matched for deletion
+        // Mantener si no coincide para la eliminación
         return !MATCH;
       });
       return {
@@ -303,6 +324,16 @@ export class Tramite240120Store extends Store<Tramite240120State> {
     }));
     this.setModificarDestinarioDatos(null);
   }
+  /**
+   * @method actualizaExistenteEnProveedorDatos
+   * @description
+   * Actualiza un proveedor existente en la lista de proveedores, reemplazando el elemento que coincide con el `tableIndex` del nuevo proveedor proporcionado.
+   * Después de la actualización, restablece el estado de modificación del proveedor a `null`.
+   *
+   * @param {Proveedor[]} newProveedor - Arreglo que contiene el proveedor actualizado. Se utiliza el primer elemento para realizar la comparación y actualización.
+   *
+   * @returns {void}
+   */
   public actualizaExistenteEnProveedorDatos(
     newProveedor: Proveedor[]
   ): void {
