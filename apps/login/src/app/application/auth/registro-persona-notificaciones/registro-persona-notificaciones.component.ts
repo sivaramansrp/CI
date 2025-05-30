@@ -109,7 +109,7 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
    */
   confirmarDatos() {
     this.personasNotificaciones = this.registroState.personasNotificaciones;
-    if (this.registroState.regustrarDatos) {
+    if (this.registroState.registrarDatos) {
       if (this.personasNotificaciones.length === 0) {
         this.personasNotificaciones = [];
         this.registroStore.setValorVisualizarTabla(this.visualizarTabla = true);
