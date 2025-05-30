@@ -7,12 +7,11 @@
  * El estado seleccionado se gestiona utilizando Akita para asegurar la persistencia del estado.
  */
 
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
-  CatalogoSelectComponent,
   ConsultaioQuery,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -21,11 +20,9 @@ import {
 } from '@angular/forms';
 import { Tramite90305State, Tramite90305Store } from '../../estados/tramite90305.store';
 import { map, takeUntil } from 'rxjs/operators';
-import {
-  CatalogoResponse,
-} from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CatalogoResponse} from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
-import { Observable } from 'rxjs';
 import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service';
 import { Subject } from 'rxjs';
 import { Tramite90305Query } from '../../estados/tramite90305.query';
@@ -47,9 +44,7 @@ import { Tramite90305Query } from '../../estados/tramite90305.query';
   styleUrl: './consultad-domicilios-90305.component.scss',
 })
 export class ConsultadDomicilios90305Component implements OnInit, OnDestroy {
-  /** Observable para el estado seleccionado */
-  selectedEstado$: Observable<CatalogoResponse | null> =
-    this.tramite90305Query.selectedEstado$;
+ 
   /** Catálogo de estados cargado desde un archivo JSON */
   estadoJson: CatalogoResponse[] = [];
   /** Formulario reactivo para la consulta de domicilios */
@@ -63,7 +58,7 @@ export class ConsultadDomicilios90305Component implements OnInit, OnDestroy {
   public esFormularioSoloLectura: boolean = false;
 
     /**
-   * Estado de la solicitud de la sección 301.
+   * Estado de la solicitud de la sección.
    */
   public solicitudState!: Tramite90305State;
 
@@ -99,13 +94,7 @@ export class ConsultadDomicilios90305Component implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Inicializa el formulario reactivo con un control para el estado
     this.formConsulta = this.fb.group({
-      estadoControl: [{ disabled: false }, Validators.required],
-    });
-
-    this.selectedEstado$.pipe(takeUntil(this.destroyNotifier$)).subscribe((selectedEstado) => {
-      if (selectedEstado) {
-        this.formConsulta.get('estadoControl')?.setValue(selectedEstado);
-      }
+      estadoControl: [{ value: this.solicitudState?.selectedEstado,disabled: false }, Validators.required],
     });
 
     this.loadEstado();
@@ -131,14 +120,15 @@ export class ConsultadDomicilios90305Component implements OnInit, OnDestroy {
    * Inicializa el formulario reactivo para capturar el estado seleccionado.
    */
     inicializarFormulario(): void {
-      this.tramite90305Query.selectedEstado$
+      this.tramite90305Query.selectSolicitud$
         .pipe(
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {
-            this.solicitudState.selectedEstado = seccionState;
+            this.solicitudState = seccionState;
           })
         )
         .subscribe();
+        
     }
 
   /**
@@ -146,6 +136,9 @@ export class ConsultadDomicilios90305Component implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
+    this.formConsulta = this.fb.group({
+      estadoControl: [{ value: this.solicitudState?.selectedEstado,disabled: false }, Validators.required],
+    });
     if (this.esFormularioSoloLectura) {
       this.formConsulta.disable();
     } else {

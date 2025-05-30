@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 @Injectable({ providedIn: 'root' })
 export class Tramite90305Query extends Query<Tramite90305State> {
-  selectedEstado$ = this.select((state) => {
-    return state.selectedEstado;
+  selectSolicitud$ = this.select((state) => {
+    return state;
   });
 
   constructor(private tramiteStore: Tramite90305Store) {
