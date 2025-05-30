@@ -60,6 +60,13 @@ export class PasoUnoComponent implements AfterViewInit {
   @Output() continuarEvento = new EventEmitter<string>();
 
   /**
+   * Evento de continuar.
+   * 
+   * Esta propiedad utiliza `@Output` para emitir un evento `cancelarEvento` con una cadena como valor.
+   */
+  @Output() cancelarEvento = new EventEmitter<string>();
+
+  /**
    * Indicador de validación.
    * 
    * Esta propiedad indica si la validación es verdadera o falsa.
@@ -99,5 +106,17 @@ export class PasoUnoComponent implements AfterViewInit {
  */
   continuar(): void {
     this.continuarEvento.emit('');
+  }
+
+  /**
+   * Cancela el proceso actual y notifica a la página principal.
+   * 
+   * Este método restablece el índice a la primera pestaña (opcional)
+   * y emite el evento `cancelarEvento` para informar al componente padre
+   * que el usuario ha decidido cancelar la operación.
+   */
+  cancelar(): void {
+    this.indice = 1;
+    this.cancelarEvento.emit();
   }
 }
