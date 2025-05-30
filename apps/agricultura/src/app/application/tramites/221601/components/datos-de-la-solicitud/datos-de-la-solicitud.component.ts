@@ -289,24 +289,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       }
   }
   /**
-* Verifica si un campo específico del formulario `formCombinacion` no es válido
-* y ha sido tocado (modificado por el usuario).
-*
-* @param field - El nombre del campo dentro del formulario que se desea validar.
-* @returns Retorna `true` si el campo tiene errores y ha sido tocado, de lo contrario `false`.
-*/
-  public isValid(field: string): boolean | null {
-    return this.validacionesService.isValid(this.datosSolicitudForm, field);
-  }
-  /**
-   * @description createFormMerge se utiliza para crear el formulario denominado formCombinacion
-   * 
-   */
-  /**
- * Inicializa el formulario `formCombinacion` con los valores del estado `solicitudState`
- * y aplica validación de longitud máxima (200) a `puntoIngreso`.
- */
-  /**
  * Actualiza el estado del store `tramite221601Store` con los datos del formulario `MedioForm`.
  *
  * Extrae los valores de los campos `transporte` y `empresa` del formulario y los fusiona con el

@@ -176,22 +176,11 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
       this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {
         this.MedioForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.MedioForm.enable();
       } else {
-        // No se requiere ninguna acción en el formulario
-      }
+        this.MedioForm.enable();
+      } 
   }
-  /**
-* Verifica si un campo específico del formulario `formCombinacion` no es válido
-* y ha sido tocado (modificado por el usuario).
-*
-* @param field - El nombre del campo dentro del formulario que se desea validar.
-* @returns Retorna `true` si el campo tiene errores y ha sido tocado, de lo contrario `false`.
-*/
-  public isValid(field: string): boolean | null {
-    return this.validacionesService.isValid(this.MedioForm, field);
-  }
+ 
   /**
  * Actualiza el estado del store `tramite221601Store` con los datos del formulario `MedioForm`.
  *
