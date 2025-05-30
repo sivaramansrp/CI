@@ -194,21 +194,24 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     }
   }
 
+
   /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   * Guarda los datos del formulario y ajusta el estado de solo lectura.
+   * 
+   * Este método inicializa el formulario y, dependiendo del valor de 
+   * `esFormularioSoloLectura`, deshabilita o habilita el formulario 
+   * para evitar o permitir la edición por parte del usuario.
    */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
+      // Si el formulario está en modo solo lectura, deshabilita todos los controles.
       this.pagoDerechosForm.disable();
-    } else if (!this.esFormularioSoloLectura) {
-      this.pagoDerechosForm.enable();
     } else {
-      // No se requiere ninguna acción en el formulario
+      // Si el formulario es editable, habilita todos los controles.
+      this.pagoDerechosForm.enable();
     }
   }
-
 
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
