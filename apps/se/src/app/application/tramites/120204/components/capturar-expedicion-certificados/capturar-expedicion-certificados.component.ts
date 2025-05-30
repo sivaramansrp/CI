@@ -1,11 +1,11 @@
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder,FormGroup,ReactiveFormsModule,Validators } from '@angular/forms';
 
 import {Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
-import { AlertComponent,Catalogo,CatalogoSelectComponent,ConsultaioQuery,InputCheckComponent,TablaDinamicaComponent,TableComponent,TableData,TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent,Catalogo,CatalogoSelectComponent,InputCheckComponent,TablaDinamicaComponent,TableComponent,TableData,TituloComponent } from '@ng-mf/data-access-user';
 import { CONFIGURACION_ACCIONISTAS_TABLA,DetalledelaLicitacion, DistribucionSaldo, LicitacionesDisponibles } from '../../../../shared/models/expedicion-certificado.model';
 import { Expedicion120204State, Expedicion120204Store } from '../../estados/tramites/expedicion120204.store';
 import { Expedicion120204Query } from '../../estados/queries/expedicion120204.query';
@@ -98,37 +98,33 @@ export class CapturarExpedicionCertificadosComponent implements OnInit, OnDestro
   */
   public esFormularioSoloLectura: boolean = false; 
 
+
 /**
    * Estado de la solicitud para el componente.
    * Este estado se utiliza para gestionar la lógica del formulario y las interacciones del usuario.
    */
   public solicitudState!: Expedicion120204State;
    
+  /**
+   * Indica si el componente es de solo lectura.
+   * Cuando es `true`, los campos del componente no pueden ser editados.
+   */
+  @Input() public readonly:boolean = false;
    
   /**
    * Constructor del componente CapturarExpedicionCertificados.
    * 
    * @param service Servicio para la gestión de expedición de certificados.
    * @param fb Constructor de formularios reactivos.
-   * @param consultaioQuery Consulta el estado de la sección de IO.
    * @param expedicion120204Store Almacén para el manejo del estado de expedición.
    * @param expedicion120204Query Consulta el estado de expedición.
    * 
    * Inicializa la suscripción al estado de la sección de IO para determinar si el formulario debe estar en modo solo lectura.
    */
   constructor(private service:ExpedicionCertificadoService,private fb: FormBuilder,
-    private consultaioQuery: ConsultaioQuery,
     private expedicion120204Store: Expedicion120204Store, 
     private expedicion120204Query: Expedicion120204Query
   ) {
-      this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
-      })
-    )
-    .subscribe()
   }
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -142,7 +138,8 @@ export class CapturarExpedicionCertificadosComponent implements OnInit, OnDestro
    *
    * @returns {void} No retorna ningún valor.
    */
-  ngOnInit(): void {  
+  ngOnInit(): void { 
+    this.esFormularioSoloLectura = this.readonly;
     this.getEntidadFederativa();
     this.getRepresentacionFederal();
     this.getDetallesDelalicitacion();

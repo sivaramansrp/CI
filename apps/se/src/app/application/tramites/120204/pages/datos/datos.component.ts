@@ -3,7 +3,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Expedicion120204Store } from '../../estados/tramites/expedicion120204.store';
 import { ExpedicionCertificadoService } from '../../services/expedicion-certificado.service';
 // Importación del componente Solicitante desde la librería compartida
 /**
@@ -48,6 +47,14 @@ export class DatosComponent implements OnInit, OnDestroy{
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
 
+  
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  public esFormularioSoloLectura: boolean = false; 
+
+
 /**
  * Constructor de la clase DatosComponent.
  * 
@@ -59,7 +66,7 @@ export class DatosComponent implements OnInit, OnDestroy{
  * Al inicializar el componente, se establece la consulta inicial en el store de consultas
  * con los parámetros correspondientes al trámite 120204.
  */
-constructor(private consultaQuery: ConsultaioQuery,private expedicionService: ExpedicionCertificadoService,private tramiteStore:Expedicion120204Store) {
+constructor(private consultaQuery: ConsultaioQuery,private expedicionService: ExpedicionCertificadoService) {
   }
 
    /**
@@ -73,6 +80,8 @@ constructor(private consultaQuery: ConsultaioQuery,private expedicionService: Ex
    ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
           this.consultaState = seccionState;
+          this.esFormularioSoloLectura = seccionState.readonly;
+
       })).subscribe();
     if(this.consultaState.update) {
       this.guardarDatosFormulario();

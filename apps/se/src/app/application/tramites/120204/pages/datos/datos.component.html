@@ -25,7 +25,7 @@
             @case (2) {
                 @if(esDatosRespuesta){
                 <!-- Caso 2: Mostrar componente "app-programa-a-cancelar" -->
-                <app-capturar-expedicion></app-capturar-expedicion>
+                <app-capturar-expedicion [readonly]="esFormularioSoloLectura"></app-capturar-expedicion>
                 }
             }
             }
