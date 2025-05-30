@@ -828,7 +828,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         // Manejar éxito, posiblemente refrescar la grilla o mostrar mensaje
         if (respuesta?.success) {
           respuesta.datos.id = this.datosDelContenedor.length + 1;
-          this.datosDelContenedor.push(respuesta.datos);
+          this.datosDelContenedor = [...this.datosDelContenedor, respuesta.datos];
           (
             this.tramite11201Store.setDelContenedor as (
               valor: DatosDelContenedor[]

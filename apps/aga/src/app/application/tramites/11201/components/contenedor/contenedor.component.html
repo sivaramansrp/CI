@@ -54,8 +54,9 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group datepicker-group">
-                            <input-fecha [datos]="fechaInicioInput" formControlName="fechaDeIngreso"
-                                (valorCambiado)="cambioFechaIngreso($event)" [isDisabled]="soloLectura"></input-fecha>
+                            <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaIngreso($event)"
+                                [isDisabled]="soloLectura"
+                                [setFecha]="solicitudForm.get('fechaIngreso')?.value"></input-fecha>
                         </div>
                     </div>
                 </div>
@@ -191,9 +192,9 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group datepicker-group">
-                                <input-fecha [datos]="fechaInicioInput" formControlName="fechaDeIngreso"
-                                    (valorCambiado)="cambioFechaDeIngreso($event)"
-                                    [isDisabled]="soloLectura"></input-fecha>
+                                <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaDeIngreso($event)"
+                                    [isDisabled]="soloLectura"
+                                    [setFecha]="solicitudForm.get('fechaDeIngreso')?.value"></input-fecha>
                             </div>
                         </div>
                     </div>
