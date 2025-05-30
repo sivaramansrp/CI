@@ -1,14 +1,13 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subject, Subscription } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
 import { Catalogo, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { DatosTramiteService } from 'libs/shared/data-access-user/src/core/services/11202/datos-tramite.service';
-import preOperativo from 'libs/shared/theme/assets/json/11202/preOperativo.json';
-import {TEXTOS_REQUISITOS } from '../../../../constantes/11202/retorno-contenedores.enum';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Contenedor11202State, Contenedor11202Store } from '../../../../core/estados/tramites/contenedor11202.store';
-import { Contenedor11202Query } from '../../../../core/queries/contenedor11202.query';
 import { DatosDelContenedor, GridContenedores } from 'libs/shared/data-access-user/src/core/models/11202/datos-tramite.model';  
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Contenedor11202Query } from '../../../../core/queries/contenedor11202.query';
+import { DatosTramiteService } from 'libs/shared/data-access-user/src/core/services/11202/datos-tramite.service';
+import {TEXTOS_REQUISITOS } from '../../../../constantes/11202/retorno-contenedores.enum';
+import preOperativo from 'libs/shared/theme/assets/json/11202/preOperativo.json';
 
 /**
  * @component ContenedorComponent
@@ -51,7 +50,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    /**
    * Define los datos que se mostrarán en la tabla dinámica.
    */
-   datosTabla: any[] = [];
+   datosTabla: unknown[] = [];
     /**
    * @property {any} radioOptions
    * Options for the radio buttons.
@@ -127,7 +126,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * @property {any[]} contenedores
    * Stores the container data
    * */
-  contenedores: any[] = [];
+  contenedores: unknown[] = [];
 
   /**
    * @property {string} archivoSeleccionado
@@ -290,7 +289,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.datosTramiteService
     .submitSolicitud(this.solicitudForm.value)
     .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe((data: any) => {
+    .subscribe(() => {
       this.exceptionCaught=false;
     });
 }
@@ -366,7 +365,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     const DATA = LINES.slice(1)
       .map((line) => {
         const VALUES = line.split(',');
-        const OBJ: any = {};
+        const OBJ: unknown = {};
         HEADERS.forEach((header, index) => {
           const KEY = HEADER_MAP[header.trim()] || header.trim();
           OBJ[KEY] = VALUES[index]?.trim();
@@ -450,7 +449,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     });
 
     this.mostrarCampos();
-       this.solicitudForm.get('tipoBusqueda')?.valueChanges.subscribe((value) => {
+       this.solicitudForm.get('tipoBusqueda')?.valueChanges.subscribe(() => {
       this.setValoresStore(
         this.solicitudForm,
         'tipoBusqueda',
@@ -519,20 +518,18 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     { encabezado: 'Fecha inicio', clave: (artículo) => artículo.fechaInicio, orden: 13 }
   ];
 
-
-    /**
+  /**
    * Configuración de las columnas de la tabla.
    */
     public gridContenedores: ConfiguracionColumna<GridContenedores>[] = [
       { encabezado: '', clave: (artículo) => artículo.id, orden: 1 },
-      { encabezado: 'Iniciales del contenedor', clave: (artículo) => artículo.inicialesContenedor, orden: 1 },
-      { encabezado: 'Número contenedor', clave: (artículo) => artículo.numeroContenedor, orden: 2 },
+      { encabezado: 'Iniciales del equipo', clave: (artículo) => artículo.inicialesContenedor, orden: 1 },
+      { encabezado: 'Número de equipo', clave: (artículo) => artículo.numeroContenedor, orden: 2 },
       { encabezado: 'Dígito Verificador', clave: (artículo) => artículo.digitoVerificador, orden: 3 },
-      { encabezado: 'Tipo Contenedor', clave: (artículo) => artículo.tipoContenedor, orden: 4 },
+      { encabezado: 'Tipo de equipo', clave: (artículo) => artículo.tipoContenedor, orden: 4 },
       { encabezado: 'Aduana', clave: (artículo) => artículo.aduana, orden: 5 },
         { encabezado: 'Estado de constancia', clave: (artículo) => artículo.estadoConstancia, orden: 8 },
       { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existeEnVUCEM, orden: 9 },
       { encabezado: 'Id constancia', clave: (artículo) => artículo.idConstancia, orden: 10 },
-  
     ];
 }

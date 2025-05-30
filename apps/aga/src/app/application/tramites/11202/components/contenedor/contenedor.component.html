@@ -39,6 +39,7 @@
             [catalogo]="options"
             formControlName="aduana"
             [label]="'Aduana/sección aduanera'"
+            [placeholder]="'Selecciona un valor'"
             [required]="true"
             (change)="setValoresStore(datosGenerales, 'aduana', 'setAduana')"
           ></app-catalogo-select>
@@ -48,18 +49,19 @@
   </div>
  
   <div id="seccionAduanaaFecha" *ngIf="seccionContenedor">
-    <ng-titulo titulo="Datos del Contenedor" />
+    <ng-titulo titulo="Datos del equipo" />
     <ng-container formGroupName="datosContenedor">
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="inicialesContenedor"
-              >Iniciales del Contenedor:
+              >Iniciales del equipo*:
             </label>
             <input
               type="text"
               class="form-control"
               id="inicialesContenedor"
+              required="true"
               formControlName="inicialesContenedor"
               (change)="
                 setValoresStore(
@@ -75,12 +77,13 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="numeroContenedor"
-              >Número Del Contenedor:</label
+              >Datos del equipo*:</label
             >
             <input
               type="text"
               class="form-control"
               id="numeroContenedor"
+              required="true"
               formControlName="numeroContenedor"
               (change)="
                 setValoresStore(
@@ -102,7 +105,7 @@
                 type="button"
                 name="limpiar"
                 id="limpiar"
-                class="btn btn-default"
+                class="btn btn-default mr"
                 (click)="limpiarCampos()"
               >
                 Limpiar
@@ -111,7 +114,7 @@
                 type="button"
                 name="buscar"
                 id="buscar"
-                class="btn btn-primary"
+                class="btn btn-primary mr-3"
                 (click)="datosCaptura()"
               >
                 Buscar
@@ -153,14 +156,19 @@
         </div>
       </div>
     </ng-container>
-    <div class="col-md-12" id="idGridContenedoresRC">
+    <div class="col-md-12 mt-5" id="idGridContenedoresRC">
       <div class="table-responsive">
         <div class="innercontainer">
           <app-tabla-dinamica [configuracionTabla]="gridContenedores"
           [datos]="contenedores"></app-tabla-dinamica>
           </div>
       </div>
-      </div>
+      <nav aria-label="Page navigation example">
+        <ul class="pagination d-flex justify-content-center mb-3">
+          <li class="page-item"><a class="page-link">1</a></li>
+        </ul>
+      </nav>
+    </div>
 
     <div *ngIf="exceptionCaught">
       <div class="row" style="margin-top: 30px">
