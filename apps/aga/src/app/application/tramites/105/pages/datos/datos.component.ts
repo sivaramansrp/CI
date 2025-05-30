@@ -43,7 +43,6 @@ ngOnInit(): void {
           this.consultaState = seccionState;
       })).subscribe();
     if(this.consultaState.update) {
-      console.log(this.consultaState)
       this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;

@@ -237,13 +237,23 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
-    //  this.inicializarFormulario();
+      this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {
         this.datosDelTramite.disable();
       } else if (!this.esFormularioSoloLectura) {
         this.datosDelTramite.enable();
       } 
   }
+  
+  /**
+   * Crea e inicializa el formulario reactivo `agregarForm` con los campos necesarios
+   * para agregar un nuevo trámite. Los campos incluyen:
+   * - `fraccionArancelaria`: Campo requerido para la fracción arancelaria.
+   * - `descripcion`: Campo requerido para la descripción.
+   * - `descripcionAdicional`: Campo opcional para información adicional.
+   *
+   * Utiliza el FormBuilder (`fb`) para construir el formulario y asigna las validaciones correspondientes.
+   */
   crearFormularioAgregar(): void {
     this.agregarForm = this.fb.group({
       fraccionArancelaria: [{ value: '' }, Validators.required],

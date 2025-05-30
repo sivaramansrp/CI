@@ -259,7 +259,7 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
-    //  this.inicializarFormulario();
+      this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {
         this.datosDelTramiteDos.disable();
         this.agenteForm.disable();
@@ -269,6 +269,16 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
       } 
   }
 
+  /**
+   * Inicializa y crea los formularios reactivos utilizados en el componente.
+   * 
+   * Este método configura dos formularios:
+   * - `datosDelTramiteDos`: Contiene los campos relacionados con el trámite, 
+   *   inicializados con valores provenientes del estado de la solicitud y con validadores requeridos.
+   * - `agenteForm`: Contiene los campos para los datos del agente, todos con validadores requeridos.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
   crearFormularios(): void {
     this.datosDelTramiteDos = this.fb.group({
       procedimientoCargaDescarga: [this.solicitudState?.procedimientoCargaDescarga, Validators.required],
