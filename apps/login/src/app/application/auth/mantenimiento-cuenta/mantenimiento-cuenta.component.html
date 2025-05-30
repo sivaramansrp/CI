@@ -1,43 +1,44 @@
 <div class="container mt-5">
   <h2 class="title">Recuperación de Cuenta</h2>
 
-  <!-- Mensaje de Alerta -->
-  <div *ngIf="mensajeAlerta" 
-       class="alert" 
-       [ngClass]="{'alert-success': mensajeAlerta.includes('exitosa'), 'alert-danger': !mensajeAlerta.includes('exitosa')}">
-    {{ mensajeAlerta }}
-  </div>
+  <lib-notificaciones
+    *ngIf="nuevaAlertaNotificacion"
+    [notificacionInput]="nuevaAlertaNotificacion">
+  </lib-notificaciones>
 
-  <form [formGroup]="recuperarForm" (ngSubmit)="onSubmit()">
-    <!-- Sección de Información Personal -->
+  <form [formGroup]="recuperarForm" (ngSubmit)="alEnviar()">
     <div class="form-section">
       <h3>Información Personal</h3>
 
-      <!-- Nacionalidad - Siempre visible -->
+      <!-- Nacionalidad -->
       <div class="form-group">
-        <label class="form-label">Nacionalidad mexicana*:</label>
-        <div class="radio-group">
-          <div class="radio-option">
-            <input type="radio" 
-                   id="nacionalidadSi" 
-                   formControlName="nacionalidad" 
-                   [value]="true"
-                   class="radio-input">
-            <label for="nacionalidadSi">Sí</label>
-          </div>
-          <div class="radio-option">
-            <input type="radio" 
-                   id="nacionalidadNo" 
-                   formControlName="nacionalidad" 
-                   [value]="false"
-                   class="radio-input">
-            <label for="nacionalidadNo">No</label>
-          </div>
-        </div>
-      </div>
+  <label class="form-label">Nacionalidad mexicana*:</label>
+  <div class="radio-group">
+    <div class="radio-option">
+      <input type="radio" 
+             id="nacionalidadSi" 
+             name="nacionalidad"
+             [formControlName]="'nacionalidad'" 
+             [value]="true"
+             (change)="alCambiarNacionalidad($event)"
+             class="radio-input">
+      <label for="nacionalidadSi">Sí</label>
+    </div>
+    <div class="radio-option">
+      <input type="radio" 
+             id="nacionalidadNo" 
+             name="nacionalidad"
+             [formControlName]="'nacionalidad'" 
+             [value]="false"
+             (change)="alCambiarNacionalidad($event)"
+             class="radio-input">
+      <label for="nacionalidadNo">No</label>
+    </div>
+  </div>
+</div>
 
       <!-- Panel Nacional -->
-      <ng-container *ngIf="isMexicana()">
+      <ng-container *ngIf="esMexicana()">
         <!-- Tipo de Identificación -->
         <div class="form-group">
           <label>Tipo de Identificación*:</label>
@@ -45,23 +46,27 @@
             <div class="radio-option">
               <input type="radio" 
                      id="rfc" 
+                     name="tipoDocumento"
                      formControlName="tipoDocumento" 
                      value="RFC"
+                     (change)="alCambiarTipoDocumento($event)"
                      class="radio-input">
               <label for="rfc">Registro Federal de Contribuyentes (RFC)</label>
             </div>
             <div class="radio-option">
               <input type="radio" 
                      id="curp" 
+                     name="tipoDocumento"
                      formControlName="tipoDocumento" 
                      value="CURP"
+                     (change)="alCambiarTipoDocumento($event)"
                      class="radio-input">
               <label for="curp">Clave Única de Registro de Población (CURP)</label>
             </div>
           </div>
         </div>
 
-        <!-- Panel RFC -->
+        <!-- Contenido para RFC -->
         <ng-container *ngIf="recuperarForm.get('tipoDocumento')?.value === 'RFC'">
           <!-- Tipo de Persona -->
           <div class="form-group">
@@ -70,76 +75,81 @@
               <div class="radio-option">
                 <input type="radio" 
                        id="personaFisica" 
+                       name="tipoPersona"
                        formControlName="tipoPersona" 
-                       value="fisica"
+                       [value]="TipoPersona.FISICA"
+                       (change)="alCambiarTipoPersona($event)"
                        class="radio-input">
                 <label for="personaFisica">Persona Física</label>
               </div>
               <div class="radio-option">
                 <input type="radio" 
                        id="personaMoral" 
+                       name="tipoPersona"
                        formControlName="tipoPersona" 
-                       value="moral"
+                       [value]="TipoPersona.MORAL"
+                       (change)="alCambiarTipoPersona($event)"
                        class="radio-input">
                 <label for="personaMoral">Persona Moral</label>
               </div>
             </div>
           </div>
 
-          <!-- Campos comunes RFC -->
-          <div class="form-group" *ngIf="recuperarForm.get('tipoPersona')?.value">
-            <label for="usuario">RFC*:</label>
-            <input type="text" 
-                   id="usuario" 
-                   formControlName="usuario" 
-                   class="form-control"
-                   placeholder="Ingrese su RFC">
-          </div>
-
-          <!-- Campos Persona Física -->
-          <ng-container *ngIf="recuperarForm.get('tipoPersona')?.value === 'fisica'">
+          <!-- Campos según tipo de persona -->
+          <ng-container *ngIf="recuperarForm.get('tipoPersona')?.value">
+            <!-- RFC -->
             <div class="form-group">
-              <label for="nombre">Nombre*:</label>
+              <label for="usuario">RFC*:</label>
               <input type="text" 
-                     id="nombre" 
-                     formControlName="nombre" 
+                     id="usuario" 
+                     formControlName="usuario" 
                      class="form-control"
-                     placeholder="Ingrese su nombre">
+                     placeholder="Ingrese su RFC">
             </div>
 
-            <div class="form-group">
-              <label for="primerApellido">Primer apellido*:</label>
-              <input type="text" 
-                     id="primerApellido" 
-                     formControlName="primerApellido" 
-                     class="form-control"
-                     placeholder="Ingrese su primer apellido">
-            </div>
+            <!-- Campos Persona Física -->
+            <ng-container *ngIf="recuperarForm.get('tipoPersona')?.value === TipoPersona.FISICA">
+              <div class="form-group">
+                <label for="nombre">Nombre*:</label>
+                <input type="text" 
+                       id="nombre" 
+                       formControlName="nombre" 
+                       class="form-control"
+                       placeholder="Ingrese su nombre">
+              </div>
+              <div class="form-group">
+                <label for="primerApellido">Primer apellido*:</label>
+                <input type="text" 
+                       id="primerApellido" 
+                       formControlName="primerApellido" 
+                       class="form-control"
+                       placeholder="Ingrese su primer apellido">
+              </div>
+              <div class="form-group">
+                <label for="segundoApellido">Segundo apellido*:</label>
+                <input type="text" 
+                       id="segundoApellido" 
+                       formControlName="segundoApellido" 
+                       class="form-control"
+                       placeholder="Ingrese su segundo apellido">
+              </div>
+            </ng-container>
 
-            <div class="form-group">
-              <label for="segundoApellido">Segundo apellido*:</label>
-              <input type="text" 
-                     id="segundoApellido" 
-                     formControlName="segundoApellido" 
-                     class="form-control"
-                     placeholder="Ingrese su segundo apellido">
-            </div>
-          </ng-container>
-
-          <!-- Campos Persona Moral -->
-          <ng-container *ngIf="recuperarForm.get('tipoPersona')?.value === 'moral'">
-            <div class="form-group">
-              <label for="razonSocial">Razón social*:</label>
-              <input type="text" 
-                     id="razonSocial" 
-                     formControlName="razonSocial" 
-                     class="form-control"
-                     placeholder="Ingrese la razón social">
-            </div>
+            <!-- Campos Persona Moral -->
+            <ng-container *ngIf="recuperarForm.get('tipoPersona')?.value === TipoPersona.MORAL">
+              <div class="form-group">
+                <label for="razonSocial">Razón social*:</label>
+                <input type="text" 
+                       id="razonSocial" 
+                       formControlName="razonSocial" 
+                       class="form-control"
+                       placeholder="Ingrese la razón social">
+              </div>
+            </ng-container>
           </ng-container>
         </ng-container>
 
-        <!-- Panel CURP -->
+        <!-- Contenido para CURP -->
         <ng-container *ngIf="recuperarForm.get('tipoDocumento')?.value === 'CURP'">
           <div class="form-group">
             <label for="usuarioCurp">CURP*:</label>
@@ -149,7 +159,6 @@
                    class="form-control"
                    placeholder="Ingrese su CURP">
           </div>
-
           <div class="form-group">
             <label for="nombreCurp">Nombre*:</label>
             <input type="text" 
@@ -158,7 +167,6 @@
                    class="form-control"
                    placeholder="Ingrese su nombre">
           </div>
-
           <div class="form-group">
             <label for="primerApellidoCurp">Primer apellido*:</label>
             <input type="text" 
@@ -167,7 +175,6 @@
                    class="form-control"
                    placeholder="Ingrese su primer apellido">
           </div>
-
           <div class="form-group">
             <label for="segundoApellidoCurp">Segundo apellido*:</label>
             <input type="text" 
@@ -178,110 +185,121 @@
           </div>
         </ng-container>
       </ng-container>
-      
-       <ng-container *ngIf="!isMexicana() && recuperarForm.get('nacionalidad')?.value !== null">
-  <!-- Tipo de Persona -->
-  <div class="form-group">
-    <label>Tipo de Persona*:</label>
-    <div class="radio-group">
-      <div class="radio-option">
-        <input type="radio" 
-               id="personaFisicaExt" 
-               formControlName="tipoPersona" 
-               value="fisica"
-               class="radio-input">
-        <label for="personaFisicaExt">Persona Física</label>
-      </div>
-      <div class="radio-option">
-        <input type="radio" 
-               id="personaMoralExt" 
-               formControlName="tipoPersona" 
-               value="moral"
-               class="radio-input">
-        <label for="personaMoralExt">Persona Moral</label>
-      </div>
-    </div>
-  </div>
 
-  <!-- Campos según tipo de persona extranjera -->
-  <ng-container *ngIf="recuperarForm.get('tipoPersona')?.value">
-    <!-- Campos Persona Física Extranjera -->
-    <ng-container *ngIf="recuperarForm.get('tipoPersona')?.value === 'fisica'">
-      <div class="form-group">
-        <label for="nombreExt">Nombre*:</label>
-        <input type="text" 
-               id="nombreExt" 
-               formControlName="nombre" 
-               class="form-control"
-               placeholder="Ingrese su nombre">
-      </div>
+      <!-- Panel Extranjero -->
+      <ng-container *ngIf="!esMexicana() && recuperarForm.get('nacionalidad')?.value !== null">
+        <!-- Tipo de Persona -->
+        <div class="form-group">
+          <label>Tipo de Persona*:</label>
+          <div class="radio-group">
+            <div class="radio-option">
+              <input type="radio" 
+                     id="personaFisicaExt" 
+                     name="tipoPersona"
+                     formControlName="tipoPersona" 
+                     [value]="TipoPersona.FISICA"
+                     (change)="alCambiarTipoPersona($event)"
+                     class="radio-input">
+              <label for="personaFisicaExt">Persona Física</label>
+            </div>
+            <div class="radio-option">
+              <input type="radio" 
+                     id="personaMoralExt" 
+                     name="tipoPersona"
+                     formControlName="tipoPersona" 
+                     [value]="TipoPersona.MORAL"
+                     (change)="alCambiarTipoPersona($event)"
+                     class="radio-input">
+              <label for="personaMoralExt">Persona Moral</label>
+            </div>
+          </div>
+        </div>
 
-      <div class="form-group">
-        <label for="primerApellidoExt">Primer apellido*:</label>
-        <input type="text" 
-               id="primerApellidoExt" 
-               formControlName="primerApellido" 
-               class="form-control"
-               placeholder="Ingrese su primer apellido">
-      </div>
-    </ng-container>
+        <!-- Campos según tipo de persona extranjera -->
+        <ng-container *ngIf="recuperarForm.get('tipoPersona')?.value">
+          <!-- Campos Persona Física -->
+          <ng-container *ngIf="recuperarForm.get('tipoPersona')?.value === TipoPersona.FISICA">
+            <div class="form-group">
+              <label for="nombreExt">Nombre*:</label>
+              <input type="text" 
+                     id="nombreExt" 
+                     formControlName="nombre" 
+                     class="form-control"
+                     placeholder="Ingrese su nombre">
+            </div>
+            <div class="form-group">
+              <label for="primerApellidoExt">Primer apellido*:</label>
+              <input type="text" 
+                     id="primerApellidoExt" 
+                     formControlName="primerApellido" 
+                     class="form-control"
+                     placeholder="Ingrese su primer apellido">
+            </div>
+            <div class="form-group">
+              <label for="segundoApellidoExt">Segundo apellido*:</label>
+              <input type="text" 
+                     id="segundoApellidoExt" 
+                     formControlName="segundoApellido" 
+                     class="form-control"
+                     placeholder="Ingrese su segundo apellido">
+            </div>
+          </ng-container>
 
-    <!-- Campos Persona Moral Extranjera -->
-    <ng-container *ngIf="recuperarForm.get('tipoPersona')?.value === 'moral'">
-      <div class="form-group">
-        <label for="razonSocialExt">Razón social*:</label>
-        <input type="text" 
-               id="razonSocialExt" 
-               formControlName="razonSocial" 
-               class="form-control"
-               placeholder="Ingrese la razón social">
-      </div>
-    </ng-container>
+          <!-- Campos Persona Moral -->
+          <ng-container *ngIf="recuperarForm.get('tipoPersona')?.value === TipoPersona.MORAL">
+            <div class="form-group">
+              <label for="razonSocialExt">Razón social*:</label>
+              <input type="text" 
+                     id="razonSocialExt" 
+                     formControlName="razonSocial" 
+                     class="form-control"
+                     placeholder="Ingrese la razón social">
+            </div>
+          </ng-container>
 
-    <!-- Campos comunes extranjero -->
-    <div class="form-group">
-      <label for="codigoPostal">Código postal*:</label>
-      <input type="text" 
-             id="codigoPostal" 
-             formControlName="codigoPostal" 
-             class="form-control"
-             placeholder="Ingrese el código postal">
-    </div>
-
-    <div class="form-group">
-      <label for="estado">Estado*:</label>
-      <input type="text" 
-             id="estado" 
-             formControlName="estado" 
-             class="form-control"
-             placeholder="Ingrese el estado">
-    </div>
-
-    <div class="form-group">
-      <label for="pais">País*:</label>
-      <select id="pais" 
-              formControlName="pais" 
-              class="form-control">
-        <option value="">Seleccione un país</option>
-        <option value="USA">Estados Unidos</option>
-        <option value="CAN">Canadá</option>
-      </select>
-    </div>
-  </ng-container>
-</ng-container>
+          <!-- Campos comunes extranjero -->
+          <div class="form-group">
+            <label for="codigoPostal">Código postal*:</label>
+            <input type="text" 
+                   id="codigoPostal" 
+                   formControlName="codigoPostal" 
+                   class="form-control"
+                   placeholder="Ingrese el código postal">
+          </div>
+          <div class="form-group">
+            <label for="estado">Estado*:</label>
+            <input type="text" 
+                   id="estado" 
+                   formControlName="estado" 
+                   class="form-control"
+                   placeholder="Ingrese el estado">
+          </div>
+          <div class="form-group">
+            <label for="pais">País*:</label>
+            <select id="pais" 
+                    formControlName="pais" 
+                    class="form-control">
+              <option value="">Seleccione un país</option>
+              <option value="USA">Estados Unidos</option>
+              <option value="CAN">Canadá</option>
+              <!-- Agregar más países según sea necesario -->
+            </select>
+          </div>
+        </ng-container>
+      </ng-container>
     </div>
 
     <div class="form-footer">
       <p class="campos-obligatorios">* Campos obligatorios</p>
       <div class="form-actions">
         <button type="button" 
-                class="btn-salir btn btn-primary" 
-                (click)="onSalir()">
+                class="btn-salir" 
+                (click)="alSalir()">
           Salir
         </button>
         <button type="submit" 
-                class="btn-recuperar btn btn-primary" 
-                [disabled]="!recuperarForm.valid || !isValidFlow()">
+                class="btn-recuperar" 
+                [disabled]="!recuperarForm.valid || !esFlujoValido()">
           Recuperar
         </button>
       </div>
