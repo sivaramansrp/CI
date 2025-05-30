@@ -285,7 +285,7 @@ this.inicializarCombinacionFormulario();
   * Carga los datos de especie desde el servicio y los asigna a la propiedad `especie`.
   */
   loaddatEspecieData(): void {
-    this._pantallas220401Service.getEspecieData().subscribe((data) => {
+    this._pantallas220401Service.getEspecieData().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
       this.especie = data;
     });
   }
@@ -294,7 +294,7 @@ this.inicializarCombinacionFormulario();
    * Carga las funciones zootécnicas desde el servicio y las asigna a la propiedad `funcionZootecnica`.
    */
   loadFuncionZootecnica(): void {
-    this._pantallas220401Service.getFuncionZootecnica().subscribe((data) => {
+    this._pantallas220401Service.getFuncionZootecnica().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
       this.funcionZootecnica = data;
     });
   }
