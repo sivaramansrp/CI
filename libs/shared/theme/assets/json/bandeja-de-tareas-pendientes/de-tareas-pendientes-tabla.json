@@ -321,7 +321,7 @@
   },
   {
     "folioTramite": "0215523965732296454156770",
-    "tipoDeTramite": "Solicitud de Proceso Interno",
+    "tipoDeTramite": "Ampliación Productor directo",
     "nombreDeLaTarea": "Evaluar solicitud",
     "fechaDeAsignacion": "2023-10-01",
     "estadoDeTramite": "En Proceso",
@@ -331,7 +331,7 @@
   },
   {
     "folioTramite": "0594662081554576343756766",
-    "tipoDeTramite": "Consulta de Proceso",
+    "tipoDeTramite": "Ampliación Productor directo",
     "nombreDeLaTarea": "confirmar notificación",
     "fechaDeAsignacion": "2023-10-02",
     "estadoDeTramite": "Pendiente",
@@ -341,7 +341,7 @@
   },
   {
     "folioTramite": "0201157325726982922695523",
-    "tipoDeTramite": "Registro de solicitud de servicio",
+    "tipoDeTramite": "Ampliación Productor directo",
     "nombreDeLaTarea": "Atender requerimiento",
     "fechaDeAsignacion": "2023-10-03",
     "estadoDeTramite": "Completado",
@@ -351,7 +351,7 @@
   },
   {
     "folioTramite": "07440025780842380388259713",
-    "tipoDeTramite": "Solicitud de Proceso Interno",
+    "tipoDeTramite": "Ampliación Productor directo",
     "nombreDeLaTarea": "Authorizar solicitud",
     "fechaDeAsignacion": "2023-10-04",
     "estadoDeTramite": "En Proceso",
@@ -361,7 +361,7 @@
   },
   {
     "folioTramite": "0264261175179109616400775",
-    "tipoDeTramite": "Registro de solicitud de servicio",
+    "tipoDeTramite": "Ampliación Productor directo",
     "nombreDeLaTarea": "confirmar notificación de resolución",
     "fechaDeAsignacion": "2023-10-05",
     "estadoDeTramite": "Pendiente",
@@ -371,7 +371,7 @@
   },
   {
     "folioTramite": "0552097381203692547975670",
-    "tipoDeTramite": "Registro de solicitud de servicio",
+    "tipoDeTramite": "Ampliación Productor directo",
     "nombreDeLaTarea": "Functionario verificar requerimiento",
     "fechaDeAsignacion": "2023-10-06",
     "estadoDeTramite": "Completado",
@@ -381,7 +381,7 @@
   },
   {
     "folioTramite": "0453067309596292181625870",
-    "tipoDeTramite": "Registro de solicitud de servicio",
+    "tipoDeTramite": "Ampliación Productor directo",
     "nombreDeLaTarea": "Generar opinión",
     "fechaDeAsignacion": "2023-10-07",
     "estadoDeTramite": "En Proceso",
@@ -391,7 +391,7 @@
   },
   {
     "folioTramite": "099226136147361192499352",
-    "tipoDeTramite": "Registro de solicitud de servicio",
+    "tipoDeTramite": "Ampliación Productor directo",
     "nombreDeLaTarea": "Revisión de presupuesto",
     "fechaDeAsignacion": "2023-10-09",
     "estadoDeTramite": "Completado",
@@ -725,7 +725,7 @@
     "nombreDeLaTarea": "Evaluar solicitud",
     "fechaDeAsignacion": "2023-10-01",
     "estadoDeTramite": "En Proceso",
-   "departamento": "agricultura",
+   "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "220401",
     "origin": "FLUJO_FUNCIONARIO_EVALUAR"
   },
@@ -735,7 +735,7 @@
     "nombreDeLaTarea": "confirmar notificación",
     "fechaDeAsignacion": "2023-10-02",
     "estadoDeTramite": "Pendiente",
-   "departamento": "agricultura",
+   "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "220401",
     "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION"
   },
@@ -745,7 +745,7 @@
     "nombreDeLaTarea": "Atender requerimiento",
     "fechaDeAsignacion": "2023-10-03",
     "estadoDeTramite": "Completado",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "220401",
     "origin": "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO"
   },
@@ -755,7 +755,7 @@
     "nombreDeLaTarea": "Authorizar solicitud",
     "fechaDeAsignacion": "2023-10-04",
     "estadoDeTramite": "En Proceso",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "220401",
     "origin": "FLUJO_FUNCIONARIO_AUTORIZACION"
   },
@@ -765,7 +765,7 @@
     "nombreDeLaTarea": "confirmar notificación de resolución",
     "fechaDeAsignacion": "2023-10-05",
     "estadoDeTramite": "Pendiente",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "220401",
     "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-RESOLUCION"
   },
@@ -775,7 +775,7 @@
     "nombreDeLaTarea": "Functionario verificar requerimiento",
     "fechaDeAsignacion": "2023-10-06",
     "estadoDeTramite": "Completado",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "220401",
     "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
   },
@@ -785,7 +785,7 @@
     "nombreDeLaTarea": "Generar opinión",
     "fechaDeAsignacion": "2023-10-07",
     "estadoDeTramite": "En Proceso",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "220401",
     "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
   },
@@ -795,7 +795,7 @@
     "nombreDeLaTarea": "Revisión de presupuesto",
     "fechaDeAsignacion": "2023-10-09",
     "estadoDeTramite": "Completado",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "220401",
     "origin": "READ_PROCEDURE"
   },
@@ -1045,7 +1045,7 @@
     "nombreDeLaTarea": "Evaluar solicitud",
     "fechaDeAsignacion": "2023-10-01",
     "estadoDeTramite": "En Proceso",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "221601",
     "origin": "FLUJO_FUNCIONARIO_EVALUAR"
   },
@@ -1055,7 +1055,7 @@
     "nombreDeLaTarea": "confirmar notificación",
     "fechaDeAsignacion": "2023-10-02",
     "estadoDeTramite": "Pendiente",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "221601",
     "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION"
   },
@@ -1065,7 +1065,7 @@
     "nombreDeLaTarea": "Atender requerimiento",
     "fechaDeAsignacion": "2023-10-03",
     "estadoDeTramite": "Completado",
-     "departamento": "agricultura",
+     "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "221601",
     "origin": "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO"
   },
@@ -1075,7 +1075,7 @@
     "nombreDeLaTarea": "Authorizar solicitud",
     "fechaDeAsignacion": "2023-10-04",
     "estadoDeTramite": "En Proceso",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "221601",
     "origin": "FLUJO_FUNCIONARIO_AUTORIZACION"
   },
@@ -1085,7 +1085,7 @@
     "nombreDeLaTarea": "confirmar notificación de resolución",
     "fechaDeAsignacion": "2023-10-05",
     "estadoDeTramite": "Pendiente",
-   "departamento": "agricultura",
+   "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "221601",
     "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-RESOLUCION"
   },
@@ -1095,7 +1095,7 @@
     "nombreDeLaTarea": "Functionario verificar requerimiento",
     "fechaDeAsignacion": "2023-10-06",
     "estadoDeTramite": "Completado",
-     "departamento": "agricultura",
+     "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "221601",
     "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
   },
@@ -1105,7 +1105,7 @@
     "nombreDeLaTarea": "Generar opinión",
     "fechaDeAsignacion": "2023-10-07",
     "estadoDeTramite": "En Proceso",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "221601",
     "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
   },
@@ -1115,7 +1115,7 @@
     "nombreDeLaTarea": "Revisión de presupuesto",
     "fechaDeAsignacion": "2023-10-09",
     "estadoDeTramite": "Completado",
-   "departamento": "agricultura",
+   "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "221601",
     "origin": "READ_PROCEDURE"
   },
@@ -4215,7 +4215,7 @@
     "nombreDeLaTarea": "Evaluar solicitud",
     "fechaDeAsignacion": "2023-10-01",
     "estadoDeTramite": "En Proceso",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "221603",
     "origin": "FLUJO_FUNCIONARIO_EVALUAR"
   },
@@ -4225,7 +4225,7 @@
     "nombreDeLaTarea": "confirmar notificación",
     "fechaDeAsignacion": "2023-10-02",
     "estadoDeTramite": "Pendiente",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "221603",
     "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION"
   },
@@ -4235,7 +4235,7 @@
     "nombreDeLaTarea": "Atender requerimiento",
     "fechaDeAsignacion": "2023-10-03",
     "estadoDeTramite": "Completado",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "221603",
     "origin": "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO"
   },
@@ -4245,7 +4245,7 @@
     "nombreDeLaTarea": "Authorizar solicitud",
     "fechaDeAsignacion": "2023-10-04",
     "estadoDeTramite": "En Proceso",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "221603",
     "origin": "FLUJO_FUNCIONARIO_AUTORIZACION"
   },
@@ -4255,7 +4255,7 @@
     "nombreDeLaTarea": "confirmar notificación de resolución",
     "fechaDeAsignacion": "2023-10-05",
     "estadoDeTramite": "Pendiente",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "221603",
     "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-RESOLUCION"
   },
@@ -4265,7 +4265,7 @@
     "nombreDeLaTarea": "Functionario verificar requerimiento",
     "fechaDeAsignacion": "2023-10-06",
     "estadoDeTramite": "Completado",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "221603",
     "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
   },
@@ -4275,7 +4275,7 @@
     "nombreDeLaTarea": "Generar opinión",
     "fechaDeAsignacion": "2023-10-07",
     "estadoDeTramite": "En Proceso",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "221603",
     "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
   },
@@ -4285,7 +4285,7 @@
     "nombreDeLaTarea": "Revisión de presupuesto",
     "fechaDeAsignacion": "2023-10-09",
     "estadoDeTramite": "Completado",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "221603",
     "origin": "READ_PROCEDURE"
   },
@@ -4295,7 +4295,7 @@
     "nombreDeLaTarea": "Evaluar solicitud",
     "fechaDeAsignacion": "2023-10-01",
     "estadoDeTramite": "En Proceso",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "220103",
     "origin": "FLUJO_FUNCIONARIO_EVALUAR"
   },
@@ -4305,7 +4305,7 @@
     "nombreDeLaTarea": "confirmar notificación",
     "fechaDeAsignacion": "2023-10-02",
     "estadoDeTramite": "Pendiente",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "220103",
     "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION"
   },
@@ -4315,7 +4315,7 @@
     "nombreDeLaTarea": "Atender requerimiento",
     "fechaDeAsignacion": "2023-10-03",
     "estadoDeTramite": "Completado",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "220103",
     "origin": "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO"
   },
@@ -4325,7 +4325,7 @@
     "nombreDeLaTarea": "Authorizar solicitud",
     "fechaDeAsignacion": "2023-10-04",
     "estadoDeTramite": "En Proceso",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "220103",
     "origin": "FLUJO_FUNCIONARIO_AUTORIZACION"
   },
@@ -4335,7 +4335,7 @@
     "nombreDeLaTarea": "confirmar notificación de resolución",
     "fechaDeAsignacion": "2023-10-05",
     "estadoDeTramite": "Pendiente",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "220103",
     "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-RESOLUCION"
   },
@@ -4345,7 +4345,7 @@
     "nombreDeLaTarea": "Functionario verificar requerimiento",
     "fechaDeAsignacion": "2023-10-06",
     "estadoDeTramite": "Completado",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "220103",
     "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
   },
@@ -4355,7 +4355,7 @@
     "nombreDeLaTarea": "Generar opinión",
     "fechaDeAsignacion": "2023-10-07",
     "estadoDeTramite": "En Proceso",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "220103",
     "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
   },
@@ -4365,7 +4365,7 @@
     "nombreDeLaTarea": "Revisión de presupuesto",
     "fechaDeAsignacion": "2023-10-09",
     "estadoDeTramite": "Completado",
-    "departamento": "agricultura",
+    "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "220103",
     "origin": "READ_PROCEDURE"
   },
@@ -5007,7 +5007,88 @@
     "estadoDeTramite": "Completado",
     "departamento": "profepa",
     "numeroDeProcedimiento": "250103",
+    "origin": "READ_PROCEDURE"
+  },
+  {
+    "folioTramite": "712345678901234",
+    "tipoDeTramite": "Solicitud de Proceso Interno",
+    "nombreDeLaTarea": "Evaluar solicitud",
+    "fechaDeAsignacion": "2023-10-01",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "semarnat",
+    "numeroDeProcedimiento": "230401",
+    "origin": "FLUJO_FUNCIONARIO_EVALUAR"
+  },
+  {
+    "folioTramite": "856789012345678",
+    "tipoDeTramite": "Consulta de Proceso",
+    "nombreDeLaTarea": "confirmar notificación",
+    "fechaDeAsignacion": "2023-10-02",
+    "estadoDeTramite": "Pendiente",
+    "departamento": "semarnat",
+    "numeroDeProcedimiento": "230401",
+    "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION"
+  },
+  {
+    "folioTramite": "903456789012345",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Atender requerimiento",
+    "fechaDeAsignacion": "2023-10-03",
+    "estadoDeTramite": "Completado",
+    "departamento": "semarnat",
+    "numeroDeProcedimiento": "230401",
+    "origin": "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO"
+  },
+  {
+    "folioTramite": "672345678901234",
+    "tipoDeTramite": "Solicitud de Proceso Interno",
+    "nombreDeLaTarea": "Authorizar solicitud",
+    "fechaDeAsignacion": "2023-10-04",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "semarnat",
+    "numeroDeProcedimiento": "230401",
+    "origin": "FLUJO_FUNCIONARIO_AUTORIZACION"
+  },
+  {
+    "folioTramite": "589012345678901",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "confirmar notificación de resolución",
+    "fechaDeAsignacion": "2023-10-05",
+    "estadoDeTramite": "Pendiente",
+    "departamento": "semarnat",
+    "numeroDeProcedimiento": "230401",
+    "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-RESOLUCION"
+  },
+  {
+    "folioTramite": "745678901234567",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Functionario verificar requerimiento",
+    "fechaDeAsignacion": "2023-10-06",
+    "estadoDeTramite": "Completado",
+    "departamento": "semarnat",
+    "numeroDeProcedimiento": "230401",
+    "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
+  },
+  {
+    "folioTramite": "234567890123456",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Generar opinión",
+    "fechaDeAsignacion": "2023-10-07",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "semarnat",
+    "numeroDeProcedimiento": "230401",
+    "origin": "FLUJO_FUNCIONARIO_GENERAR_OPINION"
+  },
+  {
+    "folioTramite": "198765432109876",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "semarnat",
+    "numeroDeProcedimiento": "230401",
     "origin": "READ_PROCEDURE"
   }
+
 ]
 
