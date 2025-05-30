@@ -11,8 +11,7 @@
               (change)="setValoresStore(partidasDelaMercanciaForm, 'cantidadPartidasDeLaMercancia')" />
             <div *ngIf="esInvalido('cantidadPartidasDeLaMercancia')" class="text-danger">
               <small
-                *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('required')">Cantidad
-                es obligatoria.</small>
+                *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('required')">Este campo es obligatorio.</small>
               <small
                 *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('pattern')">Solo se
                 permiten números.</small>
@@ -25,6 +24,9 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="valorPartidaUSD">Valor partida USD*:</label>
+            <span class="bi bi-question-circle-fill"
+        title="En caso de no contar con valor factura proporciona el valor estimado"
+        data-bs-toggle="tooltip"></span>
             <input class="form-control" type="number" id="valorPartidaUSD"
               formControlName="valorPartidaUSDPartidasDeLaMercancia" aria-labelledby="valorPartidaUSD" (change)="
                 setValoresStore(partidasDelaMercanciaForm, 'valorPartidaUSDPartidasDeLaMercancia')
@@ -55,8 +57,7 @@
               (change)="setValoresStore(partidasDelaMercanciaForm, 'descripcionPartidasDeLaMercancia')"></textarea>
             <div *ngIf="esInvalido('descripcionPartidasDeLaMercancia')" class="text-danger">
               <small
-                *ngIf="partidasDelaMercanciaForm.controls['descripcionPartidasDeLaMercancia'].hasError('required')">Descripción
-                es obligatoria.</small>
+                *ngIf="partidasDelaMercanciaForm.controls['descripcionPartidasDeLaMercancia'].hasError('required')">Este campo es obligatorio.</small>
               <small
                 *ngIf="partidasDelaMercanciaForm.controls['descripcionPartidasDeLaMercancia'].hasError('maxlength')">Máximo
                 255 caracteres.</small>
@@ -75,10 +76,10 @@
         <div class="col-md-4 text-end">
           <div class="btn-group">
             <button class="btn btn-primary me-2" type="button" data-bs-toggle="modal"
-              data-bs-target="#modalCargarArchivo">
+              data-bs-target="#modalCargarArchivo" [disabled]="esFormularioSoloLectura">
               Cargar archivo
             </button>
-            <button class="btn btn-primary ms-2" (click)="validarYEnviarFormulario()">
+            <button class="btn btn-primary ms-2" (click)="validarYEnviarFormulario()" [disabled]="esFormularioSoloLectura">
               Agregar
             </button>
           </div>
@@ -113,10 +114,10 @@
             <div class="col-md-4 text-end">
               <div class="btn-group">
                 <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-primary cancel me-2"
-                  data-bs-dismiss="modal">
+                  data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">
                   Cerrar
                 </button>
-                <button type="button" class="btn btn-primary ms-2">Enviar</button>
+                <button type="button" class="btn btn-primary ms-2" [disabled]="esFormularioSoloLectura">Enviar</button>
               </div>
             </div>
           </div>
@@ -164,7 +165,7 @@
           <div class="col-md-6 col-sm-6"></div>
           <div class="col-md-6 col-sm-6 text-end">
             <div class="btn-group">
-              <button class="btn btn-primary me-2" type="button">
+              <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura">
                 Elimina Partida
               </button>
               <button class="btn btn-danger" type="button" (click)="navegarParaModificarPartida()" [disabled]="disabled"
@@ -193,8 +194,7 @@
                             formControlName="cantidadPartidasDeLaMercancia" appUppercase aria-labelledby="cantidad" />
                           <div *ngIf="esInvalido('cantidadPartidasDeLaMercancia')" class="text-danger">
                             <small
-                              *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('required')">Cantidad
-                              es obligatoria.</small>
+                              *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('required')">Este campo es obligatorio.</small>
                             <small
                               *ngIf="partidasDelaMercanciaForm.controls['cantidadPartidasDeLaMercancia'].hasError('pattern')">Solo
                               se permiten números.</small>
@@ -234,8 +234,7 @@
                             formControlName="descripcionPartidasDeLaMercancia" aria-labelledby="descripcion"></textarea>
                           <div *ngIf="esInvalido('descripcionPartidasDeLaMercancia')" class="text-danger">
                             <small
-                              *ngIf="partidasDelaMercanciaForm.controls['descripcionPartidasDeLaMercancia'].hasError('required')">Descripción
-                              es obligatoria.</small>
+                              *ngIf="partidasDelaMercanciaForm.controls['descripcionPartidasDeLaMercancia'].hasError('required')">Este campo es obligatorio.</small>
                             <small
                               *ngIf="partidasDelaMercanciaForm.controls['descripcionPartidasDeLaMercancia'].hasError('maxlength')">Máximo
                               255 caracteres.</small>
@@ -257,10 +256,10 @@
                 <div class="col-md-4 text-end">
                   <div class="btn-group">
                     <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-primary cancel me-2"
-                      data-bs-dismiss="modal">
+                      data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">
                       Cancelar
                     </button>
-                    <button type="button" class="btn btn-primary ms-2">Modificar</button>
+                    <button type="button" class="btn btn-primary ms-2" [disabled]="esFormularioSoloLectura">Modificar</button>
                   </div>
                 </div>
               </div>

@@ -312,7 +312,7 @@
         <div class="mensaje-error">Intervalo de fecha no válido</div>
         } @if (fechaInicioPasadaFechaFinalError()) {
         <div class="mensaje-error">
-          La fecha de incio no debe ser despues que la fecha final
+          La fecha de inicio no debe ser despues que la fecha final
         </div>
         }
       </div>
@@ -477,6 +477,8 @@
           </option>
         </select>
       </div>
+    </div>
+    <div class="row">
       @if (!despachoSeleccionado) {
       <div class="col-md-4">
         <div>
@@ -506,9 +508,6 @@
         ></app-catalogo-select>
       </div>
       }
-    </div>
-
-    <div class="row">
       <div class="col-md-4">
         <app-catalogo-select
           [catalogo]="tipoOperacion"
@@ -520,6 +519,9 @@
           "
         ></app-catalogo-select>
       </div>
+    </div>
+
+    <div class="row">
       <div class="col-md-4">
         <label for="patente" class="form-label"
           >Patente/Número de autorización:</label
@@ -537,6 +539,7 @@
           [id]="'relacionSociedad'"
           [label]="'Relación de sociedad'"
           [required]="false"
+          [reverse]="true"
           formControlName="relacionSociedad"
           (change)="
             setValoresStore(despacho, 'relacionSociedad', 'setRelacionSociedad')
@@ -547,6 +550,7 @@
           [id]="'encargoConferido'"
           [label]="'Encargo conferido'"
           [required]="false"
+          [reverse]="true"
           formControlName="encargoConferido"
           (change)="
             setValoresStore(despacho, 'encargoConferido', 'setEncargoConferido')
@@ -653,60 +657,22 @@
   @if (individual()) {
   <ng-titulo titulo="Datos del vehículo de como se presentará al despacho" />
 
-  <div formGroupName="vehiculo">
-    <div class="row">
-      <div class="col-md-4">
-        <app-catalogo-select
-          [catalogo]="tipoVehiculo"
-          formControlName="tipoTransporte"
-          [label]="'Tipo de transporte'"
-          [required]="false"
-          (change)="
-            setValoresStore(vehiculo, 'tipoTransporte', 'setTipoTransporte')
-          "
-        ></app-catalogo-select>
-      </div>
-    </div>
-    @if (vehiculo.get('tipoTransporte')?.value) {
-    <div class="row">
-      <lib-agregar-transporte
-        [tipo]="vehiculo.get('tipoTransporte')?.value"
-        (datosTabla)="changeAgregarVehiculo($event, 'vehiculo')"
-        [tablaTransporte]="solicitudState.transporte"
-      ></lib-agregar-transporte>
-    </div>
-    }
-  </div>
+  <lib-transporte
+    [catalogoTransporte]="tipoVehiculo"
+    [tipoTransporteSeleccionado]="solicitudState.tipoTransporte"
+    [tablaTransporte]="solicitudState.transporte"
+    (seleccionTipoTransporte)="changeSeleccionTipoTransporte($event)"
+    (datosTabla)="changeAgregarVehiculo($event, 'vehiculo')"
+  ></lib-transporte>
 
   <ng-titulo titulo="Datos del transporte de arribo/salida (al/del país)" />
-  <div formGroupName="transporteArriboSalida">
-    <div class="row">
-      <div class="col-md-4">
-        <app-catalogo-select
-          [catalogo]="tipoTransporte"
-          formControlName="tipoTransporte"
-          [label]="'Tipo de transporte'"
-          [required]="false"
-          (change)="
-            setValoresStore(
-              transporteArriboSalida,
-              'tipoTransporte',
-              'setTipoTransporteArriboSalida'
-            )
-          "
-        ></app-catalogo-select>
-      </div>
-    </div>
-    @if (transporteArriboSalida.get('tipoTransporte')?.value) {
-    <div class="row">
-      <lib-agregar-transporte
-        [tipo]="transporteArriboSalida.get('tipoTransporte')?.value"
-        [tablaTransporte]="solicitudState.transporteArriboDatos"
-        (datosTabla)="changeAgregarVehiculo($event, 'transporte')"
-      ></lib-agregar-transporte>
-    </div>
-    }
-  </div>
+  <lib-transporte
+    [catalogoTransporte]="tipoTransporte"
+    [tipoTransporteSeleccionado]="solicitudState.tipoTransporteArriboSalida"
+    [tablaTransporte]="solicitudState.transporteArriboDatos"
+    (seleccionTipoTransporte)="changeSeleccionTipoVehiculo($event)"
+    (datosTabla)="changeAgregarVehiculo($event, 'transporte')"
+  ></lib-transporte>
   }
 
   <ng-titulo titulo="Personas responsables del despacho (máximo 5)" />
@@ -766,7 +732,6 @@
             class="btn btn-primary me-2"
             type="button"
             (click)="consultarLineaCaptura()"
-            [disabled]="!FormSolicitud.get('pagoCaptura')?.valid"
           >
             Consultar
           </button>
@@ -775,12 +740,25 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="row mt-3 mb-5">
       <p class="p-bold">
         A través del siguiente vinculo puedes ingresar a la página para generar
         la línea de captura de la constancia que se solicita:
       </p>
       <p>Generar línea de captura</p>
+    </div>
+
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-8">
+        <app-tabla-dinamica
+          [tipoSeleccionTabla]="tablaSeleccionPagos.CHECKBOX"
+          [configuracionTabla]="encabezadoDeTablaPagos"
+          [datos]="datosTablaPagos"
+        >
+        </app-tabla-dinamica>
+      </div>
+      <div class="col-md-2"></div>
     </div>
   </div>
   }

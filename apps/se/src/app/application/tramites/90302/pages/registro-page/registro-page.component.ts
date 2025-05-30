@@ -12,7 +12,7 @@
 import { Component, OnDestroy, ViewChild } from '@angular/core';
 import { Subject, } from 'rxjs';
 
-import { Aviso } from '@ng-mf/data-access-user';
+import { AVISO } from '@ng-mf/data-access-user';
 
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
@@ -93,7 +93,7 @@ export class RegistroPageComponent implements OnDestroy {
    * Textos constantes utilizados en el componente.
    * @property {any} TEXTOS
    */
-  TEXTOS = Aviso;
+  TEXTOS = AVISO;
 
   /**
    * Mensaje de éxito para el primer paso.

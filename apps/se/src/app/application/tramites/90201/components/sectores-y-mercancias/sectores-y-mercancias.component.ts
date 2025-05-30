@@ -9,7 +9,7 @@ import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramit
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { ExpansionDeProductoresService } from 'libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.service';
 import { map, merge, Subject, Subscription, takeUntil } from 'rxjs';
-import { Sectoresy } from '@libs/shared/data-access-user/src';
+import { SECTORESY } from '@libs/shared/data-access-user/src';
 import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import sectoresTabla from 'libs/shared/theme/assets/json/90201/sectores-tabla.json';
@@ -69,9 +69,9 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   public sectorCatalogo: Catalogo[] = [];
   /**
    * Una propiedad pública que contiene el contenido de texto para el componente Sectores y Mercancias.
-   * El contenido se importa del módulo `Sectoresy`.
+   * El contenido se importa del módulo `SECTORESY`.
    */
-  public TEXTOS = Sectoresy;
+  public TEXTOS = SECTORESY;
 
   /**
    * Configuración para las columnas de la tabla.
