@@ -184,7 +184,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @description Limpia todos los campos del formulario de pago de derechos.
    */
   onReset(): void {
-    this.pagoDerechosForm.reset();
+    if (this.pagoDerechosForm.invalid) {
+      this.pagoDerechosForm.markAllAsTouched();
+      return;
+    }
   }
 
   /**

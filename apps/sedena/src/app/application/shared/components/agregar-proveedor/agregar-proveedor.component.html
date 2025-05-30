@@ -5,7 +5,7 @@
     <h4>Datos generales</h4>
     <div class="row">
       <div class="col-md-6 offset-md-6">
-        <label class="form-label">Tipo persona * :</label>
+        <label class="form-label">Tipo persona*:</label>
         <app-input-radio
           [radioOptions]="tipoPersonaRadioOpciones"
           [isRequired]="true"
@@ -23,7 +23,7 @@
         <label
           class="form-label row mt-3 mover-izquierda fs-2"
           for="denominacionRazon"
-          >Denominación/razón social * :</label>
+          >Denominación/razón social*:</label>
         <input
           class="form-control col-md-4"
           id="denominacionRazon"
@@ -78,7 +78,7 @@
         </div>          
       </div>
       <div class="col-md-4">
-        <label class="form-label">Segundo apellido :</label>
+        <label class="form-label">Segundo apellido:</label>
         <input
           type="text"
           class="form-control"
@@ -111,7 +111,7 @@
       </div>        
       </div>
       <div class="col-md-4">
-        <label class="form-label">Estado<span *ngIf="campoObligatorio"> *</span> :</label>
+        <label class="form-label">Estado<span *ngIf="campoObligatorio">*</span>:</label>
         <input type="text" class="form-control" formControlName="estado"  maxlength="120"/>
         <div class="error-message">
           <small *ngIf="agregarProveedorForm.get('estado')?.touched && agregarProveedorForm.get('estado')?.hasError('required')" class="text-danger">
@@ -123,7 +123,7 @@
         </div>        
       </div>
       <div class="col-md-4">
-        <label class="form-label">Código postal o equivalente<span *ngIf="campoObligatorio"> *</span> :</label>
+        <label class="form-label">Código postal o equivalente<span *ngIf="campoObligatorio">*</span>:</label>
         <input
           type="text"
           class="form-control"
@@ -144,12 +144,12 @@
     @if(campoObligatorio){
       <div class="row mt-3">
         <div class="col-md-8">
-          <label class="form-label">Calle<span *ngIf="campoObligatorio"> *</span> :</label>
+          <label class="form-label">Calle<span *ngIf="campoObligatorio">*</span>:</label>
           <input type="text" class="form-control" formControlName="calle" maxlength="300"/>
           <i class="fas fa-info-circle"></i>
         </div>
         <div class="col-md-4">
-          <label class="form-label">agregarProveedorForm<span *ngIf="campoObligatorio"> *</span> :</label>
+          <label class="form-label">agregarProveedorForm<span *ngIf="campoObligatorio">*</span>:</label>
           <input
             type="text"
             class="form-control"
@@ -169,7 +169,7 @@
     @else{
       <div class="row mt-3">
         <div class="col-md-4">
-          <label class="form-label">Colonia o equivalente :</label>
+          <label class="form-label">Colonia o equivalente:</label>
           <input type="text" class="form-control" formControlName="colonia" maxlength="100"/>
         <div class="error-message">
           <small *ngIf="agregarProveedorForm.get('colonia')?.touched && agregarProveedorForm.get('colonia')?.hasError('maxlength')" class="text-danger">
@@ -178,7 +178,7 @@
         </div>          
         </div>
         <div class="col-md-4">
-          <label class="form-label">Calle<span *ngIf="campoObligatorio"> *</span> :</label>
+          <label class="form-label">Calle<span *ngIf="campoObligatorio">*</span>:</label>
           <input type="text" class="form-control" formControlName="calle"  maxlength="300"/>
           <i class="fas fa-info-circle"></i>
           <div class="error-message">
@@ -191,7 +191,7 @@
         </div>
         </div>
         <div class="col-md-4">
-          <label class="form-label">Número exterior * :</label>
+          <label class="form-label">Número exterior*:</label>
           <input
             type="text"
             class="form-control"
@@ -212,7 +212,7 @@
 
     <div class="row mt-3">
       <div class="col-md-4">
-        <label class="form-label">Número interior :</label>
+        <label class="form-label">Número interior:</label>
         <input
           type="text"
           class="form-control"
@@ -226,7 +226,7 @@
         </div>        
       </div>
       <div class="col-md-1">
-        <label class="form-label">Lada :</label>
+        <label class="form-label">Lada:</label>
         <input type="text" class="form-control" formControlName="lada" maxlength="5"/>
         <div class="error-message">
           <small *ngIf="agregarProveedorForm.get('lada')?.touched && agregarProveedorForm.get('lada')?.hasError('maxlength')" class="text-danger">
@@ -235,7 +235,7 @@
         </div>         
       </div>
       <div class="col-md-3">
-        <label class="form-label">Teléfono :</label>
+        <label class="form-label">Teléfono:</label>
         <input type="text" class="form-control" formControlName="telefono" />
       </div>
       <div class="col-md-4">
