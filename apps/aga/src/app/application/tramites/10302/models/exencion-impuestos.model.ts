@@ -85,3 +85,13 @@ export interface datosDelMercancia {
    */
   datosDelMercancia: [];
 }
+
+export interface RespuestaConsulta {
+  success: boolean;
+  datos: ConsultaDatos;
+  message: string;
+}
+
+export interface ConsultaDatos {
+  
+}

@@ -3,7 +3,10 @@ import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { DatosTramiteComponent } from '../../components/datosTramite.component';
-import { FormularioDinamico, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, FormularioDinamico, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { map, Subject, takeUntil } from 'rxjs';
+import { Tramite10302Store } from '../../estados/tramite10302.store';
+import { ExencionImpuestosService } from '../../services/exencion-impuestos.service';
 
 /**
  * Componente que representa el paso uno del trámite.
@@ -40,7 +43,35 @@ export class PasoUnoComponent implements AfterViewInit {
    */
   indice: number = 1;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  /**
+   * @property {Subject<void>} destroyNotifier$
+   * @description Subject utilizado para notificar y completar las suscripciones activas al destruir el componente, evitando fugas de memoria.
+   */
+  public destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  constructor(private cdr: ChangeDetectorRef,
+     private consultaioQuery: ConsultaioQuery, public tramite10302Store: Tramite10302Store,
+    private exencionImpuestosService: ExencionImpuestosService) {}
+
+  ngOnInit(): void {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+        })
+      )
+      .subscribe();
+    if (this.consultaDatos.update) {
+      this.fetchGetDatosConsulta();
+    }
+  }
 
   /**
    * Método que se ejecuta después de que la vista ha sido inicializada.
@@ -50,6 +81,41 @@ export class PasoUnoComponent implements AfterViewInit {
     this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
     this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
     this.cdr.detectChanges();
+  }
+
+  /**
+ * @method fetchGetDatosConsulta
+ * @description Método para obtener los datos de consulta desde el servicio `DatosTramiteService` y actualizar el estado del store `tramite10302Store`.
+ * 
+ * Este método realiza una solicitud HTTP para obtener los datos de consulta y, si la respuesta es exitosa, actualiza múltiples propiedades del store con los datos recibidos.
+ * Utiliza el operador `takeUntil` para cancelar la suscripción cuando el componente se destruye, evitando fugas de memoria.
+ * 
+ * @returns {void}
+ */
+  public fetchGetDatosConsulta(): void {
+    this.exencionImpuestosService
+      .getDatosConsulta()
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
+        if (respuesta.success) {
+          this.tramite10302Store.setOrganismoPublico(respuesta.datos.organismoPublico);
+          this.tramite10302Store.setAduana(respuesta.datos.aduana);
+          this.tramite10302Store.setUsoEspecifico(respuesta.datos.usoEspecifico);
+          this.tramite10302Store.setPais(respuesta.datos.pais);
+          this.tramite10302Store.setRfc(respuesta.datos.rfc);
+          this.tramite10302Store.setNumeroProgramaImmex(respuesta.datos.numeroProgramaImmex);
+          this.tramite10302Store.setRazonSocial(respuesta.datos.razonSocial);
+          this.tramite10302Store.setCorreoElectronicoOpcional(respuesta.datos.correoElectronicoOpcional);
+          this.tramite10302Store.setTelefonoOpcional(respuesta.datos.telefonoOpcional);
+          this.tramite10302Store.setCalle(respuesta.datos.calle);
+          this.tramite10302Store.setNumeroExterior(respuesta.datos.numeroExterior);
+          this.tramite10302Store.setNumeroInterior(respuesta.datos.numeroInterior);
+          this.tramite10302Store.setTelefono(respuesta.datos.telefono);
+          this.tramite10302Store.setCorreoElectronico(respuesta.datos.correoElectronico);
+          this.tramite10302Store.setCodigoPostal(respuesta.datos.codigoPostal);
+          this.tramite10302Store.setEstado(respuesta.datos.estado);
+          this.tramite10302Store.setColonia(respuesta.datos.colonia);
+        }
+      });
   }
 
   /**
