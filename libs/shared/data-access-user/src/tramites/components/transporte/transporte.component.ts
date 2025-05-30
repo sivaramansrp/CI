@@ -7,6 +7,7 @@ import {
   CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_PEATONAL,
   LABEL_HORA_ARRIBO,
   LISTA_TIPO_TRANSPORTE,
+  MODIFICAR_ITEM_TRANSPORTE,
   MSG_AGREGA_TRANSPORTE_EXITOSAMENTE,
   MSG_CAMBIO_TIPO_TRANSPORTE,
   MSG_INGRESA_UNA_GUIA,
@@ -591,7 +592,7 @@ export class TransporteComponent implements OnInit, OnChanges {
     const MODAL_AGREGA = new Modal(this.agregarTransporte.nativeElement);
     MODAL_AGREGA.show();
 
-    if (accion === 'modificar') {
+    if (accion === MODIFICAR_ITEM_TRANSPORTE) {
       this.accionModificar = true;
       const TIPO_TRANSPORTE = parseInt(
         this.tipoTransporteForma.get('tipoTransporte')?.value,

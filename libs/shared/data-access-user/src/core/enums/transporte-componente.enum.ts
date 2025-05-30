@@ -732,3 +732,8 @@ export const CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_OTRO: ConfiguracionColumn
       orden: 4,
     },
   ];
+
+/**
+ * @description Constante para cuando se va a modificar un elemento de la tabla transporte.
+ */
+export const MODIFICAR_ITEM_TRANSPORTE = 'modificar';

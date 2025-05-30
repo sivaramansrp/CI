@@ -72,6 +72,11 @@ import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-
   templateUrl: './agregar-transporte.component.html',
   styleUrl: './agregar-transporte.component.scss',
 })
+
+/**
+ * @deprecated
+ * Este componente se va a deprecar, en su lugar se va a utilizar el componente <lib-transporte>
+ */
 export class AgregarTransporteComponent implements OnChanges, OnInit {
   /**
    * Tipo de trasnporte seleccionado.
@@ -114,8 +119,7 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
    * @description
    * Encabezado de la tabla de terceros.
    */
-  encabezadoDeTablaTransporte!: ConfiguracionColumna<TransporteDespacho>[]
-  
+  encabezadoDeTablaTransporte!: ConfiguracionColumna<TransporteDespacho>[];
 
   /**
    * Cabecera de la tabla para el transporte ferroviario.
@@ -669,11 +673,5 @@ export class AgregarTransporteComponent implements OnChanges, OnInit {
   // eslint-disable-next-line class-methods-use-this
   esBooleano(valor: string | number | boolean): boolean {
     return typeof valor === 'boolean';
-  }
-
-  public eliminarElementoTabla =
-    AgregarTransporteComponent.eliminarElementoTabla;
-  static eliminarElementoTabla(): void {
-    /**/
   }
 }

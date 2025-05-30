@@ -38,7 +38,7 @@ export const ERR_CAMPOS_OBLIGATORIOS =
   'Debes capturar todos los datos marcados como obligatorios.';
 
 /**
- * @description Mensaje de eRror cuando se hace una busqueda sin datos.
+ * @description Mensaje de error cuando se hace una busqueda sin datos.
  */
 export const ERR_INPUT_BUSQUEDA_VACIO =
   'No has proporcionado información que es requerida.';
