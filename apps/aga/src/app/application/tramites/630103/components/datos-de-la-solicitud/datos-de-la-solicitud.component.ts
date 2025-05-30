@@ -126,7 +126,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Inicializa el formulario reactivo vacío (campos dinámicos se agregan aparte).
    */
   inizializarFormulario(): void {
-    this.datosImportacionTemporalFormulario = this.formBuilder.group({});
+    this.datosImportacionTemporalFormulario = this.formBuilder.group({
+       // Define los controles del formulario aquí
+    });
   }
 
   /**
