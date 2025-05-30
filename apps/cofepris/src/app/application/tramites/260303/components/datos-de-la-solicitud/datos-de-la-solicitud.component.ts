@@ -151,7 +151,7 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
    * Lista de países para seleccionar el origen de la primera sección.
    */
   seleccionarOrigenDelPais = this.crosListaDePaises;
-  
+
   /** Configuración de la tabla de sectores */
   public configuracionTabla: ConfiguracionColumna<ScianDatos>[] = [
     { encabezado: 'Clave S.C.I.A.N', clave: (item: ScianDatos) => item.clave, orden: 1 },
@@ -741,31 +741,31 @@ public static deepCopy<T>(obj: T): T {
     }
   }
 
-
-    /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
+  /**
+   * Habilita o deshabilita los formularios del componente según el modo de solo lectura.
+   * 
+   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es true), 
+   * deshabilita todos los formularios para evitar la edición por parte del usuario.
+   * Si no está en modo solo lectura, habilita todos los formularios para permitir la edición.
    */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
+      // Deshabilita todos los formularios en modo solo lectura
       this.denominacionForm.disable();
       this.domicilioDeElstablecimientoForm.disable();
       this.representanteLegalForm.disable();
       this.scianForm.disable();
       this.mercanciasForm.disable();
-    } else if (!this.esFormularioSoloLectura) {
+    } else {
+      // Habilita todos los formularios para edición
       this.denominacionForm.enable();
       this.domicilioDeElstablecimientoForm.enable();
       this.representanteLegalForm.enable();
       this.scianForm.enable();
       this.mercanciasForm.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
     }
-}
-
-
+  }
 
     /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
