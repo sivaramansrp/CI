@@ -48,7 +48,7 @@ export class UsuariosService {
         return this.http.get<Capturista[]>(`/assets/json/login/lista-capturista.json`).pipe(
             map((capturistas) => {
                 return capturistas.find(c =>
-                    (rfc ? c.rfc === rfc : true) ||
+                    (rfc ? c.rfc === rfc : true) &&
                     (curp ? c.curp === curp : true)
                 );
             })

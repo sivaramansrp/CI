@@ -26,5 +26,19 @@
                 <button type="submit" class="btn btn-primary me-2" (click)="consultaCapturista()">Agregar</button>
             </div>
         </div>
+        <div class="row mt-4">
+            <div class="table-responsive">
+                <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
+                    [configuracionTabla]="encabezadoDeTablaCapturistas" [datos]="listadoCapturistas"
+                    (listaDeFilaSeleccionada)="capturistasSeleccionados = $event">
+                </app-tabla-dinamica>
+            </div>
+        </div>
+        <div *ngIf="visualizarTabla" class="row">
+            <div class="d-flex justify-content-lg-end h1">
+                <button class="btn btn-primary ms-2" type="button" (click)="enviarFirma()">Firmar</button>
+                <button class="btn btn-default ms-2" type="button" (click)="eliminarSeleccionados()">Eliminar</button>
+            </div>
+        </div>
     </div>
 </div>
