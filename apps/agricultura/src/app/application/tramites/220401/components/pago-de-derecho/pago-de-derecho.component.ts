@@ -115,7 +115,6 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$),
       map((seccionState)=>{
         this.esFormularioSoloLectura = seccionState.readonly; 
-        this.inicializarDerechoFormulario();
       })
     )
     .subscribe()
@@ -209,11 +208,9 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
       this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {
         this.FormSolicitud.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.FormSolicitud.enable();
       } else {
-        // No se requiere ninguna acción en el formulario
-      }
+        this.FormSolicitud.enable();
+      } 
   }
 
   /**

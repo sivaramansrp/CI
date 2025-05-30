@@ -106,7 +106,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.inicializarCertificadoFormulario();
+          
         })
       )
       .subscribe()
@@ -147,12 +147,10 @@ this.inicializarCertificadoFormulario();
       if (this.esFormularioSoloLectura) {
         this.datosdelForm.disable();
         this.formGroup1.disable();
-      } else if (!this.esFormularioSoloLectura) {
+      } else {
         this.datosdelForm.enable();
         this.formGroup1.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
-      }
+      } 
   }
 
   /**

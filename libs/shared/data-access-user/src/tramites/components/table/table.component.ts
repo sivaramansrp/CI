@@ -43,7 +43,11 @@ export class TableComponent implements OnInit, OnChanges {
   */
   @Output() seleccionCambio = new EventEmitter<boolean>();
 
-   @Input() disableSeleccionTablaCheckBox:boolean = false;
+  /**
+   * @description
+   * Si es verdadero, deshabilita el checkbox de selección de la tabla.
+   */
+  @Input() disableSeleccionTablaCheckBox: boolean = false;
   /**
    * @description
    * tableData se utiliza para obtener datos de la tabla de la componente

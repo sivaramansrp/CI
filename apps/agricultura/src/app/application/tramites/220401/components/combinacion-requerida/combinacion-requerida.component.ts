@@ -144,7 +144,7 @@ export class CombinacionRequeridaComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
           this.esFormularioSoloLectura = true;
-          this.inicializarCombinacionFormulario();
+          
         })
       )
       .subscribe()
@@ -222,10 +222,8 @@ this.inicializarCombinacionFormulario();
       this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {
         this.formCombinacion.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.formCombinacion.enable();
       } else {
-        // No se requiere ninguna acción en el formulario
+        this.formCombinacion.enable();
       }
   }
 

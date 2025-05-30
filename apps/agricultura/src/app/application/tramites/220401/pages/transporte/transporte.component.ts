@@ -71,7 +71,7 @@ export class TransporteComponent implements OnDestroy, OnInit {
       takeUntil(this.destroyNotifier$),
       map((seccionState)=>{
         this.esFormularioSoloLectura = seccionState.readonly; 
-        this.inicializarTransporteFormulario();
+       
       })
     )
     .subscribe()
@@ -126,11 +126,9 @@ export class TransporteComponent implements OnDestroy, OnInit {
       this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {
         this.transporteForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.transporteForm.enable();
       } else {
-        // No se requiere ninguna acción en el formulario
-      }
+        this.transporteForm.enable();
+      } 
   }
   /**
    * Este método se utiliza para crear la forma del transporte. - 220401

@@ -77,7 +77,7 @@ export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$),
       map((seccionState)=>{
         this.esFormularioSoloLectura = seccionState.readonly; 
-        this.inicializarGeneralesFormulario();
+        
       })
     )
     .subscribe()
@@ -280,11 +280,9 @@ this.inicializarGeneralesFormulario();
       this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {
         this.frmMercanciaAnimal.disable();
-      } else if (!this.esFormularioSoloLectura) {
+      } else{
         this.frmMercanciaAnimal.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
-      }
+      } 
   }
   /**
    * Maneja la selección de una aduana en el segundo select.
