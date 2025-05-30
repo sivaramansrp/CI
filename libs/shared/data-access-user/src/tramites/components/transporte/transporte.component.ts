@@ -646,6 +646,10 @@ export class TransporteComponent implements OnInit, OnChanges {
       case LISTA_TIPO_TRANSPORTE[0].id: {
         // Carretero
         const TRANSPORTE: TransporteDespacho = this.carreteroForma.value;
+        TRANSPORTE.modelo_transporte =
+          TRANSPORTE.modelo_transporte === '-1'
+            ? ''
+            : TRANSPORTE.modelo_transporte;
         TRANSPORTE.observaciones = this.observaciones.value;
         TRANSPORTE.seleccionado = false;
         this.bodyTabla.push(TRANSPORTE);
@@ -993,7 +997,9 @@ export class TransporteComponent implements OnInit, OnChanges {
           fecha_porte: this.carreteroForma.get('fecha_porte')?.value,
           marca_transporte: this.carreteroForma.get('marca_transporte')?.value,
           modelo_transporte:
-            this.carreteroForma.get('modelo_transporte')?.value,
+            this.carreteroForma.get('modelo_transporte')?.value === '-1'
+              ? ''
+              : this.carreteroForma.get('modelo_transporte')?.value,
           placas_transporte:
             this.carreteroForma.get('placas_transporte')?.value,
           contenedor_transporte: this.carreteroForma.get(
@@ -1004,7 +1010,10 @@ export class TransporteComponent implements OnInit, OnChanges {
       case LISTA_TIPO_TRANSPORTE[1].id: // Ferroviario
         Object.assign(TRANSPORTE, {
           numero_bl: this.ferroviarioForma.get('numero_bl')?.value,
-          tipo_equipo: this.ferroviarioForma.get('tipo_equipo')?.value,
+          tipo_equipo:
+            this.ferroviarioForma.get('tipo_equipo')?.value === '-1'
+              ? ''
+              : this.ferroviarioForma.get('tipo_equipo')?.value,
           iniciales_equipo:
             this.ferroviarioForma.get('iniciales_equipo')?.value,
           numero_equipo: this.ferroviarioForma.get('numero_equipo')?.value,
