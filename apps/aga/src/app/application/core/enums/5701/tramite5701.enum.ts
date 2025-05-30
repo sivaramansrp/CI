@@ -96,7 +96,7 @@ export const TITULO_MODAL_ERROR = 'Aviso';
  *@description Mensaje de error para la validación de fecha
  */
 export const MSJ_ERROR_FECHA =
-  'Fecha inválida. La fecha final no puede ser menor a la fecha de inicio.';
+  'La fecha no es válida para la solicitud seleccionada';
 
 /**
  * @description Mensaje de error cuando los campos obligatorios no están capturados en la consulta de línea de captura..

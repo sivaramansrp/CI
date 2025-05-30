@@ -270,14 +270,8 @@
           id="fechaInicio"
           formControlName="fechaInicio"
           [ngClass]="isValid(datosServicio, 'fechaInicio') ? 'required' : ''"
-          (change)="
-            setValoresStore(datosServicio, 'fechaInicio', 'setFechaInicio')
-          "
+          (change)="changeFechaInicio()"
         />
-
-        @if (isValid(datosServicio,'fechaInicio')) {
-        <div class="mensaje-error">Fecha no válida</div>
-        }
       </div>
 
       <div class="col-md-4">
@@ -305,16 +299,6 @@
           [ngClass]="isValid(datosServicio, 'fechaFinal') ? 'required' : ''"
           (change)="changeFechaFinal()"
         />
-
-        @if (isValid(datosServicio,'fechaFinal')) {
-        <div class="mensaje-error">Fecha no válida</div>
-        } @if (intervaloFechaError()) {
-        <div class="mensaje-error">Intervalo de fecha no válido</div>
-        } @if (fechaInicioPasadaFechaFinalError()) {
-        <div class="mensaje-error">
-          La fecha de inicio no debe ser despues que la fecha final
-        </div>
-        }
       </div>
 
       <div class="col-md-4">
@@ -325,13 +309,6 @@
           [inputId]="'horaFinal'"
           (change)="changeHoraFinal()"
         ></input-hora>
-        @if (intervaloFechaError()) {
-        <div class="mensaje-error">Intervalo de fecha no válido</div>
-        } @if (fechaInicioPasadaFechaFinalError()) {
-        <div class="mensaje-error">
-          La fecha de incio no debe ser despues que la fecha final
-        </div>
-        }
       </div>
     </div>
 

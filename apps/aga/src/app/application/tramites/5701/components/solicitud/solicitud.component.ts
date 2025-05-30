@@ -958,10 +958,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
           FECHA_FINAL_CONTROL.setErrors({ invalidIntervalo: true });
         }
       }
-
-      if (DIFERENCIA_EN_TIEMPO < 0) {
-        this.datosServicio.setErrors({ endDateBeforeStartDate: true });
-      }
     }
   }
 
@@ -1252,7 +1248,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.fechaIntervaloValidator();
     this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
 
-    if (this.datosServicio.hasError('endDateBeforeStartDate')) {
+    if (this.fechaInicioPasadaFechaFinalError()) {
+      this.limpiarFechasHoras();
+      return;
+    }
+
+    if (
+      this.datosServicio.hasError('endDateBeforeStartDate') ||
+      this.datosServicio.hasError('invalidIntervalo')
+    ) {
+      this.limpiarFechasHoras();
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
@@ -1289,6 +1294,38 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       HORA_FINAL
     );
     this.colapsable = true;
+  }
+
+  /**
+   * Método que limpia el formulario de las fechas y horas.
+   */
+  limpiarFechasHoras(): void {
+    this.datosServicio.get('horaInicio')?.setValue('');
+    this.datosServicio.get('horaInicio')?.markAsUntouched();
+    this.datosServicio.get('fechaInicio')?.setValue('');
+    this.datosServicio.get('fechaInicio')?.markAsUntouched();
+    this.datosServicio.get('horaFinal')?.setValue('');
+    this.datosServicio.get('horaFinal')?.markAsUntouched();
+    this.datosServicio.get('fechaFinal')?.setValue('');
+    this.datosServicio.get('fechaFinal')?.markAsUntouched();
+
+    this.setValoresStore(this.datosServicio, 'fechaInicio', 'setFechaInicio');
+    this.setValoresStore(this.datosServicio, 'horaInicio', 'setHoraInicio');
+    this.setValoresStore(this.datosServicio, 'fechaFinal', 'setFechaFinal');
+    this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
+  }
+
+  /**
+   * Cambia la fecha de inicio del servicio.
+   *
+   */
+  changeFechaInicio(): void {
+    if (this.tipoSolicitudSeleccionada !== TIPO_SOLICITUD.INDIVIDUAL ) {
+      this.rangoFechas();
+      this.mostrarRangoFechas = true;
+    }
+
+    this.setValoresStore(this.datosServicio, 'fechaInicio', 'setFechaInicio');
   }
 
   /**
