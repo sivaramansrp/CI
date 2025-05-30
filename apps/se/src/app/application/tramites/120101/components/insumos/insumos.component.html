@@ -2,7 +2,7 @@
  
   <div class="mt-5">
     <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="tableHeaderExtranjeros"
-      [datos]="tablaInsumos" [disableSeleccionTablaCheckBox]="consultaState?.readonly ? true : false"></app-tabla-dinamica>
+      [datos]="tablaInsumos" [disableSeleccionTablaCheckBox]="consultaState.readonly ? true : false"></app-tabla-dinamica>
   </div>
 
   <div class="text-end mt-5">
@@ -24,7 +24,7 @@
         <form [formGroup]="forma">
           <div class="row">
             <formas-dinamicas [forma]="ninoFormGroup" [formularioDatos]="insumosFormData"
-              [estado]="solicitudDeRegistroState" [soloLectura]="consultaState?.readonly ?? false"
+              [estado]="solicitudDeRegistroState" [soloLectura]="consultaState.readonly ?? false"
               (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
           </div>
         </form>

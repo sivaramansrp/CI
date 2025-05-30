@@ -5,7 +5,7 @@
         [forma]="ninoFormGroup"
         [formularioDatos]="bienFinalFormData"
         [estado]="solicitudDeRegistroState"
-        [soloLectura]="consultaState?.readonly ?? false"
+        [soloLectura]="consultaState.readonly ?? false"
         (emitirCambioDeValor)="establecerCambioDeValor($event)"
       ></formas-dinamicas>
     </div>
