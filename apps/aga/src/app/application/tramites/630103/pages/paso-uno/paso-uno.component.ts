@@ -1,8 +1,8 @@
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 
-import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioState, SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 import { map, takeUntil } from 'rxjs';
 import { AutorizacionImportacionTemporalService } from '../../services/autorizacion-importacion-temporal.service';
 
@@ -38,11 +38,11 @@ export class PasoUnoComponent implements OnInit,OnDestroy,AfterViewInit {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  
   }
   constructor(
       private autorizacionImportacionTemporalService: AutorizacionImportacionTemporalService,
-      private consultaQuery: ConsultaioQuery,
-      private cdr: ChangeDetectorRef
+      private consultaQuery: ConsultaioQuery
     ) {
   // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
     }
@@ -79,7 +79,6 @@ export class PasoUnoComponent implements OnInit,OnDestroy,AfterViewInit {
     */
    ngAfterViewInit(): void {
      this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
-     this.cdr.detectChanges(); // <-- Agrega esto
     }
  
    ngOnDestroy(): void {
