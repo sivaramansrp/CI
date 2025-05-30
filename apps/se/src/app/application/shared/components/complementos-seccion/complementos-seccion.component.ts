@@ -32,7 +32,6 @@ import {
   TABLA_SOCIO_ACCIONISTAS_EXTRANJEROS,
 } from '../../constantes/complementos-seccion.enum';
 import {
-  InputRadioComponent,
   ModeloDeFormaDinamica,
   TablaDinamicaComponent,
   TablaSeleccion,
@@ -53,6 +52,8 @@ import { ComplementosSeccionQuery } from '../../../estados/queries/complementos-
 
 
 import { ComplementosSeccionState } from '../../../estados/tramites/complementos-seccion.store';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
+
 /*
   * Este componente se encarga de gestionar la sección de complementos en la aplicación.
   * Permite la interacción con los datos de los accionistas y la configuración de formularios dinámicos.
