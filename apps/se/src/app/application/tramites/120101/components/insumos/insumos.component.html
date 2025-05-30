@@ -24,7 +24,7 @@
         <form [formGroup]="forma">
           <div class="row">
             <formas-dinamicas [forma]="ninoFormGroup" [formularioDatos]="insumosFormData"
-              [estado]="solicitudDeRegistroState" [soloLectura]="consultaState?.readonly"
+              [estado]="solicitudDeRegistroState" [soloLectura]="consultaState?.readonly ?? false"
               (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
           </div>
         </form>
