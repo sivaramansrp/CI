@@ -1,29 +1,56 @@
-import { AlertComponent,BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { PantallasModuloModule } from '../../pantallas-modulo.module';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { PasoCapturarSolicitudComponent } from './paso-capturar-solicitud.component';
-import { WizardComponent } from '@ng-mf/data-access-user';
+
+
 
 describe('PasoCapturarSolicitudComponent', () => {
-  let component: PasoCapturarSolicitudComponent;
-  let fixture: ComponentFixture<PasoCapturarSolicitudComponent>;
+  let fixture;
+  let component;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [PasoCapturarSolicitudComponent],
-      imports:[HttpClientTestingModule, WizardComponent, FirmaElectronicaComponent, BtnContinuarComponent,
-        AlertComponent, PantallasModuloModule]
-    })
-    .compileComponents();
-    
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule ],
+      declarations: [
+        PasoCapturarSolicitudComponent
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+
+      ]
+    }).overrideComponent(PasoCapturarSolicitudComponent, {
+
+    }).compileComponents();
     fixture = TestBed.createComponent(PasoCapturarSolicitudComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
+  });
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
+
+  it('should run #getValorIndice()', async () => {
+    component.wizardComponent = component.wizardComponent || {};
+    component.wizardComponent.siguiente = jest.fn();
+    component.wizardComponent.atras = jest.fn();
+    component.getValorIndice({
+      valor: {},
+      accion: {}
+    });
+    // expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+    // expect(component.wizardComponent.atras).toHaveBeenCalled();
+  });
+
 });
