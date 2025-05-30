@@ -1,4 +1,4 @@
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
@@ -28,9 +28,6 @@ import { Tramite120402State, Tramite120402Store } from '../../estados/tramite120
 })
 export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
 
-  /** Suscripción para manejar observables y evitar fugas de memoria */
-  private subscription: Subscription = new Subscription();
-
   /** Subject que notifica la destrucción del componente para cancelar suscripciones */
   private destroyNotifier$: Subject<void> = new Subject();
 
@@ -42,9 +39,6 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
 
   /** Formulario reactivo para manejar la cantidad solicitada */
   form!: FormGroup;
-
-  /** Subject auxiliar para manejar la destrucción del componente */
-  private destroyed$ = new Subject<void>();
 
   /**
    * Constructor que inyecta servicios y configura la suscripción al estado de solo lectura.
@@ -109,8 +103,6 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
    * Completa los Subjects para cancelar suscripciones y evitar fugas.
    */
   ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
@@ -120,16 +112,14 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
    * Obtiene los datos actuales del store para inicializar los valores del formulario.
    */
   crearFormulario(): void {
-    this.subscription.add(
-      this.tramite120402Query.selectSolicitud$
+  this.tramite120402Query.selectSolicitud$
         .pipe(
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {
             this.solicitudState = seccionState;
           })
         )
-        .subscribe()
-    );
+        .subscribe();
     this.form = this.fb.group({
       cantidadSolicitada: [this.solicitudState?.cantidadSolicitada, [Validators.required]],
     });

@@ -38,7 +38,7 @@ import {
   TituloComponent,
 } from '@ng-mf/data-access-user';
 
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 
 import { Tramite120402State, Tramite120402Store } from '../../estados/tramite120402.store';
 
@@ -76,11 +76,6 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
      * Subject para notificar la destrucción del componente.
      */
     private destroyNotifier$: Subject<void> = new Subject();
-  
-     /**
-     * Suscripción a los cambios en el formulario react
-     */
-    private subscription: Subscription = new Subscription();
   
       /**
      * Estado de la solicitud de la sección 301.
@@ -173,7 +168,6 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     } else {
       this.initializeForm();
     }  
-    //this.getMercancia();
   }
 
      /**
@@ -235,16 +229,14 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    * @access private
    */
   private initializeForm(): void {
-    this.subscription.add(
-      this.tramite120402Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.solicitudState = seccionState;
-          })
-        )
-        .subscribe()
-    );
+   this.tramite120402Query.selectSolicitud$
+  .pipe(
+    takeUntil(this.destroyNotifier$),
+    map((seccionState) => {
+      this.solicitudState = seccionState;
+    })
+  )
+  .subscribe();
     this.representacionForm = this.fb.group({
       /**
        * @property {string} entidad

@@ -122,12 +122,6 @@ describe('CantidadSolicitadaComponent', () => {
     });
   });
 
-  it('should complete destroyed$ on ngOnDestroy', () => {
-    const spy = jest.spyOn(component['destroyed$'], 'complete');
-    component.ngOnDestroy();
-    expect(spy).toHaveBeenCalled();
-  });
-
 it('should call inicializarEstadoFormulario when consultaio state changes', () => {
   const spy = jest.spyOn(CantidadSolicitadaComponent.prototype as any, 'inicializarEstadoFormulario');
   // Re-create the component so the spy is active during constructor subscription

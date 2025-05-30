@@ -19,107 +19,22 @@ import { CommonModule, NgIf } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
+
+import {DatoCupo, EventoAccionTabla, FilaCupo, RespuestaDataArray, RespuestaTratado } from '../../model/seleccion-del-cupo-interfaces';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 
 import { Tramite120402State, Tramite120402Store } from '../../estados/tramite120402.store';
 import { CantidadSolicitadaComponent } from '../cantidad-solicitada/cantidad-solicitada.component';
 import { DescripcionDelCupoComponent } from '../descripcion-del-cupo/descripcion-del-cupo.component';
 import { Tramite120402Query } from '../../estados/tramite120402.query';
 
-/**
- * Representa la información relacionada con un cupo o asignación.
- */
-interface DatoCupo {
-  /**
-   * Descripción detallada del cupo o asignación.
-   */
-  description: string;
 
-  /**
-   * Tipo de asignación que se aplica al cupo.
-   */
-  assignmentType: string;
-
-  /**
-   * Códigos asociados al cupo, que pueden ser un arreglo de cadenas o una sola cadena.
-   */
-  codes: string[] | string;
-
-  /**
-   * Cuota asignada expresada como cadena (por ejemplo, porcentaje o cantidad).
-   */
-  quota: string;
-}
-
-
-/**
- * Interface que representa una fila dentro de la tabla de cupos.
- */
-interface FilaCupo {
-  /**
-   * Descripción detallada de la fila o del cupo.
-   */
-  descripcion: string;
-
-  /**
-   * Tipo de asignación asociado a esta fila.
-   */
-  tipoAsignacion: string;
-
-  /**
-   * Fracciones relacionadas con la fila, que pueden ser un arreglo de cadenas o una sola cadena.
-   */
-  fracciones: string[] | string;
-
-  /**
-   * Tipo de cupo representado en la fila.
-   */
-  tipoCupo: string;
-}
-
-
-/**
- * Evento que ocurre al hacer clic en una acción dentro de la tabla.
- */
-interface EventoAccionTabla {
-  /**
-   * Fila de la tabla sobre la cual se realizó la acción.
-   */
-  row: FilaCupo;
-
-  /**
-   * Nombre o identificador de la columna donde se hizo clic.
-   */
-  column: string;
-}
-
-
-/**
- * Representa la respuesta que contiene un arreglo de elementos del catálogo.
- */
-interface RespuestaDataArray {
-  /**
-   * Arreglo de objetos tipo `Catalogo` que contiene los datos de la respuesta.
-   */
-  data: Catalogo[];
-}
-
-
-/**
- * Representa la respuesta que contiene un arreglo de tratados.
- */
-interface RespuestaTratado {
-  /**
-   * Arreglo de objetos tipo `Catalogo` que representan los tratados.
-   */
-  tratado: Catalogo[];
-}
 
 
 /**
@@ -155,12 +70,6 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
 
   /** Estado actual del formulario */
   estadoSeleccionado!: Tramite120402State;
-
-  /** Sujeto de destrucción de componentes */
-  private destroy$ = new Subject<void>();
-
-  /** Suscripción general a streams */
-  private subscription: Subscription = new Subscription();
 
   /** Estado de la solicitud del trámite */
   public solicitudState!: Tramite120402State;
@@ -213,8 +122,8 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
   /** Cupo seleccionado o lista de cupos seleccionados */
   seleccionDelCupo: DatoCupo | DatoCupo[] = [];
 
-  /** Sujeto para cancelar subscripciones */
-  private destroyed$ = new Subject<void>();
+  // /** Sujeto para cancelar subscripciones */
+  // private destroyed$ = new Subject<void>();
 
   /**
    * Constructor del componente.
@@ -275,15 +184,15 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
    * Ciclo de vida: se ejecuta al destruir el componente.
    */
   ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
   /**
    * Inicializa el formulario reactivo y sus valores por defecto desde el store.
    */
   private initializeForm(): void {
-    this.subscription.add(
+
       this.tramite120402Query.selectSolicitud$
         .pipe(
           takeUntil(this.destroyNotifier$),
@@ -291,8 +200,7 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
             this.solicitudState = seccionState;
           })
         )
-        .subscribe()
-    );
+        .subscribe();
     this.seleccionForm = this.fb.group({
       regimen: [this.solicitudState?.regimen, Validators.required],
       tratado: [this.solicitudState?.tratado, Validators.required],
@@ -307,7 +215,7 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
   loadRegimen(): void {
     this.service
       .getRegimen()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data => {
         const RESPUESTA = data as RespuestaDataArray;
         this.regimen = RESPUESTA.data;
@@ -320,7 +228,7 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
   loadTratado(): void {
     this.service
       .getTratado()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data => {
         this.tratado = (data as RespuestaTratado).tratado;
       }));
@@ -332,7 +240,7 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
   loadProducto(): void {
     this.service
       .getProducto()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data => {
         const RESPUESTA = data as RespuestaDataArray;
         this.producto = RESPUESTA.data;
@@ -346,7 +254,7 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
   loadSeleccionDelCupo(): void {
     this.service
       .getSeleccionDelCupo()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos => {
         const MAPEAR_FILA = (fila: DatoCupo): FilaCupo => ({
           descripcion: fila.description,
