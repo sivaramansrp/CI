@@ -148,7 +148,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @description Tipo de selección para la tabla de solicitudes.
    * @type {TablaSeleccion}
    */
-  tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
+  tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.CHECKBOX;
   
   /**
    * @description Tipo de selección para la tabla de mercancías.
@@ -187,7 +187,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @description Indica si el formulario se encuentra en modo solo lectura.
    * @type {boolean}
    */
-  esFormularioSoloLectura: boolean = true;
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * @constructor
@@ -212,6 +212,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
         this.esFormularioSoloLectura = seccionState.readonly;
+        this.inicializarEstadoFormulario();
       })
     )
     .subscribe();
@@ -234,9 +235,37 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.agriculturaApiService.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
   });
   this.obtenerTodosLosDatosDeLaLista();
-
+  this.createFromFields();
   }
-
+  
+  /**
+   * @description Inicializa el estado del formulario dependiendo si está en modo solo lectura o edición.
+   * Si el formulario está en modo solo lectura, deshabilita los campos; de lo contrario, los habilita y crea los campos del formulario.
+   * @method inicializarEstadoFormulario
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+      if (this.esFormularioSoloLectura) {
+        this.guardarDatosFormulario();
+      } else {
+        this.createFromFields();
+      }  
+  }
+  
+  /**
+   * @description Habilita o deshabilita el formulario según el modo de solo lectura.
+   * Si el formulario está en modo solo lectura, deshabilita todos los controles; si no, los habilita.
+   * @method guardarDatosFormulario
+   * @returns {void}
+   */
+  guardarDatosFormulario(): void {
+      if (this.esFormularioSoloLectura) {
+        this.forma.disable();
+      } else {
+        this.forma.enable();
+      }
+  }
+  
   /**
    * @description Crea los campos del formulario y los agrupa en un `FormGroup`.
    * Inicializa el formulario principal (`forma`) con los controles para los datos de la solicitud, 
