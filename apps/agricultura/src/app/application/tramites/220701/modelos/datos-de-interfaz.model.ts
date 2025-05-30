@@ -333,3 +333,18 @@ export interface medioInfo {
   estatus: boolean;
 }
 
+/**
+ * @interface ConsultaioSolicitante
+ * @description
+ * Interfaz que representa los datos principales de una consulta de trámite por parte del solicitante.
+ *
+ * @property {string} folioDelTramite - Folio identificador del trámite.
+ * @property {string} fechaDeInicio - Fecha en la que inició el trámite.
+ * @property {string} estadoDelTramite - Estado actual del trámite.
+ */
+export interface ConsultaioSolicitante {
+  folioDelTramite: string;
+  fechaDeInicio: string;
+  estadoDelTramite: string;
+}
+
