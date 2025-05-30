@@ -12,6 +12,7 @@ import {
 import {
   DatosPasos,
   ListaPasosWizard,
+  Notificacion,
   PASOS,
   SECCIONES_TRAMITE_5701,
   SeccionLibQuery,
@@ -119,6 +120,11 @@ export class SolicitudPageComponent implements OnInit {
    * Se inicializa en true para mostrar la sección de carga de documentos al inicio.
    */
   seccionCargarDocumentos: boolean = true;
+
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
 
   constructor(
     private seccionQuery: SeccionLibQuery,
@@ -440,10 +446,13 @@ export class SolicitudPageComponent implements OnInit {
 
   private enviaSolicitudRequest(): void {
     const CONSTRUYE_SOLICITUD_PAYLOAD: SolicitudPayload = {
-      id_solicitud: this.solicitudState.idSolicitud,
+      id_solicitud:
+        this.solicitudState.idSolicitud === 0
+          ? null
+          : this.solicitudState.idSolicitud,
       id_tipo_tramite: TIPO_TRAMITE,
       costo_total: '',
-      rfc: '', //Este viene del store con los datos del inicio de sesión
+      rfc: this.solicitudState.RFCImportadorExportador, //Este viene del store con los datos del inicio de sesión
       representante_legal: {
         rfc: '',
         telefono: '',
@@ -477,7 +486,7 @@ export class SolicitudPageComponent implements OnInit {
           revision_origen: this.solicitudState.revision,
         },
         despacho: {
-          aduana_despacho: this.solicitudState.aduanaDespacho,
+          aduana_despacho: 850, //this.solicitudState.aduanaDespacho,
           id_seccion_despacho: parseInt(
             this.solicitudState.idSeccionDespacho,
             10
@@ -540,6 +549,17 @@ export class SolicitudPageComponent implements OnInit {
       .postSolicitud(CONSTRUYE_SOLICITUD_PAYLOAD)
       .pipe(
         map((response) => {
+          this.solicitudState.idSolicitud = response.datos.id_solicitud;
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'toastr',
+            categoria: 'success',
+            modo: 'action',
+            titulo: '',
+            mensaje: `Solicitud guardada correctamente con ID: ${response.datos.id_solicitud}`,
+            cerrar: false,
+            txtBtnAceptar: '',
+            txtBtnCancelar: '',
+          };
           return response;
         }),
         takeUntil(this.destroyNotifier$)

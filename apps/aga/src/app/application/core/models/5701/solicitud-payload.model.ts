@@ -5,7 +5,6 @@ import { TransporteDespacho } from '@libs/shared/data-access-user/src';
  *
  * @property id_solicitud Identificador único de la solicitud. Puede ser nulo si la solicitud aún no ha sido creada.
  * @property id_tipo_tramite Identificador del tipo de trámite asociado a la solicitud.
- * @property cve_unidad_administrativa Clave de la unidad administrativa. (Este campo será eliminado próximamente).
  * @property costo_total Costo total del trámite, representado como una cadena.
  * @property rfc RFC del solicitante.
  * @property representante_legal Información del representante legal asociado a la solicitud.
@@ -143,7 +142,7 @@ export interface ImportadorExportador {
  * @property bln_despacho - Indica si se realiza el despacho (true/false).
  */
 export interface Despacho {
-  aduana_despacho: string;
+  aduana_despacho: number;
   id_seccion_despacho: number;
   bln_lda: boolean;
   rfc_despacho_lda: string;
