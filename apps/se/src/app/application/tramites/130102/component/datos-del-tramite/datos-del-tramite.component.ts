@@ -31,7 +31,7 @@ import solicitudeSelectVal from 'libs/shared/theme/assets/json/130102/solicitude
 import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
 import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
 
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -52,10 +52,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
   templateUrl: './datos-del-tramite.component.html',
 })
 export class DetosDelTramiteComponent implements OnInit, OnDestroy {
-   /**
-     * Suscripción a los cambios en el formulario react
-     */
-    private subscription: Subscription = new Subscription();
+  
   /**
    * Lista de campos de entrada utilizados en el formulario.
    */

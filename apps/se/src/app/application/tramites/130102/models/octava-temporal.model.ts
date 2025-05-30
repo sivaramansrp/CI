@@ -1,3 +1,7 @@
+
+/**
+ * Interfaz que representa los datos de la octava temporal.
+ */
 export interface OctavaTemporal {
     cantidad: number,
     unidadDeMedida: string,
@@ -8,6 +12,9 @@ export interface OctavaTemporal {
     totalUsd: number
 }
 
+/**
+ * Interfaz que representa la fracción arancelaria para el proceso.
+ */
 export interface FraccionArancelariaProsec {
     fraccionArancelariaProsec: number,
     descripción: string

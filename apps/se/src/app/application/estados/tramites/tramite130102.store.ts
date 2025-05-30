@@ -316,6 +316,10 @@ export class Tramite130102Store extends Store<Solicitud130102State> {
       productos,
     }));
   }
+  /*
+    * Actualiza el estado de la solicitud.
+    * @param {string} solicitud - Nueva solicitud.
+    */
   public setSolicitude(solicitud: string) {
  this.update((state) => ({
       ...state,

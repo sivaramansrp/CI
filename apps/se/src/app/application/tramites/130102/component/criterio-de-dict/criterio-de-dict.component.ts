@@ -4,7 +4,7 @@
  * @packageDocumentation
  * @module CriterioDeDictComponent
  */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -43,7 +43,7 @@ import { FormularioRegistroService } from '../../services/octava-temporal.servic
   templateUrl: './criterio-de-dict.component.html',
   styleUrl: './criterio-de-dict.component.scss',
 })
-export class CriterioDeDictComponent implements OnInit {
+export class CriterioDeDictComponent implements OnInit , OnDestroy {
    /**
    * Suscripción a los cambios en el formulario react
    */
@@ -193,5 +193,15 @@ export class CriterioDeDictComponent implements OnInit {
       } else {
         // No se requiere ninguna acción en el formulario
       }
+  }
+
+   /**
+   * Método del ciclo de vida que se ejecuta al destruir el componente.
+   * Emite y completa el observable para evitar fugas de memoria.
+   */
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

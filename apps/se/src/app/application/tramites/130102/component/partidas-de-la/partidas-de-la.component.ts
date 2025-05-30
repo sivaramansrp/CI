@@ -30,6 +30,8 @@ import { AlertComponent, Catalogo,REGEX_NUMERO_DECIMAL_ENTERO, REG_X, TablaDinam
 import { TEXTOS } from '@libs/shared/data-access-user/src/tramites/constantes/octava-temporal.enum';
 
 import { OctavaTemporal } from '../../models/octava-temporal.model';
+
+
 /**
  * Clase PartidasDeLaComponent
  * @description Componente Angular para gestionar las partidas de mercancía en un trámite específico.
@@ -167,9 +169,9 @@ export class PartidasDeLaComponent implements OnInit, OnDestroy {
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.formularioRegistroService.getFraccionArancelariaTIGIE().subscribe(data => {
-    this.fraccionArancelariaTIGIE = data;
-  });
+    this.formularioRegistroService.getFraccionArancelariaTIGIE().pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.fraccionArancelariaTIGIE = data;
+    });
     this.inicializarEstadoFormulario();
     this.formularioTotalCount();
   

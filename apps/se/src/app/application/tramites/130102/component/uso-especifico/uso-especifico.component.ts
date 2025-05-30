@@ -65,9 +65,9 @@ export class UsoEspicificoComponent implements OnInit {
    */
   catalogos: Catalogo[] = fraccionOptionJson;
 
-    /**
+  /**
    * Estado actual de la solicitud 130102, obtenido desde el store.
-   */
+    **/
   public solicitudState!: Solicitud130102State;
 
   /**
