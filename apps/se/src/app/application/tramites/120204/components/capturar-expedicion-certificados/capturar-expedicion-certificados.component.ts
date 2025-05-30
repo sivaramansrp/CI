@@ -2,15 +2,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder,FormGroup,ReactiveFormsModule,Validators } from '@angular/forms';
 
-import {Observable,Subject,map,takeUntil } from 'rxjs';
+import {Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 import { AlertComponent,Catalogo,CatalogoSelectComponent,ConsultaioQuery,InputCheckComponent,TablaDinamicaComponent,TableComponent,TableData,TituloComponent } from '@ng-mf/data-access-user';
-import {CONFIGURACION_ACCIONISTAS_TABLA,DetalledelaLicitacion, DistribucionSaldo, LicitacionesDisponibles} from '../../../../shared/models/expedicion-certificado.model';
-import { Expedicion120204Query } from '../../estados/queries/expedicion120204.query';
+import { CONFIGURACION_ACCIONISTAS_TABLA,DetalledelaLicitacion, DistribucionSaldo, LicitacionesDisponibles } from '../../../../shared/models/expedicion-certificado.model';
 import { Expedicion120204State, Expedicion120204Store } from '../../estados/tramites/expedicion120204.store';
+import { Expedicion120204Query } from '../../estados/queries/expedicion120204.query';
 import { ExpedicionCertificadoService } from '../../services/expedicion-certificado.service';
-import {REGEX_ALTO} from '@ng-mf/data-access-user'
+import { REGEX_ALTO } from '@ng-mf/data-access-user'
  
 /**
  * Componente para mostrar las licitaciones vigentes.
@@ -105,6 +105,17 @@ export class CapturarExpedicionCertificadosComponent implements OnInit, OnDestro
   public solicitudState!: Expedicion120204State;
    
    
+  /**
+   * Constructor del componente CapturarExpedicionCertificados.
+   * 
+   * @param service Servicio para la gestión de expedición de certificados.
+   * @param fb Constructor de formularios reactivos.
+   * @param consultaioQuery Consulta el estado de la sección de IO.
+   * @param expedicion120204Store Almacén para el manejo del estado de expedición.
+   * @param expedicion120204Query Consulta el estado de expedición.
+   * 
+   * Inicializa la suscripción al estado de la sección de IO para determinar si el formulario debe estar en modo solo lectura.
+   */
   constructor(private service:ExpedicionCertificadoService,private fb: FormBuilder,
     private consultaioQuery: ConsultaioQuery,
     private expedicion120204Store: Expedicion120204Store, 
@@ -345,10 +356,15 @@ this.expedicion120204Query.selectSolicitud$
   this.inicializarExpedicionCertificadoFormulario();
 }
 
-    
-
-
-
+  /**
+   * Inicializa los formularios reactivos utilizados en el componente para la expedición de certificados.
+   * 
+   * - `formulario`: Contiene los campos de entidad federativa y representación federal, ambos requeridos.
+   * - `detalledelaLicitacionForm`: Incluye información detallada de la licitación como número, fecha del evento y descripción del producto, todos en modo solo lectura y requeridos.
+   * - `distribucionSaldoForm`: Maneja los montos disponibles y a expedir, con validaciones de requerimiento y patrón, algunos campos en solo lectura.
+   * 
+   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), todos los formularios se deshabilitan para evitar modificaciones.
+   */
   inicializarExpedicionCertificadoFormulario(): void {  
      this.formulario = this.fb.group({
       entidadFederativa: [this.solicitudState?.entidadFederativa, Validators.required],

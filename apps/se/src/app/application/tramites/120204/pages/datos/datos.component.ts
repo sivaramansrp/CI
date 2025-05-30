@@ -1,8 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+
+import { Subject, map, takeUntil } from 'rxjs';
+
 import { ConsultaioQuery, ConsultaioState, ConsultaioStore } from '@ng-mf/data-access-user';
-import { ExpedicionCertificadoService } from '../../services/expedicion-certificado.service';
-import { map, Subject, takeUntil } from 'rxjs';
 import { Expedicion120204Store } from '../../estados/tramites/expedicion120204.store';
+import { ExpedicionCertificadoService } from '../../services/expedicion-certificado.service';
 // Importación del componente Solicitante desde la librería compartida
 /**
  * Componente DatosComponent.
@@ -111,7 +113,6 @@ constructor(private consultaQuery: ConsultaioQuery,private consultaStore:Consult
       )
       .subscribe((resp) => {
         if(resp){
-          console.log(resp);
         this.esDatosRespuesta = true;
         this.expedicionService.setDatosFormulario(resp);
         }

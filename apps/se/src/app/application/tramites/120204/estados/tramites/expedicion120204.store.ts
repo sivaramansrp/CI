@@ -2,57 +2,56 @@ import { Store, StoreConfig } from '@datorama/akita';
   
 import { Injectable } from '@angular/core';
 
+
+
 /**
- * Representa el estado de la expedición 120204.
+ * Interfaz que define la estructura del estado para el trámite de expedición 120204.
+ *
+ * @property {string} entidadFederativa - Nombre de la entidad federativa seleccionada.
+ * @property {string} representacionFederal - Representación federal correspondiente.
+ * @property {string} montoAExpedir - Monto que se va a expedir.
+ * @property {boolean} montoAExpedirCheck - Indica si el monto a expedir ha sido verificado.
+ * @property {string} totalAExpedir - Total a expedir.
+ * @property {string} montoDisponible - Monto disponible para expedir.
+ * @property {string} numeraDelicitacion - Número de la licitación.
+ * @property {string} fechaDelEventoDelicitacion - Fecha del evento de licitación.
+ * @property {string} descripcionDelProducto - Descripción del producto relacionado con la expedición.
  */
 export interface Expedicion120204State {
-  /**
-   * Entidad federativa seleccionada.
-   * Puede ser un catálogo o `null` si no se ha seleccionado ninguna.
-   */
+  /** Nombre de la entidad federativa seleccionada */
   entidadFederativa: string;
-
-  /**
-   * Representación federal seleccionada.
-   * Puede ser un catálogo o `null` si no se ha seleccionado ninguna.
-   */
+  /** Representación federal correspondiente */
   representacionFederal: string;
-
-  /**
-   * Monto a expedir en formato de cadena.
-   */
+  /** Monto que se va a expedir */
   montoAExpedir: string;
-
-  /**
-   * Indicador booleano que verifica si el monto a expedir ha sido validado o chequeado.
-   */
+  /** Indica si el monto a expedir ha sido verificado */
   montoAExpedirCheck: boolean;
-
-  /**
-   * Total a expedir en formato de cadena.
-   */
+  /** Total a expedir */
   totalAExpedir: string;
-
+  /** Monto disponible para expedir */
   montoDisponible: string;
-
-   numeraDelicitacion: string;
-   fechaDelEventoDelicitacion: string;
-    descripcionDelProducto: string;
-
+  /** Número de la licitación */
+  numeraDelicitacion: string;
+  /** Fecha del evento de licitación */
+  fechaDelEventoDelicitacion: string;
+  /** Descripción del producto relacionado con la expedición */
+  descripcionDelProducto: string;
 }
 
-
-
-
 /**
- * Crea el estado inicial para la funcionalidad de expedición 120204.
- * 
- * @returns {Expedicion120204State} El estado inicial con los valores predeterminados:
- * - `entidadFederativa`: Valor inicial `null`, representa la entidad federativa.
- * - `representacionFederal`: Valor inicial `null`, representa la representación federal.
- * - `montoAExpedir`: Cadena vacía, representa el monto a expedir.
- * - `montoAExpedirCheck`: Valor inicial `false`, indica si el monto a expedir ha sido verificado.
- * - `totalAExpedir`: Cadena vacía, representa el total a expedir.
+ * Crea y retorna el estado inicial para el trámite de expedición 120204.
+ *
+ * @returns {Expedicion120204State} Estado inicial con los valores predeterminados para cada propiedad.
+ *
+ * @property {string} entidadFederativa - Nombre de la entidad federativa.
+ * @property {string} representacionFederal - Representación federal correspondiente.
+ * @property {string} montoAExpedir - Monto que se va a expedir.
+ * @property {boolean} montoAExpedirCheck - Indica si el monto a expedir ha sido verificado.
+ * @property {string} totalAExpedir - Total a expedir.
+ * @property {string} montoDisponible - Monto disponible para expedir.
+ * @property {string} numeraDelicitacion - Número de la licitación.
+ * @property {string} fechaDelEventoDelicitacion - Fecha del evento de licitación.
+ * @property {string} descripcionDelProducto - Descripción del producto relacionado con la expedición.
  */
 export function createInitialState(): Expedicion120204State {
   return{
@@ -65,8 +64,6 @@ export function createInitialState(): Expedicion120204State {
       numeraDelicitacion: '',
       fechaDelEventoDelicitacion: '',
       descripcionDelProducto: ''
-
-
   }
 }
 
@@ -161,18 +158,36 @@ export class Expedicion120204Store extends Store<Expedicion120204State> {
     }));
   }
 
+  /**
+   * Establece el valor de `montoDisponible` en el estado.
+   *
+   * @param montoDisponible - El nuevo monto disponible que se asignará al estado.
+   */
   public setMontoDisponsible(montoDisponible: string): void {
     this.update((state) => ({
       ...state,
       montoDisponible,
     }));
   }
+
+
+  /**
+   * Establece la fecha del evento de licitación en el estado.
+   *
+   * @param fechaDelEventoDelicitacion - La fecha del evento de licitación a establecer, en formato de cadena.
+   */
   public setFechaDelEventoDelicitacion(fechaDelEventoDelicitacion: string): void {
     this.update((state) => ({
       ...state,
       fechaDelEventoDelicitacion,
     }));
   }
+
+  /**
+   * Establece la descripción del producto en el estado.
+   *
+   * @param descripcionDelProducto - La descripción del producto a establecer, en formato de cadena.
+   */
   public setDescripcionDelProducto(descripcionDelProducto: string): void {
     this.update((state) => ({
       ...state,
@@ -180,12 +195,25 @@ export class Expedicion120204Store extends Store<Expedicion120204State> {
     }));
   }
 
+  /**
+   * Establece el número de la licitación en el estado.
+   *
+   * @param numeraDelicitacion - El número de la licitación a establecer, en formato de cadena.
+   */
   public setNumeraDelicitacion(numeraDelicitacion: string): void {
     this.update((state) => ({
       ...state,
       numeraDelicitacion,
     }));
   }
+
+  
+  /**
+   * Restablece el estado de la tienda al valor inicial.
+   *
+   * Esta función actualiza el estado utilizando el estado inicial generado por `createInitialState()`.
+   * Úsala cuando necesites reiniciar todos los valores de la tienda a su configuración predeterminada.
+   */
   public resetState(): void {
     this.update(createInitialState());
   }
