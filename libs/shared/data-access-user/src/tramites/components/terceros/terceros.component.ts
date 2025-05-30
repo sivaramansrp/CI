@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -49,17 +49,44 @@ import { ValidacionesFormularioService } from '../../../core/services/shared/val
   ],
   styleUrl: './terceros.component.scss',
 })
-export class TercerosComponent<T> implements OnInit, OnDestroy {
+export class TercerosComponent implements OnInit, OnDestroy,AfterViewInit {
   /**
    * @description
-   * Tabindex para la navegación por las navtabs.
+   * Tabindex para el componente.
+   * 
+   * @type {number}
+   * @memberof TercerosComponent
+   * @input
+   * @required
    */
   @Input({ required: true }) tabindex!: number;
 
   /**
-   * @description
-   * Formulario reactivo para la captura de datos de terceros.
+   * @description Indica si el formulario debe mostrarse en modo solo lectura.
+   * @param esFormularioSoloLectura Si es `true`, el formulario se presenta únicamente para visualización y no permite edición. Si es `false`, el formulario es editable.
    */
+  @Input({ required: false }) esFormularioSoloLectura: boolean = false;
+  /**
+   * @desc Lista de personas asociadas como terceros.
+   * @type {PersonaTerceros[]}
+   * @input
+   * @optional
+   * 
+   * @description [Compodoc] Arreglo de objetos de tipo PersonaTerceros que representa las personas agregadas como terceros en el trámite. Este input es opcional.
+   */
+  @Input({ required: false }) personas: PersonaTerceros[] = [];
+   /**
+   * @description
+   * Evento emitido cuando la lista de personas (terceros) cambia.
+   * 
+   * @type {EventEmitter<PersonaTerceros[]>}
+   * @memberof TercerosComponent
+   * @event personasChange
+   * @see PersonaTerceros
+   */
+  @Output() personasChange = new EventEmitter<PersonaTerceros[]>();
+
+ 
   public FormPersona: FormGroup = this.fb.group({
     nombre: ['', [Validators.required]],
     correo: [
@@ -67,12 +94,6 @@ export class TercerosComponent<T> implements OnInit, OnDestroy {
       [Validators.required, Validators.pattern(CONSTANTES.EXP_CORREO)],
     ],
   });
-
-  /**
-   * @description
-   * Arreglo que almacena los datos de las personas relacionadas.
-   */
-  personas: PersonaTerceros[] = [];
 
   /**
    * @description
@@ -127,12 +148,28 @@ export class TercerosComponent<T> implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
     if (this.tercerosState.terceros.length > 0) {
       this.personas = this.tercerosState.terceros;
     }
   }
 
+  /**
+   * @inheritdoc
+   * 
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
+   * 
+   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es verdadero), deshabilita el formulario `FormPersona` para evitar modificaciones.
+   * En caso contrario, habilita el formulario para permitir la edición.
+   */
+  ngAfterViewInit(): void {
+      if(this.esFormularioSoloLectura){
+        this.FormPersona.disable();
+      }
+      else{
+        this.FormPersona.enable();
+      }
+  }
   /**
    * Agrega una persona al arreglo `personas` si el formulario es válido y hay menos de 5 personas.
    * Resetea el formulario después de agregar.
@@ -190,6 +227,7 @@ export class TercerosComponent<T> implements OnInit, OnDestroy {
 
     if (!EXISTE_TERCERO) {
       this.personas.push(DATOS);
+      this.personasChange.emit(this.personas);
       this.tercerosStore.setTerceros(this.personas);
       this.FormPersona.reset();
     }
@@ -202,6 +240,7 @@ export class TercerosComponent<T> implements OnInit, OnDestroy {
    */
   eliminar(i: number): void {
     this.personas.splice(i, 1);
+    this.personasChange.emit(this.personas);
     this.tercerosStore.setTerceros(this.personas);
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -267,7 +306,7 @@ export class TercerosComponent<T> implements OnInit, OnDestroy {
           (seleccionado) => seleccionado.correo === persona.correo
         )
     );
-
+this.personasChange.emit(this.personas);
     this.tercerosStore.setTerceros(this.personas);
   }
 }
