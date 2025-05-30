@@ -272,10 +272,9 @@ export class LicitacionesVigentesComponent implements OnInit, OnDestroy {
     })
   }
 
+  
   /**
-   * Subscribes to the `selectSolicitud$` observable from `tramite120501Query` and updates the component's
-   * `seccionState` property with the latest `Solicitud120501State` data.
-   * The subscription is automatically unsubscribed when the `destroyed$` observable emits, preventing memory leaks.
+   * Suscribe al observable `selectSolicitud$` del query `tramite120501Query` para obtener el estado actual de la solicitud y actualizar la propiedad `seccionState` con los datos recibidos. La suscripción se mantiene activa hasta que se emite un valor en `destroyed$`, evitando fugas de memoria.
    */
   obtenerEstadoSolicitud(): void {
     this.tramite120501Query.selectSolicitud$?.pipe(takeUntil(this.destroyed$))
