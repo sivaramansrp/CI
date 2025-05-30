@@ -8,6 +8,7 @@ import CROSLISTA_DE_PAISES from '@libs/shared/theme/assets/json/260303/croslista
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { EstadoCatalogResponse } from '../../models/certificados-licencias-permisos.model';
 import PAISES_DE_ORIGEN from '@libs/shared/theme/assets/json/260303/paises_de_origen.json';
 import { Tramite260303Query } from '../../../../estados/queries/260303/tramite260303.query';
 import USO_ESPECIFICO from '@libs/shared/theme/assets/json/260303/uso_especifico.json';
@@ -15,11 +16,6 @@ import USO_ESPECIFICO from '@libs/shared/theme/assets/json/260303/uso_especifico
  * DatosDeLaSolicitudComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
  */
-interface EstadoCatalogResponse {
-  code: number;
-  data: Catalogo[];
-  message: string;
-}
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
@@ -155,9 +151,7 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
    * Lista de países para seleccionar el origen de la primera sección.
    */
   seleccionarOrigenDelPais = this.crosListaDePaises;
-
-  deepCopyParam={};
-
+  
   /** Configuración de la tabla de sectores */
   public configuracionTabla: ConfiguracionColumna<ScianDatos>[] = [
     { encabezado: 'Clave S.C.I.A.N', clave: (item: ScianDatos) => item.clave, orden: 1 },

@@ -11,7 +11,6 @@ import { Tramite260303Query } from '../../../../estados/queries/260303/tramite26
  * FabricanteModalComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
  */
-
 @Component({
   selector: 'app-fabricante-modal',
   standalone: true,
@@ -179,8 +178,6 @@ export class FabricanteModalComponent implements OnInit,OnDestroy {
       // No se requiere ninguna acción en el formulario
     }
   }
-
-
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
    * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
