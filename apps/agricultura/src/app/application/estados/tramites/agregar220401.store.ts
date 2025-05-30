@@ -15,7 +15,7 @@ import { CatalogoResponse } from '@libs/shared/data-access-user/src';
 /**
  * Interfaz que define el estado de la solicitud 220401.
  */
-// eslint-disable-next-line @typescript-eslint/naming-convention
+
 export interface solicitud220401State {
   /** Certificación asociada a la solicitud. */
   certificada: string;
@@ -113,6 +113,9 @@ export interface solicitud220401State {
   regimenMercancia:string;
   paisOrigen:string;
   exentoPago:string;
+  
+  /** Tipo de transporte utilizado para la mercancía o animales. */
+  tipoDeTransporte: string;
 }
 
 /**
@@ -217,7 +220,8 @@ export function createInitialState(): solicitud220401State {
     oisaSalida:'',
     regimenMercancia:'',
     paisOrigen:'',
-    exentoPago:''
+    exentoPago:'',
+    tipoDeTransporte:''
   };
   
 }
@@ -651,6 +655,12 @@ public setfuncionZootecnica(funcionZootecnica: string) {
     this.update((state) => ({
       ...state,
       exentoPago,
+    }));
+  }
+  public settipoDeTransporte(tipoDeTransporte:string) {
+    this.update((state) => ({
+      ...state,
+      tipoDeTransporte,
     }));
   }
 }
