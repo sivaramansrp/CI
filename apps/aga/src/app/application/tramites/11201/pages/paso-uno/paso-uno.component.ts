@@ -121,6 +121,7 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+    this.obtenerTipoPersona();
   }
 
   /**
@@ -201,7 +202,9 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
    */
   obtenerTipoPersona(): void {
     setTimeout(() => {
-      this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+      if (this.solicitante) {
+        this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+      }
     }, 50);
   }
 }
