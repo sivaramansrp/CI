@@ -142,5 +142,13 @@
     "fechInicioTramite": "2025-3-09 0035:05:00",
     "departamento": "SEMARNAT",
     "numeroDeProcedimiento": "230401"
+  },
+  {
+    "folioTramite": "0100001000320251005000002",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "AGRICULTURA ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "AGRICULTURA",
+    "numeroDeProcedimiento": "220401"
   }
 ]
