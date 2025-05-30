@@ -28,35 +28,51 @@ export class PasoUnoComponent implements OnInit {
 
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
-  public consultaState!:ConsultaioState;
+
+  /** Estado actual de la consulta obtenido del store. */
+  public consultaState!: ConsultaioState;
 
   constructor(private consultaQuery: ConsultaioQuery,private certificadosLicenciasPermisosService: CertificadosLicenciasPermisosService){}
 
+    /**
+     * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
+     * Se suscribe al estado de consulta y actualiza la variable local.
+     * Si el estado indica que hay una actualización, guarda los datos del formulario.
+     * De lo contrario, marca que ya existen datos de respuesta.
+     */
     ngOnInit(): void {
-      this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
+      this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+        // Actualiza el estado local con el valor obtenido del store
         this.consultaState = seccionState;
-      })).subscribe();
+        })
+      )
+      .subscribe();
+      // Verifica si se debe actualizar el formulario o solo mostrar los datos existentes
       if (this.consultaState.update) {
-        this.guardarDatosFormulario();
+      this.guardarDatosFormulario();
       } else {
-        this.esDatosRespuesta = true;
+      this.esDatosRespuesta = true;
       }
     }
 
 
-      /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
+  /**
+   * Método para guardar los datos del formulario.
+   * Obtiene los datos del formulario desde el servicio y actualiza el estado si la respuesta es válida.
    */
   guardarDatosFormulario(): void {
     this.certificadosLicenciasPermisosService
       .getFormularioData().pipe(
-        takeUntil(this.destroyNotifier$)
+        takeUntil(this.destroyNotifier$) // Cancela la suscripción al destruir el componente
       )
       .subscribe((resp) => {
-        if(resp){
-        this.esDatosRespuesta = true;
-         this.certificadosLicenciasPermisosService.actualizarEstadoFormulario(resp);
+        if (resp) {
+          // Si la respuesta existe, marca que hay datos de respuesta y actualiza el estado del formulario
+          this.esDatosRespuesta = true;
+          this.certificadosLicenciasPermisosService.actualizarEstadoFormulario(resp);
         }
       });
   }
