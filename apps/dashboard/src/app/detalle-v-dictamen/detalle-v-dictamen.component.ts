@@ -1,13 +1,16 @@
 import { AccuseComponentes, ListaComponentes, Tabulaciones } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
 import { Component, OnInit, Type } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { DatosComponent } from '@libs/shared/data-access-user/src';
 import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramites/components/reviewers-tabs/reviewers-tabs.component';
 import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-detalle-v-dictamen',
   standalone: true,
   imports: [
     ReviewersTabsComponent,
+    DatosComponent
   ],
   templateUrl:'./detalle-v-dictamen.component.html',
   styleUrls: ['./detalle-v-dictamen.component.css'],
