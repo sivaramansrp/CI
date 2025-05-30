@@ -136,7 +136,17 @@ export class AgregarMiembroDeLaEmpresaComponent
    * Cuerpo de datos de la tabla de miembros.
    */
   public miembroDeLaEmpresaBodyData: any[] = [];
-
+  /**
+ * @property {Modificacion} textoEstatico
+ * @description Propiedad que contiene la enumeración `Modificacion`, la cual define textos estáticos
+ * utilizados en el formulario y la interfaz de usuario. Estos textos están relacionados con las
+ * declaraciones específicas del Registro en el Esquema Integral de Certificación.
+ * 
+ * @example
+ * // Uso en la plantilla HTML
+ * <p>{{ textoEstatico.checkbox1 }}</p>
+ * <p>{{ textoEstatico.checkbox2 }}</p>
+ */
   public textoEstatico = Modificacion
 
   /**
