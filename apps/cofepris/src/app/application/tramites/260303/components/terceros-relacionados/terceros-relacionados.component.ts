@@ -8,7 +8,7 @@ import { CertificadosLicenciasPermisosService } from '../../services/certificado
 import { CommonModule } from '@angular/common';
 import { FabricanteModalComponent } from '../fabricante-modal/fabricante-modal.component';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-
+type AllowedValue = string | number | boolean | undefined;
 /**
  * TercerosRelacionadosComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
@@ -83,11 +83,11 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   public configuracionOtros = OTROS_TABLA;
 
   /** Configuración de la tabla de sectores */
-  public configuracionTabla: ConfiguracionColumna<Fabricante>[] = this.generateConfiguracionTabla(this.configuracionFabricante);
-  public configuracionFacturadorTabla: ConfiguracionColumna<Fabricante>[] = this.generateConfiguracionTabla(this.configuracionFabricante);
-  public configuracionProveedorTabla: ConfiguracionColumna<Fabricante>[] = this.generateConfiguracionTabla(this.configuracionFabricante);
-  public configuracionCertificadoAnaliticoTabla: ConfiguracionColumna<Fabricante>[] = this.generateConfiguracionTabla(this.configuracionFabricante);
-  public configuracionOtrosTabla: ConfiguracionColumna<Otros>[] = this.generateConfiguracionTabla(this.configuracionOtros);
+  public configuracionTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionFabricante);
+  public configuracionFacturadorTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionFabricante);
+  public configuracionProveedorTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionFabricante);
+  public configuracionCertificadoAnaliticoTabla: ConfiguracionColumna<Fabricante>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionFabricante);
+  public configuracionOtrosTabla: ConfiguracionColumna<Otros>[] = TercerosRelacionadosComponent.generateConfiguracionTabla(this.configuracionOtros);
 
   /**
    * Notificador para destruir observables activos.
@@ -217,30 +217,26 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  /**
-   * Genera un arreglo de configuración para una tabla basado en el arreglo de datos proporcionado.
-   *
-   * @template T - El tipo de los objetos en la tabla.
-   * @param datosArray - Un arreglo de objetos que contiene la configuración de las columnas de la tabla.
-   * Cada objeto debe tener las siguientes propiedades:
-   *   - `encabezado`: El texto del encabezado para la columna.
-   *   - `clave`: La clave de la propiedad en el objeto de datos que se mostrará en la columna.
-   * @returns Un arreglo de configuraciones de columnas, donde cada configuración incluye:
-   *   - `encabezado`: El texto del encabezado para la columna.
-   *   - `clave`: Una función que obtiene el valor de la clave especificada de un objeto de datos.
-   *   - `orden`: El orden de la columna, comenzando desde 1.
-   */
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-explicit-any
-  private generateConfiguracionTabla(datosArray: any): ConfiguracionColumna<any>[] {
-    const FIELDS: Array<{ encabezado: string, clave: keyof Fabricante }> = datosArray;
-    return FIELDS.map((field, index) => ({
-      encabezado: field.encabezado,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      clave: (item: any) => item[field.clave],
-      orden: index + 1
-    }));
-  }
+
+/**
+ * Genera la configuración de columnas para una tabla dinámica.
+ * 
+ * @template T - El tipo de los datos que se mostrarán en la tabla.
+ * @param datosArray - Un arreglo de objetos que contiene el encabezado y la clave de cada columna.
+ * @returns Un arreglo de configuraciones de columna para la tabla.
+ */
+private static generateConfiguracionTabla<T>(
+  datosArray: Array<{ encabezado: string; clave: keyof T }>
+): ConfiguracionColumna<T>[] {
+  return datosArray.map((field, index) => ({
+    // Título de la columna que se mostrará en la tabla
+    encabezado: field.encabezado,
+    // Función que extrae el valor de la clave correspondiente del objeto de datos
+    clave: (item: T): AllowedValue => item[field.clave] as AllowedValue,
+    // Orden de la columna en la tabla
+    orden: index + 1,
+  }));
+}
 
   /**
    * Abre un cuadro de diálogo modal para gestionar un "Fabricante".
