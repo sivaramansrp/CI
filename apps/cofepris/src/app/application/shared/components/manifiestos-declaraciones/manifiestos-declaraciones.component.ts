@@ -8,6 +8,8 @@ import CumplimientoOptions from '@libs/shared/theme/assets/json/260501/cumplimie
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { MENSAJE_DE_ALERTA } from '../../constantes/datos-domicilio-legal.enum';
 
+import { MANIFIESTOS_DECLARACION } from '../../constantes/aviso-de-funcionamiento.enum';
+
 /**
  * @description
  * Componente principal para gestionar el formulario de manifiestos y declaraciones.
@@ -20,7 +22,6 @@ import { MENSAJE_DE_ALERTA } from '../../constantes/datos-domicilio-legal.enum';
   imports: [
     CommonModule,
     TituloComponent,
-    AlertComponent,
     ReactiveFormsModule,
     InputRadioComponent,
   ],
@@ -32,7 +33,9 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    * @description
    * Mensaje de alerta que se muestra en el componente.
    */
-  public mensaje: string = MENSAJE_DE_ALERTA;
+  public mensaje = MENSAJE_DE_ALERTA.message;
+
+  mensajeManifiestos: string = '';
 
   /**
    * @description
@@ -79,6 +82,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    * Configura el formulario reactivo y sus valores iniciales basados en el estado de la solicitud.
    */
   ngOnInit(): void {
+    this.mensajeManifiestos = MANIFIESTOS_DECLARACION.MANIFIESTOS;
     this.DatosDomicilioLegalQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),

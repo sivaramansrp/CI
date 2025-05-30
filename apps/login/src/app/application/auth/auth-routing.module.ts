@@ -1,7 +1,10 @@
 import { RouterModule, Routes } from '@angular/router';
 import { AuthPageComponent } from './auth-page/auth-page.component';
-import { MantenimientoCuentaComponent } from './mantenimiento-cuenta/mantenimiento-cuenta.component';
+import { CambioContrasenaComponent } from './cambio-contrasena/cambio-contrasena.component';
+import { ConsultaPersonaNotificacionesComponent } from './consulta-persona-notificaciones/consulta-persona-notificaciones.component';
+import { FirmaPageComponent } from '@libs/shared/data-access-user/src';
 import { NgModule } from '@angular/core';
+import { RegistroPersonaNotificacionesComponent } from './registro-persona-notificaciones/registro-persona-notificaciones.component';
 
 export const ROUTES_AUTH: Routes = [
   {
@@ -9,8 +12,20 @@ export const ROUTES_AUTH: Routes = [
     component: AuthPageComponent
   },
   {
-    path: 'mantenimiento-cuenta',
-    component: MantenimientoCuentaComponent
+    path: 'cambio-contrasena',
+    component: CambioContrasenaComponent
+  },
+  {
+    path: 'registro-notificaciones',
+    component: RegistroPersonaNotificacionesComponent
+  },
+  {
+    path: 'consulta-registro-notificador',
+    component: ConsultaPersonaNotificacionesComponent
+  },
+  {
+    path: 'firma-electronica',
+    component: FirmaPageComponent
   },
 ];
 
