@@ -148,6 +148,10 @@ export class ImportacionDeAcuiculturaService {
     
   }
 
+  /**
+   * @description Actualiza la lista de terceros relacionados en el store de acuicultura.
+   * @param tercerosRelacionados Arreglo de objetos PersonaTerceros que representan los terceros relacionados.
+   */
   public updateTercerosRelacionados(tercerosRelacionados: PersonaTerceros[]): void {
     this.acuiculturaStore.actualizarTercerosRelacionados(tercerosRelacionados);
   }

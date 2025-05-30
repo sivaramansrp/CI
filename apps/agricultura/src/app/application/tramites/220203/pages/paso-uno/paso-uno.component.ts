@@ -78,16 +78,14 @@ private destroyNotifier$ = new Subject<void>();
    * Aquí se puede inicializar datos o suscribirse a servicios necesarios para el componente.
    */
   ngOnInit(): void {
+
     this.consultaQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          if(seccionState.update){
-            this.guardarDatosFormulario();
-          }
-        }
-      )
-    ).subscribe();
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((seccionState) => {
+      if(seccionState.update){
+              this.guardarDatosFormulario();
+      }
+    });
   }
 
   /**

@@ -473,11 +473,9 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterView
     if (this.esFormularioSoloLectura) {
       this.datosMercanciaFormGroup.disable();
     }
-    else if (!this.esFormularioSoloLectura) {
+    else {
       this.datosMercanciaFormGroup.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
-    }
+    } 
   }
 
   /**
