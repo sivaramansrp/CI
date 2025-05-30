@@ -259,11 +259,6 @@ tituloParte = TITULO_ORIGEN;
   public seccionState!: Tramite130121State;
 
    /**
-   * Subject para notificar la destrucción del componente.
-   */
-  private destroyNotifier$: Subject<void> = new Subject();
-
-   /**
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
@@ -288,7 +283,7 @@ tituloParte = TITULO_ORIGEN;
   ) {
      this.consultaioQuery.selectConsultaioState$
     .pipe(
-      takeUntil(this.destroyNotifier$),
+      takeUntil(this.destroyed$),
       map((seccionState)=>{
         this.esFormularioSoloLectura = seccionState.readonly; 
         this.inicializarEstadoFormulario();
@@ -584,7 +579,6 @@ tituloParte = TITULO_ORIGEN;
 * - Actualización del estado global del store cada vez que los formularios se modifican.
 */
   configuracionFormularioSuscripciones(): void {
-
     this.tramite130121Query.selectSolicitud$
           .pipe(takeUntil(this.destroyed$))
           .subscribe((state: Tramite130121State) => {
@@ -940,14 +934,11 @@ handleStoreUpdate(event: { form: FormGroup; campo: string; metodoNombre: string 
   * @param _bloqueId Identificador del bloque para obtener los países correspondientes.
   */
   fetchPaisesPorBloque(_bloqueId: number): void {
-    // Llamada al servicio para obtener los países por bloque
     this.permisodehidrocarburosService
       .getPaisesPorBloque(_bloqueId)
-      .pipe(takeUntil(this.destroyed$)) // Se asegura de que la suscripción se cancele correctamente
+      .pipe(takeUntil(this.destroyed$))
       .subscribe((data: Catalogo[]) => {
-        // Asigna los países obtenidos a la propiedad paisesPorBloque
         this.paisesPorBloque = data;
-        // Mapea las descripciones de los países y las asigna a selectRangoDias
         this.selectRangoDias = this.paisesPorBloque.map(
           (pais: Catalogo) => pais.descripcion
         );
