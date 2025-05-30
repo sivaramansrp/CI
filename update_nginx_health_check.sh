@@ -88,7 +88,7 @@ echo "Creando archivos health.txt en todos los directorios src..."
 APPS=(
   "aga"
   "agace"
-  "agriculture"
+  "agricultura"
   "amecafe"
   "bandejas"
   "cofepris"
