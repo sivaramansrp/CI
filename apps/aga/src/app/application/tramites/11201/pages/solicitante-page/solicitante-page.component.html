@@ -8,7 +8,7 @@
     </div>
     <div class="row">
       @switch (indice) { @case (1) {
-      <paso-uno (continuarEvento)="continuar()"></paso-uno>
+      <paso-uno (continuarEvento)="continuar()" (cancelarEvento)="cancelar()"></paso-uno>
       } @case (3) {
       <paso-tres></paso-tres>
       <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
