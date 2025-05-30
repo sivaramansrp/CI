@@ -19,6 +19,7 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
+
 import {
   FormBuilder,
   FormControl,
@@ -43,7 +44,7 @@ import { HttpClient } from '@angular/common/http';
 import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
 import { FECHA_DE_PAGO } from '@libs/shared/data-access-user/src/core/enums/260211/manifiestos.enum';
 import { SanitarioService } from '../../services/sanitario.service';
- 
+ import { ConsultaioQuery } from '@ng-mf/data-access-user';
  
 /**
  * Interfaz para la respuesta de la tabla de NICO.
@@ -100,6 +101,11 @@ export interface MercanciasTabla {
   styleUrl: './domicillo.component.scss',
 })
 export class DomicilloComponent implements OnInit,OnDestroy {
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
   /**
    * Lista de componentes Crosslist disponibles en la vista.
    */
@@ -136,7 +142,7 @@ export class DomicilloComponent implements OnInit,OnDestroy {
     private tramite260211Store: Tramite260211Store,
     private tramite260211Query: Tramite260211Query,
     private service: SanitarioService,
-        private consultaioQuery: ConsultaioQuery 
+    private consultaioQuery: ConsultaioQuery
   ) {
     // Dependencia inyectada para uso posterior
   }
@@ -260,25 +266,65 @@ public fechaCaducidadInput: InputFecha = FECHA_DE_PAGO;
  * Método que se ejecuta al inicializar el componente.
  */
 ngOnInit(): void {
-   this.inicializarEstadoFormulario();
-       /**
-       * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
-       *
-       * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
-       * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
-       * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
-       */
-      this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState)=>{
-          this.esFormularioSoloLectura = seccionState.readonly; 
-         
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
-  this.tramite260211Query
+    this.inicializarEstadoFormulario();
+     /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+     
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe();
+
+  
+ 
+  this.obtenerEstadoList();
+  this.obtenerTablaDatos();
+  this.obtenerMercanciasDatos();
+ 
+ 
+}
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+    
+  }
+    /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.domicilio.disable();
+        this.formAgente.disable();
+        this.formMercancias.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.domicilio.enable();
+        this.formAgente.enable();
+        this.formMercancias.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+inicializarFormulario():void{
+this.tramite260211Query
     .selectSolicitud$
     .pipe(
       takeUntil(this.destroyNotifier$),
@@ -287,12 +333,7 @@ ngOnInit(): void {
       })
     )
     .subscribe();
- 
-  this.obtenerEstadoList();
-  this.obtenerTablaDatos();
-  this.obtenerMercanciasDatos();
- 
-  /**
+     /**
    * Inicialización del formulario de domicilio.
    */
   this.domicilio = this.fb.group({
@@ -340,8 +381,13 @@ ngOnInit(): void {
     numeroRegistro: [this.solicitudState?.numeroRegistro, Validators.required],
     fechaCaducidad: [this.solicitudState?.fechaCaducidad],
   });
+
+     if (this.esFormularioSoloLectura) {
+      this.domicilio.disable();
+        this.formAgente.disable();
+        this.formMercancias.disable();
+  }
 }
- 
 /**
  * Botones de acción para gestionar listas de países en la primera sección.
  */

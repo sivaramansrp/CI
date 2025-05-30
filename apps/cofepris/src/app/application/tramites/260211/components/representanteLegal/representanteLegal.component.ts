@@ -6,7 +6,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
- 
+ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * Componente principal para gestionar el formulario de representante.
  */
@@ -22,6 +22,11 @@ import { Tramite260211Query } from '../../../../estados/queries/tramite260211.qu
 * Componente para gestionar la información del representante legal en la solicitud.
 */
 export class RepresentanteLegalComponent implements OnInit, OnDestroy {
+    /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
   /**
    * Estado de la solicitud obtenido desde el store.
    */
@@ -46,7 +51,8 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   constructor(
     private readonly fb: FormBuilder,
     private tramite260211Store: Tramite260211Store,
-    private tramite260211Query: Tramite260211Query
+    private tramite260211Query: Tramite260211Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // Dependencia inyectada para uso posterior
   }
@@ -56,6 +62,67 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    * Obtiene el estado de la solicitud y crea el formulario del representante legal.
    */
   ngOnInit(): void {
+  this.inicializarEstadoFormulario();
+     /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+     
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe();
+
+
+  }
+ 
+  /**
+   * Método para actualizar los valores del formulario de representante legal.
+   * Este método simula la obtención de nuevos valores y actualiza el formulario.
+   */
+  obtenerValor(): void {
+    this.representante.patchValue({
+      nombre: 47875, // Nota: Esto debería ser una cadena, considera ajustar si es necesario.
+      apellidoPaterno: 'Paterno',
+      apellidoMaterno: 'Materno',
+    });
+  }
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+    
+  }
+     /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.representante.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.representante.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+  inicializarFormulario():void{
+
     this.tramite260211Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -75,19 +142,6 @@ this.representante = this.fb.group({
       apellidoMaterno: [{ value: this.solicitudState?.apellidoMaterno, disabled: true }],
     });
   }
- 
-  /**
-   * Método para actualizar los valores del formulario de representante legal.
-   * Este método simula la obtención de nuevos valores y actualiza el formulario.
-   */
-  obtenerValor(): void {
-    this.representante.patchValue({
-      nombre: 47875, // Nota: Esto debería ser una cadena, considera ajustar si es necesario.
-      apellidoPaterno: 'Paterno',
-      apellidoMaterno: 'Materno',
-    });
-  }
- 
   /**
    * Establece el valor de un campo en el store de Tramite260211.
    * @param form - El grupo de formularios que contiene el campo.
