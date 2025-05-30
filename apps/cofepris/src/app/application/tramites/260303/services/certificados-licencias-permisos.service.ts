@@ -1,4 +1,4 @@
-import { MercanciasDatos, ScianDatos } from '@libs/shared/data-access-user/src';
+import { Fabricante, MercanciasDatos, Otros, ScianDatos } from '@libs/shared/data-access-user/src';
 import { Observable,catchError, throwError } from 'rxjs';
 import { Solicitud260303State, Tramite260303Store } from '../../../estados/tramites/260303/tramite260303.store';
 import { EstadoCatalogResponse } from '../models/certificados-licencias-permisos.model';
@@ -229,65 +229,43 @@ export class CertificadosLicenciasPermisosService {
     );
   }
 
-  /**
-   * Recupera los datos del estado desde un archivo JSON local.
-   * @returns Un `Observable` de tipo `JSONResponse` que contiene los datos del estado.
-   *          Si ocurre un error durante la solicitud HTTP, propagará el error.
-   */
-  public getFabricanteDatos(): Observable<JSONResponse> {
-    return this.http.get<JSONResponse>('assets/json/260303/fabricante-tabla.json').pipe(
+
+  public getFabricanteDatos(): Observable<Fabricante[]> {
+    return this.http.get<Fabricante[]>('assets/json/260303/fabricante-tabla.json').pipe(
       catchError((error) => {
         return throwError(() => error);
       })
     );
   }
 
-  /**
-   * Recupera los datos del estado desde un archivo JSON local.
-   * @returns Un `Observable` de tipo `JSONResponse` que contiene los datos del estado.
-   *          Si ocurre un error durante la solicitud HTTP, propagará el error.
-   */
-  public getFacturadorDatos(): Observable<JSONResponse> {
-    return this.http.get<JSONResponse>('assets/json/260303/facturador-tabla.json').pipe(
+
+  public getFacturadorDatos(): Observable<Fabricante[]> {
+    return this.http.get<Fabricante[]>('assets/json/260303/facturador-tabla.json').pipe(
       catchError((error) => {
         return throwError(() => error);
       })
     );
   }
 
-  /**
-   * Recupera los datos del estado desde un archivo JSON local.
-   * @returns Un `Observable` de tipo `JSONResponse` que contiene los datos del estado.
-   *          Si ocurre un error durante la solicitud HTTP, propagará el error.
-   */
-  public getProveedorDatos(): Observable<JSONResponse> {
-    return this.http.get<JSONResponse>('assets/json/260303/proveedor-tabla.json').pipe(
+  public getProveedorDatos(): Observable<Fabricante[]> {
+    return this.http.get<Fabricante[]>('assets/json/260303/proveedor-tabla.json').pipe(
       catchError((error) => {
         return throwError(() => error);
       })
     );
   }
 
-  /**
-   * Recupera los datos del estado desde un archivo JSON local.
-   * @returns Un `Observable` de tipo `JSONResponse` que contiene los datos del estado.
-   *          Si ocurre un error durante la solicitud HTTP, propagará el error.
-   */
-  public getCertificadoDatos(): Observable<JSONResponse> {
-    return this.http.get<JSONResponse>('assets/json/260303/certificado-analitico-tabla.json').pipe(
+  public getCertificadoDatos(): Observable<Fabricante[]> {
+    return this.http.get<Fabricante[]>('assets/json/260303/certificado-analitico-tabla.json').pipe(
       catchError((error) => {
         return throwError(() => error);
       })
     );
   }
 
-  /**
-   * Recupera los datos del estado desde un archivo JSON local.
-   * @returns Un `Observable` de tipo `JSONResponse` que contiene los datos del estado.
-   *          Si ocurre un error durante la solicitud HTTP, propagará el error.
-   */
-  public getOtrosDatos(): Observable<JSONResponse> {
-    return this.http.get<JSONResponse>('assets/json/260303/otros-tabla.json').pipe(
+
+  public getOtrosDatos(): Observable<Otros[]> {
+    return this.http.get<Otros[]>('assets/json/260303/otros-tabla.json').pipe(
       catchError((error) => {
         return throwError(() => error);
       })

@@ -137,10 +137,9 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    * @param obj - El objeto que se va a copiar profundamente. Por defecto es un objeto vacío.
    * @returns Una copia profunda del objeto proporcionado.
    */
-    // eslint-disable-next-line class-methods-use-this, @typescript-eslint/explicit-function-return-type
-    public deepCopy(obj = {}) {
-      return JSON.parse(JSON.stringify(obj));
-    }
+  public static deepCopy<T>(obj: T): T {
+    return JSON.parse(JSON.stringify(obj));
+  }
 
   /**
    * Recupera los datos para la tabla de fabricantes realizando una llamada al servicio.
@@ -151,7 +150,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    */
   public getFabricanteTablaDatos(): void {
     this.certificadosLicenciasSvc.getFabricanteDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
-      const DATA = this.deepCopy(response);
+      const DATA = TercerosRelacionadosComponent.deepCopy<Fabricante[]>(response);
       this.fabricanteTablaDatos = DATA;
     });
   }
@@ -167,7 +166,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    */
   public getFacturadorTablaDatos(): void {
     this.certificadosLicenciasSvc.getFacturadorDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
-      const DATA = this.deepCopy(response);
+      const DATA = TercerosRelacionadosComponent.deepCopy<Fabricante[]>(response);
       this.facturadorTablaDatos = DATA;
     });
   }
@@ -183,7 +182,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    */
   public getProveedorTablaDatos(): void {
     this.certificadosLicenciasSvc.getProveedorDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
-      const DATA = this.deepCopy(response);
+      const DATA = TercerosRelacionadosComponent.deepCopy<Fabricante[]>(response);
       this.proveedorTablaDatos = DATA;
     });
   }
@@ -198,7 +197,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    */
   public getCertificadoAnaliticoTablaDatos(): void {
     this.certificadosLicenciasSvc.getCertificadoDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
-      const DATA = this.deepCopy(response);
+      const DATA = TercerosRelacionadosComponent.deepCopy<Fabricante[]>(response);
       this.certificadoAnaliticoTablaDatos = DATA;
     });
   }
@@ -213,7 +212,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    */
   public getOtrosTablaDatos(): void {
     this.certificadosLicenciasSvc.getOtrosDatos().pipe(takeUntil(this.destroyed$)).subscribe((response) => {
-      const DATA = this.deepCopy(response);
+      const DATA = TercerosRelacionadosComponent.deepCopy<Otros[]>(response);
       this.otrosTablaDatos = DATA;
     });
   }
