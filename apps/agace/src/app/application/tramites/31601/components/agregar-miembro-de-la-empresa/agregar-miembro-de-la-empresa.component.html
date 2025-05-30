@@ -42,21 +42,13 @@
     <div class="form-check">
       <input class="form-check-input" type="checkbox" id="checkbox1" formControlName="squemaIntegral" (change)="setValoresStore(checkBoxesForm,'squemaIntegral', 'setSquemaIntegral')"/>
       <label class="form-check-label text-justify" for="checkbox1">
-        <span class="text-danger">*</span> Una vez manifestado lo anterior, se
-        solicita al SAT, a través de AGACE, que realice las inspecciones a que
-        hace referencia la fracción IX de la regla 7.1.1, a las instalaciones
-        señaladas en las que se realizan las operaciones de comercio exterior con
-        el propósito de verificar la información plasmada en la presente solicitud
-        del Registro en el Esquema Integral de Certificación.
+        <span class="text-danger">*</span> {{textoEstatico.checkbox1}}
       </label>
     </div>
     <div class="form-check">
       <input class="form-check-input" type="checkbox" id="checkbox2" formControlName="sidoModificadas" (change)="setValoresStore(checkBoxesForm,'sidoModificadas', 'setSidoModificadas')"/>
       <label class="form-check-label text-justify" for="checkbox2">
-        <span class="text-danger">*</span> Bajo protesta de decir verdad,
-        manifiesto que los datos asentados en el presente documento son ciertos y
-        que las facultades que me fueron otorgadas para representar al solicitante
-        no me han sido modificadas y/o revocadas.
+        <span class="text-danger">*</span> {{textoEstatico.checkbox2}}
       </label>
     </div>
   </form>

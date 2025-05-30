@@ -63,18 +63,18 @@ export class PersonaComponent implements OnInit, OnDestroy {
    * Configuración de las columnas para la tabla dinámica.
    * @type {ConfiguracionColumna<unknown>[]}
    */
-  configuracionTabla: ConfiguracionColumna<Persona>[] = [
-    { encabezado: 'RFC', clave: (item: Persona) => item.RFC, orden: 1 },
-    { encabezado: 'CURP', clave: (item: Persona) => item.CURP, orden: 2 },
-    { encabezado: 'Nombre', clave: (item: Persona) => item.Nombre, orden: 3 },
+  configuracionTabla: ConfiguracionColumna<Personas>[] = [
+    { encabezado: 'RFC', clave: (item: Personas) => item.rfc, orden: 1 },
+    { encabezado: 'CURP', clave: (item: Personas) => item.curp, orden: 2 },
+    { encabezado: 'Nombre', clave: (item: Personas) => item.nombre, orden: 3 },
     {
       encabezado: 'Apellido Paterno',
-      clave: (item: Persona) => item.Apellido_paterno,
+      clave: (item: Personas) => item.apellidoPaterno,
       orden: 4,
     },
     {
       encabezado: 'Apellido Materno',
-      clave: (item: Persona) => item.Apellido_materno,
+      clave: (item: Personas) => item.apellidoMaterno,
       orden: 5,
     },
   ];

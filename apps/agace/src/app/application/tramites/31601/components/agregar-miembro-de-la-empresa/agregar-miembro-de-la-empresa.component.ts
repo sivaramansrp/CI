@@ -17,9 +17,8 @@ import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tram
 import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
-
-import { TableBodyData } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
+import { Modificacion } from '@libs/shared/data-access-user/src/core/enums/31601/modificacion.enum';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TablePaginationComponent } from '@ng-mf/data-access-user';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
@@ -136,7 +135,9 @@ export class AgregarMiembroDeLaEmpresaComponent
   /**
    * Cuerpo de datos de la tabla de miembros.
    */
-  public miembroDeLaEmpresaBodyData: unknown[] = [];
+  public miembroDeLaEmpresaBodyData: any[] = [];
+
+  public textoEstatico = Modificacion
 
   /**
    * Datos de tabla obtenidos del archivo JSON correspondiente.

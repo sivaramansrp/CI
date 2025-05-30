@@ -90,10 +90,10 @@ export class RequisitosComponent implements OnInit, OnDestroy {
   /**
    * Configuración de columnas para la tabla de tipos de documentos.
    */
-  configuracionTabla: ConfiguracionColumna<TipoDocumento>[] = [
+  configuracionTabla: ConfiguracionColumna<Tipos>[] = [
     {
       encabezado: 'Tipo de Documento',
-      clave: (item: TipoDocumento) => item.tiposdata,
+      clave: (item: Tipos) => item.tiposData,
       orden: 1,
     },
   ];

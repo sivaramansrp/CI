@@ -16,7 +16,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AgregarMiembroDeLaEmpresaComponent } from '../agregar-miembro-de-la-empresa/agregar-miembro-de-la-empresa.component';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
@@ -144,7 +144,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos de control de inventarios obtenidos desde JSON
    */
-  controlInventarios: unknown = controlInventarios;
+  controlInventarios: any = controlInventarios;
 
   /**
    * Lista de opciones IMMEX cargadas desde JSON
@@ -219,7 +219,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos del cuerpo de la tabla de empleados
    */
-  public empleadosBodyData: unknown[] = [];
+  public empleadosBodyData: any[] = [];
 
   /**
    * Encabezados de la tabla de domicilios
@@ -229,7 +229,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos del cuerpo de la tabla de domicilios
    */
-  public domiciliosBodyData: unknown[] = [];
+  public domiciliosBodyData: any[] = [];
 
   /**
    * Encabezados de la tabla de instalaciones
@@ -239,7 +239,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * Datos del cuerpo de la tabla de instalaciones
    */
-  public InstalacionesBodyData: unknown[] = [];
+  public InstalacionesBodyData: any[] = [];
 
   /**
    * Estado de la solicitud
@@ -265,12 +265,6 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    * Indica si el formulario está en modo solo lectura
    */
   esFormularioSoloLectura: boolean = false; 
-  
-  /**
-   * Suscripción a los cambios en el formulario reactivo
-   */
-  private subscription: Subscription = new Subscription();
-
   /**
    * Constructor del componente
    * @param fb - FormBuilder para crear formularios reactivos
@@ -574,7 +568,6 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    * - Limpia observables
    */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
