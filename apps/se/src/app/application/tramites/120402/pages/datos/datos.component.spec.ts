@@ -1,5 +1,5 @@
 import { DatosComponent } from './datos.component';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 
 describe('DatosComponent', () => {
   let component: DatosComponent;
@@ -14,7 +14,7 @@ beforeEach(() => {
     actualizarEstadoFormulario: jest.fn(),
   };
   mockConsultaQuery = {
-    selectConsultaioState$: of({ update: false }), // <-- fix here
+    selectConsultaioState$: of({ update: false }),
   };
 
   component = new DatosComponent(
@@ -32,31 +32,15 @@ beforeEach(() => {
   });
 
 it('should set esDatosRespuesta to true if consultaState.update is false on ngOnInit', () => {
-  mockConsultaQuery.selectConsultaioState$ = of({ update: false }); // <-- fix here
+  mockConsultaQuery.selectConsultaioState$ = of({ update: false });
   component = new DatosComponent(
     mockPantallasSvc,
     mockSolocitud120402Service,
     mockConsultaQuery
   );
-  component.ngOnInit(); // <-- uncomment this line
+  component.ngOnInit();
   expect(component.esDatosRespuesta).toBe(true);
 });
-
-// it('should call guardarDatosFormulario if consultaState.update is true on ngOnInit', () => {
-//   const localMockConsultaQuery = {
-//     selectConsultaioState$: of({ update: true }),
-//   };
-//   // Create a spy on the prototype BEFORE instantiation
-//   const spy = jest.spyOn(DatosComponent.prototype, 'guardarDatosFormulario');
-//   component = new DatosComponent(
-//     mockPantallasSvc,
-//     mockSolocitud120402Service,
-//     localMockConsultaQuery as any
-//   );
-//   //component.ngOnInit();
-//   expect(spy).toHaveBeenCalled();
-//   spy.mockRestore(); // Clean up the spy
-// });
 
   it('guardarDatosFormulario should call actualizarEstadoFormulario if response exists', () => {
     const resp = { foo: 'bar' };
