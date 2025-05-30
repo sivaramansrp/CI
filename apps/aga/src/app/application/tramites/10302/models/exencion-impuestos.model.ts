@@ -1,3 +1,6 @@
+import { SrvRecord } from "dns";
+import { Catalogo } from "../estados/tramite10302.store";
+
 /**
  * Interfaz que representa la respuesta de una operación relacionada con mercancías.
  */
@@ -93,5 +96,31 @@ export interface RespuestaConsulta {
 }
 
 export interface ConsultaDatos {
-  
+  organismoPublico: string
+  usoEspecifico: string;
+  aduana: Catalogo[];
+  // showTabla: boolean;
+  // tipoDeMercancia: string;
+  // unidadMedida: string;
+  // condicionMercancia: string;
+  // ano: Catalogo[] | null;
+  // cantidad: string;
+  // marca: string;
+  // modelo: string;
+  // serie: string;
+  pais: Catalogo[];
+  rfc: string;
+  numeroProgramaImmex: string;
+  razonSocial: string;
+  calle: string;
+  numeroExterior: string;
+  numeroInterior: string;
+  correoElectronico: string;
+  telefono: string;
+  correoElectronicoOpcional: string;
+  telefonoOpcional: string;
+  codigoPostal: string;
+  estado: string;
+  colonia: string;
+  datosDelMercancia: [];
 }
