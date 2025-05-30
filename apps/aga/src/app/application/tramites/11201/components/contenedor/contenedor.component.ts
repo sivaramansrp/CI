@@ -1,4 +1,4 @@
-import { AlertComponent, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { AlertComponent, ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, Pedimento, REGEX_LLAVE_DE_PAGO_DE_DERECHO, REGEX_SOLO_NÚMERO } from '@ng-mf/data-access-user';
 import { Aduanas } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -6,14 +6,15 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component, } from '@angular/core';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { DatosDelContenedor } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
+import { ENCABEZADO_TABLA_CONTENEDOR } from '../../enum/solicitante.enum';
 import { EventEmitter } from '@angular/core';
 import { FECHA_INGRESO } from '../../../../core/enums/11201/tramite11201.enum';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { HEADER_MAP_DATOS } from '../../enum/solicitante.enum';
 import { Input } from '@angular/core';
 import { InputFecha, } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent, } from '@libs/shared/data-access-user/src';
@@ -40,6 +41,7 @@ import moment from 'moment';
 import { takeUntil } from 'rxjs';
 
 
+
 /**
  * Componente para gestionar la solicitud de contenedores.
  */
@@ -56,14 +58,61 @@ import { takeUntil } from 'rxjs';
     CatalogoSelectComponent,
     AlertComponent,
     TablaDinamicaComponent,
-    InputFechaComponent
+    InputFechaComponent,
+    NotificacionesComponent,
   ],
-  providers: [BsModalService]
+  providers: [BsModalService],
 })
 export class ContenedorComponent implements OnInit, OnDestroy {
   /**
-   * Representa la fecha de inicio ingresada por el usuario.
+   * Representa una nueva notificación que será utilizada en el componente.
    * 
+   * @type {Notificacion}
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Lista de objetos de tipo Pedimento asociados al componente.
+   * 
+   * Esta propiedad almacena un arreglo de pedimentos que pueden ser utilizados
+   * para mostrar, manipular o procesar información relacionada con los trámites
+   * dentro del componente contenedor.
+   */
+  public pedimentos: Array<Pedimento> = [];
+
+  /**
+   * Identificador numérico del elemento que se desea eliminar.
+   * 
+   * Esta propiedad almacena el ID del elemento seleccionado para su eliminación
+   * dentro del componente. Se debe asignar antes de realizar la operación de borrado.
+   */
+  public elementoParaEliminar!: number;
+
+  /**
+   * Bandera para indicar si se debe mostrar el contenedor.
+   */
+  radioContenedor: boolean = false;
+
+  /**
+   * Bandera para indicar si se debe mostrar el archivo CSV.
+   */
+  radioArchivoCsv: boolean = false
+
+  /**
+   * Bandera para indicar si se debe mostrar el manifiesto.
+   */
+  radioManifesto: boolean = false;
+
+  /**
+   * Evento emitido cuando se solicita la cancelación de la acción actual.
+   * 
+   * Este evento no emite ningún valor y puede ser utilizado por componentes padres
+   * para manejar la lógica de cancelación, como cerrar diálogos o limpiar formularios.
+   */
+  @Output() cancelarEvento = new EventEmitter<void>();
+  /**
+   * Representa la fecha de inicio ingresada por el usuario.
+   *
    * @type {InputFecha}
    * @default FECHA_INGRESO
    */
@@ -190,28 +239,38 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   public destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * Elemento de entrada de archivo HTML.
+   *
+   * @type {HTMLInputElement}
+   */
+  entradaArchivo!: HTMLInputElement;
+
+  /**
+   * Archivo de medicamentos seleccionado.
+   */
+  archivoMedicamentos: File | null = null;
+
+  /**
+   * Etiqueta del archivo seleccionado.
+   */
+  etiquetaDeArchivo: string = 'Sin archivo seleccionados';
+
+  /**
+   * Indica si el archivo seleccionado no es de tipo CSV.
+   * 
+   * Esta variable se utiliza para validar el tipo de archivo cargado por el usuario.
+   * Si es `true`, significa que el archivo no cumple con el formato CSV requerido.
+   */
+  archivoNoEsCSV: boolean = false;
+
+  /**
    * Configuración de las columnas de la tabla.
    */
-  public encabezadoDeTabla: ConfiguracionColumna<DatosDelContenedor>[] = [
-    { encabezado: '', clave: (artículo) => artículo.id, orden: 1 },
-    { encabezado: 'Iniciales del equipo', clave: (artículo) => artículo.inicialesEquipo, orden: 1 },
-    { encabezado: 'Número de equipo', clave: (artículo) => artículo.numeroEquipo, orden: 2 },
-    { encabezado: 'Dígito Verificador', clave: (artículo) => artículo.digitoVerificador, orden: 3 },
-    { encabezado: 'Tipo de equipo', clave: (artículo) => artículo.tipoEquipo, orden: 4 },
-    { encabezado: 'Aduana', clave: (artículo) => artículo.aduana, orden: 5 },
-    { encabezado: 'Fecha Ingreso', clave: (artículo) => artículo.fechaIngreso, orden: 6 },
-    { encabezado: 'Vigencia', clave: (artículo) => artículo.vigencia, orden: 7 },
-    { encabezado: 'Estado de constancia', clave: (artículo) => artículo.estadoConstancia, orden: 8 },
-    { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existeEnVUCEM, orden: 9 },
-    { encabezado: 'Id constancia', clave: (artículo) => artículo.idConstancia, orden: 10 },
-    { encabezado: 'Número manifiesto', clave: (artículo) => artículo.numeroManifiesto, orden: 11 },
-    { encabezado: 'Id solicitud', clave: (artículo) => artículo.idSolicitud, orden: 12 },
-    { encabezado: 'Fecha inicio', clave: (artículo) => artículo.fechaInicio, orden: 13 }
-  ];
+  public encabezadoDeTabla = ENCABEZADO_TABLA_CONTENEDOR;
 
   /**
    * Referencia a la clase o enumeración `TablaSeleccion`.
-   * 
+   *
    * Esta propiedad se utiliza para acceder a las funcionalidades
    * o valores definidos en `TablaSeleccion` dentro del componente.
    */
@@ -330,17 +389,46 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Inicializa el formulario reactivo.
    */
-  inicializarFormulario(): void {
+  public inicializarFormulario(): void {
     this.solicitudForm = this.fb.group({
-      tipoBusqueda: [this.solicitud11201State?.tipoBusqueda, Validators.required],
+      tipoBusqueda: [
+        this.solicitud11201State?.tipoBusqueda,
+        Validators.required,
+      ],
       aduana: [this.solicitud11201State?.aduana, Validators.required],
-      fechaIngreso: [this.solicitud11201State?.fechaIngreso, Validators.required],
-      inicialesContenedor: [this.solicitud11201State?.inicialesContenedor, [Validators.required, Validators.maxLength(10), Validators.pattern('^[a-zA-Z0-9]+$')]],
-      numeroContenedor: [this.solicitud11201State?.numeroContenedor, [Validators.required, Validators.maxLength(15), Validators.pattern('^[a-zA-Z0-9]+$')]],
-      digitoDeControl: [this.solicitud11201State?.digitoDeControl, [Validators.maxLength(1), Validators.pattern('^[0-9]$')]],
-      contenedores: [this.solicitud11201State?.contenedores, Validators.required],
+      fechaIngreso: [
+        this.solicitud11201State?.fechaIngreso,
+        Validators.required,
+      ],
+      inicialesContenedor: [
+        this.solicitud11201State?.inicialesContenedor,
+        [
+          Validators.required,
+          Validators.maxLength(10),
+          Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
+        ],
+      ],
+      numeroContenedor: [
+        this.solicitud11201State?.numeroContenedor,
+        [
+          Validators.required,
+          Validators.maxLength(15),
+          Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
+        ],
+      ],
+      digitoDeControl: [
+        this.solicitud11201State?.digitoDeControl,
+        [Validators.maxLength(1), Validators.pattern(REGEX_SOLO_NÚMERO)],
+      ],
+      contenedores: [
+        this.solicitud11201State?.contenedores,
+        Validators.required,
+      ],
       tipoTransporte: ['', Validators.required],
-      menuDesplegable: [this.solicitud11201State.menuDesplegable, Validators.required],
+      menuDesplegable: [
+        this.solicitud11201State.menuDesplegable,
+        Validators.required,
+      ],
       numeroManifiesta: [
         this.solicitud11201State.numeroManifiesta,
         [Validators.required, Validators.maxLength(50)],
@@ -349,7 +437,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         this.solicitud11201State.aduanaMenuDesplegable,
         Validators.required,
       ],
-      archivoSeleccionado: [this.solicitud11201State?.archivoSeleccionado, Validators.required],
+      archivoSeleccionado: [
+        this.solicitud11201State?.archivoSeleccionado,
+        Validators.required,
+      ],
       fechaDeIngreso: [
         this.solicitud11201State?.fechaDeIngreso,
         Validators.required,
@@ -358,7 +449,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.mostrarCampos();
     this.solicitudForm
       .get('inicialesContenedor')
-      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((valor) => {
+      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((valor) => {
         if (valor) {
           const SANITIZED = valor.replace(REGEX_REEMPLAZAR, '').toUpperCase();
           this.solicitudForm
@@ -374,71 +466,101 @@ export class ContenedorComponent implements OnInit, OnDestroy {
 
     this.solicitudForm
       .get('numeroContenedor')
-      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((valor) => {
+      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((valor) => {
         if (valor) {
           const SANITIZED = valor.replace(REGEX_REEMPLAZAR, '');
           this.solicitudForm
             .get('numeroContenedor')
             ?.setValue(SANITIZED, { emitEvent: false });
-          this.setValoresStore(this.solicitudForm, 'numeroContenedor', 'setNumeroContenedor');
+          this.setValoresStore(
+            this.solicitudForm,
+            'numeroContenedor',
+            'setNumeroContenedor'
+          );
         }
       });
     this.solicitudForm
       .get('digitoDeControl')
-      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((valor) => {
+      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((valor) => {
         if (valor) {
           const SANITIZED = valor.replace(REGEX_NUMEROS, '');
           this.solicitudForm
             .get('digitoDeControl')
             ?.setValue(SANITIZED, { emitEvent: false });
-          this.setValoresStore(this.solicitudForm, 'digitoDeControl', 'setDigitoDeControl');
+          this.setValoresStore(
+            this.solicitudForm,
+            'digitoDeControl',
+            'setDigitoDeControl'
+          );
         }
       });
     // Escuchar cambios en tipoBusqueda para mostrar secciones
-    this.solicitudForm.get('tipoBusqueda')?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
-      this.setValoresStore(this.solicitudForm, 'tipoBusqueda', 'setTipoBusqueda');
-      this.mostrarCampos();
-    });
+    this.solicitudForm
+      .get('tipoBusqueda')
+      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(() => {
+        this.setValoresStore(
+          this.solicitudForm,
+          'tipoBusqueda',
+          'setTipoBusqueda'
+        );
+        this.mostrarCampos();
+      });
 
     // Escuchar cambios en tipoTransporte
-    this.solicitudForm.get('aduana')?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
-      this.setValoresStore(this.solicitudForm, 'aduana', 'setAduana');
-      this.solicitudForm.get('fechaIngreso')?.setValue(moment().format('YYYY-MM-DD'));
-      this.setValoresStore(this.solicitudForm, 'fechaIngreso', 'setFechaIngreso');
-    });
+    this.solicitudForm
+      .get('aduana')
+      ?.valueChanges.pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(() => {
+        this.setValoresStore(this.solicitudForm, 'aduana', 'setAduana');
+        this.solicitudForm
+          .get('fechaIngreso')
+          ?.setValue(moment().format('YYYY-MM-DD'));
+        this.setValoresStore(
+          this.solicitudForm,
+          'fechaIngreso',
+          'setFechaIngreso'
+        );
+      });
     this.inicializarEstadoFormulario();
   }
+
   /**
-   * @method inicializarEstadoFormulario
-   * @description Inicializa el estado del formulario según el modo de solo lectura.
-   * 
-   * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
-   * En caso contrario, habilita los controles del formulario.
-   * 
-   * @returns {void}
+   * Cargar datos de la tabla.
+   *
+   * Este método obtiene los datos de la tabla desde el servicio `datosTramiteService`
+   * y los almacena en la propiedad `datosTabla`. Utiliza `takeUntil` para cancelar la suscripción
+   * cuando el componente se destruye, evitando fugas de memoria.
+   *
+   * @example
+   * // Llamar al método para cargar los datos de la tabla
+   * this.loadDatosTablaData();
    */
+  loadDatosTablaData(): void {
+    this.datosTramiteService
+      .getDatosTableData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.datosTabla = data;
+      });
+  }
+  /**
+  * @method inicializarEstadoFormulario
+  * @description Inicializa el estado del formulario según el modo de solo lectura.
+  * 
+  * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
+  * En caso contrario, habilita los controles del formulario.
+  * 
+  * @returns {void}
+  */
   inicializarEstadoFormulario(): void {
     if (this.soloLectura) {
       this.solicitudForm?.disable();
     } else {
       this.solicitudForm?.enable();
     }
-  }
-  /**
-     * Cargar datos de la tabla.
-     * 
-     * Este método obtiene los datos de la tabla desde el servicio `datosTramiteService`
-     * y los almacena en la propiedad `datosTabla`. Utiliza `takeUntil` para cancelar la suscripción
-     * cuando el componente se destruye, evitando fugas de memoria.
-     * 
-     * @example
-     * // Llamar al método para cargar los datos de la tabla
-     * this.loadDatosTablaData();
-     */
-  loadDatosTablaData(): void {
-    this.datosTramiteService.getDatosTableData().pipe(takeUntil(this.destroyNotifier$)).subscribe((data) => {
-      this.datosTabla = data;
-    });
   }
 
   /**
@@ -461,11 +583,13 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   cargarCatalogos(): void {
     // Cargar catálogo de contenedores
-    this.datosTramiteService.getContenedores().pipe(takeUntil(this.destroyNotifier$)).pipe(takeUntil(this.destroyNotifier$)).subscribe(
-      (data) => {
+    this.datosTramiteService
+      .getContenedores()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
         this.contenedores.catalogos = data.data;
-      },
-    );
+      });
   }
 
   /**
@@ -483,12 +607,21 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       case 'Contenedor':
         this.mostrarSeccionContenedor = true;
         this.mostrarSeccionAduanaaFecha = true;
+        this.radioContenedor = false;
+        this.radioArchivoCsv = true;
+        this.radioManifesto = true;
         break;
       case 'No. de Manifiesto':
         this.mostrarSeccionNoManifiesto = true;
+        this.radioContenedor = true;
+        this.radioArchivoCsv = true;
+        this.radioManifesto = false;
         break;
       case 'Archivo CSV':
         this.mostrarAdjuntarArchivo = true;
+        this.radioContenedor = true;
+        this.radioArchivoCsv = false;
+        this.radioManifesto = true;
         break;
       default:
         break;
@@ -534,7 +667,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     const INICIALESCONTENEDOR = this.solicitudForm.value.inicialesContenedor;
     const NUMEROCONTENEDOR = this.solicitudForm.value.numeroContenedor;
     const CONTENEDORES = this.solicitudForm.value.contenedores;
-    if (INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA && CONTENEDORES && FECHAINGRESO) {
+    if (INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA && CONTENEDORES && FECHAINGRESO
+    ) {
       this.agregarSolicitud();
     }
   }
@@ -543,19 +677,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Adjuntar archivo CSV y parsear su contenido.
    */
   adjuntarArchivo(): void {
-    const FILE_INPUT = document.getElementById(
-      'archivoSeleccionado'
-    ) as HTMLInputElement;
-    const FILE = FILE_INPUT.files?.[0];
-    if (FILE) {
-      const READER = new FileReader();
-      READER.onload = (e): void => {
-        const TEXT = e.target?.result as string;
-        this.analizarGramaticalmenteCSV(TEXT);
-        this.mostrarArchivoSeleccionadoTable = true;
-      };
-      READER.readAsText(FILE);
-    }
+    this.mostrarArchivoSeleccionadoTable = true;
   }
 
   /**
@@ -576,57 +698,63 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       READER.readAsText(FILE);
     }
   }
+
+  /**
+ * Restablece el estado del componente al regresar de la carga de archivos.
+ * 
+ * - Oculta la tabla de carga de archivos.
+ * - Limpia el valor del input de archivo.
+ * - Restablece la etiqueta del archivo a "Sin archivo seleccionados".
+ * 
+ * @returns {void} No retorna ningún valor.
+ */
+  regresar(): void {
+    const FILE_INPUT = document.getElementById(
+      'cargarArchivo'
+    ) as HTMLInputElement;
+    this.mostrarCargarArchivoTable = false;
+    FILE_INPUT.value = '';
+    this.etiquetaDeArchivo = 'Sin archivo seleccionados';
+  }
+
   /**
    * Método para analizar una cadena CSV y convertirla en una lista de objetos.
-   * 
+   *
    * Este método toma una cadena CSV, la divide en líneas y luego en columnas, mapea los encabezados
    * a los nombres de las propiedades del objeto y finalmente asigna los valores correspondientes
    * a cada objeto. Los objetos resultantes se almacenan en `datosTabla`.
-   * 
+   *
    * @param {string} csv - La cadena CSV a analizar.
-   * 
+   *
    * @example
    * // Llamar al método para analizar una cadena CSV
    * this.analizarGramaticalmenteCSV('Aduana,Iniciales del equipo,Tipo de equipo,...\nValor1,Valor2,Valor3,...');
    */
   analizarGramaticalmenteCSV(csv: string): void {
-    const LINES = csv.split('\n').filter(line => line.trim() !== '');
+    const LINES = csv.split('\n').filter((line) => line.trim() !== '');
     const HEADERS = LINES[0].split(',');
-    const HEADER_MAP: { [key: string]: string } = {
-      'Id': 'id',
-      'Aduana': 'aduana',
-      'Iniciales del equipo': 'inicialesEquipo',
-      'Tipo de equipo': 'tipoEquipo',
-      'Número de equipo': 'numeroEquipo',
-      'Dígito Verificador': 'digitoVerificador',
-      'Fecha Ingreso': 'fechaIngreso',
-      'Vigencia': 'vigencia',
-      'Estado de constancia': 'estadoConstancia',
-      'Existe en VUCEM': 'existeEnVUCEM',
-      'Id constancia': 'idConstancia',
-      'Número manifiesto': 'numeroManifiesto',
-      'Id solicitud': 'idSolicitud',
-      'Fecha inicio': 'fechaInicio'
-    };
-    const DATA = LINES.slice(1).map((line) => {
-      const VALUES = line.split(',');
-      const OBJ: { [key: string]: string } = {};
-      HEADERS.forEach((header, index) => {
-        const KEY = HEADER_MAP[header.trim()] || header.trim();
-        OBJ[KEY] = VALUES[index]?.trim();
-      });
-      return OBJ;
-    }).filter(artículo => Object.values(artículo).some(valor => valor));
+    const HEADER_MAP = HEADER_MAP_DATOS;
+    const DATA = LINES.slice(1)
+      .map((line) => {
+        const VALUES = line.split(',');
+        const OBJ: { [key: string]: string } = {};
+        HEADERS.forEach((header, index) => {
+          const KEY = HEADER_MAP[header.trim()] || header.trim();
+          OBJ[KEY] = VALUES[index]?.trim();
+        });
+        return OBJ;
+      })
+      .filter((articulo) => Object.values(articulo).some((valor) => valor));
     this.datosTabla = DATA;
   }
 
   /**
    * Envía el manifiesto después de validar el formulario de solicitud.
-   * 
+   *
    * Este método marca todos los campos del formulario como tocados y verifica
    * si los campos 'numeroManifiesta' y 'menuDesplegable' son válidos. Si ambos
    * campos son válidos, se muestra un mensaje.
-   * 
+   *
    * @returns {void}
    */
   enviarManifiesto(): void {
@@ -640,20 +768,18 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Verifica si el formulario de solicitud es válido y, si es así, 
-   * implementa la lógica de pago y envía el formulario. 
+   * Verifica si el formulario de solicitud es válido y, si es así,
+   * implementa la lógica de pago y envía el formulario.
    * Si el formulario no es válido, muestra un mensaje de error.
-   * 
+   *
    * @returns {void}
    */
   esPago(): void {
     if (this.solicitudForm.valid) {
-      // Implementar lógica de pago y envío del formulario
-      this.datosTramiteService.submitSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
-        () => {
-          // Manejar envío exitoso
-        }
-      );
+      this.datosTramiteService
+        .submitSolicitud()
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe();
     } else {
       this.mostrarMensaje = true;
     }
@@ -672,10 +798,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
 
   /**
    * Restablece los botones de radio y los campos relacionados en el formulario de solicitud.
-   * 
-   * Este método se utiliza para limpiar el valor del campo 'tipoBusqueda' y 
+   *
+   * Este método se utiliza para limpiar el valor del campo 'tipoBusqueda' y
    * llamar a la función `limpiarCampos` para restablecer otros campos relacionados.
-   * 
+   *
    * @returns {void} No retorna ningún valor.
    */
   cancelarRadioButton(): void {
@@ -687,21 +813,27 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Agrega una nueva solicitud utilizando el servicio `datosTramiteService`.
    * La solicitud se agrega a la lista `datosDelContenedor` y se actualiza el estado en `tramite11201Store`.
-   * 
+   *
    * @remarks
    * Este método se suscribe al observable devuelto por `agregarSolicitud` y maneja la respuesta.
    * Si la solicitud es exitosa, se actualiza el formulario `solicitudForm` para limpiar los campos y marcarlo como no modificado.
-   * 
+   *
    * @returns {void}
    */
   agregarSolicitud(): void {
-    this.datosTramiteService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$)).subscribe(
-      (respuesta) => {
+    this.datosTramiteService
+      .agregarSolicitud()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
         // Manejar éxito, posiblemente refrescar la grilla o mostrar mensaje
         if (respuesta?.success) {
           respuesta.datos.id = this.datosDelContenedor.length + 1;
           this.datosDelContenedor.push(respuesta.datos);
-          (this.tramite11201Store.setDelContenedor as (valor: DatosDelContenedor[]) => void)(this.datosDelContenedor);
+          (
+            this.tramite11201Store.setDelContenedor as (
+              valor: DatosDelContenedor[]
+            ) => void
+          )(this.datosDelContenedor);
           this.solicitudForm.patchValue({
             aduana: '',
             fechaIngreso: '',
@@ -713,39 +845,40 @@ export class ContenedorComponent implements OnInit, OnDestroy {
           this.solicitudForm.markAsUntouched();
           this.solicitudForm.markAsPristine();
         }
-      }
-    );
+      });
   }
 
   /**
    * Método para obtener la lista de transporte.
-   * 
+   *
    * Este método llama al servicio `datosTramiteService` para obtener la lista de transporte
    * y suscribe a los resultados hasta que el componente sea destruido. Los datos obtenidos
    * se asignan a la propiedad `catalogoList`.
-   * 
+   *
    * @returns {void} No retorna ningún valor.
    */
   public fetchgetTransporteList(): void {
     this.datosTramiteService
       .getTransporteList('transporteList')
-      .pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
         this.catalogoList = respuesta.data;
       });
   }
 
   /**
    * Método para obtener la lista de aduanas.
-   * 
+   *
    * Este método realiza una solicitud al servicio `datosTramiteService` para obtener la lista de aduanas.
    * La respuesta se almacena en la propiedad `aduanaList.catalogos`.
-   * 
+   *
    * @returns {void} No retorna ningún valor.
    */
   public fetchAduanaList(): void {
     this.datosTramiteService
       .getAduanaList('aduanaList')
-      .pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
         this.aduanaList.catalogos = respuesta.data;
       });
   }
@@ -758,7 +891,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    */
   abiertoModelo(datos: string): void {
     this.abiertoModeloDatos = datos;
-    this.modalRef = this.modalService.show(this.plantillaDeModelo, { id: 1, class: 'modal-sm' });
+    this.modalRef = this.modalService.show(this.plantillaDeModelo, {
+      id: 1,
+      class: 'modal-sm',
+    });
   }
 
   /**
@@ -791,4 +927,90 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.solicitudForm.get('fechaIngreso')?.markAsUntouched();
   }
 
+  /**
+   * Activa la selección del archivo de medicamentos.
+   * @returns {void}
+   */
+  activarSeleccionArchivo(): void {
+    this.entradaArchivo = document.getElementById(
+      'cargarArchivo'
+    ) as HTMLInputElement;
+    if (this.entradaArchivo) {
+      this.entradaArchivo.click();
+    }
+  }
+
+  /**
+   * Maneja el cambio de archivo en el input de archivo.
+   *
+   * @param event Evento de cambio de archivo.
+   *
+   * @returns {void}
+   */
+  onCambioDeArchivo(event: Event): void {
+    const TARGET = event.target as HTMLInputElement;
+    const FILE_INPUT = document.getElementById(
+      'cargarArchivo'
+    ) as HTMLInputElement;
+    const FILE = FILE_INPUT.files?.[0];
+    if (FILE) {
+      if (FILE.type !== 'text/csv' && !FILE.name.endsWith('.csv')) {
+        this.abrirModal();
+        return;
+      }
+
+      if (TARGET.files && TARGET.files.length > 0) {
+        this.archivoMedicamentos = TARGET.files[0];
+        this.etiquetaDeArchivo = this.archivoMedicamentos.name;
+      } else {
+        this.etiquetaDeArchivo = 'Sin archivo seleccionados';
+      }
+    }
+  }
+
+  /**
+   * Elimina un pedimento de la lista si el parámetro `borrar` es verdadero.
+   *
+   * @param borrar - Indica si se debe eliminar el pedimento seleccionado.
+   * 
+   * Si `borrar` es `true`, elimina el elemento en la posición `elementoParaEliminar` del arreglo `pedimentos`.
+   */
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+  }
+
+  /**
+   * Abre un modal de notificación para alertar al usuario que debe seleccionar un archivo CSV.
+   * 
+   * @param i - (Opcional) Índice del elemento a eliminar. Por defecto es 0.
+   * 
+   * Este método inicializa la notificación con un mensaje de alerta y configura el elemento a eliminar.
+   */
+  abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Por favor seleccione un archivo CSV.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'OK',
+      txtBtnCancelar: '',
+    };
+    this.elementoParaEliminar = i;
+  }
+
+  /**
+   * Cancela la operación actual.
+   * 
+   * Este método restablece el formulario de solicitud a su estado inicial
+   * y emite un evento para notificar al componente padre que la acción de cancelar ha sido solicitada.
+   */
+  cancelar(): void {
+    this.solicitudForm.reset();
+    this.cancelarEvento.emit();
+  }
 }

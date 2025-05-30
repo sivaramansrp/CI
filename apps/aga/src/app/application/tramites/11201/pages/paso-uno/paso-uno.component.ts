@@ -65,6 +65,13 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
   @Output() continuarEvento = new EventEmitter<string>();
 
   /**
+   * Evento de continuar.
+   * 
+   * Esta propiedad utiliza `@Output` para emitir un evento `cancelarEvento` con una cadena como valor.
+   */
+  @Output() cancelarEvento = new EventEmitter<string>();
+
+  /**
    * Indicador de validación.
    * 
    * Esta propiedad indica si la validación es verdadera o falsa.
@@ -135,15 +142,27 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
   continuar(): void {
     this.continuarEvento.emit('');
   }
+
   /**
- * @method fetchGetDatosConsulta
- * @description Método para obtener los datos de consulta desde el servicio `DatosTramiteService` y actualizar el estado del store `Tramite11201Store`.
- * 
- * Este método realiza una solicitud HTTP para obtener los datos de consulta y, si la respuesta es exitosa, actualiza múltiples propiedades del store con los datos recibidos.
- * Utiliza el operador `takeUntil` para cancelar la suscripción cuando el componente se destruye, evitando fugas de memoria.
- * 
- * @returns {void}
- */
+   * Cancela el proceso actual y notifica a la página principal.
+   * 
+   * Este método restablece el índice a la primera pestaña (opcional)
+   * y emite el evento `cancelarEvento` para informar al componente padre
+   * que el usuario ha decidido cancelar la operación.
+   */
+  cancelar(): void {
+    this.indice = 1;
+    this.cancelarEvento.emit();
+  }
+  /**
+   * @method fetchGetDatosConsulta
+   * @description Método para obtener los datos de consulta desde el servicio `DatosTramiteService` y actualizar el estado del store `Tramite11201Store`.
+   * 
+   * Este método realiza una solicitud HTTP para obtener los datos de consulta y, si la respuesta es exitosa, actualiza múltiples propiedades del store con los datos recibidos.
+   * Utiliza el operador `takeUntil` para cancelar la suscripción cuando el componente se destruye, evitando fugas de memoria.
+   * 
+   * @returns {void}
+   */
   public fetchGetDatosConsulta(): void {
     this.datosTramiteService
       .getDatosConsulta()

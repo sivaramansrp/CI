@@ -9,7 +9,8 @@
                         <div class="radio">
                             <label>
                                 <input type="radio" formControlName="tipoBusqueda" id="idRadioContenedor"
-                                    value="Contenedor" class="form-check-input">
+                                    value="Contenedor" class="form-check-input"
+                                    [attr.disabled]="radioContenedor ? true : null">
                                 Contenedor
                             </label>
                         </div>
@@ -19,7 +20,8 @@
                         <div class="radio">
                             <label>
                                 <input type="radio" formControlName="tipoBusqueda" id="idRadioManifiesto"
-                                    value="No. de Manifiesto" class="form-check-input">
+                                    value="No. de Manifiesto" class="form-check-input"
+                                    [attr.disabled]="radioManifesto ? true : null">
                                 No. de Manifiesto
                             </label>
                         </div>
@@ -29,7 +31,7 @@
                         <div class="radio">
                             <label>
                                 <input type="radio" formControlName="tipoBusqueda" id="idRedioExcel" value="Archivo CSV"
-                                    class="form-check-input">
+                                    class="form-check-input" [attr.disabled]="radioArchivoCsv ? true : null">
                                 Archivo CSV
                             </label>
                         </div>
@@ -40,27 +42,19 @@
 
         <ng-container *ngIf="mostrarSeccionAduanaaFecha">
             <div id="seccionAduanaaFecha">
-                <div class="row">
-                    <div class="col-md-12">
-                        <h3>Datos generales</h3>
-                        <hr class="red">
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-md-4 menu-desplegable">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <ng-titulo titulo="Datos generales" />
                         <app-catalogo-select [catalogo]="aduanaList.catalogos" [label]="aduana.labelNombre"
                             [placeholder]="aduana.primerOpcion" [required]="true" formControlName="aduana"
                             (change)="setValoresStore(solicitudForm,'aduana', 'setAduana')"
                             [isDisabled]="soloLectura"></app-catalogo-select>
                     </div>
                 </div>
-
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group datepicker-group">
-                            <input-fecha [datos]="fechaInicioInput"
-                                [setFecha]="solicitudForm.get('fechaIngreso')?.value"
+                            <input-fecha [datos]="fechaInicioInput" formControlName="fechaDeIngreso"
                                 (valorCambiado)="cambioFechaIngreso($event)" [isDisabled]="soloLectura"></input-fecha>
                         </div>
                     </div>
@@ -131,8 +125,7 @@
             <div id="seccionNoManifiesto">
                 <div class="row">
                     <div class="col-md-12">
-                        <h3>Ingresar por manifiesto</h3>
-                        <hr class="red">
+                        <ng-titulo titulo="Ingresar por manifiesto" />
                     </div>
                 </div>
                 <div class="row">
@@ -168,8 +161,9 @@
                 <div class="col-md-12" id="IdGridContenedoresITC">
                     <div class="table-responsive">
                         <div class="innercontainer">
-                            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [disableSeleccionTablaCheckBox]="soloLectura"
-                                [configuracionTabla]="encabezadoDeTabla" [datos]="datosTabla"></app-tabla-dinamica>
+                            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+                                [disableSeleccionTablaCheckBox]="soloLectura" [configuracionTabla]="encabezadoDeTabla"
+                                [datos]="datosTabla"></app-tabla-dinamica>
                         </div>
                     </div>
                     <div align="center" id="paginGridContenedoresITC">
@@ -197,9 +191,9 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group datepicker-group">
-                                <input-fecha [datos]="fechaInicioInput"
-                                    [setFecha]="solicitudForm.get('fechaDeIngreso')?.value"
-                                    (valorCambiado)="cambioFechaDeIngreso($event)" [isDisabled]="soloLectura"></input-fecha>
+                                <input-fecha [datos]="fechaInicioInput" formControlName="fechaDeIngreso"
+                                    (valorCambiado)="cambioFechaDeIngreso($event)"
+                                    [isDisabled]="soloLectura"></input-fecha>
                             </div>
                         </div>
                     </div>
@@ -207,27 +201,42 @@
                         <div class="col-md-4">
                             <ng-titulo titulo="Adjuntar archivo" />
                             <label for="archivoSeleccionado" class="form-label">Archivo Seleccionado*:</label>
-                            <input class="form-control" type="file" name="archivoSeleccionado" id="archivoSeleccionado" required
-                                [disabled]="soloLectura">
+                            <input class="form-control" type="string" name="archivoSeleccionado"
+                                id="archivoSeleccionado" [value]="etiquetaDeArchivo" readonly>
                         </div>
                         <div class="col-md-4 d-flex justify-content-end" style="width: 100%">
-                            <button type="button" class="btn btn-default" (click)="adjuntarArchivo()" [disabled]="soloLectura">Cargar
-                                Archivo</button>
+                            <button
+                                [disabled]="!solicitudForm.get('aduanaMenuDesplegable')?.value || !solicitudForm.get('fechaDeIngreso')?.value"
+                                type="button" class="btn btn-default" (click)="adjuntarArchivo() ">Cargar
+                                archivo</button>
                         </div>
-                        <div *ngIf="mostrarArchivoSeleccionadoTable" class="table-container ">
-                            <app-tabla-dinamica [configuracionTabla]="encabezadoDeTabla" [datos]="datosTabla"></app-tabla-dinamica>
+                        <div class="row" style="margin-top: 20px" *ngIf="mostrarArchivoSeleccionadoTable">
+                            <div class="col-md-8">
+                                <ng-titulo titulo="Cargar Archivo" />
+                                <div class="col-md-8">
+                                    <label for="cargarArchivo" class="form-label d-flex">Archivo*:</label>
+                                    <button class="mb-2" type="button" for="cargarArchivo" class="file-upload"
+                                        (click)="activarSeleccionArchivo()">
+                                        Seleccionar archivo
+                                    </button>
+                                    <span class="ml-2">{{ etiquetaDeArchivo }}</span>
+                                    <input type="file" id="cargarArchivo" class="file-upload" style="display: none;"
+                                        accept=".csv" (change)="onCambioDeArchivo($event)">
+                                    @if (nuevaNotificacion) { <section>
+                                        <lib-notificaciones [notificacionInput]="nuevaNotificacion"
+                                            (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
+                                    </section> }
+                                </div>
+                            </div>
+                            <div class="col-md-4 d-flex justify-content-end p-5 gap-3" style="width: 100%">
+                                <button type="button" class="btn btn-default" (click)="regresar()">Regresar</button>
+                                <button type="button" class="btn btn-default" (click)="archivo()">Enviar</button>
+                            </div>
                         </div>
-                        <div class="col-md-4">
-                            <ng-titulo titulo="Cargar Archivo" />
-                            <label for="cargarArchivo" class="form-label">Archivo Seleccionado*:</label>
-                            <input class="form-control" type="file" name="cargarArchivo" id="cargarArchivo" required
-                                [disabled]="soloLectura">
-                        </div>
-                        <div class="col-md-4 d-flex justify-content-end" style="width: 100%">
-                            <button type="button" class="btn btn-default" (click)="archivo()" [disabled]="soloLectura">Enviar</button>
-                        </div>
+
                         <div *ngIf="mostrarCargarArchivoTable" class="table-container">
-                            <app-tabla-dinamica [configuracionTabla]="encabezadoDeTabla" [datos]="datosTabla"></app-tabla-dinamica>
+                            <app-tabla-dinamica [configuracionTabla]="encabezadoDeTabla"
+                                [datos]="datosTabla"></app-tabla-dinamica>
                         </div>
                     </div>
                 </div>
@@ -259,7 +268,7 @@
                     </div>
                     <div class="pull-right row">
                         <div class="col-md-5">
-                            <button type="button" class="btn btn-danger">
+                            <button type="button" class="btn btn-danger" (click)="cancelar()">
                                 Cancelar
                             </button>
                         </div>
