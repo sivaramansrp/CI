@@ -10,8 +10,8 @@ import {
   Tramite90201Store,
 } from '../../../../estados/tramites/tramite90201.store';
 
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { PRODUCTOR_INDIRECTO } from '@libs/shared/data-access-user/src/core/enums/90201/productor-indirecto-tabla.enum';
 
 import { ProductorIndirectoTabla } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
 import ProductorTabla from '@libs/shared/theme/assets/json/90201/productor-indirecto-tabla.json';
@@ -19,7 +19,6 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramit
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite90201Query } from '../../../../estados/queries/tramite90201.query';
-import { PRODUCTOR_INDIRECTO } from '@libs/shared/data-access-user/src/core/enums/90201/productor-indirecto-tabla.enum';
 
 /**
  * Componente ProductorIndirecto que se utiliza para mostrar y gestionar los ProductorIndirecto.

@@ -7,14 +7,13 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { Router } from '@angular/router';
 
+import { ACUSE_DATOS } from '@libs/shared/data-access-user/src/core/enums/90201/productor-indirecto-tabla.enum';
 import { AcuseTablaDatos } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
 import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component';
 import TablaDatos from '@libs/shared/theme/assets/json/90201/acuse-tabla.json';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { ACUSE_DATOS } from '@libs/shared/data-access-user/src/core/enums/90201/productor-indirecto-tabla.enum';
 
 
 /**
@@ -81,9 +80,8 @@ export class FirmarSolicitudPasoDosComponent {
    * @param ev - La cadena de texto que representa la firma obtenida.
    */
   obtieneFirma(ev: string): void {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const firma: string = ev;
-    if (firma) {
+    const FIRMA: string = ev;
+    if (FIRMA) {
     this.router.navigate(['temporal-contenedores/acuse'])
   }
 }

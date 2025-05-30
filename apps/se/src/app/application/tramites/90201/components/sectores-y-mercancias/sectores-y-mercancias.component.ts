@@ -1,12 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { map, merge, Subject, Subscription, takeUntil } from 'rxjs';
+
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Subject, Subscription, map, merge, takeUntil } from 'rxjs';
+
 import {
   Solicitud90201State,
   Tramite90201Store,
@@ -14,11 +16,11 @@ import {
 import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ExpansionDeProductoresService } from '@libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.service';
 
 import { SECTORESY } from '@libs/shared/data-access-user/src';
+import { SECTORES_TABLA } from '@libs/shared/data-access-user/src/core/enums/90201/productor-indirecto-tabla.enum';
 import { SectoresTabla } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
 import sectoresTabla from '@libs/shared/theme/assets/json/90201/sectores-tabla.json';
 
@@ -26,7 +28,6 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramit
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite90201Query } from '../../../../estados/queries/tramite90201.query';
-import { SECTORES_TABLA } from '@libs/shared/data-access-user/src/core/enums/90201/productor-indirecto-tabla.enum';
 
 /**
  * Componente SectoresYMercancias que se utiliza para mostrar y gestionar los SectoresYMercancias.

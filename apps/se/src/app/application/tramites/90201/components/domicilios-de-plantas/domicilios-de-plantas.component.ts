@@ -5,7 +5,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 
 import { Solicitud90201State,Tramite90201Store } from '../../../../estados/tramites/tramite90201.store';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DOMICILIOS_PLANTAS } from '@libs/shared/data-access-user/src/core/enums/90201/productor-indirecto-tabla.enum';
 import { DomiciliosDePlantasTabla } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
