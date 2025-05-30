@@ -94,7 +94,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * // Inicializa el componente y gestiona el flujo de datos según el estado de la consulta.
    */
   ngOnInit(): void {
-    if(this.consultaState.update) {
+    if(this.consultaState?.update) {
       this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;

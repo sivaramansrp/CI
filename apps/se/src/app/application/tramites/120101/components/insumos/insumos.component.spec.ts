@@ -20,6 +20,7 @@ describe('InsumosComponent', () => {
       obtenerDatosTablaInsumos: jest.fn().mockReturnValue(of([])),
       obtenerDatosFraccionArancelaria: jest.fn().mockReturnValue(of([])),
       obtenerDatosEstados: jest.fn().mockReturnValue(of([])),
+      obtenerTablaInsumos: jest.fn().mockReturnValue(of([]))
     };
 
     servicioDeFormularioServiceMock = {

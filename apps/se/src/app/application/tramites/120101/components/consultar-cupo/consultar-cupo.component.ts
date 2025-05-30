@@ -206,7 +206,7 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
     this.servicioDeFormularioService.registerForm('consultarCupoForm', this.ninoFormGroup);
     this.obtenerClasificacionRegimenDatos();
     this.obtenerPaisDatos();
-    if (this.consultaState.readonly) {
+    if (this.consultaState?.readonly) {
       this.mostrarCampoDeDescripcion();
       this.obtenerTablaDatos();
     }
@@ -336,7 +336,7 @@ export class ConsultarCupoComponent implements OnInit, OnDestroy {
           );
           this.cuerpoTabla = NUEVO_CUERPO_TABLA;
           this.tramite120101Store.setDynamicFieldValue('cuerpoTabla', this.cuerpoTabla);
-          if (this.consultaState.readonly) {
+          if (this.consultaState?.readonly) {
             this.controladorDeClicsArchivo(NUEVO_CUERPO_TABLA?.[0]);
           }
         });

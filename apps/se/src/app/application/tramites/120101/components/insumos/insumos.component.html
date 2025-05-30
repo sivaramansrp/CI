@@ -2,14 +2,14 @@
  
   <div class="mt-5">
     <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="tableHeaderExtranjeros"
-      [datos]="tablaInsumos" [disableSeleccionTablaCheckBox]="consultaState.readonly ? true : false"></app-tabla-dinamica>
+      [datos]="tablaInsumos" [disableSeleccionTablaCheckBox]="consultaState?.readonly ? true : false"></app-tabla-dinamica>
   </div>
 
   <div class="text-end mt-5">
     <button type="button" class="btn btn-primary me-2">Eliminar</button>
     <button type="button" class="btn btn-primary me-2">Modificar</button>
     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-      data-bs-target="#modalAddAgentMercancias" [disabled]="consultaState.readonly">Agregar</button>
+      data-bs-target="#modalAddAgentMercancias" [disabled]="consultaState?.readonly">Agregar</button>
   </div>
 </div>
 
@@ -24,7 +24,7 @@
         <form [formGroup]="forma">
           <div class="row">
             <formas-dinamicas [forma]="ninoFormGroup" [formularioDatos]="insumosFormData"
-              [estado]="solicitudDeRegistroState" [soloLectura]="consultaState.readonly"
+              [estado]="solicitudDeRegistroState" [soloLectura]="consultaState?.readonly"
               (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
           </div>
         </form>
