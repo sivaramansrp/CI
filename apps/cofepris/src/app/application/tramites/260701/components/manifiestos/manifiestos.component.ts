@@ -1,5 +1,5 @@
 import { AlertComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud260701State, Tramite260701Store } from '../../estados/tramites/tramite260701.store';
 import { Subject,map , takeUntil } from 'rxjs';
@@ -32,6 +32,7 @@ export class ManifiestosComponent implements OnInit,OnDestroy {
      * Mensaje de alerta para el usuario.
      */
     public mensaje: string = MENSAJE_DE_ALERTA;
+    @Input() public formularioSolo: boolean = false;
    
     /**
      * Grupo de formularios principal para gestionar los manifiestos.

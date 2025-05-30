@@ -1,5 +1,5 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable,CrosslistComponent, InputFecha, InputFechaComponent, LISTACLAVESDELOSLOTES,Listaclaves, MERCANCIAS_DATA, MercanciasInfo, NICO_TABLA, ScianModel, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { FECHA_DE_PAGO, LOCALIDAD_COLONIA } from '../../services/certificados-licencias.enum';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud260701State, Tramite260701Store } from '../../estados/tramites/tramite260701.store';
@@ -39,6 +39,7 @@ export class DomicilloDelComponent implements OnInit, OnDestroy {
      * Lista de componentes Crosslist disponibles en la vista.
      */
     @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+    @Input() public formularioSolo: boolean = false;
    
     /**
      * Constructor del componente DomicilloDelComponent.

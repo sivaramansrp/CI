@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260701State, Tramite260701Store } from '../../estados/tramites/tramite260701.store';
 import { Subject,map, takeUntil } from 'rxjs';
@@ -25,6 +25,8 @@ export class RepresentanteLegalComponent implements OnInit,OnDestroy {
      * Grupo de formularios principal para el representante legal.
      */
     representante!: FormGroup;
+
+    @Input() public formularioSolo: boolean = false;
 
     /**
      * Notificador para destruir los observables al finalizar.

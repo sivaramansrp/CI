@@ -33,13 +33,14 @@
                     [radioOptions]="radioOpcions"
                     [selectedValue]="valorSeleccionado"
                     (valueChange)="cambiarRadio($event)"
+                    formControlName="tipoOperacion"
                     id="cumplimiento"
                     [layout]="'horizontal'">
                 </app-input-radio>
               </div>
                 <div class="form-group">
                     <label for="exampleFormControlTextarea1" class="form-label">Justificación*:</label>
-                    <textarea class="form-control h-100" id="exampleFormControlTextarea1" rows="6"></textarea>
+                    <textarea class="form-control h-100" [ngClass]="{'disable-class': esFormularioSoloLectura}" formControlName="justificacion" [readonly]="esFormularioSoloLectura" id="exampleFormControlTextarea1" rows="6"></textarea>
                 </div>
             </div>
         </div>
@@ -51,6 +52,7 @@
                     type="button"
                     class="btn btn-primary"
                     (click)="toggleFormControls()"
+                    [disabled]="esFormularioSoloLectura"
                     >
                     Seleccionar establecimiento
                 </button>
@@ -86,7 +88,7 @@
             </div>
         </div>
     </form>
-    <app-domicillo-del></app-domicillo-del>
-    <app-manifiestos></app-manifiestos>
-    <app-representante-legal></app-representante-legal>
+    <app-domicillo-del [formularioSolo]="esFormularioSoloLectura"></app-domicillo-del>
+    <app-manifiestos [formularioSolo]="esFormularioSoloLectura"></app-manifiestos>
+    <app-representante-legal [formularioSolo]="esFormularioSoloLectura"></app-representante-legal>
 </div>
