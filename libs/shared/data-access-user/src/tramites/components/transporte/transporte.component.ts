@@ -573,12 +573,12 @@ export class TransporteComponent implements OnInit, OnChanges {
    * @returns {void} No retorna ningún valor.
    */
   eliminarSeleccionados(): void {
-    const SELECCIONADOS = this.bodyTabla.every((item) => item.seleccionado);
-
-    if (SELECCIONADOS) {
-      this.bodyTabla = [];
-      this.checkSeleccionarTodos = false;
-    }
+    this.bodyTabla = this.bodyTabla.filter(
+      (transporte) =>
+        !this.transporteSeleccionado.some(
+          (seleccionado) => seleccionado === transporte
+        )
+    );
 
     this.datosTabla.emit(this.bodyTabla);
   }
@@ -629,6 +629,7 @@ export class TransporteComponent implements OnInit, OnChanges {
     this.tituloModal = '';
     this.mensajeModal = '';
     this.accionModificar = false;
+    this.limpiarFormulario();
   }
 
   /**
