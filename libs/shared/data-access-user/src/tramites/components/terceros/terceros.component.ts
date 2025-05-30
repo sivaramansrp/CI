@@ -1,4 +1,12 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -49,11 +57,11 @@ import { ValidacionesFormularioService } from '../../../core/services/shared/val
   ],
   styleUrl: './terceros.component.scss',
 })
-export class TercerosComponent implements OnInit, OnDestroy,AfterViewInit {
+export class TercerosComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * @description
    * Tabindex para el componente.
-   * 
+   *
    * @type {number}
    * @memberof TercerosComponent
    * @input
@@ -71,14 +79,14 @@ export class TercerosComponent implements OnInit, OnDestroy,AfterViewInit {
    * @type {PersonaTerceros[]}
    * @input
    * @optional
-   * 
+   *
    * @description [Compodoc] Arreglo de objetos de tipo PersonaTerceros que representa las personas agregadas como terceros en el trámite. Este input es opcional.
    */
   @Input({ required: false }) personas: PersonaTerceros[] = [];
-   /**
+  /**
    * @description
    * Evento emitido cuando la lista de personas (terceros) cambia.
-   * 
+   *
    * @type {EventEmitter<PersonaTerceros[]>}
    * @memberof TercerosComponent
    * @event personasChange
@@ -86,7 +94,6 @@ export class TercerosComponent implements OnInit, OnDestroy,AfterViewInit {
    */
   @Output() personasChange = new EventEmitter<PersonaTerceros[]>();
 
- 
   public FormPersona: FormGroup = this.fb.group({
     nombre: ['', [Validators.required]],
     correo: [
@@ -125,7 +132,6 @@ export class TercerosComponent implements OnInit, OnDestroy,AfterViewInit {
    */
   encabezadoDeTablaTerceros = CONFIGURACION_ENCABEZADO_TABLA_TERCEROS;
 
-
   /**
    * @description
    * Arreglo para almacenar los terceros seleccionados.
@@ -155,20 +161,19 @@ export class TercerosComponent implements OnInit, OnDestroy,AfterViewInit {
 
   /**
    * @inheritdoc
-   * 
+   *
    * @description
    * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
-   * 
+   *
    * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es verdadero), deshabilita el formulario `FormPersona` para evitar modificaciones.
    * En caso contrario, habilita el formulario para permitir la edición.
    */
   ngAfterViewInit(): void {
-      if(this.esFormularioSoloLectura){
-        this.FormPersona.disable();
-      }
-      else{
-        this.FormPersona.enable();
-      }
+    if (this.esFormularioSoloLectura) {
+      this.FormPersona.disable();
+    } else {
+      this.FormPersona.enable();
+    }
   }
   /**
    * Agrega una persona al arreglo `personas` si el formulario es válido y hay menos de 5 personas.
@@ -234,27 +239,6 @@ export class TercerosComponent implements OnInit, OnDestroy,AfterViewInit {
   }
 
   /**
-   * Elimina una persona de la lista en el índice especificado.
-   * @param i - Índice de la persona a eliminar.
-   * @returns void
-   */
-  eliminar(i: number): void {
-    this.personas.splice(i, 1);
-    this.personasChange.emit(this.personas);
-    this.tercerosStore.setTerceros(this.personas);
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: '',
-      modo: 'action',
-      titulo: TITULO_MODAL_AVISO,
-      mensaje: MSG_ELIMINA_PERSONA,
-      cerrar: false,
-      txtBtnAceptar: 'Cerrar',
-      txtBtnCancelar: '',
-    };
-  }
-
-  /**
    * Verifica si un campo específico en el formulario de persona es válido.
    *
    * @param {string} field - El nombre del campo a validar.
@@ -306,7 +290,7 @@ export class TercerosComponent implements OnInit, OnDestroy,AfterViewInit {
           (seleccionado) => seleccionado.correo === persona.correo
         )
     );
-this.personasChange.emit(this.personas);
+    this.personasChange.emit(this.personas);
     this.tercerosStore.setTerceros(this.personas);
   }
 }
