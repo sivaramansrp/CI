@@ -1,6 +1,6 @@
 import { CancelacionPeticion261701State, Tramite261701Store } from '../../estados/store/tramite261701.store';
 import { Component, OnDestroy, OnInit} from '@angular/core';
-import { ConsultaioQuery, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { ConfiguracionColumna, ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CONFIGURACIONCOLUMNA } from '../../constantes/cancelacion-peticion.enum';
 import { CancelacionPeticionService } from '../../services/cancelacion-peticion.service';
