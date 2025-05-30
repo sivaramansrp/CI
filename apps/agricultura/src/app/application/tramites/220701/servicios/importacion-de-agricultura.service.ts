@@ -14,6 +14,7 @@ import { FormularioPago } from '../modelos/importacion-de-acuicultura.module';
 import { AgriculturaStore } from '../estados/sanidad-certificado.store';
 import { RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
+import { TramiteState } from '../estados/tramite220701.store';
 
 
 /**
@@ -113,13 +114,18 @@ export class ImportacionDeAcuiculturaService {
     );
   }
 
-
-
-
   /**
    * Restablecer el formulario a su estado inicial.
    */
   public limpiarFormulario(): void {
     this.agriculturaStore.limpiarFormulario(); // Restablece todo el estado
+  }
+
+  /**
+   * Obtiene los datos de la solicitud desde un archivo JSON.
+   * @returns Observable con los datos de la solicitud.
+   */
+  getDatosDeLaSolicitudData(): Observable<TramiteState> {
+    return this.http.get<TramiteState>('assets/json/220202/datos-de-la-solicitud.json');
   }
 }

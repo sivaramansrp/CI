@@ -1,0 +1,62 @@
+{
+    "SolicitudState": {
+        "justificacion": "justificacion",
+        "certificadosAutorizados": "ABC123456T21",
+        "fechaInicio": "2025-05-31",
+        "horaDeInspeccion": "20:00",
+        "aduanaDeIngreso": "AEROPUERTO INTERNAL",
+        "sanidadAgropecuaria": "Sanidad Agropecuaria Nacional",
+        "puntoDeInspeccion": "EI Ceibo Puerto Fronterizo",
+        "dependencia": "COFEPRIS ADMINISTRACIÓN DE APOYO JURÍDICO ADUANA 5",
+        "numeroDeProcedimiento": "260703",
+        "nombreInspector": "Inspector Juan Pérez",
+        "primerApellido": "QA",
+        "segundoApellido": "QA",
+        "cantidadContenedores": "123",
+        "tipoContenedor": "QAJA DE TRAILER",
+        "medioDeTransporte": "PRUEBA",
+        "identificacionTransporte": "CONT123456",
+        "esSolicitudFerros": "Sí"
+    },
+    "InternaDatosGeneralesState": {
+        "folioControlUnico": 0,
+        "aduanaIngreso": "AEROPUERTO INTERNAL",
+        "oficinaInspeccion": "OFICINA CENTRAL",
+        "puntoInspeccion": "EI Ceibo Puerto Fronterizo",
+        "claveControlUnico": "CCU123456",
+        "establecimientoTIFs": "TIF-001",
+        "nombreVeterinario": "Dr. Luis Gómez",
+        "numeroGuia": "GUIA-7890",
+        "regimen": "Temporal",
+        "capturaMercancia": "Sí",
+        "animalesVivos": "No",
+        "coordenadas": "19.4326,-99.1332",
+        "movilizacionNacional": "Sí",
+        "identTransporte": "CONT123456",
+        "puntoVerificacion": "PV-001",
+        "empresaTransportista": "Transportes Nacionales S.A."
+    },
+    "FormularioPagoState": {
+        "exentoPago": "No",
+        "justificacion": "Pago regular",
+        "claveReferencia": "REF-2025-001",
+        "cadenaDependencia": "CD-987654",
+        "banco": "BANAMEX",
+        "llavePago": "LLAVE-1234",
+        "fechaFactura": "2025-05-31",
+        "importePago": "1500.00"
+    },
+    "PagosDeDerechosState": {
+        "claveDeReferencia": "REF-2025-002",
+        "cadenaDependencia": "CD-987655",
+        "banco": "BANCOMER",
+        "llaveDePago": "LLAVE-5678",
+        "fechaInicio": "2025-05-31",
+        "importeDePago": "2000.00",
+        "claveDeReferenciaRevision": "REF-2025-003",
+        "bancoRevision": "SANTANDER",
+        "llaveDePagoRevision": "LLAVE-9101",
+        "fechaInicioRevision": "2025-06-01",
+        "importeDePagoRevision": "500.00"
+    }
+}
