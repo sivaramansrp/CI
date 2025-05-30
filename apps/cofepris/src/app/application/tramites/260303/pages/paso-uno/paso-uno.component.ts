@@ -32,7 +32,15 @@ export class PasoUnoComponent implements OnInit {
   /** Estado actual de la consulta obtenido del store. */
   public consultaState!: ConsultaioState;
 
-  constructor(private consultaQuery: ConsultaioQuery,private certificadosLicenciasPermisosService: CertificadosLicenciasPermisosService){}
+  /**
+   * Constructor del componente.
+   * @param consultaQuery Servicio para consultar el estado de la consulta.
+   * @param certificadosLicenciasPermisosService Servicio para manejar los datos del formulario de certificados, licencias y permisos.
+   */
+  constructor(
+    private consultaQuery: ConsultaioQuery,
+    private certificadosLicenciasPermisosService: CertificadosLicenciasPermisosService
+  ) {}
 
     /**
      * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
