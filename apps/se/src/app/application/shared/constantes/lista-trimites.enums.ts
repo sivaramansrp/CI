@@ -11,12 +11,20 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
         }]
     },
     {
-        tramite: 90201,
+        tramite: 130110,
         listaComponentes: [{
             id: 'solicitud',
-            componentPath: () => import('../../tramites/90201/pages/datos/datos.component').then(m => m.DatosComponent),
+            componentPath: () => import('../../tramites/130110/pages/paso-uno/paso-uno.component').then(m => m.PasoUnoComponent),
             componentName: 'DatosComponent',
 
         }]
     },
+      {
+         tramite: 90201,
+        listaComponentes: [{
+            id: 'solicitud',
+            componentPath: () => import('../../tramites/90201/pages/datos/datos.component').then(m => m.DatosComponent),
+            componentName: 'DatosComponent',
+      }]
+    }
 ];

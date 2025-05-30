@@ -1,12 +1,12 @@
 import {
   Catalogo,
-  CatalogoSelectComponent,
-  InputRadioComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { ProductoOpción } from '../../constantes/vehiculos-adaptados.enum';
 /**
  * @description Componente para manejar los detalles del trámite.
@@ -25,7 +25,12 @@ import { ProductoOpción } from '../../constantes/vehiculos-adaptados.enum';
   templateUrl: './datos-del-tramite.component.html',
   styleUrl: './datos-del-tramite.component.scss',
 })
-export class DatosDelTramiteComponent {
+export class DatosDelTramiteComponent implements OnInit{
+  /**
+  * @description Indica si el formulario debe mostrarse en modo solo lectura.
+  */
+  @Input() esFormularioSoloLectura!: boolean;
+  
   /**
    * @description El grupo de formulario reactivo que contiene los datos del trámite.
    */
@@ -80,6 +85,18 @@ export class DatosDelTramiteComponent {
       : false;
   }
 
+  /**
+  * Habilita o deshabilita el formulario según el modo de solo lectura.  
+  * Controla el estado del formulario al iniciar el componente.
+  */
+  ngOnInit(): void {
+    if (this.esFormularioSoloLectura) {
+        this.form.disable();
+    }else if (!this.esFormularioSoloLectura) {
+       this.form.enable();
+    }
+  }
+  
   /**
    * @description Emite un evento para actualizar valores en el almacén.
    * @param form El grupo de formulario que contiene los datos.

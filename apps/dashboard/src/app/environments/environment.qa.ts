@@ -13,7 +13,7 @@ export const ENVIRONMENT = {
       "login": "https://qa.front.v30.ultrasist.net/login",
       "agace": "https://qa.front.v30.ultrasist.net/agace",
       "aga": "https://qa.front.v30.ultrasist.net/aga",
-      "agriculture": "https://qa.front.v30.ultrasist.net/agriculture",
+      "agricultura": "https://qa.front.v30.ultrasist.net/agricultura",
       "se": "https://qa.front.v30.ultrasist.net/se",
       "semarnat": "https://qa.front.v30.ultrasist.net/semarnat",
       "funcionario": "https://qa.front.v30.ultrasist.net/funcionario",
