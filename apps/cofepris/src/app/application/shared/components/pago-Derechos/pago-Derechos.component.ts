@@ -7,8 +7,10 @@ import { AvisoImportacionService } from '../../services/parmiso-importacion.serv
 import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FECHA_DE_PAGO } from '../../models/pago-derechos.model';
 import { Subject } from 'rxjs';
+
 
 /**
  * Component Define el componente de Angular.
@@ -51,6 +53,12 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
    */
   fechaInicioInput: InputFecha = FECHA_DE_PAGO;
 
+    /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * constructor
    * param {FormBuilder} fb - Constructor para formularios reactivos.
@@ -62,7 +70,8 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
     private fb: FormBuilder, // Inyección de dependencia para construir formularios.
     private service: AvisoImportacionService, // Inyección del servicio para obtener datos.
     private avisocalidadStore: AvisocalidadStore, // Inyección del store para manejar el estado.
-    private avisocalidadQuery: AvisocalidadQuery // Inyección de la query para consultar el estado.
+    private avisocalidadQuery: AvisocalidadQuery ,// Inyección de la query para consultar el estado.
+    private consultaioQuery: ConsultaioQuery, // Inyección de la query para consultar datos de la aplicación.
   ) {
     //Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
@@ -72,15 +81,21 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
    * description Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.avisocalidadQuery.selectSolicitud$ // Observa los cambios en el estado de la solicitud.
+    /**
+    * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+    *
+    * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+    * - Llama a `configurarGrupoForm()` para aplicar configuraciones basadas en el estado recibido.
+    * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+    */
+    this.consultaioQuery.selectConsultaioState$
       .pipe(
-        takeUntil(this.destroyed$), // Finaliza la suscripción al destruir el componente.
-        map((seccionState) => { // Mapea el estado recibido.
-          this.solicitudState = seccionState; // Asigna el estado a la propiedad solicitudState.
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
-      .subscribe(); // Se suscribe al observable.
-
+      .subscribe()
 
     this.configurarGrupoForm(); // Configura el formulario reactivo.
     this.loadComboUnidadMedida(); // Carga la lista de derechos.
@@ -97,6 +112,14 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
  * @memberof DatosDelEstablecimientoRfcComponent
  */
   configurarGrupoForm(): void {
+ this.avisocalidadQuery.selectSolicitud$ // Observa los cambios en el estado de la solicitud.
+      .pipe(
+        takeUntil(this.destroyed$), // Finaliza la suscripción al destruir el componente.
+        map((seccionState) => { // Mapea el estado recibido.
+          this.solicitudState = seccionState; // Asigna el estado a la propiedad solicitudState.
+        })
+      )
+      .subscribe(); // Se suscribe al observable.
 
     // Inicializa el formulario reactivo con los valores del estado.
     this.derechosForm = this.fb.group({
@@ -107,6 +130,18 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
       fechaPago: [this.solicitudState?.fechaPago], // Campo fechaPago.
       importePago: [this.solicitudState?.importePago], // Campo importePago.
     });
+
+     /*
+     * Si el formulario está en modo solo lectura, deshabilita todos los campos.
+     * En caso contrario, habilita los campos para permitir la edición.
+     * Esto asegura que el formulario refleje correctamente el estado de solo lectura.
+     */
+    if (this.esFormularioSoloLectura && this.derechosForm ) {
+      this.derechosForm.disable();
+    } else {
+      this.derechosForm.enable();
+    }
+
   }
   /**
    * method loadComboUnidadMedida

@@ -7,6 +7,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators, }
 import { Subject, map, takeUntil } from 'rxjs';
 import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
 import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 /**
@@ -93,6 +94,12 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    * Constante para el mensaje de alerta.
    */
   INPUT_FECHA_CADUCIDAD_CONFIG = INPUT_FECHA_CADUCIDAD_CONFIG;
+  
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente.
    * @param fb
@@ -104,7 +111,8 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     public readonly fb: FormBuilder,
     private avisocalidadStore: AvisocalidadStore,
     private avisocalidadQuery: AvisocalidadQuery,
-    private service: DatosDomicilioLegalService
+    private service: DatosDomicilioLegalService,
+    private consultaioQuery: ConsultaioQuery,
   ) {
     // Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
@@ -247,14 +255,23 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    * Etiqueta de la lista de fechas.
    * */
   ngOnInit(): void {
-    this.avisocalidadQuery.selectSolicitud$
+
+     /**
+    * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+    *
+    * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+    * - Llama a `configurarGrupoForm()` para aplicar configuraciones basadas en el estado recibido.
+    * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+    */
+    this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.solicitudState = seccionState;
+          this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
-      .subscribe();
+      .subscribe()
+
     this.obtenerEstadoList();
     this.obtenerTablaDatos();
     this.obtenerMercanciasDatos();
@@ -273,6 +290,15 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    * @memberof DatosDelEstablecimientoRfcComponent
    */
   configurarGrupoForm(): void {
+     this.avisocalidadQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+
     this.domicilio = this.fb.group({
       codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.maxLength(12)]],
       estado: [this.solicitudState?.estado, Validators.required],
@@ -309,6 +335,23 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
       clasificacionToxicologica: ['', Validators.required],
       objetoImportacion: ['', Validators.required],
     });
+
+     /*
+     * Si el formulario está en modo solo lectura, deshabilita todos los campos.
+     * En caso contrario, habilita los campos para permitir la edición.
+     * Esto asegura que el formulario refleje correctamente el estado de solo lectura.
+     */
+    if (this.esFormularioSoloLectura && this.domicilio && this.formAgente && this.formMercancias) {
+      this.domicilio.disable();
+      this.formAgente.disable();
+      this.formMercancias.disable();
+
+    } else {
+      this.domicilio.enable();
+      this.formAgente.disable();
+      this.formMercancias.disable();
+    }
+
   }
   /**
    * Botones de acción disponibles para gestionar las listas de fechas.
