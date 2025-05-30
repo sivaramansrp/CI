@@ -11,7 +11,10 @@
   </div>
 </form>
 <div class="row mt-5">
-    <div class="col-md-8 text-end">
+  <div class="col-md-4">
+    <p>* Campos obligatorios</p>
+  </div>
+    <div class="col-md-4 text-end">
       <button type="button" class="btn btn-primary" (click)="buscar()" [disabled]="consultaState.readonly">
         Buscar
       </button>
@@ -23,7 +26,7 @@
       <app-tabla-dinamica
         [configuracionTabla]="configuracionParaEncabezadoDeTabla"
         [datos]="cuerpoTabla"
-        [desactivarEmitirEvento]="false"
+        [desactivarEmitirEvento]="!consultaState.readonly ? true : false"
         (filaClic)="controladorDeClicsArchivo($event)"
       >
 

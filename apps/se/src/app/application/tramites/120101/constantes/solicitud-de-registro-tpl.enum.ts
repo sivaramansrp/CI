@@ -727,7 +727,18 @@ export const PAIS_ELEGIDO_ALERT = {
   * indicando que a cada traslado le corresponde una sede con un máximo de dos itinerarios.
   */
 export const ERROR_FORMA_ALERT =
-'<strong>¡Error de registro! </strong>Faltan campos por capturar.';
+`
+<div class="d-flex justify-content-center text-center">
+  <div>
+    <div class="col-md-12">
+      <strong>¡Error de registro!</strong>
+    </div>
+    <div class="col-md-12">
+      Faltan campos por capturar.
+    </div>
+  </div>
+</div>
+`;
 
 /**
  * @constant RADIO_INDICAR
@@ -787,7 +798,7 @@ export const FORMULARIO_MODAL_INSUMOS = [
       id: 'descripcion',
       labelNombre: 'Descripción del insumo',
       campo: 'descripcionInsumo',
-      clase: 'col-md-4',
+      clase: 'col-md-6',
       tipoInput: 'text',
       desactivado: false,
       soloLectura: false,
@@ -800,7 +811,7 @@ export const FORMULARIO_MODAL_INSUMOS = [
       id: 'fraccion',
       labelNombre: 'Fracción arancelaria',
       campo: 'fraccion',
-      clase: 'col-md-4',
+      clase: 'col-md-6',
       tipoInput: 'text',
       desactivado: false,
       soloLectura: false,
@@ -810,23 +821,10 @@ export const FORMULARIO_MODAL_INSUMOS = [
       marginTop: 0,
     },
   {
-    id: '',
-    labelNombre: '',
-    campo: '',
-    clase: 'col-md-4',
-    tipoInput: '',
-    desactivado: false,
-    soloLectura: false,
-    validadores: [],
-    marcadorDePosicion: '',
-    valorPredeterminado: '',
-    marginTop: 0,
-  },
-  {
     id: 'fraccion',
     labelNombre: 'Descripción Fracción arancelaria',
     campo: 'descfraccion',
-    clase: 'col-md-4',
+    clase: 'col-md-6',
     tipoInput: 'select-catalogos',
     desactivado: false,
     soloLectura: false,
@@ -839,7 +837,7 @@ export const FORMULARIO_MODAL_INSUMOS = [
     id: 'Pais',
     labelNombre: 'País de origen',
     campo: 'Pais',
-    clase: 'col-md-4',
+    clase: 'col-md-6',
     tipoInput: 'select-catalogos',
     desactivado: false,
     soloLectura: false,

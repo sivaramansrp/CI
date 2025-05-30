@@ -57,7 +57,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Índice de la pestaña seleccionada.
    */
-  indice: number = 1;
+  public indice: number = 1;
 
   /**
  * @property elementoDeTablaSeleccionado
