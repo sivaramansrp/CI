@@ -164,20 +164,23 @@ export class FabricanteModalComponent implements OnInit,OnDestroy {
     }
   }
 
+
   /**
- * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
- * Luego reinicializa el formulario con los valores actualizados desde el store.
- */
+   * Guarda los datos del formulario y ajusta el estado de solo lectura.
+   * Si el formulario está en modo solo lectura, deshabilita todos los controles del formulario.
+   * Si no, habilita los controles para permitir la edición.
+   */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
+      // Deshabilita el formulario si está en modo solo lectura
       this.tercerosRelacionadosForm.disable();
-    } else if (!this.esFormularioSoloLectura) {
-      this.tercerosRelacionadosForm.enable();
     } else {
-      // No se requiere ninguna acción en el formulario
+      // Habilita el formulario para edición
+      this.tercerosRelacionadosForm.enable();
     }
   }
+
   /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
    * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
