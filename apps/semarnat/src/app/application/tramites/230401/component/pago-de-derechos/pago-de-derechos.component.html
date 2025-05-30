@@ -28,7 +28,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="pantallasService.listoBanco" formControlName="banco" [label]="'Banco'"
-                            [required]="true" name="banco" (change)="clasificacionSeleccione()"></app-catalogo-select>
+                            [required]="true" [isDisabled]="esFormularioSoloLectura" name="banco" (change)="clasificacionSeleccione()"></app-catalogo-select>
                     </div>
                 </div>
             </div>
@@ -41,19 +41,19 @@
                             formControlName="llavePago">
                             <div class="mensaje-error" *ngIf="pagoDerechos.get('llavePago')?.errors?.['required'] && pagoDerechos.get('llavePago')?.touched">
                                 Este campo es obligatorio</div>
-                                <div class="mensaje-error" *ngIf="pagoDerechos.get('llavePago')?.errors?.['pattern']">
+                                <div class="mensaje-error" *ngIf="pagoDerechos.get('llavePago')?.errors?.['pattern'] && pagoDerechos.get('llavePago')?.touched">
                                     Debe tener exactamente 10 caracteres alfanuméricos</div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="form-group ">
-                        <label class="control-label" for="fecha">Fecha de pago *:</label>
-                        <input class="form-control" id="fecha" placeholder="Fecha de pago" type="date"
-                            formControlName="fecha">
-                            <div class="mensaje-error" *ngIf="pagoDerechos.get('fecha')?.errors?.['required'] && pagoDerechos.get('fecha')?.touched">
-                                Este campo es obligatorio</div>
-                                <div class="mensaje-error" *ngIf="pagoDerechos.get('fecha')?.errors?.['futureDateNotAllowed']">
-                                    Debe ser menor o igual a la fecha actual</div>
+                        <input-fecha (valorCambiado)="onFechaCambiada($event)" [setFecha]="pagoDerechos.get('fecha')?.value"
+                            [datos]="fechaDeLaFacturaInput"></input-fecha>
+                        <div class="mensaje-error"
+                            *ngIf="pagoDerechos.get('fecha')?.errors?.['required'] && pagoDerechos.get('fecha')?.touched">
+                            Este campo es obligatorio</div>
+                        <div class="mensaje-error" *ngIf="pagoDerechos.get('fecha')?.errors?.['futureDateNotAllowed']">
+                            Debe ser menor o igual a la fecha actual</div>
                     </div>
                 </div>
                 <div class="col-md-4">
