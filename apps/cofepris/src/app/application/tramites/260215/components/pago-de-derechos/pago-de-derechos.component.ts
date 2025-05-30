@@ -102,8 +102,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       this.formSolicitud.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.formSolicitud.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
     }
   }
 
@@ -138,7 +136,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
           this.solicitudState = seccionState;
         })
       )
-      .subscribe()
+      .subscribe();
 
     this.formSolicitud = this.fb.group({
       datosImportadorExportador: this.fb.group({

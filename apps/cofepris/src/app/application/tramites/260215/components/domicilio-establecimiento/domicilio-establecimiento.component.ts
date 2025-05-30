@@ -156,8 +156,6 @@ export class DomicilioComponent implements OnInit, OnDestroy {
         this.domicilio.disable();
       } else if (!this.esFormularioSoloLectura) {
         this.domicilio.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
       }
   }
 

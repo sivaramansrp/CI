@@ -14,8 +14,7 @@ import {
 import {
   AlertComponent,
   Catalogo,
-  CatalogoSelectComponent,
-  InputRadioComponent,
+  ConsultaioQuery,
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import {
@@ -27,8 +26,10 @@ import {
   TERCEROS_RELACIONADOS_TABLE_HEADER_DATA,
 } from '../../enum/permiso.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import {Subject, map, takeUntil, } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { ModalComponent } from '../modal/modal.component';
 import NacionalidadRadioOptions from '@libs/shared/theme/assets/json/260215/nacionalidad-options.json';
 import { Sanitario260215Store } from '../../estados/tramites/sanitario260215.store';
@@ -36,7 +37,6 @@ import { ServiciosPermisoSanitarioService } from '../../services/servicios-permi
 import { TablaDatos } from '../../models/permiso-sanitario.model';
 import { TableComponent } from '@ng-mf/data-access-user';
 import TipoPersonaRadioOptions from '@libs/shared/theme/assets/json/260215/tipo-persona-options.json';
-
 /**
  * Texto de alerta para los terceros relacionados.
  * Indica que las tablas con asterisco son obligatorias.
@@ -236,6 +236,13 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   nacionalidadOptions = NacionalidadRadioOptions;
 
+ /**
+   * Notificador para destruir observables.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+
+  
   /**
    * Opciones para el radio de tipo de persona.
    * Utiliza los datos predefinidos en `TipoPersonaRadioOptions`.
@@ -243,6 +250,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @description Este arreglo almacena las opciones para el selector de tipo de persona.
    */
   tipoPersonaOptions = TipoPersonaRadioOptions;
+
+/**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+ public esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -255,16 +268,29 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private sanitario260215Store: Sanitario260215Store,
-    private service: ServiciosPermisoSanitarioService
+    private service: ServiciosPermisoSanitarioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Inicializa el store del trámite 260215.
+     /**
+             * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+             *
+             * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+             * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+             * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+             */
+            this.consultaioQuery.selectConsultaioState$
+            .pipe(
+              takeUntil(this.destroyNotifier$),
+              map((seccionState)=>{
+                this.esFormularioSoloLectura = seccionState.readonly; 
+              })
+            )
+            .subscribe()
+          
+    
   }
 
-  /**
-   * Notificador para destruir observables.
-   */
-  private destroyNotifier$: Subject<void> = new Subject();
-
+ 
   /**
    * Ciclo de vida que se ejecuta al iniciar el componente.
    * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
@@ -294,7 +320,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Inicializa el formulario para agregar un fabricante.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarFabricanteFormGroup() {
+  initializeAgregarFabricanteFormGroup():void {
     /**
      * Crea el formulario reactivos para agregar un fabricante.
      * Cada campo tiene sus propias validaciones.
@@ -442,7 +468,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Inicializa el formulario para agregar un destinatario.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarDestinatarioFormGroup() {
+  initializeAgregarDestinatarioFormGroup():void {
     /**
      * Crea el formulario reactivos para agregar un destinatario.
      * Cada campo tiene sus propias validaciones.
@@ -546,7 +572,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Inicializa el formulario para agregar un proveedor.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarProveedorFormGroup() {
+  initializeAgregarProveedorFormGroup():void {
     /**
      * Crea el formulario reactivos para agregar un proveedor.
      * Cada campo tiene sus propias validaciones.
@@ -638,7 +664,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Inicializa el formulario para agregar un facturador.
    * Configura los campos del formulario con validaciones y comportamientos específicos.
    */
-  initializeAgregarFacturadorFormGroup() {
+  initializeAgregarFacturadorFormGroup():void {
     /**
      * Crea el formulario reactivos para agregar un facturador.
      * Cada campo tiene sus propias validaciones.
@@ -822,7 +848,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @param checkBoxName Nombre del checkbox seleccionado (fisica o moral).
    */
-  public inputChecked(checkBoxName: string) {
+  public inputChecked(checkBoxName: string): void {
     if (checkBoxName === 'fisica') {
       this.fisica = true;
       this.moral = false;
@@ -832,7 +858,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     }
   }
 
-  public tercerosInputChecked(checkBoxName: string) {
+  public tercerosInputChecked(checkBoxName: string):void {
     if (checkBoxName === 'nacional') {
       this.nacional = true;
       this.extranjero = false;
@@ -846,7 +872,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Cambia la visibilidad del formulario de Fabricante.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
-  toggleDivFabricante() {
+  toggleDivFabricante():void {
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
@@ -857,7 +883,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Cambia la visibilidad del formulario de Destinatario.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
-  toggleDivDestinatario() {
+  toggleDivDestinatario():void {
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
@@ -868,7 +894,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Cambia la visibilidad del formulario de Proveedor.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
-  toggleDivProveedor() {
+  toggleDivProveedor():void {
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
@@ -879,7 +905,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Cambia la visibilidad del formulario de Facturador.
    * Oculta la tabla principal y muestra el formulario, también resetea los valores de persona física y moral.
    */
-  toggleDivFacturador() {
+  toggleDivFacturador():void {
     this.fisica = false;
     this.moral = false;
     this.showTableDiv = !this.showTableDiv;
@@ -898,7 +924,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @description Este método es llamado al enviar el formulario de agregar un fabricante.
    */
-  submitFabricanteForm() {
+  submitFabricanteForm():void {
     /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
@@ -1051,7 +1077,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @description Este método es llamado al enviar el formulario de agregar un destinatario.
    */
-  submitDestinatarioForm() {
+  submitDestinatarioForm():void {
     /**
      * Obtiene el valor de la localidad seleccionada en el formulario.
      */
@@ -1204,7 +1230,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @description Este método es llamado al enviar el formulario de agregar un proveedor.
    */
-  submitProveedorForm() {
+  submitProveedorForm():void {
     /**
      * Crea una nueva fila para la tabla con los datos del formulario.
      */
@@ -1254,7 +1280,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @description Este método es llamado al enviar el formulario de agregar un facturador.
    */
-  submitFacturadorForm() {
+  submitFacturadorForm():void {
     /**
      * Crea una nueva fila para la tabla con los datos del formulario.
      */
@@ -1356,7 +1382,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @param value Valor seleccionado del radio button.
    */
-  cambiarRadio(value: string | number) {
+  cambiarRadio(value: string | number):void {
     const VALOR_SELECCIONADO = value as string;
     this.tercerosInputChecked(VALOR_SELECCIONADO);
   }
@@ -1366,7 +1392,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    *
    * @param value Valor seleccionado del radio button.
    */
-  cambiarRadioFisica(value: string | number) {
+  cambiarRadioFisica(value: string | number):void {
     const VALOR_SELECCIONADO = value as string;
     this.inputChecked(VALOR_SELECCIONADO);
   }

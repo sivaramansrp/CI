@@ -60,7 +60,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
           this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
-      .subscribe()
+      .subscribe();
   }
 
 
@@ -74,8 +74,6 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
       this.representante.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.representante.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
     }
   }
 
