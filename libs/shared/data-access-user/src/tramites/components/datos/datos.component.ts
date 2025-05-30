@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, DeLaMuestraComponent, InformacionDeLaComponent, PagoDeDerechosComponent, RegistroParaLaComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { SolicitanteComponent } from 'libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { Solocitud301Service } from '../../../core/services/service301.service';
@@ -9,6 +9,13 @@ import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constan
 import { Solicitud301State } from '../../../core/estados/tramite301.store';
 
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
+
+import { RegistroParaLaComponent } from '../registro-para-la/registro-para-la.component';
+
+import { DeLaMuestraComponent } from '../de-la-muestra/de-la-muestra.component';
+import { InformacionDeLaComponent } from '../informacion-de-la/informacion-de-la.component';
+import { PagoDeDerechosComponent } from '../pago-de-derechos/pago-de-derechos.component';
 
 /**
  * Este componente se utiliza para mostrar el subtítulo del asistente - 220401
@@ -20,6 +27,7 @@ import { CommonModule } from '@angular/common';
   templateUrl: './datos.component.html',
   imports: [
     CommonModule,
+    ReactiveFormsModule,
     PagoDeDerechosComponent,
     InformacionDeLaComponent,
     DeLaMuestraComponent,
@@ -52,9 +60,15 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
     private solocitud301Service: Solocitud301Service,
     private consultaQuery: ConsultaioQuery
   ) {
-// Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
+  // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
+  /**
+   * `ngOnInit` en el código TypeScript proporcionado es un método de ciclo de vida ofrecido por Angular. 
+   * En este componente específico (`DatosComponent`), el método `ngOnInit` se utiliza para suscribirse 
+   * al observable `selectConsultaioState$` de `consultaQuery` y realizar algunas operaciones basadas 
+   * en los valores emitidos.
+   */ 
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
           this.consultaState = seccionState;
@@ -93,6 +107,11 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
     this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
   }
 
+  /**
+   * Método del ciclo de vida que se llama cuando el componente es destruido.
+   * Emite un valor y completa el subject `destroyNotifier$` para notificar a las suscripciones
+   * que deben limpiar recursos y evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

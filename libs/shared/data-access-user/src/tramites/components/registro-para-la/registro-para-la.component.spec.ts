@@ -2,8 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { RegistroParaLaComponent } from './registro-para-la.component';
-import { Tramite301Store } from '../../../../core/estados/tramites/tramite301.store';
-import { Tramite301Query } from '../../../../core/queries/tramite301.query';
+import { Tramite301Store } from '../../../core/estados/tramite301.store';
+import { Tramite301Query } from '../../../core/queries/tramite301.query';
 
 describe('RegistroParaLaComponent', () => {
   let component: RegistroParaLaComponent;

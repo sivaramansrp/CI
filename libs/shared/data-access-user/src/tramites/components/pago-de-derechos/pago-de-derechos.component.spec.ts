@@ -2,10 +2,10 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
-import { Tramite301Store } from '../../../../core/estados/tramites/tramite301.store';
-import { Tramite301Query } from '../../../../core/queries/tramite301.query';
+import { Tramite301Store } from '../../../core/estados/tramite301.store';
+import { Tramite301Query } from '../../../core/queries/tramite301.query';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { Solocitud301Service } from '../../services/service301.service';
+import { Solocitud301Service } from '../../../core/services/service301.service';
 
 describe('PagoDeDerechosComponent', () => {
   let component: PagoDeDerechosComponent;

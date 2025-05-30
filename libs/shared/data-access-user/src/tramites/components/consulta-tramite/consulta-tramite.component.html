@@ -12,15 +12,35 @@
                     <div class="col-md-12">
                         <form [formGroup]="FormBuscaTramite">
                             <div class="row">
-                                <div class="col-md-2"> <strong class="text-title">Funcionario: </strong></div>
-                                <div class="col-md-6"><label class="text-title font-weight-titulo">EUROFOODS DE MEXICO
-                                        GONZALEZ PINAL</label></div>
-                                <div class="col-md-2"> <strong class="text-title">RFC:</strong></div>
-                                <div class="col-md-2"><label class="text-title font-weight-titulo">AAL0409235E6</label>
+                                <div class="col-md-2"> 
+                                    <strong class="text-title">
+                                        Funcionario: 
+                                    </strong>
                                 </div>
-                                <div class="col-md-2"> <strong class="text-title">*Folio tramite</strong></div>
-                                <div class="col-md-10"> <input type="text" name="idTramite" id="idTramite"
-                                        formControlName="idTramite" class="form-control font-weight-titulo text-title"
+                                <div class="col-md-6">
+                                    <label class="text-title font-weight-titulo">
+                                        EUROFOODS DE MEXICO GONZALEZ PINAL
+                                    </label>
+                                </div>
+                                <div class="col-md-2"> 
+                                    <strong class="text-title">
+                                        RFC:
+                                    </strong>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="text-title font-weight-titulo">
+                                        AAL0409235E6
+                                    </label>
+                                </div>
+                                <div class="col-md-2"> 
+                                    <strong class="text-title">
+                                        *Folio tramite
+                                    </strong>
+                                </div>
+                                <div class="col-md-10"> 
+                                    <input type="text" name="idTramite" id="idTramite"
+                                        formControlName="idTramite" 
+                                        class="form-control font-weight-titulo text-title"
                                         placeholder="Folio tramite"
                                         (change)="tramiteSeleccionado(FormBuscaTramite,'idTramite', 'setTramiteValue')">
                                 </div>

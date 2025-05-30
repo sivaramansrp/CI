@@ -14,7 +14,9 @@ export class Tramite301Query extends Query<Solicitud301State> {
     return state;
   });
 
-  /**Guarda el estado completo del formulario de la solicitud */
+  /**
+   * Guarda el estado completo del formulario de la solicitud 
+   */
   constructor(protected override store: Tramite301Store) {
     super(store);
   }

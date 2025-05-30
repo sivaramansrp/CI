@@ -1,37 +1,39 @@
 import { AccuseComponentes, ListaComponentes, Tabulaciones } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
 import { Component, OnInit, Type } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
-
 import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramites/components/reviewers-tabs/reviewers-tabs.component';
-
+import { Router } from '@angular/router';
 @Component({
   selector: 'app-detalle-v-dictamen',
   standalone: true,
   imports: [
     ReviewersTabsComponent,
-    
   ],
-  templateUrl: './detalle-v-dictamen.component.html',
+  templateUrl:'./detalle-v-dictamen.component.html',
   styleUrls: ['./detalle-v-dictamen.component.css'],
 })
 export class DetalleVDictamenComponent implements OnInit {
   /**
-     * @property {number} tramite
-     * @description Identificador del trámite seleccionado.
-     */
-    tramite: number = 0;
-    /**
-    * @property {Type<unknown>} viewChild
-    * @description Referencia dinámica al componente hijo que se carga según la pestaña seleccionada.
-    */
-    viewChild!: Type<unknown>;
-    /**
-    * @property {AccuseComponentes | undefined} slectTramite
-    * @description Objeto que representa el trámite seleccionado actualmente.
-    */
-    slectTramite!: AccuseComponentes | undefined;
-      /** Formulario de tramite */
+   * @property {number} tramite
+   * @description Identificador del trámite seleccionado.
+   */
+  tramite: number = 0;
+
+  /**
+   * @property {Type<unknown>} viewChild
+   * @description Referencia dinámica al componente hijo que se carga según la pestaña seleccionada.
+   */
+  viewChild!: Type<unknown>;
+
+  /**
+   * @property {AccuseComponentes | undefined} slectTramite
+   * @description Objeto que representa el trámite seleccionado actualmente.
+   */
+  slectTramite!: AccuseComponentes | undefined;
+
+  /** 
+   * Formulario de tramite 
+   */
   public FormObservacion!: FormGroup;
 
   /**
@@ -42,11 +44,11 @@ export class DetalleVDictamenComponent implements OnInit {
    */
   numeroDeTramite: string = '099226136147361192499352';
 
-    constructor(
-          private fbOb: FormBuilder,
-          private router: Router,
-        ) { }
-    /**
+  constructor(
+    private fbOb: FormBuilder,
+    private router: Router,
+  ) { }
+  /**
    * Método que se ejecuta al inicializar el componente.
    * Inicializa el formulario de tramite y consulta los datos generales del tramite.
    */
@@ -80,27 +82,42 @@ export class DetalleVDictamenComponent implements OnInit {
   }
 
   /**
-     * @method loadComponent
-     * @description Carga dinámicamente un componente hijo según la ruta especificada en el objeto recibido.
-     * @param {ListaComponentes} li - Objeto que contiene la información y la ruta del componente a cargar.
-     * @returns {Promise<void>}
-     */
-    async loadComponent(li: ListaComponentes): Promise<void> {
-      if (!li.componentPath) {
+   * @method loadComponent
+   * @description Carga dinámicamente un componente hijo según la ruta especificada en el objeto recibido.
+   * @param {ListaComponentes} li - Objeto que contiene la información y la ruta del componente a cargar.
+   * @returns {Promise<void>}
+   */
+  async loadComponent(li: ListaComponentes): Promise<void> {
+    if (!li.componentPath) {
         return;
       }
       this.viewChild = await li.componentPath() as Type<unknown>;
     }
 
-        /**
-   * @method guardar
-   * @description Emite un evento al hacer clic en el botón guardar.
+  /**
+   * Navega al usuario de regreso a la ruta 'verificar-dictamen'.
+   * Este método utiliza el Router de Angular para redirigir al usuario a la
+   * página de verificación de dictamen. Normalmente se llama cuando el usuario
+   * desea regresar a la vista anterior.
+   * @method regresar
+   * @description Redirige al usuario a la página de verificación de dictamen.
    * @returns {void}
    */
   regresar(): void {
     this.router.navigate(['verificar-dictamen']);
   }
 
+  /**
+   * El método `guardarObservacion` en la clase `DetalleVDictamenComponent` es responsable de
+   * navegar a la ruta 'bandeja-de-tareas-pendientes' cuando es llamado. Este método se activa cuando
+   * ocurre una acción o evento específico en el componente, como guardar una observación o completar
+   * una tarea. Al llamar a `this.router.navigate(['bandeja-de-tareas-pendientes']);`, el método redirige
+   * al usuario a la ruta 'bandeja-de-tareas-pendientes' dentro de la aplicación.
+   * @method guardarObservacion
+   * @description Navega a la bandeja de tareas pendientes.
+   * @returns {void}
+   * @memberof DetalleVDictamenComponent
+   */
   guardarObservacion(): void {
     this.router.navigate(['bandeja-de-tareas-pendientes']);
   }

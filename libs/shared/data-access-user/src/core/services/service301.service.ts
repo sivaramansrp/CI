@@ -35,6 +35,11 @@ export class Solocitud301Service {
     this.tramite301Store.setLineaCheckbox(DATOS.lineaCheckbox);
   }
 
+  /**
+   * Recupera los datos del "Registro de Toma de Muestras de Mercancías" desde un archivo JSON local.
+   *
+   * @returns Un Observable que emite el estado actual de Solicitud301.
+   */
   getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud301State> {
     return this.http.get<Solicitud301State>('assets/json/301/registro_toma_muestras_mercancias.json');
   }
