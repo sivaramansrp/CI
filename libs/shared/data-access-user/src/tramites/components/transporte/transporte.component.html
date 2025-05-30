@@ -32,7 +32,7 @@
       type="button"
       class="btn btn-default me-2"
       *ngIf="bodyTabla.length > 0"
-      (click)="modificaItem()"
+      (click)="btnModificar()"
     >
       Modificar
     </button>
@@ -120,9 +120,9 @@
         <button
           type="button"
           class="btn btn-primary"
-          (click)="agregarTipoTransporte()"
+          (click)="accionModificar ? modificarTransporte() : agregarTipoTransporte()"
         >
-          Agregar
+          {{ accionModificar ? 'Modificar' : 'Agregar' }}
         </button>
       </div>
     </div>

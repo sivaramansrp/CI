@@ -297,7 +297,7 @@ export const CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_CARRETERO: ConfiguracionC
      * - Orden: 1.
      */
     {
-      encabezado: 'Empresa trasnportista',
+      encabezado: 'Empresa transportista',
       clave: (fila) => fila.emp_transportista,
       orden: 1,
     },
@@ -322,7 +322,7 @@ export const CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_CARRETERO: ConfiguracionC
      */
     {
       encabezado: 'Fecha carta porte',
-      clave: (fila) => fila.numero_porte,
+      clave: (fila) => fila.fecha_porte,
       orden: 3,
     },
 
