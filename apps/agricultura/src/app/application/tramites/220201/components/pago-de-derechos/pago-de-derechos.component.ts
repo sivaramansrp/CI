@@ -2,9 +2,9 @@ import { HttpClient } from '@angular/common/http';
 
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { BtnContinuarComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, CrosslistComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TercerosComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, CrosslistComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TercerosComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 import { FECHA_DE_PAGO } from '../../constantes/certificado-zoosanitario.enum';
 
@@ -13,7 +13,6 @@ import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model'
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 
 import {Subject, map, skip, takeUntil } from 'rxjs';
-import { AlertComponent } from 'ngx-bootstrap/alert';
 import { CommonModule } from '@angular/common';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 
@@ -34,12 +33,14 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
   templateUrl: './pago-de-derechos.component.html',
   styleUrls: ['./pago-de-derechos.component.scss'],
   standalone: true,
-  imports: [SharedModule,
-      CommonModule, TituloComponent,
-          ReactiveFormsModule,
-          InputFechaComponent,
-          CatalogoSelectComponent,
-            InputRadioComponent,]
+  imports: [
+      CommonModule, 
+      TituloComponent,
+      ReactiveFormsModule,
+      InputFechaComponent,
+      CatalogoSelectComponent,
+      InputRadioComponent,
+      FormsModule]
 })
 export class PagoDeDerechosComponent implements OnDestroy, OnInit,AfterViewInit {
 

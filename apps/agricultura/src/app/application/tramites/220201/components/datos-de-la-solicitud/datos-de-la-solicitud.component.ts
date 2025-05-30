@@ -124,6 +124,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy,AfterViewI
       "value": "no"
     },
   ]
+  /**
+   * @desc Arreglo que contiene las filas de la solicitud.
+   * @type {FilaSolicitud[]}
+   * @remarks
+   * Cada elemento representa una fila con los datos específicos de la solicitud.
+   * 
+   * @see FilaSolicitud
+   */
    cuerpoTabla: FilaSolicitud[] = [];
 
   mesaCuerpo: string[] = [];
