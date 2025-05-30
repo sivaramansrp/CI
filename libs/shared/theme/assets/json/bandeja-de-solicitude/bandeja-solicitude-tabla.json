@@ -27,6 +27,15 @@
         "numeroDeProcedimiento": "110102"
     },
     {
+         "id": 3,
+        "tipoDeTramite": "Ampliación Productor directo",
+        "fecha": "2023-10-10",
+        "fechaActualizacion": "2023-10-15",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "90201"
+    },
+    {
         "id": 120402,
         "tipoDeTramite": "Solicitud de Permiso",
         "fecha": "2023-10-01",
