@@ -3,6 +3,7 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import {
   DATOS_ALERT,
   DATOS_DEL_DONANTE,
+  DATOS_DEL_PRODUCTO,
   DOMICILIO_FISCAL,
   MERCANCIAS,
   PRODUCTOS,
@@ -145,58 +146,14 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @memberof DatosDelTramiteComponent
    */
   public TablaSeleccion = TablaSeleccion;
-
-  /**
-   * Configuración de la tabla que define las columnas y sus propiedades.
-   * Cada columna incluye un encabezado, una clave para acceder al valor correspondiente
-   * en los datos, y un orden para determinar su posición en la tabla.
-   *
-   * Propiedades:
-   * - `encabezado`: Título de la columna que se mostrará en la tabla.
-   * - `clave`: Función que toma un elemento de datos y devuelve el valor correspondiente
-   *   para esta columna.
-   * - `orden`: Número que indica la posición de la columna en la tabla.
-   * @type {ConfiguracionColumna<>[]}
-   * @memberof DatosDelTramiteComponent
-   */
-    public configuracionTabla: ConfiguracionColumna<DetallesDelProducto>[] = [
-      {
-        encabezado: 'Tipo de mercancía',
-        clave: (item: DetallesDelProducto) => item.tipoDeMercancia,
-        orden: 1,
-      },
-      { 
-        encabezado: 'Cantidad',
-        clave: (item: DetallesDelProducto) => item.cantidad,
-        orden: 2
-      },
-      {
-        encabezado: 'Unidad de medida de comercialización',
-        clave: (item: DetallesDelProducto) => item.unidadDeMedida,
-        orden: 3,
-      },
-      {
-        encabezado: 'Año de importación temporal',
-        clave: (item: DetallesDelProducto) => item.anoDeImportacionTemporal,
-        orden: 4,
-      },
-      {
-        encabezado: 'Modelo',
-        clave: (item: DetallesDelProducto) => item.modelo,
-        orden: 5,
-      },
-      {
-        encabezado: 'Marca',
-        clave: (item: DetallesDelProducto) => item.marca,
-        orden: 6,
-      },
-      {
-        encabezado: 'Número de serie',
-        clave: (item: DetallesDelProducto) => item.numeroDeSerie,
-        orden: 7,
-      },
-    ];
-
+    
+    /**
+     * Configuración de la tabla utilizada para mostrar los datos del producto en el trámite.
+     * 
+     * Esta propiedad almacena la configuración específica definida en `DATOS_DEL_PRODUCTO`,
+     * que determina las columnas, formato y comportamiento de la tabla en el componente.
+     */
+    public configuracionTabla = DATOS_DEL_PRODUCTO;
   /** Variable que controla el estado del modal (abierto o cerrado). 
    * @type {string}
    * @memberof DatosDelTramiteComponent
@@ -424,14 +381,12 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     this.tramite302Store.setDynamicFieldValue(event.campo, VALOR);
   }
 
-  /**
-   * @method ngOnDestroy
-   * @description Método `ngOnDestroy()`.
-   * Este método se ejecuta cuando el componente se destruye y realiza las siguientes acciones:
-   * - Desuscribe la suscripción a los cambios en el formulario reactivo.
-   * @memberof DatosDelTramiteComponent
+   /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
+   * Emite una notificación y completa el observable `destroyNotifier$` para limpiar suscripciones y evitar fugas de memoria.
    */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
