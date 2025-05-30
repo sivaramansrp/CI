@@ -1,7 +1,7 @@
 /* eslint-disable no-empty-function */
 import { Component, OnInit } from '@angular/core';
 
-import { MENSAJEDEALERTA, TableBodyData, TituloComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, MENSAJEDEALERTA, TableBodyData, TituloComponent } from '@ng-mf/data-access-user';
 
 import { TableComponent } from '@ng-mf/data-access-user';
 
@@ -17,6 +17,7 @@ import importardorTable from '../../../../../../../../../libs/shared/theme/asset
 import { AlertComponent } from '@ng-mf/data-access-user';
 
 import { AgregarDestinatoriaComponent } from '../agregar-destinatoria/agregar-destinatoria.component';
+import { map, Subject, takeUntil } from 'rxjs';
 
 
 @Component({
@@ -41,10 +42,21 @@ export class TercerosRelacionadosComponent implements OnInit {
   public TEXTOS = MENSAJEDEALERTA;
   public hasAgregar:boolean = false;
   public infoAlert = 'alert-info';
-
-
+private destroyNotifier$: Subject<void> = new Subject();
+esFormularioSoloLectura: boolean = false;
   // eslint-disable-next-line @typescript-eslint/no-empty-function
-  constructor() {}
+  constructor( private consultaioQuery: ConsultaioQuery,) {
+       this.consultaioQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.esFormularioSoloLectura = seccionState.readonly;
+              
+              
+            })
+          )
+          .subscribe()
+  }
 
   ngOnInit(): void {
     this.getEstablecimiento();
@@ -92,5 +104,10 @@ export class TercerosRelacionadosComponent implements OnInit {
     if(agregar === 'Agregar'){
       this.hasAgregar = true;
     }
+  }
+
+    ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
