@@ -1,15 +1,18 @@
 <div class="form-group">
-  <label for="input_fecha" class="form-label" >{{datos.labelNombre}} {{datos.required ? '*' : ''}}: @if(tooltipQuestionCircle){ <span class="bi bi-question-circle-fill" title="{{datos.labelNombre}}"
+  <label for="input_fecha" class="form-label" >{{datos.labelNombre}} {{datos.required ? ' *:' : ''}} @if(tooltipQuestionCircle){ <span class="bi bi-question-circle-fill" title="{{datos.labelNombre}}"
         data-bs-toggle="tooltip"></span>}</label>
   <div class="d-flex justify-content-start" [formGroup]="Formulario">
     <div class="input-group-text" id="input_fecha">
       <div class="fecha">
         <span>{{fechaString}}</span>
       </div>
-      <div class="icono">
+      <div class="icono" [ngClass]="{'disabled-div': isDisabled}">
         <span class="d-flex justify-content-end " id="basic-addon2" style="cursor: pointer;"
           (click)="mostrarCalendario()">
-          <i class="bi bi-calendar-event"></i></span>
+          @if(icono){
+            <i class="bi bi-calendar-event"></i>
+          }
+        </span>
       </div>
     </div>
     <div class="border" *ngIf="mostrar" id="calendario">

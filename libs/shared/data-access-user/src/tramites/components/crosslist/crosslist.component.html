@@ -5,7 +5,7 @@
       <input type="text" class="form-control mb-2" placeholder="País disponible" >
     </div>
     <label class="form-label" *ngIf="label?.tituluDeLaIzquierda">{{ label?.tituluDeLaIzquierda }}:
-      <span class="bi bi-question-circle-fill" title="{{label?.tituluDeLaIzquierda}}" data-bs-toggle="tooltip"></span>
+      <span class="bi bi-question-circle-fill" *ngIf="label?.showUnoTitulo" title="{{label?.tituluDeLaIzquierda}}" data-bs-toggle="tooltip"></span>
       </label>
     <select class="form-select" multiple aria-label="Multiple select example" [formControl]="fecha">
       @for (fecha of fechasDatos; let i = $index; track i) {
@@ -17,12 +17,26 @@
     <div class="btn-group d-grid gap-2" [ngClass]="{'mt-5': label}">
       @if(showSearchInput1){
         @for (btn of botonField; track $index) {
-            <button type="button" class="btn w-100" [ngClass]="btn.class" (click)="btn.funcion()">{{btn.btnNombre}}</button>
+          <button 
+          type="button"
+          class="btn w-100"
+          [ngClass]="btn.class"
+          (click)="btn.funcion ? btn.funcion() : null"
+          [disabled]="isDisabled">
+            {{btn.btnNombre}}
+          </button>
         }
       }
       @else {
         @for (btn of botones; track $index) {
-            <button type="button" class="btn w-100" [ngClass]="btn.class" (click)="btn.funcion()">{{btn.btnNombre}}</button>
+          <button
+          type="button"
+          class="btn w-100"
+          [ngClass]="btn.class"
+          (click)="btn.funcion ? btn.funcion() : null"
+          [disabled]="isDisabled">
+            {{btn.btnNombre}}
+          </button>
         }
       }
     </div>
@@ -35,7 +49,7 @@
       <input type="text" class="form-control mb-2" placeholder="País seleccionado" >
      </div>
      <label class="form-label" *ngIf="label?.derecha">{{ label?.derecha }}:
-      <span class="bi bi-question-circle-fill" title="{{label?.derecha}}" data-bs-toggle="tooltip"></span>
+      <span class="bi bi-question-circle-fill" *ngIf="label?.showDosTitulo" title="{{label?.derecha}}" data-bs-toggle="tooltip"></span>
       </label>
     <select class="form-select" multiple aria-label="Multiple select example" [formControl]="fechaSeleccionada"
     [ngClass]="isInvalid() ? 'required' : ''" >

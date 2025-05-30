@@ -34,6 +34,18 @@ export class DocumentosComponent implements OnInit, OnDestroy {
   public datosTablaDocumentos: BodyTablaDocumentos[] = [];
 
   /**
+   * URL del archivo PDF que se va a abrir.
+   * @type {string}
+   */
+  public verPdf = DocumentosComponent.verPdf;
+
+  /**
+   * URL del archivo PDF que se va a descargar.
+   * @type {string}
+   */
+  public descargarPdf = DocumentosComponent.descargarPdf;
+
+  /**
    * Constructor de la clase DocumentosComponent.
    * @param documentosService Servicio para obtener los documentos.
    */
@@ -55,7 +67,7 @@ export class DocumentosComponent implements OnInit, OnDestroy {
    * @param {string} url - La URL del archivo PDF que se va a abrir.
    * @returns {void}
    */
-  verPdf(url: string): void {
+  static verPdf(url: string): void {
     window.open(url, '_blank');
   }
 
@@ -64,7 +76,7 @@ export class DocumentosComponent implements OnInit, OnDestroy {
    * @param {string} url - La URL del archivo PDF que se va a descargar.
    * @returns {void}
    */
-  descargarPdf(url: string): void {
+  static descargarPdf(url: string): void {
     window.open(url, '_blank');
   }
 
