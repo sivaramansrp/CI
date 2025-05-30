@@ -1,6 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup,ReactiveFormsModule,Validators} from '@angular/forms';
-import { Subject, Subscription} from 'rxjs';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { map, takeUntil } from 'rxjs/operators';
 import { CANCELACION_DE_AUTORIZACIONES } from '../../constantes/cancelacion-table.enum'
@@ -11,6 +10,7 @@ import { CancelacionesStore } from '../../estados/cancelaciones.store';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Subject } from 'rxjs';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 /**
@@ -35,17 +35,12 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
   */
   private destroy$ = new Subject<void>();
 
-    /**
-   * Suscripción a los cambios en el formulario react
-   */
-  private subscription: Subscription = new Subscription();
-  
-   /**
+  /**
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
-  public esFormularioSoloLectura: boolean = false; 
-  
+  public esFormularioSoloLectura: boolean = false;
+
   /**
    * Formulario reactivo para la cancelación de autorizaciones.
    */
@@ -69,7 +64,7 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas de la tabla.
    */
-  public configuracionTabla:ConfiguracionColumna<CancelacionDeAutorizaciones>[] = CANCELACION_DE_AUTORIZACIONES;
+  public configuracionTabla: ConfiguracionColumna<CancelacionDeAutorizaciones>[] = CANCELACION_DE_AUTORIZACIONES;
 
   /**
    * Referencia al componente de selección de tabla.
@@ -81,25 +76,25 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
    */
   public cancelacionData: CancelacionDeAutorizaciones[] = [];
 
-   /**
-   * @ignore
-   */
+  /**
+  * @ignore
+  */
   constructor(private fb: FormBuilder,
     private cancelacionesService: CancelacionesService,
     private cancelacionesStore: CancelacionesStore,
     private cancelacionesQuery: CancelacionesQuery,
     private consultaioQuery: ConsultaioQuery
   ) {
-   
+
     this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroy$),
-      map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
-        this.inicializarEstadoFormulario();
-      })
-    )
-    .subscribe()
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
 
   }
 
@@ -117,16 +112,16 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
     this.inicializarEstadoFormulario();
   }
 
-   /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.  
-   * Además, obtiene la información del catálogo de mercancía.
-   */
+  /**
+  * Evalúa si se debe inicializar o cargar datos en el formulario.  
+  * Además, obtiene la información del catálogo de mercancía.
+  */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
       this.actualizarEstado();
-    }  
+    }
   }
 
   /**
@@ -135,11 +130,11 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.actualizarEstado();
-      if (this.cancelacionForm && this.esFormularioSoloLectura) {
-        this.cancelacionForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.cancelacionForm.enable();
-      } 
+    if (this.cancelacionForm && this.esFormularioSoloLectura) {
+      this.cancelacionForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.cancelacionForm.enable();
+    }
   }
 
   /**
@@ -189,7 +184,7 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
     this.cancelacionesService
       .getCancelacionDeAutorizaciones()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((resp: CancelacionDeAutorizaciones[]) => { 
+      .subscribe((resp: CancelacionDeAutorizaciones[]) => {
         this.cancelacionData = resp;
       });
   }
@@ -200,6 +195,5 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    this.subscription.unsubscribe();
   }
 }

@@ -20,6 +20,11 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
 
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
+  
+  /**
+   * Estado de la consulta actual, que contiene información sobre el trámite y su estado.
+   * Se inicializa como una instancia de ConsultaioState.
+   */
   public consultaState!: ConsultaioState;
 
   /**
