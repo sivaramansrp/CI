@@ -198,6 +198,11 @@ export const MSG_INTERVALO_FECHA_NO_VALIDO =
  */
 export const SIN_VALOR = -1;
 
+/**
+ * @description Constante para el manejo del valor del select cuando no hay valores.
+ */
+export const SIN_ITEMS = '-2';
+
 // TODO: Se va a eliminar este valor, cuando el backend actualice el endpoint del guardado y ya no sea necesario enviar este valor
 export const CVE_UNIDAD_ADMIN = 'CV1';
 
