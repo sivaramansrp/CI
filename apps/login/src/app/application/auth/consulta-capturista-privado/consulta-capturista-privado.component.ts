@@ -26,17 +26,17 @@ export class ConsultaCapturistaPrivadoComponent implements OnInit {
   /** Notificador para cancelar suscripciones al destruir el componente */
   private destroyNotifier$: Subject<void> = new Subject();
   /** Bandera para indicar si se deben registrar los datos */
-  public regustrarDatos: boolean = false;
+  public registrarDatos: boolean = false;
 
   /**
    * Constructor que inyecta los servicios y dependencias necesarias.
-   * @param BusquedaQuery Query para obtener el estado del capturista consultado.
+   * @param busquedaQuery Query para obtener el estado del capturista consultado.
    * @param fb FormBuilder para crear el formulario reactivo.
    * @param router Router para la navegación.
    * @param capturistaStore Servicio para gestionar el estado de capturistas.
    */
   constructor(
-    private BusquedaQuery: BusquedaRFCCURPQuery,
+    private busquedaQuery: BusquedaRFCCURPQuery,
     private fb: FormBuilder,
     private router: Router,
     private capturistaStore: CapturistaStoreService
@@ -48,7 +48,7 @@ export class ConsultaCapturistaPrivadoComponent implements OnInit {
    * Suscribe al estado del capturista consultado y llena el formulario con sus datos.
    */
   ngOnInit(): void {
-    this.BusquedaQuery.selectSolicitud$
+    this.busquedaQuery.selectSolicitud$
       .pipe(
         map((seccionState) => {
           this.capturistaConsultado = seccionState;
@@ -93,7 +93,7 @@ export class ConsultaCapturistaPrivadoComponent implements OnInit {
   */
   confirmarDatosCapturista() {
     this.capturistaStore.setListaCapturistas(this.capturistaConsultado?.listaCapturistas || []);
-    this.capturistaStore.setRegistraDatos(this.regustrarDatos = true);
+    this.capturistaStore.setRegistraDatos(this.registrarDatos = true);
     this.router.navigate(['login/registro-capturista-privado']);
   }
 }
