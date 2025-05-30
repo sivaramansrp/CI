@@ -63,8 +63,17 @@ export class TratadosComponent implements OnInit, OnDestroy {
      * del solicitante dentro del contexto del trámite.
      */
   public solicitudeState!: Solicitante110101State;
+  /**
+   * Catálogo de países disponibles para selección en el componente.
+   */
   public paisCatalogo: Catalogo[] = [];
+    /**
+   * Catálogo de países disponibles para selección en el componente.
+   */
   public tratadoCatalogo: Catalogo[] = [];
+  /**
+   * Catálogo de países disponibles para selección en el componente.
+   */
   public origenCatalogo: Catalogo[] = [];
 
 

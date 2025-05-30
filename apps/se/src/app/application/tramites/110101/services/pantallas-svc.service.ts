@@ -9,6 +9,9 @@ import { JSONResponse } from '@libs/shared/data-access-user/src';
   providedIn: 'root'
 })
 export class PantallasSvcService {
+/**
+ * La URL base para el servidor auxiliar de JSON, cargada desde la configuración del entorno.
+ */
  urlServer = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
    /**
   * constructor de la clase
