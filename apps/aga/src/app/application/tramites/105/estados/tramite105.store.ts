@@ -175,7 +175,7 @@ export function createInitialState(): Solicitud105State {
     procedimientoCargaDescarga: "",
     sistemasMedicionUbicacion: "",
     motivoNoDespachoAduana: "",
-    operaciones:null
+    operaciones:""
   };
 }
 @Injectable({

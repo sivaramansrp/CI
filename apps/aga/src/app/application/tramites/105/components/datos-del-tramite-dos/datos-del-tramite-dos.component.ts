@@ -1,6 +1,6 @@
 import {
-  CatalogoSelectComponent,
-  CatalogosSelect,
+  Catalogo,
+  ConsultaioQuery,
   TableComponent,
   TituloComponent
 } from '@ng-mf/data-access-user';
@@ -13,11 +13,11 @@ import {
 } from '@angular/forms';
 import { Solicitud105State, Tramite105Store } from '../../estados/tramite105.store';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { InvoCarService } from '../../services/invocar.service';
 import { Tramite105Query } from '../../estados/tramite105.query';
 import mercanciaTable from 'libs/shared/theme/assets/json/105/mercancia-table.json';
-
 /**
  * Interfaz que representa los datos del cuerpo de la tabla de mercancías.
  * 
@@ -134,7 +134,7 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    * @type {CatalogosSelect}
    * @memberof DatosDelTramiteDosComponent
    */
-  operacione!: CatalogosSelect;
+  operacione:Catalogo[] = []
 
 
 
@@ -171,13 +171,35 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    * @param {InvoCarService} invoCarService - Servicio para obtener datos de catálogos.
    * @memberof DatosDelTramiteDosComponent
    */
+
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+
   constructor(
     private fb: FormBuilder,
     private store: Tramite105Store,
     private query: Tramite105Query,
-    private invoCarService: InvoCarService
+    private invoCarService: InvoCarService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // // Se puede agregar lógica de inicialización aquí si es necesario
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe();
   }
 
   /**
@@ -199,16 +221,60 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
     this.getOperaciones();
     this.obtenerMercancia();
     this.crearFormularios()
-    
+    this.inicializarEstadoFormulario();
+  }
+/**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
   }
 
+  /**
+   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+   * con el valor inicial obtenido del store.
+   */
+
+  inicializarFormulario(): void {
+      this.query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.solicitudState = seccionState;
+          })
+        )
+        .subscribe()
+    this.crearFormularios();
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    //  this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.datosDelTramiteDos.disable();
+        this.agenteForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+         this.datosDelTramiteDos.enable();
+        this.agenteForm.enable();
+      } 
+  }
 
   crearFormularios(): void {
     this.datosDelTramiteDos = this.fb.group({
       procedimientoCargaDescarga: [this.solicitudState?.procedimientoCargaDescarga, Validators.required],
       sistemasMedicionUbicacion: [this.solicitudState?.sistemasMedicionUbicacion, Validators.required],
       motivoNoDespachoAduana: [this.solicitudState?.motivoNoDespachoAduana, Validators.required],
-      operaciones: [{ value: this.solicitudState?.operaciones }, Validators.required],
+      operaciones: [this.solicitudState?.operaciones, Validators.required],
     });
 
     this.agenteForm = this.fb.group({
@@ -275,12 +341,7 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    this.invoCarService.getPais().pipe( takeUntil(this.destroyNotifier$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
-         this.operacione = {
-        labelNombre: 'Operaciones',
-        required: false,
-        primerOpcion: 'Selecciona un valor',
-        catalogos: RESPONSE ?? [],
-      };
+         this.operacione = RESPONSE;
       }
     });
   }

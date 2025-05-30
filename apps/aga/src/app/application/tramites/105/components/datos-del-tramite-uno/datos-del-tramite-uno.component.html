@@ -5,20 +5,20 @@
       <div class="checkbox-container">
         <p class="checkbox-header mb-4 fw-bold">Indique el(los) régimen(es) al (los) que se destinará la mercancía*</p>
 
-        <lib-input-check [id]="'importación'" [label]="'Importación'" [required]="false"
+        <lib-input-check [isDisabled]="esFormularioSoloLectura" [id]="'importación'" [label]="'Importación'" [required]="false"
             formControlName="importacion"
             (change)="setValoresStore(datosDelTramite, 'importacion', 'setImportacion')"></lib-input-check>
 
-            <lib-input-check [id]="'exportacion'" [label]="'Exportación'" [required]="false"
+            <lib-input-check [isDisabled]="esFormularioSoloLectura" [id]="'exportacion'" [label]="'Exportación'" [required]="false"
             formControlName="exportacion"
             (change)="setValoresStore(datosDelTramite, 'exportacion', 'setExportacion')"></lib-input-check>
 
-            <lib-input-check [id]="'depositoFiscalGas'" [label]="'Depósito Fiscal de gas licuado de petróleo o de gas
+            <lib-input-check [isDisabled]="esFormularioSoloLectura" [id]="'depositoFiscalGas'" [label]="'Depósito Fiscal de gas licuado de petróleo o de gas
             natural'" [required]="false"
             formControlName="depositoFiscalGas"
             (change)="setValoresStore(datosDelTramite, 'depositoFiscalGas', 'setDepositoFiscalGas')"></lib-input-check>
 
-            <lib-input-check [id]="'depositoFiscalVehiculos'" [label]="'Depósito Fiscal de Vehículos'" [required]="false"
+            <lib-input-check [isDisabled]="esFormularioSoloLectura" [id]="'depositoFiscalVehiculos'" [label]="'Depósito Fiscal de Vehículos'" [required]="false"
             formControlName="depositoFiscalVehiculos"
             (change)="setValoresStore(datosDelTramite, 'depositoFiscalVehiculos', 'setDepositoFiscalVehiculos')"></lib-input-check>
       </div>
@@ -80,12 +80,12 @@
         <p class="fw-bold">Seleccione las opciones que desea capturar*</p>
         <div class="checkbox-container d-flex flex-row">
           <div class="checkbox">
-            <lib-input-check [id]="'domicilio'" [label]="'Domicilio'" [required]="false"
+            <lib-input-check [isDisabled]="esFormularioSoloLectura" [id]="'domicilio'" [label]="'Domicilio'" [required]="false"
             formControlName="domicilio"
             (change)="setValoresStore(datosDelTramite, 'domicilio', 'setDomicilio');onCambioCheckbox($event,'domicilio')"></lib-input-check>
           </div>
           <div class="checkbox ms-4">
-            <lib-input-check [id]="'ubicacion'" [label]="'Ubicación:'" [required]="false"
+            <lib-input-check [isDisabled]="esFormularioSoloLectura" [id]="'ubicacion'" [label]="'Ubicación:'" [required]="false"
             formControlName="ubicacion"
             (change)="setValoresStore(datosDelTramite, 'ubicacion', 'setUbicacion');onCambioCheckbox($event,'ubicacion')"></lib-input-check>
           </div>
@@ -97,7 +97,7 @@
     <div class="form-input">
       <div class="row mb-3">
         <div class="col-md-4">
-          <app-catalogo-select [isDisabled]="deshabilitarSeleccion" [catalogo]="pais.catalogos" formControlName="pais" [label]="'País'" [required]="false"
+          <app-catalogo-select [isDisabled]="esFormularioSoloLectura || deshabilitarSeleccion" [catalogo]="pais" formControlName="pais" name="pais" [label]="'País'" [required]="false"
             (change)="
                 setValoresStore(datosDelTramite, 'pais', 'setPais')
               "></app-catalogo-select>
@@ -109,11 +109,11 @@
         " />
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [isDisabled]="deshabilitarSeleccion" [catalogo]="entidadFederativa.catalogos" formControlName="entidadFederativa"
+          <app-catalogo-select [isDisabled]="esFormularioSoloLectura || deshabilitarSeleccion" [catalogo]="entidadFederativa" formControlName="entidadFederativa"
             [label]="'Entidad federativa'"  [required]="true" (change)="setValoresStore(datosDelTramite, 'entidadFederativa', 'setEntidadFederativa')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [isDisabled]="deshabilitarSeleccion" [catalogo]="municipioDelegacion.catalogos" formControlName="municipioDelegacion"
+          <app-catalogo-select [isDisabled]="esFormularioSoloLectura || deshabilitarSeleccion" [catalogo]="municipioDelegacion" formControlName="municipioDelegacion"
             [label]="'Municipio o delegación'" (change)="setValoresStore(datosDelTramite, 'municipioDelegacion', 'setMunicipioDelegacion')" [required]="true"></app-catalogo-select>
         </div>
         <div class="col-md-4">
@@ -121,7 +121,7 @@
           <input type="text" class="form-control" id="localidad" formControlName="localidad" (change)="setValoresStore(datosDelTramite, 'localidad', 'setlocalidad')"/>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [isDisabled]="deshabilitarSeleccion" [catalogo]="colonia.catalogos" formControlName="colonia"
+          <app-catalogo-select [isDisabled]="esFormularioSoloLectura || deshabilitarSeleccion" [catalogo]="colonia" formControlName="colonia"
             [label]="'Colonia'" [required]="true" (change)="setValoresStore(datosDelTramite, 'colonia', 'setColonia')"></app-catalogo-select>
         </div>
       </div>
@@ -153,7 +153,7 @@
     <div class="row">
       <p class="fw-bold">Seleccione la aduana por la que llevará a cabo las operaciones</p>
       <div class="col-md-8 mt-3">
-        <app-catalogo-select [catalogo]="aduana.catalogos" formControlName="aduana" [label]="'Aduana'"
+        <app-catalogo-select [isDisabled]="deshabilitarSeleccion" [catalogo]="aduana" formControlName="aduana" [label]="'Aduana'"
           [required]="true" (change)="setValoresStore(datosDelTramite, 'aduana', 'setAduana')"></app-catalogo-select>
       </div>
     </div>
@@ -166,9 +166,9 @@
       </div>
       <div class="col-md-12 mt-5 d-flex justify-content-end">
         <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modalAgregar"
-          (click)="abrirModal()">Agregar</button>
-        <button type="button" class="btn btn-default ms-3">Eliminar</button>
-        <button type="button" class="btn btn-default">Modificar</button>
+          (click)="abrirModal()" [disabled]="esFormularioSoloLectura">Agregar</button>
+        <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura">Eliminar</button>
+        <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">Modificar</button>
       </div>
     </div>
   </form>
@@ -189,7 +189,7 @@
               conforme a la TIGIE</p>
             <div class="row mb-3">
               <div class="col-md-6">
-                <app-catalogo-select [catalogo]="fraccionArancelaria.catalogos" [label]="'Fracción arancelaria'"
+                <app-catalogo-select [catalogo]="fraccionArancelaria" [label]="'Fracción arancelaria'"
                   [required]="true" formControlName="fraccionArancelaria">
                 </app-catalogo-select>
               </div>

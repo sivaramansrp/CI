@@ -83,7 +83,6 @@ export class InvoCarService {
   }
 
   actualizarEstadoFormulario(datos:Solicitud105State): void {
-    console.log('Actualizando estado del formulario con los siguientes datos:', datos);
   this.store.setImportacion(datos.importacion);
   this.store.setExportacion(datos.exportacion);
   this.store.setDepositoFiscalGas(datos.depositoFiscalGas);
