@@ -53,137 +53,70 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   @ViewChild(CrosslistComponent) crosslistComponent!: CrosslistComponent;
 
-  /**
-   * Botones para la lista cruzada.
-   * Contiene las configuraciones de los botones utilizados en la lista cruzada.
-   */
+  /** Botones para la lista cruzada. */
   crossListBotons!: CrosslistBoton[];
 
-  /**
-   * Botones para el movimiento.
-   * Configuración de los botones relacionados con los movimientos.
-   */
+  /** Botones para el movimiento. */
   movimientoBotons!: CrosslistBoton[];
 
-  /**
-   * Botones para las aduanas.
-   * Configuración de los botones relacionados con las aduanas.
-   */
+  /** Botones para las aduanas. */
   aduanasBotons!: CrosslistBoton[];
 
-  /**
-   * Formulario de solicitud.
-   * Contiene los datos y validaciones del formulario de solicitud.
-   */
+  /** Formulario de solicitud. Contiene los datos y validaciones del formulario de solicitud. */
   formSolicitud!: FormGroup;
 
-  /**
-   * Formulario de mercancía.
-   * Contiene los datos y validaciones del formulario de mercancía.
-   */
+  /** Formulario de mercancía. Contiene los datos y validaciones del formulario de mercancía. */
   formMercancia!: FormGroup;
 
-  /**
-   * Tipo de movimiento seleccionado.
-   * Representa el tipo de movimiento actualmente seleccionado en el formulario.
-   */
+  /** Tipo de movimiento seleccionado. Representa el tipo de movimiento actualmente seleccionado en el formulario. */
   tipoMovimientoSeleccionada!: number;
 
-  /**
-   * Indica si se ha seleccionado otra fracción.
-   * Se utiliza para habilitar o deshabilitar campos relacionados con fracciones.
-   */
+  /** Indica si se ha seleccionado otra fracción. Se utiliza para habilitar o deshabilitar campos relacionados con fracciones. */
   otraFraccionSeleccionada!: boolean;
 
-  /**
-   * Estado de la solicitud 230902.
-   * Contiene el estado actual de la solicitud.
-   */
+  /** Estado de la solicitud 230902. Contiene el estado actual de la solicitud. */
   solicitud230902State!: Solicitud230902State;
 
-  /**
-   * Etiqueta de Aquaandas.
-   * Configuración de la etiqueta utilizada en la lista cruzada de Aquaandas.
-   */
+  /** Etiqueta de Aquaandas. Configuración de la etiqueta utilizada en la lista cruzada de Aquaandas. */
   aquandasLabel: CrossListLable = AQUANDAS_LABEL;
 
-  /**
-   * Lista original de aduanas.
-   * Contiene las aduanas disponibles antes de realizar selecciones.
-   */
+  /** Lista original de aduanas. Contiene las aduanas disponibles antes de realizar selecciones. */
   listaOriginalAduanas: string[] = [];
 
-  /**
-   * Lista seleccionada de aduanas.
-   * Contiene las aduanas seleccionadas por el usuario.
-   */
+  /** Lista seleccionada de aduanas. Contiene las aduanas seleccionadas por el usuario. */
   listaSeleccionadaAduanas: string[] = [];
 
-  /**
-   * Etiqueta de movimiento.
-   * Configuración de la etiqueta utilizada en la lista cruzada de movimientos.
-   */
+  /** Etiqueta de movimiento. Configuración de la etiqueta utilizada en la lista cruzada de movimientos. */
   movimientoLabel: CrossListLable = MOVIMIENTO_LABEL;
 
-  /**
-   * Configuración de la tabla de mercancías.
-   * Define las columnas y configuraciones de la tabla de mercancías.
-   */
+  /** Configuración de la tabla de mercancías. Define las columnas y configuraciones de la tabla de mercancías. */
   configuracionTabla: ConfiguracionColumna<ConfiguracionItem>[] = CONFIGURACION_TABLA_MERCANCIA;
 
-  /**
-   * Mensaje de alerta relacionado con la mercancía.
-   * Se muestra cuando ocurre un error o advertencia relacionada con la mercancía.
-   */
+  /** Mensaje de alerta relacionado con la mercancía. Se muestra cuando ocurre un error o advertencia relacionada con la mercancía. */
   public alert_message: string = ALERTA_MERCANCIA;
 
-  /**
-   * Lista original de movimientos.
-   * Contiene los movimientos disponibles antes de realizar selecciones.
-   */
+  /** Lista original de movimientos. Contiene los movimientos disponibles antes de realizar selecciones. */
   listaOriginalMovimiento: string[] = [];
 
-  /**
-   * Lista seleccionada de movimientos.
-   * Contiene los movimientos seleccionados por el usuario.
-   */
+  /** Lista seleccionada de movimientos. Contiene los movimientos seleccionados por el usuario. */
   listSeleccionadaMovimiento: string[] = [];
 
-  /**
-   * Tipo de selección de la tabla.
-   * Define el tipo de selección que se puede realizar en la tabla.
-   */
+  /** Tipo de selección de la tabla. Define el tipo de selección que se puede realizar en la tabla. */
   tablaSeleccion = TablaSeleccion.CHECKBOX;
 
-  /**
-   * Indica si se ha seleccionado un archivo.
-   * Se utiliza para rastrear el estado de la selección de archivos en el componente.
-   */
+  /** Indica si se ha seleccionado un archivo. Se utiliza para rastrear el estado de la selección de archivos en el componente. */
   isFileSelected: boolean = false;
 
-  /**
-   * Método para cargar los datos de la tabla.
-   * Realiza una solicitud al servicio para obtener los datos de la tabla.
-     */
+  /** Método para cargar los datos de la tabla. Realiza una solicitud al servicio para obtener los datos de la tabla. */
   listaFilaSeleccionadaMercancia!: ConfiguracionItem[];
 
-
-  /**
-   * Datos de la tabla de mercancías.
-   * Contiene las filas de datos que se muestran en la tabla de mercancías.
-   */
+  /** Datos de la tabla de mercancías. Contiene las filas de datos que se muestran en la tabla de mercancías. */
   tablaDatos: ConfiguracionItem[] = [];
 
-  /**
-   * Fila seleccionada en la tabla de mercancías.
-   * Representa la fila actualmente seleccionada por el usuario.
-   */
+  /** Fila seleccionada en la tabla de mercancías. Representa la fila actualmente seleccionada por el usuario. */
   filaSeleccionada!: ConfiguracionItem;
 
-  /**
-   * Indica si se debe mostrar el modal de datos de mercancía.
-   * Controla la visibilidad del modal de datos de mercancía.
-   */
+  /** Indica si se debe mostrar el modal de datos de mercancía. Controla la visibilidad del modal de datos de mercancía. */
   showDatosMercanciaModal: boolean = false;
 
   /**
@@ -192,66 +125,49 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   private destroyed$ = new Subject<void>();
 
-  /**
-   * Indica si la operación actual es una actualización.
-   * Se utiliza para diferenciar entre crear un nuevo elemento y actualizar uno existente.
-   */
+  /** Indica si la operación actual es una actualización. Se utiliza para diferenciar entre crear un nuevo elemento y actualizar uno existente. */
   esOperacionDeActualizacion: boolean = false;
 
-  /**
-   * Indica si el botón "Modificar" está habilitado.
-   * Se utiliza para controlar la disponibilidad del botón de modificación.
-   */
+  /** Indica si el botón "Modificar" está habilitado. Se utiliza para controlar la disponibilidad del botón de modificación. */
   enableModficarBoton: boolean = false;
 
-  /**
-   * Indica si el botón "Eliminar" está habilitado.
-   * Se utiliza para controlar la disponibilidad del botón de eliminación.
-   */
+  /** Indica si el botón "Eliminar" está habilitado. Se utiliza para controlar la disponibilidad del botón de eliminación. */
   enableEliminarBoton: boolean = false;
 
-  /**
-   * Indica si el popup de selección múltiple está abierto.
-   * Controla la visibilidad del popup de selección múltiple.
-   */
+  /** Indica si el popup de selección múltiple está abierto. Controla la visibilidad del popup de selección múltiple. */
   multipleSeleccionPopupAbierto: boolean = false;
 
-  /**
-   * Indica si el popup está cerrado.
-   */
-  multipleSeleccionPopupCerrado:boolean = true;
-  /**
-   * Indica si el popup de confirmación para eliminar está abierto.
-   * Controla la visibilidad del popup de confirmación para eliminar elementos.
-   */
+  /** Indica si el popup de selección múltiple está cerrado. */
+  multipleSeleccionPopupCerrado: boolean = true;
+
+  /** Indica si el popup de confirmación para eliminar está abierto. Controla la visibilidad del popup de confirmación para eliminar elementos. */
   confirmEliminarPopupAbierto: boolean = false;
 
-  /**
-   * Indica si el popup de selección múltiple está cerrado.
-   * Controla el estado del cierre del popup de selección múltiple.
-   */
+  /** Indica si el popup de confirmación para eliminar está cerrado. */
   confirmEliminarPopupCerrado: boolean = true;
+
+  /** Nombre del modal actual. */
   modal: string = '';
+
+  /** Título del modal actual. */
   tituloModal!: string;
+
+  /** Mensaje del modal actual. */
   mensajeModal!: string;
+
+  /** Notificación actual. */
   public nuevaNotificacion!: Notificacion;
 
-  /**
- * Indica si el formulario está en modo solo lectura.
- * Si es verdadero, los campos del formulario estarán deshabilitados para edición.
- */
- esFormularioSoloLectura: boolean = false; 
+  /** Indica si el formulario está en modo solo lectura. Si es verdadero, los campos del formulario estarán deshabilitados para edición. */
+  esFormularioSoloLectura: boolean = false;
 
-/**
- * Suscripción general para manejar y limpiar las suscripciones del componente.
- * Se utiliza para evitar fugas de memoria.
- */
- private subscription: Subscription = new Subscription();
+  /** Suscripción general para manejar y limpiar las suscripciones del componente. Se utiliza para evitar fugas de memoria. */
+  private subscription: Subscription = new Subscription();
 
   /**
    * Constructor del componente.
    * Inicializa los servicios y dependencias necesarias para la gestión de datos y formularios.
-     */
+   */
   constructor(
     public permisoCitesService: PermisoCitesService,
     private tramite230902Store: Tramite230902Store,
@@ -259,55 +175,54 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     public formBuilder: FormBuilder,
     private consultaioQuery: ConsultaioQuery,
   ) {
-     this.consultaioQuery.selectConsultaioState$
-        .pipe(
-          takeUntil(this.destroyed$),
-          map((seccionState) => {
-           this.esFormularioSoloLectura = seccionState.readonly;
-           this.inicializarEstadoFormulario();
-          })
-        )
-        .subscribe()
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
-     * Inicializa el estado del formulario dependiendo si es solo lectura o editable.
+   * Inicializa el estado del formulario dependiendo si es solo lectura o editable.
    */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+      this.guardarDatosFormulario();
     } else {
       this.crearFormularioSolicitud();
     }
   }
 
   /**
-     * Guarda los datos del formulario y ajusta el estado de solo lectura.
+   * Guarda los datos del formulario y ajusta el estado de solo lectura.
    */
   guardarDatosFormulario(): void {
     this.crearFormularioSolicitud();
     if (this.esFormularioSoloLectura) {
       this.formSolicitud.disable();
-    } else if (!this.esFormularioSoloLectura) {
-      this.formSolicitud.enable();
     } else {
-      // No se requiere ninguna acción en el formulario
+      this.formSolicitud.enable();
     }
   }
 
   /**
-     * Inicializa el componente.
+   * Inicializa el componente.
    * Configura los formularios, datos iniciales y suscripciones necesarias.
    */
   ngOnInit(): void {
-    this.inicializarEstadoFormulario()
+    this.inicializarEstadoFormulario();
     this.permisoCitesService.inicializaDatosSolicitudDatosCatalogos();
     this.crossListBotons = CROSSLIST_BOTONS(this.crosslistComponent);
     this.movimientoBotons = this.crossListBotons;
     this.aduanasBotons = this.crossListBotons;
 
     this.tramite230902Query.selectSolicitud$
-      .pipe(takeUntil(this.destroyed$)).subscribe((state) => {
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((state) => {
         this.solicitud230902State = state;
       });
 
@@ -315,20 +230,20 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Crea y configura el formulario para los datos de la solicitud.
+   * Crea y configura el formulario para los datos de la solicitud.
    * Define los campos y validaciones necesarias.
    */
   crearFormularioSolicitud(): void {
-     this.subscription.add(
-        this.tramite230902Query.selectSolicitud$
-          .pipe(
-            takeUntil(this.destroyed$),
-            map((seccionState) => {
-              this.solicitud230902State = seccionState;
-            })
-          )
-          .subscribe()
-      );
+    this.subscription.add(
+      this.tramite230902Query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+            this.solicitud230902State = seccionState;
+          })
+        )
+        .subscribe()
+    );
     this.formSolicitud = this.formBuilder.group({
       tipodeMovimiento: [this.solicitud230902State.tipodeMovimiento, Validators.required],
       tipoRegimen: [this.solicitud230902State.tipoRegimen, Validators.required],
@@ -336,8 +251,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Crea y configura el formulario para los datos de mercancía.
+   * Crea y configura el formulario para los datos de mercancía.
    * Define los campos y validaciones necesarias. Recibe datos iniciales opcionales.
+   * data Datos iniciales opcionales para el formulario de mercancía.
    */
   crearNuevoFormularioMercancia(data?: ConfiguracionItem): void {
     const DEFAULT_DATA: ConfiguracionItem = {
@@ -360,25 +276,16 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
     this.formMercancia = this.formBuilder.group({
       id: [DEFAULT_DATA.id],
-      fraccionArancelaria: [
-        DEFAULT_DATA.fraccionArancelaria,
-        Validators.required,
-      ],
+      fraccionArancelaria: [DEFAULT_DATA.fraccionArancelaria, Validators.required],
       fraccionDescripcion: [DEFAULT_DATA.fraccionDescripcion],
       otraFraccion: [DEFAULT_DATA.otraFraccion],
       descripcion: [DEFAULT_DATA.descripcion, Validators.required],
       rendimientoProducto: [DEFAULT_DATA.rendimientoProducto],
-      clasificacionTaxonomica: [
-        DEFAULT_DATA.clasificacionTaxonomica,
-        Validators.required,
-      ],
+      clasificacionTaxonomica: [DEFAULT_DATA.clasificacionTaxonomica, Validators.required],
       nombreCientifico: [DEFAULT_DATA.nombreCientifico, Validators.required],
       nombreComun: [DEFAULT_DATA.nombreComun, Validators.required],
       marca: [DEFAULT_DATA.marca, Validators.required],
-      cantidad: [
-        DEFAULT_DATA.cantidad,
-        [Validators.required, Validators.pattern(REGEX_SEPARADO_POR_COMAS)],
-      ],
+      cantidad: [DEFAULT_DATA.cantidad, [Validators.required, Validators.pattern(REGEX_SEPARADO_POR_COMAS)]],
       unidadMedida: [DEFAULT_DATA.unidadMedida, Validators.required],
       paisOrigen: [DEFAULT_DATA.paisOrigen, Validators.required],
       paisProcedencia: [DEFAULT_DATA.paisProcedencia, Validators.required],
@@ -391,7 +298,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Maneja el cambio en el campo "otraFracción".
+   * Maneja el cambio en el campo "otraFracción".
    * Si el campo está seleccionado, agrega un control adicional al formulario
    * y reinicia los valores relacionados con la fracción arancelaria.
    * Si no está seleccionado, elimina el control adicional.
@@ -399,14 +306,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   manejarCambioOtraFraccion(): void {
     const CHECKED = this.formMercancia.get('otraFraccion')?.value;
     if (CHECKED) {
-      this.formMercancia.addControl(
-        'fraccionVigenteTIGIE',
-        this.formBuilder.control('')
-      );
+      this.formMercancia.addControl('fraccionVigenteTIGIE', this.formBuilder.control(''));
       this.formMercancia.get('fraccionArancelaria')?.setValue('0');
-      this.formMercancia
-        .get('fraccionDescripcion')
-        ?.reset();
+      this.formMercancia.get('fraccionDescripcion')?.reset();
       this.otraFraccionSeleccionada = true;
     } else {
       this.otraFraccionSeleccionada = false;
@@ -415,7 +317,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Maneja el cambio en el tipo de movimiento seleccionado.
+   * Maneja el cambio en el tipo de movimiento seleccionado.
    * Actualiza el estado y los botones relacionados con el movimiento.
    */
   cambiarTipoDeMovimiento(): void {
@@ -430,21 +332,20 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Actualiza la fila seleccionada en la tabla.
+   * Actualiza la fila seleccionada en la tabla.
    * Sincroniza los datos de la fila seleccionada con el formulario.
    */
   updateFilaSeleccionada(): void {
     const UPDATED_DATA = this.tablaDatos.find(
       (item) => item.id === this.filaSeleccionada.id
     );
-
     if (UPDATED_DATA) {
       this.filaSeleccionada = { ...UPDATED_DATA };
     }
   }
 
   /**
-     * Verifica si un control del formulario es inválido.
+   * Verifica si un control del formulario es inválido.
    * Devuelve verdadero si el control es inválido y ha sido tocado o modificado.
    * formControlName Nombre del control en el formulario.
    */
@@ -456,9 +357,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Maneja la fila seleccionada en la tabla de mercancías.
+   * Maneja la fila seleccionada en la tabla de mercancías.
    * Actualiza el formulario con los datos de la fila seleccionada.
-   *
    * fila Fila seleccionada en la tabla.
    */
   hadleFilaSeleccionada(fila: ConfiguracionItem[]): void {
@@ -474,7 +374,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Modifica un elemento de mercancía en la tabla.
+   * Modifica un elemento de mercancía en la tabla.
    * Actualiza los datos del formulario con los valores de la fila seleccionada.
    */
   modficarMercanciaItem(): void {
@@ -485,7 +385,9 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       this.updateFilaSeleccionada();
       this.esOperacionDeActualizacion = true;
       const FRACCION_DESCRIPCION =
-        this.permisoCitesService.fraccionArancelariaDescripcion.find((item)=>Number(item.id) === Number(this.filaSeleccionada.fraccionArancelaria))?.descripcion || '';
+        this.permisoCitesService.fraccionArancelariaDescripcion.find(
+          (item) => Number(item.id) === Number(this.filaSeleccionada.fraccionArancelaria)
+        )?.descripcion || '';
 
       const MERCANCIA_CONFIGURACION_ITEM: ConfiguracionItem = {
         id: this.filaSeleccionada.id,
@@ -493,7 +395,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
           this.permisoCitesService.fraccionArancelaria,
           this.filaSeleccionada.fraccionArancelaria
         ).toString(),
-        fraccionDescripcion:FRACCION_DESCRIPCION,
+        fraccionDescripcion: FRACCION_DESCRIPCION,
         otraFraccion: this.filaSeleccionada.otraFraccion,
         descripcion: this.filaSeleccionada.descripcion,
         rendimientoProducto: this.filaSeleccionada.rendimientoProducto,
@@ -533,7 +435,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Abre el popup de selección múltiple.
+   * Abre el popup de selección múltiple.
    * Muestra un mensaje de error si se seleccionan múltiples registros para modificar.
    */
   abrirMultipleSeleccionPopup(): void {
@@ -553,7 +455,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Cierra el popup de selección múltiple.
+   * Cierra el popup de selección múltiple.
    */
   cerrarMultipleSeleccionPopup(): void {
     this.multipleSeleccionPopupAbierto = false;
@@ -561,10 +463,10 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Elimina los elementos seleccionados de la tabla de mercancías.
+   * Elimina los elementos seleccionados de la tabla de mercancías.
    * Actualiza el estado global con los datos restantes.
    */
-  eliminarMercanciaItem():void{
+  eliminarMercanciaItem(): void {
     const IDS_TO_DELETE = this.listaFilaSeleccionadaMercancia.map(item => item.id);
 
     this.tablaDatos = this.tablaDatos.filter(
@@ -573,11 +475,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
     this.listaFilaSeleccionadaMercancia = [];
     this.tramite230902Store.setMercanciaTablaDatos(this.tablaDatos);
-    this.cerrarEliminarConfirmationPopup()
-  } 
+    this.cerrarEliminarConfirmationPopup();
+  }
 
   /**
-     * Abre el popup de confirmación para eliminar elementos.
+   * Abre el popup de confirmación para eliminar elementos.
    * Muestra un mensaje de confirmación antes de eliminar los registros seleccionados.
    */
   abrirElimninarConfirmationopup(): void {
@@ -595,7 +497,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Cierra el popup de confirmación para eliminar elementos.
+   * Cierra el popup de confirmación para eliminar elementos.
    */
   cerrarEliminarConfirmationPopup(): void {
     this.confirmEliminarPopupAbierto = false;
@@ -603,7 +505,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Confirma la eliminación de los elementos seleccionados.
+   * Confirma la eliminación de los elementos seleccionados.
    * Abre el popup de confirmación si hay elementos seleccionados.
    */
   confirmEliminarMercanciaItem(): void {
@@ -614,7 +516,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Alterna la visibilidad del modal de datos de mercancía.
+   * Alterna la visibilidad del modal de datos de mercancía.
    * Muestra u oculta el modal según el estado actual.
    */
   alternarVisibilidadModalMercancia(): void {
@@ -622,7 +524,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Muestra el formulario de mercancía en un modal.
+   * Muestra el formulario de mercancía en un modal.
    * Inicializa los datos necesarios para el formulario.
    */
   mostrarformMercanciaModal(): void {
@@ -633,7 +535,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Maneja el cambio en la fracción arancelaria seleccionada.
+   * Maneja el cambio en la fracción arancelaria seleccionada.
    * Actualiza la descripción de la fracción en el formulario.
    * $event Evento que contiene la fracción seleccionada.
    */
@@ -648,7 +550,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Envía el formulario de mercancía y agrega los datos a la tabla.
+   * Envía el formulario de mercancía y agrega los datos a la tabla.
    * Valida el formulario antes de agregar los datos.
    */
   enviarFormularioMercancia(): void {
@@ -711,8 +613,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Método setValoresStore
-   * Descripción: Actualiza un valor específico en el store utilizando el método correspondiente.
+   * Método setValoresStore
+   * Actualiza un valor específico en el store utilizando el método correspondiente.
    * form Formulario reactivo que contiene los datos.
    * campo Nombre del campo cuyo valor se actualizará en el store.
    */
@@ -722,7 +624,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Limpia las suscripciones cuando el componente se destruye.
+   * Limpia las suscripciones cuando el componente se destruye.
    * Evita fugas de memoria al completar el Subject.
    */
   ngOnDestroy(): void {

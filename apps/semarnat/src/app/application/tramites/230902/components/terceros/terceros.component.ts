@@ -194,8 +194,6 @@ export class TercerosComponent implements OnInit, OnDestroy {
       this.destinatarioForm.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.destinatarioForm.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
     }
   }
 
