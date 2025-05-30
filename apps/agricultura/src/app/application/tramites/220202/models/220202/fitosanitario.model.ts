@@ -60,6 +60,15 @@ export interface DatosDeFila {
     cantidad: number;
     proveedor: string;
 }
+/**
+ * @interface FinalEnviar
+ * @description 
+ * Interfaz que agrupa los estados de validación de las diferentes secciones del formulario antes de enviar la información final.
+ * 
+ * @property {boolean} datosFormaValidacion - Indica si la validación de los datos del formulario principal fue exitosa.
+ * @property {boolean} movilizacionValidacion - Indica si la validación de la sección de movilización fue exitosa.
+ * @property {boolean} validaciondeFormulariodePago - Indica si la validación del formulario de pago fue exitosa.
+ */
 export interface FinalEnviar {
     datosFormaValidacion: boolean;
     movilizacionValidacion: boolean;
@@ -76,11 +85,34 @@ export interface FinalEnviar {
  * @property {PagoForm} pago - Datos de pago asociados a la transacción.
  */
 export interface ListaDeDatosFinal {
+    /**
+     * Datos relacionados con la forma o formulario.
+     */
     datos: DatosForma;
+
+    /**
+     * Información sobre la movilización.
+     */
     movilizacion: Movilizacion;
+
+    /**
+     * Información del formulario de pago.
+     */
     pago: PagoForm;
+
+    /**
+     * Datos finales preparados para enviar.
+     */
     finalEnviar: FinalEnviar;
+
+    /**
+     * Arreglo de filas de solicitud para la tabla de datos.
+     */
     tablaDatos: FilaSolicitud[];
+
+    /**
+     * Arreglo de personas terceros asociadas.
+     */
     personas: PersonaTerceros[];
 }
 
