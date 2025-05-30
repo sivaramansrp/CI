@@ -1,10 +1,10 @@
+import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../estados/tramites/tramite120101.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { InsumosTabla } from '../models/insumos.model';
 import { Observable } from 'rxjs';
 import { RespuestaCuposTabla } from '../../120201/models/cupos.model';
-import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../estados/tramites/tramite120101.store';
 
 /**
  * @Injectable
@@ -219,7 +219,7 @@ export class SolicitudDeRegistroTplService {
     return this.http.get<SolicitudDeRegistroTpl120101State>('assets/json/120101/solicitud-de-registro-tpl.json');
   }
 
-  actualizarEstadoFormulario(campo: string, valor: unknown) {
+  actualizarEstadoFormulario(campo: string, valor: unknown): void {
     this.tramite120101Store.setDynamicFieldValue(campo, valor);
   }
 }
