@@ -134,9 +134,36 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy,AfterViewI
    */
    cuerpoTabla: FilaSolicitud[] = [];
 
+  /**
+   * @description
+   * Arreglo que almacena los elementos del cuerpo de la mesa.
+   *
+   * @type {string[]}
+   */
   mesaCuerpo: string[] = [];
+  /**
+   * @description
+   * Tipo de selección para la solicitud.
+   * Utiliza la enumeración TablaSeleccion para definir el tipo de selección.
+   *
+   * @type {TablaSeleccion}
+   */
 tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
+  /**
+   * @description
+   * Tipo de selección para la solicitud de mercancías.
+   * Utiliza la enumeración TablaSeleccion para definir el tipo de selección.
+   *
+   * @type {TablaSeleccion}
+   */
   tipoSeleccionsoliMercancias: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  /**
+   * @description
+   * Configuración de las columnas para la tabla de solicitudes.
+   * Utiliza la interfaz ConfiguracionColumna para definir las columnas.
+   *
+   * @type {ConfiguracionColumna<FilaSolicitud>[]}
+   */
   configuracionColumnasoli: ConfiguracionColumna<FilaSolicitud>[] = [
     { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
     { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
@@ -147,8 +174,16 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
     { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
   ];
 
+  /**
+   * Notificador para destruir el componente.
+   * @property {Subject<void>} destroyNotifier$
+   */
   private destroyNotifier$ = new Subject<void>();
 
+  /**
+   * Indica si el formulario es de solo lectura.
+   * @property {boolean} esFormularioSoloLectura
+   */
   esFormularioSoloLectura:boolean = false;
   /**
    * Constructor del componente.
