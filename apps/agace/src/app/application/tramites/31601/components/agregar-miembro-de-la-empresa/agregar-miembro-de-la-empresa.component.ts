@@ -17,6 +17,8 @@ import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tram
 import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
+
+import { TableBodyData } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TablePaginationComponent } from '@ng-mf/data-access-user';

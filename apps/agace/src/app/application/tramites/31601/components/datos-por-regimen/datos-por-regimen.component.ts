@@ -91,7 +91,7 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
    * Contiene los datos del cuerpo de la tabla de regímenes.
    * El tipo de datos es actualmente desconocido y se inicializa como una matriz vacía.
    */
-  public regimenTableBodyData: unknown = [];
+  public regimenTableBodyData: TableBodyData[] = [];
 
   /**
    * Matriz de cadenas que representan los datos de cabecera de la tabla de regímenes.
@@ -240,7 +240,7 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
      * @constant {Observable<any>} bimestreUnoCatalogo$
      */
     const BIMESTRE_UNO_CATALOGO$ = this._pantallaSvc
-      .getBimestreUnoCatalogo(CATALOGOS_ID.CAT_BIMESTRE_UNO)
+      .getBimestreUnoCatalogo()
       .pipe(
         map((resp) => {
           this.bimestreUnoCatalogo = resp.data;
@@ -257,7 +257,7 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
      * @returns {Observable<any>} Un observable que emite los datos del catálogo para el segundo bimestre.
      */
     const BIMESTRE_DOS_CATALOGO$ = this._pantallaSvc
-      .getBimestreDosCatalogo(CATALOGOS_ID.CAT_BIMESTRE_DOS)
+      .getBimestreDosCatalogo()
       .pipe(
         map((resp) => {
           this.bimestreDosCatalogo = resp.data;

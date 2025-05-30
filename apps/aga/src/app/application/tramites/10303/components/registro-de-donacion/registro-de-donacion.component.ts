@@ -6,7 +6,7 @@ import { DonacionesExtranjerasService } from '../../services/donaciones-extranje
 import mercanciaTable from 'libs/shared/theme/assets/json/10303/mercancia-table.json';
 
 import { BasicRequerimientos, BasicRequerimientosRespuesta, Manifiestos, ManifiestosRespuesta } from '../../models/donaciones-extranjeras.model';
-import { CATALOGOS_ID, Catalogo } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID, Catalogo, TableBodyData } from '@ng-mf/data-access-user';
 import { FECHA_CADUCIDAD, OPCIONES_DE_BOTON_DE_RADIO, PANELS, TEXTOS } from '../../constantes/donaciones-extranjeras.enum';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { RegistroDeDonacion10303State, Tramite10303Store } from '../../estados/tramites/tramite10303.store';
@@ -107,7 +107,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
   /**
    * Cuerpo de la tabla de mercancías.
    */
-  public mercanciaBodyData: unknown = [];
+  public mercanciaBodyData: TableBodyData[] = [];
 
   /**
    * Datos de la tabla de mercancía.

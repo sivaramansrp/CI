@@ -19,14 +19,13 @@
         <textarea
           id="descripcion"
           class="form-control mb-5"
-          placeholder="Descripción de la mercancía"
           rows="8"
           formControlName="descripcion"
           (change)="setValoresStore(form, 'descripcion')"
         ></textarea>
         <div *ngIf="esInvalido('descripcion')" class="text-danger">
           <small *ngIf="form.controls['descripcion'].errors?.['required']">
-            La descripción es obligatoria.
+            Este campo es obligatorio.
           </small>
           <small *ngIf="form.controls['descripcion'].errors?.['minlength']">
             Debe tener al menos 10 caracteres.
@@ -42,15 +41,10 @@
         [catalogo]="fraccionCatalogo"
         [label]="'Fracción arancelaria'"
         [required]="true"
-        [placeholder]="'Seleccione un documento'"
         formControlName="fraccion"
         (change)="setValoresStore(form, 'fraccion')"
+        [isDisabled]="esFormularioSoloLectura"
       ></app-catalogo-select>
-      <div *ngIf="esInvalido('fraccion')" class="text-danger">
-        <small *ngIf="form.controls['fraccion'].errors?.['required']">
-          Debe seleccionar un valor.
-        </small>
-      </div>
     </div>
     <div class="row">
       <div class="col-md-4 form-group">
@@ -77,6 +71,9 @@
       </div>
       <div class="col-md-4 form-group">
         <label class="form-label" for="valorFacturaUSD">Valor factura USD<span class="require">*</span>:</label>
+        <span class="bi bi-question-circle-fill"
+        title="En caso de no contar con valor factura proporciona el valor estimado"
+        data-bs-toggle="tooltip"></span>
         <input
           class="form-control"
           id="valorFacturaUSD"
@@ -102,15 +99,11 @@
           [catalogo]="unidadCatalogo"
           [label]="'UMT'"
           [required]="true"
-          [placeholder]="'Seleccione un valor'"
           formControlName="unidadMedida"
+          [tooltipQuestionCircle]="true"
           (change)="setValoresStore(form, 'unidadMedida')"
+          [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
-        <div *ngIf="esInvalido('unidadMedida')" class="text-danger">
-          <small *ngIf="form.controls['unidadMedida'].errors?.['required']">
-            Debe seleccionar una unidad de medida.
-          </small>
-        </div>
       </div>
     </div>
   </form>

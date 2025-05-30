@@ -11,6 +11,8 @@ import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/mod
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+
+import { TableBodyData } from '@ng-mf/data-access-user';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
@@ -109,7 +111,7 @@ export class RequisitosComponent implements OnInit, OnDestroy {
   /**
    * Datos del cuerpo de la tabla.
    */
-  public tipoBodyData: unknown = [];
+  public tipoBodyData: TableBodyData[] = [];
 
   /**
    * Catálogo de tipos de documento cargado por ID.

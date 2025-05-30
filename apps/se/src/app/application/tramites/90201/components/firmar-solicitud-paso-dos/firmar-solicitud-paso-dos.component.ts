@@ -5,8 +5,8 @@ import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import TablaDatos from 'libs/shared/theme/assets/json/90201/acuse-tabla.json';
 import {
-  firmar,
-  solicitud,
+  FIRMAR,
+  SOLICITUD,
 } from '@libs/shared/data-access-user/src';
 import { AcuseTablaDatos } from 'libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
 import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
@@ -46,12 +46,12 @@ export class FirmarSolicitudPasoDosComponent implements OnDestroy {
    * Una propiedad pública que contiene las constantes de texto para el componente "firmar-solicitud-paso-dos".
    * El objeto `firmar` contiene varias cadenas de texto utilizadas dentro de este componente.
    */
-  public TEXTOS = firmar;
+  public TEXTOS = FIRMAR;
   /**
    * Contiene el contenido de texto para el componente "firmar solicitud paso dos".
    * Esta variable se llena con los datos del objeto `solicitud`.
    */
-  public TEXTOS2 = solicitud;
+  public TEXTOS2 = SOLICITUD;
   /**
    * Configuración para las columnas de la tabla en el componente "firmar-solicitud-paso-dos".
    *

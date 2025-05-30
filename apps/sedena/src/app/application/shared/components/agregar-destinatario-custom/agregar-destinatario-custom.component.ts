@@ -1,9 +1,10 @@
 import { COLONIA_FIELD_FLAG, NUMERO_TRAMITE, PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constants/datos-solicitud.enum';
-import { STR_NACIONAL,DESTINATARIO_TITULO_CUSTOM } from '../../constants/datos-solicitud.enum';
+import { STR_NACIONAL } from '../../constants/datos-solicitud.enum';
 import { TERCEROS_NACIONALIDAD_OPCIONES } from '../../constants/datos-solicitud.enum';
 import { TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
 
 import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
+import { DESTINATARIO_TITULO_CUSTOM } from '../../constants/datos-solicitud.enum';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 
 import { CommonModule } from '@angular/common';
@@ -245,10 +246,18 @@ export class AgregarDestinatarioCustomComponent
       entidadFederativa: '',
       estadoLocalidad: this.agregarDestinatarioFinal.value.estado,
       codigoPostal: this.agregarDestinatarioFinal.value.codigoPostal,
+      tipoPersona: this.agregarDestinatarioFinal.value.tipoPersona,
+      denominacionRazon: this.agregarDestinatarioFinal.value.denominacionRazon,
+      nombres: this.agregarDestinatarioFinal.value.nombres,
+      primerApellido: this.agregarDestinatarioFinal.value.primerApellido,
+      segundoApellido: this.agregarDestinatarioFinal.value.segundoApellido,
+      estado: this.agregarDestinatarioFinal.value.estado,
     };
-
     this.destinatarios.push(NUEVO_DESTINATARIO);
-    if(this.destinatarioFinalTablaDatos.length > 0) {
+    if(this.formaDatos) {
+      if ('tableindex' in this.formaDatos) {
+        this.destinatarios[0].tableindex = (this.formaDatos as DestinoFinal).tableindex;
+      }
       this.actualizaExistenteEnDestinatarioDatos.emit(this.destinatarios);
     }
     else{
@@ -269,6 +278,7 @@ export class AgregarDestinatarioCustomComponent
     this.cargarDatos();
     if(this.formaDatos) {
       this.agregarDestinatarioFinal.patchValue(this.formaDatos);
+      this.agregarDestinatarioFinal.enable(); 
     }
     if(this.destinatarioFinalTablaDatos.length > 0) {
       this.agregarDestinatarioFinal.patchValue(this.destinatarioFinalTablaDatos[0]);
@@ -294,23 +304,23 @@ export class AgregarDestinatarioCustomComponent
           Validators.maxLength(13),
         ],
       ],
-      nombres: ['', Validators.required],
-      denominacionRazon: ['', Validators.required],
-      primerApellido: ['', Validators.required],
-      segundoApellido: [''],
+      nombres: ['', [Validators.required, Validators.maxLength(200)]],
+      denominacionRazon: ['', [Validators.required, Validators.maxLength(254)]],
+      primerApellido: ['', [Validators.required, Validators.maxLength(200)]],
+      segundoApellido: ['', Validators.maxLength(200)],
       pais: ['', Validators.required],
-      estado: ['', Validators.required],
+      estado: ['', [Validators.required, Validators.maxLength(120)]],
       municipio: ['', Validators.required],
       localidad: ['', Validators.required],
-      codigoPostal: ['', Validators.required],
+      codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
       colonia: ['', Validators.required],
-      calle: ['', Validators.required],
-      numeroExterior: ['', Validators.required],
-      numeroInterior: [''],
-      lada: [''],
-      telefono: [''],
-      correoElectronico: ['', [Validators.email]],
-      nacionalidad: [],
+      calle: ['', [Validators.required, Validators.maxLength(300)]],
+      numeroExterior: ['', [Validators.required, Validators.maxLength(55)]],
+      numeroInterior: ['', Validators.maxLength(55)],
+      lada: ['', Validators.maxLength(5)],
+      telefono: ['', Validators.maxLength(24)],
+      correoElectronico: ['', [Validators.email, Validators.maxLength(320)]],
+      nacionalidad: ['', Validators.required],
     });
     
     this.agregarDestinatarioFinal.disable();
@@ -378,6 +388,8 @@ export class AgregarDestinatarioCustomComponent
    */
   limpiarFormulario(): void {
     this.agregarDestinatarioFinal.reset();
+    this.agregarDestinatarioFinal.disable();
+    this.agregarDestinatarioFinal.get('tipoPersona')?.enable();
   }
   /**
    * @method cancelar

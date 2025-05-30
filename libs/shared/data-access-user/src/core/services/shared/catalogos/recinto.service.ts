@@ -1,7 +1,7 @@
 
 import { API_GET_ADUANA, CLAVE_ADUANA_QUERY } from '../../../constants/api-constants';
-import { catchError, map, Observable, throwError } from 'rxjs';
-import { enviroment } from '../../../../enviroments/enviroment'
+import { Observable, catchError, map, throwError } from 'rxjs';
+import { ENVIRONMENT } from '../../../../enviroments/enviroment'
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RecintoResponse } from '../../../models/shared/recinto.model';
@@ -17,7 +17,7 @@ export class RecintoService {
   constructor(
     private http: HttpClient
   ) {
-    this.host = `${enviroment.API_HOST}/api/`;
+    this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
 
   /**

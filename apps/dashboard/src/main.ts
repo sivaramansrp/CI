@@ -1,4 +1,4 @@
-import { enviroment } from "@libs/shared/data-access-user/src/enviroments/enviroment";
+import { ENVIRONMENT } from "@libs/shared/data-access-user/src/enviroments/enviroment";
 import { setRemoteDefinitions } from "@nx/angular/mf";
 
 // Helper para manejar errores de forma elegante

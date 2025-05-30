@@ -237,7 +237,6 @@ export class NotificacionesComponent implements OnChanges {
   declinarAccion(): void {
     this.confirmacionModal.emit(false);
     this.modal?.hide();
-    this.confirmacionModal.emit(false);
   }
 
   /**

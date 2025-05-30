@@ -3,8 +3,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud31601State, Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
 import { Subject,map, takeUntil } from 'rxjs';
+import { TableBodyData, TableComponent } from '@ng-mf/data-access-user';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query';
 import enlace from '@libs/shared/theme/assets/json/31601/enlace.json';
@@ -65,7 +65,7 @@ export class EnlaceComponent implements OnInit, OnDestroy {
   /**
    * Cuerpo de la tabla de enlace (actualmente no usado directamente).
    */
-  public enlanceBodyData: unknown = [];
+  public enlanceBodyData: TableBodyData[] = [];
 
   /**
    * Datos de la tabla precargados desde un archivo JSON.

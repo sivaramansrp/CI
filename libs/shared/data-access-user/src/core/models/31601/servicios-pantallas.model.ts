@@ -1,3 +1,5 @@
+import { TableBodyData } from "../shared/components.model";
+
 /**
  * Representa la acción de un botón en el wizard.
  */
@@ -38,7 +40,7 @@ export interface Personas {
  */
 export interface TableData {
   tableHeader: string[];
-  tableBody: TableBodyRow[];
+  tableBody: TableBodyData[];
 }
 /**
  * Fila del cuerpo de la tabla con sus celdas.
