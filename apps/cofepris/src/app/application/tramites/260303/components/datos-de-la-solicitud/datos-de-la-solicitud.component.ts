@@ -15,7 +15,11 @@ import USO_ESPECIFICO from '@libs/shared/theme/assets/json/260303/uso_especifico
  * DatosDeLaSolicitudComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
  */
-
+interface EstadoCatalogResponse {
+  code: number;
+  data: Catalogo[];
+  message: string;
+}
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
@@ -135,22 +139,24 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
     /**
    * Lista de países para la selección de origen.
    */
-    public crosListaDePaises = this.deepCopy(CROSLISTA_DE_PAISES);
+    public crosListaDePaises = DatosDeLaSolicitudComponent.deepCopy(CROSLISTA_DE_PAISES);
     /**
      * Una propiedad pública que contiene la lista de países de origen.
      * Se inicializa con la constante `PAISES_DE_ORIGEN`.
      */
-    public seleccionarPais = this.deepCopy(PAISES_DE_ORIGEN);
+    public seleccionarPais = DatosDeLaSolicitudComponent.deepCopy(PAISES_DE_ORIGEN);
     /**
      * Una propiedad pública que contiene las opciones de uso específico para la aplicación.
      * Se inicializa con la constante `USO_ESPECIFICO`.
      */
-    public seleccionarUsoEspecifico = this.deepCopy(USO_ESPECIFICO);
+    public seleccionarUsoEspecifico = DatosDeLaSolicitudComponent.deepCopy(USO_ESPECIFICO);
 
   /**
    * Lista de países para seleccionar el origen de la primera sección.
    */
   seleccionarOrigenDelPais = this.crosListaDePaises;
+
+  deepCopyParam={};
 
   /** Configuración de la tabla de sectores */
   public configuracionTabla: ConfiguracionColumna<ScianDatos>[] = [
@@ -364,10 +370,11 @@ public inicializarTablaYCatalogoDatos(): void {
    * @param obj - El objeto que se va a copiar profundamente. Por defecto es un objeto vacío.
    * @returns Una copia profunda del objeto proporcionado.
    */
-  // eslint-disable-next-line class-methods-use-this, @typescript-eslint/explicit-function-return-type
-  public deepCopy(obj = {}) {
-    return JSON.parse(JSON.stringify(obj));
-  }
+
+public static deepCopy<T>(obj: T): T {
+  return JSON.parse(JSON.stringify(obj));
+}
+
 
   /**
    * Inicializa y crea un grupo de formularios reactivo para "domicilioDeElstablecimientoForm".
@@ -551,7 +558,7 @@ public inicializarTablaYCatalogoDatos(): void {
    */
   public getEstadoCatalogDatos(): void {
     this.certificadosLicenciasSvc.getEstadoDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      const DATOS = this.deepCopy(response);
+      const DATOS = DatosDeLaSolicitudComponent.deepCopy<EstadoCatalogResponse>(response);
       this.estadoCatalogo = DATOS.data;
     });
   }
@@ -566,7 +573,7 @@ public inicializarTablaYCatalogoDatos(): void {
    */
   public getscianTabla(): void {
     this.certificadosLicenciasSvc.getScianDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      const DATOS = this.deepCopy(response);
+      const DATOS = DatosDeLaSolicitudComponent.deepCopy<ScianDatos[]>(response);
       this.scianTablaDatos = DATOS;
     });
   }
@@ -582,7 +589,7 @@ public inicializarTablaYCatalogoDatos(): void {
    */
   public getClaveCatalogDatos():void {
     this.certificadosLicenciasSvc.getClaveDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      const DATOS = this.deepCopy(response);
+      const DATOS = DatosDeLaSolicitudComponent.deepCopy<EstadoCatalogResponse>(response);
       this.claveCatalogo = DATOS.data;
     });
   }
@@ -598,7 +605,7 @@ public inicializarTablaYCatalogoDatos(): void {
    */
   public getRegimenCatalogDatos():void {
     this.certificadosLicenciasSvc.getRegimenDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      const DATOS = this.deepCopy(response);
+      const DATOS = DatosDeLaSolicitudComponent.deepCopy(response);
       this.regimenCatalogo = DATOS.data;
     });
   }
@@ -624,7 +631,7 @@ public inicializarTablaYCatalogoDatos(): void {
    */
   public getMercanciasTabla(): void {
     this.certificadosLicenciasSvc.getMercanciasDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      const DATOS = this.deepCopy(response);
+      const DATOS = DatosDeLaSolicitudComponent.deepCopy(response);
       this.mercanciasTablaDatos = DATOS;
     });
   }
@@ -637,7 +644,7 @@ public inicializarTablaYCatalogoDatos(): void {
    */
   public getTipoDeProductoCatalogDatos(): void {
     this.certificadosLicenciasSvc.getTipoDeProductoDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      const DATOS = this.deepCopy(response);
+      const DATOS = DatosDeLaSolicitudComponent.deepCopy(response);
       this.tipoDeProductoCatalogo = DATOS.data;
     });
   }
@@ -696,7 +703,7 @@ public inicializarTablaYCatalogoDatos(): void {
    */
   public getPaisDeProcedenciaCatalogoDatos(): void {
     this.certificadosLicenciasSvc.getPaisDeProcedenciaDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      const DATOS = this.deepCopy(response);
+      const DATOS = DatosDeLaSolicitudComponent.deepCopy(response);
       this.paisDeProcedenciaCatalogo = DATOS.data;
     });
   }

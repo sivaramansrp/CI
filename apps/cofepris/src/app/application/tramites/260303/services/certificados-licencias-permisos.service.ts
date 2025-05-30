@@ -1,5 +1,7 @@
+import { MercanciasDatos, ScianDatos } from '@libs/shared/data-access-user/src';
 import { Observable,catchError, throwError } from 'rxjs';
 import { Solicitud260303State, Tramite260303Store } from '../../../estados/tramites/260303/tramite260303.store';
+import { EstadoCatalogResponse } from '../models/certificados-licencias-permisos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JSONResponse } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
@@ -141,8 +143,8 @@ export class CertificadosLicenciasPermisosService {
    * @returns Un `Observable` de tipo `JSONResponse` que contiene los datos del estado.
    *          Si ocurre un error durante la solicitud HTTP, propagará el error.
    */
-  public getEstadoDatos(): Observable<JSONResponse> {
-    return this.http.get<JSONResponse>('assets/json/260303/estado-catalog.json').pipe(
+  public getEstadoDatos(): Observable<EstadoCatalogResponse> {
+    return this.http.get<EstadoCatalogResponse>('assets/json/260303/estado-catalog.json').pipe(
       catchError((error) => {
         return throwError(() => error);
       })
@@ -154,8 +156,8 @@ export class CertificadosLicenciasPermisosService {
    * @returns Un `Observable` de tipo `JSONResponse` que contiene los datos del estado.
    *          Si ocurre un error durante la solicitud HTTP, propagará el error.
    */
-  public getScianDatos(): Observable<JSONResponse> {
-    return this.http.get<JSONResponse>('assets/json/260303/scian-tabla.json').pipe(
+  public getScianDatos(): Observable<ScianDatos[]> {
+    return this.http.get<ScianDatos[]>('assets/json/260303/scian-tabla.json').pipe(
       catchError((error) => {
         return throwError(() => error);
       })
@@ -167,8 +169,8 @@ export class CertificadosLicenciasPermisosService {
    * @returns Un `Observable` de tipo `JSONResponse` que contiene los datos del estado.
    *          Si ocurre un error durante la solicitud HTTP, propagará el error.
    */
-  public getClaveDatos(): Observable<JSONResponse> {
-    return this.http.get<JSONResponse>('assets/json/260303/clave-catalog.json').pipe(
+  public getClaveDatos(): Observable<EstadoCatalogResponse> {
+    return this.http.get<EstadoCatalogResponse>('assets/json/260303/clave-catalog.json').pipe(
       catchError((error) => {
         return throwError(() => error);
       })
@@ -180,8 +182,8 @@ export class CertificadosLicenciasPermisosService {
    * @returns Un `Observable` de tipo `JSONResponse` que contiene los datos del estado.
    *          Si ocurre un error durante la solicitud HTTP, propagará el error.
    */
-  public getRegimenDatos(): Observable<JSONResponse> {
-    return this.http.get<JSONResponse>('assets/json/260303/regimen-catalog.json').pipe(
+  public getRegimenDatos(): Observable<EstadoCatalogResponse> {
+    return this.http.get<EstadoCatalogResponse>('assets/json/260303/regimen-catalog.json').pipe(
       catchError((error) => {
         return throwError(() => error);
       })
@@ -193,8 +195,8 @@ export class CertificadosLicenciasPermisosService {
    * @returns Un `Observable` de tipo `JSONResponse` que contiene los datos del estado.
    *          Si ocurre un error durante la solicitud HTTP, propagará el error.
    */
-  public getMercanciasDatos(): Observable<JSONResponse> {
-    return this.http.get<JSONResponse>('assets/json/260303/mercancias-tabla.json').pipe(
+  public getMercanciasDatos(): Observable<MercanciasDatos[]> {
+    return this.http.get<MercanciasDatos[]>('assets/json/260303/mercancias-tabla.json').pipe(
       catchError((error) => {
         return throwError(() => error);
       })
@@ -206,8 +208,8 @@ export class CertificadosLicenciasPermisosService {
    * @returns Un `Observable` de tipo `JSONResponse` que contiene los datos del estado.
    *          Si ocurre un error durante la solicitud HTTP, propagará el error.
    */
-  public getTipoDeProductoDatos(): Observable<JSONResponse> {
-    return this.http.get<JSONResponse>('assets/json/260303/tipo-de-producto-catalog.json').pipe(
+  public getTipoDeProductoDatos(): Observable<EstadoCatalogResponse> {
+    return this.http.get<EstadoCatalogResponse>('assets/json/260303/tipo-de-producto-catalog.json').pipe(
       catchError((error) => {
         return throwError(() => error);
       })
@@ -219,8 +221,8 @@ export class CertificadosLicenciasPermisosService {
    * @returns Un `Observable` de tipo `JSONResponse` que contiene los datos del estado.
    *          Si ocurre un error durante la solicitud HTTP, propagará el error.
    */
-  public getPaisDeProcedenciaDatos(): Observable<JSONResponse> {
-    return this.http.get<JSONResponse>('assets/json/260303/pais-de-procedencia-catalog.json').pipe(
+  public getPaisDeProcedenciaDatos(): Observable<EstadoCatalogResponse> {
+    return this.http.get<EstadoCatalogResponse>('assets/json/260303/pais-de-procedencia-catalog.json').pipe(
       catchError((error) => {
         return throwError(() => error);
       })
