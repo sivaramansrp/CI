@@ -335,6 +335,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   public datosTablaPagos: LineaCaptura[] = [];
 
+  private contadorFechaInicio: number = 0;
+
   //TODO: Estas variables se van a eliminar
   /**
    * Arrelgo de patentes de la empresa
@@ -404,6 +406,24 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         delay(10),
         tap((_) => {
           this.configuraSeccion();
+        })
+      )
+      .subscribe();
+
+    this.datosServicio
+      .get('fechaInicio')
+      ?.valueChanges.pipe(
+        takeUntil(this.destroyNotifier$),
+        tap(() => {
+          this.contadorFechaInicio++;
+          console.log('contadorFechaInicio', this.contadorFechaInicio);
+
+          if (this.contadorFechaInicio > 1) {
+            if (this.tipoSolicitudSeleccionada !== TIPO_SOLICITUD.INDIVIDUAL) {
+              this.rangoFechas();
+              this.mostrarRangoFechas = true;
+            }
+          }
         })
       )
       .subscribe();
@@ -1320,11 +1340,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    *
    */
   changeFechaInicio(): void {
-    if (this.tipoSolicitudSeleccionada !== TIPO_SOLICITUD.INDIVIDUAL ) {
-      this.rangoFechas();
-      this.mostrarRangoFechas = true;
-    }
-
+    this.datosServicio.updateValueAndValidity();
+    this.fechaIntervaloValidator();
     this.setValoresStore(this.datosServicio, 'fechaInicio', 'setFechaInicio');
   }
 
