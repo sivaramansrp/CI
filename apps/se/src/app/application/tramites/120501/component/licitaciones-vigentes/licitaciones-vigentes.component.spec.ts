@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LicitacionesVigentesComponent } from './licitaciones-vigentes.component';
 import { of } from 'rxjs';
-import { LicitacionesDisponiblesService } from '../../services/licitacionesDisponibles.service';
+import { LicitacionesDisponiblesService } from '../../services/licitaciones-disponibles.service';
 
 describe('LicitacionesVigentesComponent', () => {
   let component: LicitacionesVigentesComponent;
