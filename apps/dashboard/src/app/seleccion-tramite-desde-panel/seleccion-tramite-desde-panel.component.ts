@@ -54,3 +54,4 @@ export class SeleccionTramiteDesdePanelComponent implements OnInit {
     this.tramiteStore.establecerOrigenPeticion(OrigenPeticion.NUEVA);
   }
 }
+   
