@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject,map, takeUntil } from 'rxjs';
 import { InvoCarService } from '../../services/invocar.service';
@@ -13,7 +13,7 @@ import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constan
   standalone: false,
   templateUrl: './datos.component.html',
 })
-export class DatosComponent implements AfterViewInit,OnInit {
+export class DatosComponent implements AfterViewInit,OnInit,OnDestroy {
   /**
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
    */
@@ -84,5 +84,14 @@ ngOnInit(): void {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description Limpia las suscripciones activas y restablece el estado del modal al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

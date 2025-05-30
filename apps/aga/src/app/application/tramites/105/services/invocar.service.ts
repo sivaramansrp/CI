@@ -82,6 +82,15 @@ export class InvoCarService {
     );
   }
 
+  /**
+   * Actualiza el estado del formulario con los datos proporcionados.
+   *
+   * Este método toma un objeto de tipo `Solicitud105State` y actualiza los diferentes
+   * campos del store relacionados con la importación, exportación, domicilio, ubicación,
+   * datos fiscales, aduana, fracción arancelaria, procedimientos y operaciones, entre otros.
+   * 
+   * @param datos - Objeto que contiene el estado actual del formulario `Solicitud105State`.
+   */
   actualizarEstadoFormulario(datos:Solicitud105State): void {
   this.store.setImportacion(datos.importacion);
   this.store.setExportacion(datos.exportacion);
@@ -111,6 +120,14 @@ export class InvoCarService {
   this.store.setOperaciones(datos.operaciones ?? '');
 }
 
+/**
+ * Obtiene los datos del registro de toma de muestras de mercancías.
+ *
+ * Realiza una solicitud HTTP GET para recuperar la información almacenada en el archivo JSON
+ * correspondiente a la toma de muestras de mercancías para el trámite 105.
+ *
+ * @returns Un observable que emite el estado de la solicitud 105 (`Solicitud105State`).
+ */
 getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud105State> {
     return this.http.get<Solicitud105State>('assets/json/105/registro_toma_muestras_mercancias.json');
   }
