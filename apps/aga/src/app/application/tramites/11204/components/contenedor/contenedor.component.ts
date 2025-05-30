@@ -310,7 +310,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       aduana: [this.solicitud11204State?.aduana, Validators.required],
       fechaIngreso: [this.solicitud11204State?.fechaIngreso, Validators.required],
       vigencia: [this.solicitud11204State?.vigencia, Validators.required],
-      inicialesContenedor: ['', [Validators.required, Validators.maxLength(10), Validators.pattern(REGEX_REEMPLAZAR)]],
+      inicialesContenedor: [this.solicitud11204State?.inicialesContenedor, [Validators.required, Validators.maxLength(10), Validators.pattern(REGEX_REEMPLAZAR)]],
       numeroContenedor: [this.solicitud11204State?.numeroContenedor, [Validators.required,Validators.minLength(6), Validators.maxLength(15), Validators.pattern(REGEX_REEMPLAZAR)]],
       digitoDeControl: [this.solicitud11204State?.digitoDeControl, [Validators.maxLength(1), Validators.pattern(REGEX_NUMEROS)]],
       contenedores: [this.solicitud11204State?.contenedores, Validators.required],
