@@ -133,7 +133,6 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
         .pipe(
           takeUntil(this.destroyed$),
           map((seccionState)=>{
-            console.log('seccionState1', seccionState);
             this.esFormularioSoloLectura = seccionState.readonly; 
             this.inicializarEstadoFormulario();
           })
@@ -178,7 +177,6 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
-    console.log(this.formRegistroMuestras);
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
       this.formRegistroMuestras.disable();
