@@ -256,7 +256,7 @@ export class TransporteComponent implements OnInit, OnChanges {
     tipo_transporte: '',
     modelo_transporte: '-1',
     tipo_equipo: '-1',
-    mismosDatosTransporte: '',
+    mismosDatosTransporte: false,
   };
 
   /**
