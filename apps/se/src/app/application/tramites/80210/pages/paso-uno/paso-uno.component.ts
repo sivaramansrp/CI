@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { registroSolicitudImmexService } from '../../services/registro-solicitud-immex.service';
@@ -14,7 +14,7 @@ import { registroSolicitudImmexService } from '../../services/registro-solicitud
 /**
  * Componente que representa el primer paso de un trámite.
  */
-export class PasoUnoComponent implements OnInit {
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Índice utilizado para identificar la posición actual en un proceso o lista.
    * @type {number}
@@ -86,5 +86,10 @@ ngOnInit(): void {
    */
   seleccionaTab(i:number): void {
     this.indice = i;
+  }
+  
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

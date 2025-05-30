@@ -141,6 +141,19 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Inicializa el formulario de empresas terciarizadas.
+   *
+   * - Inicializa el estado global del trámite 80210.
+   * - Asigna el valor de `showPlantas` según el estado actual.
+   * - Solicita los estados disponibles a través del servicio.
+   * - Obtiene los datos del formulario y actualiza los valores del formulario reactivo.
+   * - Si se deben mostrar plantas, segrega los datos de plantas disponibles y seleccionadas.
+   * - Si no, limpia las listas de plantas.
+   * - Finalmente, crea la estructura del formulario reactivo.
+   *
+   * @returns {void}
+   */
   inicializarFormulario(): void {
     this.initializeTramite80210State();
     this.showPlantas = this.tramites80210State.showPlantas;
