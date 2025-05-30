@@ -657,4 +657,10 @@ public setfuncionZootecnica(funcionZootecnica: string) {
       exentoPago,
     }));
   }
+  public settipoDeTransporte(tipoDeTransporte:string) {
+    this.update((state) => ({
+      ...state,
+      tipoDeTransporte,
+    }));
+  }
 }
