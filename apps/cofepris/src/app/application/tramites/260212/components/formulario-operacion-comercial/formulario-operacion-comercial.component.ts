@@ -145,10 +145,11 @@ this. inicializarEstadoFormulario();
    * @returns {void}
    */
   actualizarEstado(): void {
-this.solicitudService.getClave().subscribe((data) => {
-      this.clave = data;
-    }
-    );
+   this.solicitudService.getClave()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data): void => {
+        this.clave = data
+      });
     this.selectedRegimen$.subscribe((regimen) => {
       if (regimen) {
         this.formularioOperacionForm.get('regimen')?.setValue(regimen);

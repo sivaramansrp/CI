@@ -10,7 +10,7 @@ import { SolicitudService } from '../../services/solicitud.service';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
-import { map,takeUntil } from 'rxjs';
+import { map, takeUntil } from 'rxjs';
 import { Subject } from 'rxjs';
 
 
@@ -30,16 +30,18 @@ import { Subject } from 'rxjs';
   styleUrl: './representante-legal.component.scss',
 })
 export class RepresentanteLegalComponent implements OnInit, OnDestroy {
-/**
- * @desc Indica si el formulario debe mostrarse solo en modo de lectura.
- * @type {boolean}
- * @public
- * 
- * Cuando es verdadero, el usuario no puede editar los campos del formulario.
+  /**
+   * @desc Indica si el formulario debe mostrarse solo en modo de lectura.
+   * @type {boolean}
+   * @public
+   * 
+   * Cuando es verdadero, el usuario no puede editar los campos del formulario.
+   */
+  public esFormularioSoloLectura: boolean = true;
+  /**
+ * Subject para limpiar recursos y cancelar suscripciones al destruir el componente.
  */
-    public esFormularioSoloLectura: boolean = true;
-    
-    private destroy$ = new Subject<void>();
+  private destroy$ = new Subject<void>();
 
   /**
    * Formulario reactivo para los datos del representante legal.
@@ -66,20 +68,21 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   constructor(private http: HttpClient,
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService, private solicitudService: SolicitudService,
-  private consultaioQuery: ConsultaioQuery) {
-   
-   }
+    private consultaioQuery: ConsultaioQuery) {
+
+  }
 
   /**
    * Método del ciclo de vida Angular que se ejecuta al inicializar el componente.
    * - Configura el formulario `personaForm`.
    * - Obtiene las opciones dinámicas para los radios desde un archivo JSON.
    */
-  ngOnInit():void {
+  ngOnInit(): void {
     this.obtenerOpcionesSolicitud()
     this.actualizarEstado()
-    this. inicializarEstadoFormulario()
-;}
+    this.inicializarEstadoFormulario()
+      ;
+  }
 
   /**
    * Inicializa el estado del formulario según el modo de solo lectura.
@@ -94,7 +97,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
       }
     } else {
       this.actualizarEstado();
-    }  
+    }
   }
 
   /**
@@ -105,35 +108,35 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   guardarDatosFormulario(): void {
     this.actualizarEstado();
     // Solo intentar deshabilitar si el formulario ya está inicializado
-    
-      if (this.esFormularioSoloLectura) {
-        this.personaForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.personaForm.enable();
-      }
+
+    if (this.esFormularioSoloLectura) {
+      this.personaForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.personaForm.enable();
     }
+  }
 
   /**
    * Inicializa o reinicia el formulario de persona con los campos requeridos y sus validaciones.
    * @returns {void}
    */
   actualizarEstado(): void {
-this.personaForm = this.fb.group({
-  losDatos: ['', Validators.required],
+    this.personaForm = this.fb.group({
+      losDatos: ['', Validators.required],
       rfc: ['', Validators.required],
       nombre: [{ value: '', disabled: true }],
       primerApellido: [{ value: '', disabled: true }],
       segundoApellido: [{ value: '', disabled: true }],
     });
-     this.consultaioQuery.selectConsultaioState$
-            .pipe(
-              takeUntil(this.destroy$),
-              map((seccionState)=>{
-                this.esFormularioSoloLectura = seccionState.readonly;
-                
-              })
-            )
-            .subscribe()
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -141,15 +144,15 @@ this.personaForm = this.fb.group({
    * @param field Nombre del campo del formulario a validar.
    * @returns `true` si el campo es válido; de lo contrario, `false`.
    */
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  esValido(field: string) {
-    return this.validacionesService.isValid(this.personaForm, field);
+  
+  esValido(field: string): boolean {
+    return Boolean(this.validacionesService.isValid(this.personaForm, field));
   }
   /**
  * Obtiene las opciones dinámicas para los radios desde un archivo JSON y las almacena en `losDatos`.
  * Utiliza una petición HTTP para leer el archivo local.
  */
-  obtenerOpcionesSolicitud():void {
+  obtenerOpcionesSolicitud(): void {
     this.solicitudService.getOpcionesPublicacion().subscribe((data) => {
       this.losDatos = data;
     });
@@ -162,7 +165,7 @@ this.personaForm = this.fb.group({
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-   
+
   }
 
 }

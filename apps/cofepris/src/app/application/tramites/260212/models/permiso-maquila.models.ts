@@ -41,8 +41,6 @@ export interface ClaveModel {
   descripcíon: string;
 }
 
-
-
 /**
  * Modelo para opciones de un select.
  * Cada opción tiene un label y un valor.
@@ -52,8 +50,6 @@ export interface OpcionesPublicacion{
   label: string;
   value: string;
 }
-
-
 /**
  * Modelo de datos para una fila de una tabla.
  * Representa los datos que se mostrarán en la tabla.

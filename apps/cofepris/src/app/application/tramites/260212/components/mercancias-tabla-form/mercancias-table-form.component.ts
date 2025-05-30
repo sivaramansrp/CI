@@ -11,7 +11,7 @@ import { Tramite260212Store } from '../../estados/tramite260212.store';
 
 import { Tramite260212Query } from '../../estados/tramite260212.query';
 
-import { Observable, Subject,map, takeUntil } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { PaisDeOrigenComponent } from '../pais-de-origen/pais-de-origen.component';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -35,15 +35,15 @@ import { EstadoFisico } from '../../models/permiso-maquila.models';
   styleUrl: './mercancias-table-form.component.scss',
 })
 export class MercanciasTableFormComponent implements OnInit, OnDestroy {
-/**
- * @desc Indica si el formulario debe mostrarse solo en modo de lectura.
- * @type {boolean}
- * @public
- * 
- * Cuando es verdadero, el usuario no puede editar los campos del formulario.
- */
+  /**
+   * @desc Indica si el formulario debe mostrarse solo en modo de lectura.
+   * @type {boolean}
+   * @public
+   * 
+   * Cuando es verdadero, el usuario no puede editar los campos del formulario.
+   */
   esFormularioSoloLectura: boolean = true;
-   
+
   /**
    * Evento de salida que emite una acción de Cancelaración.
    */
@@ -101,9 +101,9 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder, private solicitudService: SolicitudService,
     private tramite260212Store: Tramite260212Store,
     private tramite260212Query: Tramite260212Query,
-      private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery
   ) {
-    
+
   }
 
   /**
@@ -136,15 +136,15 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
       UMC: ['', Validators.required],
       tipoDeEnvase: ['', Validators.required]
     });
-     this.consultaioQuery.selectConsultaioState$
-            .pipe(
-              takeUntil(this.destroy$),
-              map((seccionState)=>{
-                this.esFormularioSoloLectura = seccionState.readonly;
-                this.inicializarEstadoFormulario();
-              })
-            )
-            .subscribe()
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -157,7 +157,7 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
       this.guardarDatosFormulario();
     } else {
       this.actualizarEstado();
-    }  
+    }
   }
 
 
@@ -168,13 +168,13 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.actualizarEstado();
-      if (this.esFormularioSoloLectura) {
-        this.datosMercanciaForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.datosMercanciaForm.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
-      }
+    if (this.esFormularioSoloLectura) {
+      this.datosMercanciaForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.datosMercanciaForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
   }
 
   /**
@@ -183,20 +183,26 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   actualizarEstado(): void {
-this.solicitudService.getClave().subscribe((data) => {
-      this.especificarClasificacion = data;
-    });
+    this.solicitudService.getClave()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data): void => {
+        this.especificarClasificacion = data
+      });
 
-    this.solicitudService.getClasificacionProducto().subscribe((data) => {
-      this.clasificacionProducto = data;
-    });
+    this.solicitudService.getClasificacionProducto()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data): void => {
+        this.clasificacionProducto = data
+      });
 
-    this.solicitudService.getTestadoFisico().subscribe((data: EstadoFisico[]) => {
-      this.estadoFisico = data.map(item => ({
-        id: item.id,
-        descripcion: item.descripcíon, 
-      }));
-    });
+    this.solicitudService.getTestadoFisico()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data: EstadoFisico[]): void => {
+        this.estadoFisico = data.map(item => ({
+          id: item.id,
+          descripcion: item.descripcíon,
+        }));
+      });
 
     this.selecteDespecificarClasificacion$.subscribe((selectedDespecificarClasificacion) => {
       if (selectedDespecificarClasificacion) {
@@ -222,6 +228,6 @@ this.solicitudService.getClave().subscribe((data) => {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-    
+
   }
 }

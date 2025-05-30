@@ -54,14 +54,14 @@ import { Tramite260212Query } from '../../estados/tramite260212.query';
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
-/**
- * @desc Indica si el formulario debe mostrarse solo en modo de lectura.
- * @type {boolean}
- * @public
- * 
- * Cuando es verdadero, el usuario no puede editar los campos del formulario.
- */
- public esFormularioSoloLectura: boolean = true;
+  /**
+   * @desc Indica si el formulario debe mostrarse solo en modo de lectura.
+   * @type {boolean}
+   * @public
+   * 
+   * Cuando es verdadero, el usuario no puede editar los campos del formulario.
+   */
+  public esFormularioSoloLectura: boolean = true;
 
   /** Subject para destruir el componente */
   private destroy$ = new Subject<void>();
@@ -80,8 +80,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   colonia$ = this.tramite260212Query.selectedColonia$
   calle$ = this.tramite260212Query.selectedCalle$
   lada$ = this.tramite260212Query.selectedLada$
-  telefono$ =this.tramite260212Query.SelectedTelefono$
-  codigoPostal$=this.tramite260212Query.SelectedCodigoPostal$
+  telefono$ = this.tramite260212Query.SelectedTelefono$
+  codigoPostal$ = this.tramite260212Query.SelectedCodigoPostal$
 
   /** Formulario principal de datos del establecimiento */
   datosEstablecimientoForm!: FormGroup;
@@ -160,10 +160,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private tramite260212Query: Tramite260212Query,
     private consultaioQuery: ConsultaioQuery
   ) {
-    
+
   }
 
-  
+
   /**
  * Método del ciclo de vida Angular que se ejecuta al inicializar el componente.
  * - Inicializa el formulario de datos del establecimiento.
@@ -189,7 +189,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       }
     } else {
       this.actualizarEstado();
-    }  
+    }
   }
 
   /**
@@ -218,14 +218,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    *
    * @returns {void}
    */
-   actualizarEstado(): void {
-this.solicitudService.getSolicitudes().subscribe((data) => {
-      this.solicitudData = data;
-    });
+  actualizarEstado(): void {
+    this.solicitudService.getSolicitudes()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data): void => {
+        this.solicitudData = data
+      });
 
-    this.solicitudService.getClave().subscribe((data) => {
-      this.estado = data;
-    })
+    this.solicitudService.getClave()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data): void => {
+        this.estado = data
+      });
 
     this.selectedEstado$.subscribe((selectedEstado) => {
       if (selectedEstado) {
@@ -283,7 +287,7 @@ this.solicitudService.getSolicitudes().subscribe((data) => {
         this.datosEstablecimientoForm.get('codigoPostal')?.setValue(codigoPostal);
       }
     });
-   }
+  }
 
 
   /**
@@ -316,14 +320,14 @@ this.solicitudService.getSolicitudes().subscribe((data) => {
       telefono: ['', [Validators.required]],
     });
     this.consultaioQuery.selectConsultaioState$
-        .pipe(
-          takeUntil(this.destroy$),
-          map((seccionState)=>{
-            this.esFormularioSoloLectura = seccionState.readonly;
-            
-          })
-        )
-        .subscribe()
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -426,7 +430,7 @@ this.solicitudService.getSolicitudes().subscribe((data) => {
      * Obtiene el correoElectronico seleccionado del formulario y lo guarda en el store
      */
   updateCorreoElectronico(): void {
-    const CORREO= this.datosEstablecimientoForm.get('correoElectronico')?.value;
+    const CORREO = this.datosEstablecimientoForm.get('correoElectronico')?.value;
     this.tramite260212Store.setCorreoElectronico(CORREO);
   }
   /**
@@ -495,18 +499,19 @@ this.solicitudService.getSolicitudes().subscribe((data) => {
    * Obtiene las opciones de publicación de la solicitud.
    */
   obtenerOpcionesSolicitud(): void {
-    if (typeof this.solicitudService.getOpcionesPublicacion === 'function') {
-      this.solicitudService.getOpcionesPublicacion().subscribe((data) => {
-        this.losDatos = data;
+    this.solicitudService.getOpcionesPublicacion()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data): void => {
+        this.losDatos = data
       });
-    }
   }
+
   /*
   * Método del ciclo de vida de Angular - destruye el componente
 */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
-   }
+  }
 
 }

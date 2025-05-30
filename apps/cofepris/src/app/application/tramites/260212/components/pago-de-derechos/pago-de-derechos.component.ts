@@ -248,9 +248,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Obtiene el banco seleccionado del formulario y lo guarda en el store.
    */
-  getMunicipios(): void {
-    const SELECTED_BANCO = this.pagoDerechos.get('banco')?.value;
-    this.tramite260212Store.setBanco(SELECTED_BANCO);
+  obtenerBanco(): void {
+    const BANCO_SELECCIONADO = this.pagoDerechos.get('banco')?.value;
+    this.tramite260212Store.setBanco(BANCO_SELECCIONADO);
   }
 
   /**

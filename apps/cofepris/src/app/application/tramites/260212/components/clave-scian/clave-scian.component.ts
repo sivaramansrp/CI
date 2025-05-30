@@ -5,9 +5,9 @@ import { CatalogoResponse, CatalogoSelectComponent, ConsultaioQuery, TablaDinami
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SolicitudService } from '../../services/solicitud.service';
 
-import { map, takeUntil} from 'rxjs';
-import {Observable} from 'rxjs';
-import {Subject} from 'rxjs';
+import { map, takeUntil } from 'rxjs';
+import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
 import { Tramite260212Store } from '../../estados/tramite260212.store';
 
 import { Tramite260212Query } from '../../estados/tramite260212.query';
@@ -30,7 +30,7 @@ import { Tramite260212Query } from '../../estados/tramite260212.query';
 
 export class ClaveScianComponent implements OnInit, OnDestroy {
 
- public esFormularioSoloLectura: boolean = true;
+  public esFormularioSoloLectura: boolean = true;
   /**
    * @private
    * @type {Subscription}
@@ -38,7 +38,7 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
    * Suscripción utilizada para gestionar y limpiar las suscripciones a observables dentro del componente.
    * Se recomienda cancelar esta suscripción en el método ngOnDestroy para evitar fugas de memoria.
    */
-  
+
   /**
    * Reactive form group managing the "Clave Scian" form fields.
    */
@@ -69,7 +69,7 @@ export class ClaveScianComponent implements OnInit, OnDestroy {
   /**
    * Array to store the list of "clave" options fetched from the service.
    */
-clave: CatalogoResponse[] = [];
+  clave: CatalogoResponse[] = [];
 
   /**
    * Constructor to initialize dependencies and services.
@@ -83,13 +83,13 @@ clave: CatalogoResponse[] = [];
     private tramite260212Store: Tramite260212Store,
     // eslint-disable-next-line no-empty-function
     private tramite260212Query: Tramite260212Query,
-    private consultaioQuery: ConsultaioQuery) { 
-     
-    }
- /**
-   * Método del ciclo de vida de Angular invocado en la inicialización del componente.
-   * Configura el formulario, carga los datos iniciales y se suscribe a las actualizaciones de estado.
-   */
+    private consultaioQuery: ConsultaioQuery) {
+
+  }
+  /**
+    * Método del ciclo de vida de Angular invocado en la inicialización del componente.
+    * Configura el formulario, carga los datos iniciales y se suscribe a las actualizaciones de estado.
+    */
   ngOnInit(): void {
     this.claveScianForm();
   }
@@ -102,15 +102,15 @@ clave: CatalogoResponse[] = [];
       clave: ['', Validators.required],
       descripcion: ['']
     });
-      this.consultaioQuery.selectConsultaioState$
-              .pipe(
-                takeUntil(this.destroy$),
-                map((seccionState)=>{
-                  this.esFormularioSoloLectura = seccionState.readonly;
-                  this.inicializarEstadoFormulario();
-                })
-              )
-              .subscribe()
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
   /**
    * Inicializa el estado del formulario según el modo de solo lectura.
@@ -122,7 +122,7 @@ clave: CatalogoResponse[] = [];
       this.guardarDatosFormulario();
     } else {
       this.actualizarEstado();
-    }  
+    }
   }
 
   /**
@@ -132,13 +132,13 @@ clave: CatalogoResponse[] = [];
    */
   guardarDatosFormulario(): void {
     this.actualizarEstado();
-      if (this.esFormularioSoloLectura) {
-        this.claveForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.claveForm.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
-      }
+    if (this.esFormularioSoloLectura) {
+      this.claveForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.claveForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
   }
 
   /**
@@ -147,7 +147,7 @@ clave: CatalogoResponse[] = [];
    * @returns {void}
    */
   actualizarEstado(): void {
-this.solicitudService.getClave().subscribe((data) => {
+    this.solicitudService.getClave().subscribe((data) => {
       this.clave = data;
     });
 
@@ -162,7 +162,7 @@ this.solicitudService.getClave().subscribe((data) => {
         this.claveForm.get('descripcion')?.setValue(selectedDescripcion);
       }
     });
-   }
+  }
 
   /**
    * Emits the cancel event to notify parent components about the action.
