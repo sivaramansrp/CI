@@ -3,8 +3,8 @@ import { AVISO, IMPORTANTE } from "../../../core/enums/constantes-alertas.enum";
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { Solicitud301State, Tramite301Store } from "../../../core/estados/tramite301.store";
-import { Subject, Subscription, map, takeUntil } from "rxjs";
-import { AlertComponent } from "ngx-bootstrap/alert";
+import { Subject, map, takeUntil } from "rxjs";
+import { AlertComponent } from '../alert/alert.component';
 import { BtnContinuarComponent } from "../btn-continuar/btn-continuar.component";
 import { Catalogo } from "../../../core/models/shared/catalogos.model";
 import { CatalogoSelectComponent } from "../catalogo-select/catalogo-select.component";
@@ -35,7 +35,7 @@ import { Tramite301Query } from "../../../core/queries/tramite301.query";
     CatalogoSelectComponent,
     BtnContinuarComponent,
     ReactiveFormsModule,
-  ],
+],
   standalone: true,
 })
 export class RegistroParaLaComponent implements OnInit, OnDestroy {
