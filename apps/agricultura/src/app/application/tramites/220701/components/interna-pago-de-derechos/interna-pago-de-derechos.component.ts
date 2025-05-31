@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
 import { EXPEDICION_FACTURA_FECHA } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
 
@@ -105,12 +106,19 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   fechaPagoDate: string = '';
 
+  
+    /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Subject para manejar la desuscripción de observables.
    * Utilizado para evitar fugas de memoria.
    * @type {Subject<void>}
    */
-  private unsubscribe$ = new Subject<void>();
+  private destroyNotifier$ = new Subject<void>();
 
   /**
    * Estado de la sección actual en la tienda.
@@ -136,6 +144,7 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param {TramiteStore} tramiteStore - Tienda Akita para manejar el estado del trámite.
    * @param {SeccionLibQuery} seccionQuery - Consulta del estado de la tienda Akita para secciones.
    * @param {SeccionLibStore} seccionStore - Tienda Akita para manejar el estado de la sección.
+   * @param {ConsultaioQuery} consultaioQuery - Consulta Akita para manejar y actualizar el estado de una sección.
    */
   constructor(
     private readonly fb: FormBuilder,
@@ -144,11 +153,79 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
     private tramiteStore: TramiteStore, 
     private seccionQuery: SeccionLibQuery, 
     private seccionStore: SeccionLibStore, 
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    this.importacionAcuiculturaServicio.obtenerDatos().pipe(takeUntil(this.unsubscribe$)).subscribe((datos) => {
+    this.importacionAcuiculturaServicio.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
       this.formularioPagoStore = datos.formularioPago
     })
+        this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
+  }
 
+  
+    /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+    /**
+     * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+     * Luego reinicializa el formulario con los valores actualizados desde el store.
+     */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.formularioPago.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formularioPago.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+    inicializarFormulario(): void {
+    this.tramiteStoreQuery.selectSolicitudTramite$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.formularioPagoState = seccionState.FormularioPagoState;
+        })
+      )
+      .subscribe()
+
+    /**
+     * Inicializa el formulario reactivo con los campos requeridos.
+     * Configura validaciones y deshabilita ciertos campos según sea necesario.
+     * 
+     * @method iniciarFormulario
+     * @returns {void}
+     */
+
+    const ES_EXENTO = this.formularioPagoStore.exentoPago === 'Si';
+    this.formularioPago = this.fb.group({
+      exentoPago: [this.formularioPagoStore.exentoPago || 'Si', Validators.required],
+      justificacion: [this.formularioPagoStore.justificacion, Validators.required],
+      claveReferencia: [{ value: this.formularioPagoStore.claveReferencia, disabled: true }, Validators.required],
+      cadenaDependencia: [{ value: this.formularioPagoStore.cadenaDependencia, disabled: true }, Validators.required],
+      banco: [this.formularioPagoStore.banco, Validators.required],
+      llavePago: [{ value: this.formularioPagoStore.llavePago, disabled: ES_EXENTO }, Validators.required],
+      fechaPago: [{ value: this.formularioPagoStore.fechaPago, disabled: true }, Validators.required],
+      importePago: [{ value: this.formularioPagoStore.importePago, disabled: true }, Validators.required],
+    });
   }
 
   /**
@@ -159,15 +236,13 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
          
          this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
-          takeUntil(this.unsubscribe$),
+          takeUntil(this.destroyNotifier$),
           map((seccionState) => {
             this.formularioPagoState = seccionState.FormularioPagoState;
           })
         ).subscribe();
-
-    this.crearFormularioPago();
     this.formularioPago.statusChanges
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         error: (e) => console.error('Error durante los cambios de estado del formulario:', e),
         complete: () => this.verificarEstadoDelBoton(),
@@ -178,7 +253,7 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
 
         this.tramiteStoreQuery.selectSolicitudTramite$
       .pipe(
-        takeUntil(this.unsubscribe$),
+        takeUntil(this.destroyNotifier$),
         map((seccionState: TramiteState) => {
             if (seccionState) {
               this.formularioPagoState = seccionState.FormularioPagoState;
@@ -189,7 +264,7 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
 
         this.formularioPago.statusChanges
         .pipe(
-          takeUntil(this.unsubscribe$),
+          takeUntil(this.destroyNotifier$),
           delay(10),
           tap(() => {
             const ACTIVE_STATE = { ...this.formularioPago.value };
@@ -201,7 +276,7 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
       // Para el botón de validación Continuar
       this.seccionQuery.selectSeccionState$
         .pipe(
-          takeUntil(this.unsubscribe$),
+          takeUntil(this.destroyNotifier$),
           map((seccionState) => {
             this.seccion = seccionState;
           })
@@ -213,7 +288,7 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
      *
      * @description
      * - Se suscribe a los cambios en el estado del formulario.
-     * - Cancela la suscripción cuando `unsubscribe$` emite un valor.
+     * - Cancela la suscripción cuando `destroyNotifier$` emite un valor.
      * - Aplica un retraso de 10ms antes de ejecutar la lógica.
      * - Obtiene el estado actual de la sección desde `seccionQuery`.
      * - Actualiza la validación en `seccionStore` basándose en el estado del formulario.
@@ -223,7 +298,7 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
      */
       this.formularioPago.statusChanges
         .pipe(
-          takeUntil(this.unsubscribe$),
+          takeUntil(this.destroyNotifier$),
           delay(10),
           tap(() => {
             const SECCION: number = 1;
@@ -240,24 +315,6 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
         .subscribe();
   }
 
-  /**
-   * Crea el formulario de pago según el valor de `exentoPagoValor`.
-   * Configura los campos y sus validaciones.
-   * @method crearFormularioPago
-   */
-  private crearFormularioPago(): void {
-    const ES_EXENTO = this.formularioPagoStore.exentoPago === 'Si';
-    this.formularioPago = this.fb.group({
-      exentoPago: [this.formularioPagoStore.exentoPago || 'Si', Validators.required],
-      justificacion: [this.formularioPagoStore.justificacion, Validators.required],
-      claveReferencia: [{ value: this.formularioPagoStore.claveReferencia, disabled: true }, Validators.required],
-      cadenaDependencia: [{ value: this.formularioPagoStore.cadenaDependencia, disabled: true }, Validators.required],
-      banco: [this.formularioPagoStore.banco, Validators.required],
-      llavePago: [{ value: this.formularioPagoStore.llavePago, disabled: ES_EXENTO }, Validators.required],
-      fechaPago: [{ value: this.formularioPagoStore.fechaPago, disabled: true }, Validators.required],
-      importePago: [{ value: this.formularioPagoStore.importePago, disabled: true }, Validators.required],
-    });
-  }
 
   /**
    * Cambia el valor de un campo del formulario.
@@ -271,7 +328,6 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
       [nombreControl]: valor,
     });
     this.exentoPagoValor = valor;
-    this.crearFormularioPago();
   }
 
   /**
@@ -293,7 +349,7 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
    */
 private obtenerListaBanco(): void {
   this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('banco.json')
-    .pipe(takeUntil(this.unsubscribe$))
+    .pipe(takeUntil(this.destroyNotifier$))
     .subscribe({
       next: (data) => {
         this.justificacionCatalogo = data.data as Catalogo[];
@@ -327,7 +383,7 @@ private obtenerListaBanco(): void {
    */
   private obtenerListaJustificacion(): void {
     this.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo('justificacion.json')
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (data) => {
            this.justificacionCatalogo = data.data as Catalogo[];
@@ -410,7 +466,7 @@ private obtenerListaBanco(): void {
    * @method ngOnDestroy
    */
     ngOnDestroy(): void {
-      this.unsubscribe$.next();
-      this.unsubscribe$.complete();
+      this.destroyNotifier$.next();
+      this.destroyNotifier$.complete();
     }
 }

@@ -6,6 +6,7 @@ import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosDeLaSolicitudInt } from '../../modelos/datos-de-interfaz.model';
 import { DatosDelTramite } from '../../modelos/acuicola.model';
 import { EXPEDICION_FACTURA_FECHA } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
@@ -159,12 +160,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  
   medioContenido: medioInfo[] = [];
 
+    /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Subject para manejar la desuscripción de observables.
    * Utilizado para evitar fugas de memoria.
    * @type {Subject<void>}
    */
-  private unsubscribe$ = new Subject<void>();
+  private destroyNotifier$ = new Subject<void>();
 
   /**
    * Estado de la sección actual.
@@ -183,6 +190,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @param {TramiteStore} tramiteStore - Tienda Akita para manejar y actualizar el estado del trámite.
    * @param {SeccionLibQuery} seccionQuery - Query de Akita para consultar el estado de una sección específica.
    * @param {SeccionLibStore} seccionStore - Tienda Akita para manejar y actualizar el estado de una sección.
+   * @param {ConsultaioQuery} consultaioQuery - Consulta Akita para manejar y actualizar el estado de una sección.
    */
     private readonly fb: FormBuilder,
     private readonly acuicolaService: AcuicolaService,
@@ -192,8 +200,81 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    // Se puede agregar aquí la lógica del constructor si es necesario
+        this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
+  }
+
+    /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+    /**
+     * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+     * Luego reinicializa el formulario con los valores actualizados desde el store.
+     */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.datosDeLaSolicitudForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.datosDeLaSolicitudForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+    inicializarFormulario(): void {
+    this.tramiteStoreQuery.selectSolicitudTramite$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState.SolicitudState;
+        })
+      )
+      .subscribe()
+
+  /**
+   * Inicializa el formulario reactivo con los campos requeridos.
+   * Configura validaciones y deshabilita ciertos campos según sea necesario.
+   * 
+   * @method iniciarFormulario
+   * @returns {void}
+   */
+
+    this.datosDeLaSolicitudForm = this.fb.group({
+      justificacion: ['', Validators.required],
+      certificadosAutorizados: [{ value: '', disabled: true }, Validators.required],
+      fechaInicio: [{ value: '', disabled: true }, Validators.required],
+      horaDeInspeccion: ['', Validators.required],
+      aduanaDeIngreso: ['', Validators.required],
+      oficinaDeInspeccion: ['', Validators.required],
+      puntoDeInspeccion: ['', Validators.required],
+      nombreInspector: [{ value: '', disabled: true }, Validators.required],
+      primerApellido: [{ value: '', disabled: true }, Validators.required],
+      segundoApellido: [{ value: '', disabled: true }, Validators.required],
+      cantidadContenedores: [{ value: '', disabled: true }, Validators.required],
+      tipoContenedor: [{ value: '', disabled: true }, Validators.required],
+      medioDeTransporte: ['', Validators.required],
+      identificacionTransporte: [{ value: '', disabled: true }, Validators.required],
+      esSolicitudFerros: ['', Validators.required]
+    });
   }
 
   /**
@@ -206,13 +287,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
-      takeUntil(this.unsubscribe$),
+      takeUntil(this.destroyNotifier$),
       map((seccionState) => {
         this.solicitudState = seccionState.SolicitudState;
       })
     ).subscribe();
-
-    this.iniciarFormulario();
     this.getHoraDeInspeccion();
     this.cargarDatos();
     this.getAduanaDeIngreso();
@@ -221,6 +300,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.getTipoContenedor();
     this.obtenerResponsableDatos();
     this.getMedioDeTransporte();
+    this.inicializarEstadoFormulario();
 
 
     /**
@@ -229,7 +309,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  */
     this.tramiteStoreQuery.selectSolicitudTramite$
       .pipe(
-        takeUntil(this.unsubscribe$),
+        takeUntil(this.destroyNotifier$),
         map((seccionState: TramiteState) => {
           if (seccionState) {
             this.solicitudState = seccionState?.SolicitudState;
@@ -243,7 +323,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
     this.datosDeLaSolicitudForm.statusChanges
       .pipe(
-        takeUntil(this.unsubscribe$),
+        takeUntil(this.destroyNotifier$),
         delay(10),
         tap(() => {
           const ACTIVE_STATE = { ...this.datosDeLaSolicitudForm.value };
@@ -265,38 +345,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
     this.seccionQuery.selectSeccionState$
       .pipe(
-        takeUntil(this.unsubscribe$),
+        takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.seccion = seccionState;
         })
       )
       .subscribe();
-  }
-  /**
-   * Inicializa el formulario reactivo con los campos requeridos.
-   * Configura validaciones y deshabilita ciertos campos según sea necesario.
-   * 
-   * @method iniciarFormulario
-   * @returns {void}
-   */
-  iniciarFormulario(): void {
-    this.datosDeLaSolicitudForm = this.fb.group({
-      justificacion: ['', Validators.required],
-      certificadosAutorizados: [{ value: '', disabled: true }, Validators.required],
-      fechaInicio: ['', Validators.required],
-      horaDeInspeccion: ['', Validators.required],
-      aduanaDeIngreso: ['', Validators.required],
-      oficinaDeInspeccion: ['', Validators.required],
-      puntoDeInspeccion: ['', Validators.required],
-      nombreInspector: [{ value: '', disabled: true }, Validators.required],
-      primerApellido: [{ value: '', disabled: true }, Validators.required],
-      segundoApellido: [{ value: '', disabled: true }, Validators.required],
-      cantidadContenedores: [{ value: '', disabled: true }, Validators.required],
-      tipoContenedor: ['', Validators.required],
-      medioDeTransporte: ['', Validators.required],
-      identificacionTransporte: ['', Validators.required],
-      esSolicitudFerros: ['', Validators.required]
-    });
   }
 
     /**
@@ -305,14 +359,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * - La primera llamada obtiene `medioContenido` y actualiza `medioTableDatos`.
    * - La segunda llamada actualiza los valores del formulario con los datos recibidos.
    * 
-   * Se gestiona la suscripción con `takeUntil(this.unsubscribe$)` para evitar fugas de memoria.
+   * Se gestiona la suscripción con `takeUntil(this.destroyNotifier$)` para evitar fugas de memoria.
    * 
    * @method obtenerDatos
    * @returns {void}
    */
   obtenerDatos(): void {
     this.medioDeTransporteService.getDatos()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response: { medioContenido: medioInfo[] }) => {
           if (response && Array.isArray(response.medioContenido)) {
@@ -327,7 +381,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         }
       });
     this.medioDeTransporteService.getDatos()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.datosDeLaSolicitudForm.patchValue(data);
       });
@@ -352,7 +406,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   cargarDatos(): void {
     this.acuicolaService
       .obtenerDatosCertificados()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data: DatosDelTramite) => {
         this.datosDeLaSolicitudForm.patchValue(data);
       })
@@ -366,7 +420,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   getHoraDeInspeccion(): void {
     this.acuicolaService.getHoraDeInspeccion()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
@@ -389,7 +443,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   getAduanaDeIngreso(): void {
     this.acuicolaService.getAduanaDeIngreso()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
@@ -412,7 +466,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   getOficinaDeInspeccion(): void {
     this.acuicolaService.getOficinaDeInspeccion()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
@@ -434,7 +488,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   getPuntoDeInspeccion(): void {
     this.acuicolaService.getPuntoDeInspeccion()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
@@ -456,7 +510,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   getTipoContenedor(): void {
     this.acuicolaService.getTipoContenedor()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
@@ -478,7 +532,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   getMedioDeTransporte(): void {
     this.acuicolaService.getMedioDeTransporte()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
@@ -501,7 +555,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   obtenerResponsableDatos(): void {
     this.acuicolaService
       .obtenerResponsableDatos()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data: ResponsableInspección) => {
         this.datosDeLaSolicitudForm.patchValue(data);
       })
@@ -512,8 +566,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @description Maneja la limpieza de recursos antes de destruir el componente.
    */
   ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
 }

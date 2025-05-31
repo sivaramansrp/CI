@@ -51,7 +51,7 @@
               formControlName="certificadosAutorizados" />
           </div>
           <div class="col-md-4">
-            <input-fecha [datos]="fechaInicioInput" formControlName="fechaInicio"></input-fecha>
+            <input-fecha [datos]="fechaInicioInput" formControlName="fechaInicio" [setFecha]="datosDeLaSolicitudForm.get('fechaInicioInput')?.value"></input-fecha>
           </div>
           <div class="col-md-4">
             <div class="form-group">
@@ -117,7 +117,7 @@
         </div>
         <div class="col-md-4 form-group">
           <app-catalogo-select [catalogo]="tipoContenedor.catalogos" [label]="tipoContenedor.labelNombre"
-            [placeholder]="tipoContenedor.primerOpcion" [isDisabled]="false"
+            [placeholder]="tipoContenedor.primerOpcion" [isDisabled]="true"
             formControlName="tipoContenedor"></app-catalogo-select>
         </div>
       </div>

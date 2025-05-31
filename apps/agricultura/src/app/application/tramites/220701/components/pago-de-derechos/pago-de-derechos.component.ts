@@ -6,6 +6,7 @@ import { AcuicolaService } from '../../servicios/acuicola.service';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { EXPEDICION_FACTURA_FECHA } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -65,7 +66,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @property {PagosDeDerechosFormInt} PagosDeDerechosState
    * @description Estado del formulario de pago de derechos.
    */
-  PagosDeDerechosState!: PagosDeDerechosFormInt;
+  pagosDeDerechosState!: PagosDeDerechosFormInt;
 
   /**
    * @property {CatalogosSelect} banco
@@ -120,10 +121,16 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   fechaInicioInput: InputFecha = EXPEDICION_FACTURA_FECHA;
 
   /**
-   * @property {Subject<void>} unsubscribe$
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;  
+
+  /**
+   * @property {Subject<void>} destroyNotifier$
    * @description Subject utilizado para manejar la desuscripción de observables y evitar fugas de memoria.
    */
-  private unsubscribe$ = new Subject<void>();
+  private destroyNotifier$ = new Subject<void>();
 
   /**
    * @property {SeccionLibState} seccion
@@ -139,6 +146,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param {TramiteStore} tramiteStore - Tienda Akita para manejar el estado del trámite.
    * @param {SeccionLibQuery} seccionQuery - Consulta de estado de la tienda Akita para secciones.
    * @param {SeccionLibStore} seccionStore - Tienda Akita para manejar el estado de la sección.
+   * @param {ConsultaioQuery} consultaioQuery - Consulta Akita para manejar y actualizar el estado de una sección.
    */
   constructor(
     private readonly fb: FormBuilder,
@@ -146,95 +154,66 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private tramiteStoreQuery: TramiteStoreQuery,
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
-    private seccionStore: SeccionLibStore
-  ) // eslint-disable-next-line no-empty-function
-  {}
-
-  /**
-   * @method ngOnInit
-   * @description Inicializa el componente, suscribe a cambios en el estado del trámite y carga los datos necesarios.
-   */
-  ngOnInit(): void {
-    /**
-     * Suscripción a los cambios en el estado del trámite para obtener los datos de pago de derechos.
-     */
-    this.tramiteStoreQuery.selectSolicitudTramite$
-      .pipe(
-        takeUntil(this.unsubscribe$),
-        map((seccionState) => {
-          this.PagosDeDerechosState = seccionState.PagosDeDerechosState;
-        })
-      )
-      .subscribe();
-
-    this.obtenerListaJustificacion();
-    this.iniciarFormulario();
-    this.getBancoDatos();
-    this.pagoDeCargarDatos();
-    this.pagoDerechosRevision();
-
-    /**
-     * @description Suscripción a los cambios en el estado del trámite para actualizar el formulario de pagos de derechos.
-     */
-    this.tramiteStoreQuery.selectSolicitudTramite$
-      .pipe(
-        takeUntil(this.unsubscribe$),
-        map(
-          (seccionState: { PagosDeDerechosState: PagosDeDerechosFormInt }) => {
-            if (seccionState) {
-              this.PagosDeDerechosState = seccionState.PagosDeDerechosState;
-              this.pagosDeDerechosForm.patchValue(this.PagosDeDerechosState);
-            }
-          }
-        )
-      )
-      .subscribe();
-
-    /**
-     * @description Observa los cambios en el estado del formulario y actualiza el estado del trámite en la tienda Akita.
-     *
-     * - Se suscribe a los cambios de estado del formulario `pagosDeDerechosForm`.
-     * - Aplica un retraso de 10ms antes de ejecutar la lógica.
-     * - Obtiene el estado actual del formulario y lo almacena en la tienda Akita.
-     * - Finaliza la suscripción cuando `unsubscribe$` emite un valor para evitar fugas de memoria.
-     */
-    this.pagosDeDerechosForm.statusChanges
-      .pipe(
-        takeUntil(this.unsubscribe$),
-        delay(10),
-        tap(() => {
-          const ACTIVE_STATE = { ...this.pagosDeDerechosForm.value };
-          this.tramiteStore.setPagoDeDerechosTramite(ACTIVE_STATE);
-        })
-      )
-      .subscribe();
-
-    /**
-     * @description Observa el estado de la sección y actualiza la variable local `seccion`.
-     *
-     * - Se suscribe a `selectSeccionState$` para obtener cambios en el estado de la sección.
-     * - Al recibir un nuevo estado, se asigna a la variable `seccion`.
-     * - La suscripción se finaliza automáticamente cuando `unsubscribe$` emite un valor para evitar fugas de memoria.
-     */
-    this.seccionQuery.selectSeccionState$
-      .pipe(
-        takeUntil(this.unsubscribe$),
-        map((seccionState) => {
-          this.seccion = seccionState;
-        })
-      )
-      .subscribe();
+    private seccionStore: SeccionLibStore,
+    private consultaioQuery: ConsultaioQuery,
+  ) 
+  {
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.esFormularioSoloLectura = seccionState.readonly;
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
   }
 
-  /**
-   * @method iniciarFormulario
-   * @description Inicializa el formulario `pagosDeDerechosForm` con los campos requeridos.
-   *
-   * - Algunos campos están deshabilitados y solo se llenan automáticamente.
-   * - Se establecen validaciones obligatorias usando `Validators.required`.
-   * - Incluye los campos para la revisión de pago.
+    /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
    */
-  iniciarFormulario(): void {
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+    /**
+     * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+     * Luego reinicializa el formulario con los valores actualizados desde el store.
+     */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.pagosDeDerechosForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.pagosDeDerechosForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+    inicializarFormulario(): void {
+    this.tramiteStoreQuery.selectSolicitudTramite$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.pagosDeDerechosState = seccionState.PagosDeDerechosState;
+        })
+      )
+      .subscribe()
+
+  /**
+   * Inicializa el formulario reactivo con los campos requeridos.
+   * Configura validaciones y deshabilita ciertos campos según sea necesario.
+   * 
+   * @method iniciarFormulario
+   * @returns {void}
+   */
+
     this.pagosDeDerechosForm = this.fb.group({
       claveDeReferencia: [{ value: '', disabled: true }, Validators.required],
       cadenaDependencia: [{ value: '', disabled: true }, Validators.required],
@@ -259,6 +238,81 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       ],
     });
   }
+  /**
+   * @method ngOnInit
+   * @description Inicializa el componente, suscribe a cambios en el estado del trámite y carga los datos necesarios.
+   */
+  ngOnInit(): void {
+    /**
+     * Suscripción a los cambios en el estado del trámite para obtener los datos de pago de derechos.
+     */
+    this.tramiteStoreQuery.selectSolicitudTramite$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.pagosDeDerechosState = seccionState.PagosDeDerechosState;
+        })
+      )
+      .subscribe();
+
+    this.obtenerListaJustificacion();
+    this.getBancoDatos();
+    this.pagoDeCargarDatos();
+    this.pagoDerechosRevision();
+
+    /**
+     * @description Suscripción a los cambios en el estado del trámite para actualizar el formulario de pagos de derechos.
+     */
+    this.tramiteStoreQuery.selectSolicitudTramite$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map(
+          (seccionState: { PagosDeDerechosState: PagosDeDerechosFormInt }) => {
+            if (seccionState) {
+              this.pagosDeDerechosState = seccionState.PagosDeDerechosState;
+              this.pagosDeDerechosForm.patchValue(this.pagosDeDerechosState);
+            }
+          }
+        )
+      )
+      .subscribe();
+
+    /**
+     * @description Observa los cambios en el estado del formulario y actualiza el estado del trámite en la tienda Akita.
+     *
+     * - Se suscribe a los cambios de estado del formulario `pagosDeDerechosForm`.
+     * - Aplica un retraso de 10ms antes de ejecutar la lógica.
+     * - Obtiene el estado actual del formulario y lo almacena en la tienda Akita.
+     * - Finaliza la suscripción cuando `destroyNotifier$` emite un valor para evitar fugas de memoria.
+     */
+    this.pagosDeDerechosForm.statusChanges
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap(() => {
+          const ACTIVE_STATE = { ...this.pagosDeDerechosForm.value };
+          this.tramiteStore.setPagoDeDerechosTramite(ACTIVE_STATE);
+        })
+      )
+      .subscribe();
+
+    /**
+     * @description Observa el estado de la sección y actualiza la variable local `seccion`.
+     *
+     * - Se suscribe a `selectSeccionState$` para obtener cambios en el estado de la sección.
+     * - Al recibir un nuevo estado, se asigna a la variable `seccion`.
+     * - La suscripción se finaliza automáticamente cuando `destroyNotifier$` emite un valor para evitar fugas de memoria.
+     */
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccion = seccionState;
+        })
+      )
+      .subscribe();
+  }
+
 
   /**
    * @method pagoDeCargarDatos
@@ -266,7 +320,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    *
    * - Se suscribe al método `pagoDeCargarDatos()` del servicio.
    * - Los datos obtenidos son aplicados al formulario `pagosDeDerechosForm`.
-   * - La suscripción se gestiona con `takeUntil(this.unsubscribe$)` para evitar fugas de memoria.
+   * - La suscripción se gestiona con `takeUntil(this.destroyNotifier$)` para evitar fugas de memoria.
    *
    * @see {@link AcuicolaService} para la obtención de datos.
    * @see {@link pagosDeDerechosForm} para el almacenamiento de los datos en el formulario.
@@ -274,7 +328,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   pagoDeCargarDatos(): void {
     this.acuicolaService
       .pagoDeCargarDatos()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data: PagoDeDerechos) => {
         this.pagosDeDerechosForm.patchValue(data);
       });
@@ -294,7 +348,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   getBancoDatos(): void {
     this.acuicolaService
       .getBancoDatos()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
           const RESPONSE = resp.data;
@@ -316,7 +370,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   private obtenerListaJustificacion(): void {
     this.acuicolaService
       .obtenerDetallesDelCatalogo('justificacion.json')
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (data) => {
           this.justificacionCatalogo = data.data as Catalogo[];
@@ -333,7 +387,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    *
    * - Se suscribe a `getPagoDerechosRevision()` del servicio.
    * - Los datos obtenidos se asignan al formulario `pagosDeDerechosForm`.
-   * - Usa `takeUntil(this.unsubscribe$)` para manejar la desuscripción y evitar fugas de memoria.
+   * - Usa `takeUntil(this.destroyNotifier$)` para manejar la desuscripción y evitar fugas de memoria.
    *
    * @see {@link AcuicolaService} para la obtención de datos de revisión de pago.
    * @see {@link pagosDeDerechosForm} para almacenar los datos en el formulario.
@@ -341,7 +395,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   pagoDerechosRevision(): void {
     this.acuicolaService
       .getPagoDerechosRevision()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data: PagoDeDerechosRevision) => {
         this.pagosDeDerechosForm.patchValue(data);
       });
@@ -359,7 +413,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       [nombreControl]: valor,
     });
     this.exentoPagoValor = valor;
-    this.iniciarFormulario();
   }
 
   cambioValorRadioRevision(nombreControl: string, valor: string): void {
@@ -367,20 +420,19 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       [nombreControl]: valor,
     });
     this.exentoPagoRevisionValor = valor;
-    this.iniciarFormulario();
   }
 
   /**
    * @method ngOnDestroy
    * @description Maneja la limpieza de recursos antes de destruir el componente.
    *
-   * - Emite un valor en `unsubscribe$` y `unsubscribe$` para notificar a los observables que deben completar.
+   * - Emite un valor en `destroyNotifier$` y `destroyNotifier$` para notificar a los observables que deben completar.
    * - Llama a `complete()` en ambos `Subject` para liberar memoria y evitar fugas de suscripciones.
    *
-   * @see {@link unsubscribe$} Subject utilizado para cancelar suscripciones activas.
+   * @see {@link destroyNotifier$} Subject utilizado para cancelar suscripciones activas.
    */
   ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
