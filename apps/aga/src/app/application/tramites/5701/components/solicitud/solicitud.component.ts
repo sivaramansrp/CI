@@ -1694,6 +1694,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
                   descripcion: 'No cuenta con recinto',
                 },
               ];
+
               this.despacho.get('nombreRecinto')?.setValue(SIN_ITEMS);
               this.despacho.get('nombreRecinto')?.disable();
             }

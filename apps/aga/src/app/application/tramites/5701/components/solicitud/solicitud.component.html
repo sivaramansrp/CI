@@ -469,7 +469,7 @@
           [required]="false"
         >
           <option value="-1">Selecciona una opción...</option>
-          <option *ngFor="let recinto of recintoCatalogo" [value]="recinto">
+          <option *ngFor="let recinto of recintoCatalogo" [value]="recinto.id_recinto_fiscalizado">
             {{ recinto.descripcion }}
           </option>
         </select>
