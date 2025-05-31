@@ -156,16 +156,14 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
    */
 
   inicializarFormulario(): void {
-    this.subscription.add(
-      this.tramite301Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.solicitudState = seccionState;
-          })
-        )
-        .subscribe()
-    );
+    this.tramite301Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
 
     this.informacionDeLaform = this.formbuilt.group({
       fraccionArancelaria: [
@@ -203,10 +201,8 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
       this.informacionDeLaform.disable();
-    } else if (!this.esFormularioSoloLectura) {
-      this.informacionDeLaform.enable();
     } else {
-      // No se requiere ninguna acción en el formulario
+      this.informacionDeLaform.enable();
     }
 }
 

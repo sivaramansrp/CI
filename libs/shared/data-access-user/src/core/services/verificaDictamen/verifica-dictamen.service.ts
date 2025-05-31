@@ -13,7 +13,7 @@ export class VerificaDictamenService {
     constructor(private http: HttpClient) {
     }
 /**
- * Servisio para obtener los datos generales del tramite
+ * Servicio para obtener los datos generales del trámite.
  * @param numeroDeTramite 
  * @returns 
  */

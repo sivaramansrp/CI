@@ -45,6 +45,9 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
 
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * Esta variable se utiliza para almacenar el estado de la consulta.
+   */
   public consultaState!:ConsultaioState;
   /**
    * Esta variable se utiliza para almacenar el índice del subtítulo.
@@ -92,7 +95,6 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
       .subscribe((resp: unknown) => {
         if (resp) {
           this.esDatosRespuesta = true;
-          // Asegúrate de que resp es del tipo Solicitud301State antes de pasarlo
           this.solocitud301Service.actualizarEstadoFormulario(resp as Solicitud301State);
         }
       });

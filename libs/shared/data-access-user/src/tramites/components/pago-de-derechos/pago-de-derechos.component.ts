@@ -128,17 +128,15 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
 
   inicializarFormulario(): void {
-    // Inicializa el formulario con validaciones requeridas
-    this.subscription.add(
-      this.tramite301Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.solicitudState = seccionState;
-          })
-        )
-        .subscribe()
-    );
+    // Se obtiene el estado de la solicitud desde el store y se asigna a la variable local `solicitudState`.
+    this.tramite301Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
 
     this.FormSolicitud = this.fb.group({
       pagodederechos: this.fb.group({
@@ -148,7 +146,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       }),
     });
     // Llama al método para actualizar el campo 'monto'
-    this.updateformfied();
+    this.updateFormField();
   }
 
   /**
@@ -171,14 +169,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 }
 
   /**
-   * Método `updateformfied()`.
+   * Método `updateFormField()`.
    * Este método se encarga de actualizar el campo 'monto' dentro del formulario:
    * - Deshabilita el campo 'monto'.
    * - Establece el valor predeterminado de 'monto' a '4845'.
    *
    * @memberof PagoDeDerechosComponent
    */
-  updateformfied(): void {
+  updateFormField(): void {
     // Deshabilita el campo 'monto' y asigna el valor '4845'
     this.FormSolicitud.get('pagodederechos.monto')?.disable();
     this.FormSolicitud.get('pagodederechos.monto')?.setValue('4845');

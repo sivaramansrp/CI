@@ -9,9 +9,13 @@ import { Observable } from 'rxjs';
 })
 export class Solocitud301Service {
   /**
-   * AppConfig es una inyección de dependencias que proporciona la configuración de la aplicación.
+   * URL base del servidor principal.
    */
   urlServer = ENVIRONMENT.URL_SERVER;
+  /**
+   * La URL del servidor utilizada para operaciones auxiliares con JSON.
+   * Este valor se obtiene de la configuración del entorno.
+   */
   urlServerCatalogos = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
   constructor(private http: HttpClient, private tramite301Store: Tramite301Store,) {

@@ -151,16 +151,14 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
    */
 
   inicializarFormulario(): void {
-    this.subscription.add(
-      this.tramite301Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.solicitudState = seccionState;
-          })
-        )
-        .subscribe()
-    );
+    this.tramite301Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.Informaciondela = this.fb.group({
       datosImportadorExportador: this.fb.group({
         folio: [this.solicitudState?.folio, Validators.required],
@@ -177,10 +175,8 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
       this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {
         this.Informaciondela.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.Informaciondela.enable();
       } else {
-        // No se requiere ninguna acción en el formulario
+        this.Informaciondela.enable();
       }
   }
 

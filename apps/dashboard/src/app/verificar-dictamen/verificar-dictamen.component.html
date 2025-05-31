@@ -10,11 +10,11 @@
             <div class="card-body">            
                 <div class="form-group">            
                     <label for="folio" class="form-label text-title">Folio del trámite:</label>
-                    <label for="folio" class="form-label text-title">&nbsp;{{numeroDeTramite}}</label>
+                    <label for="folio" class="form-label text-title espacio-label">{{numeroDeTramite}}</label>
                 </div>
                 <div class="form-group">
                     <label for="tipoSolicitud" class="form-label text-title">Tipo de solicitud:</label>
-                    <label for="folio" class="form-label text-title">&nbsp;Permiso Sanitario Previo de Importación de Productos</label>
+                    <label for="folio" class="form-label text-title espacio-label">Permiso Sanitario Previo de Importación de Productos</label>
                 </div>
             </div>
         </div>
@@ -66,7 +66,7 @@
                                 class="form-control font-weight-titulo text-title" placeholder="plazo" />
                         </div> 
                         <div class="col-md-6">
-                            <div class="ajusteLabelComboCatalogos">
+                            <div class="ajuste-label-combo-catalogos">
                                 <app-catalogo-select
                                     [placeholder]="'Seleccione una restricción'"                                
                                     [catalogo]="requisitosCombo"
@@ -81,12 +81,12 @@
                 <div class="form-inline">
                     <div class="form-group">
                         <div class="col-md-6">
-                            <label for="folio" class="form-label text-title">Tipo de analisis:</label>
+                            <label for="folio" class="form-label text-title">Tipo de análisis:</label>
                             <textarea id="tipoAnalisis" formControlName="tipoAnalisis" class="form-control"
                                 placeholder="Fundamento del dictamen"  rows="8"></textarea>
                         </div>
                         <div class="col-md-6">
-                            <label for="folio" class="form-label text-title">Numero  de muestras:</label>
+                            <label for="folio" class="form-label text-title">N&uacute;mero  de muestras:</label>
                             <input type="text" id="numeroDeMuestras" formControlName="numeroDeMuestras"
                                 class="form-control font-weight-titulo text-title" placeholder="Numero de muestras" />
                         </div>
@@ -111,7 +111,7 @@
                                 class="form-control font-weight-titulo text-title" placeholder="Siglas dictaminador" />
                         </div>
                         <div class="col-md-6">
-                            <div class="ajusteLabelComboCatalogos">
+                            <div class="ajuste-label-combo-catalogos">
                                 <app-catalogo-select
                                     [placeholder]="'Seleccione una opcion'"                                
                                     [catalogo]="asignarAutorizadorCombo"

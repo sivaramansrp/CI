@@ -1,33 +1,19 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable no-empty-function */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  AVISO,
-  ConsultaioQuery,
-  IMPORTANTE,
-} from '@ng-mf/data-access-user';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
 
-import {
-  Solicitud301State,
-  Tramite301Store,
-} from '../../../core/estados/tramite301.store';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
-import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
-import { BtnContinuarComponent } from 'libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { CommonModule } from '@angular/common';
-import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { Tramite301Query } from '../../../core/queries/tramite301.query';
+import { AVISO, IMPORTANTE } from "../../../core/enums/constantes-alertas.enum";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { Solicitud301State, Tramite301Store } from "../../../core/estados/tramite301.store";
+import { Subject, Subscription, map, takeUntil } from "rxjs";
+import { AlertComponent } from "ngx-bootstrap/alert";
+import { BtnContinuarComponent } from "../btn-continuar/btn-continuar.component";
+import { Catalogo } from "../../../core/models/shared/catalogos.model";
+import { CatalogoSelectComponent } from "../catalogo-select/catalogo-select.component";
+import { CommonModule } from "@angular/common";
+import { ConsultaioQuery } from "../../../core/queries/consulta.query";
+import { DatosPasos } from "../../../core/models/shared/components.model";
+import { ListaPasosWizard } from "../../../core/models/forma-render.model";
+import { TituloComponent } from "../titulo/titulo.component";
+import { Tramite301Query } from "../../../core/queries/tramite301.query";
 
 /**
  * Componente para el registro de productos relacionados con importaciones y exportaciones.
@@ -123,14 +109,6 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
   };
 
   /**
-   * Suscripción a los cambios en el formulario reactivo.
-   *
-   * @type {Subscription}
-   * @memberof RegistroParaLaComponent
-   */
-  private subscription: Subscription = new Subscription();
-
-  /**
    * Estado de la solicitud de la sección 301.
    */
   public solicitudState!: Solicitud301State;
@@ -194,16 +172,14 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
   * con el valor inicial obtenido del store.
   */
   inicializarFormulario(): void {
-    this.subscription.add(
-      this.tramite301Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.solicitudState = seccionState;
-          })
-        )
-        .subscribe()
-    );
+    this.tramite301Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.getRegistro(); // Llama al método para obtener los datos de registro
 
     /**
@@ -257,7 +233,7 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite301Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite301Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite301Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**
@@ -267,7 +243,6 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
    * @memberof RegistroParaLaComponent
    */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
