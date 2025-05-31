@@ -325,7 +325,7 @@
     "id": 47,
     "tramite": 110217,
     "linkDashboard": "/se/certificado-origen/solicitante",
-    "linkDepartment": "/se/certificado-origen/solicitante",
+    "linkDepartment": "/pago/certificado-origen/solicitante",
     "department": "se"
   },
   {
