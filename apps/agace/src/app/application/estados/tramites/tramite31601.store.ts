@@ -317,14 +317,14 @@ export interface Solicitud31601State {
     constanciasDe: number;
     
     /**
-     * El valor de empleadosPropios.
+     * El valor de empleadosPropiosRegimen.
      */
-    empleadosPropios: string;
+    empleadosPropiosRegimen: string;
     
     /**
-     * El valor de numeroEmpleados.
+     * El valor de numeroEmpleadosUno.
      */
-    numeroEmpleados: number;
+    numeroEmpleadosUno: number;
     
     /**
      * El valor de numeroEmpleadosDos.
@@ -385,6 +385,79 @@ export interface Solicitud31601State {
      * El valor de cumplimientoLineamientos.
      */
     cumplimientoLineamientos: string;
+    /**
+     * El valor de squemaIntegral.
+     */
+    squemaIntegral: string;
+    /**
+     * El valor de sidoModificadas.
+     */
+    sidoModificadas: string;
+    /**
+     * El valor de ensucaracterde.
+     */
+    ensucaracterde: string;
+    /**
+     * El valor de rfc.
+     */
+    rfc: string;
+    /**
+     * El valor de obligadoaTributarenMéxico.
+     */
+    obligadoaTributarenMéxico: string;
+    /**
+     * El valor de nacionalidad.
+     */
+    nacionalidad: string;
+    /**
+     * El valor de registroFederaldeContribuyentes.
+     */
+    registroFederaldeContribuyentes: string;
+    /**
+     * El valor de resigtroReprestantante.
+     */
+    resigtroReprestantante: string;
+    /**
+     * El valor de rfcReprestantante.
+     */
+    rfcReprestantante: string;
+    /**
+     * El valor de nombreReprestante.
+     */
+    nombreReprestante: string;
+    /**
+     * El valor de apellidoPaterno.
+     */
+    apellidoPaterno: string;
+    /**
+     * El valor de apellidoMaterno.
+     */
+    apellidoMaterno: string;
+    /**
+     * El valor de cuidad.
+     */
+    cuidad: string;
+    /**
+     * El valor de cargo.
+     */
+    cargo: string;
+    /**
+     * El valor de telefonoReprestantante.
+     */
+    telefonoReprestantante: string;
+    /**
+     * El valor de correoReprestantante.
+     */
+    correoReprestantante: string;
+    /**
+     * El valor de suplente.
+     */
+    suplente: string;
+    /**
+     * El valor de tipoDocumento.
+     */
+    tipoDocumento: string;
+    
 }
 /**
  * Función para crear el estado inicial de Solicitud31601.
@@ -703,14 +776,14 @@ export function createInitialState(): Solicitud31601State {
         constanciasDe: 0,
         
         /**
-         * El valor de empleadosPropios.
+         * El valor de empleadosPropiosRegimen.
          */
-        empleadosPropios: '',
+        empleadosPropiosRegimen: '',
         
         /**
-         * El valor de numeroEmpleados.
+         * El valor de numeroEmpleadosUno.
          */
-        numeroEmpleados: 1,
+        numeroEmpleadosUno: 1,
         
         /**
          * El valor de numeroEmpleadosDos.
@@ -770,7 +843,91 @@ export function createInitialState(): Solicitud31601State {
         /**
          * El valor de cumplimientoLineamientos.
          */
-        cumplimientoLineamientos: ''
+        cumplimientoLineamientos: '',
+
+        /**
+         * El valor de squemaIntegral.
+         */
+        squemaIntegral: '',
+
+        /**
+         * El valor de sidoModificadas.
+         */
+        sidoModificadas: '',
+        /**
+         * El valor de ensucaracterde.
+         */
+        ensucaracterde: '',
+        /**
+         * El valor de rfc.
+         */
+        rfc: '',
+        /**
+         * El valor de obligadoaTributarenMéxico.
+         */
+        obligadoaTributarenMéxico: '',
+
+        /**
+         * El valor de nacionalidad.
+         */
+        nacionalidad: '',
+
+        /**
+         * El valor de registroFederaldeContribuyentes.
+         */
+        registroFederaldeContribuyentes: '',
+        /**
+         * El valor de resigtroReprestantante.
+         */
+        resigtroReprestantante: '',
+
+        /**
+         * El valor de rfcReprestantante.
+         */
+        rfcReprestantante: '',
+
+        /**
+         * El valor de nombreReprestante.
+         */
+        nombreReprestante: '',
+        /**
+         * El valor de apellidoPaterno.
+         */
+        apellidoPaterno: '',
+
+        /**
+         * El valor de apellidoMaterno.
+         */
+        apellidoMaterno: '',
+
+        /**
+         * El valor de cuidad.
+         */
+        cuidad: '',
+
+        /**
+         * El valor de cargo.
+         */
+        cargo: '',
+
+        /**
+         * El valor de telefonoReprestantante.
+         */
+        telefonoReprestantante: '',
+
+        /**
+         * El valor de correoReprestantante.
+         */
+        correoReprestantante: '',
+
+        /**
+         * El valor de suplente.
+         */
+        suplente: '',
+        /**
+         * El valor de tipoDocumento.
+         */
+        tipoDocumento: '',
     };
 }
 
@@ -1480,24 +1637,24 @@ export class Tramite31601Store extends Store<Solicitud31601State>{
     }
 
     /**
-     * Establece el estado de empleadosPropios.
-     * @param empleadosPropios - El valor de empleadosPropios.
+     * Establece el estado de empleadosPropiosRegimen.
+     * @param empleadosPropiosRegimen - El valor de empleadosPropiosRegimen.
      */
-    public setEmpleadosPropios(empleadosPropios: string) {
+    public setEmpleadosPropiosRegimen(empleadosPropiosRegimen: string) {
         this.update((state) => ({
             ...state,
-            empleadosPropios,
+            empleadosPropiosRegimen,
         }));
     }
 
     /**
- * Establece el estado de numeroEmpleados.
- * @param numeroEmpleados - El valor de numeroEmpleados.
+ * Establece el estado de numeroEmpleadosUno.
+ * @param numeroEmpleadosUno - El valor de numeroEmpleadosUno.
  */
-public setNumeroEmpleados(numeroEmpleados: number) {
+public setNumeroEmpleadosUno(numeroEmpleadosUno: number) {
     this.update((state) => ({
         ...state,
-        numeroEmpleados,
+        numeroEmpleadosUno,
     }));
 }
 
@@ -1630,6 +1787,198 @@ public setCumplimientoLineamientos(cumplimientoLineamientos: string) {
     this.update((state) => ({
         ...state,
         cumplimientoLineamientos,
+    }));
+}
+
+/**
+ * Establece el estado de squemaIntegral.
+ * @param squemaIntegral - El valor de squemaIntegral.
+ */
+public setSquemaIntegral(squemaIntegral: string) {
+    this.update((state) => ({
+        ...state,
+        squemaIntegral,
+    }));
+}
+
+/**
+ * Establece el estado de sidoModificadas.
+ * @param sidoModificadas - El valor de sidoModificadas.
+ */
+public setSidoModificadas(sidoModificadas: string) {
+    this.update((state) => ({
+        ...state,
+        sidoModificadas,
+    }));
+}
+/**
+ * Establece el estado de ensucaracterde.
+ * @param ensucaracterde - El valor de ensucaracterde.
+ */
+public setEnsucaracterde(ensucaracterde: string) {
+    this.update((state) => ({
+        ...state,
+        ensucaracterde,
+    }));
+}
+/**
+ * Establece el estado de rfc.
+ * @param rfc - El valor de rfc.
+ */
+public setRfc(rfc: string) {
+    this.update((state) => ({
+        ...state,
+        rfc,
+    }));
+}
+/**
+ * Establece el estado de obligadoaTributarenMéxico.
+ * @param obligadoaTributarenMéxico - El valor de obligadoaTributarenMéxico.
+ */
+public setObligadoaTributarenMéxico(obligadoaTributarenMéxico: string) {
+    this.update((state) => ({
+        ...state,
+        obligadoaTributarenMéxico,
+    }));
+}
+
+/**
+ * Establece el estado de nacionalidad.
+ * @param nacionalidad - El valor de nacionalidad.
+ */
+public setNacionalidad(nacionalidad: string) {
+    this.update((state) => ({
+        ...state,
+        nacionalidad,
+    }));
+}
+
+/**
+ * Establece el estado de registroFederaldeContribuyentes.
+ * @param registroFederaldeContribuyentes - El valor de registroFederaldeContribuyentes.
+ */
+public setRegistroFederaldeContribuyentes(registroFederaldeContribuyentes: string) {
+    this.update((state) => ({
+        ...state,
+        registroFederaldeContribuyentes,
+    }));
+}
+/**
+ * Establece el estado de resigtroReprestantante.
+ * @param resigtroReprestantante - El valor de resigtroReprestantante.
+ */
+public setResigtroReprestantante(resigtroReprestantante: string) {
+    this.update((state) => ({
+        ...state,
+        resigtroReprestantante,
+    }));
+}
+
+/**
+ * Establece el estado de rfcReprestantante.
+ * @param rfcReprestantante - El valor de rfcReprestantante.
+ */
+public setRfcReprestantante(rfcReprestantante: string) {
+    this.update((state) => ({
+        ...state,
+        rfcReprestantante,
+    }));
+}
+
+/**
+ * Establece el estado de nombreReprestante.
+ * @param nombreReprestante - El valor de nombreReprestante.
+ */
+public setNombreReprestante(nombreReprestante: string) {
+    this.update((state) => ({
+        ...state,
+        nombreReprestante,
+    }));
+}
+/**
+ * Establece el estado de apellidoPaterno.
+ * @param apellidoPaterno - El valor de apellidoPaterno.
+ */
+public setApellidoPaterno(apellidoPaterno: string) {
+    this.update((state) => ({
+        ...state,
+        apellidoPaterno,
+    }));
+}
+
+/**
+ * Establece el estado de apellidoMaterno.
+ * @param apellidoMaterno - El valor de apellidoMaterno.
+ */
+public setApellidoMaterno(apellidoMaterno: string) {
+    this.update((state) => ({
+        ...state,
+        apellidoMaterno,
+    }));
+}
+
+/**
+ * Establece el estado de cuidad.
+ * @param cuidad - El valor de cuidad.
+ */
+public setCuidad(cuidad: string) {
+    this.update((state) => ({
+        ...state,
+        cuidad,
+    }));
+}
+
+/**
+ * Establece el estado de cargo.
+ * @param cargo - El valor de cargo.
+ */
+public setCargo(cargo: string) {
+    this.update((state) => ({
+        ...state,
+        cargo,
+    }));
+}
+
+/**
+ * Establece el estado de telefonoReprestantante.
+ * @param telefonoReprestantante - El valor de telefonoReprestantante.
+ */
+public setTelefonoReprestantante(telefonoReprestantante: string) {
+    this.update((state) => ({
+        ...state,
+        telefonoReprestantante,
+    }));
+}
+
+/**
+ * Establece el estado de correoReprestantante.
+ * @param correoReprestantante - El valor de correoReprestantante.
+ */
+public setCorreoReprestantante(correoReprestantante: string) {
+    this.update((state) => ({
+        ...state,
+        correoReprestantante,
+    }));
+}
+
+/**
+ * Establece el estado de suplente.
+ * @param suplente - El valor de suplente.
+ */
+public setSuplente(suplente: string) {
+    this.update((state) => ({
+        ...state,
+        suplente,
+    }));
+}
+/**
+ * Establece el estado de tipoDocumento.
+ * @param tipoDocumento - El valor de tipoDocumento.
+ */
+public setTipoDocumento(tipoDocumento: string) {
+    this.update((state) => ({
+        ...state,
+        tipoDocumento,
     }));
 }
 } 
