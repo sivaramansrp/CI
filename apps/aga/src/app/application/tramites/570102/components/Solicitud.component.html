@@ -4,7 +4,7 @@
   </div>
   <div class="row mt-5">
     <label>Folio VUCEM</label>
-    <input type="text" class="form-control gris-color" readonly />
+    <input type="text" class="form-control gris-color" size="26" maxlength="25" readonly />
   </div>
   <div class="row mt-5">
     <div class="col-md-4">
@@ -13,8 +13,11 @@
         class="text-danger">
         Este campo es obligatorio
       </div>
-      <textarea cols="50" rows="5" formControlName="motivoDelDes"
-        (change)=" setValoresStore( solicitudForm, 'motivoDelDes', 'setMotivoDelDes' ) "></textarea>
+      <input type="text" formControlName="motivoDelDes" class="large-input form-control" maxlength="450"
+        (change)=" setValoresStore( solicitudForm, 'motivoDelDes', 'setMotivoDelDes' ) " />
     </div>
-  </div> 
+  </div>
 </form>
+<ng-container *ngIf="number === 2">
+  <btn-continuar [datos]="datosPasos" (click)="emitirEventoClick()"></btn-continuar>
+</ng-container>

@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Notificacion, NotificacionesComponent, Pedimento, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, Notificacion, NotificacionesComponent, PASOS, Pedimento, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud570102State, Tramite570102Store } from '../state/Tramite570102.store';
 import { CommonModule } from '@angular/common';
@@ -12,11 +12,29 @@ import { Tramite570102Query } from '../state/Tramite570102.query';
 @Component({
   selector: 'app-solicitud',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, BtnContinuarComponent],
   templateUrl: './Solicitud.component.html',
   styleUrl: './Solicitud.component.css',
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
+
+  @Input() number!: number;
+
+    @Output() dataEvent = new EventEmitter<number>();
+
+
+  /** Lista de pasos del asistente. */
+  pasos: ListaPasosWizard[] = PASOS;
+
+   indice: number = 1;
+
+   /** Datos de los pasos del asistente. */
+  datosPasos: DatosPasos = {
+    nroPasos: this.pasos.length,
+    indice: this.indice,
+    txtBtnAnt: 'Anterior',
+    txtBtnSig: 'Guardar y firmar',
+  };
   /**
    * Observable para gestionar la destrucción del componente y evitar fugas de memoria.
    */
@@ -53,6 +71,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Configura el formulario, obtiene datos iniciales y suscribe al estado global.
    */
   ngOnInit(): void {
+
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -105,6 +124,13 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.solicitudForm = this.fb.group({
       motivoDelDes: [this.solicitudState?.motivoDelDes, [Validators.required]],
     });
+  }
+
+  emitirEventoClick(){
+    this.indice=1;
+    this.datosPasos.indice = 1;
+    this.datosPasos.txtBtnAnt;
+     this.dataEvent.emit(1);
   }
 
   /**

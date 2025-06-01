@@ -1,11 +1,23 @@
 import { AfterViewInit, Component, EventEmitter, OnDestroy, Output, ViewChild } from '@angular/core';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL, } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { DatosPasos, FormularioDinamico, ListaPasosWizard, PASOS, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { ReplaySubject } from 'rxjs';
 import { SolicitanteComponent, } from '@libs/shared/data-access-user/src';
 import { Solicitud570102State } from '../../state/Tramite570102.store';
 
+
+interface AccionBoton {
+  /**
+   * La acción que se realizará.
+   */
+  accion: string;
+
+  /**
+   * El valor asociado a la acción.
+   */
+  valor: number;
+}
 /**
  * Componente que representa el primer paso del trámite.
  * Este componente gestiona la lógica y la interfaz de usuario para capturar los datos iniciales del trámite.
@@ -33,11 +45,25 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy {
    */
   tipoPersona!: number;
 
+  pasos: ListaPasosWizard[] = PASOS;
+
   /**
    * Observable para manejar la destrucción del componente.
    * Se utiliza para cancelar suscripciones activas y evitar fugas de memoria.
    */
   public destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
+  @Output() eventoDatosHijo: EventEmitter<number> = new EventEmitter<number>();
+
+  indice: number = 1;
+
+
+  datosPasos: DatosPasos = {
+    nroPasos: this.pasos.length,
+    indice: this.indice,
+    txtBtnAnt: 'Anterior',
+    txtBtnSig: 'Guardar y firmar',
+  };
 
   /**
    * Configuración del formulario dinámico para la persona.
@@ -55,13 +81,14 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy {
    * Índice del paso actual.
    * Representa el número del paso en el asistente de pasos.
    */
-  indice: number = 1;
 
   /**
    * Formulario reactivo que contiene los campos del paso uno del trámite.
    * Este formulario se utiliza para capturar y validar los datos ingresados por el usuario.
    */
   registroForm!: FormGroup;
+
+  nombree!: number;
 
   /**
    * Estado global de la solicitud 570102.
@@ -97,6 +124,20 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy {
     this.indiceNombre.emit(this.indice);
   }
 
+  emitirCancelacion(data: number): void {
+    this.nombree = data;
+    this.eventoDatosHijo.emit(data);
+
+  }
+  getValorIndice(e: AccionBoton): void {
+
+    if (e.valor > 0 && e.valor < 5) {
+      this.indice = e.valor;
+      if (e.accion === 'cont' && this.indice === 1) {
+      }
+    }
+    this.nombree = 1;
+  }
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Cancela todas las suscripciones activas.

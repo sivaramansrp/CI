@@ -85,7 +85,10 @@ export class SolicitudPageComponent implements OnInit {
   /**
    * Número del paso actual.
    */
-  nombre!: number;
+  nombre: number = 3;
+
+  nombree!: number;
+
   /**
    * Referencia al componente del asistente.
    */
@@ -134,17 +137,20 @@ export class SolicitudPageComponent implements OnInit {
    */
 
   getValorIndice(e: AccionBoton): void {
-    this.alEventoHijo(this.nombre);
+
     this.cargaArchivo();
     if (this.ocultarModal) {
       if (e.valor > 0 && e.valor < 5) {
         this.indice = e.valor;
-        if (e.accion === 'cont' && this.indice === 2) {
+        if (e.accion === 'cont' && this.indice === 1) {
           this.nombre = 1;
           this.wizardComponent.siguiente();
         }
       }
+    } else {
+      this.indice = 1;
     }
+
   }
 
   /**
@@ -165,6 +171,9 @@ export class SolicitudPageComponent implements OnInit {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
       this.ocultarModal = true;
       this.getValorIndice({ accion: 'cont', valor: 2 });
+    } else {
+      this.ocultarModal = false;
+      this.getValorIndice({ accion: 'cont', valor: 1 });
     }
   }
 
@@ -197,6 +206,9 @@ export class SolicitudPageComponent implements OnInit {
       this.abrirModal();
     }
   }
-
+  alEventoGuarder(event: number) {
+    this.nombree = event;
+    this.getValorIndice({ accion: 'cont', valor: 1 });
+  }
 
 }

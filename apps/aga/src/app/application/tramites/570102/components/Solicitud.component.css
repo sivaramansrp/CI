@@ -1,3 +1,8 @@
 .gris-color {
     background-color: rgb(227, 226, 226);
   }
+
+.large-input {
+  width: 380px;
+  height: 165px;
+}
