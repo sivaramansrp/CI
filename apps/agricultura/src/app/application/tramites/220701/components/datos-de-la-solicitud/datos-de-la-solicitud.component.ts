@@ -13,6 +13,7 @@ import { EXPEDICION_FACTURA_FECHA } from '../../constantes/inspeccion-fisica-zoo
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { INSTRUCCION_DOBLE_CLIC } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
+import { Input } from '@angular/core';
 import { InputFecha } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { MEDIO_SERVICIO } from '../../modelos/datos-de-interfaz.model';
@@ -160,11 +161,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
  
   medioContenido: medioInfo[] = [];
 
-    /**
-   * Indica si el formulario está en modo solo lectura.
-   * Cuando es `true`, los campos del formulario no se pueden editar.
-   */
-  esFormularioSoloLectura: boolean = false;
+/**
+ * Indica si el formulario debe mostrarse solo en modo de lectura.
+ * @type {boolean}
+ */
+  @Input() esFormularioSoloLectura!: boolean;
 
   /**
    * Subject para manejar la desuscripción de observables.
@@ -260,19 +261,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
     this.datosDeLaSolicitudForm = this.fb.group({
       justificacion: ['', Validators.required],
-      certificadosAutorizados: [{ value: '', disabled: true }, Validators.required],
-      fechaInicio: [{ value: '', disabled: true }, Validators.required],
+      certificadosAutorizados: ['', Validators.required],
+      fechaInicio: ['', Validators.required],
       horaDeInspeccion: ['', Validators.required],
       aduanaDeIngreso: ['', Validators.required],
       oficinaDeInspeccion: ['', Validators.required],
       puntoDeInspeccion: ['', Validators.required],
-      nombreInspector: [{ value: '', disabled: true }, Validators.required],
-      primerApellido: [{ value: '', disabled: true }, Validators.required],
-      segundoApellido: [{ value: '', disabled: true }, Validators.required],
-      cantidadContenedores: [{ value: '', disabled: true }, Validators.required],
-      tipoContenedor: [{ value: '', disabled: true }, Validators.required],
+      nombreInspector: ['', Validators.required],
+      primerApellido: ['', Validators.required],
+      segundoApellido: ['', Validators.required],
+      cantidadContenedores: ['', Validators.required],
+      tipoContenedor: ['', Validators.required],
       medioDeTransporte: ['', Validators.required],
-      identificacionTransporte: [{ value: '', disabled: true }, Validators.required],
+      identificacionTransporte: ['', Validators.required],
       esSolicitudFerros: ['', Validators.required]
     });
   }

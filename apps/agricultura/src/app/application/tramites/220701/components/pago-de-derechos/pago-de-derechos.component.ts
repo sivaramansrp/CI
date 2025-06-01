@@ -10,6 +10,7 @@ import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { EXPEDICION_FACTURA_FECHA } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { Input } from '@angular/core';
 import { InputFecha } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
@@ -121,10 +122,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   fechaInicioInput: InputFecha = EXPEDICION_FACTURA_FECHA;
 
   /**
-   * Indica si el formulario está en modo solo lectura.
-   * Cuando es `true`, los campos del formulario no se pueden editar.
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   * @type {boolean}
    */
-  esFormularioSoloLectura: boolean = false;  
+  @Input() esFormularioSoloLectura!: boolean;
 
   /**
    * @property {Subject<void>} destroyNotifier$
@@ -215,27 +216,18 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
 
     this.pagosDeDerechosForm = this.fb.group({
-      claveDeReferencia: [{ value: '', disabled: true }, Validators.required],
-      cadenaDependencia: [{ value: '', disabled: true }, Validators.required],
-      banco: [{value:'', disabled: true} , Validators.required],
-      llaveDePago: [{value:'', disabled: true}, Validators.required],
-      fechaInicio: [{value:'', disabled: true}, Validators.required],
-      importeDePago: [{ value: '', disabled: true }, Validators.required],
-      claveDeReferenciaRevision: [
-        { value: '', disabled: true },
-        Validators.required,
-      ],
-      cadenaDependenciaRevision: [
-        { value: '', disabled: true },
-        Validators.required,
-      ],
-      bancoRevision: [{ value: '', disabled: true }, Validators.required],
-      llaveDePagoRevision: [{ value: '', disabled: true }, Validators.required],
-      fechaInicioRevision: [{ value: '', disabled: true }, Validators.required],
-      importeDePagoRevision: [
-        { value: '', disabled: true },
-        Validators.required,
-      ],
+      claveDeReferencia: ['', Validators.required],
+      cadenaDependencia: ['', Validators.required],
+      banco: ['', Validators.required],
+      llaveDePago: ['', Validators.required],
+      fechaInicio: ['', Validators.required],
+      importeDePago: ['', Validators.required],
+      claveDeReferenciaRevision: ['', Validators.required],
+      cadenaDependenciaRevision: ['', Validators.required],
+      bancoRevision: ['', Validators.required],
+      llaveDePagoRevision: ['', Validators.required],
+      fechaInicioRevision: ['', Validators.required],
+      importeDePagoRevision: ['', Validators.required],
     });
   }
   /**
@@ -259,6 +251,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.getBancoDatos();
     this.pagoDeCargarDatos();
     this.pagoDerechosRevision();
+    this.inicializarEstadoFormulario();
 
     /**
      * @description Suscripción a los cambios en el estado del trámite para actualizar el formulario de pagos de derechos.

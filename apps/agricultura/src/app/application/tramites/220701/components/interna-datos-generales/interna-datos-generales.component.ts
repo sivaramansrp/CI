@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -9,6 +10,7 @@ import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Validators } from '@angular/forms';
 
+import { Input } from '@angular/core';
 import { Subject } from 'rxjs';
 import { delay } from 'rxjs/operators';
 import { map } from 'rxjs/operators';
@@ -195,9 +197,10 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
   mercanciaApiDatos: mercanciaInfo[] = [];
 
   /**
-   * Indica si el formulario está en modo solo lectura.
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   * @type {boolean}
    */
-  esFormularioSoloLectura: boolean = false;
+  @Input() esFormularioSoloLectura!: boolean;
 
   /**
    * Notificador para destruir suscripciones al destruir el componente.
@@ -246,6 +249,31 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
     private seccionStore: SeccionLibStore,
     private consultaioQuery: ConsultaioQuery
   ) {
+    /// Inicializa el estado del formulario dependiendo del modo de acceso.
+  }
+
+  /**
+   * Ciclo de vida `OnInit` del componente.
+   *
+   * Inicializa el formulario principal y carga datos necesarios para su funcionamiento.
+   * Realiza las siguientes acciones:
+   *
+   * - Crea la estructura inicial del formulario con `crearFormulario()`.
+   * - Desactiva campos específicos mediante `disableFormControls()`.
+   * - Carga catálogos y opciones desplegables a través de varios métodos (`getOficianaInspeccion`, `getEstablecimiento`, etc.).
+   * - Se suscribe al estado del store `TramiteStoreQuery` para recuperar y aplicar datos previos al formulario.
+   * - Se suscribe a los cambios del estado del formulario (`statusChanges`) para guardar automáticamente los datos en el store.
+   * - Llama al método `obtenerDatos()` para cargar datos adicionales (dependiendo del negocio).
+   * - Se suscribe al estado de sección desde `SeccionQuery` y guarda el estado actual.
+   *
+   * Las suscripciones se cancelan automáticamente mediante el `destroyNotifier$` al destruir el componente.
+   *
+   * @returns {void}
+   * @memberof InternaDatosGeneralesComponent
+   */
+  ngOnInit(): void {
+    this.esFormularioSoloLectura = this.consultaioQuery.getValue().readonly;
+    this.inicializarFormulario();
     /**
      * Se suscribe al estado de `ConsultaioQuery` para obtener si el formulario debe estar en modo de solo lectura.
      * También inicializa el estado del formulario cada vez que cambia el estado.
@@ -257,7 +285,77 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.inicializarEstadoFormulario();
+          console.log('Readonly flag:', this.esFormularioSoloLectura);
+          if (this.esFormularioSoloLectura) {
+            this.forma.disable();
+            this.movilizacionForm.disable();
+          } else {
+            this.forma.enable();
+            this.movilizacionForm.enable();
+          }
+        })
+      )
+      .subscribe();
+
+    this.getOficianaInspeccion();
+    this.getEstablecimiento();
+    this.getRegimenDestinaran();
+    this.getMovilizacionNacional();
+    this.getPuntoVerificacion();
+    this.getEmpresaTransportista();
+    this.obtenerListasDesplegables();
+
+    this.tramiteStoreQuery.selectSolicitudTramite$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState: TramiteState) => {
+          if (seccionState) {
+            this.internaDatosGeneralesState =
+              seccionState?.InternaDatosGeneralesState;
+            this.forma.patchValue({
+              datosDelaSolicitud: this.internaDatosGeneralesState,
+            });
+            this.movilizacionForm.patchValue(this.internaDatosGeneralesState);
+
+            // Re-disable after patching
+            if (this.esFormularioSoloLectura) {
+              this.forma.disable();
+              this.movilizacionForm.disable();
+            }
+          }
+        })
+      )
+      .subscribe();
+
+    this.forma.statusChanges
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap(() => {
+          const ACTIVE_STATE = { ...this.forma.value };
+          this.tramiteStore.setInternaDatosGeneralesTramite(ACTIVE_STATE);
+        })
+      )
+      .subscribe();
+
+    this.movilizacionForm.statusChanges
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap(() => {
+          const ACTIVE_STATE = { ...this.movilizacionForm.value };
+          this.tramiteStore.setInternaDatosGeneralesTramite(ACTIVE_STATE);
+        })
+      )
+      .subscribe();
+
+    this.obtenerDatos();
+
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccion = seccionState;
         })
       )
       .subscribe();
@@ -274,25 +372,6 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
-    } else {
-      this.inicializarFormulario();
-    }
-  }
-
-  /**
-   * Guarda el estado del formulario, activando o desactivando los campos
-   * según si el formulario está en modo solo lectura o no.
-   *
-   * Este método también llama a `inicializarFormulario()` antes de aplicar la lógica de activación/desactivación.
-   *
-   * @returns {void}
-   * @memberof InternaDatosGeneralesComponent
-   */
-  guardarDatosFormulario(): void {
-    this.inicializarFormulario();
-
-    if (this.esFormularioSoloLectura) {
       this.forma.disable();
       this.movilizacionForm.disable();
     } else {
@@ -300,7 +379,22 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
       this.movilizacionForm.enable();
     }
   }
-
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.forma.disable();
+      this.movilizacionForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.forma.enable();
+      this.movilizacionForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
   /**
    * Inicializa los formularios `forma` y `movilizacionForm`, y sus estructuras de control.
    *
@@ -311,37 +405,34 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    * @memberof InternaDatosGeneralesComponent
    */
   inicializarFormulario(): void {
-    this.tramiteStoreQuery.selectSolicitudTramite$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.internaDatosGeneralesState =
-            seccionState.InternaDatosGeneralesState;
-        })
-      )
-      .subscribe();
-
     this.forma = this.fb.group({
-      aduanaIngreso: ['', Validators.required],
-      oficinaInspeccion: ['', Validators.required],
-      puntoInspeccion: ['', Validators.required],
-      claveControlUnico: [{ value: '', disabled: true }, Validators.required],
-      establecimientoTIF: [{ value: '', disabled: true }, Validators.required],
-      regimen: [{ value: '', disabled: true }, Validators.required],
-      folioControlUnico: [{ value: '1502200200120240301000015', disabled: true }],
-      datosDelaSolicitud: this.fb.group({}),
-      numeroGuia : [{ value: '', disabled: true }],
-      tipoMercancia: [{ value: '', disabled: true }],
+      datosDelaSolicitud: this.fb.group({
+        aduanaIngreso: [Validators.required],
+        oficinaInspeccion: ['', Validators.required],
+        puntoInspeccion: ['', Validators.required],
+        claveControlUnico: [{ value: '', disabled: true }, Validators.required],
+        establecimientoTIFs: ['', Validators.required],
+        nombreVeterinario: ['', Validators.required],
+        regimen: ['', Validators.required],
+        folioControlUnico: [''],
+        numeroGuia: [''],
+        tipoMercancia: [''],
+      }),
     });
 
     this.movilizacionForm = this.fb.group({
-      coordenadas: [{ value: '', disabled: true }],
-      movilizacionNacional: [{ value: '', disabled: true }],
-      identTransporte: [{ value: '', disabled: true }],
-      puntoVerificacion: [{ value: '', disabled: true }],
-      empresaTransportista: [{ value: '', disabled: true }],
-      
+      coordenadas: [''],
+      movilizacionNacional: [''],
+      identTransporte: [''],
+      puntoVerificacion: [''],
+      empresaTransportista: [''],
     });
+
+    // Disable forms if flag is set
+    if (this.esFormularioSoloLectura) {
+      this.forma.disable();
+      this.movilizacionForm.disable();
+    }
   }
 
   /**
@@ -370,83 +461,6 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
    */
   esValido(form: FormGroup, field: string): boolean {
     return this.validacionesService.isValid(form, field) === true;
-  }
-
-  /**
-   * Ciclo de vida `OnInit` del componente.
-   *
-   * Inicializa el formulario principal y carga datos necesarios para su funcionamiento.
-   * Realiza las siguientes acciones:
-   *
-   * - Crea la estructura inicial del formulario con `crearFormulario()`.
-   * - Desactiva campos específicos mediante `disableFormControls()`.
-   * - Carga catálogos y opciones desplegables a través de varios métodos (`getOficianaInspeccion`, `getEstablecimiento`, etc.).
-   * - Se suscribe al estado del store `TramiteStoreQuery` para recuperar y aplicar datos previos al formulario.
-   * - Se suscribe a los cambios del estado del formulario (`statusChanges`) para guardar automáticamente los datos en el store.
-   * - Llama al método `obtenerDatos()` para cargar datos adicionales (dependiendo del negocio).
-   * - Se suscribe al estado de sección desde `SeccionQuery` y guarda el estado actual.
-   *
-   * Las suscripciones se cancelan automáticamente mediante el `destroyNotifier$` al destruir el componente.
-   *
-   * @returns {void}
-   * @memberof InternaDatosGeneralesComponent
-   */
-  ngOnInit(): void {
-    this.crearFormulario();
-    this.getOficianaInspeccion();
-    this.getEstablecimiento();
-    this.getRegimenDestinaran();
-    this.getMovilizacionNacional();
-    this.getPuntoVerificacion();
-    this.getEmpresaTransportista();
-    this.obtenerListasDesplegables();
-
-    this.tramiteStoreQuery.selectSolicitudTramite$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState: TramiteState) => {
-          if (seccionState) {
-            this.internaDatosGeneralesState =
-              seccionState?.InternaDatosGeneralesState;
-            this.forma.patchValue(this.internaDatosGeneralesState);
-            this.movilizacionForm.patchValue(this.internaDatosGeneralesState);
-          }
-        })
-      )
-      .subscribe();
-
-    this.forma.statusChanges
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        delay(10),
-        tap(() => {
-          const ACTIVE_STATE = { ...this.forma.value };
-          this.tramiteStore.setInternaDatosGeneralesTramite(ACTIVE_STATE);
-        })
-      )
-      .subscribe();
-
-      this.movilizacionForm.statusChanges
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        delay(10),
-        tap(() => {
-          const ACTIVE_STATE = { ...this.movilizacionForm.value };
-          this.tramiteStore.setInternaDatosGeneralesTramite(ACTIVE_STATE);
-        })
-      )
-      .subscribe();
-
-    this.obtenerDatos();
-
-    this.seccionQuery.selectSeccionState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.seccion = seccionState;
-        })
-      )
-      .subscribe();
   }
 
   /**

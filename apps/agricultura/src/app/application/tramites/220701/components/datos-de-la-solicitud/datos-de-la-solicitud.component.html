@@ -36,8 +36,8 @@
     <div class="row">
       <div class="col-md-8 mb-4">
         <label for="justificación" class="form-label text-start">Justificación*:</label>
-        <textarea id="justificación" class="form-control" formControlName="justificacion" [required]="true"
-          style="height: 100%; resize: vertical"></textarea>
+        <textarea id="justificación" class="form-control" formControlName="justificacion"
+          style="height: 100%; resize: vertical" [disabled]="esFormularioSoloLectura"></textarea>
       </div>
     </div>
 
@@ -47,17 +47,17 @@
         <div class="row">
           <div class="col-md-4 form-group">
             <label for="certificadosAutorizados">Certificados autorizados pendientes*:</label>
-            <input type="text" id="certificadosAutorizados" class="form-control" [required]="true"
-              formControlName="certificadosAutorizados" />
+            <input type="text" id="certificadosAutorizados" class="form-control"
+              formControlName="certificadosAutorizados" [disabled]="esFormularioSoloLectura"/>
           </div>
           <div class="col-md-4">
-            <input-fecha [datos]="fechaInicioInput" formControlName="fechaInicio" [setFecha]="datosDeLaSolicitudForm.get('fechaInicioInput')?.value"></input-fecha>
+            <input-fecha [datos]="fechaInicioInput" formControlName="fechaInicio" [setFecha]="datosDeLaSolicitudForm.get('fechaInicioInput')?.value" [isDisabled]="esFormularioSoloLectura"></input-fecha>
           </div>
           <div class="col-md-4">
             <div class="form-group">
               <app-catalogo-select [catalogo]="horaDeInspeccion.catalogos" [label]="horaDeInspeccion.labelNombre"
-                [placeholder]="horaDeInspeccion.primerOpcion" [isDisabled]="true" [required]="true"
-                formControlName="horaDeInspeccion"></app-catalogo-select>
+                [placeholder]="horaDeInspeccion.primerOpcion"
+                formControlName="horaDeInspeccion" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
             </div>
           </div>
         </div>
@@ -65,14 +65,14 @@
           <div class="col-md-4">
             <div class="form-group">
               <app-catalogo-select [catalogo]="aduanaDeIngreso.catalogos" [label]="aduanaDeIngreso.labelNombre"
-                [placeholder]="aduanaDeIngreso.primerOpcion" [isDisabled]="true"
+                [placeholder]="aduanaDeIngreso.primerOpcion" [isDisabled]="esFormularioSoloLectura"
                 formControlName="aduanaDeIngreso"></app-catalogo-select>
             </div>
           </div>
           <div class="col-md-8">
             <div class="form-group">
               <app-catalogo-select [catalogo]="oficinaDeInspeccion.catalogos" [label]="oficinaDeInspeccion.labelNombre"
-                [placeholder]="oficinaDeInspeccion.primerOpcion" [isDisabled]="true"
+                [placeholder]="oficinaDeInspeccion.primerOpcion" [isDisabled]="esFormularioSoloLectura"
                 formControlName="sanidadAgropecuaria"></app-catalogo-select>
             </div>
           </div>
@@ -81,7 +81,7 @@
           <div class="col-md-8">
             <div class="form-group">
               <app-catalogo-select [catalogo]="puntoDeInspeccion.catalogos" [label]="puntoDeInspeccion.labelNombre"
-                [placeholder]="puntoDeInspeccion.primerOpcion" [isDisabled]="true"
+                [placeholder]="puntoDeInspeccion.primerOpcion" [isDisabled]="esFormularioSoloLectura"
                 formControlName="puntoDeInspeccion"></app-catalogo-select>
             </div>
           </div>
@@ -112,12 +112,12 @@
               title="Número de tolvas, furgones o contenedores en que arriba la mercancía"
               data-bs-toggle="tooltip"></span>
           </label>
-          <input class="form-control" type="text" id="mercancia" [required]="true"
+          <input class="form-control" type="text" id="mercancia"
             formControlName="cantidadContenedores" />
         </div>
         <div class="col-md-4 form-group">
           <app-catalogo-select [catalogo]="tipoContenedor.catalogos" [label]="tipoContenedor.labelNombre"
-            [placeholder]="tipoContenedor.primerOpcion" [isDisabled]="true"
+            [placeholder]="tipoContenedor.primerOpcion" [isDisabled]="esFormularioSoloLectura"
             formControlName="tipoContenedor"></app-catalogo-select>
         </div>
       </div>
@@ -128,13 +128,13 @@
         <ng-titulo titulo="Medio de transporte" />
         <div class="col-md-4 mb-4 form-group">
           <app-catalogo-select [catalogo]="medioDeTransporte.catalogos" [label]="medioDeTransporte.labelNombre"
-            [placeholder]="medioDeTransporte.primerOpcion" [isDisabled]="true" [required]="true"
+            [placeholder]="medioDeTransporte.primerOpcion" [isDisabled]="esFormularioSoloLectura"
             formControlName="medioDeTransporte"></app-catalogo-select>
         </div>
         <div class="col-md-4 form-group">
           <label for="identificacionTransporte" class="form-label">Identificación del transporte:</label>
           <input class="form-control" type="text" size="30" id="identificacionTransporte"
-            formControlName="identificacionTransporte" />
+            formControlName="identificacionTransporte" [disabled]="esFormularioSoloLectura"/>
         </div>
 
         <div class="col-md-12 mt-5">
@@ -145,7 +145,7 @@
         <div class="col-md-12">
           <div class="form-check">
             <input class="form-check-input" type="radio" name="esSolicitudFerros" id="SiSolicitudFerros" value="1"
-              [required]="true" formControlName="esSolicitudFerros" />
+             formControlName="esSolicitudFerros" />
             <label class="form-check-label" for="SiSolicitudFerros">Sí</label>
           </div>
         </div>

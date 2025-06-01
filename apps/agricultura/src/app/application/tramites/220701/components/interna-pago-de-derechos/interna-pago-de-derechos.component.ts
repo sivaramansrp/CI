@@ -219,12 +219,12 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
     this.formularioPago = this.fb.group({
       exentoPago: [this.formularioPagoStore.exentoPago || 'Si', Validators.required],
       justificacion: [this.formularioPagoStore.justificacion, Validators.required],
-      claveReferencia: [{ value: this.formularioPagoStore.claveReferencia, disabled: true }, Validators.required],
-      cadenaDependencia: [{ value: this.formularioPagoStore.cadenaDependencia, disabled: true }, Validators.required],
+      claveReferencia: [{ value: this.formularioPagoStore.claveReferencia }, Validators.required],
+      cadenaDependencia: [{ value: this.formularioPagoStore.cadenaDependencia }, Validators.required],
       banco: [this.formularioPagoStore.banco, Validators.required],
       llavePago: [{ value: this.formularioPagoStore.llavePago, disabled: ES_EXENTO }, Validators.required],
-      fechaPago: [{ value: this.formularioPagoStore.fechaPago, disabled: true }, Validators.required],
-      importePago: [{ value: this.formularioPagoStore.importePago, disabled: true }, Validators.required],
+      fechaPago: [{ value: this.formularioPagoStore.fechaPago }, Validators.required],
+      importePago: [{ value: this.formularioPagoStore.importePago }, Validators.required],
     });
   }
 
@@ -250,6 +250,7 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
 
     this.obtenerListaJustificacion();
     this.obtenerListaBanco();
+    this.inicializarEstadoFormulario();
 
         this.tramiteStoreQuery.selectSolicitudTramite$
       .pipe(
