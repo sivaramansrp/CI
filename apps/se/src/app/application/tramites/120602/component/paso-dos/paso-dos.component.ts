@@ -29,8 +29,9 @@ export class PasoDosComponent implements OnInit {
 
   constructor(
     private catalogosServices: CatalogosService,
-  // eslint-disable-next-line no-empty-function
-  ) { }
+  ) { 
+    //
+  }
 
   ngOnInit(): void {
     this.getTiposDocumentos();
@@ -59,7 +60,9 @@ export class PasoDosComponent implements OnInit {
             this.catalogoDocumentos = resp;
           }
         },
-        error: (_error): void => { },
+        error: (_error): void => {
+          //
+         },
       });
   }
 }
