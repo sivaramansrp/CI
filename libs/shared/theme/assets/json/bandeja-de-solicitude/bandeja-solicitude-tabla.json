@@ -540,12 +540,12 @@
         "numeroDeProcedimiento": "250103"
     },
     {
-        "id": 230401,
+        "id": 32504,
         "tipoDeTramite": "Solicitud de cs Permiso",
         "fecha": "2023-10-01",
         "fechaActualizacion": "2023-10-05",
         "diasTranscurridos": "4",
-        "departamento": "SEMARNAT",
-        "numeroDeProcedimiento": "230401"
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "32504"
     }
 ]
