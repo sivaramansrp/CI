@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { Capturista } from '../models/capturista.model';
-import { ConsultaRegistro } from '../models/consuta-registro.model';
+import { ConsultaRegistro } from '../models/consulta-registro.model';
 import { Injectable } from '@angular/core';
 
 /**
