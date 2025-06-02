@@ -10,12 +10,8 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
 import { Solicitud30901Query } from '../../estados/tramites30901.query';
-import {
-  Solicitud30901State,
-} from '../../estados/tramites30901.store';
-import {
-  Solicitud30901Store,
-} from '../../estados/tramites30901.store';
+import { Solicitud30901State } from '../../estados/tramites30901.store';
+import { Solicitud30901Store } from '../../estados/tramites30901.store';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { Validators } from '@angular/forms';
@@ -102,11 +98,11 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
    */
   solicitud30901State: Solicitud30901State = {} as Solicitud30901State;
 
-    /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
-  esFormularioSoloLectura: boolean = false; 
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor de RegistroRenovacionesMuestrasMercanciasComponent.
@@ -119,27 +115,26 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
     public renovacionesService: RenovacionesMuestrasMercanciasService,
     public solicitud30901Store: Solicitud30901Store,
     public solicitud30901Query: Solicitud30901Query,
-    private consultaioQuery: ConsultaioQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
- 
     /**
-         * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
-         *
-         * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
-         * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
-         * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
-         */
-        this.consultaioQuery.selectConsultaioState$
-        .pipe(
-          takeUntil(this.destroyed$),
-          map((seccionState)=>{
-            this.esFormularioSoloLectura = seccionState.readonly; 
-            this.inicializarEstadoFormulario();
-          })
-        )
-        .subscribe()
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
 
-           // Si es necesario, se puede agregar aquí la lógica de inicialización
+    // Si es necesario, se puede agregar aquí la lógica de inicialización
     this.getOpcionImportador();
   }
 
@@ -154,7 +149,7 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
    * @returns {void}
    */
   ngOnInit(): void {
-     this.inicializarEstadoFormulario();
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -167,8 +162,8 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
       this.inicializarFormulario();
     }
   }
-  
-      /**
+
+  /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
@@ -185,7 +180,7 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
     } else {
       // No se requiere ninguna acción en el formulario
     }
-}
+  }
   /**
    * Obtiene las opciones desplegables del importador y las asigna a las propiedades correspondientes.
    *
@@ -219,7 +214,9 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
           this.solicitud30901Store.setNumeroCAS(
             res.registroMuestrasDatos.numeroCAS
           );
-          this.solicitud30901Store.setIdeGenerica(res.registroMuestrasDatos.ideGenerica);
+          this.solicitud30901Store.setIdeGenerica(
+            res.registroMuestrasDatos.ideGenerica
+          );
           this.solicitud30901Store.setDescClobGenerica(
             res.registroMuestrasDatos.descClobGenerica
           );
@@ -295,7 +292,9 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
    * Actualiza la descripción del motivo de falta de muestra en el estado.
    */
   setDescMotivoFaltaMuestra(): void {
-    const VALUE = this.formRegistroMuestras.get('descMotivoFaltaMuestra')?.value;
+    const VALUE = this.formRegistroMuestras.get(
+      'descMotivoFaltaMuestra'
+    )?.value;
     this.solicitud30901Store.setDescMotivoFaltaMuestra(VALUE);
   }
 
@@ -339,8 +338,7 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
     this.solicitud30901Store.setNombreComercial(VALUE); // Corregido aquí
   }
 
-  
- /**
+  /**
    * Inicializa el formulario reactivo para capturar el valor de 'registro'.
    * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
    * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
@@ -348,7 +346,6 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
    */
 
   inicializarFormulario(): void {
-    
     this.formRegistroMuestras = this.fb.group({
       opcionDeImportador: [this.solicitud30901State.opcionDeImportador],
       tomaMuestraDespacho: [this.solicitud30901State.tomaMuestraDespacho],
@@ -388,33 +385,6 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
         { value: this.solicitud30901State.descClobGenerica, disabled: true },
       ],
     });
-
-    // Se suscribe al observable para obtener el registro de muestras de la tienda.
-    this.solicitud30901Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((response: Solicitud30901State) => {
-          this.solicitud30901State = response;
-
-          this.formRegistroMuestras.patchValue({
-            opcionDeImportador: this.solicitud30901State.opcionDeImportador,
-            tomaMuestraDespacho: this.solicitud30901State.tomaMuestraDespacho,
-            descMotivoFaltaMuestra: this.solicitud30901State.descMotivoFaltaMuestra,
-            comboFraccionConcatenada: this.solicitud30901State.comboFraccionConcatenada,
-            fraccionConcatenada: this.solicitud30901State.fraccionConcatenada,
-            fracciondescripcion: this.solicitud30901State.fracciondescripcion,
-            comboNicos: this.solicitud30901State.comboNicos,
-            nicoDescripcion: this.solicitud30901State.nicoDescripcion,
-            nombreQuimico: this.solicitud30901State.nombreQuimico,
-            nombreComercial: this.solicitud30901State.nombreComercial,
-            numeroCAS: this.solicitud30901State.numeroCAS,
-            ideGenerica: this.solicitud30901State.ideGenerica,
-            descClobGenerica: this.solicitud30901State.descClobGenerica,
-          });
-        })
-      )
-      .subscribe();
-
   }
 
   /**
