@@ -4,11 +4,11 @@ import { Subject, map, takeUntil, tap } from 'rxjs';
 
 
 import { CancelarModalidad, CancelarSolicitudForm } from '../../modelos/cancelar-solicitud.modalidad.model';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { CrossListLable, FechasService, SeccionLibQuery, SeccionLibState, SeccionLibStore, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { CancelarSolicitudQuery } from '../../estados/tramite570101.query';
 import { CancelarSolicitudService } from '../../service/cancelar-solicitud.service';
 import { CancelarSolicitudStore } from '../../estados/tramite570101.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 
 @Component({
@@ -48,10 +48,29 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
 
 
   // Variables para manejar los estados de suscripción y el formulario
+  /**
+   * Observable utilizado para cancelar las suscripciones activas cuando el componente se destruye.
+   */
   public unsubscribe$ = new Subject<void>();
+
+  /**
+   * Estado actual del formulario de cancelación de solicitud.
+   */
   cancelarSolicitudFormState!: CancelarSolicitudForm;
+
+  /**
+   * Instancia del formulario reactivo para cancelar la solicitud.
+   */
   formCancelorSolicitud!: FormGroup;
+
+  /**
+   * Notificador para destruir las suscripciones al destruir el componente.
+   */
   public destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Estado de la sección actual, utilizado para la validación y control de la interfaz.
+   */
   public seccion!: SeccionLibState;
 
   /**

@@ -27,6 +27,7 @@ export class PasoUnoComponent implements OnDestroy{
    * Esta variable se utiliza para almacenar el índice del subtítulo.
    */
   public consultaState!: ConsultaioState;
+  
      /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
 
@@ -92,7 +93,6 @@ export class PasoUnoComponent implements OnDestroy{
         }
       });
   }
-
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.

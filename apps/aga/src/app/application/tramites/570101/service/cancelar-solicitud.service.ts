@@ -76,4 +76,5 @@ Devuelve un observable que emite el estado de la solicitud de cancelación.
 getRegistroTomaMuestrasMercanciasData(): Observable<CancelarSolicitudState> {
   return this.http.get<CancelarSolicitudState>('assets/json/570101/requestCancallar.json');
 }
+
 }
