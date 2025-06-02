@@ -110,6 +110,17 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   @Input() estado!: {[key: string]: unknown};
 
   /**
+  * @input soloLectura
+  * @type {boolean}
+  * @memberof FormasDinamicasComponent
+  * @description
+  * Indica si el formulario debe mostrarse en modo solo lectura.
+  * Si es `true`, los campos del formulario estarán deshabilitados para edición.
+  * Por defecto es `false`.
+  */
+  @Input() soloLectura: boolean = false;
+
+  /**
   * compo doc
   * @output emitirEventoDeClic
   * @type {EventEmitter<ModeloDeFormaDinamica>}
@@ -266,8 +277,9 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   
       if (!this.forma?.contains(campo.campo)) {
         const VALIDADORES = FormasDinamicasComponent.obtenerValidadores(campo.validadores ?? []);
+        const DESACTIVADO = this.establecerDesactivar(campo.desactivado);
         FORMGROUP[campo.campo] = this.fb.control(
-          { value: this.estado && this.estado[campo.campo] ? this.estado[campo.campo] : campo.valorPredeterminado, disabled: campo.desactivado },
+          { value: this.estado && this.estado[campo.campo] ? this.estado[campo.campo] : campo.valorPredeterminado, disabled: DESACTIVADO },
           { validators: VALIDADORES }
         );
       }
@@ -317,6 +329,20 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
       }
     });
     return VALIDATORS;
+  }
+
+  /**
+ * @method establecerDesactivar
+ * @description
+ * Determina si un campo del formulario debe estar deshabilitado.
+ * @param {boolean} desactivado - Indica si el campo debe estar deshabilitado por configuración individual.
+ * @returns {boolean} `true` si el campo debe estar deshabilitado, `false` en caso contrario.
+ */
+  public establecerDesactivar(desactivado: boolean): boolean {
+    if (desactivado || this.soloLectura) {
+      return true;
+    }
+    return false;
   }
 
   /**

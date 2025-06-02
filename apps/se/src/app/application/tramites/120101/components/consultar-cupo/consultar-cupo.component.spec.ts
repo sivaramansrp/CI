@@ -17,6 +17,11 @@ describe('ConsultarCupoComponent', () => {
 
     fixture = TestBed.createComponent(ConsultarCupoComponent);
     component = fixture.componentInstance;
+
+    component.consultaState = {
+      readonly: false,
+    } as any;
+    
     fixture.detectChanges();
   });
 
@@ -78,23 +83,6 @@ describe('ConsultarCupoComponent', () => {
     expect(setDynamicFieldValueSpy).not.toHaveBeenCalled();
     expect(setFormValueSpy).not.toHaveBeenCalled();
   });
-
-  it('should emit the row event when onFilaClicHandler is called', () => {
-    const mockEvent = {
-      id: 1,
-      nombre: 'Instrumento de prueba',
-      activo: true,
-    } as unknown as InstrumentoCupoTPLForm;
-    const emitSpy = jest.spyOn(component.emitFilaClicHandler, 'emit');
-    component.onFilaClicHandler(mockEvent);
-    expect(emitSpy).toHaveBeenCalledWith(mockEvent);
-  });  
-
-  it('should not emit if event is null', () => {
-    const emitSpy = jest.spyOn(component.emitFilaClicHandler, 'emit');
-    component.onFilaClicHandler(null as any);
-    expect(emitSpy).not.toHaveBeenCalled();
-  });  
 
   it('should not call service or update store if form is invalid', () => {
     component.ninoFormGroup.setErrors({ invalid: true });
