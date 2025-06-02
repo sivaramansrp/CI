@@ -56,3 +56,8 @@ pnpm-lock.yaml
 **/.claude/settings.local.json
 .vs
 /.vs/VSWorkspaceState.json
+/package-lock.json
+/tsconfig.base.json
+/package-lock.json
+/nx.json
+/package-lock.json

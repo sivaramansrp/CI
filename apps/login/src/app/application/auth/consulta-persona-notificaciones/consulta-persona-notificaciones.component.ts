@@ -4,7 +4,7 @@ import { RegistroStates, RegistroStore } from '../../../estados/registro.store';
 import { Subject, catchError, map, of, takeUntil } from 'rxjs';
 import { BusquedaRFCQuery } from '../../../queries/registro.query';
 import { CommonModule } from '@angular/common';
-import { ConsultaRegistro } from '../../core/models/consuta-registro.model';
+import { ConsultaRegistro } from '../../core/models/consulta-registro.model';
 import { Router } from '@angular/router';
 import { UsuariosService } from '../../core/service/usuarios.service';
 

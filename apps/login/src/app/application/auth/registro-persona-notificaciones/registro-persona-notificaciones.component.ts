@@ -6,7 +6,7 @@ import { TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access
 import { BusquedaRFCQuery } from '../../../queries/registro.query';
 import { CONFIGURACION_ENCABEZADO_NOTIFICADORES } from '../../core/constantes/notificadores.enum';
 import { CommonModule } from '@angular/common';
-import { ConsultaRegistro } from '../../core/models/consuta-registro.model';
+import { ConsultaRegistro } from '../../core/models/consulta-registro.model';
 import { Router } from '@angular/router';
 
 /**

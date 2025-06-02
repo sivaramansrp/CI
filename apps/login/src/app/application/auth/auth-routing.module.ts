@@ -7,6 +7,7 @@ import { FirmaPageComponent } from '@libs/shared/data-access-user/src';
 import { NgModule } from '@angular/core';
 import { RegistroCapturistaPrivadoComponent } from './registro-capturista-privado/registro-capturista-privado.component';
 import { RegistroPersonaNotificacionesComponent } from './registro-persona-notificaciones/registro-persona-notificaciones.component';
+import { RegistroSocioAccionistaComponent } from './registro-socio-accionista/registro-socio-accionista.component';
 
 export const ROUTES_AUTH: Routes = [
   {
@@ -38,6 +39,10 @@ export const ROUTES_AUTH: Routes = [
     component: ConsultaCapturistaPrivadoComponent
   },
 
+  {
+    path: 'registro-socio-accionista',
+    component: RegistroSocioAccionistaComponent
+  },
 ];
 
 @NgModule({
