@@ -639,12 +639,21 @@
     "numeroDeProcedimiento": "220202"
   },
   {
-    "id": 250104,
+    "id": 120301,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
     "fechaActualizacion": "2023-10-05",
     "diasTranscurridos": "4",
     "departamento": "SE",
     "numeroDeProcedimiento": "120301"
+  },
+  {
+    "id": 80101,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "80101"
   }
 ]
