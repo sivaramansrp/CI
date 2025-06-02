@@ -134,7 +134,7 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    * @type {CatalogosSelect}
    * @memberof DatosDelTramiteDosComponent
    */
-  operacione:Catalogo[] = []
+  operaciones:Catalogo[] = []
 
 
 
@@ -351,7 +351,7 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    this.invoCarService.getPais().pipe( takeUntil(this.destroyNotifier$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
-         this.operacione = RESPONSE;
+         this.operaciones = RESPONSE;
       }
     });
   }
