@@ -2,6 +2,10 @@ import { Component, ViewChild } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
+import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src/core/queries/consulta.query';
+import { map, Subject, takeUntil } from 'rxjs';
+import { ConsultaioState } from '@libs/shared/data-access-user/src/core/estados/consulta.store';
 /**
  * Componente que representa el primer paso del proceso de solicitud.
  * Contiene un componente de solicitante y permite la navegación entre tabs.
@@ -32,11 +36,86 @@ export class PasoUnoComponent implements AfterViewInit {
    */
   indice: number = 1;
 
+    /** Subject para notificar la destrucción del componente. */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+   /**
+   * Estado de consulta que contiene la información del formulario y su estado.
+   * Se obtiene a través de la consulta ConsultaioQuery.
+   */
+  public consultaState!: ConsultaioState;
+
+  /**
+   * Constructor del componente Datos260502Component.
+   * 
+   * @param solicitud260502Service - Servicio para manejar la lógica de negocio relacionada con el trámite 260502.
+   * @param consultaQuery - Consulta para obtener el estado actual del formulario y su configuración.
+   */
+  constructor(
+    private solicitud260502Service: DatosDomicilioLegalService,
+    private consultaQuery: ConsultaioQuery
+  ) {}
+
+
+
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Se suscribe al estado de consulta para obtener la información del formulario.
+   * Si el estado indica que se está actualizando, se llama a `guardarDatosFormulario`.
+   * De lo contrario, se establece `esDatosRespuesta` como verdadero.
+   */
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
+
+    if (this.consultaState?.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+
+   /**
+   * Método para guardar los datos del formulario.
+   * Se suscribe al servicio `getRegistroTomaMuestrasMercanciasData` para obtener los datos del formulario.
+   * Si la respuesta es válida, se actualiza el estado del formulario con los datos obtenidos.
+   */
+  guardarDatosFormulario(): void {
+    
+    this.solicitud260502Service
+      .getRegistroTomaMuestrasMercanciasData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.solicitud260502Service.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
+
   /**
    * Método para seleccionar un tab.
    * @param i Índice del tab.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+   /**
+   * Método que se ejecuta cuando el componente se destruye.
+   * Cancela las suscripciones activas y libera recursos.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
