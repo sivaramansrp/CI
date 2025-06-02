@@ -158,6 +158,7 @@
           [label]="'UMC*'"
           [placeholder]="'Seleccione una aduana'"
           formControlName="aduana"
+          [isDisabled]="esFormularioSoloLectura"
           (change)="setValoresStore(frmMercanciaAnimal,'aduana', 'setaduana')"
         ></app-catalogo-select>
       </div>
@@ -234,6 +235,7 @@
             [label]="'Sexo'"
             [placeholder]="'Seleccione una aduana'"
             formControlName="sexo"
+            [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(frmMercanciaAnimal,'sexo', 'setsexo')"
           ></app-catalogo-select>
         </div>
