@@ -1,4 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { DatosProrrogaMuestrasMercanciasComponent } from '../../components/datos-prorroga-muestras-mercancias/datos-prorroga-muestras-mercancias.component';
+import { PagoLineaDeCapturaComponent } from '../../components/pago-linea-de-captura/pago-linea-de-captura.component';
+import { RegistroRenovacionesMuestrasMercanciasComponent } from '../../components/registro-renovaciones-muestras-mercancias/registro-renovaciones-muestras-mercancias.component';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Solicitud30901State } from '../../estados/tramites30901.store';
@@ -9,6 +15,14 @@ import { Solocitud30901Service } from '../../services/service30901.service'
  */
 @Component({
   selector: 'app-paso-uno',
+  standalone: true,
+  imports: [
+    SolicitanteComponent,
+    PagoLineaDeCapturaComponent,
+    RegistroRenovacionesMuestrasMercanciasComponent,
+    DatosProrrogaMuestrasMercanciasComponent,
+    CommonModule,
+  ],
   templateUrl: './paso-uno.component.html',
   styleUrls: ['./paso-uno.component.scss'],
   standalone: false
@@ -22,6 +36,18 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @type {number}
    */
   indice: number = 1;
+
+  /**
+   * Referencia al componente PagoLineaDeCapturaComponent
+   */
+  @ViewChild(PagoLineaDeCapturaComponent)
+  pagoLineaDeCapturaComponent!: PagoLineaDeCapturaComponent;
+
+  /**
+   * Referencia al componente RegistroRenovacionesMuestrasMercanciasComponent
+   */
+  @ViewChild(RegistroRenovacionesMuestrasMercanciasComponent)
+  registroRenovacionesMuestrasMercanciasComponent!: RegistroRenovacionesMuestrasMercanciasComponent;
 /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
   /** Subject para notificar la destrucción del componente. */
@@ -54,7 +80,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Selecciona una pestaña específica.
    * @param i - El índice de la pestaña a seleccionar.
    */
-  seleccionaTab(i:number): void {
+  seleccionaTab(i: number): void {
     this.indice = i;
   }
 

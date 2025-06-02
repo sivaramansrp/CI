@@ -1,57 +1,40 @@
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PasoTresComponent } from './paso-tres.component';
 import { Router } from '@angular/router';
-import { TestBed } from '@angular/core/testing';
-import { ToastrModule } from 'ngx-toastr';
-import { ToastrService } from 'ngx-toastr';
 
-fdescribe('PasoTresComponent', () => {
+describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
-  let router: Router;
+  let router: jest.Mocked<Router>;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      declarations: [],
-      imports: [
-        PasoTresComponent,
-        HttpClientTestingModule,
-        ToastrModule.forRoot(),
-      ],
-      providers: [
-        ToastrService,
-        {
-          provide: Router,
-          useValue: {
-            navigate: jest.fn(),
-          },
-        },
-      ],
-    }).compileComponents();
-
-    const FIXTURE = TestBed.createComponent(PasoTresComponent);
-    component = FIXTURE.componentInstance;
-    router = TestBed.inject(Router);
+    router = { navigate: jest.fn() } as any;
+    component = new PasoTresComponent(router);
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should navigate to "servicios-extraordinarios/acuse" when a valid signature is provided', () => {
-    const ROUTERSPY = jest.spyOn(component.router, 'navigate');
-    const VALIDSIGNATURE = 'validSignature';
+  describe('obtieneFirma', () => {
+    it('should navigate to "servicios-extraordinarios/acuse" if firma is provided', () => {
+      component.obtieneFirma('firma-valida');
+      expect(router.navigate).toHaveBeenCalledWith([
+        'servicios-extraordinarios/acuse',
+      ]);
+    });
 
-    component.obtieneFirma(VALIDSIGNATURE);
+    it('should not navigate if firma is an empty string', () => {
+      component.obtieneFirma('');
+      expect(router.navigate).not.toHaveBeenCalled();
+    });
 
-    expect(ROUTERSPY).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
-  });
+    it('should not navigate if firma is undefined', () => {
+      component.obtieneFirma(undefined as any);
+      expect(router.navigate).not.toHaveBeenCalled();
+    });
 
-  it('should not navigate when an invalid signature is provided', () => {
-    const ROUTERSPY = jest.spyOn(component.router, 'navigate');
-    const INVALIDSIGNATURE = '';
-
-    component.obtieneFirma(INVALIDSIGNATURE);
-
-    expect(ROUTERSPY).not.toHaveBeenCalled();
+    it('should not navigate if firma is null', () => {
+      component.obtieneFirma(null as any);
+      expect(router.navigate).not.toHaveBeenCalled();
+    });
   });
 });

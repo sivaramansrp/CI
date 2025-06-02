@@ -1,16 +1,22 @@
-import { Component, OnDestroy } from '@angular/core';
+import { BsModalService } from 'ngx-bootstrap/modal';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ImportanteCatalogoSeleccion } from '../../models/registro-muestras-mercancias.model';
 import { InputFecha } from '@libs/shared/data-access-user/src';
+import { InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
 import { Solicitud30901Query } from '../../estados/tramites30901.query';
 import { Solicitud30901State } from '../../estados/tramites30901.store';
 import { Solicitud30901Store } from '../../estados/tramites30901.store';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 /**
@@ -25,6 +31,13 @@ import { takeUntil } from 'rxjs';
  */
 @Component({
   selector: 'app-datos-prorroga-muestras-mercancias',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, InputFechaComponent],
+  providers: [
+    RenovacionesMuestrasMercanciasService,
+    ToastrService,
+    BsModalService,
+  ],
   templateUrl: './datos-prorroga-muestras-mercancias.component.html',
   styleUrl: './datos-prorroga-muestras-mercancias.component.scss',
 })
@@ -51,17 +64,17 @@ export class DatosProrrogaMuestrasMercanciasComponent
    * @type {string}
    */
   vigenciaActualTextoLabel: string =
-    'La fecha actual de inicio y fin de vigencia de su authorización es la siguiente:';
+    'La fecha actual de inicio y fin de vigencia de su authorización es la siguiente :';
   /**
    * Etiqueta para la fecha de inicio de vigencia.
    * @type {string}
    */
-  fechaInicioVigenciaLabel: string = 'Fecha de Inicio de Vigencia';
+  fechaInicioVigenciaLabel: string = 'Fecha de inicio de vigencia';
   /**
    * Etiqueta para la fecha de fin de vigencia.
    * @type {string}
    */
-  fechaFinVigenciaLabel: string = 'Fecha de Fin de Vigencia';
+  fechaFinVigenciaLabel: string = 'Fecha de fin de vigencia';
 
   /**
    * Configuración para la fecha de fin de vigencia.
@@ -71,7 +84,7 @@ export class DatosProrrogaMuestrasMercanciasComponent
    * @property {boolean} habilitado - Indica si el campo está habilitado.
    */
   configuracionFechaFinVigencia: InputFecha = {
-    labelNombre: 'Fecha de Inicio de Vigencia',
+    labelNombre: 'Fecha de inicio de vigencia',
     required: false,
     habilitado: false,
   };
@@ -84,7 +97,7 @@ export class DatosProrrogaMuestrasMercanciasComponent
    * @property {boolean} habilitado - Indica si el campo está habilitado.
    */
   configuracionFechaInicioVigencia: InputFecha = {
-    labelNombre: 'Fecha de fin de Vigencia',
+    labelNombre: 'Fecha de fin de vigencia',
     required: false,
     habilitado: false,
   };
