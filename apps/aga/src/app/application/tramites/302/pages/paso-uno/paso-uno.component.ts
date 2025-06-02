@@ -75,6 +75,17 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
    ngOnInit(): void {
+    this.consultaStore.establecerConsultaio(
+      '120204',
+      'BANDEJA_SOLICITUDES',
+      'se',
+      '03039399393939393',
+      'tipoTramite',
+      'tipoTramite',
+      true,
+      false,
+      true
+    );
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
           this.consultaState = seccionState;
           this.esFormularioSoloLectura = seccionState.readonly;

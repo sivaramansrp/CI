@@ -1,5 +1,4 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   DATOS_ALERT,
   DATOS_DEL_DONANTE,
@@ -9,24 +8,23 @@ import {
   PRODUCTOS,
 } from '../../constantes/datos-del-tramite.enum';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { Subject, Subscription } from 'rxjs';
-import { map, takeUntil } from 'rxjs/operators';
-import { AlertComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/alert/alert.component';
-import { Catalogo } from '../../../../../../../../../libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
+import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CertiRegistro302State } from '../../../../../application/core/estados/tramites/tramite302.store';
 import { CommonModule } from '@angular/common';
-import { ConfiguracionColumna } from '../../../../../../../../../libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { DetallesDelProducto } from '../../models/certi-registro.model';
 import { FormularioDinamico } from '@libs/shared/data-access-user/src';
 import { FormulariosDeCertiRegistroComponent } from '../formularios-de-certi-registro/formularios-de-certi-registro.component';
-import { TablaDinamicaComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { TablaSeleccion } from '../../../../../../../../../libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import { TituloComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite302Query } from '../../../../../application/core/queries/tramite302.query';
 import { Tramite302Store } from '../../../../../application/core/estados/tramites/tramite302.store';
-import aduanas from 'libs/shared/theme/assets/json/302/lista-de-oficinas-de-aduanas.json';
-import importaciónTemporal from 'libs/shared/theme/assets/json/302/list-importacion-temporal.json';
-import unidadDeMedida from 'libs/shared/theme/assets/json/302/lista-unidad-de-medida.json';
+import aduanas from '@libs/shared/theme/assets/json/302/lista-de-oficinas-de-aduanas.json';
+import importaciónTemporal from '@libs/shared/theme/assets/json/302/list-importacion-temporal.json';
+import unidadDeMedida from '@libs/shared/theme/assets/json/302/lista-unidad-de-medida.json';
+import { Solicitud302Service } from '../../services/service302.service';
 /**
 * DatosDelTramiteComponent componente utilizado para procesar los datos del producto*
 * Este componente utiliza varios subcomponentes como TitleComponent, CommonModule,
@@ -217,6 +215,20 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @memberof DatosDelTramiteComponent
    */
   public certiRegistroState!: CertiRegistro302State;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   * 
+   * @type {boolean}
+   * @memberof DatosDelTramiteComponent
+   */
+  @Input() public readonly: boolean = false;
+
+  /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   * Cuando es verdadero, los campos del formulario no pueden ser editados por el usuario.
+   */
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -228,8 +240,9 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   constructor(
     public fb: FormBuilder,
     private tramite302Store: Tramite302Store,
-    private tramite302Query: Tramite302Query
-  ) // eslint-disable-next-line no-empty-function
+    private tramite302Query: Tramite302Query,
+    private service: Solicitud302Service
+  )
   {}
 
   /**
@@ -248,6 +261,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @memberof DatosDelTramiteComponent
    */
   ngOnInit(): void {
+    this.esFormularioSoloLectura = this.readonly;
     this.subscription.add(
       this.tramite302Query.selectRegistro$
         .pipe(
@@ -258,7 +272,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         )
         .subscribe()
     );
-
+    this.getProductosSeleccionados();
     this.inicializarFormGroup(this.form, MERCANCIAS);
     this.inicializarFormGroup(this.formAgregarProductos, PRODUCTOS);
     this.inicializarFormGroup(this.formDatosDelDonante, DATOS_DEL_DONANTE);
@@ -292,6 +306,9 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
           campo.listaDesplegable = [];
         }
       });
+      if(this.esFormularioSoloLectura){
+        nombreDelFormulario.disable();
+      }
     }
   }
 
@@ -318,8 +335,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * compo doc
    * @method docSeleccionado
    * @description
-   * Asigna la descripción del catálogo seleccionado al control del formulario. */
-  // eslint-disable-next-line class-methods-use-this
+   * Asigna la descripción del catálogo seleccionado al control del formulario.
+   **/
   public docSeleccionado(event: Catalogo, forma: FormGroup, controlDeFormulario: string): void {
     if (event) {
       forma?.get(controlDeFormulario)?.setValue(event?.descripcion);
@@ -389,4 +406,23 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  /**
+   * Obtiene los productos seleccionados llamando al servicio correspondiente.
+   * Suscribe al observable devuelto por `getProductos()` y asigna los datos recibidos
+   * a la propiedad `detallesDelProducto`. Si los datos no son un arreglo, los convierte en uno.
+   * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$`.
+   *
+   * @remarks
+   * Este método se utiliza para cargar los detalles de los productos seleccionados
+   * y asegurar que la suscripción se gestione correctamente para evitar fugas de memoria.
+   */
+  getProductosSeleccionados(): void {
+    this.service.getProductos().pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe(
+      (datos:DetallesDelProducto) => {
+        this.detallesDelProducto = Array.isArray(datos) ? datos : [datos];
+      })
+}
 }

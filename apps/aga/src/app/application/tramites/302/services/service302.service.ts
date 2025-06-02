@@ -3,6 +3,7 @@ import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { DetallesDelProducto } from '../models/certi-registro.model';
 
 @Injectable({
   providedIn: 'root',
@@ -43,6 +44,15 @@ export class Solicitud302Service {
    */
   getCertiRegistroDatos(): Observable<CertiRegistro302State> {
     return this.http.get<CertiRegistro302State>('assets/json/302/certi-registro.json');
+  }
+
+  /**
+   * Obtiene los detalles de los productos desde un archivo JSON local.
+   *
+   * @returns Un observable que emite los detalles del producto (`DetallesDelProducto`).
+   */
+   getProductos(): Observable<DetallesDelProducto> {
+    return this.http.get<DetallesDelProducto>('assets/json/302/producto.json');
   }
 
 }

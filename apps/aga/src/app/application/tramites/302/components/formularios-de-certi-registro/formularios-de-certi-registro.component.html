@@ -94,11 +94,11 @@
           } @else if (item.tipo_input === 'select-catalogos') {
             @if ((menuDesplegableDatos || []).length > 0) {
               <div [ngClass]="item.class" class="mt-5">
-                <app-catalogo-select [catalogo]="menuDesplegableDatos || []" [formControlName]="item.campo" [label]="item.labelNombre" [required]="item?.validators?.includes('required') ?? false" name="" (change)="changeInValoresStore(formargrupo, item.campo)"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="menuDesplegableDatos || []" [formControlName]="item.campo" [label]="item.labelNombre" [required]="item?.validators?.includes('required') ?? false" name="" (change)="changeInValoresStore(formargrupo, item.campo)" [isDisabled]="readonly"></app-catalogo-select>
               </div>
             } @else if (item?.listaDesplegable?.length){
               <div [ngClass]="item.class" class="mt-5">
-                <app-catalogo-select [catalogo]="item?.listaDesplegable || []" [formControlName]="item.campo" [label]="item.labelNombre" [required]="item?.validators?.includes('required') ?? false" name="" (change)="changeInValoresStore(formargrupo, item.campo)"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="item?.listaDesplegable || []" [formControlName]="item.campo" [label]="item.labelNombre" [required]="item?.validators?.includes('required') ?? false" name="" (change)="changeInValoresStore(formargrupo, item.campo)" [isDisabled]="readonly"></app-catalogo-select>
               </div>
             }
           }

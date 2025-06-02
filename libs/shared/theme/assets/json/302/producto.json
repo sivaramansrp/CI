@@ -1,0 +1,13 @@
+[
+{
+"tipoDeMercancia":"tipo",
+"condicionDeLaMercancia":"test condicion",
+"cantidad":"test cantidad",
+"unidadDeMedida":"test unidad",
+"enSuCaso":"test en su caso",
+"marca":"test marca",
+"anoDeImportacionTemporal":"test temporal",
+"modelo":"test modelo",
+"numeroDeSerie":"test numero de serie"
+}
+]

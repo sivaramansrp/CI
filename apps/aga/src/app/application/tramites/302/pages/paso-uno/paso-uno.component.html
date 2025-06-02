@@ -15,7 +15,9 @@
             <solicitante></solicitante>
             }
             @case (2) {
-            <datos-del-tramite></datos-del-tramite>
+              @if(esDatosRespuesta){
+            <datos-del-tramite [readonly]="esFormularioSoloLectura"></datos-del-tramite>
+              }
             }
         }
       </ng-container>

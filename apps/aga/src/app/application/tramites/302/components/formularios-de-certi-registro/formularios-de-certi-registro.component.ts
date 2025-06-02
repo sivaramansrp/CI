@@ -88,6 +88,11 @@ export class FormulariosDeCertiRegistroComponent {
   @Output() public emitirValorCambiado = new EventEmitter<{forma: FormGroup; campo: string;}>();
 
   /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   * Cuando es verdadero, los campos del formulario no serán editables.
+   */
+  @Input() public readonly: boolean = false;
+  /**
    * compo doc
    * @constructor
    * Inicializa una nueva instancia del componente `FormulariosDeCertiRegistroComponent`.
