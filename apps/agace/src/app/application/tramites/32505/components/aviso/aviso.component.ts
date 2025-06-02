@@ -3,7 +3,7 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Modal } from 'bootstrap';
 import { map, Subject, takeUntil } from 'rxjs';
-import { InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { InputRadioComponent, Notificacion, NotificacionesComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import {
   BotonAccionesTipos,
   Catalogo,
@@ -47,7 +47,8 @@ import{ALPHANUMERIC_PATTERN, ENCABEZADAS_CONSTANT, RADIO_OPCIONS, RADIO_OPCIONS_
     CatalogoSelectComponent,
     TablaDinamicaComponent,
     CargaMasivaComponent,
-    InputRadioComponent
+    InputRadioComponent,
+    NotificacionesComponent
   ],
   standalone: true,
 })
@@ -249,6 +250,13 @@ datosNIVNumeroSerie: boolean = false;
    * Indicates whether the vehicle data is visible.
    */
   datosCargaMasiva: boolean = false;
+
+
+   /**
+     * Representa una nueva instancia de notificación asociada con el componente.
+     * Esta propiedad se utiliza para gestionar y almacenar datos de notificaciones.
+     */
+    public nuevaNotificacion!: Notificacion;
 
   
    /**
@@ -488,9 +496,9 @@ datosNIVNumeroSerie: boolean = false;
         this.datosNIVNumeroSerie = true;
       } else if (FOLIO_TIPO === 'No') {
         this.datosDelVenta = true;
-        this.datosDelVehiculo = true;
-        this.datosDelImportacion = true;
-        this.datosFolioVUCEM = false;
+        this.datosDelVehiculo = false;
+        this.datosDelImportacion = false;
+        this.datosFolioVUCEM = true;
         this.datosNIVNumeroSerie = false;
       }
     } else if (AVISO_TIPO_BUSQUEDA === 'Importación y venta') {
@@ -498,7 +506,13 @@ datosNIVNumeroSerie: boolean = false;
       this.datosFolioVUCEM = false;
       this.datosDelImportacion = true;
       this.datosDelVenta = true;
-    } 
+    } else
+    {
+        this.datosFolioVUCEM = true;
+        this.datosDelVehiculo = true;
+        this.datosDelImportacion = true;
+        this.datosDelImportacion = true;
+    }
   }
 
   /**
@@ -511,7 +525,7 @@ datosNIVNumeroSerie: boolean = false;
       this.datosDelAvisoVisible = true;
       this.datosCargaMasiva = false;
     } else if (TIPO_BUSQUEDA === 'Carga masiva') {
-      this.datosDelAvisoVisible = false;
+      this.datosDelAvisoVisible = true;
       this.datosCargaMasiva = true;
     } else {
     }
@@ -651,8 +665,24 @@ datosNIVNumeroSerie: boolean = false;
    * @returns {void}
    */
   agregarDomicilio(): void {
-      this.cargarAvisoTabla();
+    this.cargarAvisoTabla();
     this.closeDomicilio.nativeElement.click();
+     this.abrirModal();
+  }
+
+  public abrirModal(): void {
+    console.log('abrir modal');
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'El registro fue agregado correctamente.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    }
   }
 
   /**
