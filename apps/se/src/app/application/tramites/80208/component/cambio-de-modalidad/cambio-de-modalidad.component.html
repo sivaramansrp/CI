@@ -4,21 +4,21 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="seleccionaLaModalidad">Selecciona la modalidad:</label>
-                    <input class="form-control" id="seleccionaLaModalidad" placeholder="Selecciona la modalidad"
+                    <input class="form-control" id="seleccionaLaModalidad"
                         type="text" formControlName="seleccionaLaModalidad">
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="folio">Folio:</label>
-                    <input class="form-control" id="folio" placeholder="folio" type="text"
+                    <input class="form-control" id="folio" type="text"
                         formControlName="folio">
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="form-group">
                     <label class="form-label" for="año">Año:</label>
-                    <input class="form-control" id="año" placeholder="año" type="text"
+                    <input class="form-control" id="año" type="text"
                         formControlName="ano">
                 </div>
             </div>
@@ -27,7 +27,7 @@
             <div class="col-md-8">
                 <div class="form-group">
                     <label class="form-label" for="seleccionaModalidad">Selecciona la modalidad:</label>
-                    <input class="form-control" id="seleccionaModalidad" placeholder="Selecciona la modalidad"
+                    <input class="form-control" id="seleccionaModalidad"
                         type="text" formControlName="seleccionaModalidad">
                 </div>
             </div>
@@ -35,7 +35,9 @@
                 <div class="form-group">
                     <app-catalogo-select formControlName="cambioDeModalidad" [label]="'Cambio de Modalidad'"
                         [required]="true" name="cambioDeModalidad" [catalogo]="cambioDeModalidad"
-                        (selectionChange)="onDropdownSelect($event)">
+                        (selectionChange)="onDropdownSelect($event)"
+                        [isDisabled]="esFormularioSoloLectura"
+                        >
                     </app-catalogo-select>
                 </div>
             </div>
@@ -50,7 +52,9 @@
             <form [formGroup]="serviciosImmxForm">
                 <div class="form-group">
                     <app-catalogo-select formControlName="serviciosImmx" [label]="'Servicios IMMEX'" [required]="true"
-                        name="serviciosImmx" [catalogo]="serviciosImmx"></app-catalogo-select>
+                        name="serviciosImmx" [catalogo]="serviciosImmx" [placeholder]="'selecciona un valor'"
+                        [isDisabled]="esFormularioSoloLectura"
+                        ></app-catalogo-select>
                 </div>
             </form>
         </div>

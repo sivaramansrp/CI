@@ -13,9 +13,10 @@
             @switch (indice) { @case (1) {
             <solicitante></solicitante>
             } @case (2) {
+            @if (esDatosRespuesta) {
             <app-cambio-de-modalidad></app-cambio-de-modalidad>
             }
-            }
+            } }
         </ng-container>
     </div>
 </div>

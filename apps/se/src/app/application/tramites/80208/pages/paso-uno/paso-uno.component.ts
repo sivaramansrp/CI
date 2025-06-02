@@ -1,4 +1,8 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
+import { CambioModalidadService } from '../../service/cambio-modalidad.service';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioState } from '@libs/shared/data-access-user/src';
 import { SECCIONES_TRAMITE_80208 } from '../../constantes/solicitud-modalidad.enums';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 
@@ -17,7 +21,7 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss'
 })
-export class PasoUnoComponent implements OnInit {
+export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /**
    * @property {number} indice
@@ -27,16 +31,81 @@ export class PasoUnoComponent implements OnInit {
   indice: number = 1;
 
   /**
+   * Indica si existen datos de respuesta para mostrar en el formulario.
+   * @type {boolean}
+   */
+  public esDatosRespuesta: boolean = false;
+
+  /**
+   * Estado de la consulta actual, contiene la información relevante del solicitante.
+   * @type {ConsultaioState}
+   */
+  public consultaState!: ConsultaioState;
+
+  /**
+   * Notificador para destruir las suscripciones y evitar fugas de memoria.
+   * @type {Subject<void>}
+   * @private
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * @type {boolean}
+   */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
    * @constructor
    * @description Constructor que inicializa el store de la sección.
    * @param {SeccionLibStore} seccionStore - Servicio para manejar el estado de las secciones.
    */
-  constructor(private seccionStore: SeccionLibStore) {
+  constructor(
+    public seccionStore: SeccionLibStore,
+    public consultaQuery: ConsultaioQuery,
+    public modalidadService: CambioModalidadService,
+  ) {
 
   }
 
+  /**
+   * @method ngOnInit
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe al estado de consulta y, dependiendo de si hay actualización, obtiene los datos del formulario o marca que existen datos de respuesta.
+   * También asigna las secciones del formulario.
+   */
   ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$.subscribe((seccionState) => {
+      this.consultaState = seccionState;
+      if (this.consultaState.update) {
+        this.guardarDatosFormulario();
+      } else {
+        this.esDatosRespuesta = true;
+      }
+    });
+
     this.asignarSecciones();
+  }
+
+  /**
+   * @method guardarDatosFormulario
+   * @description
+   * Obtiene los datos de la solicitud desde el servicio y actualiza el estado del formulario.
+   * Si la respuesta es válida, marca que existen datos de respuesta y actualiza el estado del formulario.
+   * Utiliza takeUntil para evitar fugas de memoria al destruir el componente.
+   */
+  guardarDatosFormulario(): void {
+    this.modalidadService
+      .getDatosDeLaSolicitudData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.modalidadService.actualizarEstadoFormulario(resp);
+        }
+      });
   }
 
   /**
@@ -82,5 +151,16 @@ export class PasoUnoComponent implements OnInit {
     }
     this.seccionStore.establecerSeccion(SECCIONES);
     this.seccionStore.establecerFormaValida(FORMA_VALIDA);
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
+   * Libera recursos y evita fugas de memoria completando el notificador de destrucción.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
