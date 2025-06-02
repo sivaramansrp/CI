@@ -1,0 +1,23 @@
+{
+    "operacion": "1",
+    "movimiento":"1",
+    "motivo": "1",
+    "pais": "1",
+    "transporte": "1",
+    "aduana": "1",
+    "autor":"valor ficticio",
+    "titulo":"valor ficticio",
+    "tecnica":"valor ficticio",
+    "alto":"valor ficticio",
+    "ancho":"valor ficticio",
+    "profundidad":"valor ficticio",
+    "diametro":"valor ficticio",
+    "variables":"valor ficticio",
+    "anoDeCreacion":"valor ficticio",
+    "avaluo":"valor ficticio",
+    "moneda":"1",
+    "propietario":"valor ficticio",
+    "fraccionArancelaria":"1",
+    "descripcionArancelaria":"valor ficticio",
+    "ObraDeArte":"valor ficticio"
+}

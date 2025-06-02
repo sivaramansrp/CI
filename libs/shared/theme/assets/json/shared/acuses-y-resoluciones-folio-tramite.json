@@ -208,5 +208,14 @@
     "fechInicioTramite": "2025-3-09 0035:05:00",
     "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "220202"
+  },
+
+   {
+    "folioTramite": "0100001000320251005220203",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "INBAL ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "INBAL",
+    "numeroDeProcedimiento": "270201"
   }
 ]
