@@ -4,6 +4,7 @@ import { Subject, map, takeUntil, tap } from 'rxjs';
 
 
 import { CancelarModalidad, CancelarSolicitudForm } from '../../modelos/cancelar-solicitud.modalidad.model';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { CrossListLable, FechasService, SeccionLibQuery, SeccionLibState, SeccionLibStore, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { CancelarSolicitudQuery } from '../../estados/tramite570101.query';
 import { CancelarSolicitudService } from '../../service/cancelar-solicitud.service';
@@ -39,6 +40,13 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
   // Array para almacenar el rango de días
   selectRangoDias: string[] = [];
 
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+
   // Variables para manejar los estados de suscripción y el formulario
   public unsubscribe$ = new Subject<void>();
   cancelarSolicitudFormState!: CancelarSolicitudForm;
@@ -63,7 +71,8 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
     public cancelarSolicitudQuery: CancelarSolicitudQuery,
     public validacionesService: ValidacionesFormularioService,
     private seccionStore: SeccionLibStore,
-    private seccionQuery: SeccionLibQuery
+    private seccionQuery: SeccionLibQuery,
+    private consultaQuery: ConsultaioQuery,
   ) {
     // El constructor está intencionalmente vacío para la inyección de dependencias 
   }
@@ -103,7 +112,30 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+        this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
+
+        /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+     inicializarEstadoFormulario(): void {
+      if(!this.formCancelorSolicitud){
+        this.crearFormSolicitud();
+      }
+      if (this.esFormularioSoloLectura) {
+          this.formCancelorSolicitud.disable();
+      }
+    }
+ 
 
   actualizarValidationInStore(): void {
     let seccion: number | null = 0;

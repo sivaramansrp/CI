@@ -1,4 +1,5 @@
 import { CancelarModalidad, CancelarSolicitudForm } from '../modelos/cancelar-solicitud.modalidad.model';
+import { CancelarSolicitudState, CancelarSolicitudStore } from '../estados/tramite570101.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -22,7 +23,7 @@ export class CancelarSolicitudService {
    * 
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,public CancelarSolicitudStore: CancelarSolicitudStore) {
     // No se necesita lógica de inicialización adicional.
   }
 
@@ -52,4 +53,21 @@ export class CancelarSolicitudService {
     getTipoSolicitud(): Observable<CancelarModalidad[]> {
       return this.http.get<CancelarModalidad[]>(`${this.cancelarSolicitudUrl}tipoSolicitud.json`);
     }
+
+ /**
+ * Actualiza el estado del formulario con los datos proporcionados.
+ * 
+ * @param DATOS - Estado de la solicitud `Solicitud230401State` con la información 
+ *                del tipo de solicitud a actualizar en el store.
+ */
+actualizarEstadoFormulario(DATOS: Partial<CancelarSolicitudState>): void {
+  this.CancelarSolicitudStore.update((state) => ({
+    ...state,
+    ...DATOS
+  }));
+}
+
+getRegistroTomaMuestrasMercanciasData(): Observable<CancelarSolicitudState> {
+  return this.http.get<CancelarSolicitudState>('assets/json/570101/requestCancallar.json');
+}
 }
