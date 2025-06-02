@@ -657,6 +657,15 @@
     "numeroDeProcedimiento": "80308"
   },
   {
+    "id": 130102,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "130102"
+  },
+  {
     "id": 11201,
     "tipoDeTramite": "Solicitud de cs Permiso",
     "fecha": "2023-10-01",
