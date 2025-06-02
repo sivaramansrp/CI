@@ -1,14 +1,17 @@
-import { Catalogo } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputRadioComponent, SolicitanteComponent, TableComponent, TercerosComponent, TituloComponent } from '@ng-mf/data-access-user';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormularioMovilizacion } from '../../models/220203/importacion-de-acuicultura.module';
+
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 
-import { FormularioMovilizacion } from '../../models/220203/importacion-de-acuicultura.module';
+import { CommonModule } from '@angular/common';
+
 
 /**
  * @title Datos para la Movilización
@@ -17,9 +20,27 @@ import { FormularioMovilizacion } from '../../models/220203/importacion-de-acuic
 @Component({
   selector: 'app-datos-para-movilizacion',
   templateUrl: './datos-para-movilizacion.component.html',
-  styleUrls: ['./datos-para-movilizacion.component.scss']
+  styleUrls: ['./datos-para-movilizacion.component.scss'],
+  standalone: true,
+  imports: [
+    TituloComponent,
+    InputRadioComponent,
+    InputCheckComponent,
+    InputFechaComponent,
+    CatalogoSelectComponent,
+    CrosslistComponent,
+    BtnContinuarComponent,
+    AnexarDocumentosComponent,
+    TableComponent,
+    SolicitanteComponent,
+    TercerosComponent,
+    AlertComponent,
+    FirmaElectronicaComponent,
+    ReactiveFormsModule,
+    CommonModule
+  ]
 })
-export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
+export class DatosParaMovilizacionComponent implements OnInit, OnDestroy,AfterViewInit {
 
   /**
    * @description Lista de opciones de transporte obtenidas del catálogo.
@@ -43,13 +64,20 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
   private destroyNotifier$ = new Subject<void>();
 
   /**
+   * @description Indica si el formulario está en modo solo lectura.
+   * @type {boolean}
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * @description Constructor del componente.
    * @param {FormBuilder} fb Servicio para construir formularios reactivos.
    * @param {ImportacionDeAcuiculturaService} importacionDeAcuiculturaServices Servicio para obtener datos de catálogos.
    */
   constructor(
     private readonly fb: FormBuilder,
-    private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService
+    private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService,
+    private consultaQuery: ConsultaioQuery
   ) {
     this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
       this.formularioMovilizacionStore = datos.formularioMovilizacion
@@ -61,14 +89,18 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
    * Inicializa los cambios del formulario y obtiene los datos necesarios de los catálogos.
    */
   ngOnInit(): void {
-
     this.formularioMovilizacion = this.fb.group({
       medioDeTransporte: [this.formularioMovilizacionStore.medioDeTransporte || '', Validators.required],
       identificacionTransporte: [this.formularioMovilizacionStore.identificacionTransporte || ''],
       puntoVerificacion: [this.formularioMovilizacionStore.puntoVerificacion || ''],
       nombreEmpresaTransportista: [this.formularioMovilizacionStore.nombreEmpresaTransportista || '', Validators.required]
     });
-    this.formularioMovilizacion.valueChanges
+
+    this.obtenerCatalogosTransporte();
+    this.obtenerCatalogosPuntos();
+  }
+ngAfterViewInit(): void {
+   this.formularioMovilizacion.valueChanges
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((changes) => {
         this.verificarEstadoDelBoton();
@@ -76,10 +108,27 @@ export class DatosParaMovilizacionComponent implements OnInit, OnDestroy {
         console.error('Error en cambios de formulario:', error);
       });
 
-    this.obtenerCatalogosTransporte();
-    this.obtenerCatalogosPuntos();
-  }
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+        }
+      )
+    ).subscribe();
 
+}
+
+inicializarEstadoFormulario(): void {
+  if(this.esFormularioSoloLectura){
+      this.formularioMovilizacion.disable();
+    }
+    else{
+      this.formularioMovilizacion.enable();
+    }
+
+}
   /**
    * @description Obtiene los datos del catálogo de transporte y los asigna a la lista de transportes.
    */
