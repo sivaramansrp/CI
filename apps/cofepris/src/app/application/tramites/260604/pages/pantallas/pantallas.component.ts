@@ -40,7 +40,7 @@ pantallasPasos: ListaPasosWizard[] = PANTA_PASOS;
 /**
    * Este método se utiliza para inicializar el componente.
    */
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

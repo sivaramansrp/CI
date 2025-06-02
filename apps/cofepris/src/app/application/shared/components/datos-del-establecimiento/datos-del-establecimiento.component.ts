@@ -6,7 +6,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { DomicilioState } from '../../estados/stores/domicilio.store';
 
-import { DomicilioStore } from '../../estados/stores/domicilio.store'; 
+import { DomicilioStore } from '../../estados/stores/domicilio.store';
 
 import { DomicilioQuery } from '../../../shared/estados/queries/domicilio.query';
 
@@ -33,12 +33,12 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
-  public esFormularioSoloLectura: boolean = false; 
+  public esFormularioSoloLectura: boolean = false;
 
-/**
-   * @description
-   * Formulario reactivo para capturar los datos del establecimiento.
-   */
+  /**
+     * @description
+     * Formulario reactivo para capturar los datos del establecimiento.
+     */
   datosDelForm!: FormGroup;
 
   /**
@@ -87,30 +87,30 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    * Configura el formulario reactivo y sus valores iniciales basados en el estado de la solicitud.
    */
   ngOnInit(): void {
-    
-   this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
-        this.inicializarEstadoFormulario();
-      })
-    )
-    .subscribe()
-    this.inicializarEstadoFormulario();
-}
 
-/**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.  
-   * Además, obtiene la información del catálogo de mercancía.
-   */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+     * Evalúa si se debe inicializar o cargar datos en el formulario.  
+     * Además, obtiene la información del catálogo de mercancía.
+     */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
       this.inicializarFormulario();
-    }  
-    
+    }
+
   }
 
   /**
@@ -118,25 +118,25 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
-      this.inicializarFormulario();
-      if (this.esFormularioSoloLectura) {
-        this.datosDelForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.datosDelForm.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
-      }
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.datosDelForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.datosDelForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
   }
 
- /**
-   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
-   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
-   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
-   * con el valor inicial obtenido del store.
-   */
+  /**
+    * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+    * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+    * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+    * con el valor inicial obtenido del store.
+    */
   inicializarFormulario(): void {
 
-     this.domicilioquery.selectSolicitud$
+    this.domicilioquery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -145,19 +145,19 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-       this.datosDelForm = this.fb.group({
+    this.datosDelForm = this.fb.group({
       denominacion: [this.solicitudState?.denominacion, [Validators.required]],
       correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email]],
     });
   }
 
-/**
-   * @description
-   * Método que actualiza el estado del store con los valores del formulario.
-   * @param form Formulario reactivo.
-   * @param campo Campo del formulario que se desea actualizar.
-   * @param metodoNombre Nombre del método del store que se invocará.
-   */
+  /**
+     * @description
+     * Método que actualiza el estado del store con los valores del formulario.
+     * @param form Formulario reactivo.
+     * @param campo Campo del formulario que se desea actualizar.
+     * @param metodoNombre Nombre del método del store que se invocará.
+     */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof DomicilioStore): void {
     const VALOR = form.get(campo)?.value;
     (this.domicilioStore[metodoNombre] as (value: string | number) => void)(VALOR);

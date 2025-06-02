@@ -24,7 +24,7 @@ import { ScianData } from '../../../shared/models/datos-modificacion.model';
 
 import { DomicilioState } from '../../estados/stores/domicilio.store';
 
-import { DomicilioStore } from '../../estados/stores/domicilio.store'; 
+import { DomicilioStore } from '../../estados/stores/domicilio.store';
 
 import { DomicilioQuery } from '../../../shared/estados/queries/domicilio.query';
 
@@ -52,11 +52,11 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 })
 export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
 
-   /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
-  esFormularioSoloLectura: boolean = false; 
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Referencia a los componentes Crosslist.
    */
@@ -213,22 +213,22 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-   /**
-     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
-     *
-     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
-     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
-     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
-     */
+    /**
+      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+      *
+      * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+      * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+      * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+      */
     this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroy$),
-      map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
-        this.inicializarEstadoFormulario();
-      })
-    )
-    .subscribe()
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
 
     this.cargarEstadoData();
     this.cargarDatosTabla();
@@ -248,7 +248,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       this.guardarDatosFormulario();
     } else {
       this.inicializarFormulario();
-    }  
+    }
   }
 
   /**
@@ -256,29 +256,29 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
-      this.inicializarFormulario();
-      if (this.esFormularioSoloLectura) {
-        this.domicilioForm.disable();
-        this.claveScianForm.disable();
-        this.DatosMercanciaForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.domicilioForm.enable();
-        this.claveScianForm.enable();
-        this.DatosMercanciaForm.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
-      }
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.domicilioForm.disable();
+      this.claveScianForm.disable();
+      this.DatosMercanciaForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.domicilioForm.enable();
+      this.claveScianForm.enable();
+      this.DatosMercanciaForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
   }
 
-   /**
-   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
-   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
-   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
-   * con el valor inicial obtenido del store.
-   */
+  /**
+  * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+  * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+  * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+  * con el valor inicial obtenido del store.
+  */
 
   inicializarFormulario(): void {
-   this.domicilioForm = this.fb.group({
+    this.domicilioForm = this.fb.group({
       codigoPostal: [this.solicitudState?.codigoPostal, [Validators.maxLength(12)]],
       estado: [this.solicitudState?.estado, Validators.required],
       municipio: [this.solicitudState?.municipio, Validators.required],
@@ -296,12 +296,12 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       autorizacionIVAIEPS: [this.solicitudState?.autorizacionIVAIEPS, Validators.required],
     });
 
-     this.claveScianForm = this.fb.group({
+    this.claveScianForm = this.fb.group({
       claveScian: [this.solicitudState?.claveScian, Validators.required],
       descripcionScian: [this.solicitudState?.descripcionScian, Validators.required],
     });
 
-     this.DatosMercanciaForm = this.fb.group({
+    this.DatosMercanciaForm = this.fb.group({
       clasificacionProducto: [this.solicitudState?.clasificacionProducto, Validators.required],
       especificarClasificacion: [this.solicitudState?.especificarClasificacion, Validators.required],
       marcaComercial: [this.solicitudState?.marcaComercial, Validators.required],
@@ -321,12 +321,12 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
     });
   }
 
- /**
-   * Actualiza el estado del store con los valores del formulario.
-   * @param form Formulario reactivo.
-   * @param campo Campo del formulario.
-   * @param metodoNombre Método del store a invocar.
-   */
+  /**
+    * Actualiza el estado del store con los valores del formulario.
+    * @param form Formulario reactivo.
+    * @param campo Campo del formulario.
+    * @param metodoNombre Método del store a invocar.
+    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof DomicilioStore): void {
     const VALOR = form.get(campo)?.value;
     (this.domicilioStore[metodoNombre] as (value: string | number) => void)(VALOR);
