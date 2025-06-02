@@ -99,7 +99,7 @@ export interface TextilesState {
 
 /**
  * Crea el estado inicial para la sección de elegibilidad de textiles.
- * 
+ *
  * @returns El estado inicial de tipo `TextilesState`.
  */
 export function createInitialState(): TextilesState {
@@ -144,8 +144,8 @@ export function createInitialState(): TextilesState {
     formaValida: [],
     metrosCuadradosEquivalentes: 53,
     cantidadFacturasTotal: 5,
-    numeroDeLaConstancia:'',
-    anoDeLaConstancia:'',
+    numeroDeLaConstancia: '',
+    anoDeLaConstancia: '',
     datosTablaConstanciaDelRegistro: [],
     guardarBandera: false,
   };
@@ -155,7 +155,7 @@ export function createInitialState(): TextilesState {
  * @description
  * Store para gestionar el estado de la sección de elegibilidad de textiles.
  * Proporciona métodos para actualizar propiedades específicas del estado.
- * 
+ *
  * @extends Store<TextilesState>
  */
 @Injectable({ providedIn: 'root' })
@@ -163,6 +163,15 @@ export function createInitialState(): TextilesState {
 export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
   constructor() {
     super(createInitialState());
+  }
+
+  //create a function to set entire state
+  /**
+   * Actualiza el estado completo con un nuevo estado.
+   * @param newState El nuevo estado a establecer.
+   */
+  public setTextilesState(newState: TextilesState): void {
+    this.update(newState);
   }
 
   /**
@@ -182,8 +191,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setCantidadTotal(cantidadTotal: string): void {
     this.update((state) => ({
-        ...state,
-        cantidadTotal,
+      ...state,
+      cantidadTotal,
     }));
   }
 
@@ -193,8 +202,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setUnidadDeMedida(unidadDeMedida: string): void {
     this.update((state) => ({
-        ...state,
-        unidadDeMedida,
+      ...state,
+      unidadDeMedida,
     }));
   }
 
@@ -204,8 +213,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setFechaInicioInput(fechaInicioInput: string): void {
     this.update((state) => ({
-        ...state,
-        fechaInicioInput,
+      ...state,
+      fechaInicioInput,
     }));
   }
 
@@ -215,8 +224,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setValorDolares(valorDolares: string): void {
     this.update((state) => ({
-        ...state,
-        valorDolares,
+      ...state,
+      valorDolares,
     }));
   }
 
@@ -226,8 +235,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setTaxId(taxId: string): void {
     this.update((state) => ({
-        ...state,
-        taxId,
+      ...state,
+      taxId,
     }));
   }
 
@@ -237,8 +246,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setRazonSocial(razonSocial: string): void {
     this.update((state) => ({
-        ...state,
-        razonSocial,
+      ...state,
+      razonSocial,
     }));
   }
 
@@ -248,8 +257,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setCalle(calle: string): void {
     this.update((state) => ({
-        ...state,
-        calle,
+      ...state,
+      calle,
     }));
   }
 
@@ -259,8 +268,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setCiudad(ciudad: string): void {
     this.update((state) => ({
-        ...state,
-        ciudad,
+      ...state,
+      ciudad,
     }));
   }
 
@@ -270,8 +279,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setCp(cp: string): void {
     this.update((state) => ({
-        ...state,
-        cp,
+      ...state,
+      cp,
     }));
   }
 
@@ -281,8 +290,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setPais(pais: string): void {
     this.update((state) => ({
-        ...state,
-        pais,
+      ...state,
+      pais,
     }));
   }
 
@@ -292,8 +301,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setFlexRadioRegistro(flexRadioRegistro: string): void {
     this.update((state) => ({
-        ...state,
-        flexRadioRegistro,
+      ...state,
+      flexRadioRegistro,
     }));
   }
 
@@ -303,8 +312,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setEstado(estado: string): void {
     this.update((state) => ({
-        ...state,
-        estado,
+      ...state,
+      estado,
     }));
   }
 
@@ -314,8 +323,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setRepresentacionFederal(representacionFederal: string): void {
     this.update((state) => ({
-        ...state,
-        representacionFederal,
+      ...state,
+      representacionFederal,
     }));
   }
 
@@ -325,8 +334,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setFraccionArancelaria(fraccionArancelaria: string): void {
     this.update((state) => ({
-        ...state,
-        fraccionArancelaria,
+      ...state,
+      fraccionArancelaria,
     }));
   }
 
@@ -336,8 +345,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setDescripcionProducto(descripcionProducto: string): void {
     this.update((state) => ({
-        ...state,
-        descripcionProducto,
+      ...state,
+      descripcionProducto,
     }));
   }
 
@@ -347,8 +356,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setTratado(tratado: string): void {
     this.update((state) => ({
-        ...state,
-        tratado,
+      ...state,
+      tratado,
     }));
   }
 
@@ -358,8 +367,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setSubproducto(subproducto: string): void {
     this.update((state) => ({
-        ...state,
-        subproducto,
+      ...state,
+      subproducto,
     }));
   }
 
@@ -369,8 +378,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setMecanismo(mecanismo: string): void {
     this.update((state) => ({
-        ...state,
-        mecanismo,
+      ...state,
+      mecanismo,
     }));
   }
 
@@ -380,8 +389,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setTypoCategoria(typoCategoria: string): void {
     this.update((state) => ({
-        ...state,
-        typoCategoria,
+      ...state,
+      typoCategoria,
     }));
   }
 
@@ -391,8 +400,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setTypoRegimen(typoRegimen: string): void {
     this.update((state) => ({
-        ...state,
-        typoRegimen,
+      ...state,
+      typoRegimen,
     }));
   }
 
@@ -400,10 +409,12 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    * Actualiza la descripción de la categoría textil en el estado.
    * @param descripcionCategoriaTextil La nueva descripción de la categoría.
    */
-  public setDescripcionCategoriaTextil(descripcionCategoriaTextil: string): void {
+  public setDescripcionCategoriaTextil(
+    descripcionCategoriaTextil: string
+  ): void {
     this.update((state) => ({
-        ...state,
-        descripcionCategoriaTextil,
+      ...state,
+      descripcionCategoriaTextil,
     }));
   }
 
@@ -413,8 +424,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setPaisDestino(PaisDestino: string): void {
     this.update((state) => ({
-        ...state,
-        PaisDestino,
+      ...state,
+      PaisDestino,
     }));
   }
 
@@ -422,10 +433,12 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    * Actualiza la unidad de medida de la categoría textil en el estado.
    * @param unidadMedidaCategoriaTextil La nueva unidad de medida.
    */
-  public setUnidadMedidaCategoriaTextil(unidadMedidaCategoriaTextil: string): void {
+  public setUnidadMedidaCategoriaTextil(
+    unidadMedidaCategoriaTextil: string
+  ): void {
     this.update((state) => ({
-        ...state,
-        unidadMedidaCategoriaTextil,
+      ...state,
+      unidadMedidaCategoriaTextil,
     }));
   }
 
@@ -433,10 +446,12 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    * Actualiza el factor de conversión de la categoría textil en el estado.
    * @param factorConversionCategoriaTextil El nuevo factor de conversión.
    */
-  public setFactorConversionCategoriaTextil(factorConversionCategoriaTextil: string): void {
+  public setFactorConversionCategoriaTextil(
+    factorConversionCategoriaTextil: string
+  ): void {
     this.update((state) => ({
-        ...state,
-        factorConversionCategoriaTextil,
+      ...state,
+      factorConversionCategoriaTextil,
     }));
   }
 
@@ -446,8 +461,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setFechaInicioVigencia(fechaInicioVigencia: string): void {
     this.update((state) => ({
-        ...state,
-        fechaInicioVigencia,
+      ...state,
+      fechaInicioVigencia,
     }));
   }
 
@@ -457,8 +472,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setFechaFinVigencia(fechaFinVigencia: string): void {
     this.update((state) => ({
-        ...state,
-        fechaFinVigencia,
+      ...state,
+      fechaFinVigencia,
     }));
   }
 
@@ -468,8 +483,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setCantidadFacturas(cantidadFacturas: string): void {
     this.update((state) => ({
-        ...state,
-        cantidadFacturas,
+      ...state,
+      cantidadFacturas,
     }));
   }
 
@@ -479,8 +494,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setExportadorFabricanteMismo(exportadorFabricanteMismo: string): void {
     this.update((state) => ({
-        ...state,
-        exportadorFabricanteMismo,
+      ...state,
+      exportadorFabricanteMismo,
     }));
   }
 
@@ -490,8 +505,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setNumeroRegistroFiscal(numeroRegistroFiscal: string): void {
     this.update((state) => ({
-        ...state,
-        numeroRegistroFiscal,
+      ...state,
+      numeroRegistroFiscal,
     }));
   }
 
@@ -501,8 +516,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setTipo(tipo: string): void {
     this.update((state) => ({
-        ...state,
-        tipo,
+      ...state,
+      tipo,
     }));
   }
 
@@ -512,8 +527,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setCantidadTotalImportador(cantidadTotalImportador: string): void {
     this.update((state) => ({
-        ...state,
-        cantidadTotalImportador,
+      ...state,
+      cantidadTotalImportador,
     }));
   }
 
@@ -523,8 +538,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setRazonSocialImportador(razonSocialImportador: string): void {
     this.update((state) => ({
-        ...state,
-        razonSocialImportador,
+      ...state,
+      razonSocialImportador,
     }));
   }
 
@@ -534,8 +549,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setDomicilio(domicilio: string): void {
     this.update((state) => ({
-        ...state,
-        domicilio,
+      ...state,
+      domicilio,
     }));
   }
 
@@ -545,8 +560,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setCiudadImportador(ciudadImportador: string): void {
     this.update((state) => ({
-        ...state,
-        ciudadImportador,
+      ...state,
+      ciudadImportador,
     }));
   }
 
@@ -556,8 +571,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setCpImportador(cpImportador: string): void {
     this.update((state) => ({
-        ...state,
-        cpImportador,
+      ...state,
+      cpImportador,
     }));
   }
 
@@ -567,8 +582,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setPaisImportador(PaisImportador: string): void {
     this.update((state) => ({
-        ...state,
-        PaisImportador,
+      ...state,
+      PaisImportador,
     }));
   }
 
@@ -578,8 +593,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setFormaValida(formaValida: Catalogo[]): void {
     this.update((state) => ({
-        ...state,
-        formaValida,
+      ...state,
+      formaValida,
     }));
   }
 
@@ -587,10 +602,12 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    * Actualiza los metros cuadrados equivalentes de los textiles en el estado.
    * @param metrosCuadradosEquivalentes El nuevo valor de metros cuadrados equivalentes.
    */
-  public setMetrosCuadradosEquivalentes(metrosCuadradosEquivalentes: number): void {
+  public setMetrosCuadradosEquivalentes(
+    metrosCuadradosEquivalentes: number
+  ): void {
     this.update((state) => ({
-        ...state,
-        metrosCuadradosEquivalentes,
+      ...state,
+      metrosCuadradosEquivalentes,
     }));
   }
 
@@ -600,8 +617,8 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setCantidadFacturasTotal(cantidadFacturasTotal: number): void {
     this.update((state) => ({
-        ...state,
-        cantidadFacturasTotal,
+      ...state,
+      cantidadFacturasTotal,
     }));
   }
 
@@ -609,10 +626,12 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    * Actualiza los datos de la tabla de constancia del registro en el estado.
    * @param datosTablaConstanciaDelRegistro Los nuevos datos de la tabla.
    */
-  public setdatosTablaConstanciaDelRegistro(datosTablaConstanciaDelRegistro: Array<ConstanciaTramiteConfiguracion>): void {
+  public setdatosTablaConstanciaDelRegistro(
+    datosTablaConstanciaDelRegistro: Array<ConstanciaTramiteConfiguracion>
+  ): void {
     this.update((state) => ({
-        ...state,
-        datosTablaConstanciaDelRegistro,
+      ...state,
+      datosTablaConstanciaDelRegistro,
     }));
   }
 
@@ -622,12 +641,10 @@ export class ElegibilidadDeTextilesStore extends Store<TextilesState> {
    */
   public setguardarBandera(guardarBandera: boolean): void {
     this.update((state) => ({
-        ...state,
-        guardarBandera,
+      ...state,
+      guardarBandera,
     }));
   }
 
-  
   // Similar TSDoc comments can be added for other setter methods.
-
 }

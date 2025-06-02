@@ -1,11 +1,4 @@
 /**
- * @fileoverview Archivo que contiene las constantes utilizadas en el formulario fitosanitario.
- * Este archivo define arrays de objetos que representan los pasos del formulario,
- * los campos para solicitantes (personas físicas y morales), instrucciones y mensajes.
- * @module constantesFitosanitario
- */
-
-/**
  * @description Constante que define los pasos del formulario.
  * Cada objeto representa un paso con su índice, título, estado activo y completado.
  * @constant {Array<Object>} PASOS
@@ -191,6 +184,11 @@ export const TEXTOS_REQUISITOS = {
  */
 export const URL = '../../../../../assets/json/220202/';
 
+/**
+ * @description Constante que define la configuración para el input de fecha final de pago en acuicultura.
+ * Esta constante se utiliza para establecer las propiedades del campo de fecha de pago, indicando que es requerido y no habilitado.
+ * @constant {Object}
+ */
 export const FECHA_SALIDA_ACUICULTURA = {
     labelNombre: 'Fecha de pago',
     required: true,
