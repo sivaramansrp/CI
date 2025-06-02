@@ -11,6 +11,7 @@ import {
   MSJ_ERROR_LINEA_CAPTURA,
   MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
   PATENTES_ID,
+  SIN_ITEMS,
   SIN_VALOR,
   TRANSPORTE,
   VEHICULO,
@@ -1250,7 +1251,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
     this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
-    
+
     if (this.datosServicio.hasError('endDateBeforeStartDate')) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -1597,29 +1598,51 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * y actualiza el estado del componente.
    */
   public changeAduana(): void {
-    const ADUANA: ICatalogo = this.despacho.get('idAduanaDespacho')?.value;
+    const ADUANA = this.despacho.get('idAduanaDespacho')?.value;
+
     if (ADUANA) {
       this.despacho.get('idSeccionDespacho')?.setValue(SIN_VALOR);
-
       this.seccionAduanaService
-        .getListaSeccionesAduanas('CV2')
+        .getListaSeccionesAduanas(ADUANA)
         .pipe(
           switchMap((response) => {
             this.desactivarSelectSeccionAduanera =
-              response && response.datos?.length === 0;
+              response && response.datos?.length > 0;
+
             if (this.desactivarSelectSeccionAduanera) {
-              this.despacho.get('idSeccionDespacho')?.disable();
-              this.despacho.get('nombreRecinto')?.disable();
-            } else {
+              this.seccionAduanera = response?.datos;
               this.despacho.get('idSeccionDespacho')?.enable();
-              this.despacho.get('nombreRecinto')?.enable();
+            } else {
+              this.seccionAduanera = [
+                {
+                  clave: '-2',
+                  descripcion: 'No cuenta con sección aduanera',
+                },
+              ];
+              this.despacho.get('idSeccionDespacho')?.setValue(SIN_ITEMS);
+              this.despacho.get('idSeccionDespacho')?.disable();
             }
 
-            this.seccionAduanera = response?.datos;
-            return this.recintoService.getListaRecintos(ADUANA.clave);
+            return this.recintoService.getListaRecintos(ADUANA);
           }),
           tap((responseRecinto) => {
-            this.recintoCatalogo = responseRecinto?.datos;
+            this.desactivarSelectRecinto =
+              responseRecinto && responseRecinto.datos?.length > 0;
+
+            if (this.desactivarSelectRecinto) {
+              this.recintoCatalogo = responseRecinto?.datos;
+              this.despacho.get('nombreRecinto')?.enable();
+            } else {
+              this.recintoCatalogo = [
+                {
+                  id_recinto_fiscalizado: '-2',
+                  nombre: 'No cuenta con recinto',
+                  descripcion: 'No cuenta con recinto',
+                },
+              ];
+              this.despacho.get('nombreRecinto')?.setValue(SIN_ITEMS);
+              this.despacho.get('nombreRecinto')?.disable();
+            }
           }),
           takeUntil(this.destroyNotifier$)
         )

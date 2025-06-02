@@ -4,12 +4,12 @@
         <div class="row">
             <div class="col-md-8 ml">
                 <app-catalogo-select [catalogo]="clasificacionProducto" [label]="'Clasificación del producto*:'" [required]="true"
-                    name="clasificacionProducto" formControlName="clasificacion">
+                    name="clasificacionProducto" formControlName="clasificacion"  [isDisabled]="esFormularioSoloLectura">
                 </app-catalogo-select>
             </div>
             <div class="col-md-8 ">
                 <app-catalogo-select [catalogo]="especificarClasificacion" [label]="'Especificar clasificación del producto*:'"
-                    [required]="true" name="especificarClasificacion" formControlName="especificarClasificacion"  (change)="getEspecificar()">
+                    [required]="true" name="especificarClasificacion" formControlName="especificarClasificacion"  (change)="getEspecificar()" [isDisabled]="esFormularioSoloLectura">
                 </app-catalogo-select>
             </div>
             <div class="col-md-8">
@@ -41,7 +41,7 @@
             <div class="col-md-8 ml">
                 <div class="form-group">
                     <app-catalogo-select [catalogo]="estadoFisico" [label]="'Estado físico*:'" [required]="true"
-                    name="estadoFisico" formControlName="estadoFisico">
+                    name="estadoFisico" formControlName="estadoFisico"  [isDisabled]="esFormularioSoloLectura">
                 </app-catalogo-select>
                 </div>
             </div>
@@ -102,7 +102,7 @@
             <button class="btn btn-primary" (click)="cerrarMercanciasTableForm()">
                 Cancelar
             </button>
-            <button class="btn btn-default ms-2">Agregar</button>
+            <button class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura">Agregar</button>
             <button class="btn btn-default ms-2">Limpiar</button>
         </div>
     </form>

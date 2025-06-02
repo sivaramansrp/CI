@@ -5,6 +5,7 @@ import { of } from 'rxjs';
 import { EntidadExternaComponent } from './entidad-externa.component';
 import { CancelacionesStore } from '../../estados/cancelaciones.store';
 import { CancelacionesQuery } from '../../estados/cancelaciones.query';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
 jest.mock('../../estados/cancelaciones.store');
 jest.mock('../../estados/cancelaciones.query');
@@ -14,7 +15,9 @@ describe('EntidadExternaComponent', () => {
   let fixture: ComponentFixture<EntidadExternaComponent>;
   let cancelacionesStore: jest.Mocked<CancelacionesStore>;
   let cancelacionesQuery: jest.Mocked<CancelacionesQuery>;
-
+  const consultaioQueryMock = {
+    selectConsultaioState$: of({ readonly: true }),
+  };
   beforeEach(async () => {
     // Create Mock for CancelacionesStore
     cancelacionesStore = new CancelacionesStore() as jest.Mocked<CancelacionesStore>;
@@ -46,6 +49,7 @@ describe('EntidadExternaComponent', () => {
       providers: [
         { provide: CancelacionesStore, useValue: cancelacionesStore },
         { provide: CancelacionesQuery, useValue: cancelacionesQuery },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock }
       ],
     }).compileComponents();
 
@@ -69,7 +73,7 @@ describe('EntidadExternaComponent', () => {
 
   it('should update the form state with observable values', () => {
     component.ngOnInit();
-    component.updateState();
+    component.estadoActualizacion();
     expect(component.entidadForm.get('entidadExterna')?.value).toBe('Entidad Externa');
     expect(component.entidadForm.get('nombreSolicitanteIPC')?.value).toBe('Nombre Solicitante');
     expect(component.entidadForm.get('cargoSolicitanteIPC')?.value).toBe('Cargo Solicitante');
@@ -110,5 +114,53 @@ describe('EntidadExternaComponent', () => {
     component.entidadForm.get('correoSolicitanteIPC')?.setValue('correo@ejemplo.com');
     component.updateCorreoSolicitanteIPC();
     expect(cancelacionesStore.setCorreoSolicitanteIPC).toHaveBeenCalledWith('correo@ejemplo.com');
+  });
+
+  it('should disable form if esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+
+    const disableSpy = jest.spyOn(component.entidadForm, 'disable');
+    const enableSpy = jest.spyOn(component.entidadForm, 'enable');
+
+    component.guardarDatosFormulario();
+
+    expect(component.estadoActualizacion).toHaveBeenCalled();
+    expect(disableSpy).toHaveBeenCalled();
+    expect(enableSpy).not.toHaveBeenCalled();
+  });
+
+  it('should enable form if esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+
+    const disableSpy = jest.spyOn(component.entidadForm, 'disable');
+    const enableSpy = jest.spyOn(component.entidadForm, 'enable');
+
+    component.guardarDatosFormulario();
+
+    expect(component.estadoActualizacion).toHaveBeenCalled();
+    expect(enableSpy).toHaveBeenCalled();
+    expect(disableSpy).not.toHaveBeenCalled();
+  });
+
+  it('should call guardarDatosFormulario when readonly is true in inicializarEstadoFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    const updateSpy = jest.spyOn(component, 'estadoActualizacion');
+
+    component.inicializarEstadoFormulario();
+
+    expect(guardarSpy).toHaveBeenCalled();
+    expect(updateSpy).not.toHaveBeenCalledTimes(2); 
+  });
+
+  it('should only call estadoActualizacion when readonly is false in inicializarEstadoFormulario', () => {
+    component.esFormularioSoloLectura = false;
+    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    const updateSpy = jest.spyOn(component, 'estadoActualizacion');
+
+    component.inicializarEstadoFormulario();
+
+    expect(updateSpy).toHaveBeenCalled();
+    expect(guardarSpy).not.toHaveBeenCalled();
   });
 });
