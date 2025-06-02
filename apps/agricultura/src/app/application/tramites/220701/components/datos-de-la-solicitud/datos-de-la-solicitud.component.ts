@@ -49,11 +49,12 @@ import { medioInfo } from '../../modelos/datos-de-interfaz.model';
     InputFechaComponent,
     ReactiveFormsModule,
     TablaDinamicaComponent,
-    CommonModule
+    CommonModule,
   ],
   templateUrl: './datos-de-la-solicitud.component.html',
-  styleUrl: './datos-de-la-solicitud.component.scss'
+  styleUrl: './datos-de-la-solicitud.component.scss',
 })
+
 /**
  * Componente que maneja los datos de la solicitud en el formulario.
  * Implementa `OnInit` y `OnDestroy` para la inicialización y limpieza de recursos.
@@ -65,68 +66,78 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @type {FormGroup}
    */
   datosDeLaSolicitudForm!: FormGroup;
+
   /**
- * Estado actual de la solicitud basado en el modelo `DatosDeLaSolicitudInt`.
- * Contiene la información manejada dentro del componente.
- * @type {DatosDeLaSolicitudInt}
- */
+   * Estado actual de la solicitud basado en el modelo `DatosDeLaSolicitudInt`.
+   * Contiene la información manejada dentro del componente.
+   * @type {DatosDeLaSolicitudInt}
+   */
   solicitudState!: DatosDeLaSolicitudInt;
-  
+
   /**
- * Indica si la sección del formulario es colapsable.
- * Permite mostrar u ocultar contenido adicional.
- * @type {boolean}
- * @default false
- */
+   * Indica si la sección del formulario es colapsable.
+   * Permite mostrar u ocultar contenido adicional.
+   * @type {boolean}
+   * @default false
+   */
   colapsable: boolean = false;
+
   /**
- * Mensaje de instrucción para la acción de doble clic.
- * Proporciona información al usuario sobre cómo interactuar con el formulario.
- * @type {string}
- */
+   * Mensaje de instrucción para la acción de doble clic.
+   * Proporciona información al usuario sobre cómo interactuar con el formulario.
+   * @type {string}
+   */
   instruccionDobleClic: string = INSTRUCCION_DOBLE_CLIC;
+
   /**
    * Catálogo de opciones para la hora de inspección.
    * Contiene las opciones disponibles para seleccionar la hora de inspección.
    * @type {CatalogosSelect}
    */
   horaDeInspeccion!: CatalogosSelect;
+
   /**
- * Catálogo de opciones para la aduana de ingreso.
- * Contiene las opciones disponibles para seleccionar la aduana de ingreso.
- * @type {CatalogosSelect}
- */
+   * Catálogo de opciones para la aduana de ingreso.
+   * Contiene las opciones disponibles para seleccionar la aduana de ingreso.
+   * @type {CatalogosSelect}
+   */
   aduanaDeIngreso!: CatalogosSelect;
+
   /**
- * Catálogo de opciones para la oficina de inspección.
- * Contiene las opciones disponibles para seleccionar la oficina de inspección.
- * @type {CatalogosSelect}
- */
+   * Catálogo de opciones para la oficina de inspección.
+   * Contiene las opciones disponibles para seleccionar la oficina de inspección.
+   * @type {CatalogosSelect}
+   */
   oficinaDeInspeccion!: CatalogosSelect;
+
   /**
- * Catálogo de opciones para el punto de inspección.
- * Contiene las opciones disponibles para seleccionar el punto de inspección.
- * @type {CatalogosSelect}
- */
+   * Catálogo de opciones para el punto de inspección.
+   * Contiene las opciones disponibles para seleccionar el punto de inspección.
+   * @type {CatalogosSelect}
+   */
   puntoDeInspeccion!: CatalogosSelect;
+
   /**
- * Catálogo de opciones para el tipo de contenedor.
- * Contiene las opciones disponibles para seleccionar el tipo de contenedor.
- * @type {CatalogosSelect}
- */
+   * Catálogo de opciones para el tipo de contenedor.
+   * Contiene las opciones disponibles para seleccionar el tipo de contenedor.
+   * @type {CatalogosSelect}
+   */
   tipoContenedor!: CatalogosSelect;
+
   /**
- * Catálogo de opciones para el medio de transporte.
- * Contiene las opciones disponibles para seleccionar el medio de transporte.
- * @type {CatalogosSelect}
- */
+   * Catálogo de opciones para el medio de transporte.
+   * Contiene las opciones disponibles para seleccionar el medio de transporte.
+   * @type {CatalogosSelect}
+   */
   medioDeTransporte!: CatalogosSelect;
+
   /**
    * Constante que contiene los textos utilizados en el componente.
    * Proporciona mensajes y etiquetas predefinidas.
    * @type {any}
    */
   mercanciaDatos: string[] = [];
+
   /**
    * Fecha de inicio utilizada en el componente, basada en la expedición de la factura.
    * Proporciona un valor inicial para el campo de fecha.
@@ -135,36 +146,37 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   fechaInicioInput: InputFecha = EXPEDICION_FACTURA_FECHA;
 
   /**
- * Tipo de selección de la tabla (Checkbox).
- * Define el tipo de interacción permitida en la tabla.
- * @type {TablaSeleccion}
- */
+   * Tipo de selección de la tabla (Checkbox).
+   * Define el tipo de interacción permitida en la tabla.
+   * @type {TablaSeleccion}
+   */
   tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
+
   /**
-  * Configuración de las columnas de la tabla para los servicios de mercancía.  
-  * Define la estructura y propiedades de las columnas.
-  * @type {ConfiguracionColumna<medioInfo>[]}
-  */
+   * Configuración de las columnas de la tabla para los servicios de mercancía.
+   * Define la estructura y propiedades de las columnas.
+   * @type {ConfiguracionColumna<medioInfo>[]}
+   */
   exportadorTabla: ConfiguracionColumna<medioInfo>[] = MEDIO_SERVICIO;
+
   /**
-  * Datos de los servicios de mercancía.
-  * Contiene la información mostrada en la tabla de mercancía.
-  * @type {medioInfo[]}
-  */
+   * Datos de los servicios de mercancía.
+   * Contiene la información mostrada en la tabla de mercancía.
+   * @type {medioInfo[]}
+   */
   medioTableDatos: medioInfo[] = [];
 
   /**
-  * Contenido relacionado con el medio de transporte.
-  * Contiene información sobre los elementos del medio de transporte.
-  * @type {medioInfo[]}
-  */
- 
+   * Contenido relacionado con el medio de transporte.
+   * Contiene información sobre los elementos del medio de transporte.
+   * @type {medioInfo[]}
+   */
   medioContenido: medioInfo[] = [];
 
-/**
- * Indica si el formulario debe mostrarse solo en modo de lectura.
- * @type {boolean}
- */
+  /**
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   * @type {boolean}
+   */
   @Input() esFormularioSoloLectura!: boolean;
 
   /**
@@ -182,17 +194,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   private seccion!: SeccionLibState;
 
   constructor(
-   /**
-   * @param {FormBuilder} fb - Servicio para la construcción y gestión de formularios reactivos.
-   * @param {AcuicolaService} acuicolaService - Servicio para obtener y gestionar datos de acuicultura.
-   * @param {MedioDeTransporteService} medioDeTransporteService - Servicio para obtener y gestionar datos del medio de transporte.
-   * @param {ChangeDetectorRef} cdr - Servicio para detectar y optimizar cambios en la vista.
-   * @param {TramiteStoreQuery} tramiteStoreQuery - Query de Akita para consultar el estado del trámite.
-   * @param {TramiteStore} tramiteStore - Tienda Akita para manejar y actualizar el estado del trámite.
-   * @param {SeccionLibQuery} seccionQuery - Query de Akita para consultar el estado de una sección específica.
-   * @param {SeccionLibStore} seccionStore - Tienda Akita para manejar y actualizar el estado de una sección.
-   * @param {ConsultaioQuery} consultaioQuery - Consulta Akita para manejar y actualizar el estado de una sección.
-   */
+    /**
+     * @param {FormBuilder} fb - Servicio para la construcción y gestión de formularios reactivos.
+     * @param {AcuicolaService} acuicolaService - Servicio para obtener y gestionar datos de acuicultura.
+     * @param {MedioDeTransporteService} medioDeTransporteService - Servicio para obtener y gestionar datos del medio de transporte.
+     * @param {ChangeDetectorRef} cdr - Servicio para detectar y optimizar cambios en la vista.
+     * @param {TramiteStoreQuery} tramiteStoreQuery - Query de Akita para consultar el estado del trámite.
+     * @param {TramiteStore} tramiteStore - Tienda Akita para manejar y actualizar el estado del trámite.
+     * @param {SeccionLibQuery} seccionQuery - Query de Akita para consultar el estado de una sección específica.
+     * @param {SeccionLibStore} seccionStore - Tienda Akita para manejar y actualizar el estado de una sección.
+     * @param {ConsultaioQuery} consultaioQuery - Consulta Akita para manejar y actualizar el estado de una sección.
+     */
     private readonly fb: FormBuilder,
     private readonly acuicolaService: AcuicolaService,
     private readonly medioDeTransporteService: MedioDeTransporteService,
@@ -201,9 +213,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
-    private consultaioQuery: ConsultaioQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
-        this.consultaioQuery.selectConsultaioState$
+    this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -211,12 +223,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           this.inicializarEstadoFormulario();
         })
       )
-      .subscribe()
+      .subscribe();
   }
 
-    /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.  
-   * Además, obtiene la información del catálogo de mercancía.
+  /**
+   * Inicializa el formulario reactivo con los campos requeridos.
+   * Configura validaciones y deshabilita ciertos campos según sea necesario.
+   *
+   * @method inicializarFormulario
+   * @returns {void}
    */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
@@ -226,10 +241,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
-    /**
-     * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-     * Luego reinicializa el formulario con los valores actualizados desde el store.
-     */
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
@@ -241,7 +256,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
-    inicializarFormulario(): void {
+  inicializarFormulario(): void {
     this.tramiteStoreQuery.selectSolicitudTramite$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -249,15 +264,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           this.solicitudState = seccionState.SolicitudState;
         })
       )
-      .subscribe()
+      .subscribe();
 
-  /**
-   * Inicializa el formulario reactivo con los campos requeridos.
-   * Configura validaciones y deshabilita ciertos campos según sea necesario.
-   * 
-   * @method iniciarFormulario
-   * @returns {void}
-   */
+    /**
+     * Inicializa el formulario reactivo con los campos requeridos.
+     * Configura validaciones y deshabilita ciertos campos según sea necesario.
+     *
+     * @method iniciarFormulario
+     * @returns {void}
+     */
 
     this.datosDeLaSolicitudForm = this.fb.group({
       justificacion: ['', Validators.required],
@@ -274,25 +289,26 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       tipoContenedor: ['', Validators.required],
       medioDeTransporte: ['', Validators.required],
       identificacionTransporte: ['', Validators.required],
-      esSolicitudFerros: ['', Validators.required]
+      esSolicitudFerros: ['', Validators.required],
     });
   }
 
   /**
    * Inicializa el componente y obtiene los datos necesarios.
    * Se suscribe a los cambios en el estado y configura el formulario.
-   * 
+   *
    * @method ngOnInit
    * @returns {void}
    */
   ngOnInit(): void {
-
-    this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.solicitudState = seccionState.SolicitudState;
-      })
-    ).subscribe();
+    this.tramiteStoreQuery.selectSolicitudTramite$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState.SolicitudState;
+        })
+      )
+      .subscribe();
     this.getHoraDeInspeccion();
     this.cargarDatos();
     this.getAduanaDeIngreso();
@@ -303,11 +319,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.getMedioDeTransporte();
     this.inicializarEstadoFormulario();
 
-
     /**
- * Se suscribe a los cambios en el estado de la solicitud de trámite.
- * Actualiza el formulario con los datos obtenidos del estado.
- */
+     * Se suscribe a los cambios en el estado del formulario.
+     * Después de un breve retraso, actualiza el estado de la solicitud en el store.
+     */
     this.tramiteStoreQuery.selectSolicitudTramite$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -317,11 +332,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
             this.datosDeLaSolicitudForm.patchValue(this.solicitudState);
           }
         })
-      ).subscribe();
-  /**
-   * Se suscribe a los cambios en el estado del formulario.
-   * Después de un breve retraso, actualiza el estado de la solicitud en el store.
-   */
+      )
+      .subscribe();
+    /**
+     * Se suscribe a los cambios en el estado del formulario.
+     * Después de un breve retraso, actualiza el estado de la solicitud en el store.
+     */
     this.datosDeLaSolicitudForm.statusChanges
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -333,17 +349,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-  /**
-   * Obtiene los datos iniciales requeridos para el componente.
-   */
+    /**
+     * Obtiene los datos iniciales requeridos para el componente.
+     */
     this.obtenerDatos();
 
-      /**
-   * Se suscribe a los cambios en el estado de la sección.
-   * Almacena la información de la sección en la propiedad `seccion`.
-   * Para el botón de validación Continuar
-   */
-
+    /**
+     * Se suscribe a los cambios en el estado de la sección.
+     * Almacena la información de la sección en la propiedad `seccion`.
+     * Para el botón de validación Continuar
+     */
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -354,19 +369,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-    /**
+  /**
    * Obtiene datos del servicio de medio de transporte y actualiza el estado del componente.
-   * 
+   *
    * - La primera llamada obtiene `medioContenido` y actualiza `medioTableDatos`.
    * - La segunda llamada actualiza los valores del formulario con los datos recibidos.
-   * 
+   *
    * Se gestiona la suscripción con `takeUntil(this.destroyNotifier$)` para evitar fugas de memoria.
-   * 
+   *
    * @method obtenerDatos
    * @returns {void}
    */
   obtenerDatos(): void {
-    this.medioDeTransporteService.getDatos()
+    this.medioDeTransporteService
+      .getDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response: { medioContenido: medioInfo[] }) => {
@@ -374,23 +390,27 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
             this.medioTableDatos = response.medioContenido;
             this.cdr.detectChanges();
           } else {
-            console.error("La respuesta de la API no tiene el formato esperado: ", response);
+            console.error(
+              'La respuesta de la API no tiene el formato esperado: ',
+              response
+            );
           }
         },
         error: (error) => {
-          console.error("Error al obtener datos: ", error);
-        }
+          console.error('Error al obtener datos: ', error);
+        },
       });
-    this.medioDeTransporteService.getDatos()
+    this.medioDeTransporteService
+      .getDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.datosDeLaSolicitudForm.patchValue(data);
       });
   }
 
-    /**
+  /**
    * Alterna el estado de la propiedad `colapsable`, mostrando u ocultando contenido colapsable.
-   * 
+   *
    * @method mostrarColapsable
    * @returns {void}
    */
@@ -398,9 +418,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.colapsable = !this.colapsable;
   }
 
-    /**
+  /**
    * Carga los datos de certificados autorizados y los establece en el formulario.
-   * 
+   *
    * @method cargarDatos
    * @returns {void}
    */
@@ -410,17 +430,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data: DatosDelTramite) => {
         this.datosDeLaSolicitudForm.patchValue(data);
-      })
+      });
   }
 
-    /**
+  /**
    * Obtiene la lista de horas de inspección desde el servicio y la almacena en `horaDeInspeccion`.
-   * 
+   *
    * @method getHoraDeInspeccion
    * @returns {void}
    */
   getHoraDeInspeccion(): void {
-    this.acuicolaService.getHoraDeInspeccion()
+    this.acuicolaService
+      .getHoraDeInspeccion()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
@@ -435,15 +456,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
-
-    /**
+  /**
    * Obtiene la lista de aduanas de ingreso desde el servicio y la almacena en `aduanaDeIngreso`.
-   * 
+   *
    * @method getAduanaDeIngreso
    * @returns {void}
    */
   getAduanaDeIngreso(): void {
-    this.acuicolaService.getAduanaDeIngreso()
+    this.acuicolaService
+      .getAduanaDeIngreso()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
@@ -458,15 +479,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
-  
   /**
    * Obtiene la lista de oficinas de inspección y la almacena en `oficinaDeInspeccion`.
-   * 
+   *
    * @method getOficinaDeInspeccion
    * @returns {void}
    */
   getOficinaDeInspeccion(): void {
-    this.acuicolaService.getOficinaDeInspeccion()
+    this.acuicolaService
+      .getOficinaDeInspeccion()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
@@ -481,14 +502,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
-    /**
+  /**
    * Obtiene la lista de puntos de inspección desde el servicio y la almacena en `puntoDeInspeccion`.
-   * 
+   *
    * @method getPuntoDeInspeccion
    * @returns {void}
    */
   getPuntoDeInspeccion(): void {
-    this.acuicolaService.getPuntoDeInspeccion()
+    this.acuicolaService
+      .getPuntoDeInspeccion()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
@@ -503,14 +525,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
-    /**
+  /**
    * Obtiene la lista de tipos de contenedor desde el servicio y la almacena en `tipoContenedor`.
-   * 
+   *
    * @method getTipoContenedor
    * @returns {void}
    */
   getTipoContenedor(): void {
-    this.acuicolaService.getTipoContenedor()
+    this.acuicolaService
+      .getTipoContenedor()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
@@ -525,14 +548,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
-    /**
+  /**
    * Obtiene la lista de medios de transporte desde el servicio y la almacena en `medioDeTransporte`.
-   * 
+   *
    * @method getMedioDeTransporte
    * @returns {void}
    */
   getMedioDeTransporte(): void {
-    this.acuicolaService.getMedioDeTransporte()
+    this.acuicolaService
+      .getMedioDeTransporte()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
@@ -547,9 +571,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       });
   }
 
-    /**
+  /**
    * Obtiene los datos del responsable de la inspección y los establece en el formulario.
-   * 
+   *
    * @method obtenerResponsableDatos
    * @returns {void}
    */
@@ -559,7 +583,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data: ResponsableInspección) => {
         this.datosDeLaSolicitudForm.patchValue(data);
-      })
+      });
   }
 
   /**
@@ -570,5 +594,4 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }

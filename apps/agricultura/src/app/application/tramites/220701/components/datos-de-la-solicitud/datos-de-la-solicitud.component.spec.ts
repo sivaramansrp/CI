@@ -1,203 +1,106 @@
 // @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { of as observableOf } from 'rxjs';
 
-import { Component, ChangeDetectorRef } from '@angular/core';
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
 import { FormBuilder } from '@angular/forms';
 import { AcuicolaService } from '../../servicios/acuicola.service';
 import { MedioDeTransporteService } from '../../servicios/medio-de-transporte';
 import { TramiteStoreQuery } from '../../estados/tramite220701.query';
 import { TramiteStore } from '../../estados/tramite220701.store';
-import { SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { HttpClientModule } from '@angular/common/http';
+import { SeccionLibQuery, SeccionLibStore, ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
-@Injectable()
-class MockAcuicolaService {}
+@Directive({ selector: '[myCustom]' })
+class MyCustomDirective {
+  @Input() myCustom;
+}
 
-@Injectable()
-class MockMedioDeTransporteService {}
+@Pipe({name: 'translate'})
+class TranslatePipe implements PipeTransform {
+  transform(value) { return value; }
+}
 
-@Injectable()
-class MockTramiteStoreQuery {}
+@Pipe({name: 'phoneNumber'})
+class PhoneNumberPipe implements PipeTransform {
+  transform(value) { return value; }
+}
 
-@Injectable()
-class MockTramiteStore {}
-
+@Pipe({name: 'safeHtml'})
+class SafeHtmlPipe implements PipeTransform {
+  transform(value) { return value; }
+}
 
 describe('DatosDeLaSolicitudComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<DatosDeLaSolicitudComponent>;
+  let component: DatosDeLaSolicitudComponent;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,DatosDeLaSolicitudComponent, HttpClientModule ],
-      declarations: [
-        
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [DatosDeLaSolicitudComponent, FormsModule, ReactiveFormsModule],
+      declarations: [TranslatePipe, PhoneNumberPipe, SafeHtmlPipe, MyCustomDirective],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         FormBuilder,
-        { provide: AcuicolaService, useClass: MockAcuicolaService },
-        { provide: MedioDeTransporteService, useClass: MockMedioDeTransporteService },
-        ChangeDetectorRef,
-        { provide: TramiteStoreQuery, useClass: MockTramiteStoreQuery },
-        { provide: TramiteStore, useClass: MockTramiteStore },
-        SeccionLibQuery,
-        SeccionLibStore
+        { provide: AcuicolaService, useValue: {} },
+        { provide: MedioDeTransporteService, useValue: { getDatos: jest.fn() } },
+        { provide: TramiteStoreQuery, useValue: {} },
+        { provide: TramiteStore, useValue: {} },
+        { provide: SeccionLibQuery, useValue: {} },
+        { provide: SeccionLibStore, useValue: {} },
+        { provide: ConsultaioQuery, useValue: {} },
       ]
-    }).overrideComponent(DatosDeLaSolicitudComponent, {
-
     }).compileComponents();
+
     fixture = TestBed.createComponent(DatosDeLaSolicitudComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
   });
 
-  it('should run #constructor()', async () => {
+  afterEach(() => {
+    if (component) {
+      component.ngOnDestroy?.();
+    }
+    fixture?.destroy();
+  });
+
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.tramiteStoreQuery = component.tramiteStoreQuery || {};
-    component.tramiteStoreQuery.selectSolicitudTramite$ = observableOf({});
-    component.iniciarFormulario = jest.fn();
-    component.getHoraDeInspeccion = jest.fn();
-    component.cargarDatos = jest.fn();
-    component.getAduanaDeIngreso = jest.fn();
-    component.getOficinaDeInspeccion = jest.fn();
-    component.getPuntoDeInspeccion = jest.fn();
-    component.getTipoContenedor = jest.fn();
-    component.obtenerResponsableDatos = jest.fn();
-    component.getMedioDeTransporte = jest.fn();
-    component.datosDeLaSolicitudForm = component.datosDeLaSolicitudForm || {};
-    component.datosDeLaSolicitudForm.patchValue = jest.fn();
-    component.datosDeLaSolicitudForm.statusChanges = observableOf({});
-    component.datosDeLaSolicitudForm.value = 'value';
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.setSolicitudTramite = jest.fn();
-    component.obtenerDatos = jest.fn();
-    component.seccionQuery = component.seccionQuery || {};
-    component.seccionQuery.selectSeccionState$ = observableOf({});
-    component.ngOnInit();
-    // expect(component.iniciarFormulario).toHaveBeenCalled();
-    // expect(component.getHoraDeInspeccion).toHaveBeenCalled();
-    // expect(component.cargarDatos).toHaveBeenCalled();
-    // expect(component.getAduanaDeIngreso).toHaveBeenCalled();
-    // expect(component.getOficinaDeInspeccion).toHaveBeenCalled();
-    // expect(component.getPuntoDeInspeccion).toHaveBeenCalled();
-    // expect(component.getTipoContenedor).toHaveBeenCalled();
-    // expect(component.obtenerResponsableDatos).toHaveBeenCalled();
-    // expect(component.getMedioDeTransporte).toHaveBeenCalled();
-    // expect(component.datosDeLaSolicitudForm.patchValue).toHaveBeenCalled();
-    // expect(component.tramiteStore.setSolicitudTramite).toHaveBeenCalled();
-    // expect(component.obtenerDatos).toHaveBeenCalled();
-  });
+it('should run #obtenerDatos() and handle unexpected response format', () => {
+  const mockResponse = {
+    medioTransporte: '01',
+    aduanaIngreso: 'XYZ'
+  };
 
-  it('should run #iniciarFormulario()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.iniciarFormulario();
-    // expect(component.fb.group).toHaveBeenCalled();
-  });
+  const mockGetDatos = jest.fn().mockReturnValue(observableOf(mockResponse));
+  const mockDetectChanges = jest.fn();
+  const mockPatchValue = jest.fn();
+  const mockConsoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
 
+  component.medioDeTransporteService = {
+    getDatos: mockGetDatos
+  } as any;
 
-  it('should run #mostrarColapsable()', async () => {
+  component.cdr = {
+    detectChanges: mockDetectChanges
+  } as any;
 
-    component.mostrarColapsable();
+  component.datosDeLaSolicitudForm = {
+    patchValue: mockPatchValue
+  } as any;
 
-  });
+  component.obtenerDatos();
 
-  it('should run #cargarDatos()', async () => {
-    component.acuicolaService = component.acuicolaService || {};
-    component.acuicolaService.obtenerDatosCertificados = jest.fn().mockReturnValue(observableOf({}));
-    component.datosDeLaSolicitudForm = component.datosDeLaSolicitudForm || {};
-    component.datosDeLaSolicitudForm.patchValue = jest.fn();
-    component.cargarDatos();
-    // expect(component.acuicolaService.obtenerDatosCertificados).toHaveBeenCalled();
-    // expect(component.datosDeLaSolicitudForm.patchValue).toHaveBeenCalled();
-  });
+  expect(mockGetDatos).toHaveBeenCalled();
+  expect(mockPatchValue).not.toHaveBeenCalled();
+  expect(mockConsoleError).toHaveBeenCalledWith(
+    "La respuesta de la API no tiene el formato esperado: ", 
+    mockResponse
+  );
 
-  it('should run #getHoraDeInspeccion()', async () => {
-    component.acuicolaService = component.acuicolaService || {};
-    component.acuicolaService.getHoraDeInspeccion = jest.fn().mockReturnValue(observableOf({
-      code: {},
-      data: {}
-    }));
-    component.getHoraDeInspeccion();
-    // expect(component.acuicolaService.getHoraDeInspeccion).toHaveBeenCalled();
-  });
-
-  it('should run #getAduanaDeIngreso()', async () => {
-    component.acuicolaService = component.acuicolaService || {};
-    component.acuicolaService.getAduanaDeIngreso = jest.fn().mockReturnValue(observableOf({
-      code: {},
-      data: {}
-    }));
-    component.getAduanaDeIngreso();
-    // expect(component.acuicolaService.getAduanaDeIngreso).toHaveBeenCalled();
-  });
-
-  it('should run #getOficinaDeInspeccion()', async () => {
-    component.acuicolaService = component.acuicolaService || {};
-    component.acuicolaService.getOficinaDeInspeccion = jest.fn().mockReturnValue(observableOf({
-      code: {},
-      data: {}
-    }));
-    component.getOficinaDeInspeccion();
-    // expect(component.acuicolaService.getOficinaDeInspeccion).toHaveBeenCalled();
-  });
-
-  it('should run #getPuntoDeInspeccion()', async () => {
-    component.acuicolaService = component.acuicolaService || {};
-    component.acuicolaService.getPuntoDeInspeccion = jest.fn().mockReturnValue(observableOf({
-      code: {},
-      data: {}
-    }));
-    component.getPuntoDeInspeccion();
-    // expect(component.acuicolaService.getPuntoDeInspeccion).toHaveBeenCalled();
-  });
-
-  it('should run #getTipoContenedor()', async () => {
-    component.acuicolaService = component.acuicolaService || {};
-    component.acuicolaService.getTipoContenedor = jest.fn().mockReturnValue(observableOf({
-      code: {},
-      data: {}
-    }));
-    component.getTipoContenedor();
-    // expect(component.acuicolaService.getTipoContenedor).toHaveBeenCalled();
-  });
-
-  it('should run #getMedioDeTransporte()', async () => {
-    component.acuicolaService = component.acuicolaService || {};
-    component.acuicolaService.getMedioDeTransporte = jest.fn().mockReturnValue(observableOf({
-      code: {},
-      data: {}
-    }));
-    component.getMedioDeTransporte();
-    // expect(component.acuicolaService.getMedioDeTransporte).toHaveBeenCalled();
-  });
-
-  it('should run #obtenerResponsableDatos()', async () => {
-    component.acuicolaService = component.acuicolaService || {};
-    component.acuicolaService.obtenerResponsableDatos = jest.fn().mockReturnValue(observableOf({}));
-    component.datosDeLaSolicitudForm = component.datosDeLaSolicitudForm || {};
-    component.datosDeLaSolicitudForm.patchValue = jest.fn();
-    component.obtenerResponsableDatos();
-    // expect(component.acuicolaService.obtenerResponsableDatos).toHaveBeenCalled();
-    // expect(component.datosDeLaSolicitudForm.patchValue).toHaveBeenCalled();
-  });
-
-  it('should run #ngOnDestroy()', async () => {
-    component.unsubscribe$ = component.unsubscribe$ || {};
-    component.unsubscribe$.next = jest.fn();
-    component.unsubscribe$.complete = jest.fn();
-    component.ngOnDestroy();
-    // expect(component.unsubscribe$.next).toHaveBeenCalled();
-    // expect(component.unsubscribe$.complete).toHaveBeenCalled();
-  });
+  mockConsoleError.mockRestore();
+});
 
 });

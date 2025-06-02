@@ -75,6 +75,7 @@ export interface PagosDeDerechosFormInt {
   llaveDePagoRevision: string;
   fechaInicioRevision: string;
   importeDePagoRevision: string;
+  exentoPago: string;
 }
 
 

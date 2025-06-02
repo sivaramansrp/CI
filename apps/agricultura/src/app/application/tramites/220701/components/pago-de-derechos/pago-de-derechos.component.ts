@@ -14,6 +14,7 @@ import { Input } from '@angular/core';
 import { InputFecha } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { OpcionDeRadio } from '../../modelos/importacion-de-acuicultura.module';
@@ -34,6 +35,7 @@ import { map } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators';
 import { tap } from 'rxjs/operators';
 
+import * as moment from 'moment';
 import { TIPO_RADIO } from '../../constantes/inspeccion-fisica-zoosanitario.enums';
 @Component({
   selector: 'pago-de-derechos',
@@ -52,11 +54,11 @@ import { TIPO_RADIO } from '../../constantes/inspeccion-fisica-zoosanitario.enum
 
 /**
  * @class PagoDeDerechosComponent
- * @implements {OnInit, OnDestroy}
+ * @implements {OnInit, OnDestroy, OnChanges}
  * @description Componente para la gestión del pago de derechos.
- * Maneja el formulario de pagos y su estado.
+ * Maneja el formulario de pagos y su estado, así como la interacción con catálogos y servicios relacionados.
  */
-export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+export class PagoDeDerechosComponent implements OnInit, OnDestroy, OnChanges {
   /**
    * @property {FormGroup} pagosDeDerechosForm
    * @description Formulario reactivo para el pago de derechos.
@@ -64,7 +66,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   pagosDeDerechosForm!: FormGroup;
 
   /**
-   * @property {PagosDeDerechosFormInt} PagosDeDerechosState
+   * @property {PagosDeDerechosFormInt} pagosDeDerechosState
    * @description Estado del formulario de pago de derechos.
    */
   pagosDeDerechosState!: PagosDeDerechosFormInt;
@@ -76,42 +78,41 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   banco!: CatalogosSelect;
 
   /**
-   * Opciones de radio para la exención de pago.
-   * Contiene las opciones disponibles para seleccionar si el pago está exento.
-   * @type {OpcionDeRadio[]}
+   * @property {OpcionDeRadio[]} exentoPagoRadio
+   * @description Opciones de radio para la exención de pago.
    */
   exentoPagoRadio: OpcionDeRadio[] = TIPO_RADIO;
 
+  /**
+   * @property {OpcionDeRadio[]} exentoPagoRevisionRadio
+   * @description Opciones de radio para la exención de pago en revisión.
+   */
   exentoPagoRevisionRadio: OpcionDeRadio[] = TIPO_RADIO;
 
   /**
-   * Fecha seleccionada para el pago.
-   * Contiene el valor actual de la fecha de pago.
-   * @type {string}
+   * @property {string} fechaPagoDate
+   * @description Fecha seleccionada para el pago.
    * @default ''
    */
   fechaPagoDate: string = '';
 
   /**
-   * Valor seleccionado para la exención de pago.
-   * Indica si el pago está exento o no.
-   * @type {string}
+   * @property {string} exentoPagoValor
+   * @description Valor seleccionado para la exención de pago.
    * @default 'Si'
    */
   exentoPagoValor: string = 'Si';
 
   /**
-   * Valor seleccionado para la exención de pago.
-   * Indica si el pago está exento o no.
-   * @type {string}
+   * @property {string} exentoPagoRevisionValor
+   * @description Valor seleccionado para la exención de pago en revisión.
    * @default 'Si'
    */
   exentoPagoRevisionValor: string = 'Si';
 
   /**
-   * Catálogo de justificaciones para la exención de pago.
-   * Contiene las opciones disponibles para justificar la exención de pago.
-   * @type {Catalogo[]}
+   * @property {Catalogo[]} justificacionCatalogo
+   * @description Catálogo de justificaciones para la exención de pago.
    */
   justificacionCatalogo: Catalogo[] = [];
 
@@ -122,10 +123,16 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   fechaInicioInput: InputFecha = EXPEDICION_FACTURA_FECHA;
 
   /**
-   * Indica si el formulario debe mostrarse solo en modo de lectura.
-   * @type {boolean}
+   * @property {boolean} esFormularioSoloLectura
+   * @description Indica si el formulario debe mostrarse solo en modo de lectura.
    */
   @Input() esFormularioSoloLectura!: boolean;
+
+  /**
+   * @property {string} setFecha
+   * @description Propiedad opcional para almacenar la fecha seleccionada o calculada en el componente.
+   */
+  @Input() setFecha: string = '';
 
   /**
    * @property {Subject<void>} destroyNotifier$
@@ -141,13 +148,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
   /**
    * @constructor
-   * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
-   * @param {AcuicolaService} acuicolaService - Servicio para manejar datos relacionados con acuicultura.
-   * @param {TramiteStoreQuery} tramiteStoreQuery - Consulta de estado de la tienda Akita para trámites.
-   * @param {TramiteStore} tramiteStore - Tienda Akita para manejar el estado del trámite.
-   * @param {SeccionLibQuery} seccionQuery - Consulta de estado de la tienda Akita para secciones.
-   * @param {SeccionLibStore} seccionStore - Tienda Akita para manejar el estado de la sección.
-   * @param {ConsultaioQuery} consultaioQuery - Consulta Akita para manejar y actualizar el estado de una sección.
+   * @param {FormBuilder} fb Servicio para la creación de formularios reactivos.
+   * @param {AcuicolaService} acuicolaService Servicio para manejar datos relacionados con acuicultura.
+   * @param {TramiteStoreQuery} tramiteStoreQuery Consulta de estado de la tienda Akita para trámites.
+   * @param {TramiteStore} tramiteStore Tienda Akita para manejar el estado del trámite.
+   * @param {SeccionLibQuery} seccionQuery Consulta de estado de la tienda Akita para secciones.
+   * @param {SeccionLibStore} seccionStore Tienda Akita para manejar el estado de la sección.
+   * @param {ConsultaioQuery} consultaioQuery Consulta Akita para manejar y actualizar el estado de una sección.
    */
   constructor(
     private readonly fb: FormBuilder,
@@ -156,22 +163,21 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
-    private consultaioQuery: ConsultaioQuery,
-  ) 
-  {
+    private consultaioQuery: ConsultaioQuery
+  ) {
     this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.esFormularioSoloLectura = seccionState.readonly;
-        this.inicializarEstadoFormulario();
-      })
-    )
-    .subscribe()
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
-    /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
    * Además, obtiene la información del catálogo de mercancía.
    */
   inicializarEstadoFormulario(): void {
@@ -182,10 +188,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     }
   }
 
-    /**
-     * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-     * Luego reinicializa el formulario con los valores actualizados desde el store.
-     */
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
@@ -197,7 +203,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     }
   }
 
-    inicializarFormulario(): void {
+  /**
+   * Inicializa el formulario reactivo con los campos requeridos.
+   * Configura validaciones y deshabilita ciertos campos según sea necesario.
+   *
+   * @method inicializarFormulario
+   * @returns {void}
+   */
+  inicializarFormulario(): void {
     this.tramiteStoreQuery.selectSolicitudTramite$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -205,31 +218,57 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
           this.pagosDeDerechosState = seccionState.PagosDeDerechosState;
         })
       )
-      .subscribe()
-
-  /**
-   * Inicializa el formulario reactivo con los campos requeridos.
-   * Configura validaciones y deshabilita ciertos campos según sea necesario.
-   * 
-   * @method iniciarFormulario
-   * @returns {void}
-   */
+      .subscribe();
 
     this.pagosDeDerechosForm = this.fb.group({
-      claveDeReferencia: ['', Validators.required],
-      cadenaDependencia: ['', Validators.required],
-      banco: ['', Validators.required],
-      llaveDePago: ['', Validators.required],
-      fechaInicio: ['', Validators.required],
-      importeDePago: ['', Validators.required],
-      claveDeReferenciaRevision: ['', Validators.required],
-      cadenaDependenciaRevision: ['', Validators.required],
-      bancoRevision: ['', Validators.required],
-      llaveDePagoRevision: ['', Validators.required],
-      fechaInicioRevision: ['', Validators.required],
-      importeDePagoRevision: ['', Validators.required],
+      claveDeReferencia: [
+        this.pagosDeDerechosState?.claveDeReferencia || '',
+        Validators.required,
+      ],
+      cadenaDependencia: [
+        this.pagosDeDerechosState?.cadenaDependencia || '',
+        Validators.required,
+      ],
+      banco: [this.pagosDeDerechosState?.banco || '', Validators.required],
+      exentoPago: [
+        this.pagosDeDerechosState?.exentoPago || '',
+        Validators.required,
+      ],
+      llaveDePago: [
+        this.pagosDeDerechosState?.llaveDePago || '',
+        Validators.required,
+      ],
+      fechaInicio: [
+        this.pagosDeDerechosState?.fechaInicio || '',
+        Validators.required,
+      ],
+      importeDePago: [
+        this.pagosDeDerechosState?.importeDePago || '',
+        Validators.required,
+      ],
+      claveDeReferenciaRevision: [
+        this.pagosDeDerechosState?.claveDeReferenciaRevision || '',
+        Validators.required,
+      ],
+      bancoRevision: [
+        this.pagosDeDerechosState?.bancoRevision || '',
+        Validators.required,
+      ],
+      llaveDePagoRevision: [
+        this.pagosDeDerechosState?.llaveDePagoRevision || '',
+        Validators.required,
+      ],
+      fechaInicioRevision: [
+        this.pagosDeDerechosState?.fechaInicioRevision || '',
+        Validators.required,
+      ],
+      importeDePagoRevision: [
+        this.pagosDeDerechosState?.importeDePagoRevision || '',
+        Validators.required,
+      ],
     });
   }
+
   /**
    * @method ngOnInit
    * @description Inicializa el componente, suscribe a cambios en el estado del trámite y carga los datos necesarios.
@@ -254,7 +293,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.inicializarEstadoFormulario();
 
     /**
-     * @description Suscripción a los cambios en el estado del trámite para actualizar el formulario de pagos de derechos.
+     * Suscripción a los cambios en el estado del trámite para actualizar el formulario de pagos de derechos.
      */
     this.tramiteStoreQuery.selectSolicitudTramite$
       .pipe(
@@ -271,7 +310,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .subscribe();
 
     /**
-     * @description Observa los cambios en el estado del formulario y actualiza el estado del trámite en la tienda Akita.
+     * Observa los cambios en el estado del formulario y actualiza el estado del trámite en la tienda Akita.
      *
      * - Se suscribe a los cambios de estado del formulario `pagosDeDerechosForm`.
      * - Aplica un retraso de 10ms antes de ejecutar la lógica.
@@ -290,7 +329,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .subscribe();
 
     /**
-     * @description Observa el estado de la sección y actualiza la variable local `seccion`.
+     * Observa el estado de la sección y actualiza la variable local `seccion`.
      *
      * - Se suscribe a `selectSeccionState$` para obtener cambios en el estado de la sección.
      * - Al recibir un nuevo estado, se asigna a la variable `seccion`.
@@ -305,7 +344,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
-
 
   /**
    * @method pagoDeCargarDatos
@@ -356,9 +394,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene la lista de justificaciones desde el servicio.
-   * Actualiza el catálogo de justificaciones disponibles.
    * @method obtenerListaJustificacion
+   * @description Obtiene la lista de justificaciones desde el servicio y actualiza el catálogo de justificaciones disponibles.
    */
   private obtenerListaJustificacion(): void {
     this.acuicolaService
@@ -395,9 +432,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Cambia el valor de un campo del formulario.
-   * Actualiza el formulario y recrea su estructura si es necesario.
    * @method cambioValorRadio
+   * @description Cambia el valor de un campo del formulario y actualiza el valor de exentoPagoValor.
    * @param {string} nombreControl - Nombre del campo del formulario.
    * @param {string} valor - Nuevo valor a asignar.
    */
@@ -407,7 +443,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     });
     this.exentoPagoValor = valor;
   }
-
+  /**
+   * @method cambioValorRadioRevision
+   * @description Cambia el valor de un campo del formulario en revisión y actualiza el valor de exentoPagoRevisionValor.
+   * @param {string} nombreControl - Nombre del campo del formulario.
+   * @param {string} valor - Nuevo valor a asignar.
+   */
   cambioValorRadioRevision(nombreControl: string, valor: string): void {
     this.pagosDeDerechosForm.patchValue({
       [nombreControl]: valor,
@@ -416,11 +457,54 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method ngOnChanges
+   * @description Método del ciclo de vida de Angular que se ejecuta cuando cambian las propiedades de entrada del componente.
+   * Si la propiedad `setFecha` es una cadena, la divide en día, mes y año, crea un objeto de fecha usando `moment.utc`
+   * y genera el formulario correspondiente. Además, habilita el control 'fechaInicio' en el formulario de pagos de derechos.
+   */
+  ngOnChanges(): void {
+    if (
+      typeof this.setFecha === 'string' &&
+      this.setFecha.trim() !== '' &&
+      this.setFecha.includes('/')
+    ) {
+      const FECHA = this.setFecha.split('/');
+      if (FECHA.length === 3) {
+        const OBJECT_DATE = moment.utc(`${FECHA[2]}-${FECHA[1]}-${FECHA[0]}`);
+        if (typeof this.generarFormulario === 'function') {
+          this.generarFormulario(OBJECT_DATE);
+        }
+        if (
+          this.pagosDeDerechosForm &&
+          this.pagosDeDerechosForm.controls['fechaInicio']
+        ) {
+          this.pagosDeDerechosForm.controls['fechaInicio'].enable();
+        }
+      }
+    }
+  }
+  /**
+   * @method generarFormulario
+   * @description Genera o actualiza el formulario con la fecha proporcionada.
+   * @param {moment.Moment} fecha Fecha en formato moment.Moment
+   */
+  generarFormulario(fecha: moment.Moment): void {
+    if (
+      this.pagosDeDerechosForm &&
+      this.pagosDeDerechosForm.controls['fechaInicio']
+    ) {
+      this.pagosDeDerechosForm.patchValue({
+        fechaInicio: fecha.format('YYYY-MM-DD'),
+      });
+    }
+  }
+
+  /**
    * @method ngOnDestroy
    * @description Maneja la limpieza de recursos antes de destruir el componente.
    *
-   * - Emite un valor en `destroyNotifier$` y `destroyNotifier$` para notificar a los observables que deben completar.
-   * - Llama a `complete()` en ambos `Subject` para liberar memoria y evitar fugas de suscripciones.
+   * - Emite un valor en `destroyNotifier$` para notificar a los observables que deben completar.
+   * - Llama a `complete()` en `destroyNotifier$` para liberar memoria y evitar fugas de suscripciones.
    *
    * @see {@link destroyNotifier$} Subject utilizado para cancelar suscripciones activas.
    */

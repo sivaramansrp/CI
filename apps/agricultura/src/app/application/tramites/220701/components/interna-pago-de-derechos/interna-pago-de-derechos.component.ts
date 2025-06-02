@@ -1,3 +1,7 @@
+/**
+ * Módulo común de Angular.
+ * Proporciona directivas y servicios básicos para aplicaciones Angular.
+ */
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
@@ -35,6 +39,12 @@ import { map } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators'; 
 import { tap } from 'rxjs/operators'; 
 
+/**
+ * Componente para gestionar el pago de derechos.
+ * Permite capturar, validar y almacenar la información relacionada con el pago de derechos en trámites de importación de acuicultura.
+ * Incluye lógica para la gestión de catálogos, validaciones, estado de la sección y comunicación con el store y servicios.
+ * @author [Tu Nombre o Equipo]
+ */
 @Component({
   selector: 'interna-pago-de-derechos',
   standalone: true,
@@ -137,14 +147,13 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Constructor del componente.
    * Inicializa servicios y dependencias necesarias para el funcionamiento del componente.
-   * @constructor
-   * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
-   * @param {ImportacionDeAcuiculturaService} importacionAcuiculturaServicio - Servicio para obtener datos de importación de acuicultura.
-   * @param {TramiteStoreQuery} tramiteStoreQuery - Consulta del estado de la tienda Akita para trámites.
-   * @param {TramiteStore} tramiteStore - Tienda Akita para manejar el estado del trámite.
-   * @param {SeccionLibQuery} seccionQuery - Consulta del estado de la tienda Akita para secciones.
-   * @param {SeccionLibStore} seccionStore - Tienda Akita para manejar el estado de la sección.
-   * @param {ConsultaioQuery} consultaioQuery - Consulta Akita para manejar y actualizar el estado de una sección.
+   * @param fb Servicio para la creación de formularios reactivos.
+   * @param importacionAcuiculturaServicio Servicio para obtener datos de importación de acuicultura.
+   * @param tramiteStoreQuery Consulta del estado de la tienda Akita para trámites.
+   * @param tramiteStore Tienda Akita para manejar el estado del trámite.
+   * @param seccionQuery Consulta del estado de la tienda Akita para secciones.
+   * @param seccionStore Tienda Akita para manejar el estado de la sección.
+   * @param consultaioQuery Consulta Akita para manejar y actualizar el estado de una sección.
    */
   constructor(
     private readonly fb: FormBuilder,
@@ -170,7 +179,7 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
   }
 
   
-    /**
+  /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.  
    * Además, obtiene la información del catálogo de mercancía.
    */
@@ -182,10 +191,10 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
     }
   }
 
-    /**
-     * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-     * Luego reinicializa el formulario con los valores actualizados desde el store.
-     */
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
@@ -196,7 +205,10 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
       // No se requiere ninguna acción en el formulario
     }
   }
-
+  /**
+   * Inicializa el formulario reactivo con los campos requeridos.
+   * Configura validaciones y deshabilita ciertos campos según sea necesario.
+   */
     inicializarFormulario(): void {
     this.tramiteStoreQuery.selectSolicitudTramite$
       .pipe(
@@ -206,14 +218,6 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe()
-
-    /**
-     * Inicializa el formulario reactivo con los campos requeridos.
-     * Configura validaciones y deshabilita ciertos campos según sea necesario.
-     * 
-     * @method iniciarFormulario
-     * @returns {void}
-     */
 
     const ES_EXENTO = this.formularioPagoStore.exentoPago === 'Si';
     this.formularioPago = this.fb.group({
@@ -227,7 +231,19 @@ export class InternaPagoDeDerechosComponent implements OnInit, OnDestroy {
       importePago: [{ value: this.formularioPagoStore.importePago }, Validators.required],
     });
   }
+  /**
+   * Actualiza el estado de la sección en la tienda Akita.
+   * Este método se utiliza para establecer el estado de validación de la sección actual.
+   * @method actualizarEstadoSeccion
+   */
+  actualizarEstadoSeccion(): void {
+    const SECCION: number = 1;
+    const SECCION_STATE = this.seccionQuery.getValue();
+    const FORMAS_VALIDADAS = [...SECCION_STATE.formaValida];
+    FORMAS_VALIDADAS[SECCION] = this.formularioPago.valid;
 
+    this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+  }
   /**
    * Inicializa el componente y obtiene los datos necesarios para el formulario de pago.
    * Configura las suscripciones y el formulario reactivo.

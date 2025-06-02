@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -46,6 +45,8 @@ import { TramiteStoreQuery } from '../../estados/tramite220701.query';
 /**
  * Componente para manejar los datos generales internos.
  * Este componente permite gestionar formularios y datos relacionados con los trámites.
+ * Incluye lógica para la gestión de catálogos, validaciones, estado de la sección y comunicación con el store y servicios.
+ * @author [Tu Nombre o Equipo]
  */
 @Component({
   selector: 'interna-datos-generales',
@@ -63,26 +64,31 @@ import { TramiteStoreQuery } from '../../estados/tramite220701.query';
 export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
   /**
    * Formulario principal del componente.
+   * Contiene los campos y validaciones necesarias para los datos generales.
    */
   forma!: FormGroup;
 
   /**
    * Estado interno relacionado con los datos generales.
+   * Contiene la información manejada dentro del componente.
    */
   internaDatosGeneralesState!: InternaDatosGeneralesInt;
 
   /**
    * Formulario con los datos de la solicitud.
+   * Permite capturar y validar la información de la solicitud.
    */
   datosDelaSolicitud!: FormGroup;
 
   /**
    * Catálogo seleccionado para la empresa transportista.
+   * Contiene las opciones disponibles para seleccionar una empresa.
    */
   empresaTransportista!: CatalogosSelect;
 
   /**
    * Formulario relacionado con la movilización de mercancía.
+   * Permite capturar y validar los datos de movilización.
    */
   movilizacionForm!: FormGroup;
 
@@ -93,6 +99,7 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
 
   /**
    * Datos cargados para los menús desplegables.
+   * Utilizados para alimentar los selectores del formulario.
    */
   dropdownData = [];
 
@@ -249,7 +256,7 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
     private seccionStore: SeccionLibStore,
     private consultaioQuery: ConsultaioQuery
   ) {
-    /// Inicializa el estado del formulario dependiendo del modo de acceso.
+    // Lógica constructora
   }
 
   /**
@@ -285,7 +292,6 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          console.log('Readonly flag:', this.esFormularioSoloLectura);
           if (this.esFormularioSoloLectura) {
             this.forma.disable();
             this.movilizacionForm.disable();
@@ -305,6 +311,16 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
     this.getEmpresaTransportista();
     this.obtenerListasDesplegables();
 
+    /**
+     * Suscripción al estado del trámite para actualizar los formularios y el store.
+     *
+     * - Se suscribe a los cambios en el estado del trámite (`selectSolicitudTramite$`).
+     * - Cuando hay cambios, actualiza el estado interno y aplica los valores a los formularios principales.
+     * - Si el formulario está en modo solo lectura, deshabilita los controles después de aplicar los valores.
+     * - También se suscribe a los cambios de estado de ambos formularios (`forma` y `movilizacionForm`), y guarda automáticamente el estado actualizado en el store.
+     * - Todas las suscripciones se cancelan automáticamente al destruir el componente mediante `takeUntil(this.destroyNotifier$)`.
+     * - Finalmente, se suscribe al estado de la sección para mantener sincronizado el estado local.
+     */
     this.tramiteStoreQuery.selectSolicitudTramite$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -316,8 +332,7 @@ export class InternaDatosGeneralesComponent implements OnInit, OnDestroy {
               datosDelaSolicitud: this.internaDatosGeneralesState,
             });
             this.movilizacionForm.patchValue(this.internaDatosGeneralesState);
-
-            // Re-disable after patching
+            
             if (this.esFormularioSoloLectura) {
               this.forma.disable();
               this.movilizacionForm.disable();
