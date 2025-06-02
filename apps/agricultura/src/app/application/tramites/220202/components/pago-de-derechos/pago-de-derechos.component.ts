@@ -7,13 +7,18 @@ import {
 import {
   FormBuilder,
   FormGroup,
+  ReactiveFormsModule,
   Validators
 } from '@angular/forms';
 
 import {
   Catalogo,
-  InputFecha
+  ConsultaioQuery,
+  InputFecha,
+  TituloComponent
 } from '@ng-mf/data-access-user';
+
+import { map } from 'rxjs';
 
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 
@@ -32,6 +37,8 @@ import {
 } from '../../../220203/constantes/220203/importacion-de-acuicultura.enum';
 
 import { OpcionDeRadio } from '../../../220203/models/220203/importacion-de-acuicultura.module';
+
+import { CatalogoSelectComponent, InputFechaComponent, InputRadioComponent } from '@ng-mf/data-access-user';
 
 /**
  * Componente para el formulario de pago de derechos.
@@ -56,10 +63,24 @@ interface RadioOption {
 @Component({
   selector: 'app-pago-de-derechos',
   templateUrl: './pago-de-derechos.component.html',
-  styleUrls: ['./pago-de-derechos.component.scss']
+  styleUrls: ['./pago-de-derechos.component.scss'],
+  standalone: true,
+  imports: [
+    InputRadioComponent,
+    InputFechaComponent,
+    CatalogoSelectComponent,
+    ReactiveFormsModule,
+    TituloComponent
+  ]
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+
+  /**
+   * @description Subject utilizado para destruir las suscripciones y evitar fugas de memoria cuando el componente se destruye.
+   * @type {Subject<void>}
+   */
   private destroyNotifier$ = new Subject<void>();
+
   /**
    * Configuración para el input de fecha de pago.
    * Este objeto contiene la configuración para el campo de fecha de inicio del pago.
@@ -107,16 +128,42 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       "value": "Si"
     }
   ];
-  formularioPagoStore: PagoForm = {} as PagoForm;
-  fechaPagoDate: string = '15/03/2025';
-  fechaFinalInput: InputFecha = FECHA_SALIDA_ACUICULTURA;
+
   /**
- * @description Valor seleccionado para la exención de pago.
- * @type {string}
- */
+   * @description Almacena los datos del formulario de pago de derechos.
+   * @type {PagoForm}
+   */
+  formularioPagoStore: PagoForm = {} as PagoForm;
+
+  /**
+   * @description Fecha de pago seleccionada en el formulario.
+   * @type {string}
+   */
+  fechaPagoDate: string = '15/03/2025';
+
+  /**
+   * @description Configuración para el input de fecha final de pago.
+   * @type {InputFecha}
+   */
+  fechaFinalInput: InputFecha = FECHA_SALIDA_ACUICULTURA;
+
+  /**
+   * @description Valor seleccionado para la exención de pago.
+   * @type {string}
+   */
   exentoPagoValor: string = 'Si';
+
+  /**
+   * @description Opciones para el radio button de exención de pago.
+   * @type {OpcionDeRadio[]}
+   */
   exentoPagoRadio: OpcionDeRadio[] = TIPO_RADIO;
 
+  /**
+   * @description Indica si el formulario se encuentra en modo solo lectura.
+   * @type {boolean}
+   */
+  esFormularioSoloLectura: boolean = true;
 
   /**
    * Valor seleccionado en el radio button de exención de pago.
@@ -132,7 +179,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param {string} nuevo_valor - Nueva fecha a establecer.
    * @returns {void}
    */
-  cambioFechaInicio(nuevo_valor: string) {
+  cambioFechaInicio(nuevo_valor: string): void {
     this.pagoForm.get('fechaDePago')?.setValue(nuevo_valor);
     this.pagoForm.get('fechaDePago')?.markAsUntouched();
   }
@@ -144,10 +191,28 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param {FormBuilder} fb - Servicio para la creación de formularios.
    * @param {AgriculturaApiService} agriculturaApiService - Cliente HTTP para realizar solicitudes a la API de Agricultura.
    */
-  constructor(private readonly fb: FormBuilder, private readonly agriculturaApiService: AgriculturaApiService) {
+  constructor(private readonly fb: FormBuilder, private readonly agriculturaApiService: AgriculturaApiService,
+    private consultaioQuery: ConsultaioQuery
+  ) {
     this.agriculturaApiService.getAllDatosForma().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
       this.formularioPagoStore = datos.pago;
     })
+
+    this.agriculturaApiService
+      .getAllDatosForma()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos) => {
+        this.formularioPagoStore = datos.pago;
+      });
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
+
   }
 
   /**
@@ -159,14 +224,14 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.pagoForm = this.fb.group({
-      exentoPago: [this.formularioPagoStore.exentoPago || 'Si', Validators.required],
-      justificacion: [this.formularioPagoStore.justificacion, Validators.required],
-      claveReferencia: [{ value: this.formularioPagoStore.claveReferencia || '', disabled: true }, Validators.required],
-      cadenaDependencia: [{ value: this.formularioPagoStore.cadenaDependencia || '', disabled: true }, Validators.required],
-      banco: [this.formularioPagoStore.banco, Validators.required],
-      llavePago: [{ value: this.formularioPagoStore.llavePago || '', disabled: true }, Validators.required],
-      fechaPago: [{ value: this.formularioPagoStore.fechaPago || '', disabled: true }, Validators.required],
-      importePago: [{ value: this.formularioPagoStore.importePago || '', disabled: true }, Validators.required],
+      exentoPago: [{ value: this.formularioPagoStore.exentoPago || 'Si', disabled: this.esFormularioSoloLectura }, Validators.required],
+      justificacion: [{ value: this.formularioPagoStore.justificacion, disabled: this.esFormularioSoloLectura }, Validators.required],
+      claveReferencia: [{ value: this.formularioPagoStore.claveReferencia || '', disabled: this.esFormularioSoloLectura }],
+      cadenaDependencia: [{ value: this.formularioPagoStore.cadenaDependencia || '', disabled: this.esFormularioSoloLectura }],
+      banco: [{ value: this.formularioPagoStore.banco, disabled: this.esFormularioSoloLectura }, Validators.required],
+      llavePago: [{ value: this.formularioPagoStore.llavePago || '', disabled: this.esFormularioSoloLectura }],
+      fechaPago: [{ value: this.formularioPagoStore.fechaPago || '', disabled: this.esFormularioSoloLectura }, Validators.required],
+      importePago: [{ value: this.formularioPagoStore.importePago || '', disabled: this.esFormularioSoloLectura }],
     });
     this.pagoForm.statusChanges
       .pipe(takeUntil(this.destroyNotifier$)) // Ensures unsubscribe on component destruction
@@ -192,11 +257,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @method obtenerDetallesDeListaDeOpciones
    * @returns {void}
    */
-  obtenerDetallesDeListaDeOpciones() {
+  obtenerDetallesDeListaDeOpciones(): void {
     this.obtenerBancoSelectorList();
     this.obtenerListaDeJustificaciones();
   }
-
 
   /**
    * @description Actualiza la fecha de pago en el formulario.
@@ -215,7 +279,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @method obtenerBancoSelectorList
    * @returns {void}
    */
-  obtenerBancoSelectorList() {
+  obtenerBancoSelectorList(): void {
     this.agriculturaApiService.obtenerSelectorList('banco.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(data => {
@@ -231,7 +295,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @method obtenerListaDeJustificaciones
    * @returns {void}
    */
-  obtenerListaDeJustificaciones() {
+  obtenerListaDeJustificaciones(): void {
     this.agriculturaApiService.obtenerSelectorList('Justificación.json')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(data => {
@@ -249,7 +313,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param {string} name - El nombre del control del formulario a actualizar.
    * @returns {void}
    */
-  seleccionarListDatas(e: Catalogo, name: string) {
+  seleccionarListDatas(e: Catalogo, name: string): void {
     this.pagoForm.patchValue({
       [name]: e.id
     });
@@ -272,7 +336,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   setValoresStore(
-    form?: FormGroup,
+    _form?: FormGroup,
     campo?: string,
 
   ): void {
@@ -301,10 +365,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.pagoForm.get('fechaPago')?.disable();
     this.pagoForm.get('importePago')?.disable();
   }
+
   /**
-    * Maneja el evento de cambio para la entrada de fecha.
-    * @param evento - El nuevo valor de la fecha como cadena.
-    */
+   * Maneja el evento de cambio para la entrada de fecha.
+   * @param evento - El nuevo valor de la fecha como cadena.
+   */
   fechaCambiado(evento: string): void {
     // Manejar cambio de fecha
     this.pagoForm.patchValue({
@@ -313,11 +378,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     const VALOR = this.pagoForm.value;
     this.agriculturaApiService.updatePago(VALOR);
   }
+
   /**
- * @description Cambia el valor de un campo del formulario.
- * @param {string} nombreControl Nombre del campo del formulario.
- * @param {string} valor Nuevo valor a asignar.
- */
+   * @description Cambia el valor de un campo del formulario.
+   * @param {string} nombreControl Nombre del campo del formulario.
+   * @param {string} valor Nuevo valor a asignar.
+   */
   cambioValorRadio(nombreControl: string, valor: string): void {
     this.pagoForm.patchValue({
       [nombreControl]: valor,
