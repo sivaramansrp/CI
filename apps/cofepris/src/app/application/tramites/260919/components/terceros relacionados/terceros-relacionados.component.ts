@@ -9,6 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ReplaySubject } from 'rxjs';
 import { TEXTOS } from '../../constants/constantes.enum';
 import { takeUntil } from 'rxjs/operators';
+import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-fabricante/terceros-fabricante.component';
 /**
  * Componente para gestionar los terceros relacionados en el trámite.
  * Este componente permite obtener y mostrar datos relacionados con destinatarios,
@@ -26,6 +27,8 @@ import { takeUntil } from 'rxjs/operators';
     CatalogoSelectComponent,
     NotificacionesComponent,
     InputRadioComponent,
+    TercerosRelacionadosComponent
+    
   ],
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
@@ -54,6 +57,12 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
 
   /** Datos de los facturadores */
   facturadorDatos: FilaTablaData[] = [];
+
+   /** Conjunto de filas seleccionadas en la tabla */
+   selectedRows: Set<number> = new Set();
+
+  /** Indica si el formulario está visible */
+  esFormularioVisible = false;
 
   /**
    * Constructor del componente.
@@ -130,6 +139,55 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
       });
   }
 
+
+   onSelectedRowsChange(selectedRows: FilaTablaData[]): void {
+      this.selectedRows = new Set(selectedRows.map((row) => row.id));
+      this.esFormularioVisible = false;
+    }
+    // openModificarMercancias(): void {
+    //   if (this.selectedRows.size === 1) {
+    //     const SELECTED_ID = Array.from(this.selectedRows)[0];
+    //     const SELECTED_ROW_DATA = this.tableData.find(
+    //       (row) => row.id === SELECTED_ID
+    //     );
+  
+    //     if (SELECTED_ROW_DATA) {
+    //       this.destinatarioForm.patchValue({
+    //         agregarDestinatario: {
+    //           tipoPersona: SELECTED_ROW_DATA.tipoPersona,
+    //         },
+    //         datosPersonales: {
+    //           nombre: SELECTED_ROW_DATA.nombre,
+    //           primerApellido: SELECTED_ROW_DATA.primerApellido,
+    //           segundoApellido: SELECTED_ROW_DATA.segundoApellido,
+    //           denominacion: SELECTED_ROW_DATA.denominacion,
+    //           pais: SELECTED_ROW_DATA.pais,
+    //           domicilio: SELECTED_ROW_DATA.domicilio,
+    //           estado: SELECTED_ROW_DATA.estado,
+    //           codigopostal: SELECTED_ROW_DATA.codigopostal,
+    //           calle: SELECTED_ROW_DATA.calle,
+    //           numeroExterior: SELECTED_ROW_DATA.numeroExterior,
+    //           numeroInterior: SELECTED_ROW_DATA.numeroInterior,
+    //           lada: SELECTED_ROW_DATA.lada,
+    //           telefono: SELECTED_ROW_DATA.telefono,
+    //           correoElectronico: SELECTED_ROW_DATA.correoElectronico,
+    //         },
+    //       });
+  
+    //       this.esFormularioVisible = true;
+    //     }
+    //   }
+    // }
+    // agregarMercancias(): void {
+    //   this.esFormularioVisible = true;
+    //   this.destinatarioForm.reset();
+    // }
+    // onDeleted(): void {
+    //   if (this.selectedRows.size > 0) {
+    //     // this.abrirModal();
+    //   }
+    // }
+  
   /**
    * Método que se ejecuta al destruir el componente.
    * Marca el observable `destroyed$` como completado para evitar fugas de memoria.

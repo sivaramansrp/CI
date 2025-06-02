@@ -31,8 +31,17 @@ export class ImportarDeRemediosHerbalsService {
    * @returns Observable con la lista de claves SCIAN.
    */
   getClaveScianData(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('./assets/json/260919/clavescian.json');
-  }
+      return this.http.get<Catalogo[]>('./assets/json/260919/clavescian.json');
+    }
+  
+    /**
+     * Obtiene los datos de las descripciones de claves desde un archivo JSON.
+     * @returns Observable con la lista de descripciones de claves.
+     */
+    getClaveDescripcionDelData(): Observable<Catalogo[]> {
+      return this.http.get<Catalogo[]>('./assets/json/260919/clavedescripciondel.json');
+    }
+  
 
   /**
    * Obtiene los datos del régimen desde un archivo JSON.
@@ -80,6 +89,23 @@ export class ImportarDeRemediosHerbalsService {
    */
   getFabricanteData(): Observable<FilaTablaData[]> {
     return this.http.get<FilaTablaData[]>('./assets/json/260919/fabricante.json');
+  }
+
+  getTipoProductoData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('./assets/json/260919/tipoproducto.json');
+  }
+  getClasificacionDelProductoData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('./assets/json/260919/delproducto.json');
+  }
+getEstadoFisicoData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('./assets/json/260919/estadofisico.json');
+  }
+  /**
+   * Obtiene los datos para especificar productos desde un archivo JSON.
+   * @returns Observable con la lista de especificaciones de productos.
+   */
+  getEspificarData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('./assets/json/260919/espicificar.json');
   }
 
   /**

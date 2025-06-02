@@ -170,6 +170,10 @@ presentacionFarmaceutica: string;
  * Puede ser utilizado para diferenciar entre operaciones como alta, modificación o baja.
  */
 tipoOperacion: boolean,
+numeroDeRegistoSanitario: string,
+presentacion: string,
+formaFarmaceutica: string,
+numeroDeRegistroSnitario: string
 }
 
 /**
@@ -345,6 +349,11 @@ export function createInitialSolicitudState(): Solicitud260919State {
  * Indica si la operación es de alta, modificación o baja.
  */
   tipoOperacion: false,
+
+  numeroDeRegistoSanitario: '',
+  presentacion:'',
+  formaFarmaceutica: '',
+  numeroDeRegistroSnitario: '',
   };
 }
 /**
@@ -938,5 +947,31 @@ public setRfcDel(rfcDel: string): void {
     rfcDel,
   }));
 }
-
+public setNumeroDeRegistoSanitario(numeroDeRegistoSanitario: string): void {
+  this.update((state) => ({
+    ...state,
+    numeroDeRegistoSanitario,
+  }));
+}
+public setPresentacion(presentacion: string): void {
+  this.update((state) => ({
+    ...state,
+    presentacion,
+  }));
+}
+public setFormaFarmaceutica(formaFarmaceutica: string): void {
+  this.update((state) => ({
+    ...state,
+    formaFarmaceutica,
+  }));
+}
+public setNumeroDeRegistroSnitario(numeroDeRegistroSnitario: string): void {
+  this.update((state) => ({
+    ...state,
+    numeroDeRegistroSnitario,
+  }));
+}
+// numeroDeRegistoSanitario
+// presentacion
+// formaFarmaceutica
 }

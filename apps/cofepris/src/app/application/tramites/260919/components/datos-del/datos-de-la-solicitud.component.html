@@ -360,17 +360,71 @@
     </ng-container>
     <ng-titulo titulo="S.C.I.A.N.*" />
     <app-tabla-dinamica
-      [configuracionTabla]="configuracionColumnasoli"
-      [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
-      [datos]="tableData"
-    >
-    </app-tabla-dinamica>
-    <div class="col-md-12 d-flex justify-content-end">
-      <div class="btn-group">
-        <button class="btn btn-danger" type="button" >Eliminar</button>
-        <button class="btn btn-primary me-2" type="submit" >Agregar</button>
-      </div>
+  [configuracionTabla]="configuracionColumnasoli"
+   [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
+    [datos]="tableData"
+    (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)">
+</app-tabla-dinamica>
+<div class="col-md-12 d-flex justify-content-end">
+    <div class="btn-group">
+      <button class="btn btn-danger"
+        type="button" (click)="onDelete()">Eliminar</button>
+        <button class="btn btn-primary me-2"
+        type="submit" (click)="onAgregar()">Agregar</button>
     </div>
+</div>
+@if (nuevaNotificacion) {
+  <section>
+  <lib-notificaciones 
+  [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+  </lib-notificaciones>
+  </section>
+  }
+<div *ngIf="showClavaScianForm">
+  <ng-titulo titulo="Clave S.C.I.A.N" />
+<form [formGroup]="clavaScianForm" (ngSubmit)="onSubmit()">
+  <ng-container formGroupName="claveScianG"> 
+      <div class="row">
+          <div class="col-md-4 mb-3">
+              <div class="form-group">
+                  <app-catalogo-select
+                  id="claveScianData"
+                  formControlName="claveScian"
+                  [catalogo]="claveScianData.catalogos"
+                  [label]="'Clave S.C.I.A.N'"
+                  [required]="true"
+                  
+                ></app-catalogo-select>
+              </div>
+           </div>
+      </div>
+      <div class="row">
+          <div class="col-md-4 mb-3">
+              <div class="form-group">
+                  <app-catalogo-select
+                  id="descripcionDelScianData"
+                  formControlName="descripcionDelScian"
+                  [catalogo]="descripcionDelScianData.catalogos"
+                  [label]="'Descripcion del S.C.I.A.N'"
+                  [required]="true"
+                ></app-catalogo-select>
+              </div>
+           </div>
+      </div>
+  </ng-container>
+  <div class="col-md-12 d-flex justify-content-end">
+      <div class="btn-group">
+        <button class="btn btn-danger"
+          type="button" (click)="onCancelar()">Cancelar</button>
+          <button class="btn btn-primary me-2"
+          type="button" (click)="onLimpiar()">Limpiar</button>
+          <button class="btn btn-primary me-2"
+          type="submit">Agregar</button>
+      </div>
+    
+  </div>
+  </form>
+</div>
 
     <ng-container formGroupName="datosDelTramiteRealizar">
       <div class="row mt-5">
@@ -453,37 +507,215 @@
         [tipoSeleccionTabla]="tipoSeleccionsoliMercancias"
         [configuracionTabla]="mercanciasDatos"
         [datos]="mercanciasData"
-      >
+        (listaDeFilaSeleccionada)="onfilasSeleccionadas($event)">
       </app-tabla-dinamica>
-
-      <div class="col-md-12 d-flex justify-content-end">
-        <button
-          type="button"
-          class="btn btn-primary"
-          name="eliminar"
-          id="btneliminar"
-        >
-          Eliminar
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          name="modificar"
-          id="btnmodificar"
-        >
-          Modificar
-        </button>
-        <button
-          type="button"
-          class="btn btn-primary"
-          name="agregarAduana"
-          id="btnagregarAduana"
-          data-bs-toggle="modal"
-          data-bs-target="#modalAgregarMercancia"
-        >
-          Agregar
-        </button>
-      </div>
+      <div class="modal fade" id="modalAgregarMercancia" tabindex="-1" aria-labelledby="modalAgregarMercanciaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title">Datos mercancía</h4>
+            </div>
+            <div class="modal-body">
+              <div class="row mt-5">
+                <div class="col-md-6">
+                  <app-catalogo-select 
+                  id="delProductoData"
+                  formControlName="clasificaionProductos"
+                  [catalogo]="delProducto.catalogos" 
+                  [label]="'Clasificación del producto'" 
+                  [required]="true"
+                  (change)="setValoresStore(datosDelTramiteRealizar,'clasificaionProductos', 'setClasificaionProductos')"
+                  ></app-catalogo-select>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-6">
+                  <app-catalogo-select 
+                  id="especificarData"
+                  formControlName="especificarProducto"
+                  [catalogo]="especificarData.catalogos" 
+                  [label]="'Especificar clasificación del producto'"
+                   [required]="true"
+                   (change)="setValoresStore(datosDelTramiteRealizar,'especificarProducto', 'setEspecificarProducto')"></app-catalogo-select>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-6">
+                  <label class="form-label" for="denominacionProducto">Denominación especifica del producto*:</label>
+                  <input class="form-control" formControlName="nombreProductoEspecifico" placeholder="" type="text"
+                  (change)="setValoresStore(datosDelTramiteRealizar,'nombreProductoEspecifico', 'setNombreProductoEspecifico')" />
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-6">
+                  <label class="form-label">Denominación distintiva*:</label>
+                  <input class="form-control" formControlName="denominacionDistintiva" placeholder="" type="text"
+                  (change)="setValoresStore(datosDelTramiteRealizar,'denominacionDistintiva', 'setDenominacionDistintiva')"/>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-6">
+                  <label class="form-label">Denominación común, nombre común o nombre científico*:</label>
+                  <input class="form-control" formControlName="denominacionNombre" placeholder="" type="text"
+                  (change)="setValoresStore(datosDelTramiteRealizar,'denominacionNombre', 'setDenominacionNombre')"/>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-6">
+                  <label class="form-label">Forma farmacéutica:</label>
+                  <input class="form-control" formControlName="formaFarmaceutica" placeholder="" type="text"
+                  (change)="setValoresStore(datosDelTramiteRealizar,'formaFarmaceutica', 'setFormaFarmaceutica')"/>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-6">
+                  <app-catalogo-select 
+                  id="estadoFisicoData"
+                  formControlName="estadoFisico"
+                  [catalogo]="estadoFisicoData.catalogos"
+                   [label]="'Estado fisico'" 
+                   [required]="true"
+                   (change)="setValoresStore(datosDelTramiteRealizar,'estadoFisico', 'setEstadoFisico')"></app-catalogo-select>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-6">
+                  <label class="form-label">Fracción arancelaria*: <span class="bi bi-question-circle-fill" title="Fracción arancelaria" data-bs-toggle="tooltip"></span>
+                  </label>
+                  <input class="form-control" placeholder="" formControlName="fraccionArancelaria" type="text" 
+                  (change)="setValoresStore(datosDelTramiteRealizar,'fraccionArancelaria', 'setFraccionArancelaria')"/>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-6">
+                  <label class="form-label">Descripción de la fracción arancelaria*:</label>
+                  <input class="form-control" placeholder="" type="text" formControlName="descripcionFraccionArancelaria" 
+                  (change)="setValoresStore(datosDelTramiteRealizar,'descripcionFraccionArancelaria', 'setDescripcionFraccionArancelaria')"/>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-3">
+                  <label class="form-label">Cantidad UMC*:</label>
+                  <input class="form-control" placeholder="" formControlName="cantidadUMC" type="text" 
+                  (change)="setValoresStore(datosDelTramiteRealizar,'cantidadUMC', 'setCantidadUMC')"/>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">UMC*: <span class="bi bi-question-circle-fill" title="UMC" data-bs-toggle="tooltip"></span>
+                  </label>
+                  <input class="form-control" placeholder="" formControlName="umc" type="text" 
+                  (change)="setValoresStore(datosDelTramiteRealizar,'umc', 'setUMC')"/>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-3">
+                  <label class="form-label">Cantidad UMT*:</label>
+                  <input class="form-control" placeholder="" formControlName="cantidadUMT" type="text" 
+                  (change)="setValoresStore(datosDelTramiteRealizar,'cantidadUMT', 'setCantidadUMT')"/>
+                </div>
+                <div class="col-md-3">
+                  <label class="form-label">UMT*: <span class="bi bi-question-circle-fill" title="UMT" data-bs-toggle="tooltip"></span>
+                  </label>
+                  <input class="form-control" placeholder="" formControlName="umt" type="text"
+                  (change)="setValoresStore(datosDelTramiteRealizar,'umt', 'setUMT')" />
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-6">
+                 <div class="form-group">
+                   <label class="form-label" for="presentacionFarmaceutica">presentacion</label>
+                   <textarea class="form-control" id="presentacionFarmaceutica" rows="2" height="50"
+                   placeholder="" style="height: 100px" formControlName="presentacionFarmaceutica"
+                   (change)="setValoresStore(datosDelTramiteRealizar,'presentacionFarmaceutica','setPresentacionFarmaceutica')"></textarea>
+                 </div>
+               </div>
+           </div>
+              <div class="row mt-5">
+                <div class="col-md-6">
+                  <label class="form-label">Numero de registro sanitario:</label>
+                  <input class="form-control" placeholder="" type="text" formControlName="numeroDeRegistroSnitario" 
+                  (change)="setValoresStore(datosDelTramiteRealizar,'numeroDeRegistroSnitario', 'setNumeroDeRegistroSnitario')"/>
+                </div>
+              </div> 
+              <!-- collapsed crosslist -->
+              <div class="col-md-12 mt-4">
+                <div class="panel-group ficha-collapse" id="accordion">
+                  <div class="panel panel-default">
+                    <div class="panel-heading" (click)="paisOrigenColapsable()" tabindex="0">
+                      <h4 class="panel-title">País de origen</h4>
+                      <button type="button" class="collpase-button collapsed"></button>
+                    </div> @if(paisOrigen){ <div class="panel-collapse collapse in" id="panel-01">
+                      <div class="panel-body">
+                        <crosslist [label]="paisOrigenCrossList.label" [fechas]="paisOrigenCrossList.fechas"></crosslist>
+                      </div>
+                    </div> }
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 mt-4">
+                <div class="panel-group ficha-collapse" id="accordion">
+                  <div class="panel panel-default">
+                    <div class="panel-heading" (click)="paisOrigenColapsable()" tabindex="0">
+                      <h4 class="panel-title">País de procedencia</h4>
+                      <button type="button" class="collpase-button collapsed"></button>
+                    </div>
+                    @if(paisProcedencisColapsable){
+                    <div class="panel-collapse collapse in" id="panel-01" *ngIf="paisOrigenCrossList">
+                      <div class="panel-body">
+                        <crosslist [label]="paisOrigenCrossList.label" [fechas]="paisOrigenCrossList.fechas"></crosslist>
+                      </div>
+                    </div>
+                    }
+                  </div>
+                </div>
+              </div>
+              <div class="row mt-5">
+                <div class="col-md-6">
+                  <app-catalogo-select 
+                  id="tipoProductoData"
+                  formControlName="tipoProducto"
+                  [catalogo]="tipoProductoData.catalogos"
+                   [label]="'Tipo de producto'" 
+                   [required]="true"
+                   (change)="setValoresStore(datosDelTramiteRealizar,'tipoProducto', 'setTipoProducto')"></app-catalogo-select>
+                </div>
+              </div> 
+              <!-- udospecifico crosslist -->
+              <div class="col-md-12 mt-4">
+                <div class="panel-group ficha-collapse" id="accordion">
+                  <div class="panel panel-default">
+                    <div class="panel-heading" (click)="usoEspecificoColapsable()" tabindex="0">
+                      <h4 class="panel-title">Uso especifico</h4>
+                      <button type="button" class="collpase-button collapsed"></button>
+                    </div> @if(usoEspecifico){ <div class="panel-collapse collapse in" id="panel-01">
+                      <div class="panel-body">
+                        <crosslist [fechas]="usoEspecificoCrossList.fechas" [label]="usoEspecificoCrossList.label"></crosslist>
+                      </div>
+                    </div> }
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4 mb-3">
+                <input-fecha
+                [datos]="fechaPago"
+                [setFecha]="dataDeLaSolicitudForm.get('datosDelTramiteRealizar.fechadepago')?.value"
+                (valorCambiado)="seleccionarFechaInicio($event)"
+              ></input-fecha>
+              </div>
+              <div class="col-md-12 d-flex justify-content-end align-items-end">
+                <div class="btn-group">
+                  <button class="btn btn-default ms-3" type="button" data-bs-dismiss="modal" >Cancelar</button>
+                  <button class="btn btn-primary ms-3" type="button" data-bs-dismiss="modal" (click)="onSave()">Agregar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+   </div>
+   <div class="col-md-12 d-flex justify-content-end">
+    <button type="button" class="btn btn-primary" name="eliminar" id="btneliminar">Eliminar</button>
+    <button type="button" class="btn btn-primary" name="modificar" id="btnmodificar"  (click)="onModificar()" >Modificar</button>
+    <button type="button" class="btn btn-primary" name="agregarAduana" id="btnagregarAduana">Agregar</button>
+  </div>
 
       <ng-titulo titulo="Manifiestos y declaraciones" />
       <div class="alert alert-info">

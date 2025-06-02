@@ -9,21 +9,45 @@
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
             [datos]="fabricanteDatos"
+            (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"
           >
           </app-tabla-dinamica>
         </div>
-        <div class="col-md-12 d-flex justify-content-end">
+        <!-- <div class="col-md-12 d-flex justify-content-end">
           <div class="btn-group">
+           <div>
             <button
-            type="button"
-            class="btn btn-primary ms-3"
-            data-bs-toggle="modal"
-            data-bs-target="#modalAgregarMercancias"
-          >
-            Agregar
-          </button>
-          </div>
-        </div>
+            *ngIf="selectedRows.size > 0"
+            class="btn btn-default"
+              class="btn btn-default 3"
+              type="button"
+              data-bs-toggle="modal"
+             (click)="onDeleted()"
+            >
+              Eliminar
+            </button>
+            <button
+            *ngIf="selectedRows.size === 1"
+              type="button"
+              data-bs-toggle="modal"
+              data-bs-target="#modalAgregarMercancias"
+              class="btn btn-default btn-space ms-3"
+              (click)="openModificarMercancias()"    
+            >
+              Modificar
+            </button>
+            </div>
+            <button
+              type="button"
+              class="btn btn-primary ms-3"
+              data-bs-toggle="modal"
+              data-bs-target="#modalAgregarMercancias"
+              (click)="agregarMercancias()"
+            >
+              Agregar
+            </button>
+          </div>  
+      </div> -->
         <div class="col-md-12 mt-5">
           <label class="form-label" for="">Destinatario(destino final)*:</label>
           <app-tabla-dinamica
@@ -55,19 +79,7 @@
              >
           </app-tabla-dinamica>
         </div>
-        <div class="col-md-12 d-flex justify-content-end">
-          <div class="btn-group">
-            <button
-              type="button"
-              class="btn btn-primary ms-3"
-              data-bs-toggle="modal"
-              data-bs-target="#modalAgregarMercancias"
-             
-            >
-              Agregar
-            </button>
-          </div>  
-      </div>
+        
         <div class="col-md-12 mt-5">
           <label class="form-label" for="">Facturador:</label>
           <app-tabla-dinamica
@@ -93,4 +105,4 @@
   </div>
   </div>
   
-  
+  <app-terceros-fabricante></app-terceros-fabricante>

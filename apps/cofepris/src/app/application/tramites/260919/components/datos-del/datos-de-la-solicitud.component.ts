@@ -1,6 +1,6 @@
-import { ADUANA_DATA, CLAVE_SCIAN_DATA, DESCRIPCION_SCIAN_DATA, ESTADO_DATA, REGIMEN_AL_QUE_DATA } from '../../constants/catalogs.enum';
+import { ADUANA_DATA, CLASIFICACION_PRODUCTO_DATA, CLAVE_SCIAN_DATA, DESCRIPCION_SCIAN_DATA, ESPECIFICAR_DATA, ESTADO_DATA, ESTADO_FISICO_DATA, REGIMEN_AL_QUE_DATA, TIPO_PRODUCTO_DATA } from '../../constants/catalogs.enum';
 
-import { AlertComponent, Catalogo, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CrosslistComponent, InputFecha, InputFechaComponent, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 
 import { CONFIGURACION_COLUMNAS_MERCANCIAS, CONFIGURACION_COLUMNAS_SOLI } from '../../constants/column-config.enum';
@@ -19,6 +19,8 @@ import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { Modal } from 'bootstrap';
+import { CrossList, MercanciasInfo } from '../../models/mercancia.model';
 
 /**
  * Componente para gestionar los datos de la solicitud.
@@ -26,7 +28,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 @Component({
   selector: 'app-datos-de-la-solicitud',
   standalone: true,
-  imports: [CommonModule,ReactiveFormsModule,InputRadioComponent,TituloComponent,CatalogoSelectComponent,TablaDinamicaComponent,InputRadioComponent,InputCheckComponent,NotificacionesComponent,AlertComponent,NotificacionesComponent],
+  imports: [CommonModule,ReactiveFormsModule,InputRadioComponent,TituloComponent,CatalogoSelectComponent,TablaDinamicaComponent,InputRadioComponent,InputCheckComponent,NotificacionesComponent,AlertComponent,NotificacionesComponent,CrosslistComponent,InputFechaComponent],
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrls: ['./datos-de-la-solicitud.component.scss'],
 })
@@ -80,8 +82,9 @@ opcionDeBotonDeRadio = OPCION_DE_BOTON_DE_RADIO;
   /** Datos de la tabla */
   tableData: FilaData[] = [];
 
+  tableData2: MercanciasInfo[] = [];
  /** Datos de las mercancías. */
-  mercanciasData: FilaData2[] = [];
+  mercanciasData: MercanciasInfo[] = [];
 
   /** Opciones para el botón de radio de hacerlos */
   hacerlosRadioOptions = HACERLOS_RADIO_OPTIONS;
@@ -112,6 +115,24 @@ opcionDeBotonDeRadio = OPCION_DE_BOTON_DE_RADIO;
 public infoAlert = 'alert-warning';
 
 rfc: string = 'MAVL621207C95';
+
+
+ /** Indica si el país de origen es colapsable */
+ paisOrigen = false;
+  /** Configuración del crosslist para el país de origen */
+  paisOrigenCrossList: CrossList = {} as CrossList;
+
+  /** Configuración del crosslist para el país de procedencia */
+  paisProcedencisCrossList: CrossList = {} as CrossList;
+
+  /** Indica si el país de procedencia es colapsable */
+  paisProcedencisColapsable = false;
+
+/** Indica si el uso específico es colapsable */
+  usoEspecifico = false;
+
+  /** Configuración del crosslist para el uso específico */
+  usoEspecificoCrossList: CrossList = {} as CrossList;
 
   /**
  * Constructor del componente.
@@ -147,10 +168,34 @@ constructor(private fb: FormBuilder,
   * Apellido materno del solicitante.
   */
  apellidoMaterno: string = '';
+ indiceFilaSeleccionada: number | null = null;
 
- public nuevaNotificacion!: Notificacion;
+/** Configuración para el campo de selección de clasificación del producto */
+  public delProducto = CLASIFICACION_PRODUCTO_DATA;
+
+  /** Configuración para especificar clasificación del producto */
+  public especificarData = ESPECIFICAR_DATA;
+
+  /** Configuración para el campo de selección del tipo de producto */
+  public tipoProductoData = TIPO_PRODUCTO_DATA;
+
+/** 
+ * Datos de configuración para el estado físico de la mercancía.
+ */
+public estadoFisicoData = ESTADO_FISICO_DATA;
+
+ /** Conjunto de filas seleccionadas */
+ filasSeleccionadas: Set<number> = new Set();
+ public nuevaNotificacion: Notificacion | null = null;
+
   elementoParaEliminar!: number;
   pedimentos: Array<Pedimento> = [];
+
+  fechaPago: InputFecha = {
+      labelNombre: 'Fecha de pago',
+      required: false,
+      habilitado: true,
+    };
 
 /** Inicialización del componente */
   ngOnInit(): void {
@@ -169,25 +214,68 @@ constructor(private fb: FormBuilder,
     this.getRegimenalqueData();
     this.getAduanaData();
     this.getMercanciasData();
+    this.getClaveDescripcionDelData();
+    this.createclaveScianForm();
+    this.getTipoProductoData();
+    this.getClasificacionDelProductoData();
+    this.getEspificarData()
+    this.getEstadoFisicoData();
   }
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
-      this.pedimentos.splice(this.elementoParaEliminar, 1);
+      // Filtrar las filas seleccionadas
+      this.tableData = this.tableData.filter((row) => {
+        const ROW_ID = row.id || (row.claveScianG && row.claveScianG.claveScian);
+        return !this.filasSeleccionadas.has(Number(ROW_ID));
+      });
+  
+      // Borrar la selección y la notificación
+      this.filasSeleccionadas.clear();
+      this.nuevaNotificacion = null;
     }
   }
-  abrirModal(i: number = 0): void {
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: 'danger',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favorde capturar su establecimiento. Acerar',
-      cerrar: false,
-      tiempoDeEspera: 2000,
-      txtBtnAceptar: 'Aceptar',
-      txtBtnCancelar: 'Cancelar',
+  abrirModal(i: number = 0, isSeleccionarEstablecimiento: boolean = false): void {
+    if (isSeleccionarEstablecimiento) {
+      // Condición específica para "Seleccionar establecimiento"
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+    } else if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
+      // No hay filas seleccionadas
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: '',
+        mensaje: 'Selecciona un registro',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
+    } else {
+      // Hay filas seleccionadas
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: '',
+        mensaje: '¿Estás seguro que deseas eliminar los registros marcados?',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: 'Cancelar',
+      };
     }
-   
+  
     this.elementoParaEliminar = i;
   }
   /** Configuración del formulario con validaciones para los campos del trámite. */
@@ -239,11 +327,21 @@ createForm(): void{
    
   });
 }
-
+createclaveScianForm(): void {
+  this.clavaScianForm = this.fb.group({
+    claveScianG: this.fb.group({
+      claveScian: ['', Validators.required],
+      descripcionDelScian: ['', Validators.required]
+    }),
+  });
+}
  /** Obtiene el formulario de datos del trámite a realizar */
 
  get datosDelTramiteRealizar(): FormGroup {
   return this.dataDeLaSolicitudForm.get('datosDelTramiteRealizar') as FormGroup;
+}
+seleccionarFechaInicio(evento: string): void {
+  this.solicitud260919Store.setFechadePago(evento);
 }
 
 /**
@@ -323,8 +421,25 @@ changeEvent(): void{
     this.importarDeRemediosHerbals.getClaveScianData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
-      this.tableData = data as unknown as FilaData[];
+      // this.tableData = data as unknown as FilaData[];
+      this.claveScianData.catalogos = data as Catalogo[];
+
       });
+  }
+  getClasificacionDelProductoData(): void{
+    this.importarDeRemediosHerbals.getClasificacionDelProductoData()
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((data) => {
+      this.delProducto.catalogos = data as Catalogo[];
+    });
+  }
+    /** Obtiene los datos para especificar clasificación del producto */
+  getEspificarData(): void{
+    this.importarDeRemediosHerbals.getEspificarData()
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((data) => {
+      this.especificarData.catalogos = data as Catalogo[];
+    });
   }
 
   /**
@@ -336,10 +451,16 @@ changeEvent(): void{
     this.importarDeRemediosHerbals.getMercanciasData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
-      this.mercanciasData = data as unknown as FilaData2[];
+      this.mercanciasData = data as unknown as MercanciasInfo[];
       });
   }
-
+  getEstadoFisicoData(): void{
+    this.importarDeRemediosHerbals.getEstadoFisicoData()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.estadoFisicoData.catalogos = data as Catalogo[];
+      });
+  }
 
     /** Obtiene los datos del régimen */
   getRegimenalqueData(): void{
@@ -371,7 +492,7 @@ changeEvent(): void{
   }
 
   seleccionarEstablecimiento(): void {
-    this.abrirModal(0);
+    this.abrirModal(0,true);
   }
 
   getSolicitudData(): void {
@@ -392,6 +513,180 @@ changeEvent(): void{
  
   }
 
+  getClaveDescripcionDelData(): void{
+      this.importarDeRemediosHerbals.getClaveDescripcionDelData()
+        .pipe(takeUntil(this.destroyed$))
+        .subscribe((data) => {
+          this.descripcionDelScianData.catalogos = data as Catalogo[];
+        });
+    }
+    getTipoProductoData(): void{
+      this.importarDeRemediosHerbals.getTipoProductoData()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.tipoProductoData.catalogos = data as Catalogo[];
+      });
+    }
+ /**
+ * Método para alternar el estado colapsable del país de origen.
+ * Cambia el valor de `paisOrigen` entre verdadero y falso.
+ */
+ paisOrigenColapsable(): void {
+  this.paisOrigen = !this.paisOrigen;
+}
+
+/**
+* Método para alternar el estado colapsable del país de procedencia.
+* Cambia el valor de `paisProcedencisColapsable` entre verdadero y falso.
+*/
+paisProcedencis_colapsable(): void {
+  this.paisProcedencisColapsable = !this.paisProcedencisColapsable;
+}
+
+/**
+* Método para alternar el estado colapsable del uso específico.
+* Cambia el valor de `usoEspecifico` entre verdadero y falso.
+*/
+usoEspecificoColapsable(): void {
+  this.usoEspecifico = !this.usoEspecifico;
+}
+     onfilasSeleccionadas(filasSeleccionadas: FilaData[]| MercanciasInfo[]): void {
+          if (filasSeleccionadas.length > 0 && 'clasificaionProductos' in filasSeleccionadas[0]) {
+            this.filasSeleccionadas = new Set((filasSeleccionadas as MercanciasInfo[]).map((row) => row.id));
+           }
+           if (filasSeleccionadas.length > 0 && 'claveScianG' in filasSeleccionadas[0] && 'claveScian' in filasSeleccionadas[0].claveScianG) {
+            this.filasSeleccionadas = new Set((filasSeleccionadas as FilaData[]).map((row) => Number(row.claveScianG.claveScian)));
+          } else {
+            this.filasSeleccionadas.clear();
+          }
+        }
+        onDelete(): void {
+          if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
+                const modalElement = document.getElementById('seleccionaRegistroModal');
+                if (modalElement) {
+                  const modal = new Modal(modalElement);
+                  modal.show();
+                }
+              } else {
+              const modalElement = document.getElementById('confirmarEliminarModal');
+              if (modalElement) {
+                const modal = new Modal(modalElement);
+                modal.show();
+              }
+              }
+              this.clavaScianForm.reset(); 
+              this.abrirModal();
+        }
+
+        onAgregar(): void{
+          this.showClavaScianForm = true; 
+          
+        }
+        onSubmit(): void {
+          const FORM_DATA = { ...this.clavaScianForm.value };
+          FORM_DATA.claveScianG.claveScian = this.claveScianData.catalogos.find(
+            (item: Catalogo) => String(item.id) === String(FORM_DATA.claveScianG.claveScian)
+          )?.descripcion || 'Not Found';
+        
+          FORM_DATA.claveScianG.descripcionDelScian = this.descripcionDelScianData.catalogos.find(
+            (item: Catalogo) => String(item.id) === String(FORM_DATA.claveScianG.descripcionDelScian)
+          )?.descripcion || 'Not Found';
+          this.tableData.push(FORM_DATA);
+          this.showClavaScianForm = false;
+            this.clavaScianForm.reset(); 
+        }
+        onCancelar(): void {
+          this.showClavaScianForm = false; 
+          this.clavaScianForm.reset(); 
+        }
+
+        onLimpiar(): void {
+          this.clavaScianForm.reset();
+        }      
+        onSave(): void {
+          const FORM_DATA = { ...this.dataDeLaSolicitudForm.value };
+        
+          FORM_DATA.tipoProducto = this.tipoProductoData.catalogos.find(
+            (item: Catalogo) => String(item.id) === String(FORM_DATA.tipoProducto)
+          )?.descripcion || FORM_DATA.tipoProducto;
+        
+          FORM_DATA.clasificaionProductos = this.delProducto.catalogos.find(
+            (item: Catalogo) => String(item.id) === String(FORM_DATA.clasificaionProductos)
+          )?.descripcion || FORM_DATA.clasificaionProductos;
+        
+          FORM_DATA.especificarProducto = this.especificarData.catalogos.find(
+            (item: Catalogo) => String(item.id) === String(FORM_DATA.especificarProducto)
+          )?.descripcion || FORM_DATA.especificarProducto;
+        
+          FORM_DATA.estadoFisico = this.estadoFisicoData.catalogos.find(
+            (item: Catalogo) => String(item.id) === String(FORM_DATA.estadoFisico)
+          )?.descripcion || FORM_DATA.estadoFisico;
+        
+          if (this.indiceFilaSeleccionada !== null) {
+            // Update existing row in mercanciasData
+            this.mercanciasData[this.indiceFilaSeleccionada] = { ...this.mercanciasData[this.indiceFilaSeleccionada], ...FORM_DATA };
+            this.indiceFilaSeleccionada = null;
+          } else {
+            // Add new row to mercanciasData
+            this.mercanciasData.push(FORM_DATA);
+          }
+        
+          // Push the updated mercanciasData to the tableData
+          this.tableData2 = [...this.mercanciasData];
+        
+          // Reset the form
+          this.dataDeLaSolicitudForm.reset();
+        }
+
+
+        // onModificar(): void {
+        //   if (!this.filasSeleccionadas || this.filasSeleccionadas.size > 1) {
+        //     return;
+        //   }
+        
+        //   const SELECTED_ID = Array.from(this.filasSeleccionadas)[0];
+        //   const SELECTED_ROW_INDEX = this.mercanciasData.findIndex((row) => row.id === SELECTED_ID);
+        
+        //   if (SELECTED_ROW_INDEX === -1) {
+        //     return;
+        //   }
+        
+        //   this.indiceFilaSeleccionada = SELECTED_ROW_INDEX;
+        //   const SELECTED_ROW = this.mercanciasData[SELECTED_ROW_INDEX];
+        
+        //   // Parche los valores del formulario con la asignación correcta para los campos del catálogo
+        //   this.dataDeLaSolicitudForm.patchValue({
+        //     descripcionFraccionArancelaria: SELECTED_ROW.descripcionFraccion,
+        //     cantidadUMT: SELECTED_ROW.cantidadUMT,
+        //     umt: SELECTED_ROW.unidadUMT,
+        //     cantidadUMC: SELECTED_ROW.cantidadUMC,
+        //     umc: SELECTED_ROW.unidad,
+        //     tipoProducto: this.tipoProductoData.catalogos.find(
+        //       (item) => item.descripcion === SELECTED_ROW.tipoProducto
+        //     )?.id || SELECTED_ROW.tipoProducto,
+        //     clasificaionProductos: this.delProducto.catalogos.find(
+        //       (item) => item.descripcion === SELECTED_ROW.clasificacion
+        //     )?.id || SELECTED_ROW.clasificacion,
+        //     especificarProducto: this.especificarData.catalogos.find(
+        //       (item) => item.descripcion === SELECTED_ROW.especificar
+        //     )?.id || SELECTED_ROW.especificar,
+        //     nombreProductoEspecifico: SELECTED_ROW.denominacionEspecifica,
+        //     denominacionDistintiva: SELECTED_ROW.denominacionDistintiva,
+        //     denominacionNombre: SELECTED_ROW.denominacionComun,
+        //     estadoFisico: this.estadoFisicoData.catalogos.find(
+        //       (item) => item.descripcion === SELECTED_ROW.estadoFisico
+        //     )?.id || SELECTED_ROW.estadoFisico,
+        //     presentacionFarmaceutica: SELECTED_ROW.presentacion,
+        //     fraccionArancelaria: SELECTED_ROW.fraccionArancelaria,
+        //   });
+        
+        //   // mostrar el modal
+        //   const MODAL_ELEMENT = document.getElementById('modalAgregarMercancia');
+        //   if (MODAL_ELEMENT) {
+        //     const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
+        //     MODAL_INSTANCE.show();
+        //   } 
+        // }
 /**
  * Método para establecer valores en el store de la solicitud.
  * Obtiene el valor de un campo del formulario y lo asigna al método correspondiente en el store.
