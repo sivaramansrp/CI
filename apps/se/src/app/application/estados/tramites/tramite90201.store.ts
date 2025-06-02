@@ -2,39 +2,66 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
 /**
- * Creacion del estado inicial para la interfaz de tramite 90201
- * @returns Solicitud90201
+ * Representa el estado de la solicitud para el trámite 90201.
+ *
+ * @property fraccion - Fracción arancelaria relacionada con la solicitud.
+ * @property sector - Sector económico al que pertenece la solicitud.
+ * @property rfc - Registro Federal de Contribuyentes del solicitante.
+ * @property representacionFederal - Indica si existe representación federal.
+ * @property actividadProductiva - Actividad productiva principal del solicitante.
  */
 export interface Solicitud90201State {
   fraccion: string;
   sector: string;
   rfc: string;
+  representacionFederal: string;
+  actividadProductiva: string;
 }
 
 /**
- * Creacion del estado inicial para la interfaz de tramite 90201
- * @returns Solicitud90201
+ * Crea y retorna el estado inicial para la solicitud 90201.
+ * 
+ * @returns {Solicitud90201State} Un objeto que representa el estado inicial con valores vacíos para fracción, sector, RFC, representación federal y actividad productiva.
  */
 export function createInitialState(): Solicitud90201State {
   return {
     fraccion: '',
     sector: '',
     rfc: '',
+    representacionFederal: '',
+    actividadProductiva: ''
   };
 }
 
+/**
+ * Store para gestionar el estado de la solicitud 90201.
+ * 
+ * Proporciona métodos para actualizar los campos principales de la solicitud,
+ * tales como fracción, sector, RFC, representación federal y actividad productiva.
+ * Permite también limpiar el estado de la solicitud.
+ * 
+ * @extends Store<Solicitud90201State>
+ * @decorator @Injectable
+ * @decorator @StoreConfig
+ */
 @Injectable({
   providedIn: 'root',
 })
 @StoreConfig({ name: 'tramite90201', resettable: true })
 export class Tramite90201Store extends Store<Solicitud90201State> {
+
+  /**
+   * Constructor de la clase.
+   * Llama al constructor de la clase base pasando el estado inicial creado por `createInitialState()`.
+   */
   constructor() {
     super(createInitialState());
   }
 
   /**
-   * Actualiza la fracción de la solicitud
-   * @param fraccion
+   * Actualiza el estado con el valor proporcionado para la fracción arancelaria.
+   *
+   * @param fraccion - La nueva fracción arancelaria que se establecerá en el estado.
    */
   public setFraccion(fraccion: string) {
     this.update((state) => ({
@@ -44,8 +71,9 @@ export class Tramite90201Store extends Store<Solicitud90201State> {
   }
 
   /**
-   * Actualiza el sector de la solicitud
-   * @param sector
+   * Actualiza el sector de la solicitud.
+   *
+   * @param sector - El nuevo sector que se establecerá en el estado.
    */
   public setSector(sector: string) {
     this.update((state) => ({
@@ -55,8 +83,9 @@ export class Tramite90201Store extends Store<Solicitud90201State> {
   }
 
   /**
-   * Actualiza el RFC de la solicitud
-   * @param rfc
+   * Actualiza el RFC de la solicitud.
+   *
+   * @param rfc - El nuevo RFC que se establecerá en el estado.
    */
   public setRfc(rfc: string) {
     this.update((state) => ({
@@ -66,7 +95,32 @@ export class Tramite90201Store extends Store<Solicitud90201State> {
   }
 
   /**
-   * Limpia los datos de la solicitud
+   * Actualiza el estado con el valor proporcionado para la representación federal.
+   *
+   * @param representacionFederal - El nuevo valor de la representación federal que se establecerá en el estado.
+   */
+  public setRepresentacionFederal(representacionFederal: string) {
+    this.update((state) => ({ 
+      ...state,
+      representacionFederal,
+    }));
+  }
+  
+  /**
+   * Actualiza el estado con una nueva actividad productiva.
+   *
+   * @param actividadProductiva - La actividad productiva que se va a establecer en el estado.
+   */
+  public setActividadProductiva(actividadProductiva: string) {
+    this.update((state) => ({
+      ...state,
+      actividadProductiva,
+    }));
+  }
+
+  /**
+   * Limpia la solicitud actual restableciendo el estado a sus valores iniciales.
+   * Utiliza el método `reset()` para reiniciar todos los campos relacionados con la solicitud.
    */
   public limpiarSolicitud() {
     this.reset();

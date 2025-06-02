@@ -9,6 +9,7 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { PasoDosComponent } from './paso-dos.component';
 
+
 describe('PasoDosComponent', () => {
   let fixture;
   let component;

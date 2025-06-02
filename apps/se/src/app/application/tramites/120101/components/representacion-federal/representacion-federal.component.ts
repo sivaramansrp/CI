@@ -1,8 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../../estados/tramites/tramite120101.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { REPRESENTACION_FEDERAL } from '../../constantes/solicitud-de-registro-tpl.enum';
@@ -35,6 +36,14 @@ import { Tramite120101Query } from '../../../../estados/queries/tramite120101.qu
   styleUrl: './representacion-federal.component.scss',
 })
 export class RepresentacionFederalComponent implements OnInit, OnDestroy {
+
+  /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
+    
   /**
    * compo doc
    * @property representacionFederalFormData

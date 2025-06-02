@@ -1,6 +1,6 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CARGA_MERCANCIA_SELECCIONADAS, CONFIGURACION_MERCANCIA, MERCANCIA_SELECCIONADAS, TEXTOS_REQUISITOS } from '../../constantes/modificacion.enum';
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { ConfiguracionColumna, MenusDesplegables } from '../../models/modificacion.enum';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -56,7 +56,7 @@ export const FECHA_FINAL = {
   styleUrl: './certificado-de-origen.component.scss'
 })
 
-export class CertificadoDeOrigenComponent implements OnDestroy {
+export class CertificadoDeOrigenComponent implements OnDestroy, OnInit {
   /**
    * Propiedad de entrada que recibe un arreglo de menús desplegables.
    * @type {MenusDesplegables[]}
@@ -69,6 +69,11 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
    */
   @Input() operador!: boolean;
 
+  /**
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   * @type {boolean}
+   */
+  @Input() esFormularioSoloLectura!: boolean;
   /**
    * Propiedad de entrada que indica si la tabla de selección está activada o no.
    * @type {boolean}
@@ -152,7 +157,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
   * @type {EventEmitter<Mercancia[]>}
   */
   @Output() guardarClicadoEvent: EventEmitter<Mercancia[]> = new EventEmitter<Mercancia[]>();
-  
+
   /**
    * Propiedad que almacena un arreglo de objetos de tipo `Mercancia` seleccionados para ser guardados.
    * @type {Mercancia[]}
@@ -194,7 +199,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
    * Configuración de las columnas de la tabla de mercancia seleccionada.
    * @type {ConfiguracionColumna<Mercancia>[]}
    */
-    configuracionTablaMercancia: ConfiguracionColumna<Mercancia>[] = MERCANCIA_SELECCIONADAS;
+  configuracionTablaMercancia: ConfiguracionColumna<Mercancia>[] = MERCANCIA_SELECCIONADAS;
 
   /**
    * Configuración de las columnas de la tabla de mercancia seleccionada.
@@ -245,13 +250,13 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
    * @type {boolean}
    */
 
- /**
-   * Emisor de eventos para indicar si el formulario es válido.
-   * @type {EventEmitter<boolean>}
-   */
- @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(
-  false
-);  
+  /**
+    * Emisor de eventos para indicar si el formulario es válido.
+    * @type {EventEmitter<boolean>}
+    */
+  @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(
+    false
+  );
 
 
   /**
@@ -259,7 +264,29 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
    * @param fb FormBuilder para la creación del formulario reactivo.
    */
   constructor(private fb: FormBuilder) {
-    // Inicializa el formulario reactivo con los campos y validaciones necesarias.
+
+    // Si hay datos del formulario, se los asigna al formulario después de un pequeño retraso.
+
+    setTimeout(() => {
+      if (this.datosForm) {
+        this.formCertificado.patchValue(this.datosForm);
+      }
+    }, 100);
+
+    this.actualizarDatosFormularioSolicitud();
+  }
+
+  /**
+   * Crea e inicializa el formulario reactivo `formCertificado` con los controles y validaciones requeridas
+   * para el componente Certificado de Origen.
+   *
+   * @remarks
+   * Este método configura los campos del formulario, incluyendo validaciones como `required` y `min`.
+   *
+   * @command
+   * Utilice este método para inicializar el formulario antes de interactuar con los datos del certificado.
+   */
+  createForm(): void {
     this.formCertificado = this.fb.group({
       si: [false],
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
@@ -277,18 +304,18 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
       calle: [''],
       numeroLetra: [''],
     });
-
-    // Si hay datos del formulario, se los asigna al formulario después de un pequeño retraso.
-    
-    setTimeout(() => {
-      if (this.datosForm) {
-        this.formCertificado.patchValue(this.datosForm);
-      }
-    }, 100);
-
-    this.actualizarDatosFormularioSolicitud();
   }
-
+  /**
+* Evalúa si se debe inicializar o cargar datos en el formulario.
+*/
+  inicializarEstadoFormulario(): void {
+    if (!this.formCertificado) {
+      this.createForm();
+    }
+    if (this.esFormularioSoloLectura) {
+      this.formCertificado.disable();
+    }
+  }
   /**
    * Actualiza los validadores requeridos en los campos del formulario especificados
    * en la lista `elementosRequeridos`.
@@ -297,11 +324,11 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
    */
   actualizarDatosFormularioSolicitud(): void {
     this.elementosRequeridos?.forEach((campo) => {
-        const CONTROL = this.formCertificado.get(campo);
-        if (CONTROL) {
-            CONTROL.setValidators(Validators.required);
-            CONTROL.updateValueAndValidity();
-        }
+      const CONTROL = this.formCertificado.get(campo);
+      if (CONTROL) {
+        CONTROL.setValidators(Validators.required);
+        CONTROL.updateValueAndValidity();
+      }
     });
   }
 
@@ -320,6 +347,15 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
   tipoSeleccion(estado: Catalogo): void {
     this.paisBloquEvent.emit(estado);
   }
+  /**
+   * @inheritdoc
+   * 
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Inicializa el estado del formulario llamando a `inicializarEstadoFormulario()`.
+   */
+  ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
 
   /**
    * Método del ciclo de vida ngOnDestroy. Se utiliza para cancelar las suscripciones y evitar fugas de memoria.
@@ -328,9 +364,20 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
-  setValoresStore(formGroupName: string, campo: string, storeStateName: string):void {    
-    const VALOR = this.formCertificado.get(campo)?.value;    
+  /**
+    * Establece valores en el store y emite eventos relacionados con el formulario.
+    *
+    * @param formGroupName - El nombre del grupo de formulario al que pertenece el campo.
+    * @param campo - El nombre del campo cuyo valor se desea obtener y procesar.
+    * @param storeStateName - El nombre del estado en el store asociado al campo.
+    * 
+    * @remarks
+    * Este método obtiene el valor de un campo específico del formulario `formDatosDelDestinatario`,
+    * emite un evento para indicar si el formulario es válido y otro evento con los datos del campo
+    * y su estado asociado en el store.
+    */
+  setValoresStore(formGroupName: string, campo: string, storeStateName: string): void {
+    const VALOR = this.formCertificado.get(campo)?.value;
     this.formaValida.emit(this.formCertificado.valid);
     this.formCertificadoEvent.emit({ formGroupName, campo, valor: VALOR, storeStateName });
   }
@@ -354,9 +401,9 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
    * Cambia el valor de la fecha de inicio en el formulario.
    * @param nuevo_valor El nuevo valor de la fecha de inicio.
    */
-  public cambioFechaInicio(nuevo_valor: string): void {    
+  public cambioFechaInicio(nuevo_valor: string): void {
     this.formCertificado.get('fechaInicioInput')?.setValue(nuevo_valor);
-    this.setValoresStore('formCertificado','fechaInicioInput',nuevo_valor)
+    this.setValoresStore('formCertificado', 'fechaInicioInput', nuevo_valor)
     this.formCertificado.get('fechaInicioInput')?.markAsUntouched();
   }
 
@@ -366,7 +413,7 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
    */
   public cambioFechaFinal(nuevo_valor: string): void {
     this.formCertificado.get('fechaFinalInput')?.setValue(nuevo_valor);
-    this.setValoresStore('formCertificado','fechaFinalInput',nuevo_valor)
+    this.setValoresStore('formCertificado', 'fechaFinalInput', nuevo_valor)
     this.formCertificado.get('fechaFinalInput')?.markAsUntouched();
   }
 
@@ -390,22 +437,22 @@ export class CertificadoDeOrigenComponent implements OnDestroy {
     this.filaClics.emit(tableData);
   }
 
-    /**
-   * Método que asigna un objeto de tipo `Mercancia` al arreglo de mercancías seleccionadas para guardar.
-   * @param {Mercancia} evento - Objeto de tipo `Mercancia` que ha sido seleccionado.
-   */
-    obtenerSeleccionadoMercancia(evento: Mercancia): void {
-      this.seleccionadaguardarClicado = [evento];
+  /**
+ * Método que asigna un objeto de tipo `Mercancia` al arreglo de mercancías seleccionadas para guardar.
+ * @param {Mercancia} evento - Objeto de tipo `Mercancia` que ha sido seleccionado.
+ */
+  obtenerSeleccionadoMercancia(evento: Mercancia): void {
+    this.seleccionadaguardarClicado = [evento];
+  }
+
+  /**
+  * Método que elimina los objetos seleccionados del arreglo de mercancías guardadas.
+  * @remarks
+  * Este método verifica si hay elementos seleccionados antes de vaciar el arreglo `guardarClicado`.
+  */
+  eliminarSeleccionados(): void {
+    if (this.seleccionadaguardarClicado.length > 0) {
+      this.guardarClicado = [];
     }
-  
-    /**
-    * Método que elimina los objetos seleccionados del arreglo de mercancías guardadas.
-    * @remarks
-    * Este método verifica si hay elementos seleccionados antes de vaciar el arreglo `guardarClicado`.
-    */
-    eliminarSeleccionados(): void {
-      if (this.seleccionadaguardarClicado.length > 0) {
-          this.guardarClicado = [];
-      }
-    }
+  }
 }
