@@ -4,26 +4,32 @@
  * Incluye un formulario para capturar los datos de las facturas y tablas para mostrar las facturas disponibles y asociadas.
  */
 
-import { AsociadasTableColumns, CapturarColumns } from '../../models/elegibilidad-de-textiles.model';
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ElegibilidadDeTextilesStore, TextilesState } from '../../estados/elegibilidad-de-textiles.store';
+import {
+  AsociadasTableColumns,
+  CapturarColumns,
+} from '../../models/elegibilidad-de-textiles.model';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  ElegibilidadDeTextilesStore,
+  TextilesState,
+} from '../../estados/elegibilidad-de-textiles.store';
 
-import { 
-  ConfiguracionColumna, 
-
+import {
+  ConfiguracionColumna,
   SeccionLibQuery,
+  SeccionLibState,
+  SeccionLibStore,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+} from '@ng-mf/data-access-user';
 
-  SeccionLibState, 
-
-  SeccionLibStore, 
-
-  TablaDinamicaComponent, 
-
-  TablaSeleccion
- } from '@ng-mf/data-access-user';
-
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject,delay, map, takeUntil,tap } from 'rxjs';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
@@ -41,10 +47,15 @@ import { VALIDO } from '../../constantes/elegibilidad-de-textiles.enums';
     CommonModule,
     ReactiveFormsModule,
     TableComponent,
-    TablaDinamicaComponent
-  ]
+    TablaDinamicaComponent,
+  ],
 })
 export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
+  /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+   */
+  @Input()
+  formularioDeshabilitado: boolean = false;
   /**
    * @property {FormGroup} formularioAsociacionFactura - El grupo de formularios para capturar los datos de las facturas asociadas.
    */
@@ -89,59 +100,61 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    * @property {ConfiguracionColumna<CapturarColumns>[]} tableColumns - Configuración de las columnas de la tabla de facturas disponibles.
    */
   tableColumns: ConfiguracionColumna<CapturarColumns>[] = [
-        { encabezado: 'Número de la factura', 
-          clave: (fila) => fila.numeroDeLaFactura, 
-          orden: 1 },
-        {
-          encabezado: 'Razón social',
-          clave: (fila) => fila.razonSocial,
-          orden: 2,
-        },
-        {
-          encabezado: 'Domicilio',
-          clave: (fila) => fila.domicilio,
-          orden: 3,
-        },
-        {
-          encabezado: 'Fecha de expedición de la factura',
-          clave: (fila) => fila.fechaExpedicionFactura,
-          orden: 4,
-        },
-        {
-          encabezado: 'Cantidad total',
-          clave: (fila) => fila.cantidadTotal,
-          orden: 5,
-        },
-        {
-          encabezado: 'Cantidad disponible',
-          clave: (fila) => fila.cantidadDisponible,
-          orden: 6,
-        },
-        {
-          encabezado: 'Unidad de medida',
-          clave: (fila) => fila.unidadMedida,
-          orden: 7,
-        },
-        {
-          encabezado: 'Valor en dólares',
-          clave: (fila) => fila.valorDolares,
-          orden: 8,
-        },
-      ];
+    {
+      encabezado: 'Número de la factura',
+      clave: (fila) => fila.numeroDeLaFactura,
+      orden: 1,
+    },
+    {
+      encabezado: 'Razón social',
+      clave: (fila) => fila.razonSocial,
+      orden: 2,
+    },
+    {
+      encabezado: 'Domicilio',
+      clave: (fila) => fila.domicilio,
+      orden: 3,
+    },
+    {
+      encabezado: 'Fecha de expedición de la factura',
+      clave: (fila) => fila.fechaExpedicionFactura,
+      orden: 4,
+    },
+    {
+      encabezado: 'Cantidad total',
+      clave: (fila) => fila.cantidadTotal,
+      orden: 5,
+    },
+    {
+      encabezado: 'Cantidad disponible',
+      clave: (fila) => fila.cantidadDisponible,
+      orden: 6,
+    },
+    {
+      encabezado: 'Unidad de medida',
+      clave: (fila) => fila.unidadMedida,
+      orden: 7,
+    },
+    {
+      encabezado: 'Valor en dólares',
+      clave: (fila) => fila.valorDolares,
+      orden: 8,
+    },
+  ];
 
   /**
    * @property {ConfiguracionColumna<AsociadasTableColumns>[]} asociadastableColumns - Configuración de las columnas de la tabla de facturas asociadas.
    */
   asociadastableColumns: ConfiguracionColumna<AsociadasTableColumns>[] = [
-    { 
-      encabezado: 'Candidad asociada', 
-      clave: (fila) => fila.candidadAsociada, 
-      orden: 1 
+    {
+      encabezado: 'Candidad asociada',
+      clave: (fila) => fila.candidadAsociada,
+      orden: 1,
     },
-    { 
-      encabezado: 'Número de la factura', 
-      clave: (fila) => fila.numeroDeLaFactura, 
-      orden: 2 
+    {
+      encabezado: 'Número de la factura',
+      clave: (fila) => fila.numeroDeLaFactura,
+      orden: 2,
     },
     {
       encabezado: 'Razón social',
@@ -206,48 +219,54 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    * @description Inicializa el componente y obtiene los datos de las facturas.
    */
   ngOnInit(): void {
-    
     this.seccionQuery.selectSeccionState$
-          .pipe(
-            takeUntil(this.destroyNotifier$),
-            map((seccionState) => {
-              this.seccionState = seccionState;
-            })
-          )
-          .subscribe();
-        this.ElegibilidadDeTextilesQuery.selectTextile$
-          .pipe(
-            takeUntil(this.destroyNotifier$),
-            map((state) => {
-              this.facturasState = state as TextilesState;
-            })
-          )
-          .subscribe();
-          this.initActionFormBuild();
-          this.recuperarDatos();
-          this.recuperarDatosAsociadas();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccionState = seccionState;
+        })
+      )
+      .subscribe();
+    this.ElegibilidadDeTextilesQuery.selectTextile$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((state) => {
+          this.facturasState = state as TextilesState;
+        })
+      )
+      .subscribe();
+    this.initActionFormBuild();
+    this.recuperarDatos();
+    this.recuperarDatosAsociadas();
 
     this.formularioAsociacionFactura.statusChanges
-          .pipe(
-            takeUntil(this.destroyNotifier$),
-            delay(10),
-            tap((_value) => {
-              if (this.formularioAsociacionFactura.valid) {
-                this.ElegibilidadDeTextilesStore.setFormaValida([
-                  ...this.facturasState.formaValida,
-                  { id: 1, descripcion: "Valida" }])
-              }
-            })
-          )
-          .subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap((_value) => {
+          if (this.formularioAsociacionFactura.valid) {
+            this.ElegibilidadDeTextilesStore.setFormaValida([
+              ...this.facturasState.formaValida,
+              { id: 1, descripcion: 'Valida' },
+            ]);
+          }
+        })
+      )
+      .subscribe();
+    this.seccionStore.establecerFormaValida([false]);
+    if (
+      this.facturasState.formaValida &&
+      this.facturasState.formaValida[0] &&
+      this.facturasState.formaValida[0].descripcion === VALIDO
+    ) {
+      this.seccionStore.establecerSeccion([true]);
+      this.seccionStore.establecerFormaValida([true]);
+    } else {
       this.seccionStore.establecerFormaValida([false]);
-      if(this.facturasState.formaValida && this.facturasState.formaValida[0] && this.facturasState.formaValida[0].descripcion === VALIDO){
-        this.seccionStore.establecerSeccion([true]);
-        this.seccionStore.establecerFormaValida([true])
-      }
-      else{
-        this.seccionStore.establecerFormaValida([false]);
-      }
+    }
+    if (this.formularioDeshabilitado) {
+      this.formularioAsociacionFactura.disable();
+    }
   }
 
   /**
@@ -256,9 +275,19 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    */
   initActionFormBuild(): void {
     this.formularioAsociacionFactura = this.fb.group({
-      cantidadFacturas: [this.facturasState.cantidadFacturas, [Validators.required]],
-      cantidadFacturasTotal:[{value:this.facturasState.cantidadFacturasTotal,disabled:true}],
-      metrosCuadradosEquivalentes:[{value:this.facturasState.metrosCuadradosEquivalentes,disabled:true}]
+      cantidadFacturas: [
+        this.facturasState.cantidadFacturas,
+        [Validators.required],
+      ],
+      cantidadFacturasTotal: [
+        { value: this.facturasState.cantidadFacturasTotal, disabled: true },
+      ],
+      metrosCuadradosEquivalentes: [
+        {
+          value: this.facturasState.metrosCuadradosEquivalentes,
+          disabled: true,
+        },
+      ],
     });
   }
 
@@ -267,16 +296,17 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    * @description Obtiene los datos de las facturas disponibles desde el servicio.
    */
   recuperarDatos(): void {
-    this.elegibilidadTextilesService.obtenerTablaDatos<CapturarColumns>('facturasDisponible.json')
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe({
-      next: (response) => {
-          this.facturasDisponible = response as CapturarColumns[]
-      },
-      error: (error) => {
-        console.error('Error al obtener los datos:', error);
-      }}
-    );
+    this.elegibilidadTextilesService
+      .obtenerTablaDatos<CapturarColumns>('facturasDisponible.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          this.facturasDisponible = response as CapturarColumns[];
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+        },
+      });
   }
 
   /**
@@ -284,16 +314,17 @@ export class FormularioAsociacionFacturaComponent implements OnInit, OnDestroy {
    * @description Obtiene los datos de las facturas asociadas desde el servicio.
    */
   recuperarDatosAsociadas(): void {
-    this.elegibilidadTextilesService.obtenerTablaDatos<AsociadasTableColumns>('facturas-asociadas.json')
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe({
-      next: (response) => {
-          this.facturasAsociadas = response as AsociadasTableColumns[]
-      },
-      error: (error) => {
-        console.error('Error al obtener los datos:', error);
-      }}
-    );
+    this.elegibilidadTextilesService
+      .obtenerTablaDatos<AsociadasTableColumns>('facturas-asociadas.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          this.facturasAsociadas = response as AsociadasTableColumns[];
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+        },
+      });
   }
 
   /**

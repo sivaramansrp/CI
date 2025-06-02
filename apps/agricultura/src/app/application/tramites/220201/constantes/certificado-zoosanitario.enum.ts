@@ -76,3 +76,5 @@ export const TEXTOS =
 export const TERCEROR_TEXTO_DE_ALERTA =
   'Las tablas con asterisco son obligatorias y debes agregar por lo menos un registro.';
 export const IDDEUSUARIO = 21;
+
+export const FECHAPAGODATE ='15/03/2025'
