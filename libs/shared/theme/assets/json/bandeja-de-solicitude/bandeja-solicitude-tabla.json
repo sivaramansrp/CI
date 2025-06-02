@@ -9,6 +9,15 @@
     "numeroDeProcedimiento": "301"
   },
   {
+    "id": 110101,
+    "tipoDeTramite": "Consulta de Proceso",
+    "fecha": "2023-10-06",
+    "fechaActualizacion": "2023-10-12",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "110101"
+  },
+  {
     "id": 16,
     "tipoDeTramite": "Antecesor",
     "fecha": "2023-10-01",
@@ -646,6 +655,24 @@
     "diasTranscurridos": "4",
     "departamento": "SE",
     "numeroDeProcedimiento": "120301"
+  },
+  {
+    "id": 80308,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "80308"
+  },
+  {
+    "id": 130102,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "130102"
   },
   {
     "id": 80101,

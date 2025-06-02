@@ -10,6 +10,7 @@
           (selectionChange)="fetchEntidadFederativa($event);setValoresStore(frmRepresentacion,'entidad', 'setEntidad')"
           [placeholder]="'Seleccione un valor'"
           formControlName="entidad"
+            [isDisabled]="esFormularioSoloLectura ? true : false"
         ></app-catalogo-select>
         @if (frmRepresentacion.controls['entidad'].invalid && frmRepresentacion.controls['entidad'].touched) {
           <div class="text-danger">
@@ -28,6 +29,7 @@
           (selectionChange)="fetchRepresentacionFederal($event);setValoresStore(frmRepresentacion,'representacion', 'setRepresentacion')"
           [placeholder]="'Seleccione un valor'"
           formControlName="representacion"
+            [isDisabled]="esFormularioSoloLectura ? true : false"
         ></app-catalogo-select>
         @if (frmRepresentacion.controls['representacion'].invalid && frmRepresentacion.controls['representacion'].touched) {
           <div class="text-danger">
