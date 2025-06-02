@@ -647,13 +647,31 @@
     "departamento": "SE",
     "numeroDeProcedimiento": "120301"
   },
-    {
-        "id": 220701,
-        "tipoDeTramite": "Solicitud",
-        "fecha": "2024-10-05",
-        "fechaActualizacion": "2022-10-25",
-        "diasTranscurridos": "3",
-        "departamento": "AGRICULTURA",
-        "numeroDeProcedimiento": "220701"
-    }
+  {
+    "id": 220701,
+    "tipoDeTramite": "Solicitud",
+    "fecha": "2024-10-05",
+    "fechaActualizacion": "2022-10-25",
+    "diasTranscurridos": "3",
+    "departamento": "AGRICULTURA",
+    "numeroDeProcedimiento": "220701"
+  },
+  {
+    "id": 80308,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "80308"
+  },
+  {
+    "id": 130102,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "130102"
+  }
 ]
