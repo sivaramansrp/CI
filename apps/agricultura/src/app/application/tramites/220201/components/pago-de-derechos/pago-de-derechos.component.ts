@@ -120,7 +120,7 @@ export class PagoDeDerechosComponent implements OnDestroy, OnInit,AfterViewInit 
       }
     });
     
-    this.pagoForm.valueChanges.pipe(skip(1)).subscribe((changes) => {
+    this.pagoForm.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((changes) => {
       const FORMA_VALIDA_ACTUALIZADA = {
         pagoDeformaValida: false,
       };

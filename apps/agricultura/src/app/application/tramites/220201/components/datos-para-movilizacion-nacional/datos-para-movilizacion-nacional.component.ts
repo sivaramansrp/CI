@@ -98,7 +98,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
   }
 
   ngAfterViewInit(): void {
-        this.movilizacionForm.valueChanges.pipe(skip(1)).subscribe((changes) => {
+        this.movilizacionForm.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((changes) => {
       const FORMA_VALIDA_ACTUALIZADA = {
         dataParaMovilizacion: false,
       };

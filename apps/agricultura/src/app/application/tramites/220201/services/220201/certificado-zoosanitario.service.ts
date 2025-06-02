@@ -9,33 +9,40 @@ import {
 
 import { Injectable } from '@angular/core';
 
-import { Observable, map, } from 'rxjs';
+import { Observable, map } from 'rxjs';
 
-import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store'
+import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 
 import { PersonaTerceros, SeccionLibStore } from '@libs/shared/data-access-user/src';
 
 /**
- * Servicio para la gestión de solicitudes de certificado zoosanitario.
- * Este servicio proporciona métodos para configurar y enviar la información de la solicitud.
- * @module certificadoZoosanitario
+ * Servicio para la gestión de solicitudes del certificado zoosanitario.
+ * Este servicio permite actualizar y obtener información relacionada con el proceso de captura
+ * de la solicitud, incluyendo datos del solicitante, movilización, terceros relacionados, pagos, y validaciones.
+ * 
+ * @export
+ * @class CertificadoZoosanitarioServiceService
  */
 @Injectable({
   providedIn: 'root',
 })
 export class CertificadoZoosanitarioServiceService {
   /**
-   * Constructor del servicio.
-   * @param zoosanitarioStore Store para el manejo del estado zoosanitario.
-   * @param seccionStore Store para el manejo de secciones.
+   * Inicializa una nueva instancia del servicio.
+   *
+   * @param {ZoosanitarioStore} zoosanitarioStore Store para el estado zoosanitario.
+   * @param {SeccionLibStore} seccionStore Store para el estado de secciones y validez de formularios.
    */
-  constructor(private readonly zoosanitarioStore: ZoosanitarioStore, private readonly seccionStore: SeccionLibStore) {
-    // Constructor logic can be added here if needed
-  }
+  constructor(
+    private readonly zoosanitarioStore: ZoosanitarioStore,
+    private readonly seccionStore: SeccionLibStore
+  ) {}
 
   /**
-   * Actualiza la información del solicitante en el store.
-   * @param solicitante Datos del solicitante.
+   * Actualiza los datos del solicitante en el store.
+   *
+   * @param {Solicitante} solicitante Datos del solicitante.
+   * @memberof CertificadoZoosanitarioServiceService
    */
   updateSolicitante(solicitante: Solicitante): void {
     this.zoosanitarioStore.actualizarSolicitante(solicitante);
@@ -43,117 +50,138 @@ export class CertificadoZoosanitarioServiceService {
 
   /**
    * Actualiza los datos de la solicitud en el store.
-   * @param datosDeLaSolicitud Datos de la solicitud.
+   *
+   * @param {DatosDeLaSolicitud} datosDeLaSolicitud Datos generales de la solicitud.
+   * @memberof CertificadoZoosanitarioServiceService
    */
   updateDatosDeLaSolicitud(datosDeLaSolicitud: DatosDeLaSolicitud): void {
     this.zoosanitarioStore.actualizarDatosDeLaSolicitud(datosDeLaSolicitud);
   }
 
   /**
-   * Actualiza los datos para movilización nacional en el store.
-   * @param datosParaMovilizacionNacional Datos para movilización nacional.
+   * Actualiza los datos para la movilización nacional en el store.
+   *
+   * @param {DatosParaMovilizacionNacional} datosParaMovilizacionNacional Datos de movilización.
+   * @memberof CertificadoZoosanitarioServiceService
    */
   updateDatosParaMovilizacionNacional(datosParaMovilizacionNacional: DatosParaMovilizacionNacional): void {
     this.zoosanitarioStore.actualizarDatosParaMovilizacionNacional(datosParaMovilizacionNacional);
   }
 
   /**
-   * Actualiza los terceros relacionados en el store.
-   * @param tercerosRelacionados Lista de terceros relacionados.
+   * Actualiza la lista de terceros relacionados con la solicitud.
+   *
+   * @param {PersonaTerceros[]} tercerosRelacionados Lista de terceros.
+   * @memberof CertificadoZoosanitarioServiceService
    */
   updateTercerosRelacionados(tercerosRelacionados: PersonaTerceros[]): void {
     this.zoosanitarioStore.actualizarTercerosRelacionados(tercerosRelacionados);
   }
 
   /**
-   * Actualiza la validación de envío en el store.
-   * @param validarEnvio Objeto de validación de envío.
+   * Actualiza los estados de validación del formulario en el store.
+   *
+   * @param {ValidarEnvio} validarEnvio Objeto con estados de validación por sección.
+   * @memberof CertificadoZoosanitarioServiceService
    */
   updateValidarEnvio(validarEnvio: ValidarEnvio): void {
     this.zoosanitarioStore.actualizarformaValidas(validarEnvio);
   }
 
   /**
-   * Actualiza la información de pago de derechos en el store.
-   * @param pagoDeDerechos Datos de pago de derechos.
+   * Actualiza los datos relacionados con el pago de derechos.
+   *
+   * @param {PagoDeDerechos} pagoDeDerechos Datos del pago.
+   * @memberof CertificadoZoosanitarioServiceService
    */
   updatePagoDeDerechos(pagoDeDerechos: PagoDeDerechos): void {
     this.zoosanitarioStore.actualizarPagoDeDerechos(pagoDeDerechos);
   }
 
   /**
-   * Limpia el formulario en el store.
+   * Limpia toda la información del formulario almacenada en el store.
+   *
+   * @memberof CertificadoZoosanitarioServiceService
    */
   limpiarFormulario(): void {
     this.zoosanitarioStore.limpiarFormulario();
   }
 
   /**
-   * Obtiene los datos de la solicitud como observable.
-   * @returns Observable con los datos de la solicitud.
+   * Obtiene los datos de la solicitud.
+   *
+   * @returns {Observable<DatosDeLaSolicitud>} Observable con los datos de la solicitud.
+   * @memberof CertificadoZoosanitarioServiceService
    */
   getDatosDeLaSolicitud(): Observable<DatosDeLaSolicitud> {
     return this.zoosanitarioStore._select(state => state.datosDeLaSolicitud);
   }
 
   /**
-   * Obtiene los datos para movilización nacional como observable.
-   * @returns Observable con los datos para movilización nacional.
+   * Obtiene los datos para movilización nacional.
+   *
+   * @returns {Observable<DatosParaMovilizacionNacional>} Observable con los datos de movilización.
+   * @memberof CertificadoZoosanitarioServiceService
    */
   getDatosParaMovilizacionNacional(): Observable<DatosParaMovilizacionNacional> {
     return this.zoosanitarioStore._select(state => state.datosParaMovilizacionNacional);
   }
 
   /**
-   * Obtiene los datos de pago de derechos como observable.
-   * @returns Observable con los datos de pago de derechos.
+   * Obtiene los datos del pago de derechos.
+   *
+   * @returns {Observable<PagoDeDerechos>} Observable con los datos del pago.
+   * @memberof CertificadoZoosanitarioServiceService
    */
   getPagoDeDerechos(): Observable<PagoDeDerechos> {
     return this.zoosanitarioStore._select(state => state.pagoDeDerechos);
   }
 
   /**
-   * Obtiene la validación de envío como observable.
-   * @returns Observable con la validación de envío.
+   * Obtiene el estado de validación de envío de formularios.
+   *
+   * @returns {Observable<ValidarEnvio>} Observable con el estado de validación.
+   * @memberof CertificadoZoosanitarioServiceService
    */
   getValidarEnvio(): Observable<ValidarEnvio> {
     return this.zoosanitarioStore._select(state => state.validarEnvio);
   }
 
   /**
-   * Obtiene todos los datos del formulario como observable.
-   * @returns Observable con todos los datos del formulario.
+   * Obtiene todos los datos actuales del formulario.
+   *
+   * @returns {Observable<CapturarSolicitud>} Observable con toda la información de la solicitud.
+   * @memberof CertificadoZoosanitarioServiceService
    */
   getFormData(): Observable<CapturarSolicitud> {
     return this.zoosanitarioStore._select(state => state);
   }
 
   /**
-   * Actualiza el estado de la forma válida y actualiza el store de secciones.
-   * @param updatedFormaValida Objeto con los estados de validez de las formas.
+   * Actualiza el estado de validez de los formularios y sincroniza con el store de secciones.
+   *
+   * @param {{ [key: string]: boolean }} updatedFormaValida Mapa de secciones con su validez.
+   * @memberof CertificadoZoosanitarioServiceService
    */
   actualizarFormaValida(updatedFormaValida: { [key: string]: boolean }): void {
     this.zoosanitarioStore.actualizarformaValida(updatedFormaValida);
     this.obtenerTodosLosStatus().subscribe((result: boolean) => {
-      if (result) {
-        this.seccionStore.establecerSeccion([true]);
-        this.seccionStore.establecerFormaValida([true]);
-      } else {
-        this.seccionStore.establecerSeccion([true]);
-        this.seccionStore.establecerFormaValida([false]);
-      }
+      this.seccionStore.establecerSeccion([true]);
+      this.seccionStore.establecerFormaValida([result]);
     });
   }
 
   /**
-   * Verifica si todos los formularios son válidos.
-   * @returns Observable que emite true si todos los formularios son válidos, false en caso contrario.
+   * Verifica si todas las secciones del formulario son válidas.
+   *
+   * @returns {Observable<boolean>} Observable que emite `true` si todos los formularios son válidos.
+   * @memberof CertificadoZoosanitarioServiceService
    */
   obtenerTodosLosStatus(): Observable<boolean> {
     return this.zoosanitarioStore._select(state => state.validarEnvio).pipe(
-      map((formaValida: ValidarEnvio) => {
-        return Object.values(formaValida).every(value => value === true);
-      })
+      map((formaValida: ValidarEnvio) =>
+        Object.values(formaValida).every(value => value === true)
+      )
     );
   }
 }

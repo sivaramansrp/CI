@@ -224,7 +224,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
   }
 
    ngAfterViewInit(): void {
-       this.datosDelaSolicitud.valueChanges.pipe(skip(1)).subscribe((changes) => {
+       this.datosDelaSolicitud.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((changes) => {
       const FORMA_VALIDA_ACTUALIZADA = {
         dataDeLaSolicitud: false, 
       };
