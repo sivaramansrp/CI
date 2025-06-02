@@ -48,7 +48,9 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
-import { TablePaginationComponent } from '@ng-mf/data-access-user';
+import { TablePaginationComponent } from '@ng-mf/data-access-user';import { Modal } from 'bootstrap';
+
+
 export interface RespuestaTabla {
   code: number;
   data: NicoInfo[];
@@ -310,6 +312,13 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   colapsableDuos: boolean = false;
 
   /**
+   * @property {NicoInfo[]} personaparas - Arreglo que contiene información de personas relacionadas.
+   * @description Lista de objetos NicoInfo que representan las personas asociadas al establecimiento.
+   * @type {NicoInfo[]}
+   */
+  personaparas: NicoInfo[] = [];
+
+  /**
    * Indica si la sección es colapsableTres.
    * @property {boolean} colapsableTres
    */
@@ -334,15 +343,59 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    * Lista de rangos de días seleccionarOrigenDelPaisCuatro.
    */
   seleccionarOrigenDelPaisCuatro: string[] = this.crosListaDePaises;
-
+/**
+ * Instancia del Modal de Bootstrap utilizada para controlar la visualización y el comportamiento del cuadro de diálogo modal
+ * dentro del componente DomicilioEstablecimientoComponent.
+ *
+ * */
+modalInstance!: Modal; /**
+   * Lista de mercancías agregadas por el usuario.
+   */
+  listaMercancias: MercanciasInfo[] = [];
   /**
    * Etiqueta de la lista de fechas.
    * */
   public paisDeProcedenciaLabel: CrossListLable = {
-    tituluDeLaIzquierda: 'País de procedencia',
-    derecha: 'País(es) seleccionados',
+    tituluDeLaIzquierda: 'País productor del ingrediente activo',
+    derecha: 'País(es) seleccionado(s)',
   };
 
+  /**
+   * Objeto que representa la configuración de etiquetas para la selección del país donde se elabora el producto.
+   * 
+   * @property {string} tituluDeLaIzquierda - Etiqueta que se muestra a la izquierda, indicando el título "país donde se elabora el producto".
+   * @property {string} derecha - Etiqueta que se muestra a la derecha, indicando los países seleccionados.
+   */
+  public paisDondeSeElabora: CrossListLable = {
+    tituluDeLaIzquierda: 'país donde se elabora el producto',
+    derecha: 'País(es) seleccionado(s)',
+  };
+
+    /**
+     * Objeto que representa la configuración de la lista cruzada para el campo "País de procedencia".
+     * 
+     * @property {string} tituluDeLaIzquierda - Etiqueta que se muestra en el lado izquierdo de la lista, indicando el país de procedencia.
+     * @property {string} derecha - Etiqueta que se muestra en el lado derecho de la lista, indicando los países seleccionados.
+     */
+    public paisDeProcedencia: CrossListLable = {
+    tituluDeLaIzquierda: 'País de procedencia',
+    derecha: 'País(es) seleccionado(s)',
+  };
+
+  /**
+   * @method
+   * @description
+   * Muestra el modal asociado al modelo de clave.
+   * 
+   * @returns {void}
+   * 
+   * @memberof DomicilioEstablecimientoComponent
+   */
+  public mostrarModeloClave(): void {
+    this.modalInstance.show();
+  }
+
+ 
   /**
    * Objeto que representa la configuración de etiquetas para la selección de país de origen.
    * 
@@ -353,6 +406,17 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     tituluDeLaIzquierda: 'País de origen',
     derecha: 'País(es) seleccionados',
   };
+
+  /**
+   * Catálogo de fracciones arancelarias y sus descripciones.
+   * @property {Array<{ fraccion: string, descripcion: string }>} fraccionesCatalogo
+   */
+  fraccionesCatalogo = [
+    { fraccion: '0101.21.01', descripcion: 'Caballos de carrera' },
+    { fraccion: '0201.30.00', descripcion: 'Carne de bovino congelada' },
+    { fraccion: '0402.10.01', descripcion: 'Leche en polvo, sin azúcar' },
+    { fraccion: '1006.30.99', descripcion: 'Arroz semiblanqueado' }
+  ];
   /**
    * Etiqueta de la lista de fechas.
    * */
@@ -366,8 +430,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.obtenerEstadoList();
-    this.obtenerTablaDatos();
-    this.obtenerMercanciasDatos();
+  this.obtenerMercanciasDatos();
     this.domicilio = this.fb.group({
       codigoPostal: [this.solicitudState?.codigoPostal,[Validators.required, Validators.maxLength(12),Validators.pattern(REGEX_CODIGO_POSTAL)]],
       estado: [this.solicitudState?.estado, Validators.required],
@@ -389,8 +452,8 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     });
 
     this.formAgente = this.fb.group({
-      claveScianModal: ['', Validators.required],
-      claveDescripcionModal: [{ value: '', disabled: true }],
+      claveScianModal: [this.solicitudState?.claveScianModal, Validators.required],
+      claveDescripcionModal: [this.solicitudState?.claveDescripcionModal],
     });
     this.formMercancias = this.fb.group({
        nombreComercial: [
@@ -443,6 +506,59 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       objetoImportacion: ['', Validators.required],
     });
     this.seleccionadasAduanasEntradaDatos=this.solicitudState?.aduanasDeEntrada;
+    
+  }
+
+  /**
+   * @method cerrarModalScian
+   * @description Oculta el modal relacionado con el catálogo SCIAN.
+   * @returns {void}
+   *
+   * @memberof DomicilioEstablecimientoComponent
+   */
+  cerrarModalScian(): void {
+    this.modalInstance.hide();
+  }
+
+  /**
+   * @method limpiarScianForm
+   * @description Limpia y reinicia el formulario asociado al agente SCian.
+   * @returns {void}
+   * 
+   * @memberof DomicilioEstablecimientoComponent
+   */
+  limpiarScianForm(): void {
+    this.formAgente.reset();
+  }
+
+  /**
+   * Guarda los datos del formulario del agente SCIAN en la tabla Nico.
+   * 
+   * Si el formulario `formAgente` es válido, crea un nuevo objeto `NicoInfo` con los valores
+   * de los campos `claveScianModal` y `claveDescripcionModal`, lo agrega al arreglo `nicoTablaDatos`,
+   * limpia el formulario y cierra el modal correspondiente.
+   *
+   * @returns {void}
+   * @memberof DomicilioComponent
+   */
+  guardarScian(): void {
+    if (this.formAgente.valid) {
+      const NUEVO_DATO: NicoInfo = {
+        clave_Scian: this.formAgente.get('claveScianModal')?.value,
+        descripcion_Scian: this.formAgente.get('claveDescripcionModal')?.value,
+      };
+this.nicoTablaDatos.push(NUEVO_DATO);
+  this.formAgente.reset();
+   this.cerrarModalScian();
+}
+  
+this.formMercancias.get('fraccionArancelaria')?.valueChanges.subscribe((valor: string) => {
+      const MATCHED = this.fraccionesCatalogo.find(item =>
+        item.fraccion.startsWith(valor)
+      );
+      const DESCRIPCION = MATCHED ? MATCHED.descripcion : '';
+      this.formMercancias.get('descripcionFraccion')?.setValue(DESCRIPCION);
+    });
   }
 
   /**
@@ -594,25 +710,12 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   /**
    * Método para obtener el valor de la fecha seleccionada.
    */
-  obtenerTablaDatos(): void {
-    this.service
-      .getObtenerTablaDatos()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data): void => {
-        this.nicoTablaDatos = data?.data;
-      });
-  }
-
+ 
   /**
    * Método para obtener el valor de la fecha seleccionada.
    */
   obtenerMercanciasDatos(): void {
-    this.service
-      .getObtenerMercanciasDatos()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data): void => {
-        this.mercanciasTablaDatos = data?.data;
-      });
+    this.mercanciasTablaDatos = this.listaMercancias
   }
 
   /**
@@ -668,6 +771,24 @@ export class DomicilioComponent implements OnInit, OnDestroy {
         value: string | number | boolean
       ) => void
     )(VALOR);
+  }
+
+    /**
+     * Agrega una nueva mercancía a la lista de mercancías si el formulario es válido.
+     * 
+     * - Si el formulario `formMercancias` es válido, obtiene los valores actuales del formulario,
+     *   crea un nuevo objeto de mercancía y lo agrega a `listaMercancias`.
+     * - Luego, imprime la lista actualizada en la consola y reinicia el formulario.
+     * 
+     * @remarks
+     * Este método se utiliza para gestionar la adición dinámica de mercancías en el componente.
+     */
+    agregarMercancia(): void {
+    if (this.formMercancias.valid) {
+      const NUEVA_MERCANCIA = { ...this.formMercancias.getRawValue() };
+      this.listaMercancias.push(NUEVA_MERCANCIA);
+      this.formMercancias.reset();
+    } 
   }
 
  /**

@@ -28,35 +28,30 @@
       type="button"
       class="btn btn-default me-md-3"
       (click)="openAgregarModal()"
+      disabled="esFormularioSoloLectura ? true : false"
     >
       Modificar
     </button>
-    <button type="button" class="btn btn-primary me-md-3">Eliminar</button>
-    <button type="button" class="btn btn-primary me-md-3">Agregar</button>
+    <button type="button" class="btn btn-primary me-md-3" disabled="esFormularioSoloLectura ? true : false">Eliminar</button>
+    <button type="button" class="btn btn-primary me-md-3" disabled="esFormularioSoloLectura ? true : false">Agregar</button>
   </div>
 </div>
 
 <div class="container p-3 mt-4 mb-4">
-  <div class="form-check">
-    <input class="form-check-input" type="checkbox" id="checkbox1" />
-    <label class="form-check-label text-justify" for="checkbox1">
-      <span class="text-danger">*</span> Una vez manifestado lo anterior, se
-      solicita al SAT, a través de AGACE, que realice las inspecciones a que
-      hace referencia la fracción IX de la regla 7.1.1, a las instalaciones
-      señaladas en las que se realizan las operaciones de comercio exterior con
-      el propósito de verificar la información plasmada en la presente solicitud
-      del Registro en el Esquema Integral de Certificación.
-    </label>
-  </div>
-  <div class="form-check">
-    <input class="form-check-input" type="checkbox" id="checkbox2" />
-    <label class="form-check-label text-justify" for="checkbox2">
-      <span class="text-danger">*</span> Bajo protesta de decir verdad,
-      manifiesto que los datos asentados en el presente documento son ciertos y
-      que las facultades que me fueron otorgadas para representar al solicitante
-      no me han sido modificadas y/o revocadas.
-    </label>
-  </div>
+  <form [formGroup]="checkBoxesForm" class="form-group">
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="checkbox1" formControlName="squemaIntegral" (change)="setValoresStore(checkBoxesForm,'squemaIntegral', 'setSquemaIntegral')"/>
+      <label class="form-check-label text-justify" for="checkbox1">
+        <span class="text-danger">*</span> {{textoEstatico.checkbox1}}
+      </label>
+    </div>
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="checkbox2" formControlName="sidoModificadas" (change)="setValoresStore(checkBoxesForm,'sidoModificadas', 'setSidoModificadas')"/>
+      <label class="form-check-label text-justify" for="checkbox2">
+        <span class="text-danger">*</span> {{textoEstatico.checkbox2}}
+      </label>
+    </div>
+  </form>
 </div>
 
 <div class="modal fade" tabindex="-1" #Agregar>
@@ -74,6 +69,9 @@
                   [label]="'En su carácter de'"
                   [required]="true"
                   [catalogo]="enSuCaracterDeOptions"
+                  formControlName="ensucaracterde"
+                  [isDisabled]="esFormularioSoloLectura ? true : false"
+                  (change)="setValoresStore(agregarMiembroDeLaEmpresaFrom,'ensucaracterde', 'setEnsucaracterde')"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -85,12 +83,14 @@
                   id="rfc"
                   formControlName="rfc"
                   class="form-control"
+                  formControlName="rfc"
+                  (change)="setValoresStore(agregarMiembroDeLaEmpresaFrom,'rfc', 'setRfc')"
                 />
               </div>
             </div>
             <div class="col-4 d-flex align-items-end">
               <div class="form-group">
-                <button type="button" class="btn btn-primary">Buscar</button>
+                <button type="button" class="btn btn-primary" disabled="esFormularioSoloLectura ? true : false">Buscar</button>
               </div>
             </div>
           </div>
@@ -105,6 +105,8 @@
                   [isRequired]="true"
                   [layout]="'horizontal'"
                   [gap]="'50px'"
+                  formControlName="obligadoaTributarenMéxico"
+                  (change)="setValoresStore(agregarMiembroDeLaEmpresaFrom,'obligadoaTributarenMéxico', 'setObligadoaTributarenMéxico')"
                 ></app-input-radio>
               </div>
             </div>
@@ -133,6 +135,8 @@
                   [required]="true"
                   [catalogo]="nacionalidadOptions"
                   formControlName="nacionalidad"
+                  [isDisabled]="esFormularioSoloLectura ? true : false"
+                  (change)="setValoresStore(agregarMiembroDeLaEmpresaFrom,'nacionalidad', 'setNacionalidad')"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -151,13 +155,14 @@
             </div>
           </div>
           <div class="button-group d-flex justify-content-end">
-            <button type="submit" class="btn btn-primary me-md-3">
+            <button type="submit" class="btn btn-primary me-md-3" disabled="esFormularioSoloLectura ? true : false">
               Aceptar
             </button>
             <button
               type="button"
               class="btn btn-default me-md-3"
               (click)="closeAgregarModal()"
+              disabled="esFormularioSoloLectura ? true : false"
             >
               Cancelar
             </button>

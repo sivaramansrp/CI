@@ -44,7 +44,8 @@ Thumbs.db
 .nx/workspace-data
 .angular
 ./.package-lock.json
-.package-lock.json
+package-lock.json
+pnpm-lock.yaml
 .bablerc
 /.vs/frontend/FileContentIndex
 *.sqlite-journal
