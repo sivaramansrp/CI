@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { MercanciaTabla } from '../../models/medio-transporte.model';
 import { Solicitud220501Query } from '../../estados/tramites220501.query';
 import { Subject } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, TituloComponent } from '@libs/shared/data-access-user/src';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 /**
@@ -63,6 +63,11 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit, OnDestroy {
   solicitud220501State: Solicitud220501State = {} as Solicitud220501State;
 
   /**
+   * Indica si el formulario está deshabilitado.
+   */
+  formularioDeshabilitado: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios.
    */
@@ -70,24 +75,60 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit, OnDestroy {
     private fb: FormBuilder,
     public solicitud220501Store: Solicitud220501Store,
     public solicitud220501Query: Solicitud220501Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    this.crearFormulario();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.formularioDeshabilitado = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
-   * Método que se ejecuta cuando el componente se inicializa.
-   * Aquí se debe inicializar el formulario con los datos de entrada.
+   * Método del ciclo de vida que se ejecuta al iniciar el componente.
+   * Llama a la función que determina cómo inicializar el formulario.
    */
   ngOnInit(): void {
-    if (this.mercanciasDatos && this.mercanciasDatos.length > 0) {
-      this.setFormData();
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.formularioDeshabilitado) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.formularioDeshabilitado) {
+      this.agregarMercanciaForm.disable();
+    } else if (!this.formularioDeshabilitado) {
+      this.agregarMercanciaForm.enable();
     }
   }
 
   /**
    * Método para crear el formulario de agregar mercancía.
    */
-  crearFormulario(): void {
+  inicializarFormulario(): void {
+    if (this.mercanciasDatos && this.mercanciasDatos.length > 0) {
+      this.setFormData();
+    }
+
     this.agregarMercanciaForm = this.fb.group({
       fraccionArancelaria: [{ value: this.solicitud220501State.fraccionArancelaria, disabled: true }],
       descripcionFraccion: [{ value: this.solicitud220501State.descripcionFraccion, disabled: true }],

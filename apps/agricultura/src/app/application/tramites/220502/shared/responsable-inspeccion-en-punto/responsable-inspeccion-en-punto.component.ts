@@ -75,6 +75,11 @@ export class ResponsableInspeccionEnPuntoComponent
  */
 solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
 
+  /**
+   * Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
+
   constructor(
     private solicitud220502Store: Solicitud220502Store,
     private solicitud220502Query: Solicitud220502Query,
@@ -126,6 +131,10 @@ solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
       )
       .subscribe();
     this.cargarDatosIniciales(); // Cargar datos del catálogo inicial
+
+    if (this.formularioDeshabilitado) {
+      this.grupoFormularioPadre.disable();
+    }
   }
   /**
    * Maneja la selección de un artículo del catálogo.

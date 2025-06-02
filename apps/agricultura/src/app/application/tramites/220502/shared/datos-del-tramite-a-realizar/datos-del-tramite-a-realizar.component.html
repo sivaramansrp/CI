@@ -9,8 +9,8 @@
           [label]="certificadosAutorizados.labelNombre"
           [placeholder]="certificadosAutorizados.primerOpcion"
           [required]="certificadosAutorizados.required"
-          [isDisabled]="false"
           formControlName="certificadosAutorizados"
+          [isDisabled]="formularioDeshabilitado"
           (selectionChange)="setCertificadosAutorizados($event)"
         ></app-catalogo-select>
       </div>
@@ -33,7 +33,7 @@
           [placeholder]="horaDeInspeccion.primerOpcion"
           [required]="horaDeInspeccion.required"
           formControlName="horaDeInspeccion"
-          [isDisabled]="false"
+          [isDisabled]="formularioDeshabilitado"
           (selectionChange)="setHoraDeInspeccion($event)"
         ></app-catalogo-select>
       </div>
@@ -47,7 +47,7 @@
           [placeholder]="aduanaDeIngreso.primerOpcion"
           [required]="aduanaDeIngreso.required"
           formControlName="aduanaDeIngreso"
-          [isDisabled]="false"
+          [isDisabled]="formularioDeshabilitado"
           (selectionChange)="setAduanaDeIngreso($event)"
         ></app-catalogo-select>
       </div>
@@ -61,7 +61,7 @@
           [placeholder]="sanidadAgropecuaria.primerOpcion"
           [required]="sanidadAgropecuaria.required"
           formControlName="sanidadAgropecuaria"
-          [isDisabled]="false"
+          [isDisabled]="formularioDeshabilitado"
           (selectionChange)="setSanidadAgropecuaria($event)"
         ></app-catalogo-select>
       </div>
@@ -75,7 +75,7 @@
           [placeholder]="puntoDeInspeccion.primerOpcion"
           [required]="puntoDeInspeccion.required"
           formControlName="puntoDeInspeccion"
-          [isDisabled]="false"
+          [isDisabled]="formularioDeshabilitado"
           (selectionChange)="setPuntoDeInspeccion($event)"
         ></app-catalogo-select>
       </div>

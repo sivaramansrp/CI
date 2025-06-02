@@ -111,6 +111,10 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
    */
   solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
 
+  /**
+   * Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
 
   /** Constructor para inyectar el servicio de solicitud de pantallas. */
   constructor(
@@ -157,6 +161,10 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
           }
         })
       ).subscribe();
+    }
+
+    if (this.formularioDeshabilitado) {
+      this.grupoFormularioPadre.disable();
     }
   }
 

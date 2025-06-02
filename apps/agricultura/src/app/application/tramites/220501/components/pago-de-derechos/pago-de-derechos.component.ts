@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
@@ -24,7 +24,7 @@ import { Solicitud220501Store } from '../../estados/tramites220501.store';
   templateUrl: './pago-de-derechos.component.html',
   styleUrls: ['./pago-de-derechos.component.scss'],
   standalone: true,
-  imports: [InputRadioComponent,TituloComponent,ReactiveFormsModule,CatalogoSelectComponent],
+  imports: [InputRadioComponent, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent],
 })
 
 /**
@@ -97,6 +97,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
   /**
+   * Indica si el formulario está deshabilitado.
+   */
+  formularioDeshabilitado: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param {FormBuilder} fb - El servicio FormBuilder de Angular para crear formularios.
    * @param {RevisionService} revisionService - El servicio de revisión para obtener datos relacionados con el pago.
@@ -105,16 +110,58 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder,
     revisionService: RevisionService,
     public solicitud220501Store: Solicitud220501Store,
-    public solicitud220501Query: Solicitud220501Query
+    public solicitud220501Query: Solicitud220501Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
     this.revisionService = revisionService;
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.formularioDeshabilitado = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
-   * Inicializa el componente y configura el formulario de pago.
-   * @returns {void}
+   * Método del ciclo de vida que se ejecuta al iniciar el componente.
+   * Llama a la función que determina cómo inicializar el formulario.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.formularioDeshabilitado) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.formularioDeshabilitado) {
+      this.pagoForm.disable();
+    } else if (!this.formularioDeshabilitado) {
+      this.pagoForm.enable();
+    }
+  }
+
+  /**
+   * Inicializa el formulario con los valores del estado de la solicitud 220501.
+   */
+  inicializarFormulario(): void {
     this.pagoForm = this.fb.group({
       exentoPagoNo: [{ value: this.solicitud220501State.exentoPagoNo }],
       justificacion: [{ value: this.solicitud220501State.justificacion, disabled: true }],
