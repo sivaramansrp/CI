@@ -2,9 +2,8 @@
     <form [formGroup]="solicitudForm" id="formSolicitud">
         <ng-titulo titulo="Ingresar por:" />
         <ng-container>
-            <div class="row">
+            <div class="row tipo-busqueda-radio">
                 <div class="col-md-12">
-                    <br><br>
                     <div class="col-md-4">
                         <div class="radio">
                             <label>
@@ -73,7 +72,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-4 mb-4">
                         <div class="form-group">
                             <label for="inicialesContenedor">Iniciales del equipo<span class="require">*</span>:</label>
                             <input type="text" formControlName="inicialesContenedor" id="inicialesContenedor"
@@ -152,8 +151,7 @@
 
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="numeroManifiesta" class="mt-2">No. Manifiesto<span
-                                    class="require">*</span>:</label>
+                            <label for="numeroManifiesta">No. Manifiesto<span class="require">*</span>:</label>
                             <input type="text" formControlName="numeroManifiesta" id="numeroManifiesta" maxlength="50"
                                 class="form-control" [ngClass]="isValid('numeroManifiesta') ? 'required' : ''"
                                 (change)="setValoresStore(solicitudForm,'numeroManifiesta', 'setNumeroManifiesta')">

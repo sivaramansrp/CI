@@ -316,7 +316,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     };
     this.contenedores = {
       catalogos: [],
-      labelNombre: 'Aduana/sección aduanera',
+      labelNombre: 'Tipo de equipo',
       primerOpcion: 'Seleccione un valor',
     };
   }
