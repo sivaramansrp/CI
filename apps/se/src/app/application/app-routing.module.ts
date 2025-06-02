@@ -634,7 +634,7 @@ const ROUTES: Routes = [
       ).then((m) => m.ImportacionesAgropecuariasModule),
   },
   {
-    path: 'modificaciones-immex-prosec',
+    path: 'modificaciones-immex',
     loadChildren: () =>
       import('./tramites/80316/modificaciones-immex-prosec.module').then(
         (m) => m.ModificacionesImmexProsecModule
