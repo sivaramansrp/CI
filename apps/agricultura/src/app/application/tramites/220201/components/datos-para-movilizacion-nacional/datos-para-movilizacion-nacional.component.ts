@@ -1,12 +1,18 @@
-import { HttpClient } from '@angular/common/http';
-
-import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, RespuestaCatalogos, SharedModule, TituloComponent } from '@ng-mf/data-access-user';
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  ConsultaioQuery,
+  RespuestaCatalogos,
+  SharedModule,
+  TituloComponent
+} from '@ng-mf/data-access-user';
 
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import {Subject,map,skip, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 
 /**
@@ -19,61 +25,72 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 /**
  * Componente para el formulario de datos para la movilización nacional.
  * @class DatosParaMovilizacionNacionalComponent
- * @implements {OnInit}
+ * @implements {OnInit, OnDestroy, AfterViewInit}
  */
 @Component({
   selector: 'app-datos-para-movilizacion-nacional',
   templateUrl: './datos-para-movilizacion-nacional.component.html',
   styleUrl: './datos-para-movilizacion-nacional.component.scss',
   standalone: true,
-  imports:[SharedModule,
-        CommonModule, TituloComponent,
-            ReactiveFormsModule,
-            CatalogoSelectComponent,
-            ]
+  imports: [
+    SharedModule,
+    CommonModule,
+    TituloComponent,
+    ReactiveFormsModule,
+    CatalogoSelectComponent
+  ]
 })
-export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy,AfterViewInit {
+export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy, AfterViewInit {
 
   /**
-   * Grupo de formularios para la movilización nacional.
-   * @property {FormGroup} movilizacionForm
+   * Grupo de controles del formulario para la movilización nacional.
    */
   movilizacionForm: FormGroup;
 
   /**
-   * Configuración para el selector de medio de transporte.
-   * @property {CatalogosSelect} medioTransporteList
+   * Lista de medios de transporte disponibles.
    */
   medioTransporteList: Catalogo[] = [];
 
   /**
-   * Configuración para el selector de identificación del transporte.
-   * @property {CatalogosSelect} identificacionTransporteList
+   * Lista de identificaciones de transporte.
    */
   identificacionTransporteList: Catalogo[] = [];
 
   /**
-   * Configuración para el selector de nombre de la empresa transportista.
-   * @property {CatalogosSelect} nombreDeLaEmpresaTransportista
+   * Lista de nombres de empresas transportistas.
    */
   nombreDeLaEmpresaTransportista: Catalogo[] = [];
 
-  esFormularioSoloLectura:boolean = false;
   /**
-   * Configuración para el selector de punto de verificación federal.
-   * @property {CatalogosSelect} puntoDeVerificacionFederal
+   * Lista de puntos de verificación federal.
    */
   puntoDeVerificacionFederal: Catalogo[] = [];
-    private destroyNotifier$ = new Subject<void>();
+
   /**
-   * Constructor de la clase DatosParaMovilizacionNacionalComponent.
-   * @constructor
-   * @param {FormBuilder} fb - Inyección de dependencia del servicio FormBuilder.
-   * @param {HttpClient} httpServicios - Inyección de dependencia del servicio HttpClient.
+   * Indica si el formulario se encuentra en modo solo lectura.
    */
-  constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient, private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
-      private readonly certificadoZoosanitarioQuery:ZoosanitarioQuery,
-        private consultaQuery: ConsultaioQuery
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Notificador para cancelar todas las suscripciones activas al destruir el componente.
+   */
+  private destroyNotifier$ = new Subject<void>();
+
+  /**
+   * Constructor del componente.
+   * @param fb Constructor de formularios reactivos.
+   * @param httpServicios Cliente HTTP para llamadas a servicios.
+   * @param certificadoZoosanitarioServices Servicio que gestiona la lógica del certificado zoosanitario.
+   * @param certificadoZoosanitarioQuery Consulta para acceder al estado del certificado zoosanitario.
+   * @param consultaQuery Consulta para determinar si el formulario es de solo lectura.
+   */
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly httpServicios: HttpClient,
+    private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
+    private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
+    private consultaQuery: ConsultaioQuery
   ) {
     this.movilizacionForm = this.fb.group({
       coordenadas: [''],
@@ -85,34 +102,39 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
   }
 
   /**
-   * Inicializa el componente.
-   * @method ngOnInit
+   * Ciclo de vida de Angular que se ejecuta al iniciar el componente.
    */
   ngOnInit(): void {
-       this.certificadoZoosanitarioQuery.seleccionarMovilizacionNacional$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datosDeLaSolicitud) => {
-      if (datosDeLaSolicitud) {
-        this.movilizacionForm.patchValue(datosDeLaSolicitud);
-      }
-    });
+    this.certificadoZoosanitarioQuery.seleccionarMovilizacionNacional$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datosDeLaSolicitud) => {
+        if (datosDeLaSolicitud) {
+          this.movilizacionForm.patchValue(datosDeLaSolicitud);
+        }
+      });
+
     this.obtenerListasDesplegables();
   }
 
+  /**
+   * Ciclo de vida que se ejecuta después de que la vista ha sido inicializada.
+   */
   ngAfterViewInit(): void {
-        this.movilizacionForm.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((changes) => {
-      const FORMA_VALIDA_ACTUALIZADA = {
-        dataParaMovilizacion: false,
-      };
-      if (this.movilizacionForm.valid) {
-        FORMA_VALIDA_ACTUALIZADA.dataParaMovilizacion = true;
-      }
-      this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
-    });
-     this.consultaQuery.selectConsultaioState$
+    this.movilizacionForm.valueChanges
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(() => {
+        const FORMA_VALIDA_ACTUALIZADA = {
+          dataParaMovilizacion: this.movilizacionForm.valid
+        };
+        this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
+      });
+
+    this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          if(this.esFormularioSoloLectura){
+          if (this.esFormularioSoloLectura) {
             this.movilizacionForm.disable();
           }
         })
@@ -121,10 +143,9 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
   }
 
   /**
-   * Obtiene las listas desplegables.
-   * @method obtenerListasDesplegables
+   * Obtiene todas las listas desplegables requeridas en el formulario.
    */
-  obtenerListasDesplegables() {
+  obtenerListasDesplegables(): void {
     this.obtenerTransporteListList();
     this.obtenernombreDeLaEmpresaTransportistaList();
     this.obtenerPuntoDeVerificaciónList();
@@ -132,56 +153,62 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
   }
 
   /**
-   * Obtiene la lista de transportes.
-   * @method obtenerTransporteListList
+   * Obtiene la lista de medios de transporte desde un archivo JSON.
    */
-  obtenerTransporteListList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/transporte.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
-      const DATOS = data?.data;
-      this.medioTransporteList = DATOS;
-    });
+  obtenerTransporteListList(): void {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/transporte.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.medioTransporteList = data?.data;
+      });
   }
 
   /**
-   * Obtiene la lista de nombres de empresas transportistas.
-   * @method obtenernombreDeLaEmpresaTransportistaList
+   * Obtiene la lista de nombres de las empresas transportistas desde un archivo JSON.
    */
-  obtenernombreDeLaEmpresaTransportistaList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/nombre.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
-      const DATOS = data?.data;
-      this.nombreDeLaEmpresaTransportista = DATOS;
-    });
+  obtenernombreDeLaEmpresaTransportistaList(): void {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/nombre.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.nombreDeLaEmpresaTransportista = data?.data;
+      });
   }
 
   /**
-   * Obtiene la lista de puntos de verificación.
-   * @method obtenerPuntoDeVerificaciónList
+   * Obtiene la lista de puntos de verificación federal desde un archivo JSON.
    */
-  obtenerPuntoDeVerificaciónList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
-      const DATOS = data?.data;
-      this.puntoDeVerificacionFederal = DATOS;
-    });
+  obtenerPuntoDeVerificaciónList(): void {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.puntoDeVerificacionFederal = data?.data;
+      });
   }
 
   /**
- * Obtiene la lista de identificaciones de transporte. --220201
- * @method obtenerIdentificacionTransporteList
- */
-  obtenerIdentificacionTransporteList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
-      const DATOS = data?.data;
-      this.identificacionTransporteList = DATOS;
-    });
+   * Obtiene la lista de identificaciones del transporte desde un archivo JSON.
+   */
+  obtenerIdentificacionTransporteList(): void {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.identificacionTransporteList = data?.data;
+      });
   }
-     setValoresStore(
-    ): void {
-      const VALOR = this.movilizacionForm.value;
- this.certificadoZoosanitarioServices.updateDatosParaMovilizacionNacional(VALOR);
-    }
+
+  /**
+   * Envía los valores actuales del formulario al store del servicio para actualizar el estado global.
+   */
+  setValoresStore(): void {
+    const VALOR = this.movilizacionForm.value;
+    this.certificadoZoosanitarioServices.updateDatosParaMovilizacionNacional(VALOR);
+  }
+
+  /**
+   * Ciclo de vida que se ejecuta al destruir el componente. Libera recursos y cancela las suscripciones.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
-   
   }
 }
