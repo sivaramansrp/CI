@@ -249,9 +249,7 @@ export class DevolverComponent implements OnInit, OnDestroy {
           this.solicitudState = seccionState as Solicitud140103State;
         })
       )
-      .subscribe((data) => {
-        //
-      });
+      .subscribe();
       
     // Inicializa el formulario con los controles necesarios y las validaciones
     this.DevolverForm = this.fb.group({

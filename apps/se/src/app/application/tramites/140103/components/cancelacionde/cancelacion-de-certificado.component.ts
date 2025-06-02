@@ -294,7 +294,7 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
-      this.inicializarFormulario();
+       this.CancelacionForm.enable();
     }
   }
 
@@ -338,6 +338,24 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
    * y configura los controles necesarios con las validaciones requeridas.
    */
   private inicializarFormulario(): void {
+    /**
+ * Formulario reactivo utilizado para la cancelación del trámite.
+ * 
+ * Este formulario contiene los siguientes controles, todos con validación obligatoria (`Validators.required`):
+ * 
+ * Inicialmente, todos los valores están establecidos como `null` hasta que se carguen los datos reales.
+ */
+    this.CancelacionForm = this.fb.group({
+    regimen: [null, Validators.required],
+    mecanismo: [null, Validators.required],
+    tratado: [null, Validators.required],
+    producto: [null, Validators.required],
+    subproducto: [null, Validators.required],
+    representacion: [null, Validators.required],
+  });
+
+/** Suscribe al estado de solicitud 140103 y lo asigna a `solicitudState`.  
+ * Usa `takeUntil` para limpiar la suscripción al destruir el componente. */
     this.tramite140103Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -345,18 +363,18 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
           this.solicitudState = seccionState as Solicitud140103State;
         })
       )
-      .subscribe((data) => {
-        //
-      });
+      .subscribe();
 
-    this.CancelacionForm = this.fb.group({
-      regimen: [this.solicitudState.regimen, Validators.required],
-      mecanismo: [this.solicitudState.mecanismo, Validators.required],
-      tratado: [this.solicitudState.tratado, Validators.required],
-      producto: [this.solicitudState.producto, Validators.required],
-      subproducto: [this.solicitudState.subproducto, Validators.required],
-      representacion: [this.solicitudState.representacion, Validators.required],
-    });
+      /** Actualiza los valores del formulario `CancelacionForm` con los datos de `solicitudState`.  
+ * Se usa `patchValue` para asignar los campos sin reemplazar el grupo completo. */
+      this.CancelacionForm.patchValue({
+          regimen: this.solicitudState.regimen,
+          mecanismo: this.solicitudState.mecanismo,
+          tratado: this.solicitudState.tratado,
+          producto: this.solicitudState.producto,
+          subproducto: this.solicitudState.subproducto,
+          representacion: this.solicitudState.representacion,
+        });
   }
 
   /**

@@ -10,7 +10,6 @@ import { DetalleComponent } from '../detalle/detalle.component';
 import { HttpClient } from '@angular/common/http';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-// import { certificadosCancelar} from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
 import oficiodata from '@libs/shared/theme/assets/json/140103/oficiotable.json';
 
 /** Representa la configuración de un ítem de oficio con datos del certificado y su origen. */
