@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
+
 import { RouterModule, Routes } from '@angular/router';
 import { PermisoMaquilaComponent } from './pages/permiso-maquila/permiso-maquila.component';
 
-const routes: Routes = [
+const ROUTES: Routes = [
   {
     path:'solictud',
     component:PermisoMaquilaComponent
@@ -10,7 +11,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
 export class PermisoMaquilaRoutingModule { }

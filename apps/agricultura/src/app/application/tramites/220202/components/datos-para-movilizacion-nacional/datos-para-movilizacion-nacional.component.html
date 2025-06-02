@@ -10,6 +10,7 @@
             formControlName="transporte"
             [label]="'Medio de transporte'"
             [required]="true"
+            [isDisabled]="esFormularioSoloLectura"
             name="transporte"
             (change)="
           setValoresStore(
@@ -44,6 +45,7 @@
             formControlName="guiaIdentificacion"
             [label]="'Punto de verificación federal'"
             [required]="false"
+            [isDisabled]="esFormularioSoloLectura"
             name="guiaIdentificacion"
             (change)="
             setValoresStore(
