@@ -11,11 +11,13 @@
  * @import { PLANTACOLUMNS } from '../../../../shared/constantes/prosec/prosec.module';
  */
 
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
-import { Catalogo } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { FilaPlantas } from '../../models/prosec.module'
 import { HttpErrorResponse } from '@angular/common/http';
@@ -25,16 +27,14 @@ import { SeccionLibState } from '@ng-mf/data-access-user';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
 import { TEXTO } from '../../constantes/prosec.module';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { delay } from 'rxjs';
-import { map } from 'rxjs';
-import { Subject } from 'rxjs';
-import { tap } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 
 @Component({
   selector: 'app-domicilios-de-plantas',
   templateUrl: './domicilios-de-plantas.component.html',
   styleUrls: ['./domicilios-de-plantas.component.scss'],
+  standalone: true,
+  imports: [ReactiveFormsModule, TituloComponent, CatalogoSelectComponent, CommonModule, TablaDinamicaComponent, AlertComponent]
 })
 export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
 
@@ -73,6 +73,8 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
 
   private seccionState!: SeccionLibState
 
+  esFormularioSoloLectura: boolean = false;
+
   plantaColumnsConfiguracion: ConfiguracionColumna<FilaPlantas>[] = [
     { encabezado: 'Calle', 
       clave: (fila) => fila.calle, 
@@ -110,7 +112,8 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     private AutorizacionProsecStore: AutorizacionProsecStore,
     private AUtorizacionProsecQuery: AUtorizacionProsecQuery,
     private seccionStore: SeccionLibStore,
-    private seccionQuery: SeccionLibQuery
+    private seccionQuery: SeccionLibQuery,
+     private consultaQuery: ConsultaioQuery
   ) {
     // Constructor logic can be added here if needed
   }
@@ -149,7 +152,17 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
           )
           .subscribe();
 
-    if(this.domiciliosState.formaValida[0].descripcion = 'AllValida'){
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+        }
+      )
+    ).subscribe();
+
+    if(this.domiciliosState.formaValida[0].descripcion === 'AllValida'){
       this.seccionStore.establecerSeccion([true]);
       this.seccionStore.establecerFormaValida([true])
     }
@@ -164,10 +177,18 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     metodoNombre: keyof AutorizacionProsecStore
   ): void {
     const VALOR = form.get(campo)?.value;
-    console.log(VALOR);
-    (this.AutorizacionProsecStore[metodoNombre] as (value: any) => void)(
+    (this.AutorizacionProsecStore[metodoNombre] as (value: unknown) => void)(
       VALOR
     );
+  }
+
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.forma.disable();
+    }
+    else {
+      this.forma.enable();
+    } 
   }
 
   initActionFormBuild(): void {
@@ -262,17 +283,16 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     this.AutorizacionProsecStore.setActividadProductiva([ActividadProductiva]);
   }
 
+  
+
   recuperarDatos(): void {
-    this.ProsecService.obtenerTablaDatos('plantasDatos.json').subscribe({
-      next: (response: any) => {
-        if (response && Array.isArray(response.plantasDatos)) {
-          this.plantasDatos = response.plantasDatos
+    this.ProsecService.obtenerTablaDatos('plantasDatos.json').subscribe(
+      (response) => {
+        if (response && Array.isArray(response)) {
+          this.plantasDatos = response as FilaPlantas[];
         } 
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
       }
-    });
+    );
   }
 
   ngOnDestroy(): void {

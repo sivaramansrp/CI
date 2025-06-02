@@ -87,3 +87,8 @@ export function createDatosState(params: Partial<ListaDeDatosFinal> = {}): Lista
     sectoresYMercancias: params.sectoresYMercancias || [],
   };
 }
+
+export interface PlantasDatosResponse {
+    plantasDatos: FilaPlantas[];
+    [key: string]: unknown;
+  }

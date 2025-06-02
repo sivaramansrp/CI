@@ -12,11 +12,13 @@
  * @import { SECTORCOLUMNS } from '../../../../shared/constantes/prosec/prosec.module';
  */
 
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { AutorizacionProsecStore, ProsecState } from '../../estados/autorizacion-prosec.store';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
-import { Catalogo } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { FilaSectors } from '../../models/prosec.module';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -26,17 +28,15 @@ import { SeccionLibQuery } from '@ng-mf/data-access-user';
 import { SeccionLibState } from '@ng-mf/data-access-user';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { delay } from 'rxjs';
-import { map } from 'rxjs';
-import { Subject } from 'rxjs';
-import { tap } from 'rxjs';
-import { takeUntil } from 'rxjs';
+
 
 
 @Component({
   selector: 'app-sectores-y-mercancias',
   templateUrl: './sectores-y-mercancias.component.html',
   styleUrl: './sectores-y-mercancias.component.scss',
+  standalone: true,
+  imports: [ ReactiveFormsModule,AlertComponent, TablaDinamicaComponent, CatalogoSelectComponent, TituloComponent, CommonModule ]
 })
 export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
 
@@ -57,7 +57,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
 
   TablaSeleccion = TablaSeleccion;
 
-  sectors: any[] = [];
+  sectors: FilaSectors[] = [];
 
   sectorColumnsConfiguracion: ConfiguracionColumna<FilaSectors>[] = [
     { encabezado: 'Lista de sectores', clave: (fila) => fila.sectorLista, orden: 1 },
@@ -70,13 +70,16 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
 
   private seccionState!: SeccionLibState
 
+  esFormularioSoloLectura: boolean = false;
+
 
   constructor(private readonly fb: FormBuilder, 
     private ProsecService: ProsecService, 
     private AutorizacionProsecStore: AutorizacionProsecStore,
     private AUtorizacionProsecQuery: AUtorizacionProsecQuery,
     private seccionStore: SeccionLibStore,
-    private seccionQuery: SeccionLibQuery
+    private seccionQuery: SeccionLibQuery,
+    private consultaQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -122,7 +125,17 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-      if(this.sectoresState.formaValida[0].descripcion = 'AllValida'){
+      this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+        }
+      )
+    ).subscribe();
+
+      if(this.sectoresState.formaValida[0].descripcion === 'AllValida'){
         this.seccionStore.establecerSeccion([true]);
         this.seccionStore.establecerFormaValida([true])
       }
@@ -131,6 +144,15 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
       }
 
     }
+
+    inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.sectoresYMercancias.disable();
+    }
+    else {
+      this.sectoresYMercancias.enable();
+    } 
+  }
   
     initActionFormBuild(): void {
       this.sectoresYMercancias = this.fb.group({
@@ -149,9 +171,8 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
       campo: string,
       metodoNombre: keyof AutorizacionProsecStore
     ): void {
-      const VALOR = form.get(campo)?.value;
-      console.log(VALOR);
-      (this.AutorizacionProsecStore[metodoNombre] as (value: any) => void)(
+      const VALOR = form.get(campo)?.value as unknown;
+      (this.AutorizacionProsecStore[metodoNombre] as (value: unknown) => void) (
         VALOR
       );
     }
@@ -173,16 +194,13 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   }
 
   recuperarDatos(): void {
-    this.ProsecService.obtenerTablaDatos('sectorDatos.json').subscribe({
-      next: (response: any) => {
-        if (response && Array.isArray(response.sectors)) {
-          this.sectors = response.sectors
+    this.ProsecService.obtenerTablaDatos('sectorDatos.json').subscribe(
+      (response) => {
+        if (response && Array.isArray(response)) {
+          this.sectors = response as FilaSectors[];
         }
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
       }
-    });
+    );
   }
 
   sectorSeleccion(Sector: Catalogo): void {
