@@ -1,23 +1,20 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable sort-imports */
-/* eslint-disable @nx/enforce-module-boundaries */
-import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import TablaDatos from 'libs/shared/theme/assets/json/90201/acuse-tabla.json';
+import { Component } from '@angular/core';
+
 import {
   FIRMAR,
   SOLICITUD,
 } from '@libs/shared/data-access-user/src';
-import { AcuseTablaDatos } from 'libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
 import { Router } from '@angular/router';
-import { ExpansionDeProductoresService } from 'libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.service';
-import { TramiteFolioStore } from '@libs/shared/data-access-user/src';
-import { catchError, map, Subscription } from 'rxjs';
-import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { FirmaElectronicaComponent } from 'libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component';
+
+import { ACUSE_DATOS } from '@libs/shared/data-access-user/src/core/enums/90201/productor-indirecto-tabla.enum';
+import { AcuseTablaDatos } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
+import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
+import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src/tramites/components/firma-electronica/firma-electronica.component';
+import TablaDatos from '@libs/shared/theme/assets/json/90201/acuse-tabla.json';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+
 
 /**
  * Componente FirmarSolicitudPasoDos que se utiliza para mostrar y gestionar los FirmarSolicitudPasoDos.
@@ -32,16 +29,16 @@ import { FirmaElectronicaComponent } from 'libs/shared/data-access-user/src/tram
   selector: 'app-firmar-solicitud-paso-dos',
   standalone: true,
   imports: [
-    CommonModule,
     AlertComponent,
-    TituloComponent,
-    TablaDinamicaComponent,
+    CommonModule,
     FirmaElectronicaComponent,
+    TablaDinamicaComponent,
+    TituloComponent
   ],
   templateUrl: './firmar-solicitud-paso-dos.component.html',
   styleUrl: './firmar-solicitud-paso-dos.component.scss',
 })
-export class FirmarSolicitudPasoDosComponent implements OnDestroy {
+export class FirmarSolicitudPasoDosComponent {
   /**
    * Una propiedad pública que contiene las constantes de texto para el componente "firmar-solicitud-paso-dos".
    * El objeto `firmar` contiene varias cadenas de texto utilizadas dentro de este componente.
@@ -52,19 +49,17 @@ export class FirmarSolicitudPasoDosComponent implements OnDestroy {
    * Esta variable se llena con los datos del objeto `solicitud`.
    */
   public TEXTOS2 = SOLICITUD;
+  
   /**
-   * Configuración para las columnas de la tabla en el componente "firmar-solicitud-paso-dos".
-   *
-   * @type {ConfiguracionColumna<any>[]} configuracionTabla - Un arreglo de configuraciones de columnas.
-   * @property {string} encabezado - El texto del encabezado para la columna.
-   * @property {Function} clave - Una función que devuelve el valor para la columna basado en el elemento.
-   * @property {number} orden - El orden en el que la columna debe aparecer.
+   * Configuración de la tabla utilizada en el componente para mostrar los datos del acuse.
+   * 
+   * @remarks
+   * Esta propiedad almacena la configuración de columnas, formato y otros parámetros
+   * necesarios para renderizar la tabla de datos del acuse en la interfaz de usuario.
+   * 
+   * @see ACUSE_DATOS para la definición de la configuración.
    */
-  public configuracionTabla: ConfiguracionColumna<any>[] = [
-    { encabezado: 'no', clave: (item: any) => item.no, orden: 1 },
-    { encabezado: 'documento', clave: (item: any) => item.documento, orden: 2 },
-    { encabezado: 'descargar', clave: (item: any) => item.descargar, orden: 3 },
-  ];
+  public configuracionTabla = ACUSE_DATOS;
 
   /**
    * Un arreglo de objetos `AcuseTablaDatos` que contiene los datos para la tabla.
@@ -73,22 +68,11 @@ export class FirmarSolicitudPasoDosComponent implements OnDestroy {
   public acuseTablaDatos: AcuseTablaDatos[] = TablaDatos;
 
   /**
-   * Una instancia de Subscription que se utiliza para manejar la suscripción a eventos.
-   * Esta instancia se utiliza para manejar la suscripción a eventos y liberar recursos cuando el componente se destruye.
-   * @type {Subscription}
-   */
-  private subscription: Subscription = new Subscription();
-
-  /**
    * Constructor del componente.
    * @param router - El enrutador.
-   * @param TramiteFolioServices - Los servicios extraordinarios.
-   * @param tramiteStore - El almacén de trámites.
    */
   constructor(
-    private router: Router,
-    private _expansionDesvc: ExpansionDeProductoresService,
-    private tramiteStore: TramiteFolioStore
+    private router: Router
   ) {}
 
   /**
@@ -96,32 +80,10 @@ export class FirmarSolicitudPasoDosComponent implements OnDestroy {
    * @param ev - La cadena de texto que representa la firma obtenida.
    */
   obtieneFirma(ev: string): void {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const firma: string = ev;
-    if (firma) {
-      // Obtiene el número de trámite
-      this.subscription.add(
-        this._expansionDesvc
-          .obtenerTramite(19)
-          .pipe(
-            map((tramite) => {
-              this.tramiteStore.establecerTramite(tramite.data, firma);
-              this.router.navigate(['servicios-extraordinarios/acuse']);
-            }),
-            catchError((_error) => {
-              return _error;
-            })
-          )
-          .subscribe()
-      );
-    }
+    const FIRMA: string = ev;
+    if (FIRMA) {
+    this.router.navigate(['temporal-contenedores/acuse'])
   }
+}
 
-  /**
-   * Maneja el evento para cancelar la firma.
-   * Navega al componente anterior.
-   */
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
 }

@@ -8,8 +8,8 @@ import { Tramite260212Store } from '../../estados/tramite260212.store';
 
 import { Tramite260212Query } from '../../estados/tramite260212.query';
 
-import { Observable, Subject } from 'rxjs';
-
+import { Observable, Subject, map, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * Componente FormularioOperacionComercialComponent
  * Este componente gestiona el formulario relacionado con la operación comercial.
@@ -26,14 +26,22 @@ import { Observable, Subject } from 'rxjs';
   styleUrl: './formulario-operacion-comercial.component.scss',
 })
 export class FormularioOperacionComercialComponent implements OnInit, OnDestroy {
-  /** Subject para destruir el componente */
+/**
+ * @desc Indica si el formulario debe mostrarse solo en modo de lectura.
+ * @type {boolean}
+ * @public
+ * 
+ * Cuando es verdadero, el usuario no puede editar los campos del formulario.
+ */
+   public esFormularioSoloLectura: boolean = true;
+ /** Subject para destruir el componente */
   private destroy$ = new Subject<void>();
   /** Observable para el estado seleccionado */
-  selectedRegimen$: Observable<CatalogoResponse | null> =
+  selectedRegimen$: Observable<string> =
     this.tramite260212Query.selectedRegimen$;
   /** Catálogo de estados cargado desde un archivo JSON */
 
-  selectedEntradas$: Observable<CatalogoResponse | null> =
+  selectedEntradas$: Observable<string> =
     this.tramite260212Query.selectedEntradas$;
   /**
  * Arreglo que almacena las claves del catálogo.
@@ -59,9 +67,10 @@ export class FormularioOperacionComercialComponent implements OnInit, OnDestroy 
 
   constructor(private fb: FormBuilder, private solicitudService: SolicitudService,
     private tramite260212Store: Tramite260212Store,
-    private tramite260212Query: Tramite260212Query
+    private tramite260212Query: Tramite260212Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Se puede agregar lógica de inicialización aquí si es necesario
+     
   }
 
   /**
@@ -70,35 +79,91 @@ export class FormularioOperacionComercialComponent implements OnInit, OnDestroy 
  * - Recupera las claves del catálogo mediante el servicio.
  */
   ngOnInit(): void {
-
-    this.formularioOperacionInitial()
-
-    this.solicitudService.getClave().subscribe((data) => {
-      this.clave = data;
-    }
-    );
-    this.selectedRegimen$.subscribe((regimen) => {
-      if (regimen) {
-        this.formularioOperacionForm.get('regimen')?.setValue(regimen);
-      }
-    });
-    this.selectedEntradas$.subscribe((entradas) => {
-      if (entradas) {
-        this.formularioOperacionForm.get('entradas')?.setValue(entradas);
-      }
-    });
-  }
+this.formularioOperacionInitial();
+this. inicializarEstadoFormulario();
+}
 
   /**
-   * Inicializa el formulario `formularioOperacionForm` con campos y sus validaciones requeridas.
+   * Inicializa el formulario de operación comercial con los campos requeridos y sus validaciones.
+   * @returns {void}
    */
   formularioOperacionInitial(): void {
     this.formularioOperacionForm = this.fb.group({
+      avisoclave: [''],
       noLicenciaSanitaria: [''],
       regimen: ['', Validators.required],
       entradas: []
 
     })
+    this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroy$),
+          map((seccionState)=>{
+            this.esFormularioSoloLectura = seccionState.readonly;
+            
+          })
+        )
+        .subscribe()
+  }
+
+  /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   * Si está en modo solo lectura, deshabilita el formulario; si no, lo habilita y actualiza los valores.
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (!this.formularioOperacionForm) {
+      return;
+    }
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.actualizarEstado();
+    }  
+  }
+
+  /**
+   * Aplica el modo solo lectura o edición al formulario según corresponda.
+   * También actualiza los valores del formulario desde el store.
+   * @returns {void}
+   */
+  guardarDatosFormulario(): void {
+    if (!this.formularioOperacionForm) {
+     return;
+    }
+    this.actualizarEstado();
+    if (this.esFormularioSoloLectura) {
+      this.formularioOperacionForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formularioOperacionForm.enable();
+    }
+  }
+
+  /**
+   * Actualiza los valores del formulario a partir del store y servicios.
+   * Sincroniza los campos 'regimen' y 'entradas' con el estado global.
+   * @returns {void}
+   */
+  actualizarEstado(): void {
+   this.solicitudService.getClave()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data): void => {
+        this.clave = data
+      });
+    this.selectedRegimen$.subscribe((regimen) => {
+      if (regimen) {
+        this.formularioOperacionForm.get('regimen')?.setValue(regimen);
+      } else {
+        this.formularioOperacionForm.get('regimen')?.setValue('');
+      }
+    });
+    this.selectedEntradas$.subscribe((entradas) => {
+      if (entradas) {
+        this.formularioOperacionForm.get('entradas')?.setValue(entradas);
+      } else {
+        this.formularioOperacionForm.get('entradas')?.setValue('');
+      }
+    });
   }
 
   /**
@@ -126,11 +191,28 @@ export class FormularioOperacionComercialComponent implements OnInit, OnDestroy 
     this.tramite260212Store.setEntradas(ENTRADAS);
   }
 
-  /*
-  * Método del ciclo de vida de Angular - destruye el componente
- */
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Libera recursos y cancela suscripciones.
+   * @returns {void}
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+    
+  }
+
+  /**
+   * Getter para los controles del formulario (para pruebas).
+   */
+  get formControls(): { [key: string]: import("@angular/forms").AbstractControl } | undefined {
+    return this.formularioOperacionForm?.controls;
+  }
+
+  /**
+   * Expose clave for testing.
+   */
+  getClaveCatalog(): CatalogoResponse[] {
+    return this.clave;
   }
 }
