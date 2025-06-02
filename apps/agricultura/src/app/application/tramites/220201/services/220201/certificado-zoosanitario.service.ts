@@ -1,4 +1,5 @@
 import {
+  ApiSolicitud,
   CapturarSolicitud,
   DatosDeLaSolicitud,
   DatosParaMovilizacionNacional,
@@ -14,6 +15,7 @@ import { Observable, map } from 'rxjs';
 import { ZoosanitarioStore } from '../../estados/220201/zoosanitario.store';
 
 import { PersonaTerceros, SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { HttpClient } from '@angular/common/http';
 
 /**
  * Servicio para la gestión de solicitudes del certificado zoosanitario.
@@ -35,7 +37,8 @@ export class CertificadoZoosanitarioServiceService {
    */
   constructor(
     private readonly zoosanitarioStore: ZoosanitarioStore,
-    private readonly seccionStore: SeccionLibStore
+    private readonly seccionStore: SeccionLibStore,
+    private readonly http: HttpClient
   ) {}
 
   /**
@@ -184,4 +187,33 @@ export class CertificadoZoosanitarioServiceService {
       )
     );
   }
+   /**
+     * @method guardarDatosFormulario
+     * @description Almacena los datos del formulario en el estado correspondiente.
+     * Actualiza los datos de pago de derechos, datos de la solicitud, datos para movilización nacional y terceros relacionados,
+     * utilizando la información proporcionada en el objeto `datos`.
+     * 
+     * @param {ApiSolicitud} datos - Objeto que contiene la información de la solicitud a almacenar.
+     * 
+     * @memberof CertificadoZoosanitarioService
+     */
+    public guardarDatosFormulario(): Observable<ApiSolicitud> {
+      return this.http.get<ApiSolicitud>('assets/json/220201/capturarSolicitud.json');
+    }
+    /**
+     * @method storeDatosFormulario
+     * @description Almacena los datos del formulario en el estado correspondiente.
+     * Actualiza los datos de pago de derechos, datos de la solicitud, datos para movilización nacional y terceros relacionados,
+     * utilizando la información proporcionada en el objeto `datos`.
+     * 
+     * @param {ApiSolicitud} datos - Objeto que contiene la información de la solicitud a almacenar.
+     * 
+     * @memberof CertificadoZoosanitarioService
+     */
+    public storeDatosFormulario(datos: ApiSolicitud): void {
+    this.updatePagoDeDerechos(datos?.pagoDeDerechos || {} as PagoDeDerechos);
+   this.updateDatosDeLaSolicitud(datos?.datosDeLaSolicitud || {} as DatosDeLaSolicitud);
+   this.updateDatosParaMovilizacionNacional(datos?.datosParaMovilizacionNacional || {} as DatosDeLaSolicitud);
+   this.updateTercerosRelacionados(datos?.tercerosRelacionados || {} as ValidarEnvio);
+    }
 }

@@ -71,18 +71,13 @@ if(seccionState.update){
     });
 }
   guardarDatosFormulario(): void {
-     this.httpServicios.get<ApiSolicitud>('../../../../../assets/json/220201/capturarSolicitud.json').pipe(
-          takeUntil(this.destroyNotifier$)
-        )
-        .subscribe((resp) => {
-          if(resp){
-   this.certificadoZoosanitarioServices.updatePagoDeDerechos(resp?.pagoDeDerechos || {} as PagoDeDerechos);
-   this.certificadoZoosanitarioServices.updateDatosDeLaSolicitud(resp?.datosDeLaSolicitud || {} as DatosDeLaSolicitud);
-   this.certificadoZoosanitarioServices.updateDatosParaMovilizacionNacional(resp?.datosParaMovilizacionNacional || {} as DatosDeLaSolicitud);
-   this.certificadoZoosanitarioServices.updateTercerosRelacionados(resp?.tercerosRelacionados || []);
-   this.certificadoZoosanitarioServices.updateTercerosRelacionados(resp?.tercerosRelacionados || {} as ValidarEnvio);
-          }
-        });
+     this.certificadoZoosanitarioServices.guardarDatosFormulario()
+          .pipe(takeUntil(this.destroyNotifier$))
+          .subscribe((data) => {
+   this.certificadoZoosanitarioServices.storeDatosFormulario(data as ApiSolicitud);
+          }, (error) => {
+            console.error(error);
+          });
   }
   /**
    * Evento emitido al cambiar de pestaña.
