@@ -23,6 +23,7 @@ import {
   LOCALIDADSELECTDATA,
   MUNICIPIOSELECTDATA,
   PAISSELECTDATA,
+  TERCEROS_RELACIONADOS_TABLE_BODY_DATA,
   TERCEROS_RELACIONADOS_TABLE_HEADER_DATA,
 } from '../../enum/permiso.enum';
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -283,6 +284,10 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
               takeUntil(this.destroyNotifier$),
               map((seccionState)=>{
                 this.esFormularioSoloLectura = seccionState.readonly; 
+                if(this.esFormularioSoloLectura) {
+                 this.fetchTableDummyJson()
+                }
+             
               })
             )
             .subscribe()
@@ -290,7 +295,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     
   }
 
- 
+/**
+ * Método para obtener datos de ejemplo para la tabla.
+ * Retorna un arreglo vacío de tipo TablaDatos.
+ *
+ * @returns Un arreglo vacío de TablaDatos.
+ */
+fetchTableDummyJson(): void {
+  this.fabricanteRowData.push(TERCEROS_RELACIONADOS_TABLE_BODY_DATA);
+  this.destinatarioRowData.push(TERCEROS_RELACIONADOS_TABLE_BODY_DATA);
+  this.proveedorRowData.push(TERCEROS_RELACIONADOS_TABLE_BODY_DATA);
+  this.facturadorRowData.push(TERCEROS_RELACIONADOS_TABLE_BODY_DATA);
+}
   /**
    * Ciclo de vida que se ejecuta al iniciar el componente.
    * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
@@ -1211,7 +1227,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
      * Agrega la nueva fila a la lista de filas del destinatario.
      */
     this.destinatarioRowData.push(DESTINATARIO_FILA);
-
     /**
      * Actualiza el estado del store con los nuevos datos del destinatario.
      */
@@ -1311,7 +1326,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
      * Agrega la nueva fila a la lista de filas del facturador.
      */
     this.facturadorRowData.push(FACTURADOR_FILA);
-
     /**
      * Actualiza el estado del store con los nuevos datos del facturador.
      */

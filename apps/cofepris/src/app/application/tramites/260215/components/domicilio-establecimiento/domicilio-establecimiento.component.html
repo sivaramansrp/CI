@@ -124,11 +124,12 @@
       [datos]="nicoTablaDatos"
     ></app-tabla-dinamica>
     <div class="container text-end mt-5">
-      <button class="btn btn-default me-2">Eliminar</button>
+      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
       <button
         class="btn btn-primary me-2"
         data-bs-toggle="modal"
         data-bs-target="#modalAddAgent"
+        [disabled]="esFormularioSoloLectura"
       >
         Agregar
       </button>
@@ -238,14 +239,16 @@
         class="btn btn-default me-2"
         data-bs-toggle="modal"
         data-bs-target="#modalAddAgentMercancias"
+        [disabled]="esFormularioSoloLectura"
       >
         Modificar
       </button>
-      <button class="btn btn-default me-2">Eliminar</button>
+      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
       <button
         class="btn btn-primary me-2"
         data-bs-toggle="modal"
         data-bs-target="#modalAddAgentMercancias"
+        [disabled]="esFormularioSoloLectura"
       >
         Agregar
       </button>

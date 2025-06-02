@@ -1,7 +1,6 @@
 import {
   AL_DAR,
   AlertComponent,
-  ConsultaioQuery,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -17,6 +16,7 @@ import {
 } from '../../estados/tramites/tramite260215.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DomicilioComponent } from '../domicilio-establecimiento/domicilio-establecimiento.component';
 import { ManifiestosComponent } from '../manifiestos-declaraciones/manifiestos-declaraciones.component';
 import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';

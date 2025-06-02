@@ -6,7 +6,6 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   ConfiguracionColumna,
-  ConsultaioQuery,
   CrossListLable,
   CrosslistComponent,
   InputFechaComponent,
@@ -40,9 +39,9 @@ import {
 } from '../../estados/tramites/tramite260215.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ServiciosPermisoSanitarioService } from '../../services/servicios-permiso-sanitario.service';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
-
 export interface RespuestaTabla {
   code: number;
   data: NicoInfo[];
