@@ -104,7 +104,6 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
     this.query.selectDatosFederatariosFormulario$
       .pipe(takeUntil(this.destroy$))
       .subscribe((datos) => {
-        console.log(datos);
         this.datosFederatarios = datos;
       });
   }
