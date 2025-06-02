@@ -67,6 +67,17 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
 
+  /**
+   * Constructor de la clase PasoUnoComponent.
+   * 
+   * @param query Servicio para consultar el estado de Tramite80102.
+   * @param store Almacén para gestionar el estado de Tramite80102.
+   * @param consultaQuery Servicio para consultar el estado de Consultaio.
+   * @param autorizacionProgrmaNuevoService Servicio público para la autorización de nuevos programas.
+   * 
+   * Suscribe al observable `selectConsultaioState$` de `consultaQuery` y actualiza la propiedad `consultaState`
+   * cada vez que el estado de la sección cambia, hasta que se emita la notificación de destrucción del componente.
+   */
   constructor(private query:Tramite80102Query,private store:Tramite80102Store,
     private consultaQuery: ConsultaioQuery, public autorizacionProgrmaNuevoService: AutorizacionProgrmaNuevoService
   ) {
@@ -75,6 +86,15 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     })).subscribe();
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * 
+   * - Si el estado de consulta (`consultaState`) existe, el `procedureId` es '80102' y la propiedad `update` es verdadera,
+   *   se llama al método `guardarDatosFormulario()` para guardar los datos del formulario.
+   * - En caso contrario, se establece la variable `esDatosRespuesta` en `true`.
+   * - Además, se suscribe al observable `indicePrevioRuta$` para actualizar el índice (`indice`) cuando se emite un nuevo valor,
+   *   asegurando la limpieza de la suscripción al destruir el componente mediante `takeUntil(this.destroyNotifier$)`.
+   */
   ngOnInit():void{
     if (this.consultaState && this.consultaState.procedureId === '80102' &&
       this.consultaState.update) {
