@@ -1,5 +1,5 @@
+import { Component, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
 import {
@@ -10,8 +10,9 @@ import {
   PlantasDisponibles,
   PlantasImmex,
 } from '../../../../shared/models/federatarios-y-plantas.model';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FederatariosYPlantasComponent } from '../../../../shared/components/federatarios-y-plantas/federatarios-y-plantas.component';
-import { Observable } from 'rxjs';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { Tramite80102Store } from '../../estados/tramite80102.store';
 
@@ -36,7 +37,7 @@ import { Tramite80102Store } from '../../estados/tramite80102.store';
  * para manejar y observar los datos relacionados con los federatarios y plantas. Además, implementa el ciclo de vida
  * de Angular para limpiar las suscripciones al destruirse.
  */
-export class FederatariosYPlantasVistaComponent {
+export class FederatariosYPlantasVistaComponent implements OnDestroy {
   /**
    * Configuración de la tabla de federatarios
    * @property {Object} federatariosTablaConfiguracion
@@ -74,14 +75,28 @@ export class FederatariosYPlantasVistaComponent {
    * Lista de plantas disponibles para mostrar en la tabla
    * @property {PlantasDisponibles[]} plantasDisponiblesTablaLista
    */
-  public plantasDisponiblesTablaLista: PlantasDisponibles[] = [];
+  public plantasDisponiblesTablaLista$!: Observable<PlantasDisponibles[]>;
 
   /**
    * Lista de plantas IMMEX para mostrar en la tabla
    * @property {PlantasImmex[]} plantasImmexTablaLista
    */
-  public plantasImmexTablaLista: PlantasImmex[] = [];
+  public plantasImmexTablaLista$!: Observable<PlantasImmex[]>;
 
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  public esFormularioSoloLectura: boolean = false; 
+
+  /**
+   * Notificador utilizado para manejar la destrucción o desuscripción de observables.
+   * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
+   *
+   * @property {Subject<void>} destroyNotifier$
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+  
   /**
    * Constructor de la clase FederatariosYPlantasVistaComponent.
    * @param {Tramite80102Store} store - Servicio para manejar el estado del trámite.
@@ -89,9 +104,19 @@ export class FederatariosYPlantasVistaComponent {
    */
   constructor(
     private store: Tramite80102Store,
-    private query: Tramite80102Query
-  ) {
+    private query: Tramite80102Query, private consultaQuery: ConsultaioQuery
+      ) {
+        this.consultaQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.esFormularioSoloLectura = seccionState.readonly;
+            })
+          )
+          .subscribe();
     this.federatariosTablaLista$ = this.query.selectDatosFederatarios$;
+    this.plantasDisponiblesTablaLista$ = this.query.selectPlantasDisponiblesTablaLista$;
+    this.plantasImmexTablaLista$ = this.query.selectplantasImmexTablaLista$;
   }
 
   /**
@@ -101,5 +126,16 @@ export class FederatariosYPlantasVistaComponent {
    */
   setFormaDatos(datos: FederatariosEncabezado): void {
     this.store.setFederatarios(datos);
+  }
+
+  
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
+   * Emite una notificación a través del observable `destroyNotifier$` para limpiar suscripciones
+   * y otros recursos, y luego completa el observable para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

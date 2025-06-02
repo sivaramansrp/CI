@@ -1,13 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { map, takeUntil } from 'rxjs/operators';
 import { ANEXO_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { AnexoDosYTresComponent } from '../../../../shared/components/anexo-dos-y-tres.component/anexo-dos-y-tres.component';
 import { AnexoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { Tramite80102Store } from '../../estados/tramite80102.store';
-import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-contenedor-annexo-dos-tres',
@@ -64,15 +65,28 @@ export class ContenedorAnnexoDosTresComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  public esFormularioSoloLectura: boolean = false; 
+
+  /**
    * Constructor de la clase ContenedorAnnexoDosTresComponent.
    * @param {Tramite80102Query} query - Servicio para consultar el estado del trámite.
    * @param {Tramite80102Store} store - Servicio para manejar el estado del trámite.
    */
   constructor(
     private query: Tramite80102Query,
-    private store: Tramite80102Store
+    private store: Tramite80102Store, private consultaQuery: ConsultaioQuery
   ) {
-    //El constructor requiere inyección de dependencias, pero se ha mantenido vacío debido a una regla de ESLint.
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe()
   }
 
   /**

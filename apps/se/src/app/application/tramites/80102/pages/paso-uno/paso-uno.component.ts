@@ -1,15 +1,15 @@
 import { Component, OnDestroy ,OnInit} from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { ConsultaioQuery, ConsultaioState, FormularioDinamico, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AggregarComplimentosComponent } from '../../components/aggregar-complimentos/aggregar-complimentos.component';
+import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
 import { CommonModule } from '@angular/common';
 import { ContenedorAnnexoDosTresComponent } from '../../components/contenedor-annexo-dos-tres/contenedor-annexo-dos-tres.component';
 import { ContenedorAnnexoUnoComponent } from '../../components/contenedor-annexo-uno/contenedor-annexo-uno.component';
 import { EmpresasSubfabricanteComponent } from '../../components/empresas-subfabricante/empresas-subfabricante.component';
 import { FederatariosYPlantasVistaComponent } from '../../components/federatarios-y-plantas-vista/federatarios-y-plantas-vista.component';
-import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ServiciosComponent } from "../../components/servicios/servicios.component";
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { Tramite80102Store } from '../../estados/tramite80102.store';
 
@@ -59,12 +59,30 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   indice: number = 1;
 
-  constructor(private query:Tramite80102Query,private store:Tramite80102Store) {
-    //constructor vacío
+  /**
+   * Esta variable se utiliza para almacenar el índice del subtítulo.
+   */
+  public consultaState!: ConsultaioState;
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+  constructor(private query:Tramite80102Query,private store:Tramite80102Store,
+    private consultaQuery: ConsultaioQuery, public autorizacionProgrmaNuevoService: AutorizacionProgrmaNuevoService
+  ) {
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
+      this.consultaState = seccionState;
+    })).subscribe();
   }
 
   ngOnInit():void{
-    
+    if (
+      this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+
     this.query.indicePrevioRuta$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((indice: number) => {
@@ -72,6 +90,21 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       this.indice = indice;
      }
       });
+  }
+
+/**
+ * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+ * Luego reinicializa el formulario con los valores actualizados desde el store.
+ */
+  guardarDatosFormulario(): void {
+    this.autorizacionProgrmaNuevoService
+      .getRegistroTomaMuestrasMercanciasData().pipe(
+        takeUntil(this.destroyNotifier$)).subscribe((resp) => {
+          if (resp) {
+            this.esDatosRespuesta = true;
+            this.autorizacionProgrmaNuevoService.actualizarEstadoFormulario(resp);
+          }
+        });
   }
 
   /**

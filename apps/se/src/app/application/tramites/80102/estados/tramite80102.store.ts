@@ -22,8 +22,8 @@ import {
   EmpressaSubFabricantePlantas,
   PlantasSubfabricante,
 } from '../../../shared/models/empresas-subfabricanta.model';
+import { FederatariosEncabezado, PlantasDisponibles, PlantasImmex } from '../../../shared/models/federatarios-y-plantas.model';
 import { Store, StoreConfig } from '@datorama/akita';
-import { FederatariosEncabezado } from '../../../shared/models/federatarios-y-plantas.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -85,7 +85,9 @@ export interface Tramite80102State {
   annexoUno: AnnexoUno;
 
   indicePrevioRuta: number;
-  tablaDatosFederatarios: FederatariosEncabezado[]
+  tablaDatosFederatarios: FederatariosEncabezado[];
+  plantasImmexTablaLista: PlantasImmex[];
+  plantasDisponiblesTablaLista: PlantasDisponibles[];
 }
 
 /**
@@ -311,7 +313,9 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80102State = {
 
   indicePrevioRuta: 0,
 
-  tablaDatosFederatarios: []
+  tablaDatosFederatarios: [],
+  plantasImmexTablaLista: [],
+  plantasDisponiblesTablaLista: [],
 };
 
 
