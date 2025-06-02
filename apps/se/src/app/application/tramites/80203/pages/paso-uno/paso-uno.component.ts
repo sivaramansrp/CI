@@ -6,6 +6,7 @@ import { Anexo1Component } from '../../components/anexo-1/anexo-1.component';
 import { CommonModule } from '@angular/common';
 import { PermisoImmexDatosService } from '../../servicios/immex/permiso-immex-datos.service';
 import { SECCIONES_TRAMITE_80203 } from '../../constantes/immex-registro-de-solicitud-modality.enums';
+import { immexRegistroform } from '../../modelos/immex-registro-de-solicitud-modality.model';
 /**
  * Componente para mostrar el subtítulo del asistente.
  * @component PasoUnoComponent
@@ -77,7 +78,6 @@ export class PasoUnoComponent implements OnInit {
     else {
       this.esDatosRespuesta = true;
     }
-
     this.asignarSecciones();
   }
   /**
@@ -92,7 +92,7 @@ export class PasoUnoComponent implements OnInit {
       .subscribe((resp) => {
         if(resp){
         this.esDatosRespuesta = true;
-        // this.solocitud301Service.actualizarEstadoFormulario(resp);
+      this.permisoImmexDatosService.actualizarEstadoFormulario(resp?.immexRegistro || {} as immexRegistroform)
         }
       });
   }
