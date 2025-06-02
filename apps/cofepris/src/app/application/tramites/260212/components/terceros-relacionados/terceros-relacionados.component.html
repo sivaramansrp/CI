@@ -20,7 +20,7 @@
           <button class="btn btn-danger" type="button">Eliminar</button>
           <button class="btn btn-default" type="button">Modificar</button>
         </div>
-        <button type="button" class="btn btn-primary" (click)="toggleDivFabricante()">
+        <button type="button" class="btn btn-primary" (click)="toggleDivFabricante()" [disabled]="esFormularioSoloLectura">
           Agregar
         </button>
       </div>
@@ -40,7 +40,7 @@
           <button class="btn btn-danger" type="button">Eliminar</button>
           <button class="btn btn-default" type="button">Modificar</button>
         </div>
-        <button type="button" class="btn btn-primary" (click)="toggleDivDestinatario()">
+        <button type="button" class="btn btn-primary" (click)="toggleDivDestinatario()" [disabled]="esFormularioSoloLectura">
           Agregar
         </button>
       </div>
@@ -59,7 +59,7 @@
           <button class="btn btn-danger" type="button">Eliminar</button>
           <button class="btn btn-default" type="button">Modificar</button>
         </div>
-        <button type="button" class="btn btn-primary" (click)="toggleDivProveedor()">
+        <button type="button" class="btn btn-primary" (click)="toggleDivProveedor()" [disabled]="esFormularioSoloLectura">
           Agregar
         </button>
       </div>
@@ -78,7 +78,7 @@
           <button class="btn btn-danger" type="button">Eliminar</button>
           <button class="btn btn-default" type="button">Modificar</button>
         </div>
-        <button type="button" class="btn btn-primary" (click)="toggleDivFacturador()">
+        <button type="button" class="btn btn-primary" (click)="toggleDivFacturador()" [disabled]="esFormularioSoloLectura">
           Agregar
         </button>
       </div>

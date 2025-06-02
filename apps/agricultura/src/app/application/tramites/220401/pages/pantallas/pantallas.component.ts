@@ -1,9 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/303/pasos.enums';
-// import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/220202/fitosanitario.model';
-import { DatosPasos, ListaPasosWizard,  WizardComponent } from '@ng-mf/data-access-user';
 
-import { PANTAPASOS } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
+
 
 interface AccionBoton {
   accion: string;
