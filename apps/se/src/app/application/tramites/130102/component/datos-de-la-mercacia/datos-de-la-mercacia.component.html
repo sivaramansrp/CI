@@ -8,6 +8,7 @@
           <app-input-radio
             [radioOptions]="producto"
             [isRequired]="true"
+            [selectedValue]="defaultSelect"
             formControlName="productos"
             (change)="setValoresStore(formDelLa,'productos','setProducto')"
             [layout]="'vertical'"
@@ -54,6 +55,7 @@
         (change)="fetchFraccion();setValoresStore(formDelLa,'fraccionArancelaria', 'setFraccionArancelaria')"
         [placeholder]="'Seleccione un documento'"
         formControlName="fraccionArancelaria"
+        [isDisabled]="esFormularioSoloLectura ? true : false"
       ></app-catalogo-select>
       @if (formDelLa.controls['fraccionArancelaria'].invalid && formDelLa.controls['fraccionArancelaria'].touched) {
         <div class="text-danger">
@@ -73,6 +75,7 @@
           (change)="fetchUnidad(); setValoresStore(formDelLa,'unidadMedida', 'setUnidadMedida') "
          [placeholder]="'Seleccione una unidad de medida'"
          formControlName="unidadMedida"
+            [isDisabled]="esFormularioSoloLectura ? true : false"
         ></app-catalogo-select>
         @if (formDelLa.controls['unidadMedida'].invalid && formDelLa.controls['unidadMedida'].touched) {
           <div class="text-danger">
