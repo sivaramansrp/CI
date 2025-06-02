@@ -36,7 +36,7 @@
         "numeroDeProcedimiento": "110102"
     },
     {
-         "id": 3,
+        "id": 3,
         "tipoDeTramite": "Ampliación Productor directo",
         "fecha": "2023-10-10",
         "fechaActualizacion": "2023-10-15",
@@ -557,7 +557,6 @@
         "departamento": "PROFEPA",
         "numeroDeProcedimiento": "250103"
     },
-    
     {
         "id": 80205,
         "tipoDeTramite": "Solicitud de Permiso",
@@ -575,6 +574,15 @@
         "diasTranscurridos": "4",
         "departamento": "SE",
         "numeroDeProcedimiento": "120602"
+    },
+    {
+        "id": 140201,
+        "tipoDeTramite": "Solicitud de Permiso",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "140201"
     },
     {
         "id": 220401,
