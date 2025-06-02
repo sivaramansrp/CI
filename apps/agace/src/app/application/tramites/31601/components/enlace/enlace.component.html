@@ -21,11 +21,12 @@
         data-bs-toggle="modal"
         data-bs-target="#modalAgregar"
         (click)="abrirModal()"
+        disabled="esFormularioSoloLectura ? true : false"
       >
         Agregar
       </button>
-      <button type="button" class="btn btn-default me-3">Modificar</button>
-      <button type="button" class="btn btn-danger">Eliminar</button>
+      <button type="button" class="btn btn-default me-3" disabled="esFormularioSoloLectura ? true : false">Modificar</button>
+      <button type="button" class="btn btn-danger" disabled="esFormularioSoloLectura ? true : false">Eliminar</button>
     </div>
   </div>
 </div>
@@ -51,9 +52,10 @@
                 <div class="form-group">
                   <input
                     class="form-control"
-                    id="resigtro"
-                    formControlName="resigtro"
+                    id="resigtroReprestantante"
+                    formControlName="resigtroReprestantante"
                     type="text"
+                    (change)="setValoresStore(represtantante,'resigtroReprestantante', 'setResigtroReprestantante')"
                   />
                 </div>
               </div>
@@ -61,31 +63,33 @@
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
-                  <label class="form-label" for="rfc">RFC:</label>
+                  <label class="form-label" for="rfcReprestantante">RFC:</label>
                   <input
                     class="form-control"
-                    id="rfc"
-                    formControlName="rfc"
+                    id="rfcReprestantante"
+                    formControlName="rfcReprestantante"
                     type="text"
+                    (change)="setValoresStore(represtantante,'rfcReprestantante', 'setRfcReprestantante')"
                   />
                 </div>
               </div>
 
               <div class="col-md-4 d-flex align-items-center">
                 <div class="btn-group">
-                  <button class="btn btn-default" type="button">Buscar</button>
+                  <button class="btn btn-default" type="button" disabled="esFormularioSoloLectura ? true : false">Buscar</button>
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
-                  <label class="form-label" for="nombre">Nombre:</label>
+                  <label class="form-label" for="nombreReprestante">Nombre:</label>
                   <input
                     class="form-control"
-                    id="nombre"
-                    formControlName="nombre"
+                    id="nombreReprestante"
+                    formControlName="nombreReprestante"
                     type="text"
+                    (change)="setValoresStore(represtantante,'nombreReprestante', 'setNombreReprestante')"
                   />
                 </div>
               </div>
@@ -99,6 +103,7 @@
                     id="apellidoPaterno"
                     formControlName="apellidoPaterno"
                     type="text"
+                    (change)="setValoresStore(represtantante,'apellidoPaterno', 'setApellidoPaterno')"
                   />
                 </div>
               </div>
@@ -112,6 +117,7 @@
                     id="apellidoMaterno"
                     formControlName="apellidoMaterno"
                     type="text"
+                    (change)="setValoresStore(represtantante,'apellidoMaterno', 'setApellidoMaterno')"
                   />
                 </div>
               </div>
@@ -127,6 +133,7 @@
                     id="cuidad"
                     formControlName="cuidad"
                     type="text"
+                    (change)="setValoresStore(represtantante,'cuidad', 'setCuidad')"
                   />
                 </div>
               </div>
@@ -138,6 +145,7 @@
                     id="cargo"
                     formControlName="cargo"
                     type="text"
+                    (change)="setValoresStore(represtantante,'cargo', 'setCargo')"
                   />
                 </div>
               </div>
@@ -145,25 +153,27 @@
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
-                  <label class="form-label" for="telefono">Teléfono:</label>
+                  <label class="form-label" for="telefonoReprestantante">Teléfono:</label>
                   <input
                     class="form-control"
-                    id="telefono"
-                    formControlName="telefono"
+                    id="telefonoReprestantante"
+                    formControlName="telefonoReprestantante"
                     type="text"
+                    (change)="setValoresStore(represtantante,'telefonoReprestantante', 'setTelefonoReprestantante')"
                   />
                 </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">
-                  <label class="form-label" for="correo"
+                  <label class="form-label" for="correoReprestantante"
                     >Correo Electrónico:</label
                   >
                   <input
                     class="form-control"
-                    id="correo"
-                    formControlName="correo"
+                    id="correoReprestantante"
+                    formControlName="correoReprestantante"
                     type="text"
+                    (change)="setValoresStore(represtantante,'correoReprestantante', 'setCorreoReprestantante')"
                   />
                 </div>
               </div>
@@ -177,6 +187,7 @@
                       value=""
                       id="suplente"
                       formControlName="suplente"
+                      (change)="setValoresStore(represtantante,'suplente', 'setSuplente')"
                     />
                   </div>
                 </div>
@@ -185,12 +196,13 @@
           </form>
         </div>
         <div class="modal-footer custom-footer justify-content-center">
-          <button type="button" class="btn btn-primary">Agregar</button>
+          <button type="button" class="btn btn-primary" disabled="esFormularioSoloLectura ? true : false">Agregar</button>
           <button
             type="button"
             class="btn btn-default"
             data-bs-dismiss="modal"
             #closeModal
+            disabled="esFormularioSoloLectura ? true : false"
           >
             Cerrar
           </button>

@@ -384,7 +384,7 @@ export class FormasDinamicasComponent implements ControlValueAccessor, OnInit {
   * // Emitirá: { campo: 'nombreCampo', valor: 'nuevo valor' }
   */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-public eventoDeCambioDeValor(event: any, campo: string): void {
+public eventoDeCambioDeValor(event: any, campo: string, tipo?: string): void {
   let VALOR;
 
   if (event?.target) {
@@ -397,6 +397,10 @@ public eventoDeCambioDeValor(event: any, campo: string): void {
     }
   } else {
     VALOR = event; // Para componentes personalizados o valores directos
+  }
+
+  if (tipo === 'date') {
+    this.forma.get(campo)?.setValue(event);
   }
 
   if (campo) {
