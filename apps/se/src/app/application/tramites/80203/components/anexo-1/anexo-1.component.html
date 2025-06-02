@@ -14,7 +14,7 @@
         </div>
       </div>
       <div class="row  mt-5" *ngIf="showTableExport">
-        <app-tabla-dinamica *ngIf="immexTableDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionRadio" [configuracionTabla]="permisoImmexTabla" [datos]="immexTableDatos"></app-tabla-dinamica>
+        <app-tabla-dinamica *ngIf="immexTableDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionRadio" [configuracionTabla]="permisoImmexTabla" [datos]="immexTableDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
 
         <div class="container text-end mt-5">
           <button class="btn btn-primary me-2" (click)="showFraccionExportacion()">Mostrar detalle mercancía</button>
@@ -44,7 +44,8 @@
           *ngIf="fraccionTablaDatos.length > 0"
           [tipoSeleccionTabla]="tablaSeleccionRadio"
           [configuracionTabla]="fraccionExportacionTabla"
-          [datos]="fraccionTablaDatos">
+          [datos]="fraccionTablaDatos"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
         </app-tabla-dinamica>
           <div class="container text-end mt-5">
             <button class="btn btn-primary me-2" (click)="showProductoImportacion()">Mostrar detalle mercancía</button>
@@ -72,6 +73,7 @@
             formControlName="Nico"
             [required]="true"
             name="Nico"
+            [isDisabled]="esFormularioSoloLectura"
           ></app-catalogo-select>
           </div>
           <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8">
@@ -86,7 +88,7 @@
           <h6>Nico</h6>
           <div class="col-12 col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7">
             <app-tabla-dinamica *ngIf="nicoTablaDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
-            [datos]="nicoTablaDatos"></app-tabla-dinamica>
+            [datos]="nicoTablaDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
           </div>
           <div class="container text-start mt-5">
             <button class="btn btn-default me-2">Eliminar Nico</button>
@@ -115,7 +117,7 @@
         </div>
       </div>
       <div class="row  mt-5" *ngIf="showTableImport">
-        <app-tabla-dinamica *ngIf="immexTableDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionRadio" [configuracionTabla]="permisoImmexTabla" [datos]="immexTableDatos"></app-tabla-dinamica>
+        <app-tabla-dinamica *ngIf="immexTableDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionRadio" [configuracionTabla]="permisoImmexTabla" [datos]="immexTableDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
         <div class="container text-end mt-5">
           <button class="btn btn-primary me-2" (click)="showCommodityImportacion()">Mostrar detalle mercancía</button>
         </div>
@@ -155,6 +157,7 @@
             formControlName="Nico"
             [required]="true"
             name="Nico"
+            [isDisabled]="esFormularioSoloLectura"
           ></app-catalogo-select>
           </div>
           <div class="col-12 col-xxl-8 col-xl-8 col-lg-8 col-md-8 col-sm-8">
@@ -169,7 +172,7 @@
           <h6>Nico</h6>
           <div class="col-12 col-xxl-7 col-xl-7 col-lg-7 col-md-7 col-sm-7">
             <app-tabla-dinamica  *ngIf="nicoTablaDatos.length > 0" [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
-            [datos]="nicoTablaDatos"></app-tabla-dinamica>
+            [datos]="nicoTablaDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
           </div>
           <div class="container text-start mt-5">
             <button class="btn btn-default me-2">Eliminar Nico</button>
@@ -184,7 +187,8 @@
           *ngIf="fraccionTablaDatos.length > 0"
           [tipoSeleccionTabla]="tablaSeleccionRadio"
           [configuracionTabla]="fraccionExportacionTabla"
-          [datos]="fraccionTablaDatos">
+          [datos]="fraccionTablaDatos"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
         </app-tabla-dinamica>
         
         </div> 

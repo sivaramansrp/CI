@@ -9,9 +9,8 @@
  * Contiene la lógica para la obtención de datos, la gestión de formularios y la interacción con tablas dinámicas.
  */
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
@@ -19,7 +18,7 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { Catalogo, SeccionLibQuery, SeccionLibState } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, SeccionLibQuery, SeccionLibState } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
@@ -59,7 +58,7 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src';
     CatalogoSelectComponent,
   ]
 })
-export class Anexo1Component implements OnInit, OnDestroy {
+export class Anexo1Component implements OnInit, OnDestroy,AfterViewInit {
   /**
    * @property {FormGroup} immexRegistroform
    * @description Formulario principal del registro IMMEX.
@@ -167,6 +166,14 @@ export class Anexo1Component implements OnInit, OnDestroy {
 
   private seccion!: SeccionLibState;
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   *
+   * @type {boolean}
+   * @memberof Anexo1Component
+   */
+  esFormularioSoloLectura:boolean=false;
   /**
    * @constructor
    * @param {FormBuilder} fb - Constructor de formularios.
@@ -177,12 +184,12 @@ export class Anexo1Component implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private permisoImmexDatosService: PermisoImmexDatosService,
-    private readonly httpServicios: HttpClient,
     private readonly nicoService: NicoService,
     private immexRegistroQuery: ImmexRegistroQuery,
     private immexRegistroStore: ImmexRegistroStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
+    private readonly consultaQuery: ConsultaioQuery,
   ) {}
 
   /**
@@ -190,6 +197,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @description Inicializa el componente y obtiene los datos necesarios.
    */
   ngOnInit(): void {
+    
     this.immexRegistroQuery.selectImmexRegistro$.pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
@@ -197,31 +205,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
       })
     ).subscribe();
 
-    this.immexRegistroform = this.fb.group({
-      exportacionForm: this.fb.group({
-        permisoImmexDatos: [this.immexRegitroAnexoState.permisoImmexDatos || [], []],
-        fraccionDatos: [this.immexRegitroAnexoState?.fraccionDatos || [], []],
-        nicoDatos: [this.immexRegitroAnexoState?.nicoDatos || [], []],
-        fraccionArancelariaExportacion: [this.immexRegitroAnexoState?.fraccionArancelariaExportacion || '', []],
-        productoArancelariaExportacion: [this.immexRegitroAnexoState?.productoArancelariaExportacion || '', []],
-        fraccionArancelariaDesc: [this.immexRegitroAnexoState?.fraccionArancelariaDesc || '', []],
-        productoDescExportacion: [this.immexRegitroAnexoState?.productoDescExportacion || '', []],
-        FraccionDescExportacion: [this.immexRegitroAnexoState?.FraccionDescExportacion || '', []],
-        exportacionDescExportacion: [this.immexRegitroAnexoState?.exportacionDescExportacion || '', []],
-        Nico: [this.immexRegitroAnexoState?.Nico || '', []],
-      }),
-      importacionForm: this.fb.group({
-        fraccionDatos: [this.immexRegitroAnexoState?.fraccionDatos || [], []],
-        nicoDatos: [this.immexRegitroAnexoState?.nicoDatos || [], []],
-        commodityImportacion: [this.immexRegitroAnexoState?.commodityImportacion || '', []],
-        commodityDescImportacion: [this.immexRegitroAnexoState?.commodityDescImportacion || '', []],
-        commodityNicoDescImportacion: [this.immexRegitroAnexoState?.commodityNicoDescImportacion || '', []],
-        candiadAnual: [this.immexRegitroAnexoState?.candiadAnual || '', []],
-        capacidadPeriodo: [this.immexRegitroAnexoState?.capacidadPeriodo || '', []],
-        candidadPorPeriodo: [this.immexRegitroAnexoState?.candidadPorPeriodo || '', []],
-        Nico: [this.immexRegitroAnexoState?.Nico || '', []],
-      })
-    });
+    this.creatFormSolicitud();
 
     // Asegúrese de que immexRegitroAnexoState esté asignado antes de acceder a sus propiedades
     this.immexRegistroQuery.selectImmexRegistro$
@@ -281,7 +265,58 @@ export class Anexo1Component implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+ngAfterViewInit(): void {
+ this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          if(!seccionState.create && seccionState.procedureId === '80203') {
+            this.esFormularioSoloLectura = seccionState.readonly;
+          }
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+}
 
+creatFormSolicitud():void{
+    this.immexRegistroform = this.fb.group({
+      exportacionForm: this.fb.group({
+        permisoImmexDatos: [this.immexRegitroAnexoState.permisoImmexDatos || [], []],
+        fraccionDatos: [this.immexRegitroAnexoState?.fraccionDatos || [], []],
+        nicoDatos: [this.immexRegitroAnexoState?.nicoDatos || [], []],
+        fraccionArancelariaExportacion: [this.immexRegitroAnexoState?.fraccionArancelariaExportacion || '', []],
+        productoArancelariaExportacion: [this.immexRegitroAnexoState?.productoArancelariaExportacion || '', []],
+        fraccionArancelariaDesc: [this.immexRegitroAnexoState?.fraccionArancelariaDesc || '', []],
+        productoDescExportacion: [this.immexRegitroAnexoState?.productoDescExportacion || '', []],
+        FraccionDescExportacion: [this.immexRegitroAnexoState?.FraccionDescExportacion || '', []],
+        exportacionDescExportacion: [this.immexRegitroAnexoState?.exportacionDescExportacion || '', []],
+        Nico: [this.immexRegitroAnexoState?.Nico || '', []],
+      }),
+      importacionForm: this.fb.group({
+        fraccionDatos: [this.immexRegitroAnexoState?.fraccionDatos || [], []],
+        nicoDatos: [this.immexRegitroAnexoState?.nicoDatos || [], []],
+        commodityImportacion: [this.immexRegitroAnexoState?.commodityImportacion || '', []],
+        commodityDescImportacion: [this.immexRegitroAnexoState?.commodityDescImportacion || '', []],
+        commodityNicoDescImportacion: [this.immexRegitroAnexoState?.commodityNicoDescImportacion || '', []],
+        candiadAnual: [this.immexRegitroAnexoState?.candiadAnual || '', []],
+        capacidadPeriodo: [this.immexRegitroAnexoState?.capacidadPeriodo || '', []],
+        candidadPorPeriodo: [this.immexRegitroAnexoState?.candidadPorPeriodo || '', []],
+        Nico: [this.immexRegitroAnexoState?.Nico || '', []],
+      })
+    });
+}
+
+     inicializarEstadoFormulario(): void {
+      if(!this.immexRegistroform){
+        this.creatFormSolicitud();
+      }
+      if (this.esFormularioSoloLectura) {
+          this.immexRegistroform.disable();
+      } else {
+        this.immexRegistroform.enable();
+      }
+    }
   /**
    * @method ngOnDestroy
    * @description Maneja la limpieza de recursos antes de destruir el componente.
