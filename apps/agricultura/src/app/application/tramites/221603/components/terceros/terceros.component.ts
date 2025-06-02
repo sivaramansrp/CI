@@ -1,6 +1,18 @@
-import { CONFIGURATION_TABLA_DESTINATARIO, CONFIGURATION_TABLA_EXPORTADOR, Destinatario, Exportador, MENSAJE_TABLA_OBLIGATORIA } from '../../enum/sanidad.enum';
-import { Component, OnInit } from '@angular/core';
-import { ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import {
+  CONFIGURATION_TABLA_DESTINATARIO,
+  CONFIGURATION_TABLA_EXPORTADOR,
+  Destinatario,
+  Exportador,
+  MENSAJE_TABLA_OBLIGATORIA,
+} from '../../enum/sanidad.enum';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ConfiguracionColumna,
+  ConsultaioQuery,
+  ConsultaioStore,
+  TablaSeleccion,
+} from '@libs/shared/data-access-user/src';
+import { Subject, map, takeUntil } from 'rxjs';
 import { SanidadService } from '../../service/sanidad.service';
 /**
  * Decorador que define el componente de Angular.
@@ -13,13 +25,13 @@ import { SanidadService } from '../../service/sanidad.service';
 @Component({
   selector: 'app-terceros',
   templateUrl: './terceros.component.html',
-  styleUrls: ['./terceros.component.scss']
+  styleUrls: ['./terceros.component.scss'],
 })
 /**
  * Componente que representa la sección de terceros.
  * Gestiona la visualización y configuración de las tablas de exportadores y destinatarios.
  */
-export class TercerosComponent implements OnInit {
+export class TercerosComponent implements OnInit, OnDestroy {
   /**
    * Mensaje que indica que la tabla es obligatoria.
    */
@@ -32,18 +44,45 @@ export class TercerosComponent implements OnInit {
    * Configuración de las columnas de la tabla de exportadores.
    * Define el encabezado, clave y el orden de las columnas para la tabla de exportadores.
    */
-  configuracionTabla: ConfiguracionColumna<Exportador>[] = CONFIGURATION_TABLA_EXPORTADOR;
+  configuracionTabla: ConfiguracionColumna<Exportador>[] =
+    CONFIGURATION_TABLA_EXPORTADOR;
   /**
    * Configuración de las columnas de la tabla de destinatarios.
    * Define el encabezado, clave y el orden de las columnas para la tabla de destinatarios.
    */
-  configuracionTablaDatos: ConfiguracionColumna<Destinatario>[] = CONFIGURATION_TABLA_DESTINATARIO;
+  configuracionTablaDatos: ConfiguracionColumna<Destinatario>[] =
+    CONFIGURATION_TABLA_DESTINATARIO;
+
+  /**
+   * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    * Inyecta el servicio de sanidad para inicializar los datos de exportadores y destinatarios.
    * sanidadService Servicio que gestiona los datos relacionados con la sanidad.
    */
-  constructor(public sanidadService: SanidadService) {}
+  constructor(
+    public sanidadService: SanidadService,
+    private consultaQuery: ConsultaioQuery,
+    private consultaStore: ConsultaioStore
+  ) {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly || true;
+        })
+      )
+      .subscribe();
+  }
   /**
    * Método del ciclo de vida que se ejecuta al inicializar el componente.
    * Inicializa los datos de exportadores y destinatarios utilizando el servicio de sanidad.
@@ -51,5 +90,10 @@ export class TercerosComponent implements OnInit {
   ngOnInit(): void {
     this.sanidadService.inicializaDatosExportador();
     this.sanidadService.inicializaDatosDestinatario();
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

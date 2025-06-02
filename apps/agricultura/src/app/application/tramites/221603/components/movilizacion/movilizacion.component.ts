@@ -1,10 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  ConsultaioQuery,
+  ConsultaioStore,
+} from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   Solicitud221603State,
   Tramite221603Store,
 } from '../../estados/tramite221603.store';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { FormularioDatos } from '../../enum/sanidad.enum';
 import { SanidadService } from '../../service/sanidad.service';
 import { Tramite221603Query } from '../../estados/tramite221603.query';
@@ -44,6 +48,13 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
    * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    * Inyecta las dependencias necesarias para gestionar el formulario y los datos de la movilización.
@@ -56,9 +67,19 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private tramite221603Store: Tramite221603Store,
     private Tramite221603Query: Tramite221603Query,
-    public sanidadService: SanidadService
+    public sanidadService: SanidadService,
+    private consultaQuery: ConsultaioQuery,
+    private consultaStore: ConsultaioStore
   ) {
-    // Constructor que inyecta las dependencias necesarias
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly || true;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
   /**
    * Método que se ejecuta cuando el componente es inicializado.
@@ -80,6 +101,19 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
         this.formularioDatos = formularioDatos;
         this.rellenarValoresPredeterminados();
       });
+
+    this.inicializarEstadoFormulario();
+  }
+
+  inicializarEstadoFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.medioForm.get('empresa')?.disable();
+      this.medioForm.get('transporte')?.disable();
+    } else {
+      this.medioForm.get('empresa')?.enable();
+      this.medioForm.get('transporte')?.enable ();
+    }
   }
   /**
    * Inicializa el formulario reactivo con los valores actuales de la solicitud.
