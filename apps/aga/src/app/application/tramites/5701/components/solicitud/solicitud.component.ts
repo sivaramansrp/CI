@@ -336,6 +336,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   public datosTablaPagos: LineaCaptura[] = [];
 
   private contadorFechaInicio: number = 0;
+  private contadorFechaFinal: number = 0;
 
   //TODO: Estas variables se van a eliminar
   /**
@@ -416,18 +417,25 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         takeUntil(this.destroyNotifier$),
         tap(() => {
           this.contadorFechaInicio++;
-          console.log('contadorFechaInicio', this.contadorFechaInicio);
-
           if (this.contadorFechaInicio > 1) {
-            if (this.tipoSolicitudSeleccionada !== TIPO_SOLICITUD.INDIVIDUAL) {
-              this.rangoFechas();
-              this.mostrarRangoFechas = true;
-            }
+            this.calcularRangoFechas();
           }
         })
       )
       .subscribe();
 
+    this.datosServicio
+      .get('fechaFinal')
+      ?.valueChanges.pipe(
+        takeUntil(this.destroyNotifier$),
+        tap(() => {
+          this.contadorFechaFinal++;
+          if (this.contadorFechaFinal > 1) {
+            this.calcularRangoFechas();
+          }
+        })
+      )
+      .subscribe();
     // Aqui se busca el nro de patente o autorizacion
     //
     this.obtenerPatente();
@@ -927,8 +935,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {Function} Una función que toma un `FormGroup` y devuelve un objeto con una clave booleana indicando si el intervalo es inválido, o `null` si el intervalo es válido.
    */
   fechaIntervaloValidator(): void {
-    const FECHA_INICIO = new Date(this.datosServicio.get('fechaInicio')?.value);
-    const FECHA_FINAL = new Date(this.datosServicio.get('fechaFinal')?.value);
+    const FECHA_INICIO_STR = this.datosServicio.get('fechaInicio')?.value;
+    const FECHA_FINAL_STR = this.datosServicio.get('fechaFinal')?.value;
+
+    const FECHA_INICIO = new Date(`${FECHA_INICIO_STR}T00:00:00`);
+    const FECHA_FINAL = new Date(`${FECHA_FINAL_STR}T00:00:00`);
     const HORA_INICIO = this.datosServicio.get('horaInicio')?.value;
     const HORA_FINAL = this.datosServicio.get('horaFinal')?.value;
     const INTERVALO_DIAS = SolicitudComponent.getIntervaloDias(
@@ -949,8 +960,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         parseInt(HORA_FINAL.split(':')[0], 10),
         parseInt(HORA_FINAL.split(':')[1], 10)
       );
+
       const DIFERENCIA_EN_TIEMPO =
         FECHA_FINAL.getTime() - FECHA_INICIO.getTime();
+
       const DIFERENCIA_EN_HORAS = DIFERENCIA_EN_TIEMPO / (1000 * 3600);
 
       if (DIFERENCIA_EN_TIEMPO <= 0) {
@@ -967,16 +980,14 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       }
 
       const DIFERENCIA_EN_DIAS = DIFERENCIA_EN_TIEMPO / (1000 * 3600 * 24);
+
       if (
         (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.SEMANAL &&
           DIFERENCIA_EN_DIAS > 7) ||
         (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.MENSUAL &&
           DIFERENCIA_EN_DIAS > 30)
       ) {
-        const FECHA_FINAL_CONTROL = this.datosServicio.get('fechaFinal');
-        if (FECHA_FINAL_CONTROL) {
-          FECHA_FINAL_CONTROL.setErrors({ invalidIntervalo: true });
-        }
+        this.datosServicio.setErrors({ invalidIntervalo: true });
       }
     }
   }
@@ -1291,6 +1302,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
+    this.calcularRangoFechas();
+  }
+
+  /**
+   * Calcula el rango de días entre las fechas y horas seleccionadas,
+   * actualiza el valor de mostrarRangoFechas y colapsable,
+   * y establece los valores correspondientes en el store.
+   * @returns
+   */
+  calcularRangoFechas(): void {
     if (this.tipoSolicitudSeleccionada !== TIPO_SOLICITUD.INDIVIDUAL) {
       this.rangoFechas();
       this.mostrarRangoFechas = true;
