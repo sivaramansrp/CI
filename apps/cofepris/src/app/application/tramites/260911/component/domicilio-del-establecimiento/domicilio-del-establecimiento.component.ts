@@ -31,7 +31,9 @@ import { Validators } from '@angular/forms';
 
 /**
  * Componente para gestionar el domicilio del establecimiento.
- * 
+ * Permite la visualización y edición de los datos del domicilio, así como la gestión de tablas y catálogos asociados.
+ * Incluye lógica para modo solo lectura y edición, integración con el store y servicios para obtener datos.
+ *
  * @selector app-domicilio-del-establecimiento
  * @standalone true
  * @imports [
@@ -41,7 +43,8 @@ import { Validators } from '@angular/forms';
  *   CatalogoSelectComponent,
  *   AlertComponent,
  *   TablaDinamicaComponent,
- *   InputRadioComponent
+ *   InputRadioComponent,
+ *   InputCheckComponent
  * ]
  * @templateUrl ./domicilio-del-establecimiento.component.html
  * @styleUrl ./domicilio-del-establecimiento.component.scss
@@ -71,86 +74,90 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /**
-   * Formulario principal.
+   * Formulario principal reactivo para los datos del domicilio.
    */
   form!: FormGroup;
 
   /**
-   * Lista de estados.
+   * Lista de estados obtenida del catálogo.
    */
   estado: Catalogo[] = [];
 
   /**
-   * Textos de alerta.
+   * Textos de alerta utilizados en el componente.
    */
   TEXTOS = ALERT;
 
   /**
-   * Clase de alerta.
+   * Clase CSS para el tipo de alerta.
    */
   class = 'alert-warning';
 
   /**
-   * Configuración de selección de tabla.
+   * Configuración para la selección de filas en la tabla (checkbox).
    */
   tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
-   * Configuración de columnas de la tabla NICO.
+   * Configuración de columnas para la tabla NICO.
    */
   nicoTabla: ConfiguracionColumna<NicoInfo>[] = NICO_TABLA;
 
   /**
-   * Datos de la tabla NICO.
+   * Datos cargados para la tabla NICO.
    */
   nicoTablaDatos: NicoInfo[] = [];
 
   /**
-   * Formulario de domicilio.
+   * Formulario reactivo para los datos del domicilio.
    */
   domicilio!: FormGroup;
 
   /**
-   * Configuración de columnas de la tabla de mercancías.
+   * Configuración de columnas para la tabla de mercancías.
    */
   mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIAS_DATA;
 
   /**
-   * Datos de la tabla de mercancías.
+   * Datos cargados para la tabla de mercancías.
    */
   mercanciasTablaDatos: MercanciasInfo[] = [];
 
   /**
-   * Manifiestos de alerta.
+   * Manifiestos de alerta utilizados en el componente.
    */
   manifests = ALERT.MANIFESTS;
 
   /**
-   * Opciones de botón de radio.
+   * Opciones para el botón de radio.
    */
   opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
   /**
-   * Formulario de representante legal.
+   * Formulario reactivo para los datos del representante legal.
    */
   representanteLegal!: FormGroup;
 
+  /**
+   * Subject para controlar la destrucción de suscripciones y evitar fugas de memoria.
+   * @private
+   */
   private destroy$ = new Subject<void>();
-
 
   /**
    * Estado seleccionado del trámite 260911.
    */
   estadoSeleccionado!: Tramite260911State;
 
-
   /**
    * Constructor del componente.
-   * 
-   * @param fb FormBuilder para crear formularios.
+   *
+   * @param fb FormBuilder para crear formularios reactivos.
    * @param httpServicios Servicio HTTP para realizar peticiones.
    * @param tramite260911Query Consulta de datos del trámite.
    * @param tramite260911Store Almacenamiento de datos del trámite.
+   * @param domicilioDelEstablecimientoService Servicio para obtener datos relacionados con el domicilio.
+   * @param consultaioQuery Consulta de estado de solo lectura.
    */
   constructor(
     private fb: FormBuilder,
@@ -172,10 +179,10 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * Inicializa el formulario dependiendo del modo (solo lectura o editable).
-  * Si está en solo lectura, carga y bloquea el formulario.
-  * Si no, crea un formulario editable.
-  */
+   * Inicializa el formulario dependiendo del modo (solo lectura o editable).
+   * Si está en solo lectura, carga y bloquea el formulario.
+   * Si no, crea un formulario editable.
+   */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
@@ -185,9 +192,9 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * Crea el formulario y, si está en modo solo lectura, lo deshabilita.
-  * De lo contrario, lo habilita para edición.
-  */
+   * Crea el formulario y, si está en modo solo lectura, lo deshabilita.
+   * De lo contrario, lo habilita para edición.
+   */
   guardarDatosFormulario(): void {
     this.crearFormulario();
     if (this.esFormularioSoloLectura) {
@@ -201,25 +208,29 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
     }
   }
 
-
   /**
-   * Método de inicialización del componente.
+   * Método de inicialización del ciclo de vida del componente.
+   * Inicializa el formulario y carga los datos necesarios para las tablas y catálogos.
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
     this.obtenerTablaDatos();
     this.obtenerEstadoList();
     this.obtenerMercanciasDatos();
-
   }
 
+  /**
+   * Método de destrucción del ciclo de vida del componente.
+   * Libera recursos y cancela suscripciones.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
   /**
-   * Método para crear el formulario.
+   * Crea los formularios reactivos principales del componente usando los datos del store.
+   * Incluye el formulario principal, el de domicilio y el de representante legal.
    */
   crearFormulario(): void {
     this.tramite260911Query.selectTramite260911$
@@ -260,7 +271,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método para obtener los datos de la tabla.
+   * Obtiene los datos de la tabla NICO desde el servicio y los asigna a la propiedad correspondiente.
    */
   obtenerTablaDatos(): void {
     this.domicilioDelEstablecimientoService
@@ -272,8 +283,8 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * Método para obtener la lista de estados.
-  */
+   * Obtiene la lista de estados desde el servicio y la asigna a la propiedad correspondiente.
+   */
   obtenerEstadoList(): void {
     this.domicilioDelEstablecimientoService
       .obtenerEstadoList()
@@ -283,9 +294,8 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       });
   }
 
-
   /**
-   * Método para obtener los datos de mercancías.
+   * Obtiene los datos de mercancías desde el servicio y los asigna a la propiedad correspondiente.
    */
   obtenerMercanciasDatos(): void {
     this.domicilioDelEstablecimientoService
@@ -298,9 +308,9 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
 
   /**
    * Actualiza un valor específico en el store del trámite.
-   * 
-   * @param FormGroup - Formulario reactivo.
-   * @param control - Nombre del control cuyo valor se actualizará en el store.
+   *
+   * @param FormGroup Formulario reactivo del cual se obtiene el valor.
+   * @param control Nombre del control cuyo valor se actualizará en el store.
    */
   setValorStore(FormGroup: FormGroup, control: string): void {
     const VALOR = FormGroup.get(control)?.value;

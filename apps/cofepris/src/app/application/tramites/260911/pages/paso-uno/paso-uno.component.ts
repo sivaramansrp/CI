@@ -7,6 +7,11 @@ import { Solocitud260911Service } from '../../services/service260911.service';
 
 /**
  * Componente que representa el primer paso en un proceso de múltiples pasos.
+ * Gestiona la obtención y actualización de datos del formulario, así como la selección de pestañas.
+ * Integra el estado de consulta y controla la suscripción a los datos del store.
+ *
+ * @selector app-paso-uno
+ * @templateUrl ./paso-uno.component.html
  */
 @Component({
   selector: 'app-paso-uno',
@@ -14,31 +19,42 @@ import { Solocitud260911Service } from '../../services/service260911.service';
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
 
-    /**
+  /**
    * Indica si se han recibido correctamente los datos desde el servidor.
    */
   public esDatosRespuesta: boolean = false;
 
-    /**
+  /**
    * Subject utilizado para cancelar suscripciones y evitar fugas de memoria al destruir el componente.
+   * Se emite un valor y se completa cuando el componente se destruye.
+   * @private
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
-  
   /**
    * Estado actual de la consulta obtenido desde el store.
    */
   public consultaState!: ConsultaioState;
+
   /**
    * El índice de la pestaña actualmente seleccionada.
    */
-
-  constructor(private consultaQuery: ConsultaioQuery, private solocitud120402Service: Solocitud260911Service,) {}
   indice: number = 1;
 
-    /**
+  /**
+   * Constructor del componente.
+   * @param consultaQuery Consulta de estado de solo lectura.
+   * @param solocitud120402Service Servicio para obtener y actualizar datos del formulario.
+   */
+  constructor(
+    private consultaQuery: ConsultaioQuery,
+    private solocitud120402Service: Solocitud260911Service,
+  ) {}
+
+  /**
    * Hook del ciclo de vida de Angular.
    * Se ejecuta al inicializar el componente y se suscribe al estado del store.
+   * Si el estado indica actualización, solicita los datos del formulario.
    */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
@@ -57,8 +73,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
   }
 
-    /**
+  /**
    * Solicita los datos del formulario al servicio y actualiza el store si la respuesta es válida.
+   * Marca la bandera de datos recibidos si la respuesta es exitosa.
    */
   guardarDatosFormulario(): void {
     this.solocitud120402Service
@@ -72,7 +89,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       });
   }
 
-
   /**
    * Selecciona una pestaña estableciendo su índice.
    * @param i El índice de la pestaña a seleccionar.
@@ -81,7 +97,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.indice = i;
   }
 
-    /**
+  /**
    * Hook del ciclo de vida Angular que se ejecuta al destruir el componente.
    * Libera recursos cancelando todas las suscripciones activas.
    */

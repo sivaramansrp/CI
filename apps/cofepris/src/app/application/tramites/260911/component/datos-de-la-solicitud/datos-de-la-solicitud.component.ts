@@ -18,7 +18,9 @@ import { Validators } from '@angular/forms';
 
 /**
  * Componente para gestionar los datos de la solicitud.
- * 
+ * Permite la visualización y edición de los datos generales de la solicitud,
+ * así como la gestión de formularios y su integración con el store.
+ *
  * @selector app-datos-de-la-solicitud
  * @standalone true
  * @imports [
@@ -46,22 +48,22 @@ import { Validators } from '@angular/forms';
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
-   /** Estado actual de la solicitud proveniente del store */
+  /** Estado actual de la solicitud proveniente del store */
   public solicitudState!: Tramite260911State;
 
-    /** Indica si el formulario está en modo solo lectura */
+  /** Indica si el formulario está en modo solo lectura */
   esFormularioSoloLectura: boolean = false;
+
   /**
-    * Indica si el formulario es colapsable.
-    */
+   * Indica si el formulario es colapsable.
+   */
   colapsable: boolean = true;
 
   /**
-   * Textos de alerta.
+   * Textos de alerta utilizados en el componente.
    */
   TEXTOS = ALERT;
 
-  
   /**
    * Estado seleccionado del trámite 260911.
    */
@@ -73,7 +75,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   btonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
   /**
-   * Formulario principal.
+   * Formulario principal reactivo.
    */
   form!: FormGroup;
 
@@ -82,25 +84,26 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   datosDelEstablecimiento!: FormGroup;
 
-/** 
- * Observable utilizado para gestionar la destrucción de suscripciones y evitar fugas de memoria.
- * Se emite un valor y se completa cuando el componente se destruye.
- */  
-
+  /**
+   * Observable utilizado para gestionar la destrucción de suscripciones y evitar fugas de memoria.
+   * Se emite un valor y se completa cuando el componente se destruye.
+   * @private
+   */
   private destroy$ = new Subject<void>();
 
   /**
    * Constructor del componente.
-   * 
+   *
    * @param fb FormBuilder para crear formularios.
    * @param tramite260911Query Consulta de datos del trámite.
    * @param tramite260911Store Almacenamiento de datos del trámite.
+   * @param consultaioQuery Consulta de estado de solo lectura.
    */
   constructor(
     private fb: FormBuilder,
     private tramite260911Query: Tramite260911Query,
     private tramite260911Store: Tramite260911Store,
-      public consultaioQuery: ConsultaioQuery,
+    public consultaioQuery: ConsultaioQuery,
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -126,7 +129,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
-   /**
+  /**
    * Crea el formulario y, si está en modo solo lectura, lo deshabilita.
    * De lo contrario, lo habilita para edición.
    */
@@ -141,14 +144,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
-
   /**
-   * Método de inicialización del componente.
+   * Método de inicialización del ciclo de vida del componente.
+   * Inicializa el formulario según el modo de solo lectura.
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
   }
 
+  /**
+   * Método de destrucción del ciclo de vida del componente.
+   * Libera recursos y cancela suscripciones.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
@@ -156,23 +163,25 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * Método para mostrar u ocultar el formulario colapsable.
+   * Cambia el estado de la variable `colapsable`.
    */
   mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
 
   /**
-   * Método para crear el formulario.
+   * Método para crear los formularios reactivos principales del componente usando los datos del store.
+   * Incluye el formulario principal y el de datos del establecimiento.
    */
   crearFormulario(): void {
-      this.tramite260911Query.selectTramite260911$
-        .pipe(
-          takeUntil(this.destroy$),
-          map((seccionState) => {
-            this.solicitudState = seccionState;
-          })
-        )
-        .subscribe();
+    this.tramite260911Query.selectTramite260911$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.form = this.fb.group({
       btonDeRadio: [this.solicitudState.btonDeRadio, [Validators.required]],
       justificacion: [this.solicitudState.justificacion, [Validators.required]],
@@ -183,10 +192,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       denominacion: [this.solicitudState?.denominacion, Validators.required],
       correo: [this.solicitudState?.correo, Validators.required],
     });
-  } 
+  }
 
   /**
-   * Método para habilitar los controles del formulario.
+   * Método para habilitar los controles del formulario de datos del establecimiento si están deshabilitados.
    */
   toggleFormControls(): void {
     Object.keys(this.datosDelEstablecimiento.controls).forEach(
@@ -199,13 +208,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     );
   }
 
-   /**
+  /**
    * Actualiza un valor específico en el store del trámite.
-   * 
-   * @param FormGroup - Formulario reactivo.
-   * @param control - Nombre del control cuyo valor se actualizará en el store.
+   *
+   * @param FormGroup Formulario reactivo del cual se obtiene el valor.
+   * @param control Nombre del control cuyo valor se actualizará en el store.
    */
-   setValorStore(FormGroup: FormGroup, control: string): void {
+  setValorStore(FormGroup: FormGroup, control: string): void {
     const VALOR = FormGroup.get(control)?.value;
     this.tramite260911Store.setTramite260911State({
       [control]: VALOR
