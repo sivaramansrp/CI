@@ -1,10 +1,11 @@
-import { Catalogo, CatalogoSelectComponent, TableBodyData, TableComponent, TablePaginationComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, TableBodyData, TableComponent, TablePaginationComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, distinctUntilChanged, takeUntil } from 'rxjs';
+import { Subject, distinctUntilChanged, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDelInmueble104Query } from '../../../../core/queries/tramite104.query';
 import { DatosDelInmueble104Store } from '../../../../core/estados/tramites/tramite104.store';
+import { DepositoFiscalManufacturaVehiculosApiService } from '../../services/deposito-fiscal-manufactura-vehiculos-api.service';
 import { MENSAJEDE_ALERTA } from '@libs/shared/data-access-user/src/core/enums/104/104.enum';
 import { TableData } from '@libs/shared/data-access-user/src/core/models/104/model-104';
 import destinatarioTableData from '@libs/shared/theme/assets/json/104/table-104.json'
@@ -116,6 +117,11 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
    */
   itemsPerPage: number = 5;
 
+  /** Subject para notificar la destrucción del componente. */
+  public consultaState!:ConsultaioState;
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
 
   /**
    * **Constructor del componente**  
@@ -123,7 +129,7 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
    * - Inicializa el `FormBuilder` para la creación de formularios reactivos.
    */
 
-  constructor(private fb: FormBuilder, private datosDelInmueble104Store: DatosDelInmueble104Store, private datosDelInmueble104Query: DatosDelInmueble104Query) {
+  constructor(private fb: FormBuilder, private datosDelInmueble104Store: DatosDelInmueble104Store, private datosDelInmueble104Query: DatosDelInmueble104Query,private depositoFiscalManufacturaVehiculosApiService:DepositoFiscalManufacturaVehiculosApiService,private consultaQuery: ConsultaioQuery) {
     // Inicializa
   }
 
@@ -153,6 +159,15 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
     });
     this.cargarDatosGuardados(); // Carga los datos guardados en el formulario.
     this.escucharCambiosFormulario();
+
+     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroy$),map((seccionState) => {
+          this.consultaState = seccionState;
+      })).subscribe();
+    if(this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
   }
 
 
@@ -344,6 +359,22 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
     this.updatePagination();
   }
 
+    /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.depositoFiscalManufacturaVehiculosApiService
+      .obtenerDatosInicialesFormulario().pipe(
+        takeUntil(this.destroy$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.depositoFiscalManufacturaVehiculosApiService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
 
   /**
    * **Limpia las suscripciones al destruir el componente**  
