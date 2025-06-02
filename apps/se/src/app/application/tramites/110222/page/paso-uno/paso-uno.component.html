@@ -23,16 +23,24 @@
             <solicitante></solicitante>
             }
             @case (2){
+                  @if(esDatosRespuesta){
                 <app-certificado-origen></app-certificado-origen>
+                  }
             }
             @case (3){
+                  @if(esDatosRespuesta){
                 <app-historico-de-productores></app-historico-de-productores>
+                  }
             }
             @case (4){
+                  @if(esDatosRespuesta){
                 <app-destinatario-de-certificado></app-destinatario-de-certificado>
+                  }
             }
             @case (5){
+                  @if(esDatosRespuesta){
                 <app-datos-certificado></app-datos-certificado>
+                  }
             }
             }
         </ng-container>
