@@ -167,13 +167,15 @@
                     </div>
                 </div>
             </div>
-            <div id="mensaje" style="margin-top: 1em;" *ngIf="mostrarMensaje">
+            <div id="mensaje" style="margin-top: 1em;"
+                *ngIf="!solicitud11201State?.tipoBusqueda || solicitud11201State?.tipoBusqueda === 'No. de Manifiesto'">
                 <ng-alert [CONTENIDO]="TEXTOS.ADVERTENCIA"></ng-alert>
                 <div class="col-md-12" id="IdGridContenedoresITC">
                     <div class="table-responsive">
                         <div class="innercontainer">
                             <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
-                                [disableSeleccionTablaCheckBox]="soloLectura" [configuracionTabla]="encabezadoDeTabla"
+                                [disableSeleccionTablaCheckBox]="soloLectura"
+                                [configuracionTabla]="encabezadoDeTablaManifiesto"
                                 [datos]="datosTabla"></app-tabla-dinamica>
                         </div>
                     </div>
@@ -245,8 +247,9 @@
                             </div>
                         </div>
 
-                        <div *ngIf="mostrarCargarArchivoTable" class="table-container">
-                            <app-tabla-dinamica [configuracionTabla]="encabezadoDeTabla"
+                        <div *ngIf="!solicitud11201State?.tipoBusqueda || solicitud11201State?.tipoBusqueda === 'Archivo CSV'"
+                            class="table-container">
+                            <app-tabla-dinamica [configuracionTabla]="encabezadoDeTablaManifiesto"
                                 [datos]="datosTabla"></app-tabla-dinamica>
                         </div>
                     </div>

@@ -1,4 +1,5 @@
 import { AlertComponent, ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, Pedimento, REGEX_LLAVE_DE_PAGO_DE_DERECHO, REGEX_SOLO_NÚMERO } from '@ng-mf/data-access-user';
+import { ENCABEZADO_TABLA_CONTENEDOR, ENCABEZADO_TABLA_CONTENEDOR_MANIFIESTO } from '../../enum/solicitante.enum';
 import { Aduanas } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { BsModalService } from 'ngx-bootstrap/modal';
@@ -8,7 +9,6 @@ import { CommonModule } from '@angular/common';
 import { Component, } from '@angular/core';
 import { DatosDelContenedor } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
-import { ENCABEZADO_TABLA_CONTENEDOR } from '../../enum/solicitante.enum';
 import { FECHA_INGRESO } from '../../../../core/enums/11201/tramite11201.enum';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -248,7 +248,14 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Configuración de las columnas de la tabla.
    */
   public encabezadoDeTabla = ENCABEZADO_TABLA_CONTENEDOR;
-
+  /**
+ * @property {any} encabezadoDeTablaManifiesto
+ * @description Configuración de las columnas de la tabla para el manifiesto.
+ * 
+ * Esta propiedad utiliza la constante `ENCABEZADO_TABLA_CONTENEDOR_MANIFIESTO` para definir
+ * los encabezados de las columnas que se mostrarán en la tabla del manifiesto.
+ */
+  public encabezadoDeTablaManifiesto = ENCABEZADO_TABLA_CONTENEDOR_MANIFIESTO;
   /**
    * Referencia a la clase o enumeración `TablaSeleccion`.
    *
@@ -352,7 +359,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.tabSeleccionado();
     this.fetchgetTransporteList();
     this.fetchAduanaList();
-    this.loadDatosTablaData();
   }
 
   /**
@@ -745,6 +751,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       this.solicitudForm.get('menuDesplegable')?.valid
     ) {
       this.mostrarMensaje = true;
+      this.loadDatosTablaData();
     }
   }
 
