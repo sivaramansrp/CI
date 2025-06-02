@@ -1,20 +1,13 @@
-/* eslint-disable sort-imports */
-/**
- * Este componente se utiliza para mostrar los pasos del asistente - 90201
- * Lista de pasos
- * Índice del paso
- */ 
-
-/* eslint-disable @nx/enforce-module-boundaries */
 import { Component, ViewChild } from '@angular/core';
+
+import { CATALOGOS_ID } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogosService } from '@libs/shared/data-access-user/src/core/services/shared/catalogos/catalogos.service';
-import { CATALOGOS_ID } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
+
+import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
-// eslint-disable-next-line sort-imports
-import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
-import { PANTAPASOS } from 'libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.enum';
-import { WizardComponent } from 'libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+import { PANTAPASOS } from '@libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.enum';
+import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 
 /**
  * Interfaz que representa un botón de acción.
@@ -31,6 +24,19 @@ interface AccionBoton {
   valor: number;
 }
 
+/**
+ * Componente encargado de gestionar la lógica y visualización de los pasos (wizard) 
+ * en el trámite 90201. Permite la navegación entre pantallas, el manejo de los índices 
+ * de pasos, y la obtención de catálogos de documentos requeridos.
+ * 
+ * @remarks
+ * Este componente utiliza el servicio `CatalogosService` para obtener información 
+ * de catálogos y el componente hijo `WizardComponent` para controlar la navegación 
+ * entre pasos.
+ * 
+ * @example
+ * <app-pantallas></app-pantallas>
+ */
 @Component({
   selector: 'app-pantallas',
   templateUrl: './pantallas.component.html',
@@ -40,11 +46,11 @@ export class PantallasComponent {
   /**
    * Esta variable se utiliza para almacenar la lista de pasos.
    */
-  pantallasPasos: ListaPasosWizard[] = PANTAPASOS;
+  public pantallasPasos: ListaPasosWizard[] = PANTAPASOS;
   /**
    * Esta variable se utiliza para almacenar el índice del paso.
    */
-  indice: number = 1;
+  public indice: number = 1;
 
   /**
    * Una referencia a la instancia de WizardComponent dentro de la plantilla.
@@ -64,7 +70,7 @@ export class PantallasComponent {
    * @property {string} txtBtnAnt - El texto para el botón "Anterior".
    * @property {string} txtBtnSig - El texto para el botón "Continuar".
    */
-  datosPasos: DatosPasos = {
+  public datosPasos: DatosPasos = {
     nroPasos: this.pantallasPasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
@@ -79,8 +85,12 @@ export class PantallasComponent {
 
 
 
+  /**
+   * Constructor de la clase PantallasComponent.
+   * 
+   * @param catalogosServices Servicio inyectado para gestionar operaciones relacionadas con catálogos.
+   */
   constructor(private catalogosServices: CatalogosService) {
-    //
   }
 
 
@@ -91,7 +101,7 @@ export class PantallasComponent {
    *
    * @param {AccionBoton} e - El objeto del botón de acción que contiene las propiedades `valor` y `accion`.
    */
- public getValorIndice(e: AccionBoton) {
+ public getValorIndice(e: AccionBoton):void{
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
@@ -113,15 +123,22 @@ export class PantallasComponent {
    * @returns {void}
    */
   public getTiposDocumentos(): void {
+    // Llama al servicio para obtener el catálogo de tipos de documentos
     this.catalogosServices
       .getCatalogo(CATALOGOS_ID.CAT_TIPO_DOCUMENTO)
       .subscribe({
-        next: (resp): void => {
-          if (resp.length > 0) {
-            this.catalogoDocumentos = resp;
-          }
-        },
-        error: (_error): void => { },
+      // Si la respuesta es exitosa
+      next: (resp): void => {
+        // Verifica si la respuesta contiene elementos
+        if (resp.length > 0) {
+        // Asigna los elementos obtenidos al array catalogoDocumentos
+        this.catalogoDocumentos = resp;
+        }
+      },
+      // Maneja posibles errores en la petición
+      error: (_error): void => {
+        // Aquí se puede agregar lógica para manejar el error si es necesario
+      },
       });
   }
 }

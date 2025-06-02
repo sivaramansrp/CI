@@ -15,6 +15,71 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
     ],
   },
   {
+    tramite: 140201,
+    listaComponentes: [
+      {
+        id: 'solicitud',
+        componentPath: () =>
+          import('../../tramites/140201/pages/datos/datos.component').then(
+            (m) => m.DatosComponent
+          ),
+        componentName: 'DatosComponent',
+      },
+    ],
+  },
+  {
+    tramite: 80205,
+    listaComponentes: [
+      {
+        id: 'solicitud',
+        componentPath: () =>
+          import('../../tramites/80205/pages/paso-uno/paso-uno.component').then(
+            (m) => m.PasoUnoComponent
+          ),
+        componentName: 'DatosComponent',
+      },
+    ],
+  },
+  {
+    tramite: 130110,
+    listaComponentes: [
+      {
+        id: 'solicitud',
+        componentPath: () =>
+          import(
+            '../../tramites/130110/pages/paso-uno/paso-uno.component'
+          ).then((m) => m.PasoUnoComponent),
+        componentName: 'DatosComponent',
+      },
+    ],
+  },
+  {
+    tramite: 120602,
+    listaComponentes: [
+      {
+        id: 'solicitud',
+        componentPath: () =>
+          import('../../tramites/120602/pages/datos/datos.component').then(
+            (m) => m.DatosComponent
+          ),
+        componentName: 'DatosComponent',
+      },
+    ],
+  },
+  {
+    tramite: 90201,
+    listaComponentes: [
+      {
+        id: 'solicitud',
+        componentPath: () =>
+          import('../../tramites/90201/pages/datos/datos.component').then(
+            (m) => m.DatosComponent
+          ),
+        componentName: 'DatosComponent',
+      },
+    ],
+  },
+  {
     tramite: 120301,
     listaComponentes: [
       {
