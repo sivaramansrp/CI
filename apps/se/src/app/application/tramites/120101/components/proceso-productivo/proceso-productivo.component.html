@@ -11,7 +11,7 @@
             <div class="row">
                 @if (procesoProductivoForm.get('paisDeOrigenDeLaFibra')) {
                     <div class="col-md-4">
-                        <app-catalogo-select [catalogo]="paisDeOrigen" [label]="'País de origen de la fibra'" [required]="false"
+                        <app-catalogo-select [catalogo]="paisDeOrigen" [label]="'País de origen de la fibra'" [required]="false" [isDisabled]="consultaState.readonly ?? false"
                             name="País de origen de la fibra" formControlName="paisDeOrigenDeLaFibra" (change)="eventoDeCambioDeValor($event, 'paisDeOrigenDeLaFibra')">
                         </app-catalogo-select>
                     </div>
@@ -19,7 +19,7 @@
         
                 @if (procesoProductivoForm.get('paisEnQueSeRealizoElHilado')) {
                     <div class="col-md-4">
-                        <app-catalogo-select [catalogo]="paisDeOrigen" [label]="'País en que se realizó el hilado'"
+                        <app-catalogo-select [catalogo]="paisDeOrigen" [label]="'País en que se realizó el hilado'" [isDisabled]="consultaState.readonly ?? false"
                             [required]="true" name="País en que se realizó el hilado" formControlName="paisEnQueSeRealizoElHilado" (change)="eventoDeCambioDeValor($event, 'paisEnQueSeRealizoElHilado')">
                         </app-catalogo-select>
                     </div>
@@ -31,7 +31,7 @@
             <div class="row">
                 @if (procesoProductivoForm.get('paisEnQueSeRealizoElHilado')) {
                     <div class="col-md-4">
-                        <app-catalogo-select [catalogo]="paisDeOrigen" [label]="'País en que se realizó el hilado'"
+                        <app-catalogo-select [catalogo]="paisDeOrigen" [label]="'País en que se realizó el hilado'" [isDisabled]="consultaState.readonly ?? false"
                             [required]="true" name="País en que se realizó el hilado" formControlName="paisEnQueSeRealizoElHilado" (change)="eventoDeCambioDeValor($event, 'paisEnQueSeRealizoElHilado')">
                         </app-catalogo-select>
                     </div>
@@ -39,7 +39,7 @@
                 
                 @if (procesoProductivoForm.get('paisEnQueSeRealizoElTejido')) {
                     <div class="col-md-4">
-                        <app-catalogo-select [catalogo]="paisDeOrigen" [label]="'País en que se realizó el tejido'"
+                        <app-catalogo-select [catalogo]="paisDeOrigen" [label]="'País en que se realizó el tejido'" [isDisabled]="consultaState.readonly ?? false"
                             [required]="true" name="País en que se realizó el tejido" formControlName="paisEnQueSeRealizoElTejido" (change)="eventoDeCambioDeValor($event, 'paisEnQueSeRealizoElTejido')">
                         </app-catalogo-select>
                     </div>
@@ -52,7 +52,7 @@
             <div class="row">
                 @if (procesoProductivoForm.get('paisEnQueSeRealizoElHilado')) {
                     <div class="col-md-4">
-                        <app-catalogo-select [catalogo]="paisDeOrigen" [label]="'País en que se realizó el hilado'"
+                        <app-catalogo-select [catalogo]="paisDeOrigen" [label]="'País en que se realizó el hilado'" [isDisabled]="consultaState.readonly ?? false"
                             [required]="true" name="País en que se realizó el hilado" formControlName="paisEnQueSeRealizoElHilado" (change)="eventoDeCambioDeValor($event, 'paisEnQueSeRealizoElHilado')">
                         </app-catalogo-select>
                     </div>
@@ -60,7 +60,7 @@
                 
                 @if (procesoProductivoForm.get('paisEnQueSeRealizoElTejidoAForma')) {
                     <div class="col-md-5">
-                        <app-catalogo-select [catalogo]="paisDeOrigen" [label]="'País en que se realizó el tejido a forma'"
+                        <app-catalogo-select [catalogo]="paisDeOrigen" [label]="'País en que se realizó el tejido a forma'" [isDisabled]="consultaState.readonly ?? false"
                             [required]="true" name="País en que se realizó el tejido a forma"
                             formControlName="paisEnQueSeRealizoElTejidoAForma" (change)="eventoDeCambioDeValor($event, 'paisEnQueSeRealizoElTejidoAForma')">
                         </app-catalogo-select>
@@ -74,7 +74,7 @@
             <div class="row">
                 @if (procesoProductivoForm.get('paisEnQueSeRealizoElHilado')) {
                     <div class="col-md-4">
-                        <app-catalogo-select [catalogo]="paisDeOrigen" [label]="'País en que se realizó el hilado'"
+                        <app-catalogo-select [catalogo]="paisDeOrigen" [label]="'País en que se realizó el hilado'" [isDisabled]="consultaState.readonly ?? false"
                             [required]="true" name="País en que se realizó el hilado"
                             formControlName="paisEnQueSeRealizoElHilado" (change)="eventoDeCambioDeValor($event, 'paisEnQueSeRealizoElHilado')">
                         </app-catalogo-select>
@@ -83,7 +83,7 @@
                 
                 @if (procesoProductivoForm.get('paisEnQueSeRealizoElTejido')) {
                     <div class="col-md-4">
-                        <app-catalogo-select [catalogo]="paisDeOrigen" [label]="'País en que se realizó el tejido'"
+                        <app-catalogo-select [catalogo]="paisDeOrigen" [label]="'País en que se realizó el tejido'" [isDisabled]="consultaState.readonly ?? false"
                             [required]="true" name="País en que se realizó el tejido"
                             formControlName="paisEnQueSeRealizoElTejido" (change)="eventoDeCambioDeValor($event, 'paisEnQueSeRealizoElTejido')">
                         </app-catalogo-select>
@@ -94,7 +94,7 @@
             <div class="row">
                 @if (procesoProductivoForm.get('paisEnQueSeRealizoElCorte')) {
                     <div class="col-md-4">
-                        <app-catalogo-select [catalogo]="paisDeOrigen" [label]="'País en que se realizó el corte'"
+                        <app-catalogo-select [catalogo]="paisDeOrigen" [label]="'País en que se realizó el corte'" [isDisabled]="consultaState.readonly ?? false"
                             [required]="true" name="País en que se realizó el corte"
                             formControlName="paisEnQueSeRealizoElCorte" (change)="eventoDeCambioDeValor($event, 'paisEnQueSeRealizoElCorte')">
                         </app-catalogo-select>
@@ -103,7 +103,7 @@
                 
                 @if (procesoProductivoForm.get('paisEnQueSeRealizoElEnsamble')) {
                     <div class="col-md-4">
-                        <app-catalogo-select [catalogo]="paisDeOrigen" [label]="'País en que se realizó el ensamble'"
+                        <app-catalogo-select [catalogo]="paisDeOrigen" [label]="'País en que se realizó el ensamble'" [isDisabled]="consultaState.readonly ?? false"
                             [required]="true" name="País en que se realizó el ensamble"
                             formControlName="paisEnQueSeRealizoElEnsamble" (change)="eventoDeCambioDeValor($event, 'paisEnQueSeRealizoElEnsamble')">
                         </app-catalogo-select>
