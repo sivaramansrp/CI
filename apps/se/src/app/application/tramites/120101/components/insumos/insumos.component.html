@@ -9,7 +9,7 @@
     <button type="button" class="btn btn-primary me-2">Eliminar</button>
     <button type="button" class="btn btn-primary me-2">Modificar</button>
     <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-      data-bs-target="#modalAddAgentMercancias" [disabled]="consultaState?.readonly">Agregar</button>
+      data-bs-target="#modalAddAgentMercancias" [disabled]="consultaState.readonly">Agregar</button>
   </div>
 </div>
 
@@ -24,7 +24,7 @@
         <form [formGroup]="forma">
           <div class="row">
             <formas-dinamicas [forma]="ninoFormGroup" [formularioDatos]="insumosFormData"
-              [estado]="solicitudDeRegistroState" [soloLectura]="consultaState.readonly ?? false"
+              [estado]="solicitudDeRegistroState" [soloLectura]="consultaState.readonly"
               (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
           </div>
         </form>
