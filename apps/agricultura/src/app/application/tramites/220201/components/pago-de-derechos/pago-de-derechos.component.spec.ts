@@ -11,8 +11,8 @@ describe('PagoDeDerechosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PagoDeDerechosComponent],
-      imports: [HttpClientModule, TituloComponent, AlertComponent, InputRadioComponent, CatalogoSelectComponent, InputFechaComponent, ReactiveFormsModule]
+      declarations: [],
+      imports: [HttpClientModule, TituloComponent, AlertComponent, InputRadioComponent, CatalogoSelectComponent, InputFechaComponent, ReactiveFormsModule,PagoDeDerechosComponent]
     })
       .compileComponents();
 
