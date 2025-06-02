@@ -15,6 +15,7 @@
               [required]="true"
               (change)="aduanaSeleccion()"
               name="aduana"
+              [isDisabled]="soloLectura"
             >
             </app-catalogo-select>
           </div>
@@ -26,6 +27,7 @@
               [required]="true"
               formControlName="organismoPublico"
               (change)="organismoPublico()"
+              [isDisabled]="soloLectura"
             ></lib-input-check>
           </div>
         </div>
@@ -50,6 +52,7 @@
                     'setUsoEspecifico')"
                 cols="110"
                 rows="4"
+                [disabled]="soloLectura"
               ></textarea>
             </div>
           </div>
@@ -91,6 +94,7 @@
                 maxlength="13"
                 class="form-control"
                 (change)="setValoresStore(exencionImpuestos, 'rfc', 'setRfc')"
+                [disabled]="soloLectura"
               />
             </div>
           </div>
@@ -113,6 +117,7 @@
                     exencionImpuestos,
                     'numeroProgramaImmex',
                     'setNumeroProgramaImmex')"
+                [disabled]="soloLectura"
               />
             </div>
           </div>
@@ -273,6 +278,7 @@
                     exencionImpuestos,
                     'correoElectronicoOpcional',
                     'setCorreoElectronicoOpcional')"
+                [disabled]="soloLectura"
               />
             </div>
           </div>
@@ -290,6 +296,7 @@
                     exencionImpuestos,
                     'telefonoOpcional',
                     'setTelefonoOpcional')"
+                [disabled]="soloLectura"
               />
             </div>
           </div>

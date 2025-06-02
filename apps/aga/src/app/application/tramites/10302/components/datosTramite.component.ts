@@ -6,6 +6,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
@@ -159,6 +160,19 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
   public datosDelMercancia: datosDelMercancia[] = [];
 
   /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param exencionImpuestoService Servicio para manejar la lógica de exención de impuestos.
    * @param store Almacén para manejar el estado del trámite.
@@ -171,7 +185,8 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
     private store: Tramite10302Store,
     private query: Tramite10302Query,
     public fb: FormBuilder,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -179,12 +194,20 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializaCatalogos();
-
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
         })
       )
       .subscribe();
