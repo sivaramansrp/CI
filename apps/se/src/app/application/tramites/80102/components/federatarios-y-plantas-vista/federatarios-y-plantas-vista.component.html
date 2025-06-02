@@ -3,6 +3,7 @@
   [federatariosDatos]="(federatariosTablaLista$ | async) || []"
   [plantasDisponiblesConfig]="plantasDisponiblesTablaConfiguracion"
   [plantasImmexConfig]="plantasImmexTablaConfiguracion"
+  [formularioDeshabilitado]="esFormularioSoloLectura"
   [plantasDisponiblesDatos]="(plantasDisponiblesTablaLista$ | async) || []"
   [plantasImmexDatos]="(plantasImmexTablaLista$ | async) || []"
   (datosFormaFedratario)="setFormaDatos($event)"
