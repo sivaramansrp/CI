@@ -170,7 +170,7 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
    * @description Indica si el formulario o los campos están en modo de solo lectura.
    * @default false
    */
-  soloLectura: boolean = false;
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -207,7 +207,8 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaDatos = seccionState;
-          this.soloLectura = this.consultaDatos.readonly;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
@@ -369,6 +370,24 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
         serie: [this.solicitudState?.ano],
       }),
     });
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+  * @method inicializarEstadoFormulario
+  * @description Inicializa el estado del formulario según el modo de solo lectura.
+  * 
+  * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
+  * En caso contrario, habilita los controles del formulario.
+  * 
+  * @returns {void}
+  */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.tramiteForm?.disable();
+    } else {
+      this.tramiteForm?.enable();
+    }
   }
 
   /**

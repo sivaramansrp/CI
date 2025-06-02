@@ -15,7 +15,7 @@
               [required]="true"
               (change)="aduanaSeleccion()"
               name="aduana"
-              [isDisabled]="soloLectura"
+              [isDisabled]="esFormularioSoloLectura"
             >
             </app-catalogo-select>
           </div>
@@ -27,7 +27,7 @@
               [required]="true"
               formControlName="organismoPublico"
               (change)="organismoPublico()"
-              [isDisabled]="soloLectura"
+              [isDisabled]="esFormularioSoloLectura"
             ></lib-input-check>
           </div>
         </div>
@@ -52,7 +52,7 @@
                     'setUsoEspecifico')"
                 cols="110"
                 rows="4"
-                [disabled]="soloLectura"
+                [disabled]="esFormularioSoloLectura"
               ></textarea>
             </div>
           </div>
@@ -94,7 +94,7 @@
                 maxlength="13"
                 class="form-control"
                 (change)="setValoresStore(exencionImpuestos, 'rfc', 'setRfc')"
-                [disabled]="soloLectura"
+                [disabled]="esFormularioSoloLectura"
               />
             </div>
           </div>
@@ -117,7 +117,7 @@
                     exencionImpuestos,
                     'numeroProgramaImmex',
                     'setNumeroProgramaImmex')"
-                [disabled]="soloLectura"
+                [disabled]="esFormularioSoloLectura"
               />
             </div>
           </div>
@@ -278,7 +278,7 @@
                     exencionImpuestos,
                     'correoElectronicoOpcional',
                     'setCorreoElectronicoOpcional')"
-                [disabled]="soloLectura"
+                [disabled]="esFormularioSoloLectura"
               />
             </div>
           </div>
@@ -296,7 +296,7 @@
                     exencionImpuestos,
                     'telefonoOpcional',
                     'setTelefonoOpcional')"
-                [disabled]="soloLectura"
+                [disabled]="esFormularioSoloLectura"
               />
             </div>
           </div>
