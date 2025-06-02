@@ -33,6 +33,7 @@
                     [catalogo]="config.catalogo"
                     [label]="config.label"
                     [formControlName]="config.controlName"
+                    [isDisabled]="esFormularioSoloLectura"
                     (change)="getDelegaciones()"
                   ></app-catalogo-select>
                   </div>
@@ -53,7 +54,7 @@
         (archivoAction)="cargarArchivo()"
         (agregarAction)="agregar()">
         </app-agregar-archivo>
-    
+        <form [formGroup]="datosdelForm">
         <div class="mb-5">
             <label for="message" class="form-label">Tratamiento:</label>
             <textarea class="form-control" rows="5" formControlName="datoscertificado" 
@@ -63,5 +64,6 @@
             <button class="btn btn-default me-2">Guardar</button>
             <button class="btn btn-primary">Continuar</button>
         </div>
+        </form>
      
 </div>
