@@ -192,7 +192,7 @@
                           [datos]="obtenerInformacionDeFecha(item)"
                           [ngClass]="esValido(item.campo) ? 'required' : ''"
                           [tooltipQuestionCircle]="item.tooltipQuestionCircle ?? false"
-                          (valorCambiado)="eventoDeCambioDeValor($event, item.campo)"
+                          (valorCambiado)="eventoDeCambioDeValor($event, item.campo, 'date')"
                         ></input-fecha>
 
                         <validadores-de-formularios 
