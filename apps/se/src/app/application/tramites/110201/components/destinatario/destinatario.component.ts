@@ -4,7 +4,7 @@ import {
   TituloComponent,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -20,7 +20,7 @@ import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/s
 import { CommonModule } from '@angular/common';
 import { RegistroService } from '../../services/registro.service';
 import { Tramite110201Query } from '../../state/Tramite110201.query';
-
+declare const bootstrap: any;
 /**
  * Componente que representa el formulario de destinatario en el trámite.
  */
@@ -36,7 +36,7 @@ import { Tramite110201Query } from '../../state/Tramite110201.query';
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.css',
 })
-export class DestinatarioComponent implements OnInit, OnDestroy {
+export class DestinatarioComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
    * Formulario reactivo para el destinatario.
    */
@@ -71,17 +71,17 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Indica si el formulario está vacío.
    */
   estaVacio: boolean = false;
-/**
- * Opciones del catálogo.
- * Contiene una lista de objetos del catálogo obtenidos desde el servicio.
- * Estas opciones se utilizan para poblar los selectores en el formulario.
- */
-options!: Catalogo[];
+  /**
+   * Opciones del catálogo.
+   * Contiene una lista de objetos del catálogo obtenidos desde el servicio.
+   * Estas opciones se utilizan para poblar los selectores en el formulario.
+   */
+  options!: Catalogo[];
 
-/**
- * Notificador para destruir observables al destruir el componente.
- * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
- */
+  /**
+   * Notificador para destruir observables al destruir el componente.
+   * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
+   */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
@@ -97,7 +97,8 @@ options!: Catalogo[];
     public fb: FormBuilder,
     private store: Tramite110201Store,
     private query: Tramite110201Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private el: ElementRef
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -137,6 +138,15 @@ options!: Catalogo[];
       .subscribe();
     this.donanteDomicilio();
 
+  }
+
+  ngAfterViewInit() {
+    // Only initialize tooltips contained in this component’s template
+    this.el.nativeElement
+      .querySelectorAll('[data-bs-toggle="tooltip"]')
+      .forEach((tooltipEl: HTMLElement) => {
+        new bootstrap.Tooltip(tooltipEl);
+      });
   }
 
   /**
@@ -211,38 +221,23 @@ options!: Catalogo[];
    */
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
-      validacionForm: this.fb.group({
-        nacion: [this.solicitudState?.nacion, [Validators.required]],
-        transporte: [this.solicitudState?.transporte, [Validators.required]],
-        nombre: [this.solicitudState?.nombre, [Validators.required]],
-        apellidoPrimer: [
-          this.solicitudState?.apellidoPrimer,
-          [Validators.required],
-        ],
-        apellidoSegundo: [
-          this.solicitudState?.apellidoSegundo,
-          [Validators.required],
-        ],
-        numeroFiscal: [
-          this.solicitudState?.numeroFiscal,
-          [Validators.required],
-        ],
-        razonSocial: [this.solicitudState?.razonSocial, [Validators.required]],
-        ciudad: [this.solicitudState?.ciudad, [Validators.required]],
-        calle: [this.solicitudState?.calle, [Validators.required]],
-        numeroLetra: [this.solicitudState?.numeroLetra, [Validators.required]],
-        lada: [this.solicitudState?.lada, [Validators.required]],
-        telefono: [
-          this.solicitudState?.telefono,
-          [Validators.required, Validators.pattern(/^\d+$/)],
-        ],
-        fax: [this.solicitudState?.fax, [Validators.pattern(/^\d+$/)]],
-        correoElectronico: [
-          this.solicitudState?.correoElectronico,
-          [Validators.required, Validators.email],
-        ],
-      }),
-    });
+  validacionForm: this.fb.group({
+    nacion: [this.solicitudState?.nacion, [Validators.required]],
+    transporte: [this.solicitudState?.transporte, [Validators.required]],
+    nombre: [this.solicitudState?.nombre, [Validators.required]],
+    apellidoPrimer: [this.solicitudState?.apellidoPrimer, [Validators.required]],
+    apellidoSegundo: [this.solicitudState?.apellidoSegundo, [Validators.required]],
+    numeroFiscal: [this.solicitudState?.numeroFiscal, [Validators.required]],
+    razonSocial: [this.solicitudState?.razonSocial, [Validators.required]],
+    ciudad: [this.solicitudState?.ciudad, [Validators.required]],
+    calle: [this.solicitudState?.calle, [Validators.required]],
+    numeroLetra: [this.solicitudState?.numeroLetra, [Validators.required]],
+    lada: [this.solicitudState?.lada, [Validators.required]],
+    telefono: [this.solicitudState?.telefono, [Validators.required, Validators.pattern(/^\d+$/)]],
+    fax: [this.solicitudState?.fax, [Validators.pattern(/^\d+$/)]],
+    correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email]],
+  }),
+});
   }
 
   /**
@@ -250,7 +245,7 @@ options!: Catalogo[];
    * Cancela todas las suscripciones activas.
    */
   ngOnDestroy(): void {
-   
+
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
