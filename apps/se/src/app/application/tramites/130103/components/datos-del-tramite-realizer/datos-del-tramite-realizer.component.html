@@ -2,5 +2,6 @@
     <div class="row">
         <formas-dinamicas formularioTitulo="Datos del trámite a realizar" [forma]="ninoFormGroup" [formularioDatos]="datosDelTramiteFormData"
         [estado]="importacionstate" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+        <!-- [soloLectura]="consultaState.readonly ?? false" -->
     </div>
 </form>

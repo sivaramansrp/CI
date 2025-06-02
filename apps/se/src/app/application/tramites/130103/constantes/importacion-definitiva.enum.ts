@@ -258,9 +258,9 @@ export const DATOS_DE_LA_MERCANCIA = [
  */
 export const PARTIDAS_DE_LA_MERCANCIA = [
   {
-    id: 'cantidad',
+    id: 'partidas_cantidad',
     labelNombre: 'Cantidad',
-    campo: 'cantidad',
+    campo: 'partidas_cantidad',
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: false,
@@ -288,7 +288,7 @@ export const PARTIDAS_DE_LA_MERCANCIA = [
     marginTop: 0,
   },
   {
-    id: '',
+    id: 'seleccion_fraccion',
     labelNombre: '',
     campo: 'seleccion_fraccion',
     clase: 'col-md-4',
@@ -306,9 +306,9 @@ export const PARTIDAS_DE_LA_MERCANCIA = [
     marginTop: 0,
   },
   {
-    id: 'descripcion',
+    id: 'partidas_descripcion',
     labelNombre: 'Descripción',
-    campo: 'descripcion',
+    campo: 'partidas_descripcion',
     clase: 'col-md-8',
     tipoInput: 'textarea',
     desactivado: false,
@@ -327,9 +327,9 @@ export const PARTIDAS_DE_LA_MERCANCIA = [
     marginTop: 0
   },
   {
-    id: 'valor_partida_usd',
+    id: 'partidas_valor_factura_USD',
     labelNombre: 'Valor partida USD',
-    campo: 'valor_partida_usd',
+    campo: 'partidas_valor_factura_USD',
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: false,
@@ -364,10 +364,10 @@ export const PARTIDAS_DE_LA_MERCANCIA = [
  */
 export const USO_ESPECIFICO_DE_LA_MERCANCIA = [
   {
-    id: 'fraccion_arancelaria',
+    id: 'uso_fraccion_arancelaria',
     labelNombre:
       'Fracción arancelaria PROSEC (Especificar la fracción arancelaria del producto en el que se utilizará la mercancía a importar)',
-    campo: 'fraccion_arancelaria',
+    campo: 'uso_fraccion_arancelaria',
     clase: 'col-md-8',
     tipoInput: 'select-catalogos',
     desactivado: false,
@@ -377,10 +377,10 @@ export const USO_ESPECIFICO_DE_LA_MERCANCIA = [
     marginTop: 0,
   },
   {
-    id: 'descripcion',
+    id: 'uso_descripcion',
     labelNombre:
       'Descripción fracción PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizará la mercancía a importar)',
-    campo: 'descripcion',
+    campo: 'uso_descripcion',
     clase: 'col-md-8',
     tipoInput: 'textarea',
     desactivado: false,

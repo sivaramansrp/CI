@@ -251,7 +251,7 @@ export class UsoEspecificoDeLaMercanciaComponent implements OnInit, OnDestroy {
       const ESPECIFICO = {
         id: 1,
         fraccion_arancelaria_prosec: this.prosec,
-        descripcion: this.ninoFormGroup.get('descripcion')?.value,
+        descripcion: this.ninoFormGroup.get('uso_descripcion')?.value,
       };
       this.datosTabla?.push(ESPECIFICO);
       this.tramite130103Store.setDynamicFieldValue('especifico', ESPECIFICO);

@@ -168,8 +168,8 @@ export class PartidasDeLaMercanciaComponent
     ninoFormGroup: new FormGroup({}),
 
     modificarPartidaForm: new FormGroup({
-      cantidad_partidas: new FormControl(''),
-      descripcion_partidas: new FormControl(''),
+      modificar_cantidad: new FormControl(''),
+      modificar_descripcion: new FormControl(''),
       valor_partidas_usd: new FormControl(''),
       fraccion_partidas: new FormControl(''),
     }),
@@ -350,10 +350,10 @@ export class PartidasDeLaMercanciaComponent
     if (this.ninoFormGroup.valid) {
       const PRODUCTOS = {
         id: this.datosTabla?.length + 1,
-        cantidad: this.ninoFormGroup.get('cantidad')?.value,
+        cantidad: this.ninoFormGroup.get('partidas_cantidad')?.value,
         unidadDeMedida: this.importacionstate['unidad_de_medida'],
         fraccionArancelariaTigie: this.importacionstate['seleccion_fraccion'],
-        descripcion: this.ninoFormGroup.get('descripcion')?.value,
+        descripcion: this.ninoFormGroup.get('partidas_descripcion')?.value,
         precioUnitario: '1.000',
         totalUsd: this.ninoFormGroup.get('valor_partida_usd')?.value,
       };
@@ -494,8 +494,8 @@ export class PartidasDeLaMercanciaComponent
     const FILA_SELECCIONADA = this.partidasSeleccionadas[0];
     if (FILA_SELECCIONADA) {
       this.modificarPartidaForm.patchValue({
-        cantidad_partidas: FILA_SELECCIONADA.cantidad,
-        descripcion_partidas: FILA_SELECCIONADA.descripcion,
+        modificar_cantidad: FILA_SELECCIONADA.cantidad,
+        modificar_descripcion: FILA_SELECCIONADA.descripcion,
         valor_partidas_usd: FILA_SELECCIONADA.totalUsd,
         fraccion_partidas: FILA_SELECCIONADA.fraccionArancelariaTigie,
 
@@ -528,7 +528,7 @@ export class PartidasDeLaMercanciaComponent
     if (INDEX !== -1) {
       this.datosTabla[INDEX] = {
         ...this.datosTabla[INDEX],
-        cantidad: this.modificarPartidaForm.get('cantidad_partidas')?.value,
+        cantidad: this.modificarPartidaForm.get('modificar_cantidad')?.value,
 
         descripcion: this.modificarPartidaForm.get('descripcion_partidas')
           ?.value,
