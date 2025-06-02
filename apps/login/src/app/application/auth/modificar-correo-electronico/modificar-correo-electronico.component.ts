@@ -18,10 +18,7 @@ import { ToastrService } from 'ngx-toastr';
 export class ModificarCorreoElectronicoComponent implements OnInit, OnDestroy {
   /** Formulario de correo electrónico */
   public emailForm!: FormGroup;
-  
-  /** Indicador de carga */
-  public loading = false;
-  
+    
   /** Notificación para mostrar estados y errores */
   public nuevaAlertaNotificacion: Notificacion | null = null;
   
@@ -47,11 +44,10 @@ export class ModificarCorreoElectronicoComponent implements OnInit, OnDestroy {
 
   /** Maneja el envío del formulario */
   public onSubmit(): void {
-    if (!this.emailForm.valid || this.loading) {
+    if (!this.emailForm.valid) {
       return;
     }
-
-    this.loading = true;
+    
     const EMAILDATA: EmailData = {
       currentEmail: this.emailForm.get('currentEmail')?.value,
       newEmail: this.emailForm.get('newEmail')?.value
@@ -102,9 +98,6 @@ export class ModificarCorreoElectronicoComponent implements OnInit, OnDestroy {
               txtBtnAceptar: 'Aceptar',
               txtBtnCancelar: '',
             };
-        },
-        complete: () => {
-          this.loading = false;
         }
       });
   }
