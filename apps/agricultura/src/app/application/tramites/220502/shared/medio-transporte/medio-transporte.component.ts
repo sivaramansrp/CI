@@ -1,4 +1,4 @@
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
@@ -37,7 +37,7 @@ import { takeUntil } from 'rxjs';
     TituloComponent,
     CatalogoSelectComponent,
     TableComponent,
-    InputRadioComponent
+    InputRadioComponent,
   ],
   viewProviders: [
     {
@@ -69,7 +69,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
   parentContainer = inject(ControlContainer);
 
   /** Getter para acceder al grupo de formularios principal */
-  get grupoFormularioPadre(): FormGroup{
+  get grupoFormularioPadre(): FormGroup {
     return this.parentContainer.control as FormGroup;
   }
   esSolicitudFerrosValor!: string;
@@ -81,23 +81,37 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
   };
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Variable que almacena el estado actual de la solicitud.
    * Se inicializa como un objeto vacío de tipo `Solicitud220502State`.
    */
   solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
 
-
   /**
-    * Subject para desuscribirse de los observables.
-    * @type {Subject<void>}
-    */
+   * Subject para desuscribirse de los observables.
+   * @type {Subject<void>}
+   */
   private destroyed$ = new Subject<void>();
 
   constructor(
     public solicitud220502Query: Solicitud220502Query,
-    public solicitud220502Store: Solicitud220502Store
-  ){
-    //
+    public solicitud220502Store: Solicitud220502Store,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -105,38 +119,78 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
    * Agrega un control de formulario dinámico al formulario principal
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.grupoFormularioPadre.get(this.claveDeControl)?.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.grupoFormularioPadre.get(this.claveDeControl)?.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  inicializarFormulario(): void {
     if (this.claveDeControl) {
       // Agregar un nuevo FormGroup dinámicamente al formulario principal
       this.grupoFormularioPadre.addControl(
         this.claveDeControl,
         new FormGroup({
-          transporteIdMedio: new FormControl(this.solicitud220502State.transporteIdMedio, [Validators.required]),
-          identificacionTransporte: new FormControl(this.solicitud220502State.identificacionTransporte, [
-            Validators.maxLength(30),
-          ]),
-          esSolicitudFerros: new FormControl(this.solicitud220502State.esSolicitudFerros, [Validators.required]),
-          totalDeGuiasAmparadas: new FormControl(this.solicitud220502State.totalDeGuiasAmparadas, [
-            Validators.maxLength(50),
-          ]),
+          transporteIdMedio: new FormControl(
+            this.solicitud220502State.transporteIdMedio,
+            [Validators.required]
+          ),
+          identificacionTransporte: new FormControl(
+            this.solicitud220502State.identificacionTransporte,
+            [Validators.maxLength(30)]
+          ),
+          esSolicitudFerros: new FormControl(
+            this.solicitud220502State.esSolicitudFerros,
+            [Validators.required]
+          ),
+          totalDeGuiasAmparadas: new FormControl(
+            this.solicitud220502State.totalDeGuiasAmparadas,
+            [Validators.maxLength(50)]
+          ),
         })
       );
     }
 
-     this.solicitud220502Query.selectSolicitud$.pipe(
-            takeUntil(this.destroyed$),
-            map((res:Solicitud220502State)=>{
-              this.solicitud220502State = res;
-              const FORM_GROUP = this.grupoFormularioPadre.get(this.claveDeControl) as FormGroup;
-                if (FORM_GROUP) {
-                FORM_GROUP.patchValue({
-                  transporteIdMedio: this.solicitud220502State.transporteIdMedio,
-                  identificacionTransporte: this.solicitud220502State.identificacionTransporte,
-                  esSolicitudFerros: this.solicitud220502State.esSolicitudFerros,
-                  totalDeGuiasAmparadas: this.solicitud220502State.totalDeGuiasAmparadas
-                });
-              }
-            })
-          ).subscribe();
+    this.solicitud220502Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((res: Solicitud220502State) => {
+          this.solicitud220502State = res;
+          const FORM_GROUP = this.grupoFormularioPadre.get(
+            this.claveDeControl
+          ) as FormGroup;
+          if (FORM_GROUP) {
+            FORM_GROUP.patchValue({
+              transporteIdMedio: this.solicitud220502State.transporteIdMedio,
+              identificacionTransporte:
+                this.solicitud220502State.identificacionTransporte,
+              esSolicitudFerros: this.solicitud220502State.esSolicitudFerros,
+              totalDeGuiasAmparadas:
+                this.solicitud220502State.totalDeGuiasAmparadas,
+            });
+          }
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -154,7 +208,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
   /**
    * Maneja los cambios en las propiedades de entrada y actualiza los datos de la tabla en consecuencia.
    * @param {SimpleChanges} changes - Objeto que contiene las propiedades modificadas.
-   *  
+   *
    */
   ngOnChanges(changes: SimpleChanges): void {
     const TBODYKEY = 'hMercanciaTabla';
@@ -184,7 +238,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
   }
   /**
    * Actualiza el medio de transporte en el estado de la solicitud.
-   * 
+   *
    * @param event - Objeto de tipo Catalogo que contiene el identificador del medio de transporte.
    */
   setTransporteIdMedio(event: Catalogo): void {
@@ -193,7 +247,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
 
   /**
    * Actualiza la identificación del transporte en el estado de la solicitud.
-   * 
+   *
    * @param event - Evento del input que contiene la identificación del transporte.
    */
   setIdentificacionTransporte(event: Event): void {
@@ -203,7 +257,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
 
   /**
    * Actualiza el total de guías amparadas en el estado de la solicitud.
-   * 
+   *
    * @param event - Evento del input que contiene el número total de guías amparadas.
    */
   setTotalDeGuiasAmparadas(event: Event): void {

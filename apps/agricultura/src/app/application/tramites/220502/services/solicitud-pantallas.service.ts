@@ -1,8 +1,11 @@
-import { CargarDatosIniciales, TipoContenedor } from '../models/solicitud-pantallas.model';
-import { DatosDelTramiteRealizar } from '../models/solicitud-pantallas.model'
+import { CargarDatosIniciales } from '../models/solicitud-pantallas.model';
+import { DatosDeLaSolicitud } from '../models/solicitud-pantallas.model';
+import { DatosDelTramiteRealizar } from '../models/solicitud-pantallas.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Solicitud220502Store } from '../estados/tramites220502.store';
+import { TipoContenedor } from '../models/solicitud-pantallas.model';
 
 /** Servicio para obtener los datos de la solicitud */
 @Injectable({
@@ -15,7 +18,10 @@ export class SolicitudPantallasService {
     '../../../assets/json/220502/solicitud-pantallas-mock-data.json';
 
   /** Constructor para inyectar el servicio HttpClient */
-  constructor(public http: HttpClient) {
+  constructor(
+    public http: HttpClient,
+    private solicitud220502Store: Solicitud220502Store
+  ) {
     /** Llamar al método para obtener los datos */
     this.getData();
   }
@@ -38,8 +44,30 @@ export class SolicitudPantallasService {
    * @returns Observable<TipoContenedor>
    */
   getDataResponsableInspeccion(): Observable<TipoContenedor> {
-    return this.http
-      .get<TipoContenedor>(this.dataUrl)
-      .pipe();
+    return this.http.get<TipoContenedor>(this.dataUrl).pipe();
+  }
+
+  getDatosDeLaSolicitud(): Observable<DatosDeLaSolicitud> {
+    return this.http.get<DatosDeLaSolicitud>('assets/json/220502/datos-de-la-solicitud.json').pipe();
+  }
+
+  actualizarEstadoFormulario(datos: DatosDeLaSolicitud): void {
+    this.solicitud220502Store.setCertificadosAutorizados(
+      datos.certificadosAutorizados
+    );
+    this.solicitud220502Store.setHoraDeInspeccion(datos.horaDeInspeccion);
+    this.solicitud220502Store.setAduanaDeIngreso(datos.aduanaDeIngreso);
+    this.solicitud220502Store.setSanidadAgropecuaria(datos.sanidadAgropecuaria);
+    this.solicitud220502Store.setPuntoDeInspeccion(datos.puntoDeInspeccion);
+    this.solicitud220502Store.setFechaDeInspeccion(datos.fechaDeInspeccion);
+    this.solicitud220502Store.setNombre(datos.nombre);
+    this.solicitud220502Store.setPrimerapellido(datos.primerapellido);
+    this.solicitud220502Store.setSegundoapellido(datos.segundoapellido);
+    this.solicitud220502Store.setMercancia(datos.mercancia);
+    this.solicitud220502Store.setTipocontenedor(datos.tipocontenedor);
+    this.solicitud220502Store.setTransporteIdMedio(datos.transporteIdMedio);
+    this.solicitud220502Store.setIdentificacionTransporte(
+      datos.identificacionTransporte
+    );
   }
 }

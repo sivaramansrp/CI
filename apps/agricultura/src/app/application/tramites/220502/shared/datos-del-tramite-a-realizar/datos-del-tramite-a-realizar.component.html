@@ -9,7 +9,7 @@
           [label]="certificadosAutorizados.labelNombre"
           [placeholder]="certificadosAutorizados.primerOpcion"
           [required]="certificadosAutorizados.required"
-          [isDisabled]="false"
+          [isDisabled]="esFormularioSoloLectura"
           formControlName="certificadosAutorizados"
           (selectionChange)="setCertificadosAutorizados($event)"
         ></app-catalogo-select>
@@ -21,6 +21,7 @@
           [datos]="configuracionFechaFinVigencia"
           (valorCambiado)="cambioFechaInicio($event)"
           [setFecha]="this.solicitud220502State.fechaDeInspeccion"
+          [isDisabled]="esFormularioSoloLectura"  
         ></input-fecha>
       </div>
     </div>
@@ -33,7 +34,7 @@
           [placeholder]="horaDeInspeccion.primerOpcion"
           [required]="horaDeInspeccion.required"
           formControlName="horaDeInspeccion"
-          [isDisabled]="false"
+          [isDisabled]="esFormularioSoloLectura"
           (selectionChange)="setHoraDeInspeccion($event)"
         ></app-catalogo-select>
       </div>
@@ -47,7 +48,7 @@
           [placeholder]="aduanaDeIngreso.primerOpcion"
           [required]="aduanaDeIngreso.required"
           formControlName="aduanaDeIngreso"
-          [isDisabled]="false"
+          [isDisabled]="esFormularioSoloLectura"
           (selectionChange)="setAduanaDeIngreso($event)"
         ></app-catalogo-select>
       </div>
@@ -61,7 +62,7 @@
           [placeholder]="sanidadAgropecuaria.primerOpcion"
           [required]="sanidadAgropecuaria.required"
           formControlName="sanidadAgropecuaria"
-          [isDisabled]="false"
+          [isDisabled]="esFormularioSoloLectura"
           (selectionChange)="setSanidadAgropecuaria($event)"
         ></app-catalogo-select>
       </div>
@@ -75,7 +76,7 @@
           [placeholder]="puntoDeInspeccion.primerOpcion"
           [required]="puntoDeInspeccion.required"
           formControlName="puntoDeInspeccion"
-          [isDisabled]="false"
+          [isDisabled]="esFormularioSoloLectura"
           (selectionChange)="setPuntoDeInspeccion($event)"
         ></app-catalogo-select>
       </div>

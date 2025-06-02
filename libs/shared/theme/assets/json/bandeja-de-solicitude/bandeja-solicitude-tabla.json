@@ -557,7 +557,6 @@
         "departamento": "PROFEPA",
         "numeroDeProcedimiento": "250103"
     },
-    
     {
         "id": 80205,
         "tipoDeTramite": "Solicitud de Permiso",
@@ -584,5 +583,14 @@
         "diasTranscurridos": "3",
         "departamento": "AGRICULTURA",
         "numeroDeProcedimiento": "220401"
+    },
+    {
+        "id": 220502,
+        "tipoDeTramite": "Solicitud",
+        "fecha": "2024-08-05",
+        "fechaActualizacion": "2022-08-25",
+        "diasTranscurridos": "3",
+        "departamento": "AGRICULTURA",
+        "numeroDeProcedimiento": "220502"
     }
 ]

@@ -3,6 +3,7 @@ import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ControlContainer } from '@angular/forms';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -69,24 +70,65 @@ export class ResponsableInspeccionEnPuntoComponent
    */
   private destroyed$ = new Subject<void>();
 
-/**
- * Variable que almacena el estado actual de la solicitud.
- * Se inicializa como un objeto vacío de tipo `Solicitud220502State`.
- */
-solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Variable que almacena el estado actual de la solicitud.
+   * Se inicializa como un objeto vacío de tipo `Solicitud220502State`.
+   */
+  solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
 
   constructor(
+    private consultaioQuery: ConsultaioQuery,
     private solicitud220502Store: Solicitud220502Store,
     private solicitud220502Query: Solicitud220502Query,
     private solicitudService: SolicitudPantallasService /**Servicio para obtener datos de solicitud */
   ) {
-    /** Inyectar el ControlContainer principal para administrar los controles de formulario */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
   /**
    * Ciclo de vida que inicializa el componente.
    * Agrega un control de formulario dinámico y carga datos iniciales.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.grupoFormularioPadre.get(this.claveDeControl)?.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.grupoFormularioPadre.get(this.claveDeControl)?.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  inicializarFormulario(): void {
     if (this.claveDeControl) {
       // Agregue un nuevo FormGroup dinámico al formulario principal
       this.grupoFormularioPadre.addControl(
@@ -96,10 +138,21 @@ solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
             Validators.required,
             Validators.maxLength(150),
           ]),
-          primerapellido: new FormControl(this.solicitud220502State.primerapellido, [Validators.maxLength(80)]),
-          segundoapellido: new FormControl(this.solicitud220502State.segundoapellido, [Validators.maxLength(80)]),
-          mercancia: new FormControl(this.solicitud220502State.mercancia, [Validators.required]),
-          tipocontenedor: new FormControl(this.solicitud220502State.tipocontenedor, []),
+          primerapellido: new FormControl(
+            this.solicitud220502State.primerapellido,
+            [Validators.maxLength(80)]
+          ),
+          segundoapellido: new FormControl(
+            this.solicitud220502State.segundoapellido,
+            [Validators.maxLength(80)]
+          ),
+          mercancia: new FormControl(this.solicitud220502State.mercancia, [
+            Validators.required,
+          ]),
+          tipocontenedor: new FormControl(
+            this.solicitud220502State.tipocontenedor,
+            []
+          ),
         })
       );
     }
@@ -127,6 +180,7 @@ solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
       .subscribe();
     this.cargarDatosIniciales(); // Cargar datos del catálogo inicial
   }
+
   /**
    * Maneja la selección de un artículo del catálogo.
    * Actualiza el formulario con la descripción del catálogo seleccionado.
@@ -152,55 +206,54 @@ solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
       },
     });
   }
-/**
- * Actualiza el nombre en el estado de la solicitud.
- * 
- * @param event - Evento del input que contiene el nuevo valor del nombre.
- */
-setNombre(event: Event): void {
-  const VALUE = (event.target as HTMLInputElement).value;
-  this.solicitud220502Store.setNombre(VALUE);
-}
+  /**
+   * Actualiza el nombre en el estado de la solicitud.
+   *
+   * @param event - Evento del input que contiene el nuevo valor del nombre.
+   */
+  setNombre(event: Event): void {
+    const VALUE = (event.target as HTMLInputElement).value;
+    this.solicitud220502Store.setNombre(VALUE);
+  }
 
-/**
- * Actualiza el primer apellido en el estado de la solicitud.
- * 
- * @param event - Evento del input que contiene el nuevo valor del primer apellido.
- */
-setPrimerapellido(event: Event): void {
-  const VALUE = (event.target as HTMLInputElement).value;
-  this.solicitud220502Store.setPrimerapellido(VALUE);
-}
+  /**
+   * Actualiza el primer apellido en el estado de la solicitud.
+   *
+   * @param event - Evento del input que contiene el nuevo valor del primer apellido.
+   */
+  setPrimerapellido(event: Event): void {
+    const VALUE = (event.target as HTMLInputElement).value;
+    this.solicitud220502Store.setPrimerapellido(VALUE);
+  }
 
-/**
- * Actualiza el segundo apellido en el estado de la solicitud.
- * 
- * @param event - Evento del input que contiene el nuevo valor del segundo apellido.
- */
-setSegundoapellido(event: Event): void {
-  const VALUE = (event.target as HTMLInputElement).value;
-  this.solicitud220502Store.setSegundoapellido(VALUE);
-}
+  /**
+   * Actualiza el segundo apellido en el estado de la solicitud.
+   *
+   * @param event - Evento del input que contiene el nuevo valor del segundo apellido.
+   */
+  setSegundoapellido(event: Event): void {
+    const VALUE = (event.target as HTMLInputElement).value;
+    this.solicitud220502Store.setSegundoapellido(VALUE);
+  }
 
-/**
- * Actualiza la mercancía en el estado de la solicitud.
- * 
- * @param event - Evento del input que contiene la descripción de la mercancía.
- */
-setMercancia(event: Event): void {
-  const VALUE = (event.target as HTMLInputElement).value;
-  this.solicitud220502Store.setMercancia(VALUE);
-}
+  /**
+   * Actualiza la mercancía en el estado de la solicitud.
+   *
+   * @param event - Evento del input que contiene la descripción de la mercancía.
+   */
+  setMercancia(event: Event): void {
+    const VALUE = (event.target as HTMLInputElement).value;
+    this.solicitud220502Store.setMercancia(VALUE);
+  }
 
-/**
- * Actualiza el tipo de contenedor en el estado de la solicitud.
- * 
- * @param event - Objeto de tipo Catalogo que contiene el identificador del tipo de contenedor.
- */
-setTipoContenedor(event: Catalogo): void {
-  this.solicitud220502Store.setTipocontenedor(event.id);
-}
-
+  /**
+   * Actualiza el tipo de contenedor en el estado de la solicitud.
+   *
+   * @param event - Objeto de tipo Catalogo que contiene el identificador del tipo de contenedor.
+   */
+  setTipoContenedor(event: Catalogo): void {
+    this.solicitud220502Store.setTipocontenedor(event.id);
+  }
 
   /**
    * Gancho de ciclo de vida que limpia el componente.
