@@ -30,6 +30,11 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Este identificador se utiliza para enlazar el componente con un procedimiento específico.
    */
   @Input() idProcedimiento!: number;
+    /**
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   * @type {boolean}
+   */
+  @Input() esFormularioSoloLectura!: boolean;
 
   /**
    * Indica si el país de destino está habilitado
@@ -132,16 +137,6 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder) {
-    this.formDestinatario = this.fb.group({
-      paisDestin: ['', [Validators.required, Validators.min(0)]],
-      ciudad: [''],
-      calle: ['', [Validators.required]],
-      numeroLetra: ['', [Validators.required]],
-      lada: [''],
-      telefono: [''],
-      fax: [''],
-      correoElectronico: ['', [Validators.required]],
-    });
 
     // La función se ejecutará después de un segundo.
     setTimeout(() => {
@@ -159,7 +154,44 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.campoDestinatario = CAMPO_DE_DESTINATARIO.includes(this.idProcedimiento);
+    this.inicializarEstadoFormulario();
     this.formDestinatario.patchValue(this.datosForm);
+  }
+    /**
+* Evalúa si se debe inicializar o cargar datos en el formulario.
+*/
+  inicializarEstadoFormulario(): void {
+    if (!this.formDestinatario) {
+      this.createForm();
+    }
+
+    if (this.esFormularioSoloLectura) {
+      this.formDestinatario.disable();
+
+    }
+  }
+  
+ /**
+   * Crea e inicializa el formulario reactivo `formDatosCertificado` con los controles y validaciones necesarios.
+   * 
+   * @remarks
+   * Este método configura los campos del formulario, asignando validadores según los requisitos del negocio.
+   * 
+   * @command
+   * Genera el formulario para capturar los datos del certificado, incluyendo observaciones, idioma, entidad federativa,
+   * representación federal y precisión, aplicando las validaciones correspondientes.
+   */
+  createForm(): void {
+    this.formDestinatario = this.fb.group({
+      paisDestin: ['', [Validators.required, Validators.min(0)]],
+      ciudad: [''],
+      calle: ['', [Validators.required]],
+      numeroLetra: ['', [Validators.required]],
+      lada: [''],
+      telefono: [''],
+      fax: [''],
+      correoElectronico: ['', [Validators.required]],
+    });
   }
 
   /**

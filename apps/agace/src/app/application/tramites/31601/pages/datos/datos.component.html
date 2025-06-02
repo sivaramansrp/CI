@@ -24,21 +24,28 @@
                     <solicitante></solicitante>
                 }              
                 @case (2) {
-                   
-                    <app-aduanero></app-aduanero>
+                    @if(esDatosRespuesta){
+                        <app-aduanero></app-aduanero>
+                    }
                 }
                 @case(3) {
-                    <app-represtantante></app-represtantante>
-                    <app-enlace></app-enlace>
-                    <app-persona></app-persona>
+                    @if(esDatosRespuesta){
+                        <app-represtantante></app-represtantante>
+                        <app-enlace></app-enlace>
+                        <app-persona></app-persona>
+                    }
                     
                 }
                
                 @case(4) {
-                    <app-datos-por-regimen></app-datos-por-regimen>
+                    @if(esDatosRespuesta){
+                        <app-datos-por-regimen></app-datos-por-regimen>
+                    }
                 }
                 @case (5) {
-                    <app-capturar-ivaeieps></app-capturar-ivaeieps>
+                    @if(esDatosRespuesta){
+                        <app-capturar-ivaeieps></app-capturar-ivaeieps>
+                    }
                 }
 
             }

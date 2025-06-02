@@ -74,6 +74,14 @@ const TERCEROS_TEXTO_DE_ALERTA =
  */
 export class TercerosRelacionadosComponent implements OnInit {
   /**
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   * Inicialmente establecido en `true`.
+   *
+   * @description Cuando es verdadero, el usuario no puede editar los campos del formulario.
+   */
+ public esFormularioSoloLectura: boolean = true;
+
+  /**
    * Indicador de visibilidad para la sección de la tabla.
    * Inicialmente visible (`true`).
    *
@@ -260,8 +268,10 @@ export class TercerosRelacionadosComponent implements OnInit {
    * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
    */
   ngOnInit(): void {
-    this.tercerosService.getEncabezadoDeTabla().subscribe((data: any) => {
-      this.tablaEncabezadoData = data.columns;
+    this.tercerosService.getEncabezadoDeTabla().subscribe((data: unknown) => {
+      if (typeof data === 'object' && data !== null && 'columns' in data) {
+        this.tablaEncabezadoData = (data as { columns: string[] }).columns;
+      }
     });
 
     /**
@@ -1350,13 +1360,56 @@ export class TercerosRelacionadosComponent implements OnInit {
   }
 
   /**
+   * Cancela el formulario de Fabricante y regresa a la tabla.
+   */
+  cancelFabricante(): void {
+    this.showFabricante = false;
+    this.showTableDiv = true;
+  }
+
+  /**
+   * Cancela el formulario de Destinatario y regresa a la tabla.
+   */
+  cancelDestinatario(): void {
+    this.showDestinatario = false;
+    this.showTableDiv = true;
+  }
+
+  /**
+   * Cancela el formulario de Proveedor y regresa a la tabla.
+   */
+  cancelProveedor(): void {
+    this.showProveedor = false;
+    this.showTableDiv = true;
+  }
+
+  /**
+   * Cancela el formulario de Facturador y regresa a la tabla.
+   */
+  cancelFacturador(): void {
+    this.showFacturador = false;
+    this.showTableDiv = true;
+  }
+
+  /**
+   * Muestra la tabla principal y oculta todos los formularios.
+   */
+  showTable(): void {
+    this.showTableDiv = true;
+    this.showFabricante = false;
+    this.showDestinatario = false;
+    this.showProveedor = false;
+    this.showFacturador = false;
+  }
+
+  /**
    * Validador personalizado para verificar que el país seleccionado no esté vacío ni sea '-1'.
    *
    * @param control Control del formulario a validar.
    * @returns Nulo si el valor es válido, de lo contrario devuelve un objeto con la propiedad `requiredPais`.
    */
   // eslint-disable-next-line class-methods-use-this
-  requiredPaisValidator(control: AbstractControl) {
+  requiredPaisValidator(control: AbstractControl): import('@angular/forms').ValidationErrors | null {
     return control.value !== '' && control.value !== '-1'
       ? null
       : { requiredPais: true };
@@ -1370,7 +1423,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @returns Nulo si el RFC es válido, de lo contrario devuelve un objeto con la propiedad `invalidRFC`.
    */
   // eslint-disable-next-line class-methods-use-this
-  rfcValidator(control: AbstractControl) {
+  rfcValidator(control: AbstractControl): import('@angular/forms').ValidationErrors | null {
     const RFC_FISICA = /^([a-zñA-ZÑ]{4})(\d{6})(([a-zA-Z]|\d){3})$/;
     const RFC_MORAL = /^([a-zñA-ZÑ&]{3})(\d{6})(([a-zA-Z]|\d){3})$/;
     return RFC_FISICA.test(control.value) || RFC_MORAL.test(control.value)
@@ -1386,7 +1439,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @returns Nulo si la CURP es válida, de lo contrario devuelve un objeto con la propiedad `invalidCURP`.
    */
   // eslint-disable-next-line class-methods-use-this
-  curpValidator(control: AbstractControl) {
+  curpValidator(control: AbstractControl): import('@angular/forms').ValidationErrors | null {
     // eslint-disable-next-line @typescript-eslint/naming-convention
     const pattern = /^([a-zA-Z]{4})([0-9]{6})([HhMm][a-zA-Z]{5})([0-9]{2})$/;
     return pattern.test(control.value) ? null : { invalidCURP: true };
@@ -1400,7 +1453,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @returns Nulo si el teléfono es válido, de lo contrario devuelve un objeto con la propiedad `invalidTelefono`.
    */
   // eslint-disable-next-line class-methods-use-this
-  telefonoValidator(control: AbstractControl) {
+  telefonoValidator(control: AbstractControl): import('@angular/forms').ValidationErrors | null {
     const PATTERN = /^([0-9A-Za-z\-() ])*$/;
     return PATTERN.test(control.value) ? null : { invalidTelefono: true };
   }

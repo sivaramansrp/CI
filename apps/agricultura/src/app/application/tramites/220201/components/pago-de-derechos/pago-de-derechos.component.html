@@ -9,9 +9,10 @@
           <div class="col-md-4">
             <app-input-radio
               [radioOptions]="radioOptions"
-              [selectedValue]="selectedValue"
               [isRequired]="true"
               [layout]="'horizontal'"
+              formControlName="exentoPago"
+                 (change)="setValoresStore()"
             ></app-input-radio>
           </div>
         </div>
@@ -21,7 +22,9 @@
             formControlName="justificacion"
             [label]="'Justificación'"
             [required]="true"
+        [isDisabled]="esFormularioSoloLectura"
             name="justificacion"
+               (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
         <div class="col-md-8"></div>
@@ -35,9 +38,9 @@
               id="nombreImportExport"
               placeholder=""
               type="text"
-              [disabled]="true"
               name="claveReferencia"
               formControlName="claveReferencia"
+                 (change)="setValoresStore()"
             />
           </div>
         </div>
@@ -52,9 +55,9 @@
               placeholder=""
               type="text"
               libUppercase
-              [disabled]="true"
               name="cadenaDependencia"
               formControlName="cadenaDependencia"
+                 (change)="setValoresStore()"
             />
           </div>
         </div>
@@ -64,8 +67,9 @@
             formControlName="banco"
             [label]="'Banco'"
             [required]="true"
-            [isDisabled]="true"
+             [isDisabled]="true"
             name="banco"
+               (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
         <div class="col-md-4">
@@ -79,15 +83,20 @@
               placeholder=""
               type="text"
               libUppercase
-              [disabled]="true"
               name="llavePago"
               formControlName="llavePago"
+                 (change)="setValoresStore()"
             />
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <input-fecha [datos]="fechaInicioInput"></input-fecha>
+                <input-fecha
+            [datos]="fechaInicioInput"
+            (valorCambiado)="cambioFechaFinal($event)"
+            name="fechaPago"
+            [setFecha]="fechaPagoDate" 
+          ></input-fecha>
           </div>
         </div>
         <div class="col-md-4">
@@ -100,9 +109,9 @@
               id="nombreImportExport"
               placeholder=""
               type="text"
-              [disabled]="true"
               name="importePago"
               formControlName="importePago"
+                 (change)="setValoresStore()"
             />
           </div>
         </div>
