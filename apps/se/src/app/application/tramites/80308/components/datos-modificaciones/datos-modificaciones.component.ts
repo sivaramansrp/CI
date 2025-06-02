@@ -39,15 +39,23 @@ export class DatosModificacionesComponent implements OnDestroy {
   */
   public esFormularioSoloLectura: boolean = false; 
 
+  /**
+   * Constructor del componente.
+   *
+   * @param {FormBuilder} fb - Servicio de Angular para construir formularios reactivos.
+   * @param {ModificacionSolicitudeService} modificionService - Servicio encargado de gestionar la modificación de solicitudes.
+   * @param {ToastrService} toastr - Servicio para mostrar notificaciones tipo "toast" al usuario.
+   * @param {ConsultaioQuery} consultaioQuery - Servicio para observar y obtener el estado de la sección `Consultaio` del formulario.
+   *
+   * Este constructor configura una suscripción al observable del estado de `Consultaio`. En cada actualización del estado:
+   * - Se actualiza la propiedad `esFormularioSoloLectura` para reflejar si el formulario debe estar en modo solo lectura.
+   * - Se inicializa la estructura del formulario mediante `iniciarFormulario()`.
+   * - Se cargan los datos necesarios mediante `cargarDatos()`.
+   * - Se aplica la lógica del estado del formulario con `inicializarEstadoFormulario()`.
+   *
+   * La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor, para evitar fugas de memoria.
+   */
   constructor(public fb: FormBuilder, public modificionService: ModificacionSolicitudeService, private toastr: ToastrService, private consultaioQuery: ConsultaioQuery){
-   
-    /**
-     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
-     *
-     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
-     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
-     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
-     */
     this.consultaioQuery.selectConsultaioState$
     .pipe(
       takeUntil(this.destroyNotifier$),
