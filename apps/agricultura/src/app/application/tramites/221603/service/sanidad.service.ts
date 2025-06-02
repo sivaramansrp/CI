@@ -1,9 +1,9 @@
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Destinatario, Exportador, FormularioDatos, Mercancia } from '../enum/sanidad.enum';
+import { Solicitud221603State, Tramite221603Store } from '../estados/tramite221603.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Solicitud221603State, Tramite221603Store } from '../estados/tramite221603.store';
 
 @Injectable({
   providedIn: 'root'

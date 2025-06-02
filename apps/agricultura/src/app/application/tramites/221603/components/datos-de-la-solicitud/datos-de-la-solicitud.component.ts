@@ -7,6 +7,8 @@ import {
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   ConfiguracionColumna,
+  ConsultaioQuery,
+  ConsultaioStore,
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -14,7 +16,7 @@ import {
   Solicitud221603State,
   Tramite221603Store,
 } from '../../estados/tramite221603.store';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 import { SanidadService } from '../../service/sanidad.service';
 import { Tramite221603Query } from '../../estados/tramite221603.query';
 /**
@@ -65,7 +67,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas para la tabla dinámica que muestra las mercancías.
    */
-  configuracionTabla: ConfiguracionColumna<Mercancia>[] = CONFIGURATION_TABLA_MERCANCIAS;
+  configuracionTabla: ConfiguracionColumna<Mercancia>[] =
+    CONFIGURATION_TABLA_MERCANCIAS;
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
    */
@@ -82,9 +91,21 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private tramite221603Store: Tramite221603Store,
     private tramite221603Query: Tramite221603Query,
-    public sanidadService: SanidadService
+    public sanidadService: SanidadService,
+    private consultaQuery: ConsultaioQuery,
+    private consultaStore: ConsultaioStore
   ) {
     // Constructor que inyecta las dependencias necesarias
+
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly || true;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
   /**
    * Método que se ejecuta cuando el componente es inicializado.
@@ -96,9 +117,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((state: Solicitud221603State) => {
         this.solicitudState = state;
+        console.log("soliciutid state", this.solicitudState);
       });
+
     this.inicializarFormulario();
-    this.sanidadService.obtenerFormularioDatos()
+    this.inicializarEstadoFormulario();
+
+    this.sanidadService
+      .obtenerFormularioDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp: FormularioDatos) => {
         this.formularioDatos = resp;
@@ -107,6 +133,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.sanidadService.inicializaCatalogosRegimen();
     this.sanidadService.inicializaDatosMercancia();
   }
+
+  inicializarEstadoFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+       this.datosSolicitudForm.get('guia')?.disable();
+    } else {
+      this.datosSolicitudForm.get('guia')?.enable();
+    }
+  }
+
   /**
    * Inicializa el formulario reactivo con los valores actuales del estado de la solicitud.
    *
@@ -124,7 +160,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         Validators.required,
       ],
     });
-    
   }
 
   /**
@@ -133,9 +168,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   rellenarValoresPredeterminados(): void {
     this.datosSolicitudForm.get('punto')?.setValue(this.formularioDatos?.punto);
     this.datosSolicitudForm.get('punto')?.disable();
-    this.datosSolicitudForm.get('aduana')?.setValue(this.formularioDatos?.aduana);
+    this.datosSolicitudForm
+      .get('aduana')
+      ?.setValue(this.formularioDatos?.aduana);
     this.datosSolicitudForm.get('aduana')?.disable();
-    this.datosSolicitudForm.get('oficina')?.setValue(this.formularioDatos?.oficina);
+    this.datosSolicitudForm
+      .get('oficina')
+      ?.setValue(this.formularioDatos?.oficina);
     this.datosSolicitudForm.get('oficina')?.disable();
   }
 

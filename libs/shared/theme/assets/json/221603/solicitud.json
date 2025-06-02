@@ -4,7 +4,7 @@
   "oficina": "Oficina Central",
   "punto": "Punto de Inspección 5",
   "guia": "G123456789",
-  "regimen": "Temporal",
+  "regimen": "1",
   "carro": "C4567",
   "medio": "Marítimo",
   "transporte": "Barco",
@@ -13,7 +13,7 @@
   "exento": "No",
   "clave": "CLV-221603-01",
   "dependencia": "SADER",
-  "banco": "Bancomer",
+  "banco": "1",
   "llave": "LLAVE-987654321",
   "fecha": "2025-05-28",
   "importe": "15000.00"

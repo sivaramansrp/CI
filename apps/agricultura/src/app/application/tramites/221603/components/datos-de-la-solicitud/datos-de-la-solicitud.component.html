@@ -124,6 +124,7 @@
           name="regimen"
           formControlName="regimen"
           (change)="setValoresStore('regimen', 'setRegimen')"
+          [isDisabled]="esFormularioSoloLectura"
         >
         </app-catalogo-select>
       </div>
@@ -136,6 +137,7 @@
       [configuracionTabla]="configuracionTabla"
       [datos]="sanidadService.mercancia"
       [tipoSeleccionTabla]="checkbox"
+       [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
 
     <nav aria-label="Page navigation example">
@@ -146,8 +148,8 @@
   </div>
 
   <div class="col-md-12 mt-5 d-flex justify-content-end">
-    <button type="button" class="btn btn-default">Modificar</button>
-    <button type="button" class="btn btn-danger ms-3">Eliminar</button>
-    <button type="button" class="btn btn-primary ms-3">Agregar</button>
+    <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">Modificar</button>
+    <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura">Eliminar</button>
+    <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura">Agregar</button>
   </div>
 </div>
