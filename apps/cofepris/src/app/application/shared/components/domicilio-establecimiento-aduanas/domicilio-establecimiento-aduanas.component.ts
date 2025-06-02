@@ -314,26 +314,25 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     });
 
     this.formAgente = this.fb.group({
-      claveScianModal: ['', Validators.required],
-      claveDescripcionModal: [''],
+      claveScianModal: [this.solicitudState?.claveScianModal, Validators.required],
+      claveDescripcionModal: [this.solicitudState?.claveDescripcionModal],
     });
     this.formMercancias = this.fb.group({
-      nombreComercial: ['', Validators.required],
-      nombreComun: ['', Validators.required],
-      nombreCientifico: ['', Validators.required],
-      usoEspecifico: ['', Validators.required],
-      estadofisico: ['', Validators.required],
-      fraccionArancelaria: ['', Validators.required],
-      descripcionFraccion: [{ value: '', disabled: true }, Validators.required],
-      cantidadUMT: ['', Validators.required],
-      UMT: [{ value: '', disabled: true }, Validators.required],
-      cantidadUMC: ['', Validators.required],
-      UMC: ['', Validators.required],
-      numerocas: ['', Validators.required],
-      porcentajeConcentracion: ['', Validators.required],
-      numeroRegistro: ['', Validators.required],
-      clasificacionToxicologica: ['', Validators.required],
-      objetoImportacion: ['', Validators.required],
+      nombreComercial: [this.solicitudState?.nombreComercial, Validators.required],
+      nombreComun: [this.solicitudState?.nombreComun, Validators.required],
+      nombreCientifico: [this.solicitudState?.nombreCientifico, Validators.required],
+      usoEspecifico: [this.solicitudState?.usoEspecifico, Validators.required],
+      estadofisico: [this.solicitudState?.estadoFisico, Validators.required],
+      fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, Validators.required],
+      descripcionFraccion: [{ value: this.solicitudState?.descripcionFraccion, disabled: true }, Validators.required],
+      cantidadUMT: [this.solicitudState?.cantidadUMT, Validators.required],
+      UMT: [{ value: this.solicitudState?.UMT, disabled: true }, Validators.required],
+      cantidadUMC: [this.solicitudState?.cantidadUMC, Validators.required],
+      UMC: [this.solicitudState?.UMC, Validators.required],
+      numerocas: [this.solicitudState?.numeroCas, Validators.required],
+      porcentajeConcentracion: [this.solicitudState?.porcentajeConcentracion, Validators.required],
+      clasificacionToxicologica: [this.solicitudState?.clasificacionToxicologica, Validators.required],
+      objetoImportacion: [this.solicitudState?.objetoImportacion, Validators.required],
     });
 
      /*

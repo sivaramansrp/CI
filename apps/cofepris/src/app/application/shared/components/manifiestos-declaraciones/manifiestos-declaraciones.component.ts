@@ -55,7 +55,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    */
   cumplimientoOptions = CumplimientoOptions;
 
-    /**
+  /**
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
@@ -90,7 +90,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
 
-      /**
+    /**
     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
     *
     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
@@ -125,6 +125,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
       .subscribe();
 
   this.manifiestos = this.fb.group({
+    mensaje: [Validators.required],
     cumplimiento: [this.solicitudState?.cumplimiento, Validators.required],
   });
 
