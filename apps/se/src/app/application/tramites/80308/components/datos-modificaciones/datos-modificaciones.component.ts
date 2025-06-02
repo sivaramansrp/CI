@@ -5,7 +5,8 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosModificacion } from '../../models/plantas-consulta.model';
 import { ModificacionSolicitudeService } from '../../services/modificacion-solicitude.service';
 import { ToastrService } from 'ngx-toastr';
@@ -32,9 +33,40 @@ export class DatosModificacionesComponent implements OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
-  constructor(public fb: FormBuilder, public modificionService: ModificacionSolicitudeService, private toastr: ToastrService){
-    this.iniciarFormulario();
-    this.cargarDatos();
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  public esFormularioSoloLectura: boolean = false; 
+
+  /**
+   * Constructor del componente.
+   *
+   * @param {FormBuilder} fb - Servicio de Angular para construir formularios reactivos.
+   * @param {ModificacionSolicitudeService} modificionService - Servicio encargado de gestionar la modificación de solicitudes.
+   * @param {ToastrService} toastr - Servicio para mostrar notificaciones tipo "toast" al usuario.
+   * @param {ConsultaioQuery} consultaioQuery - Servicio para observar y obtener el estado de la sección `Consultaio` del formulario.
+   *
+   * Este constructor configura una suscripción al observable del estado de `Consultaio`. En cada actualización del estado:
+   * - Se actualiza la propiedad `esFormularioSoloLectura` para reflejar si el formulario debe estar en modo solo lectura.
+   * - Se inicializa la estructura del formulario mediante `iniciarFormulario()`.
+   * - Se cargan los datos necesarios mediante `cargarDatos()`.
+   * - Se aplica la lógica del estado del formulario con `inicializarEstadoFormulario()`.
+   *
+   * La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor, para evitar fugas de memoria.
+   */
+  constructor(public fb: FormBuilder, public modificionService: ModificacionSolicitudeService, private toastr: ToastrService, private consultaioQuery: ConsultaioQuery){
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.iniciarFormulario();
+        this.cargarDatos();
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe();
   }
 
 
@@ -49,6 +81,30 @@ export class DatosModificacionesComponent implements OnDestroy {
       tipoModalidad: [{ value: '', disabled: true }],
       descripcionModalidad: [{ value: '', disabled: true }],
     });
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.formularioDatosGenerales.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formularioDatosGenerales.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    }
   }
 
   /**

@@ -3,7 +3,8 @@ import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 
 
-import { Acuicultura, DatosMercancia220203, FormularioMovilizacion, FormularioPago, createDatosState } from '../../models/220203/importacion-de-acuicultura.module';
+import { Acuicultura, Consulta, DatosMercancia220203, FormularioMovilizacion, FormularioPago, createDatosState } from '../../models/220203/importacion-de-acuicultura.module';
+import { PersonaTerceros } from '@libs/shared/data-access-user/src';
 
 
 
@@ -49,14 +50,6 @@ export class AcuiculturaStore extends Store<Acuicultura> {
         }));
     }
 
-
-    /**
-     * Restablece el estado a su estado inicial.
-     */
-    public limpiarFormulario(): void {
-        this.reset();
-    }
-
     /**
      * Restablece el estado a su estado inicial.
      */
@@ -70,4 +63,32 @@ export class AcuiculturaStore extends Store<Acuicultura> {
         }));
     }
 
+    /**
+     * Actualiza el estado con la información de la consulta.
+     * @param consulta Datos de la consulta.
+     */
+    public setConsultaioState(consulta: Consulta): void {
+        this.update(state => ({
+            ...state,
+            consulta
+        }));
+    }
+
+    /**
+     * @description Updates the store with related third parties.
+     * @param tercerosRelacionados Array of related third-party persons.
+     */
+    public actualizarTercerosRelacionados(tercerosRelacionados: PersonaTerceros[]): void {
+    this.update(state => ({
+        ...state,
+        tercerosRelacionados: tercerosRelacionados,
+    }));
+    }
+
+    /**
+     * Restablece el estado a su estado inicial.
+     */
+    public limpiarFormulario(): void {
+        this.reset();
+    }
 }

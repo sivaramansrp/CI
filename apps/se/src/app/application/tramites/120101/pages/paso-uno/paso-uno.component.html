@@ -28,18 +28,24 @@
                     <domicilio-fiscal></domicilio-fiscal>
                 }
                 @case (2) {
-                    <consultar-cupo (emitirFilaClicControlador)="archivoHagaClicControlador($event)"></consultar-cupo>
-                    @if (elementoDeTablaSeleccionado) {
-                        <descripcion-del-cupo [objetoDeFormulario]="elementoDeTablaSeleccionado"></descripcion-del-cupo>
-                        <representacion-federal></representacion-federal>
-                        <bien-final></bien-final>
-                    }
+                     @if (esDatosRespuesta) {
+                        <consultar-cupo [consultaState]="consultaState" (emitirFilaClicControlador)="archivoHagaClicControlador($event)"></consultar-cupo>
+                        @if (elementoDeTablaSeleccionado) {
+                            <descripcion-del-cupo [objetoDeFormulario]="elementoDeTablaSeleccionado"></descripcion-del-cupo>
+                            <representacion-federal [consultaState]="consultaState"></representacion-federal>
+                            <bien-final [consultaState]="consultaState"></bien-final>
+                        }
+                     }
                 }
                 @case (3) {
-                    <app-insumos></app-insumos>
+                    @if (esDatosRespuesta) {
+                        <app-insumos [consultaState]="consultaState"></app-insumos>
+                    }
                 }
                 @case (4) {
-                    <app-proceso-productivo></app-proceso-productivo>
+                    @if (esDatosRespuesta) {
+                        <app-proceso-productivo [consultaState]="consultaState"></app-proceso-productivo>
+                    }
                 }
             }
         </ng-container>

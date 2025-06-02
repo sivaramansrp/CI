@@ -11,8 +11,10 @@
 
 import { AccionBoton, ListaPasoWizard } from '../../models/peru-certificado.module';
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, PAGO_DE_DERECHOS } from '@ng-mf/data-access-user';
+import { DatosPasos, PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
+import { Subject, takeUntil } from 'rxjs';
 import { PASOS } from '../../constantes/peru-certificado.module';
+import { Tramite110222Query } from '../../estados/tramite110222.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 @Component({
@@ -53,7 +55,22 @@ export class CertificadoComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+  /**
+   * Notificador para destruir los observables y evitar posibles fugas de memoria.
+   * @private
+   * @type {Subject<void>}
+   */
+  destroyNotifier$: Subject<void> = new Subject();
 
+  constructor(private seccionStore: SeccionLibStore, private tramiteQuery: Tramite110222Query,
+  ) {
+    this.tramiteQuery.FormaValida$.pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe((res) => {
+      this.seccionStore.establecerSeccion([true]);
+      this.seccionStore.establecerFormaValida([res]);
+    });
+  }
   /**
    * @method getValorIndice
    * @description Maneja la acción del botón y determina la navegación (siguiente o anterior).
