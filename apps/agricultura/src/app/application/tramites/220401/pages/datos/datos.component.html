@@ -23,19 +23,27 @@
             <solicitante></solicitante>
             }
             @case (2) {
+            @if(esDatosRespuesta){
             <app-220401solicitud></app-220401solicitud>
             <app-datos-del-certificado></app-datos-del-certificado>
             <app-combinacion-requerida></app-combinacion-requerida>
             <app-datos-generales-animales></app-datos-generales-animales>
+                }
             }
             @case (3) {
+            @if(esDatosRespuesta){
             <app-transporte></app-transporte>
+                }
             }
             @case (4) {
+                @if(esDatosRespuesta){
                 <app-pago-de-derecho></app-pago-de-derecho>
+                }
             }
             @case (5) {
+                @if(esDatosRespuesta){
                 <app-terceros-relacionados></app-terceros-relacionados>
+                }
             }
             }
         </ng-container>
