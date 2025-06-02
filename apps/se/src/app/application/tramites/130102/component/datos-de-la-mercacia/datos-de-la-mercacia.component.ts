@@ -21,9 +21,10 @@ import fractionValues from 'libs/shared/theme/assets/json/130102/fraccion_arance
 import productoOptions from 'libs/shared/theme/assets/json/130102/producto-otions.json';
 import unidadOptions from 'libs/shared/theme/assets/json/130102/unidad_da.json';
 
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
+
 import { REG_X } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
@@ -54,6 +55,11 @@ import { FormularioRegistroService } from '../../services/octava-temporal.servic
   styleUrl: './datos-de-la-mercacia.component.scss',
 })
 export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
+   defaultSelect: string = 'Nuevo';
+  /** 
+  * @description Indica si el formulario es de solo lectura.
+  */
+   esFormularioSoloLectura: boolean = false;
   /**
    * compo doc
    * @property {any} prodData - Datos de productos importados desde un archivo JSON.
@@ -94,8 +100,14 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
    * @property {Catalogo[]} fraccionF - Catálogo de fracciones arancelarias.
    */
   fraccionF: Catalogo[] = fractionValues;
-
+/** 
+* @description Estado de la solicitud 130102, obtenido desde el store.
+*/
   public solicitudState!: Solicitud130102State;
+  /**
+   * compo doc
+   * @property {Subject<void>} destroyNotifier$ - Observable para cancelar suscripciones al destruir el componente.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
   /**
    * compo doc
@@ -107,9 +119,18 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
      private fb: FormBuilder,
     private tramite130102Store: Tramite130102Store,
     private tramite130102Query: Tramite130102Query,
-    private formularioRegistroService: FormularioRegistroService
+    private formularioRegistroService: FormularioRegistroService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    //constructor
+    this.consultaioQuery.selectConsultaioState$
+         .pipe(
+           takeUntil(this.destroyNotifier$),
+           map((seccionState) => {
+             this.esFormularioSoloLectura = seccionState.readonly;
+             this.inicializarEstadoFormulario();
+           })
+         )
+         .subscribe();
   }
 
   /**
@@ -118,7 +139,48 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
    * @description Inicializa el formulario con validaciones y carga datos de productos.
    */
   ngOnInit(): void {
-    this.tramite130102Query.selectSolicitud$
+     this.inicializarEstadoFormulario();
+   
+   this.fetchProductoOptions();
+   this.formularioRegistroService.registrarFormulario('formDelLa', this.formDelLa);
+  }
+  /**
+   * compo doc
+   * @method inicializarEstadoFormulario
+   * @description Inicializa el estado del formulario según si es de solo lectura o editable.
+   */
+
+ inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+   
+  }
+  /**
+   * Guarda los datos del formulario y ajusta su estado según si es de solo lectura o no.
+   * @returns void
+   * @description Guarda los datos del formulario y ajusta su estado según si es de solo lectura o no.
+   */
+    guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.formDelLa.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.formDelLa.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+/** 
+  * compo doc
+  * @method inicializarFormulario
+  * @description Inicializa el formulario reactivo con los valores del estado de la solicitud.
+  * Suscribe al estado de la solicitud para obtener los datos necesarios.
+*/
+  inicializarFormulario():void{
+ this.tramite130102Query.selectSolicitud$
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {  
@@ -159,10 +221,10 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
         ],
       ],
     });
-   this.fetchProductoOptions();
-   this.formularioRegistroService.registrarFormulario('formDelLa', this.formDelLa);
+     if (this.esFormularioSoloLectura) {
+    this.formDelLa.disable();
   }
-
+  }
     /**
    * Asigna un valor del formulario al store.
    *
