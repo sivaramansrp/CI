@@ -109,10 +109,10 @@ export class RegistroModificacionComponent implements OnInit, OnDestroy {
   valorDeAlternancia(): void {
     const CURRENT_URL = this.router.url;
     if (CURRENT_URL.includes('se')) {
-      this.router.navigate(['/se/modificaciones-immex-prosec/solicitud']);
+      this.router.navigate(['/se/modificaciones-immex/solicitud']);
     }
     if (CURRENT_URL.includes('pago')) {
-      this.router.navigate(['/pago/modificaciones-immex-prosec/solicitud']);
+      this.router.navigate(['/pago/modificaciones-immex/solicitud']);
     }
   }
 
