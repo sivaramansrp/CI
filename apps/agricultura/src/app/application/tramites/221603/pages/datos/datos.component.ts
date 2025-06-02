@@ -1,7 +1,7 @@
 import { AfterViewInit ,Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { SolicitanteComponent, TIPO_PERSONA, ConsultaioQuery, ConsultaioState, ConsultaioStore } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, ConsultaioStore, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { SanidadService } from '../../service/sanidad.service';
-import { map, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-datos',
@@ -37,7 +37,8 @@ export class DatosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
           this.consultaState = seccionState;
       })).subscribe();
-    if(this.consultaState.update) {
+    if(true) {
+      // this.consultaState.update
       this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;

@@ -16,7 +16,7 @@ import {
   Solicitud221603State,
   Tramite221603Store,
 } from '../../estados/tramite221603.store';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { SanidadService } from '../../service/sanidad.service';
 import { Tramite221603Query } from '../../estados/tramite221603.query';
 /**
@@ -117,7 +117,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((state: Solicitud221603State) => {
         this.solicitudState = state;
-        console.log("soliciutid state", this.solicitudState);
       });
 
     this.inicializarFormulario();
