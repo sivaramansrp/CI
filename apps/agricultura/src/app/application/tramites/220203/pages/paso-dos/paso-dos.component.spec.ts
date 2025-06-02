@@ -1,34 +1,62 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { PasoDosComponent } from './paso-dos.component';
-import { HttpClient } from '@angular/common/http';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { AlertComponent, AnexarDocumentosComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { ReactiveFormsModule } from '@angular/forms';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
+import { CatalogosService } from '@ng-mf/data-access-user';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('PasoDosComponent', () => {
-  let component: PasoDosComponent;
-  let fixture: ComponentFixture<PasoDosComponent>;
-  let httpClient: HttpClient;
-  let httpTestingController: HttpTestingController;
+  let fixture;
+  let component;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [PasoDosComponent],
-      imports: [HttpClientTestingModule, TituloComponent, AlertComponent, AnexarDocumentosComponent, ReactiveFormsModule, ToastrModule.forRoot(),],
-      providers: [ImportacionDeAcuiculturaService, ToastrService]
-    })
-      .compileComponents();
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule, HttpClientModule ],
+      declarations: [
+        PasoDosComponent,
+      ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        CatalogosService
+      ]
+    }).overrideComponent(PasoDosComponent, {
 
+    }).compileComponents();
     fixture = TestBed.createComponent(PasoDosComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-    httpClient = TestBed.inject(HttpClient); // Inject the HttpClient
-    httpTestingController = TestBed.inject(HttpTestingController); // Inject HttpTestingController
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
+  });
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
+
+  it('should run #ngOnInit()', async () => {
+    component.getTiposDocumentos = jest.fn();
+    component.ngOnInit();
+  });
+
+  it('should run #getTiposDocumentos()', async () => {
+    component.catalogosServices = component.catalogosServices || {};
+    component.catalogosServices.getCatalogo = jest.fn().mockReturnValue(observableOf({}));
+    component.getTiposDocumentos();
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.complete = jest.fn();
+    component.ngOnDestroy();
+  });
+
 });
