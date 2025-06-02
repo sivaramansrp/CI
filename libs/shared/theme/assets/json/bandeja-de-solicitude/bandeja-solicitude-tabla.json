@@ -603,6 +603,15 @@
     "numeroDeProcedimiento": "110222"
   },
   {
+    "id": 120101,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "120101"
+  },
+  {
     "id": 250104,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
