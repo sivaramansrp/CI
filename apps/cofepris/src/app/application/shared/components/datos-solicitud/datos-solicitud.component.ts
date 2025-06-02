@@ -10,6 +10,7 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  ConsultaioQuery,
   Notificacion,
   REGEX_CORREO_ELECTRONICO,
   REGEX_RFC_FISICA,
@@ -98,6 +99,9 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    */
   elementoParaEliminar!: number;
 
+   /** Bandera de solo lectura (puedes adaptarla si tienes lógica para esto) */
+  public esFormularioSoloLectura: boolean = false;
+
   /**
    * Notificador para destruir observables.
    */
@@ -111,16 +115,69 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
   /**
    * Constructor del componente.
    * @param fb
-   * @param DatosDomicilioLegalStore
-   * @param DatosDomicilioLegalQuery
+   * @param datosDomicilioLegalStore
+   * @param datosDomicilioLegalQuery
    */
   constructor(
     public readonly fb: FormBuilder,
-    private DatosDomicilioLegalStore: DatosDomicilioLegalStore,
-    private DatosDomicilioLegalQuery: DatosDomicilioLegalQuery
+    private datosDomicilioLegalStore: DatosDomicilioLegalStore,
+    private datosDomicilioLegalQuery: DatosDomicilioLegalQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // Inicializa el formulario.
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
   }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de estados.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+    // this.getEstadoCatalogo();
+  }
+
+   /**
+   * Carga datos y deshabilita el formulario si es solo lectura.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    // this.formConsulta = this.fb.group({
+    //   estadoControl: [{ value: this.solicitudState?.selectedEstado,disabled: false }, Validators.required],
+    // });
+    if (this.esFormularioSoloLectura) {
+      this.forma.disable();
+    } else {
+      this.forma.enable();
+    }
+  }
+
+  /**
+   * Inicializa el formulario reactivo para capturar el estado seleccionado.
+   */
+    inicializarFormulario(): void {
+      this.datosDomicilioLegalQuery.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.solicitudState = seccionState;
+          })
+        )
+        .subscribe();
+        
+    }
 
   /**
    * Grupo de formularios principal.
@@ -132,7 +189,7 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    * Método que se llama cuando se inicializa el componente
    * */
   ngOnInit(): void {
-    this.DatosDomicilioLegalQuery.selectSolicitud$
+    this.datosDomicilioLegalQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -205,7 +262,7 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (
-      this.DatosDomicilioLegalStore[metodoNombre] as (
+      this.datosDomicilioLegalStore[metodoNombre] as (
         value: string | number | boolean
       ) => void
     )(VALOR);
