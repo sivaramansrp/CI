@@ -67,31 +67,6 @@ export class CapturarExpedicionCertificadosComponent implements OnInit, OnDestro
    */
   private destroyed$ = new Subject<void>();
 
-  /**
-   * Constructor del componente.
-   *
-   * @param service Servicio para obtener datos de licitaciones disponibles.
-   * @param fb Constructor de formularios.
-   */
-
-   /**
-   * Notificador utilizado para destruir suscripciones activas en el componente.
-   * Se utiliza comúnmente en el patrón de diseño para evitar fugas de memoria
-   * al desuscribirse de observables cuando el componente se destruye.
-   *
-   * @example
-   * ```typescript
-   * this.someObservable.pipe(
-   *   takeUntil(this.destroyNotifier$)
-   * ).subscribe(data => {
-   *   // Manejo de datos
-   * });
-   * ```
-   *
-   * @see {@link Subject}
-   */
-   public destroyNotifier$: Subject<void> = new Subject();
-
    /**
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
@@ -343,7 +318,7 @@ AgregarMontoExpedir():void{
 inicializarFormulario(): void {
 this.expedicion120204Query.selectSolicitud$
         .pipe(
-          takeUntil(this.destroyNotifier$),
+          takeUntil(this.destroyed$),
           map((seccionState) => {
             this.solicitudState = seccionState;
             
