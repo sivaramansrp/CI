@@ -99,15 +99,6 @@ export interface ConsultaDatos {
   organismoPublico: string
   usoEspecifico: string;
   aduana: Catalogo[];
-  // showTabla: boolean;
-  // tipoDeMercancia: string;
-  // unidadMedida: string;
-  // condicionMercancia: string;
-  // ano: Catalogo[] | null;
-  // cantidad: string;
-  // marca: string;
-  // modelo: string;
-  // serie: string;
   pais: Catalogo[];
   rfc: string;
   numeroProgramaImmex: string;

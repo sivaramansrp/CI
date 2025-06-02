@@ -294,8 +294,8 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
           Validators.required,
         ],
         razonSocial: [
-          { value: '', disabled: true },
-          [this.solicitudState?.razonSocial, Validators.required],
+          { value: this.solicitudState?.razonSocial, disabled: true },
+          [Validators.required],
         ],
         correoElectronicoOpcional: [
           this.solicitudState?.correoElectronicoOpcional,
@@ -306,33 +306,27 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
           [Validators.required, Validators.maxLength(30)],
         ],
         calle: [
-          { value: '', disabled: true },
-          this.solicitudState?.calle,
+          { value: this.solicitudState?.calle, disabled: true },
           [Validators.required, Validators.maxLength(80)],
         ],
         numeroExterior: [
-          { value: '', disabled: true },
-          this.solicitudState?.numeroExterior,
+          { value: this.solicitudState?.numeroExterior, disabled: true },
           [Validators.required, Validators.maxLength(40)],
         ],
         numeroInterior: [
-          { value: '', disabled: true },
-          this.solicitudState?.numeroInterior,
+          { value: this.solicitudState?.numeroInterior, disabled: true },
           [Validators.maxLength(30)],
         ],
         telefono: [
-          { value: '', disabled: true },
-          this.solicitudState?.telefono,
+          { value: this.solicitudState?.telefono, disabled: true },
           [Validators.required, Validators.pattern(REGEX_TELEFONO_DIGITOS)],
         ],
         correoElectronico: [
-          { value: '', disabled: true },
-          this.solicitudState?.correoElectronico,
+          { value: this.solicitudState?.correoElectronico, disabled: true },
           [Validators.required, Validators.email, Validators.maxLength(50)],
         ],
         codigoPostal: [
-          { value: '', disabled: true },
-          this.solicitudState?.codigoPostal,
+          { value: this.solicitudState?.codigoPostal, disabled: true },
           [
             Validators.required,
             Validators.pattern(REGEX_POSTAL),
@@ -340,13 +334,11 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
           ],
         ],
         estado: [
-          { value: '', disabled: true },
-          this.solicitudState?.estado,
+          { value: this.solicitudState?.estado, disabled: true },
           [Validators.required, Validators.maxLength(80)],
         ],
         colonia: [
-          { value: '', disabled: true },
-          this.solicitudState?.colonia,
+          { value: this.solicitudState?.colonia, disabled: true },
           [Validators.required, Validators.maxLength(50)],
         ],
       }),

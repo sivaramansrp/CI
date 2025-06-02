@@ -61,16 +61,18 @@
               [commonTableHeader]="mercanciaHeaderData"
               [commonTableBody]="mercanciaBodyData"
             ></ng-table>
+            <div *ngIf="esFormularioSoloLectura" class="disable-overlay"></div>
           </div>
           <div class="col-md-12 mt-5 d-flex justify-content-end">
-            <button type="button" class="btn btn-default">Modificar</button>
-            <button type="button" class="btn btn-default ms-3">Eliminar</button>
+            <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">Modificar</button>
+            <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura">Eliminar</button>
             <button
               type="button"
               class="btn btn-primary ms-3"
               data-bs-toggle="modal"
               data-bs-target="#modalAgregarMercancias"
               (click)="abrirDialogoMercancias()"
+              [disabled]="esFormularioSoloLectura"
             >
               Agregar
             </button>
