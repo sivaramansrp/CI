@@ -1,7 +1,7 @@
 import { AbstractControl,FormBuilder,FormGroup,ReactiveFormsModule,ValidationErrors,Validators} from '@angular/forms';
 import { Agregar220401Store, solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { REGEX_DESCRIPCION_ESPECIALES,REGEX_LEADING_SPACES} from '@ng-mf/data-access-user';
+import { ConsultaioQuery, REGEX_DESCRIPCION_ESPECIALES,REGEX_LEADING_SPACES} from '@ng-mf/data-access-user';
 import { Subject,map,takeUntil } from 'rxjs';
 import { AgregarQuery } from '../../../../estados/queries/agregar.query';
 import { Catalogo } from '@ng-mf/data-access-user';
@@ -29,7 +29,22 @@ import sexoJson from '@libs/shared/theme/assets/json/220401/sexo.json';
 export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
   /** Configuración del primer select de aduanas */
   frmMercanciaAnimal!: FormGroup;
-   private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * @comdoc
+   * Inicializa el formulario de datos generales de animales.
+   *
+   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), guarda los datos actuales del formulario.
+   * De lo contrario, inicializa el formulario para su edición.
+   *
+   * @comdoc
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+    /**
+     * Inicializa el formulario de datos generales de animales.
+     *
+     * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), guarda los datos actuales del formulario.
+     * De lo contrario, inicializa el formulario para su edición.
+     */
     public solicitudState!: solicitud220401State;
   /** Configuración del primer select de aduanas */
   aduanas: Catalogo[] = aduanasJson;
@@ -42,6 +57,11 @@ export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
   /** Aduana seleccionada en el segundo select */
   selectedAduanaOne: Catalogo = { id: 0, descripcion: '' }; // Provide an initial value
 
+    /**
+     * Indica si el formulario debe mostrarse solo en modo de lectura.
+     * Cuando es verdadero, los campos del formulario no serán editables.
+     */
+    esFormularioSoloLectura: boolean = false; 
   /**
    * Maneja la selección de una aduana en el primer select.
    * @param e - La aduana seleccionada.
@@ -50,7 +70,18 @@ export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder, 
     private agregar220401Store: Agregar220401Store,
     private agregarQuery: AgregarQuery,
-  ) {}
+     private consultaioQuery: ConsultaioQuery,
+  ) {
+        this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        
+      })
+    )
+    .subscribe()
+  }
   /**
    * Validador personalizado para validar una descripción especial.
    * Este validador verifica si el valor ingresado cumple con las reglas de caracteres permitidos y no tiene espacios al principio.
@@ -114,6 +145,22 @@ export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
 
+this.inicializarGeneralesFormulario();
+  }
+
+  /**
+   * @function inicializarFormulario
+   * @description
+   * Inicializa el formulario reactivo para la sección de datos generales de animales.
+   * 
+   * - Suscribe al observable `selectSolicitud$` para obtener el estado actual de la solicitud y actualizar la propiedad `solicitudState`.
+   * - Crea el formulario `frmMercanciaAnimal` con los controles y validadores necesarios para cada campo, incluyendo validadores personalizados y reglas específicas de formato y longitud.
+   * - Los campos incluyen información como fracción arancelaria, tratamiento, presentación, marca de embarque, fecha de caducidad, aduana, CITES, nombre de identificación, número de autorización CITES, raza, edad del animal, sexo y color.
+   * 
+   * @remarks
+   * Este método debe ser llamado durante la inicialización del componente para asegurar que el formulario esté correctamente configurado y validado según los requisitos del dominio.
+   */
+  inicializarFormulario(){
      this.agregarQuery.selectSolicitud$
           .pipe(
             takeUntil(this.destroyNotifier$),
@@ -202,6 +249,40 @@ export class DatosGeneralesAnimalesComponent implements OnInit, OnDestroy {
         ],
       ],
     });
+  }
+    /**
+     * Inicializa el formulario de datos generales de animales.
+     *
+     * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), guarda los datos actuales del formulario.
+     * De lo contrario, inicializa el formulario para su edición.
+     *
+     * @comdoc
+     */
+    inicializarGeneralesFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+   
+  }
+
+    /**
+     * @comdoc
+     * Guarda los datos del formulario de mercancía animal.
+     * 
+     * Inicializa el formulario y ajusta su estado según el modo de solo lectura.
+     * - Si el formulario está en modo solo lectura, lo deshabilita.
+     * - Si no está en modo solo lectura, lo habilita.
+     * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
+     */
+    guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.frmMercanciaAnimal.disable();
+      } else{
+        this.frmMercanciaAnimal.enable();
+      } 
   }
   /**
    * Maneja la selección de una aduana en el segundo select.
