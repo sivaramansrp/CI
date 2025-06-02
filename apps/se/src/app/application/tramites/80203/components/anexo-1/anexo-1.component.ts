@@ -126,10 +126,10 @@ export class Anexo1Component implements OnInit, OnDestroy,AfterViewInit {
   immexRegistro!: string;
 
   /**
-   * @property {Subject<void>} unsubscribe$
+   * @property {Subject<void>} destroyNotifier$
    * @description Subject para manejar la desuscripción de observables.
    */
-  private unsubscribe$ = new Subject<void>();
+  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * @property {any[]} permisoImmexDatos - Array de datos permiso immex.
@@ -165,7 +165,7 @@ export class Anexo1Component implements OnInit, OnDestroy,AfterViewInit {
   showCommodityImport: boolean = false;
 
   private seccion!: SeccionLibState;
-  private destroyNotifier$: Subject<void> = new Subject();
+
 
   /**
    * Indica si el formulario debe mostrarse solo en modo de lectura.
@@ -322,8 +322,6 @@ creatFormSolicitud():void{
    * @description Maneja la limpieza de recursos antes de destruir el componente.
    */
   ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
@@ -334,7 +332,7 @@ creatFormSolicitud():void{
    */
   fetchData(): void {
     this.permisoImmexDatosService.getDatos()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response: any) => {
           if (response && Array.isArray(response.permisoImmexDatos) &&
@@ -390,7 +388,7 @@ creatFormSolicitud():void{
         }
       });
       this.permisoImmexDatosService.getDatos()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.immexRegistroform.patchValue(data);
       });
