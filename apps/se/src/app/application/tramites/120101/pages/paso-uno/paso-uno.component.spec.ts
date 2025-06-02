@@ -6,6 +6,7 @@ import { ConsultarCupoComponent } from '../../components/consultar-cupo/consulta
 import { DescripcionDelCupoComponent } from '../../components/descripcion-del-cupo/descripcion-del-cupo.component';
 import { RepresentacionFederalComponent } from '../../components/representacion-federal/representacion-federal.component';
 import { BienFinalComponent } from '../../components/bien-final/bien-final.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -21,6 +22,7 @@ describe('PasoUnoComponent', () => {
         DescripcionDelCupoComponent,
         RepresentacionFederalComponent,
         BienFinalComponent,
+        HttpClientTestingModule
       ],
     }).compileComponents();
 
