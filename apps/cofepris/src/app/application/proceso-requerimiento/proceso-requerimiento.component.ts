@@ -72,9 +72,9 @@ import { Type } from '@angular/core';
   styleUrl: './proceso-requerimiento.component.scss',
 })
 export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
-   /**
-   * Lista de pasos del wizard de requerimientos.
-   */
+  /**
+  * Lista de pasos del wizard de requerimientos.
+  */
   pasos: ListaPasosWizard[] = PASOS_REQUERIMIENTOS;
 
   /**
@@ -207,15 +207,15 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
      * Extrae y asigna la fecha y justificación del requerimiento.
      */
     this.requerimientoService.informacionRequisitos()
-    .pipe(
-      takeUntil(this.destroyNotifier$)
-    ).subscribe({
-      next: (resp): void => {
-        const DATOS = resp.data;
-        this.fechaRequerimiento = DATOS.fechaRequerimiento;
-        this.justificacionRequerimiento = DATOS.justificacionRequerimiento;
-      },
-    });
+      .pipe(
+        takeUntil(this.destroyNotifier$)
+      ).subscribe({
+        next: (resp): void => {
+          const DATOS = resp.data;
+          this.fechaRequerimiento = DATOS.fechaRequerimiento;
+          this.justificacionRequerimiento = DATOS.justificacionRequerimiento;
+        },
+      });
 
     /**
      * Asigna valores a propiedades locales a partir de `guardarDatos`.
@@ -253,14 +253,14 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
      */
     const URL_ACTUAL = this.router.url;
     this.url = URL_ACTUAL.split('/')[1];
-    
+
     /**
      * Obtiene el folio del trámite actual desde el servicio `tramiteQueries`.
      */
     this.folio = this.tramiteQueries.getTramite();
-      /**
-   * Genera el texto de alerta de acuse con el folio del trámite.
-   */
+    /**
+ * Genera el texto de alerta de acuse con el folio del trámite.
+ */
     this.txtAlerta = TXT_ALERTA_ACUSE(this.folio);
   }
 
@@ -309,7 +309,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (this.indice === 1) {
-          this.consultaioStore.establecerConsultaio(
+        this.consultaioStore.establecerConsultaio(
           this.guardarDatos?.procedureId,
           this.guardarDatos?.parameter,
           this.guardarDatos?.department,

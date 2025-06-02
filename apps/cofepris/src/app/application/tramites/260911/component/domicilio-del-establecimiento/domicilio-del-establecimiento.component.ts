@@ -1,13 +1,14 @@
 import { AlertComponent, InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite260911State, Tramite260911Store } from '../../estados/tramite260911.store';
 import { ALERT } from '../../enums/domicilio-del-establecimiento.enum';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import {DomicilioDelEstablecimientoService} from '../../services/domicilio-del-establecimiento/domicilio-del-establecimiento.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DomicilioDelEstablecimientoService } from '../../services/domicilio-del-establecimiento/domicilio-del-establecimiento.service';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -61,7 +62,14 @@ import { Validators } from '@angular/forms';
   templateUrl: './domicilio-del-establecimiento.component.html',
   styleUrl: './domicilio-del-establecimiento.component.scss',
 })
-export class DomicilioDelEstablecimientoComponent implements OnInit , OnDestroy {
+export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
+
+  /** Estado actual de la solicitud proveniente del store */
+  public solicitudState!: Tramite260911State;
+
+  /** Indica si el formulario está en modo solo lectura */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Formulario principal.
    */
@@ -129,11 +137,11 @@ export class DomicilioDelEstablecimientoComponent implements OnInit , OnDestroy 
 
   private destroy$ = new Subject<void>();
 
-  
-    /**
-     * Estado seleccionado del trámite 260911.
-     */
-    estadoSeleccionado!: Tramite260911State;
+
+  /**
+   * Estado seleccionado del trámite 260911.
+   */
+  estadoSeleccionado!: Tramite260911State;
 
 
   /**
@@ -149,22 +157,61 @@ export class DomicilioDelEstablecimientoComponent implements OnInit , OnDestroy 
     private httpServicios: HttpClient,
     private tramite260911Query: Tramite260911Query,
     private tramite260911Store: Tramite260911Store,
-    private domicilioDelEstablecimientoService:DomicilioDelEstablecimientoService
+    private domicilioDelEstablecimientoService: DomicilioDelEstablecimientoService,
+    public consultaioQuery: ConsultaioQuery,
   ) {
-    // Constructor
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
+
+  /**
+  * Inicializa el formulario dependiendo del modo (solo lectura o editable).
+  * Si está en solo lectura, carga y bloquea el formulario.
+  * Si no, crea un formulario editable.
+  */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearFormulario();
+    }
+  }
+
+  /**
+  * Crea el formulario y, si está en modo solo lectura, lo deshabilita.
+  * De lo contrario, lo habilita para edición.
+  */
+  guardarDatosFormulario(): void {
+    this.crearFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.form.disable();
+      this.domicilio.disable();
+      this.representanteLegal.disable();
+    } else {
+      this.form.enable();
+      this.domicilio.enable();
+      this.representanteLegal.enable();
+    }
+  }
+
 
   /**
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.getValorStore();
-    this.crearFormulario();
+    this.inicializarEstadoFormulario();
     this.obtenerTablaDatos();
     this.obtenerEstadoList();
     this.obtenerMercanciasDatos();
- 
-}
+
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -175,32 +222,40 @@ export class DomicilioDelEstablecimientoComponent implements OnInit , OnDestroy 
    * Método para crear el formulario.
    */
   crearFormulario(): void {
+    this.tramite260911Query.selectTramite260911$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.form = this.fb.group({
-      codigoPostal: ['', [Validators.required]],
-      estado: [],
-      municipioOAlcaldia: ['', [Validators.required]],
-      localidad: [''],
-      colonias: [''],
-      calle: ['', [Validators.required]],
-      lada: [''],
-      telefono: ['', [Validators.required]],
+      codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required]],
+      estado: [this.solicitudState?.estado],
+      municipioOAlcaldia: [this.solicitudState?.municipioOAlcaldia, [Validators.required]],
+      localidad: [this.solicitudState?.localidad],
+      colonias: [this.solicitudState?.colonias],
+      calle: [this.solicitudState?.calle, [Validators.required]],
+      lada: [this.solicitudState?.lada],
+      telefono: [this.solicitudState.telefono, [Validators.required]],
     });
 
     this.domicilio = this.fb.group({
       avisoCheckbox: [true],
-      licenciaSanitaria: [{ value: '', disabled: true }],
-      regimen: [],
-      aduanasEntradas: [],
+      licenciaSanitaria: [{ value: this.solicitudState?.licenciaSanitaria, disabled: true }],
+      regimen: [this.solicitudState?.regimen],
+      aduanasEntradas: [this.solicitudState?.aduanasEntradas],
       aifaCheckbox: [true],
       manifests: [true],
     });
 
     this.representanteLegal = this.fb.group({
-      acuerdoPublico: [],
-      rfc: ['', [Validators.required]],
-      nombre: [{ value: 'LUIS AMBROSIO', disabled: true }, [Validators.required]],
-      apellidoPaterno: [{ value: 'MARTINEZ', disabled: true }, [Validators.required]],
-      apellidoMaterno: [{ value: 'VALENZUELA', disabled: true }, [Validators.required]],
+      acuerdoPublico: [this.solicitudState?.acuerdoPublico],
+      rfc: [this.solicitudState?.rfc, [Validators.required]],
+      nombre: [{ value: this.solicitudState?.nombre, disabled: true }, [Validators.required]],
+      apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno, disabled: true }, [Validators.required]],
+      apellidoMaterno: [{ value: this.solicitudState?.apellidoMaterno, disabled: true }, [Validators.required]],
     });
   }
 
@@ -216,10 +271,10 @@ export class DomicilioDelEstablecimientoComponent implements OnInit , OnDestroy 
       });
   }
 
-   /**
-   * Método para obtener la lista de estados.
-   */
-   obtenerEstadoList(): void {
+  /**
+  * Método para obtener la lista de estados.
+  */
+  obtenerEstadoList(): void {
     this.domicilioDelEstablecimientoService
       .obtenerEstadoList()
       .pipe(takeUntil(this.destroy$))
@@ -227,7 +282,7 @@ export class DomicilioDelEstablecimientoComponent implements OnInit , OnDestroy 
         this.estado = data?.data || [];
       });
   }
- 
+
 
   /**
    * Método para obtener los datos de mercancías.
@@ -253,17 +308,4 @@ export class DomicilioDelEstablecimientoComponent implements OnInit , OnDestroy 
       [control]: VALOR
     });
   }
-
-  /**
-   * Obtiene el estado actual del trámite desde el store.
-   */
-  getValorStore(): void {
-    this.tramite260911Query.selectTramite260911$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(
-      (data) => {
-        this.estadoSeleccionado = data;
-      }
-    );
-  }
-  }
+}

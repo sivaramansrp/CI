@@ -12,10 +12,11 @@ import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, Validator
 import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite260911State, Tramite260911Store } from '../../estados/tramite260911.store';
 
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { PagoDeDerechosService } from '../../services/datos-de-la-solicitud/pago-de-derechos.service';
 
 import { Tramite260911Query } from '../../estados/tramite260911.query';
@@ -38,6 +39,11 @@ import { Tramite260911Query } from '../../estados/tramite260911.query';
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
+   /** Estado actual de la solicitud proveniente del store */
+  public solicitudState!: Tramite260911State;
+
+    /** Indica si el formulario está en modo solo lectura */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Formulario reactivo para manejar los campos de entrada del usuario.
    */
@@ -69,15 +75,52 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     private tramite260911Store: Tramite260911Store,
     private tramite260911Query: Tramite260911Query,
-    private Servicio: PagoDeDerechosService
-  ) {}
+    private Servicio: PagoDeDerechosService,
+     public consultaioQuery: ConsultaioQuery,
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
+
+  
+  /**
+   * Inicializa el formulario dependiendo del modo (solo lectura o editable).
+   * Si está en solo lectura, carga y bloquea el formulario.
+   * Si no, crea un formulario editable.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearForm();
+    }
+  }
+
+   /**
+   * Crea el formulario y, si está en modo solo lectura, lo deshabilita.
+   * De lo contrario, lo habilita para edición.
+   */
+  guardarDatosFormulario(): void {
+    this.crearForm();
+    if (this.esFormularioSoloLectura) {
+      this.pagoDeDerechosForm.disable();
+    } else {
+      this.pagoDeDerechosForm.enable();
+    }
+  }
 
   /**
    * Hook de ciclo de vida para inicializar la lógica del componente y cargar datos.
    */
   ngOnInit(): void {
-    this.crearForm();
-    this.getValorStore();
+ this.inicializarEstadoFormulario();
     this.obtenerBancoList();
   }
 
@@ -85,13 +128,21 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Crea el formulario reactivo con las reglas de validación para cada control.
    */
   crearForm(): void {
+    this.tramite260911Query.selectTramite260911$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+            this.solicitudState = seccionState;
+          })
+        )
+        .subscribe();
     this.pagoDeDerechosForm = this.fb.group({
-      claveDeReferencia: ['', [Validators.maxLength(50)]],
-      cadenaPagoDependencia: ['', [Validators.maxLength(50)]],
-      clave: ['', Validators.required],
-      llaveDePago: ['', [Validators.required, Validators.pattern('^[A-Z0-9]{10}$')]],
-      fecPago: ['', [Validators.required, PagoDeDerechosComponent.fechaLimValidator()]],
-      impPago: ['', [Validators.maxLength(16), PagoDeDerechosComponent.noComaValidator()]],
+      claveDeReferencia: [this.solicitudState?.claveDeReferencia, [Validators.maxLength(50)]],
+      cadenaPagoDependencia: [this.solicitudState?.cadenaPagoDependencia, [Validators.maxLength(50)]],
+      clave: [this.solicitudState?.clave, Validators.required],
+      llaveDePago: [this.solicitudState?.llaveDePago, [Validators.required, Validators.pattern('^[A-Z0-9]{10}$')]],
+      fecPago: [this.solicitudState?.fecPago, [Validators.required, PagoDeDerechosComponent.fechaLimValidator()]],
+      impPago: [this.solicitudState?.impPago, [Validators.maxLength(16), PagoDeDerechosComponent.noComaValidator()]],
     });
   }
 

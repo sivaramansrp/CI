@@ -1,9 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite260911State, Tramite260911Store } from '../../estados/tramite260911.store';
 import { ALERT } from '../../enums/datos-de-la-solicitud.enum';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
@@ -44,6 +45,12 @@ import { Validators } from '@angular/forms';
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+
+   /** Estado actual de la solicitud proveniente del store */
+  public solicitudState!: Tramite260911State;
+
+    /** Indica si el formulario está en modo solo lectura */
+  esFormularioSoloLectura: boolean = false;
   /**
     * Indica si el formulario es colapsable.
     */
@@ -92,19 +99,55 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite260911Query: Tramite260911Query,
-    private tramite260911Store: Tramite260911Store
+    private tramite260911Store: Tramite260911Store,
+      public consultaioQuery: ConsultaioQuery,
   ) {
-    // Constructor
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
+
+  /**
+   * Inicializa el formulario dependiendo del modo (solo lectura o editable).
+   * Si está en solo lectura, carga y bloquea el formulario.
+   * Si no, crea un formulario editable.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearFormulario();
+    }
+  }
+
+   /**
+   * Crea el formulario y, si está en modo solo lectura, lo deshabilita.
+   * De lo contrario, lo habilita para edición.
+   */
+  guardarDatosFormulario(): void {
+    this.crearFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.form.disable();
+      this.datosDelEstablecimiento.disable();
+    } else {
+      this.form.enable();
+      this.datosDelEstablecimiento.enable();
+    }
+  }
+
 
   /**
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.crearFormulario();
-   this.getValorStore();
-    
-      }
+    this.inicializarEstadoFormulario();
+  }
 
   ngOnDestroy(): void {
     this.destroy$.next();
@@ -122,15 +165,23 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Método para crear el formulario.
    */
   crearFormulario(): void {
+      this.tramite260911Query.selectTramite260911$
+        .pipe(
+          takeUntil(this.destroy$),
+          map((seccionState) => {
+            this.solicitudState = seccionState;
+          })
+        )
+        .subscribe();
     this.form = this.fb.group({
-      btonDeRadio: ['', [Validators.required]],
-      justificacion: ['', [Validators.required]],
+      btonDeRadio: [this.solicitudState.btonDeRadio, [Validators.required]],
+      justificacion: [this.solicitudState.justificacion, [Validators.required]],
     });
 
     this.datosDelEstablecimiento = this.fb.group({
-      rfcDel: ['', Validators.required],
-      denominacion: ['', Validators.required],
-      correo: ['', Validators.required],
+      rfcDel: [this.solicitudState?.rfcDel, Validators.required],
+      denominacion: [this.solicitudState?.denominacion, Validators.required],
+      correo: [this.solicitudState?.correo, Validators.required],
     });
   } 
 
@@ -159,18 +210,5 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.tramite260911Store.setTramite260911State({
       [control]: VALOR
     });
-  }
-
-  /**
-   * Obtiene el estado actual del trámite desde el store.
-   */
-  getValorStore(): void {
-    this.tramite260911Query.selectTramite260911$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(
-      (data) => {
-        this.estadoSeleccionado = data;
-      }
-    );
   }
 }

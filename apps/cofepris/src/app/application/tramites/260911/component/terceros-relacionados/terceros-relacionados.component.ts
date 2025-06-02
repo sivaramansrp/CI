@@ -15,9 +15,14 @@ import { AlertComponent, ConfiguracionColumna, TablaSeleccion } from '@ng-mf/dat
 import { CapturarColumns, FABRICANTE_TABLE_COLUMNS } from '../../models/fabricante-datos.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DESTINATARIO_TABLE_COLUMNS, DestinatarioCapturarColumns } from '../../models/destinatario-datos.model';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import {Subject, map, takeUntil } from 'rxjs';
+
 import { TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+
+import { Tramite260911State } from '../../estados/tramite260911.store';
+
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { CommonModule } from '@angular/common';
 
@@ -63,13 +68,14 @@ import { TercerosRelacionadosService } from '../../services/terceros-relacionado
   styleUrl: './terceros-relacionados.component.scss',
 })
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
-  /**
-   * @property {FormGroup} tercerosRelacionadosForm
-   * @description Grupo de formulario reactivo para gestionar los controles del formulario
-   * relacionados con terceros. Permite capturar y validar la información ingresada.
-   * @public
-   */
-  tercerosRelacionadosForm!: FormGroup;
+
+  /** Estado actual de la solicitud proveniente del store */
+  public solicitudState!: Tramite260911State;
+
+    /** Indica si el formulario está en modo solo lectura */
+  esFormularioSoloLectura: boolean = false;
+
+
 
   /**
    * @property {typeof TEXTOS} TEXTOS
@@ -139,9 +145,19 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * relacionados con terceros relacionados. Proporciona métodos para comunicarse con el
    * backend y obtener información de fabricantes y destinatarios.
    */
-  constructor(private fb: FormBuilder, private fabricanteService: TercerosRelacionadosService) {
-    //
+  constructor(private fb: FormBuilder, private fabricanteService: TercerosRelacionadosService, public consultaioQuery: ConsultaioQuery,) {
+     this.consultaioQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroyed$),
+            map((seccionState) => {
+              this.esFormularioSoloLectura = seccionState.readonly;
+         
+            }) )
+          .subscribe();
   }
+
+
+
 
   /**
    * @method ngOnInit
