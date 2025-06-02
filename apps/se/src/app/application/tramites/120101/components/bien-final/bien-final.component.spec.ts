@@ -13,6 +13,11 @@ describe('BienFinalComponent', () => {
 
     fixture = TestBed.createComponent(BienFinalComponent);
     component = fixture.componentInstance;
+
+    component.consultaState = {
+      readonly: false,
+    } as any;
+
     fixture.detectChanges();
   });
 
