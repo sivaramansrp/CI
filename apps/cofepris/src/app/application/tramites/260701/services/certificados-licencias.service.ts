@@ -1,10 +1,9 @@
 import { Observable,catchError, throwError } from 'rxjs';
+import { Solicitud260701State, Tramite260701Store } from '../estados/tramites/tramite260701.store';
+import { ENVIRONMENT } from '@libs/shared/data-access-user/src/enviroments/enviroment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JSONResponse } from '@libs/shared/data-access-user/src';
-
-import { ENVIRONMENT } from '@libs/shared/data-access-user/src/enviroments/enviroment';
-import { Solicitud260701State, Tramite260701Store } from '../estados/tramites/tramite260701.store';
 
 /**
  * Servicio para gestionar operaciones relacionadas con certificados y licencias.
@@ -119,10 +118,17 @@ export class CertificadosLicenciasService {
     return this.http.get<JSONResponse>('./assets/json/260701/lista-claves.json');
   }
 
+  /**
+   * Recupera los datos de consulta para el estado Solicitud260701State.
+   * @returns Un Observable que emite el objeto `Solicitud260701State` obtenido.
+   */
   getConsultaDatos(): Observable<Solicitud260701State> {
     return this.http.get<Solicitud260701State>('./assets/json/260701/consulta-datos.json');
   }
 
+  /**
+   * Actualiza el estado del formulario en el store `tramite260701Store` utilizando los datos proporcionados.
+   */
   actualizarEstadoFormulario(DATOS: Solicitud260701State): void {
     this.tramite260701Store.setDenominacionORazonSocial(DATOS.denominacionORazonSocial);
     this.tramite260701Store.setCorreoElectronico(DATOS.correoElectronico);

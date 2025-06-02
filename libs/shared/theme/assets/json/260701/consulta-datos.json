@@ -34,7 +34,7 @@
     "numeroRegistro": "REG-2024-001",
     "fechaCaducidad": "2025-12-31",
     "claveDeLosLotes": "LOTE-001",
-    "cumplimiento": true,
+    "cumplimiento": "no",
     "claveDeReferencia": "REF-123",
     "cadenaDependencia": "Dependencia X",
     "banco": "1",
@@ -67,6 +67,6 @@
     "tercerosRelacionadosTelefono": "87654321",
     "tercerosRelacionadosCorreoElectronico": "proveedor@ejemplo.com",
     "muncipio": "Benito Juárez",
-    "tipoOperacion": "Importación",
+    "tipoOperacion": "Modificación",
     "justificacion": "Cumplimiento de requisitos legales"
 }

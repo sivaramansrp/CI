@@ -1,14 +1,14 @@
-import { AL_DAR, AlertComponent, ConsultaioQuery, InputCheckComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AL_DAR, AlertComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud260701State, Tramite260701Store } from '../../estados/tramites/tramite260701.store';
 import { Subject,map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DomicilloDelComponent } from '../domicillo-del/domicillo-del.component';
 import { ManifiestosComponent } from '../manifiestos/manifiestos.component';
 import { RepresentanteLegalComponent } from '../representante-legal/representante-legal.component';
 import { Tramite260701Query } from '../../estados/queries/tramite260701.query';
-
 /**
  * Componente que representa la sección de datos de la solicitud en el formulario.
  * 
@@ -143,10 +143,10 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
      */
     public inicializarFormulario(): void {
        this.forma = this.fb.group({
-      tipoOperacion: [this.solicitudState.tipoOperacion],
-      justificacion: [this.solicitudState.justificacion],
-      denominacionORazonSocial: [{ value: this.solicitudState.denominacionORazonSocial, disabled: true }],
-      correoElectronico: [{ value: this.solicitudState.correoElectronico, disabled: true }]
+      tipoOperacion: [this.solicitudState?.tipoOperacion],
+      justificacion: [this.solicitudState?.justificacion],
+      denominacionORazonSocial: [{ value: this.solicitudState?.denominacionORazonSocial, disabled: true }],
+      correoElectronico: [{ value: this.solicitudState?.correoElectronico, disabled: true }]
       });
     }
    
@@ -203,7 +203,8 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
       this.forma.get('tipoOperacion')?.disable();
-      this.forma.get('justificacion')?.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.forma.get('tipoOperacion')?.enable();
     }
   }
   

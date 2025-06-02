@@ -1,9 +1,10 @@
 import { AlertComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud260701State, Tramite260701Store } from '../../estados/tramites/tramite260701.store';
 import { Subject,map , takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { MENSAJE_DE_ALERTA } from '../../services/certificados-licencias.enum';
 import { Tramite260701Query } from '../../estados/queries/tramite260701.query';
 
@@ -32,7 +33,6 @@ export class ManifiestosComponent implements OnInit,OnDestroy {
      * Mensaje de alerta para el usuario.
      */
     public mensaje: string = MENSAJE_DE_ALERTA;
-    @Input() public formularioSolo: boolean = false;
    
     /**
      * Grupo de formularios principal para gestionar los manifiestos.
@@ -61,6 +61,11 @@ export class ManifiestosComponent implements OnInit,OnDestroy {
      * Se espera que se inicialice con una instancia de `Solicitud260701State`.
      */
     public solicitudState!: Solicitud260701State;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+    public esFormularioSoloLectura: boolean = false;
    
     /**
      * Constructor del componente.
@@ -69,9 +74,15 @@ export class ManifiestosComponent implements OnInit,OnDestroy {
     constructor(
       private fb: FormBuilder,
       private tramite260701Store: Tramite260701Store,
-      private tramite260701Query: Tramite260701Query
+      private tramite260701Query: Tramite260701Query,
+      private consultaioQuery: ConsultaioQuery
     ) {
-      // Dependencia inyectada para uso posterior
+      this.consultaioQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     }
    
     /**
@@ -79,6 +90,19 @@ export class ManifiestosComponent implements OnInit,OnDestroy {
      * Obtiene el estado de la solicitud y crea el formulario de manifiestos.
      */
     ngOnInit(): void {
+      this.inicializarFormulario();
+    }
+
+    /**
+     * Inicializa el formulario de manifiestos y se suscribe al estado de la solicitud.
+     *
+     * Este método configura una suscripción al observable `selectSolicitud$` de `tramite260701Query`
+     * para mantener actualizado el `solicitudState` local. También inicializa el grupo de formularios
+     * `manifiestos` con el valor actual de `cumplimiento` del `solicitudState`.
+     *
+     * La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor.
+     */
+    public inicializarFormulario(): void {
       this.tramite260701Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
           this.solicitudState = seccionState;
       })).subscribe();
@@ -87,9 +111,10 @@ export class ManifiestosComponent implements OnInit,OnDestroy {
        * Inicialización del formulario de manifiestos.
        */
       this.manifiestos = this.fb.group({
-        cumplimiento: [this.solicitudState.cumplimiento],
+        cumplimiento: [this.solicitudState?.cumplimiento],
       });
-    }
+
+  }
 
   /**
    * Cambia el valor seleccionado del radio.
@@ -109,6 +134,35 @@ export class ManifiestosComponent implements OnInit,OnDestroy {
         const VALOR = form.get(campo)?.value;
         (this.tramite260701Store[metodoNombre] as (value: unknown) => void)(VALOR);
       }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  public inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); 
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Inicializa el formulario y alterna su estado habilitado/deshabilitado según la bandera de solo lectura.
+   *
+   * - Llama a `inicializarFormulario()` para reiniciar o configurar el formulario.
+   * - Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es true), deshabilita el grupo de formularios `manifiestos` después de un breve retraso.
+   * - Si no está en modo solo lectura, habilita el grupo de formularios `manifiestos`.
+   */
+  public guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+       setTimeout(() => {
+        this.manifiestos.disable();
+       }, 1);
+      } else if (!this.esFormularioSoloLectura) {
+        this.manifiestos.enable();
+      }
+    }
     
     /**
      * Método para actualizar el banco seleccionado.

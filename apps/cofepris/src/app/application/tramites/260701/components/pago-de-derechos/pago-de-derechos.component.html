@@ -49,6 +49,7 @@
                     [catalogo]="bancoCatalogo"
                     formControlName="banco"
                     [label]="'Banco'"
+                    [isDisabled]="esFormularioSoloLectura"
                     [required]="true"
                     (change)="setValoresStore(formSolicitud,'banco', 'setBanco')">
                   </app-catalogo-select>

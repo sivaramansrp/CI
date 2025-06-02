@@ -16,6 +16,7 @@
                     [catalogo]="estado" 
                     formControlName="estado" 
                     [label]="'Estado'" 
+                    [isDisabled]="esFormularioSoloLectura"
                     [required]="true"
                     (change)="setValoresStore(domicilio,'estado', 'setEstado')"
                     name="estado">
@@ -106,9 +107,9 @@
                 [datos]="nicoTablaDatos">
             </app-tabla-dinamica>
             <div class="container text-end mt-5">
-                <button class="btn btn-default me-2" [disabled]="formularioSolo">Eliminar</button>
-                <button class="btn btn-primary me-2" [disabled]="formularioSolo" data-bs-toggle="modal"
-                    data-bs-target="#modalAddAgent">Agregar</button>
+                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+                <button class="btn btn-primary me-2" data-bs-toggle="modal"
+                    data-bs-target="#modalAddAgent" [disabled]="esFormularioSoloLectura">Agregar</button>
             </div>
         </div>
         <div class="row align-item-center">
@@ -157,6 +158,7 @@
                     formControlName="regimen" 
                     [label]="'Régimen al que se destinará la mercancía'" 
                     [required]="true"
+                    [isDisabled]="esFormularioSoloLectura"
                     (change)="setValoresStore(domicilio,'regimen', 'setRegimen')"
                     name="regimen">
                 </app-catalogo-select>
@@ -166,6 +168,7 @@
                     [catalogo]="estado" 
                     formControlName="aduanasEntradas"
                     [label]="'Aduanas'" 
+                    [isDisabled]="esFormularioSoloLectura"
                     [required]="true" 
                     (change)="setValoresStore(domicilio,'aduanasEntradas', 'setAduanasEntradas')"
                     name="aduanasEntradas">
@@ -185,9 +188,9 @@
                 [datos]="mercanciasTablaDatos">
             </app-tabla-dinamica>
             <div class="container text-end mt-5">
-                <button class="btn btn-default me-2">Modificar</button>
-                <button class="btn btn-default me-2">Eliminar</button>
-                <button class="btn btn-primary me-2" data-bs-toggle="modal"
+                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+                <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+                <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" data-bs-toggle="modal"
                     data-bs-target="#modalAddAgentMercancias">Agregar</button>
             </div>
         </div>
@@ -224,10 +227,11 @@
                         </div>
                     </form>
                 </div>
+                <h1>{{esFormularioSoloLectura}}</h1>
                 <div class="modal-footer custom-footer">
-                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Limpiar</button>
-                    <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Agregar</button>
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">Limpiar</button>
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">Cancelar</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">Agregar</button>
                 </div>
             </div>
         </div>
