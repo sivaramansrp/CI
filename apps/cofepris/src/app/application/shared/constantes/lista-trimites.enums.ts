@@ -18,7 +18,7 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
             componentName: 'Datos260212Component',
 
         }]
-    }
+    },
      {
         tramite: 260215,
         listaComponentes: [{
