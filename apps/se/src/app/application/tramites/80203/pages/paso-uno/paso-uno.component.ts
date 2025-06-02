@@ -1,7 +1,9 @@
 /* eslint-disable no-empty-function */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { SeccionLibStore, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { Anexo1Component } from '../../components/anexo-1/anexo-1.component';
+import { CommonModule } from '@angular/common';
 import { SECCIONES_TRAMITE_80203 } from '../../constantes/immex-registro-de-solicitud-modality.enums';
-import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 /**
  * Componente para mostrar el subtítulo del asistente.
  * @component PasoUnoComponent
@@ -12,7 +14,13 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
-  styleUrl: './paso-uno.component.scss'
+  styleUrl: './paso-uno.component.scss',
+  standalone:true,
+  imports: [
+        CommonModule,
+        SolicitanteComponent,
+        Anexo1Component
+  ]
 })
 
 /**
