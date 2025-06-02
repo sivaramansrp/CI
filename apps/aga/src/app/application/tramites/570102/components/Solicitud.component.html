@@ -7,17 +7,17 @@
     <input type="text" class="form-control gris-color" size="26" maxlength="25" readonly />
   </div>
   <div class="row mt-5">
-    <div class="col-md-4">
+    <div class="col-md-4" style="margin-left: -12px;">
       <label>*Motivo del Desistimiento</label>
       <div *ngIf="solicitudForm.get('motivoDelDes')?.invalid && solicitudForm.get('motivoDelDes')?.touched"
         class="text-danger">
         Este campo es obligatorio
       </div>
-      <input type="text" formControlName="motivoDelDes" class="large-input form-control" maxlength="450"
-        (change)=" setValoresStore( solicitudForm, 'motivoDelDes', 'setMotivoDelDes' ) " />
+      <textarea formControlName="motivoDelDes" class="large-input form-control no-resize" maxlength="450"
+        (change)=" setValoresStore( solicitudForm, 'motivoDelDes', 'setMotivoDelDes' ) "></textarea>
     </div>
   </div>
 </form>
-<ng-container *ngIf="number === 2">
+<ng-container *ngIf="nombree !== 1">
   <btn-continuar [datos]="datosPasos" (click)="emitirEventoClick()"></btn-continuar>
 </ng-container>

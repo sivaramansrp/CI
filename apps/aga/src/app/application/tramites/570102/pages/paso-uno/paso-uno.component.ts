@@ -1,11 +1,10 @@
 import { AfterViewInit, Component, EventEmitter, OnDestroy, Output, ViewChild } from '@angular/core';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL, } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DatosPasos, FormularioDinamico, ListaPasosWizard, PASOS, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { ReplaySubject } from 'rxjs';
-import { SolicitanteComponent, } from '@libs/shared/data-access-user/src';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { Solicitud570102State } from '../../state/Tramite570102.store';
-
 
 interface AccionBoton {
   /**
@@ -18,6 +17,7 @@ interface AccionBoton {
    */
   valor: number;
 }
+
 /**
  * Componente que representa el primer paso del trámite.
  * Este componente gestiona la lógica y la interfaz de usuario para capturar los datos iniciales del trámite.
@@ -29,7 +29,7 @@ interface AccionBoton {
 })
 export class PasoUnoComponent implements AfterViewInit, OnDestroy {
   /**
-   * Evento que emite el índice del paso actual.
+   * Evento que emite el índice del paso actual al componente padre.
    */
   @Output() indiceNombre: EventEmitter<number> = new EventEmitter<number>();
 
@@ -40,11 +40,13 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy {
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
   /**
-   * Tipo de persona seleccionada.
-   * Representa el tipo de persona (moral o física) que realiza el trámite.
+   * Tipo de persona seleccionada (física o moral) que realiza el trámite.
    */
   tipoPersona!: number;
 
+  /**
+   * Lista de pasos del asistente.
+   */
   pasos: ListaPasosWizard[] = PASOS;
 
   /**
@@ -53,11 +55,24 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy {
    */
   public destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
+  /**
+   * Evento que emite datos al componente padre.
+   */
   @Output() eventoDatosHijo: EventEmitter<number> = new EventEmitter<number>();
 
+  /**
+   * Evento que emite si existen datos disponibles al componente padre.
+   */
+  @Output() isdataEvent = new EventEmitter<boolean>();
+
+  /**
+   * Índice del paso actual en el asistente.
+   */
   indice: number = 1;
 
-
+  /**
+   * Datos de los pasos del asistente, incluyendo textos de botones y el índice actual.
+   */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
@@ -78,17 +93,20 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy {
   domicilioFiscal: FormularioDinamico[] = [];
 
   /**
-   * Índice del paso actual.
-   * Representa el número del paso en el asistente de pasos.
-   */
-
-  /**
    * Formulario reactivo que contiene los campos del paso uno del trámite.
    * Este formulario se utiliza para capturar y validar los datos ingresados por el usuario.
    */
   registroForm!: FormGroup;
 
-  nombree!: number;
+  /**
+   * Variable auxiliar para almacenar el número de paso o datos emitidos.
+   */
+  nombree: number = 2;
+
+  /**
+   * Indica si existen datos disponibles.
+   */
+  isDataevent!: boolean;
 
   /**
    * Estado global de la solicitud 570102.
@@ -98,8 +116,7 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy {
 
   /**
    * Constructor del componente PasoUnoComponent.
-   * 
-   * @param fb - Servicio FormBuilder utilizado para construir formularios reactivos.
+   * @param fb Servicio FormBuilder utilizado para construir formularios reactivos.
    */
   constructor(public fb: FormBuilder) {
     // El constructor se utiliza para la inyección de dependencias.
@@ -116,6 +133,15 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy {
   }
 
   /**
+   * Método que recibe un evento booleano y lo emite al componente padre.
+   * @param event Valor booleano que indica si existen datos.
+   */
+  isDataEvent(event: boolean) {
+    this.isDataevent = event;
+    this.isdataEvent.emit(this.isDataevent);
+  }
+
+  /**
    * Selecciona una pestaña del asistente.
    * @param i Índice de la pestaña a seleccionar.
    */
@@ -124,20 +150,29 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy {
     this.indiceNombre.emit(this.indice);
   }
 
+  /**
+   * Emite un evento de cancelación o cambio de datos al componente padre.
+   * @param data Número o dato a emitir.
+   */
   emitirCancelacion(data: number): void {
     this.nombree = data;
     this.eventoDatosHijo.emit(data);
-
   }
-  getValorIndice(e: AccionBoton): void {
 
+  /**
+   * Controla la navegación entre los pasos del asistente según la acción recibida.
+   * @param e Objeto con la acción y el valor del paso.
+   */
+  getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont' && this.indice === 1) {
+        // Lógica adicional si es necesario
       }
     }
     this.nombree = 1;
   }
+
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Cancela todas las suscripciones activas.

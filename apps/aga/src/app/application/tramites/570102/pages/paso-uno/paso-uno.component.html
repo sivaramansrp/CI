@@ -15,11 +15,11 @@
 
       </solicitante>
       }
-      @case (2) { <app-solicitud [number]="2" (dataEvent)="emitirCancelacion($event)" [tabindex]="2"></app-solicitud> }
+      @case (2) { <app-solicitud [nombree]="1" (isdataEvent)="isDataEvent($event)" (dataEvent)="emitirCancelacion($event)" [tabindex]="2"></app-solicitud> }
       }
     </ng-container>
   </div>
 </div>
-<ng-container>
-  <btn-continuar *ngIf="nombree !== 1 " [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+<ng-container *ngIf="nombree === 2 ">
+  <btn-continuar *ngIf="nombree === 2 " [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
 </ng-container>
