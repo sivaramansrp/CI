@@ -19,7 +19,7 @@ import {
   FECHAINICIAL,
   SeleccionadasTabla,
 } from '../../models/registro.model';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -63,6 +63,10 @@ const TERCEROS_TEXTO_DE_ALERTA =
   styleUrl: './certificado-de-origen.component.css',
 })
 export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
+  /**
+    * Evento para comunicar datos al componente padre.
+    */
+  @Output() dataEvent = new EventEmitter<boolean>();
   /**
    * Texto de alerta mostrado en el componente.
    */
@@ -216,37 +220,37 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
  * Notificador para destruir observables al destruir el componente.
  * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
  */
-private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-/**
- * Opciones del catálogo de tratados.
- * Contiene una lista de objetos del catálogo de tratados obtenidos desde el servicio.
- */
-optionsTratado!: Catalogo[];
+  /**
+   * Opciones del catálogo de tratados.
+   * Contiene una lista de objetos del catálogo de tratados obtenidos desde el servicio.
+   */
+  optionsTratado!: Catalogo[];
 
-/**
- * Opciones del catálogo de países.
- * Contiene una lista de objetos del catálogo de países obtenidos desde el servicio.
- */
-optionsPais!: Catalogo[];
+  /**
+   * Opciones del catálogo de países.
+   * Contiene una lista de objetos del catálogo de países obtenidos desde el servicio.
+   */
+  optionsPais!: Catalogo[];
 
-/**
- * Opciones del catálogo de unidades de medida comercial (UMC).
- * Contiene una lista de objetos del catálogo de UMC obtenidos desde el servicio.
- */
-optionsUMC!: Catalogo[];
+  /**
+   * Opciones del catálogo de unidades de medida comercial (UMC).
+   * Contiene una lista de objetos del catálogo de UMC obtenidos desde el servicio.
+   */
+  optionsUMC!: Catalogo[];
 
-/**
- * Opciones del catálogo de unidades de medida.
- * Contiene una lista de objetos del catálogo de unidades de medida obtenidos desde el servicio.
- */
-optionsUnidadMedida!: Catalogo[];
+  /**
+   * Opciones del catálogo de unidades de medida.
+   * Contiene una lista de objetos del catálogo de unidades de medida obtenidos desde el servicio.
+   */
+  optionsUnidadMedida!: Catalogo[];
 
-/**
- * Opciones del catálogo de tipos de factura.
- * Contiene una lista de objetos del catálogo de tipos de factura obtenidos desde el servicio.
- */
-optionsTipoFactura!: Catalogo[];
+  /**
+   * Opciones del catálogo de tipos de factura.
+   * Contiene una lista de objetos del catálogo de tipos de factura obtenidos desde el servicio.
+   */
+  optionsTipoFactura!: Catalogo[];
 
   /**
    * Datos de la tabla de mercancías disponibles.
@@ -409,35 +413,10 @@ optionsTipoFactura!: Catalogo[];
       .subscribe();
     this.donanteDomicilio();
   }
-/**
- * Actualiza la fecha inicial en el formulario reactivo y en el estado de la tienda.
- * @param nuevo_fechaIncial Nueva fecha inicial seleccionada.
- */
-  cambioFechaInicial(nuevo_fechaIncial: string): void {
-    this.registroForm.patchValue({
-      validacionForm: {
-        fechaInicial: nuevo_fechaIncial,
-      },
-    });
-    this.setValoresStore(this.validacionForm, 'fechaInicial', 'setFechInicioB');
-  }
-/**
- * Actualiza la fecha final en el formulario reactivo y en el estado de la tienda.
- * @param nuevo_fechaFinal Nueva fecha final seleccionada.
- */
-  cambioFechaFinal(nuevo_fechaFinal: string): void {
-    this.registroForm.patchValue({
-      validacionForm: {
-        fechaFinal: nuevo_fechaFinal,
-      },
-    });
-
-    this.setValoresStore(this.validacionForm, 'fechaFinal', 'setFechFinB');
-  }
-/**
- * Actualiza la fecha de la factura en el formulario reactivo y en el estado de la tienda.
- * @param nuevo_fechaFin Nueva fecha de la factura seleccionada.
- */
+  /**
+   * Actualiza la fecha de la factura en el formulario reactivo y en el estado de la tienda.
+   * @param nuevo_fechaFin Nueva fecha de la factura seleccionada.
+   */
   cambioFechaFactura(nuevo_fechaFin: string): void {
     this.mercanciaForm.patchValue({
       validacionMercanciaForm: {
@@ -477,25 +456,27 @@ optionsTipoFactura!: Catalogo[];
     if (this.mercanciaForm.valid) {
       this.esMercanciaEnEdicion = true;
       this.esFormulario = false;
+
+      const formValues = this.mercanciaForm.value.validacionMercanciaForm;
+
       this.mercanciaSeleccionadasTablaData.splice(0, 1, {
-        fraccionArancelaria:
-          this.mercanciaForm?.value.validacionMercanciaForm
-            .fraccionMercanArancelaria,
-        cantidad: this.mercanciaForm?.value.validacionMercanciaForm.cantidad,
-        unidadMedida:
-          this.mercanciaForm?.value.validacionMercanciaForm.unidadMedida,
-        valorMercancia:
-          this.mercanciaForm?.value.validacionMercanciaForm.valordelamercancia,
-        tipoFactura:
-          this.mercanciaForm?.value.validacionMercanciaForm.tipoFactura,
-        numFactura:
-          this.mercanciaForm?.value.validacionMercanciaForm.numeroFactura,
-        complementoDescripcion:
-          this.mercanciaForm?.value.validacionMercanciaForm
-            .complementoDelaDescripcion,
-        fechaFactura: this.mercanciaForm?.value.validacionMercanciaForm.fecha,
+        fraccionArancelaria: formValues.fraccionMercanArancelaria,
+        cantidad: formValues.cantidad,
+        unidadMedida: formValues.unidadMedida,
+        valorMercancia: formValues.valordelamercancia,
+        tipoFactura: formValues.tipoFactura,
+        numFactura: formValues.numeroFactura,
+        complementoDescripcion: formValues.complementoDelaDescripcion,
+        fechaFactura: formValues.fecha,
       });
     }
+  }
+  /**
+    * Cancela la edición de una mercancía.
+    */
+  cancelar() {
+    this.esMercanciaEnEdicion = true;
+    this.esFormulario = false;
   }
   /**
    * Modifica una mercancía existente.
@@ -524,6 +505,7 @@ optionsTipoFactura!: Catalogo[];
    */
   cargaArchivo() {
     this.cargarArchivo = true;
+    this.dataEvent.emit(false);
   }
   /**
    * Muestra errores en el formulario y desactiva la carga de archivos.
@@ -666,62 +648,32 @@ optionsTipoFactura!: Catalogo[];
       validacionForm: this.fb.group({
         tratado: [this.solicitudState?.tratado, [Validators.required]],
         pais: [this.solicitudState?.pais, [Validators.required]],
-        fraccionArancelaria: [
-          this.solicitudState?.fraccionArancelaria,
-          [Validators.required, Validators.pattern(/^\d+$/)],
-        ],
-        numeroRegistro: [
-          this.solicitudState?.numeroRegistro,
-          [Validators.required],
-        ],
-        nombreComercial: [
-          this.solicitudState?.nombreComercial,
-          [Validators.required],
-        ],
-        fechaInicial: [
-          this.solicitudState?.fechaInicial,
-          [Validators.required],
-        ],
+        fraccionArancelaria: [this.solicitudState?.fraccionArancelaria, [Validators.required, Validators.pattern(/^\d+$/)]],
+        numeroRegistro: [this.solicitudState?.numeroRegistro, [Validators.required]],
+        nombreComercial: [this.solicitudState?.nombreComercial, [Validators.required]],
+        fechaInicial: [this.solicitudState?.fechaInicial, [Validators.required]],
         fechaFinal: [this.solicitudState?.fechaFinal, [Validators.required]],
         archivo: [this.solicitudState?.archivo, [Validators.required]],
       }),
     });
+
     this.mercanciaForm = this.fb.group({
       validacionMercanciaForm: this.fb.group({
         fraccionMercanciaArancelaria: ['', [Validators.required]],
         nombreTecnico: ['', [Validators.required]],
         nombreComercialDelaMercancia: ['', [Validators.required]],
-
         criterioParaConferir: ['', [Validators.required]],
         nombreEnIngles: ['', [Validators.required]],
         marca: [this.solicitudState?.marca, [Validators.required]],
-        cantidad: [
-          this.solicitudState?.cantidad,
-          [Validators.required, Validators.pattern(/^\d+$/)],
-        ],
+        cantidad: [this.solicitudState?.cantidad, [Validators.required, Validators.pattern(/^\d+$/)]],
         umc: [this.solicitudState?.umc, [Validators.required]],
-        valorDelaMercancia: [
-          this.solicitudState?.valorDelaMercancia,
-          [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
-        ],
-        complementoDelaDescripcion: [
-          this.solicitudState?.complementoDelaDescripcion,
-          [Validators.required],
-        ],
-        masaBruta: [
-          this.solicitudState?.masaBruta,
-          [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)],
-        ],
-        unidadMedida: [
-          this.solicitudState?.unidadMedida,
-          [Validators.required],
-        ],
+        valorDelaMercancia: [this.solicitudState?.valorDelaMercancia, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+        complementoDelaDescripcion: [this.solicitudState?.complementoDelaDescripcion, [Validators.required]],
+        masaBruta: [this.solicitudState?.masaBruta, [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)]],
+        unidadMedida: [this.solicitudState?.unidadMedida, [Validators.required]],
         tipoFactura: [this.solicitudState?.tipoFactura, [Validators.required]],
         fecha: [this.solicitudState?.fecha, [Validators.required]],
-        numeroFactura: [
-          this.solicitudState?.numeroFactura,
-          [Validators.required],
-        ],
+        numeroFactura: [this.solicitudState?.numeroFactura, [Validators.required]],
       }),
     });
   }

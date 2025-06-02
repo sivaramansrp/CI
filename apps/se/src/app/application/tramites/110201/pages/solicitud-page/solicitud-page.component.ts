@@ -11,12 +11,14 @@ import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { CertificadoDeOrigenComponent } from "../../components/certificado-de-origen/certificado-de-origen.component";
 
 /**
  * Texto de alerta para terceros.
  */
 const TERCEROS_TEXTO_DE_ALERTA =
   'La solicitud ha quedado registrada con el número temporal 202757598 Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada.';
+
 /**
  * Interfaz que define la estructura de una acción de botón.
  */
@@ -31,6 +33,7 @@ interface AccionBoton {
    */
   valor: number;
 }
+
 /**
  * Componente que representa la página de solicitud.
  */
@@ -46,31 +49,37 @@ interface AccionBoton {
     PasoDosComponent,
     PasoTresComponent,
     PasoUnoComponent,
-    ReactiveFormsModule,
+    ReactiveFormsModule
   ],
 })
-/**
- * Componente que representa la página de solicitud.
- */
 export class SolicitudPageComponent {
+  /**
+   * Texto de alerta que se muestra a los terceros.
+   */
   TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
+
   /**
    * Lista de pasos del asistente.
    */
   pasos: ListaPasosWizard[] = PASOS;
 
   /**
-   * Índice del paso actual.
+   * Indica si se debe mostrar el botón de continuar (controla la visibilidad según el estado de carga de archivo).
+   */
+  cargarArchivo: boolean = true;
+
+  /**
+   * Índice del paso actual en el asistente.
    */
   indice: number = 1;
 
   /**
-   * Referencia al componente del asistente.
+   * Referencia al componente del asistente (wizard).
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
-   * Datos de los pasos del asistente.
+   * Datos de los pasos del asistente, incluyendo textos de botones y el índice actual.
    */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
@@ -88,7 +97,7 @@ export class SolicitudPageComponent {
   }
 
   /**
-   * Obtiene el valor del índice de la acción del botón.
+   * Obtiene el valor del índice de la acción del botón y controla la navegación del asistente.
    * @param e Acción del botón.
    */
   getValorIndice(e: AccionBoton) {
@@ -100,5 +109,14 @@ export class SolicitudPageComponent {
         this.wizardComponent.atras();
       }
     }
+  }
+
+  /**
+   * Actualiza el estado de carga de archivo, permitiendo mostrar u ocultar el botón de continuar.
+   * Este método es llamado desde un componente hijo mediante un evento.
+   * @param data Valor booleano que indica si se está cargando un archivo.
+   */
+  cargaArchivo(data: boolean): void {
+    this.cargarArchivo = data;
   }
 }

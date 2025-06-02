@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
 import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
   PERSONA_MORAL_NACIONAL,
@@ -12,7 +12,7 @@ import { CertificadoDeOrigenComponent } from '../../components/certificado-de-or
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos_certificado.component';
 import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
-import { RegistroService } from '../../services/registro.service';
+import { RegistroService } from '../../services/registro.service'
 
 /**
  * Componente que representa el primer paso del trámite.
@@ -32,10 +32,44 @@ import { RegistroService } from '../../services/registro.service';
   ],
 })
 export class PasoUnoComponent implements AfterViewInit, OnInit {
+
+  /**
+   * Evento para comunicar al componente padre si se está cargando un archivo.
+   */
+  @Output() archivo = new EventEmitter<boolean>();
+
   /**
    * Catálogo de entidades federativas.
    */
   entidadFederativa!: any;
+
+  /**
+   * Referencia al componente de solicitante.
+   * Permite interactuar con el formulario de datos del solicitante.
+   */
+  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+
+  /**
+   * Tipo de persona seleccionada (física o moral).
+   */
+  tipoPersona!: number;
+
+  /**
+   * Configuración del formulario dinámico para la persona.
+   * Contiene los campos relacionados con los datos personales del solicitante.
+   */
+  persona: FormularioDinamico[] = [];
+
+  /**
+   * Configuración del formulario dinámico para el domicilio fiscal.
+   * Contiene los campos relacionados con el domicilio fiscal del solicitante.
+   */
+  domicilioFiscal: FormularioDinamico[] = [];
+
+  /**
+   * Índice del paso actual en el asistente.
+   */
+  indice: number = 1;
 
   /**
    * Constructor del componente.
@@ -52,38 +86,12 @@ export class PasoUnoComponent implements AfterViewInit, OnInit {
   ngOnInit(): void {
     this.registro.getCatalogoById(21).subscribe((resp) => {
       this.entidadFederativa = resp;
-     
+
       const DATA = JSON.parse(this.entidadFederativa.data);
 
       this.entidadFederativa = DATA?.domicilioFiscal?.entidadFederativa;
-     
     });
   }
-
-  /**
-   * Referencia al componente de solicitante.
-   */
-  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
-
-  /**
-   * Tipo de persona seleccionada.
-   */
-  tipoPersona!: number;
-
-  /**
-   * Configuración del formulario dinámico para la persona.
-   */
-  persona: FormularioDinamico[] = [];
-
-  /**
-   * Configuración del formulario dinámico para el domicilio fiscal.
-   */
-  domicilioFiscal: FormularioDinamico[] = [];
-
-  /**
-   * Índice del paso actual.
-   */
-  indice: number = 1;
 
   /**
    * Método que se ejecuta después de que las vistas del componente han sido inicializadas.
@@ -101,5 +109,13 @@ export class PasoUnoComponent implements AfterViewInit, OnInit {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+  /**
+   * Emite un evento al componente padre indicando si se está cargando un archivo.
+   * @param data Valor booleano que indica el estado de carga de archivo.
+   */
+  cargaArchivo(data: boolean): void {
+    this.archivo.emit(data);
   }
 }
