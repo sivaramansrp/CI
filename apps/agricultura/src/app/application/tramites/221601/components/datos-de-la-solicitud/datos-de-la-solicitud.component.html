@@ -7,7 +7,7 @@
             <h4 class="panel-title">
               <a aria-label="Repeat"><i class="bi bi-repeat" aria-hidden="true"></i></a>
             </h4>
-            <button type="button" class="collpase-button collapsed" (keydown)="mostrarColapsable()"> </button>
+            <button type="button" class="collpase-button collapsed" (keydown)="mostrarColapsable()" [disabled]="esFormularioSoloLectura"> </button>
           </div>
           @if(plegable){
           <div class="panel-collapse collapse in" id="panel-01">
@@ -16,7 +16,7 @@
               <div class="row">
 
                 <div class=" d-flex justify-content-end">
-                  <button type="button" class="btn btn-primary">
+                  <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">
                     Cargar
                   </button>
                 </div>
@@ -168,9 +168,9 @@
 
 
     <div class="col-md-12 mt-5 d-flex justify-content-end">
-      <button type="button" class="btn btn-default">Modificar</button>
-      <button type="button" class="btn btn-danger ms-3">Eliminar</button>
-      <button type="button" class="btn btn-primary ms-3">Agregar</button>
+      <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">Modificar</button>
+      <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura">Eliminar</button>
+      <button type="button" class="btn btn-primary ms-3"[disabled]="esFormularioSoloLectura">Agregar</button>
     </div>
   </div>
 </div>
@@ -185,13 +185,13 @@
             </div>
             <div class="modal-footer custom-footer d-flex justify-content-end">
               <button
-                type="button"
+                type="button" [disabled]="esFormularioSoloLectura"
                 class="btn btn-default"
               >
                 Cancelar
               </button>
               <button
-                type="button"
+                type="button" [disabled]="esFormularioSoloLectura"
                 class="btn btn-primary" data-bs-dismiss="modal" #closeModal
               >
                 Agregar
