@@ -12,6 +12,7 @@
             [label]="'Medio de transporte'"
             [required]="true"
             name="medioDeTransporte"
+            [isDisabled]="esFormularioSoloLectura"
             (change)="
             setValoresStore(
               formularioMovilizacion,
@@ -48,6 +49,7 @@
             [label]="'Punto de verificación federal'"
             [required]="false"
             name="puntoVerificacion"
+            [isDisabled]="esFormularioSoloLectura"
             (change)="
             setValoresStore(
               formularioMovilizacion,

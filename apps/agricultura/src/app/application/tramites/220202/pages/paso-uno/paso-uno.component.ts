@@ -1,5 +1,9 @@
-import { Component } from '@angular/core';
-import { SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, PersonaTerceros, } from '@ng-mf/data-access-user';
+import { map, takeUntil } from 'rxjs';
+import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
+import { Subject } from 'rxjs';
 
 /**
  * Componente para mostrar el subtítulo del asistente.
@@ -24,7 +28,7 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src';
   styleUrls: ['./paso-uno.component.scss']
 })
 
-export class PasoUnoComponent {
+export class PasoUnoComponent implements OnInit,OnDestroy {
 
   /**
    * @description Índice de la pestaña/paso actual.
@@ -33,6 +37,37 @@ export class PasoUnoComponent {
    * @default 1
    */
   indice: number = 1;
+
+  /**
+   * Indica si existen datos de respuesta para mostrar en el formulario.
+   * @type {boolean}
+   */
+  public esDatosRespuesta: boolean = false;
+
+  /**
+   * Estado de la consulta actual, contiene la información relevante del solicitante.
+   * @type {ConsultaioState}
+   */
+  public consultaState!: ConsultaioState;
+
+  /**
+   * Notificador para destruir las suscripciones y evitar fugas de memoria.
+   * @type {Subject<void>}
+   * @private
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * @type {boolean}
+   */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Lista de personas relacionadas con el trámite.
+   * @type {PersonaTerceros[]}
+   */
+  public personas: PersonaTerceros[] = [];
 
   /**
    * @description 
@@ -57,12 +92,47 @@ export class PasoUnoComponent {
    * @constructor
    * @param {SeccionLibStore} seccionStore - Servicio para gestionar el estado de las secciones del formulario.
    */
-  constructor(private readonly seccionStore: SeccionLibStore) {
+  constructor(private readonly seccionStore: SeccionLibStore, 
+    private agriculturaApiService: AgriculturaApiService,
+    private consultaQuery: ConsultaioQuery) {
     // Establece el estado de la forma como no válida al inicio.
     this.seccionStore.establecerFormaValida([false]);
     // Establece la primera sección como activa.
     this.seccionStore.establecerSeccion([true]);
+    
   }
+
+  
+  ngOnInit(): void {
+  this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.consultaState = seccionState;
+        this.esFormularioSoloLectura = seccionState.readonly;
+        if (this.consultaState.update) {
+          this.guardarDatosFormulario();
+        } else {
+          this.esDatosRespuesta = true;
+        }
+      })
+    )
+    .subscribe();
+  }
+  
+    guardarDatosFormulario(): void {
+      this.agriculturaApiService
+        .getDatosDeLaSolicitudData().pipe(
+          takeUntil(this.destroyNotifier$)
+        )
+        .subscribe((resp) => {
+          if(resp){
+          this.esDatosRespuesta = true;
+          this.personas = resp.personas;
+          this.agriculturaApiService.actualizarEstadoFormulario(resp);
+          }
+        });
+    }
 
   /**
    * @description 
@@ -76,5 +146,10 @@ export class PasoUnoComponent {
    */
   seleccionaPestana(i: number): void {
     this.indice = i;
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

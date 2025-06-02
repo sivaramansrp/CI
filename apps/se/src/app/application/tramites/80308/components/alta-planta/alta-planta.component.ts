@@ -1,6 +1,7 @@
 import {
   Catalogo,
   CatalogoSelectComponent,
+  ConsultaioQuery,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -13,7 +14,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { CONFIGURACION_DOMICILIOS } from '../../constantes/modificacion.enum';
 import { CommonModule } from '@angular/common';
 import { ComplementariaImmexComponent } from '../complementaria-immex/complementaria-immex.component';
@@ -96,6 +97,12 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
   destroyNotifier$: Subject<void> = new Subject();
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  public esFormularioSoloLectura: boolean = false; 
+
+  /**
    * Constructor de la clase.
    * @param {FormBuilder} fb - El servicio para construir formularios reactivos.
    * @param {ModificacionSolicitudeService} modificionService - Servicio para la modificación de solicitudes.
@@ -105,8 +112,26 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
     public modificionService: ModificacionSolicitudeService,
     private toastr: ToastrService,
     private store: Tramite80308Store,
-    private tramiteQuery: Tramite80308Query
+    private tramiteQuery: Tramite80308Query,
+    private consultaioQuery: ConsultaioQuery,
   ) {
+
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+     this.consultaioQuery.selectConsultaioState$
+     .pipe(
+       takeUntil(this.destroyNotifier$),
+       map((seccionState)=>{
+         this.esFormularioSoloLectura = seccionState.readonly; 
+         this.inicializarEstadoFormulario();
+       })
+     )
+     .subscribe()
 
     // Inicialización del formulario para la entidad federativa.
     this.formulario = this.fb.group({
@@ -126,6 +151,30 @@ export class AltaPlantaComponent implements OnInit, OnDestroy {
     this.datos$ = this.tramiteQuery.selectBuscarDomicilios$;
     this.estados$ = this.tramiteQuery.selectAltaPlanta$;
     this.domicilios$ = this.tramiteQuery.selectDomicilios$;
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.formulario.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formulario.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    }
   }
 
   /**
