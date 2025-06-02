@@ -14,7 +14,9 @@
                 <app-solicitante></app-solicitante>
             }
             @case (2) {
-                <app-datos-empresa></app-datos-empresa>
+                @if (esDatosRespuesta) {
+                    <app-datos-empresa></app-datos-empresa>
+                }
             }
             }
         </ng-container>
