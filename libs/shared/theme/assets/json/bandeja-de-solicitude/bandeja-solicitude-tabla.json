@@ -486,6 +486,15 @@
         "numeroDeProcedimiento": "220103"
     },
     {
+        "id": 220203,
+        "tipoDeTramite": "Solicitud de Permiso",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "AGRICULTURA",
+        "numeroDeProcedimiento": "220203"
+    },
+    {
         "id": 240305,
         "tipoDeTramite": "Solicitud de Permiso",
         "fecha": "2023-10-01",
