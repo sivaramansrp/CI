@@ -45,6 +45,11 @@ export class DatosPageComponent {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe al estado de consulta y, dependiendo de la propiedad `update`, 
+   * guarda los datos del formulario o marca la respuesta como datos.
+   */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
       this.consultaState = seccionState;
@@ -82,6 +87,11 @@ export class DatosPageComponent {
     this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
+   * Utiliza el observable `destroyNotifier$` para notificar y completar las suscripciones,
+   * evitando posibles fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

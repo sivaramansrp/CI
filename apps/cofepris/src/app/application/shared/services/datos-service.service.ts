@@ -5,20 +5,38 @@ import { Observable } from 'rxjs';
 
 import { DomicilioState, DomicilioStore } from '../estados/stores/domicilio.store';
 
+/**
+ * Servicio para gestionar los datos relacionados con el domicilio y operaciones auxiliares.
+ */
 @Injectable({
   providedIn: 'root',
 })
 export class DatosServiceService {
   /**
-   * AppConfig es una inyección de dependencias que proporciona la configuración de la aplicación.
+   * URL base del servidor principal.
    */
   urlServer = ENVIRONMENT.URL_SERVER;
+  /**
+   * URL base del servidor de catálogos auxiliares.
+   */
   urlServerCatalogos = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
-  constructor(private http: HttpClient, private domicilioStore: DomicilioStore,) {
+  /**
+   * Constructor del servicio.
+   * @param http Cliente HTTP para realizar peticiones.
+   * @param domicilioStore Tienda de estado para el domicilio.
+   */
+  constructor(
+    private http: HttpClient,
+    private domicilioStore: DomicilioStore,
+  ) {
     // Lógica de inicialización si es necesario
   }
 
+  /**
+   * Actualiza el estado del formulario de domicilio en el store.
+   * @param DATOS Objeto con los datos del domicilio a actualizar.
+   */
   actualizarEstadoFormulario(DATOS: DomicilioState): void {
     this.domicilioStore.setDenominacion(DATOS.denominacion);
     this.domicilioStore.setCorreoElectronico(DATOS.correoElectronico);
@@ -31,16 +49,19 @@ export class DatosServiceService {
     this.domicilioStore.setLada(DATOS.lada);
     this.domicilioStore.setTelefono(DATOS.telefono);
     this.domicilioStore.setNoLicenciaSanitaria(DATOS.noLicenciaSanitaria);
-      if (DATOS.regimenDestinado) {
+    if (DATOS.regimenDestinado) {
       this.domicilioStore.setRegimenDestinado(DATOS.regimenDestinado);
     }
-     if (DATOS.aduana) {
+    if (DATOS.aduana) {
       this.domicilioStore.setAduana(DATOS.aduana);
     }
-   
     this.domicilioStore.setAduana(DATOS.aduana);
   }
 
+  /**
+   * Obtiene los datos de registro para toma de muestras de mercancías desde un archivo JSON local.
+   * @returns Observable con los datos del estado de domicilio.
+   */
   getRegistroTomaMuestrasMercanciasData(): Observable<DomicilioState> {
     return this.http.get<DomicilioState>('assets/json/shared/datos.json');
   }
