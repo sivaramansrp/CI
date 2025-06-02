@@ -18,6 +18,15 @@ export class Tramite110222Query extends Query<Tramite110222State> {
   });
 
   /**
+   * Selecciona si todos los valores de la forma son válidos.
+   * Verifica si todas las propiedades de `formaValida` son `true`.
+   * @returns {Observable<boolean>} - Observable que indica si la forma es válida.
+   */
+  FormaValida$ = this.select((state) => {
+    return Object.values(state.formaValida).every(value => value === true);
+  });
+
+  /**
    * @descripcion
    * Observable que selecciona la tabla de mercancías del estado.
    */

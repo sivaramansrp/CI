@@ -1,12 +1,21 @@
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  ConsultaioQuery,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
 import { AgriculturaApiService } from '../../services/220202/agricultura-api.service';
 
-import { Catalogo } from '@ng-mf/data-access-user';
-
-import { Subject, Subscription, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Movilizacion } from '../../models/220202/fitosanitario.model';
 
 /**
@@ -33,9 +42,12 @@ import { Movilizacion } from '../../models/220202/fitosanitario.model';
 @Component({
   selector: 'app-datos-para-movilizacion-nacional',
   templateUrl: './datos-para-movilizacion-nacional.component.html',
-  styleUrls: ['./datos-para-movilizacion-nacional.component.scss']
+  styleUrls: ['./datos-para-movilizacion-nacional.component.scss'],
+  standalone: true,
+  imports: [TituloComponent, CatalogoSelectComponent, ReactiveFormsModule],
 })
 export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy {
+  
   /**
    * @description FormGroup que contiene los controles del formulario.
    * Este objeto `FormGroup` contiene los controles de formulario necesarios para capturar los datos de movilización nacional.
@@ -56,24 +68,48 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @type {Catalogo[]}
    */
   puntoList: Catalogo[] = [];
+  
   /**
    * @description Subject para manejar la destrucción de las suscripciones.
    * Se utiliza para emitir cuando el componente es destruido, limpiando todas las suscripciones.
    */
   private destroyNotifier$ = new Subject<void>();
+
+  /**
+   * @description Almacena los datos del formulario de movilización nacional.
+   * @type {Movilizacion}
+   */
   formulariodataStore: Movilizacion = {} as Movilizacion;
 
+  /**
+   * @description Indica si el formulario se encuentra en modo solo lectura.
+   * @type {boolean}
+   */
+  esFormularioSoloLectura: boolean = true;
 
   /**
    * @constructor
    * @param {AgriculturaApiService} agriculturaApiService - Servicio HttpClient para realizar peticiones.
    * Este servicio se utiliza para obtener las listas de opciones para los selectores del formulario y para actualizar el estado de la forma.
    */
-  constructor(private readonly agriculturaApiService: AgriculturaApiService) {
-    this.agriculturaApiService.getAllDatosForma().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
-      this.formulariodataStore = datos.movilizacion;
-    })
-
+  constructor(
+    private readonly agriculturaApiService: AgriculturaApiService,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+    this.agriculturaApiService
+      .getAllDatosForma()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos) => {
+        this.formulariodataStore = datos.movilizacion;
+      });
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -85,19 +121,43 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    */
   ngOnInit(): void {
     this.forma = new FormGroup({
-      transporte: new FormControl(this.formulariodataStore.transporte || '', Validators.required),
-      medioTransporte: new FormControl(this.formulariodataStore.medioTransporte || ''),
-      guiaIdentificacion: new FormControl(this.formulariodataStore.guiaIdentificacion || ''),
-      empresaTransportista: new FormControl(this.formulariodataStore.empresaTransportista || '', Validators.required),
+      transporte: new FormControl(
+        {
+          value: this.formulariodataStore.transporte || '',
+          disabled: this.esFormularioSoloLectura,
+        },
+        Validators.required
+      ),
+      medioTransporte: new FormControl({
+        value: this.formulariodataStore.medioTransporte || '',
+        disabled: this.esFormularioSoloLectura,
+      }),
+      guiaIdentificacion: new FormControl({
+        value: this.formulariodataStore.guiaIdentificacion || '',
+        disabled: this.esFormularioSoloLectura,
+      }),
+      empresaTransportista: new FormControl(
+        {
+          value: this.formulariodataStore.empresaTransportista || '',
+          disabled: this.esFormularioSoloLectura,
+        },
+        Validators.required
+      ),
     });
     // Se suscribe a los cambios de estado del formulario para actualizar su validez
-    this.forma.statusChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((changes) => {
-      const FORMA_VALIDA_ACTUALIZADA = {
-        movilizacionValidacion: false,
-      };
-      FORMA_VALIDA_ACTUALIZADA.movilizacionValidacion = this.forma.valid ? true : false;
-      this.agriculturaApiService.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
-    });
+    this.forma.statusChanges
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((_changes) => {
+        const FORMA_VALIDA_ACTUALIZADA = {
+          movilizacionValidacion: false,
+        };
+        FORMA_VALIDA_ACTUALIZADA.movilizacionValidacion = this.forma.valid
+          ? true
+          : false;
+        this.agriculturaApiService.actualizarFormaValida(
+          FORMA_VALIDA_ACTUALIZADA
+        );
+      });
 
     // Obtiene las listas de opciones (medio de transporte y puntos de verificación)
     this.obtenerTodosLosDatosDeOpciones();
@@ -121,9 +181,12 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @returns {void}
    */
   obtenerListaDeJustificaciones(): void {
-    this.agriculturaApiService.obtenerSelectorList('transporte.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.transporteList = data as Catalogo[];
-    });
+    this.agriculturaApiService
+      .obtenerSelectorList('transporte.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.transporteList = data as Catalogo[];
+      });
   }
 
   /**
@@ -133,9 +196,12 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @returns {void}
    */
   obtenerListaDePunto(): void {
-    this.agriculturaApiService.obtenerSelectorList('punto.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
-      this.puntoList = data as Catalogo[];
-    });
+    this.agriculturaApiService
+      .obtenerSelectorList('punto.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        this.puntoList = data as Catalogo[];
+      });
   }
 
   /**
@@ -146,10 +212,7 @@ export class DatosParaMovilizacionNacionalComponent implements OnInit, OnDestroy
    * @param {string} campo - El nombre del campo cuyo valor se actualizará en el servicio.
    * @returns {void}
    */
-  setValoresStore(
-    form?: FormGroup,
-    campo?: string,
-  ): void {
+  setValoresStore( _forma?: FormGroup, _campo?: string): void {
     const VALOR = this.forma.value;
     this.agriculturaApiService.updateMovilizacion(VALOR);
   }
