@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
     DatosComponent
   ],
   templateUrl:'./detalle-v-dictamen.component.html',
-  styleUrls: ['./detalle-v-dictamen.component.css'],
+  styleUrls: ['./detalle-v-dictamen.component.scss'],
 })
 export class DetalleVDictamenComponent implements OnInit {
   /**
