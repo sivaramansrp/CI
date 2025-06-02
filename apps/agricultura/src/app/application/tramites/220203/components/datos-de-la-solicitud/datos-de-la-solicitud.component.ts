@@ -1,16 +1,18 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { Catalogo, ConfiguracionColumna, TablaSeleccion, TableBodyData } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+
+import { DatosMercancia220203 } from '../../models/220203/importacion-de-acuicultura.module';
 
 import { MENSAJE_DOBLE_CLIC } from '../../constantes/220203/importacion-de-acuicultura.enum';
 
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 
-import { Subject, takeUntil } from 'rxjs';
-import { DatosMercancia220203 } from '../../models/220203/importacion-de-acuicultura.module';
-import { isDisabledDay } from 'ngx-bootstrap/chronos';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+
 
 interface DatoTabla {
   solicitud: string;
@@ -41,9 +43,20 @@ interface FilaSolicitud {
 @Component({
   selector: 'app-datos-de-la-solicitud',
   templateUrl: './datos-de-la-solicitud.component.html',
-  styleUrl: './datos-de-la-solicitud.component.scss'
+  styleUrl: './datos-de-la-solicitud.component.scss',
+  standalone: true,
+  imports: [
+    ReactiveFormsModule,
+    TituloComponent,
+    InputRadioComponent,
+    AlertComponent,
+    TablaDinamicaComponent,
+    CatalogoSelectComponent,
+    TableComponent,
+    CommonModule
+  ],
 })
-export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
+export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit, AfterViewInit {
   private destroyNotifier$ = new Subject<void>();
 
   /**
@@ -211,22 +224,20 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
   myScrollbarValue: boolean = true;
 
   /**
+   * @description Indica si el formulario está en modo solo lectura.
+   * @type {boolean}
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * @description Constructor del componente.
    * @param {FormBuilder} fb Servicio para construir formularios.
    * @param {ImportacionDeAcuiculturaService} importacionDeAcuiculturaServices Servicio para obtener datos de catálogos.
    */
-  constructor(private readonly fb: FormBuilder, private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService) {
+  constructor(private readonly fb: FormBuilder, private readonly importacionDeAcuiculturaServices: ImportacionDeAcuiculturaService, private consultaQuery: ConsultaioQuery) {
     this.importacionDeAcuiculturaServices.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
-      console.log(datos);
       this.datosMercanciaStore = datos.datosMercancia;
     })
-    this.createFromGroup();
-    console.log(this.datosMercanciaFormGroup.value);
-    this.obtenerCatalogosTransporte();
-    this.obtenerCatalogosArancelaria();
-    this.obtenerCatalogosUMC();
-    this.obtenerCatalogosUMT();
-    this.obtenerCatalogosUSO();
   }
 
   /**
@@ -257,31 +268,31 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
    * Creates the 'mercanciaGroup' form group.
    */
   createMercanciaGroup() {
-    const mercanciaData = this.datosMercanciaStore.mercanciaGroup || {};
+    const MERCANCIADATA = this.datosMercanciaStore.mercanciaGroup || {};
 
-    const formGroup = this.fb.group({
-      tipoRequisito: [mercanciaData.tipoRequisito || '', Validators.required],
-      requisito: [mercanciaData.requisito || '', Validators.required],
-      numeroCertificadoInternacional: [mercanciaData.numeroCertificadoInternacional || '', Validators.required],
-      numeroOficioCasoEspecial: [mercanciaData.numeroOficioCasoEspecial || ''],
-      fraccionArancelaria: [mercanciaData.fraccionArancelaria || '', Validators.required],
-      descripcionFraccionArancelaria: [mercanciaData.descripcionFraccionArancelaria || '', Validators.required],
-      nico: [mercanciaData.nico || '', Validators.required],
-      descripcionNico: [mercanciaData.descripcionNico || '', Validators.required],
-      descripcion: [mercanciaData.descripcion || '', Validators.required],
-      cantidadUMT: [mercanciaData.cantidadUMT || '', Validators.required],
-      umt: [mercanciaData.umt, Validators.required],
-      cantidadUMC: [mercanciaData.cantidadUMC || '', Validators.required],
-      umc: [mercanciaData.umc || '', Validators.required],
-      uso: [mercanciaData.uso || '', Validators.required],
-      numeroDeLote: [mercanciaData.numeroDeLote || '', Validators.required],
-      faseDeDesarrollo: [mercanciaData.faseDeDesarrollo || '', Validators.required],
-      especie: [mercanciaData.especie || '', Validators.required],
-      paisDeOrigen: [mercanciaData.paisDeOrigen || '', Validators.required],
-      paisDeProcedencia: [mercanciaData.paisDeProcedencia || '', Validators.required],
+    const FORMGROUP = this.fb.group({
+      tipoRequisito: [MERCANCIADATA.tipoRequisito || '', Validators.required],
+      requisito: [MERCANCIADATA.requisito || '', Validators.required],
+      numeroCertificadoInternacional: [MERCANCIADATA.numeroCertificadoInternacional || '', Validators.required],
+      numeroOficioCasoEspecial: [MERCANCIADATA.numeroOficioCasoEspecial || ''],
+      fraccionArancelaria: [MERCANCIADATA.fraccionArancelaria || '', Validators.required],
+      descripcionFraccionArancelaria: [MERCANCIADATA.descripcionFraccionArancelaria || '', Validators.required],
+      nico: [MERCANCIADATA.nico || '', Validators.required],
+      descripcionNico: [MERCANCIADATA.descripcionNico || '', Validators.required],
+      descripcion: [MERCANCIADATA.descripcion || '', Validators.required],
+      cantidadUMT: [MERCANCIADATA.cantidadUMT || '', Validators.required],
+      umt: [MERCANCIADATA.umt, Validators.required],
+      cantidadUMC: [MERCANCIADATA.cantidadUMC || '', Validators.required],
+      umc: [MERCANCIADATA.umc || '', Validators.required],
+      uso: [MERCANCIADATA.uso || '', Validators.required],
+      numeroDeLote: [MERCANCIADATA.numeroDeLote || '', Validators.required],
+      faseDeDesarrollo: [MERCANCIADATA.faseDeDesarrollo || '', Validators.required],
+      especie: [MERCANCIADATA.especie || '', Validators.required],
+      paisDeOrigen: [MERCANCIADATA.paisDeOrigen || '', Validators.required],
+      paisDeProcedencia: [MERCANCIADATA.paisDeProcedencia || '', Validators.required],
     });
 
-    return formGroup;
+    return FORMGROUP;
   }
 
 
@@ -299,13 +310,33 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
 
 
   ngOnInit(): void {
-    this.datosMercanciaFormGroup.statusChanges
+     this.createFromGroup();
+    this.obtenerCatalogosTransporte();
+    this.obtenerCatalogosArancelaria();
+    this.obtenerCatalogosUMC();
+    this.obtenerCatalogosUMT();
+    this.obtenerCatalogosUSO();
+  }
+
+  ngAfterViewInit(): void {
+      this.datosMercanciaFormGroup.valueChanges
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((changes) => {
         this.verificarEstadoDelBoton();
       }, (error) => {
         console.error(error);
       });
+
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+        }
+      )
+    ).subscribe();
+    
   }
 
   /**
@@ -430,10 +461,21 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
       });
     }
     const VALOR = this.datosMercanciaFormGroup.value;
-    console.log(VALOR, 'FormGroup');
     (this.importacionDeAcuiculturaServices.actualizarDatosMercancia as (value: DatosMercancia220203) => void)(
       VALOR
     );
+  }
+
+   /**
+   * @description Inicializa el estado del formulario según si está en modo solo lectura o no.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.datosMercanciaFormGroup.disable();
+    }
+    else {
+      this.datosMercanciaFormGroup.enable();
+    } 
   }
 
   /**

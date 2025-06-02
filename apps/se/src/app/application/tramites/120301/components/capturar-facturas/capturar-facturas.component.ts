@@ -1,8 +1,7 @@
-
 import { HttpClient } from '@angular/common/http';
 import { HttpErrorResponse } from '@angular/common/http';
 
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
@@ -29,7 +28,10 @@ import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 import { tap } from 'rxjs';
 
-import { EXPEDICION_FACTURA_FECHA, VALIDO } from '../../constantes/elegibilidad-de-textiles.enums';
+import {
+  EXPEDICION_FACTURA_FECHA,
+  VALIDO,
+} from '../../constantes/elegibilidad-de-textiles.enums';
 
 import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
 import { TextilesState } from '../../estados/elegibilidad-de-textiles.store';
@@ -40,8 +42,8 @@ import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-texti
 
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 
-import { REGEX_PATRON_DECIMAL_2} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
-import { REGEX_SOLO_DIGITOS} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { REGEX_PATRON_DECIMAL_2 } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
 /**
  * @component CapturarFacturasComponent
@@ -58,10 +60,16 @@ import { REGEX_SOLO_DIGITOS} from '@libs/shared/data-access-user/src/tramites/co
     ReactiveFormsModule,
     InputFechaComponent,
     CatalogoSelectComponent,
-    TablaDinamicaComponent
-  ]
+    TablaDinamicaComponent,
+  ],
 })
 export class CapturarFacturasComponent implements OnInit, OnDestroy {
+  /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+   */
+  @Input()
+  formularioDeshabilitado: boolean = false;
+
   /**
    * @property {FormGroup} facturaForm - El grupo de formularios para capturar los datos de las facturas.
    */
@@ -87,57 +95,73 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    */
   facturas: CapturarColumns[] = [];
 
+  /**
+   * @property {Subject<void>} destroyNotifier$ - Notificador para cancelar suscripciones y evitar fugas de memoria.
+   * Utilizado con operadores como `takeUntil`.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
-  private capturarState!: TextilesState
+  /**
+   * @property {TextilesState} capturarState - Estado actual relacionado con la captura de datos textiles.
+   */
+  private capturarState!: TextilesState;
 
-  private seccionState!: SeccionLibState
+  /**
+   * @property {SeccionLibState} seccionState - Estado actual de la sección en el módulo de librerías.
+   */
+  private seccionState!: SeccionLibState;
 
+  /**
+   * @property {*} TablaSeleccion - Referencia a la enumeración o constante `TablaSeleccion`
+   * para su uso en la plantilla o lógica del componente.
+   */
   TablaSeleccion = TablaSeleccion;
+
   /**
    * @property {string[]} tableColumns - Array de encabezados de columnas de la tabla.
    */
   tableColumns: ConfiguracionColumna<CapturarColumns>[] = [
-      { encabezado: 'Número de la factura', 
-        clave: (fila) => fila.numeroDeLaFactura, 
-        orden: 1 },
-      {
-        encabezado: 'Razón social',
-        clave: (fila) => fila.razonSocial,
-        orden: 2,
-      },
-      {
-        encabezado: 'Domicilio',
-        clave: (fila) => fila.domicilio,
-        orden: 3,
-      },
-      {
-        encabezado: 'Fecha de expedición de la factura',
-        clave: (fila) => fila.fechaExpedicionFactura,
-        orden: 4,
-      },
-      {
-        encabezado: 'Cantidad total',
-        clave: (fila) => fila.cantidadTotal,
-        orden: 5,
-      },
-      {
-        encabezado: 'Cantidad disponible',
-        clave: (fila) => fila.cantidadDisponible,
-        orden: 6,
-      },
-      {
-        encabezado: 'Unidad de medida',
-        clave: (fila) => fila.unidadMedida,
-        orden: 7,
-      },
-      {
-        encabezado: 'Valor en dólares',
-        clave: (fila) => fila.valorDolares,
-        orden: 8,
-      },
-    ];
-  
+    {
+      encabezado: 'Número de la factura',
+      clave: (fila) => fila.numeroDeLaFactura,
+      orden: 1,
+    },
+    {
+      encabezado: 'Razón social',
+      clave: (fila) => fila.razonSocial,
+      orden: 2,
+    },
+    {
+      encabezado: 'Domicilio',
+      clave: (fila) => fila.domicilio,
+      orden: 3,
+    },
+    {
+      encabezado: 'Fecha de expedición de la factura',
+      clave: (fila) => fila.fechaExpedicionFactura,
+      orden: 4,
+    },
+    {
+      encabezado: 'Cantidad total',
+      clave: (fila) => fila.cantidadTotal,
+      orden: 5,
+    },
+    {
+      encabezado: 'Cantidad disponible',
+      clave: (fila) => fila.cantidadDisponible,
+      orden: 6,
+    },
+    {
+      encabezado: 'Unidad de medida',
+      clave: (fila) => fila.unidadMedida,
+      orden: 7,
+    },
+    {
+      encabezado: 'Valor en dólares',
+      clave: (fila) => fila.valorDolares,
+      orden: 8,
+    },
+  ];
 
   /**
    * @constructor
@@ -153,22 +177,21 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
     private seccionQuery: SeccionLibQuery
   ) {
     // Se puede agregar aquí la lógica del constructor si es necesario
-   }
+  }
 
   /**
    * @method ngOnInit
    * @description Método que se ejecuta al inicializar el componente.
    */
   ngOnInit(): void {
-
     this.seccionQuery.selectSeccionState$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.seccionState = seccionState;
-          })
-        )
-        .subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccionState = seccionState;
+        })
+      )
+      .subscribe();
     this.ElegibilidadDeTextilesQuery.selectTextile$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -177,13 +200,13 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-      this.initActionFormBuild();
-      this.obtenerListasDesplegables();
-      this.recuperarDatos();
+    this.initActionFormBuild();
+    this.obtenerListasDesplegables();
+    this.recuperarDatos();
 
-  this.seccionStore.establecerFormaValida([false]);
-  
-  this.facturaForm.statusChanges
+    this.seccionStore.establecerFormaValida([false]);
+
+    this.facturaForm.statusChanges
       .pipe(
         takeUntil(this.destroyNotifier$),
         delay(10),
@@ -191,18 +214,25 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
           if (this.facturaForm.valid) {
             this.ElegibilidadDeTextilesStore.setFormaValida([
               ...this.capturarState.formaValida,
-              { id: 2, descripcion: "Valida" }])
+              { id: 2, descripcion: 'Valida' },
+            ]);
           }
         })
       )
       .subscribe();
-  if(this.capturarState.formaValida && this.capturarState.formaValida[0] && this.capturarState.formaValida[0].descripcion === VALIDO){
-    this.seccionStore.establecerSeccion([true]);
-    this.seccionStore.establecerFormaValida([true])
-  }
-  else{
-    this.seccionStore.establecerFormaValida([false]);
-  }
+    if (
+      this.capturarState.formaValida &&
+      this.capturarState.formaValida[0] &&
+      this.capturarState.formaValida[0].descripcion === VALIDO
+    ) {
+      this.seccionStore.establecerSeccion([true]);
+      this.seccionStore.establecerFormaValida([true]);
+    } else {
+      this.seccionStore.establecerFormaValida([false]);
+    }
+    if (this.formularioDeshabilitado) {
+      this.facturaForm.disable();
+    }
   }
 
   /**
@@ -212,17 +242,29 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
   initActionFormBuild(): void {
     this.facturaForm = this.fb.group({
       numeroFactura: [this.capturarState.numeroFactura, Validators.required],
-      cantidadTotal: [this.capturarState.cantidadTotal, [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)]],
+      cantidadTotal: [
+        this.capturarState.cantidadTotal,
+        [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)],
+      ],
       unidadDeMedida: [this.capturarState.unidadDeMedida, Validators.required],
       fechaInicioInput: [''],
-      valorDolares: [this.capturarState.valorDolares, [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)]],
+      valorDolares: [
+        this.capturarState.valorDolares,
+        [Validators.required, Validators.pattern(REGEX_PATRON_DECIMAL_2)],
+      ],
       taxId: [this.capturarState.taxId],
       razonSocial: [this.capturarState.razonSocial, Validators.required],
       calle: [this.capturarState.calle, Validators.required],
       ciudad: [this.capturarState.ciudad, Validators.required],
-      cp: [this.capturarState.cp, [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
-      pais: [{value:this.capturarState.pais,disabled:true},[ Validators.required]],
-      fechaExpedicionFactura: ['2025-04-30'], 
+      cp: [
+        this.capturarState.cp,
+        [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
+      ],
+      pais: [
+        { value: this.capturarState.pais, disabled: true },
+        [Validators.required],
+      ],
+      fechaExpedicionFactura: ['2025-04-30'],
     });
   }
   /**
@@ -246,31 +288,33 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * @description Establece los valores en el store de textiles.
    */
   setValoresStore(
-      form: FormGroup,
-      campo: string,
-      metodoNombre: keyof ElegibilidadDeTextilesStore
-    ): void {
-      const VALOR = form.get(campo)?.value;
-      (this.ElegibilidadDeTextilesStore[metodoNombre] as (value: string) => void)(
-        VALOR
-      );
-    }
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof ElegibilidadDeTextilesStore
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.ElegibilidadDeTextilesStore[metodoNombre] as (value: string) => void)(
+      VALOR
+    );
+  }
 
   /**
    * @method obtenerIngresoSelectList
    * @description Obtiene la lista para el select de unidad de medida.
    */
-  obtenerIngresoSelectList():void {
-    this.ElegibilidadTextilesService.obtenerMenuDesplegable('unidad-de-medida.json')
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe({
-      next: (data) => {
-        this.unidadDeMedida = data as Catalogo[];
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error)
-      }
-    })
+  obtenerIngresoSelectList(): void {
+    this.ElegibilidadTextilesService.obtenerMenuDesplegable(
+      'unidad-de-medida.json'
+    )
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (data) => {
+          this.unidadDeMedida = data as Catalogo[];
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error al obtener los datos:', error);
+        },
+      });
   }
 
   /**
@@ -278,18 +322,20 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    * @description Obtiene los datos de las facturas desde el servicio.
    */
   recuperarDatos(): void {
-    this.ElegibilidadTextilesService.obtenerTablaDatos<CapturarColumns>('capturar-facturas.json')
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe({
-      next: (response) => {
-        if (response && Array.isArray(response)) {
-          this.facturas = response as CapturarColumns[]
-        } 
-      },
-      error: (error) => {
-        console.error('Error al obtener los datos:', error);
-      }}
-    );
+    this.ElegibilidadTextilesService.obtenerTablaDatos<CapturarColumns>(
+      'capturar-facturas.json'
+    )
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response) => {
+          if (response && Array.isArray(response)) {
+            this.facturas = response as CapturarColumns[];
+          }
+        },
+        error: (error) => {
+          console.error('Error al obtener los datos:', error);
+        },
+      });
   }
 
   /**
@@ -300,5 +346,4 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }

@@ -8,14 +8,14 @@
         <div class="col-md-8 form-group">
           <label class="form-label" for="coordenadas">Exento de pago*:</label>
           <app-input-radio [radioOptions]="exentoPagoRadio" [selectedValue]="exentoPagoValor" [isRequired]="true"
-            [layout]="'horizontal'" formControlName="exentoPago"
+            [layout]="'horizontal'" formControlName="exentoPago" 
             (valueChange)="cambioValorRadio('exentoPago', $event.toString())"></app-input-radio>
         </div>
       </div>
       <div class="row">
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="justificacionCatalogo" formControlName="justificacion"
-            [label]="'Justificación'" [required]="true" [isDisabled]="false" (change)="
+            [label]="'Justificación'" [required]="true" [isDisabled]="esFormularioSoloLectura" (change)="
               setValoresStore(
                 pagoForm,
                 'justificacion'
@@ -46,7 +46,7 @@
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="bancoCatalogo" formControlName="banco" [label]="'Banco'" [required]="true"
-            [isDisabled]="true" name="banco" (change)="
+             [isDisabled]="esFormularioSoloLectura" name="banco" (change)="
             setValoresStore(
               pagoForm,
               'banco'
