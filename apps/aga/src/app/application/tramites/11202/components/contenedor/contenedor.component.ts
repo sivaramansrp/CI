@@ -50,7 +50,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    /**
    * Define los datos que se mostrarán en la tabla dinámica.
    */
-   datosTabla: unknown[] = [];
+   datosTabla: any[] = [];
     /**
    * @property {any} radioOptions
    * Options for the radio buttons.
@@ -126,7 +126,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * @property {any[]} contenedores
    * Stores the container data
    * */
-  contenedores: unknown[] = [];
+  contenedores: any[] = [];
 
   /**
    * @property {string} archivoSeleccionado
