@@ -14,10 +14,35 @@
 
     <ng-container>
       @switch (indice) { @case (1) {
-      <app-solicitante #Solicitante (continuarEvento)="continuar()" (cancelarEvento)="cancelar()"></app-solicitante>
+      <solicitante #Solicitante></solicitante>
       } @case (2) {
-      <app-contenedor (continuarEvento)="continuar()" (cancelarEvento)="cancelar()"></app-contenedor>
+      <app-contenedor></app-contenedor>
       } }
+      @if (consultaDatos.create) {
+      <div class="row" style="margin-top: 30px;margin-bottom: 30px;">
+        <div class="form-group">
+          <div class="col-md-12">
+            <div class="pull-left text-muted text-vertical-align-button" id="lblCamposObligatorios">
+              {{ mensajeCamposObligatorios }}
+            </div>
+            <div class="pull-right row">
+              @if (indice===2) {
+              <div class="col-md-5">
+                <button type="button" class="btn btn-danger" (click)="cancelar()">
+                  Cancelar
+                </button>
+              </div>
+              }
+              <div class="col-md-5" id="botonGuardar">
+                <button type="submit" class="btn btn-primary" (click)="continuar()">
+                  Continuar
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      }
     </ng-container>
   </div>
 </div>
