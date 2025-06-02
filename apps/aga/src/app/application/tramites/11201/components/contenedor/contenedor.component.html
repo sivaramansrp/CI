@@ -75,20 +75,32 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="inicialesContenedor">Iniciales del equipo</label>
-                            <span class="require">*</span>
+                            <label for="inicialesContenedor">Iniciales del equipo<span class="require">*</span>:</label>
                             <input type="text" formControlName="inicialesContenedor" id="inicialesContenedor"
                                 maxlength="10" class="form-control"
                                 [ngClass]="isValid('inicialesContenedor') ? 'required' : ''">
+                            <div *ngIf="esInvalido('inicialesContenedor')" class="text-danger">
+                                <small *ngIf="solicitudForm.controls['inicialesContenedor'].errors?.['required']">
+                                    Este campo es obligatorio.
+                                </small>
+                            </div>
                         </div>
                     </div>
 
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="numeroContenedor">Número de equipo</label>
-                            <span class="require">*</span>
+                            <label for="numeroContenedor">Número de equipo<span class="require">*</span>:</label>
                             <input type="text" formControlName="numeroContenedor" id="numeroContenedor" maxlength="15"
                                 class="form-control" [ngClass]="isValid('numeroContenedor') ? 'required' : ''">
+                            <div *ngIf="esInvalido('numeroContenedor')" class="text-danger">
+                                <small *ngIf="solicitudForm.controls['numeroContenedor'].errors?.['required']">
+                                    Este campo es obligatorio.
+                                </small>
+                                <div *ngIf="solicitudForm.get('numeroContenedor')?.touched && solicitudForm.get('numeroContenedor')?.errors?.['minlength']"
+                                    class="mensaje-error">
+                                    Por favor, no escribas menos de 6 caracteres
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -96,7 +108,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="digitoDeControl">Dígito verificador</label>
+                            <label for="digitoDeControl">Dígito verificador:</label>
                             <input type="text" formControlName="digitoDeControl" id="digitoDeControl" maxlength="1"
                                 class="form-control">
                         </div>
@@ -140,8 +152,8 @@
 
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="numeroManifiesta" class="mt-2">No. Manifiesto</label>
-                            <span class="require">*</span>
+                            <label for="numeroManifiesta" class="mt-2">No. Manifiesto<span
+                                    class="require">*</span>:</label>
                             <input type="text" formControlName="numeroManifiesta" id="numeroManifiesta" maxlength="50"
                                 class="form-control" [ngClass]="isValid('numeroManifiesta') ? 'required' : ''"
                                 (change)="setValoresStore(solicitudForm,'numeroManifiesta', 'setNumeroManifiesta')">

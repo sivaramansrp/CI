@@ -21,7 +21,7 @@ export interface Solicitud11201State {
   contenedores: string;
   aduanaMenuDesplegable: string;
   casillaDeVerificacionindividual: boolean[];
-  numeroManifiesta: number;
+  numeroManifiesta: string;
   fechaDeIngreso: string;
   archivoSeleccionado: string;
   /**
@@ -59,7 +59,7 @@ export function createInitialState(): Solicitud11201State {
     fechaIngreso: '',
     aduanaMenuDesplegable: '',
     casillaDeVerificacionindividual: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-    numeroManifiesta: 0,
+    numeroManifiesta: '',
     fechaDeIngreso: '',
     archivoSeleccionado: '',
     linea: '',
@@ -90,7 +90,7 @@ export class Tramite11201Store extends Store<Solicitud11201State> {
     }));
   }
 
-  public setNumeroManifiesta(numeroManifiesta: number): void {
+  public setNumeroManifiesta(numeroManifiesta: string): void {
     this.update((state) => ({
       ...state,
       numeroManifiesta,

@@ -389,6 +389,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         this.solicitud11201State?.numeroContenedor,
         [
           Validators.required,
+          Validators.minLength(6),
           Validators.maxLength(15),
           Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
         ],
@@ -619,6 +620,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.mostrarMensaje = false;
     // Deshabilitar controles específicos si es necesario
     this.solicitudForm.get('archivoSeleccionado')?.disable();
+    this.radioContenedor = false;
+    this.radioArchivoCsv = false;
+    this.radioManifesto = false;
   }
 
   /**
@@ -968,5 +972,16 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       txtBtnCancelar: '',
     };
     this.elementoParaEliminar = i;
+  }
+  /**
+    * Verifica si un control del formulario es inválido, tocado o modificado.
+    * @param nombreControl - Nombre del control a verificar.
+    * @returns True si el control es inválido, de lo contrario false.
+    */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.solicitudForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
   }
 }

@@ -161,6 +161,6 @@ export interface ConsultaDatos {
   aduanaMenuDesplegable: string;
   fechaDeIngreso: string;
   menuDesplegable: string;
-  numeroManifiesta: number;
+  numeroManifiesta: string;
   datosDelContenedor: DatosDelContenedor[];
 }
