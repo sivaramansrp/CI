@@ -1,5 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { DatosSolicitante } from '../../tramites/32505/models/avios-model';
 
 /**
  * @interface Solicitud32502State
@@ -180,6 +181,9 @@ export interface Solicitud32502State {
    * Valor de la venta del vehículo.
    */
   valorVenta: string;
+
+ datosSolicitante: DatosSolicitante;
+  
 }
 /**
  * @function createInitialState
@@ -223,7 +227,24 @@ export function createInitialState(): Solicitud32502State {
     folioCFDI:'',
     folioVenta:'',
     valorVenta:'',
-
+    datosSolicitante: {
+      rfc: '',
+      denominacion: '',
+      actividadEconomica: '',
+      correoElectronico: '',
+      pais: '',
+      codigoPostal: '',
+      entidadFederativa: '',
+      municipio: '',
+      localidad: '',
+      colonia: '',
+      calle: '',
+      nExt: '',
+      nInt: '',
+      lada: '',
+      telefono: '',
+      adace: ''
+    }
   };
 }
 
@@ -647,6 +668,18 @@ export class tramite32505Store extends Store<Solicitud32502State> {
     this.update((state) => ({
       ...state,
       valorVenta,
+    }));
+  }
+
+  /**
+   * @method setDatosSolicitante
+   * @description Actualiza el estado del campo `datosSolicitante`.
+   * @param {DatosSolicitante} datosSolicitante - Objeto con los datos del solicitante.
+   */ 
+  public setDatosSolicitante(datosSolicitante: DatosSolicitante) {
+    this.update((state) => ({
+      ...state,
+      datosSolicitante,
     }));
   }
 }

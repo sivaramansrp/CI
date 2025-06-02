@@ -682,11 +682,11 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAlbergueModule
       ),
   },
-  {
-    path: 'registro-solicitud-immex-modalidad-controladora',
+    {
+    path: 'certificado-origen',
     loadChildren: () =>
-      import('./tramites/80104/modalidad-controlodora.module').then(
-        (m) => m.ModalidadControlodoraModule
+      import('./tramites/110217/certificado-origen-routing.module').then(
+        (m) => m.CertificadoOrigenRoutingModule
       ),
   },
 
