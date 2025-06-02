@@ -1,17 +1,17 @@
 import { Catalogo, ConfiguracionColumna, ModeloDeFormaDinamica, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../../estados/tramites/tramite120101.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FORMULARIO_MODAL_INSUMOS } from '../../constantes/solicitud-de-registro-tpl.enum';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { InsumosTabla } from '../../models/insumos.model';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { SolicitudDeRegistroTplService } from '../../services/solicitud-de-registro-tpl.service';
 import { Tramite120101Query } from '../../../../estados/queries/tramite120101.query';
-
 /**
  * Componente que gestiona la funcionalidad de los insumos en el formulario.
  * Este componente incluye la lógica para manejar tablas dinámicas, formularios y datos relacionados con insumos.
@@ -24,6 +24,14 @@ import { Tramite120101Query } from '../../../../estados/queries/tramite120101.qu
   styleUrl: './insumos.component.scss',
 })
 export class InsumosComponent implements OnInit, OnDestroy {
+
+  /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
+
   /**
    * Sujeto utilizado para destruir las suscripciones y evitar fugas de memoria.
    */
@@ -132,10 +140,8 @@ export class InsumosComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-  
     this.obtenerDatosFraccionArancelaria();
     this.obtenerDatosEstados();
-    this.agregarInsumo();
     this.servicioDeFormularioService.registerForm('insumosForm', this.ninoFormGroup);
   }
 
