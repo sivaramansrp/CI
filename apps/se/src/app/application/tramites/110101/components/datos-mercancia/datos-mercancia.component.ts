@@ -154,11 +154,11 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    */
   public inicializarFormulario(): void {
     this.formMercancia = this.fb.group({
-      nombreComercial: [this.solicitudeState.nombreComercial, Validators.required],
-      nombreIngles: [this.solicitudeState.nombreIngles, Validators.required],
-      fraccionArancelaria: [this.solicitudeState.fraccionArancelaria, [Validators.maxLength(8), Validators.pattern(REGEX_SOLO_NUMEROS)]],
-      descripcion: [{value: this.solicitudeState.descripcion, disabled: true}],
-      valorTransaccion: [this.solicitudeState.valorTransaccion, Validators.maxLength(20)]
+      nombreComercial: [this.solicitudeState?.nombreComercial, Validators.required],
+      nombreIngles: [this.solicitudeState?.nombreIngles, Validators.required],
+      fraccionArancelaria: [this.solicitudeState?.fraccionArancelaria, [Validators.maxLength(8), Validators.pattern(REGEX_SOLO_NUMEROS)]],
+      descripcion: [{value: this.solicitudeState?.descripcion, disabled: true}],
+      valorTransaccion: [this.solicitudeState?.valorTransaccion, Validators.maxLength(20)]
     });
   }
 

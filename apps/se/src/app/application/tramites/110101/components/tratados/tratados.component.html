@@ -22,7 +22,7 @@
         </div>
     </div>
     <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-        <button class="btn btn-primary" (click)="agregarTratado()">Agregar tratado</button>
+        <button class="btn btn-primary" (click)="agregarTratado()" [disabled]="esFormularioSoloLectura">Agregar tratado</button>
     </div>
 </form>
 
@@ -33,6 +33,6 @@
 <ng-table [commonTableHeader]="encabezadosComunesTabla" [commonTableBody]="cuerpoTabla"></ng-table>
 
 <div class=" text-end mt-5">
-    <button class="btn btn-default me-2">Modificar tratado</button>
-    <button class="btn btn-primary">Eliminar tratado</button>
+    <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar tratado</button>
+    <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">Eliminar tratado</button>
 </div>

@@ -146,9 +146,9 @@ export class TratadosComponent implements OnInit, OnDestroy {
      */
   public inicializarFormulario(): void {
     this.formularioTratados = this.fb.group({
-      pais: [this.solicitudeState.pais, Validators.required],
-      tratado: [this.solicitudeState.tratado, Validators.required],
-      origen: [this.solicitudeState.origen, Validators.required]
+      pais: [this.solicitudeState?.pais, Validators.required],
+      tratado: [this.solicitudeState?.tratado, Validators.required],
+      origen: [this.solicitudeState?.origen, Validators.required]
     });
   }
 

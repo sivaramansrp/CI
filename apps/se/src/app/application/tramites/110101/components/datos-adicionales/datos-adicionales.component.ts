@@ -137,8 +137,8 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
    */
   public inicializarFormulario(): void {
     this.formulario = this.fb.group({
-      entidad: [this.solicitudeState.entidad, Validators.required],
-      representacion: [this.solicitudeState.representacion, Validators.required],
+      entidad: [this.solicitudeState?.entidad, Validators.required],
+      representacion: [this.solicitudeState?.representacion, Validators.required],
     });
   }
 
