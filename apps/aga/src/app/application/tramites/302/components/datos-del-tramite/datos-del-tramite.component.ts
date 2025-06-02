@@ -425,4 +425,15 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         this.detallesDelProducto = Array.isArray(datos) ? datos : [datos];
       })
 }
+
+ /**
+   * Maneja la selección de una fila en la tabla.
+   * Actualiza el formulario y el store con los datos de la fila seleccionada.
+   * 
+   * @param row - Los datos de la fila seleccionada.
+   */
+  valorDeAlternancia(row:DetallesDelProducto[]): void {
+   
+  }
+
 }

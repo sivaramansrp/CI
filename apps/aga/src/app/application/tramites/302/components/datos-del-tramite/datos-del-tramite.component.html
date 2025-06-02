@@ -4,14 +4,14 @@
   
     <div class="row">
         <ng-titulo titulo="Mercancías" />
-        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="configuracionTabla" [datos]="detallesDelProducto" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="configuracionTabla" [datos]="detallesDelProducto" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura" (listaDeFilaSeleccionada)="valorDeAlternancia($event)"></app-tabla-dinamica>
     </div>
   
     <div class="row">
         <div class="col-md-6"></div>
         <div class="col-md-6"> 
             <div class="btn-group d-flex align-items-rigth">
-            <button type="button" class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+            <button type="button" class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura" data-bs-toggle="modal" data-bs-target="#modalAgregarProductos" (click)="abrirModal()">Modificar</button>
             <button type="button" class="btn btn-default ms-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
             <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalAgregarProductos" (click)="abrirModal()" [disabled]="esFormularioSoloLectura">
                 Agregar

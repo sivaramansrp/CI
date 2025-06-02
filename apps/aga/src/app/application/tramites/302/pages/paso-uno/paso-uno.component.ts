@@ -82,9 +82,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       '03039399393939393',
       'tipoTramite',
       'tipoTramite',
-      true,
-      false,
-      true
+       false,
+       false,
+       true
     );
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
           this.consultaState = seccionState;
