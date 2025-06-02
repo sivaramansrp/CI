@@ -1,15 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosDelInmuebleComponent } from './datos-del-inmueble.component';
 import { FormBuilder } from '@angular/forms';
-import { FormularioStore } from '../../../../core/estados/tramites/tramite104.store';
-import { FormularioQuery } from '../../../../core/queries/tramite104.query';
+import { DatosDelInmueble104Store } from '../../../../core/estados/tramites/tramite104.store';
+import { DatosDelInmueble104Query } from '../../../../core/queries/tramite104.query';
 import { of } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('DatosDelInmuebleComponent', () => {
   let componente: DatosDelInmuebleComponent;
   let fixture: ComponentFixture<DatosDelInmuebleComponent>;
-  let formularioTienda: FormularioStore;
-  let formularioConsulta: FormularioQuery;
+  let formularioTienda: DatosDelInmueble104Store;
+  let formularioConsulta: DatosDelInmueble104Query;
 
   const FORMULARIO_EXPORTACION = { tipoPrograma: '1', folioAutorizacion: '12345' };
   const FORMULARIO_DIRECCION = { calle: 'Main St', numeroExterior: '100' };
@@ -18,19 +19,19 @@ describe('DatosDelInmuebleComponent', () => {
     formularioTienda = {
       setFomentoExportacion: jest.fn(),
       setDireccion: jest.fn()
-    } as Partial<FormularioStore> as FormularioStore;
+    } as Partial<DatosDelInmueble104Store> as DatosDelInmueble104Store;
 
     formularioConsulta = {
       fomentoExportacion$: of(FORMULARIO_EXPORTACION),
       direccion$: of(FORMULARIO_DIRECCION)
-    } as Partial<FormularioQuery> as FormularioQuery;
+    } as Partial<DatosDelInmueble104Query> as DatosDelInmueble104Query;
 
     await TestBed.configureTestingModule({
-      imports: [DatosDelInmuebleComponent],
+      imports: [DatosDelInmuebleComponent, HttpClientTestingModule],
       providers: [
         FormBuilder,
-        { provide: FormularioStore, useValue: formularioTienda },
-        { provide: FormularioQuery, useValue: formularioConsulta }
+        { provide: DatosDelInmueble104Store, useValue: formularioTienda },
+        { provide: DatosDelInmueble104Query, useValue: formularioConsulta }
       ]
     }).compileComponents();
 
