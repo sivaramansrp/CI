@@ -1,7 +1,7 @@
-import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, TableBodyData, TableComponent, TablePaginationComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, TableBodyData, TableComponent, TablePaginationComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, distinctUntilChanged, map, takeUntil } from 'rxjs';
+import { Subject, distinctUntilChanged,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDelInmueble104Query } from '../../../../core/queries/tramite104.query';
 import { DatosDelInmueble104Store } from '../../../../core/estados/tramites/tramite104.store';
@@ -117,12 +117,6 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
    */
   itemsPerPage: number = 5;
 
-  /** Subject para notificar la destrucción del componente. */
-  public consultaState!:ConsultaioState;
-
-  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
-  public esDatosRespuesta: boolean = false;
-
   /**
    * **Constructor del componente**  
    * 
@@ -159,15 +153,6 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
     });
     this.cargarDatosGuardados(); // Carga los datos guardados en el formulario.
     this.escucharCambiosFormulario();
-
-     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroy$),map((seccionState) => {
-          this.consultaState = seccionState;
-      })).subscribe();
-    if(this.consultaState.update) {
-      this.guardarDatosFormulario();
-    } else {
-      this.esDatosRespuesta = true;
-    }
   }
 
 
@@ -325,8 +310,6 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
     this.colapsable = !this.colapsable;
   }
 
-
-
   /**
    * Actualiza la paginación de la tabla de establecimientos.
    * Corta los datos de la tabla según la página actual y el número de elementos por página.
@@ -357,23 +340,6 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
     this.itemsPerPage = itemsPerPage;
     this.currentPage = 1;
     this.updatePagination();
-  }
-
-    /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
-  guardarDatosFormulario(): void {
-    this.depositoFiscalManufacturaVehiculosApiService
-      .obtenerDatosInicialesFormulario().pipe(
-        takeUntil(this.destroy$)
-      )
-      .subscribe((resp) => {
-        if(resp){
-        this.esDatosRespuesta = true;
-        this.depositoFiscalManufacturaVehiculosApiService.actualizarEstadoFormulario(resp);
-        }
-      });
   }
 
   /**
