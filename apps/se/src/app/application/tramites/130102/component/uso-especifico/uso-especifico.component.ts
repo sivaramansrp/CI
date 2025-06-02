@@ -109,7 +109,9 @@ export class UsoEspicificoComponent implements OnInit {
    */
   ngOnInit(): void {
 this.inicializarEstadoFormulario();
-    
+      this.formularioRegistroService.getFraccionesUsoEspecifico().subscribe(data => {
+      this.datosSocios = data;
+    });
     this.formularioRegistroService.registrarFormulario('usoEspicificoForm', this.usoEspicificoForm);
   }
 

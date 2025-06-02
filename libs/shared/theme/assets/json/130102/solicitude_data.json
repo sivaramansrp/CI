@@ -18,7 +18,7 @@
   "bloque": "1",
   "descripcionJustificacion": "valor ficticio",
   "observaciones": "valor ficticio",
-  "productos": "valor ficticio",
-  "descripción": "valor ficticio"
-  
+  "productos": "Nuevo",
+  "descripción": "valor ficticio",
+  "solicitud":"Inicial"
 }

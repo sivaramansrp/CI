@@ -55,6 +55,7 @@ import { FormularioRegistroService } from '../../services/octava-temporal.servic
   styleUrl: './datos-de-la-mercacia.component.scss',
 })
 export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
+   defaultSelect: string = 'Nuevo';
   /** 
   * @description Indica si el formulario es de solo lectura.
   */

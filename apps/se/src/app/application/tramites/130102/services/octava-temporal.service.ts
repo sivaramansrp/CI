@@ -8,6 +8,7 @@ import { Solicitud130102State, Tramite130102Store } from '../../../estados/trami
 
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { FraccionArancelariaProsec, OctavaTemporal } from '../models/octava-temporal.model';
 /**
  * Servicio inyectable disponible en toda la aplicación.
  */
@@ -93,6 +94,21 @@ getRepresentacionesFederales(): Observable<Catalogo[]> {
    getSolicitudData(): Observable<Solicitud130102State> {
     return this.http.get<Solicitud130102State>('assets/json/130102/solicitude_data.json');
   }
+  /**
+   * Obtiene un formulario registrado por su clave.
+   * @param key - Clave identificadora del formulario.
+   * @returns FormGroup asociado a la clave, o undefined si no existe.
+   */
+  getPartidasFromJson(): Observable<OctavaTemporal[]> {
+  return this.http.get<OctavaTemporal[]>('assets/json/130102/partidas.json');
+}
+/*
+  * Obtiene las fracciones arancelarias de uso específico desde un archivo JSON.
+  * @returns Observable que emite un array de objetos FraccionArancelariaProsec.
+  */
+getFraccionesUsoEspecifico(): Observable<FraccionArancelariaProsec[]> {
+  return this.http.get<FraccionArancelariaProsec[]>('assets/json/130102/uso-especifico.json');
+}
 /*
   * Actualiza el estado del formulario con los datos proporcionados.
   * @param {Solicitud130102State} DATOS - Datos de la solicitud a actualizar.

@@ -4,15 +4,15 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label for="solicitude">Solicitude*:</label>
+          <label for="solicitud">Solicitude*:</label>
           <app-input-radio
             [radioOptions]="solicitude"
             [selectedValue]="defaultSelect"
             [isRequired]="true"
             (valueChange)="onValueChange($event)"
             [layout]="'vertical'"
-            formControlName="solicitude"
-            (change)="setValoresStore(formDelTramite,'solicitude', 'setSolicitude')"
+            formControlName="solicitud"
+            (change)="setValoresStore(formDelTramite,'solicitud', 'setSolicitude')"
           ></app-input-radio>
         </div>
       </div>

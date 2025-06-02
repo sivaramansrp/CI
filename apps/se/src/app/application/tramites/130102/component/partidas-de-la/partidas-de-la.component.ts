@@ -172,6 +172,9 @@ export class PartidasDeLaComponent implements OnInit, OnDestroy {
     this.formularioRegistroService.getFraccionArancelariaTIGIE().pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.fraccionArancelariaTIGIE = data;
     });
+     this.formularioRegistroService.getPartidasFromJson().pipe(takeUntil(this.destroyNotifier$)).subscribe(partidas => {
+    this.datosSocios = partidas;
+  });
     this.inicializarEstadoFormulario();
     this.formularioTotalCount();
   

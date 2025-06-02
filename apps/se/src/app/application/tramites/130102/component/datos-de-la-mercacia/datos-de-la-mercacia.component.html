@@ -8,6 +8,7 @@
           <app-input-radio
             [radioOptions]="producto"
             [isRequired]="true"
+            [selectedValue]="defaultSelect"
             formControlName="productos"
             (change)="setValoresStore(formDelLa,'productos','setProducto')"
             [layout]="'vertical'"

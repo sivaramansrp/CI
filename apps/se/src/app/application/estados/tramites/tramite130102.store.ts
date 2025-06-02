@@ -93,7 +93,7 @@ export function createInitialState(): Solicitud130102State {
     descripcionJustificacion: '', // Justificación vacía.
     observaciones: '', // Sin observaciones iniciales.
     productos: '', // Sin productos asignados.
-    solicitud : "", // Indica que la solicitud no está activa por defecto.
+    solicitud : '', // Indica que la solicitud no está activa por defecto.
   };
 }
 
