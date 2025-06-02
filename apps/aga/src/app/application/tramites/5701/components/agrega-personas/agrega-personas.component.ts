@@ -13,7 +13,16 @@ import {
   MSG_SELECCIONA_REGISTRO,
   TITULO_MODAL_AVISO,
 } from '../../../../core/enums/5701/responsables-despacho.enum';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {
   ConfiguracionColumna,
   Notificacion,
@@ -53,7 +62,13 @@ import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
   templateUrl: './agrega-personas.component.html',
   styleUrl: './agrega-personas.component.scss',
 })
-export class AgregaPersonasComponent implements OnInit, OnDestroy {
+export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
+  @Input() personasResponsablesDespachoSeleccionados: ResponsablesDespacho[] =
+    [];
+
+  @Output() responsablesDespachoChange: EventEmitter<ResponsablesDespacho[]> = new EventEmitter<
+    ResponsablesDespacho[]
+  >();
   /**
    * @description
    * Configuración de la tabla de responsables del despacho.
@@ -139,6 +154,20 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
 
     if (this.solicitudState.personasResponsablesDespacho.length > 0) {
       this.personas = this.solicitudState.personasResponsablesDespacho;
+    }
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['personasResponsablesDespachoSeleccionados'] &&
+      changes['personasResponsablesDespachoSeleccionados'].currentValue
+    ) {
+      this.personas = [
+        ...changes['personasResponsablesDespachoSeleccionados'].currentValue,
+      ];
+      // this.responsablesDespachoChange.emit(this.personas);
+
+      // this.tramite5701Store.setPersonasResponsablesDespacho(this.personas);
     }
   }
 
@@ -334,7 +363,8 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
 
     if (responsable !== null && !EXISTE_RESPONSABLE) {
       this.personas.push(responsable);
-      this.tramite5701Store.setPersonasResponsablesDespacho(this.personas);
+      this.responsablesDespachoChange.emit(this.personas);
+      // this.tramite5701Store.setPersonasResponsablesDespacho(this.personas);
     }
 
     this.gafeteRespoDespacho.setValue('');
@@ -401,7 +431,9 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
       txtBtnAceptar: 'Cerrar',
       txtBtnCancelar: '',
     };
-    this.tramite5701Store.setPersonasResponsablesDespacho(this.personas);
+    this.responsablesDespachoChange.emit(this.personas);
+
+    // this.tramite5701Store.setPersonasResponsablesDespacho(this.personas);
   }
 
   /**

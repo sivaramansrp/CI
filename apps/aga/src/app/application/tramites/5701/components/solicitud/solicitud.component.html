@@ -469,7 +469,10 @@
           [required]="false"
         >
           <option value="-1">Selecciona una opción...</option>
-          <option *ngFor="let recinto of recintoCatalogo" [value]="recinto.id_recinto_fiscalizado">
+          <option
+            *ngFor="let recinto of recintoCatalogo"
+            [value]="recinto.id_recinto_fiscalizado"
+          >
             {{ recinto.descripcion }}
           </option>
         </select>
@@ -661,7 +664,12 @@
 
   <ng-titulo titulo="Personas responsables del despacho (máximo 5)" />
 
-  <agrega-personas />
+  <agrega-personas
+    [personasResponsablesDespachoSeleccionados]="
+      solicitudState.personasResponsablesDespacho
+    "
+    (responsablesDespachoChange)="changeResponsablesDespacho($event)"
+  />
 
   <ng-titulo titulo="Pagos" />
   <div formGroupName="pagoCaptura">

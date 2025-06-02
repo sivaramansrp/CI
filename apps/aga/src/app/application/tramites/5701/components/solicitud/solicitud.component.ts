@@ -59,6 +59,7 @@ import {
 import {
   DatosComponentePedimento,
   Pedimento,
+  ResponsablesDespacho,
 } from '../../../../core/models/5701/tramite5701.model';
 import {
   EMPTY,
@@ -485,6 +486,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       } else {
         FORMAS_VALIDADAS[seccion] = false;
         this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
+        console.log(this.seccion);
+        
       }
     }
   }
@@ -902,7 +905,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
       pedimento: this.fb.array([]),
 
-      personasResponsablesDespacho: this.fb.array([]),
+      personasResponsablesDespacho: this.fb.array([], Validators.required),
 
       vehiculo: this.fb.group({
         tipoTransporte: [this.solicitudState?.tipoTransporte],
@@ -2207,5 +2210,28 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       'tipoTransporteArriboSalida',
       'setTipoTransporteArriboSalida'
     );
+  }
+
+  /**
+   * Cambia los responsables de despacho y actualiza el store correspondiente.
+   * @param personas - Lista de responsables de despacho.
+   * @returns {void} No retorna ningún valor.
+   */
+  changeResponsablesDespacho(personas: ResponsablesDespacho[]): void {
+    this.tramite5701Store.setPersonasResponsablesDespacho(personas);
+
+    this.personasResponsablesDespacho.clear();
+    if (personas.length > 0) {
+      personas.forEach((persona) => {
+        this.personasResponsablesDespacho.push(
+          this.fb.group({
+            gafeteRespoDespacho: [persona.gafeteRespoDespacho],
+            nombre: [persona.nombre],
+            primerApellido: [persona.primerApellido],
+            segundoApellido: [persona.segundoApellido],
+          })
+        );
+      });
+    }
   }
 }
