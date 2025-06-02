@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } fr
 import { Catalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, delay, map, of, takeUntil } from 'rxjs';
 import { Tramite110222State, Tramite110222Store } from '../../estados/tramite110222.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ELEMENTOS_REQUERIDOS } from '../../constantes/peru-certificado.module';
 import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -116,7 +117,11 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    * Referencia al elemento del modal de modificación.
    */
   @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
-
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  esFormularioSoloLectura: boolean = false;
   /**
    * @descripcion
    * Constructor que inicializa los servicios y dependencias requeridas.
@@ -129,11 +134,12 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    */
   constructor(
     private readonly fb: FormBuilder,
-    private ValidarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService,
-    private store: Tramite110222Store,
-    private query: Tramite110222Query,
-    private seccionStore: SeccionLibStore,
-    private seccionQuery: SeccionLibQuery
+    public ValidarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService,
+    public store: Tramite110222Store,
+    public query: Tramite110222Query,
+    public seccionStore: SeccionLibStore,
+    public seccionQuery: SeccionLibQuery,
+    public consultaQuery: ConsultaioQuery
   ) {
     this.query.formCertificado$
       .pipe(takeUntil(this.destroyNotifier$), delay(100))
@@ -153,6 +159,15 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.seccionState = seccionState;
+        })
+      )
+      .subscribe();
+
+       this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {          
+          this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
       .subscribe();
