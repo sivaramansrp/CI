@@ -50,7 +50,6 @@ export interface OpcionesPublicacion{
   label: string;
   value: string;
 }
-
 /**
  * Modelo de datos para una fila de una tabla.
  * Representa los datos que se mostrarán en la tabla.
@@ -67,4 +66,17 @@ export interface TablaDatos {
 export interface DatosSeleccionados extends TablaDatos {
 
   checked: boolean;
+}
+
+/**
+ * @interface EstadoFisico
+ * @description
+ * Representa el estado físico de un objeto o entidad dentro del sistema.
+ *
+ * @property {number} id - Identificador único del estado físico.
+ * @property {string} descripcíon - Descripción detallada del estado físico.
+ */
+export interface EstadoFisico {
+  id: number;
+  descripcíon: string;
 }

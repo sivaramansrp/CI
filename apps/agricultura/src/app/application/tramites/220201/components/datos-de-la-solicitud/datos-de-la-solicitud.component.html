@@ -38,6 +38,8 @@
             [label]="'Aduana de ingreso'"
             [required]="true"
             name="aduanaIngreso"
+             [isDisabled]="esFormularioSoloLectura"
+            (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
         <div class="col-md-12">
@@ -47,6 +49,8 @@
             [label]="'Oficina de inspección de sanidad Agropecuaria'"
             [required]="true"
             name="oficinaInspeccion"
+             [isDisabled]="esFormularioSoloLectura"
+               (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
         <div class="col-md-12">
@@ -56,6 +60,8 @@
             [label]="'Punto de inspección'"
             [required]="true"
             name="puntoInspeccion"
+             [isDisabled]="esFormularioSoloLectura"
+               (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
         <div class="col-md-6">
@@ -69,12 +75,12 @@
             ></label>
             <input
               formControlName="claveUCON"
-              value=""
               class="form-control"
               id="claveUCON"
               placeholder=""
               type="text"
               libUppercase
+                   (change)="setValoresStore()"
             />
           </div>
         </div>
@@ -85,6 +91,8 @@
             [label]="'Establecimiento TIF'"
             [required]="false"
             name="establecimientoTIFs"
+             [isDisabled]="esFormularioSoloLectura"
+               (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
         <div class="col-md-12">
@@ -94,6 +102,8 @@
             [label]="'Nombre del médico veterinario'"
             [required]="false"
             name="nombreVeterinario"
+             [isDisabled]="esFormularioSoloLectura"
+               (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
         <div class="col-md-6">
@@ -102,9 +112,11 @@
             <input
               class="form-control"
               id="numeroGuia"
+              formControlName="numeroGuia"
               placeholder=""
               type="text"
               libUppercase
+                   (change)="setValoresStore()"
             />
           </div>
         </div>
@@ -115,9 +127,11 @@
             [label]="'Régimen'"
             [required]="true"
             name="regimen"
+             [isDisabled]="esFormularioSoloLectura"
+               (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
-      </div>
+    
   
       <div class="row">
         <ng-titulo titulo="Tipo de Mercancía" />
@@ -128,11 +142,15 @@
           <app-input-radio
             [radioOptions]="opcionDeBotonDeRadio"
             [isRequired]="true"
-            [selectedValue]="selectedValue"
             [layout]="'vertical'"
+            name="tipoMercancia"
+            formControlName="tipoMercancia"
+
+               (change)="setValoresStore()"
           ></app-input-radio>
         </div>
       </div>
+        </div>
       <div class="row">
         <ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
         <div class="row mt-5">
@@ -140,10 +158,11 @@
             <label for="mercancia">Mercancía</label>
           </div>
           <div class="col-md-12">
-            <ng-table
-              [commonTableHeader]="tableData.header"
-              [commonTableBody]="mesaCuerpo"
-            ></ng-table>
+              <app-tabla-dinamica
+                    [tipoSeleccionTabla]="tipoSeleccionsoli"
+                    [configuracionTabla]="configuracionColumnasoli"
+                    [datos]="cuerpoTabla"
+                  ></app-tabla-dinamica> 
           </div>
         </div>
         <div class="row my-5">

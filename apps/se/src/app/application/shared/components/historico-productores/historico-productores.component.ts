@@ -34,6 +34,11 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
  * Permite capturar y validar los datos relacionados con las mercancías.
  */
   formularioMercancia!: FormGroup;
+    /**
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   * @type {boolean}
+   */
+  @Input() esFormularioSoloLectura!: boolean;
 
   /**
    * Propiedad de entrada que contiene una lista de opciones de catálogo para el "Tipo Factura".
@@ -239,6 +244,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.initFormulario();
+    this.inicializarEstadoFormulario();
     this.inicializarFormularioMercancia()
     this.initAgregarDatosProductorFormulario();
     if (this.tramiteState) {
@@ -246,6 +252,19 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     }
     if (this.agregarDatosProductor) {
       this.agregarDatosProductorFormulario.patchValue(this.agregarDatosProductor);
+    }
+  }
+    /**
+* Evalúa si se debe inicializar o cargar datos en el formulario.
+*/
+  inicializarEstadoFormulario(): void {
+    if (!this.formulario) {
+      this.initFormulario();
+    }
+
+    if (this.esFormularioSoloLectura) {
+      this.formulario.disable();
+
     }
   }
 
@@ -272,7 +291,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       valorMercancia: [{ value: '', disabled: true }],
       complemento: [{ value: '', disabled: true }],
       numeroFactura: [{ value: [[]], disabled: true }],
-      tipoFactura: [[]],
+      tipoFactura: ['', [Validators.required, Validators.min(0)]],
     });
   }
   /**
