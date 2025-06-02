@@ -3,6 +3,7 @@
  * @description Servicio para obtener los datos del permiso IMMEX.
  */
 import { HttpClient } from '@angular/common/http';
+import { ImmexRegistroState } from '../../estados/tramites/tramite80203.store';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -32,4 +33,7 @@ export class PermisoImmexDatosService {
     return this.httpClient.get<any[]>(this.jsonUrl).pipe(
     );
   }  
+  getRegistroTomaMuestrasMercanciasData(): Observable<ImmexRegistroState> {
+    return this.httpClient.get<ImmexRegistroState>('assets/json/80203/immexRegistro.json');
+  }
 }
