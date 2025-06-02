@@ -9,7 +9,7 @@ export interface Solicitud221603State {
   /**
    * Justificación para la solicitud.
    */
-  justificacion: string;
+  justificacionDescription: string;
 
   /**
    * Aduana de ingreso para el trámite.
@@ -95,6 +95,8 @@ export interface Solicitud221603State {
    * Importe relacionado con el trámite.
    */
   importe: string;
+
+  justificacion: string;
 }
 
 /**
@@ -103,7 +105,7 @@ export interface Solicitud221603State {
  */
 export function createInitialState(): Solicitud221603State {
   return {
-    justificacion: '',
+    justificacionDescription: '',
     aduana: '',
     oficina: '',
     punto: '',
@@ -121,6 +123,7 @@ export function createInitialState(): Solicitud221603State {
     llave: '',
     fecha: '',
     importe: '',
+    justificacion: '',
   };
 }
 
@@ -159,6 +162,17 @@ export class Tramite221603Store extends Store<Solicitud221603State> {
     this.update((state) => ({
       ...state,
       justificacion,
+    }));
+  }
+
+   /**
+   * Actualiza el estado con la justificación proporcionada.
+   * justificacion La justificación a establecer.
+   */
+  public setJustificacionDescription(justificacionDescription: string): void {
+    this.update((state) => ({
+      ...state,
+      justificacionDescription,
     }));
   }
 

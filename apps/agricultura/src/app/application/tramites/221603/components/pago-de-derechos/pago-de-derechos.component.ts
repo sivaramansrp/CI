@@ -109,9 +109,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.sanidadService.inicializaPagoDeDerechosDatosCatalogos();
     this.inicializarFormulario();
 
-    this.disableJustificacion =
-      this.solicitudState.exento === '1' ? false : true;
-    this.disableBanco = this.solicitudState.exento === '1' ? true : false;
+this.disableJustificacion = (this.solicitudState?.exento ?? '') !== '1';
+this.disableBanco = (this.solicitudState?.exento ?? '') === '1';
 
     this.sanidadService
       .obtenerFormularioDatos()
@@ -122,19 +121,20 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
           this.limpiarFormularioYDeshabilitarControles();
         }
       });
-      this.inicializarEstadoFormulario()
+    this.inicializarEstadoFormulario();
   }
 
   inicializarEstadoFormulario(): void {
-    this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
       this.disableBanco = true;
       this.pagoDerechosForm.get('fecha')?.disable();
       this.pagoDerechosForm.get('llave')?.disable();
+      this.pagoDerechosForm.get('exentoDePago')?.disable();
     } else {
-       this.disableBanco = true;
+      this.disableBanco = true;
       this.pagoDerechosForm.get('fecha')?.enable();
       this.pagoDerechosForm.get('llave')?.enable();
+      this.pagoDerechosForm.get('exentoDePago')?.enable();
     }
   }
 

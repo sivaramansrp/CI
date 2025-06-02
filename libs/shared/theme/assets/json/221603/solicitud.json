@@ -1,5 +1,5 @@
 {
-  "justificacion": "Solicitud de inspección para importación de productos agrícolas",
+  "justificacionDescription": "Solicitud de inspección para importación de productos agrícolas",
   "aduana": "Aduana de Veracruz",
   "oficina": "Oficina Central",
   "punto": "Punto de Inspección 5",
@@ -11,6 +11,7 @@
   "verificacion": "Inspección física",
   "empresa": "AgroMex S.A. de C.V.",
   "exento": "No",
+  "justificacion": "1",
   "clave": "CLV-221603-01",
   "dependencia": "SADER",
   "banco": "1",

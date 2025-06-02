@@ -134,11 +134,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   inicializarEstadoFormulario(): void {
-    this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
        this.datosSolicitudForm.get('guia')?.disable();
+       this.datosSolicitudForm.get('justificacionDescription')?.disable();
     } else {
       this.datosSolicitudForm.get('guia')?.enable();
+      this.datosSolicitudForm.get('justificacionDescription')?.enable();
     }
   }
 
@@ -149,7 +150,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   private inicializarFormulario(): void {
     this.datosSolicitudForm = this.formBuilder.group({
-      justificacion: [this.solicitudState.justificacion, Validators.required],
+      justificacionDescription: [this.solicitudState.justificacionDescription, Validators.required],
       aduana: [this.solicitudState.aduana, Validators.required],
       oficina: [this.solicitudState.oficina, Validators.required],
       punto: [this.solicitudState.punto, Validators.required],

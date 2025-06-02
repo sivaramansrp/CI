@@ -106,7 +106,6 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
   }
 
   inicializarEstadoFormulario(): void {
-    this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
       this.medioForm.get('empresa')?.disable();
       this.medioForm.get('transporte')?.disable();

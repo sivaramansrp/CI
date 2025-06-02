@@ -122,6 +122,7 @@ export class SanidadService {
 
  public actualizarEstadoFormulario(resp: Solicitud221603State): void {
     this.tramite221603Store.setJustificacion(resp.justificacion)
+    this.tramite221603Store.setJustificacionDescription(resp.justificacionDescription)
     this.tramite221603Store.setAduana(resp.aduana)
     this.tramite221603Store.setOficina(resp.oficina)
     this.tramite221603Store.setPunto(resp.punto)

@@ -25,25 +25,25 @@
   <div class="row">
     <div class="col-md-12">
       <div class="form-group">
-        <label class="form-label" for="justificacion">Justificación*:</label>
+        <label class="form-label" for="justificacionDescription">Justificación*:</label>
         <textarea
           class="form-control custom-textarea"
-          id="justificacion"
-          formControlName="justificacion"
+          id="justificacionDescription"
+          formControlName="justificacionDescription"
           style="height: 90px"
-          (change)="setValoresStore('justificacion', 'setJustificacion')"
-          [class.is-invalid]="datosSolicitudForm.get('justificacion')?.touched && datosSolicitudForm.get('justificacion')?.invalid"
+          (change)="setValoresStore('justificacionDescription', 'setJustificacionDescription')"
+          [class.is-invalid]="datosSolicitudForm.get('justificacionDescription')?.touched && datosSolicitudForm.get('justificacionDescription')?.invalid"
         ></textarea>
         <div
           class="invalid-feedback"
           *ngIf="
-            datosSolicitudForm.get('justificacion')?.touched &&
-            datosSolicitudForm.get('justificacion')?.invalid
+            datosSolicitudForm.get('justificacionDescription')?.touched &&
+            datosSolicitudForm.get('justificacionDescription')?.invalid
           "
         >
           <span
             *ngIf="
-              datosSolicitudForm.get('justificacion')?.hasError('required')
+              datosSolicitudForm.get('justificacionDescription')?.hasError('required')
             "
             >Este campo es obligatorio.</span
           >
