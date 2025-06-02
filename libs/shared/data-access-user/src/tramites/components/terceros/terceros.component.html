@@ -34,6 +34,7 @@
       class="btn btn-primary ms-2 d-flex"
       type="button"
       (click)="agregaPersona()"
+      [disabled]="esFormularioSoloLectura"
     >
       Agregar
     </button>
@@ -48,6 +49,7 @@
       [configuracionTabla]="encabezadoDeTablaTerceros"
       [datos]="personas"
       (listaDeFilaSeleccionada)="tercerosSeleccionados = $event"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     >
     </app-tabla-dinamica>
   </div>
