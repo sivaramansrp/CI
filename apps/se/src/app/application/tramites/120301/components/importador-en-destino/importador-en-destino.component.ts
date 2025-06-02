@@ -50,6 +50,10 @@ import { REG_X } from '@libs/shared/data-access-user/src/tramites/constantes/reg
   styleUrl: './importador-en-destino.component.scss',
 })
 export class ImportadorEnDestinoComponent implements OnInit, OnDestroy {
+  /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario debe estar deshabilitado.
+   * Puede ser configurado externamente a través del binding de entrada.
+   */
   @Input()
   formularioDeshabilitado: boolean = false;
 

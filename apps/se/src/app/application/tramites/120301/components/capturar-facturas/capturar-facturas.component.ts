@@ -95,13 +95,28 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
    */
   facturas: CapturarColumns[] = [];
 
+  /**
+   * @property {Subject<void>} destroyNotifier$ - Notificador para cancelar suscripciones y evitar fugas de memoria.
+   * Utilizado con operadores como `takeUntil`.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * @property {TextilesState} capturarState - Estado actual relacionado con la captura de datos textiles.
+   */
   private capturarState!: TextilesState;
 
+  /**
+   * @property {SeccionLibState} seccionState - Estado actual de la sección en el módulo de librerías.
+   */
   private seccionState!: SeccionLibState;
 
+  /**
+   * @property {*} TablaSeleccion - Referencia a la enumeración o constante `TablaSeleccion`
+   * para su uso en la plantilla o lógica del componente.
+   */
   TablaSeleccion = TablaSeleccion;
+
   /**
    * @property {string[]} tableColumns - Array de encabezados de columnas de la tabla.
    */

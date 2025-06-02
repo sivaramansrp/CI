@@ -59,6 +59,11 @@ export class ElegibilidadTextilesService {
     return this.http.get<Catalogo[]>(JSONURL);
   }
 
+  /**
+   * @method getPrefillDatos
+   * @description Obtiene los datos precargados desde un archivo JSON local.
+   * @returns {Observable<TextilesState>} Observable que emite el estado de datos textiles precargado.
+   */
   getPrefillDatos(): Observable<TextilesState> {
     const JSONURL = 'assets/json/120301/datos-prefill.json';
     return this.http.get<TextilesState>(JSONURL);

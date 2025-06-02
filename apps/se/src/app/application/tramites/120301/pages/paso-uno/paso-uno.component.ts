@@ -41,10 +41,17 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   mostrarOtraPestana: boolean = true;
 
-  /** Subject para notificar la destrucción del componente. */
+  /**
+   * @property {Subject<void>} destroyNotifier$ - Subject para notificar la destrucción del componente.
+   * Utilizado para cancelar suscripciones y evitar fugas de memoria.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * @property {ConsultaioState} consultaState - Estado actual relacionado con la consulta.
+   */
   public consultaState!: ConsultaioState;
+
   /**
    * @method seleccionaTab
    * @description Selecciona una pestaña y actualiza el índice.
@@ -88,6 +95,11 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @method cargarDatosPrevios
+   * @description Carga datos previos desde el servicio `elegibilidadTextilesService` y actualiza el estado en el store.
+   * Utiliza `takeUntil` para evitar fugas de memoria al destruir el componente.
+   */
   cargarDatosPrevios(): void {
     const PREFILL_DATOS = this.elegibilidadTextilesService.getPrefillDatos();
     PREFILL_DATOS.pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
@@ -95,6 +107,11 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * @method ngOnDestroy
+   * @description Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Cancela suscripciones activas mediante `destroyNotifier$`.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
