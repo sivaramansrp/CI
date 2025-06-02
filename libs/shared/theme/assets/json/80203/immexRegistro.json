@@ -1,0 +1,25 @@
+{
+  "immexRegistro": {
+    "permisoImmexDatos": 1,
+    "fraccionArancelariaExportacion": "1001.90.01",
+    "productoDescExportacion": "Harina de trigo para exportación",
+    "productoArancelariaExportacion": 123456,
+    "Nico": "01",
+    "fraccionDatos": 987654,
+    "commodityCandiadAnual": 5000,
+    "commodityCapacidadInstalda": "10000 toneladas",
+    "commodityCandidadPor": "mensual",
+    "commodityFraccionImportacion": 789123,
+    "commodityImportacion": 3000,
+    "commodityDescImportacion": "Trigo importado para procesamiento",
+    "nicoDescImportacion": "Producto agrícola",
+    "exportacionDescExportacion": "Exportación de harina procesada",
+    "FraccionDescExportacion": "Fracción especial para harina",
+    "fraccionArancelariaDesc": "Descripción completa de fracción arancelaria",
+    "candidadPorPeriodo": "416.66 toneladas",
+    "capacidadPeriodo": "833.33 toneladas",
+    "candiadAnual": "5000 toneladas",
+    "commodityNicoDescImportacion": "Trigo duro - grano",
+    "nicoDatos": "Detalle técnico del NICO"
+  }
+}
