@@ -1,4 +1,3 @@
-
 /**
  * Importaciones necesarias para el funcionamiento del componente.
  */
@@ -18,7 +17,9 @@ import { FECHA_DE_PAGO } from '../../constantes/permiso-maquila.enum';
 
 import { Tramite260212Query } from '../../estados/tramite260212.query';
 
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
+
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * Componente que gestiona el pago de derechos.
  * Utiliza un formulario reactivos para recopilar datos del usuario.
@@ -37,85 +38,138 @@ import { Observable, Subject, takeUntil } from 'rxjs';
   styleUrls: ['./pago-de-derechos.component.scss',],
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
-
-  /** Subject para destruir el componente */
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   */
+ public esFormularioSoloLectura: boolean = true;
+/**
+   * Subject para limpiar recursos y cancelar suscripciones al destruir el componente.
+   */
   private destroy$ = new Subject<void>();
-  /** Observable para el estado seleccionado */
-  selectedBanco$: Observable<CatalogoResponse | null> =
-    this.tramite260212Query.selectedBanco$;
-  /** Catálogo de estados cargado desde un archivo JSON */
 
+  /**
+   * Observable para el banco seleccionado desde el store.
+   */
+  selectedBanco$: Observable<string> =
+    this.tramite260212Query.selectedBanco$;
+
+  /**
+   * Formulario reactivo principal para el pago de derechos.
+   */
+  pagoDerechos!: FormGroup;
+
+  /**
+   * Observable para la clave de referencia seleccionada.
+   */
   claveDeReferncia$ = this.tramite260212Query.selectedClaveDeReferncia$
+
+  /**
+   * Observable para la cadena de la dependencia seleccionada.
+   */
   cadenaDeLaDependencia$ = this.tramite260212Query.selectedCadenaDeLaDependencia$
+
+  /**
+   * Observable para la llave de pago seleccionada.
+   */
   llaveDePago$ = this.tramite260212Query.selectedLlaveDePago$
+
+  /**
+   * Observable para la fecha de pago seleccionada.
+   */
   fechaDePago$ = this.tramite260212Query.selectedFechaDePago$
+
+  /**
+   * Observable para el importe de pago seleccionado.
+   */
   importeDePago$ = this.tramite260212Query.selectedImporteDePago$
 
-
+  /**
+   * Configuración para el input de fecha de inicio.
+   */
   fechaInicioInput: InputFecha = FECHA_DE_PAGO;
 
+  /**
+   * Fecha de pago por defecto (ejemplo).
+   */
   fechaPagoDate: string = '15/03/2025';
 
   /**
-   * Datos para el selector de opciones.
+   * Datos para poblar el selector de bancos.
    */
   dropdownData: CatalogoResponse[] = [];
 
   /**
- * Constructor del componente.
- * Inyecta el FormBuilder y el servicio de pago de derechos.
- * 
- * @param fb Constructor de formularios para crear el formulario reactivos.
- * @param pagoDeDerechosService Servicio que proporciona datos para el componente.
- */
+   * Inicializa el formulario y el estado de solo lectura según el store global.
+   */
   constructor(
     private fb: FormBuilder,
     private pagoDeDerechosService: PagoDeDerechosService,
     private tramite260212Store: Tramite260212Store,
-    private tramite260212Query: Tramite260212Query
-    // eslint-disable-next-line no-empty-function
-  ) { }
+    private tramite260212Query: Tramite260212Query,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+   
+  }
 
   /**
-   * Formulario reactivos para el pago de derechos.
-   * Cada campo es obligatorio.
-   */
-  public pagoDerechos: FormGroup = this.fb.group({
-    /**
-     * Clave de referencia.
-     */
-    claveDeReferncia: ['', [Validators.required]],
-    /**
-     * Cadena de la dependencia.
-     */
-    cadenaDeLaDependencia: ['', [Validators.required]],
-    /**
-     * Banco seleccionado.
-     */
-    banco: ['', [Validators.required]],
-    /**
-     * Llave de pago.
-     */
-    llaveDePago: ['', [Validators.required]],
-    /**
-     * Fecha de pago.
-     */
-    fechaDePago: ['', [Validators.required]],
-    /**
-     * Importe del pago.
-     */
-    importeDePago: ['', [Validators.required]],
-  });
-
-  /**
-   * Ciclo de vida que se ejecuta al iniciar el componente.
-   * Obtiene los datos para el selector de opciones desde el servicio.
+   * Inicializa el formulario reactivo y el estado del componente.
    */
   ngOnInit(): void {
+    this.pagoDerechos = this.fb.group({
+      claveDeReferncia: ['', [Validators.required]],
+      cadenaDeLaDependencia: ['', [Validators.required]],
+      banco: ['', [Validators.required]],
+      llaveDePago: ['', [Validators.required]],
+      fechaDePago: ['', [Validators.required]],
+      importeDePago: ['', [Validators.required]],
+    });
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          
+        })
+      )
+      .subscribe()
+
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      if (this.pagoDerechos) {
+        this.guardarDatosFormulario();
+      }
+    } else {
+      this.actualizarEstado();
+    }
+  }
+
+  /**
+   * Aplica el modo solo lectura o edición al formulario según corresponda.
+   */
+  guardarDatosFormulario(): void {
+    this.actualizarEstado();
+    if (this.pagoDerechos) {
+      if (this.esFormularioSoloLectura) {
+        this.pagoDerechos.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.pagoDerechos.enable();
+      }
+    }
+  }
+
+  /**
+   * Sincroniza el formulario con el estado global y carga los datos del selector.
+   */
+  actualizarEstado(): void {
     this.pagoDeDerechosService.getData().subscribe((data) => {
       this.dropdownData = data;
     });
-
 
     this.selectedBanco$.subscribe((selectedBanco) => {
       if (selectedBanco) {
@@ -149,81 +203,62 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         this.pagoDerechos.get('importeDePago')?.setValue(importeDePago);
       }
     });
-
   }
+
   /**
-   * Actualiza el valor de claveDeReferncia en el tramite260212Store.
-   * 
-   * Este método obtiene el valor de 'claveDeReferncia' del control de formulario 
-   * 'pagoDerechos' y lo establece en el 'tramite260212Store'.
-   * 
-   * @comdoc
+   * Actualiza el valor de claveDeReferncia en el store.
    */
   actualizarClaveDeReferncia(): void {
     const CORREO = this.pagoDerechos.get('claveDeReferncia')?.value;
     this.tramite260212Store.setClaveDeReferncia(CORREO);
   }
+
   /**
-   * Actualiza el valor de cadenaDeLaDependencia en el tramite260212Store.
-   * 
-   * Este método obtiene el valor de 'cadenaDeLaDependencia' del control de formulario 
-   * 'pagoDerechos' y lo establece en el 'tramite260212Store'.
-   * 
-   * @comdoc
+   * Actualiza el valor de cadenaDeLaDependencia en el store.
    */
   actualizarCadenaDeLaDependencia(): void {
     const CORREO = this.pagoDerechos.get('cadenaDeLaDependencia')?.value;
     this.tramite260212Store.setCadenaDeLaDependencia(CORREO);
   }
+
   /**
-   * Actualiza el valor de llaveDePago en el tramite260212Store.
-   * 
-   * Este método obtiene el valor de 'llaveDePago' del control de formulario 
-   * 'pagoDerechos' y lo establece en el 'tramite260212Store'.
-   * 
-   * @comdoc
+   * Actualiza el valor de llaveDePago en el store.
    */
   actualizarLlaveDePago(): void {
     const CORREO = this.pagoDerechos.get('llaveDePago')?.value;
     this.tramite260212Store.setLlaveDePago(CORREO);
   }
+
   /**
-   * Actualiza el valor de fechaDePago en el tramite260212Store.
-   * 
-   * Este método obtiene el valor de 'fechaDePago' del control de formulario 
-   * 'pagoDerechos' y lo establece en el 'tramite260212Store'.
-   * 
-   * @comdoc
+   * Actualiza el valor de fechaDePago en el store.
    */
   actualizarFechaDePago(): void {
     const CORREO = this.pagoDerechos.get('fechaDePago')?.value;
     this.tramite260212Store.setFechaDePago(CORREO);
   }
+
   /**
-   * Actualiza el valor de importeDePago en el tramite260212Store.
-   * 
-   * Este método obtiene el valor de 'importeDePago' del control de formulario 
-   * 'pagoDerechos' y lo establece en el 'tramite260212Store'.
-   * 
-   * @comdoc
+   * Actualiza el valor de importeDePago en el store.
    */
   actualizarImporteDePago(): void {
     const CORREO = this.pagoDerechos.get('importeDePago')?.value;
     this.tramite260212Store.setImporteDePago(CORREO);
   }
+
   /**
- * Obtiene el estado seleccionado del formulario y lo guarda en el store
- */
-  getMunicipios(): void {
-    const SELECTED_BANCO = this.pagoDerechos.get('banco')?.value;
-    this.tramite260212Store.setBanco(SELECTED_BANCO);
+   * Obtiene el banco seleccionado del formulario y lo guarda en el store.
+   */
+  obtenerBanco(): void {
+    const BANCO_SELECCIONADO = this.pagoDerechos.get('banco')?.value;
+    this.tramite260212Store.setBanco(BANCO_SELECCIONADO);
   }
 
-  /*
-  * Método del ciclo de vida de Angular - destruye el componente
-*/
+  /**
+   * Limpia recursos y cancela suscripciones al destruir el componente.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+   
   }
 }

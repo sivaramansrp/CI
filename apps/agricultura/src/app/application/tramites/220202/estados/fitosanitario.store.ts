@@ -1,6 +1,8 @@
 import {
     DatosForma,
 
+    FilaSolicitud,
+
     ListaDeDatosFinal,
 
     Movilizacion,
@@ -58,9 +60,10 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
         }));
     }
 
-
-
-
+    /**
+     * Actualiza el estado de validez de los formularios.
+     * @param updatedFormaValida Objeto con las claves de los formularios y su estado de validez (true/false).
+     */
     public actualizarformaValida(updatedFormaValida: { [key: string]: boolean }): void {
         this.update(state => ({
             ...state,
@@ -70,6 +73,18 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
             }
         }));
     }
+
+    /**
+     * Actualiza el estado con los datos finales de la tabla.
+     * @param tablaDatos Arreglo de filas con los datos de la solicitud.
+     */
+    public tablaDatosFinal(tablaDatos: FilaSolicitud[]): void {
+        this.update(state => ({
+            ...state,
+            tablaDatos,
+        }));
+    }
+
     /**
      * Restablece el estado a su estado inicial.
      */

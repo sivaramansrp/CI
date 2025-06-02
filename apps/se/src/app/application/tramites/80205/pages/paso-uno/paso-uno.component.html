@@ -26,10 +26,13 @@
     </ul>
     <ng-container>
       @switch (indice) { @case (1) {
+        @if(esDatosRespuesta) {
       <solicitante [tabindex]="1"></solicitante>
+        }
       } @case (2) {
+        @if(esDatosRespuesta) {
       <app-ampliacion-servicios [tabindex]="2"></app-ampliacion-servicios>
-      } }
+      } }}
     </ng-container>
   </div>
 </div>

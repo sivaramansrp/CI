@@ -50,7 +50,7 @@ const ROUTES: Routes = [
     path: 'bandeja-solicitudes',
     component: BandejaSolicitudesComponent,
   },
-   {
+  {
     path: 'consulta-tramite',
     component: ConsultaTramiteComponent
   },
@@ -58,11 +58,10 @@ const ROUTES: Routes = [
     path: 'datos-generales-tramite',
     component: DatosGeneralesTramiteComponent
   },
-   {
+  {
     path: 'autorizacion-masiva',
     component: AutorizacionMasivaComponent
   },
-
 ];
 
 @NgModule({
