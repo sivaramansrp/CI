@@ -365,7 +365,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     const DATA = LINES.slice(1)
       .map((line) => {
         const VALUES = line.split(',');
-        const OBJ: unknown = {};
+        const OBJ: Record<string, string | undefined> = {};
         HEADERS.forEach((header, index) => {
           const KEY = HEADER_MAP[header.trim()] || header.trim();
           OBJ[KEY] = VALUES[index]?.trim();
@@ -410,7 +410,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   tabSeleccionado(): void {
     const CURRENT_IDX = localStorage.getItem('currentIdx');
     if (CURRENT_IDX !== null) {
-      this.currentIdx = +CURRENT_IDX;
+      this.currentIdx = Number(CURRENT_IDX ?? 0);
     }
   }
 
@@ -449,7 +449,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     });
 
     this.mostrarCampos();
-       this.solicitudForm.get('tipoBusqueda')?.valueChanges.subscribe(() => {
+       this.solicitudForm.get('tipoBusqueda')?.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
       this.setValoresStore(
         this.solicitudForm,
         'tipoBusqueda',
