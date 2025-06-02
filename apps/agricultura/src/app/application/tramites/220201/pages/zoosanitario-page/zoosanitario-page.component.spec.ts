@@ -13,8 +13,8 @@ describe('ZoosanitarioPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ZoosanitarioPageComponent, PasoDosComponent, PasoUnoComponent, PasoTresComponent],
-      imports: [WizardComponent, BtnContinuarComponent, SolicitanteComponent, HttpClientTestingModule]
+      declarations: [],
+      imports: [WizardComponent, BtnContinuarComponent, SolicitanteComponent, HttpClientTestingModule,ZoosanitarioPageComponent, PasoDosComponent, PasoUnoComponent, PasoTresComponent]
     })
       .compileComponents();
 
