@@ -1,0 +1,70 @@
+{
+        "formularioPago": {
+            "exentoPago": "No",
+            "justificacion": "160",
+            "claveReferencia": "llenar",
+            "cadenaDependencia": "llenar",
+            "banco": "160",
+            "llavePago": "llenar",
+            "fechaPago": "llenar",
+            "importePago": "llenar"
+        },
+        "formularioMovilizacion": {
+            "medioDeTransporte": "101",
+            "identificacionTransporte": "llenar",
+            "puntoVerificacion": "160",
+            "nombreEmpresaTransportista": "llenar"
+        },
+        "datosMercancia": {
+            "realizarGroup": {
+                "aduanaIngreso": "160",
+                "oficinaInspeccion": "160",
+                "puntoInspeccion": "101",
+                "numeroGuia": "llenar",
+                "regimen": "101"
+            },
+            "mercanciaGroup": {
+                "tipoRequisito": "160",
+                "requisito": "llenar",
+                "numeroCertificadoInternacional": "llenar",
+                "numeroOficioCasoEspecial": "llenar",
+                "fraccionArancelaria": "160",
+                "descripcionFraccionArancelaria": "llenar",
+                "nico": "101",
+                "descripcionNico": "llenar",
+                "descripcion": "llenar",
+                "cantidadUMT": "llenar",
+                "umt": "llenar",
+                "cantidadUMC": "llenar",
+                "umc": "101",
+                "uso": "161",
+                "numeroDeLote": "llenar",
+                "faseDeDesarrollo": "llenar",
+                "especie": "llenar",
+                "paisDeOrigen": "161",
+                "paisDeProcedencia": "161"
+            },
+            "detalles": {
+                "nombreCientifico": "llenar"
+            }
+        },
+        "formaValida": {
+            "pagoDeformaValida": false,
+            "dataParaMovilizacion": false,
+            "dataDeLaSolicitud": false
+        },
+        "tercerosRelacionados":[
+         {
+            "nombre": "Carlos Rodríguez",
+            "correo": "carlos.rodriguez@example.com"
+        },
+        {
+            "nombre": "Ana Martínez",
+            "correo": "ana.martinez@example.com"
+        },
+        {
+            "nombre": "Luis Fernández",
+            "correo": "luis.fernandez@example.com"
+        }
+    ]
+}

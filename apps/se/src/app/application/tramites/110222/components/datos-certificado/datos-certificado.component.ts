@@ -1,6 +1,6 @@
+import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
@@ -56,7 +56,12 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * @descripcion
    * Almacena los valores del formulario de datos del certificado.
    */
-  formDatosCertificadoValues!:{ [key: string]: unknown};
+  formDatosCertificadoValues!: { [key: string]: unknown };
+  /**
+* Indica si el formulario está en modo solo lectura.
+* Cuando es `true`, los campos del formulario no se pueden editar.
+*/
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * @descripcion
@@ -70,11 +75,12 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     private ValidarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService,
     private store: Tramite110222Store,
     private query: Tramite110222Query,
+    private consultaQuery: ConsultaioQuery
   ) {
     this.query.formDatosCertificado$.pipe(
       takeUntil(this.destroyNotifier$)
     ).subscribe(estado => {
-        this.formDatosCertificadoValues = estado;
+      this.formDatosCertificadoValues = estado;
     });
   }
 
@@ -87,6 +93,14 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     this.idiomOpcion();
     this.entidadFederativasOpcion();
     this.representacionFederalOpcion();
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -105,18 +119,18 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    */
   idiomOpcion(): void {
     this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable('idioma.json')
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-    )
-    .subscribe({
-      next: (data) => {
-        this.idiomaDatos = data as Catalogo[];
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
-        this.idiomaDatos = [];
-      },
-    });
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+      )
+      .subscribe({
+        next: (data) => {
+          this.idiomaDatos = data as Catalogo[];
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error al obtener los datos:', error);
+          this.idiomaDatos = [];
+        },
+      });
   }
 
   /**
@@ -125,18 +139,18 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    */
   entidadFederativasOpcion(): void {
     this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable('entidadFederativas.json')
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-    )
-    .subscribe({
-      next: (data) => {
-        this.entidadFederativas = data as Catalogo[];
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
-        this.entidadFederativas = [];
-      },
-    });
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+      )
+      .subscribe({
+        next: (data) => {
+          this.entidadFederativas = data as Catalogo[];
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error al obtener los datos:', error);
+          this.entidadFederativas = [];
+        },
+      });
   }
 
   /**
@@ -145,18 +159,18 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    */
   representacionFederalOpcion(): void {
     this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable('representacionFederal.json')
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-    )
-    .subscribe({
-      next: (data) => {
-        this.representacionFederal = data as Catalogo[];
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
-        this.representacionFederal = [];
-      },
-    });
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+      )
+      .subscribe({
+        next: (data) => {
+          this.representacionFederal = data as Catalogo[];
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error al obtener los datos:', error);
+          this.representacionFederal = [];
+        },
+      });
   }
 
   /**

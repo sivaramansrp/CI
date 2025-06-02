@@ -85,8 +85,8 @@ export class CrosslistComponent implements OnInit, OnChanges {
         this.fecha.disable();
         this.fechaSeleccionada.disable();
       } else {
-        this.fecha.disable();
-        this.fechaSeleccionada.disable();
+        this.fecha.enable();
+        this.fechaSeleccionada.enable();
       }
       this.fecha.updateValueAndValidity({ emitEvent: false });
       this.fechaSeleccionada.updateValueAndValidity({ emitEvent: false });

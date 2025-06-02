@@ -1,13 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, REGEX_LLAVE_DE_PAGO, REGEX_RFC, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder,FormGroup,ReactiveFormsModule,Validators} from '@angular/forms';
 import { PagoData ,TableData} from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
-import { REGEX_LLAVE_DE_PAGO, REGEX_RFC, TituloComponent } from '@ng-mf/data-access-user';
 import { Solicitud31601State,Tramite31601Store } from '../../../../estados/tramites/tramite31601.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { TableComponent } from '@ng-mf/data-access-user';
 import { Tramite31601Query } from '../../../../estados/queries/tramite31601.query'
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
@@ -102,6 +102,12 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+
+  /**
    * Construye una instancia de CapturarIvaeiepsComponent.
    *
    * @param fb: una instancia de FormBuilder utilizada para crear controles de formulario.
@@ -114,8 +120,19 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
     private tramite31601Store: Tramite31601Store,
-    private tramite31601Query: Tramite31601Query
-  ) {}
+    private tramite31601Query: Tramite31601Query,
+    private consultaioQuery: ConsultaioQuery,
+  ) {
+     this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarForms();
+      })
+    )
+    .subscribe()
+  }
 
   /**
    * Gancho de ciclo de vida angular que se llama después de que la vista del componente se haya inicializado por completo.
@@ -210,6 +227,24 @@ export class CapturarIvaeiepsComponent implements OnInit,OnDestroy {
       fechaPago: [{ value: '', disabled: true }],
       importePago: [{ value: '', disabled: true }],
     });
+
+    
+if (this.esFormularioSoloLectura) {
+      Object.keys(this.ivaForm.controls).forEach((key) => {
+        this.ivaForm.get(key)?.disable();
+      })
+      Object.keys(this.formularioDePago.controls).forEach((key) => {
+        this.formularioDePago.get(key)?.disable();
+      })
+    } else {
+      Object.keys(this.ivaForm.controls).forEach((key) => {
+        this.ivaForm.get(key)?.enable();
+      })
+      Object.keys(this.formularioDePago.controls).forEach((key) => {
+        this.formularioDePago.get(key)?.enable();
+      })
+    }  
+
   }
 
   /**

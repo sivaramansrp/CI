@@ -1,251 +1,243 @@
 <div class="container">
-    <form [formGroup]="facturaForm" >
-        <div class="col-md-12">
-            <ng-titulo titulo="Datos de la factura" />
-        </div>
-        <div class="row mt-5">
-          <div class="col-md-12">
-            <label for="mercancia">Facturas asociadas</label>
+  <form [formGroup]="facturaForm">
+    <div class="col-md-12">
+      <ng-titulo titulo="Datos de la factura" />
+    </div>
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <label for="mercancia">Facturas asociadas</label>
+      </div>
+      <div class="col-md-12">
+        <app-tabla-dinamica
+          [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+          [configuracionTabla]="tableColumns"
+          [datos]="facturas"
+        ></app-tabla-dinamica>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <ng-titulo titulo="Datos de la factura" />
+      </div>
+      <div class="row mt-5">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="numeroFactura"
+              >Número de la factura*:</label
+            >
+            <input
+              class="form-control"
+              value=""
+              id="numeroFactura"
+              placeholder=""
+              type="text"
+              libUppercase
+              name="numeroFactura"
+              formControlName="numeroFactura"
+              (change)="
+                setValoresStore(
+                  facturaForm,
+                  'numeroFactura',
+                  'setNumeroFactura'
+                )
+              "
+            />
           </div>
-          <div class="col-md-12">
-            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns" [datos]="facturas" ></app-tabla-dinamica>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="cantidadTotal"
+              >Cantidad total*:</label
+            >
+            <input
+              class="form-control"
+              value=""
+              id="cantidadTotal"
+              placeholder=""
+              type="text"
+              libUppercase
+              name="cantidadTotal"
+              formControlName="cantidadTotal"
+              (change)="
+                setValoresStore(
+                  facturaForm,
+                  'cantidadTotal',
+                  'setCantidadTotal'
+                )
+              "
+            />
           </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <ng-titulo titulo="Datos de la factura" />
-            </div>
-            <div class="row mt-5">
-              <div class="col-md-4">
-                <div class="form-group">
-                    <label class="form-label" for="numeroFactura">Número de la factura*:</label>
-                    <input
-                    class="form-control"
-                    value=""
-                    id="numeroFactura"
-                    placeholder=""
-                    type="text"
-                    libUppercase
-                    name="numeroFactura"
-                    formControlName="numeroFactura"
-                    (change)="
-                    setValoresStore(
-                    facturaForm,
-                    'numeroFactura',
-                    'setNumeroFactura'
-                    )" 
-                    />
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                    <label class="form-label" for="cantidadTotal">Cantidad total*:</label>
-                    <input
-                    class="form-control"
-                    value=""
-                    id="cantidadTotal"
-                    placeholder=""
-                    type="text"
-                    libUppercase
-                    name="cantidadTotal"
-                    formControlName="cantidadTotal"
-                    (change)="
-                      setValoresStore(
-                      facturaForm,
-                      'cantidadTotal',
-                      'setCantidadTotal'
-                      )" 
-                    />
-                </div>
-              </div>
-              <div class="col-md-4">
-                    <app-catalogo-select
-                    [catalogo]="unidadDeMedida"
-                    formControlName="unidadDeMedida"
-                    [label]="'Unidad De Medida'"
-                    [required]="true"
-                    name="unidadDeMedida"
-                    (change)="
-                      setValoresStore(
-                      facturaForm,
-                      'unidadDeMedida',
-                      'setUnidadDeMedida'
-                      )"
-                  ></app-catalogo-select>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group capturar-factura-datepicker">
-                     <input-fecha 
-                     [setFecha]="facturaForm.get('fechaExpedicionFactura')?.value" 
-                     [datos]="fechaInicioInputs" 
-                     formControlName="fechaExpedicionFactura">
-                     </input-fecha>
-                </div>
-              </div>
-              <div class="col-md-4">
-                <div class="form-group">
-                    <label class="form-label" for="valorDolares">Valor en dólares*:</label>
-                    <input
-                    class="form-control"
-                    value=""
-                    id="valorDolares"
-                    placeholder=""
-                    type="text"
-                    libUppercase
-                    name="valorDolares"
-                    formControlName="valorDolares"
-                    (change)="
-                      setValoresStore(
-                      facturaForm,
-                      'valorDolares',
-                      'setValorDolares'
-                      )"
-                    />
-                </div>
-              </div>
-            </div>
-        <div>
+        <div class="col-md-4">
+          <app-catalogo-select
+            [isDisabled]="formularioDeshabilitado"
+            [catalogo]="unidadDeMedida"
+            formControlName="unidadDeMedida"
+            [label]="'Unidad De Medida'"
+            [required]="true"
+            name="unidadDeMedida"
+            (change)="
+              setValoresStore(
+                facturaForm,
+                'unidadDeMedida',
+                'setUnidadDeMedida'
+              )
+            "
+          ></app-catalogo-select>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group capturar-factura-datepicker">
+            <input-fecha
+              [setFecha]="facturaForm.get('fechaExpedicionFactura')?.value"
+              [datos]="fechaInicioInputs"
+              formControlName="fechaExpedicionFactura"
+            >
+            </input-fecha>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="valorDolares"
+              >Valor en dólares*:</label
+            >
+            <input
+              class="form-control"
+              value=""
+              id="valorDolares"
+              placeholder=""
+              type="text"
+              libUppercase
+              name="valorDolares"
+              formControlName="valorDolares"
+              (change)="
+                setValoresStore(facturaForm, 'valorDolares', 'setValorDolares')
+              "
+            />
+          </div>
+        </div>
+      </div>
+      <div>
         <div class="row mb-6">
-            <div class="col-md-12">
-                <ng-titulo titulo="Datos del emisor/consignatario" />
-            </div>
-            <div class="row mt-5">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="form-label" for="taxId">TAX ID:</label>
-                        <input
-                        class="form-control"
-                        value=""
-                        class="form-control"
-                        id="taxId"
-                        placeholder=""
-                        type="text"
-                        libUppercase
-                        name="taxId"
-                        formControlName="taxId"
-                        (change)="
-                          setValoresStore(
-                          facturaForm,
-                          'taxId',
-                          'setTaxId'
-                          )"
-                        />
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="form-label" for="razonSocial">Razón social*:</label>
-                        <input
-                        class="form-control"
-                        value=""
-                        id="razonSocial"
-                        placeholder=""
-                        type="text"
-                        libUppercase
-                        name="razonSocial"
-                        formControlName="razonSocial"
-                        (change)="
-                          setValoresStore(
-                          facturaForm,
-                          'razonSocial',
-                          'setRazonSocial'
-                          )"
-                        />
-                    </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                    <label class="form-label" for="calle">Calle*:</label>
-                    <input
-                    class="form-control"
-                    value=""
-                    id="calle"
-                    placeholder=""
-                    type="text"
-                    libUppercase
-                    name="calle"
-                    formControlName="calle"
-                    (change)="
-                      setValoresStore(
-                      facturaForm,
-                      'calle',
-                      'setCalle'
-                      )"
-                    />
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                    <label class="form-label" for="ciudad">Ciudad (población, estado o provincia)*:</label>
-                    <input
-                    class="form-control"
-                    value=""
-                    class="form-control"
-                    id="ciudad"
-                    placeholder=""
-                    type="text"
-                    libUppercase
-                    name="ciudad"
-                    formControlName="ciudad"
-                    (change)="
-                      setValoresStore(
-                      facturaForm,
-                      'ciudad',
-                      'setCiudad'
-                      )"
-                    />
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                    <label class="form-label" for="cp">CP*:</label>
-                    <input
-                    class="form-control"
-                    value=""
-                    id="cp"
-                    placeholder=""
-                    type="text"
-                    libUppercase
-                    name="cp"
-                    formControlName="cp"
-                    (change)="
-                      setValoresStore(
-                      facturaForm,
-                      'cp',
-                      'setCp'
-                      )"
-                    />
-                </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-group">
-                    <label class="form-label" for="pais">País*:</label>
-                    <input
-                    class="form-control"
-                    value=""
-                    id="pais"
-                    placeholder=""
-                    type="text"
-                    libUppercase
-                    name="pais"
-                    formControlName="pais"
-                    (change)="
-                      setValoresStore(
-                      facturaForm,
-                      'pais',
-                      'setPais'
-                      )"
-                    />
-                </div>
+          <div class="col-md-12">
+            <ng-titulo titulo="Datos del emisor/consignatario" />
+          </div>
+          <div class="row mt-5">
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label" for="taxId">TAX ID:</label>
+                <input
+                  class="form-control"
+                  value=""
+                  class="form-control"
+                  id="taxId"
+                  placeholder=""
+                  type="text"
+                  libUppercase
+                  name="taxId"
+                  formControlName="taxId"
+                  (change)="setValoresStore(facturaForm, 'taxId', 'setTaxId')"
+                />
               </div>
             </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label" for="razonSocial"
+                  >Razón social*:</label
+                >
+                <input
+                  class="form-control"
+                  value=""
+                  id="razonSocial"
+                  placeholder=""
+                  type="text"
+                  libUppercase
+                  name="razonSocial"
+                  formControlName="razonSocial"
+                  (change)="
+                    setValoresStore(
+                      facturaForm,
+                      'razonSocial',
+                      'setRazonSocial'
+                    )
+                  "
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label" for="calle">Calle*:</label>
+                <input
+                  class="form-control"
+                  value=""
+                  id="calle"
+                  placeholder=""
+                  type="text"
+                  libUppercase
+                  name="calle"
+                  formControlName="calle"
+                  (change)="setValoresStore(facturaForm, 'calle', 'setCalle')"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label" for="ciudad"
+                  >Ciudad (población, estado o provincia)*:</label
+                >
+                <input
+                  class="form-control"
+                  value=""
+                  class="form-control"
+                  id="ciudad"
+                  placeholder=""
+                  type="text"
+                  libUppercase
+                  name="ciudad"
+                  formControlName="ciudad"
+                  (change)="setValoresStore(facturaForm, 'ciudad', 'setCiudad')"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label" for="cp">CP*:</label>
+                <input
+                  class="form-control"
+                  value=""
+                  id="cp"
+                  placeholder=""
+                  type="text"
+                  libUppercase
+                  name="cp"
+                  formControlName="cp"
+                  (change)="setValoresStore(facturaForm, 'cp', 'setCp')"
+                />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="form-group">
+                <label class="form-label" for="pais">País*:</label>
+                <input
+                  class="form-control"
+                  value=""
+                  id="pais"
+                  placeholder=""
+                  type="text"
+                  libUppercase
+                  name="pais"
+                  formControlName="pais"
+                  (change)="setValoresStore(facturaForm, 'pais', 'setPais')"
+                />
+              </div>
+            </div>
+          </div>
         </div>
         <div class="container text-end mt-5">
-            <button class="btn btn-default me-2">Limpiar</button>
-            <button class="btn btn-default me-2">Agregar</button>
-            <button class="btn btn-primary me-2">Cerrar</button>
+          <button class="btn btn-default me-2">Limpiar</button>
+          <button class="btn btn-default me-2">Agregar</button>
+          <button class="btn btn-primary me-2">Cerrar</button>
         </div>
-        </div>     
       </div>
-    </form>
+    </div>
+  </form>
 </div>
