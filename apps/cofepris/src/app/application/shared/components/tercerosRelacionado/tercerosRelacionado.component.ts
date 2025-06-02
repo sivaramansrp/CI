@@ -144,16 +144,8 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
    * description Método de inicialización del componente.
    */
   ngOnInit(): void {
-    // this.exportacionQuery.selectSolicitud$
-    //   .pipe(
-    //     takeUntil(this.destroyed$),
-    //     map((seccionState) => {
-    //       this.solicitudState = seccionState as ExportacionState;
-    //     })
-    //   )
-    //   .subscribe();
-
-       this.consultaioQuery.selectConsultaioState$
+   
+this.consultaioQuery.selectConsultaioState$
     .pipe(
       takeUntil(this.destroyed$),
       map((seccionState)=>{
@@ -164,7 +156,7 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
     .subscribe()
     this.loadMercancias();
     this.loadLocalidad();
-    this.inicializarFormulario();
+    this.getFacturator()
     this.cargarRadio();
     this. inicializarEstadoFormulario();
   }
@@ -177,45 +169,9 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
-      this.inicializarFormulario();
+      this.getFacturator();
     }  
     
-  }
-
-  
-  /**
-   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
-   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
-   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
-   * con el valor inicial obtenido del store.
-   */
-
-  inicializarFormulario(): void {
-    this.exportacionQuery.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.solicitudState = seccionState as ExportacionState;
-        })
-      )
-      .subscribe();
-
-    this.facturatorForm = this.fb.group({
-      tipoPersona: [this.solicitudState?.tipoPersona || 'fisica', Validators.required],
-      nombre: [this.solicitudState?.nombre || '', [Validators.required]],
-      apellidoPrimer: [this.solicitudState?.apellidoPrimer || '', Validators.required],
-      apellidoSegundo: [this.solicitudState?.apellidoSegundo || ''],
-      denominacionRazonSocial: [this.solicitudState?.denominacionRazonSocial || '', [Validators.maxLength(254)]],
-      selectPais: [this.solicitudState?.selectPais || '', Validators.required],
-      estadoLocalidad: [this.solicitudState?.estadoLocalidad || '', Validators.required],
-      codPostal1: [this.solicitudState?.codPostal1 || ''],
-      calle: [this.solicitudState?.calle || '', [Validators.maxLength(300)]],
-      numExterior: [this.solicitudState?.numExterior || '', [Validators.maxLength(55)]],
-      numInterior: [this.solicitudState?.numInterior || '', [Validators.maxLength(55)]],
-      lada: [this.solicitudState?.lada || '', [Validators.maxLength(5)]],
-      telefono: [this.solicitudState?.telefono || ''],
-      correoElectronico: [this.solicitudState?.correoElectronico || '', [Validators.required, Validators.email]],
-    });
   }
 
    /**
@@ -223,7 +179,7 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
-      this.inicializarFormulario();
+      this.getFacturator();
       if (this.esFormularioSoloLectura) {
         this.facturatorForm.disable();
       } else if (!this.esFormularioSoloLectura) {
@@ -271,31 +227,39 @@ export class TercerosRelacionadoComponent implements OnInit, OnDestroy {
    */
   abrirModalfacurator(): void {
     this.modal = 'show';
-    this.inicializarFormulario();
+    this.getFacturator();
   }
 
   /**
    * method getFacturator
    * description Inicializa el formulario del facturador con valores predeterminados.
    */
-  // getFacturator(): void {
-  //   this.facturatorForm = this.fb.group({
-  //     tipoPersona: [this.solicitudState?.tipoPersona || 'fisica', Validators.required],
-  //     nombre: [this.solicitudState?.nombre || '', [Validators.required]],
-  //     apellidoPrimer: [this.solicitudState?.apellidoPrimer || '', Validators.required],
-  //     apellidoSegundo: [this.solicitudState?.apellidoSegundo || ''],
-  //     denominacionRazonSocial: [this.solicitudState?.denominacionRazonSocial || '', [Validators.maxLength(254)]],
-  //     selectPais: [this.solicitudState?.denominacionRazonSocial || '', Validators.required],
-  //     estadoLocalidad: [this.solicitudState?.estadoLocalidad || '', Validators.required],
-  //     codPostal1: [this.solicitudState?.codPostal1 || ''],
-  //     calle: [this.solicitudState?.calle || '', [Validators.maxLength(300)]],
-  //     numExterior: [this.solicitudState?.numExterior || '', [Validators.maxLength(55)]],
-  //     numInterior: [this.solicitudState?.numInterior || '', [Validators.maxLength(55)]],
-  //     lada: [this.solicitudState?.lada || '', [Validators.maxLength(5)]],
-  //     telefono: [this.solicitudState?.telefono || ''],
-  //     correoElectronico: [this.solicitudState?.correoElectronico || '', [Validators.required, Validators.email]],
-  //   });
-  // }
+  getFacturator(): void {
+    this.exportacionQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.solicitudState = seccionState as ExportacionState;
+        })
+      )
+      .subscribe();
+    this.facturatorForm = this.fb.group({
+      tipoPersona: [this.solicitudState?.tipoPersona || 'fisica', Validators.required],
+      nombre: [this.solicitudState?.nombre || '', [Validators.required]],
+      apellidoPrimer: [this.solicitudState?.apellidoPrimer || '', Validators.required],
+      apellidoSegundo: [this.solicitudState?.apellidoSegundo || ''],
+      denominacionRazonSocial: [this.solicitudState?.denominacionRazonSocial || '', [Validators.maxLength(254)]],
+      selectPais: [this.solicitudState?.denominacionRazonSocial || '', Validators.required],
+      estadoLocalidad: [this.solicitudState?.estadoLocalidad || '', Validators.required],
+      codPostal1: [this.solicitudState?.codPostal1 || ''],
+      calle: [this.solicitudState?.calle || '', [Validators.maxLength(300)]],
+      numExterior: [this.solicitudState?.numExterior || '', [Validators.maxLength(55)]],
+      numInterior: [this.solicitudState?.numInterior || '', [Validators.maxLength(55)]],
+      lada: [this.solicitudState?.lada || '', [Validators.maxLength(5)]],
+      telefono: [this.solicitudState?.telefono || ''],
+      correoElectronico: [this.solicitudState?.correoElectronico || '', [Validators.required, Validators.email]],
+    });
+  }
 
    /**
    * method setValoresStore
