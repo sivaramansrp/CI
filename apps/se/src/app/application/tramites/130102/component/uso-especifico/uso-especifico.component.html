@@ -10,7 +10,8 @@
                 (change)="obtenerRequisitosFraccionArancelariaEsquema();setValoresStore(usoEspicificoForm,'fraccionArancelariaProsec', 'setFraccionArancelariaProsec')" 
                 formControlName="fraccionArancelariaProsec"
                 [catalogo]="catalogos"
-               [required]="true"></app-catalogo-select>
+               [required]="true"
+                 [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                @if (usoEspicificoForm.controls['fraccionArancelariaProsec'].invalid && usoEspicificoForm.controls['fraccionArancelariaProsec'].touched) {
                 <div class="text-danger">
                   @if (usoEspicificoForm.controls['fraccionArancelariaProsec'].errors?.['required']) {
@@ -56,7 +57,14 @@
 <div class="container mt-5">
     <div class="row mt-5">
         <h6>Fracciones arancelarias uso especifico</h6>
-        <ng-table [commonTableHeader]="tableColumns" [commonTableBody]="tableData"></ng-table>
+      
+             <app-tabla-dinamica
+          [configuracionTabla]="configuracionTabla"
+          [datos]="datosSocios"
+          [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
+        
+        ></app-tabla-dinamica>
     </div>
     <div class="container text-end mt-5">
         <button class="btn btn-danger">Eliminar seleccionado</button>
