@@ -125,7 +125,7 @@
           </div>
           <div class="row mb-3">
             <div class="col-md-6">
-              <input-fecha [datos]="fechaFactura"></input-fecha>
+              <input-fecha [datos]="fechaFactura" [setFecha]="mercanciaForm.get('fechaFactura')?.value"></input-fecha>
             </div>
             <div class="col-md-6">
               <label for="numeroFactura">N° factura / Referencia*:</label>

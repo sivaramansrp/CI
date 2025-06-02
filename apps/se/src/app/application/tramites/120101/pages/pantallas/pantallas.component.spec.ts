@@ -16,6 +16,7 @@ import { BienFinalComponent } from '../../components/bien-final/bien-final.compo
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { CUPOS_PASOS } from '../../constantes/solicitud-de-registro-tpl.enum';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PantallasComponent', () => {
   let component: PantallasComponent;
@@ -45,6 +46,7 @@ describe('PantallasComponent', () => {
         DescripcionDelCupoComponent,
         RepresentacionFederalComponent,
         BienFinalComponent,
+        HttpClientTestingModule
       ],
       providers: [
         { provide: ServicioDeFormularioService, useValue: mockServicioDeFormularioService },

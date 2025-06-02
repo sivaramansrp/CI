@@ -11,8 +11,8 @@ describe('DatosDeLaSolicitudComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DatosDeLaSolicitudComponent],
-      imports: [HttpClientTestingModule, TituloComponent, CatalogoSelectComponent, InputRadioComponent, AlertComponent, TableComponent, ReactiveFormsModule]
+      declarations: [],
+      imports: [HttpClientTestingModule, TituloComponent, CatalogoSelectComponent, InputRadioComponent, AlertComponent, TableComponent, ReactiveFormsModule,DatosDeLaSolicitudComponent]
     })
       .compileComponents();
 
