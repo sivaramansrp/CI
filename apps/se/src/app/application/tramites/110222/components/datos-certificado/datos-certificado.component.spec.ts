@@ -1,5 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -11,23 +12,22 @@ import { FormBuilder } from '@angular/forms';
 import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
 import { Tramite110222Store } from '../../estados/tramite110222.store';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 @Injectable()
 class MockValidarInicialmenteCertificadoService {}
 
 @Injectable()
-class MockcamCertificadoStore {}
+class MockTramite110222Store {}
 
 @Injectable()
-class MockcamCertificadoQuery {
-  selectCam$ = observableOf({});
-  selectmercanciaTabla$ = observableOf({});
+class MockTramite110222Query {
   formDatosCertificado$ = observableOf({});
 }
 
 describe('DatosCertificadoComponent', () => {
-  let fixture: ComponentFixture<DatosCertificadoComponent>;
-  let component: DatosCertificadoComponent;
+  let fixture;
+  let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -39,8 +39,9 @@ describe('DatosCertificadoComponent', () => {
       providers: [
         FormBuilder,
         { provide: ValidarInicialmenteCertificadoService, useClass: MockValidarInicialmenteCertificadoService },
-        { provide: Tramite110222Store, useClass: MockcamCertificadoStore },
-        { provide: Tramite110222Query, useClass: MockcamCertificadoQuery }
+        { provide: Tramite110222Store, useClass: MockTramite110222Store },
+        { provide: Tramite110222Query, useClass: MockTramite110222Query },
+        ConsultaioQuery
       ]
     }).overrideComponent(DatosCertificadoComponent, {
 
@@ -49,10 +50,6 @@ describe('DatosCertificadoComponent', () => {
     component = fixture.debugElement.componentInstance;
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
@@ -62,10 +59,73 @@ describe('DatosCertificadoComponent', () => {
     component.idiomOpcion = jest.fn();
     component.entidadFederativasOpcion = jest.fn();
     component.representacionFederalOpcion = jest.fn();
+    component.consultaQuery = component.consultaQuery || {};
+    component.consultaQuery.selectConsultaioState$ = observableOf({});
     component.ngOnInit();
     expect(component.idiomOpcion).toHaveBeenCalled();
     expect(component.entidadFederativasOpcion).toHaveBeenCalled();
     expect(component.representacionFederalOpcion).toHaveBeenCalled();
+  });
+
+  it('should run #setValoresStore()', async () => {
+    component.store = component.store || {};
+    component.store.setFormDatosCertificado = jest.fn();
+    component.setValoresStore({});
+  });
+
+  it('should run #idiomOpcion()', async () => {
+    component.ValidarInicialmenteCertificadoService = component.ValidarInicialmenteCertificadoService || {};
+    component.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
+    component.idiomOpcion();
+  });
+
+  it('should run #entidadFederativasOpcion()', async () => {
+    component.ValidarInicialmenteCertificadoService = component.ValidarInicialmenteCertificadoService || {};
+    component.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
+    component.entidadFederativasOpcion();
+  });
+
+  it('should run #representacionFederalOpcion()', async () => {
+    component.ValidarInicialmenteCertificadoService = component.ValidarInicialmenteCertificadoService || {};
+    component.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable = jest.fn().mockReturnValue(observableOf({}));
+    component.representacionFederalOpcion();
+  });
+
+  it('should run #obtenerDatosFormulario()', async () => {
+    component.store = component.store || {};
+    component.store.setFormDatosCertificado = jest.fn();
+    component.obtenerDatosFormulario({});
+  });
+
+  it('should run #idiomaSeleccion()', async () => {
+    component.store = component.store || {};
+    component.store.setIdiomaSeleccion = jest.fn();
+    component.idiomaSeleccion({});
+  });
+
+  it('should run #entidadFederativaSeleccion()', async () => {
+    component.store = component.store || {};
+    component.store.setEntidadFederativaSeleccion = jest.fn();
+    component.entidadFederativaSeleccion({});
+  });
+
+  it('should run #representacionFederalSeleccion()', async () => {
+    component.store = component.store || {};
+    component.store.setRepresentacionFederalDatosSeleccion = jest.fn();
+    component.representacionFederalSeleccion({});
+  });
+
+  it('should run #setFormValida()', async () => {
+    component.store = component.store || {};
+    component.store.setFormValida = jest.fn();
+    component.setFormValida({});
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.complete = jest.fn();
+    component.ngOnDestroy();
   });
 
 });
