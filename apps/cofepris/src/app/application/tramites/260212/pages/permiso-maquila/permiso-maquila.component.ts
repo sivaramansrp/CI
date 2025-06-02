@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { PERMISO_MAQUILA } from '../../constantes/permiso-maquila.enum';
 
-import { DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard,WizardComponent } from '@ng-mf/data-access-user';
 
 interface AccionBoton {
   accion: string;

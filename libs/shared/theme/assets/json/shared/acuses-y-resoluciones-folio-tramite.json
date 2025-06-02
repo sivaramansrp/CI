@@ -1,11 +1,36 @@
 [
   {
-    "folioTramite": "0100001000320251005000002",
+    "folioTramite": "0100001000320251005000003",
     "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
     "dependencia": "AGA ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
     "fechInicioTramite": "2025-3-09 0035:05:00",
     "departamento": "AGA",
     "numeroDeProcedimiento": "301"
+  },
+   {
+    "folioTramite": "0100001000320251005000002",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "COFEPRIS ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260212"
+  },
+ 
+  {
+    "folioTramite": "0100001000320251005000003",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "SEMARNAT ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "301"
+  },
+  {
+    "folioTramite": "0100001000320251005000004",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "AGACE ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "31601"
   },
   {
     "folioTramite": "0100001000320251005000003",
@@ -158,5 +183,13 @@
     "fechInicioTramite": "2025-3-09 0035:05:00",
     "departamento": "SEMARNAT",
     "numeroDeProcedimiento": "230401"
+  },
+  {
+    "folioTramite": "0100001000320251005000002",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "AGRICULTURA ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "AGRICULTURA",
+    "numeroDeProcedimiento": "220401"
   }
 ]

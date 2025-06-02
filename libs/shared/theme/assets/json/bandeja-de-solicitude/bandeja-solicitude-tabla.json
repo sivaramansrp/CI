@@ -1,4 +1,3 @@
-
 [
     {
         "id": 1,
@@ -8,6 +7,15 @@
         "diasTranscurridos": "4",
         "departamento": "AGA",
         "numeroDeProcedimiento": "301"
+    },
+    {
+        "id": 16,
+        "tipoDeTramite": "Antecesor",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "31601"
     },
     {
         "id": 230401,
@@ -26,6 +34,15 @@
         "diasTranscurridos": "4",
         "departamento": "SE",
         "numeroDeProcedimiento": "110102"
+    },
+    {
+        "id": 3,
+        "tipoDeTramite": "Ampliación Productor directo",
+        "fecha": "2023-10-10",
+        "fechaActualizacion": "2023-10-15",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "90201"
     },
     {
         "id": 120402,
@@ -541,6 +558,15 @@
         "numeroDeProcedimiento": "250103"
     },
     {
+        "id": 80205,
+        "tipoDeTramite": "Solicitud de Permiso",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "80205"
+    },
+    {
         "id": 120602,
         "tipoDeTramite": "Solicitud de Permiso",
         "fecha": "2023-10-01",
@@ -557,5 +583,14 @@
         "diasTranscurridos": "4",
         "departamento": "SE",
         "numeroDeProcedimiento": "140201"
+    },
+    {
+        "id": 220401,
+        "tipoDeTramite": "Solicitud",
+        "fecha": "2024-10-05",
+        "fechaActualizacion": "2022-10-25",
+        "diasTranscurridos": "3",
+        "departamento": "AGRICULTURA",
+        "numeroDeProcedimiento": "220401"
     }
 ]
