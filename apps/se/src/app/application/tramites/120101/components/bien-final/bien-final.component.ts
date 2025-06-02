@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../../estados/tramites/tramite120101.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { BIEN_FINAL } from '../../constantes/solicitud-de-registro-tpl.enum';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
 import { Tramite120101Query } from '../../../../estados/queries/tramite120101.query';
@@ -33,6 +34,13 @@ import { Tramite120101Query } from '../../../../estados/queries/tramite120101.qu
   styleUrl: './bien-final.component.scss',
 })
 export class BienFinalComponent implements OnInit, OnDestroy {
+  /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
+
   /**
    * compo doc
    * @property bienFinalFormData
