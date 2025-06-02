@@ -159,6 +159,9 @@ export class CriterioDeDictComponent implements OnInit , OnDestroy {
         this.solicitudState?.solicitudMercancia,
         Validators.required,
       ],
+      criterioDictamen: [
+        this.solicitudState?.criterioDictamen,
+     { value: '', disabled: true }],
     });
        if (this.esFormularioSoloLectura) {
     this.frmCriterioDictamen.disable();

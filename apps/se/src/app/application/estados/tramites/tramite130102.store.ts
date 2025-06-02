@@ -7,6 +7,7 @@ import { Injectable } from '@angular/core';
  */
 export interface Solicitud130102State {
   
+  criterioDictamen : string; // Criterio de dictamen para la solicitud, puede ser un código o descripción.
   /** Código que identifica la fracción arancelaria específica del producto. */
   fraccion: string;
 
@@ -72,6 +73,7 @@ export interface Solicitud130102State {
  */
 export function createInitialState(): Solicitud130102State {
   return {
+    criterioDictamen: '', // Criterio de dictamen vacío por defecto.
     fraccion: '', // Valor inicial vacío.
     descripcion: '', // Descripción vacía por defecto.
     fraccionArancelaria: '', // Sin fracción arancelaria inicial.
@@ -107,7 +109,12 @@ export class Tramite130102Store extends Store<Solicitud130102State> {
   constructor() {
     super(createInitialState()); // Inicializa el estado con los valores por defecto.
   }
-
+public setCriterioDictamen(criterioDictamen: string) {
+    this.update((state) => ({
+      ...state,
+      criterioDictamen,
+    }));
+  }
   /**
    * Actualiza el valor de la fracción arancelaria.
    * @param {string} fraccion - Nueva fracción arancelaria.

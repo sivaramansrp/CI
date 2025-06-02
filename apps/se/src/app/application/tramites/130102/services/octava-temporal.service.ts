@@ -98,6 +98,8 @@ getRepresentacionesFederales(): Observable<Catalogo[]> {
   * @param {Solicitud130102State} DATOS - Datos de la solicitud a actualizar.
   */
  actualizarEstadoFormulario(DATOS: Solicitud130102State): void {
+  
+    this.tramite130102store.setCriterioDictamen(DATOS.criterioDictamen);
     this.tramite130102store.setFraccion(DATOS.fraccion);
     this.tramite130102store.setDescripcion(DATOS.descripcion);
     this.tramite130102store.setFraccionArancelaria(DATOS.fraccionArancelaria);
@@ -118,6 +120,7 @@ getRepresentacionesFederales(): Observable<Catalogo[]> {
     this.tramite130102store.setObservaciones(DATOS.observaciones);
     this.tramite130102store.setProducto(DATOS.productos);
     this.tramite130102store.setSolicitude(DATOS.solicitud);
+
    
   }
 }
