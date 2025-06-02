@@ -1,9 +1,9 @@
-import { Component, EventEmitter, Output, ViewChild, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CancelarSolicitudComponent } from '../../components/cancelar-solicitud/cancelar-solicitud.component';
 import { CancelarSolicitudService } from '../../service/cancelar-solicitud.service';
-import { TramiteFolioService } from '../../service/servicios-extraordinarios.service';
+import { OnDestroy } from '@angular/core';
 
 @Component({
   selector: 'app-paso-uno',
@@ -11,6 +11,16 @@ import { TramiteFolioService } from '../../service/servicios-extraordinarios.ser
   styles: ``
 })
 export class PasoUnoComponent implements OnDestroy{
+  /**
+   * Componente PasoUnoComponent
+   * 
+   * Este componente representa el primer paso del trámite 570101.
+   * Gestiona la visualización y validación del formulario de cancelación de solicitud,
+   * así como la navegación entre pestañas y la carga de datos desde el servicio correspondiente.
+   * 
+   * @example
+   * <app-paso-uno (pestanaCambiado)="onTabChange($event)" (isValid)="onFormValid($event)"></app-paso-uno>
+   */
   indice: number = 1;
 
    /**
@@ -25,12 +35,15 @@ export class PasoUnoComponent implements OnDestroy{
   
   @Output() pestanaCambiado = new EventEmitter<number>();
   @Output() isValid = new EventEmitter<boolean>();
+  /**
+   * Referencia al componente CancelarSolicitudComponent hijo.
+   * Permite acceder a sus propiedades y métodos, como el formulario interno.
+   */
   @ViewChild(CancelarSolicitudComponent) cancelarSolicitudComponent!: CancelarSolicitudComponent
 
   constructor(
     private consultaQuery: ConsultaioQuery,
-    private CancelarSolicitudService: CancelarSolicitudService,
-    private TramiteFolioService: TramiteFolioService
+    private CancelarSolicitudService: CancelarSolicitudService
   ){
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => { this.consultaState = seccionState;
     })).subscribe();
@@ -81,6 +94,10 @@ export class PasoUnoComponent implements OnDestroy{
   }
 
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
+   * Libera los recursos y completa el Subject para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

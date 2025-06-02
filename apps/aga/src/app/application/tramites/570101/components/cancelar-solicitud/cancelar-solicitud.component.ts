@@ -136,6 +136,15 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
       }
     }
  
+  /**
+
+Actualiza el estado de validación de la sección actual en el store.
+Recorre el arreglo de secciones para identificar la sección activa (aquella cuyo valor es true).
+Si encuentra una sección activa, verifica si el formulario formCancelorSolicitud es válido.
+Si es válido, marca la sección correspondiente como válida en el arreglo formaValida.
+Si no es válido, marca la sección como no válida.
+Finalmente, actualiza el estado global llamando a establecerFormaValida en el store de la sección.
+@returns {void} */
 
   actualizarValidationInStore(): void {
     let seccion: number | null = 0;
@@ -196,6 +205,17 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  
+
+  /**
+   * Establece si el campo 'fechasSeleccionadas.selectedFechas' del formulario es obligatorio o no.
+   *
+   * @param isRequired Indica si el campo debe ser obligatorio (`true`) o no (`false`).
+   *
+   * Si el parámetro es `true`, se aplica el validador `Validators.required` al control.
+   * Si es `false`, se eliminan los validadores existentes del control.
+   * Finalmente, se actualiza el estado y la validez del control.
+   */
   setSelectedFechasRequired(isRequired: boolean): void {
     const CONTROL = this.formCancelorSolicitud.get('fechasSeleccionadas.selectedFechas');
 

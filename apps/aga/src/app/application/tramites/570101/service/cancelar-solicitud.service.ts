@@ -67,6 +67,12 @@ actualizarEstadoFormulario(DATOS: Partial<CancelarSolicitudState>): void {
   }));
 }
 
+/**
+
+Obtiene los datos simulados para el registro de toma de muestras de mercancías.
+Realiza una solicitud HTTP al archivo 'requestCancallar.json' ubicado en la carpeta de assets.
+Devuelve un observable que emite el estado de la solicitud de cancelación.
+@returns {Observable<CancelarSolicitudState>} Observable que emite los datos del estado de la solicitud de cancelación. */
 getRegistroTomaMuestrasMercanciasData(): Observable<CancelarSolicitudState> {
   return this.http.get<CancelarSolicitudState>('assets/json/570101/requestCancallar.json');
 }
