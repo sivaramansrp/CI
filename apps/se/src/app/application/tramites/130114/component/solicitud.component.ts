@@ -1,7 +1,8 @@
-import { Catalogo, REG_X } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite130114State, Tramite130114Store } from '../../../estados/tramites/tramite130114.store'
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { DiamanteBrutoService } from '../../130114/services/diamante-bruto.service';
 import { HttpClient } from '@angular/common/http';
@@ -12,7 +13,6 @@ import { ProductoOpción } from '../../../shared/constantes/vehiculos-adaptados.
 import { TEXTOS } from '../../../shared/constantes/representacion-federal.enum';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { Tramite130114Query } from '../../../estados/queries/tramite130114.query';
-import { Tramite130114Store } from '../../../estados/tramites/tramite130114.store'
 import fractionValues from '@libs/shared/theme/assets/json/130114/fraccion_arancelaria.json';
 import solicitudeSelectVal from '@libs/shared/theme/assets/json/130114/solicitud-select.json';
 import unidadOptions from '@libs/shared/theme/assets/json/130114/unidad_da.json';
@@ -198,7 +198,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @type {any}
    */
   TEXTOS = TEXTOS;
-
+/**
+     * Indica si el formulario está en modo solo lectura.
+     * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false;
+   /**
+    * Estado interno de la sección actual del trámite 130110.
+    * Utilizado para gestionar y almacenar la información relacionada con esta sección.
+    * Propiedad privada.
+   */
+    private seccionState!: Tramite130114State;
     /**
  * **Subject para manejar la destrucción de suscripciones**
  *
@@ -223,9 +233,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private Tramite130114Store: Tramite130114Store,
     private Tramite130114Query: Tramite130114Query,
-    private DiamanteBrutoService: DiamanteBrutoService
+    private DiamanteBrutoService: DiamanteBrutoService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    //constructor
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState)=>{
+          this.esFormularioSoloLectura = seccionState.readonly; 
+          this.inicializarFormularios();
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -253,13 +272,43 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+     * Evalúa si se debe inicializar o cargar datos en el formulario.
+     */
+    inicializarEstadoFormulario(): void {
+      if (this.esFormularioSoloLectura) {
+        this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+      } else {
+        this.inicializarFormularios();
+      }
+    }
+
+    /**
+ * Se suscribe a los cambios del estado de la solicitud en el store de Tramite130111.
+ * Cada vez que el estado cambia, actualiza la propiedad interna `seccionState` con los nuevos datos.
+ * Esta suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
+ */
+  suscribirseAEstadoDeSolicitud(): void {
+      this.Tramite130114Query.selectSolicitud$?.pipe(takeUntil(this.destroyed$))
+      .subscribe((data: Tramite130114State) => {
+        this.seccionState = data;
+      });
+  }
+     /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+    guardarDatosFormulario(): void {
+      this.inicializarFormularios();
+    }
+  /**
    * Inicializa todos los formularios reactivos del componente con sus validaciones correspondientes.
    */
   inicializarFormularios(): void {
+    this.suscribirseAEstadoDeSolicitud();
     this.formDelTramite = this.fb.group({
       solicitud: ['', Validators.required],
-      regimen: ['', Validators.required],
-      clasificacion: ['', Validators.required],
+      regimen: [{value:this.seccionState?.regimen,disabled: true}, Validators.required],
+      clasificacion: [{value:this.seccionState?.clasificacion,disabled: true}, Validators.required],
     });
 
     this.mercanciaForm = this.fb.group({

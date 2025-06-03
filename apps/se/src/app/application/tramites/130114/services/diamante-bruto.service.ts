@@ -4,12 +4,13 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
 import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
+import { Tramite130114State, Tramite130114Store } from '../../../estados/tramites/tramite130114.store';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DiamanteBrutoService {
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,private tramite130114Store: Tramite130114Store) {
     //
   }
   /**
@@ -77,5 +78,19 @@ export class DiamanteBrutoService {
       'assets/json/130114/partidas-de-la.json'
     );
   }
+    /**
+   * Actualiza el estado del formulario en el store.
+   * @param DATOS Estado actualizado del trámite.
+   */
+  actualizarEstadoFormulario(DATOS: Tramite130114State): void {
+      this.tramite130114Store.actualizarEstado(DATOS);
+  }
+  /**
+ * Obtiene los datos de la solicitud.
+ * @returns Observable con los datos de la solicitud.
+ */
+getDatosDeLaSolicitud(): Observable<Tramite130114State> {
+    return this.http.get<Tramite130114State>('assets/json/130114/datos-de-la-solicitud.json');
+}
 }
 

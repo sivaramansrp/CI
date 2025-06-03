@@ -8,6 +8,7 @@ import { of, Subject } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ProductoOpción } from '../../../shared/constantes/vehiculos-adaptados.enum';
 import { Component, Input } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 
 
@@ -107,28 +108,8 @@ describe('SolicitudComponent', () => {
       getListaDePaisesDisponibles: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
       getPaisesPorBloque: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
     };
-    jest.spyOn(mockService, 'getEntidadFederativa'); 
 
-    await TestBed.configureTestingModule({
-      declarations: [
-        SolicitudComponent,
-        PartidasDeLaMercanciaStubComponent,
-        DatosDelTramiteStubComponent,
-        DatosDeLaMercanciaStubComponent,
-        PaisProcendenciaStubComponent,
-        RepresentacionStubComponent,
-      ],
-      imports: [ReactiveFormsModule],
-      providers: [
-        FormBuilder,
-        { provide: Tramite130114Store, useValue: mockStore },
-        { provide: Tramite130114Query, useValue: mockQuery },
-        { provide: DiamanteBrutoService, useValue: mockDiamanteBrutoService },
-      ],
-    }).compileComponents();
-  });
-
-  beforeEach(async () => {
+    // Assign mockDiamanteBrutoService before using it in providers
     mockDiamanteBrutoService = {
       getEntidadFederativa: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
       getRepresentacionFederal: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
@@ -147,10 +128,22 @@ describe('SolicitudComponent', () => {
       ),
       getTablaDatos: jest.fn().mockReturnValue(of([{ cantidad: 10, totalUSD: 1000 }])),
     };
-  
+
+    jest.spyOn(mockService, 'getEntidadFederativa'); 
     await TestBed.configureTestingModule({
-      declarations: [SolicitudComponent],
+      declarations: [
+        SolicitudComponent,
+        PartidasDeLaMercanciaStubComponent,
+        DatosDelTramiteStubComponent,
+        DatosDeLaMercanciaStubComponent,
+        PaisProcendenciaStubComponent,
+        RepresentacionStubComponent,
+      ],
+      imports: [ReactiveFormsModule, HttpClientTestingModule],
       providers: [
+        FormBuilder,
+        { provide: Tramite130114Store, useValue: mockStore },
+        { provide: Tramite130114Query, useValue: mockQuery },
         { provide: DiamanteBrutoService, useValue: mockDiamanteBrutoService },
       ],
     }).compileComponents();
