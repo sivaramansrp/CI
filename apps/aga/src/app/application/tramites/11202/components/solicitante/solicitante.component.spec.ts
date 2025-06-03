@@ -1,20 +1,8 @@
 
 import {  ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-    CUSTOM_ELEMENTS_SCHEMA,
-  NO_ERRORS_SCHEMA,
-   NgModule,
-} from '@angular/core';
-import {
-  FormsModule,
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  FormControl,
-} from '@angular/forms';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { SolicitanteComponent } from './solicitante.component';
-
-
 @NgModule({
   declarations: [
     SolicitanteComponent,
@@ -60,7 +48,6 @@ describe('SolicitanteComponent', () => {
   it('should run #ngOnInit()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
-    
     component.ngOnInit();
   });
 });

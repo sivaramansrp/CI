@@ -1,3 +1,4 @@
+import { PersonaTerceros } from "@libs/shared/data-access-user/src";
 /**
  * @interface ListaPasosWizard
  * @description 
@@ -59,6 +60,15 @@ export interface DatosDeFila {
     cantidad: number;
     proveedor: string;
 }
+/**
+ * @interface FinalEnviar
+ * @description 
+ * Interfaz que agrupa los estados de validación de las diferentes secciones del formulario antes de enviar la información final.
+ * 
+ * @property {boolean} datosFormaValidacion - Indica si la validación de los datos del formulario principal fue exitosa.
+ * @property {boolean} movilizacionValidacion - Indica si la validación de la sección de movilización fue exitosa.
+ * @property {boolean} validaciondeFormulariodePago - Indica si la validación del formulario de pago fue exitosa.
+ */
 export interface FinalEnviar {
     datosFormaValidacion: boolean;
     movilizacionValidacion: boolean;
@@ -75,10 +85,35 @@ export interface FinalEnviar {
  * @property {PagoForm} pago - Datos de pago asociados a la transacción.
  */
 export interface ListaDeDatosFinal {
+    /**
+     * Datos relacionados con la forma o formulario.
+     */
     datos: DatosForma;
+
+    /**
+     * Información sobre la movilización.
+     */
     movilizacion: Movilizacion;
+
+    /**
+     * Información del formulario de pago.
+     */
     pago: PagoForm;
+
+    /**
+     * Datos finales preparados para enviar.
+     */
     finalEnviar: FinalEnviar;
+
+    /**
+     * Arreglo de filas de solicitud para la tabla de datos.
+     */
+    tablaDatos: FilaSolicitud[];
+
+    /**
+     * Arreglo de personas terceros asociadas.
+     */
+    personas: PersonaTerceros[];
 }
 
 /**
@@ -204,6 +239,11 @@ export interface DatosForma {
     uso: string;
     tipoDeProducto: string;
 }
+/**
+ * @interface FilaSolicitud
+ * @description 
+ * Interfaz que representa una fila de la tabla de solicitudes.
+ */
 export interface FilaSolicitud {
     noPartida: string;
     tipoRequisito: string;
@@ -213,6 +253,18 @@ export interface FilaSolicitud {
     descripcionFraccion: string;
     nico: string;
 }
+
+/**
+ * @interface ConsultaioSolicitante
+ * @description 
+ * Interfaz que representa los datos de consulta de un solicitante.
+ */
+export interface ConsultaioSolicitante {
+  folioDelTramite: string;
+  fechaDeInicio: string;
+  estadoDelTramite: string;
+}
+
 /**
  * @function getDefaultValue
  * @description Función auxiliar para retornar el valor por defecto de cada propiedad.
@@ -223,18 +275,6 @@ export interface FilaSolicitud {
  */
 function getDefaultValue(value: string | undefined, defaultValue: string): string {
     return value !== undefined && value !== null ? value : defaultValue;
-}
-
-/**
- * @function getMercanciasDefault
- * @description Función auxiliar específicamente para la propiedad `mercancias`.
- * 
- * @param {Mercancia[]} value - El valor a verificar para `mercancias`.
- * @param {Mercancia[]} defaultValue - El valor por defecto (array vacío) para `mercancias` si `value` no es un array.
- * @returns {Mercancia[]} - El array de `mercancias` o un array vacío si el valor no es un array.
- */
-function getMercanciasDefault(value: Mercancia[], defaultValue: Mercancia[]): Mercancia[] {
-    return Array.isArray(value) ? value : defaultValue;
 }
 
 /**
@@ -303,6 +343,8 @@ export function createDatosState(params: Partial<ListaDeDatosFinal> = {}): Lista
             datosFormaValidacion: finalEnviar(params.finalEnviar?.datosFormaValidacion as boolean, false),
             movilizacionValidacion: finalEnviar(params.finalEnviar?.movilizacionValidacion as boolean, false),
             validaciondeFormulariodePago: finalEnviar(params.finalEnviar?.validaciondeFormulariodePago as boolean, false)
-        }
-    };
+        },
+        tablaDatos: params.tablaDatos || [],
+        personas: params.personas || []
+    }
 }
