@@ -8,6 +8,7 @@ import {
   LABEL_DESPACHO_DD,
   LABEL_DESPACHO_LDA,
   MSG_ADUANA_PEDIMENTO,
+  MSG_CAMBIO_TIPO_SOLICITUD,
   MSJ_ERROR_FECHA,
   MSJ_ERROR_LINEA_CAPTURA,
   MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
@@ -62,24 +63,30 @@ import {
 import {
   DatosComponentePedimento,
   Pedimento,
+  ResponsablesDespacho,
 } from '../../../../core/models/5701/tramite5701.model';
 import {
   EMPTY,
   Observable,
   Subject,
   delay,
+  distinctUntilChanged,
   first,
   map,
   merge,
+  skip,
   switchMap,
   takeUntil,
   tap,
 } from 'rxjs';
 import {
+  AbstractControl,
   FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
+  ValidationErrors,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import {
@@ -503,8 +510,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    *
    * @returns {FormGroup} El grupo de formulario 'pedimento'.
    */
-  get pedimento(): FormGroup {
-    return this.FormSolicitud.get('pedimento') as FormGroup;
+  get pedimento(): FormArray {
+    return this.FormSolicitud.get('pedimento') as FormArray;
   }
 
   /**
@@ -569,6 +576,22 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   get fechasSeleccionadas(): FormArray {
     return this.datosServicio.get('fechasSeleccionadas') as FormArray;
+  }
+
+  /**
+   * Valida que el FormArray tenga al menos un elemento.
+   * @param min {number} - El número mínimo de elementos que debe tener el FormArray.
+   * @returns {ValidatorFn} - Una función de validador que verifica la longitud del FormArray.
+   */
+  static minLengthArray(min: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control instanceof FormArray && control.length < min) {
+        return {
+          minLengthArray: { requiredLength: min, actualLength: control.length },
+        };
+      }
+      return null;
+    };
   }
 
   /**
@@ -893,7 +916,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
       pedimento: this.fb.array([]),
 
-      personasResponsablesDespacho: this.fb.array([]),
+      personasResponsablesDespacho: this.fb.array([], Validators.required),
 
       vehiculo: this.fb.group({
         tipoTransporte: [this.solicitudState?.tipoTransporte],
@@ -927,8 +950,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {Function} Una función que toma un `FormGroup` y devuelve un objeto con una clave booleana indicando si el intervalo es inválido, o `null` si el intervalo es válido.
    */
   fechaIntervaloValidator(): void {
-    const FECHA_INICIO = new Date(this.datosServicio.get('fechaInicio')?.value);
-    const FECHA_FINAL = new Date(this.datosServicio.get('fechaFinal')?.value);
+    const FECHA_INICIO_STR = this.datosServicio.get('fechaInicio')?.value;
+    const FECHA_FINAL_STR = this.datosServicio.get('fechaFinal')?.value;
+
+    const FECHA_INICIO = new Date(`${FECHA_INICIO_STR}T00:00:00`);
+    const FECHA_FINAL = new Date(`${FECHA_FINAL_STR}T00:00:00`);
     const HORA_INICIO = this.datosServicio.get('horaInicio')?.value;
     const HORA_FINAL = this.datosServicio.get('horaFinal')?.value;
     const INTERVALO_DIAS = SolicitudComponent.getIntervaloDias(
@@ -949,8 +975,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         parseInt(HORA_FINAL.split(':')[0], 10),
         parseInt(HORA_FINAL.split(':')[1], 10)
       );
+
       const DIFERENCIA_EN_TIEMPO =
         FECHA_FINAL.getTime() - FECHA_INICIO.getTime();
+
       const DIFERENCIA_EN_HORAS = DIFERENCIA_EN_TIEMPO / (1000 * 3600);
 
       if (DIFERENCIA_EN_TIEMPO <= 0) {
@@ -967,20 +995,14 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       }
 
       const DIFERENCIA_EN_DIAS = DIFERENCIA_EN_TIEMPO / (1000 * 3600 * 24);
+
       if (
         (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.SEMANAL &&
           DIFERENCIA_EN_DIAS > 7) ||
         (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.MENSUAL &&
           DIFERENCIA_EN_DIAS > 30)
       ) {
-        const FECHA_FINAL_CONTROL = this.datosServicio.get('fechaFinal');
-        if (FECHA_FINAL_CONTROL) {
-          FECHA_FINAL_CONTROL.setErrors({ invalidIntervalo: true });
-        }
-      }
-
-      if (DIFERENCIA_EN_TIEMPO < 0) {
-        this.datosServicio.setErrors({ endDateBeforeStartDate: true });
+        this.datosServicio.setErrors({ invalidIntervalo: true });
       }
     }
   }
@@ -1079,22 +1101,61 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} Esta función no retorna ningún valor.
    */
   tipoSolicitudSeleccion(): void {
-    const TIPO_SOLICITUD = parseInt(
+    // Se obtiene el valor del tipo de solicitud seleccionado y se agrega la descripción correspondiente al formulario.
+    const TIPO_SOLICITUD_VALUE = parseInt(
       this.FormSolicitud.get('tipoSolicitud')?.value,
       10
     );
 
     const SOLICITUD_DESRIPCION = this.tiposSolicitud.find(
-      (tipo) => tipo.id === TIPO_SOLICITUD
+      (tipo) => tipo.id === TIPO_SOLICITUD_VALUE
     )?.descripcion;
     this.FormSolicitud.get('descripcionTipoSolicitud')?.setValue(
       SOLICITUD_DESRIPCION
     );
 
+
+    const FORMA_MODIFICADA = Object.keys(this.FormSolicitud.controls).some(
+      (key) => {
+        if (key !== 'tipoSolicitud' && key !== 'descripcionTipoSolicitud') {
+          return (
+            this.FormSolicitud.controls[key].dirty ||
+            this.FormSolicitud.controls[key].touched
+          );
+        }
+        return false;
+      }
+    );
+
+
+    if (FORMA_MODIFICADA) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: 'Avisos',
+        mensaje: MSG_CAMBIO_TIPO_SOLICITUD,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.limpiarFormulario();
+      return;
+    }
+
     this.tipoSolicitudSeleccionada = parseInt(
       this.FormSolicitud.get('tipoSolicitud')?.value,
       10
     );
+
+    if (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL) {
+      this.pedimento.setValidators([Validators.required]);
+      this.pedimento.setValidators([SolicitudComponent.minLengthArray(1)]);
+      this.pedimento.updateValueAndValidity();
+    } else {
+      this.pedimento.clearValidators();
+      this.pedimento.updateValueAndValidity();
+    }
 
     this.setValoresStore(
       this.FormSolicitud,
@@ -1272,7 +1333,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.fechaIntervaloValidator();
     this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
 
-    if (this.datosServicio.hasError('endDateBeforeStartDate')) {
+    if (this.fechaInicioPasadaFechaFinalError()) {
+      this.limpiarFechasHoras();
+      return;
+    }
+
+    if (
+      this.datosServicio.hasError('endDateBeforeStartDate') ||
+      this.datosServicio.hasError('invalidIntervalo')
+    ) {
+      this.limpiarFechasHoras();
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
@@ -1286,6 +1356,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
+    this.calcularRangoFechas();
+  }
+
+  /**
+   * Calcula el rango de días entre las fechas y horas seleccionadas,
+   * actualiza el valor de mostrarRangoFechas y colapsable,
+   * y establece los valores correspondientes en el store.
+   * @returns
+   */
+  calcularRangoFechas(): void {
     if (this.tipoSolicitudSeleccionada !== TIPO_SOLICITUD.INDIVIDUAL) {
       this.rangoFechas();
       this.mostrarRangoFechas = true;
@@ -1309,6 +1389,35 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       HORA_FINAL
     );
     this.colapsable = true;
+  }
+
+  /**
+   * Método que limpia el formulario de las fechas y horas.
+   */
+  limpiarFechasHoras(): void {
+    this.datosServicio.get('horaInicio')?.setValue('');
+    this.datosServicio.get('horaInicio')?.markAsUntouched();
+    this.datosServicio.get('fechaInicio')?.setValue('');
+    this.datosServicio.get('fechaInicio')?.markAsUntouched();
+    this.datosServicio.get('horaFinal')?.setValue('');
+    this.datosServicio.get('horaFinal')?.markAsUntouched();
+    this.datosServicio.get('fechaFinal')?.setValue('');
+    this.datosServicio.get('fechaFinal')?.markAsUntouched();
+
+    this.setValoresStore(this.datosServicio, 'fechaInicio', 'setFechaInicio');
+    this.setValoresStore(this.datosServicio, 'horaInicio', 'setHoraInicio');
+    this.setValoresStore(this.datosServicio, 'fechaFinal', 'setFechaFinal');
+    this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
+  }
+
+  /**
+   * Cambia la fecha de inicio del servicio.
+   *
+   */
+  changeFechaInicio(): void {
+    this.datosServicio.updateValueAndValidity();
+    this.fechaIntervaloValidator();
+    this.setValoresStore(this.datosServicio, 'fechaInicio', 'setFechaInicio');
   }
 
   /**
@@ -1662,6 +1771,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
                   descripcion: 'No cuenta con recinto',
                 },
               ];
+
               this.despacho.get('nombreRecinto')?.setValue(SIN_ITEMS);
               this.despacho.get('nombreRecinto')?.disable();
             }
@@ -2124,6 +2234,26 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún v(alor.
    */
   changeAgregarPedimento(datosPedimento: Pedimento[]): void {
+    this.pedimento.clear();
+    if (datosPedimento.length > 0) {
+      datosPedimento.forEach((pedimento) => {
+        this.pedimento.push(
+          this.fb.group({
+            idPedimento: [pedimento.idPedimento],
+            patente: [pedimento.patente],
+            pedimento: [pedimento.pedimento],
+            aduana: [pedimento.aduana],
+            tipoPedimento: [pedimento.tipoPedimento],
+            estadoPedimento: [pedimento.estadoPedimento],
+            subEstadoPedimento: [pedimento.subEstadoPedimento],
+            descTipoPedimento: [pedimento.descTipoPedimento],
+            numero: [pedimento.numero],
+            comprobanteValor: [pedimento.comprobanteValor],
+            pedimentoValidado: [pedimento.pedimentoValidado],
+          })
+        );
+      });
+    }
     this.tramite5701Store.setPedimentos(datosPedimento);
   }
 
@@ -2173,6 +2303,127 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.transporteArriboSalida,
       'tipoTransporteArriboSalida',
       'setTipoTransporteArriboSalida'
+    );
+  }
+
+  /**
+   * Cambia los responsables de despacho y actualiza el store correspondiente.
+   * @param personas - Lista de responsables de despacho.
+   * @returns {void} No retorna ningún valor.
+   */
+  changeResponsablesDespacho(personas: ResponsablesDespacho[]): void {
+    this.tramite5701Store.setPersonasResponsablesDespacho(personas);
+
+    this.personasResponsablesDespacho.clear();
+    if (personas.length > 0) {
+      personas.forEach((persona) => {
+        this.personasResponsablesDespacho.push(
+          this.fb.group({
+            gafeteRespoDespacho: [persona.gafeteRespoDespacho],
+            nombre: [persona.nombre],
+            primerApellido: [persona.primerApellido],
+            segundoApellido: [persona.segundoApellido],
+          })
+        );
+      });
+    }
+  }
+
+  /**
+   * Limpia el formulario FormSolicitud, excepto el campo de tipoSolicitud y actualiza el store correspondiente.
+   * @returns {void} No retorna ningún valor.
+   */
+  limpiarFormulario(): void {
+    this.FormSolicitud.reset({
+      folioSolicitud: null,
+      tipoSolicitud: this.FormSolicitud.get('tipoSolicitud')?.value,
+      descripcionTipoSolicitud: this.FormSolicitud.get(
+        'descripcionTipoSolicitud'
+      )?.value,
+      datosImportadorExportador: {
+        apoderadoPatente: null,
+        empresaApoderado: null,
+        empresasApoderado: null,
+        RFCImpExp: '',
+        nombre: '',
+        desNumeroRegistro: '',
+        programa: false,
+        desProgramaFomento: '',
+        checkIMMEX: false,
+        desImmex: '',
+        industriaAutomotriz: false,
+        desIndustrialAutomotriz: '',
+        tipoEmpresaCertificada: '',
+        socioComercial: false,
+        certificacionOEA: false,
+        revision: false,
+        idSocioComercial: '',
+      },
+      datosServicio: {
+        fechaInicio: '',
+        fechaFinal: '',
+        horaInicio: '',
+        horaFinal: '',
+        fechasSeleccionadas: [],
+      },
+      despacho: {
+        lda: false,
+        rfcDespachoLDA: '',
+        dd: false,
+        folioDDEX: '',
+        idAduanaDespacho: '-1',
+        aduanaDespacho: '',
+        idSeccionDespacho: '-1',
+        seccionAduanera: '',
+        idRecinto: null,
+        nombreRecinto: '-1',
+        tipoDespacho: -1,
+        descripcionTipoDespacho: '',
+        tipoOperacion: '-1',
+        patente: this.despacho.get('patente')?.value,
+        relacionSociedad: false,
+        encargoConferido: false,
+        domicilioDespacho: '',
+        especifique: '',
+      },
+      mercancia: {
+        paisOrigen: 0,
+        paisProcedencia: 0,
+        descripcionGenerica: '',
+        justificacion: '',
+      },
+      pedimento: [],
+      personasResponsablesDespacho: [],
+      vehiculo: {
+        tipoTransporte: '',
+        vehiculoDatos: [],
+      },
+      transporteArriboSalida: {
+        tipoTransporte: '',
+        transporteArriboDatos: [],
+      },
+      pagoCaptura: {
+        montoAPagar: this.pagoCaptura.get('montoAPagar')?.value,
+        lineaCaptura: '',
+        monto: '',
+      },
+    });
+
+    this.pedimento.clear();
+    this.personasResponsablesDespacho.clear();
+
+    this.tramite5701Store.limpiarSolicitud();
+
+    this.setValoresStore(
+      this.FormSolicitud,
+      'tipoSolicitud',
+      'setTipoSolicitud'
+    );
+
+      this.setValoresStore(
+      this.FormSolicitud,
+      'descripcionTipoSolicitud',
+      'setDescripcionTipoSolicitud'
     );
   }
 }
