@@ -8,12 +8,10 @@ export class Tramite120501Query extends Query<Solicitud120501State> {
   /**
    * Selecciona el estado completo de la solicitud
    */
+    selectSolicitud$ = this.select((state) => {
+    return state;
+  });
   
-    entidadFederativa$ = this.select((state) => state.entidadFederativa);
-    representacionFederal$ = this.select((state) => state.representacionFederal);
-    montoRecibir$ = this.select((state) => state.montoRecibir);
-
-
   /**Guarda el estado completo del formulario de la solicitud */
   constructor(
     protected override store: Tramite120501Store) {

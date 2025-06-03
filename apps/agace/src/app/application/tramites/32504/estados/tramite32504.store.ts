@@ -2,6 +2,10 @@ import { CargaTipo, DatosDomicilioLugar, DatosEmpresa, DatosMercanciaSubmanufact
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
+/**
+ * Estado inicial del formulario del trámite 32504.
+ * @type {FormularioGrupo}
+ */
 export const INITIAL_STATE: FormularioGrupo = {
     datosEmpresa: {
         numeroPrograma: '',
@@ -38,25 +42,25 @@ export const INITIAL_STATE: FormularioGrupo = {
 };
 
 /**
- * Tramite entity store
- *
- * @export
- * @class TramiteStore
+ * @class Tramite32504Store
+ * @description Store para la gestión del estado del formulario del trámite 32504.
  * @extends {Store<FormularioGrupo>}
  */
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'tramite-32504', resettable: true })
 export class Tramite32504Store extends Store<FormularioGrupo> {
+  /**
+   * Crea una instancia de Tramite32504Store e inicializa el estado.
+   */
   constructor() {
     super(INITIAL_STATE);
   }
 
   /**
-   * Establece los datos de modificación en el estado.
+   * Establece los datos de la empresa en el estado.
    * 
-   * @param {DatosEmpresa} datosEmpresa - Los datos de modificación que se van a establecer en el estado.
-   * 
-   * @returns {void} - No devuelve ningún valor.
+   * @param {DatosEmpresa} datosEmpresa - Los datos de la empresa que se van a establecer en el estado.
+   * @returns {void}
    */
   setDatosEmpresa(datosEmpresa: DatosEmpresa): void {
     this.update((state) => ({
@@ -66,11 +70,10 @@ export class Tramite32504Store extends Store<FormularioGrupo> {
   }
 
   /**
-   * Establece el CargaTipo en el almacén.
+   * Establece el tipo de carga en el estado.
    * 
-   * @param {CargaTipo} cargaTipo - El CargaTipo que se va a establecer en el almacén.
-   * 
-   * @returns {void} - No devuelve ningún valor.
+   * @param {CargaTipo} cargaTipo - El tipo de carga que se va a establecer en el estado.
+   * @returns {void}
    */
   setCargaTipo(cargaTipo: CargaTipo): void {
     this.update((state) => ({
@@ -80,11 +83,10 @@ export class Tramite32504Store extends Store<FormularioGrupo> {
   }
 
   /**
-   * Establece el alta de DatosQuienRecibe en el almacén.
+   * Establece los datos de quien recibe en el estado.
    * 
-   * @param {DatosQuienRecibe} datosQuienRecibe - Representa las DatosQuienRecibe a dar de alta.
-   * 
-   * @returns {void} - No devuelve ningún valor.
+   * @param {DatosQuienRecibe} datosQuienRecibe - Los datos de quien recibe que se van a establecer en el estado.
+   * @returns {void}
    */
   setDatosQuienRecibe(datosQuienRecibe: DatosQuienRecibe): void {
     this.update((state) => ({
@@ -94,11 +96,10 @@ export class Tramite32504Store extends Store<FormularioGrupo> {
   }
 
   /**
-   * Establece el alta de datosDomicilioLugar en el almacén.
+   * Establece los datos del domicilio del lugar en el estado.
    * 
-   * @param {datosDomicilioLugar} datosDomicilioLugar - Representa las datosDomicilioLugar a dar de alta.
-   * 
-   * @returns {void} - No devuelve ningún valor.
+   * @param {DatosDomicilioLugar} datosDomicilioLugar - Los datos del domicilio del lugar que se van a establecer en el estado.
+   * @returns {void}
    */
   setDatosDomicilioLugar(datosDomicilioLugar: DatosDomicilioLugar): void {
     this.update((state) => ({
@@ -108,11 +109,10 @@ export class Tramite32504Store extends Store<FormularioGrupo> {
   }
 
   /**
-   * Establece el alta de datosMercanciaSubmanufactura en el almacén.
+   * Establece los datos de la mercancía para submanufactura en el estado.
    * 
-   * @param {DatosMercanciaSubmanufactura} datosMercanciaSubmanufactura - Representa las datosMercanciaSubmanufactura a dar de alta.
-   * 
-   * @returns {void} - No devuelve ningún valor.
+   * @param {DatosMercanciaSubmanufactura} datosMercanciaSubmanufactura - Los datos de la mercancía para submanufactura que se van a establecer en el estado.
+   * @returns {void}
    */
   setDatosMercanciaSubmanufactura(datosMercanciaSubmanufactura: DatosMercanciaSubmanufactura): void {
     this.update((state) => ({
@@ -122,7 +122,21 @@ export class Tramite32504Store extends Store<FormularioGrupo> {
   }
 
   /**
-   * @description Resets the store to its initial state.
+   * Actualiza el estado general del formulario con los datos proporcionados.
+   * 
+   * @param {FormularioGrupo} datos - Los nuevos datos del formulario que se utilizarán para actualizar el estado.
+   * @returns {void}
+   */
+  setEstadoGeneral(datos: FormularioGrupo): void {
+    this.update((state) => ({
+      ...state,
+      datos,
+    }));
+  }
+
+  /**
+   * Restaura el estado del store a su estado inicial.
+   * @returns {void}
    */
   public limpiarFormulario(): void {
     this.reset();
