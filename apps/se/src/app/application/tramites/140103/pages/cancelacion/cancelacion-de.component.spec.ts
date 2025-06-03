@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CancelacionDeComponent } from './cancelacion-de.component';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 describe('CancelacionDeComponent', () => {
   let component: CancelacionDeComponent;
@@ -7,7 +8,8 @@ describe('CancelacionDeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CancelacionDeComponent],
+      imports: [WizardComponent],
+      declarations: [CancelacionDeComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(CancelacionDeComponent);
