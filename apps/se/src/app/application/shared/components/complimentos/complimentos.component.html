@@ -135,6 +135,7 @@
               [required]="true"
               name="estado"
               formControlName="estado"
+              [isDisabled]="formularioDeshabilitado"
             ></app-catalogo-select>
           </div>
         </div>
@@ -333,6 +334,7 @@
           name="agregar"
           class="btn btn-primary mx-2"
           (click)="aggregarAccionistas()"
+          [disabled]="formularioDeshabilitado"
         >
           Agregar
         </button>
@@ -348,6 +350,7 @@
         [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
         (listaDeFilaSeleccionada)="empresaAccionistasSeleccionados = $event"
         [datos]="datosSocioAccionistas"
+        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
       ></app-tabla-dinamica>
     </div>
     <div class="col-12">
@@ -356,6 +359,7 @@
           name="eliminar"
           class="btn btn-danger"
           (click)="eliminarAccionistas()"
+          [disabled]="formularioDeshabilitado"
         >
           Eliminar
         </button>
@@ -369,6 +373,7 @@
         [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
         (listaDeFilaSeleccionada)="accionistasExtranjerosSeleccionados = $event"
         [datos]="datosSocioAccionistasExtrenjeros"
+        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
       ></app-tabla-dinamica>
     </div>
     <div class="col-12">
@@ -377,6 +382,7 @@
           name="eliminar"
           class="btn btn-danger"
           (click)="eliminarAccionistasExtrenjeros()"
+          [disabled]="formularioDeshabilitado"
         >
           Eliminar
         </button>

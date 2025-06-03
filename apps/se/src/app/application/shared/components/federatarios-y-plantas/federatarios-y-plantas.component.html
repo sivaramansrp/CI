@@ -62,7 +62,7 @@
           </div>
           <div class="col-md-4">
             <div class="form-group">
-              <input-fecha [datos]="fechaInicioInput"></input-fecha>
+              <input-fecha [datos]="fechaInicioInput" [isDisabled]="formularioDeshabilitado"></input-fecha>
             </div>
           </div>
 
@@ -88,6 +88,7 @@
               [label]="'Estado'"
               [required]="true"
               name="estado"
+              [isDisabled]="formularioDeshabilitado"
             ></app-catalogo-select>
           </div>
           <div class="col-md-4">
@@ -97,13 +98,16 @@
               [label]="'Municipio o alcaldía'"
               [required]="true"
               name="estado"
+              [isDisabled]="formularioDeshabilitado"
             ></app-catalogo-select>
           </div>
         </div>
         <div class="row mt-5">
           <div class="col-12 container text-end mt-5">
-            <button class="btn btn-default me-2">Eliminar</button>
-            <button class="btn btn-primary" (click)="aggregarDatos()">
+            <button class="btn btn-default me-2"
+            [disabled]="formularioDeshabilitado">Eliminar</button>
+            <button class="btn btn-primary" (click)="aggregarDatos()"
+            [disabled]="formularioDeshabilitado">
               Agregar
             </button>
           </div>
@@ -122,6 +126,7 @@
             [configuracionTabla]="federatariosConfig.TablaEncabezado"
             [tipoSeleccionTabla]="federatariosConfig.TablaSeleccion"
             [datos]="federatariosDatos"
+            [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
           ></app-tabla-dinamica>
         </div>
       </div>
@@ -145,14 +150,16 @@
                 [catalogo]="estadoOptions"
                 [label]="'Estado'"
                 [required]="true"
-                name="estado"
-              ></app-catalogo-select>
+                name="estadoUno"
+                [isDisabled]="formularioDeshabilitado"
+                ></app-catalogo-select>
             </div>
           </div>
           <div class="row">
             <div class="col-md-12">
               <div class="pull-right ms-2">
-                <button class="btn btn-primary">Buscar plantas IMMEX</button>
+                <button class="btn btn-primary"
+                [disabled]="formularioDeshabilitado">Buscar plantas IMMEX</button>
               </div>
             </div>
           </div>
@@ -175,6 +182,7 @@
                       plantasDisponiblesConfig.TablaSeleccion
                     "
                     [datos]="plantasDisponiblesDatos"
+                    [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
                   ></app-tabla-dinamica>
                 </div>
               </div>
@@ -186,7 +194,8 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="pull-right ms-2">
-                    <button class="btn btn-primary">Agregar plantas</button>
+                    <button class="btn btn-primary"
+                    [disabled]="formularioDeshabilitado">Agregar plantas</button>
                   </div>
                 </div>
               </div>
@@ -202,6 +211,7 @@
                   [configuracionTabla]="plantasImmexConfig.TablaEncabezado"
                   [tipoSeleccionTabla]="plantasImmexConfig.TablaSeleccion"
                   [datos]="plantasImmexDatos"
+                  [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
                 ></app-tabla-dinamica>
               </div>
             </div>
@@ -212,6 +222,7 @@
                 <button
                   class="btn btn-primary"
                   (click)="irAAcciones('../complementar-plantas-acciones')"
+                  [disabled]="formularioDeshabilitado"
                 >
                   Complementar planta
                 </button>
@@ -220,6 +231,7 @@
                 <button
                   class="btn btn-primary"
                   (click)="irAAcciones('../montos-inversion-acciones')"
+                  [disabled]="formularioDeshabilitado"
                 >
                   Montos de inversión
                 </button>
@@ -228,6 +240,7 @@
                 <button
                   class="btn btn-primary"
                   (click)="irAAcciones('../empleados-acciones')"
+                  [disabled]="formularioDeshabilitado"
                 >
                   Empleados
                 </button>
@@ -236,6 +249,7 @@
                 <button
                   class="btn btn-primary"
                   (click)="irAAcciones('../capacidad-instalada-acciones')"
+                  [disabled]="formularioDeshabilitado"
                 >
                   Capacidad Instalada
                 </button>
@@ -244,12 +258,13 @@
                 <button
                   class="btn btn-primary"
                   (click)="irAAcciones('../proveedor-por-archivo')"
-                >
+                [disabled]="formularioDeshabilitado">
                   Carga por archivo
                 </button>
               </div>
               <div class="p-2">
-                <button class="btn btn-primary">Eliminar plantas</button>
+                <button class="btn btn-primary"
+                [disabled]="formularioDeshabilitado">Eliminar plantas</button>
               </div>
             </div>
           </div>
@@ -257,9 +272,10 @@
             <div class="col-md-4">
               <app-catalogo-select
                 [catalogo]="estadoOptions"
-                [label]="'Representación federal*'"
+                [label]="'Representación federal'"
                 [required]="true"
-                name="estado"
+                name="estadoDos"
+                [isDisabled]="formularioDeshabilitado"
               ></app-catalogo-select>
             </div>
             <div class="col-md-4">
@@ -267,7 +283,8 @@
                 [catalogo]="estadoOptions"
                 [label]="'Actividad productiva'"
                 [required]="true"
-                name="estado"
+                name="estadoTres"
+                [isDisabled]="formularioDeshabilitado"
               ></app-catalogo-select>
             </div>
           </div>

@@ -13,7 +13,39 @@ export const FECHA_DE_PAGO = {
   habilitado: true,
 };
 
+/**
+ * Constante que define los estados predeterminados para un formulario.
+ * 
+ * Esta constante es un objeto que contiene tres propiedades:
+ * - `estadoUno`: Representa el primer estado del formulario, inicialmente vacío.
+ * - `estadoDos`: Representa el segundo estado del formulario, inicialmente vacío.
+ * - `estadoTres`: Representa el tercer estado del formulario, inicialmente vacío.
+ * 
+ * Estos estados pueden ser utilizados para inicializar o resetear un formulario
+ * en una aplicación Angular.
+ */
+export const DEFAULT_ESTADOS = {
+  estadoUno: '',
+  estadoDos: '',
+  estadoTres: ''
+}
 
+/**
+ * Constante que define las opciones predeterminadas para los estados de un formulario.
+ * 
+ * Esta constante es un objeto que contiene tres propiedades:
+ * - `estadoOptionUno`: Representa la primera opción del estado, inicialmente vacío.
+ * - `estadoOptionDos`: Representa la segunda opción del estado, inicialmente vacío.
+ * - `estadoOptionTres`: Representa la tercera opción del estado, inicialmente vacío.
+ * 
+ * Estas opciones pueden ser utilizadas para inicializar o resetear un formulario
+ * en una aplicación Angular.
+ */
+export const DEFAULT_ESTADOS_OPTIONS = {
+  estadoOptionUno: '',
+  estadoOptionDos: '',
+  estadoOptionTres: ''
+}
 /**
  * Constante que define los datos de configuración para los campos de entrada
  * relacionados con federatarios y plantas.

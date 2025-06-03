@@ -35,6 +35,7 @@
             [label]="mercanciaInputValues[i].label"
             [placeholder]="mercanciaInputValues[i].placeholder"
             [required]="mercanciaInputValues[i].required"
+            [isDisabled]="esFormularioSoloLectura"
             [formControlName]="mercanciaInputValues[i].controlName"
             (change)="alCambioDelCampo(form, mercanciaInputValues[i].controlName, i)">
             </app-catalogo-select>

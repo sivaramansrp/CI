@@ -1,186 +1,96 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-
-import { Component } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { InternaPagoDeDerechosComponent } from './interna-pago-de-derechos.component';
+import { of, Subject } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
-import { ImportacionDeAcuiculturaService } from '../../servicios/importacion-de-agricultura.service';
-import { TramiteStoreQuery } from '../../estados/tramite220701.query';
-import { TramiteStore } from '../../estados/tramite220701.store';
-import { SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { HttpClientModule } from '@angular/common/http';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-@Injectable()
-class MockImportacionDeAcuiculturaService {
-  obtenerDatos = function() {
-    return observableOf({
-      formularioPago: {}
-    });
-  };
-}
 
-@Injectable()
-class MockTramiteStoreQuery {}
+// Mocks
+const mockImportacionDeAcuiculturaService = {
+  obtenerDatos: jest.fn().mockReturnValue(of({ formularioPago: {} })),
+  obtenerDetallesDelCatalogo: jest.fn().mockReturnValue(of({ data: [] })),
+  actualizarFormaValida: jest.fn(),
+  actualizarFormularioPago: jest.fn()
+};
 
-@Injectable()
-class MockTramiteStore {}
+const mockTramiteStoreQuery = {
+  selectSolicitudTramite$: of({ FormularioPagoState: {} })
+};
 
+const mockTramiteStore = {
+  setInternaPagoDeDerechosTramite: jest.fn()
+};
+
+const mockSeccionLibQuery = {
+  selectSeccionState$: of({ formaValida: [] }),
+  getValue: () => ({ formaValida: [] })
+};
+
+const mockSeccionLibStore = {
+  establecerFormaValida: jest.fn()
+};
+
+const mockConsultaioQuery = {
+  selectConsultaioState$: of({ readonly: false })
+};
 
 describe('InternaPagoDeDerechosComponent', () => {
-  let fixture;
-  let component;
+  let component: InternaPagoDeDerechosComponent;
+  let fixture: ComponentFixture<InternaPagoDeDerechosComponent>;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule , InternaPagoDeDerechosComponent, HttpClientModule],
-      declarations: [
-       
-      ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      declarations: [InternaPagoDeDerechosComponent],
       providers: [
-        FormBuilder,
-        { provide: ImportacionDeAcuiculturaService, useClass: MockImportacionDeAcuiculturaService },
-        { provide: TramiteStoreQuery, useClass: MockTramiteStoreQuery },
-        { provide: TramiteStore, useClass: MockTramiteStore },
-        SeccionLibQuery,
-        SeccionLibStore
-      ]
-    }).overrideComponent(InternaPagoDeDerechosComponent, {
-
+      FormBuilder,
+      { provide: 'ImportacionDeAcuiculturaService', useValue: mockImportacionDeAcuiculturaService },
+      { provide: 'TramiteStoreQuery', useValue: mockTramiteStoreQuery },
+      { provide: 'TramiteStore', useValue: mockTramiteStore },
+      { provide: 'SeccionLibQuery', useValue: mockSeccionLibQuery },
+      { provide: 'SeccionLibStore', useValue: mockSeccionLibStore },
+      { provide: 'ConsultaioQuery', useValue: mockConsultaioQuery }
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
+
     fixture = TestBed.createComponent(InternaPagoDeDerechosComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  it('should run #constructor()', async () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.tramiteStoreQuery = component.tramiteStoreQuery || {};
-    component.tramiteStoreQuery.selectSolicitudTramite$ = observableOf({});
-    component.crearFormularioPago = jest.fn();
-    component.formularioPago = component.formularioPago || {};
-    component.formularioPago.statusChanges = observableOf({});
-    component.formularioPago.patchValue = jest.fn();
-    component.formularioPago.value = 'value';
-    component.formularioPago.get = jest.fn().mockReturnValue({
-      status: {}
-    });
-    component.formularioPago.valid = 'valid';
-    component.verificarEstadoDelBoton = jest.fn();
-    component.obtenerListaJustificacion = jest.fn();
-    component.obtenerListaBanco = jest.fn();
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.setInternaPagoDeDerechosTramite = jest.fn();
-    component.seccionQuery = component.seccionQuery || {};
-    component.seccionQuery.selectSeccionState$ = observableOf({});
-    component.seccionQuery.getValue = jest.fn();
-    component.seccionStore = component.seccionStore || {};
-    component.seccionStore.establecerFormaValida = jest.fn();
-    component.ngOnInit();
-    // expect(component.crearFormularioPago).toHaveBeenCalled();
-    // expect(component.formularioPago.patchValue).toHaveBeenCalled();
-    // expect(component.formularioPago.get).toHaveBeenCalled();
-    // expect(component.verificarEstadoDelBoton).toHaveBeenCalled();
-    // expect(component.obtenerListaJustificacion).toHaveBeenCalled();
-    // expect(component.obtenerListaBanco).toHaveBeenCalled();
-    // expect(component.tramiteStore.setInternaPagoDeDerechosTramite).toHaveBeenCalled();
-    // expect(component.seccionQuery.getValue).toHaveBeenCalled();
-    // expect(component.seccionStore.establecerFormaValida).toHaveBeenCalled();
+  it('debe inicializar el formulario correctamente', () => {
+    component.inicializarFormulario();
+    expect(component.formularioPago).toBeDefined();
+    expect(component.formularioPago.get('exentoPago')).toBeTruthy();
   });
 
-  it('should run #crearFormularioPago()', async () => {
-    component.formularioPagoStore = component.formularioPagoStore || {};
-    component.formularioPagoStore.exentoPago = 'exentoPago';
-    component.formularioPagoStore.justificacion = 'justificacion';
-    component.formularioPagoStore.claveReferencia = 'claveReferencia';
-    component.formularioPagoStore.cadenaDependencia = 'cadenaDependencia';
-    component.formularioPagoStore.banco = 'banco';
-    component.formularioPagoStore.llavePago = 'llavePago';
-    component.formularioPagoStore.fechaPago = 'fechaPago';
-    component.formularioPagoStore.importePago = 'importePago';
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.crearFormularioPago();
-    // expect(component.fb.group).toHaveBeenCalled();
+  it('debe cambiar el valor del radio exentoPago', () => {
+    component.inicializarFormulario();
+    component.cambioValorRadio('exentoPago', 'No');
+    expect(component.exentoPagoValor).toBe('No');
+    expect(component.formularioPago.get('exentoPago')?.value).toBe('No');
   });
 
-  it('should run #cambioValorRadio()', async () => {
-    component.formularioPago = component.formularioPago || {};
-    component.formularioPago.patchValue = jest.fn();
-    component.crearFormularioPago = jest.fn();
-    component.cambioValorRadio({}, {});
-    // expect(component.formularioPago.patchValue).toHaveBeenCalled();
-    // expect(component.crearFormularioPago).toHaveBeenCalled();
+  it('debe actualizar la fecha en el formulario', () => {
+    component.inicializarFormulario();
+    component.cambioFechaFinal('01/01/2025');
+    expect(component.fechaPagoDate).toBe('01/01/2025');
+    expect(component.formularioPago.get('fechaPago')?.value).toBe('01/01/2025');
   });
 
-  it('should run #cambioFechaFinal()', async () => {
-    component.formularioPago = component.formularioPago || {};
-    component.formularioPago.patchValue = jest.fn();
-    component.cambioFechaFinal({});
-    // expect(component.formularioPago.patchValue).toHaveBeenCalled();
+  it('debe formatear una fecha correctamente', () => {
+    const fecha = new Date('2025-06-02');
+    const resultado = InternaPagoDeDerechosComponent.formatearFecha(fecha);
+    expect(resultado).toBe('02/06/2025');
   });
 
-  it('should run #obtenerListaBanco()', async () => {
-    component.importacionAcuiculturaServicio = component.importacionAcuiculturaServicio || {};
-    component.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo = jest.fn().mockReturnValue(observableOf({}));
-    component.obtenerListaBanco();
-    // expect(component.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo).toHaveBeenCalled();
+  it('debe llamar a actualizarFormularioPago cuando se ejecuta setValoresStore', () => {
+    component.inicializarFormulario();
+    component.setValoresStore(component.formularioPago, 'exentoPago');
+    expect(mockImportacionDeAcuiculturaService.actualizarFormularioPago).toHaveBeenCalled();
   });
-
-  it('should run #verificarEstadoDelBoton()', async () => {
-    component.formularioPago = component.formularioPago || {};
-    component.formularioPago.valid = 'valid';
-    component.importacionAcuiculturaServicio = component.importacionAcuiculturaServicio || {};
-    component.importacionAcuiculturaServicio.actualizarFormaValida = jest.fn();
-    component.verificarEstadoDelBoton();
-    // expect(component.importacionAcuiculturaServicio.actualizarFormaValida).toHaveBeenCalled();
-  });
-
-  it('should run #obtenerListaJustificacion()', async () => {
-    component.importacionAcuiculturaServicio = component.importacionAcuiculturaServicio || {};
-    component.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo = jest.fn().mockReturnValue(observableOf({}));
-    component.obtenerListaJustificacion();
-    // expect(component.importacionAcuiculturaServicio.obtenerDetallesDelCatalogo).toHaveBeenCalled();
-  });
-
-  it('should run #setValoresStore()', async () => {
-    component.actualizarValorAleatorio = jest.fn();
-    component.formularioPago = component.formularioPago || {};
-    component.formularioPago.value = 'value';
-    component.importacionAcuiculturaServicio = component.importacionAcuiculturaServicio || {};
-    component.importacionAcuiculturaServicio.actualizarFormularioPago = jest.fn();
-    component.setValoresStore({}, {});
-    // expect(component.actualizarValorAleatorio).toHaveBeenCalled();
-    // expect(component.importacionAcuiculturaServicio.actualizarFormularioPago).toHaveBeenCalled();
-  });
-
-  it('should run #actualizarValorAleatorio()', async () => {
-    component.formularioPago = component.formularioPago || {};
-    component.formularioPago.value = {
-      justificacion: {},
-      banco: {}
-    };
-    component.formularioPago.patchValue = jest.fn();
-    component.formularioPagoStore = component.formularioPagoStore || {};
-    component.formularioPagoStore.exentoPago = 'exentoPago';
-    component.actualizarValorAleatorio();
-    // expect(component.formularioPago.patchValue).toHaveBeenCalled();
-  });
-
-  it('should run #ngOnDestroy()', async () => {
-    component.unsubscribe$ = component.unsubscribe$ || {};
-    component.unsubscribe$.next = jest.fn();
-    component.unsubscribe$.complete = jest.fn();
-    component.ngOnDestroy();
-    // expect(component.unsubscribe$.next).toHaveBeenCalled();
-    // expect(component.unsubscribe$.complete).toHaveBeenCalled();
-  });
-
 });
