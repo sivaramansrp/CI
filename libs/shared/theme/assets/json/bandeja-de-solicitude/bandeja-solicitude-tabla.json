@@ -9,13 +9,13 @@
     "numeroDeProcedimiento": "301"
   },
   {
-        "id": 110101,
-        "tipoDeTramite": "Consulta de Proceso",
-        "fecha": "2023-10-06",
-        "fechaActualizacion": "2023-10-12",
-        "diasTranscurridos": "4",
-        "departamento": "SE",
-        "numeroDeProcedimiento": "110101"
+    "id": 110101,
+    "tipoDeTramite": "Consulta de Proceso",
+    "fecha": "2023-10-06",
+    "fechaActualizacion": "2023-10-12",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "110101"
   },
   {
     "id": 16,
@@ -35,15 +35,15 @@
     "departamento": "SEMARNAT",
     "numeroDeProcedimiento": "230401"
   },
-    {
-        "id":260215,
-        "tipoDeTramite": "Solicitud de Permiso",
-        "fecha": "2023-10-01",
-        "fechaActualizacion": "2023-10-05",
-        "diasTranscurridos": "4",
-        "departamento": "COFEPRIS",
-        "numeroDeProcedimiento": "260215"
-    },
+  {
+    "id": 260215,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260215"
+  },
   {
     "id": 110102,
     "tipoDeTramite": "Solicitud de Permiso",
@@ -657,7 +657,7 @@
     "numeroDeProcedimiento": "220202"
   },
   {
-    "id": 250104,
+    "id": 120301,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
     "fechaActualizacion": "2023-10-05",
@@ -709,5 +709,32 @@
     "diasTranscurridos": "4",
     "departamento": "AGACE",
     "numeroDeProcedimiento": "32504"
+  },
+  {
+    "id": 80102,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "80102"
+  },
+  {
+    "id": 80101,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "80101"
+  },
+  {
+    "id": 140103,
+    "tipoDeTramite": "Cancelacion de Certificados",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "140103"
   }
 ]

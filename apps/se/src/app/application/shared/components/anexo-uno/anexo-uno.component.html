@@ -36,16 +36,18 @@
     </div>
     <div class="row">
       <div class="col-12 container text-end mt-5">
-        <button class="btn btn-default me-2" (click)="eliminarAnexoUno()">
+        <button class="btn btn-default me-2" (click)="eliminarAnexoUno()"
+        [disabled]="formularioDeshabilitado">
           Eliminar
         </button>
-        <button class="btn btn-primary me-2" (click)="agregarAnexoUno()">
+        <button class="btn btn-primary me-2" (click)="agregarAnexoUno()"
+        [disabled]="formularioDeshabilitado">
           Agregar
         </button>
         <button
           class="btn btn-primary"
           (click)="setRuta('proveedor-por-archivo', 'IMPORT')"
-        >
+        [disabled]="formularioDeshabilitado">
           Carga por archivo
         </button>
       </div>
@@ -57,6 +59,7 @@
         [configuracionTabla]="anexoConfiguartion.anexoUnoEncabezadoDeTabla"
         [datos]="anexoUnoTablaLista"
         (filaSeleccionada)="setAnexoUnoLista($event)"
+        [disableSeleccionTablaRadio]="formularioDeshabilitado"
       ></app-tabla-dinamica>
     </div>
   </form>
@@ -72,20 +75,20 @@
       <button
         class="btn btn-primary me-2"
         (click)="setRuta('contenedor-proveedor-cliente', 'IMPORT')"
-      >
+      [disabled]="formularioDeshabilitado">
         Proveedor Cliente
       </button>
       <button
         class="btn btn-primary me-2"
         (click)="setRuta('proyecto-immex', 'IMPORT')"
-      >
+      [disabled]="formularioDeshabilitado">
         Proyecto IMMEX
       </button>
 
       <button
         class="btn btn-primary"
         (click)="setRuta('proveedor-por-archivo', 'IMPORT')"
-      >
+      [disabled]="formularioDeshabilitado">
         Proveedor Cliente por Archivo
       </button>
     </div>
@@ -125,10 +128,12 @@
     </div>
     <div class="row">
       <div class="col-12 container text-end mt-5">
-        <button class="btn btn-default me-2" (click)="eliminarAnexoDos()">
+        <button class="btn btn-default me-2" (click)="eliminarAnexoDos()"
+        [disabled]="formularioDeshabilitado">
           Eliminar
         </button>
-        <button class="btn btn-primary me-2" (click)="agregarAnexoDos()">
+        <button class="btn btn-primary me-2" (click)="agregarAnexoDos()"
+        [disabled]="formularioDeshabilitado">
           Agregar
         </button>
       </div>
@@ -140,6 +145,7 @@
         [configuracionTabla]="anexoDosConfiguartion.anexoDosEncabezadoDeTabla"
         [datos]="anexoDosTablaLista"
         (filaSeleccionada)="setAnexoDosLista($event)"
+        [disableSeleccionTablaRadio]="formularioDeshabilitado"
       ></app-tabla-dinamica>
     </div>
   </form>
@@ -148,13 +154,14 @@
       <button
         class="btn btn-default me-2"
         (click)="setRuta('complementar-fraccion', 'EXPORT')"
+        [disabled]="formularioDeshabilitado"
       >
         Complementar Función
       </button>
       <button
         class="btn btn-primary me-2"
         (click)="setRuta('contenedor-proveedor-cliente', 'EXPORT')"
-      >
+      [disabled]="formularioDeshabilitado">
         Proveedor Cliente
       </button>
     </div>
