@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, viewChild, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DatosDelTramiteComponent } from '../../components/datos-del-tramite/datos-del-tramite.component';
@@ -17,7 +17,6 @@ import { map, Subject, takeUntil } from 'rxjs';
   templateUrl: './paso-uno.component.html',
   standalone:true,
   imports:[SolicitanteComponent,CommonModule,DatosDelTramiteComponent, FormsModule, ReactiveFormsModule]
-  
 })
 export class PasoUnoComponent implements AfterViewInit {
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
@@ -25,13 +24,12 @@ export class PasoUnoComponent implements AfterViewInit {
 
   private destroyNotifier$: Subject<void> = new Subject();
   public consultaState!:ConsultaioState;
-    constructor(
-      private datosDelTramite: DatosDelTramiteComponent,
-      private solicitud10301Service: Solicitud10301Service,
-      private consultaQuery: ConsultaioQuery
-    ) {
-  // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
-    }
+  constructor(
+    private solicitud10301Service: Solicitud10301Service,
+    private consultaQuery: ConsultaioQuery
+  ) {
+    // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
+  }
   /**
    * Referencia al componente de solicitante.
    */
@@ -58,15 +56,15 @@ export class PasoUnoComponent implements AfterViewInit {
   indice: number = 1;
 
    ngOnInit(): void {
-     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+   this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
            this.consultaState = seccionState;
        })).subscribe();
      if(this.consultaState.update) {
        this.guardarDatosFormulario();
-     } else {
-       this.esDatosRespuesta = true;
-     }
-   }
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
 
      guardarDatosFormulario(): void {
     this.solicitud10301Service

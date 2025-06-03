@@ -1,16 +1,13 @@
 {
-  "tipoMercancia": "Electrónica",
-  "usoEspecifico": "Uso personal",
-  "marca": "Sony",
-  "modelo": "X123",
-  "serie": "SN987654321",
+  "nombre": "Electronica",
   "calle": "Calle Principal",
   "numeroExterior": "100",
-  "numeroInterior": "12B",
+  "numeroInterior": "15",
   "telefono": "5551234567",
   "correoElectronico": "usuario@ejemplo.com",
+  "pais":1,
   "codigoPostal": "12345",
-  "estado": "Ciudad de México",
-  "colonia": "Centro",
+  "estado": "11122",
+  "colonia": "55",
   "opcion":true
 }

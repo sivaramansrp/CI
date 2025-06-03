@@ -2,6 +2,7 @@ import {
   AlertComponent,
   CatalogoSelectComponent,
   CatalogosSelect,
+  ConsultaioQuery,
   CrosslistComponent,
   InputRadioComponent,
   TableComponent,
@@ -183,7 +184,9 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     'Número de serie',
     'Uso específico de la mercancía',
   ];
-
+  isPais: boolean = false;
+  isDesplegableDepaises: boolean = false;
+  isAdunaMarcancia: boolean = false;
   /**
    * Botones de acción disponibles para gestionar las listas de fechas.
    */
@@ -220,6 +223,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
 
   constructor(
+    private consultaioQuery: ConsultaioQuery,
     private importarExportar: ImportadorExportadorService,
     private store: Tramite10301Store,
     private query: Tramite10301Query,
@@ -227,6 +231,14 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     private validacionesService: ValidacionesFormularioService
   ) {
     // El constructor se utiliza para la inyección de dependencias.
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -237,6 +249,12 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       this.tramiteForm.markAllAsTouched();
     }
   }
+
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Método de inicialización del componente.
    */
@@ -406,6 +424,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       });
   }
 
+
   getAduanaIngresara(): void {
     this.getAduanaIngresaraSubscription = this.importarExportar
       .getAduanaIngresara()
@@ -482,6 +501,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Inicializa el formulario de donante y domicilio con los valores del estado de la solicitud.
    */
   donanteDomicilio(): void {
+
     this.tramiteForm = this.fb.group({
       importadorExportador: this.fb.group({
         aduana: [this.solicitudState?.aduana, [Validators.required]],
@@ -548,6 +568,24 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         opcion: [this.solicitudState?.opcion],
       }),
     });
+
+    if (this.esFormularioSoloLectura) {
+      this.importadorExportador?.get('aduana')?.disable();
+      this.importadorExportador?.get('nombre')?.disable();
+      this.importadorExportador?.get('calle')?.disable();
+      this.importadorExportador?.get('numeroExterior')?.disable();
+      this.importadorExportador?.get('numeroInterior')?.disable();
+      this.importadorExportador?.get('telefono')?.disable();
+      this.importadorExportador?.get('correoElectronico')?.disable();
+      this.importadorExportador?.get('pais')?.disable();
+      this.importadorExportador?.get('codigoPostal')?.disable();
+      this.importadorExportador?.get('estado')?.disable();
+      this.importadorExportador?.get('colonia')?.disable();
+      this.importadorExportador?.get('opcion')?.disable();
+      this.isDesplegableDepaises = true;
+      this.isAdunaMarcancia = true;
+      this.isPais = true;
+    }
   }
 
   /**
