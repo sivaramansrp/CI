@@ -1,0 +1,14 @@
+{
+"establecimientoDenominacionRazonSocial":"Nombre por defecto",
+"establecimientoCorreoElectronico":"correo@ejemplo.com",
+"establecimientoDomicilioCodigoPostal": "00000",
+"establecimientoDomicilioEstado": "Estado por defecto",
+"establecimientoMunicipioYAlcaldia": "Municipio/Alcaldía por defecto",
+"establecimientoDomicilioLocalidad": "Localidad por defecto",
+"establecimientoDomicilioColonia": "Colonia por defecto",
+"establecimientoDomicilioCalle": "Calle por defecto",
+"establecimientoDomicilioLada": "000",
+"establecimientoDomicilioTelefono": "0000000000",
+"rfcDelProfesionalResponsable": "RFC000000XXX",
+"nombreDelProfesionalResponsable": "Nombre por defecto"
+}
