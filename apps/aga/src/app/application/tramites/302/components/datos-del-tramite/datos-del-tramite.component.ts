@@ -16,6 +16,7 @@ import { CommonModule } from '@angular/common';
 import { DetallesDelProducto } from '../../models/certi-registro.model';
 import { FormularioDinamico } from '@libs/shared/data-access-user/src';
 import { FormulariosDeCertiRegistroComponent } from '../formularios-de-certi-registro/formularios-de-certi-registro.component';
+import { Solicitud302Service } from '../../services/service302.service';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
@@ -24,7 +25,6 @@ import { Tramite302Store } from '../../../../../application/core/estados/tramite
 import aduanas from '@libs/shared/theme/assets/json/302/lista-de-oficinas-de-aduanas.json';
 import importaciónTemporal from '@libs/shared/theme/assets/json/302/list-importacion-temporal.json';
 import unidadDeMedida from '@libs/shared/theme/assets/json/302/lista-unidad-de-medida.json';
-import { Solicitud302Service } from '../../services/service302.service';
 /**
 * DatosDelTramiteComponent componente utilizado para procesar los datos del producto*
 * Este componente utiliza varios subcomponentes como TitleComponent, CommonModule,
@@ -230,6 +230,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   public esFormularioSoloLectura: boolean = false;
 
+  public selectedProducto: DetallesDelProducto[] = [];
+
   /**
    * Constructor del componente.
    * 
@@ -300,8 +302,14 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
 
         if (campo.campo === 'unidadDeMedida') {
           campo.listaDesplegable = this.listaUnidadDeMedida;
+          // this.certiRegistroState['unidadDeMedidaDesc'] = this.listaUnidadDeMedida.find(
+          //   (unidad: Catalogo) => unidad.id === this.certiRegistroState['unidadDeMedida']
+          // )?.descripcion || '';
         } else if (campo.campo === 'anoDeImportacionTemporal') {
           campo.listaDesplegable = this.listImportacionTemporal;
+          // this.certiRegistroState['anoDeImportacionTemporalDesc'] = this.listImportacionTemporal.find(
+          //   (importaciónTemporal: Catalogo) => importaciónTemporal.id === this.certiRegistroState['anoDeImportacionTemporal']
+          // )?.descripcion || '';
         } else {
           campo.listaDesplegable = [];
         }
@@ -337,7 +345,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @description
    * Asigna la descripción del catálogo seleccionado al control del formulario.
    **/
-  public docSeleccionado(event: Catalogo, forma: FormGroup, controlDeFormulario: string): void {
+  public static docSeleccionado(event: Catalogo, forma: FormGroup, controlDeFormulario: string): void {
     if (event) {
       forma?.get(controlDeFormulario)?.setValue(event?.descripcion);
     }
@@ -378,6 +386,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     if (this.formAgregarProductos.valid) {
       const PRODUCTOS = this.formAgregarProductos?.value;
       this.detallesDelProducto?.push(PRODUCTOS);
+      this.tramite302Store.setDynamicFieldValue('detallesDelProducto', this.detallesDelProducto);
       this.formAgregarProductos.reset();
       this.cerrarModal();
       this.modalConfirmacion = 'show';
@@ -396,6 +405,19 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   public setValoresStore(event: {campo: string, forma: FormGroup}): void {
     const VALOR = event.forma.get(event.campo)?.value;
     this.tramite302Store.setDynamicFieldValue(event.campo, VALOR);
+    if (event.campo === 'unidadDeMedida') {
+      const VALOR_UNIDAD = this.listaUnidadDeMedida.find(
+        (unidad: Catalogo) => unidad.id === VALOR
+      )?.descripcion || '';
+      this.tramite302Store.setDynamicFieldValue('unidadDeMedidaDesc', VALOR_UNIDAD);
+    }
+    if (event.campo === 'anoDeImportacionTemporal') {
+      const DATOS = this.listImportacionTemporal.find(
+        (importaciónTemporal: Catalogo) => importaciónTemporal.id === VALOR
+      )?.descripcion || '';
+      this.tramite302Store.setDynamicFieldValue('anoDeImportacionTemporalDesc', DATOS);
+    }
+
   }
 
    /**
@@ -423,6 +445,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     ).subscribe(
       (datos:DetallesDelProducto) => {
         this.detallesDelProducto = Array.isArray(datos) ? datos : [datos];
+        this.tramite302Store.setDynamicFieldValue('detallesDelProducto', this.detallesDelProducto);
       })
 }
 
@@ -433,7 +456,15 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @param row - Los datos de la fila seleccionada.
    */
   valorDeAlternancia(row:DetallesDelProducto[]): void {
-   
+   this.selectedProducto = row;
   }
 
+  modificarModal(): void {
+    if(this.selectedProducto.length > 0) {
+    this.modal = 'show';
+    this.formAgregarProductos.patchValue(this.selectedProducto[0]);
+    this.selectedProducto = [];
+    this.cerrarModal();
+    }
+  }
 }

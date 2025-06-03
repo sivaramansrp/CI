@@ -3,10 +3,10 @@
 "tipoDeMercancia":"tipo",
 "condicionDeLaMercancia":"test condicion",
 "cantidad":"test cantidad",
-"unidadDeMedida":"test unidad",
+"unidadDeMedida":"1",
 "enSuCaso":"test en su caso",
 "marca":"test marca",
-"anoDeImportacionTemporal":"test temporal",
+"anoDeImportacionTemporal":"2",
 "modelo":"test modelo",
 "numeroDeSerie":"test numero de serie"
 }

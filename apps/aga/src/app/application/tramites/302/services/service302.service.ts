@@ -1,9 +1,9 @@
 import { CertiRegistro302State, Tramite302Store } from '../../../core/estados/tramites/tramite302.store';
+import { DetallesDelProducto } from '../models/certi-registro.model';
 import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { DetallesDelProducto } from '../models/certi-registro.model';
 
 @Injectable({
   providedIn: 'root',

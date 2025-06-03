@@ -148,7 +148,27 @@ export const MERCANCIAS = [
         tooltip: '',
         validators: [''],
         placeholder: '',
-      }
+      },
+      {
+        labelNombre: 'Año de importación temporal',
+        campo: 'anoDeImportacionTemporalDesc',
+        class: 'col-md-4',
+        tipo_input: 'hidden',
+        disabled: false,
+        tooltip: '',
+        validators: [''],
+        placeholder: '',
+      },
+      {
+        labelNombre: 'Unidad de medida',
+        campo: 'unidadDeMedidaDesc',
+        class: 'col-md-4',
+        tipo_input: 'hidden',
+        disabled: false,
+        tooltip: '',
+        validators: [''],
+        placeholder: '',
+      },
   ];
 
   /**
