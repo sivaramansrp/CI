@@ -32,6 +32,15 @@ export class DatosDeLaMercanciaComponent {
    */
   @Input() form!: FormGroup;
 
+    /**
+   * @description Indica si el formulario debe mostrarse en modo solo lectura.
+   * Cuando es `true`, todos los campos del formulario estarán deshabilitados y no podrán ser editados por el usuario.
+   * Este valor se recibe como entrada desde el componente padre.
+   * @type {boolean}
+   * @default false
+   */
+  @Input() esFormularioSoloLectura: boolean = false;
+
   /**
    * @description Valores de entrada para configurar los campos del formulario.
    * Cada objeto incluye etiqueta, marcador de posición, si es requerido y el nombre del control.
