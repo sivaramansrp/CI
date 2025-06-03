@@ -547,5 +547,23 @@
         "diasTranscurridos": "4",
         "departamento": "SEMARNAT",
         "numeroDeProcedimiento": "230401"
+    },
+    {
+        "id": 40102,
+        "tipoDeTramite": "Atención de Renovación por Vigencia",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "40102"
+    },
+    {
+        "id": 40103,
+        "tipoDeTramite": "Atención de Modificación",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "40103"
     }
 ]

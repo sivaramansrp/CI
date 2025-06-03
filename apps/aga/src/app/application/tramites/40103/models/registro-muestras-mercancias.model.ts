@@ -336,3 +336,20 @@ export interface Chofer {
   entidadFederativaCHE?: string;
   paisOrigenCHE?: string;
 }
+
+/**
+ * Representa la estructura de datos para un Director General.
+ *
+ * @property nombre - El nombre del Director General.
+ * @property primerApellido - El primer apellido del Director General.
+ * @property segundoApellido - El segundo apellido del Director General.
+ * @property apellidoPaterno - El apellido paterno del Director General.
+ * @property apellidoMaternoCHN - El apellido materno del Director General en formato CHN.
+ */
+export interface DirectorGeneralData {
+  nombre : string;
+  primerApellido : string;
+  segundoApellido : string;
+  apellidoPaterno : string;
+  apellidoMaternoCHN : string;
+}

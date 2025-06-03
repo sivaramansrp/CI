@@ -7,6 +7,7 @@ import { Chofer40103Query } from '../../estados/chofer40103.query';
 import { Chofer40103Service } from '../../estados/chofer40103.service';
 import { Subject } from 'rxjs';
 import mockData from '@libs/shared/theme/assets/json/40103/director-general-mockdata.json';
+
 @Component({
   selector: 'app-director-general',
   templateUrl: './director-general.component.html',
@@ -68,33 +69,19 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
         })
       ).subscribe();
     this.crearFormularioDirectorGeneral();
-    this.establecerValoresDeFormulario();
   }
 
   /**
    * Crea el formulario para el director general.
    */
   crearFormularioDirectorGeneral(): void {
-    this.directorGeneralForm = this.fb.group({
-      nombre: [this.solicitud40103State?.curp, [Validators.required]],
-      primerApellido: [this.solicitud40103State?.primerApellido, [Validators.required]],
-      segundoApellido: [this.solicitud40103State?.segundoApellido, [Validators.required]],
-    });
-  }
+    const STATE = this.chofer40103Store?.getValue();
 
-  /**
-   * Establece los valores del formulario utilizando datos simulados.
-   */
-  establecerValoresDeFormulario(): void {
-    if (mockData) {
-      setTimeout(() => {
-        this.directorGeneralForm.patchValue({
-          nombre: mockData.nombre || '',
-          primerApellido: mockData.primerApellido || '',
-          segundoApellido: mockData.segundoApellido || '',
-        });
-      });
-    }
+    this.directorGeneralForm = this.fb.group({
+      nombre: [STATE.nombre, [Validators.required]],
+      primerApellido: [STATE.primerApellido, [Validators.required]],
+      segundoApellido: [STATE.segundoApellido, [Validators.required]],
+    });
   }
 
   /**
@@ -106,7 +93,7 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-    /**
+  /**
    * Establecer valores en el store del trámite.
    * @param form Formulario reactivo.
    * @param campo Nombre del campo.

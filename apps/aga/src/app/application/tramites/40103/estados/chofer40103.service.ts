@@ -1,6 +1,6 @@
 import { BehaviorSubject, Observable } from 'rxjs'; 
+import { Chofer, DirectorGeneralData } from '../models/registro-muestras-mercancias.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
-import { Chofer } from '../models/registro-muestras-mercancias.model';
 import { Chofer40103Store } from './chofer40103.store';
 import { DatosDelVehículo } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 import { HttpClient } from '@angular/common/http';
@@ -247,5 +247,33 @@ export class Chofer40103Service {
   obtenerTablaDatos<T>(fileName: string): Observable<T[]> {
     const JSONURL = this.url + fileName;
     return this.http.get<T[]>(JSONURL);
+  }
+
+  /**
+   * Recupera datos simulados para el Director General.
+   *
+   * Envía una solicitud HTTP GET para obtener los datos del Director General desde un archivo JSON simulado.
+   *
+   * @returns Un Observable que emite el objeto DirectorGeneralData.
+   */
+  getDirectorGeneralData(): Observable<DirectorGeneralData> {
+    return this.http.get<DirectorGeneralData>(`${this.url}director-general-mockdata.json`);
+  }
+
+  /**
+   * Actualiza la propiedad `directorGeneral` en la tienda con los datos proporcionados.
+   *
+   * @param data - El nuevo objeto `DirectorGeneralData` que se establecerá como la información del director general.
+   */
+  updateStateDirectorGeneralData(data: DirectorGeneralData): void {
+    this.chofer40103Store.update((state) => ({
+      ...state,
+      //directorGeneral: data,
+      nombre: data.nombre,
+      primerApellido: data.primerApellido,
+      segundoApellido: data.segundoApellido,
+      apellidoPaterno: data.primerApellido,
+      apellidoMaternoCHN: data.apellidoMaternoCHN,
+    }));
   }
 }
