@@ -2,11 +2,12 @@ import {
   Catalogo,
   CategoriaMensaje,
   ConfiguracionColumna,
+  ConsultaioQuery,
   CrosslistComponent,
   Notificacion,
   TablaSeleccion,
   TipoNotificacionEnum,
-} from '@libs/shared/data-access-user/src';
+} from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   CrosslistBoton,
@@ -14,13 +15,14 @@ import {
 } from '../../enum/botons.enum';
 import { DESTINATARIO_TABLA_CONFIGURACION, DestinatarioConfiguracionItem, MERCANCIA_TABLA_CONFIGURACION, MercanciaConfiguracionItem } from '../../enum/destinatario-tabla.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import {
   Tramite300105State,
   Tramite300105Store,
 } from '../../estados/tramite300105.store';
 import { AutorizacionDeRayosXService } from '../../services/autorizacion-de-rayos-x.service';
 import { Tramite300105Query } from '../../estados/tramite300105.query';
+import { mapToCanActivateChild } from '@angular/router';
 
 /*
  * Componente que gestiona los datos de la solicitud, incluyendo la configuración de formularios,
@@ -182,6 +184,12 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
   relacionMercanciaPopupAbierto: boolean = false;
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+
+  /**
    * Constructor del componente.
    * autorizacionDeRayosXService Servicio para manejar datos relacionados con autorizaciones de vida silvestre.
    * tramite300105Store Almacén de estado para el trámite 300105.
@@ -192,9 +200,24 @@ export class DestinatariosComponent implements OnInit, OnDestroy {
     public autorizacionDeRayosXService: AutorizacionDeRayosXService,
     private tramite300105Store: Tramite300105Store,
     private tramite300105Query: Tramite300105Query,
-    private formBuilder: FormBuilder
-  ) {
-    // No se realiza ninguna acción aquí.
+    private formBuilder: FormBuilder,
+    private consultaioQuery: ConsultaioQuery
+  ) {  
+      /**
+       * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+       *
+       * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+       * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+       * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+       */
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.notificadorDestruccion$),
+        map((seccionState) => {
+         this.esFormularioSoloLectura = seccionState.readonly || true;
+        })
+      )
+      .subscribe()
   }
 
   /**

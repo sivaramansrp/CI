@@ -143,7 +143,7 @@ describe('DatosSolicitudComponent', () => {
       fraccionArancelaria: '1',
       fraccionDescripcion: 'Fracción 1',
     });
-    component.enviarFormularioMercancia();
+    component.enviarFormularioMercancia(true);
     expect(component.datosTablaMercancia.length).toBe(1);
     expect(tramite300105StoreMock.setMercanciaTablaDatos).toHaveBeenCalled();
   });

@@ -2,11 +2,12 @@ import {
   Catalogo,
   CategoriaMensaje,
   ConfiguracionColumna,
+  ConsultaioQuery,
   CrosslistComponent,
   Notificacion,
   TablaSeleccion,
   TipoNotificacionEnum,
-} from '@libs/shared/data-access-user/src';
+} from '@ng-mf/data-access-user';
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   ConfiguracionItem,
@@ -19,7 +20,7 @@ import {
   OBTENER_BOTONES_CROSSLIST,
 } from '../../enum/botons.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import {
   Tramite300105State,
   Tramite300105Store,
@@ -102,6 +103,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   configuracionTabla: ConfiguracionColumna<ConfiguracionItem>[] =
     TABLA_CONFIGURACION;
 
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
 
   /**
    * Configuración de las columnas para la tabla de series.
@@ -212,9 +218,24 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     public autorizacionDeRayosXService: AutorizacionDeRayosXService,
     private tramite300105Store: Tramite300105Store,
     private tramite300105Query: Tramite300105Query,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // No se realiza ninguna acción aquí.
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.notificadorDestruccion$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly || true;
+      })
+    )
+    .subscribe()
   }
 
   /**
@@ -232,6 +253,22 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     );
 
     this.datosTablaMercancia = this.estadoSolicitud300105.mercanciaTablaDatos;
+
+    this.formularioSolicitud = this.formBuilder.group({
+      observaciones: [this.estadoSolicitud300105.observaciones, Validators.maxLength(500)],
+    });
+
+    if(this.esFormularioSoloLectura){
+      this.formularioSolicitud.disable();
+    };
+  }
+
+   /**
+   * Método para guardar el valor de observaciones en el store.
+   */
+   guardarObservaciones(): void {
+    const observaciones = this.formularioSolicitud.get('observaciones')?.value;
+    this.tramite300105Store.establecerDatos({observaciones}); 
   }
 
   /**
