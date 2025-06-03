@@ -670,6 +670,18 @@
         "fecha": "2023-10-01",
         "fechaActualizacion": "2023-10-05",
         "diasTranscurridos": "4",
+        "departamento": "SEMARNAT",
+        "numeroDeProcedimiento": "230401"
+    },
+    {
+        "id": 11204,
+        "tipoDeTramite": "Solicitud de Permiso",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "11204"
+    }
         "departamento": "SE",
         "numeroDeProcedimiento": "130102"
    }
