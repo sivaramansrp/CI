@@ -1,19 +1,31 @@
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ConsultaioState } from '@libs/shared/data-access-user/src';
 import { DatosDeLaSolicitud } from '../../models/solicitud-pantallas.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
 import { Subject } from 'rxjs';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
+import { DatosDelTramiteARealizarComponent } from '../../shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
 /** Componente para gestionar el primer paso del trámite */
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
-  standalone: false,
+  imports: [
+    SolicitudComponent,
+    CatalogoSelectComponent,
+    CommonModule,
+    SolicitanteComponent,
+    DatosDelTramiteARealizarComponent
+  ],
+  standalone: true,
 })
 /** Componente para gestionar el primer paso del trámite */
 export class PasoUnoComponent implements OnInit, OnDestroy {

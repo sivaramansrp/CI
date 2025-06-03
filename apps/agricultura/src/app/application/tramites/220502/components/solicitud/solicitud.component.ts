@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { CargarDatosIniciales } from '../../models/solicitud-pantallas.model';
 import { CarrosDeFerrocarril } from '../../models/solicitud-pantallas.model';
 import { CarrosDeFerrocarrilComponent } from '../../shared/carros-de-ferrocarril/carros-de-ferrocarril.component';
-import { CatalogosSelect } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosDeMercancias } from '../../models/solicitud-pantallas.model';
 import { DatosDelTramiteARealizarComponent } from '../../shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
@@ -35,6 +35,7 @@ import { Subject } from 'rxjs';
     SolicitudDatosComponent,
     ResponsableInspeccionEnPuntoComponent,
     DatosDelTramiteARealizarComponent,
+    CatalogoSelectComponent,
     MedioTransporteComponent,
   ],
   providers: [SolicitudPantallasService],

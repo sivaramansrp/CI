@@ -161,9 +161,9 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
-      this.grupoFormularioPadre.get(this.claveDeControl)?.disable();
+      this.grupoFormularioPadre?.get(this.claveDeControl)?.disable();
     } else if (!this.esFormularioSoloLectura) {
-      this.grupoFormularioPadre.get(this.claveDeControl)?.enable();
+      this.grupoFormularioPadre?.get(this.claveDeControl)?.enable();
     } else {
       // No se requiere ninguna acción en el formulario
     }
@@ -174,7 +174,7 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
       this.grupoFormularioPadre.addControl(
         this.claveDeControl,
         new FormGroup({
-          certificadosAutorizados: new FormControl(1,
+          certificadosAutorizados: new FormControl('',
             [Validators.required]
           ),
           horaDeInspeccion: new FormControl(
@@ -325,7 +325,7 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
       false,
       data.puntoInspeccion
     );
-    // this.cdRef.detectChanges();
+    this.cdRef.detectChanges();
   }
 
   /**
