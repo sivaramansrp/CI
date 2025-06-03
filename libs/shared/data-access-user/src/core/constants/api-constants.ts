@@ -105,3 +105,5 @@ export const API_GET_DOCUMENTOS_OBLIGATORIOS = `tramite/{numeroTramite}/document
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/catalogo/swagger-ui/index.html#/Pa%C3%ADs/consulta-paises-activos
  */
 export const API_GET_PAISES = 'catalogo/paises';
+
+

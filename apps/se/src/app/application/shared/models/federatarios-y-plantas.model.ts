@@ -1,4 +1,5 @@
 
+import { Catalogo } from './certificado-origen.model';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 
@@ -50,6 +51,32 @@ export interface FederatariosEncabezado {
   numeroDeNotaria: string;
   entidadFederativa: string;
   municipioODelegacion: string;
+}
+
+/**
+ * Representa un catálogo de estados con tres propiedades distintas.
+ *
+ * @property estadoUno - El primer estado del catálogo.
+ * @property estadoDos - El segundo estado del catálogo.
+ * @property estadoTres - El tercer estado del catálogo.
+ */
+export interface EstadoCatalogo {
+estadoUno: string;
+estadoDos: string;
+estadoTres: string;
+}
+
+/**
+ * Representa un catálogo de estados con tres propiedades que contienen listas de objetos `Catalogo`.
+ *
+ * @property estadoUno - Lista de objetos `Catalogo` para el primer estado.
+ * @property estadoDos - Lista de objetos `Catalogo` para el segundo estado.
+ * @property estadoTres - Lista de objetos `Catalogo` para el tercer estado.
+ */
+export interface EstadoOptionCatalogo {
+estadoUnoOption: Catalogo[];
+estadoDosOption: Catalogo[];
+estadoTresOption: Catalogo[];
 }
 
 /**
