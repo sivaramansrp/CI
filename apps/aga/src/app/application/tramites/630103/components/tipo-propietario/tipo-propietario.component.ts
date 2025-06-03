@@ -5,13 +5,13 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery} from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { map, takeUntil } from 'rxjs';
-import { Subject} from 'rxjs';
-import { Subscription} from 'rxjs';
+import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { Catalogo, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
@@ -23,8 +23,10 @@ import { Tramite630103Query } from '../../estados/tramite630103.query';
 
 import { Tramite630103State, Tramite630103Store } from '../../estados/tramite630103.store';
 import { AutorizacionImportacionTemporalService } from '../../services/autorizacion-importacion-temporal.service';
+
 /**
  * Componente que gestiona los datos del tipo de propietario para el trámite 630103.
+ * Permite inicializar formularios, obtener datos de catálogos y manejar el estado del formulario.
  */
 @Component({
   selector: 'app-tipo-propietario',
@@ -46,6 +48,7 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
    * Indicador para mostrar el formulario de personas extranjeras.
    */
   mostrarFormularioPersonaExtranjera = false;
+
   /**
    * Indica si se debe mostrar el tipo de propietario.
    */
@@ -73,7 +76,7 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
 
   /**
    * Formulario dinámico para gestionar los datos del nombre del propietario.
-   */ 
+   */
   formularioDatosPropietarioNombre: ModeloDeFormaDinamica[] = FORMULARIO_DATOS_PROPIETARIO_NOMBRE;
 
   /**
@@ -90,17 +93,30 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
    * Subject utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
    */
   private destroyed$ = new Subject<void>();
+
+  /**
+   * Suscripción general para manejar y limpiar las suscripciones del componente.
+   */
   private subscription: Subscription = new Subscription();
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Si es verdadero, los campos del formulario estarán deshabilitados para edición.
+   */
   esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Estado actual de la solicitud.
+   */
   public solicitudState!: Tramite630103State;
 
   /**
    * Constructor del componente.
-   * 
-   * @param fb - Constructor de formularios reactivos.
-   * @param tramite630103Store - Store para manejar el estado del trámite.
-   * @param tramite630103Query - Query para consultar el estado del trámite.
-   * @param autorizacionImportacionTemporalService - Servicio para obtener datos de catálogos.
+   * fb - Constructor de formularios reactivos.
+   * tramite630103Store - Store para manejar el estado del trámite.
+   * tramite630103Query - Query para consultar el estado del trámite.
+   * autorizacionImportacionTemporalService - Servicio para obtener datos de catálogos.
+   * consultaioQuery - Query para observar el estado de solo lectura.
    */
   constructor(
     private fb: FormBuilder,
@@ -108,41 +124,50 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
     private tramite630103Query: Tramite630103Query,
     private autorizacionImportacionTemporalService: AutorizacionImportacionTemporalService,
     private consultaioQuery: ConsultaioQuery
-) {
-      this.consultaioQuery.selectConsultaioState$
-        .pipe(
-          takeUntil(this.destroyed$),
-          map((seccionState) => {
-            this.esFormularioSoloLectura = seccionState.readonly;
-            this.inicializarEstadoFormulario();
-          })
-        )
-        .subscribe();
-    }
-  inicializarEstadoFormulario(): void {
-      if (this.esFormularioSoloLectura) {
-        this.formularioDatosPropietarioNombre = this.formularioDatosPropietarioNombre.map(campo => ({
-          ...campo,
-          desactivado: true
-        }));
-         this.formularioDatosPropietarioDireccion = this.formularioDatosPropietarioDireccion.map(campo => ({
-          ...campo,
-          desactivado: true
-        }));
-        this.guardarDatosFormulario();
-      } else {
-        this.formularioDatosPropietarioNombre = this.formularioDatosPropietarioNombre.map(campo => ({
-          ...campo,
-          desactivado: false
-        }));
-        this.formularioDatosPropietarioDireccion = this.formularioDatosPropietarioDireccion.map(campo => ({
-          ...campo,
-          desactivado: false
-        }));
-        this.inicializarFormulario();
-      }
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
-  
+
+  /**
+   * Inicializa el estado del formulario dependiendo si es solo lectura o editable.
+   * Si es solo lectura, desactiva los campos y carga los datos; si no, los activa.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.formularioDatosPropietarioNombre = this.formularioDatosPropietarioNombre.map(campo => ({
+        ...campo,
+        desactivado: true
+      }));
+      this.formularioDatosPropietarioDireccion = this.formularioDatosPropietarioDireccion.map(campo => ({
+        ...campo,
+        desactivado: true
+      }));
+      this.guardarDatosFormulario();
+    } else {
+      this.formularioDatosPropietarioNombre = this.formularioDatosPropietarioNombre.map(campo => ({
+        ...campo,
+        desactivado: false
+      }));
+      this.formularioDatosPropietarioDireccion = this.formularioDatosPropietarioDireccion.map(campo => ({
+        ...campo,
+        desactivado: false
+      }));
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Guarda los datos del formulario y ajusta el estado de solo lectura.
+   * Deshabilita o habilita los campos según corresponda.
+   */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
@@ -152,7 +177,7 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
     } else {
       // No se requiere ninguna acción en el formulario
     }
-  }  
+  }
 
   /**
    * Método del ciclo de vida que se ejecuta al inicializar el componente.
@@ -160,9 +185,7 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.getValorStore();
-    this.inicializarEstadoFormulario()
-    
-    
+    this.inicializarEstadoFormulario();
     this.getPropietario();
     this.getTipoDePropietario();
     this.getPais();
@@ -186,7 +209,7 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
       APELLIDO_MATERNO_CAMPO.mostrar = TIPO_PROPIETARIO_VALOR === '1';
       RAZON_SOCIAL_CAMPO.mostrar = TIPO_PROPIETARIO_VALOR === '2';
     }
-    this.mostrarFormularioPersonaExtranjera = TIPO_PROPIETARIO_VALOR ;
+    this.mostrarFormularioPersonaExtranjera = TIPO_PROPIETARIO_VALOR;
   }
 
   /**
@@ -259,7 +282,7 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
 
   /**
    * Establece un cambio de valor en el store basado en un evento.
-   *  Evento que contiene el campo y el valor a actualizar.
+   * $event - Evento que contiene el campo y el valor a actualizar.
    */
   establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
     if (typeof $event.valor === 'object' && $event.valor !== null && 'id' in $event.valor) {
@@ -269,13 +292,13 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
     }
   }
 
-    /**
-     * Método del ciclo de vida que se ejecuta al destruir el componente.
-     * Libera las suscripciones activas para evitar fugas de memoria.
-     */
-    ngOnDestroy(): void {
-      this.subscription.unsubscribe();
-      this.destroyed$.next();
-      this.destroyed$.complete();
-    }
+  /**
+   * Método del ciclo de vida que se ejecuta al destruir el componente.
+   * Libera las suscripciones activas para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
 }

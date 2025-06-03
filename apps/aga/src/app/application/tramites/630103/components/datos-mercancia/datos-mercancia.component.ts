@@ -9,14 +9,15 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { ConsultaioQuery, ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
 import { map, takeUntil } from 'rxjs';
-import { Subject} from 'rxjs';
-import { Subscription} from 'rxjs';
+import { Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { FORMULARIO_DATOS_MERCANCIA } from '../../enum/autorizacion-importacion-temporal.enum';
 import { Tramite630103Query } from '../../estados/tramite630103.query';
 
 import { Tramite630103State, Tramite630103Store } from '../../estados/tramite630103.store';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+
 /**
  * Componente que gestiona los datos de la mercancía para el trámite 630103.
  */
@@ -49,28 +50,29 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   formularioDatosMercancia: ModeloDeFormaDinamica[] = FORMULARIO_DATOS_MERCANCIA;
 
   /**
-   * Constructor del componente.
-   * 
-   * @param formBuilder - Constructor de formularios reactivos.
-   * @param tramite630103Store - Store para manejar el estado del trámite.
-   * @param tramite630103Query - Query para consultar el estado del trámite.
+   * Suscripción general para manejar y limpiar las suscripciones del componente.
    */
-   private subscription: Subscription = new Subscription();
+  private subscription: Subscription = new Subscription();
 
   /**
    * Indica si el formulario está en modo solo lectura.
    * Si es verdadero, los campos del formulario estarán deshabilitados para edición.
-   * @type {boolean}
-   * @compodoc
    */
   esFormularioSoloLectura: boolean = false;
 
   /**
    * Estado actual de la solicitud.
-   * @type {Tramite630103State}
-   * @compodoc
    */
   public solicitudState!: Tramite630103State;
+
+  /**
+   * Constructor del componente.
+   * 
+   * formBuilder - Constructor de formularios reactivos.
+   * tramite630103Store - Store para manejar el estado del trámite.
+   * tramite630103Query - Query para consultar el estado del trámite.
+   * consultaioQuery - Query para observar el estado de solo lectura.
+   */
   constructor(
     private formBuilder: FormBuilder,
     private tramite630103Store: Tramite630103Store,
@@ -88,7 +90,10 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-inicializarEstadoFormulario(): void {
+  /**
+   * Inicializa el estado del formulario dependiendo si es solo lectura o editable.
+   */
+  inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.formularioDatosMercancia = this.formularioDatosMercancia.map(campo => ({
         ...campo,
@@ -107,7 +112,6 @@ inicializarEstadoFormulario(): void {
   /**
    * Guarda los datos del formulario y ajusta el estado de solo lectura.
    * Deshabilita o habilita los campos según corresponda.
-   * @compodoc
    */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
@@ -119,6 +123,7 @@ inicializarEstadoFormulario(): void {
       // No se requiere ninguna acción en el formulario
     }
   }
+
   /**
    * Método del ciclo de vida que se ejecuta al inicializar el componente.
    * Inicializa el formulario y obtiene el estado del trámite.
@@ -133,6 +138,7 @@ inicializarEstadoFormulario(): void {
    */
   inicializarFormulario(): void {
     this.datosMercancia = this.formBuilder.group({
+      // Aquí puedes agregar los controles dinámicamente si es necesario
     });
   }
 
@@ -150,7 +156,7 @@ inicializarEstadoFormulario(): void {
   /**
    * Establece un cambio de valor en el store basado en un evento.
    * 
-   * @param $event - Evento que contiene el campo y el valor a actualizar.
+   * $event - Evento que contiene el campo y el valor a actualizar.
    */
   establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
     this.tramite630103Store.setTramite630103State($event.campo, $event.valor);

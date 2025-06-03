@@ -1,6 +1,6 @@
 /**
  * datos-de-la-solicitud.component.ts
- * @description Componente que gestiona los datos de la solicitud para el trámite 630103.
+ * Componente que gestiona los datos de la solicitud para el trámite 630103.
  * Permite inicializar formularios, obtener datos de catálogos y manejar el estado del formulario.
  */
 import { ConsultaioQuery, ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
@@ -38,34 +38,53 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * Modelo dinámico del formulario con estructura definida por el trámite.
+   * {ModeloDeFormaDinamica[]}
    */
   formularioDatosSolicitud: ModeloDeFormaDinamica[] = FORMULARIO_DATOS_SOLICITUD;
 
   /**
    * Formulario reactivo para los datos de importación temporal.
+   * {FormGroup}
    */
   datosImportacionTemporalFormulario!: FormGroup;
 
   /**
    * Subject para manejar la destrucción de suscripciones.
+   * {Subject<void>}
    */
   private destroyed$ = new Subject<void>();
 
   /**
    * Estado actual del trámite cargado desde el store.
+   * {Tramite630103State}
    */
   estadoSeleccionado!: Tramite630103State;
+
+  /**
+   * Suscripción general para manejar y limpiar las suscripciones del componente.
+   * {Subscription}
+   */
   private subscription: Subscription = new Subscription();
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * {boolean}
+   */
   esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Estado de la solicitud actual.
+   * {Tramite630103State}
+   */
   public solicitudState!: Tramite630103State;
 
   /**
    * Constructor del componente.
-   * 
-   * @param fb Constructor de formularios reactivos.
-   * @param autorizacionImportacionTemporalService Servicio para obtener datos de catálogos.
-   * @param tramite630103Store Store para actualizar el estado del trámite.
-   * @param tramite630103Query Query para observar el estado del trámite.
+   * {FormBuilder} formBuilder - Constructor de formularios reactivos.
+   * {AutorizacionImportacionTemporalService} autorizacionImportacionTemporalService - Servicio para obtener datos de catálogos.
+   * {Tramite630103Store} tramite630103Store - Store para actualizar el estado del trámite.
+   * {Tramite630103Query} tramite630103Query - Query para observar el estado del trámite.
+   * {ConsultaioQuery} consultaioQuery - Query para observar el estado de solo lectura.
    */
   constructor(
     private formBuilder: FormBuilder,
@@ -74,17 +93,21 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private tramite630103Query: Tramite630103Query,
     private consultaioQuery: ConsultaioQuery
   ) {
-      this.consultaioQuery.selectConsultaioState$
-        .pipe(
-          takeUntil(this.destroyed$),
-          map((seccionState) => {
-            this.esFormularioSoloLectura = seccionState.readonly;
-            this.inicializarEstadoFormulario();
-          })
-        )
-        .subscribe();
-    }
-  
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Inicializa el estado del formulario según si es solo lectura o editable.
+   * {void}
+   */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.formularioDatosSolicitud = this.formularioDatosSolicitud.map(campo => ({
@@ -100,20 +123,23 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.inizializarFormulario();
     }
   }
-  
+
+  /**
+   * Guarda los datos del formulario y ajusta el estado de solo lectura.
+   * {void}
+   */
   guardarDatosFormulario(): void {
     this.inizializarFormulario();
     if (this.esFormularioSoloLectura) {
       this.datosImportacionTemporalFormulario.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.datosImportacionTemporalFormulario.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
     }
   }
 
   /**
    * Ciclo de vida: Inicializa el formulario y carga datos de catálogos al iniciar el componente.
+   * {void}
    */
   ngOnInit(): void {
     this.getValorStore();
@@ -124,15 +150,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * Inicializa el formulario reactivo vacío (campos dinámicos se agregan aparte).
+   * {void}
    */
   inizializarFormulario(): void {
     this.datosImportacionTemporalFormulario = this.formBuilder.group({
-       // Define los controles del formulario aquí
+      // Define los controles del formulario aquí
     });
   }
 
   /**
    * Obtiene las opciones de Aduanas de Ingreso y las asigna al formulario dinámico.
+   * {void}
    */
   getAduanaDeIngreso(): void {
     this.autorizacionImportacionTemporalService.getAduanaDeIngreso()
@@ -147,6 +175,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * Obtiene las opciones de Sección Aduanera desde el servicio.
+   * {void}
    */
   getSeccionAduanera(): void {
     this.autorizacionImportacionTemporalService.getSeccionAduanera()
@@ -158,15 +187,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         }
       });
   }
-  
-
-  /**
-   * Obtiene las opciones para el campo Cuenta Prórroga.
-   */
- 
 
   /**
    * Observa los cambios del store del trámite y actualiza el estado local.
+   * {void}
    */
   getValorStore(): void {
     this.tramite630103Query.selectTramite630103State$
@@ -178,8 +202,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * Establece un nuevo valor en el store del trámite según el evento emitido desde el formulario.
-   *
-   * @param $event Evento con el campo y el valor a establecer.
+   * {{ campo: string; valor: unknown }} $event - Evento con el campo y el valor a establecer.
+   * {void}
    */
   establecerCambioDeValor($event: { campo: string; valor: unknown }): void {
     if (typeof $event.valor === 'object' && $event.valor !== null && 'id' in $event.valor) {
@@ -187,11 +211,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     } else {
       this.tramite630103Store.setTramite630103State($event.campo, $event.valor);
     }
-   
   }
 
   /**
    * Ciclo de vida: Libera recursos al destruir el componente.
+   * {void}
    */
   ngOnDestroy(): void {
     this.subscription.unsubscribe();

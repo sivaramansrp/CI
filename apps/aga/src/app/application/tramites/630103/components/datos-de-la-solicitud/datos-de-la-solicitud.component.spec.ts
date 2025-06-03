@@ -56,7 +56,7 @@ describe('DatosDeLaSolicitudComponent', () => {
         CommonModule,
         ReactiveFormsModule,
         FormasDinamicasComponent,
-        DatosDeLaSolicitudComponent // Add the standalone component here
+        DatosDeLaSolicitudComponent
       ],
       providers: [
         FormBuilder,

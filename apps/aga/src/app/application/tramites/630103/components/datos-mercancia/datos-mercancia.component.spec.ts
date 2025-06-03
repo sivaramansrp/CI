@@ -78,4 +78,40 @@ describe('DatosMercanciaComponent', () => {
     expect(destroyedSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+  it('debería deshabilitar el formulario si esFormularioSoloLectura es true', () => {
+    componente.esFormularioSoloLectura = true;
+    componente.inicializarFormulario();
+    const disableSpy = jest.spyOn(componente.datosMercancia, 'disable');
+    componente.guardarDatosFormulario();
+    expect(disableSpy).toHaveBeenCalled();
+  });
+
+  it('debería habilitar el formulario si esFormularioSoloLectura es false', () => {
+    componente.esFormularioSoloLectura = false;
+    componente.inicializarFormulario();
+    const enableSpy = jest.spyOn(componente.datosMercancia, 'enable');
+    componente.guardarDatosFormulario();
+    expect(enableSpy).toHaveBeenCalled();
+  });
+
+  it('debería actualizar los campos como desactivados si esFormularioSoloLectura es true', () => {
+    componente.formularioDatosMercancia = [
+      { id: 'campo1', desactivado: false } as any,
+      { id: 'campo2', desactivado: false } as any,
+    ];
+    componente.esFormularioSoloLectura = true;
+    componente.inicializarEstadoFormulario();
+    expect(componente.formularioDatosMercancia.every(c => c.desactivado)).toBe(true);
+  });
+
+  it('debería actualizar los campos como activados si esFormularioSoloLectura es false', () => {
+    componente.formularioDatosMercancia = [
+      { id: 'campo1', desactivado: true } as any,
+      { id: 'campo2', desactivado: true } as any,
+    ];
+    componente.esFormularioSoloLectura = false;
+    componente.inicializarEstadoFormulario();
+    expect(componente.formularioDatosMercancia.every(c => !c.desactivado)).toBe(true);
+  });
 });

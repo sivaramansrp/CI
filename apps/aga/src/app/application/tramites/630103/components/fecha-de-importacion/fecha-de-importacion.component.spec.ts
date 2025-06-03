@@ -3,7 +3,7 @@ import { FormBuilder } from '@angular/forms';
 import { FechaDeImportacionComponent } from './fecha-de-importacion.component';
 import { Tramite630103Store } from '../../estados/tramite630103.store';
 import { Tramite630103Query } from '../../estados/tramite630103.query';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 
 describe('FechaDeImportacionComponent', () => {
   let componente: FechaDeImportacionComponent;
@@ -77,5 +77,41 @@ describe('FechaDeImportacionComponent', () => {
 
     expect(destroyedSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('debería deshabilitar el formulario si esFormularioSoloLectura es true', () => {
+    componente.esFormularioSoloLectura = true;
+    componente.inicializarFormulario();
+    const disableSpy = jest.spyOn(componente.FechaDeImportacionTemporalFormulario, 'disable');
+    componente.guardarDatosFormulario();
+    expect(disableSpy).toHaveBeenCalled();
+  });
+
+  it('debería habilitar el formulario si esFormularioSoloLectura es false', () => {
+    componente.esFormularioSoloLectura = false;
+    componente.inicializarFormulario();
+    const enableSpy = jest.spyOn(componente.FechaDeImportacionTemporalFormulario, 'enable');
+    componente.guardarDatosFormulario();
+    expect(enableSpy).toHaveBeenCalled();
+  });
+
+  it('debería actualizar los campos como desactivados si esFormularioSoloLectura es true', () => {
+    componente.formularioFechaDeImportacion = [
+      { id: 'campo1', desactivado: false } as any,
+      { id: 'campo2', desactivado: false } as any,
+    ];
+    componente.esFormularioSoloLectura = true;
+    componente.inicializarEstadoFormulario();
+    expect(componente.formularioFechaDeImportacion.every(c => c.desactivado)).toBe(true);
+  });
+
+  it('debería actualizar los campos como activados si esFormularioSoloLectura es false', () => {
+    componente.formularioFechaDeImportacion = [
+      { id: 'campo1', desactivado: true } as any,
+      { id: 'campo2', desactivado: true } as any,
+    ];
+    componente.esFormularioSoloLectura = false;
+    componente.inicializarEstadoFormulario();
+    expect(componente.formularioFechaDeImportacion.every(c => !c.desactivado)).toBe(true);
   });
 });

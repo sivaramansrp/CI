@@ -98,4 +98,61 @@ describe('TipoPropietarioComponent', () => {
     componente.ngOnDestroy();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+  // Casos adicionales
+
+  it('debería deshabilitar el formulario si esFormularioSoloLectura es true', () => {
+    componente.esFormularioSoloLectura = true;
+    componente.inicializarFormulario();
+    const disableSpy = jest.spyOn(componente.tipoPropietarioFormulario, 'disable');
+    componente.guardarDatosFormulario();
+    expect(disableSpy).toHaveBeenCalled();
+  });
+
+  it('debería habilitar el formulario si esFormularioSoloLectura es false', () => {
+    componente.esFormularioSoloLectura = false;
+    componente.inicializarFormulario();
+    const enableSpy = jest.spyOn(componente.tipoPropietarioFormulario, 'enable');
+    componente.guardarDatosFormulario();
+    expect(enableSpy).toHaveBeenCalled();
+  });
+
+  it('debería actualizar los campos como desactivados si esFormularioSoloLectura es true', () => {
+    componente.formularioDatosPropietarioNombre = [
+      { id: 'campo1', desactivado: false } as any,
+      { id: 'campo2', desactivado: false } as any,
+    ];
+    componente.formularioDatosPropietarioDireccion = [
+      { id: 'campo3', desactivado: false } as any,
+      { id: 'campo4', desactivado: false } as any,
+    ];
+    componente.esFormularioSoloLectura = true;
+    componente.inicializarEstadoFormulario();
+    expect(componente.formularioDatosPropietarioNombre.every(c => c.desactivado)).toBe(true);
+    expect(componente.formularioDatosPropietarioDireccion.every(c => c.desactivado)).toBe(true);
+  });
+
+  it('debería actualizar los campos como activados si esFormularioSoloLectura es false', () => {
+    componente.formularioDatosPropietarioNombre = [
+      { id: 'campo1', desactivado: true } as any,
+      { id: 'campo2', desactivado: true } as any,
+    ];
+    componente.formularioDatosPropietarioDireccion = [
+      { id: 'campo3', desactivado: true } as any,
+      { id: 'campo4', desactivado: true } as any,
+    ];
+    componente.esFormularioSoloLectura = false;
+    componente.inicializarEstadoFormulario();
+    expect(componente.formularioDatosPropietarioNombre.every(c => !c.desactivado)).toBe(true);
+    expect(componente.formularioDatosPropietarioDireccion.every(c => !c.desactivado)).toBe(true);
+  });
+
+  it('debería asignar opciones de país al campo correspondiente en getPais()', () => {
+    componente.formularioDatosPropietarioDireccion = [
+      { id: 'pais', opciones: [] } as any,
+      { id: 'otro', opciones: [] } as any,
+    ];
+    componente.getPais();
+    expect(componente.formularioDatosPropietarioDireccion.find(c => c.id === 'pais')?.opciones?.length).toBeGreaterThan(0);
+  });
 });
