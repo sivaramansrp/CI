@@ -11,13 +11,20 @@ import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { EstadoCatalogo, EstadoOptionCatalogo, FederatariosEncabezado } from '../../models/federatarios-y-plantas.model';
+import {
+  EstadoCatalogo,
+  EstadoOptionCatalogo,
+  FederatariosEncabezado,
+} from '../../models/federatarios-y-plantas.model';
 import { FederatariosYPlantasConfiguration } from '../../models/federatarios-y-plantas.model';
 import { PlantasDisponibles } from '../../models/federatarios-y-plantas.model';
 import { PlantasImmex } from '../../models/federatarios-y-plantas.model';
 import { TEXTO_DE_ALERTA } from '../../models/federatarios-y-plantas.model';
 
-import { DEFAULT_ESTADOS, FECHA_DE_PAGO } from '../../constantes/federatarios-y-plantas.enum';
+import {
+  DEFAULT_ESTADOS,
+  FECHA_DE_PAGO,
+} from '../../constantes/federatarios-y-plantas.enum';
 
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -45,7 +52,13 @@ import { Validators } from '@angular/forms';
   templateUrl: './federatarios-y-plantas.component.html',
   styleUrl: './federatarios-y-plantas.component.scss',
 })
-export class FederatariosYPlantasComponent implements OnInit{
+export class FederatariosYPlantasComponent implements OnInit {
+  /**
+   * Datos de federatarios que se mostrarán en la tabla
+   * @property {FederatariosEncabezado} datosFederatarios
+   */
+  @Input()
+  datosFederatarios!: FederatariosEncabezado;
   /**
    * Configuración para la tabla de federatarios
    * @property {FederatariosYPlantasConfiguration<FederatariosEncabezado>} federatariosConfig
@@ -137,9 +150,7 @@ export class FederatariosYPlantasComponent implements OnInit{
    * @param {Router} router - Servicio de Angular para la navegación.
    * @param {ActivatedRoute} activatedRoute - Servicio de Angular para obtener información sobre la ruta actual.
    */
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
-    this.initFederatariosFormGroup();
-  }
+  constructor(private router: Router, private activatedRoute: ActivatedRoute) {}
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -147,7 +158,8 @@ export class FederatariosYPlantasComponent implements OnInit{
    * deshabilita el grupo de controles `federatariosFormGroup` para evitar la interacción del usuario.
    */
   ngOnInit(): void {
-    if( this.formularioDeshabilitado) {
+    this.initFederatariosFormGroup();
+    if (this.formularioDeshabilitado) {
       this.federatariosFormGroup.disable();
     }
   }
@@ -159,12 +171,15 @@ export class FederatariosYPlantasComponent implements OnInit{
    */
   initFederatariosFormGroup(): void {
     this.federatariosFormGroup = new FormGroup({
-      nombre: new FormControl('', Validators.required),
-      fechaInicioInput: new FormControl(''),
-      primerApellido: new FormControl(''),
-      segundoApellido: new FormControl(''),
-      numeroDeActa: new FormControl(''),
-      numeroDeNotaria: new FormControl(''),
+      nombre: new FormControl(
+        this.datosFederatarios?.nombre,
+        Validators.required
+      ),
+      fechaInicioInput: new FormControl(this.datosFederatarios?.fechaDelActa),
+      primerApellido: new FormControl(this.datosFederatarios?.primerApellido),
+      segundoApellido: new FormControl(this.datosFederatarios?.segundoApellido),
+      numeroDeActa: new FormControl(this.datosFederatarios?.numeroDeActa),
+      numeroDeNotaria: new FormControl(this.datosFederatarios?.numeroDeNotaria),
       estado: new FormControl(''),
       estadoOptions: new FormControl(''),
     });
