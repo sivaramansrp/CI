@@ -46,20 +46,43 @@ export class PasoUnoComponent implements OnInit {
     this.indice = i;
   }
 
-  constructor(private depositoFiscalManufacturaVehiculosApiService:DepositoFiscalManufacturaVehiculosApiService,private consultaQuery: ConsultaioQuery) {
-      // Inicializa
-    }
+  /**
+   * Constructor del componente.
+   * @param depositoFiscalManufacturaVehiculosApiService Servicio para interactuar con la API de depósito fiscal.
+   * @param consultaQuery Consulta para obtener el estado actual del store.
+   */
+  constructor(
+    private depositoFiscalManufacturaVehiculosApiService: DepositoFiscalManufacturaVehiculosApiService,
+    private consultaQuery: ConsultaioQuery
+  ) {
+    // Inicialización de servicios inyectados.
+  }
 
+  /**
+   * Método de ciclo de vida que se ejecuta al inicializar el componente.
+   * Se suscribe al estado del store y decide si cargar datos del formulario.
+   */
   ngOnInit(): void {
-      this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroy$),map((seccionState) => {
+    // Se suscribe al observable del estado y actualiza la propiedad local.
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
           this.consultaState = seccionState;
-      })).subscribe();
-    if(this.consultaState.update) {
+        })
+      )
+      .subscribe();
+
+    // Si el estado indica actualización, carga los datos del formulario.
+    if (this.consultaState.update) {
       this.guardarDatosFormulario();
     } else {
+      // Si no, marca que ya hay datos de respuesta.
       this.esDatosRespuesta = true;
     }
-     this.guardarDatosFormulario();
+
+    // Llama a la función para cargar datos del formulario.
+    this.guardarDatosFormulario();
   }
 
       /**
