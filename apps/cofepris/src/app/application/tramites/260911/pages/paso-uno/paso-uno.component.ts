@@ -44,11 +44,11 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Constructor del componente.
    * @param consultaQuery Consulta de estado de solo lectura.
-   * @param solocitud120402Service Servicio para obtener y actualizar datos del formulario.
+   * @param solocitud260911Service Servicio para obtener y actualizar datos del formulario.
    */
   constructor(
     private consultaQuery: ConsultaioQuery,
-    private solocitud120402Service: Solocitud260911Service,
+    private solocitud260911Service: Solocitud260911Service,
   ) {}
 
   /**
@@ -78,13 +78,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Marca la bandera de datos recibidos si la respuesta es exitosa.
    */
   guardarDatosFormulario(): void {
-    this.solocitud120402Service
+    this.solocitud260911Service
       .getRegistroTomaMuestrasMercanciasData()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
-          this.solocitud120402Service.actualizarEstadoFormulario(resp);
+          this.solocitud260911Service.actualizarEstadoFormulario(resp);
         }
       });
   }
