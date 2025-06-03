@@ -175,7 +175,16 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
             componentName: 'DatosComponent',
       }]
     },
-      {
+    {
+        tramite: 110102,
+        listaComponentes: [{
+            id: 'solicitud',
+            componentPath: () => import('../../tramites/110102/pages/datos-mercancia/datos-mercancia.component').then(m => m.DatosMercanciaComponent),
+            componentName: 'DatosMercanciaComponent',
+
+        }]
+    },
+     {
         tramite: 120402,
         listaComponentes: [{
             id: 'solicitud',
