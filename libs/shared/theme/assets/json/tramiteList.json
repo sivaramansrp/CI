@@ -114,8 +114,8 @@
   {
     "id": 17,
     "tramite": 31803,
-    "linkDashboard": "/agace/registro-solicitud/solicitud",
-    "linkDepartment": "/pago/registro-solicitud/solicitud",
+    "linkDashboard": "/agace/registro/solicitud",
+    "linkDepartment": "/pago/registro/solicitud",
     "department": "agace"
   },
   {
