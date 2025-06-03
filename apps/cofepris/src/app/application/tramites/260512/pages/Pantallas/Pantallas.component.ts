@@ -1,5 +1,4 @@
 import { Component, ViewChild } from '@angular/core';
-
 import { DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
 import { LISTA_PASOS_WIZARD } from '../../../../shared/constantes/lista-pasos-wizard.enum';
 

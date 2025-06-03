@@ -41,7 +41,7 @@ describe('DatosComponent', () => {
 
     fixture = TestBed.createComponent(DatosComponent);
     component = fixture.componentInstance;
-    // Inject mocks manually since constructor uses types, not tokens
+
     (component as any).solicitudService = mockSolicitudService;
     (component as any).consultaQuery = mockConsultaQuery;
     fixture.detectChanges();

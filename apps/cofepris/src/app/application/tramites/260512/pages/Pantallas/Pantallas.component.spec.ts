@@ -1,9 +1,11 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { PantallasComponent } from './Pantallas.component';
-import { Component } from '@angular/core';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { WizardComponent, PASOS } from '@ng-mf/data-access-user';
+import { LISTA_PASOS_WIZARD } from '../../../../shared/constantes/lista-pasos-wizard.enum';
 
-@Component({selector: 'app-wizard', template: ''})
+// Mock WizardComponent
+@Component({ selector: 'app-wizard', template: '' })
 class MockWizardComponent {
   siguiente = jest.fn();
   atras = jest.fn();
@@ -16,11 +18,12 @@ describe('PantallasComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PantallasComponent, MockWizardComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA], // Ignore unknown elements like btn-continuar
     }).compileComponents();
 
     fixture = TestBed.createComponent(PantallasComponent);
     component = fixture.componentInstance;
-  
+    // Inject the mock wizardComponent
     component.wizardComponent = new MockWizardComponent() as any;
     fixture.detectChanges();
   });
@@ -29,13 +32,16 @@ describe('PantallasComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have default indice as 1', () => {
-    expect(component.indice).toBe(1);
+  it('should have solicitudePasos equal to LISTA_PASOS_WIZARD', () => {
+    expect(component.solicitudePasos).toBe(LISTA_PASOS_WIZARD);
   });
 
-  it('should have pasos and solicitudePasos defined', () => {
-    expect(Array.isArray(component.pasos)).toBe(true);
-    expect(Array.isArray(component.solicitudePasos)).toBe(true);
+  it('should have pasos equal to PASOS', () => {
+    expect(component.pasos).toBe(PASOS);
+  });
+
+  it('should have indice initialized to 1', () => {
+    expect(component.indice).toBe(1);
   });
 
   it('should have datosPasos initialized correctly', () => {
@@ -46,36 +52,30 @@ describe('PantallasComponent', () => {
   });
 
   it('should update indice and call wizardComponent.siguiente for accion "cont"', () => {
-    const spySiguiente = jest.spyOn(component.wizardComponent, 'siguiente');
     component.getValorIndice({ accion: 'cont', valor: 2 });
     expect(component.indice).toBe(2);
-    expect(spySiguiente).toHaveBeenCalled();
+    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
   it('should update indice and call wizardComponent.atras for accion not "cont"', () => {
-    const spyAtras = jest.spyOn(component.wizardComponent, 'atras');
     component.getValorIndice({ accion: 'atras', valor: 3 });
     expect(component.indice).toBe(3);
-    expect(spyAtras).toHaveBeenCalled();
+    expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
   it('should not change indice or call wizard methods for valor <= 0', () => {
-    const spySiguiente = jest.spyOn(component.wizardComponent, 'siguiente');
-    const spyAtras = jest.spyOn(component.wizardComponent, 'atras');
     component.indice = 1;
     component.getValorIndice({ accion: 'cont', valor: 0 });
     expect(component.indice).toBe(1);
-    expect(spySiguiente).not.toHaveBeenCalled();
-    expect(spyAtras).not.toHaveBeenCalled();
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
   });
 
   it('should not change indice or call wizard methods for valor >= 5', () => {
-    const spySiguiente = jest.spyOn(component.wizardComponent, 'siguiente');
-    const spyAtras = jest.spyOn(component.wizardComponent, 'atras');
     component.indice = 1;
     component.getValorIndice({ accion: 'cont', valor: 5 });
     expect(component.indice).toBe(1);
-    expect(spySiguiente).not.toHaveBeenCalled();
-    expect(spyAtras).not.toHaveBeenCalled();
+    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
   });
 });

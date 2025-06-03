@@ -3,9 +3,6 @@
  * */
 
 import { Component } from '@angular/core';
-
-import { CommonModule } from '@angular/common';
-import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 import { Router } from '@angular/router';
 
 /**
