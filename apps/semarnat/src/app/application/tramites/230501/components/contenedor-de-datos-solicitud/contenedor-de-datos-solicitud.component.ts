@@ -1,6 +1,6 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { COMPOSICION_TABLA, DATOS_ESPECIFICOS_VALIDO_CONTROL, FECHA_FACTURA, INFO_GENERAL_VALIDO_CONTROL, NUMERO_CAS_TABLA, OPCIONES_DE_BOTON_DE_RADIO_CONTENEDOR } from '../../constantes/materiales-peligrosos.enum';
-import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputCheckComponent, InputFechaComponent, InputRadioComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputCheckComponent, InputFechaComponent, InputRadioComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ComposicionMaterial, InputFecha, TablaNumeroCasType } from '../../models/materiales-peligrosos.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -203,17 +203,18 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          if (!seccionState.create && seccionState.procedureId === '230501') {
-            this.esFormularioSoloLectura = seccionState.readonly;
-            this.fechaDeLaFacturaInput.habilitado = this.esFormularioSoloLectura;
-          }
+
+          this.esFormularioSoloLectura = seccionState.readonly;
+       
           this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
 
     this.pestanaValidar();
-    this.crearDatosSolicitudForm();
+    // this.datosSolicitudForm.patchValue(this.tramiteState?.datosSolicitudFormType);
+
+    // this.crearDatosSolicitudForm();
 
   }
   /**
@@ -225,8 +226,6 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
     }
     if (this.esFormularioSoloLectura) {
       this.datosSolicitudForm.disable();
-    } else {
-      this.datosSolicitudForm.enable();
     }
   }
   /**

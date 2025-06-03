@@ -3,7 +3,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ComposicionMaterial } from '../../models/materiales-peligrosos.model';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
 
 @Component({
@@ -51,11 +51,11 @@ export class ComposicionComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.createComposicionForm();
+    // this.createComposicionForm();
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
+       map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
           this.inicializarEstadoFormulario();
         })
@@ -71,8 +71,6 @@ export class ComposicionComponent implements OnInit, OnDestroy {
       }
       if (this.esFormularioSoloLectura) {
           this.composicionForm.disable();
-      } else {
-        this.composicionForm.enable();
       }
     }
 

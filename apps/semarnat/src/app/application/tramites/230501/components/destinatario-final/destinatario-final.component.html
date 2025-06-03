@@ -14,6 +14,7 @@
             [layout]="'vertical'"
             formControlName="tipoPersona"
             [isRequired]="true"
+        
           >
           </app-input-radio>
           </div>
@@ -53,7 +54,7 @@
 
     <div class="row mt-5">
       <div class="col-md-4 px-5">
-        <app-catalogo-select [catalogo]="paisesDatos" formControlName="pais" [label]="'País'"
+        <app-catalogo-select [catalogo]="paisesDatos" [isDisabled]="esFormularioSoloLectura" formControlName="pais" [label]="'País'"
           [required]="true"></app-catalogo-select>
       </div>
       <div class="col-md-4 px-5">

@@ -28,9 +28,10 @@
         <div class="row mt-3">
             <div class="col-md-6">
                 <div class="form-group">
-                    <app-catalogo-select [catalogo]="listaDeFraccionesArancelarias" [isDisabled]="esFormularioSoloLectura"
-                        formControlName="fraccionArancelaria" [label]="'Fracción arancelaria'"
-                        name="Fracción arancelaria" (change)="fraccionArancelariaSeleccione()" [required]="true"
+                    <app-catalogo-select [catalogo]="listaDeFraccionesArancelarias"
+                         formControlName="fraccionArancelaria"
+                        [label]="'Fracción arancelaria'" name="Fracción arancelaria"
+                        (change)="fraccionArancelariaSeleccione()" [required]="true"
                         [tooltipQuestionCircle]="true"></app-catalogo-select>
                 </div>
             </div>
@@ -47,10 +48,10 @@
         <div class="row mt-3 justify-content-end">
             <div class="col-md-6 text-end">
                 <div class="">
-                    <lib-input-check [id]="'convenioMinamata'"
-                    [label]="'El material está contenido en el convenio de Minamata'" [required]="false"
-                    formControlName="tratadoRotterdam"
-                    (change)="actualizarElValorDeLaTienda('convenioMinamata', 'boolean')"></lib-input-check>
+                    <lib-input-check [id]="'convenioMinamata'" 
+                        [label]="'El material está contenido en el convenio de Minamata'" [required]="false"
+                        formControlName="tratadoRotterdam"
+                        (change)="actualizarElValorDeLaTienda('convenioMinamata', 'boolean')"></lib-input-check>
                 </div>
             </div>
         </div>
@@ -58,9 +59,9 @@
         <div class="row mt-3">
             <div class="col-md-6">
                 <div class="form-group">
-                    <app-catalogo-select [isDisabled]="esFormularioSoloLectura" [catalogo]="listaDeNumeroCas" formControlName="numeroCas"
-                        [label]="'Número CAS'" name="Número CAS" (change)="numeroCasSeleccione()"
-                        [required]="true"></app-catalogo-select>
+                    <app-catalogo-select [catalogo]="listaDeNumeroCas"
+                        formControlName="numeroCas" [label]="'Número CAS'" name="Número CAS"
+                        (change)="numeroCasSeleccione()" [required]="true"></app-catalogo-select>
                 </div>
             </div>
             <div class="col-md-6">
@@ -92,8 +93,8 @@
                         (click)="eliminarNumeroCas()" [disabled]="numeroCasSellecionLista.length === 0">
                         Eliminar
                     </button>
-                    <button type="button" name="agregarNumero" class="btn btn-primary ms-2" data-bs-toggle="modal"
-                        data-bs-target="#modalAgregarNumero" (click)="agregarNumero()"
+                    <button type="button" name="agregarNumero" class="btn btn-primary ms-2"
+                     (click)="agregarNumero()"
                         [disabled]="!areSpecificControlsValid()">
                         Agregar
                     </button>
@@ -123,8 +124,9 @@
             </div>
 
             <div class="col-md-4">
-                <app-catalogo-select [isDisabled]="esFormularioSoloLectura" [catalogo]="listaDeEstadoFisico" formControlName="estadoFisico"
-                    [label]="'Estado físico del material'" name="Estado físico del material" [required]="true"
+                <app-catalogo-select [catalogo]="listaDeEstadoFisico"
+                    formControlName="estadoFisico" [label]="'Estado físico del material'"
+                    name="Estado físico del material" [required]="true"
                     (change)="estadoFisicoSeleccione()"></app-catalogo-select>
             </div>
         </div>
@@ -147,9 +149,9 @@
 
         <div class="row mt-3">
             <div class="col-md-4">
-                <app-catalogo-select [isDisabled]="esFormularioSoloLectura" [catalogo]="listaDeUnidadMedida" formControlName="unidadMedida"
-                    [label]="'Unidad de medida'" name="Unidad de medida" [required]="true"
-                    (change)="unidadMedidaSeleccione()"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="listaDeUnidadMedida"
+                    formControlName="unidadMedida" [label]="'Unidad de medida'" name="Unidad de medida"
+                    [required]="true" (change)="unidadMedidaSeleccione()"></app-catalogo-select>
             </div>
 
             <div class="col-md-4">
@@ -202,8 +204,7 @@
                         (click)="eliminarComposicion()" [disabled]="composicionSeleccionLista.length === 0">
                         Eliminar
                     </button>
-                    <button type="button" name="agregarcomposicion" class="btn btn-primary ms-2" data-bs-toggle="modal"
-                        data-bs-target="#modalAgregarcomposicion" (click)="agregarcomposicion()">
+                    <button type="button" name="agregarcomposicion" class="btn btn-primary ms-2"  (click)="agregarcomposicion()">
                         Agregar
                     </button>
                 </div>

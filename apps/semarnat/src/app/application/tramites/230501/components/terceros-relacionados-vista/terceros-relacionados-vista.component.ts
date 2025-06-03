@@ -1,8 +1,8 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import { ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 import { DESTINATARIO_ENCABEZADO_DE_TABLA, Destinatario, REPRESENTANTE_ENCABEZADO_DE_TABLA, Representante, USO_FINAL_ENCABEZADO_DE_TABLA, UsoFinal } from '../../models/terceros-relacionados.model';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite230501State, Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
 import { CommonModule } from '@angular/common';
 import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
@@ -90,6 +90,11 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   */
   public tramiteState!: Tramite230501State;
 
+  /**
+* Indica si el formulario está en modo solo lectura.
+* Cuando es `true`, los campos del formulario no se pueden editar.
+*/
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * @property {ConfiguracionColumna<UsoFinal>[]} configuracionTablaFacturador
@@ -119,8 +124,9 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     private tramiteStore: Tramite230501Store,
     private tramiteQuery: Tramite230501Query,
     private router: Router,
-    private activatedRoute: ActivatedRoute
-  ) { 
+    private activatedRoute: ActivatedRoute,
+    public consultaQuery: ConsultaioQuery
+  ) {
     // No hacer nada 
   }
 
@@ -139,7 +145,17 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
         this.representanteLegalTablaDatos = tramiteState.representanteLegalTablaDatos;
         this.usuarioTablaDatos = tramiteState.usuarioTablaDatos;
       });
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          // this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     this.pestanaValidar();
+
   }
 
   /**
@@ -166,8 +182,8 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
       this.representanteFilaSeleccionada = [];
       this.usoDeFilaSeleccionada = [];
       this.tramiteStore.update((state) => ({
-      ...state,
-      esDestinatarioFinalElModoDeEdicion: true
+        ...state,
+        esDestinatarioFinalElModoDeEdicion: true
       }));
       this.tramiteStore.destinatarioSujeto.next(this.destinatarioFinalFilaSeleccionada[0]);
     }
@@ -184,7 +200,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
       this.tramiteStore.update((state) => ({
         ...state,
         esRepresentanteLegalElModoDeEdicion: true
-        }));
+      }));
       this.tramiteStore.representanteSujeto.next(this.representanteFilaSeleccionada[0]);
     }
   }
@@ -200,7 +216,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
       this.tramiteStore.update((state) => ({
         ...state,
         esUsuarioElModoDeEdicion: true
-        }));
+      }));
       this.tramiteStore.usuarioSujeto.next(this.usoDeFilaSeleccionada[0]);
     }
   }

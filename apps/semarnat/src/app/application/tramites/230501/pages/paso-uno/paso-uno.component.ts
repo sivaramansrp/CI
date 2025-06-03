@@ -7,6 +7,7 @@ import { MaterialesPeligrososService } from '../../services/materiales-peligroso
 import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
 import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 
+
 /**
  * PasoUnoComponent
  *
@@ -32,25 +33,27 @@ export class PasoUnoComponent implements OnDestroy {
    * Este valor controla qué sección se debe mostrar al usuario en la vista.
    */
   indice: number = 1;
-  
+
   /**
    * Esta variable se utiliza para almacenar el índice del subtítulo.
    */
   public consultaState!: ConsultaioState;
 
-    /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
-    public esDatosRespuesta: boolean = false;
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
 
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
   constructor(private seccionStore: SeccionLibStore,
     private consultaQuery: ConsultaioQuery,
     public materialesPeligrososService: MaterialesPeligrososService
-  ){
+  ) {
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
       this.consultaState = seccionState;
+    console.log('Consulta State:', this.consultaState);
     })).subscribe();
-    if (this.consultaState.update) {
+    if (this.consultaState && this.consultaState.procedureId === '230501' &&
+      this.consultaState.update) {
       this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;
@@ -69,32 +72,34 @@ export class PasoUnoComponent implements OnDestroy {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
-     /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
-    guardarDatosFormulario(): void {
-      this.materialesPeligrososService
-        .getRegistroTomaMuestrasMercanciasData().pipe(
-          takeUntil(this.destroyNotifier$)
-        )
-        .subscribe((resp) => {
-          if(resp){
+  /**
+* Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+* Luego reinicializa el formulario con los valores actualizados desde el store.
+*/
+  guardarDatosFormulario(): void {
+    this.materialesPeligrososService
+      .getRegistroTomaMuestrasMercanciasData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
           this.esDatosRespuesta = true;
+          console.log(resp,'resp');
+          
           this.materialesPeligrososService.actualizarEstadoFormulario(resp);
-          }
-        });
-    }
-      /**
-   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
-   *
-   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
-   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
-   *
-   * @returns {void} No retorna ningún valor.
-   */
-      ngOnDestroy(): void {
-        this.destroyNotifier$.next();
-        this.destroyNotifier$.complete();
-      }
+        }
+      });
+  }
+  /**
+* Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+*
+* Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
+* que el componente está siendo destruido, y luego completa el observable para liberar recursos.
+*
+* @returns {void} No retorna ningún valor.
+*/
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

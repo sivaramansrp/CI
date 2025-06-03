@@ -7,10 +7,9 @@
  */
 import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { Observable, map } from 'rxjs';
+import { Tramite230501State, Tramite230501Store } from '../estados/stores/tramite230501Store.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Tramite230201Store } from '../../230201/estados/tramite230201.store';
-import { Tramite230501State } from '../estados/stores/tramite230501Store.store';
 
 @Injectable({
   providedIn: 'root'
@@ -61,7 +60,7 @@ export class MaterialesPeligrososService {
    */
   listoBanco: Catalogo[] = [];
 
-  constructor(public httpServicios: HttpClient,public tramite230501Store:Tramite230201Store) {
+  constructor(public httpServicios: HttpClient, public tramite230501Store: Tramite230501Store) {
     // No hacer nada
   }
   private jsonUrl = 'assets/json/230501/domicilio.json';
@@ -108,21 +107,21 @@ export class MaterialesPeligrososService {
     const ESPECIALES = ['diez', 'once', 'doce', 'trece', 'catorce', 'quince'];
     const DECENAS = ['', '', 'veinte', 'treinta', 'cuarenta', 'cincuenta', 'sesenta', 'setenta', 'ochenta', 'noventa'];
     const CENTENAS = ['', 'ciento', 'doscientos', 'trescientos', 'cuatrocientos', 'quinientos', 'seiscientos', 'setecientos', 'ochocientos', 'novecientos'];
-  
-    if (num === 0) {return 'cero'}
-    if (num === 100) {return 'cien'}
-  
+
+    if (num === 0) { return 'cero' }
+    if (num === 100) { return 'cien' }
+
     let letras = '';
-  
+
     const C = Math.floor(num / 100);
     const D = Math.floor((num % 100) / 10);
     const U = num % 10;
     const DOS_DIGITOS = num % 100;
-  
+
     if (C > 0) {
       letras += CENTENAS[C] + ' ';
     }
-  
+
     if (DOS_DIGITOS < 10) {
       letras += UNIDADES[DOS_DIGITOS];
     } else if (DOS_DIGITOS >= 10 && DOS_DIGITOS < 16) {
@@ -135,7 +134,7 @@ export class MaterialesPeligrososService {
         letras += ' y ' + UNIDADES[U];
       }
     }
-  
+
     return letras.trim();
   }
 
@@ -204,28 +203,27 @@ export class MaterialesPeligrososService {
       .get<{ colonia: Catalogo[] }>(this.jsonUrl)
       .pipe(map((res) => res.colonia));
   }
-/**
- * Actualiza el estado del formulario con los datos proporcionados.
- * 
- * @param DATOS - Estado de la solicitud `Solicitud230501State` con la información 
- *                del tipo de solicitud a actualizar en el store.
- */
-actualizarEstadoFormulario(DATOS: Tramite230501State): void {
-  // this.tramite230501Store.setTipoSolicitud(DATOS.tipoSolicitud);
-  this.tramite230501Store.update((state) => ({
-    ...state,
-    ...DATOS
-  }))
+  /**
+   * Actualiza el estado del formulario con los datos proporcionados.
+   * 
+   * @param DATOS - Estado de la solicitud `Solicitud230501State` con la información 
+   *                del tipo de solicitud a actualizar en el store.
+   */
+  actualizarEstadoFormulario(DATOS: Tramite230501State): void {
+    this.tramite230501Store.update((state) => ({
+      ...state,
+      ...DATOS
+    }))
 
-}
+  }
 
-/**
-* Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.
-* 
-* @returns Observable con los datos del estado de la solicitud `Solicitud230501State`,
-*          cargados desde el archivo JSON especificado en la ruta de `assets`.
-*/
-getRegistroTomaMuestrasMercanciasData(): Observable<Tramite230501State> {
-  return this.httpServicios.get<Tramite230501State>('assets/json/230501/respuestaDeActualizacionDe.json');
-}
+  /**
+  * Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.
+  * 
+  * @returns Observable con los datos del estado de la solicitud `Solicitud230501State`,
+  *          cargados desde el archivo JSON especificado en la ruta de `assets`.
+  */
+  getRegistroTomaMuestrasMercanciasData(): Observable<Tramite230501State> {
+    return this.httpServicios.get<Tramite230501State>('assets/json/230501/datos-prefill.json');
+  }
 }

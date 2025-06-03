@@ -1,8 +1,8 @@
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule, Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { USO_TABLA, Uso, UsoFinal } from '../../models/terceros-relacionados.model';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/materiales-peligrosos.enum';
@@ -106,6 +106,11 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
    * @command Opciones definidas en la constante OPCIONES_DE_BOTON_DE_RADIO.
    */
   public radioOpcions = OPCIONES_DE_BOTON_DE_RADIO;
+    /**
+* Indica si el formulario está en modo solo lectura.
+* Cuando es `true`, los campos del formulario no se pueden editar.
+*/
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor que inicializa el formulario y servicios necesarios.
@@ -122,6 +127,7 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
     private ubicaccion: Location,
     private tramiteStore: Tramite230501Store,
     public tramiteQuery: Tramite230501Query,
+    public consultaQuery: ConsultaioQuery
   ) {
 
     //No hacer nada
@@ -156,7 +162,17 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
     SEGUNDO_APELLIDO?.updateValueAndValidity();
     DENOMINACION_RAZON?.updateValueAndValidity();
   }
-
+    /**
+* Evalúa si se debe inicializar o cargar datos en el formulario.
+*/
+  inicializarEstadoFormulario(): void {
+    if (!this.usoFinalForm) {
+      this.createUsoFinalForm();
+    }
+    if (this.esFormularioSoloLectura) {
+      this.usoFinalForm.disable();
+    }
+  }
 
   /**
    * Hook de inicialización del componente. Carga los catálogos necesarios.
@@ -188,6 +204,16 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
       .subscribe(modo => {
         this.esElModoDeEdicion = modo;
       });
+      
+             this.consultaQuery.selectConsultaioState$
+                  .pipe(
+                    takeUntil(this.unsubscribe$),
+                    map((seccionState) => {
+                      this.esFormularioSoloLectura = seccionState.readonly;
+                      this.inicializarEstadoFormulario();
+                    })
+                  )
+                  .subscribe();
   }
 
   /**

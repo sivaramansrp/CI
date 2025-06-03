@@ -1,0 +1,106 @@
+{
+
+    "datosSolicitudFormType": {
+        "tratadoRotterdam": true,
+        "listadoNacional": false,
+        "fraccionArancelaria": "2",
+        "descripcionFraccion": "Clorofluorocarbonos",
+        "convenioMinamata": true,
+        "numeroCas": "2",
+        "descripcionNoArancelaria": "Producto químico controlado",
+        "nombreQuimico": "Diclorometano",
+        "nombreComun": "Metileno",
+        "nombreComercial": "Solvente MC-45",
+        "estadoFisico": "2",
+        "cantidad": 10,
+        "cantidadLetra": "Quinientos",
+        "unidadMedida": "2",
+        "licenciaSanitaria": "LIC-1234567",
+        "usoEspecifico": "Análisis de laboratorio",
+        "fechaExportacion": "2025-07-01",
+        "modoCantidad": "Numérico"
+    },
+    "agregarDestinatarioFinal": {
+        "tipoPersona": "Fisica",
+        "nombres": "Juan Carlos",
+        "denominacionRazon": "",
+        "primerApellido": "Pérez",
+        "segundoApellido": "García",
+        "pais": "2",
+        "estadoLocalidad": "Ciudad de México",
+        "municipio": "Benito Juárez",
+        "localidad": "Nápoles",
+        "codigoPostal": "03810",
+        "colonia": "Nápoles",
+        "calle": "Calle Dakota",
+        "numeroExterior": "123",
+        "numeroInterior": "4B",
+        "lada": "55",
+        "telefono": "12345678",
+        "correoElectronico": "juan.perez@example.com"
+    },
+
+    "pagoDerechos": {
+        "clave": "123456789",
+        "dependencia": "SEMARNAT",
+        "banco": "2",
+        "llavePago": "LLAVE-20250601-ABC123",
+        "fecha": "2025-06-01",
+        "importePago": "1500.00"
+    },
+    "representanteLegalForm": {
+        "tipoPersona": "Moral",
+        "nombres": "23456",
+        "denominacionRazon": "Servicios Jurídicos Internacionales S.A. de C.V.",
+        "primerApellido": "Guadalajara",
+        "segundoApellido": "Guadalajara",
+        "pais": "2",
+        "estadoLocalidad": "Jalisco",
+        "municipio": "Guadalajara",
+        "localidad": "Providencia",
+        "codigoPostal": "44630",
+        "colonia": "Colonia Providencia",
+        "calle": "Av. Américas",
+        "numeroExterior": "456",
+        "numeroInterior": "Piso 3",
+        "lada": "33",
+        "telefono": "98765432",
+        "correoElectronico": "contacto@serviciosjuridicos.com"
+    },
+    "composicionForm": {
+        "componenteMaterial": "Diclorometano",
+        "porcentajeConcentracion": "98%"
+    },
+    "usoFinalForm":{
+        "pais": "2",
+        "descripcionUso": "Utilizado en laboratorios para pruebas de pureza"
+    },
+    "usuarioFinalForm":{
+        "tipoPersona": "Moral",
+        "nombres": "Laboratorios Químicos S.A.",
+        "denominacionRazon": "Laboratorios Químicos S.A. de C.V.",
+        "primerApellido": "",
+        "segundoApellido": "",
+        "pais": "2",
+        "estadoLocalidad": "Nuevo León",
+        "municipio": "Monterrey",
+        "localidad": "San Pedro Garza García",
+        "codigoPostal": "66220",
+        "colonia": "Colonia del Valle",
+        "calle": "Calle Río Amazonas",
+        "numeroExterior": "789",
+        "numeroInterior": "",
+        "lada": "81",
+        "telefono": "12345678",
+        "correoElectronico": "juan.perez@example.com"
+    },
+    "formaValida": {
+        "destinatarioFinal": true,
+        "representanteLegal": true,
+        "UsuarioFinal": true,
+        "composicionForm": true,
+        "datosSolicitudForm": true,
+        "pagoDeDerechos": true,
+        "formularioTotal": true
+    }
+}

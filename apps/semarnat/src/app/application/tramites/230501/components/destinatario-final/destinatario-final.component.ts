@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule, Location } from '@angular/common';
 import {
   Component,
@@ -13,7 +13,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Destinatario } from '../../models/terceros-relacionados.model';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/materiales-peligrosos.enum';
@@ -124,7 +124,11 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
    * Cuando es falso, el componente opera en modo de solo lectura.
    */
   public esElModoDeEdicion = false;
-
+  /**
+* Indica si el formulario está en modo solo lectura.
+* Cuando es `true`, los campos del formulario no se pueden editar.
+*/
+  esFormularioSoloLectura: boolean = false;
   /**
    * Crea el componente e inicializa el grupo de formulario.
    *
@@ -140,6 +144,7 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
     public materialesPeligrososService: MaterialesPeligrososService,
     public tramiteStore: Tramite230501Store,
     public tramiteQuery: Tramite230501Query,
+    public consultaQuery:ConsultaioQuery
   ) {
     // No hacer nada
   }
@@ -233,6 +238,16 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
       .subscribe(modo => {
         this.esElModoDeEdicion = modo;
       });
+
+        this.consultaQuery.selectConsultaioState$
+            .pipe(
+              takeUntil(this.unsubscribe$),
+              map((seccionState) => {
+                this.esFormularioSoloLectura = seccionState.readonly;
+                this.inicializarEstadoFormulario();
+              })
+            )
+            .subscribe();
   }
 
   /**
@@ -370,6 +385,17 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
       correoElectronico: ['', [Validators.required, Validators.email]],
     });
   }
+         /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+     inicializarEstadoFormulario(): void {
+      if(!this.agregarDestinatarioFinal){
+        this.createrDestinatrioForm();
+      }
+      if (this.esFormularioSoloLectura) {
+          this.agregarDestinatarioFinal.disable();
+      }
+    }
 
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
