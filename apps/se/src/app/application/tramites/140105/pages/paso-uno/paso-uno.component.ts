@@ -1,5 +1,7 @@
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 
@@ -37,6 +39,18 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
    */
   public mostrarBusqueda: boolean = false;
 
+   /**
+   * Esta variable se utiliza para almacenar el índice del subtítulo.
+   */
+  public consultaState!: ConsultaioState;
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+  
+  /** Subject para notificar la destrucción del componente. */
+  private destroyNotifier$: Subject<void> = new Subject();
+
 
   /**
    * Constructor del componente.
@@ -45,11 +59,40 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
    * @constructor
    * @param {SeccionLibStore} seccionStore - Servicio para gestionar el estado de las secciones del formulario.
    */
-  constructor(private readonly seccionStore: SeccionLibStore, private servicioDeMensajesService: ServicioDeMensajesService) {
+  constructor(private readonly seccionStore: SeccionLibStore, private servicioDeMensajesService: ServicioDeMensajesService, private consultaQuery: ConsultaioQuery) {
     // Establece el estado de la forma como no válida al inicio.
     this.seccionStore.establecerFormaValida([false]);
     // Establece la primera sección como activa.
     this.seccionStore.establecerSeccion([false]);
+
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
+    if (this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+  }
+}
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.servicioDeMensajesService.getRegistroTomaMuestrasMercanciasData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.servicioDeMensajesService.actualizarEstadoFormulario(resp);
+        }
+      });
   }
   
   /**
@@ -71,7 +114,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
  * Se suscribe a los cambios en el mensaje enviado desde el servicio de mensajes,
  * y actualiza la propiedad 'mostrarBusqueda' con el valor recibido.
  */
-  ngOnInit() {
+  ngOnInit(): void {
     this.servicioDeMensajesService.mensaje$.subscribe((mensaje) => {
       this.mostrarBusqueda = mensaje;
     });
@@ -82,7 +125,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
  * Envía un mensaje con el valor 'false' al servicio de mensajes para indicar 
  * que se ha cancelado o finalizado la acción relacionada.
  */
-  ngOnDestroy(){
+  ngOnDestroy(): void {
+    // Notifica a los suscriptores que el componente se está destruyendo
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+    
+    // Envía un mensaje al servicio de mensajes indicando que la acción ha finalizado 
   this.servicioDeMensajesService.enviarMensaje(false);
   }
   

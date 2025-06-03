@@ -1,0 +1,13 @@
+       [
+        {
+    "folioTramite": "FT-2025001",
+    "tipoDeSolicitud": "Importación",
+    "regimen": "Definitivo",
+    "cdr": "A1",
+    "condicionDeLaMercancia": "Nueva",
+    "fraccionArancelaria": "8703.22.02",
+    "umt": "PZA",
+    "cantidad": 10,
+    "usd": 5000
+        }
+    ]

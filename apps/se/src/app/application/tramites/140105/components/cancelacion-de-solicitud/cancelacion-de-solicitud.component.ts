@@ -9,7 +9,9 @@ import { OnInit } from '@angular/core';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 @Component({
   selector: 'app-cancelacion-de-solicitud',
   templateUrl: './cancelacion-de-solicitud.component.html',
@@ -28,6 +30,14 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
    * Formulario para capturar el motivo de cancelación.
    */
   public cancelacionForm!: FormGroup;
+
+    /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+
   /**
    * Configuración de las columnas de la tabla de solicitudes de cancelación.
    */
@@ -55,7 +65,7 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
    */
   public datosDePermiso: boolean = false;
 
-  constructor(private fb: FormBuilder, private servicioDeMensajesService: ServicioDeMensajesService) { }
+  constructor(private fb: FormBuilder, private servicioDeMensajesService: ServicioDeMensajesService, private consultaQuery: ConsultaioQuery,) { }
    /**
    * Método que se ejecuta al iniciar el componente.
    * Inicializa los formularios de solicitud y cancelación, 
@@ -99,7 +109,18 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
         }
       });
 
+      this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotificationSubject$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        
+        })
+      )
+      .subscribe();
+
   }
+
 
   /**
    * Método que se ejecuta al destruir el componente.
