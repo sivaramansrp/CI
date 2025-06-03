@@ -9,8 +9,10 @@ import {
 import { Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
 import { Subject, map, takeUntil } from 'rxjs';
 import { DatosPasos } from '../../../core/models/shared/components.model';
-import { SeccionLibQuery } from '../../../core/queries/seccion.query';
-import { SeccionLibState } from '../../../core/estados/seccion.store';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { SeccionLibQuery } from '@ng-mf/data-access-user';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { SeccionLibState } from '@ng-mf/data-access-user';
 import { VistaEmergente } from '../../../core/models/shared/datos-generales.model';
 import { WizardService } from '../../../core/services/shared/wizard/wizard.service';
 
