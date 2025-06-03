@@ -1,0 +1,37 @@
+{
+  "success": true,
+  "message": "",
+  "datos": {
+    "exencionImpuestos": {
+      "manifesto": "Declaro que la información es verídica",
+      "aduana": "Aduana de Veracruz",
+      "organismoPublico": "Secretaría de Economía",
+      "destinoMercancia": "Ciudad de México"
+    },
+    "importadorExportador": {
+      "nombre": "Carlos Ramírez",
+      "calle": "Avenida Reforma",
+      "numeroExterior": "123",
+      "numeroInterior": "4B",
+      "telefono": "5512345678",
+      "correoElectronico": "carlos.ramirez@ejemplo.com",
+      "pais": "México",
+      "codigoPostal": "06500",
+      "estado": "Ciudad de México",
+      "colonia": "Juárez",
+      "opcion": "Importador"
+    },
+    "datosMercancia": {
+      "tipoDeMercancia": "Electrodomésticos",
+      "usoEspecifico": "Uso doméstico",
+      "condicionMercancia": "Nueva",
+      "unidadMedida": "Piezas",
+      "vehiculo": "Camión de carga",
+      "ano": "2024",
+      "cantidad": "50",
+      "marca": "Samsung",
+      "modelo": "SmartCool X200",
+      "serie": "SCX200-789456"
+    }
+  }
+}

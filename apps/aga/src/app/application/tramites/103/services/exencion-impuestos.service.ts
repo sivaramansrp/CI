@@ -1,8 +1,8 @@
+import { RespuestaConsulta, RespuestaMercancia } from '../models/exencion-impuestos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { RespuestaMercancia } from '../models/exencion-impuestos.model';
 import { Tramite103Store } from '../estados/tramite103.store';
 
 /**
@@ -75,4 +75,9 @@ export class ExencionImpuestosService {
   agregarMercancias(): Observable<RespuestaMercancia> {
     return this.http.get<RespuestaMercancia>('assets/json/103/mercanciaDatos.json');
   }
+
+  getDatosConsulta(): Observable<RespuestaConsulta> {
+    return this.http.get<RespuestaConsulta>(`assets/json/103/consulta_103.json`);
+  }
+
 }
