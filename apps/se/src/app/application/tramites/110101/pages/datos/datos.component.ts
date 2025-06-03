@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject,map, takeUntil } from 'rxjs';
 import { PantallasSvcService } from '../../services/pantallas-svc.service';
 
@@ -49,6 +49,7 @@ export class DatosComponent implements OnInit, OnDestroy {
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
         this.consultaState = seccionState;
     })).subscribe();
+    console.log('DatosComponent - ngOnInit', this.consultaState);
     if(this.consultaState.update) {
       this.guardarDatosFormulario();
     }
