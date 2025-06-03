@@ -15,11 +15,11 @@
         <div class="col-md-4">
           <ng-container *ngIf="exentoPagoValor === 'Si'; else noTrack">
             <app-catalogo-select [catalogo]="justificacionCatalogo" formControlName="justificacion"
-              [label]="'Justificación'" [required]="true" [isDisabled]="false"></app-catalogo-select>
+              [label]="'Justificación'" [required]="true" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
           </ng-container>
           <ng-template #noTrack>
             <app-catalogo-select [catalogo]="justificacionCatalogo" formControlName="justificacion"
-              [label]="'Justificación'" [required]="true" [isDisabled]="true"
+              [label]="'Justificación'" [required]="true" [isDisabled]="esFormularioSoloLectura"
               name="justificacion"></app-catalogo-select>
           </ng-template>
         </div>
@@ -28,19 +28,19 @@
         <div class="col-md-4 form-group">
           <label class="form-label" for="claveDeReferencia">Clave de referencia*:</label>
           <input type="text" id="claveDeReferencia" class="form-control" formControlName="claveDeReferencia"
-            [required]="true" />
+            [required]="true" [disabled]="esFormularioSoloLectura"/>
         </div>
 
         <div class="col-md-4 form-group">
           <label class="form-label" for="cadenaDependencia">Cadena de la dependencia*:</label>
           <input type="text" id="cadenaDependencia" class="form-control" formControlName="cadenaDependencia"
-            [required]="true" />
+            [required]="true" [disabled]="esFormularioSoloLectura"/>
         </div>
 
         <div class="col-md-4">
           <div class="form-group">
             <app-catalogo-select [catalogo]="banco.catalogos" [label]="banco.labelNombre"
-              [placeholder]="banco.primerOpcion" [isDisabled]="true" formControlName="banco"></app-catalogo-select>
+              [placeholder]="banco.primerOpcion" [isDisabled]="esFormularioSoloLectura" formControlName="banco" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
           </div>
         </div>
       </div>
@@ -48,17 +48,17 @@
       <div class="row">
         <div class="col-md-4 form-group">
           <label class="form-label" for="llaveDePago">Llave de pago*:</label>
-          <input type="text" id="llaveDePago" class="form-control" formControlName="llaveDePago" [required]="true" />
+          <input type="text" id="llaveDePago" class="form-control" formControlName="llaveDePago" [required]="true" [disabled]="esFormularioSoloLectura"/>
         </div>
 
         <div class="col-md-4">
-          <input-fecha [datos]="fechaInicioInput" formControlName="fechaInicio"></input-fecha>
+          <input-fecha [datos]="fechaInicioInput" formControlName="fechaInicio" [disabled]="esFormularioSoloLectura"></input-fecha>
         </div>
 
         <div class="col-md-4 form-group">
           <label class="form-label" for="importeDePago">Importe de pago*:</label>
           <input type="text" id="importeDePago" class="form-control" formControlName="importeDePago"
-            [required]="true" />
+            [required]="true" [disabled]="esFormularioSoloLectura"/>
         </div>
       </div>
 
@@ -86,11 +86,11 @@
         <div class="col-md-4">
           <ng-container *ngIf="exentoPagoRevisionValor  === 'Si'; else noTrack">
             <app-catalogo-select [catalogo]="justificacionCatalogo" formControlName="justificacionRevision"
-              [label]="'Justificación'" [required]="true" [isDisabled]="false"></app-catalogo-select>
+              [label]="'Justificación'" [required]="true" [isDisabled]="esFormularioSoloLectura" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
           </ng-container>
           <ng-template #noTrack>
             <app-catalogo-select [catalogo]="justificacionCatalogo" formControlName="justificacionRevision"
-              [label]="'Justificación'" [required]="true" [isDisabled]="true"
+              [label]="'Justificación'" [required]="true" [isDisabled]="esFormularioSoloLectura"
               name="justificacion"></app-catalogo-select>
           </ng-template>
         </div>
@@ -98,33 +98,33 @@
       <div class="col-md-8 form-group">
         <label class="form-label" for="claveDeReferenciaRevision">Clave de referencia:</label>
         <input type="text" id="claveDeReferenciaRevision" class="form-control"
-          formControlName="claveDeReferenciaRevision" />
+          formControlName="claveDeReferenciaRevision" [disabled]="esFormularioSoloLectura"/>
       </div>
 
       <div class="col-md-4 form-group">
         <label class="form-label" for="cadenaDependenciaRevision">Cadena de la dependencia:</label>
         <input type="text" id="cadenaDependenciaRevision" class="form-control"
-          formControlName="cadenaDependenciaRevision" />
+          formControlName="cadenaDependenciaRevision" [disabled]="esFormularioSoloLectura"/>
       </div>
 
       <div class="col-md-4 form-group">
         <label class="form-label" for="bancoRevision"> Banco:</label>
-        <input type="text" id="bancoRevision" class="form-control" formControlName="bancoRevision" />
+        <input type="text" id="bancoRevision" class="form-control" formControlName="bancoRevision" [disabled]="esFormularioSoloLectura"/>
       </div>
 
       <div class="col-md-4 form-group">
         <label class="form-label" for="llaveDePagoRevision">Llave de pago:</label>
-        <input type="text" id="llaveDePagoRevision" class="form-control" formControlName="llaveDePagoRevision" />
+        <input type="text" id="llaveDePagoRevision" class="form-control" formControlName="llaveDePagoRevision" [disabled]="esFormularioSoloLectura"/>
       </div>
 
       <div class="col-md-4 form-group">
         <label class="form-label" for="fechaInicioRevision">Fecha de pago:</label>
-        <input type="text" id="fechaInicioRevision" class="form-control" formControlName="fechaInicioRevision" />
+        <input type="text" id="fechaInicioRevision" class="form-control" formControlName="fechaInicioRevision" [disabled]="esFormularioSoloLectura"/>
       </div>
 
       <div class="col-md-4 form-group">
         <label class="form-label" for="importeDePagoRevision">Importe de pago:</label>
-        <input type="text" id="importeDePagoRevision" class="form-control" formControlName="importeDePagoRevision" />
+        <input type="text" id="importeDePagoRevision" class="form-control" formControlName="importeDePagoRevision" [disabled]="esFormularioSoloLectura"/>
       </div>
     </div>
   </form>

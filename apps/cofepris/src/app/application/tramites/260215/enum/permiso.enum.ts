@@ -109,3 +109,9 @@ export const TERCEROS_RELACIONADOS_TABLE_HEADER_DATA = [
   'Código postal',
   'Colonia o equivalente',
 ];
+export const TERCEROS_RELACIONADOS_TABLE_BODY_DATA = {
+  tbodyData: [
+    "FEREZ", "RFC2113", "DUMYD", "12-42322445", "5234", "Avenida Insurgentes", "DUMYD", "23", "1", "DUMYD", "DUMYD", "DUMYD", "DUMYD", "BAJA CALIFORNIA", "DUMYD", "DUMYD"
+  ]
+};
+
