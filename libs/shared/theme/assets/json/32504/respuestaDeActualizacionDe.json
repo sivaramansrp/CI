@@ -1,0 +1,34 @@
+{
+  "datosEmpresa": {
+    "numeroPrograma": "4492920",
+    "anoPrograma": "2023",
+    "mesCorrespondeAviso": 2,
+    "anoCorrespondeAviso": 2
+  },
+  "cargaTipo": {
+    "cargaTipo": "manual"
+  },
+  "datosQuienRecibe": {
+    "rfc": "1",
+    "numberProgramaQr": "22",
+    "anoProgramaQr": "333"
+  },
+  "datosDomicilioLugar": {
+    "nombreComercial": "4444",
+    "entidadFederativa": "55555",
+    "alcaldiaMunicipio": "56666",
+    "colonias": "77777",
+    "calle": "88888",
+    "numeroExterior": "999999",
+    "numeroInterior": "010101010",
+    "codigoPostal": "020202020"
+  },
+  "datosMercanciaSubmanufactura": {
+    "fracArancelaria": "030303030",
+    "nico": "04040404040",
+    "unidadMedida": "050505050",
+    "cantidad": "06060606060",
+    "valorUsd": "0707070707",
+    "descripcionMercancia": "080808088008"
+  }
+}

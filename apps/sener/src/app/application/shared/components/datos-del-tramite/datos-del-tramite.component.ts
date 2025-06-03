@@ -1,11 +1,11 @@
 import {
-  Catalogo,
   CatalogoSelectComponent,
   InputRadioComponent,
   TituloComponent,
-} from '@ng-mf/data-access-user';
+} from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
 import { ProductoOpción } from '../../constantes/vehiculos-adaptados.enum';
 /**
@@ -32,6 +32,15 @@ export class DatosDelTramiteComponent implements OnInit{
    * Este formulario se utiliza para capturar y validar la información del usuario.
    */
   @Input() form!: FormGroup;
+
+  /**
+   * @description Indica si el formulario debe mostrarse en modo solo lectura.
+   * Cuando es `true`, todos los campos del formulario estarán deshabilitados y no podrán ser editados por el usuario.
+   * Este valor se recibe como entrada desde el componente padre.
+   * @type {boolean}
+   * @default false
+   */
+  @Input() esFormularioSoloLectura: boolean = false;
 
   /**
    * @description Campos dinámicos configurados para el formulario.
@@ -81,7 +90,7 @@ export class DatosDelTramiteComponent implements OnInit{
  */
   ngOnInit(): void {
   if (
-    this.inputFields.length > 1 &&
+    this.inputFields.length > 1 && !this.esFormularioSoloLectura && 
     this.form.get(this.inputFields[0].controlName) &&
     this.form.get(this.inputFields[1].controlName)
   ) {

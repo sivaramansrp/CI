@@ -10,7 +10,7 @@
               tabindex="0"
             >
               <p class="panel-title">Opciones de pre-llenado de Solicitud</p>
-              <button type="button" class="collpase-button collapsed"></button>
+              <button [disabled]="esFormularioSoloLectura" type="button" class="collpase-button collapsed"></button>
             </div>
             @if(colapsable){
             <div class="panel-collapse collapse in" id="panel-01">
@@ -30,6 +30,7 @@
         <button
           type="button"
           class="btn btn-primary"
+          [disabled]="esFormularioSoloLectura"
           (click)="alternarControlesDeFormulario()"
         >
           Seleccionar establecimiento
