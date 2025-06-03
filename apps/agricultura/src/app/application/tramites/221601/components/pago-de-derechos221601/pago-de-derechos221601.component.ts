@@ -1,18 +1,20 @@
-import { Catalogo,CatalogoSelectComponent,ConsultaioQuery,InputFechaComponent,TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { Catalogo,CatalogoSelectComponent,InputFechaComponent,TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component,OnDestroy,OnInit} from '@angular/core';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { Solicitud221601State, Tramite221601Store } from '../../../../estados/tramites/tramite221601.store';
 import { Subject,map,takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { INPUT_FECHA_CONFIG } from '@libs/shared/data-access-user/src/core/enums/221601/fecha.enum';
 import { Tramite221601Query } from '../../../../estados/queries/tramite221601.query';
 import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
+
 
 /**
  * Componente encargado de gestionar el pago de derechos dentro del trámite 221601.
  * Permite al usuario ingresar los datos correspondientes al pago de derechos, como clave, dependencia, banco,
  * llave, fecha e importe. También interactúa con el store para almacenar los datos del trámite.
  * 
- * Este componente utiliza un formulario reactivo para gestionar los datos del pago de derechos, y actualiza el store 
+ * Este componente utiliza un formulario reactivo para gestionadr los datos del pago de derechos, y actualiza el store 
  * con los valores proporcionados.
  * 
  * @component
@@ -108,7 +110,7 @@ export class PagoDeDerechos221601Component implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.esFormularioSoloLectura = true;
+       
           this.inicializarCertificadoFormulario();
         })
       )

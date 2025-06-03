@@ -4,14 +4,16 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { CAPTURA_MERCANCIA, DATOS_SOLICITUD, Mercancias, OPCIONES_DE_BOTON_DE_RADIO } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
 import { Solicitud221601State, Tramite221601Store } from '../../../../estados/tramites/tramite221601.store';
 import { CONFIGURATION_TABLAS_MERCANCIAS } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
 import { Tramite221601Query } from '../../../../estados/queries/tramite221601.query';
 import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
+
 
 /**
  * Componente que gestiona la visualización y el manejo de los datos de la solicitud 221601, incluyendo 
@@ -190,7 +192,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.esFormularioSoloLectura = true;
+         
          
            this.inicializarCombinacionFormulario();
         })

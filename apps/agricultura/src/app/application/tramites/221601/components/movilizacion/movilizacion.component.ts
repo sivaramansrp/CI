@@ -1,10 +1,12 @@
-import { Catalogo,CatalogoSelectComponent,ConsultaioQuery,TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { Catalogo,CatalogoSelectComponent,TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component,OnDestroy,OnInit } from '@angular/core';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { Solicitud221601State,Tramite221601Store } from '../../../../estados/tramites/tramite221601.store';
 import { Subject,map,takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite221601Query } from '../../../../estados/queries/tramite221601.query';
 import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
+
 /**
  * Componente encargado de la gestión de la movilización de mercancías, permitiendo seleccionar el medio de transporte, 
  * verificación, y empresa relacionada con la solicitud 221601.
@@ -109,7 +111,7 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.esFormularioSoloLectura = true;
+          
         this.inicializarCertificadoFormulario();
         })
       )

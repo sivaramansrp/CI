@@ -58,13 +58,18 @@ export class DatosComponent implements AfterViewInit, OnInit {
   ) {
 // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
-  /** Inicializa el componente suscribiéndose al estado de consulta.  
+  /** Inicializa el componente suscribiéndose al estado de consulta.  a
  *  Ejecuta lógica según si se requiere actualización o solo visualización. */
-    ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+      ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
           this.consultaState = seccionState;
-      })).subscribe();
-    if(this.consultaState.update) {
+        })
+      )
+      .subscribe();
+    if (this.consultaState.update) {
       this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;
@@ -72,7 +77,7 @@ export class DatosComponent implements AfterViewInit, OnInit {
   }
 /** Obtiene los datos del formulario desde un JSON simulado y actualiza el store.  
  *  Marca la bandera de respuesta si la información es válida. */
-    guardarDatosFormulario(): void {
+     guardarDatosFormulario(): void {
     this.solocitud221601Service
       .getRegistroTomaMuestrasMercanciasData().pipe(
         takeUntil(this.destroyNotifier$)

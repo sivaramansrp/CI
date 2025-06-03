@@ -1,4 +1,4 @@
-import { AlertComponent,Catalogo,CatalogoSelectComponent,ConfiguracionColumna,ConsultaioQuery,TablaDinamicaComponent,TablaSeleccion,TituloComponent, ValidacionesFormularioService} from '@libs/shared/data-access-user/src';
+import { AlertComponent,Catalogo,CatalogoSelectComponent,ConfiguracionColumna,TablaDinamicaComponent,TablaSeleccion,TituloComponent, ValidacionesFormularioService} from '@libs/shared/data-access-user/src';
 import { Component,OnDestroy,OnInit, } from '@angular/core';
 import { Exportador,MENSAJE_TABLA_OBLIGATORIA } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
@@ -6,10 +6,12 @@ import { Solicitud221601State,Tramite221601Store } from '../../../../estados/tra
 import { Subject,map,takeUntil } from 'rxjs';
 import { CONFIGURATION_TABLA_DATOS } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
 import { CONFIGURATION_TABLA_DESTINATARIO } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Destinatario } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
 import { ModalComponent } from '../modal/modal.component';
 import { Tramite221601Query } from '../../../../estados/queries/tramite221601.query';
 import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
+
 /**
  * Componente encargado de gestionar la visualización y exportación de datos relacionados con los exportadores y destinatarios.
  * Este componente muestra dos tablas dinámicas: una para los exportadores y otra para los destinatarios. 
@@ -184,7 +186,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.esFormularioSoloLectura = true;
+        
           this.inicializarCertificadoFormulario();
         })
       )
