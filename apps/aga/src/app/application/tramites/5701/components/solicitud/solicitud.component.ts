@@ -529,7 +529,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {FormArray} El array de formulario 'lineasCaptura'.
    */
   get lineasCaptura(): FormArray {
-    return this.FormSolicitud.get('lineasCaptura') as FormArray;
+    return this.pagoCaptura.get('lineasCaptura') as FormArray;
   }
 
   /**
@@ -1101,6 +1101,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} Esta función no retorna ningún valor.
    */
   tipoSolicitudSeleccion(): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'toastr',
+      categoria: 'error',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Error al guardar la solicitud. Intente nuevamente.',
+      cerrar: false,
+      txtBtnAceptar: '',
+      txtBtnCancelar: '',
+    };
     // Se obtiene el valor del tipo de solicitud seleccionado y se agrega la descripción correspondiente al formulario.
     const TIPO_SOLICITUD_VALUE = parseInt(
       this.FormSolicitud.get('tipoSolicitud')?.value,
@@ -1114,7 +1124,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       SOLICITUD_DESRIPCION
     );
 
-
     const FORMA_MODIFICADA = Object.keys(this.FormSolicitud.controls).some(
       (key) => {
         if (key !== 'tipoSolicitud' && key !== 'descripcionTipoSolicitud') {
@@ -1127,18 +1136,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       }
     );
 
-
     if (FORMA_MODIFICADA) {
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'warning',
-        modo: 'action',
-        titulo: 'Avisos',
-        mensaje: MSG_CAMBIO_TIPO_SOLICITUD,
-        cerrar: false,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
       this.limpiarFormulario();
       return;
     }
@@ -1926,7 +1924,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
-   * Consulta si la línea de captura es válida y actualiza el store correspondiente.
+   * Consulta si la línea de captura es válida, ha sido usada y ya fue pagada y actualiza el store correspondiente.
    * @returns {void} No retorna ningún valor.
    */
   public agregarPagoSea(): void {
@@ -1952,7 +1950,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         switchMap((responseValidaLineaCaptura) => {
-          console.log(responseValidaLineaCaptura);
           if (responseValidaLineaCaptura.datos) {
             this.nuevaNotificacion = {
               tipoNotificacion: 'alert',
@@ -2002,6 +1999,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
           const MONTO_A_CUBRIR = DIAS_SERVICIO * MONTO_A_PAGAR;
 
+          //TODO: Aqui se hace la validación del monto a pagar y el monto a cubrir
+
           const PAGO = {
             lineaCaptura: LINEA_PAGO,
             monto: responseLineaCapturaPagada.datos.pago_model.importe,
@@ -2010,6 +2009,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
           this.montoPagadoLineas +=
             responseLineaCapturaPagada.datos.pago_model.importe;
           this.datosTablaPagos.push(PAGO);
+          this.lineasCaptura?.clear();
+          this.lineasCaptura.push(
+            this.fb.group({
+              lineaCaptura: [LINEA_PAGO, Validators.required],
+              monto: [
+                responseLineaCapturaPagada.datos.pago_model.importe,
+                Validators.required,
+              ],
+            })
+          );
         })
       )
       .subscribe();
@@ -2409,6 +2418,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       },
     });
 
+    this.selectRangoDias = [];
     this.pedimento.clear();
     this.personasResponsablesDespacho.clear();
 
@@ -2420,7 +2430,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       'setTipoSolicitud'
     );
 
-      this.setValoresStore(
+    this.setValoresStore(
       this.FormSolicitud,
       'descripcionTipoSolicitud',
       'setDescripcionTipoSolicitud'

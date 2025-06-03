@@ -30,10 +30,11 @@ import {
   PersonaResponsableDespacho,
   SolicitudPayload,
 } from '../../../../core/models/5701/solicitud-payload.model';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Observable, Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { GuardaSolicitudService } from '../../../../core/services/5701/guardar/guarda-solicitud.service';
 import { Solicitud5701State } from '../../../../core/estados/tramites/tramite5701.store';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
+import { log } from 'console';
 
 interface AccionBoton {
   accion: string;
@@ -191,16 +192,46 @@ export class SolicitudPageComponent implements OnInit {
    * Si la acción no es 'cont', retrocede al paso anterior del wizard.
    */
   getValorIndice(e: AccionBoton): void {
+    console.log(e);
+    console.log('Indice actual:', this.indice);
+    
+    
+
+
+
+
     // Nos encontramos en el paso 1, se guarda parcialmente la información.
     if (this.indice === 1) {
-      this.enviaSolicitudRequest();
-    }
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+      this.enviaSolicitudRequest()
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          tap((respuesta) => {
+            console.log('Respuesta de la solicitud:', respuesta);
+            if(!respuesta) {
+              console.log('DEBO MOSTRAR NOTIFICACION DE ERROR');
+              
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'toastr',
+                categoria: 'error',
+                modo: 'action',
+                titulo: '',
+                mensaje: 'Error al guardar la solicitud. Intente nuevamente.',
+                cerrar: false,
+                txtBtnAceptar: '',
+                txtBtnCancelar: '',
+              };
+            }
+          }),
+        )
+        .subscribe();
+    } else {
+      if (e.valor > 0 && e.valor < 5) {
+        this.indice = e.valor;
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
       }
     }
   }
@@ -444,7 +475,7 @@ export class SolicitudPageComponent implements OnInit {
    * @returns {void} No retorna ningún valor.   *
    */
 
-  private enviaSolicitudRequest(): void {
+  private enviaSolicitudRequest(): Observable<boolean> {
     const CONSTRUYE_SOLICITUD_PAYLOAD: SolicitudPayload = {
       id_solicitud:
         this.solicitudState.idSolicitud === 0
@@ -545,26 +576,31 @@ export class SolicitudPageComponent implements OnInit {
       },
     };
 
-    this.guardarSolicitudService
+    return this.guardarSolicitudService
       .postSolicitud(CONSTRUYE_SOLICITUD_PAYLOAD)
       .pipe(
         map((response) => {
-          this.solicitudState.idSolicitud = response.datos.id_solicitud;
-          this.nuevaNotificacion = {
-            tipoNotificacion: 'toastr',
-            categoria: 'success',
-            modo: 'action',
-            titulo: '',
-            mensaje: `Solicitud guardada correctamente con ID: ${response.datos.id_solicitud}`,
-            cerrar: false,
-            txtBtnAceptar: '',
-            txtBtnCancelar: '',
-          };
-          return response;
+          if (response.datos.id_solicitud) {
+            this.solicitudState.idSolicitud = response.datos.id_solicitud;
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'toastr',
+              categoria: 'success',
+              modo: 'action',
+              titulo: '',
+              mensaje: `Solicitud guardada correctamente con ID: ${response.datos.id_solicitud}`,
+              cerrar: false,
+              txtBtnAceptar: '',
+              txtBtnCancelar: '',
+            };
+            return true;
+          }
+
+          return false;
         }),
+        catchError(() => of(false)),
+
         takeUntil(this.destroyNotifier$)
-      )
-      .subscribe();
+      );
   }
 
   /**
