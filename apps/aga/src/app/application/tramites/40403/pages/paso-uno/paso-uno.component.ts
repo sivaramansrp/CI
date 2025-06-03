@@ -74,9 +74,10 @@ public fetchGetDatosConsulta(): void {
           this.tramite40403Store.establecerCveFolioCaat(respuesta.datos.cveFolioCaat);
           this.tramite40403Store.establecerDescripcionTipoCaat(respuesta.datos.descripcionTipoCaat);
           this.tramite40403Store.establecerTipoDeCaatAerea(respuesta.datos.tipoDeCaatAerea);
+         
           this.tramite40403Store.establecerIdeCodTransportacionAerea(respuesta.datos.ideCodTransportacionAerea);
           this.tramite40403Store.establecerCodIataIcao(respuesta.datos.codIataIcao);
-          
+            
 
 
           

@@ -5,8 +5,8 @@
     "claveFolioCAAT": "CAAT123456",
     "cveFolioCaat": "CV1234",
     "descripcionTipoCaat": "Tipo de CAAT de ejemplo",
-    "tipoDeCaatAerea": "Aérea",
-    "ideCodTransportacionAerea": "TRN001",
+    "tipoDeCaatAerea": "CAAT03",
+    "ideCodTransportacionAerea": "CAAT02",
     "codIataIcao": "IATA123"
   }
 }
