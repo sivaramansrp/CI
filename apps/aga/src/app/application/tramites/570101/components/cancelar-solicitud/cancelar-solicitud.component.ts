@@ -8,6 +8,7 @@ import { CrossListLable, FechasService, SeccionLibQuery, SeccionLibState, Seccio
 import { CancelarSolicitudQuery } from '../../estados/tramite570101.query';
 import { CancelarSolicitudService } from '../../service/cancelar-solicitud.service';
 import { CancelarSolicitudStore } from '../../estados/tramite570101.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 
 @Component({
@@ -39,11 +40,37 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
   // Array para almacenar el rango de días
   selectRangoDias: string[] = [];
 
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+
   // Variables para manejar los estados de suscripción y el formulario
+  /**
+   * Observable utilizado para cancelar las suscripciones activas cuando el componente se destruye.
+   */
   public unsubscribe$ = new Subject<void>();
+
+  /**
+   * Estado actual del formulario de cancelación de solicitud.
+   */
   cancelarSolicitudFormState!: CancelarSolicitudForm;
+
+  /**
+   * Instancia del formulario reactivo para cancelar la solicitud.
+   */
   formCancelorSolicitud!: FormGroup;
+
+  /**
+   * Notificador para destruir las suscripciones al destruir el componente.
+   */
   public destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Estado de la sección actual, utilizado para la validación y control de la interfaz.
+   */
   public seccion!: SeccionLibState;
 
   /**
@@ -63,7 +90,8 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
     public cancelarSolicitudQuery: CancelarSolicitudQuery,
     public validacionesService: ValidacionesFormularioService,
     private seccionStore: SeccionLibStore,
-    private seccionQuery: SeccionLibQuery
+    private seccionQuery: SeccionLibQuery,
+    private consultaQuery: ConsultaioQuery,
   ) {
     // El constructor está intencionalmente vacío para la inyección de dependencias 
   }
@@ -103,7 +131,39 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+        this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
+
+        /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+     inicializarEstadoFormulario(): void {
+      if(!this.formCancelorSolicitud){
+        this.crearFormSolicitud();
+      }
+      if (this.esFormularioSoloLectura) {
+          this.formCancelorSolicitud.disable();
+      }
+    }
+ 
+  /**
+
+Actualiza el estado de validación de la sección actual en el store.
+Recorre el arreglo de secciones para identificar la sección activa (aquella cuyo valor es true).
+Si encuentra una sección activa, verifica si el formulario formCancelorSolicitud es válido.
+Si es válido, marca la sección correspondiente como válida en el arreglo formaValida.
+Si no es válido, marca la sección como no válida.
+Finalmente, actualiza el estado global llamando a establecerFormaValida en el store de la sección.
+@returns {void} */
 
   actualizarValidationInStore(): void {
     let seccion: number | null = 0;
@@ -164,6 +224,17 @@ export class CancelarSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+  
+
+  /**
+   * Establece si el campo 'fechasSeleccionadas.selectedFechas' del formulario es obligatorio o no.
+   *
+   * @param isRequired Indica si el campo debe ser obligatorio (`true`) o no (`false`).
+   *
+   * Si el parámetro es `true`, se aplica el validador `Validators.required` al control.
+   * Si es `false`, se eliminan los validadores existentes del control.
+   * Finalmente, se actualiza el estado y la validez del control.
+   */
   setSelectedFechasRequired(isRequired: boolean): void {
     const CONTROL = this.formCancelorSolicitud.get('fechasSeleccionadas.selectedFechas');
 
