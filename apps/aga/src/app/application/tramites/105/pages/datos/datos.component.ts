@@ -34,10 +34,27 @@ export class DatosComponent implements AfterViewInit,OnInit,OnDestroy {
  */
 public consultaState!:ConsultaioState;
 
+/**
+ * Constructor de la clase.
+ * 
+ * @param consultaQuery Servicio utilizado para realizar consultas relacionadas con la entidad Consultaio.
+ * @param invoCarService Servicio encargado de gestionar operaciones relacionadas con InvoCar.
+ * 
+ * La inicialización de las propiedades se realizará en métodos específicos según sea necesario.
+ */
  constructor(private consultaQuery: ConsultaioQuery,private invoCarService: InvoCarService) {
 // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
  }
 
+/**
+ * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+ * 
+ * - Suscribe al observable `selectConsultaioState$` para obtener el estado de la consulta y actualizar la propiedad `consultaState`.
+ * - Si la propiedad `update` de `consultaState` es verdadera, llama al método `guardarDatosFormulario()`.
+ * - Si no, establece la bandera `esDatosRespuesta` en `true`.
+ * 
+ * @returns void
+ */
 ngOnInit(): void {
  this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
           this.consultaState = seccionState;
