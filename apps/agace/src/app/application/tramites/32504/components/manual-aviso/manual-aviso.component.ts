@@ -1,4 +1,4 @@
-import { BotonAccionesTipos, FormaValidators, InputTypes, Props } from '@ng-mf/data-access-user';
+import { BotonAccionesTipos, ConsultaioQuery, FormaValidators, InputTypes, Props } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { DATOS_DOMICILIO_LUGAR, DATOS_MERCANCIA_SUBMANUFACTURA, DATOS_QUIEN_RECIBE } from '../../constants/aviso.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
@@ -27,10 +27,28 @@ import { Tramite32504Store } from '../../estados/tramite32504.store';
 })
 export class ManualAvisoComponent implements OnInit, OnDestroy {
 
+  /**
+   * Evento que emite acciones de los botones principales del formulario.
+   * @type {EventEmitter<boolean>}
+   */
   @Output() emitButtonAction = new EventEmitter<boolean>();
 
+  /**
+   * Notificador para destruir suscripciones activas y evitar fugas de memoria.
+   * @type {Subject<void>}
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * @type {boolean}
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Configuración de los grupos y campos del formulario dinámico principal.
+   * @type {InputConfig[]}
+   */
   configuracion: InputConfig[] = [
     {
       title: 'Datos de quien recibe las mercancías(tercero submanufacturero autoriado)',
@@ -100,6 +118,11 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
       ],
     },
   ];
+
+  /**
+   * Configuración de los campos para la tabla de mercancía transferida.
+   * @type {InputConfig[]}
+   */
   configuracion_table: InputConfig[] = [
     {
       title: 'Datos de la mercancía transferida para submanufactura',
@@ -138,8 +161,23 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
       ],
     },
   ];
+
+  /**
+   * Arreglo para la gestión de formularios dinámicos fiscales.
+   * @type {FormularioDinamico[]}
+   */
   fiscal: FormularioDinamico[] = [];
+
+  /**
+   * Formulario reactivo principal del componente.
+   * @type {FormGroup}
+   */
   formulario!: FormGroup;
+
+  /**
+   * Configuración y datos de la tabla dinámica de destinatarios.
+   * @type {Object}
+   */
   tableData: {
     headers: {
       encabezado: string,
@@ -173,28 +211,96 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
       ],
       data: []
     };
+
+  /**
+   * Indica si se ha hecho clic en el botón para agregar en la tabla secundaria.
+   * @type {boolean}
+   */
   esAgregarClicked = false;
+
+  /**
+   * Enumeración de los tipos de acciones de los botones.
+   * @type {typeof BotonAccionesTipos}
+   */
   botonAccionesTipos = BotonAccionesTipos;
+
+  /**
+   * Enumeración de los tipos de acción del formulario.
+   * @type {typeof ActionType}
+   */
   actionTypes = ActionType;
+
+  /**
+   * Enumeración para la selección de filas en la tabla.
+   * @type {typeof TablaSeleccion}
+   */
   TablaSeleccion = TablaSeleccion;
+
+  /**
+   * Objeto para almacenar eventos de interacción.
+   * @type {any}
+   */
   event = {};
+
+  /**
+   * Enumeración de los tipos de input disponibles.
+   * @type {typeof InputTypes}
+   */
   inputTypes = InputTypes;
   
+  /**
+   * Inicializa el componente, inyecta los servicios necesarios y crea el formulario principal.
+   * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
+   * @param {CatalogosService} catalogosServicios - Servicio para obtener catálogos.
+   * @param {Tramite32504Store} store - Store para la gestión del estado del trámite.
+   * @param {ConsultaioQuery} consultaQuery - Query para consultar el estado de consulta.
+   */
   constructor(
     private fb: FormBuilder,
     private catalogosServicios: CatalogosService,
-    private store: Tramite32504Store
+    private store: Tramite32504Store,
+    private consultaQuery: ConsultaioQuery,
   ) {
     this.crearFormulario();
   }
   
+  /**
+   * Inicializa los grupos del formulario y suscribe el estado de solo lectura para habilitar o deshabilitar el formulario según corresponda.
+   */
   ngOnInit(): void {
     this.renderizadoGrupo(this.configuracion);
+    this.consultaQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.esFormularioSoloLectura = seccionState.readonly;
+            this.inicializarEstadoFormulario();
+          })
+        )
+        .subscribe();
   }
 
   /**
-   * Pase la config para inicializar el formulario
-   * @param config - La config para los controles del formulario.
+   * Inicializa el estado del formulario según el modo de solo lectura. Si el formulario está en modo solo lectura, deshabilita todos los campos; de lo contrario, los habilita para su edición.
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if(!this.formulario){
+        this.configuracion.forEach((eachConfig: InputConfig, groupIndex: number) => {
+        this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
+      });     
+    }
+    if (this.esFormularioSoloLectura) {
+        this.formulario.disable();
+    } else {
+      this.formulario.enable();
+    }
+  }
+
+  /**
+   * Inicializa los grupos de formularios con la configuración proporcionada.
+   * @param {InputConfig[]} config - Configuración para los controles del formulario.
+   * @returns {void}
    */
   renderizadoGrupo(config: InputConfig[]): void { 
     config.forEach((eachConfig: InputConfig, groupIndex: number) => {
@@ -204,9 +310,10 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
 
   /**
    * Inicializa un grupo de formularios con controles basados en la configuración proporcionada.
-   * @param configuracion - La configuración para los controles del formulario.
-   * @param nombreGrupo - El nombre del grupo de formularios.
-   * @param indiceGrupo - El índice del grupo en la matriz de configuración.
+   * @param {MenuConfig[]} configuracion - Configuración para los controles del formulario.
+   * @param {string} nombreGrupo - Nombre del grupo de formularios.
+   * @param {number} indiceGrupo - Índice del grupo en la matriz de configuración.
+   * @returns {void}
    */
   inicializarFormGroup(
     configuracion: MenuConfig[],
@@ -228,11 +335,12 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
   }
 
   /**
-    * Obtiene los valores del catálogo y actualiza la configuración.
-    * @param indiceGrupo - El índice del grupo en la matriz de configuración.
-    * @param indiceMenu - El índice del menú en el grupo.
-    * @param clave - La clave para obtener los valores del catálogo.
-    */
+   * Obtiene los valores del catálogo y actualiza la configuración del campo correspondiente.
+   * @param {number} indiceGrupo - Índice del grupo en la matriz de configuración.
+   * @param {number} indiceMenu - Índice del menú en el grupo.
+   * @param {string} clave - Clave para obtener los valores del catálogo.
+   * @returns {void}
+   */
   obtenerValoresCatalogo(indiceGrupo: number, indiceMenu: number, clave: string): void {
     this.catalogosServicios
       .getCatalogo(clave)
@@ -249,6 +357,7 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
 
   /**
    * Crea el formulario principal e inicializa los subgrupos.
+   * @returns {void}
    */
   crearFormulario(): void {
     this.formulario = this.fb.group({
@@ -261,8 +370,8 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
 
   /**
    * Genera una matriz de validadores de formularios basada en los patrones proporcionados.
-   * @param validadores - Una matriz de patrones regex que se utilizarán para la validación.
-   * @returns Una matriz de validadores de formularios.
+   * @param {string[]} validadores - Arreglo de patrones regex para la validación.
+   * @returns {ValidatorFn[]} Arreglo de validadores de formularios.
    */
   static obtenerValidadores(validadores: string[]): ValidatorFn[] {
     const FORM_VALIDATORS: ValidatorFn[] = [];
@@ -282,7 +391,8 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
 
   /**
    * Maneja el evento de cambio para la entrada de fecha.
-   * @param evento - El nuevo valor de la fecha como cadena.
+   * @param {string} evento - Nuevo valor de la fecha.
+   * @returns {void}
    */
   fechaCambiado(evento: string): void {
     // Manejar cambio de fecha
@@ -290,27 +400,32 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
   }
   
   /**
-   * Maneja el evento de selección para un catálogo.
-   * @param nombreControlFormulario - El nombre del control del formulario a actualizar.
-   * @param evento - El valor seleccionado del catálogo.
+   * Maneja el evento de selección para un catálogo y actualiza el valor del control correspondiente.
+   * @param {string} nombreControlFormulario - Nombre del control del formulario a actualizar.
+   * @param {Event} evento - Valor seleccionado del catálogo.
+   * @returns {void}
    */
   seleccionCatalogo(nombreControlFormulario: string, evento: Event): void {
     this.formulario.get(nombreControlFormulario)?.setValue(evento);
   }
   
   /**
-   * Maneja el evento de cambio para una entrada de radio.
-   * @param claveRadio - La clave de la entrada de radio.
-   * @param evento - El nuevo valor de la entrada de radio.
+   * Maneja el evento de cambio para una entrada de radio y actualiza el valor seleccionado.
+   * @param {string} claveRadio - Clave de la entrada de radio.
+   * @param {number} groupIndex - Índice del grupo en la configuración.
+   * @param {number} menuIndex - Índice del menú en el grupo.
+   * @param {string | number} evento - Nuevo valor de la entrada de radio.
+   * @returns {void}
    */
   cambioValorRadio(claveRadio: string, groupIndex: number, menuIndex: number, evento: string | number): void {
     this.configuracion[groupIndex].menu[menuIndex].props.radioSelectedValue = evento;
   }
 
   /**
-   * La función maneja las acciones de los botones según el formulario actual. Esta función maneja las acciones de los botones para dos formularios
-   * @param accionTipo - Tipo de acción que define el tipo de formulario.
-   * @param accione - Parámetro que tiene la acción de ser del tipo BotonAccionesTipos.
+   * Maneja las acciones de los botones del formulario y la tabla secundaria según el tipo de acción seleccionada.
+   * @param {ActionType} accionTipo - Tipo de acción que define el tipo de formulario.
+   * @param {BotonAccionesTipos} accione - Tipo de acción a ejecutar.
+   * @returns {void}
    */
   accionesBotones(accionTipo: ActionType, accione: BotonAccionesTipos): void {
     switch (accionTipo) {
@@ -351,8 +466,9 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Esta función maneja el comportamiento del botón de la tabla secundaria
-   * @param accione - Parámetro que tiene la acción de ser del tipo BotonAccionesTipos.
+   * Maneja el comportamiento del botón de la tabla secundaria.
+   * @param {BotonAccionesTipos} action - Tipo de acción a ejecutar.
+   * @returns {void}
    */
   botonDeTablaInfantilAccion(action: BotonAccionesTipos): void {
     switch (action) {
@@ -365,12 +481,20 @@ export class ManualAvisoComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Envía los datos del formulario al store para su almacenamiento.
+   * @returns {void}
+   */
   onSubmit(): void {
     this.store.setDatosQuienRecibe(this.formulario.get('datosQuienRecibe')?.value);
     this.store.setDatosDomicilioLugar(this.formulario.get('datosDomicilioLugar')?.value);
     this.store.setDatosMercanciaSubmanufactura(this.formulario.get('datosMercanciaSubmanufactura')?.value);
   }
 
+  /**
+   * Libera los recursos y destruye las suscripciones activas al destruir el componente.
+   * @returns {void}
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

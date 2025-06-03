@@ -135,8 +135,8 @@
   {
     "id": 20,
     "tramite": 32504,
-    "linkDashboard": "/agace/aviso/aviso-procesos",
-    "linkDepartment": "/agace/aviso/aviso-procesos",
+    "linkDashboard": "/agace/aviso-procesos/aviso-procesos",
+    "linkDepartment": "/pago/aviso-procesos/aviso-procesos",
     "department": "agace"
   },
   {
