@@ -20,9 +20,9 @@
 import { DatosDelTerceroDestinatario, Instalacion } from "../../modelos/sanidad-acuicola-importacion.model";
 import { Tramite220103Query } from "../../estados/queries/tramites220103.query";
 
-import { FormBuilder } from "@angular/forms";
-
 import { Subject, takeUntil } from "rxjs";
+
+import {ConsultaioQuery} from "@ng-mf/data-access-user"
 
 import { AlertComponent, ModeloDeFormaDinamica, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from "@libs/shared/data-access-user/src";
 import { CAMPOS_FORMULARIO_DATOS_DEL_TRAMITE, CAMPOS_FORMULARIO_MERCANCIAS, CONFIGURACION_CONTACTO, CONFIGURACION_TABLA_INSTALACION, IMPORTANTE } from "../../constantes/sanidad-acuicola-importacion.enum";
@@ -48,6 +48,8 @@ import { AgregarDestinatarioComponent } from "../agregar-destinatario/agregar-de
 })
 export class DatosDelTercerosComponent implements OnInit, OnDestroy {
 
+
+    esSoloLectura!: boolean;
   /**
    * Notificador para manejar la destrucción de suscripciones y evitar fugas de memoria.
    * Se utiliza para cancelar todas las suscripciones activas al destruir el componente.
@@ -124,8 +126,8 @@ export class DatosDelTercerosComponent implements OnInit, OnDestroy {
    * @param tramite220103Query - Consulta para obtener el estado del trámite.
    */
   constructor(
-    formBuilder: FormBuilder,
-    private tramite220103Query: Tramite220103Query
+    private tramite220103Query: Tramite220103Query,
+     private consultaQuery: ConsultaioQuery,
   ) {}
 
   /**
@@ -134,7 +136,21 @@ export class DatosDelTercerosComponent implements OnInit, OnDestroy {
    * Esta suscripción se mantiene activa durante toda la vida del componente.
    */
   ngOnInit(): void {
-    this.tramite220103Query.selectTramite220103State$
+
+
+    this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((estadoConsulta) => {
+        this.esSoloLectura = estadoConsulta.readonly;
+        this.getValorStore()
+      });
+
+  
+  }
+
+  getValorStore():void
+  {
+  this.tramite220103Query.selectTramite220103State$
       .pipe(takeUntil(this.notificadorDestruccion$))
       .subscribe((estado) => {
         this.datosTabla = estado?.['tablaDestinatario'] || [];

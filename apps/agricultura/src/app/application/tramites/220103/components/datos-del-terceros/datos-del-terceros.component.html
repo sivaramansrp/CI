@@ -11,6 +11,7 @@
       [configuracionTabla]="configuracionTablaContacto"
       [datos]="datosTabla"
       [tipoSeleccionTabla]="seleccionTabla"
+      [disableSeleccionTablaCheckBox]="esSoloLectura"
       (listaDeFilaSeleccionada)="obtenerDestinatarioSeleccionadas($event)"
     ></app-tabla-dinamica>
     <nav aria-label="Ejemplo de paginación">
@@ -22,6 +23,7 @@
   <div class="row mt-4 ">
     <div class="col-12 d-flex justify-content-end">
       <button
+      [disabled]="esSoloLectura"
         name="agregar"
         class="btn btn-primary"
         data-bs-toggle="modal"

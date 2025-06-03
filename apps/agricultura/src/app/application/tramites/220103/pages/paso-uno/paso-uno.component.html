@@ -26,13 +26,19 @@
         <solicitante [tabindex]="1"></solicitante>
         }
         @case (2) {
+          @if(datosRespuestaDisponibles){
           <app-datos-del-tramite [tabIndex]="2"></app-datos-del-tramite>
+          }
         }
         @case (3) {
+          @if(datosRespuestaDisponibles){
           <app-datos-de-instalacion [tabIndex]="3"></app-datos-de-instalacion>
+          }
         }
         @case (4){
+          @if(datosRespuestaDisponibles){
           <app-datos-del-terceros [tabIndex]="4"></app-datos-del-terceros>
+          }
         }
         }
       </ng-container>

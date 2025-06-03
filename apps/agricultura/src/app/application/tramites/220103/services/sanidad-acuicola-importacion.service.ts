@@ -9,6 +9,8 @@ import { Observable } from "rxjs";
 
 import { Catalogo } from "@libs/shared/data-access-user/src";
 
+import { Tramite220103State, Tramite220103Store } from "../estados/tramites/tramites220103.store";
+
 /**
  * Servicio para gestionar la obtención de catálogos y datos
  * relacionados con el trámite de sanidad acuícola en importación.
@@ -22,7 +24,7 @@ export class SanidadAcuicolaImportacionService {
      * Constructor del servicio.
      * @param http Cliente HTTP para realizar peticiones a archivos JSON locales.
      */
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient ,private store:Tramite220103Store) { }
 
     /**
      * Obtiene el catálogo de mercancías.
@@ -102,5 +104,17 @@ export class SanidadAcuicolaImportacionService {
      */
     getInstalacion(): Observable<Instalacion[]> {
         return this.http.get<Instalacion[]>('/assets/json/220103/instalacion.json');
+    }
+
+    getDatos():Observable<Tramite220103State>
+    {
+       return this.http.get<Tramite220103State>('/assets/json/220103/datos.json')
+    }
+
+    updateState(valor:Tramite220103State):void{
+        this.store.update(valor)
+        this.store.setTramite220103State("tablaDestinatario",[valor.datosDelTerceroDestinatario])
+        this.store.setTramite220103State("tablaMercancia",this.getMercancias())
+        this.store.setTramite220103State("tablaInstalacion",this.getInstalacion())
     }
 }
