@@ -61,7 +61,7 @@
         <div class="col-md-8"></div>
         <div class="col-md-4 text-end">
           <div class="btn-group">
-            <button class="btn btn-primary ms-2" (click)="validarYEnviarFormulario()">
+            <button class="btn btn-primary ms-2" [disabled]="esFormularioSoloLectura" (click)="validarYEnviarFormulario()">
               Agregar
             </button>
           </div>
@@ -113,8 +113,8 @@
     <div>
       <h6>Partidas</h6>
       <div>
-        <app-tabla-dinamica [configuracionTabla]="tableHeaderData" [datos]="tableBodyData"
-          [tipoSeleccionTabla]="CHECKBOX" (listaDeFilaSeleccionada)="handleListaDeFilaSeleccionada($event)">
+        <app-tabla-dinamica [configuracionTabla]="tableHeaderData" [datos]="tableBodyData" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+          [tipoSeleccionTabla]="CHECKBOX">
         </app-tabla-dinamica>
       </div>
 
@@ -140,10 +140,10 @@
           <div class="col-md-6 col-sm-6"></div>
           <div class="col-md-6 col-sm-6 text-end">
             <div class="btn-group btn-gap">
-              <button class="btn btn-primary" type="button" (click)="navegarParaModificarPartida()">
+              <button class="btn btn-primary" type="button" [disabled]="esFormularioSoloLectura" (click)="navegarParaModificarPartida()">
                 Modificar partidas mercancía
               </button>
-              <button class="btn btn-danger me-2" type="button" (click)="onclickEliminar()">
+              <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura" (click)="onclickEliminar()">
                 Eliminar partida
               </button>
             </div>

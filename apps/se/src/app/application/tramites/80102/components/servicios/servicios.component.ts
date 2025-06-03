@@ -3,6 +3,7 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   CatalogosService,
+  ConsultaioQuery,
   FormularioDinamico,
   SelectPaisesComponent,
   TablaDinamicaComponent,
@@ -31,7 +32,7 @@ import {
   ServicioInmex,
   Servicios,
 } from '../../models/autorizacion-programa-nuevo.model';
-import { Observable, Subject,takeUntil } from 'rxjs';
+import { Observable, Subject, map,takeUntil } from 'rxjs';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { Tramite80102Store } from '../../estados/tramite80102.store';
@@ -228,6 +229,12 @@ export class ServiciosComponent implements OnInit, OnDestroy {
     private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   * Cuando es verdadero, los campos del formulario no pueden ser editados por el usuario.
+   */
+  public esFormularioSoloLectura: boolean = false; 
+
+  /**
    * Constructor del componente.
    * @constructor
    * @param {FormBuilder} fb - Servicio para la creación de formularios.
@@ -239,7 +246,7 @@ export class ServiciosComponent implements OnInit, OnDestroy {
     private Tramite80102Query: Tramite80102Query,
     private Tramite80102Store: Tramite80102Store,
     private readonly autorizacionProgrmaNuevoService: AutorizacionProgrmaNuevoService,
-    private catalogosServices: CatalogosService
+    private catalogosServices: CatalogosService, private consultaQuery: ConsultaioQuery
   ) {
     this.formulario = this.fb.group({
       entidadFederativa: ['', [Validators.required, Validators.min(0)]],
@@ -283,6 +290,18 @@ export class ServiciosComponent implements OnInit, OnDestroy {
     this.suscribirseADatos();
     this.suscribirseAFields();
     this.getCatalogoPaises();
+    this.consultaQuery.selectConsultaioState$
+     .pipe(
+       takeUntil(this.destroyNotifier$),
+       map((seccionState)=>{
+         this.esFormularioSoloLectura = seccionState.readonly; 
+         if(this.esFormularioSoloLectura){
+            this.formulario.disable();
+            this.formularioEmpresaExtranjera.disable();
+         }
+       })
+     )
+     .subscribe()
   }
 
   /**

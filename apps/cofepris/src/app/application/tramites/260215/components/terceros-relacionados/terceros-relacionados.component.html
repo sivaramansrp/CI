@@ -19,13 +19,14 @@
 
       <div class="d-flex justify-content-end mt-3">
         <div *ngIf="showFabricanteButtons">
-          <button class="btn btn-danger" type="button">Eliminar</button>
-          <button class="btn btn-default" type="button">Modificar</button>
+          <button [disabled]="esFormularioSoloLectura" class="btn btn-danger" type="button">Eliminar</button>
+          <button [disabled]="esFormularioSoloLectura" class="btn btn-default" type="button">Modificar</button>
         </div>
         <button
           type="button"
           class="btn btn-primary"
           (click)="toggleDivFabricante()"
+          [disabled]="esFormularioSoloLectura"
         >
           Agregar
         </button>
@@ -46,13 +47,14 @@
 
       <div class="d-flex justify-content-end mt-3">
         <div *ngIf="showDestinatarioButtons">
-          <button class="btn btn-danger" type="button">Eliminar</button>
-          <button class="btn btn-default" type="button">Modificar</button>
+          <button [disabled]="esFormularioSoloLectura" class="btn btn-danger" type="button">Eliminar</button>
+          <button [disabled]="esFormularioSoloLectura" class="btn btn-default" type="button">Modificar</button>
         </div>
         <button
           type="button"
           class="btn btn-primary"
           (click)="toggleDivDestinatario()"
+          [disabled]="esFormularioSoloLectura"
         >
           Agregar
         </button>
@@ -72,13 +74,14 @@
 
       <div class="d-flex justify-content-end mt-3">
         <div *ngIf="showProveedorButtons">
-          <button class="btn btn-danger" type="button">Eliminar</button>
-          <button class="btn btn-default" type="button">Modificar</button>
+          <button [disabled]="esFormularioSoloLectura" class="btn btn-danger" type="button">Eliminar</button>
+          <button [disabled]="esFormularioSoloLectura" class="btn btn-default" type="button">Modificar</button>
         </div>
         <button
           type="button"
           class="btn btn-primary"
           (click)="toggleDivProveedor()"
+          [disabled]="esFormularioSoloLectura"
         >
           Agregar
         </button>
@@ -98,13 +101,14 @@
 
       <div class="d-flex justify-content-end mt-3">
         <div *ngIf="showFacturadorButtons">
-          <button class="btn btn-danger" type="button">Eliminar</button>
-          <button class="btn btn-default" type="button">Modificar</button>
+          <button [disabled]="esFormularioSoloLectura" class="btn btn-danger" type="button">Eliminar</button>
+          <button [disabled]="esFormularioSoloLectura" class="btn btn-default" type="button">Modificar</button>
         </div>
         <button
           type="button"
           class="btn btn-primary"
           (click)="toggleDivFacturador()"
+          [disabled]="esFormularioSoloLectura"
         >
           Agregar
         </button>

@@ -5,9 +5,10 @@ import {
   ComplimentarFraccionResoponse,
 } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplementarFraccionComponent } from '../../../../shared/components/complementar-fraccion/complementar-fraccion.component';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 
 @Component({
@@ -58,12 +59,25 @@ export class ComplementarFraccionVistaComponent implements OnInit, OnDestroy {
   public complimentarFraccionDatos: ComplimentarFraccion = COMPLEMENTAR_FRACCION_DATOS;
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  public esFormularioSoloLectura: boolean = false; 
+
+  /**
    * Constructor de la clase ComplementarFraccionVistaComponent.
    * @param {Tramite80102Query} query - Servicio para consultar el estado del trámite.
    */
-  constructor(private query: Tramite80102Query) {
-    //El constructor requiere inyección de dependencias, pero se ha mantenido vacío debido a una regla de ESLint.
-  }
+  constructor(private query: Tramite80102Query, private consultaQuery: ConsultaioQuery) {
+    this.consultaQuery.selectConsultaioState$
+     .pipe(
+       takeUntil(this.destroyNotifier$),
+       map((seccionState)=>{
+         this.esFormularioSoloLectura = seccionState.readonly; 
+       })
+     )
+     .subscribe()
+    }
 
     /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
