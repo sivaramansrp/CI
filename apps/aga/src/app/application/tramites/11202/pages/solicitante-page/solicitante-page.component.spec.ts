@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitantePageComponent } from './solicitante-page.component';
-import { WizardComponent } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { SeccionQuery } from '../../../../core/queries/seccion.query';
@@ -62,6 +61,4 @@ describe('SolicitantePageComponent', () => {
     expect(component.indice).toBe(1);
     expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
-
-
 });
