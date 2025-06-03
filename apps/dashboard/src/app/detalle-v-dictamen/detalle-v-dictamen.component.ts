@@ -48,6 +48,11 @@ export class DetalleVDictamenComponent implements OnInit {
    */
   numeroDeTramite: string = '099226136147361192499352';
 
+  /**
+   * Constructor del componente `DetalleVDictamenComponent`.
+   * @param {FormBuilder} fbOb - Servicio para construir formularios reactivos.
+   * @param {Router} router - Servicio de enrutamiento de Angular para navegar entre rutas.
+   */
   constructor(private fbOb: FormBuilder, private router: Router) {}
   /**
    * Método que se ejecuta al inicializar el componente.

@@ -57,11 +57,17 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Constructor del componente AnexoVistaUnoComponent.
+   * @param {Router} router - Servicio de enrutamiento de Angular para navegar entre rutas.
+   * @param {ActivatedRoute} activatedRoute - Servicio que proporciona información sobre la ruta activa.
+   * @param {Tramite80101Store} store - Store para manejar el estado del trámite 80101.
+   * @param {Tramite80101Query} query - Query para obtener datos del estado del trámite 80101.
+   */
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private store: Tramite80101Store,
-    // eslint-disable-next-line no-empty-function
     private query: Tramite80101Query
   ) {}
 

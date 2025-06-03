@@ -33,6 +33,10 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
    */
   @Input() formularioDeshabilitado: boolean = false;
 
+  /**
+   * Datos de federatarios que se mostrarán en la tabla
+   * @property {FederatariosEncabezado} datosFederatarios
+   */
   datosFederatarios!: FederatariosEncabezado;
   /**
    * Configuración de la tabla de federatarios
@@ -42,6 +46,13 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
     TablaSeleccion: TablaSeleccion.CHECKBOX,
     TablaEncabezado: FEDERATARIOS,
   };
+
+  /**
+   * Notificador utilizado para manejar la destrucción o desuscripción de observables.
+   * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
+   *
+   * @property {Subject<void>} destroy$
+   */
   private destroy$ = new Subject<void>();
 
   /**
@@ -100,6 +111,12 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy, OnInit {
     this.federatariosTablaLista$ = this.query.selectDatosFederatarios$;
   }
 
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Se suscribe a los cambios en los datos de federatarios del almacén y actualiza la propiedad `datosFederatarios`.
+   *
+   * @returns {void}
+   */
   ngOnInit(): void {
     this.query.selectDatosFederatariosFormulario$
       .pipe(takeUntil(this.destroy$))

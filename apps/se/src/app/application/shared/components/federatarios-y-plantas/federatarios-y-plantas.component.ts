@@ -53,6 +53,10 @@ import { Validators } from '@angular/forms';
   styleUrl: './federatarios-y-plantas.component.scss',
 })
 export class FederatariosYPlantasComponent implements OnInit {
+  /**
+   * Datos de federatarios que se mostrarán en la tabla
+   * @property {FederatariosEncabezado} datosFederatarios
+   */
   @Input()
   datosFederatarios!: FederatariosEncabezado;
   /**
