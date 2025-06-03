@@ -110,12 +110,12 @@ export class DatosAdicionalesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+    this.getEntidadFederativa();
+    this.getRepresentacionFederal();
     this.solicitanteQuery.selectSolicitante$.pipe(takeUntil(this.destroy$),map((seccionState) => {
         this.solicitudeState = seccionState;
     })).subscribe();
     this.crearFormulario();
-    this.getEntidadFederativa();
-    this.getRepresentacionFederal();
   }
   /**
    * Crea el formulario con los campos necesarios y sus validaciones.
