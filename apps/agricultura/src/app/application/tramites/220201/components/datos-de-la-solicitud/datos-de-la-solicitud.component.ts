@@ -1,17 +1,21 @@
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 
-import { Catalogo, RespuestaCatalogos, TableBodyData } from '@ng-mf/data-access-user';
+import {AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, CrosslistComponent, InputRadioComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 
 import { HttpClient } from '@angular/common/http';
 
 import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
 
+import {Subject, map, skip, takeUntil } from 'rxjs';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
-import { skip } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { FilaSolicitud } from '../../models/220201/capturar-solicitud.model';
+import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
+
 
 /**
  * @fileoverview Componente para la gestión del formulario de datos de la solicitud.
@@ -28,9 +32,18 @@ import { skip } from 'rxjs';
 @Component({
   selector: 'app-datos-de-la-solicitud',
   templateUrl: './datos-de-la-solicitud.component.html',
-  styleUrls: ['./datos-de-la-solicitud.component.scss']
+  styleUrls: ['./datos-de-la-solicitud.component.scss'],
+  standalone: true,
+  imports:[SharedModule,
+          CommonModule, TituloComponent,
+              ReactiveFormsModule,
+              CatalogoSelectComponent,
+            CrosslistComponent,
+          InputRadioComponent,
+             AlertComponent,
+        TablaDinamicaComponent]
 })
-export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy,AfterViewInit {
   /**
    * Constantes de texto.
    * @property {string} TEXTOS
@@ -100,7 +113,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @property {CatalogosSelect} regimen
    */
   regimen: Catalogo[] = [];
-  selectedValue: string = 'no';
 
   opcionDeBotonDeRadio: RadioOpcion[] = [
     {
@@ -112,25 +124,67 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       "value": "no"
     },
   ]
-  tableData = {
-    header: [
-      "No. partida",
-      "Tipo de requisito",
-      "Requisito",
-      "Número de Certificado Internacional",
-      "Fracción arancelaria",
-      "Descripción de la fracción",
-      "Nico",
-    ],
+  /**
+   * @desc Arreglo que contiene las filas de la solicitud.
+   * @type {FilaSolicitud[]}
+   * @remarks
+   * Cada elemento representa una fila con los datos específicos de la solicitud.
+   * 
+   * @see FilaSolicitud
+   */
+   cuerpoTabla: FilaSolicitud[] = [];
 
+  /**
+   * @description
+   * Arreglo que almacena los elementos del cuerpo de la mesa.
+   *
+   * @type {string[]}
+   */
+  mesaCuerpo: string[] = [];
+  /**
+   * @description
+   * Tipo de selección para la solicitud.
+   * Utiliza la enumeración TablaSeleccion para definir el tipo de selección.
+   *
+   * @type {TablaSeleccion}
+   */
+tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
+  /**
+   * @description
+   * Tipo de selección para la solicitud de mercancías.
+   * Utiliza la enumeración TablaSeleccion para definir el tipo de selección.
+   *
+   * @type {TablaSeleccion}
+   */
+  tipoSeleccionsoliMercancias: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  /**
+   * @description
+   * Configuración de las columnas para la tabla de solicitudes.
+   * Utiliza la interfaz ConfiguracionColumna para definir las columnas.
+   *
+   * @type {ConfiguracionColumna<FilaSolicitud>[]}
+   */
+  configuracionColumnasoli: ConfiguracionColumna<FilaSolicitud>[] = [
+    { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
+    { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
+    { encabezado: 'Requisito', clave: (fila) => fila.requisito, orden: 3 },
+    { encabezado: 'Número de Certificado Internacional', clave: (fila) => fila.numeroCertificadoInternacional, orden: 4 },
+    { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 5 },
+    { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
+    { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
+  ];
 
-  };
+  /**
+   * Notificador para destruir el componente.
+   * @property {Subject<void>} destroyNotifier$
+   */
+  private destroyNotifier$ = new Subject<void>();
 
-  encabezadoDeTabla: string[] = this.tableData.header;
-  mesaCuerpo: TableBodyData[] = [];
-
-
-
+  /**
+   * Indica si el formulario es de solo lectura.
+   * @property {boolean} esFormularioSoloLectura
+   */
+  esFormularioSoloLectura:boolean = false;
   /**
    * Constructor del componente.
    * @constructor
@@ -138,10 +192,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.--220201
    */
   constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient,
-    private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService
+    private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
+    private readonly certificadoZoosanitarioQuery:ZoosanitarioQuery,
+      private consultaQuery: ConsultaioQuery
   ) {
-    this.crearFormulario();
-    this.initActionFormBuild();
+     this.obtenerListasDesplegables();
+
+       
   }
 
   /**
@@ -159,24 +216,42 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    */
   ngOnInit(): void {
-    this.datosDelaSolicitud.valueChanges.pipe(skip(1)).subscribe((changes) => {
+        this.crearFormulario();
+    this.initActionFormBuild();
+ 
+
+
+  }
+
+   ngAfterViewInit(): void {
+       this.datosDelaSolicitud.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((changes) => {
       const FORMA_VALIDA_ACTUALIZADA = {
-        dataDeLaSolicitud: false, // Example boolean to update
+        dataDeLaSolicitud: false, 
       };
       if (this.datosDelaSolicitud.valid) {
         FORMA_VALIDA_ACTUALIZADA.dataDeLaSolicitud = true;
       }
       this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
     });
-    this.obtenerListasDesplegables();
+     this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+      if(this.esFormularioSoloLectura){
+    this.datosDelaSolicitud.disable();
+      }
+        })
+      )
+      .subscribe();
   }
-
   /**
    * Inicializa el grupo de formularios anidado para los datos de la solicitud.
    * @method initActionFormBuild
    */
-  initActionFormBuild() {
+  initActionFormBuild() { 
     this.datosDelaSolicitud = this.fb.group({
+      tipoMercancia: ['no', Validators.required],
       aduanaIngreso: ['', Validators.required],
       oficinaInspeccion: ['', Validators.required],
       puntoInspeccion: ['', Validators.required],
@@ -186,6 +261,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       numeroGuia: [''],
       certficacion: [''],
       regimen: ['', Validators.required],
+    });
+        this.certificadoZoosanitarioQuery.seleccionarDatosSolicitud$.pipe(takeUntil(this.destroyNotifier$)).subscribe((datosDeLaSolicitud) => {
+      if (datosDeLaSolicitud) {
+        this.datosDelaSolicitud.patchValue(datosDeLaSolicitud);
+      }
     });
     this.forma.setControl('datosDelaSolicitud', this.datosDelaSolicitud);
   }
@@ -216,7 +296,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method obtenerIngresoSelectList
    */
   obtenerIngresoSelectList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/aduana_de_ingreso.json').subscribe((data): void => {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/aduana_de_ingreso.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.aduanaDeIngreso = DATOS;
     });
@@ -227,7 +307,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method obtenerSanidadAgropecuariaList
    */
   obtenerSanidadAgropecuariaList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/oficina_de_inspeccion.json').subscribe((data): void => {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/oficina_de_inspeccion.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.sanidadAgropecuaria = DATOS;
     });
@@ -238,7 +318,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method obtenerPuntoInspeccionList
    */
   obtenerPuntoInspeccionList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json').subscribe((data): void => {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.puntoInspeccion = DATOS;
     });
@@ -249,7 +329,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method obtenerEstablecimientoList
    */
   obtenerEstablecimientoList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/establecimiento.json').subscribe((data): void => {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/establecimiento.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.establecimientoTIF = DATOS;
     });
@@ -261,7 +341,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
 
   obtenerVeterinarioList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/nombre.json').subscribe((data): void => {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/nombre.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.veterinario = DATOS;
     });
@@ -272,13 +352,26 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @method obtenerRegimenList
    */
   obtenerRegimenList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/regimen.json').subscribe((data): void => {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/regimen.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       const DATOS = data?.data;
       this.regimen = DATOS;
     });
   }
-  ngOnDestroy(): void {
+  
+    /**
+     * @description Actualiza los datos almacenados en el store.
+     * @method setValoresStore
+     * @param {FormGroup} form - El formulario a obtener los valores.
+     * @param {string} campo - El nombre del campo del formulario a obtener.
+     */
+    setValoresStore(
+    ): void {
+      const VALOR = this.datosDelaSolicitud.value;
+      this.certificadoZoosanitarioServices.updateDatosDeLaSolicitud(VALOR);
+    }
 
-    this.certificadoZoosanitarioServices.updateDatosDeLaSolicitud(this.datosDelaSolicitud.value);
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

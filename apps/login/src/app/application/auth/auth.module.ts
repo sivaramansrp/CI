@@ -10,16 +10,16 @@ import { HttpClientModule } from '@angular/common/http';
   declarations: [
   ],
   imports: [
-   CommonModule,
-   AuthRoutingModule,
+    CommonModule,
+    AuthRoutingModule,
     forwardRef(() => CatalogoSelectComponent),
     forwardRef(() => FirmaPageComponent),
     ToastrModule.forRoot(),
     HttpClientModule,
     TituloComponent,
-],
-providers: [
-  ToastrService
-]
+  ],
+  providers: [
+    ToastrService
+  ]
 })
 export class AppLoginModule { }

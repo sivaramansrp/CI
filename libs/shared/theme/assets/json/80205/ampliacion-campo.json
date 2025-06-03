@@ -1,0 +1,17 @@
+{
+    "servicios": {
+      "seleccionaLaModalidad": "Ampliación Servicios",
+      "folio": "2",
+      "ano": "2023"
+    },
+    "aduanaDeIngresoSelecion": {
+    "id": -1,
+    "descripcion": ""
+  },
+    "rfcEmpresa": "rfcEmpresa",
+    "numeroPrograma": "123456789",
+    "tiempoPrograma": "tiempoPrograma",
+    "tablaDatos":[],
+    "tablaDatosIMMEX": []
+  }
+  
