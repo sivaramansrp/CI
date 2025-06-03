@@ -20,7 +20,7 @@ import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 import { SectorModel } from '../../models/prosec-modificacion.model';
 
-import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service';
 
 /**
  * compo doc
