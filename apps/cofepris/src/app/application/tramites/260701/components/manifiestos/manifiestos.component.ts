@@ -155,13 +155,13 @@ export class ManifiestosComponent implements OnInit,OnDestroy {
    */
   public guardarDatosFormulario(): void {
       this.inicializarFormulario();
-      if (this.esFormularioSoloLectura) {
-       setTimeout(() => {
-        this.manifiestos.disable();
-       }, 1);
-      } else if (!this.esFormularioSoloLectura) {
-        this.manifiestos.enable();
-      }
+      Promise.resolve().then(() => {
+        if (this.esFormularioSoloLectura) {
+          this.manifiestos.disable();
+        } else if (!this.esFormularioSoloLectura) {
+          this.manifiestos.enable();
+        }
+      });
     }
     
     /**

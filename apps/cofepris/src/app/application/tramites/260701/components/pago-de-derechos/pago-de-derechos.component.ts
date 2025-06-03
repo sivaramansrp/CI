@@ -161,13 +161,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   public guardarDatosFormulario(): void {
     this.crearFormSolicitudForm();
-    if (this.esFormularioSoloLectura) {
-      setTimeout(() => {
-        this.formSolicitud.disable();
-      },1);
-    } else if (!this.esFormularioSoloLectura) {
+    Promise.resolve().then(() => {
+      if (this.esFormularioSoloLectura) {
+      this.formSolicitud.disable();
+      } else if (!this.esFormularioSoloLectura) {
       this.formSolicitud.enable();
-    }
+      }
+    });
   }
   
     /**

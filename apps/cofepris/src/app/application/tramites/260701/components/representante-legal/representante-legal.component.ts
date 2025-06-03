@@ -143,13 +143,13 @@ export class RepresentanteLegalComponent implements OnInit,OnDestroy {
    */
   public guardarDatosFormulario(): void {
     this.crearRepresentanteForm();
-    if (this.esFormularioSoloLectura) {
-      setTimeout(() => {
-        this.representante.disable();
-      },1);
-    } else if (!this.esFormularioSoloLectura) {
+    Promise.resolve().then(() => {
+      if (this.esFormularioSoloLectura) {
+      this.representante.disable();
+      } else if (!this.esFormularioSoloLectura) {
       this.representante.enable();
-    }
+      }
+    });
   }
 
   /**

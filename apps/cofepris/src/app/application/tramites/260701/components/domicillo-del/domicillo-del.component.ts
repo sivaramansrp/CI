@@ -445,15 +445,13 @@ export class DomicilloDelComponent implements OnInit, OnDestroy {
        */
   public guardarDatosFormulario(): void {
       this.inicializarFormulario();
-      if (this.esFormularioSoloLectura) {
-       setTimeout(() => {
-        this.domicilio.disable();
-       }, 1);
-      } else if (!this.esFormularioSoloLectura) {
-        setTimeout(() => {
+      Promise.resolve().then(() => {
+        if (this.esFormularioSoloLectura) {
+          this.domicilio.disable();
+        } else if (!this.esFormularioSoloLectura) {
           this.domicilio.enable();
-        }, 2);
-      }
+        }
+      });
   }
 
     /**
