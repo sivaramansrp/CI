@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '../../../80205/models/datos-info.model';
 import { CANCELACIONES_PASOS } from '../../constantes/cancelaciones.enum';
-//getCancelacionDeAutorizaciones
+
 @Component({
   selector: 'app-cancelaciones',
   templateUrl: './cancelaciones.component.html',
@@ -31,6 +31,14 @@ export class CancelacionesComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+  
+  /**
+   * Método para manejar la acción del botón en el asistente.
+   * 
+   * @param {AccionBoton} e - Objeto que contiene la acción y el valor del botón.
+   * 
+   * @returns {void}
+   */
   getValorIndice(e: AccionBoton) :void{
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;

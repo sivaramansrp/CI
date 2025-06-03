@@ -6,7 +6,7 @@ import { CrossListLable,CrosslistComponent } from '@libs/shared/data-access-user
 
 import { FormControl } from '@angular/forms';
 
-import Procedencia from 'libs/shared/theme/assets/json/260212/pis-de-procedencia.json'
+import Procedencia from '@libs/shared/theme/assets/json/260212/pis-de-procedencia.json'
 
 export const TIPO_T: string = 't';
 
@@ -78,22 +78,22 @@ export class PaisDeOrigenComponent {
     {
       btnNombre: 'Agregar todos',
       class: 'btn-primary',
-      funcion: () => this.agregar(''),
+      funcion: (): void => this.agregar(''),
     },
     {
       btnNombre: 'Agregar selección',
       class: 'btn-default',
-      funcion: () => this.agregar(TIPO_T),
+      funcion: (): void => this.agregar(TIPO_T),
     },
     {
       btnNombre: 'Restar selección',
       class: 'btn-danger',
-      funcion: () => this.quitar(''),
+      funcion: (): void => this.quitar(''),
     },
     {
       btnNombre: 'Restar todos',
       class: 'btn-default',
-      funcion: () => this.quitar(TIPO_T),
+      funcion: (): void => this.quitar(TIPO_T),
     },
   ];
 
@@ -119,7 +119,7 @@ export class PaisDeOrigenComponent {
    * Elimina elementos de la lista de fechas según el tipo especificado.
    * @param {string} tipo - Tipo de acción a realizar.
    */
-  quitar(tipo = '') {
+  quitar(tipo = ''): void {
     if (tipo === TIPO_T) {
       this.fechasDatos = [...this.fechasSeleccionadas];
       this.fechasSeleccionadas = [];

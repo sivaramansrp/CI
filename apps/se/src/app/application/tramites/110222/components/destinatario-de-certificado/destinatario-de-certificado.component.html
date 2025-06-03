@@ -1,5 +1,5 @@
 <div class="container">
-    <app-datos-del-destinatario (formDatosDelDestinatarioEvent)="setValoresStoreDatos($event)" (formaValida)="setFormValida($event)" [datosForm]="formDatosDelDestinatarioValues" [idProcedimiento]="idProcedimiento"></app-datos-del-destinatario>
-    <app-destinatario [ocultarLada]="ocultarLada" [ocultarFax]="ocultarFax" (formaValida)="setFormValidaDestinatario($event)" [datosForm]="formDestinatarioValues" (formDestinatarioEvent)="setValoresStoreDe($event)" [idProcedimiento]="idProcedimiento"></app-destinatario>
-    <app-representante-legal (formExportorEvent)="setValoresStoreExportador($event)" (formaValida)="setFormValidaExportador($event)"  [datosForm]="formExportadorValues" [idProcedimiento]="idProcedimiento"></app-representante-legal>
+    <app-datos-del-destinatario (formDatosDelDestinatarioEvent)="setValoresStoreDatos($event)" (formaValida)="setFormValida($event)"  [esFormularioSoloLectura]="esFormularioSoloLectura" [datosForm]="formDatosDelDestinatarioValues" [idProcedimiento]="idProcedimiento"></app-datos-del-destinatario>
+    <app-destinatario [ocultarLada]="ocultarLada" [ocultarFax]="ocultarFax" (formaValida)="setFormValidaDestinatario($event)"  [esFormularioSoloLectura]="esFormularioSoloLectura" [datosForm]="formDestinatarioValues" (formDestinatarioEvent)="setValoresStoreDe($event)" [idProcedimiento]="idProcedimiento"></app-destinatario>
+    <app-representante-legal (formExportorEvent)="setValoresStoreExportador($event)" (formaValida)="setFormValidaExportador($event)"  [esFormularioSoloLectura]="esFormularioSoloLectura" [datosForm]="formExportadorValues" [idProcedimiento]="idProcedimiento"></app-representante-legal>
 </div>
