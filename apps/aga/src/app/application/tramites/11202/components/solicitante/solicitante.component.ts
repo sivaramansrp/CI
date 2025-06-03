@@ -1,6 +1,6 @@
-import { Component, OnInit, OnDestroy } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { ReplaySubject, map, Subject, takeUntil } from "rxjs";
+import { ReplaySubject, Subject, map, takeUntil } from "rxjs";
 import { Solicitud11202State, Solicitud11202Store } from "../../../../core/estados/tramites/solicitud11202.store";
 import { Solicitud11202Query } from "../../../../core/queries/solicitud11202.query";
 
@@ -94,7 +94,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    */
     setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud11202Store): void {
       const VALOR = form.get(campo)?.value;
-      (this.solicitudStore[metodoNombre] as (value: any) => void)(VALOR);
+      (this.solicitudStore[metodoNombre] as (value: unknown) => void)(VALOR);
     }
 
   /**
