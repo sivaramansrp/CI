@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, delay, map, of, takeUntil } from 'rxjs';
 import { Tramite110222State, Tramite110222Store } from '../../estados/tramite110222.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FECHA } from '../../constantes/peru-certificado.module';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
@@ -98,7 +99,11 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    * Estado actual de la sección.
    */
   private seccionState!: SeccionLibState;
-
+  /**
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   * @type {boolean}
+   */
+  @Input() esFormularioSoloLectura!: boolean;
   /**
    * @descripcion
    * Constructor que inicializa los servicios y dependencias requeridas.
@@ -115,8 +120,9 @@ export class MercanciaComponent implements OnInit, OnDestroy {
     private store: Tramite110222Store,
     private query: Tramite110222Query,
     private seccionStore: SeccionLibStore,
-    private seccionQuery: SeccionLibQuery
-  ) {}
+    private seccionQuery: SeccionLibQuery,
+    private consultaQuery: ConsultaioQuery
+  ) { }
 
   /**
    * @descripcion
@@ -139,6 +145,14 @@ export class MercanciaComponent implements OnInit, OnDestroy {
         map((state) => {
           this.mercanciaState = state as Tramite110222State;
           this.initActionFormBuild();
+        })
+      )
+      .subscribe();
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
       .subscribe();
@@ -166,7 +180,8 @@ export class MercanciaComponent implements OnInit, OnDestroy {
       complementoDescripcion: [this.mercanciaState.complementoDescripcion],
       numeroFactura: [this.mercanciaState.numeroFactura, Validators.required],
       tipoFactura: [this.mercanciaState.tipoFactura, Validators.required],
-      numeroDeSerie: [this.mercanciaState.numeroDeSerie]
+      numeroDeSerie: [this.mercanciaState.numeroDeSerie],
+      fechaFactura: ['',Validators.required],
     });
   }
 
@@ -193,16 +208,16 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    */
   umcOpcion(): void {
     this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable('umc.json')
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe({
-      next: (data) => {
-        this.umc = data as Catalogo[];
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
-        this.umc = [];
-      },
-    });
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (data) => {
+          this.umc = data as Catalogo[];
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error al obtener los datos:', error);
+          this.umc = [];
+        },
+      });
   }
 
   /**
@@ -211,16 +226,16 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    */
   facturasOpcion(): void {
     this.ValidarInicialmenteCertificadoService.obtenerMenuDesplegable('factura.json')
-    .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe({
-      next: (data) => {
-        this.factura = data as Catalogo[];
-      },
-      error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
-        this.factura = [];
-      },
-    });
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (data) => {
+          this.factura = data as Catalogo[];
+        },
+        error: (error: HttpErrorResponse) => {
+          console.error('Error al obtener los datos:', error);
+          this.factura = [];
+        },
+      });
   }
 
   /**

@@ -1,4 +1,8 @@
-/* eslint-disable @nx/enforce-module-boundaries */
+/**
+ * @file PartidasDeLaComponent
+ * @description Componente Angular para gestionar las partidas de mercancía en un trámite específico.
+ */
+
 import { CommonModule } from '@angular/common';
  
 import {
@@ -9,27 +13,29 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { UppercaseDirective } from 'libs/shared/data-access-user/src/tramites/directives/Uppercase/uppercase.directive';
- 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { TEXTOS } from 'libs/shared/data-access-user/src/tramites/constantes/octava-temporal.enum';
-import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
- 
-import establecimientoTable from 'libs/shared/theme/assets/json/130102/partidas-de-la.json';
-import fraccionArancelariaTIGIE from 'libs/shared/theme/assets/json/130102/partidas-de-la-catalogos-select.json';
- 
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { MERCANCIA_TABLA } from '../../constantes/octava-temporal.enum';
 
 import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
 import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
 
 import { Subject, map, takeUntil } from 'rxjs'; 
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
-import { REG_X, REGEX_NUMERO_DECIMAL_ENTERO } from '@libs/shared/data-access-user/src';
 
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
+import { AlertComponent, Catalogo,REGEX_NUMERO_DECIMAL_ENTERO, REG_X, TablaDinamicaComponent, TablaSeleccion, TituloComponent, UppercaseDirective} from '@libs/shared/data-access-user/src';
+import { TEXTOS } from '@libs/shared/data-access-user/src/tramites/constantes/octava-temporal.enum';
+
+import { OctavaTemporal } from '../../models/octava-temporal.model';
+
+
+/**
+ * Clase PartidasDeLaComponent
+ * @description Componente Angular para gestionar las partidas de mercancía en un trámite específico.
+ */
 @Component({
   selector: 'app-partidas-de-la',
   standalone: true,
@@ -39,13 +45,32 @@ import { REG_X, REGEX_NUMERO_DECIMAL_ENTERO } from '@libs/shared/data-access-use
     TituloComponent,
     UppercaseDirective,
     AlertComponent,
-    TableComponent,
-    CatalogoSelectComponent
+    CatalogoSelectComponent,
+    TablaDinamicaComponent
   ],
   templateUrl: './partidas-de-la.component.html',
   styleUrl: './partidas-de-la.component.scss',
 })
+/**
+ * * Componente para gestionar las partidas de mercancía en un trámite específico.
+ */
+
 export class PartidasDeLaComponent implements OnInit, OnDestroy {
+    /**
+     * @property {TablaSeleccion} tablaSeleccion
+     * @description Tabla de selección para la tabla de cupos.
+     */
+    tablaSeleccion = TablaSeleccion;
+  /**
+   * Expresión regular para validar fracciones arancelarias.
+   */ 
+  configuracionTabla =MERCANCIA_TABLA;
+/*
+* @property {OctavaTemporal[]} datosSocios
+* @description Datos de los socios obtenidos desde el store.
+*/
+    datosSocios: OctavaTemporal[] = [];
+
   /**
    * Formulario reactivo utilizado para gestionar los datos de las partidas de la mercancía.
    * @type {FormGroup}
@@ -68,13 +93,9 @@ export class PartidasDeLaComponent implements OnInit, OnDestroy {
    * Datos del catálogo de fracciones arancelarias TIGIE.
    * @type {CatalogosSelect}
    */
-  fraccionArancelariaTIGIE: Catalogo[] = fraccionArancelariaTIGIE.catalogos;
+  fraccionArancelariaTIGIE: Catalogo[] = [];
  
-  /**
-   * Datos del encabezado de la tabla.
-   * @type {string[]}
-   */
-  tableHeaderData: string[] = [];
+ 
  
   /**
    * Datos del cuerpo de la tabla.
@@ -82,35 +103,81 @@ export class PartidasDeLaComponent implements OnInit, OnDestroy {
    */
   tableBodyData: { tbodyData: string[] }[] = [];
  
-  /**
-   * Datos de la tabla de establecimiento.
-   * @type {any}
-   */
-  public getEstablecimientoTableData = establecimientoTable;
  
+ 
+    /**
+     * Estado actual de la solicitud 130102, obtenido desde el store.
+     */
     public solicitudState!: Solicitud130102State;
+  
+    /**
+     * Observable utilizado para cancelar suscripciones al destruir el componente.
+     */
     private destroyNotifier$: Subject<void> = new Subject();
+  /* *
+     * Indica si el formulario es de solo lectura.
+     */
+     esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del formulario reactivo.
    * @param {FormBuilder} fb - Constructor del formulario reactivo.
    */
-  // eslint-disable-next-line no-empty-function
+
   constructor(private fb: FormBuilder,
       private tramite130102Store: Tramite130102Store,
       private tramite130102Query: Tramite130102Query,
-      private formularioRegistroService: FormularioRegistroService
+      private formularioRegistroService: FormularioRegistroService,
+       private consultaioQuery: ConsultaioQuery
   ) {
-    //constructor
+      this.consultaioQuery.selectConsultaioState$
+         .pipe(
+           takeUntil(this.destroyNotifier$),
+           map((seccionState) => {
+             this.esFormularioSoloLectura = seccionState.readonly;
+            
+             this.inicializarEstadoFormulario();
+           })
+         )
+         .subscribe();
   }
- 
+  /**
+   * Método para inicializar el estado del formulario.
+   * Si el formulario es de solo lectura, se guardan los datos; de lo contrario, se crea el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearFormulario();
+    }
+   
+  }
+  /**
+   * Método para guardar los datos del formulario y ajustar su estado según si es de solo lectura o no.
+   */
+  guardarDatosFormulario(): void {
+      this.crearFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.form.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.form.enable();
+      } 
+  }
+  
   /**
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.crearFormulario();
+    this.formularioRegistroService.getFraccionArancelariaTIGIE().pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
+      this.fraccionArancelariaTIGIE = data;
+    });
+     this.formularioRegistroService.getPartidasFromJson().pipe(takeUntil(this.destroyNotifier$)).subscribe(partidas => {
+    this.datosSocios = partidas;
+  });
+    this.inicializarEstadoFormulario();
     this.formularioTotalCount();
-    this.getEstablecimiento();
+  
     this.calculateTotals();
  
     // eslint-disable-next-line dot-notation
@@ -168,6 +235,9 @@ export class PartidasDeLaComponent implements OnInit, OnDestroy {
         ],
       ],
     });
+     if (this.esFormularioSoloLectura) {
+    this.form.disable();
+  }
   }
  
   /**
@@ -210,13 +280,7 @@ this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTAL_USD);
     // Implementar el método o eliminarlo si no es necesario
   }
  
-  /**
-   * Método para obtener los datos de establecimiento.
-   */
-  public getEstablecimiento(): void {
-    this.tableHeaderData = this.getEstablecimientoTableData.tableHeader;
-    this.tableBodyData = this.getEstablecimientoTableData.tableBody;
-  }
+  
  
   /**
    * Método para validar el formulario al hacer clic en el botón

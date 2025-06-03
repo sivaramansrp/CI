@@ -63,6 +63,7 @@ jobs:
           docker compose -f ./docker/modulefederation-dashboard.yml build && docker compose -f ./docker/modulefederation-dashboard.yml push
           docker compose -f ./docker/modulefederation-login-microfront.yml build && docker compose -f ./docker/modulefederation-login-microfront.yml push
           docker compose -f ./docker/modulefederation-aga-microfront.yml build && docker compose -f ./docker/modulefederation-aga-microfront.yml push
+          docker compose -f ./docker/modulefederation-agricultura-microfront.yml build && docker compose -f ./docker/modulefederation-agricultura-microfront.yml push
           docker compose -f ./docker/modulefederation-amecafe-microfront.yml build && docker compose -f ./docker/modulefederation-amecafe-microfront.yml push
           docker compose -f ./docker/modulefederation-cofepris-microfront.yml build && docker compose -f ./docker/modulefederation-cofepris-microfront.yml push
           docker compose -f ./docker/modulefederation-crt-microfront.yml build && docker compose -f ./docker/modulefederation-crt-microfront.yml push
@@ -102,3 +103,4 @@ jobs:
             microk8s kubectl rollout restart deployment modulefederation-stps-microfront-deployment-dev -n default
             microk8s kubectl rollout restart deployment modulefederation-funcionario-microfront-deployment-dev -n default
             microk8s kubectl rollout restart deployment modulefederation-bandejas-microfront-deployment-dev -n default
+            microk8s kubectl rollout restart deployment modulefederation-agricultura-microfront-deployment-dev -n default
