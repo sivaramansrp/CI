@@ -1,5 +1,5 @@
-import { AfterViewInit ,Component,OnInit,ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { Component,OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {Subject,map,takeUntil } from 'rxjs';
 import { Solocitud221601Service } from '../../service/service221601.service';
 
@@ -13,22 +13,8 @@ import { Solocitud221601Service } from '../../service/service221601.service';
 })
 /** Componente encargado de gestionar y mostrar los datos del formulario  
  *  dentro del flujo del trámite 221601. */
-export class DatosComponent implements AfterViewInit, OnInit {
- /**
-   * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
-   */
- @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
-
- /**
-  * Se ejecuta después de que la vista ha sido inicializada.
-  * Llama al método `obtenerTipoPersona` del componente SolicitanteComponent
-  * para establecer el tipo de persona como MORAL_NACIONAL.
-  */
- ngAfterViewInit() :void{
-   this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
- }
-
- /**
+export class DatosComponent implements OnInit {
+  /**
   * Índice actual del subtítulo seleccionado en la interfaz.
   */
  indice: number = 1;
