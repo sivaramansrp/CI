@@ -50,7 +50,7 @@ export class RevisionDocumentalComponent {
   /**
    * Indica si el formulario está deshabilitado.
    */
-  formularioDeshabilitado: boolean = false;
+  formularioDeshabilitado!: boolean;
 
   /**
    * Estado de la consulta, utilizado para manejar el estado del formulario.

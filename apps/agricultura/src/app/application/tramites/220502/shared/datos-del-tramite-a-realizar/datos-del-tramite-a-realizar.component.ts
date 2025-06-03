@@ -1,5 +1,5 @@
 import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -114,7 +114,7 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
   /**
    * Indica si el formulario está deshabilitado.
    */
-  @Input() formularioDeshabilitado: boolean = false;
+  @Input() formularioDeshabilitado!: boolean;
 
   /** Constructor para inyectar el servicio de solicitud de pantallas. */
   constructor(
@@ -242,7 +242,6 @@ actualizarDatosIniciales(data: DatosDelTramiteRealizar): void {
   this.aduanaDeIngreso = CATALOGOTEMPLATE('Aduana de ingreso', false, data.aduanaIngreso);
   this.sanidadAgropecuaria = CATALOGOTEMPLATE('Oficina de inspección de Sanidad Agropecuaria', false, data.sanidadAgropecuaria);
   this.puntoDeInspeccion = CATALOGOTEMPLATE('Punto de inspección', false, data.puntoInspeccion);
-  this.cdRef.detectChanges();
 }
 
 

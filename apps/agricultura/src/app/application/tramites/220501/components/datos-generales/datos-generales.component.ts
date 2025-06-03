@@ -185,7 +185,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
   /**
    * Indica si el formulario está deshabilitado.
    */
-  formularioDeshabilitado: boolean = false;
+  formularioDeshabilitado!: boolean;
 
   /**
    * Índice actual de la fila.

@@ -123,7 +123,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
   /**
    * Indica si el formulario está deshabilitado.
    */
-  formularioDeshabilitado: boolean = false;
+  formularioDeshabilitado!: boolean;
 
   /**
    * Constructor del componente.

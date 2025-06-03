@@ -99,7 +99,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Indica si el formulario está deshabilitado.
    */
-  formularioDeshabilitado: boolean = false;
+  formularioDeshabilitado!: boolean;
 
   /**
    * Constructor del componente.

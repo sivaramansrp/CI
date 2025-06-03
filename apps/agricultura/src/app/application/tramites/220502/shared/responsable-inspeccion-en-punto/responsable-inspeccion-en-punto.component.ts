@@ -1,5 +1,5 @@
 import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -78,7 +78,7 @@ solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
   /**
    * Indica si el formulario está deshabilitado.
    */
-  @Input() formularioDeshabilitado: boolean = false;
+  @Input() formularioDeshabilitado!: boolean;
 
   constructor(
     private solicitud220502Store: Solicitud220502Store,

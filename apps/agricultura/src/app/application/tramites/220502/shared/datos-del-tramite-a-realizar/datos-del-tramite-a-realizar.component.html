@@ -20,6 +20,7 @@
         <input-fecha
           [datos]="configuracionFechaFinVigencia"
           (valorCambiado)="cambioFechaInicio($event)"
+          [isDisabled]="formularioDeshabilitado"
           [setFecha]="this.solicitud220502State.fechaDeInspeccion"
         ></input-fecha>
       </div>

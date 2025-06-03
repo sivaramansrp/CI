@@ -93,7 +93,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Indica si el formulario está en modo solo lectura.
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
-  formularioDeshabilitado: boolean = false;
+  formularioDeshabilitado!: boolean;
 
   /**
    * Subject para desuscribirse de los observables.

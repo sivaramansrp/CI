@@ -65,7 +65,7 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit, OnDestroy {
   /**
    * Indica si el formulario está deshabilitado.
    */
-  formularioDeshabilitado: boolean = false;
+  @Input() formularioDeshabilitado!: boolean;
 
   /**
    * Constructor del componente.
@@ -74,18 +74,9 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     public solicitud220501Store: Solicitud220501Store,
-    public solicitud220501Query: Solicitud220501Query,
-    private consultaioQuery: ConsultaioQuery
+    public solicitud220501Query: Solicitud220501Query
   ) {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.formularioDeshabilitado = seccionState.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
+    // El constructor se utiliza para la inyección de dependencias.
   }
 
   /**
@@ -93,26 +84,6 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit, OnDestroy {
    * Llama a la función que determina cómo inicializar el formulario.
    */
   ngOnInit(): void {
-    this.inicializarEstadoFormulario();
-  }
-
-  /**
-   * Determina si se debe cargar un formulario nuevo o uno existente.
-   * Ejecuta la lógica correspondiente según el estado del componente.
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.formularioDeshabilitado) {
-      this.guardarDatosFormulario();
-    } else {
-      this.inicializarFormulario();
-    }
-  }
-
-  /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
-  guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.formularioDeshabilitado) {
       this.agregarMercanciaForm.disable();

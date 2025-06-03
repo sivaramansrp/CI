@@ -16,12 +16,13 @@
 
         @if (mostrarSeccion) {
         <!--Cantidad de carros de ferrocarril 2-->
-        <app-carros-de-ferrocarril [tablaHeadData]="hCarroFerrocarril"
-            [tablaFilaDatos]="dCarrosDeFerrocarril"></app-carros-de-ferrocarril>
+        <app-carros-de-ferrocarril [tablaHeadData]="hCarroFerrocarril" [tablaFilaDatos]="dCarrosDeFerrocarril"
+            [formularioDeshabilitado]="formularioDeshabilitado"></app-carros-de-ferrocarril>
 
         <!-- Historial inspeccion fisica -->
         <app-historial-inspeccion-fisica [tablaHeadData]="hHistorialinspeccion"
-            [tablaFilaDatos]="dHistorialInspecciones"></app-historial-inspeccion-fisica>
+            [tablaFilaDatos]="dHistorialInspecciones"
+            [formularioDeshabilitado]="formularioDeshabilitado"></app-historial-inspeccion-fisica>
         }
     </form>
 </div>
