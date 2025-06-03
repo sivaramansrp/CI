@@ -39,12 +39,13 @@ describe('DatosSolicitudComponent', () => {
       selectSolicitud$: of({
         tipodeMovimiento: '1',
         tipoRegimen: 'A',
+        mercanciaTablaDatos: []
       }),
     };
 
     await TestBed.configureTestingModule({
       declarations: [DatosSolicitudComponent],
-       imports: [ReactiveFormsModule, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent, CrosslistComponent],
+      imports: [ReactiveFormsModule, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent, CrosslistComponent],
       providers: [
         FormBuilder,
         { provide: PermisoCitesService, useValue: permisoCitesServiceMock },
@@ -58,34 +59,34 @@ describe('DatosSolicitudComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize formSolicitud with values from state', () => {
+  it('debería inicializar formSolicitud con valores del estado', () => {
     expect(component.formSolicitud.get('tipodeMovimiento')?.value).toBe('1');
     expect(component.formSolicitud.get('tipoRegimen')?.value).toBe('A');
   });
 
-  it('should toggle modal visibility', () => {
+  it('debería alternar la visibilidad del modal', () => {
     component.showDatosMercanciaModal = false;
     component.alternarVisibilidadModalMercancia();
     expect(component.showDatosMercanciaModal).toBe(true);
   });
 
-  it('should create a new empty mercancia form', () => {
+  it('debería crear un formulario de mercancía vacío', () => {
     component.crearNuevoFormularioMercancia();
     expect(component.formMercancia).toBeDefined();
     expect(component.formMercancia.valid).toBe(false);
   });
 
-  it('should not submit if mercancia form is invalid', () => {
+  it('no debería agregar mercancía si el formulario es inválido', () => {
     component.crearNuevoFormularioMercancia();
     component.enviarFormularioMercancia();
     expect(component.tablaDatos.length).toBe(0);
   });
 
-  it('should add a new mercancia item if form is valid', () => {
+  it('debería agregar una mercancía si el formulario es válido', () => {
     component.crearNuevoFormularioMercancia();
     component.formMercancia.patchValue({
       fraccionArancelaria: '1',
@@ -99,12 +100,11 @@ describe('DatosSolicitudComponent', () => {
       paisOrigen: '1',
       paisProcedencia: '1',
     });
-
     component.enviarFormularioMercancia();
     expect(component.tablaDatos.length).toBe(1);
   });
 
-  it('should handle selection and enable modification', () => {
+  it('debería manejar la selección y habilitar modificación', () => {
     const row = {
       id: 1,
       fraccionArancelaria: '0101.21.01',
@@ -124,9 +124,10 @@ describe('DatosSolicitudComponent', () => {
     component.tablaDatos = [row];
     component.hadleFilaSeleccionada([row]);
     expect(component.enableModficarBoton).toBe(true);
+    expect(component.enableEliminarBoton).toBe(true);
   });
 
-  it('should modify a selected mercancia item', () => {
+  it('debería modificar una mercancía seleccionada', () => {
     const row = {
       id: 1,
       fraccionArancelaria: '0101.21.01',
@@ -151,7 +152,7 @@ describe('DatosSolicitudComponent', () => {
     expect(component.esOperacionDeActualizacion).toBe(true);
   });
 
-  it('should delete selected mercancia items', () => {
+  it('debería eliminar mercancías seleccionadas', () => {
     const row = {
       id: 1,
       fraccionArancelaria: '0101.21.01',
@@ -174,9 +175,86 @@ describe('DatosSolicitudComponent', () => {
     expect(component.tablaDatos.length).toBe(0);
   });
 
-  it('should set value in store from form', () => {
+  it('debería actualizar el valor en el store desde el formulario', () => {
     component.formSolicitud.get('tipoRegimen')?.setValue('B');
     component.setValoresStore(component.formSolicitud, 'tipoRegimen');
     expect(tramiteStoreMock.establecerDatos).toHaveBeenCalledWith({ tipoRegimen: 'B' });
   });
+
+  // Nuevos tests en español
+
+  it('debería deshabilitar los botones si no hay selección', () => {
+    component.hadleFilaSeleccionada([]);
+    expect(component.enableModficarBoton).toBe(false);
+    expect(component.enableEliminarBoton).toBe(false);
+  });
+
+  it('debería alternar el popup de selección múltiple', () => {
+    component.enableModficarBoton = true;
+    component.abrirMultipleSeleccionPopup();
+    expect(component.multipleSeleccionPopupAbierto).toBe(true);
+    component.cerrarMultipleSeleccionPopup();
+    expect(component.multipleSeleccionPopupAbierto).toBe(false);
+  });
+
+  it('debería abrir y cerrar el popup de confirmación de eliminación', () => {
+    component.abrirElimninarConfirmationopup();
+    expect(component.confirmEliminarPopupAbierto).toBe(true);
+    component.cerrarEliminarConfirmationPopup();
+    expect(component.confirmEliminarPopupAbierto).toBe(false);
+  });
+
+  it('debería no abrir el popup de confirmación si no hay selección', () => {
+    component.listaFilaSeleccionadaMercancia = [];
+    component.abrirElimninarConfirmationopup = jest.fn();
+    component.confirmEliminarMercanciaItem();
+    expect(component.abrirElimninarConfirmationopup).not.toHaveBeenCalled();
+  });
+
+  it('debería abrir el popup de confirmación si hay selección', () => {
+    component.listaFilaSeleccionadaMercancia = [{ id: 1 } as any];
+    component.abrirElimninarConfirmationopup = jest.fn();
+    component.confirmEliminarMercanciaItem();
+    expect(component.abrirElimninarConfirmationopup).toHaveBeenCalled();
+  });
+
+  it('debería manejar el cambio de otra fracción', () => {
+    component.crearNuevoFormularioMercancia();
+    component.formMercancia.get('otraFraccion')?.setValue(true);
+    component.manejarCambioOtraFraccion();
+    expect(component.otraFraccionSeleccionada).toBe(true);
+    component.formMercancia.get('otraFraccion')?.setValue(false);
+    component.manejarCambioOtraFraccion();
+    expect(component.otraFraccionSeleccionada).toBe(false);
+  });
+
+  it('debería manejar el cambio de fracción arancelaria', () => {
+    component.crearNuevoFormularioMercancia();
+    const event = { descripcion: '0101.21.01' };
+    component.manejarCambioFraccionArancelaria(event as any);
+    expect(component.formMercancia.get('fraccionDescripcion')?.value).toBe('Caballos pura sangre');
+  });
+
+  it('debería validar si un control es inválido', () => {
+    component.crearNuevoFormularioMercancia();
+    const control = component.formMercancia.get('descripcion');
+    control?.markAsTouched();
+    expect(component.esInvalido('descripcion')).toBe(true);
+  });
+
+  it('debería alternar el modal de mercancía desde mostrarformMercanciaModal', () => {
+    component.showDatosMercanciaModal = false;
+    component.mostrarformMercanciaModal();
+    expect(component.showDatosMercanciaModal).toBe(true);
+    expect(component.esOperacionDeActualizacion).toBe(false);
+  });
+
+  it('debería limpiar las suscripciones al destruir el componente', () => {
+    const spy = jest.spyOn<any, any>(component['destroyed$'], 'next');
+    const spy2 = jest.spyOn<any, any>(component['destroyed$'], 'complete');
+    component.ngOnDestroy();
+    expect(spy).toHaveBeenCalled();
+    expect(spy2).toHaveBeenCalled();
+  });
 });
+
