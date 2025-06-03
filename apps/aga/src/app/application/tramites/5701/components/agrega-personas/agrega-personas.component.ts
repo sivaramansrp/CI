@@ -165,9 +165,6 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
       this.personas = [
         ...changes['personasResponsablesDespachoSeleccionados'].currentValue,
       ];
-      // this.responsablesDespachoChange.emit(this.personas);
-
-      // this.tramite5701Store.setPersonasResponsablesDespacho(this.personas);
     }
   }
 
@@ -364,7 +361,6 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
     if (responsable !== null && !EXISTE_RESPONSABLE) {
       this.personas.push(responsable);
       this.responsablesDespachoChange.emit(this.personas);
-      // this.tramite5701Store.setPersonasResponsablesDespacho(this.personas);
     }
 
     this.gafeteRespoDespacho.setValue('');
@@ -432,8 +428,6 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
       txtBtnCancelar: '',
     };
     this.responsablesDespachoChange.emit(this.personas);
-
-    // this.tramite5701Store.setPersonasResponsablesDespacho(this.personas);
   }
 
   /**
