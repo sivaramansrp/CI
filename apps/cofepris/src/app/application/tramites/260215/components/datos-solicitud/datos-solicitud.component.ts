@@ -112,8 +112,6 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
         this.forma.disable();
       } else if (!this.esFormularioSoloLectura) {
         this.forma.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
       }
   }
 

@@ -285,7 +285,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
               map((seccionState)=>{
                 this.esFormularioSoloLectura = seccionState.readonly; 
                 if(this.esFormularioSoloLectura) {
-                 this.fetchTableDummyJson()
+                 this.fetchTableDummyJson();
                 }
              
               })
