@@ -1,10 +1,16 @@
-import { AnexoEncabezado, AnexoUnoEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
-import { AnnexoDosTres, AnnexoUno } from '../models/nuevo-programa-industrial.model';
+import {
+  AnexoEncabezado,
+  AnexoUnoEncabezado,
+} from '../../../shared/models/nuevo-programa-industrial.model';
+import {
+  AnnexoDosTres,
+  AnnexoUno,
+} from '../models/nuevo-programa-industrial.model';
 import { AnexoDosEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoPaises } from '@ng-mf/data-access-user';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
-import { DatosEmpresaExtranjera} from '../models/nuevo-programa-industrial.model';
+import { DatosEmpresaExtranjera } from '../models/nuevo-programa-industrial.model';
 import { DatosSubcontratista } from '../../../shared/models/empresas-subfabricanta.model';
 import { EmpressaSubFabricantePlantas } from '../../../shared/models/empresas-subfabricanta.model';
 import { FederatariosEncabezado } from '../../../shared/models/federatarios-y-plantas.model';
@@ -19,9 +25,9 @@ import { StoreConfig } from '@datorama/akita';
 
 /**
  * Representa el estado de Tramite80101 en la aplicación.
- * 
+ *
  * @interface Tramite80101State
- * 
+ *
  * @property {Servicios} infoRegistro - Información del registro de servicios.
  * @property {Catalogo[]} aduanaDeIngreso - Lista de aduanas de ingreso disponibles.
  * @property {Servicio[]} datosImmex - Datos relacionados con el programa IMMEX.
@@ -67,18 +73,19 @@ export interface Tramite80101State {
   tablaDatosComplimentosExtranjera: SociaoAccionistas[];
 
   empressaSubFabricantePlantas: EmpressaSubFabricantePlantas;
-  annexoDosTres: AnnexoDosTres,
-  annexoUno: AnnexoUno,
-  
+  annexoDosTres: AnnexoDosTres;
+  annexoUno: AnnexoUno;
+
   indicePrevioRuta: number;
-  tablaDatosFederatarios: FederatariosEncabezado[]
+  tablaDatosFederatarios: FederatariosEncabezado[];
+  datosFederatarios: FederatariosEncabezado;
 }
 
 /**
  * Estado inicial para el trámite 80101 relacionado con la ampliación de servicios.
  * Este objeto define la estructura y valores predeterminados para manejar el estado
  * de la aplicación en este trámite específico.
- * 
+ *
  * Propiedades:
  * - `infoRegistro`: Contiene información básica del registro, como modalidad, folio y año.
  * - `empresas`: Lista de empresas relacionadas con el trámite.
@@ -190,17 +197,17 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
     plantasSubfabricantesAgregar: [],
     plantasPorCompletar: [],
   },
-  annexoDosTres:{
-    anexoDosTablaLista:[],
-    anexoTresTablaLista:[]
+  annexoDosTres: {
+    anexoDosTablaLista: [],
+    anexoTresTablaLista: [],
   },
-  
+
   tablaDatosComplimentos: [],
   tablaDatosComplimentosExtranjera: [],
 
-  annexoUno:{
-    exportarDatosTabla:[],
-    importarDatosTabla:[],
+  annexoUno: {
+    exportarDatosTabla: [],
+    importarDatosTabla: [],
     datosParaNavegar: {
       encabezadoFraccion: '',
       encabezadoDescripcionComercial: '',
@@ -212,11 +219,21 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
       encabezadoCategoria: '',
       encabezadoValorEnMercado: '',
     },
-    seccionActiva:''
+    seccionActiva: '',
   },
 
   indicePrevioRuta: 0,
-  tablaDatosFederatarios: []
+  tablaDatosFederatarios: [],
+  datosFederatarios: {
+    nombre: '',
+    primerApellido: '',
+    segundoApellido: '',
+    numeroDeActa: '',
+    fechaDelActa: '',
+    numeroDeNotaria: '',
+    entidadFederativa: '',
+    municipioODelegacion: '',
+  },
 };
 
 /**
@@ -245,9 +262,9 @@ export class Tramite80101Store extends Store<Tramite80101State> {
 
   /**
    * Establece el catálogo de aduanas de ingreso en el estado de la tienda.
-   * 
+   *
    * @param aduanaDeIngreso - Una lista de objetos del tipo `Catalogo` que representa las aduanas de ingreso.
-   * 
+   *
    * @remarks
    * Este método actualiza el estado de la tienda con la información proporcionada
    * en el parámetro `aduanaDeIngreso`.
@@ -273,7 +290,7 @@ export class Tramite80101Store extends Store<Tramite80101State> {
 
   /**
    * Establece los datos en el estado de la tienda.
-   * 
+   *
    * @param datos - Una lista de objetos de tipo `ServicioInmex` que se asignarán al estado.
    */
   setDatos(datos: ServicioInmex[]): void {
@@ -379,7 +396,7 @@ export class Tramite80101Store extends Store<Tramite80101State> {
 
   /**
    * Establece la lista de servicios en el estado de la tienda.
-   * 
+   *
    * @param servicios - Un arreglo de objetos de tipo `Servicio` que se asignará al estado.
    */
   setServicios(servicios: Servicio[]): void {
@@ -426,10 +443,10 @@ export class Tramite80101Store extends Store<Tramite80101State> {
 
   /**
    * Agrega los datos de una empresa extranjera al estado actual.
-   * 
+   *
    * @param datosEmpresaExtranjera - Objeto que contiene la información de la empresa extranjera.
    *                                Este objeto será extendido con un identificador único generado automáticamente.
-   * 
+   *
    * @remarks
    * Este método utiliza la función `update` para modificar el estado actual,
    * añadiendo los datos de la nueva empresa extranjera al arreglo existente.
@@ -477,7 +494,7 @@ export class Tramite80101Store extends Store<Tramite80101State> {
    * Actualiza el estado con los datos complementarios proporcionados.
    *
    * @param datosComplimentos - Objeto que contiene los datos complementarios a actualizar.
-   * 
+   *
    * Este método combina los datos existentes en el estado con los nuevos datos proporcionados
    * y actualiza el estado con el resultado.
    */
@@ -490,7 +507,7 @@ export class Tramite80101Store extends Store<Tramite80101State> {
 
   /**
    * Establece los datos del subcontratista en el estado de la tienda.
-   * 
+   *
    * @param datosSubcontratista - Objeto que contiene la información del subcontratista.
    */
   setDatosSubcontratista(datosSubcontratista: DatosSubcontratista): void {
@@ -506,11 +523,11 @@ export class Tramite80101Store extends Store<Tramite80101State> {
   /**
    * Establece las plantas subfabricantes a agregar en el estado de la tienda.
    *
-   * @param plantasSubfabricantesAgregar - Lista de objetos de tipo `PlantasSubfabricante` 
+   * @param plantasSubfabricantesAgregar - Lista de objetos de tipo `PlantasSubfabricante`
    * que representan las plantas subfabricantes que se deben agregar.
-   * 
-   * Este método actualiza el estado de la tienda añadiendo o reemplazando 
-   * las plantas subfabricantes especificadas en la propiedad 
+   *
+   * Este método actualiza el estado de la tienda añadiendo o reemplazando
+   * las plantas subfabricantes especificadas en la propiedad
    * `empressaSubFabricantePlantas`.
    */
   setPlantasSubfabricantesAgregar(
@@ -527,8 +544,8 @@ export class Tramite80101Store extends Store<Tramite80101State> {
 
   /**
    * Establece las plantas buscadas para el subfabricante.
-   * 
-   * @param plantasBuscadas - Una lista de objetos de tipo `PlantasSubfabricante` 
+   *
+   * @param plantasBuscadas - Una lista de objetos de tipo `PlantasSubfabricante`
    * que representan las plantas buscadas.
    */
   setPlantasBuscadas(plantasBuscadas: PlantasSubfabricante[]): void {
@@ -567,11 +584,11 @@ export class Tramite80101Store extends Store<Tramite80101State> {
 
   /**
    * Establece las plantas por completar para el subfabricante.
-   * 
-   * @param plantasPorCompletar - Una lista de objetos de tipo `PlantasSubfabricante` 
+   *
+   * @param plantasPorCompletar - Una lista de objetos de tipo `PlantasSubfabricante`
    * que representan las plantas que deben ser agregadas.
-   * 
-   * Actualiza el estado de la tienda para incluir las plantas proporcionadas 
+   *
+   * Actualiza el estado de la tienda para incluir las plantas proporcionadas
    * en la propiedad `plantasSubfabricantesAgregar` dentro de `empressaSubFabricantePlantas`.
    */
   setPlantasPorCompletar(plantasPorCompletar: PlantasSubfabricante[]): void {
@@ -586,10 +603,10 @@ export class Tramite80101Store extends Store<Tramite80101State> {
 
   /**
    * Agrega un nuevo conjunto de datos a la tabla de complementos en el estado.
-   * 
+   *
    * @param datos - Objeto que contiene la información de socios o accionistas que se agregará.
    *                Se genera un identificador único (UUID) para cada entrada.
-   * 
+   *
    * @remarks
    * Este método actualiza el estado actual añadiendo un nuevo elemento a la lista
    * `tablaDatosComplimentos`. Utiliza `crypto.randomUUID()` para generar un identificador único.
@@ -631,13 +648,13 @@ export class Tramite80101Store extends Store<Tramite80101State> {
 
   /**
    * Agrega un nuevo registro a la tabla de datos de complementos extranjera.
-   * 
+   *
    * @param datos - Objeto que contiene la información del socio o accionista que se agregará.
    *                Este objeto se extiende con un identificador único generado automáticamente.
-   * 
+   *
    * @remarks
    * Este método actualiza el estado de la tienda añadiendo un nuevo elemento al arreglo
-   * `tablaDatosComplimentosExtranjera`. El identificador único se genera utilizando 
+   * `tablaDatosComplimentosExtranjera`. El identificador único se genera utilizando
    * `crypto.randomUUID()`.
    */
   aggregarTablaDatosComplimentosExtranjera(datos: SociaoAccionistas): void {
@@ -648,7 +665,10 @@ export class Tramite80101Store extends Store<Tramite80101State> {
       };
       return {
         ...state,
-        tablaDatosComplimentosExtranjera: [...state.tablaDatosComplimentosExtranjera, DATOS],
+        tablaDatosComplimentosExtranjera: [
+          ...state.tablaDatosComplimentosExtranjera,
+          DATOS,
+        ],
       };
     });
   }
@@ -662,8 +682,8 @@ export class Tramite80101Store extends Store<Tramite80101State> {
    */
   eliminarTablaDatosComplimentosExtranjera(datos: SociaoAccionistas[]): void {
     this.update((state) => {
-      const DOMICILIOS = [...state.tablaDatosComplimentosExtranjera].filter((ele) =>
-        datos.some((datos) => ele.id !== datos.id)
+      const DOMICILIOS = [...state.tablaDatosComplimentosExtranjera].filter(
+        (ele) => datos.some((datos) => ele.id !== datos.id)
       );
       return {
         ...state,
@@ -678,18 +698,17 @@ export class Tramite80101Store extends Store<Tramite80101State> {
    * Establece la lista de la tabla Anexo Dos en el estado de la tienda.
    *
    * @param anexoDosTablaLista - Un arreglo de objetos de tipo `AnexoEncabezado` que representa la nueva lista de la tabla Anexo Dos.
-   * 
+   *
    * Este método actualiza el estado de la tienda para incluir la nueva lista de la tabla Anexo Dos,
    * manteniendo el resto de las propiedades del estado sin cambios.
    */
-  setAnnexoDosTableLista(anexoDosTablaLista:AnexoEncabezado[]):void{
+  setAnnexoDosTableLista(anexoDosTablaLista: AnexoEncabezado[]): void {
     this.update((state) => ({
       ...state,
       annexoDosTres: {
         ...state.annexoDosTres,
         anexoDosTablaLista: anexoDosTablaLista,
-      }
-     
+      },
     }));
   }
 
@@ -698,14 +717,13 @@ export class Tramite80101Store extends Store<Tramite80101State> {
    *
    * @param anexoTresTablaLista - Arreglo de objetos de tipo `AnexoEncabezado` que representa la nueva lista de la tabla Anexo Tres.
    */
-  setAnnexoTresTableLista(anexoTresTablaLista:AnexoEncabezado[]):void{
+  setAnnexoTresTableLista(anexoTresTablaLista: AnexoEncabezado[]): void {
     this.update((state) => ({
       ...state,
       annexoDosTres: {
         ...state.annexoDosTres,
         anexoTresTablaLista: anexoTresTablaLista,
-      }
-     
+      },
     }));
   }
 
@@ -738,22 +756,23 @@ export class Tramite80101Store extends Store<Tramite80101State> {
 
   /**
    * Establece los datos necesarios para la navegación en el estado de la aplicación.
-   * 
-   * @param datosParaNavegar - Objeto que contiene los datos para navegar, 
+   *
+   * @param datosParaNavegar - Objeto que contiene los datos para navegar,
    * puede ser de tipo `AnexoUnoEncabezado` o `AnexoDosEncabezado`.
-   * 
+   *
    * @remarks
-   * Este método actualiza el estado de la aplicación añadiendo o modificando 
+   * Este método actualiza el estado de la aplicación añadiendo o modificando
    * los datos de navegación en el objeto `annexoUno`.
    */
-  setDatosParaNavegar(datosParaNavegar:AnexoUnoEncabezado | AnexoDosEncabezado):void{
+  setDatosParaNavegar(
+    datosParaNavegar: AnexoUnoEncabezado | AnexoDosEncabezado
+  ): void {
     this.update((state) => ({
       ...state,
       annexoUno: {
         ...state.annexoUno,
         datosParaNavegar: datosParaNavegar,
-      }
-     
+      },
     }));
   }
 
@@ -761,18 +780,17 @@ export class Tramite80101Store extends Store<Tramite80101State> {
    * Establece los datos de la tabla de importación en el estado.
    *
    * @param importarDatosTabla - Un arreglo de objetos de tipo `AnexoUnoEncabezado` que contiene los datos a importar.
-   * 
-   * Este método actualiza el estado del componente añadiendo o reemplazando 
+   *
+   * Este método actualiza el estado del componente añadiendo o reemplazando
    * los datos de la tabla de importación en la propiedad `annexoUno`.
    */
-  setImportarDatosTabla(importarDatosTabla:AnexoUnoEncabezado[]):void{
+  setImportarDatosTabla(importarDatosTabla: AnexoUnoEncabezado[]): void {
     this.update((state) => ({
       ...state,
       annexoUno: {
         ...state.annexoUno,
         importarDatosTabla: importarDatosTabla,
-      }
-     
+      },
     }));
   }
 
@@ -781,28 +799,30 @@ export class Tramite80101Store extends Store<Tramite80101State> {
    *
    * @param exportarDatosTabla - Un arreglo de objetos de tipo `AnexoDosEncabezado` que contiene los datos a exportar.
    */
-  setExportarDatosTabla(exportarDatosTabla:AnexoDosEncabezado[]):void{
+  setExportarDatosTabla(exportarDatosTabla: AnexoDosEncabezado[]): void {
     this.update((state) => ({
       ...state,
       annexoUno: {
         ...state.annexoUno,
         exportarDatosTabla: exportarDatosTabla,
-      }
-     
+      },
     }));
   }
 
   /**
-   * Agrega un nuevo elemento de tipo `FederatariosEncabezado` a la lista `tablaDatosFederatarios` 
+   * Agrega un nuevo elemento de tipo `FederatariosEncabezado` a la lista `tablaDatosFederatarios`
    * en el estado actual de la tienda.
    *
-   * @param formaFederatarios - El objeto de tipo `FederatariosEncabezado` que se añadirá 
+   * @param formaFederatarios - El objeto de tipo `FederatariosEncabezado` que se añadirá
    * a la lista `tablaDatosFederatarios`.
    */
   setFederatarios(formaFederatarios: FederatariosEncabezado): void {
     this.update((state) => ({
       ...state,
-      tablaDatosFederatarios: [...state.tablaDatosFederatarios, formaFederatarios],
+      tablaDatosFederatarios: [
+        ...state.tablaDatosFederatarios,
+        formaFederatarios,
+      ],
     }));
   }
 }
