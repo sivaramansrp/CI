@@ -1,7 +1,7 @@
+import { Catalogo, RespuestaCatalogos } from '../../models/shared/catalogos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RespuestaCatalogos } from '../../models/shared/catalogos.model';
 
 @Injectable({
   providedIn: 'root'
@@ -34,5 +34,15 @@ export class ImportacionDefinitivaService {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   getSolicitudMercancia(): Observable<any> {
     return this.http.get<RespuestaCatalogos>('assets/json/130102/solicitud_mercancia.json');
+  }
+
+  /**
+ * @method getBloqueData
+ * @description
+ * Obtiene los datos del catálogo de bloques desde un archivo JSON local.
+ * @returns {Observable<Catalogo>} Observable con los datos del catálogo de bloques.
+ */
+  getBloqueData(): Observable<Catalogo> {
+    return this.http.get<Catalogo>('assets/json/130103/bloque.json');
   }
 }

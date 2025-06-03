@@ -2,6 +2,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  Input,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -24,12 +25,12 @@ import {
 } from '../../constantes/importacion-definitiva.enum';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { Modal } from 'bootstrap';
 import { Partidas } from '../../models/importacion-definitiva.model';
 import { TEXTOS } from '@libs/shared/data-access-user/src/tramites/constantes/octava-temporal.enum';
 import { Tramite130103Query } from '../../../../estados/queries/tramite130103.query';
-
 /**
  * compo doc
  * @component
@@ -71,6 +72,15 @@ import { Tramite130103Query } from '../../../../estados/queries/tramite130103.qu
 export class PartidasDeLaMercanciaComponent
   implements OnInit, AfterViewInit, OnDestroy
 {
+
+  /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
+      
+
   /**
    * Referencia al modal de confirmación
    */
@@ -310,9 +320,9 @@ export class PartidasDeLaMercanciaComponent
             this.importacionstate &&
             typeof this.importacionstate === 'object' &&
             this.importacionstate !== null &&
-            'producto' in this.importacionstate
+            'partidas_tabla' in this.importacionstate
           ) {
-            const PRODUCTO = this.importacionstate['producto'];
+            const PRODUCTO = this.importacionstate['partidas_tabla'];
             const IS_ALREADY_ADDED = this.datosTabla.some(
               (item: { id: number }) => item.id === PRODUCTO.id
             );
@@ -358,7 +368,7 @@ export class PartidasDeLaMercanciaComponent
         totalUsd: this.ninoFormGroup.get('valor_partida_usd')?.value,
       };
       this.datosTabla?.push(PRODUCTOS);
-      this.tramite130103Store.setDynamicFieldValue('producto', PRODUCTOS);
+      this.tramite130103Store.setDynamicFieldValue('partidas_tabla', PRODUCTOS);
       this.ninoFormGroup.reset();
     }
   }
@@ -520,27 +530,21 @@ export class PartidasDeLaMercanciaComponent
    */
   guardarEdicion(): void {
     if (!this.partidasSeleccionadas.length) {
-      return;
-    }
-    const INDEX = this.datosTabla.findIndex(
-      (item) => item === this.partidasSeleccionadas[0]
-    );
-    if (INDEX !== -1) {
-      this.datosTabla[INDEX] = {
-        ...this.datosTabla[INDEX],
-        cantidad: this.modificarPartidaForm.get('modificar_cantidad')?.value,
-
-        descripcion: this.modificarPartidaForm.get('descripcion_partidas')
-          ?.value,
-        totalUsd: this.modificarPartidaForm.get('valor_partidas_usd')?.value,
-        fraccionArancelariaTigie:
-          this.modificarPartidaForm.get('fraccion_partidas')?.value,
-      };
-    }
-    const MODAL_ELEMENT = document.getElementById('modalEditarPartida');
-    if (MODAL_ELEMENT) {
-      const MODAL_INSTANCE = Modal.getOrCreateInstance(MODAL_ELEMENT);
-      MODAL_INSTANCE.hide(); // <-- Cierra el modal
+      const INDEX = this.datosTabla.findIndex((item) => item === this.partidasSeleccionadas[0]);
+      if (INDEX !== -1) {
+        this.datosTabla[INDEX] = {
+          ...this.datosTabla[INDEX],
+          cantidad: this.modificarPartidaForm.get('modificar_cantidad')?.value,
+          descripcion: this.modificarPartidaForm.get('descripcion_partidas')?.value,
+          totalUsd: this.modificarPartidaForm.get('valor_partidas_usd')?.value,
+          fraccionArancelariaTigie: this.modificarPartidaForm.get('fraccion_partidas')?.value,
+        };
+      }
+      const MODAL_ELEMENT = document.getElementById('modalEditarPartida');
+      if (MODAL_ELEMENT) {
+        const MODAL_INSTANCE = Modal.getOrCreateInstance(MODAL_ELEMENT);
+        MODAL_INSTANCE.hide(); // <-- Cierra el modal
+      }
     }
     // Si usas *ngIf para mostrar el modal, pon aquí: this.mostrarModalEditar = false;
   }

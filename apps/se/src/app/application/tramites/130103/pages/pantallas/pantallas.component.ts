@@ -112,7 +112,7 @@ export class PantallasComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
         // this.consultaState = seccionState;
-        this.consultaState = {...seccionState, readonly: true, update: true };
+        this.consultaState = {...seccionState, readonly: false, update: true };
         console.log('this.consultaState', this.consultaState)
       })
     ).subscribe();

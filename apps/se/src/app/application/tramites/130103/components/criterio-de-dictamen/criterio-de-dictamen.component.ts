@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Catalogo, ConsultaioState } from '@ng-mf/data-access-user';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ImportacionDefinitiva130103State, Tramite130103Store } from '../../../../estados/tramites/tramite130103.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -8,7 +9,6 @@ import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tram
 import { ImportacionDefinitivaService } from '@libs/shared/data-access-user/src/core/services/130103/importacion-definitiva.service';
 import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { Tramite130103Query } from '../../../../estados/queries/tramite130103.query';
-
 /**
   * compo doc
   * @component
@@ -51,6 +51,13 @@ import { Tramite130103Query } from '../../../../estados/queries/tramite130103.qu
 })
 
 export class CriterioDeDictamenComponent implements OnInit, OnDestroy {
+  /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
+      
   /**
   * compo doc
   * @property criterioDeDictamenFormData
@@ -107,6 +114,14 @@ export class CriterioDeDictamenComponent implements OnInit, OnDestroy {
  * Subject para notificar la destrucción del componente.
  */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+ * @property solicitudMercancia
+ * @description
+ * Arreglo privado que almacena las opciones de solicitudes de mercancía obtenidas desde el servicio
+ * @type {Catalogo[]}
+ */
+  private solicitudMercancia: Catalogo[] = [];
 
   /**
   * compo doc
@@ -188,6 +203,7 @@ export class CriterioDeDictamenComponent implements OnInit, OnDestroy {
     .pipe(
       takeUntil(this.destroyNotifier$)
     ).subscribe((resp) => {
+      this.solicitudMercancia=resp;
       const SOLICITUD_MERCANCIA_FIELD = this.criterioDeDictamenFormData.find((datos: ModeloDeFormaDinamica) => datos.campo === 'solicitud_mercancia') as ModeloDeFormaDinamica;
       if (SOLICITUD_MERCANCIA_FIELD) {
         if (!SOLICITUD_MERCANCIA_FIELD.opciones) {
@@ -223,14 +239,11 @@ export class CriterioDeDictamenComponent implements OnInit, OnDestroy {
   * this.establecerCambioDeValor({ campo: 'solicitud_mercancia', valor: { id: 1, descripcion: 'Nueva solicitud' } });
   * // Actualiza el campo "criterio_de_dictamen" y el estado dinámico del campo "solicitud_mercancia".
   */
-  public establecerCambioDeValor(event: { campo: string; valor: { id: number; descripcion: string } }): void {
-    if (event.campo === 'solicitud_mercancia' && event.valor.descripcion !== '') {
-      this.ninoFormGroup.get('criterio_de_dictamen')?.setValue(event.valor);
-      this.tramite130103Store.setDynamicFieldValue('criterio_de_dictamen', event.valor);
-    }
-    if (event && typeof event.valor === 'object' && event.valor !== null && 'id' in event.valor) {
-      const VALOR = event.valor.id;
-      this.tramite130103Store.setDynamicFieldValue(event.campo, VALOR);
+  public establecerCambioDeValor(event: { campo: string; valor: string }): void {
+    if (event.campo === 'solicitud_mercancia' && event.valor !== '') {
+      const DESCRIPCION = this.solicitudMercancia.find((ele: Catalogo) => ele.id === Number(event.valor))?.descripcion;
+      this.ninoFormGroup.get('criterio_de_dictamen')?.setValue(DESCRIPCION);
+      this.tramite130103Store.setDynamicFieldValue('criterio_de_dictamen', DESCRIPCION);
     }
   }
     

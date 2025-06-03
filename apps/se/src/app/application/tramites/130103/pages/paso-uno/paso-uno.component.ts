@@ -1,6 +1,6 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ConsultaioState } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { ImportacionDefinitivaService } from '../../services/importacion-definitiva.service';
 /**
  * @component
@@ -12,7 +12,7 @@ import { ImportacionDefinitivaService } from '../../services/importacion-definit
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
 })
-export class PasoUnoComponent {
+export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /**
   * @property consultaState

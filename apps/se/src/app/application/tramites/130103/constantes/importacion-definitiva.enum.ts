@@ -144,8 +144,7 @@ export const DATOS_DE_LA_MERCANCIA = [
     soloLectura: false,
     validadores: [
       {
-        tipo: 'required',
-        mensaje: '',
+        tipo: 'required'
       },
       {
         tipo: 'maxlength',
@@ -183,7 +182,7 @@ export const DATOS_DE_LA_MERCANCIA = [
   {
     id: 'cantidad',
     labelNombre: 'Cantidad',
-    campo: 'cantidad',
+    campo: 'datos_cantidad',
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: false,
@@ -315,8 +314,7 @@ export const PARTIDAS_DE_LA_MERCANCIA = [
     soloLectura: false,
     validadores: [
       {
-        tipo: 'required',
-        mensaje: '',
+        tipo: 'required'
       },
       {
         tipo:'maxlength',

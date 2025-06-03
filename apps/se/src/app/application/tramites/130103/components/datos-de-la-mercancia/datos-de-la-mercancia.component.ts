@@ -1,8 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ImportacionDefinitiva130103State, Tramite130103Store } from '../../../../estados/tramites/tramite130103.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { DATOS_DE_LA_MERCANCIA } from '../../constantes/importacion-definitiva.enum';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { ImportacionDefinitivaService } from '@libs/shared/data-access-user/src/core/services/130103/importacion-definitiva.service';
@@ -52,6 +53,14 @@ import { Tramite130103Query } from '../../../../estados/queries/tramite130103.qu
 })
 
 export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
+
+  /**
+    * @property consultaState
+    * @description
+    * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+    */
+    @Input() consultaState!: ConsultaioState;
+    
   /**
     * compo doc
     * @property datosDelTramiteFormData
@@ -127,7 +136,7 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
       public importacionDefinitivaService: ImportacionDefinitivaService,
       private tramite130103Store: Tramite130103Store,
       private tramite130103Query: Tramite130103Query
-    // eslint-disable-next-line no-empty-function
+    //
     ) {}
 
     /**

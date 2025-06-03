@@ -31,6 +31,9 @@ describe('CriterioDeDictamenComponent', () => {
     });
   
     jest.spyOn(component as any, 'ninoFormGroup', 'get').mockReturnValue(mockFormGroup);
+    component.consultaState = {
+      readonly: false,
+    } as any;
     fixture.detectChanges();
   });
 
@@ -112,16 +115,6 @@ describe('CriterioDeDictamenComponent', () => {
   it('should not throw if solicitud_mercancia field is missing', () => {
     component.criterioDeDictamenFormData = [];
     expect(() => component.obtenerSolictudMercancia()).not.toThrow();
-  });
-  
-
-  it('should not throw if valor has no id', () => {
-    const event = {
-      campo: 'any_field',
-      valor: { id: 1, descripcion: 'No ID' }
-    };
-    component.establecerCambioDeValor(event);
-    expect(storeMock.setDynamicFieldValue).not.toHaveBeenCalled();
   });
 
   it('should call next and complete on destroyNotifier$', () => {

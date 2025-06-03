@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
+  Catalogo,
   ConfiguracionColumna,
   ModeloDeFormaDinamica,
   TablaDinamicaComponent,
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
   ImportacionDefinitiva130103State,
@@ -12,6 +13,7 @@ import {
 } from '../../../../estados/tramites/tramite130103.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { ImportacionDefinitivaService } from '@libs/shared/data-access-user/src/core/services/130103/importacion-definitiva.service';
 import { Partidas } from '../../models/importacion-definitiva.model';
@@ -53,6 +55,14 @@ import { USO_ESPECIFICO_DE_LA_MERCANCIA } from '../../constantes/importacion-def
   styleUrl: './uso-especifico-de-la-mercancia.component.scss',
 })
 export class UsoEspecificoDeLaMercanciaComponent implements OnInit, OnDestroy {
+
+  /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
+    
   /**
    * compo doc
    * @property usoEspecificoFormData
@@ -103,7 +113,7 @@ export class UsoEspecificoDeLaMercanciaComponent implements OnInit, OnDestroy {
    * Configuración de las columnas de la tabla.
    */
   public encabezadoDeTabla: ConfiguracionColumna<Partidas>[] = [
-    { encabezado: '', clave: (artículo) => artículo.id, orden: 1 },
+    { encabezado: 'ID', clave: (artículo) => artículo.id, orden: 1 },
     {
       encabezado: 'Fracción Arancelaria',
       clave: (artículo) => artículo.fraccionArancelariaProsec,
@@ -149,6 +159,8 @@ export class UsoEspecificoDeLaMercanciaComponent implements OnInit, OnDestroy {
    * Se utiliza para asociar y mostrar la información correspondiente en la tabla dinámica y en el estado del trámite.
    */
   public prosec!: string;
+
+  private fraccionArancelariaArray: Catalogo[] = [];
 
   /**
    * compo doc
@@ -250,13 +262,18 @@ export class UsoEspecificoDeLaMercanciaComponent implements OnInit, OnDestroy {
     if (this.ninoFormGroup.valid) {
       const ESPECIFICO = {
         id: 1,
-        fraccion_arancelaria_prosec: this.prosec,
+        fraccionArancelariaProsec: this.obtenerFraccionArancelariaProsec(),
         descripcion: this.ninoFormGroup.get('uso_descripcion')?.value,
       };
       this.datosTabla?.push(ESPECIFICO);
       this.tramite130103Store.setDynamicFieldValue('especifico', ESPECIFICO);
       this.ninoFormGroup.reset();
     }
+  }
+
+  public obtenerFraccionArancelariaProsec(): string {
+    const DESCRIPCION = this.fraccionArancelariaArray.find((ele: Catalogo) => ele.id === Number(this.ninoFormGroup.get('uso_fraccion_arancelaria')?.value))?.descripcion;
+    return DESCRIPCION ?? '';
   }
 
   /**
@@ -282,13 +299,14 @@ export class UsoEspecificoDeLaMercanciaComponent implements OnInit, OnDestroy {
       .getFraccionArancelaria()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
+        this.fraccionArancelariaArray = resp;
         const FRACCION_FIELD = this.usoEspecificoFormData.find(
           (datos: ModeloDeFormaDinamica) =>
-            datos.campo === 'fraccion_arancelaria'
+            datos.campo === 'uso_fraccion_arancelaria'
         ) as ModeloDeFormaDinamica;
         if (FRACCION_FIELD) {
           if (!FRACCION_FIELD.opciones) {
-            FRACCION_FIELD.opciones = resp.map(
+            FRACCION_FIELD.opciones = resp.map(                 
               (item: { id: number; descripcion: string }) => ({
                 descripcion: item.descripcion,
                 id: item.id,

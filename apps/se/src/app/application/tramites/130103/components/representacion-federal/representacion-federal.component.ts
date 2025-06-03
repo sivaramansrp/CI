@@ -2,7 +2,7 @@ import {
   Catalogo,
   ModeloDeFormaDinamica,
 } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
   ImportacionDefinitiva130103State,
@@ -10,6 +10,7 @@ import {
 } from '../../../../estados/tramites/tramite130103.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { REPRESENTACION_FEDERAL } from '../../constantes/importacion-definitiva.enum';
 import { Tramite130103Query } from '../../../../estados/queries/tramite130103.query';
@@ -44,6 +45,14 @@ import representacion from '@libs/shared/theme/assets/json/130119/representacion
   styleUrl: './representacion-federal.component.scss',
 })
 export class RepresentacionFederalComponent implements OnInit, OnDestroy {
+  
+  /**
+    * @property consultaState
+    * @description
+    * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+    */
+    @Input() consultaState!: ConsultaioState;
+
   /**
    * compo doc
    * @property representacionFormdata

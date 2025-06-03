@@ -1,13 +1,14 @@
 <div class="container">
     <div class="row">
         <formas-dinamicas formularioTitulo="Uso específico de la mercancía" [forma]="ninoFormGroup" [formularioDatos]="usoEspecificoFormData"
-        [estado]="importacionstate" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+        [estado]="importacionstate" [soloLectura]="consultaState.readonly" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
     </div>
     <div class="row mt-5">
         <div class="col-md-8"></div>
         <div class="col-md-4 text-end">
             <button
             class="btn btn-primary ms-2"
+            [disabled]="consultaState.readonly"
             (click)="agregar()"
         >
             Agregar
@@ -17,11 +18,11 @@
     <div class="row mt-5">
         <h6>Fracciones arancelarias uso especifico:</h6>
         <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"  [configuracionTabla]="encabezadoDeTabla"
-            [datos]="datosTabla"></app-tabla-dinamica>
+            [disableSeleccionTablaCheckBox]="consultaState.readonly" [desactivarEmitirEvento]="!consultaState.readonly" [datos]="datosTabla"></app-tabla-dinamica>
     </div>
     <div class="row btn-right">
         <div>
-            <button type="button" class="btn btn-danger btn-space" >Eliminar seleccionado</button>        
+            <button type="button" class="btn btn-danger btn-space" [disabled]="consultaState.readonly">Eliminar seleccionado</button>        
         </div>
     </div>
 </div>

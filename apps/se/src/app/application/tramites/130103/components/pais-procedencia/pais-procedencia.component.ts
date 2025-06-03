@@ -1,14 +1,15 @@
 import { CROSLISTA_DE_PAISES, PAIS_PROCEDENCIA } from '../../constantes/importacion-definitiva.enum';
-import { Catalogo, ModeloDeFormaDinamica, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { CrossListLable, CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ImportacionDefinitiva130103State, Tramite130103Store } from '../../../../estados/tramites/tramite130103.store';
+import { ModeloDeFormaDinamica, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
+import { ImportacionDefinitivaService } from '@libs/shared/data-access-user/src/core/services/130103/importacion-definitiva.service';
 import { Tramite130103Query } from '../../../../estados/queries/tramite130103.query';
-
 /**
   * compo doc
   * @component
@@ -44,6 +45,14 @@ import { Tramite130103Query } from '../../../../estados/queries/tramite130103.qu
 })
 
 export class PaisProcedenciaComponent implements OnInit, OnDestroy {
+
+  /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
+
   /**
    * Referencia a los componentes de la lista de fechas.
    */
@@ -115,11 +124,6 @@ export class PaisProcedenciaComponent implements OnInit, OnDestroy {
   public paisProcedenciaFormData = PAIS_PROCEDENCIA;
 
   /**
-   * Lista de bloques obtenidos del archivo JSON.
-   */
-  public bloque: Catalogo[] = [];
-
-  /**
    * compo doc
    * @type {FormGroup}
    * @memberof RepresentanteLegalComponent
@@ -174,6 +178,7 @@ export class PaisProcedenciaComponent implements OnInit, OnDestroy {
   * que es necesario para realizar solicitudes y obtener datos dinámicos que se utilizan en el formulario.
   */
   constructor(
+    public importacionDefinitivaService: ImportacionDefinitivaService,
     private tramite130103Store: Tramite130103Store,
     private tramite130103Query: Tramite130103Query,
     private formValidator: ValidacionesFormularioService
@@ -215,14 +220,7 @@ export class PaisProcedenciaComponent implements OnInit, OnDestroy {
   *   }
   * }
   */
-  async ngOnInit(): Promise<void> {
-    try {
-      const FRACCIONS = await import('@libs/shared/theme/assets/json/130106/fraccion.json');
-      this.bloque = FRACCIONS.bloque ?? [];
-    } catch (error) {
-      this.bloque = [];
-    }
-  
+  ngOnInit(): void{
     this.tramite130103Query.selectImportacion$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -248,17 +246,46 @@ export class PaisProcedenciaComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-  
-    const BLOQUE_FIELD = this.paisProcedenciaFormData.find(
-      (datos: ModeloDeFormaDinamica) => datos.campo === 'bloque'
-    ) as ModeloDeFormaDinamica;
-  
-    if (BLOQUE_FIELD && !BLOQUE_FIELD.opciones) {
-      BLOQUE_FIELD.opciones = this.bloque.map((item: { id: number; descripcion: string }) => ({
-        descripcion: item.descripcion,
-        id: item.id,
-      }));
+
+    if (this.consultaState?.readonly) {
+      this.forma.get('justificacion')?.disable();
+      this.forma.get('observaciones')?.disable();
     }
+    this.obtenerBloqueDatos();
+  }
+
+  /**
+ * @method obtenerBloqueDatos
+ * @description
+ * Método que obtiene los datos dinámicos para el campo "bloque" del formulario de país de procedencia.
+ * 
+ * Detalles:
+ * - Realiza una petición al servicio `ImportacionDefinitivaService` para obtener los datos del bloque.
+ * - Utiliza `takeUntil` para cancelar la suscripción cuando el componente se destruye, evitando fugas de memoria.
+ * - Busca el campo "bloque" en la configuración del formulario (`paisProcedenciaFormData`).
+ * - Si el campo existe y aún no tiene opciones, asigna las opciones obtenidas del servicio.
+ * 
+ * @example
+ * this.obtenerBloqueDatos();
+ * // Obtiene y asigna las opciones dinámicas para el campo "bloque".
+ */
+  obtenerBloqueDatos(): void {
+    this.importacionDefinitivaService
+    .getBloqueData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        const BLOQUE_FIELD = this.paisProcedenciaFormData.find(
+          (datos: ModeloDeFormaDinamica) => datos.campo === 'bloque'
+        ) as ModeloDeFormaDinamica;
+      
+        if (BLOQUE_FIELD && !BLOQUE_FIELD.opciones) {
+          const BLOQUE_ARRAY = Array.isArray(resp) ? resp : [resp];
+          BLOQUE_FIELD.opciones = BLOQUE_ARRAY.map((item: { id: number; descripcion: string }) => ({
+            descripcion: item.descripcion,
+            id: item.id,
+          }));
+        }
+      });
   }
   
 
