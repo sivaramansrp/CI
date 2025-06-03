@@ -6,6 +6,7 @@ import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Chofer40103Query } from '../../estados/chofer40103.query';
 import { Chofer40103Service } from '../../estados/chofer40103.service';
 import { Chofer40103Store } from '../../estados/chofer40103.store';
+import { DatosDelChoferNacional } from '../../models/registro-muestras-mercancias.model';
 
 @Component({
   selector: 'paso-uno',
@@ -100,11 +101,20 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
       takeUntil(this.destroyed$), 
       map((seccionState) => {
         if( seccionState.update ) {
-          this.chofer40103Service.getDirectorGeneralData().subscribe((data) => {
-          // Actualiza el estado del chofer40103Store con los datos del director general
-          
-          this.chofer40103Service.updateStateDirectorGeneralData(data);
+          this.chofer40103Service
+            .getDirectorGeneralData()
+            .pipe(takeUntil(this.destroyed$))
+            .subscribe((data) => {
+              // Actualiza el estado del chofer40103Store con los datos del director general
+              this.chofer40103Service.updateStateDirectorGeneralData(data);
           });
+
+          this.chofer40103Service
+            .obtenerTablaDatos<DatosDelChoferNacional>('facturasDisponible.json')
+            .pipe(takeUntil(this.destroyed$))
+            .subscribe( (response) => {
+                this.chofer40103Service.updateDatosDelChoferNacional(response);
+            });
         }
     })).subscribe();
   }

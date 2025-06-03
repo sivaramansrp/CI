@@ -121,7 +121,7 @@ export class ChoferesComponent implements OnInit, OnDestroy {
    *
    * @type {Observable<unknown[]>}
    */
-  choferesextranjerosList$: Observable<unknown[]> = new Observable();
+  // choferesextranjerosList$: Observable<unknown[]> = new Observable();
 
   /**
    * Observable utilizado para manejar la limpieza de recursos al destruir el componente.
@@ -420,6 +420,7 @@ export class ChoferesComponent implements OnInit, OnDestroy {
 Gancho del ciclo de vida angular que se llama después de que se inicializan las propiedades enlazadas a datos.
    */
   ngOnInit(): void {
+    this.solicitud40103State = this.chofer40103Query.getValue(); 
     this.chofer40103Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -439,12 +440,12 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
         }
       });
 
-    this.choferesList$ = this.chofer40103Query.getChoferes$;
-    this.choferesextranjerosList$ =
-      this.chofer40103Query.getchoferesextranjero$;
-    this.choferesList$.pipe(takeUntil(this.destroyed$)).subscribe();
+    // this.choferesList$ = this.chofer40103Query.getChoferes$;
+    // this.choferesextranjerosList$ =
+      // this.chofer40103Query.getchoferesextranjero$;
+    // this.choferesList$.pipe(takeUntil(this.destroyed$)).subscribe();
 
-    this.choferesextranjerosList$.pipe(takeUntil(this.destroyed$)).subscribe();
+    // this.choferesextranjerosList$.pipe(takeUntil(this.destroyed$)).subscribe();
 
     this.chofernacionalForm();
     this.loadStoredData();
@@ -458,7 +459,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     this.delegacionChnData();
     this.coloniaChnData();
     this.nacionaliDadChe();
-    this.recuperarDatos();
+    // this.recuperarDatos();
     this.estadoData();
     this.paisChnData();
     this.ConfiguracionColumna = this.tableColumns;
@@ -825,21 +826,31 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   limpiarFormulario(): void {
     this.formChoferes.reset();
   }
+  
   /**
    * Establece los valores del formulario de choferes utilizando datos simulados (`mockData`).
    *
    * @returns {void}
    */
   setFormValues(): void {
-    if (mockData) {
-      setTimeout(() => {
-        this.formChoferes.patchValue({
-          nombre: mockData.nombre || '',
-          primerApellido: mockData.primerApellido || '',
-          segundoApellido: mockData.segundoApellido || '',
-        });
-      });
-    }
+    // if (mockData) {
+    //   setTimeout(() => {
+    //     this.formChoferes.patchValue({
+    //       nombre: mockData.nombre || '',
+    //       primerApellido: mockData.primerApellido || '',
+    //       segundoApellido: mockData.segundoApellido || '',
+    //     });
+    //   });
+    // }
+    const DATA = this.chofer40103Store.getValue();
+    this.formChoferes.patchValue({
+      curp: DATA.curp || '',
+      rfc: DATA.rfc || '',
+      nombre: DATA.nombre || '',
+      apellidoPaterno: DATA.apellidoPaterno || '',
+      segundoApellido: DATA.segundoApellido || '',
+    });
+    this.DatosDelChoferNacional = this.chofer40103Store.getValue().datosDelChoferNacional;
   }
 
   /**
@@ -867,6 +878,10 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
         MODEL.show();
       }
     }
+  }
+
+  addNewRow() {
+    this.selectedRow = {};
   }
 
   /**

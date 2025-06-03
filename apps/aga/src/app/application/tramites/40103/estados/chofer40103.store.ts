@@ -1,5 +1,5 @@
+import { Chofer, DatosDelChoferNacional } from '../models/registro-muestras-mercancias.model';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { Chofer } from '../models/registro-muestras-mercancias.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
@@ -18,7 +18,7 @@ export interface Choferesnacionales40103State {
   nombre: string;
   primerApellido: string;
   segundoApellido: string;
-  datosDelChoferNacional: unknown[]; // Se reemplazó `any[]` con `unknown[]`
+  datosDelChoferNacional: DatosDelChoferNacional[]; // Se reemplazó `any[]` con `unknown[]`
   PagoDerechosLista: unknown[]; // Se reemplazó `any[]` con `unknown[]`
   curp: string;
   rfc: string;

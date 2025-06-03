@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable } from 'rxjs'; 
-import { Chofer, DirectorGeneralData } from '../models/registro-muestras-mercancias.model';
+import { Chofer, DatosDelChoferNacional, DirectorGeneralData } from '../models/registro-muestras-mercancias.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Chofer40103Store } from './chofer40103.store';
 import { DatosDelVehículo } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
@@ -274,6 +274,13 @@ export class Chofer40103Service {
       segundoApellido: data.segundoApellido,
       apellidoPaterno: data.primerApellido,
       apellidoMaternoCHN: data.apellidoMaternoCHN,
+    }));
+  }
+
+  updateDatosDelChoferNacional(data: DatosDelChoferNacional[]): void {
+    this.chofer40103Store.update((state) => ({
+      ...state,
+      datosDelChoferNacional: data
     }));
   }
 }
