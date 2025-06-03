@@ -39,8 +39,7 @@ export class TramiteFolioService {
    * @description Función para obtener el trámite
    * @param id
    * @returns JSONResponse
-   */
-   
+   */   
     public obtenerTramite(id: number): Observable<JSONResponse> {
       return this.http.get<JSONResponse>(`${this.urlServer}/${id}`).pipe(
         catchError((error) => {
