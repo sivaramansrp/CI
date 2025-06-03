@@ -30,9 +30,9 @@ export function createConsultaInitialState(): ConsultaioState {
     folioTramite: '',
     tipoDeTramite: '',
     estadoDeTramite: '',
-    readonly: true,
-    create: false,
-    update: true,
+    readonly: false,
+    create: true,
+    update: false,
     consultaioSolicitante: null,
   };
 }

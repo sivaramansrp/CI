@@ -113,11 +113,11 @@ export class TratadosComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    */
   ngOnInit(): void {
+     this.getCatalogoList();
     this.solicitanteQuery.selectSolicitante$.pipe(takeUntil(this.destroy$),map((seccionState) => {
         this.solicitudeState = seccionState;
     })).subscribe();
     this.inicializarFormularioTratados();
-    this.getCatalogoList();
   }
 
   /**
