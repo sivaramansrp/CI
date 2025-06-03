@@ -389,15 +389,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
           if (response && Array.isArray(response.medioContenido)) {
             this.medioTableDatos = response.medioContenido;
             this.cdr.detectChanges();
-          } else {
-            console.error(
-              'La respuesta de la API no tiene el formato esperado: ',
-              response
-            );
           }
-        },
-        error: (error) => {
-          console.error('Error al obtener datos: ', error);
         },
       });
     this.medioDeTransporteService

@@ -12,25 +12,6 @@ import { TramiteStoreQuery } from '../../estados/tramite220701.query';
 import { TramiteStore } from '../../estados/tramite220701.store';
 import { SeccionLibQuery, SeccionLibStore, ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
 
 describe('DatosDeLaSolicitudComponent', () => {
   let fixture: ComponentFixture<DatosDeLaSolicitudComponent>;
@@ -39,7 +20,7 @@ describe('DatosDeLaSolicitudComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [DatosDeLaSolicitudComponent, FormsModule, ReactiveFormsModule],
-      declarations: [TranslatePipe, PhoneNumberPipe, SafeHtmlPipe, MyCustomDirective],
+      declarations: [],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         FormBuilder,
