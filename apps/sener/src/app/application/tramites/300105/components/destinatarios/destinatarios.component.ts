@@ -22,7 +22,6 @@ import {
 } from '../../estados/tramite300105.store';
 import { AutorizacionDeRayosXService } from '../../services/autorizacion-de-rayos-x.service';
 import { Tramite300105Query } from '../../estados/tramite300105.query';
-import { mapToCanActivateChild } from '@angular/router';
 
 /*
  * Componente que gestiona los datos de la solicitud, incluyendo la configuración de formularios,

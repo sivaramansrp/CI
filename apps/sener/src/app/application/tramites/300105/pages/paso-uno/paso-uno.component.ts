@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AutorizacionDeRayosXService } from '../../services/autorizacion-de-rayos-x.service';
@@ -10,7 +10,7 @@ import { AutorizacionDeRayosXService } from '../../services/autorizacion-de-rayo
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
 })
-export class PasoUnoComponent {
+export class PasoUnoComponent implements OnInit {
   /**
    * El índice de la pestaña actualmente seleccionada.
    */

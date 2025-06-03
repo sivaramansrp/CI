@@ -1,8 +1,8 @@
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, takeUntil } from 'rxjs';
+import { Tramite300105State, Tramite300105Store } from '../estados/tramite300105.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Tramite300105State, Tramite300105Store } from '../estados/tramite300105.store';
 
 /**
  * Servicio AutorizacionDeRayosXService

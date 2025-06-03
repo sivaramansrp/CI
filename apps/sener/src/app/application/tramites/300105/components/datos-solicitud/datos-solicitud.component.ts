@@ -260,15 +260,15 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
     if(this.esFormularioSoloLectura){
       this.formularioSolicitud.disable();
-    };
+    }
   }
 
    /**
    * Método para guardar el valor de observaciones en el store.
    */
    guardarObservaciones(): void {
-    const observaciones = this.formularioSolicitud.get('observaciones')?.value;
-    this.tramite300105Store.establecerDatos({observaciones}); 
+    const VALOR = this.formularioSolicitud.get('observaciones')?.value;
+    this.tramite300105Store.establecerDatos({observaciones : VALOR}); 
   }
 
   /**

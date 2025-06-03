@@ -8,9 +8,9 @@ import {
 import { AutorizacionDeRayosXService } from '../../services/autorizacion-de-rayos-x.service';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { INPUT_FECHA_CONFIG } from '../../enum/permiso.enum';
 import { Tramite300105Query } from '../../estados/tramite300105.query';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 /**
  * Componente para la sección de pago de derechos.
