@@ -105,6 +105,7 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
       private tramite80211Query: Tramite80211Query,
       private consultaQuery: ConsultaioQuery
     ) {
+      this.createEmpresasForm();
        /**
    * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
       *
@@ -138,6 +139,7 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
       if (this.esFormularioSoloLectura) {
         this.guardarDatosFormulario();
       } else {
+        this.empresasForm.get('rfc')?.enable();
         this.inicializarFormulario();
       }
     }
@@ -171,7 +173,6 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
             this.plantasSeleccionadas = [];
           }
         });
-      this.createEmpresasForm();
     }
   
   
