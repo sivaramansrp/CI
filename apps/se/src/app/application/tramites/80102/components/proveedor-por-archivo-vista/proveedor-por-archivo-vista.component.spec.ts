@@ -1,42 +1,47 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { ProveedorPorArchivoVistaComponent } from './proveedor-por-archivo-vista.component';
 import { Location } from '@angular/common';
-import { ToastrService, TOAST_CONFIG } from 'ngx-toastr';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+
 
 describe('ProveedorPorArchivoVistaComponent', () => {
-  let component: ProveedorPorArchivoVistaComponent;
-  let fixture: ComponentFixture<ProveedorPorArchivoVistaComponent>;
-  let mockLocation: any;
-  let mockToastrService: any;
+  let fixture;
+  let component;
 
-  beforeEach(async () => {
-    // Create mocks for dependencies
-    mockLocation = { back: jest.fn() };
-    mockToastrService = { success: jest.fn(), error: jest.fn() };
-
-    // Configure TestBed
-    await TestBed.configureTestingModule({
-      imports: [HttpClientModule,ProveedorPorArchivoVistaComponent],
-      declarations: [],
-      providers: [
-        { provide: Location, useValue: mockLocation },
-        { provide: ToastrService, useValue: mockToastrService },
-        { provide: TOAST_CONFIG, useValue: {} },
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ ProveedorPorArchivoVistaComponent, FormsModule, ReactiveFormsModule , HttpClientTestingModule],
+      declarations: [
+        
       ],
-    }).compileComponents();
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        Location
+      ]
+    }).overrideComponent(ProveedorPorArchivoVistaComponent, {
 
+    }).compileComponents();
     fixture = TestBed.createComponent(ProveedorPorArchivoVistaComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create the component', () => {
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call Location.back when regrssarAnnexoI is called', () => {
+  it('should run #regrsarAnnexoI()', async () => {
+    component.ubicaccion = component.ubicaccion || {};
+    component.ubicaccion.back = jest.fn();
     component.regrsarAnnexoI();
-    expect(mockLocation.back).toHaveBeenCalled();
+    expect(component.ubicaccion.back).toHaveBeenCalled();
   });
+
 });

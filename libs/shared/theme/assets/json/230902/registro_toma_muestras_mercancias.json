@@ -1,0 +1,31 @@
+{
+  "tipodeMovimiento": "1",
+  "tipoRegimen": "2",
+  "entidadFederativa": "1",
+  "claveDeReferencia": "REF123456",
+  "cadenaPagoDependencia": "CADENA123456",
+  "banco": "1",
+  "llaveDePago": "LLAVE",
+  "fecPago": "2024-06-01",
+  "impPago": 12345.67,
+  "popupAbierto": false,
+  "popupCerrado": true,
+  "mercanciaTablaDatos": [
+    {
+      "id": 1,
+      "fraccionArancelaria": "0101.21.00",
+      "fraccionDescripcion": "Caballos reproductores de raza pura",
+      "otraFraccion": false,
+      "descripcion": "Caballo pura sangre para reproducción",
+      "clasificacionTaxonomica": "Mammalia",
+      "rendimientoProducto": "Alto",
+      "nombreCientifico": "Equus ferus caballus",
+      "nombreComun": "Caballo",
+      "marca": "Marca123",
+      "cantidad": "5",
+      "unidadMedida": "cabezas",
+      "paisOrigen": "México",
+      "paisProcedencia": "España"
+   }
+  ]
+}
