@@ -15,9 +15,9 @@ import { DestinatarioComponent } from './components/destinatario/destinatario.co
 import { NgModule } from '@angular/core';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
-import { Solocitud110208Service } from './services/service110208.service';
 import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { Solocitud110208Service } from './services/service110208.service';
 import { ToastrService } from 'ngx-toastr';
 import { ValidarInicalmenteRoutingModule } from './validar-inicalmente-routing.module';
 import { ValidarInicalmenteService } from './services/validar-inicalmente/validar-inicalmente.service';

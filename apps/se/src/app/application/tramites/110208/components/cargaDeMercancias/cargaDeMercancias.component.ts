@@ -6,10 +6,10 @@ import { MERCANCIA_TABLA, MercanciasFormInfo, MercanciasInfo } from '@libs/share
 import { Solicitud110208State, Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
 import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
 import { ValidarInicalmenteService } from '../../services/validar-inicalmente/validar-inicalmente.service';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 /**
  * Componente que gestiona la carga de mercancías.

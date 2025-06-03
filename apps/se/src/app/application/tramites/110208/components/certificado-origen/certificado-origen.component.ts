@@ -7,9 +7,9 @@ import { Solicitud110208State, Tramite110208Store } from '../../../../estados/tr
 import { Subject, map, takeUntil } from 'rxjs';
 import { CargaDeMercanciasComponent } from '../cargaDeMercancias/cargaDeMercancias.component';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
 import { ValidarInicalmenteService } from '../../services/validar-inicalmente/validar-inicalmente.service';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 /**
  * Componente que gestiona el formulario y la lógica del certificado de origen.

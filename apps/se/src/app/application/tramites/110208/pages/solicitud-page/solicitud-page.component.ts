@@ -1,11 +1,10 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { ALERTA_COM } from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum';
 import { PASOS } from "@libs/shared/data-access-user/src/core/enums/110208/modificacion.enum";
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Solocitud110208Service } from '../../services/service110208.service';
-import { map, Subject, takeUntil } from 'rxjs';
-import { ConsultaioState } from '@ng-mf/data-access-user';
 
 /**
  * Componente para la página de solicitud.
