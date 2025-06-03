@@ -308,9 +308,7 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
       this.CancelacionForm.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.CancelacionForm.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
-    }
+    } 
   }
 
 /**

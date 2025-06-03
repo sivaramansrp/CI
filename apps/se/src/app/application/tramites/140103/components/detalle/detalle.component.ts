@@ -120,9 +120,7 @@ export class DetalleComponent implements OnInit, OnDestroy{
   inicializarEstadoFormulario(): void {
     if (this.DetalleForm && this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
-    } else {
-      //
-    }
+    } 
   }
 
     /**
@@ -134,9 +132,7 @@ export class DetalleComponent implements OnInit, OnDestroy{
       this.DetalleForm.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.DetalleForm.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
-    }
+    } 
   }
 
   /**

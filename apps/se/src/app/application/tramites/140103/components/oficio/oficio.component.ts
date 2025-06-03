@@ -208,9 +208,7 @@ export class OficioComponent implements OnInit, OnDestroy{
   inicializarEstadoFormulario(): void {
     if (this.OficioForm && this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
-    } else {
-      // Si el formulario no está definido o no es de solo lectura, se habilita para edición
-    }
+    } 
   }
 
     /**
@@ -222,9 +220,7 @@ export class OficioComponent implements OnInit, OnDestroy{
       this.OficioForm.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.OficioForm.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
-    }
+    } 
   }
 
   /**

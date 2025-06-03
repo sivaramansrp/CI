@@ -211,9 +211,7 @@ export class DevolverComponent implements OnInit, OnDestroy {
       this.DevolverForm.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.DevolverForm.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
-    }
+    } 
   }
 
 /**
