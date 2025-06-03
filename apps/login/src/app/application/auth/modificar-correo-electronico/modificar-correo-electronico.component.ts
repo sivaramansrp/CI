@@ -106,8 +106,10 @@ export class ModificarCorreoElectronicoComponent implements OnInit, OnDestroy {
   private inicializarFormulario(): void {
     this.emailForm = this.fb.group({
       currentEmail: ['vucem2.5@hotmail.com', [Validators.required, Validators.email]],
-      newEmail: ['', [Validators.required, Validators.email]],
-      confirmEmail: ['', [Validators.required, Validators.email]]
+      newEmail: ['', [Validators.required, Validators.email, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")
+       ]],
+      confirmEmail: ['', [Validators.required, Validators.email, Validators.pattern("^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$")
+      ]]
     }, { validators: this.validarEmailsIguales });
   }
 
