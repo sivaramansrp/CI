@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ConsultaioState } from '@libs/shared/data-access-user/src';
 import { DatosDeLaSolicitud } from '../../models/solicitud-pantallas.model';
+import { DatosDelTramiteARealizarComponent } from '../../shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
@@ -12,7 +13,6 @@ import { SolicitudPantallasService } from '../../services/solicitud-pantallas.se
 import { Subject } from 'rxjs';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import { DatosDelTramiteARealizarComponent } from '../../shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
 /** Componente para gestionar el primer paso del trámite */
 @Component({
   selector: 'app-paso-uno',
@@ -69,7 +69,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    if (!this.consultaState.update) {
+    if (this.consultaState.update) {
       this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;
