@@ -116,10 +116,27 @@ export class SanidadService {
     this.obtenerRespuestaPorUrl(this, 'justificacionCatalogo', '/221603/justificacion.json');
   }
 
-  public getData(): Observable<Solicitud221603State>{
+  /**
+   * Obtiene los datos de la solicitud 221603.
+   * Realiza una petición HTTP para recuperar el estado actual de la solicitud desde un archivo JSON.
+   * 
+   * Observable<Solicitud221603State> - Observable con los datos de la solicitud.
+   */
+  public getData(): Observable<Solicitud221603State> {
     return this.http.get<Solicitud221603State>('assets/json/221603/solicitud.json');
   }
 
+/**
+ * actualizarEstadoFormulario
+ * Actualiza el estado del formulario de la solicitud 221603 en el store correspondiente,
+ * estableciendo los valores de cada campo a partir del objeto de estado proporcionado.
+ *
+ * {Solicitud221603State} resp - Objeto que contiene el estado actual del formulario,
+ * incluyendo justificación, aduana, oficina, punto, guía, régimen, carro, medio de transporte,
+ * exención de pago, clave, dependencia, banco, llave, fecha e importe.
+ *
+ * {void}
+ */
  public actualizarEstadoFormulario(resp: Solicitud221603State): void {
     this.tramite221603Store.setJustificacion(resp.justificacion)
     this.tramite221603Store.setJustificacionDescription(resp.justificacionDescription)

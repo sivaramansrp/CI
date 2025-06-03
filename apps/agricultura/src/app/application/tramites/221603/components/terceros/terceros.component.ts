@@ -8,10 +8,10 @@ import {
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   ConfiguracionColumna,
-  ConsultaioQuery,
-  ConsultaioStore,
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery,
+  ConsultaioStore,} from "@ng-mf/data-access-user";
 import { Subject, map, takeUntil } from 'rxjs';
 import { SanidadService } from '../../service/sanidad.service';
 /**
@@ -92,6 +92,10 @@ export class TercerosComponent implements OnInit, OnDestroy {
     this.sanidadService.inicializaDatosDestinatario();
   }
 
+  /**
+   * Método del ciclo de vida que se ejecuta cuando el componente se destruye.
+   * Libera los recursos y evita fugas de memoria completando el Subject destroyNotifier$.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

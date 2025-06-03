@@ -1,8 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  ConsultaioQuery,
-  ConsultaioStore,
-} from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery,
+  ConsultaioStore,} from "@ng-mf/data-access-user";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   Solicitud221603State,
@@ -105,13 +103,18 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
     this.inicializarEstadoFormulario();
   }
 
+  /**
+   * Inicializa el estado del formulario según si está en modo solo lectura o editable.
+   * Si el formulario está en modo solo lectura, deshabilita los campos 'empresa' y 'transporte'.
+   * Si el formulario es editable, habilita los campos 'empresa' y 'transporte'.
+   */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.medioForm.get('empresa')?.disable();
       this.medioForm.get('transporte')?.disable();
     } else {
       this.medioForm.get('empresa')?.enable();
-      this.medioForm.get('transporte')?.enable ();
+      this.medioForm.get('transporte')?.enable();
     }
   }
   /**

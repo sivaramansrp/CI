@@ -7,10 +7,10 @@ import {
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   ConfiguracionColumna,
-  ConsultaioQuery,
-  ConsultaioStore,
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery,
+  ConsultaioStore,} from "@ng-mf/data-access-user";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   Solicitud221603State,
@@ -75,17 +75,26 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   esFormularioSoloLectura: boolean = false;
+
   /**
    * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+
   /**
-   * Constructor del componente.
-   * Inyecta las dependencias necesarias para gestionar el formulario y los datos de la solicitud.
-   * formBuilder Servicio para construir formularios reactivos.
-   * tramite221603Store Servicio para gestionar el estado del trámite.
-   * tramite221603Query Servicio para consultar el estado del trámite.
-   * sanidadService Servicio para obtener datos relacionados con la sanidad.
+   * Constructor del componente DatosDeLaSolicitud.
+   * 
+   * Inicializa las dependencias necesarias mediante inyección de servicios y stores.
+   * Suscribe al estado de consulta para actualizar el modo de solo lectura del formulario
+   * y para inicializar el estado del formulario cuando cambie el estado de la sección.
+   * 
+   *  formBuilder Servicio para construir formularios reactivos.
+   *  tramite221603Store Store para gestionar el estado del trámite 221603.
+   *  tramite221603Query Query para consultar el estado del trámite 221603.
+   *  sanidadService Servicio relacionado con sanidad.
+   *  consultaQuery Query para consultar el estado de la consulta.
+   *  consultaStore Store para gestionar el estado de la consulta.
    */
   constructor(
     private formBuilder: FormBuilder,
@@ -95,8 +104,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private consultaQuery: ConsultaioQuery,
     private consultaStore: ConsultaioStore
   ) {
-    // Constructor que inyecta las dependencias necesarias
-
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),

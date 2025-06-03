@@ -1,8 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import {
-  ConsultaioQuery,
-  ConsultaioStore,
-} from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery,
+  ConsultaioStore,} from "@ng-mf/data-access-user";
 import {
   EXENTO_DE_RADIO_BOTONS,
   FormularioDatos,
@@ -124,6 +122,11 @@ this.disableBanco = (this.solicitudState?.exento ?? '') === '1';
     this.inicializarEstadoFormulario();
   }
 
+  /**
+   * Inicializa el estado del formulario según si está en modo solo lectura o editable.
+   * Si el formulario es solo lectura, deshabilita los campos correspondientes.
+   * Si es editable, habilita los campos necesarios.
+   */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.disableBanco = true;

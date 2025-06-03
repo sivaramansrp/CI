@@ -24,8 +24,19 @@ import { SanidadService } from '../../service/sanidad.service';
  * Permite seleccionar el tipo de persona y cambiar entre diferentes pestañas de datos.
  */
 export class DatosComponent implements OnInit, AfterViewInit, OnDestroy {
+  /**
+   * Estado actual de la consulta, contiene la información relevante del trámite.
+   */
   consultaState!: ConsultaioState;
+
+  /**
+   * Indica si los datos de respuesta están disponibles.
+   */
   esDatosRespuesta: boolean = false;
+
+  /**
+   * Notificador para destruir las suscripciones y evitar fugas de memoria.
+   */
   destroyNotifier$: Subject<void> = new Subject<void>();
 
   constructor(
@@ -62,6 +73,10 @@ export class DatosComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  /**
+   * Guarda los datos del formulario en el estado de la consulta.
+   * Este método se invoca cuando se detecta que el estado requiere actualización.
+   */
   guardarDatosFormulario(): void {
     this.sanidadService
       .getData()
@@ -93,6 +108,10 @@ export class DatosComponent implements OnInit, AfterViewInit, OnDestroy {
     this.indice = i;
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
+   * Libera los recursos y completa el notificador para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
