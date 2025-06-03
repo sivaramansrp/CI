@@ -31,11 +31,11 @@ export class Solocitud260911Service {
    * Constructor del servicio que inyecta las dependencias necesarias.
    * 
    * @param http Cliente HTTP para realizar solicitudes al servidor.
-   * @param tramite120402Store Estado global relacionado con el trámite 120402.
+   * @param tramite260911Store Estado global relacionado con el trámite 120402.
    */
   constructor(
     private http: HttpClient,
-    private tramite120402Store: Tramite260911Store,
+    private tramite260911Store: Tramite260911Store,
   ) {
     // Inicialización adicional si es necesario
   }
@@ -47,7 +47,7 @@ export class Solocitud260911Service {
    * @param DATOS Objeto con el nuevo estado del trámite 120402.
    */
   actualizarEstadoFormulario(DATOS: Tramite260911State): void {
-    this.tramite120402Store.setTramite260911State(DATOS);
+    this.tramite260911Store.setTramite260911State(DATOS);
   }
 
   /**
