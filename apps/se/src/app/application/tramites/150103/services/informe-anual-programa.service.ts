@@ -1,4 +1,6 @@
 import { ProgramasReporte, ReporteFechas } from '../models/programas-reporte.model';
+import { Solicitud150103State,Solicitud150103Store } from '../estados/solicitud150103.store';
+
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -11,8 +13,21 @@ export class InformeAnualProgramaService {
    * Constructor del servicio.
    * @param http Cliente HTTP para realizar solicitudes a servicios externos.
    */
-  constructor(private http: HttpClient) {}
-
+  constructor(private http: HttpClient, private solicitud150103Store: Solicitud150103Store) {}
+  actualizarEstadoFormulario(DATOS: Solicitud150103State): void {
+    this.solicitud150103Store.actualizarFin(DATOS.fin);
+    this.solicitud150103Store.actualizarFolioPrograma(DATOS.folioPrograma);
+    this.solicitud150103Store.actualizarModalidad(DATOS.modalidad);
+    this.solicitud150103Store.actualizarTipoPrograma(DATOS.tipoPrograma);
+    this.solicitud150103Store.actualizarEstatus(DATOS.estatus);
+    this.solicitud150103Store.actualizarInicio(DATOS.inicio);
+    this.solicitud150103Store.actualizarVentasTotales(DATOS.ventasTotales);
+    this.solicitud150103Store.actualizarTotalExportaciones(DATOS.totalExportaciones);
+    this.solicitud150103Store.actualizarTotalImportaciones(DATOS.totalImportaciones);
+    this.solicitud150103Store.actualizarSaldo(DATOS.saldo);
+    this.solicitud150103Store.actualizarPorcentajeExportacion(DATOS.porcentajeExportacion);
+   
+  }
   /**
    * Obtiene los programas de reporte desde un archivo JSON.
    * 
