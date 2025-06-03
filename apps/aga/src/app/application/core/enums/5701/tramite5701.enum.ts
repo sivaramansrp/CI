@@ -241,7 +241,16 @@ export const CONFIGURACION_ENCABEZADO_TABLA_PAGOS: ConfiguracionColumna<LineaCap
     { encabezado: 'monto', clave: (fila) => fila.monto, orden: 2 },
   ];
 
-  /**
-   * @description Constante estauts pagado
-   */
+/**
+ * @description Constante estauts pagado
+ */
 export const ESTATUS_PAGADO = 'Pagado';
+
+/**
+ * @description Mensaje del registro exitoso de la solicitud
+ *@param {string} numeroSolicitud - El número de la solicitud registrada.
+ */
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const MSG_REGISTRO_EXITOSO = (numeroSolicitud: string) =>
+  `<p>La solicitud ha quedado resgitrada con el número temporal ${numeroSolicitud}. Este no tiene válidez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado al momento en que ésta sea firmada.</p>`;

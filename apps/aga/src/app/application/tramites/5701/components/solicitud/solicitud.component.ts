@@ -339,6 +339,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   public datosTablaPagos: LineaCaptura[] = [];
 
+  /**
+   * @description Almacena los montos a pagar en la solicitud.
+   */
+  montoPagadoLineas: number = 0;
+
   //TODO: Estas variables se van a eliminar
   /**
    * Arrelgo de patentes de la empresa
@@ -509,6 +514,15 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   get personasResponsablesDespacho(): FormArray {
     return this.FormSolicitud.get('personasResponsablesDespacho') as FormArray;
+  }
+
+  /**
+   * Obtiene el array del formulario 'lineasCaptura' del formulario principal 'FormSolicitud'.
+   *
+   * @returns {FormArray} El array de formulario 'lineasCaptura'.
+   */
+  get lineasCaptura(): FormArray {
+    return this.FormSolicitud.get('lineasCaptura') as FormArray;
   }
 
   /**
@@ -900,6 +914,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
           [Validators.required],
         ],
         monto: [this.solicitudState.monto, [Validators.required]],
+        lineasCaptura: this.fb.array([], Validators.required),
       }),
     });
     this.despacho.get('idSeccionDespacho')?.disable();
@@ -1875,9 +1890,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               ? 1
               : this.fechasSeleccionadas.length;
 
-          console.log(`Días de servicio: ${DIAS_SERVICIO}`);
-          // Calculamos el monto a cubrir
-
           const MONTO_A_CUBRIR = DIAS_SERVICIO * MONTO_A_PAGAR;
 
           const PAGO = {
@@ -1885,60 +1897,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             monto: responseLineaCapturaPagada.datos.pago_model.importe,
           };
 
+          this.montoPagadoLineas +=
+            responseLineaCapturaPagada.datos.pago_model.importe;
           this.datosTablaPagos.push(PAGO);
-
-          console.log(`Monto a cubrir: ${MONTO_A_CUBRIR}`);
-
-          console.log(responseLineaCapturaPagada);
         })
       )
       .subscribe();
-
-    // this.validaLineaPagoService
-    //   .getLineaPagoValidacion(LINEA_PAGO)
-    //   .pipe(
-    //     takeUntil(this.destroyNotifier$),
-    //     switchMap((responseValidaPago) => {
-    //       if (responseValidaPago.codigo !== '00') {
-    //         this.nuevaNotificacion = {
-    //           tipoNotificacion: 'alert',
-    //           categoria: 'danger',
-    //           modo: 'action',
-    //           titulo: TITULO_MODAL_ERROR,
-    //           mensaje: MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
-    //           cerrar: false,
-    //           txtBtnAceptar: 'Aceptar',
-    //           txtBtnCancelar: '',
-    //         };
-    //         this.pagoCaptura.get('lineaCaptura')?.reset();
-    //         this.pagoCaptura.get('monto')?.reset();
-    //         return EMPTY;
-    //       }
-    //       return this.parametroMontoService.getParametroMonto();
-    //     }),
-    //     tap((montoResponse) => {
-    //       // TODO:Implementar lógica para agregar información a tabla de pagos
-    //       if (montoResponse) {
-    //         let numeroDias: number = 0;
-    //         if (
-    //           this.tipoSolicitudSeleccionada === 2 ||
-    //           this.tipoSolicitudSeleccionada === 3
-    //         ) {
-    //           numeroDias = this.fechasSeleccionadas.length;
-    //         }
-    //         if (montoResponse.datos) {
-    //           const MONTO_TOTAL: number =
-    //             numeroDias > 0
-    //               ? montoResponse.datos * numeroDias
-    //               : montoResponse.datos;
-    //           const VALIDACION_MONTO: boolean =
-    //             MONTO >= MONTO_TOTAL ? true : false;
-    //           this.tramite5701Store.setIsMontoAceptable(VALIDACION_MONTO);
-    //         }
-    //       }
-    //     })
-    //   )
-    //   .subscribe();
   }
 
   /**
