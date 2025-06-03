@@ -36,6 +36,15 @@
     "numeroDeProcedimiento": "230401"
   },
   {
+    "id": 260215,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260215"
+  },
+  {
     "id": 110102,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -657,6 +666,15 @@
     "numeroDeProcedimiento": "120301"
   },
   {
+    "id": 220701,
+    "tipoDeTramite": "Solicitud",
+    "fecha": "2024-10-05",
+    "fechaActualizacion": "2022-10-25",
+    "diasTranscurridos": "3",
+    "departamento": "AGRICULTURA",
+    "numeroDeProcedimiento": "220701"
+  },
+  {
     "id": 80308,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -682,5 +700,14 @@
     "diasTranscurridos": "4",
     "departamento": "SE",
     "numeroDeProcedimiento": "80101"
+  },
+  {
+    "id": 570101,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "570101"
   }
 ]
