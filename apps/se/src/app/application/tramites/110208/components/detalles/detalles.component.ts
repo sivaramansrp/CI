@@ -6,6 +6,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
 import { ValidarInicalmenteService } from '../../services/validar-inicalmente/validar-inicalmente.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 /**
  * Componente que gestiona los detalles del trámite 110208.
@@ -27,6 +28,10 @@ export class DetallesComponent implements OnInit, OnDestroy {
    * Estado de la solicitud obtenido desde el store.
    */
   public solicitudState!: Solicitud110208State;
+  /**
+   * Determina si el formulario debe estar en modo solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Notificador para destruir observables activos y evitar pérdidas de memoria.
@@ -55,15 +60,33 @@ export class DetallesComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private service: ValidarInicalmenteService,
     private tramite110208Store: Tramite110208Store,
-    private tramite110208Query: Tramite110208Query
+    private tramite110208Query: Tramite110208Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Dependencia inyectada para uso posterior
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+    this.obtenerEstadoList();
+  }
+  /**
+   * Inicializa el formulario con datos del store y aplica validaciones.
+   * También aplica configuración de solo lectura si es necesario.
+   * @method inicializarEstadoFormulario
+   */
+  inicializarEstadoFormulario(): void {
     this.tramite110208Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -80,7 +103,15 @@ export class DetallesComponent implements OnInit, OnDestroy {
       puertoDeDesembarque: [this.solicitudState?.puertoDeDesembarque]
     });
 
-    this.obtenerEstadoList();
+    if (this.esFormularioSoloLectura) {
+      Object.keys(this.detallas.controls).forEach((key) => {
+        this.detallas.get(key)?.disable();
+      });
+    } else {
+      Object.keys(this.detallas.controls).forEach((key) => {
+        this.detallas.get(key)?.enable();
+      });
+    }
   }
 
   /**

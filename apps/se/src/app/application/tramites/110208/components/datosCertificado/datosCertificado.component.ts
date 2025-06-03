@@ -6,6 +6,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
 import { ValidarInicalmenteService } from '../../services/validar-inicalmente/validar-inicalmente.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 /**
  * Componente que gestiona los datos del certificado en el trámite 110208.
@@ -27,6 +28,10 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * Estado de la solicitud obtenido desde el store.
    */
   public solicitudState!: Solicitud110208State;
+  /**
+   * Determina si el formulario debe estar en modo solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Notificador para destruir observables activos y evitar pérdidas de memoria.
@@ -55,9 +60,18 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder,
     private service: ValidarInicalmenteService,
     private tramite110208Store: Tramite110208Store,
-    private tramite110208Query: Tramite110208Query
+    private tramite110208Query: Tramite110208Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Dependencia inyectada para uso posterior
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -65,6 +79,16 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * Configura el formulario y suscribe al estado de la solicitud.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+    this.obtenerEstadoList();
+
+  }
+  /**
+   * Inicializa el formulario con datos del store y aplica validaciones.
+   * También aplica configuración de solo lectura si es necesario.
+   * @method inicializarEstadoFormulario
+   */
+  inicializarEstadoFormulario(): void {
     this.tramite110208Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -74,14 +98,22 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.obtenerEstadoList();
-
     this.formDatosCertificado = this.fb.group({
       observaciones: [this.solicitudState?.observaciones],
       idioma: [this.solicitudState?.idioma, Validators.required],
       entidadFederativa: [this.solicitudState?.entidadFederativaCertificado, Validators.required],
-      representacionFederal: [this.solicitudState?.representacionFederal, Validators.required]
+      representacionFederal: [this.solicitudState?.representacionFederal, Validators.required],
+      entidadFederativaCertificado: [this.solicitudState?.entidadFederativaCertificado, Validators.required],
     });
+    if (this.esFormularioSoloLectura) {
+      Object.keys(this.formDatosCertificado.controls).forEach((key) => {
+        this.formDatosCertificado.get(key)?.disable();
+      });
+    } else {
+      Object.keys(this.formDatosCertificado.controls).forEach((key) => {
+        this.formDatosCertificado.get(key)?.enable();
+      });
+    }
   }
 
   /**
