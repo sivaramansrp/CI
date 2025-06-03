@@ -10,7 +10,6 @@ import {
   Validators,
 } from '@angular/forms';
 import {
-  ConsultaioQuery,
   Notificacion,
   REGEX_CORREO_ELECTRONICO,
   REGEX_RFC_FISICA,
@@ -22,6 +21,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ConfiguracionVisibilidad } from '../../models/datos-domicilio-legal.model';
 import { DEFAULT_CONFIGURACION_VISIBILIDAD } from '../../constantes/datos-domicilio-legal.enum';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
@@ -148,20 +148,22 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
     }
     // this.getEstadoCatalogo();
   }
-
-   /**
+    /**
    * Carga datos y deshabilita el formulario si es solo lectura.
    */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
-    // this.formConsulta = this.fb.group({
-    //   estadoControl: [{ value: this.solicitudState?.selectedEstado,disabled: false }, Validators.required],
-    // });
-    if (this.esFormularioSoloLectura) {
-      this.forma.disable();
-    } else {
-      this.forma.enable();
-    }
+     this.forma = this.fb.group({
+      rfcDel: [{ value: this.solicitudState?.rfcDel, disabled: true },Validators.pattern(REGEX_RFC_FISICA)],
+      denominacion: [
+        { value: this.solicitudState?.denominacion, disabled: true },
+        Validators.required,
+      ],
+      correo: [
+        { value: this.solicitudState?.correo, disabled: true },
+        [Validators.required,Validators.pattern(REGEX_CORREO_ELECTRONICO)]
+      ],
+    });
   }
 
   /**

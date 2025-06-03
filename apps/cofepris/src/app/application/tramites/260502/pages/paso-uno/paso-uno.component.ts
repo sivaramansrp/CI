@@ -3,9 +3,8 @@ import { AfterViewInit } from '@angular/core';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src/core/queries/consulta.query';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { map, Subject, takeUntil } from 'rxjs';
-import { ConsultaioState } from '@libs/shared/data-access-user/src/core/estados/consulta.store';
 /**
  * Componente que representa el primer paso del proceso de solicitud.
  * Contiene un componente de solicitante y permite la navegación entre tabs.
