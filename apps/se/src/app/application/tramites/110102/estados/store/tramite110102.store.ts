@@ -15,9 +15,9 @@ export interface Tramite110102State {
   /** Clave de registro del productor */
   cveRegistroProductor: string;
   /** Clave de la unidad administrativa */
-  unidadAdministrativaClave: string;
+  claveUnidadAdministrativa: string;
   /** Clave de la entidad federativa de la solicitud */
-  solicitudEntidadFederativaEntidadClave: string;
+  claveEntidadFederativa: string;
   /** Indica si se protesta decir verdad */
   protestoDecirVerdad: boolean;
   /** Indica si se solicita separación contable */
@@ -39,8 +39,8 @@ export interface Tramite110102State {
 export function createInitialState(): Tramite110102State {
   return {
     cveRegistroProductor: '',
-    unidadAdministrativaClave: '',
-    solicitudEntidadFederativaEntidadClave: '',
+    claveEntidadFederativa: '',
+    claveUnidadAdministrativa: '',
     protestoDecirVerdad: false,
     solicitaSeparacionContable: false,
     solicitaExportadorAutorizado: false,

@@ -6,7 +6,7 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 import {
   DatosSubcontratista,
@@ -38,7 +38,7 @@ import { Router } from '@angular/router';
  * Este componente permite gestionar los datos de las empresas subfabricantes,
  * incluyendo la selección de plantas, la configuración de la tabla y el cambio de estados.
  */
-export class GestionarEmpresasSubfabricantesComponent {
+export class GestionarEmpresasSubfabricantesComponent implements OnInit {
   /**
    * Lista de estados del catálogo. Esta propiedad almacena los diferentes estados disponibles para ser seleccionados.
    * @property {Catalogo[]} _estadoCatalogo
@@ -97,6 +97,7 @@ export class GestionarEmpresasSubfabricantesComponent {
   set estadoCatalogo(valor: Catalogo[]) {
     this._estadoCatalogo = valor;
   }
+
 
   /**
    * Obtiene el estado del catálogo.
@@ -196,6 +197,11 @@ export class GestionarEmpresasSubfabricantesComponent {
   }
 
   /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
+
+  /**
    * Evento emitido cuando cambia el RFC del subcontratista.
    * @event alCambiarRFC
    * @type {EventEmitter<DatosSubcontratista>}
@@ -265,6 +271,16 @@ export class GestionarEmpresasSubfabricantesComponent {
     this.inicializarFormularioDatosSubcontratista();
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Si el formulario está deshabilitado (`formularioDeshabilitado` es verdadero),
+   * desactiva el formulario de datos del subcontratista para evitar modificaciones.
+   */
+  ngOnInit(): void {
+    if (this.formularioDeshabilitado) {
+      this._formularioDatosSubcontratista.disable();
+    }
+  }
   /**
    * Inicializa el formulario de datos del subcontratista con los campos `rfc` y `estado`, ambos requeridos.
    * @method inicializarFormularioDatosSubcontratista
