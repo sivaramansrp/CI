@@ -135,5 +135,13 @@ getEstadoFisicoData(): Observable<Catalogo[]> {
   getSolicitudData(): Observable<TramitesAsociados[]> {
       return this.http.get<TramitesAsociados[]>('./assets/json/260919/solicitud.json');
     }
+
+    /**
+   * Obtiene los datos de los países desde un archivo JSON.
+   * @returns Observable con la lista de países.
+   */
+  getPaisData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('./assets/json/260919/pais.json');
+  }
   
 }

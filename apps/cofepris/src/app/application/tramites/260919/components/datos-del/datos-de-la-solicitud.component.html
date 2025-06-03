@@ -632,8 +632,8 @@
               <div class="row mt-5">
                 <div class="col-md-6">
                   <label class="form-label">Numero de registro sanitario:</label>
-                  <input class="form-control" placeholder="" type="text" formControlName="numeroDeRegistroSnitario" 
-                  (change)="setValoresStore(datosDelTramiteRealizar,'numeroDeRegistroSnitario', 'setNumeroDeRegistroSnitario')"/>
+                  <input class="form-control" placeholder="" type="text" formControlName="numeroDeRegistroSanitario" 
+                  (change)="setValoresStore(datosDelTramiteRealizar,'numeroDeRegistroSanitario', 'setNumeroDeRegistroSanitario')"/>
                 </div>
               </div> 
               <!-- collapsed crosslist -->
@@ -712,9 +712,21 @@
         </div>
    </div>
    <div class="col-md-12 d-flex justify-content-end">
-    <button type="button" class="btn btn-primary" name="eliminar" id="btneliminar">Eliminar</button>
+    <button type="button" class="btn btn-primary" name="eliminar" id="btneliminar"(click)=onEliminar()>Eliminar</button>
+    @if (nuevaNotificacion) {
+      <section>
+      <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+      </lib-notificaciones>
+      </section>
+      }
     <button type="button" class="btn btn-primary" name="modificar" id="btnmodificar"  (click)="onModificar()" >Modificar</button>
-    <button type="button" class="btn btn-primary" name="agregarAduana" id="btnagregarAduana">Agregar</button>
+    @if (nuevaNotificacion) {
+      <section>
+      <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+      </lib-notificaciones>
+      </section>
+      }
+    <button type="button" class="btn btn-primary" name="agregar" id="btnagregar" (click)="onAdd()">Agregar</button>
   </div>
 
       <ng-titulo titulo="Manifiestos y declaraciones" />
