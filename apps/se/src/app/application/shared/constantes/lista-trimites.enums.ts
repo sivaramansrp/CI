@@ -298,12 +298,12 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
       }]
     },
     {
-    tramite: 130103,
-    listaComponentes: [{
-        id: 'solicitud',
-        componentPath: () => import('../../tramites/130103/pages/pantallas/pantallas.component').then(m => m.PantallasComponent),
-        componentName: 'PantallasComponent',
-    }]
+      tramite: 130103,
+      listaComponentes: [{
+          id: 'solicitud',
+          componentPath: () => import('../../tramites/130103/pages/pantallas/pantallas.component').then(m => m.PantallasComponent),
+          componentName: 'PantallasComponent',
+      }]
   },
 ];
 
