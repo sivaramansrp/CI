@@ -348,7 +348,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    * @description Maneja el evento de selección del dropdown.
    * @param {any} event - Evento de selección del dropdown.
    */
-  onDropdownSelect(event: any): void {
+  seleccionarDesplegable(event: any): void {
     if (event?.id) {
       this.toggleServiciosImmx(event.id.toString());
     }
