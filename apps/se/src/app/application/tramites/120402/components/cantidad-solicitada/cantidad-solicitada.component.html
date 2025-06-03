@@ -13,7 +13,7 @@
                 formControlName="cantidadSolicitada"
                 libUppercase
                 aria-labelledby="cantidadSolicitada"
-                (change)="getCantidadSolicitada()"
+                (change)="setValorStore(form, 'cantidadSolicitada')"
               />
               <div *ngIf="esInvalido('cantidadSolicitada')" class="text-danger">
                 <small *ngIf="form.controls['cantidadSolicitada'].hasError('required')">La cantidad solicitada es un campo obligatorio.</small>
