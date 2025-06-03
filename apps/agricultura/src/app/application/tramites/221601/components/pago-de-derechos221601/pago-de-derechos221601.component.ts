@@ -178,11 +178,9 @@ export class PagoDeDerechos221601Component implements OnInit, OnDestroy {
   guardarDatosFormulario(): void {
       this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {
-        this.pagoDerechosForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.pagoDerechosForm.enable();
+       this.pagoDerechosForm.disable();
       } else {
-        // No se requiere ninguna acción en el formulario
+      this.pagoDerechosForm.enable();
       }
   }
   /**
