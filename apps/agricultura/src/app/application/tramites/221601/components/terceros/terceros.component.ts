@@ -1,4 +1,4 @@
-import { AlertComponent,Catalogo,CatalogoSelectComponent,ConfiguracionColumna,TablaDinamicaComponent,TablaSeleccion,TituloComponent} from '@libs/shared/data-access-user/src';
+import { AlertComponent,Catalogo,CatalogoSelectComponent,ConfiguracionColumna,TablaDinamicaComponent,TablaSeleccion,TituloComponent, ValidacionesFormularioService} from '@libs/shared/data-access-user/src';
 import { Component,OnDestroy,OnInit, } from '@angular/core';
 import { Exportador,MENSAJE_TABLA_OBLIGATORIA } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
@@ -6,10 +6,12 @@ import { Solicitud221601State,Tramite221601Store } from '../../../../estados/tra
 import { Subject,map,takeUntil } from 'rxjs';
 import { CONFIGURATION_TABLA_DATOS } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
 import { CONFIGURATION_TABLA_DESTINATARIO } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Destinatario } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
 import { ModalComponent } from '../modal/modal.component';
 import { Tramite221601Query } from '../../../../estados/queries/tramite221601.query';
 import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
+
 /**
  * Componente encargado de gestionar la visualización y exportación de datos relacionados con los exportadores y destinatarios.
  * Este componente muestra dos tablas dinámicas: una para los exportadores y otra para los destinatarios. 
@@ -159,7 +161,9 @@ export class TercerosComponent implements OnInit, OnDestroy {
     * Controla la visibilidad de los campos correspondientes a datos de planta o establecimiento.
     */
    showPlantaRow: boolean = false;
- 
+   /** Indica si el formulario debe mostrarse en modo solo lectura.  
+ *  Controla la habilitación o deshabilitación de los campos. */
+  esFormularioSoloLectura: boolean = false;
  /**
    * Constructor del componente.
    * 
@@ -173,8 +177,20 @@ export class TercerosComponent implements OnInit, OnDestroy {
  constructor(
     private fb: FormBuilder,
     private tramite221601Store: Tramite221601Store,
-    private tramite221601Query: Tramite221601Query
+    private tramite221601Query: Tramite221601Query,
+     private consultaioQuery: ConsultaioQuery,
+         private validacionesService: ValidacionesFormularioService, 
   ) { // Constructor que inyecta las dependencias necesarias
+       this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        
+          this.inicializarCertificadoFormulario();
+        })
+      )
+      .subscribe()
     }
  /**
    * Método que se ejecuta cuando el componente es inicializado.
@@ -182,15 +198,24 @@ export class TercerosComponent implements OnInit, OnDestroy {
    * Inicializa el formulario reactivo con los valores actuales de la solicitud.
    */
   ngOnInit(): void {
-    this.inicializarFormulario();
+    this.inicializarCertificadoFormulario();
   }
-   /**
-   * Inicializa el formulario reactivo con los valores actuales de la solicitud.
+ /**
+   * Método para inicializar el formulario reactivo con los datos de la solicitud.
    * 
-   * Configura el formulario para gestionar los campos relacionados con el pago de derechos, como clave, 
-   * dependencia, banco, llave, fecha e importe. También asigna valores predeterminados a algunos campos.
+   * Este método configura los campos del formulario con los valores actuales del estado de la solicitud
+   * y aplica las validaciones necesarias. También deshabilita ciertos campos y establece valores predeterminados.
    */
-  private inicializarFormulario(): void {
+  inicializarCertificadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+     this.inicializarFormulario()
+    }  
+  }
+  /** Inicializa los datos del formulario suscribiéndose al estado del trámite.  
+ *  Asigna el estado actual al modelo local del componente. */
+   inicializarFormulario(): void {
      this.tramite221601Query.selectSolicitud$
           .pipe(
             takeUntil(this.destroyNotifier$),
@@ -228,6 +253,26 @@ export class TercerosComponent implements OnInit, OnDestroy {
           this.updateStoreWithFormData();
          
   }
+    /**
+   * @comdoc
+   * Guarda los datos del formulario de combinación requerida.
+   * 
+   * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
+   * - Si el formulario es de solo lectura, lo deshabilita.
+   * - Si no es de solo lectura, lo habilita.
+   * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.tipoPersonaForm.disable();
+        this.datosPersonales.disable();
+      } else {
+        this.tipoPersonaForm.enable();
+        this.datosPersonales.enable();
+      }
+  }
+
    /**
  * Actualiza el estado del store `tramite221601Store` con los datos del formulario `MedioForm`.
  *
