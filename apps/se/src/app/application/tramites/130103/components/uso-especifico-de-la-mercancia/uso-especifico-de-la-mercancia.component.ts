@@ -160,6 +160,12 @@ export class UsoEspecificoDeLaMercanciaComponent implements OnInit, OnDestroy {
    */
   public prosec!: string;
 
+  /**
+ * @property fraccionArancelariaArray
+ * @description
+ * Arreglo privado que almacena las opciones de fracciones arancelarias obtenidas desde el servicio.
+ * @type {Catalogo[]}
+ */
   private fraccionArancelariaArray: Catalogo[] = [];
 
   /**
@@ -177,7 +183,7 @@ export class UsoEspecificoDeLaMercanciaComponent implements OnInit, OnDestroy {
     public importacionDefinitivaService: ImportacionDefinitivaService,
     private tramite130103Store: Tramite130103Store,
     private tramite130103Query: Tramite130103Query
-  ) // eslint-disable-next-line no-empty-function
+  ) //
   {}
 
   /**
@@ -271,6 +277,12 @@ export class UsoEspecificoDeLaMercanciaComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+ * @method obtenerFraccionArancelariaProsec
+ * @description
+ * Obtiene la descripción de la fracción arancelaria seleccionada en el formulario dinámico.
+ * @returns {string} Descripción de la fracción arancelaria seleccionada o una cadena vacía si no existe.
+ */
   public obtenerFraccionArancelariaProsec(): string {
     const DESCRIPCION = this.fraccionArancelariaArray.find((ele: Catalogo) => ele.id === Number(this.ninoFormGroup.get('uso_fraccion_arancelaria')?.value))?.descripcion;
     return DESCRIPCION ?? '';

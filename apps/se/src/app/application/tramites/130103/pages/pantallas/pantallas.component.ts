@@ -1,9 +1,9 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
 import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantallas.enum';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { map, Subject, takeUntil } from 'rxjs';
 
 /**
  * @component
@@ -111,9 +111,7 @@ export class PantallasComponent implements OnInit, OnDestroy {
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
-        // this.consultaState = seccionState;
-        this.consultaState = {...seccionState, readonly: false, update: true };
-        console.log('this.consultaState', this.consultaState)
+        this.consultaState = seccionState;
       })
     ).subscribe();
   }

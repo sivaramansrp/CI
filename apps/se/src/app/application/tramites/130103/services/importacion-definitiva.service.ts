@@ -1,11 +1,18 @@
+import { ImportacionDefinitiva130103State, Tramite130103Store } from '../../../estados/tramites/tramite130103.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ImportacionDefinitiva130103State, Tramite130103Store } from '../../../estados/tramites/tramite130103.store';
 import { Observable } from 'rxjs';
 
+/**
+ * @Injectable
+ * @providedIn root
+ * @description
+ * Decorador que marca la clase `ImportacionDefinitivaService` como un servicio inyectable en Angular.
+ */
 @Injectable({
   providedIn: 'root'
 })
+
 export class ImportacionDefinitivaService {
 
    /**
