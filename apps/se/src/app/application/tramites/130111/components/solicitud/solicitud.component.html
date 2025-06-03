@@ -4,6 +4,7 @@
   [catalogosArray]="catalogosArray"
   [solicitudOpciones]="opcionesSolicitud"
   (setValoresStoreEvent)="setValoresStore($event)"
+  [esFormularioSoloLectura] ="esFormularioSoloLectura"
 ></app-datos-del-tramite>
 
 <app-datos-de-la-mercancia
@@ -12,6 +13,7 @@
   [fraccionCatalogo]="fraccionCatalogo"
   [unidadCatalogo]="unidadCatalogo"
   (setValoresStoreEvent)="setValoresStore($event)"
+  [esFormularioSoloLectura] ="esFormularioSoloLectura"
 ></app-datos-de-la-mercancia>
 
 
@@ -26,6 +28,7 @@
   (navegarParaModificarPartidaEvent)="navegarParaModificarPartida()"
   [disabled]="disabledModificar()"
   (setValoresStoreEvent)="setValoresStore($event)"
+  [esFormularioSoloLectura] ="esFormularioSoloLectura"
 ></app-partidas-de-la-mercancia>
 
 
@@ -36,6 +39,7 @@
 [selectRangoDias]="selectRangoDias"
 (bloqueCambiar)="enCambioDeBloque($event)"
 (setValoresStoreEvent)="setValoresStore($event)"
+[esFormularioSoloLectura] ="esFormularioSoloLectura"
 ></app-pais-procendencia>
 
 <app-representacion 
@@ -43,5 +47,6 @@
 [entidadFederativa]="entidadFederativa"
 [representacionFederal]="representacionFederal"
 [TEXTOS]="TEXTOS"
-(setValoresStoreEvent)="setValoresStore($event)">
-</app-representacion>
+(setValoresStoreEvent)="setValoresStore($event)"
+[esFormularioSoloLectura] ="esFormularioSoloLectura"
+></app-representacion>
