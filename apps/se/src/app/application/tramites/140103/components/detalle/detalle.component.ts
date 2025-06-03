@@ -45,7 +45,7 @@ export class DetalleComponent implements OnInit, OnDestroy{
    * Contiene un formulario anidado llamado `DetalleData` que alberga campos relacionados con el régimen,
    * descripción, clasificación, unidad, mecanismo, entre otros.
    */
-  DetalleForm!: FormGroup;
+  detalleForm!: FormGroup;
 
 /**
  * @property {Subject<void>} destroyNotifier$
@@ -89,7 +89,7 @@ export class DetalleComponent implements OnInit, OnDestroy{
    */
   ngOnInit(): void {
     // Creación del formulario reactivo con todos los controles y validaciones
-    this.DetalleForm = this.fb.group({
+    this.detalleForm = this.fb.group({
       DetalleData: this.fb.group({
         regimen: ['', Validators.required], // Campo para seleccionar el régimen, obligatorio
         descripcion: ['', Validators.required], // Campo para la descripción del producto, obligatorio
@@ -118,7 +118,7 @@ export class DetalleComponent implements OnInit, OnDestroy{
    * Ejecuta la lógica correspondiente según el estado del componente.
    */
   inicializarEstadoFormulario(): void {
-    if (this.DetalleForm && this.esFormularioSoloLectura) {
+    if (this.detalleForm && this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } 
   }
@@ -129,9 +129,9 @@ export class DetalleComponent implements OnInit, OnDestroy{
    */
   guardarDatosFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.DetalleForm.disable();
+      this.detalleForm.disable();
     } else if (!this.esFormularioSoloLectura) {
-      this.DetalleForm.enable();
+      this.detalleForm.enable();
     } 
   }
 
@@ -141,20 +141,20 @@ export class DetalleComponent implements OnInit, OnDestroy{
    * Este método también deshabilita el formulario para que los usuarios no puedan modificar los valores.
    */
   getFormData(): void {
-    this.DetalleForm.disable(); // Deshabilita el formulario para que no se pueda modificar
+    this.detalleForm.disable(); // Deshabilita el formulario para que no se pueda modificar
 
     // Carga los valores por defecto en cada uno de los controles del formulario
-    this.DetalleForm.get('DetalleData.regimen')?.setValue('EXPORTACION');
-    this.DetalleForm.get('DetalleData.descripcion')?.setValue('TELAS Y BIENES TEXTILES SIMPLE');
-    this.DetalleForm.get('DetalleData.unidad')?.setValue('Kilogramo');
-    this.DetalleForm.get('DetalleData.mecanismo')?.setValue('Primero en tiempo primero en dere');
-    this.DetalleForm.get('DetalleData.tratado')?.setValue('Tratado entre México, Estados Unid');
-    this.DetalleForm.get('DetalleData.fracciones')?.setValue('6302530020, 6103230055, 6103432015, 6302100020, 6201407511');
-    this.DetalleForm.get('DetalleData.paises')?.setValue('ESTADOS UNIDOS DE AMERICA');
-    this.DetalleForm.get('DetalleData.observaciones')?.setValue('observaciones');
-    this.DetalleForm.get('DetalleData.fundamentos')?.setValue('Fundamento de la vigencia del UPO');
-    this.DetalleForm.get('DetalleData.inicio')?.setValue('2024-01-01');
-    this.DetalleForm.get('DetalleData.fecha')?.setValue('2024-12-31');
+    this.detalleForm.get('DetalleData.regimen')?.setValue('EXPORTACION');
+    this.detalleForm.get('DetalleData.descripcion')?.setValue('TELAS Y BIENES TEXTILES SIMPLE');
+    this.detalleForm.get('DetalleData.unidad')?.setValue('Kilogramo');
+    this.detalleForm.get('DetalleData.mecanismo')?.setValue('Primero en tiempo primero en dere');
+    this.detalleForm.get('DetalleData.tratado')?.setValue('Tratado entre México, Estados Unid');
+    this.detalleForm.get('DetalleData.fracciones')?.setValue('6302530020, 6103230055, 6103432015, 6302100020, 6201407511');
+    this.detalleForm.get('DetalleData.paises')?.setValue('ESTADOS UNIDOS DE AMERICA');
+    this.detalleForm.get('DetalleData.observaciones')?.setValue('observaciones');
+    this.detalleForm.get('DetalleData.fundamentos')?.setValue('Fundamento de la vigencia del UPO');
+    this.detalleForm.get('DetalleData.inicio')?.setValue('2024-01-01');
+    this.detalleForm.get('DetalleData.fecha')?.setValue('2024-12-31');
   }
 
    /**

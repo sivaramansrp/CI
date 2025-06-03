@@ -153,7 +153,7 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
    * @type {Cupo[]}
    */
   Cancelacion: Cupo[] = cancelacions;
-  CancelacionForm!: FormGroup;
+  cancelacionForm!: FormGroup;
 
   /**
    * Lista de catálogos para el régimen que se utiliza en la cancelación de certificados. Esta propiedad permite acceder
@@ -294,7 +294,7 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
-       this.CancelacionForm.enable();
+       this.cancelacionForm.enable();
     }
   }
 
@@ -304,10 +304,10 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
-    if (this.CancelacionForm && this.esFormularioSoloLectura) {
-      this.CancelacionForm.disable();
+    if (this.cancelacionForm && this.esFormularioSoloLectura) {
+      this.cancelacionForm.disable();
     } else if (!this.esFormularioSoloLectura) {
-      this.CancelacionForm.enable();
+      this.cancelacionForm.enable();
     } 
   }
 
@@ -343,7 +343,7 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
  * 
  * Inicialmente, todos los valores están establecidos como `null` hasta que se carguen los datos reales.
  */
-    this.CancelacionForm = this.fb.group({
+    this.cancelacionForm = this.fb.group({
     regimen: [null, Validators.required],
     mecanismo: [null, Validators.required],
     tratado: [null, Validators.required],
@@ -365,7 +365,7 @@ export class CancelacionDeCertificateComponent implements OnInit, OnDestroy {
 
       /** Actualiza los valores del formulario `CancelacionForm` con los datos de `solicitudState`.  
  * Se usa `patchValue` para asignar los campos sin reemplazar el grupo completo. */
-      this.CancelacionForm.patchValue({
+      this.cancelacionForm.patchValue({
           regimen: this.solicitudState.regimen,
           mecanismo: this.solicitudState.mecanismo,
           tratado: this.solicitudState.tratado,

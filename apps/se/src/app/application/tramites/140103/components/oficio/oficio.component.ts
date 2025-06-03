@@ -74,7 +74,7 @@ interface ConfiguracionItem {
  * @property {ConfiguracionColumna<any>[]} configuracionTabla - Configuración de las columnas para la tabla de oficios.
  * @property {any[]} filteredData - Datos filtrados de los oficios para mostrar solo los que cumplen con un criterio específico.
  * @property {TablaSeleccion} TablaSeleccion - Tipo de selección de tabla (checkbox).
- * @property {FormGroup} OficioForm - Formulario reactivo que captura la información del oficio.
+ * @property {FormGroup} oficioForm - Formulario reactivo que captura la información del oficio.
  * @property {ListaPasosWizard[]} pasos - Lista de pasos del asistente de navegación (wizard).
  * @property {number} indice - Índice del paso actual del asistente de navegación.
  * @property {DatosPasos} datosPasos - Datos del asistente de pasos que incluyen la cantidad de pasos, texto de los botones, etc.
@@ -122,7 +122,7 @@ export class OficioComponent implements OnInit, OnDestroy{
    * Formulario reactivo que captura datos relacionados con el oficio, incluyendo
    * asignado, monto y cancelar.
    */
-  OficioForm!: FormGroup;
+  oficioForm!: FormGroup;
 
 /**
  * @property {Subject<void>} destroyNotifier$
@@ -185,7 +185,7 @@ export class OficioComponent implements OnInit, OnDestroy{
    */
   ngOnInit(): void {
     // Inicializa el formulario con los controles y validaciones necesarias
-    this.OficioForm = this.fb.group({
+    this.oficioForm = this.fb.group({
       oficioData: this.fb.group({
         asignado: ['', Validators.required], // Campo obligatorio para el monto asignado
         monto: ['', Validators.required], // Campo obligatorio para el monto
@@ -206,7 +206,7 @@ export class OficioComponent implements OnInit, OnDestroy{
    * Ejecuta la lógica correspondiente según el estado del componente.
    */
   inicializarEstadoFormulario(): void {
-    if (this.OficioForm && this.esFormularioSoloLectura) {
+    if (this.oficioForm && this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } 
   }
@@ -217,9 +217,9 @@ export class OficioComponent implements OnInit, OnDestroy{
    */
   guardarDatosFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.OficioForm.disable();
+      this.oficioForm.disable();
     } else if (!this.esFormularioSoloLectura) {
-      this.OficioForm.enable();
+      this.oficioForm.enable();
     } 
   }
 
@@ -228,11 +228,11 @@ export class OficioComponent implements OnInit, OnDestroy{
    * También deshabilita los campos para que no puedan ser modificados por el usuario.
    */
   updateformfied(): void {
-    this.OficioForm.get('oficioData.asignado')?.disable(); // Deshabilita el campo 'asignado'
-    this.OficioForm.get('oficioData.monto')?.disable(); // Deshabilita el campo 'monto'
-    this.OficioForm.get('oficioData.asignado')?.setValue('2500'); // Asigna un valor predeterminado al campo 'asignado'
-    this.OficioForm.get('oficioData.monto')?.setValue('-3991'); // Asigna un valor predeterminado al campo 'monto'
-    this.OficioForm.get('oficioData.cancelar')?.setValue('12'); // Asigna un valor predeterminado al campo 'cancelar'
+    this.oficioForm.get('oficioData.asignado')?.disable(); // Deshabilita el campo 'asignado'
+    this.oficioForm.get('oficioData.monto')?.disable(); // Deshabilita el campo 'monto'
+    this.oficioForm.get('oficioData.asignado')?.setValue('2500'); // Asigna un valor predeterminado al campo 'asignado'
+    this.oficioForm.get('oficioData.monto')?.setValue('-3991'); // Asigna un valor predeterminado al campo 'monto'
+    this.oficioForm.get('oficioData.cancelar')?.setValue('12'); // Asigna un valor predeterminado al campo 'cancelar'
   }
 
   /**

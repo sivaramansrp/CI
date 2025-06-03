@@ -3,7 +3,7 @@
 
 <div>
   <div class="container">
-    <form [formGroup]="DevolverForm">
+    <form [formGroup]="devolverForm">
 
       <div class="row sub-title">
         <div class="col-md-5">
@@ -43,13 +43,13 @@
           <div class="form-group">
             <label class="form-label" for="cantidad"> Cantidad a devolver (en unidades primarias):</label>
             <input class="form-control" id="cantidad" formControlName="cantidad" type="text"
-              (change)="setValoresStore(DevolverForm,'cantidad', 'setCantidad')">
+              (change)="setValoresStore(devolverForm,'cantidad', 'setCantidad')">
           </div>
         </div>
       </div>
       <div class="row btn-right">
         <div>
-          <button type="button" class="btn btn-primary btn-space">Devolver monto</button>
+          <button type="button" class="btn btn-primary btn-space" [disabled]="esFormularioSoloLectura">Devolver monto</button>
 
         </div>
       </div>
@@ -73,7 +73,7 @@
       </div>
       <div class="row btn-right">
         <div>
-          <button type="button" class="btn btn-primary btn-space">Eliminar seleccionado</button>
+          <button type="button" class="btn btn-primary btn-space" [disabled]="esFormularioSoloLectura">Eliminar seleccionado</button>
 
         </div>
       </div>
@@ -93,7 +93,7 @@
       </div>
       <div class="row cerrar-btn">
         <div>
-          <button class="btn btn-default" type="button">Cerrar</button>
+          <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura">Cerrar</button>
         </div>
 
       </div>

@@ -126,7 +126,7 @@ export class DevolverComponent implements OnInit, OnDestroy {
    * Formulario reactivo que captura los datos necesarios para realizar la devolución de facturas.
    * Contiene un grupo de controles para el folio, disponible, cantidad, total y cuadrados.
    */
-  DevolverForm!: FormGroup;
+  devolverForm!: FormGroup;
 
 /**
  * @property {Solicitud140103State} solicitudState
@@ -194,7 +194,7 @@ export class DevolverComponent implements OnInit, OnDestroy {
    * Ejecuta la lógica correspondiente según el estado del componente.
    */
   inicializarEstadoFormulario(): void {
-    if (this.DevolverForm && this.esFormularioSoloLectura) {
+    if (this.devolverForm && this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
       this.inicializarFormulario();
@@ -208,9 +208,9 @@ export class DevolverComponent implements OnInit, OnDestroy {
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
-      this.DevolverForm.disable();
+      this.devolverForm.disable();
     } else if (!this.esFormularioSoloLectura) {
-      this.DevolverForm.enable();
+      this.devolverForm.enable();
     } 
   }
 
@@ -250,7 +250,7 @@ export class DevolverComponent implements OnInit, OnDestroy {
       .subscribe();
       
     // Inicializa el formulario con los controles necesarios y las validaciones
-    this.DevolverForm = this.fb.group({
+    this.devolverForm = this.fb.group({
       folio: [''],
       disponible: [''],
       cantidad: [this.solicitudState.cantidad, Validators.required], // Campo obligatorio para la cantidad a devolver
@@ -267,16 +267,16 @@ export class DevolverComponent implements OnInit, OnDestroy {
    * También deshabilita los campos para que los usuarios no puedan modificarlos.
    */
   updateformfied(): void {
-    this.DevolverForm.get('folio')?.setValue('4MX216520');
-    this.DevolverForm.get('disponible')?.setValue('12');
-    this.DevolverForm.get('total')?.setValue('12');
-    this.DevolverForm.get('cuadrados')?.setValue('133');
+    this.devolverForm.get('folio')?.setValue('4MX216520');
+    this.devolverForm.get('disponible')?.setValue('12');
+    this.devolverForm.get('total')?.setValue('12');
+    this.devolverForm.get('cuadrados')?.setValue('133');
 
     // Deshabilita los campos para que no se puedan editar
-    this.DevolverForm.get('folio')?.disable();
-    this.DevolverForm.get('disponible')?.disable();
-    this.DevolverForm.get('total')?.disable();
-    this.DevolverForm.get('cuadrados')?.disable();
+    this.devolverForm.get('folio')?.disable();
+    this.devolverForm.get('disponible')?.disable();
+    this.devolverForm.get('total')?.disable();
+    this.devolverForm.get('cuadrados')?.disable();
   }
 
     /**
