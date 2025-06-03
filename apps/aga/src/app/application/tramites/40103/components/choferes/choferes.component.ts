@@ -6,6 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Catalogo, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {
   Chofer40103Store,
   Choferesnacionales40103State,
@@ -20,7 +21,6 @@ import {
 } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { CHOFERES_PAGE } from '../../enum/transportista-terrestre.enum';
-import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { ChangeDetectorRef } from '@angular/core';
 import { Chofer40103Query } from '../../estados/chofer40103.query';
@@ -382,6 +382,8 @@ export class ChoferesComponent implements OnInit, OnDestroy {
    */
   facturasAsociadas: choferesExtranjeros[] = [];
 
+  datosConsulta!: ConsultaioState;
+
   /**
    * Establece la pestaña activa.
    * @param tab La pestaña que se establecerá como activa.
@@ -410,6 +412,7 @@ export class ChoferesComponent implements OnInit, OnDestroy {
     private chofer40103Store: Chofer40103Store,
     private chofer40103Service: Chofer40103Service,
     private chofer40103Query: Chofer40103Query,
+    private consultaioQuery: ConsultaioQuery,
     private cdRef: ChangeDetectorRef
   ) {
     // Initialization logic can be added here if needed
@@ -440,13 +443,6 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
         }
       });
 
-    // this.choferesList$ = this.chofer40103Query.getChoferes$;
-    // this.choferesextranjerosList$ =
-      // this.chofer40103Query.getchoferesextranjero$;
-    // this.choferesList$.pipe(takeUntil(this.destroyed$)).subscribe();
-
-    // this.choferesextranjerosList$.pipe(takeUntil(this.destroyed$)).subscribe();
-
     this.chofernacionalForm();
     this.loadStoredData();
     this.fetchChoferes();
@@ -459,10 +455,21 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     this.delegacionChnData();
     this.coloniaChnData();
     this.nacionaliDadChe();
-    // this.recuperarDatos();
     this.estadoData();
     this.paisChnData();
     this.ConfiguracionColumna = this.tableColumns;
+
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data) => {
+        if (data) {
+          this.datosConsulta = data;
+          if(this.datosConsulta.readonly) {
+            this.formChoferes.disable();
+
+          }
+        }
+      });
   }
 
   /**

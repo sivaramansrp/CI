@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { map, takeUntil } from 'rxjs/operators';
 import { Chofer40103Query } from '../../estados/chofer40103.query';
 import { Chofer40103Service } from '../../estados/chofer40103.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import mockData from '@libs/shared/theme/assets/json/40103/director-general-mockdata.json';
 
@@ -50,7 +51,8 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private chofer40103Store: Chofer40103Store,
     private chofer40103Service: Chofer40103Service,
-    private chofer40103Query: Chofer40103Query
+    private chofer40103Query: Chofer40103Query,
+    private consultaioQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -69,6 +71,16 @@ export class DirectorGeneralComponent implements OnInit, OnDestroy {
         })
       ).subscribe();
     this.crearFormularioDirectorGeneral();
+
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          if(seccionState.readonly) {
+            this.directorGeneralForm.disable();
+          } 
+        })
+      ).subscribe();
   }
 
   /**
