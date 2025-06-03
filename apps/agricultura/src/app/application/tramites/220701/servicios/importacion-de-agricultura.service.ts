@@ -14,7 +14,8 @@ import { FormularioPago } from '../modelos/importacion-de-acuicultura.module';
 import { AgriculturaStore } from '../estados/sanidad-certificado.store';
 import { RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
-
+import { TramiteState } from '../estados/tramite220701.store';
+import { TramiteStore } from '../estados/tramite220701.store';    
 
 /**
  * @description Servicio para la importación de Agricultura, encargado de obtener datos de catálogos.
@@ -32,7 +33,7 @@ export class ImportacionDeAcuiculturaService {
    * @description Constructor del servicio.
    * @param http Cliente HTTP para realizar las peticiones.
    */
-  constructor(private readonly http: HttpClient, private readonly agriculturaStore: AgriculturaStore, private readonly seccionStore: SeccionLibStore) {
+  constructor(private readonly http: HttpClient, private readonly agriculturaStore: AgriculturaStore, private readonly seccionStore: SeccionLibStore, private readonly tramiteStore: TramiteStore) {
     // Se puede agregar aquí la lógica del constructor si es necesario
   }
 
@@ -112,14 +113,59 @@ export class ImportacionDeAcuiculturaService {
       })
     );
   }
+  /**
+   * @description Actualiza los datos de la solicitud en el store.
+   * @param solicitud Datos de la solicitud.
+   */
+  updateSolicitud(solicitud: TramiteState['SolicitudState']): void {
+    this.tramiteStore.setSolicitudTramite(solicitud);
+  }
 
+  /**
+   * @description Actualiza los datos generales internos en el store.
+   * @param datosGenerales Datos generales internos.
+   */
+  updateInternaDatosGenerales(datosGenerales: TramiteState['InternaDatosGeneralesState']): void {
+    this.tramiteStore.setInternaDatosGeneralesTramite(datosGenerales);
+  }
 
+  /**
+   * @description Actualiza los datos internos de pago de derechos en el store.
+   * @param internaPagoDeDerechos Datos internos de pago de derechos.
+   */
+  updateInternaPagoDeDerechos(internaPagoDeDerechos: TramiteState['FormularioPagoState']): void {
+    this.tramiteStore.setInternaPagoDeDerechosTramite(internaPagoDeDerechos);
+  }
 
-
+  /**
+   * @description Actualiza los datos de pago de derechos en el store.
+   * @param pagoDeDerechos Datos de pago de derechos.
+   */
+  updatePagoDeDerechos(pagoDeDerechos: TramiteState['PagosDeDerechosState']): void {
+    this.tramiteStore.setPagoDeDerechosTramite(pagoDeDerechos);
+  }
   /**
    * Restablecer el formulario a su estado inicial.
    */
   public limpiarFormulario(): void {
     this.agriculturaStore.limpiarFormulario(); // Restablece todo el estado
+  }
+    /**
+   * @description Actualiza el estado completo del formulario en el store.
+   * @param {TramiteState} DATOS - Objeto con todos los datos del formulario.
+   */
+  actualizarEstadoFormulario(DATOS: TramiteState): void {
+    this.tramiteStore.setSolicitudTramite(DATOS.SolicitudState);
+    this.tramiteStore.setInternaDatosGeneralesTramite(DATOS.InternaDatosGeneralesState);
+    this.tramiteStore.setInternaPagoDeDerechosTramite(DATOS.FormularioPagoState);
+    this.tramiteStore.setPagoDeDerechosTramite(DATOS.PagosDeDerechosState);
+  }
+
+  /**
+   * Obtiene los datos de la solicitud desde un archivo JSON.
+   * @returns Observable con los datos de la solicitud.
+   */
+  getDatosDeLaSolicitudData(): Observable<TramiteState> {
+    return this.http.get<TramiteState>('assets/json/220701/datos-de-la-solicitud.json');
   }
 }
