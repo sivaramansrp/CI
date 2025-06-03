@@ -3,7 +3,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { PantallasFormData } from '../../models/220401/servicios-pantallas.model';
 
-@Injectable()
+@Injectable({
+  providedIn: 'root'
+})
 /**
  * Este servicio se utiliza para almacenar los datos del formulario del trámite 110101.
  * pantallasFormData: almacenar los datos del formulario de los componentes secundarios

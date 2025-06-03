@@ -2,11 +2,11 @@
   "code": 200,
   "data": [
     {
-      "id": 101,
+      "id": 1,
       "descripcion": "Transporte de carga",
       "tam": "Mediano",
       "dpi": "Internacional",
-      "value": "Aéreo"
+      "value": "1"
     },
     {
       "id": 102,
