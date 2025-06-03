@@ -6,13 +6,13 @@ import { DatosSubcontratista, PlantasSubfabricante } from '../../../../shared/mo
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { SUBFABRICANTE_DISPONIBLES_PLANTAS_TABLA_CONFIGURACION, SUBFABRICANTE_SELECCIONADAS_PLANTAS_TABLA_CONFIGURACION } from '../../../../shared/constantes/plantas-subfabricante-disponibles.enum';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AutorizacionProgrmaNuevoService } from '../../services/autorizacion-programa-nuevo.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { GestionarEmpresasSubfabricantesComponent } from '../../../../shared/components/gestionar-empresas-subfabricante/gestionar-empresas-subfabricante.component';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { Tramite80102Store } from '../../estados/tramite80102.store';
-
 
 @Component({
   selector: 'app-empresas-subfabricante',
@@ -97,16 +97,63 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
    */
    private destroyNotifier$: Subject<void> = new Subject();
 
-    configuracionTablaDisponibles: ConfiguracionColumna<PlantasSubfabricante>[] =SUBFABRICANTE_DISPONIBLES_PLANTAS_TABLA_CONFIGURACION;
-    configuracionTablaSeleccionadas: ConfiguracionColumna<PlantasSubfabricante>[] =SUBFABRICANTE_SELECCIONADAS_PLANTAS_TABLA_CONFIGURACION
- 
-   constructor(private AutorizacionProgrmaNuevoServiceServicios:AutorizacionProgrmaNuevoService,
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  public esFormularioSoloLectura: boolean = false; 
+
+  /**
+   * Configuración de las columnas para la tabla de plantas subfabricante disponibles.
+   * 
+   * Esta propiedad almacena un arreglo de configuraciones de columna, 
+   * que define cómo se mostrarán y gestionarán las plantas subfabricante 
+   * disponibles en la tabla correspondiente del componente.
+   * 
+   * @type {ConfiguracionColumna<PlantasSubfabricante>[]}
+   */
+  configuracionTablaDisponibles: ConfiguracionColumna<PlantasSubfabricante>[] = SUBFABRICANTE_DISPONIBLES_PLANTAS_TABLA_CONFIGURACION;
+  /**
+   * Configuración de las columnas para la tabla de plantas subfabricantes seleccionadas.
+   * 
+   * Esta propiedad almacena un arreglo de configuraciones de columnas, 
+   * que define cómo se mostrarán y gestionarán las plantas subfabricantes seleccionadas 
+   * en la tabla correspondiente del componente.
+   * 
+   * @type {ConfiguracionColumna<PlantasSubfabricante>[]}
+   */
+  configuracionTablaSeleccionadas: ConfiguracionColumna<PlantasSubfabricante>[] = SUBFABRICANTE_SELECCIONADAS_PLANTAS_TABLA_CONFIGURACION
+
+  /**
+   * Constructor de la clase EmpresasSubfabricanteComponent.
+   * 
+   * Inicializa los servicios y dependencias necesarias para el componente, incluyendo servicios de autorización,
+   * formularios reactivos, consultas y navegación. Además, suscribe al estado de consulta para determinar si el
+   * formulario debe estar en modo solo lectura y llama al método para inicializar el formulario de datos del subcontratista.
+   * 
+   * @param AutorizacionProgrmaNuevoServiceServicios Servicio para la autorización de nuevos programas.
+   * @param fb Constructor de formularios reactivos.
+   * @param query Consulta específica para el trámite 80102.
+   * @param store Almacén de estado para el trámite 80102.
+   * @param router Servicio de enrutamiento de Angular.
+   * @param activatedRoute Información sobre la ruta activa.
+   * @param consultaQuery Consulta para el estado de Consultaio.
+   */
+  constructor(private AutorizacionProgrmaNuevoServiceServicios: AutorizacionProgrmaNuevoService,
     private fb: FormBuilder,
     public query: Tramite80102Query,
     private store: Tramite80102Store,
-    private router:Router,
-    private activatedRoute:ActivatedRoute
-   ){
+    private router: Router,
+    private activatedRoute: ActivatedRoute, private consultaQuery: ConsultaioQuery
+  ) {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
     this.inicializarFormularioDatosSubcontratista();
   }
 

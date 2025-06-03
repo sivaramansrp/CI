@@ -58,6 +58,12 @@ import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramite
   styleUrl: './complimentos.component.scss',
 })
 export class ComplimentosComponent implements OnInit, OnDestroy {
+
+  /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
+
   /**
    * @type {FormGroup}
    * @description Grupo de formularios para los complementos.
@@ -268,6 +274,10 @@ export class ComplimentosComponent implements OnInit, OnDestroy {
 
     if (this.datosFormaComplimentos) {
       this.formaComplimentos.patchValue(this.datosFormaComplimentos);
+    }
+
+    if(this.formularioDeshabilitado) {
+      this.formaComplimentos.disable();
     }
   }
 
