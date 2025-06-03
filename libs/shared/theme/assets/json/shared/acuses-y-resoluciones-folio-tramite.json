@@ -262,6 +262,14 @@
     "fechInicioTramite": "2025-3-09 0035:05:00",
     "departamento": "SE",
     "numeroDeProcedimiento": "80308"
+  }
+    ,{
+    "folioTramite": "1234567890123451005220203",
+    "tipoDeTramite": "Registro de solicitud de modificación programa IMMEX (Modificación Alta a domicilio de una planta, bodega o almacén)",
+    "dependencia": "SE ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "80102"
   },
   {
     "folioTramite": "0100001000320251005000003",

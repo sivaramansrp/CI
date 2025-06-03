@@ -227,6 +227,24 @@ export class Tramite80102Query extends Query<Tramite80102State> {
   );
 
   /**
+   * Observable que selecciona la lista de plantas disponibles desde el estado.
+   * 
+   * @returns Un observable que emite la lista de plantas disponibles para la tabla.
+   */
+  selectPlantasDisponiblesTablaLista$ = this.select(
+    (state) => state.plantasDisponiblesTablaLista
+  );
+  
+  /**
+   * Observable que selecciona la lista de plantas IMMEX desde el estado de la aplicación.
+   * 
+   * @returns Un observable que emite la lista de plantas IMMEX almacenada en el estado.
+   */
+  selectplantasImmexTablaLista$ = this.select(
+    (state) => state.plantasImmexTablaLista
+  );
+
+  /**
    * @description Constructor de la clase `Tramite80102Query`.
    * Inicializa la clase base `Query` con el store proporcionado.
    *
