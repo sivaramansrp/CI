@@ -25,14 +25,30 @@ import { Tramite302Store } from '../../../../../application/core/estados/tramite
 import aduanas from '@libs/shared/theme/assets/json/302/lista-de-oficinas-de-aduanas.json';
 import importaciónTemporal from '@libs/shared/theme/assets/json/302/list-importacion-temporal.json';
 import unidadDeMedida from '@libs/shared/theme/assets/json/302/lista-unidad-de-medida.json';
+
 /**
-* DatosDelTramiteComponent componente utilizado para procesar los datos del producto*
-* Este componente utiliza varios subcomponentes como TitleComponent, CommonModule,
-* ReactiveFormsModule y TablaDinamicaComponent,
-* AlertComponent, FormulariosDeCertiRegistroComponent
-* 
-* @component
-*/
+ * Componente Angular encargado de gestionar los datos del trámite 302.
+ * 
+ * Este componente permite la visualización y edición de los datos relacionados con el trámite,
+ * incluyendo la gestión de productos, datos del donante y domicilio fiscal. Utiliza formularios reactivos
+ * y tablas dinámicas para la captura y presentación de la información. Además, integra la funcionalidad
+ * de modales para agregar, modificar y eliminar productos, así como la interacción con el store para
+ * mantener el estado global del trámite.
+ * 
+ * Funcionalidades principales:
+ * - Inicialización y configuración dinámica de formularios reactivos.
+ * - Gestión de productos asociados al trámite (agregar, modificar, eliminar).
+ * - Manejo de modales para la interacción del usuario.
+ * - Sincronización del estado del formulario con el store global.
+ * - Soporte para modo solo lectura.
+ * 
+ * @component
+ * @selector datos-del-tramite
+ * @standalone true
+ * @imports [CommonModule, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent, AlertComponent, FormulariosDeCertiRegistroComponent]
+ * @templateUrl ./datos-del-tramite.component.html
+ * @styleUrl ./datos-del-tramite.component.scss
+ */
 @Component({
   selector: 'datos-del-tramite',
   standalone: true,
@@ -47,26 +63,8 @@ import unidadDeMedida from '@libs/shared/theme/assets/json/302/lista-unidad-de-m
   templateUrl: './datos-del-tramite.component.html',
   styleUrl: './datos-del-tramite.component.scss',
 })
-/**
- * Componente que gestiona los datos del trámite 302.
- * Este componente permite la captura, validación y visualización de información
- * relacionada con mercancías, productos, datos del donante y domicilio fiscal.
- * 
- * Funcionalidades principales:
- * - Inicialización de formularios reactivos con validaciones dinámicas.
- * - Gestión de modales para agregar productos y confirmaciones.
- * - Sincronización de datos con el estado global del trámite.
- * - Configuración dinámica de tablas y listas desplegables.
- * 
- * Ciclo de vida:
- * - `ngOnInit`: Configura los formularios y suscripciones necesarias.
- * - `ngOnDestroy`: Limpia las suscripciones activas para evitar fugas de memoria.
- * 
- * @export
- * @class DatosDelTramiteComponent
- * @implements {OnInit}
- * @implements {OnDestroy}
- */
+
+
 export class DatosDelTramiteComponent implements OnInit, OnDestroy {
 
   /**Referencia al elemento del modal para agregar productos.
@@ -230,6 +228,13 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   public esFormularioSoloLectura: boolean = false;
 
+
+  /**
+   * Arreglo que contiene los productos seleccionados con sus detalles.
+   * 
+   * Cada elemento del arreglo es una instancia de `DetallesDelProducto`, que representa
+   * la información detallada de un producto seleccionado en el trámite actual.
+   */
   public selectedProducto: DetallesDelProducto[] = [];
 
   /**
@@ -241,9 +246,9 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   constructor(
     public fb: FormBuilder,
-    private tramite302Store: Tramite302Store,
-    private tramite302Query: Tramite302Query,
-    private service: Solicitud302Service
+    public tramite302Store: Tramite302Store,
+    public tramite302Query: Tramite302Query,
+    public service: Solicitud302Service
   )
   {}
 
@@ -274,11 +279,17 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         )
         .subscribe()
     );
-    this.getProductosSeleccionados();
+    if(this.esFormularioSoloLectura){
+      this.getProductosSeleccionados();
+    }
+    else{
+    this.detallesDelProducto = this.certiRegistroState['detallesDelProducto'];
+    }
     this.inicializarFormGroup(this.form, MERCANCIAS);
     this.inicializarFormGroup(this.formAgregarProductos, PRODUCTOS);
     this.inicializarFormGroup(this.formDatosDelDonante, DATOS_DEL_DONANTE);
     this.inicializarFormGroup(this.formDomicilioFiscal, DOMICILIO_FISCAL);
+
   }
 
   /** * compo doc
@@ -394,6 +405,65 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Modifica un producto existente en la lista de detalles del producto.
+   *
+   * Si el formulario `formAgregarProductos` es válido, busca el producto seleccionado en la lista
+   * `detallesDelProducto` y lo reemplaza con los nuevos valores del formulario. Posteriormente,
+   * actualiza el estado en el store, limpia la selección y el formulario, cierra el modal y muestra
+   * la confirmación.
+   *
+   * @remarks
+   * - Utiliza la comparación de todas las propiedades del producto seleccionado para encontrar el índice.
+   * - Si no se encuentra el producto, no realiza ninguna modificación.
+   *
+   * @returns {void}
+   */
+  public modificarProductos(): void {
+    if (this.formAgregarProductos.valid) {
+      const PRODUCTOS = this.formAgregarProductos?.value;
+       const INDICE_BORROR = this.detallesDelProducto.findIndex((ele) =>
+        Object.entries(this.selectedProducto[0] || {}).every(
+          ([key, value]) => ele[key as keyof DetallesDelProducto] === value
+        )
+      );
+
+    if (INDICE_BORROR !== -1) {
+      this.detallesDelProducto[INDICE_BORROR] = PRODUCTOS;
+      this.tramite302Store.setDynamicFieldValue('detallesDelProducto', this.detallesDelProducto);
+    }
+      this.selectedProducto = [];
+      this.formAgregarProductos.reset();
+      this.cerrarModal();
+      this.modalConfirmacion = 'show';
+    }
+  }
+
+  /**
+   * compo doc
+   * @method eliminarProducto
+   * @description
+   * Elimina un producto de la lista de detalles del producto.
+   * Si hay un producto seleccionado, busca su índice en la lista,
+   * lo elimina y actualiza el store. Luego, limpia la selección
+   * y muestra el modal de confirmación.
+   */
+  public eliminarProducto(): void {
+    if (this.selectedProducto.length > 0) {
+      const INDICE_BORROR = this.detallesDelProducto.findIndex((ele) =>
+        Object.entries(this.selectedProducto[0] || {}).every(
+          ([key, value]) => ele[key as keyof DetallesDelProducto] === value
+        )
+      );
+      if (INDICE_BORROR !== -1) {
+        this.detallesDelProducto.splice(INDICE_BORROR, 1);
+        this.tramite302Store.setDynamicFieldValue('detallesDelProducto', this.detallesDelProducto);
+      }
+      this.selectedProducto = [];
+      this.modalConfirmacion = 'show';
+    }
+  }
+
+  /**
    * compo doc
    * @method setValoresStore
    * @description
@@ -459,12 +529,20 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    this.selectedProducto = row;
   }
 
+  /**
+   * Muestra un modal para modificar un producto seleccionado.
+   * 
+   * Si hay al menos un producto seleccionado en `selectedProducto`, 
+   * muestra el modal, actualiza el formulario `formAgregarProductos` 
+   * con los datos del primer producto seleccionado, limpia la selección 
+   * y cierra el modal.
+   */
   modificarModal(): void {
-    if(this.selectedProducto.length > 0) {
-    this.modal = 'show';
-    this.formAgregarProductos.patchValue(this.selectedProducto[0]);
-    this.selectedProducto = [];
-    this.cerrarModal();
+    if (Array.isArray(this.selectedProducto) && this.selectedProducto.length > 0) {
+      this.modal = 'show';
+      this.formAgregarProductos.patchValue(this.selectedProducto[0]);
+      this.selectedProducto = [];
+      this.cerrarModal();
     }
   }
 }

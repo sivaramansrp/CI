@@ -354,7 +354,19 @@ export const DATOS_ALERT = {
   message: `<p>Debes capturar la descripción de la mercancía en los mismos términos de la carta de donación.</p>`,
 };
 
-
+/**
+ * Arreglo de configuraciones de columnas para mostrar los detalles de un producto.
+ * Cada objeto define la información que se mostrará en la tabla de productos, incluyendo:
+ * - El encabezado de la columna.
+ * - La clave o función para obtener el valor correspondiente del producto.
+ * - El orden en el que se mostrará la columna.
+ *
+ * @type {ConfiguracionColumna<DetallesDelProducto>[]}
+ * 
+ * @ejemplo
+ * Este arreglo puede ser utilizado para generar dinámicamente las columnas de una tabla
+ * que muestre información relevante sobre los productos en el trámite 302.
+ */
 export const DATOS_DEL_PRODUCTO : ConfiguracionColumna<DetallesDelProducto>[] = [
       {
         encabezado: 'Tipo de mercancía',
