@@ -2,8 +2,9 @@ import { Component, OnDestroy } from '@angular/core';
 import { CargarDatosIniciales } from '../../models/solicitud-pantallas.model';
 import { CarrosDeFerrocarril } from '../../models/solicitud-pantallas.model';
 import { CarrosDeFerrocarrilComponent } from '../../shared/carros-de-ferrocarril/carros-de-ferrocarril.component';
-import { CatalogoSelectComponent, CatalogosSelect } from '@ng-mf/data-access-user';
+import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeMercancias } from '../../models/solicitud-pantallas.model';
 import { DatosDelTramiteARealizarComponent } from '../../shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
 import { FormBuilder } from '@angular/forms';
@@ -19,6 +20,8 @@ import { Solicitud } from '../../models/solicitud-pantallas.model';
 import { SolicitudDatosComponent } from '../../shared/solicitud-datos/solicitud-datos.component';
 import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
 import { Subject } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente para gestionar la solicitud de trámite.
@@ -35,7 +38,6 @@ import { Subject } from 'rxjs';
     SolicitudDatosComponent,
     ResponsableInspeccionEnPuntoComponent,
     DatosDelTramiteARealizarComponent,
-    CatalogoSelectComponent,
     MedioTransporteComponent,
   ],
   providers: [SolicitudPantallasService],
@@ -86,11 +88,24 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   private destroyed$ = new Subject<void>();
 
+  formularioDeshabilitado: boolean =
+    false; /** Bandera para deshabilitar el formulario */
+
   /** Constructor para inyectar dependencias */
   constructor(
     private fb: FormBuilder,
-    private solicitudService: SolicitudPantallasService /**Servicio para obtener datos de solicitud */
+    private solicitudService: SolicitudPantallasService /**Servicio para obtener datos de solicitud */,
+    private consultaioQuery: ConsultaioQuery
   ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.formularioDeshabilitado = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     this.form = this.fb.group(
       {}
     ); /** Inicializar un grupo de formulario vacío y obtener datos de formulario utilizando formGroupName de un componente secundario. */
@@ -98,7 +113,42 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   /** Gancho de ciclo de vida para cargar datos iniciales cuando se inicializa el componente */
   ngOnInit(): void {
+    // this.cargarDatosIniciales();
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.formularioDeshabilitado) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearFormulario();
+      this.cargarDatosIniciales();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.crearFormulario();
     this.cargarDatosIniciales();
+    if (this.formularioDeshabilitado) {
+      this.form.disable();
+    } else if (!this.formularioDeshabilitado) {
+      this.form.enable();
+    }
+  }
+
+  /**
+   * Método para crear el formulario de la solicitud.
+   */
+  crearFormulario(): void {
+    this.form = this.fb.group({});
   }
 
   /**

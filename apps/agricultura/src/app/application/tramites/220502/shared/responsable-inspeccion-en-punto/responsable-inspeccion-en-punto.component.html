@@ -33,7 +33,7 @@
           [label]="tipoContenedor.labelNombre"
           [placeholder]="tipoContenedor.primerOpcion"
           [required]="tipoContenedor.required"
-          [isDisabled]="esFormularioSoloLectura"
+          [isDisabled]="formularioDeshabilitado"
           formControlName="tipocontenedor"
           (selectionChange)="setTipoContenedor($event)"
         ></app-catalogo-select>

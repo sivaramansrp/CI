@@ -1,5 +1,5 @@
-import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -8,7 +8,7 @@ import { DatosDeMercancias } from '../../models/solicitud-pantallas.model';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { InputRadioComponent } from 'libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/solicitud-pantallas.enum';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -81,12 +81,6 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
   };
 
   /**
-   * Indica si el formulario está en modo solo lectura.
-   * Cuando es `true`, los campos del formulario no se pueden editar.
-   */
-  esFormularioSoloLectura: boolean = false;
-
-  /**
    * Variable que almacena el estado actual de la solicitud.
    * Se inicializa como un objeto vacío de tipo `Solicitud220502State`.
    */
@@ -98,20 +92,16 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
    */
   private destroyed$ = new Subject<void>();
 
+  /**
+   * Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado!: boolean;
+
   constructor(
     public solicitud220502Query: Solicitud220502Query,
-    public solicitud220502Store: Solicitud220502Store,
-    private consultaioQuery: ConsultaioQuery
+    public solicitud220502Store: Solicitud220502Store
   ) {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
+    /** Inyectar el ControlContainer principal para administrar los controles de formulario */
   }
 
   /**
@@ -119,32 +109,6 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
    * Agrega un control de formulario dinámico al formulario principal
    */
   ngOnInit(): void {
-    this.inicializarEstadoFormulario();
-  }
-
-  /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
-    } else {
-      this.inicializarFormulario();
-    }
-  }
-
-  guardarDatosFormulario(): void {
-    this.inicializarFormulario();
-    if (this.esFormularioSoloLectura) {
-      this.grupoFormularioPadre.get(this.claveDeControl)?.disable();
-    } else if (!this.esFormularioSoloLectura) {
-      this.grupoFormularioPadre.get(this.claveDeControl)?.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
-    }
-  }
-
-  inicializarFormulario(): void {
     if (this.claveDeControl) {
       // Agregar un nuevo FormGroup dinámicamente al formulario principal
       this.grupoFormularioPadre.addControl(
@@ -191,6 +155,10 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
         })
       )
       .subscribe();
+
+    if (this.formularioDeshabilitado) {
+      this.grupoFormularioPadre.disable();
+    }
   }
 
   /**

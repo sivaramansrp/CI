@@ -9,8 +9,8 @@
           [label]="certificadosAutorizados.labelNombre"
           [placeholder]="certificadosAutorizados.primerOpcion"
           [required]="certificadosAutorizados.required"
-          [isDisabled]="esFormularioSoloLectura"
           formControlName="certificadosAutorizados"
+          [isDisabled]="formularioDeshabilitado"
           (selectionChange)="setCertificadosAutorizados($event)"
         ></app-catalogo-select>
       </div>
@@ -20,8 +20,8 @@
         <input-fecha
           [datos]="configuracionFechaFinVigencia"
           (valorCambiado)="cambioFechaInicio($event)"
+          [isDisabled]="formularioDeshabilitado"
           [setFecha]="this.solicitud220502State.fechaDeInspeccion"
-          [isDisabled]="esFormularioSoloLectura"  
         ></input-fecha>
       </div>
     </div>
@@ -34,7 +34,7 @@
           [placeholder]="horaDeInspeccion.primerOpcion"
           [required]="horaDeInspeccion.required"
           formControlName="horaDeInspeccion"
-          [isDisabled]="esFormularioSoloLectura"
+          [isDisabled]="formularioDeshabilitado"
           (selectionChange)="setHoraDeInspeccion($event)"
         ></app-catalogo-select>
       </div>
@@ -48,7 +48,7 @@
           [placeholder]="aduanaDeIngreso.primerOpcion"
           [required]="aduanaDeIngreso.required"
           formControlName="aduanaDeIngreso"
-          [isDisabled]="esFormularioSoloLectura"
+          [isDisabled]="formularioDeshabilitado"
           (selectionChange)="setAduanaDeIngreso($event)"
         ></app-catalogo-select>
       </div>
@@ -62,7 +62,7 @@
           [placeholder]="sanidadAgropecuaria.primerOpcion"
           [required]="sanidadAgropecuaria.required"
           formControlName="sanidadAgropecuaria"
-          [isDisabled]="esFormularioSoloLectura"
+          [isDisabled]="formularioDeshabilitado"
           (selectionChange)="setSanidadAgropecuaria($event)"
         ></app-catalogo-select>
       </div>
@@ -76,7 +76,7 @@
           [placeholder]="puntoDeInspeccion.primerOpcion"
           [required]="puntoDeInspeccion.required"
           formControlName="puntoDeInspeccion"
-          [isDisabled]="esFormularioSoloLectura"
+          [isDisabled]="formularioDeshabilitado"
           (selectionChange)="setPuntoDeInspeccion($event)"
         ></app-catalogo-select>
       </div>
