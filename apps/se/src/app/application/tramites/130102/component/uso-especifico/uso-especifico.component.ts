@@ -14,9 +14,8 @@ import { TituloComponent } from "libs/shared/data-access-user/src/tramites/compo
 
 import fraccionOptionJson from 'libs/shared/theme/assets/json/130102/fracciónarancelaria-options.json';
 
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
-
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 
 import { Solicitud130102State, Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
 import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
@@ -24,14 +23,34 @@ import { Tramite130102Query } from '../../../../estados/queries/tramite130102.qu
 import { Subject, map, takeUntil } from 'rxjs'; 
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
+import { ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { FRACCIONES_ANARCIA_TABLA } from '../../constantes/octava-temporal.enum';
+import { FraccionArancelariaProsec } from '../../models/octava-temporal.model';
+
 @Component({
   selector: 'app-uso-especifico',
   standalone: true,
-  imports: [TituloComponent, CatalogoSelectComponent, TableComponent, ReactiveFormsModule, CommonModule],
+  imports: [TituloComponent, CatalogoSelectComponent, TableComponent, ReactiveFormsModule, CommonModule,TablaDinamicaComponent],
   templateUrl: './uso-especifico.component.html',
   styleUrl: './uso-especifico.component.scss'
 })
 export class UsoEspicificoComponent implements OnInit {
+   /**
+       * @property {TablaSeleccion} tablaSeleccion
+       * @description Tabla de selección para la tabla de cupos.
+       */
+      tablaSeleccion = TablaSeleccion;
+  /*
+    * @description Configuración de la tabla para mostrar las fracciones arancelarias.
+    * @type {TablaDinamicaComponent}
+    */
+    
+    configuracionTabla =FRACCIONES_ANARCIA_TABLA;
+/**
+ * @description Lista de fracciones arancelarias PROSEC.
+ * @type {FraccionArancelariaProsec[]}
+ */
+     datosSocios: FraccionArancelariaProsec[] = [];
 
   /**
    * @description Formulario para el uso específico.
@@ -39,33 +58,6 @@ export class UsoEspicificoComponent implements OnInit {
    */
   usoEspicificoForm!: FormGroup;
 
-  /**
-   * @description Columnas para la tabla de fracciones arancelarias.
-   * @type {string[]}
-   */
-  tableColumns = [
-    'Fracción arancelaria',
-    'Descripción'
-  ];
-
-  /**
-   * @description Datos de ejemplo para la tabla.
-   * @type {any[]}
-   */
-  tableData = [
-    {
-      tbodyData: [
-        '980200011',
-        'Descripción fraccion PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizará la mercancía a importar) ',
-      ]
-    },
-    {
-      tbodyData: [
-        '01039101',
-        'Descripción fraccion PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizara ta mercancia a importar) ',
-      ]
-    }
-  ];
 
   /**
    * @description Opciones del catálogo de fracción arancelaria.
@@ -74,15 +66,18 @@ export class UsoEspicificoComponent implements OnInit {
   catalogos: Catalogo[] = fraccionOptionJson;
 
   /**
-   * Estado actual de la solicitud utilizado para poblar los formularios.
-   */
+   * Estado actual de la solicitud 130102, obtenido desde el store.
+    **/
   public solicitudState!: Solicitud130102State;
 
   /**
-   * Notificador para destruir las suscripciones activas al destruir el componente.
+   * Observable utilizado para cancelar suscripciones al destruir el componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-
+/*
+   * Indica si el formulario es de solo lectura.
+   */
+   esFormularioSoloLectura: boolean = false;
 
   /**
    * @constructor
@@ -92,9 +87,19 @@ export class UsoEspicificoComponent implements OnInit {
   constructor(private formbuilt: FormBuilder,
     private tramite130102Store: Tramite130102Store,
     private tramite130102Query: Tramite130102Query,
-    private formularioRegistroService: FormularioRegistroService
+    private formularioRegistroService: FormularioRegistroService,
+    private consultaioQuery: ConsultaioQuery
   ) { 
-    // constructor
+   this.consultaioQuery.selectConsultaioState$
+         .pipe(
+           takeUntil(this.destroyNotifier$),
+           map((seccionState) => {
+             this.esFormularioSoloLectura = seccionState.readonly;
+            
+             this.inicializarEstadoFormulario();
+           })
+         )
+         .subscribe();
   }
 
   /**
@@ -103,8 +108,47 @@ export class UsoEspicificoComponent implements OnInit {
    * @memberof UsoEspicificoComponent
    */
   ngOnInit(): void {
+this.inicializarEstadoFormulario();
+      this.formularioRegistroService.getFraccionesUsoEspecifico().subscribe(data => {
+      this.datosSocios = data;
+    });
+    this.formularioRegistroService.registrarFormulario('usoEspicificoForm', this.usoEspicificoForm);
+  }
 
-    this.tramite130102Query.selectSolicitud$
+  /**
+   * @method inicializarEstadoFormulario
+   * @description Inicializa el estado del formulario según si es de solo lectura o editable.
+   * @memberof UsoEspicificoComponent
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+   
+  }
+  /*
+    * Guarda los datos del formulario y ajusta su estado según si es de solo lectura o no.
+    * @returns void
+    * */
+   guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.usoEspicificoForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.usoEspicificoForm.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+  /**
+   * @method inicializarFormulario
+   * @description Inicializa el formulario reactivo y sus validaciones.
+   * @memberof UsoEspicificoComponent
+   */
+  inicializarFormulario():void{
+      this.tramite130102Query.selectSolicitud$
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {  
@@ -118,9 +162,10 @@ export class UsoEspicificoComponent implements OnInit {
       descripción: ['',Validators.required,UsoEspicificoComponent.noLeadingSpacesValidator],
 
     });
-    this.formularioRegistroService.registrarFormulario('usoEspicificoForm', this.usoEspicificoForm);
+       if (this.esFormularioSoloLectura) {
+    this.usoEspicificoForm.disable();
   }
-
+  }
     /**
    * Asigna un valor del formulario al store.
    *

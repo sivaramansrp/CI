@@ -11,8 +11,8 @@ describe('DatosParaMovilizacionNacionalComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DatosParaMovilizacionNacionalComponent],
-      imports: [HttpClientTestingModule, TituloComponent, CatalogoSelectComponent, ReactiveFormsModule]
+      declarations: [],
+      imports: [HttpClientTestingModule, TituloComponent, CatalogoSelectComponent, ReactiveFormsModule,DatosParaMovilizacionNacionalComponent]
     })
       .compileComponents();
 
