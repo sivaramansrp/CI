@@ -5,28 +5,29 @@ import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { PasoDosComponent } from './paso-dos.component';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { InjectionToken } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, InjectionToken } from '@angular/core';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
   let fixture: ComponentFixture<PasoDosComponent>;
-
+ 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PasoDosComponent],
-      imports: [HttpClientTestingModule, TituloComponent, AlertComponent, AnexarDocumentosComponent, ToastrModule.forRoot()],
+      declarations: [],
+      imports: [HttpClientTestingModule, TituloComponent, AlertComponent, AnexarDocumentosComponent, ToastrModule.forRoot(),PasoDosComponent],
       providers: [
         ToastrService,
         { provide: new InjectionToken('ToastConfig'), useValue: {} }
-      ]
+      ],
+       schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
-    
+   
     fixture = TestBed.createComponent(PasoDosComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
-
+ 
   it('should create', () => {
     expect(component).toBeTruthy();
   });

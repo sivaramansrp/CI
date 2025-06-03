@@ -20,6 +20,7 @@ describe('InsumosComponent', () => {
       obtenerDatosTablaInsumos: jest.fn().mockReturnValue(of([])),
       obtenerDatosFraccionArancelaria: jest.fn().mockReturnValue(of([])),
       obtenerDatosEstados: jest.fn().mockReturnValue(of([])),
+      obtenerTablaInsumos: jest.fn().mockReturnValue(of([]))
     };
 
     servicioDeFormularioServiceMock = {
@@ -49,6 +50,9 @@ describe('InsumosComponent', () => {
 
     fixture = TestBed.createComponent(InsumosComponent);
     component = fixture.componentInstance;
+    component.consultaState = {
+      readonly: false,
+    } as any;
     fixture.detectChanges();
   });
 

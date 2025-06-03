@@ -25,16 +25,9 @@ import {
   AlertComponent,
   AnexarDocumentosComponent,
   BtnContinuarComponent,
-  CatalogoSelectComponent,
-  CrosslistComponent,
   FirmaElectronicaComponent,
-  InputCheckComponent,
-  InputFechaComponent,
-  InputRadioComponent,
   SharedModule,
   SolicitanteComponent,
-  TablaDinamicaComponent,
-  TableComponent,
   TercerosComponent,
   TituloComponent,
   WizardComponent
@@ -47,9 +40,6 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
-    DatosDeLaSolicitudComponent,
-    DatosParaMovilizacionNacionalComponent,
-    PagoDeDerechosComponent
   ],
   imports: [
     CommonModule,
@@ -59,19 +49,15 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
     WizardComponent,
     TituloComponent,
     BtnContinuarComponent,
-    CrosslistComponent,
-    InputCheckComponent,
     AlertComponent,
-    InputFechaComponent,
     AnexarDocumentosComponent,
     FirmaElectronicaComponent,
     SolicitanteComponent,
     TercerosComponent,
-    CatalogoSelectComponent,
-    TableComponent,
-    InputRadioComponent,
     ToastrModule.forRoot(),
-    TablaDinamicaComponent
+    DatosDeLaSolicitudComponent,
+    DatosParaMovilizacionNacionalComponent,
+    PagoDeDerechosComponent
   ],
   providers: [
     ToastrService

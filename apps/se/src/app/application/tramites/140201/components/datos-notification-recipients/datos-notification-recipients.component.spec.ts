@@ -8,6 +8,7 @@ import { CancelacionesStore } from '../../estados/cancelaciones.store';
 import { CancelacionesQuery } from '../../estados/cancelaciones.query';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { DireccionDeNotificacionesComponent } from '../direccion-de-notificaciones/direccion-de-notificaciones.component';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
 describe('DatosNotificationRecipientsComponent', () => {
   let component: DatosNotificationRecipientsComponent;
@@ -15,6 +16,9 @@ describe('DatosNotificationRecipientsComponent', () => {
   let mockService: Partial<CancelacionesService>;
   let mockStore: Partial<CancelacionesStore>;
   let mockQuery: Partial<CancelacionesQuery>;
+ const consultaioQueryMock = {
+    selectConsultaioState$: of({ readonly: true }),
+  };
 
   beforeEach(async () => {
     mockService = {
@@ -39,7 +43,8 @@ describe('DatosNotificationRecipientsComponent', () => {
       providers: [
         { provide: CancelacionesService, useValue: mockService },
         { provide: CancelacionesStore, useValue: mockStore },
-        { provide: CancelacionesQuery, useValue: mockQuery }
+        { provide: CancelacionesQuery, useValue: mockQuery },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock }
       ]
     }).compileComponents();
 
@@ -89,8 +94,8 @@ describe('DatosNotificationRecipientsComponent', () => {
     expect(mockStore.setCorreoElectronico).toHaveBeenCalledWith('carlos@example.com');
   });
 
-  it('should call updateState on ngOnInit', () => {
-    const updateStateSpy = jest.spyOn(component, 'updateState');
+  it('should call estadoActualizacion on ngOnInit', () => {
+    const updateStateSpy = jest.spyOn(component, 'estadoActualizacion');
     component.ngOnInit();
     expect(updateStateSpy).toHaveBeenCalled();
   });
@@ -101,8 +106,8 @@ describe('DatosNotificationRecipientsComponent', () => {
     expect(infoDeCargaSpy).toHaveBeenCalled();
   });
 
-  it('should update form controls in updateState', () => {
-    component.updateState();
+  it('should update form controls in estadoActualizacion', () => {
+    component.estadoActualizacion();
     expect(component.formularioDeNotificacionesForm.get('nombre')?.value).toBe('Carlos');
     expect(component.formularioDeNotificacionesForm.get('apellidoPaterno')?.value).toBe('Gómez');
     expect(component.formularioDeNotificacionesForm.get('correoElectronico')?.value).toBe('carlos@example.com');
@@ -119,4 +124,54 @@ describe('DatosNotificationRecipientsComponent', () => {
     component.ngOnDestroy();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+  
+  it('should disable form if esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+
+    const disableSpy = jest.spyOn(component.formularioDeNotificacionesForm, 'disable');
+    const enableSpy = jest.spyOn(component.formularioDeNotificacionesForm, 'enable');
+
+    component.guardarDatosFormulario();
+
+    expect(component.estadoActualizacion).toHaveBeenCalled();
+    expect(disableSpy).toHaveBeenCalled();
+    expect(enableSpy).not.toHaveBeenCalled();
+  });
+
+  it('should enable form if esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+
+    const disableSpy = jest.spyOn(component.formularioDeNotificacionesForm, 'disable');
+    const enableSpy = jest.spyOn(component.formularioDeNotificacionesForm, 'enable');
+
+    component.guardarDatosFormulario();
+
+    expect(component.estadoActualizacion).toHaveBeenCalled();
+    expect(enableSpy).toHaveBeenCalled();
+    expect(disableSpy).not.toHaveBeenCalled();
+  });
+
+  it('should call guardarDatosFormulario when readonly is true in inicializarEstadoFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    const updateSpy = jest.spyOn(component, 'estadoActualizacion');
+
+    component.inicializarEstadoFormulario();
+
+    expect(guardarSpy).toHaveBeenCalled();
+    expect(updateSpy).not.toHaveBeenCalledTimes(2); 
+  });
+
+  it('should only call estadoActualizacion when readonly is false in inicializarEstadoFormulario', () => {
+    component.esFormularioSoloLectura = false;
+    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    const updateSpy = jest.spyOn(component, 'estadoActualizacion');
+
+    component.inicializarEstadoFormulario();
+
+    expect(updateSpy).toHaveBeenCalled();
+    expect(guardarSpy).not.toHaveBeenCalled();
+  });
+  
 });
