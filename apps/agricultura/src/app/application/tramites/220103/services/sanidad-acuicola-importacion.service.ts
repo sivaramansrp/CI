@@ -114,7 +114,7 @@ export class SanidadAcuicolaImportacionService {
     updateState(valor:Tramite220103State):void{
         this.store.update(valor)
         this.store.setTramite220103State("tablaDestinatario",[valor.datosDelTerceroDestinatario])
-        this.store.setTramite220103State("tablaMercancia",this.getMercancias())
-        this.store.setTramite220103State("tablaInstalacion",this.getInstalacion())
+        this.store.setTramite220103State("tablaMercancia",[valor.mercancia])
+        this.store.setTramite220103State("tablaInstalacion",[valor.datosDelTerceroInstalacion])
     }
 }

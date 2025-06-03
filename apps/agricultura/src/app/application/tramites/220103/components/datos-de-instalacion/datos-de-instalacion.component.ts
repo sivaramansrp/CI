@@ -10,7 +10,8 @@ import { CommonModule } from '@angular/common';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ModeloDeFormaDinamica, TituloComponent } from '@ng-mf/data-access-user';
+import { ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
+
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 
 import { Subject, takeUntil } from 'rxjs';
@@ -25,7 +26,7 @@ import { Tramite220103State, Tramite220103Store} from '../../estados/tramites/tr
 @Component({
   selector: 'app-datos-de-instalacion',
   standalone: true,
-  imports: [CommonModule, TituloComponent, FormasDinamicasComponent],
+  imports: [CommonModule, FormasDinamicasComponent],
   templateUrl: './datos-de-instalacion.component.html',
   styleUrl: './datos-de-instalacion.component.scss',
 })
