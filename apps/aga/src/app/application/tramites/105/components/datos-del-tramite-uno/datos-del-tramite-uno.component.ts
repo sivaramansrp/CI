@@ -219,7 +219,6 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    */
 
   inicializarFormulario(): void {
-    this.subscription.add(
       this.query.selectSolicitud$
         .pipe(
           takeUntil(this.destroyNotifier$),
@@ -227,8 +226,7 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
             this.solicitudState = seccionState;
           })
         )
-        .subscribe()
-    );
+        .subscribe();
     this.crearDatosDelTramiteForm();
   }
 
