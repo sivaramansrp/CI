@@ -29,7 +29,7 @@
           [catalogo]="estadoCatalogo"
           [label]="'Estado'"
           [required]="true"
-          [isDisabled]="false"
+          [isDisabled]="formularioDeshabilitado"
           name="estado"
           formControlName="estado"
           (selectionChange)="cambiarEstado($event)"
@@ -45,6 +45,7 @@
     type="button"
     class="btn btn-primary col-auto pull-right float-end mt-3"
     (click)="onBuscar()"
+    [disabled]="formularioDeshabilitado"
   >
     Buscar plantas
   </button>
@@ -62,6 +63,7 @@
       [configuracionTabla]="configuracionTablaDisponibles"
       [datos]="datosTablaSubfabricantesDisponibles"
       (listaDeFilaSeleccionada)="onPlantasDisponiblesSeleccionadas($event)"
+      [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
     ></app-tabla-dinamica>
   </div>
 
@@ -70,6 +72,7 @@
       type="button"
       class="btn btn-primary col-auto pull-right float-end mt-3"
       (click)="agregarPlantas()"
+      [disabled]="formularioDeshabilitado"
     >
       Agregar plantas
     </button>
@@ -87,12 +90,14 @@
       [configuracionTabla]="configuracionTablaSeleccionadas"
       [datos]="datosTablaSubfabricantesSeleccionadas"
       (listaDeFilaSeleccionada)="onPlantasSeleccionadas($event)"
+      [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
     ></app-tabla-dinamica>
   </div>
 
   <div class="row justify-content-end">
     <button type="button" class="btn btn-danger col-auto mt-3 complementar-margin-right"
-    (click)="complementarPlantas()">
+    (click)="complementarPlantas()"
+    [disabled]="formularioDeshabilitado">
       Complementar plantas
       
     </button>
@@ -102,6 +107,7 @@
       class="btn btn-danger col-auto pull-right float-end mt-3"
       [disabled]="datosTablaSubfabricantesSeleccionadas.length === 0"
       (click)="eliminarPlantas()"
+      [disabled]="formularioDeshabilitado"
     >
       Eliminar plantas
     </button>
