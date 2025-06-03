@@ -1,10 +1,10 @@
+import { Tramite130114State, Tramite130114Store } from '../../../estados/tramites/tramite130114.store';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
 import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
-import { Tramite130114State, Tramite130114Store } from '../../../estados/tramites/tramite130114.store';
 
 @Injectable({
   providedIn: 'root',
