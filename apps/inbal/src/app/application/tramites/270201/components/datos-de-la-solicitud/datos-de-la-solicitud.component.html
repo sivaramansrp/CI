@@ -7,14 +7,14 @@
                         <div class="form-group">
                             <app-catalogo-select [catalogo]="operacionData" [label]="'Tipo de operacíon'"
                                 [required]="true" for="tipoDeOperacion" id="tipoDeOperacion"
-                                formControlName="tipoDeOperacion" (change)="actualizarOperacion()"></app-catalogo-select>
+                                formControlName="tipoDeOperacion" (change)="actualizarOperacion()" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                         </div>
                     </div>
                     <div class="col-md-4 ms-5">
                         <div class="form-group">
                             <app-catalogo-select [catalogo]="movimientoData" [label]="'Tipo de movimiento'"
                                 [required]="true" for="tipoDeMovimiento" id="tipoDeMovimiento"
-                                formControlName="tipoDeMovimiento"  (change)="actualizarMovimiento()"></app-catalogo-select>
+                                formControlName="tipoDeMovimiento"  (change)="actualizarMovimiento()" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                         </div>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="motivoData" [label]="'Motivo'" [required]="true" for="motivo"
-                            id="motivo" formControlName="motivo"  (change)="actualizarMotivo()"></app-catalogo-select>
+                            id="motivo" formControlName="motivo"  (change)="actualizarMotivo()" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                     </div>
                 </div>
             </div>
@@ -51,7 +51,7 @@
                     <div class="col-md-4">
                         <div class="form-group">
                             <app-catalogo-select [catalogo]="paisData" [label]="'País'" [required]="true" for="pais"
-                                id="pais" formControlName="pais"  (change)="actualizarPais()"></app-catalogo-select>
+                                id="pais" formControlName="pais"  (change)="actualizarPais()" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                         </div>
                     </div>
 
@@ -65,7 +65,7 @@
                         <div class="form-group">
                             <app-catalogo-select [catalogo]="transporteData" [label]="'Medio de transporte'"
                                 [required]="true" for="medioTransporte" id="medioTransporte"
-                                formControlname="medioTransporte" (change)="actualizarTransporte()"></app-catalogo-select>
+                                formControlname="medioTransporte" (change)="actualizarTransporte()" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                         </div>
                     </div>
                 </div>
@@ -79,7 +79,7 @@
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="aduanaData" [label]="'Aduana de entrada'" [required]="true"
                             for="aduanaEntrada" id="aduanaEntrada"
-                            formControlname="aduanaEntrada" name="aduanaData" (change)="actualizarAduana()"></app-catalogo-select>
+                            formControlname="aduanaEntrada" name="aduanaData" (change)="actualizarAduana()" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                     </div>
                 </div>
             </div>
@@ -173,7 +173,7 @@
                 <div class="col-md-4">
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="monedaData" [label]="'Moneda'" [required]="true" for="moneda"
-                            id="moneda" formControlName="moneda" name="moneda"  (change)="actualizarMoneda()"></app-catalogo-select>
+                            id="moneda" formControlName="moneda" name="moneda"  (change)="actualizarMoneda()" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                     </div>
                 </div>
 
@@ -189,7 +189,7 @@
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="arancelariaData" [label]="'Fracción arancelaria'"
                             [required]="true" for="fraccionArancelaria" id="fraccionArancelaria"
-                            formControlName="fraccionArancelaria" name="fraccionArancelaria"  (change)="actualizarFraccionArancelaria()"></app-catalogo-select>
+                            formControlName="fraccionArancelaria" name="fraccionArancelaria"  (change)="actualizarFraccionArancelaria()" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                     </div>
                 </div>
 
