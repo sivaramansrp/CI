@@ -4,7 +4,6 @@
 import {
   Catalogo,
   CatalogoSelectComponent,
-  ConsultaioQuery,
   InputRadioComponent,
   SolicitanteComponent,
 } from '@libs/shared/data-access-user/src';
@@ -24,21 +23,19 @@ import {
   REGEX_DIAMETRO,
   REGEX_PROFUNDIDAD,
 } from '@libs/shared/data-access-user/src';
-import { Subject, map, takeUntil } from 'rxjs';
-import { Tramite270201State, Tramite270201Store } from '../../estados/tramites/tramite270201.store';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ModalComponent } from '../modal/modal.component';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/aviso-siglos.enum';
 import { ObraTablaDatos } from '../../models/aviso-siglos.models';
 import { SolicitudService } from '../../services/solicitud.service';
+import { Subject } from 'rxjs';
 import { TablaDatos } from '../../models/aviso-siglos.models';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TableComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Tramite270201Query } from '../../estados/queries/tramite270201.query';
-// import { takeUntil } from 'rxjs';
-// import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { Tramite270201Store } from '../../estados/tramites/tramite270201.store';
+import { takeUntil } from 'rxjs';
 
 /**
  * Constante que contiene el texto del manifiesto de alerta sobre la propiedad y datos técnicos de la obra(s).
@@ -210,12 +207,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   tablaObraDeArteData: string[] = [];
 
-  // private destroyNotifier$: Subject<void> = new Subject();
-
-   esFormularioSoloLectura: boolean = false;
-
-   public solicitudState!: Tramite270201State;
-
   /**
    * @constructor
    * @description
@@ -231,19 +222,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite270201Store: Tramite270201Store,
-    private tramite270201Query: Tramite270201Query,
-    private solicitudService: SolicitudService,
-    private consultaioQuery: ConsultaioQuery
+    private solicitudService: SolicitudService
   ) {
-      this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
+    // La lógica del constructor se puede añadir aquí si es necesario
   }
 
   /**
@@ -366,8 +347,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
      */
     this.initializeObraDeArteFormGroup();
 
-      this.inicializarEstadoFormulario();
-
     /**
      * Configura el texto HTML para el mensaje del manifiesto de alerta.
      */
@@ -379,36 +358,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       </div>
     </div>
   `;
-  }
-
-
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
-    } else {
-       this.solicitudFormGroup.enable();
-      //  this.obraDeArteFormgroup.enable();
-    }
-  }
-
-  guardarDatosFormulario(): void {
-    this.initializeSolicitudFormGroup();
-    // this.initializeObraDeArteFormGroup();
-    if (this.solicitudFormGroup && this.esFormularioSoloLectura) {
-      this.solicitudFormGroup.disable();
-    } else if (!this.esFormularioSoloLectura) {
-      this.solicitudFormGroup.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
-    }
-
-    // if (this.obraDeArteFormgroup && this.esFormularioSoloLectura) {
-    //   this.obraDeArteFormgroup.disable();
-    // } else if (!this.esFormularioSoloLectura) {
-    //   this.obraDeArteFormgroup.enable();
-    // } else {
-    //   // No se requiere ninguna acción en el formulario
-    // }
   }
 
   /**
@@ -508,15 +457,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
        */
       aduanaEntrada: new FormControl('', [Validators.required]),
     });
-
-      this.tramite270201Query.selectDatosSolicitud$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((seccionState) => {
-          this.solicitudState = seccionState as Tramite270201State;
-        })
-      )
-      .subscribe()
   }
 
   /**
@@ -715,15 +655,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
        */
       descripcionArancelaria: ['', [Validators.required]],
     });
-
-   this.tramite270201Query.selectDatosSolicitud$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((seccionState) => {
-          this.solicitudState = seccionState as Tramite270201State;
-        })
-      )
-      .subscribe()
   }
 
   /**
