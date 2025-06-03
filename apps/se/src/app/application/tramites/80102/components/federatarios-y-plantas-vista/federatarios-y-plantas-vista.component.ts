@@ -84,9 +84,9 @@ export class FederatariosYPlantasVistaComponent implements OnDestroy {
   public plantasImmexTablaLista$!: Observable<PlantasImmex[]>;
 
   /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   * Cuando es verdadero, los campos del formulario no pueden ser editados por el usuario.
+   */
   public esFormularioSoloLectura: boolean = false; 
 
   /**
