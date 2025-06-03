@@ -41,7 +41,7 @@
             </div>
         </form>
         <div class="d-flex justify-content-lg-end h1">
-            <button class="btn btn-primary ms-2" type="button" (click)="onSubmit()">Modificar</button>
+            <button disabled="{{!FormCambioContrasena.valid}}" class="btn btn-primary ms-2" type="button" (click)="onSubmit()">Modificar</button>
         </div>
     </div>
 </div>
