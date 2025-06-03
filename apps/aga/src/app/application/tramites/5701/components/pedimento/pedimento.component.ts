@@ -162,7 +162,6 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['tablaPedimento'] && changes['tablaPedimento'].currentValue) {
       this.pedimentos = [...changes['tablaPedimento'].currentValue];
-      this.datosTablaPedimento.emit(this.pedimentos);
     }
 
     if (changes['validacion']) {

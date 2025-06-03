@@ -7,6 +7,7 @@ import {
   LABEL_DESPACHO_DD,
   LABEL_DESPACHO_LDA,
   MSG_ADUANA_PEDIMENTO,
+  MSG_CAMBIO_TIPO_SOLICITUD,
   MSJ_ERROR_FECHA,
   MSJ_ERROR_LINEA_CAPTURA,
   MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
@@ -66,18 +67,23 @@ import {
   Observable,
   Subject,
   delay,
+  distinctUntilChanged,
   first,
   map,
   merge,
+  skip,
   switchMap,
   takeUntil,
   tap,
 } from 'rxjs';
 import {
+  AbstractControl,
   FormArray,
   FormBuilder,
   FormControl,
   FormGroup,
+  ValidationErrors,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import {
@@ -336,9 +342,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   public datosTablaPagos: LineaCaptura[] = [];
 
-  private contadorFechaInicio: number = 0;
-  private contadorFechaFinal: number = 0;
-
   //TODO: Estas variables se van a eliminar
   /**
    * Arrelgo de patentes de la empresa
@@ -412,35 +415,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       )
       .subscribe();
 
-    this.datosServicio
-      .get('fechaInicio')
-      ?.valueChanges.pipe(
-        takeUntil(this.destroyNotifier$),
-        tap(() => {
-          this.contadorFechaInicio++;
-          if (this.contadorFechaInicio > 1) {
-            this.calcularRangoFechas();
-          }
-        })
-      )
-      .subscribe();
-
-    this.datosServicio
-      .get('fechaFinal')
-      ?.valueChanges.pipe(
-        takeUntil(this.destroyNotifier$),
-        tap(() => {
-          this.contadorFechaFinal++;
-          if (this.contadorFechaFinal > 1) {
-            this.calcularRangoFechas();
-          }
-        })
-      )
-      .subscribe();
     // Aqui se busca el nro de patente o autorizacion
     //
     this.obtenerPatente();
-
     this.obtenerMontoAPagar();
     this.verificarDatosExistentesStore();
   }
@@ -486,8 +463,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       } else {
         FORMAS_VALIDADAS[seccion] = false;
         this.seccionStore.establecerFormaValida(FORMAS_VALIDADAS);
-        console.log(this.seccion);
-        
       }
     }
   }
@@ -524,8 +499,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    *
    * @returns {FormGroup} El grupo de formulario 'pedimento'.
    */
-  get pedimento(): FormGroup {
-    return this.FormSolicitud.get('pedimento') as FormGroup;
+  get pedimento(): FormArray {
+    return this.FormSolicitud.get('pedimento') as FormArray;
   }
 
   /**
@@ -581,6 +556,22 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   get fechasSeleccionadas(): FormArray {
     return this.datosServicio.get('fechasSeleccionadas') as FormArray;
+  }
+
+  /**
+   * Valida que el FormArray tenga al menos un elemento.
+   * @param min {number} - El número mínimo de elementos que debe tener el FormArray.
+   * @returns {ValidatorFn} - Una función de validador que verifica la longitud del FormArray.
+   */
+  static minLengthArray(min: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control instanceof FormArray && control.length < min) {
+        return {
+          minLengthArray: { requiredLength: min, actualLength: control.length },
+        };
+      }
+      return null;
+    };
   }
 
   /**
@@ -1089,22 +1080,61 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} Esta función no retorna ningún valor.
    */
   tipoSolicitudSeleccion(): void {
-    const TIPO_SOLICITUD = parseInt(
+    // Se obtiene el valor del tipo de solicitud seleccionado y se agrega la descripción correspondiente al formulario.
+    const TIPO_SOLICITUD_VALUE = parseInt(
       this.FormSolicitud.get('tipoSolicitud')?.value,
       10
     );
 
     const SOLICITUD_DESRIPCION = this.tiposSolicitud.find(
-      (tipo) => tipo.id === TIPO_SOLICITUD
+      (tipo) => tipo.id === TIPO_SOLICITUD_VALUE
     )?.descripcion;
     this.FormSolicitud.get('descripcionTipoSolicitud')?.setValue(
       SOLICITUD_DESRIPCION
     );
 
+
+    const FORMA_MODIFICADA = Object.keys(this.FormSolicitud.controls).some(
+      (key) => {
+        if (key !== 'tipoSolicitud' && key !== 'descripcionTipoSolicitud') {
+          return (
+            this.FormSolicitud.controls[key].dirty ||
+            this.FormSolicitud.controls[key].touched
+          );
+        }
+        return false;
+      }
+    );
+
+
+    if (FORMA_MODIFICADA) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'warning',
+        modo: 'action',
+        titulo: 'Avisos',
+        mensaje: MSG_CAMBIO_TIPO_SOLICITUD,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.limpiarFormulario();
+      return;
+    }
+
     this.tipoSolicitudSeleccionada = parseInt(
       this.FormSolicitud.get('tipoSolicitud')?.value,
       10
     );
+
+    if (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL) {
+      this.pedimento.setValidators([Validators.required]);
+      this.pedimento.setValidators([SolicitudComponent.minLengthArray(1)]);
+      this.pedimento.updateValueAndValidity();
+    } else {
+      this.pedimento.clearValidators();
+      this.pedimento.updateValueAndValidity();
+    }
 
     this.setValoresStore(
       this.FormSolicitud,
@@ -2160,6 +2190,26 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún v(alor.
    */
   changeAgregarPedimento(datosPedimento: Pedimento[]): void {
+    this.pedimento.clear();
+    if (datosPedimento.length > 0) {
+      datosPedimento.forEach((pedimento) => {
+        this.pedimento.push(
+          this.fb.group({
+            idPedimento: [pedimento.idPedimento],
+            patente: [pedimento.patente],
+            pedimento: [pedimento.pedimento],
+            aduana: [pedimento.aduana],
+            tipoPedimento: [pedimento.tipoPedimento],
+            estadoPedimento: [pedimento.estadoPedimento],
+            subEstadoPedimento: [pedimento.subEstadoPedimento],
+            descTipoPedimento: [pedimento.descTipoPedimento],
+            numero: [pedimento.numero],
+            comprobanteValor: [pedimento.comprobanteValor],
+            pedimentoValidado: [pedimento.pedimentoValidado],
+          })
+        );
+      });
+    }
     this.tramite5701Store.setPedimentos(datosPedimento);
   }
 
@@ -2233,5 +2283,103 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         );
       });
     }
+  }
+
+  /**
+   * Limpia el formulario FormSolicitud, excepto el campo de tipoSolicitud y actualiza el store correspondiente.
+   * @returns {void} No retorna ningún valor.
+   */
+  limpiarFormulario(): void {
+    this.FormSolicitud.reset({
+      folioSolicitud: null,
+      tipoSolicitud: this.FormSolicitud.get('tipoSolicitud')?.value,
+      descripcionTipoSolicitud: this.FormSolicitud.get(
+        'descripcionTipoSolicitud'
+      )?.value,
+      datosImportadorExportador: {
+        apoderadoPatente: null,
+        empresaApoderado: null,
+        empresasApoderado: null,
+        RFCImpExp: '',
+        nombre: '',
+        desNumeroRegistro: '',
+        programa: false,
+        desProgramaFomento: '',
+        checkIMMEX: false,
+        desImmex: '',
+        industriaAutomotriz: false,
+        desIndustrialAutomotriz: '',
+        tipoEmpresaCertificada: '',
+        socioComercial: false,
+        certificacionOEA: false,
+        revision: false,
+        idSocioComercial: '',
+      },
+      datosServicio: {
+        fechaInicio: '',
+        fechaFinal: '',
+        horaInicio: '',
+        horaFinal: '',
+        fechasSeleccionadas: [],
+      },
+      despacho: {
+        lda: false,
+        rfcDespachoLDA: '',
+        dd: false,
+        folioDDEX: '',
+        idAduanaDespacho: '-1',
+        aduanaDespacho: '',
+        idSeccionDespacho: '-1',
+        seccionAduanera: '',
+        idRecinto: null,
+        nombreRecinto: '-1',
+        tipoDespacho: -1,
+        descripcionTipoDespacho: '',
+        tipoOperacion: '-1',
+        patente: this.despacho.get('patente')?.value,
+        relacionSociedad: false,
+        encargoConferido: false,
+        domicilioDespacho: '',
+        especifique: '',
+      },
+      mercancia: {
+        paisOrigen: 0,
+        paisProcedencia: 0,
+        descripcionGenerica: '',
+        justificacion: '',
+      },
+      pedimento: [],
+      personasResponsablesDespacho: [],
+      vehiculo: {
+        tipoTransporte: '',
+        vehiculoDatos: [],
+      },
+      transporteArriboSalida: {
+        tipoTransporte: '',
+        transporteArriboDatos: [],
+      },
+      pagoCaptura: {
+        montoAPagar: this.pagoCaptura.get('montoAPagar')?.value,
+        lineaCaptura: '',
+        monto: '',
+      },
+    });
+
+    this.pedimento.clear();
+    this.personasResponsablesDespacho.clear();
+
+    this.tramite5701Store.limpiarSolicitud();
+
+    this.setValoresStore(
+      this.FormSolicitud,
+      'tipoSolicitud',
+      'setTipoSolicitud'
+    );
+
+      this.setValoresStore(
+      this.FormSolicitud,
+      'descripcionTipoSolicitud',
+      'setDescripcionTipoSolicitud'
+    );
   }
 }

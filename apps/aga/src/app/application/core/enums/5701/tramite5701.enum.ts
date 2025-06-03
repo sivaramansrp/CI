@@ -22,11 +22,6 @@ export const FECHA_FINAL = {
 };
 
 /**
- * @description Mensaje de aviso para el cambio de tipo de solicitud.
- */
-export const MSG_CAMBIO_TIPO_SOLICITUD = '';
-
-/**
  * @description Titulo del modal de aviso.
  */
 export const TITULO_MODAL = 'Aviso';
@@ -115,6 +110,11 @@ export const MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA =
  */
 export const MSJ_ERROR_GAFETE_EXISTE =
   'El número de gafete ya se encuentra registrado, intenta de nuevo';
+
+  /**
+   * @description Mensaje de avertencia cuando se va a cambiar de tipo de solicitud y el formulario tiene datos capturados.
+   */
+  export const MSG_CAMBIO_TIPO_SOLICITUD = 'Los datos capturados serán borrados, ¿estás de acuerdo (SI/NO)?';
 
 /**
  * @description Constantes para el manejo de las etiquetas de los inputs de la autorización LDA y DDEX
