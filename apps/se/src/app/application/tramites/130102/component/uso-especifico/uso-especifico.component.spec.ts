@@ -1,71 +1,117 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-
-import { UsoEspicificoComponent } from './uso-especifico.component'
-
-import { CatalogoSelectComponent } from "../../../../shared/components/catalogo-select/catalogo-select/catalogo-select.component";
+import { UsoEspicificoComponent } from './uso-especifico.component';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
+import { TituloComponent } from "libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
 import { CommonModule } from '@angular/common';
-import { TableComponent } from '../../../../shared/components/table/table.component';
-import { TituloComponent } from "../../../../shared/components/titulo/titulo.component";
-
-import fraccionOptionJson from '../../../../../assets/json/130102/fracciónarancelaria-options.json';
-
+import { FormularioRegistroService } from '../../services/octava-temporal.service';
+import { Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
+import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { Subject } from 'rxjs';
 
 describe('UsoEspicificoComponent', () => {
   let component: UsoEspicificoComponent;
   let fixture: ComponentFixture<UsoEspicificoComponent>;
 
+  const mockFormRegistroService = {
+    registrarFormulario: jest.fn()
+  };
+
+  const mockStore = {
+    setFraccionArancelariaProsec: jest.fn(),
+    setDescripcion: jest.fn()
+  };
+
+  const solicitudMockState = {
+    fraccionArancelariaProsec: '01039101'
+  };
+
+  const consultaioSubject = new Subject<any>();
+  const tramiteQuerySubject = new Subject<any>();
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [UsoEspicificoComponent],
       imports: [
+        UsoEspicificoComponent,
         ReactiveFormsModule,
-        CommonModule,
+        CatalogoSelectComponent,
         TableComponent,
         TituloComponent,
-        CatalogoSelectComponent
+        CommonModule
+      ],
+      providers: [
+        FormBuilder,
+        { provide: Tramite130102Store, useValue: mockStore },
+        {
+          provide: Tramite130102Query,
+          useValue: {
+            selectSolicitud$: tramiteQuerySubject.asObservable()
+          }
+        },
+        {
+          provide: ConsultaioQuery,
+          useValue: {
+            selectConsultaioState$: consultaioSubject.asObservable()
+          }
+        },
+        { provide: FormularioRegistroService, useValue: mockFormRegistroService }
       ]
     }).compileComponents();
   });
 
-  beforeEach(() => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should create the component', () => {
     fixture = TestBed.createComponent(UsoEspicificoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
-
-  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
+  it('should initialize form and register it', () => {
+    consultaioSubject.next({ readonly: false });
+    tramiteQuerySubject.next(solicitudMockState);
+
+    fixture = TestBed.createComponent(UsoEspicificoComponent);
+    component = fixture.componentInstance;
+    component.ngOnInit();
     expect(component.usoEspicificoForm).toBeDefined();
-    expect(component.usoEspicificoForm.get('fracciónarancelaria')?.value).toBe('');
-    expect(component.usoEspicificoForm.get('descripción')?.value).toBe('');
+    expect(mockFormRegistroService.registrarFormulario).toHaveBeenCalled();
+    expect(component.usoEspicificoForm.enabled).toBe(true);
   });
 
-  it('should have table columns defined', () => {
-    expect(component.tableColumns).toEqual(['Fracción arancelaria', 'Descripción']);
+
+  it('should call setValoresStore and store value', () => {
+    consultaioSubject.next({ readonly: false });
+    tramiteQuerySubject.next(solicitudMockState);
+
+    fixture = TestBed.createComponent(UsoEspicificoComponent);
+    component = fixture.componentInstance;
+    component.ngOnInit();
+
+    component.usoEspicificoForm.get('fraccionArancelariaProsec')?.setValue('01039101');
+    component.setValoresStore(component.usoEspicificoForm, 'fraccionArancelariaProsec', 'setFraccionArancelariaProsec');
+    expect(mockStore.setFraccionArancelariaProsec).toHaveBeenCalledWith('01039101');
   });
 
-  it('should have table data defined', () => {
-    expect(component.tableData.length).toBe(2);
-    expect(component.tableData[0].tbodyData).toEqual([
-      '980200011',
-      'Descripción fraccion PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizará la mercancía a importar) '
-    ]);
-    expect(component.tableData[1].tbodyData).toEqual([
-      '01039101',
-      'Descripción fraccion PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizara ta mercancia a importar) '
-    ]);
+
+  it('should validate no leading spaces', () => {
+    const controlWithSpace = { value: '  Leading' } as any;
+    const controlValid = { value: 'Valid' } as any;
+
+    expect(UsoEspicificoComponent['noLeadingSpacesValidator'](controlWithSpace)).toEqual({ leadingSpaces: true });
+    expect(UsoEspicificoComponent['noLeadingSpacesValidator'](controlValid)).toBeNull();
   });
 
-  it('should have catalogos defined', () => {
-    expect(component.catalogos).toEqual(fraccionOptionJson);
-  });
-
-  it('should update descripción when obtenerRequisitosFraccionArancelariaEsquema is called', () => {
-    component.obtenerRequisitosFraccionArancelariaEsquema();
-    expect(component.usoEspicificoForm.get('descripción')?.value).toBe('Descripción fraccion PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizará la mercancía a importar) ');
+  it('should unsubscribe on destroy', () => {
+    fixture = TestBed.createComponent(UsoEspicificoComponent);
+    component = fixture.componentInstance;
+    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+ 
   });
 });

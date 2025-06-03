@@ -1,16 +1,18 @@
-<form [formGroup]="formularioRepresentacionFederalForm">
+<form [formGroup]="formularioRepresentacionFederal">
     <div class="form">
         <ng-titulo [titulo]="'Representación federal'"></ng-titulo>
         <div class="row">
             <div class="col-md-4">
-                <app-catalogo-select (change)="onEntidadFederativaChange($event)" [catalogo]="entidadesFrontera"
+                <app-catalogo-select (change)="alCambiarEntidadFederativa($event)" [catalogo]="entidadesFederativas"
                     [label]="'Entidad federativa'" [required]="true"
-                    formControlName="solicitudEntidadFederativaEntidadClave"></app-catalogo-select>
+                    [isDisabled]="esSoloLectura"
+                    formControlName="claveEntidadFederativa"></app-catalogo-select>
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="representacionFederalOptions" [label]="'Representación federal'"
-                    [required]="true" formControlName="unidadAdministrativaClave"
-                    (change)="setValoresStore(formularioRepresentacionFederalForm,'unidadAdministrativaClave')">
+                <app-catalogo-select [catalogo]="opcionesRepresentacionFederal" [label]="'Representación federal'"
+                    [required]="true" formControlName="claveUnidadAdministrativa"
+                    [isDisabled]="esSoloLectura"
+                    (change)="establecerValoresEnEstado(formularioRepresentacionFederal,'claveUnidadAdministrativa')">
                 </app-catalogo-select>
             </div>
 
@@ -24,7 +26,7 @@
                     <div>
                         <input type="checkbox" id="protestoDecirVerdad" class="form-check-input me-3"
                             formControlName="protestoDecirVerdad"
-                            (change)="setValoresStore(formularioRepresentacionFederalForm,'protestoDecirVerdad')" />
+                            (change)="establecerValoresEnEstado(formularioRepresentacionFederal,'protestoDecirVerdad')" />
                     </div>
                     <div class="text-justify">
                         <p>El/la solicitante acepta presentar la información y documentación soporte que

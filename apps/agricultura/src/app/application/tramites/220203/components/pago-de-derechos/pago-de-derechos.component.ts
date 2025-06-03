@@ -1,14 +1,15 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { Catalogo, InputFecha } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 
 import { FECHA_SALIDA_ACUICULTURA, TIPO_RADIO } from '../../constantes/220203/importacion-de-acuicultura.enum';
 
 import { FormularioPago, OpcionDeRadio } from '../../models/220203/importacion-de-acuicultura.module';
 
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 import { ImportacionDeAcuiculturaService } from '../../services/220203/importacion-de-acuicultura.service';
 
@@ -20,8 +21,23 @@ import { ImportacionDeAcuiculturaService } from '../../services/220203/importaci
   selector: 'app-pago-de-derechos',
   templateUrl: './pago-de-derechos.component.html',
   styleUrls: ['./pago-de-derechos.component.scss'],
+  standalone: true,
+  imports: [
+    InputRadioComponent,
+    InputCheckComponent,
+    InputFechaComponent,
+    CatalogoSelectComponent,
+    CrosslistComponent,
+    BtnContinuarComponent,
+    AnexarDocumentosComponent,
+    TableComponent,
+    TituloComponent,
+    AlertComponent,
+    ReactiveFormsModule,
+    CommonModule
+  ]
 })
-export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+export class PagoDeDerechosComponent implements OnInit, OnDestroy,AfterViewInit {
   /**
    * @description Formulario para el pago de derechos.
    * @type {FormGroup}
@@ -62,6 +78,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
   private destroyNotifier$ = new Subject<void>();
   formularioPagoStore: FormularioPago = {} as FormularioPago;
+
+  /**
+   * @description Indica si el formulario está en modo solo lectura.
+   * @type {boolean}
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * @description Constructor que inicializa el servicio de formularios y el servicio de importación de acuicultura.
    * @param {FormBuilder} fb FormBuilder para la creación de formularios reactivos.
@@ -69,7 +92,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   constructor(
     private readonly fb: FormBuilder,
-    private readonly importacionAcuiculturaServicio: ImportacionDeAcuiculturaService
+    private readonly importacionAcuiculturaServicio: ImportacionDeAcuiculturaService,
+    private consultaQuery: ConsultaioQuery
   ) {
     this.importacionAcuiculturaServicio.obtenerDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((datos) => {
       this.formularioPagoStore = datos.formularioPago
@@ -82,7 +106,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.crearFormularioPago();
-    this.formularioPago.statusChanges
+    this.obtenerListaJustificacion();
+    this.obtenerListaBanco();
+  }
+  ngAfterViewInit(): void {
+     this.formularioPago.valueChanges
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(
         () => {
@@ -93,10 +121,26 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         }
       );
 
-    this.obtenerListaJustificacion();
-    this.obtenerListaBanco();
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+        }
+      )
+    ).subscribe();
   }
 
+  inicializarEstadoFormulario(): void {
+    if(this.esFormularioSoloLectura) {
+      this.formularioPago.disable();
+    }
+    else {
+      this.formularioPago.enable();
+    }
+
+  }
   /**
    * @description Crea el formulario de pago según el valor de `exentoPagoValor`.
    */

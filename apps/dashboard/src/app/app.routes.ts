@@ -11,7 +11,8 @@ import { SubsecuentesComponent } from './subsecuentes/subsecuentes.component';
 import { VerificarDictamenComponent } from './verificar-dictamen/verificar-dictamen.component';
 import { loadRemoteModule } from '@angular-architects/module-federation';
 
-export const APP_ROUTES: Route[] = [
+// eslint-disable-next-line @typescript-eslint/naming-convention
+export const appRoutes: Route[] = [
   {
     path: 'login',
     loadChildren: () =>
