@@ -436,7 +436,7 @@ onSelectedRowsChange(selectedRows: FilaTablaData[]): void {
             ...this.tableData[rowIndex],
             ...formData.agregarDestinatario,
             ...formData.datosPersonales,
-            pais: this.getPaisName(formData.datosPersonales.pais), // Map the country ID to its description
+            pais: this.getPaisName(formData.datosPersonales.pais), 
           };
           }
     

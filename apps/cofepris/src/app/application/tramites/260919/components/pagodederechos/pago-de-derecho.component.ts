@@ -1,4 +1,3 @@
-
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -15,6 +14,11 @@ import { Solicitud260919Query } from '../../estados/tramites260919.query';
 import { Catalogo, InputFecha, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
+import {
+  REGEX_SOLO_DIGITOS,
+  REGEX_REEMPLAZAR,
+} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+
 /**
  * Componente para gestionar el pago de derechos en el trámite.
  */
@@ -98,12 +102,24 @@ public bancoData = BANCO_DATA;
   crearFormulario(): void {
     this.pagoDeDerechosForm = this.fb.group({
       pagoDeDerechos: this.fb.group({
-        clavedereferencia: [this.pagoDeDerechosState?.clavedereferencia, [Validators.required, Validators.pattern(/^[a-zA-Z0-9]{9}$/)]],
-        cadenadeladependencia: [this.pagoDeDerechosState?.cadenadeladependencia,[ Validators.pattern(/^[a-zA-Z0-9]{40}$/)]],
+        clavedereferencia: [
+          this.pagoDeDerechosState?.clavedereferencia,
+          [Validators.required, Validators.pattern(REGEX_REEMPLAZAR)],
+        ],
+        cadenadeladependencia: [
+          this.pagoDeDerechosState?.cadenadeladependencia,
+          [Validators.pattern(REGEX_REEMPLAZAR)],
+        ],
         banco: [this.pagoDeDerechosState?.banco],
-        llavedepago: [this.pagoDeDerechosState?.llavedepago,[Validators.pattern(/^[a-zA-Z0-9]{30}$/)]],
+        llavedepago: [
+          this.pagoDeDerechosState?.llavedepago,
+          [Validators.pattern(REGEX_REEMPLAZAR)],
+        ],
         fechadepago: [this.pagoDeDerechosState?.fechadepago],
-        importedepago: [this.pagoDeDerechosState?.importedepago,[Validators.pattern(/^\d{16}$/)]],
+        importedepago: [
+          this.pagoDeDerechosState?.importedepago,
+          [Validators.pattern(REGEX_SOLO_DIGITOS)],
+        ],
       }),
     });
   }
@@ -120,11 +136,9 @@ public bancoData = BANCO_DATA;
    */
   clearForm(): void {
     this.pagoDeDerechosForm.reset(); // Restablecer el formulario
-    // Explicitly reset the fechaDePago value
     this.pagoDeDerechosForm.get('pagoDeDerechos.fechadepago')?.setValue(null);
     this.pagoDeDerechosForm.get('pagoDeDerechos.fechadepago')?.markAsPristine();
     this.pagoDeDerechosForm.get('pagoDeDerechos.fechadepago')?.markAsUntouched();
-  // Optionally, reset the store value if needed
   this.solicitud260919Store.setFechadePago('');
   }
 

@@ -60,6 +60,12 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Modal } from 'bootstrap';
 import { CrossList, MercanciasInfo } from '../../models/mercancia.model';
+import {
+  REGEX_SOLO_DIGITOS,
+  REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL,
+  REGEX_RFC,
+  REGEX_REEMPLAZAR,
+} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
 /**
  * Componente para gestionar los datos de la solicitud.
@@ -350,7 +356,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
         ],
         rfcDel: [
           this.dataDeLaSolicitudState?.rfcDel,
-          [Validators.maxLength(13), Validators.pattern('^[A-Za-z0-9]+$')],
+          [Validators.maxLength(13), Validators.pattern(REGEX_RFC)],
         ],
         denominacion: [
           this.dataDeLaSolicitudState?.denominacion,
@@ -365,7 +371,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
           [
             Validators.required,
             Validators.maxLength(12),
-            Validators.pattern('^[0-9]+$'),
+            Validators.pattern(REGEX_SOLO_DIGITOS),
           ],
         ],
         estado: [this.dataDeLaSolicitudState?.estado, Validators.required],
@@ -378,7 +384,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
           [
             Validators.required,
             Validators.maxLength(120),
-            Validators.pattern('^[a-zA-Z0-9 ]+$'),
+            Validators.pattern(REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL),
           ],
         ],
         colonia: [
@@ -395,7 +401,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
             Validators.required,
             Validators.minLength(5),
             Validators.maxLength(5),
-            Validators.pattern('^[0-9]+$'),
+            Validators.pattern(REGEX_SOLO_DIGITOS),
           ],
         ],
         telefono: [
@@ -403,7 +409,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
           [
             Validators.required,
             Validators.maxLength(30),
-            Validators.pattern('^[0-9]+$'),
+            Validators.pattern(REGEX_SOLO_DIGITOS),
           ],
         ],
         avisoDeFuncionamiento: [
@@ -479,12 +485,12 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
       formaFarmaceutica: [
         this.dataDeLaSolicitudState?.formaFarmaceutica,
         Validators.maxLength(200),
-      ], // Added
+      ],
       numeroDeRegistroSanitario: [
         this.dataDeLaSolicitudState?.numeroDeRegistroSanitario,
         Validators.maxLength(200),
       ],
-      fechaDePago: [this.dataDeLaSolicitudState?.fechaDePago], 
+      fechaDePago: [this.dataDeLaSolicitudState?.fechaDePago],
     });
   }
   createclaveScianForm(): void {
@@ -561,7 +567,6 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
       .getClaveScianData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
-        // this.tableData = data as unknown as FilaData[];
         this.claveScianData.catalogos = data as Catalogo[];
       });
   }
