@@ -111,6 +111,12 @@ export const MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA =
   'Línea de captura no es válida, favor de verificar.';
 
 /**
+ * @decription Mensaje de advertencia cuando la línea de captura ya ha sido usada
+ */
+export const MSJ_LINEA_CAPTURA_USADA =
+  'La línea de captura ya ha sido utilizada, favor de verificar.';
+
+/**
  * @description Mensaje de error cuando ya existe un responsable del despacho con el mismo gafete que se quiere registrar.
  */
 export const MSJ_ERROR_GAFETE_EXISTE =

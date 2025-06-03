@@ -130,3 +130,10 @@ export const LINEA_CAPTURA_QUERY = '{lineaCaptura}';
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/pago/swagger-ui/index.html#/Pago/pago_2
  */
 export const API_GET_VALIDA_LINEA_CAPTURA = `pago/linea-captura/${LINEA_CAPTURA_QUERY}/usada`;
+
+/**
+ * API para validar si una línea de captura ha sido pagada
+ * @param LINEA_CAPTURA_QUERY La línea de captura a validar
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/pago/swagger-ui/index.html#/Pago/pago
+ */
+export const API_GET_VALIDA_LINEA_CAPTURA_PAGADA = `pago/valida/${LINEA_CAPTURA_QUERY}`;

@@ -10,6 +10,7 @@ import {
   MSJ_ERROR_FECHA,
   MSJ_ERROR_LINEA_CAPTURA,
   MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
+  MSJ_LINEA_CAPTURA_USADA,
   PATENTES_ID,
   SIN_ITEMS,
   SIN_VALOR,
@@ -102,6 +103,7 @@ import { SocioComercialService } from '../../../../core/services/5701/socio-come
 import { TITULO_MODAL_ERROR } from '../../../../core/enums/5701/tramite5701.enum';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { UsuarioState } from '@libs/shared/data-access-user/src/core/estados/usuario.store';
+import { ValidaLineaCapturaService } from '../../../../core/services/5701/pago/valida-linea-captura.service';
 import { ValidaLineaPagoService } from '../../../../core/services/5701/pago/valida-linea-pago.service';
 
 //TODO: Estas importaciones deben eliminarse una vez que se obtengan las patentes y los rfcs de la consulta del api.
@@ -370,6 +372,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     private readonly certificacionOrigenService: CertificacionOrigenService,
     private readonly certificacionOeaService: CertificacionOeaService,
     private readonly validaLineaPagoService: ValidaLineaPagoService,
+    private readonly validaLineaCapturaService: ValidaLineaCapturaService,
     private readonly parametroMontoService: ParametroMontoService
   ) {}
 
@@ -1815,51 +1818,80 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    this.validaLineaPagoService
-      .getLineaPagoValidacion(LINEA_PAGO)
+    this.validaLineaCapturaService
+      .getValidaLineaCapturaUsada(LINEA_PAGO)
       .pipe(
         takeUntil(this.destroyNotifier$),
-        switchMap((responseValidaPago) => {
-          if (responseValidaPago.codigo !== '00') {
-            this.nuevaNotificacion = {
-              tipoNotificacion: 'alert',
-              categoria: 'danger',
-              modo: 'action',
-              titulo: TITULO_MODAL_ERROR,
-              mensaje: MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
-              cerrar: false,
-              txtBtnAceptar: 'Aceptar',
-              txtBtnCancelar: '',
-            };
-            this.pagoCaptura.get('lineaCaptura')?.reset();
-            this.pagoCaptura.get('monto')?.reset();
-            return EMPTY;
-          }
-          return this.parametroMontoService.getParametroMonto();
+        switchMap((responseValidaLineaCaptura) => {
+          console.log(responseValidaLineaCaptura);
+          // if (responseValidaLineaCaptura.datos) {
+          //   this.nuevaNotificacion = {
+          //     tipoNotificacion: 'alert',
+          //     categoria: 'danger',
+          //     modo: 'action',
+          //     titulo: TITULO_MODAL_ERROR,
+          //     mensaje: MSJ_LINEA_CAPTURA_USADA,
+          //     cerrar: false,
+          //     txtBtnAceptar: 'Aceptar',
+          //     txtBtnCancelar: '',
+          //   };
+          //   this.pagoCaptura.get('lineaCaptura')?.reset();
+          //   this.pagoCaptura.get('monto')?.reset();
+          //   return EMPTY;
+          // }
+          return this.validaLineaCapturaService.getValidaLineaCaptura(LINEA_PAGO);
         }),
-        tap((montoResponse) => {
-          // TODO:Implementar lógica para agregar información a tabla de pagos
-          if (montoResponse) {
-            let numeroDias: number = 0;
-            if (
-              this.tipoSolicitudSeleccionada === 2 ||
-              this.tipoSolicitudSeleccionada === 3
-            ) {
-              numeroDias = this.fechasSeleccionadas.length;
-            }
-            if (montoResponse.datos) {
-              const MONTO_TOTAL: number =
-                numeroDias > 0
-                  ? montoResponse.datos * numeroDias
-                  : montoResponse.datos;
-              const VALIDACION_MONTO: boolean =
-                MONTO >= MONTO_TOTAL ? true : false;
-              this.tramite5701Store.setIsMontoAceptable(VALIDACION_MONTO);
-            }
-          }
+        tap((responseLineaCapturaPagada) => {
+          console.log(responseLineaCapturaPagada);
         })
       )
       .subscribe();
+
+    // this.validaLineaPagoService
+    //   .getLineaPagoValidacion(LINEA_PAGO)
+    //   .pipe(
+    //     takeUntil(this.destroyNotifier$),
+    //     switchMap((responseValidaPago) => {
+    //       if (responseValidaPago.codigo !== '00') {
+    //         this.nuevaNotificacion = {
+    //           tipoNotificacion: 'alert',
+    //           categoria: 'danger',
+    //           modo: 'action',
+    //           titulo: TITULO_MODAL_ERROR,
+    //           mensaje: MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
+    //           cerrar: false,
+    //           txtBtnAceptar: 'Aceptar',
+    //           txtBtnCancelar: '',
+    //         };
+    //         this.pagoCaptura.get('lineaCaptura')?.reset();
+    //         this.pagoCaptura.get('monto')?.reset();
+    //         return EMPTY;
+    //       }
+    //       return this.parametroMontoService.getParametroMonto();
+    //     }),
+    //     tap((montoResponse) => {
+    //       // TODO:Implementar lógica para agregar información a tabla de pagos
+    //       if (montoResponse) {
+    //         let numeroDias: number = 0;
+    //         if (
+    //           this.tipoSolicitudSeleccionada === 2 ||
+    //           this.tipoSolicitudSeleccionada === 3
+    //         ) {
+    //           numeroDias = this.fechasSeleccionadas.length;
+    //         }
+    //         if (montoResponse.datos) {
+    //           const MONTO_TOTAL: number =
+    //             numeroDias > 0
+    //               ? montoResponse.datos * numeroDias
+    //               : montoResponse.datos;
+    //           const VALIDACION_MONTO: boolean =
+    //             MONTO >= MONTO_TOTAL ? true : false;
+    //           this.tramite5701Store.setIsMontoAceptable(VALIDACION_MONTO);
+    //         }
+    //       }
+    //     })
+    //   )
+    //   .subscribe();
   }
 
   /**
