@@ -79,6 +79,7 @@ export function createInitialState(): TramiteState {
             claveDeReferencia: '',
             cadenaDependencia: '',
             banco: '',
+            exentoPago: '',
             llaveDePago: '',
             fechaInicio: '',
             importeDePago: '',

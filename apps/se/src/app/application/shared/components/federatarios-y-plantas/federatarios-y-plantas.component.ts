@@ -1,4 +1,4 @@
-import { Component, EventEmitter } from '@angular/core';
+import { Component, EventEmitter, OnInit } from '@angular/core';
 import { Input, Output } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -11,13 +11,13 @@ import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { FederatariosEncabezado } from '../../models/federatarios-y-plantas.model';
+import { EstadoCatalogo, EstadoOptionCatalogo, FederatariosEncabezado } from '../../models/federatarios-y-plantas.model';
 import { FederatariosYPlantasConfiguration } from '../../models/federatarios-y-plantas.model';
 import { PlantasDisponibles } from '../../models/federatarios-y-plantas.model';
 import { PlantasImmex } from '../../models/federatarios-y-plantas.model';
 import { TEXTO_DE_ALERTA } from '../../models/federatarios-y-plantas.model';
 
-import { FECHA_DE_PAGO } from '../../constantes/federatarios-y-plantas.enum';
+import { DEFAULT_ESTADOS, FECHA_DE_PAGO } from '../../constantes/federatarios-y-plantas.enum';
 
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -45,7 +45,7 @@ import { Validators } from '@angular/forms';
   templateUrl: './federatarios-y-plantas.component.html',
   styleUrl: './federatarios-y-plantas.component.scss',
 })
-export class FederatariosYPlantasComponent {
+export class FederatariosYPlantasComponent implements OnInit{
   /**
    * Configuración para la tabla de federatarios
    * @property {FederatariosYPlantasConfiguration<FederatariosEncabezado>} federatariosConfig
@@ -85,6 +85,23 @@ export class FederatariosYPlantasComponent {
   @Input() plantasImmexDatos!: PlantasImmex[];
 
   /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
+
+  /**
+   * Estado del catálogo para el formulario
+   * @property {EstadoCatalogo} estadoIdx
+   */
+  @Input() public estadoIdx: EstadoCatalogo = DEFAULT_ESTADOS;
+
+  /**
+   * Opciones del catálogo de estados para el formulario
+   * @property {EstadoOptionCatalogo} estadoOptionIdx
+   */
+  @Input() public estadoOptionIdx!: EstadoOptionCatalogo;
+
+  /**
    * Configuración del input de fecha de inicio
    * @property {InputFecha} fechaInicioInput
    */
@@ -122,6 +139,17 @@ export class FederatariosYPlantasComponent {
    */
   constructor(private router: Router, private activatedRoute: ActivatedRoute) {
     this.initFederatariosFormGroup();
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Si el formulario está deshabilitado (`formularioDeshabilitado` es verdadero),
+   * deshabilita el grupo de controles `federatariosFormGroup` para evitar la interacción del usuario.
+   */
+  ngOnInit(): void {
+    if( this.formularioDeshabilitado) {
+      this.federatariosFormGroup.disable();
+    }
   }
 
   /**

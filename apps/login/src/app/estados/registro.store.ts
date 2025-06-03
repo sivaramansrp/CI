@@ -14,7 +14,7 @@ export interface RegistroStore {
     /** Persona notificador actualmente seleccionada o consultada */
     personaNotifcador: ConsultaRegistro;
     /** Indica si los datos han sido confirmados para registro */
-    regustrarDatos: boolean;
+    registrarDatos: boolean;
     /** Indica si la tabla de personas notificadoras debe mostrarse en la UI */
     visualizarTabla: boolean;
 }
@@ -34,7 +34,7 @@ export function createInitialState(): RegistroStore {
             apellidoMaterno: '',
             rfc: '',
         },
-        regustrarDatos: false,
+        registrarDatos: false,
         visualizarTabla: false
     };
 }
@@ -95,12 +95,12 @@ export class RegistroStates extends Store<RegistroStore> {
 
     /**
      * Actualiza el valor que indica si los datos han sido confirmados para registro.
-     * @param regustrarDatos Valor booleano que indica si los datos están confirmados.
+     * @param registrarDatos Valor booleano que indica si los datos están confirmados.
      */
-    public setValorRegistro(regustrarDatos: boolean): void {
+    public setValorRegistro(registrarDatos: boolean): void {
         this.update((state) => ({
             ...state,
-            regustrarDatos,
+            registrarDatos,
         }));
     }
 
