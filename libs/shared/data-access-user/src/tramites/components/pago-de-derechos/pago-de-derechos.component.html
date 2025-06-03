@@ -1,0 +1,90 @@
+<div class="container">
+  <ng-titulo titulo="Importante" />
+  <form *ngIf="FormSolicitud" [formGroup]="FormSolicitud">
+    <div formGroupName="pagodederechos">
+      <div class="row" style="padding-bottom: 20px">
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="linea"> Linea de captura*:</label>
+            <input
+              class="form-control"
+              id="linea"
+              formControlName="linea"
+              type="text"
+              (change)="
+                setValoresStore(
+                  FormSolicitud,
+                  'pagodederechos.linea',
+                  'setLinea'
+                )
+              "
+            />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="monto">monto*:</label>
+            <input
+              class="form-control"
+              id="monto"
+              formControlName="monto"
+              type="text"
+            />
+          </div>
+        </div>
+      </div>
+      <div class="row" style="padding-bottom: 20px; text-align: right">
+        <div>
+          <button type="button" class="btn btn-default btn-space">
+            Limpiar
+          </button>
+          <button type="button" class="btn btn-primary btn-space">
+            Agregar
+          </button>
+        </div>
+      </div>
+      <div class="row justify-content-center">
+        <div class="col-md-4">
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="checkbox"
+              id="lineaCheckbox"
+              formControlName="lineaCheckbox"
+              (change)="
+                setValoresStore(
+                  FormSolicitud,
+                  'pagodederechos.lineaCheckbox',
+                  'setLineaCheckbox'
+                )
+              "
+            />
+            <label class="form-check-label" for="lineaCheckbox">
+              <span>linea de captura</span>
+              <span style="margin-left: 60px">Monto</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <nav aria-label="Page navigation example">
+        <ul class="pagination d-flex justify-content-center">
+
+        </ul>
+      </nav>
+      <div class="row" style="text-align: right">
+        <div>
+          <button class="btn btn-danger" type="button">Eliminar</button>
+        </div>
+      </div>
+
+      <p>
+        <strong>
+          A través del siguiente vinculo puedes ingresar a la página para
+          generar la línea de captura de la constancia que se solicita:
+        </strong>
+      </p>
+      <p>Generar línea de captura</p>
+    </div>
+  </form>
+</div>

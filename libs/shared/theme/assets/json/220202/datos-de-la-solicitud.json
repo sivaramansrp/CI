@@ -1,0 +1,59 @@
+{
+    "datos": {
+        "aduanaDeIngreso": "1",
+        "oficinaDeInspeccion": "1",
+        "puntoDeInspeccion": "1",
+        "numeroDeGuia": "GUIA123456",
+        "regimen": "1",
+        "numeroDeCarro": "CARRO7890",
+        "tipoDeRequisito": "1",
+        "requisito": "Certificado Zoosanitario",
+        "numeroCertificadoInternacional": "CERTINTL2024",
+        "fraccionArancelaria": "1",
+        "descripcionFraccion": "Caballos de raza pura",
+        "nico": "1",
+        "descripcionNico": "Caballos para carreras",
+        "descripcion": "Importación de caballos de carreras",
+        "cantidadUMT": "5",
+        "umt": "Cabezas",
+        "cantidadUMC": "5",
+        "umc": "1",
+        "uso": "1",
+        "tipoDeProducto": "1"
+    },
+    "movilizacion": {
+        "transporte": "1",
+        "guiaIdentificacion": "1",
+        "empresaTransportista": "Transportes Nacionales SA",
+        "medioTransporte": "Camión"
+    },
+    "pago": {
+        "exentoPago": "No",
+        "justificacion": "1",
+        "claveReferencia": "REFPAGO2024",
+        "cadenaDependencia": "CADENA123",
+        "banco": "1",
+        "llavePago": "LLAVE9876",
+        "importePago": "15000.00",
+        "fechaDePago": "2024-06-15",
+        "fechaInicioInput": "2024-06-10",
+        "fechaPago": "2024-06-15"
+    },
+    "tablaDatos": [
+        {
+            "noPartida": "abc",
+            "tipoRequisito": "abc",
+            "requisito": "abc",
+            "numeroCertificadoInternacional": "abc",
+            "fraccionArancelaria": "abc",
+            "descripcionFraccion": "abc",
+            "nico": "abc"
+        }
+    ],
+    "personas": [
+        {
+            "nombre": "abc",
+            "correo": "abc"
+        }
+    ]
+}

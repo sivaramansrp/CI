@@ -11,8 +11,11 @@ import { Tramite260212Store } from '../../estados/tramite260212.store';
 
 import { Tramite260212Query } from '../../estados/tramite260212.query';
 
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { PaisDeOrigenComponent } from '../pais-de-origen/pais-de-origen.component';
+
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { EstadoFisico } from '../../models/permiso-maquila.models';
 
 /**
  * Componente MercanciasTableFormComponent
@@ -32,6 +35,15 @@ import { PaisDeOrigenComponent } from '../pais-de-origen/pais-de-origen.componen
   styleUrl: './mercancias-table-form.component.scss',
 })
 export class MercanciasTableFormComponent implements OnInit, OnDestroy {
+  /**
+   * @desc Indica si el formulario debe mostrarse solo en modo de lectura.
+   * @type {boolean}
+   * @public
+   * 
+   * Cuando es verdadero, el usuario no puede editar los campos del formulario.
+   */
+  esFormularioSoloLectura: boolean = true;
+
   /**
    * Evento de salida que emite una acción de Cancelaración.
    */
@@ -88,9 +100,10 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
    */
   constructor(private fb: FormBuilder, private solicitudService: SolicitudService,
     private tramite260212Store: Tramite260212Store,
-    private tramite260212Query: Tramite260212Query
+    private tramite260212Query: Tramite260212Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Se puede agregar lógica de inicialización aquí si es necesario
+
   }
 
   /**
@@ -99,29 +112,13 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
   */
   ngOnInit(): void {
     this.datosMercanciaFormInitial();
-
-    this.solicitudService.getClave().subscribe((data) => {
-      this.especificarClasificacion = data;
-    });
-
-    this.solicitudService.getClasificacionProducto().subscribe((data) => {
-      this.clasificacionProducto = data;
-    });
-
-    this.solicitudService.getTestadoFisico().subscribe((data) => {
-      this.estadoFisico = data;
-    });
-
-    this.selecteDespecificarClasificacion$.subscribe((selectedDespecificarClasificacion) => {
-      if (selectedDespecificarClasificacion) {
-        this.datosMercanciaForm.get('especificarClasificacion')?.setValue(selectedDespecificarClasificacion);
-      }
-    });
+    this.inicializarEstadoFormulario()
   }
 
   /**
- * Inicializa el formulario `datosMercanciaForm` con campos requeridos y validaciones.
- */
+   * Inicializa el formulario de mercancías con los campos requeridos y sus validaciones.
+   * @returns {void}
+   */
   datosMercanciaFormInitial(): void {
     this.datosMercanciaForm = this.fb.group({
       clasificacion: ['', Validators.required],
@@ -139,7 +136,81 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
       UMC: ['', Validators.required],
       tipoDeEnvase: ['', Validators.required]
     });
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
+
+  /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   * Si está en modo solo lectura, deshabilita el formulario; si no, lo habilita y actualiza los valores.
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.actualizarEstado();
+    }
+  }
+
+
+  /**
+   * Aplica el modo solo lectura o edición al formulario según corresponda.
+   * También actualiza los valores del formulario desde el store.
+   * @returns {void}
+   */
+  guardarDatosFormulario(): void {
+    this.actualizarEstado();
+    if (this.esFormularioSoloLectura) {
+      this.datosMercanciaForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.datosMercanciaForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  /**
+   * Actualiza los valores del formulario a partir del store y servicios.
+   * Sincroniza los campos con el estado global y adapta los datos de estado físico.
+   * @returns {void}
+   */
+  actualizarEstado(): void {
+    this.solicitudService.getClave()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data): void => {
+        this.especificarClasificacion = data
+      });
+
+    this.solicitudService.getClasificacionProducto()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data): void => {
+        this.clasificacionProducto = data
+      });
+
+    this.solicitudService.getTestadoFisico()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data: EstadoFisico[]): void => {
+        this.estadoFisico = data.map(item => ({
+          id: item.id,
+          descripcion: item.descripcíon,
+        }));
+      });
+
+    this.selecteDespecificarClasificacion$.subscribe((selectedDespecificarClasificacion) => {
+      if (selectedDespecificarClasificacion) {
+        this.datosMercanciaForm.get('especificarClasificacion')?.setValue(selectedDespecificarClasificacion);
+      }
+    });
+  }
+
 
   /**
    * Obtiene el valor de 'especificarClasificacion' del formulario y lo establece en el store.
@@ -150,11 +221,13 @@ export class MercanciasTableFormComponent implements OnInit, OnDestroy {
   }
 
   /**
- * Angular lifecycle hook invoked when the component is destroyed.
- * Cleans up any subscriptions or resources associated with the component.
- */
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Libera recursos y cancela suscripciones.
+   * @returns {void}
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+
   }
 }
