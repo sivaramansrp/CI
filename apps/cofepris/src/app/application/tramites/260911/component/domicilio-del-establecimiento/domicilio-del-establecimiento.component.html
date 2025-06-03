@@ -6,10 +6,16 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="codigoPostal">Código postal*:</label>
-            <input class="form-control" type="text" id="codigoPostal" formControlName="codigoPostal" appUppercase
-              aria-labelledby="codigoPostal" (change)="setValorStore(form, 'codigoPostal')" />
-            <div *ngIf="form.get('codigoPostal')?.touched && form.get('codigoPostal')?.hasError('required')"
-              class="text-danger">
+            <input
+              class="form-control"
+              type="text"
+              id="codigoPostal"
+              formControlName="codigoPostal"
+              appUppercase
+              aria-labelledby="codigoPostal"
+              (change)="setValorStore(form, 'codigoPostal')"
+            />
+            <div *ngIf="form.get('codigoPostal')?.touched && form.get('codigoPostal')?.hasError('required')" class="text-danger">
               Por favor, corrija la codigoPostal.
             </div>
           </div>
@@ -17,8 +23,15 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <app-catalogo-select [catalogo]="estado" [label]="'Estado'" name="estado" [required]="true"
-              [isDisabled]="esFormularioSoloLectura" formControlName="estado" (change)="setValorStore(form, 'estado')">
+             <app-catalogo-select
+              [catalogo]="estado"
+              [label]="'Estado*'"
+              name="estado"
+              [required]="true"
+              [isDisabled]="esFormularioSoloLectura" 
+              formControlName="estado"
+              (change)="setValorStore(form, 'estado')"
+            >
             </app-catalogo-select>
             <div *ngIf="form.get('estado')?.touched && form.get('estado')?.hasError('required')" class="text-danger">
               Por favor, corrija la estadoLocalidad.
@@ -29,8 +42,15 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="municipioOAlcaldia">Municipio o alcaldía*:</label>
-            <input class="form-control" type="text" id="municipioOAlcaldia" formControlName="municipioOAlcaldia"
-              appUppercase aria-labelledby="municipioOAlcaldia" (change)="setValorStore(form, 'municipioOAlcaldia')" />
+          <input
+              class="form-control"
+              type="text"
+              id="municipioOAlcaldia"
+              formControlName="municipioOAlcaldia"
+              appUppercase
+              aria-labelledby="municipioOAlcaldia"
+              (change)="setValorStore(form, 'municipioOAlcaldia')"
+            />
             <div *ngIf="form.get('municipioOAlcaldia')?.touched && form.get('municipioOAlcaldia')?.hasError('required')"
               class="text-danger">
               Por favor, corrija el municipio.
@@ -47,8 +67,15 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="localidad">Localidad:</label>
-            <input class="form-control" type="text" id="localidad" formControlName="localidad" appUppercase
-              aria-labelledby="localidad" (change)="setValorStore(form, 'localidad')" />
+             <input
+              class="form-control"
+              type="text"
+              id="localidad"
+              formControlName="localidad"
+              appUppercase
+              aria-labelledby="localidad"
+              (change)="setValorStore(form, 'localidad')"
+            />
             <div *ngIf="form.get('localidad')?.touched && form.get('localidad')?.hasError('required')"
               class="text-danger">
               Por favor, corrija el localidad.
@@ -59,8 +86,15 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="colonias">Colonias:</label>
-            <input class="form-control" type="text" id="colonias" formControlName="colonias" appUppercase
-              aria-labelledby="colonias" (change)="setValorStore(form, 'colonias')" />
+            <input
+              class="form-control"
+              type="text"
+              id="colonias"
+              formControlName="colonias"
+              appUppercase
+              aria-labelledby="colonias"
+              (change)="setValorStore(form, 'colonias')"
+            />
             <div *ngIf="form.get('colonias')?.touched && form.get('colonias')?.hasError('required')"
               class="text-danger">
               Por favor, corrija la colonias.
@@ -73,8 +107,15 @@
         <div class="col-md-8">
           <div class="form-group">
             <label class="form-label" for="calle">Calle*:</label>
-            <input class="form-control" type="text" id="calle" formControlName="calle" appUppercase
-              aria-labelledby="calle" (change)="setValorStore(form, 'calle')" />
+            <input
+              class="form-control"
+              type="text"
+              id="calle"
+              formControlName="calle"
+              appUppercase
+              aria-labelledby="calle"
+              (change)="setValorStore(form, 'calle')"
+            />
             <div *ngIf="form.get('calle')?.touched && form.get('calle')?.hasError('required')" class="text-danger">
               Por favor, corrija la calle.
             </div>
@@ -86,8 +127,15 @@
         <div class="col-md-1">
           <div class="form-group">
             <label class="form-label" for="lada">Lada:</label>
-            <input class="form-control" type="text" id="lada" formControlName="lada" appUppercase aria-labelledby="lada"
-              (change)="setValorStore(form, 'lada')" />
+            <input
+              class="form-control"
+              type="text"
+              id="lada"
+              formControlName="lada"
+              appUppercase
+              aria-labelledby="lada"
+              (change)="setValorStore(form, 'lada')"
+            />
             <div *ngIf="form.get('lada')?.touched && form.get('lada')?.hasError('required')" class="text-danger">
               Por favor, corrija la lada.
             </div>
@@ -96,8 +144,15 @@
         <div class="col-md-3">
           <div class="form-group">
             <label class="form-label" for="telefono">Teléfono*:</label>
-            <input class="form-control" type="text" id="telefono" formControlName="telefono" appUppercase
-              aria-labelledby="telefono" (change)="setValorStore(form, 'telefono')" />
+            <input
+              class="form-control"
+              type="text"
+              id="telefono"
+              formControlName="telefono"
+              appUppercase
+              aria-labelledby="telefono"
+              (change)="setValorStore(form, 'telefono')"
+            />
 
             <div *ngIf="form.get('telefono')?.touched && form.get('telefono')?.invalid" class="text-danger">
               <div *ngIf="form.get('telefono')?.errors?.['required']">
@@ -118,8 +173,12 @@
     <label class="form-label mt-4 text-start">S.C.I.A.N.*:</label>
   </div>
   <div class="row">
-    <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
-      [datos]="nicoTablaDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+    <app-tabla-dinamica 
+      [tipoSeleccionTabla]="tablaSeleccionCheckbox" 
+      [configuracionTabla]="nicoTabla"
+      [datos]="nicoTablaDatos" 
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+    </app-tabla-dinamica>
     <div class="container text-end mt-5">
       <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
       <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent"
@@ -131,17 +190,30 @@
   <form [formGroup]="domicilio">
     <div class="row align-item-center">
       <div class="col-md-4 mt-5">
-        <lib-input-check [id]="'avisoCheckbox'" [label]="'Aviso de funcionamiento'" [required]="true"
-          formControlName="avisoCheckbox" [isDisabled]="true"
-          (change)="setValorStore(domicilio, 'avisoCheckbox')"></lib-input-check>
+        <lib-input-check 
+          [id]="'avisoCheckbox'" 
+          [label]="'Aviso de funcionamiento'" 
+          [required]="true"
+          formControlName="avisoCheckbox" 
+          [isDisabled]="true"
+          (change)="setValorStore(domicilio, 'avisoCheckbox')"
+      ></lib-input-check>
 
       </div>
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria:
-            <span class="bi bi-question-circle-fill" title="No. de licencia sanitaria"
-              data-bs-toggle="tooltip"></span></label>
-          <input class="form-control" id="licenciaSanitaria" placeholder="" type="text"
+            <span 
+              class="bi bi-question-circle-fill" 
+              title="No. de licencia sanitaria"
+              data-bs-toggle="tooltip"
+              ></span
+            ></label>
+          <input 
+            class="form-control" 
+            id="licenciaSanitaria" 
+            placeholder="" 
+            type="text"
             formControlName="licenciaSanitaria" />
         </div>
       </div>
@@ -149,18 +221,31 @@
 
     <div class="row">
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="estado" formControlName="regimen" [label]="'Régimen'" [required]="true"
-          [isDisabled]="esFormularioSoloLectura" name="regimen" [tooltipQuestionCircle]="true"
-          (change)="setValorStore(domicilio, 'regimen')"></app-catalogo-select>
+        <app-catalogo-select 
+          [catalogo]="estado" 
+          formControlName="regimen" 
+          [label]="'Régimen'" 
+          [required]="true"
+          [isDisabled]="esFormularioSoloLectura" 
+          name="regimen" 
+          [tooltipQuestionCircle]="true"
+          (change)="setValorStore(domicilio, 'regimen')"
+        ></app-catalogo-select>
         <div *ngIf="domicilio.get('regimen')?.touched && domicilio.get('regimen')?.hasError('required')"
           class="text-danger">
           Por favor, corrija la estadoLocalidad.
         </div>
       </div>
       <div class="col-md-8">
-        <app-catalogo-select [catalogo]="estado" formControlName="aduanasEntradas" [label]="'Aduanas de entradas'"
-          [required]="true" [isDisabled]="esFormularioSoloLectura" name="aduanasEntradas"
-          (change)="setValorStore(domicilio, 'aduanasEntradas')"></app-catalogo-select>
+        <app-catalogo-select 
+          [catalogo]="estado" 
+          formControlName="aduanasEntradas" 
+          [label]="'Aduanas de entradas'"
+          [required]="true" 
+          [isDisabled]="esFormularioSoloLectura" 
+          name="aduanasEntradas"
+          (change)="setValorStore(domicilio, 'aduanasEntradas')"
+        ></app-catalogo-select>
         <div *ngIf="domicilio.get('aduanasEntradas')?.touched && domicilio.get('aduanasEntradas')?.hasError('required')"
           class="text-danger">
           Por favor, corrija la estadoLocalidad.
@@ -172,9 +257,14 @@
       <div class="col-md-4"></div>
       <div class="col-md-4">
 
-        <lib-input-check [id]="'aifaCheckbox'" [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA).'"
-          [required]="true" formControlName="aifaCheckbox" [isDisabled]="true"
-          (change)="setValorStore(domicilio, 'aifaCheckbox')"></lib-input-check>
+        <lib-input-check 
+          [id]="'aifaCheckbox'" 
+          [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA).'"
+          [required]="true" 
+          formControlName="aifaCheckbox" 
+          [isDisabled]="true"
+          (change)="setValorStore(domicilio, 'aifaCheckbox')"
+        ></lib-input-check>
       </div>
     </div>
 
@@ -185,8 +275,12 @@
         </div>
       </div>
       <div class="row mt-5">
-        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla"
-          [datos]="mercanciasTablaDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
+        <app-tabla-dinamica 
+          [tipoSeleccionTabla]="tablaSeleccionCheckbox" 
+          [configuracionTabla]="mercanciasTabla"
+          [datos]="mercanciasTablaDatos" 
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+        ></app-tabla-dinamica>
         <div class="container text-end mt-5">
           <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
           <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
@@ -203,8 +297,14 @@
         <ng-titulo titulo="Manifiesto bajo protesta" />
         <div class="form-check bg-light p-0">
           <div class="alert alert-info content-with-checkbox py-6">
-            <lib-input-check [id]="'manifiesto'" [label]="''" [required]="true" formControlName="manifests"
-              [isDisabled]="true" (change)="setValorStore(domicilio, 'manifests')"></lib-input-check>
+            <lib-input-check 
+              [id]="'manifiesto'" 
+              [label]="''" 
+              [required]="true"
+               formControlName="manifests"
+              [isDisabled]="true" 
+              (change)="setValorStore(domicilio, 'manifests')"
+            ></lib-input-check>
             <span class="fw-bold align-middle"> *</span>
             <div>{{ manifests }}</div>
           </div>
@@ -219,16 +319,25 @@
         acuerdo en hacerlos públicos?*:
       </h6>
       <div class="row px-3">
-        <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [layout]="'horizontal'" formControlName="acuerdoPublico"
-          (change)="setValorStore(representanteLegal, 'acuerdoPublico')"></app-input-radio>
+        <app-input-radio 
+          [radioOptions]="opcionDeBotonDeRadio" 
+          [layout]="'horizontal'" 
+          formControlName="acuerdoPublico"
+          (change)="setValorStore(representanteLegal, 'acuerdoPublico')"
+        ></app-input-radio>
       </div>
       <ng-titulo titulo="Representante legal"></ng-titulo>
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="rfc">RFC*:</label>
-            <input class="form-control" type="text" id="rfc" formControlName="rfc" appUppercase aria-labelledby="rfc"
-              (change)="setValorStore(representanteLegal, 'rfc')" />
+            <input 
+              class="form-control" 
+              type="text" id="rfc" 
+              formControlName="rfc" 
+              appUppercase aria-labelledby="rfc"
+              (change)="setValorStore(representanteLegal, 'rfc')" 
+            />
             <div *ngIf="representanteLegal.get('rfc')?.invalid && representanteLegal.get('rfc')?.touched"
               class="text-danger">
               El RFC es obligatorio.
@@ -244,24 +353,42 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="nombre">Nombre o Razón Social*:</label>
-            <input class="form-control" type="text" id="nombre" formControlName="nombre" appUppercase
-              aria-labelledby="nombre" />
+            <input 
+              class="form-control" 
+              type="text" 
+              id="nombre" 
+              formControlName="nombre" 
+              appUppercase
+              aria-labelledby="nombre" 
+            />
           </div>
         </div>
 
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="apellidoPaterno">Apellido paterno*:</label>
-            <input class="form-control" type="text" id="apellidoPaterno" formControlName="apellidoPaterno" appUppercase
-              aria-labelledby="apellidoPaterno" />
+            <input 
+              class="form-control" 
+              type="text" 
+              id="apellidoPaterno" 
+              formControlName="apellidoPaterno" 
+              appUppercase
+              aria-labelledby="apellidoPaterno" 
+            />
           </div>
         </div>
 
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="apellidoMaterno">Apellido materno:</label>
-            <input class="form-control" type="text" id="apellidoMaterno" formControlName="apellidoMaterno" appUppercase
-              aria-labelledby="apellidoMaterno" />
+            <input 
+              class="form-control" 
+              type="text" 
+              id="apellidoMaterno" 
+              formControlName="apellidoMaterno" 
+              appUppercase
+              aria-labelledby="apellidoMaterno" 
+            />
           </div>
         </div>
       </div>
