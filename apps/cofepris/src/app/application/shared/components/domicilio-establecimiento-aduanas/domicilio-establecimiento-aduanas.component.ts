@@ -299,6 +299,9 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
       )
       .subscribe();
 
+    /* 
+    * Inicializa el grupo de formularios con los valores del estado de la solicitud.
+    */
     this.domicilio = this.fb.group({
       codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required, Validators.maxLength(12)]],
       estado: [this.solicitudState?.estado, Validators.required],
@@ -313,10 +316,17 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
         { value: this.solicitudState?.licenciaSanitaria, disabled: false }, [Validators.required]],
     });
 
+    /** 
+     *Inicializa el grupo de formularios para el agente aduanal y las mercancías.
+     */
     this.formAgente = this.fb.group({
       claveScianModal: [this.solicitudState?.claveScianModal, Validators.required],
       claveDescripcionModal: [this.solicitudState?.claveDescripcionModal],
     });
+
+    /** 
+     * Inicializa el grupo de formularios para las mercancías con los valores del estado de la solicitud.
+     */ 
     this.formMercancias = this.fb.group({
       nombreComercial: [this.solicitudState?.nombreComercial, Validators.required],
       nombreComun: [this.solicitudState?.nombreComun, Validators.required],
