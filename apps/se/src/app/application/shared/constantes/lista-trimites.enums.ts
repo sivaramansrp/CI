@@ -121,5 +121,14 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
             componentName: 'DatosComponent',
 
         }]
-    }
+    },
+    {
+        tramite: 120404,
+        listaComponentes: [{
+            id: 'solicitud',
+            componentPath: () => import('../../tramites/120404/pages/solicitante-asigncionTab/solicitante-entidad.component').then(m => m.SolicitanteAsigncionComponent),
+            componentName: 'SolicitanteAsigncionComponent',
+
+        }]
+    },
 ];
