@@ -2,21 +2,21 @@
     "code": 200,
     "data": [
       {
-        "id": 101,
+        "id": 1,
         "descripcion": "Transporte de carga",
         "tam": "Mediano",
         "dpi": "Internacional",
         "value": "Aéreo"
       },
       {
-        "id": 102,
+        "id": 2,
         "descripcion": "Transporte de pasajeros",
         "tam": "Pequeño",
         "dpi": "Nacional",
         "value": "Marítimo"
       },
       {
-        "id": 103,
+        "id": 3,
         "descripcion": "Transporte de mercancías",
         "tam": "Grande",
         "dpi": "Internacional",

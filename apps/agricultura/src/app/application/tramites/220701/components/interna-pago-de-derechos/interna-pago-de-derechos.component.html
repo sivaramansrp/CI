@@ -26,7 +26,7 @@
                 formControlName="justificacion"
                 [label]="'Justificación'"
                 [required]="true"
-                [isDisabled]="false"
+                [isDisabled]="esFormularioSoloLectura"
                 (change)="
                 setValoresStore(
                   formularioPago,
@@ -41,7 +41,7 @@
                 formControlName="justificacion"
                 [label]="'Justificación'"
                 [required]="true"
-                [isDisabled]="true"
+                [isDisabled]="esFormularioSoloLectura"
                 name="justificacion"
                 (change)="
                 setValoresStore(
@@ -63,6 +63,7 @@
               name="claveReferencia"
               placeholder=""
               type="text"
+              [disabled]="esFormularioSoloLectura"
               appUppercase
               (change)="
               setValoresStore(
@@ -83,6 +84,7 @@
               name="cadenaDependencia"
               placeholder=""
               type="text"
+              [disabled]="esFormularioSoloLectura"
               appUppercase
               (change)="
               setValoresStore(
@@ -99,7 +101,7 @@
                 formControlName="banco"
                 [label]="'Banco'"
                 [required]="true"
-                [isDisabled]="false"
+                [isDisabled]="esFormularioSoloLectura"
                 name="banco"
                 (change)="
               setValoresStore(
@@ -115,7 +117,7 @@
                 formControlName="banco"
                 [label]="'Banco'"
                 [required]="true"
-                [isDisabled]="false"
+                [isDisabled]="esFormularioSoloLectura"
                 name="banco"
                 (change)="
                 setValoresStore(
@@ -137,6 +139,7 @@
               name="llavePago"
               placeholder=""
               type="text"
+              [disabled]="esFormularioSoloLectura"
               appUppercase
               (change)="
               setValoresStore(
@@ -153,6 +156,7 @@
               name="fechaPago"
               [setFecha]="fechaPagoDate" 
               formControlName="fechaFactura"
+              [isDisabled]="esFormularioSoloLectura"
             ></input-fecha>
           </div>
           <div class="col-md-4 form-group">
@@ -164,6 +168,7 @@
               name="importePago"
               placeholder=""
               type="text"
+              [disabled]="esFormularioSoloLectura"
               appUppercase
               (change)="
               setValoresStore(
