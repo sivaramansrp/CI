@@ -365,7 +365,7 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
    * Si es falso, los habilita para permitir la edición.
    */
   deshabilitarFormularios(): void {
-    if (this.consultaState.readonly) {
+    if (this.consultaState?.readonly) {
       // Deshabilita los formularios si el estado es solo lectura
       this.fomentoExportacionForm.disable();
       this.formularioDireccion.disable();

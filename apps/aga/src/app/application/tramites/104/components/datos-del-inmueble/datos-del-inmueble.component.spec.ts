@@ -37,6 +37,21 @@ describe('DatosDelInmuebleComponent', () => {
 
     fixture = TestBed.createComponent(DatosDelInmuebleComponent);
     componente = fixture.componentInstance;
+    
+    componente['consultaState'] = {
+    procedureId: 'ABC123',
+    parameter: 'param',
+    department: 'dep',
+    folioTramite: 'FT-001',
+    tipoDeTramite: 'tipo',
+    estadoDeTramite: 'estado',
+    readonly: false,
+    create: true,
+    update: true,
+    consultaioSolicitante: null
+  };
+
+
     fixture.detectChanges();
   });
 
