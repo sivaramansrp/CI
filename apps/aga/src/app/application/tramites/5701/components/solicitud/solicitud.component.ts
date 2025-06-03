@@ -2,6 +2,7 @@ import {
   ADV_LIMPIA_CAMPOS,
   CONFIGURACION_ENCABEZADO_TABLA_PAGOS,
   EMPRESAS_CERTIFICADAS,
+  ESTATUS_PAGADO,
   ID_NAME_DD,
   ID_NAME_LDA,
   LABEL_DESPACHO_DD,
@@ -10,6 +11,7 @@ import {
   MSJ_ERROR_FECHA,
   MSJ_ERROR_LINEA_CAPTURA,
   MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
+  MSJ_LINEA_CAPTURA_NO_PAGADA,
   MSJ_LINEA_CAPTURA_USADA,
   PATENTES_ID,
   SIN_ITEMS,
@@ -1514,9 +1516,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns void
    */
   changeCrosslist(fechas: string[]): void {
+    this.fechasSeleccionadas.clear();
     fechas.forEach((fecha) => {
       this.fechasSeleccionadas.push(new FormControl(fecha));
     });
+
     this.tramite5701Store.setFechasSeleccionadas(fechas);
   }
 
@@ -1824,24 +1828,67 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         takeUntil(this.destroyNotifier$),
         switchMap((responseValidaLineaCaptura) => {
           console.log(responseValidaLineaCaptura);
-          // if (responseValidaLineaCaptura.datos) {
-          //   this.nuevaNotificacion = {
-          //     tipoNotificacion: 'alert',
-          //     categoria: 'danger',
-          //     modo: 'action',
-          //     titulo: TITULO_MODAL_ERROR,
-          //     mensaje: MSJ_LINEA_CAPTURA_USADA,
-          //     cerrar: false,
-          //     txtBtnAceptar: 'Aceptar',
-          //     txtBtnCancelar: '',
-          //   };
-          //   this.pagoCaptura.get('lineaCaptura')?.reset();
-          //   this.pagoCaptura.get('monto')?.reset();
-          //   return EMPTY;
-          // }
-          return this.validaLineaCapturaService.getValidaLineaCaptura(LINEA_PAGO);
+          if (responseValidaLineaCaptura.datos) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: TITULO_MODAL_ERROR,
+              mensaje: MSJ_LINEA_CAPTURA_USADA,
+              cerrar: false,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+            this.pagoCaptura.get('lineaCaptura')?.reset();
+            this.pagoCaptura.get('monto')?.reset();
+            return EMPTY;
+          }
+          return this.validaLineaCapturaService.getValidaLineaCaptura(
+            LINEA_PAGO
+          );
         }),
         tap((responseLineaCapturaPagada) => {
+          if (
+            responseLineaCapturaPagada.datos.pago_model.estatus !==
+            ESTATUS_PAGADO
+          ) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: TITULO_MODAL_ERROR,
+              mensaje: MSJ_LINEA_CAPTURA_NO_PAGADA,
+              cerrar: false,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+            return;
+          }
+
+          //Obtenemos el monto a pagar desde el servicio de parámetros
+          const MONTO_A_PAGAR = this.pagoCaptura
+            .get('montoAPagar')
+            ?.getRawValue();
+
+          const DIAS_SERVICIO =
+            this.tipoSolicitudSeleccionada === 1
+              ? 1
+              : this.fechasSeleccionadas.length;
+
+          console.log(`Días de servicio: ${DIAS_SERVICIO}`);
+          // Calculamos el monto a cubrir
+
+          const MONTO_A_CUBRIR = DIAS_SERVICIO * MONTO_A_PAGAR;
+
+          const PAGO = {
+            lineaCaptura: LINEA_PAGO,
+            monto: responseLineaCapturaPagada.datos.pago_model.importe,
+          };
+
+          this.datosTablaPagos.push(PAGO);
+
+          console.log(`Monto a cubrir: ${MONTO_A_CUBRIR}`);
+
           console.log(responseLineaCapturaPagada);
         })
       )

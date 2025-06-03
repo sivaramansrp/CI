@@ -117,6 +117,12 @@ export const MSJ_LINEA_CAPTURA_USADA =
   'La línea de captura ya ha sido utilizada, favor de verificar.';
 
 /**
+ * @description Mensaje de error cuando la línea de captura no ha sido pagada.
+ */
+export const MSJ_LINEA_CAPTURA_NO_PAGADA =
+  'La línea de captura no ha sido pagada, favor de verificar.';
+
+/**
  * @description Mensaje de error cuando ya existe un responsable del despacho con el mismo gafete que se quiere registrar.
  */
 export const MSJ_ERROR_GAFETE_EXISTE =
@@ -234,3 +240,8 @@ export const CONFIGURACION_ENCABEZADO_TABLA_PAGOS: ConfiguracionColumna<LineaCap
      */
     { encabezado: 'monto', clave: (fila) => fila.monto, orden: 2 },
   ];
+
+  /**
+   * @description Constante estauts pagado
+   */
+export const ESTATUS_PAGADO = 'Pagado';
