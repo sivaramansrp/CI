@@ -3,13 +3,24 @@
     <form [formGroup]="formulario">
         <div class="row mb-3">
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="entidad" [label]="'Entidad federativa'" [required]="true"
-                    name="entidad" formControlName="entidad" >
+                <app-catalogo-select [catalogo]="entidad" 
+                    [label]="'Entidad federativa'" 
+                    [required]="true"
+                    name="entidad" 
+                    formControlName="entidad"
+                    [isDisabled]="esFormularioSoloLectura"
+                    (change)="setValoresStore(formulario, 'entidad', 'setEntidad')" 
+                    >
                 </app-catalogo-select>
             </div>
             <div class="col-md-4">
-                <app-catalogo-select [catalogo]="representacion" [label]="'Representación federal'" [required]="true"
-                    name="representacion" formControlName="representacion"
+                <app-catalogo-select [catalogo]="representacion" 
+                    [label]="'Representación federal'" 
+                    [required]="true"
+                    name="representacion" 
+                    formControlName="representacion"
+                    [isDisabled]="esFormularioSoloLectura"
+                    (change)="setValoresStore(formulario, 'representacion', 'setRepresentacion')"
                     >
                 </app-catalogo-select>
             </div>
