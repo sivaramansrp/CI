@@ -21,12 +21,12 @@ describe('SanidadCertificadoComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [
         SanidadCertificadoComponent,
-        PasoUnoComponent,
         PasoDosComponent,
         PasoTresComponent, // Declare all components used in the test
 
       ],
       imports: [
+        PasoUnoComponent,
         HttpClientTestingModule, // Import HttpClientTestingModule for mock HTTP requests
         ReactiveFormsModule, // Import ReactiveFormsModule if you're using reactive forms
         ToastrModule.forRoot(),
