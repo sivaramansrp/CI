@@ -1,10 +1,9 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
 import { CambioModalidadService } from '../../service/cambio-modalidad.service';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { ConsultaioState } from '@libs/shared/data-access-user/src';
 import { SECCIONES_TRAMITE_80208 } from '../../constantes/solicitud-modalidad.enums';
-import { SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { SeccionLibStore } from '@ng-mf/data-access-user';
 
 /**
  * @component PasoUnoComponent

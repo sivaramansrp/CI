@@ -209,10 +209,9 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
           this.cambioModalidadState = seccionState.cambioModalidad;
           this.cambioDeModalidadState = seccionState.cambioDeModalidad;
           this.serviciosImmxState = seccionState.serviciosImmx;
-          this.inicializarForm();
-          this.inicializarEstadoFormulario();
         })
       ).subscribe();
+    this.inicializarForm();
     this.getCargarDatos();
     this.getCambioDeModalidad();
     this.getServiciosImmx();
@@ -250,15 +249,15 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    */
   inicializarForm(): void {
     this.cambioDeModalidadForm = this.fb.group({
-      seleccionaLaModalidad: [{value: this.cambioDeModalidadState?.seleccionaLaModalidad, disabled: this.esFormularioSoloLectura}],
-      folio: [{value: this.cambioDeModalidadState?.folio, disabled: this.esFormularioSoloLectura}],
-      ano: [{value: this.cambioDeModalidadState?.ano, disabled: this.esFormularioSoloLectura}],
-      seleccionaModalidad: [{value: this.cambioDeModalidadState?.seleccionaModalidad, disabled: this.esFormularioSoloLectura}],
-      cambioDeModalidad: [{value:this.cambioModalidadState, disabled: this.esFormularioSoloLectura}]
+      seleccionaLaModalidad: [{value: this.cambioDeModalidadState?.seleccionaLaModalidad, disabled: true}],
+      folio: [{value: this.cambioDeModalidadState?.folio, disabled: true}],
+      ano: [{value: this.cambioDeModalidadState?.ano, disabled: true}],
+      seleccionaModalidad: [{value: this.cambioDeModalidadState?.seleccionaModalidad, disabled: true}],
+      cambioDeModalidad: [{value:this.cambioModalidadState}]
     });
 
     this.serviciosImmxForm = this.fb.group({
-      serviciosImmx: [{value: this.cambioModalidadState, disabled: this.esFormularioSoloLectura}]
+      serviciosImmx: [{value: this.cambioModalidadState}]
     });
   } 
 
@@ -286,10 +285,8 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
     this.inicializarForm();
       if (this.esFormularioSoloLectura) {
         this.cambioDeModalidadForm.disable();
-        this.serviciosImmxForm.disable();
       } else {
         this.cambioDeModalidadForm.enable();
-        this.serviciosImmxForm.enable();
       }
   }
 
