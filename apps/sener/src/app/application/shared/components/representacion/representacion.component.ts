@@ -39,6 +39,15 @@ export class RepresentacionComponent {
    */
   @Input() frmRepresentacionForm!: FormGroup;
 
+    /**
+   * @description Indica si el formulario debe mostrarse en modo solo lectura.
+   * Cuando es `true`, todos los campos del formulario estarán deshabilitados y no podrán ser editados por el usuario.
+   * Este valor se recibe como entrada desde el componente padre.
+   * @type {boolean}
+   * @default false
+   */
+   @Input() esFormularioSoloLectura: boolean = false;
+
   /**
    * Lista de entidades federativas.
    * @type {Catalogo[]}
