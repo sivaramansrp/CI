@@ -1,4 +1,4 @@
-import { BtnContinuarComponent, InicioSesionService, SolicitanteComponent, SubirDocumentoService, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, InicioSesionService, SolicitanteComponent, SubirDocumentoService, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { AvisoTercerosRelacionadosComponent } from '../../shared/components/aviso-terceros-relacionados/aviso-terceros-relacionados.component';
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from './pages/datos/datos.component';
@@ -20,6 +20,8 @@ import { provideHttpClient } from '@angular/common/http';
   declarations: [
     DatosComponent,
     PantallasComponent,
+    PasoDosComponent,
+    PasoTresComponent,
   ],
   imports: [
     CommonModule,
@@ -27,14 +29,16 @@ import { provideHttpClient } from '@angular/common/http';
     SolicitanteComponent,
     BtnContinuarComponent,
     WizardComponent,
-    PasoDosComponent,
-    PasoTresComponent,
     DatosDelEstablecimientoRFCComponent,
     DomicilioEstablecimientoAduanasComponent,
     ManifiestosComponent,
     RepresentanteLegalRfcComponent,
     PagoDerechosComponent,
-    AvisoTercerosRelacionadosComponent
+    AvisoTercerosRelacionadosComponent,
+    TituloComponent,
+    AnexarDocumentosComponent, 
+    AlertComponent,
+    FirmaElectronicaComponent
   ],
   providers: [
     provideHttpClient(),
