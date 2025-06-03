@@ -82,6 +82,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   frmRepresentacionForm!: FormGroup;
 
+   /**
+   * Formulario reactivo para capturar el estado del manifiesto de aceptación (checkbox).
+   * Este formulario se utiliza para almacenar y gestionar el valor del checkbox de aceptación en el store.
+   */
+  manifestoForm!: FormGroup;
+
   /**
    * Datos de configuración para los encabezados de la tabla.
    * @type {ConfiguracionColumna<string>[]} Arreglo que contiene la configuración de las columnas para la tabla.
@@ -501,6 +507,23 @@ tituloParte = TITULO_ORIGEN;
        * Es un campo obligatorio.
        */
       representacion: [this.seccionState?.representacion, Validators.required],
+    });
+     /**
+     * @description Inicializa el formulario reactivo para el manifiesto de aceptación.
+     * Este formulario contiene el control 'manifesto', que representa el estado del checkbox de aceptación.
+     * El valor por defecto es 'false'.
+     * @type {FormGroup}
+     */
+    this.manifestoForm = this.fb.group({
+      
+      /**
+       * @description Estado del checkbox del manifiesto de aceptación.
+       * Valor booleano que indica si el usuario ha aceptado el manifiesto.
+       * Se utiliza para almacenar y gestionar el valor en el formulario reactivo y en el store.
+       * @type {boolean}
+       * @default false
+       */
+      manifesto: [this.seccionState?.manifesto], 
     });
   }
 
