@@ -692,15 +692,24 @@
     "departamento": "SE",
     "numeroDeProcedimiento": "130102"
   },
-   {
-        "id": 570101,
-        "tipoDeTramite": "Solicitud de Permiso",
-        "fecha": "2023-10-01",
-        "fechaActualizacion": "2023-10-05",
-        "diasTranscurridos": "4",
-        "departamento": "AGA",
-        "numeroDeProcedimiento": "570101"
-    },
+  {
+    "id": 570101,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "570101"
+  },
+  {
+    "id": 32504,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32504"
+  },
   {
     "id": 80102,
     "tipoDeTramite": "Solicitud de Permiso",
@@ -710,5 +719,4 @@
     "departamento": "SE",
     "numeroDeProcedimiento": "80102"
   }
-    
 ]
