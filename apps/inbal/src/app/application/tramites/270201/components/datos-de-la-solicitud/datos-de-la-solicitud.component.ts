@@ -4,7 +4,6 @@
 import {
   Catalogo,
   CatalogoSelectComponent,
-  ConsultaioQuery,
   InputRadioComponent,
   SolicitanteComponent,
 } from '@libs/shared/data-access-user/src';
@@ -28,6 +27,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite270201State, Tramite270201Store } from '../../estados/tramites/tramite270201.store';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ModalComponent } from '../modal/modal.component';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/aviso-siglos.enum';
 import { ObraTablaDatos } from '../../models/aviso-siglos.models';
@@ -366,7 +366,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
      */
     this.initializeObraDeArteFormGroup();
 
-      this.inicializarEstadoFormulario();
+    this.inicializarEstadoFormulario();
 
     /**
      * Configura el texto HTML para el mensaje del manifiesto de alerta.
@@ -387,7 +387,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.guardarDatosFormulario();
     } else {
        this.solicitudFormGroup.enable();
-      //  this.obraDeArteFormgroup.enable();
+       this.obraDeArteFormgroup.enable();
     }
   }
 
@@ -402,13 +402,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       // No se requiere ninguna acción en el formulario
     }
 
-    // if (this.obraDeArteFormgroup && this.esFormularioSoloLectura) {
-    //   this.obraDeArteFormgroup.disable();
-    // } else if (!this.esFormularioSoloLectura) {
-    //   this.obraDeArteFormgroup.enable();
-    // } else {
-    //   // No se requiere ninguna acción en el formulario
-    // }
+    if (this.obraDeArteFormgroup && this.esFormularioSoloLectura) {
+      this.obraDeArteFormgroup.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.obraDeArteFormgroup.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
   }
 
   /**

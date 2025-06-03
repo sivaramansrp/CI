@@ -28,8 +28,8 @@
                 </div>
 
                 <div class="col-md-12 mt-5 d-flex justify-content-end">
-                    <button type="button" class="btn btn-danger">Eliminar</button>
-                    <button type="button" class="btn btn-primary ms-3" (click)="toggleObraDeArte()">Agregar</button>
+                    <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura">Eliminar</button>
+                    <button type="button" class="btn btn-primary ms-3" (click)="toggleObraDeArte()" [disabled]="esFormularioSoloLectura">Agregar</button>
                 </div>
             </div>
 
@@ -206,9 +206,9 @@
                     </div>
 
                     <div class="col-md-9 d-flex justify-content-end">
-                        <button type="button" class="btn btn-default me-3" (click)="toggleObraDeArte()"> Cancelar
+                        <button type="button" class="btn btn-default me-3" (click)="toggleObraDeArte()" [disabled]="esFormularioSoloLectura"> Cancelar
                         </button>
-                        <button type="button" class="btn btn-primary" (click)="submitDeArteForm()"> Guardar </button>
+                        <button type="button" class="btn btn-primary" (click)="submitDeArteForm()" [disabled]="esFormularioSoloLectura"> Guardar </button>
                     </div>
                 </div>
             </div>
