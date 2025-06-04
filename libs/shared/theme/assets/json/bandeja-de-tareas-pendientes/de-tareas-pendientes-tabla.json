@@ -5849,5 +5849,15 @@
     "departamento": "se",
     "numeroDeProcedimiento": "80101",
     "origin": "READ_PROCEDURE"
+  },
+  {
+    "folioTramite": "099226136147361192499352",
+    "tipoDeTramite": "Registro de Información de Junta Técnica",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "se",
+    "numeroDeProcedimiento": "80306",
+    "origin": "READ_PROCEDURE"
   }
 ]
