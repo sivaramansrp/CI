@@ -114,8 +114,8 @@
   {
     "id": 17,
     "tramite": 31803,
-    "linkDashboard": "/agace/registro-solicitud/solicitud",
-    "linkDepartment": "/pago/registro-solicitud/solicitud",
+    "linkDashboard": "/agace/registro/solicitud",
+    "linkDepartment": "/pago/registro/solicitud",
     "department": "agace"
   },
   {
@@ -2032,8 +2032,8 @@
   {
     "id": 291,
     "tramite": 80316,
-    "linkDashboard": "/se/modificaciones-immex-prosec/tipo-de-persona",
-    "linkDepartment": "/pago/modificaciones-immex-prosec/tipo-de-persona",
+    "linkDashboard": "/se/modificaciones-immex/tipo-de-persona",
+    "linkDepartment": "/pago/modificaciones-immex/tipo-de-persona",
     "department": "se"
   },
   {
@@ -4202,7 +4202,7 @@
   {
     "id": 603,
     "tramite": 120403,
-    "linkDashboard": "se/cupos/solicitud",
+    "linkDashboard": "/se/cupos/solicitud",
     "linkDepartment": "/pago/cupos/solicitud",
     "department": "se"
   },
