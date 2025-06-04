@@ -1,104 +1,87 @@
-import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ExpedicionCertificadoService } from './expedicion-certificado.service';
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { DetalledelaLicitacion, DistribucionSaldo, LicitacionesDisponibles } from '../../../shared/models/expedicion-certificado.model';
+import { HttpClient } from '@angular/common/http';
+import { of } from 'rxjs';
 
 describe('ExpedicionCertificadoService', () => {
   let service: ExpedicionCertificadoService;
-  let httpMock: HttpTestingController;
+  let httpMock: any;
+  let tramiteStoreMock: any;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [ExpedicionCertificadoService],
-    });
-
-    service = TestBed.inject(ExpedicionCertificadoService);
-    httpMock = TestBed.inject(HttpTestingController);
+    httpMock = {
+      get: jest.fn()
+    };
+    tramiteStoreMock = {
+      setEntidadFederativa: jest.fn(),
+      setRepresentacionFederal: jest.fn(),
+      setMontoExpedir: jest.fn(),
+      setMontoExpedirCheck: jest.fn(),
+      setMontoDisponsible: jest.fn(),
+      setTotalExpedir: jest.fn(),
+      setNumeraDelicitacion: jest.fn(),
+      setFechaDelEventoDelicitacion: jest.fn(),
+      setDescripcionDelProducto: jest.fn()
+    };
+    service = new ExpedicionCertificadoService(httpMock, tramiteStoreMock);
   });
 
-  afterEach(() => {
-    httpMock.verify();
+  it('should call http.get for getEntidadFederativa', () => {
+    httpMock.get.mockReturnValue(of([]));
+    service.getEntidadFederativa().subscribe();
+    expect(httpMock.get).toHaveBeenCalledWith('assets/json/120204/entidad-federativa.json');
   });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
+  it('should call http.get for getRepresentacionFederal', () => {
+    httpMock.get.mockReturnValue(of([]));
+    service.getRepresentacionFederal().subscribe();
+    expect(httpMock.get).toHaveBeenCalledWith('assets/json/120204/representacion-federal.json');
   });
 
-  it('should fetch entidad federativa data', () => {
-    const mockResponse: Catalogo = { id: 1, descripcion: 'Entidad Federativa' };
-
-    service.getEntidadFederativa().subscribe((data) => {
-      expect(data).toEqual(mockResponse);
-    });
-
-    const req = httpMock.expectOne('assets/json/120204/entidad-federativa.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+  it('should call http.get for getDetallesDelalicitacion', () => {
+    httpMock.get.mockReturnValue(of({}));
+    service.getDetallesDelalicitacion().subscribe();
+    expect(httpMock.get).toHaveBeenCalledWith('assets/json/120204/detalles-licitacion.json');
   });
 
-  it('should fetch representacion federal data', () => {
-    const mockResponse: Catalogo = { id: 2, descripcion: 'Representacion Federal' };
-
-    service.getRepresentacionFederal().subscribe((data) => {
-      expect(data).toEqual(mockResponse);
-    });
-
-    const req = httpMock.expectOne('assets/json/120204/representacion-federal.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+  it('should call http.get for getDistribucionSaldo', () => {
+    httpMock.get.mockReturnValue(of({}));
+    service.getDistribucionSaldo().subscribe();
+    expect(httpMock.get).toHaveBeenCalledWith('assets/json/120204/distribucion-saldo.json');
   });
 
-  it('should fetch detalles de la licitacion data', () => {
-    const mockResponse: DetalledelaLicitacion = {
-      "numeraDelicitacion":"002/2024",
-      "fechaDelEventoDelicitacion":"2024-03-22",
-      "descripcionDelProducto":"PANTALONES CON PETO Y TIRANTI 100% ALGODON"    
-  };
-
-    service.getDetallesDelalicitacion().subscribe((data) => {
-      expect(data).toEqual(mockResponse);
-    });
-
-    const req = httpMock.expectOne('assets/json/120204/detalles-licitacion.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+  it('should call http.get for obtenerDatosTabla', () => {
+    httpMock.get.mockReturnValue(of({}));
+    service.obtenerDatosTabla().subscribe();
+    expect(httpMock.get).toHaveBeenCalledWith('assets/json/120204/datos-de-la-tabla.json');
   });
 
-  it('should fetch distribucion saldo data', () => {
-    const mockResponse: DistribucionSaldo = {
-      "montoAExpedir":"",
-      "montoAExpedirCheck":false,
-      "montoDisponible":"9985",
-      "totalAExpedir":""
-  };
-
-    service.getDistribucionSaldo().subscribe((data) => {
-      expect(data).toEqual(mockResponse);
-    });
-
-    const req = httpMock.expectOne('assets/json/120204/distribucion-saldo.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+  it('should call http.get for getExpedienteCertificado', () => {
+    httpMock.get.mockReturnValue(of({}));
+    service.getExpedienteCertificado().subscribe();
+    expect(httpMock.get).toHaveBeenCalledWith('assets/json/120204/expedicion-certificado.json');
   });
 
-  it('should fetch table data', () => {
-    const mockResponse: LicitacionesDisponibles = {
-      "numeroDeLicitacion":"002/2024 ",
-      "fechaDeLicitacion":"2024-03-22 ",
-      "descripcion":"",
-      "montoAdjudicado":"9985",
-      "fechaInicioVigencia":"2024-03-01",
-      "fechaFinVigencia":"2024-12-31"
-  };
-
-    service.obtenerDatosTabla().subscribe((data) => {
-      expect(data).toEqual(mockResponse);
-    });
-
-    const req = httpMock.expectOne('assets/json/120204/datos-de-la-tabla.json');
-    expect(req.request.method).toBe('GET');
-    req.flush(mockResponse);
+  it('should call all tramiteStore setters in setDatosFormulario', () => {
+    const datos = {
+      entidadFederativa: 'Entidad',
+      representacionFederal: 'RepFed',
+      montoAExpedir: '10',
+      montoAExpedirCheck: true,
+      montoDisponible: '100',
+      totalAExpedir: '110',
+      numeraDelicitacion: 'LIC123',
+      fechaDelEventoDelicitacion: '2024-01-01',
+      descripcionDelProducto: 'Producto'
+    };
+    service.setDatosFormulario(datos as any);
+    expect(tramiteStoreMock.setEntidadFederativa).toHaveBeenCalledWith('Entidad');
+    expect(tramiteStoreMock.setRepresentacionFederal).toHaveBeenCalledWith('RepFed');
+    expect(tramiteStoreMock.setMontoExpedir).toHaveBeenCalledWith('10');
+    expect(tramiteStoreMock.setMontoExpedirCheck).toHaveBeenCalledWith(true);
+    expect(tramiteStoreMock.setMontoDisponsible).toHaveBeenCalledWith('100');
+    expect(tramiteStoreMock.setTotalExpedir).toHaveBeenCalledWith('110');
+    expect(tramiteStoreMock.setNumeraDelicitacion).toHaveBeenCalledWith('LIC123');
+    expect(tramiteStoreMock.setFechaDelEventoDelicitacion).toHaveBeenCalledWith('2024-01-01');
+    expect(tramiteStoreMock.setDescripcionDelProducto).toHaveBeenCalledWith('Producto');
   });
 });

@@ -223,6 +223,10 @@ export class AgregarDestinatarioFinalComponent
    * y navega hacia atrás en el historial.
    */
   guardarDestinatario(): void {
+    if (this.agregarDestinatarioFinal.invalid) {
+      this.agregarDestinatarioFinal.markAllAsTouched();
+      return;
+    }  
     const NUEVO_DESTINATARIO: DestinoFinal = {
       nombreRazonSocial: `${this.agregarDestinatarioFinal.value.nombres} ${this.agregarDestinatarioFinal.value.primerApellido
         } ${this.agregarDestinatarioFinal.value.segundoApellido || ''}`.trim(),

@@ -22,11 +22,6 @@ export const FECHA_FINAL = {
 };
 
 /**
- * @description Mensaje de aviso para el cambio de tipo de solicitud.
- */
-export const MSG_CAMBIO_TIPO_SOLICITUD = '';
-
-/**
  * @description Titulo del modal de aviso.
  */
 export const TITULO_MODAL = 'Aviso';
@@ -96,7 +91,7 @@ export const TITULO_MODAL_ERROR = 'Aviso';
  *@description Mensaje de error para la validación de fecha
  */
 export const MSJ_ERROR_FECHA =
-  'Fecha inválida. La fecha final no puede ser menor a la fecha de inicio.';
+  'La fecha no es válida para la solicitud seleccionada';
 
 /**
  * @description Mensaje de error cuando los campos obligatorios no están capturados en la consulta de línea de captura..
@@ -115,6 +110,11 @@ export const MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA =
  */
 export const MSJ_ERROR_GAFETE_EXISTE =
   'El número de gafete ya se encuentra registrado, intenta de nuevo';
+
+  /**
+   * @description Mensaje de avertencia cuando se va a cambiar de tipo de solicitud y el formulario tiene datos capturados.
+   */
+  export const MSG_CAMBIO_TIPO_SOLICITUD = 'Los datos capturados serán borrados, ¿estás de acuerdo (SI/NO)?';
 
 /**
  * @description Constantes para el manejo de las etiquetas de los inputs de la autorización LDA y DDEX
