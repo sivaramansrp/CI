@@ -4,6 +4,8 @@ import {
   CatalogoSelectComponent,
   CatalogosSelect,
   ConfiguracionColumna,
+  ConsultaioQuery,
+  ConsultaioState,
   InputFecha,
   TablaDinamicaComponent,
   TablaSeleccion,
@@ -63,6 +65,15 @@ const TERCEROS_TEXTO_DE_ALERTA =
   styleUrl: './certificado-de-origen.component.css',
 })
 export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
+   /**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
   /**
    * Texto de alerta mostrado en el componente.
    */
@@ -356,9 +367,19 @@ optionsTipoFactura!: Catalogo[];
     public fb: FormBuilder,
     private store: Tramite110201Store,
     private query: Tramite110201Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // El constructor se utiliza para la inyección de dependencias.
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
   /**
    * Maneja el evento de clic para habilitar el formulario de edición.
@@ -398,6 +419,7 @@ optionsTipoFactura!: Catalogo[];
     this.getUnidadMedida();
     this.getTipoFactura();
     this.getSolicitudesTabla();
+    this.inicializarEstadoFormulario();
 
     this.query.selectSolicitud$
       .pipe(
@@ -408,6 +430,30 @@ optionsTipoFactura!: Catalogo[];
       )
       .subscribe();
     this.donanteDomicilio();
+  }
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.donanteDomicilio();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.donanteDomicilio();
+    if (this.soloLectura) {
+      this.registroForm.disable();
+    } else {
+      this.registroForm.enable();
+    }
   }
 /**
  * Actualiza la fecha inicial en el formulario reactivo y en el estado de la tienda.

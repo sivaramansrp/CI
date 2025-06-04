@@ -17,6 +17,7 @@
               [required]="true"
               id="tratado"
               formControlName="tratado"
+              [isDisabled]="soloLectura"
               (change)="
                 setValoresStore(validacionForm, 'tratado', 'setTratado')
               "
@@ -29,6 +30,7 @@
               [required]="true"
               id="pais"
               formControlName="pais"
+              [isDisabled]="soloLectura"
               (change)="setValoresStore(validacionForm, 'pais', 'setPais')"
             ></app-catalogo-select>
           </div>
@@ -41,6 +43,7 @@
               required="true"
               class="form-control"
               formControlName="fraccionArancelaria"
+              [disabled]="soloLectura"
               (change)="
                 setValoresStore(
                   validacionForm,
@@ -57,6 +60,7 @@
               required="true"
               class="form-control"
               formControlName="numeroRegistro"
+              [disabled]="soloLectura"
               (change)="
                 setValoresStore(
                   validacionForm,
@@ -73,6 +77,7 @@
               required="true"
               class="form-control"
               formControlName="nombreComercial"
+              [disabled]="soloLectura"
               (change)="
                 setValoresStore(
                   validacionForm,
@@ -92,14 +97,14 @@
               [setFecha]="
                 registroForm.get('validacionForm.fechaInicial')?.value
               "
-              [datos]="fechaInicialInput"
+              [datos]="fechaInicialInput" [isDisabled]="soloLectura"
               (valorCambiado)="cambioFechaInicial($event)"
             ></input-fecha>
           </div>
           <div class="col-md-4">
             <input-fecha
               [setFecha]="registroForm.get('validacionForm.fechaFinal')?.value"
-              [datos]="fechaFinalInput"
+              [datos]="fechaFinalInput" [isDisabled]="soloLectura"
               (valorCambiado)="cambioFechaFinal($event)"
             ></input-fecha>
           </div>
@@ -507,7 +512,7 @@
         <div class="col-md-4">
           <input-fecha
             [setFecha]="registroForm.get('fecha')?.value"
-            [datos]="fechaFacturaInput"
+            [datos]="fechaFacturaInput" 
             (valorCambiado)="cambioFechaFactura($event)"
           ></input-fecha>
         </div>

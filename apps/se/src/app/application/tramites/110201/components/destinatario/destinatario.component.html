@@ -7,7 +7,7 @@
         <input
           type="text"
           class="form-control"
-          formControlName="nombre"
+          formControlName="nombre" [disabled]="soloLectura"
           (change)="setValoresStore(validacionForm, 'nombre', 'setNombre')"
         />
       </div>
@@ -17,7 +17,7 @@
           type="text"
           class="form-control"
           id="primerApellido"
-          formControlName="apellidoPrimer"
+          formControlName="apellidoPrimer" [disabled]="soloLectura"
           (click)="onClick()"
           (change)="
             setValoresStore(
@@ -34,7 +34,7 @@
           type="text"
           class="form-control"
           id="segundoApellido"
-          formControlName="apellidoSegundo"
+          formControlName="apellidoSegundo" [disabled]="soloLectura"
           (change)="
             setValoresStore(
               validacionForm,
@@ -52,7 +52,7 @@
           type="text"
           class="form-control"
           id="denominacion"
-          formControlName="numeroFiscal"
+          formControlName="numeroFiscal" [disabled]="soloLectura"
           (change)="
             setValoresStore(validacionForm, 'numeroFiscal', 'setNumeroFiscal')
           "
@@ -71,7 +71,7 @@
           [readonly]="
             registroForm.get('validacionForm.apellidoPrimer')?.value !== ''
           "
-          formControlName="razonSocial"
+          formControlName="razonSocial" [disabled]="soloLectura"
           (change)="
             setValoresStore(validacionForm, 'razonSocial', 'setRazonSocial')
           "
@@ -86,7 +86,7 @@
           type="text"
           class="form-control"
           id="denominacion"
-          formControlName="ciudad"
+          formControlName="ciudad" [disabled]="soloLectura"
           (change)="setValoresStore(validacionForm, 'ciudad', 'setCiudad')"
         />
       </div>
@@ -98,7 +98,7 @@
           type="text"
           class="form-control"
           id="nombre"
-          formControlName="calle"
+          formControlName="calle" [disabled]="soloLectura"
           (change)="setValoresStore(validacionForm, 'calle', 'setCalle')"
         />
       </div>
@@ -108,7 +108,7 @@
           type="text"
           class="form-control"
           id="primerApellido"
-          formControlName="numeroLetra"
+          formControlName="numeroLetra" [disabled]="soloLectura"
           (change)="
             setValoresStore(validacionForm, 'numeroLetra', 'setNumeroLetra')
           "
@@ -120,7 +120,7 @@
           type="text"
           class="form-control"
           id="segundoApellido"
-          formControlName="lada"
+          formControlName="lada" [disabled]="soloLectura"
           (change)="setValoresStore(validacionForm, 'lada', 'setLada')"
         />
       </div>
@@ -130,7 +130,7 @@
           type="text"
           class="form-control"
           id="segundoApellido"
-          formControlName="telefono"
+          formControlName="telefono" [disabled]="soloLectura"
           (change)="setValoresStore(validacionForm, 'telefono', 'setTelefono')"
         />
       </div>
@@ -142,7 +142,7 @@
           type="text"
           class="form-control"
           id="nombre"
-          formControlName="fax"
+          formControlName="fax" [disabled]="soloLectura"
           (change)="setValoresStore(validacionForm, 'fax', 'setFax')"
         />
       </div>
@@ -157,7 +157,7 @@
           type="text"
           class="form-control"
           id="primerApellido"
-          formControlName="correoElectronico"
+          formControlName="correoElectronico" [disabled]="soloLectura"
           (change)="
             setValoresStore(
               validacionForm,
@@ -174,7 +174,7 @@
           [catalogo]="options"
           [label]="'País destino'"
           [required]="true"
-          formControlName="nacion"
+          formControlName="nacion" [isDisabled]="soloLectura"
           (change)="setValoresStore(validacionForm, 'nacion', 'setNacion')"
         ></app-catalogo-select>
       </div>
@@ -185,7 +185,7 @@
         [catalogo]="options"
         [label]="'Medio de transporte'"
         [required]="true"
-        formControlName="transporte"
+        formControlName="transporte" [isDisabled]="soloLectura"
         (change)="
           setValoresStore(validacionForm, 'transporte', 'setTransporte')
         "
