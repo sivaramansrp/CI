@@ -283,7 +283,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
           takeUntil(this.destroyNotifier$),
           map((seccionState)=>{
             this.esFormularioSoloLectura = seccionState.readonly; 
-            this.inicializarEstadoFormulario();
           })
         )
         .subscribe()
@@ -366,6 +365,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     this.initializeAgregarFabricanteFormGroup();
     this.initializeAgregarFormuladorFormGroup();
     this.initializeAgregarProveedorFormGroup();
+
+    this.inicializarEstadoFormulario();
   }
 
   /**
