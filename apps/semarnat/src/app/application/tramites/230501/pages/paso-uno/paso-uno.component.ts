@@ -50,7 +50,6 @@ export class PasoUnoComponent implements OnDestroy {
   ) {
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
       this.consultaState = seccionState;
-    console.log('Consulta State:', this.consultaState);
     })).subscribe();
     if (this.consultaState && this.consultaState.procedureId === '230501' &&
       this.consultaState.update) {
@@ -83,9 +82,7 @@ export class PasoUnoComponent implements OnDestroy {
       )
       .subscribe((resp) => {
         if (resp) {
-          this.esDatosRespuesta = true;
-          console.log(resp,'resp');
-          
+          this.esDatosRespuesta = true;          
           this.materialesPeligrososService.actualizarEstadoFormulario(resp);
         }
       });

@@ -132,9 +132,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * - llavePago: Llave de pago, deshabilitado y con valor predeterminado.
    * - importePago: Importe del pago, deshabilitado y con valor predeterminado.
     */
-  createPagoDerechos(): void {
-    console.log(this.pagoDerechosState,'pagoDerechosState');
-    
+  createPagoDerechos(): void {    
     this.pagoDerechos = this.fb.group({
       clave: [{ value: this.pagoDerechosState.clave, disabled: true }],
       dependencia: [{ value: this.pagoDerechosState.dependencia, disabled: true }],

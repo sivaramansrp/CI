@@ -24,15 +24,15 @@ export interface ConsultaioState {
  */
 export function createConsultaInitialState(): ConsultaioState {
   return {
-    procedureId: '230501',
+    procedureId: '',
     parameter: '',
-    department: 'Semarnat',
+    department: '',
     folioTramite: '',
     tipoDeTramite: '',
     estadoDeTramite: '',
     readonly: false,
-    create: false,
-    update: true,
+    create: true,
+    update: false,
     consultaioSolicitante: null,
   };
 }

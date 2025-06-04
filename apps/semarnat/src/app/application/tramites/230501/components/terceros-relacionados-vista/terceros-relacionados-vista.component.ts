@@ -150,7 +150,6 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          // this.inicializarEstadoFormulario();
         })
       )
       .subscribe();

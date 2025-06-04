@@ -51,7 +51,6 @@ export class ComposicionComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    // this.createComposicionForm();
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),

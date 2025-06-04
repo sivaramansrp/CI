@@ -1,98 +1,132 @@
 {
-
+    "opcionesColapsableState": false,
+    "destinatarioFinalTablaDatos": [
+        {
+            "nombreRazonSocial": "Servicios Ambientales del Norte S.A. de C.V.",
+            "rfc": "SAN910202KJ4",
+            "curp": "ROML920303HMCRRL07",
+            "telefono": "8187654321",
+            "correoElectronico": "info@ambientalesnorte.com",
+            "calle": "Calle Industria Verde",
+            "numeroExterior": "101",
+            "numeroInterior": "2A",
+            "pais": "2",
+            "colonia": "Parque Industrial",
+            "municipioAlcaldia": "Apodaca",
+            "localidad": "Apodaca",
+            "entidadFederativa": "Nuevo León",
+            "estadoLocalidad": "NL",
+            "codigoPostal": "66600",
+            "coloniaEquivalente": "Zona Industrial",
+            "descripcion": "Empresa dedicada al tratamiento de residuos peligrosos",
+            "segundoApellido": "Martínez",
+            "primerApellido": "Rodríguez",
+            "nombres": "Laura Elena",
+            "lada": "81",
+            "tipoPersona": "Moral"
+        }
+    ],
+    "esDestinatarioFinalElModoDeEdicion": false,
+    "usuarioTablaDatos": [
+        {
+            "nombreRazonSocial": "Servicios Ambientales del Norte S.A. de C.V.",
+            "rfc": "SAN910202KJ4",
+            "curp": "ROML920303HMCRRL07",
+            "telefono": "8187654321",
+            "correoElectronico": "info@ambientalesnorte.com",
+            "calle": "Calle Industria Verde",
+            "numeroExterior": "101",
+            "numeroInterior": "2A",
+            "pais": "2",
+            "colonia": "Parque Industrial",
+            "municipioAlcaldia": "Apodaca",
+            "localidad": "Apodaca",
+            "entidadFederativa": "Nuevo León",
+            "estadoLocalidad": "NL",
+            "codigoPostal": "66600",
+            "coloniaEquivalente": "Zona Industrial",
+            "descripcion": "Empresa dedicada al tratamiento de residuos peligrosos",
+            "segundoApellido": "Martínez",
+            "primerApellido": "Rodríguez",
+            "nombres": "Laura Elena",
+            "lada": "81",
+            "tipoPersona": "Moral"
+        }
+    ],
+    "esUsuarioElModoDeEdicion": false,
+    "usoTablaDatos": [
+        {
+            "descripcion": "Uso industrial para fabricación de adhesivos",
+            "pais": "2"
+        }
+    ],
+    "representanteLegalTablaDatos": [
+        {
+            "nombreRazonSocial": "Química Industrial SA de CV",
+            "rfc": "QIS123456ABC",
+            "curp": "GOPL850101HDFRRN09",
+            "telefono": "5551234567",
+            "correoElectronico": "contacto@quimicaindustrial.com",
+            "calle": "Av. de los Insurgentes",
+            "numeroExterior": "321",
+            "numeroInterior": "4B",
+            "pais": "México",
+            "colonia": "Nápoles",
+            "municipioAlcaldia": "Benito Juárez",
+            "localidad": "Ciudad de México",
+            "entidadFederativa": "Ciudad de México",
+            "estadoLocalidad": "CDMX",
+            "codigoPostal": "03810",
+            "coloniaEquivalente": "Insurgentes Mixcoac",
+            "segundoApellido": "López",
+            "primerApellido": "González",
+            "nombres": "Patricia",
+            "lada": "55",
+            "tipoPersona": "Moral"
+        }
+    ],
+    "esRepresentanteLegalElModoDeEdicion": false,
     "datosSolicitudFormType": {
         "tratadoRotterdam": true,
-        "listadoNacional": false,
+        "listadoNacional": true,
         "fraccionArancelaria": "2",
-        "descripcionFraccion": "Clorofluorocarbonos",
-        "convenioMinamata": true,
+        "descripcionFraccion": "Compuestos orgánicos",
+        "convenioMinamata": false,
         "numeroCas": "2",
-        "descripcionNoArancelaria": "Producto químico controlado",
-        "nombreQuimico": "Diclorometano",
-        "nombreComun": "Metileno",
-        "nombreComercial": "Solvente MC-45",
+        "descripcionNoArancelaria": "Solvente para procesos químicos",
+        "nombreQuimico": "Tolueno",
+        "nombreComun": "Tolueno",
+        "nombreComercial": "Solvex T-100",
         "estadoFisico": "2",
-        "cantidad": 10,
-        "cantidadLetra": "Quinientos",
+        "cantidad": 500,
+        "cantidadLetra": "Quinientos litros",
         "unidadMedida": "2",
-        "licenciaSanitaria": "LIC-1234567",
-        "usoEspecifico": "Análisis de laboratorio",
+        "licenciaSanitaria": "LIC-123456789",
+        "usoEspecifico": "Producción de pinturas",
         "fechaExportacion": "2025-07-01",
         "modoCantidad": "Numérico"
     },
-    "agregarDestinatarioFinal": {
-        "tipoPersona": "Fisica",
-        "nombres": "Juan Carlos",
-        "denominacionRazon": "",
-        "primerApellido": "Pérez",
-        "segundoApellido": "García",
-        "pais": "2",
-        "estadoLocalidad": "Ciudad de México",
-        "municipio": "Benito Juárez",
-        "localidad": "Nápoles",
-        "codigoPostal": "03810",
-        "colonia": "Nápoles",
-        "calle": "Calle Dakota",
-        "numeroExterior": "123",
-        "numeroInterior": "4B",
-        "lada": "55",
-        "telefono": "12345678",
-        "correoElectronico": "juan.perez@example.com"
-    },
-
-    "pagoDerechos": {
-        "clave": "123456789",
+    "numeroCasTablaDatos": [
+        {
+            "numeroCas": "67-56-1",
+            "descripcionNoArancelaria": "Uso como disolvente en procesos industriales",
+            "nombreQuimico": "Metanol",
+            "constanciaCisen": "CISEN-2025-00123"
+        }
+    ],
+    "composicionTablaDatos": [
+        {
+            "componente": "Tolueno",
+            "porcentajeConcentracion": 98.5
+        }
+    ],
+    "pagoDerechosState": {
+        "clave": "PD2025-001",
         "dependencia": "SEMARNAT",
         "banco": "2",
-        "llavePago": "LLAVE-20250601-ABC123",
+        "llavePago": "A1B2C3D4E5F6",
         "fecha": "2025-06-01",
         "importePago": "1500.00"
-    },
-    "representanteLegalForm": {
-        "tipoPersona": "Moral",
-        "nombres": "23456",
-        "denominacionRazon": "Servicios Jurídicos Internacionales S.A. de C.V.",
-        "primerApellido": "Guadalajara",
-        "segundoApellido": "Guadalajara",
-        "pais": "2",
-        "estadoLocalidad": "Jalisco",
-        "municipio": "Guadalajara",
-        "localidad": "Providencia",
-        "codigoPostal": "44630",
-        "colonia": "Colonia Providencia",
-        "calle": "Av. Américas",
-        "numeroExterior": "456",
-        "numeroInterior": "Piso 3",
-        "lada": "33",
-        "telefono": "98765432",
-        "correoElectronico": "contacto@serviciosjuridicos.com"
-    },
-    "composicionForm": {
-        "componenteMaterial": "Diclorometano",
-        "porcentajeConcentracion": "98%"
-    },
-    "usoFinalForm":{
-        "pais": "2",
-        "descripcionUso": "Utilizado en laboratorios para pruebas de pureza"
-    },
-    "usuarioFinalForm":{
-        "tipoPersona": "Moral",
-        "nombres": "Laboratorios Químicos S.A.",
-        "denominacionRazon": "Laboratorios Químicos S.A. de C.V.",
-        "primerApellido": "",
-        "segundoApellido": "",
-        "pais": "2",
-        "estadoLocalidad": "Nuevo León",
-        "municipio": "Monterrey",
-        "localidad": "San Pedro Garza García",
-        "codigoPostal": "66220",
-        "colonia": "Colonia del Valle",
-        "calle": "Calle Río Amazonas",
-        "numeroExterior": "789",
-        "numeroInterior": "",
-        "lada": "81",
-        "telefono": "12345678",
-        "correoElectronico": "juan.perez@example.com"
     },
     "formaValida": {
         "destinatarioFinal": true,
@@ -102,5 +136,29 @@
         "datosSolicitudForm": true,
         "pagoDeDerechos": true,
         "formularioTotal": true
+    },
+    "agregarDestinatarioFinal":{
+        
+        "nombreRazonSocial": "Química Industrial SA de CV",
+            "rfc": "QIS123456ABC",
+            "curp": "GOPL850101HDFRRN09",
+            "telefono": "5551234567",
+            "correoElectronico": "contacto@quimicaindustrial.com",
+            "calle": "Av. de los Insurgentes",
+            "numeroExterior": "321",
+            "numeroInterior": "4B",
+            "pais": "México",
+            "colonia": "Nápoles",
+            "municipioAlcaldia": "Benito Juárez",
+            "localidad": "Ciudad de México",
+            "entidadFederativa": "Ciudad de México",
+            "estadoLocalidad": "CDMX",
+            "codigoPostal": "03810",
+            "coloniaEquivalente": "Insurgentes Mixcoac",
+            "segundoApellido": "López",
+            "primerApellido": "González",
+            "nombres": "Patricia",
+            "lada": "55",
+            "tipoPersona": "Moral"
     }
 }
