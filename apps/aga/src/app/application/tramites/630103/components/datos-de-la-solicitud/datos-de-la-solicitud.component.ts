@@ -3,10 +3,10 @@
  * Componente que gestiona los datos de la solicitud para el trámite 630103.
  * Permite inicializar formularios, obtener datos de catálogos y manejar el estado del formulario.
  */
-import { ConsultaioQuery, ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
 import { map, takeUntil } from 'rxjs';
@@ -35,7 +35,27 @@ import { AutorizacionImportacionTemporalService } from '../../services/autorizac
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
-
+  /**
+   * Estado de la consulta gestionado por el store `ConsultaioQuery`.
+   * Recibe el estado actual de la consulta, incluyendo si el formulario es de solo lectura,
+   * el identificador del trámite, parámetros, departamento, folio, tipo y estado del trámite,
+   * así como banderas de creación/actualización y el solicitante.
+   * 
+   * Ejemplo de uso:
+   */
+  @Input() consultaState: ConsultaioState = {
+    readonly: false,
+    procedureId: '',
+    parameter: '',
+    department: '',
+    folioTramite: '',
+    tipoDeTramite: '',
+    estadoDeTramite: '',
+    create: false,
+    update: false,
+    consultaioSolicitante: null
+  };
+  
   /**
    * Modelo dinámico del formulario con estructura definida por el trámite.
    * {ModeloDeFormaDinamica[]}
@@ -67,12 +87,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
 
   /**
-   * Indica si el formulario está en modo solo lectura.
-   * {boolean}
-   */
-  esFormularioSoloLectura: boolean = false;
-
-  /**
    * Estado de la solicitud actual.
    * {Tramite630103State}
    */
@@ -97,7 +111,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
+          this.consultaState.readonly = seccionState.readonly;
           this.inicializarEstadoFormulario();
         })
       )
@@ -109,7 +123,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * {void}
    */
   inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
+    if (this.consultaState.readonly) {
       this.formularioDatosSolicitud = this.formularioDatosSolicitud.map(campo => ({
         ...campo,
         desactivado: true
@@ -130,9 +144,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.inizializarFormulario();
-    if (this.esFormularioSoloLectura) {
+    if (this.consultaState.readonly) {
       this.datosImportacionTemporalFormulario.disable();
-    } else if (!this.esFormularioSoloLectura) {
+    } else if (!this.consultaState.readonly) {
       this.datosImportacionTemporalFormulario.enable();
     }
   }

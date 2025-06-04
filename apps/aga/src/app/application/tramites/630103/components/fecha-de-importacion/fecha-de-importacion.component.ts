@@ -33,6 +33,26 @@ import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tram
 })
 export class FechaDeImportacionComponent implements OnInit, OnDestroy {
   /**
+   * Estado de la consulta gestionado por el store `ConsultaioQuery`.
+   * Recibe el estado actual de la consulta, incluyendo si el formulario es de solo lectura,
+   * el identificador del trámite, parámetros, departamento, folio, tipo y estado del trámite,
+   * así como banderas de creación/actualización y el solicitante.
+   * 
+   * Ejemplo de uso:
+   */
+  @Input() consultaState: ConsultaioState = {
+    readonly: false,
+    procedureId: '',
+    parameter: '',
+    department: '',
+    folioTramite: '',
+    tipoDeTramite: '',
+    estadoDeTramite: '',
+    create: false,
+    update: false,
+    consultaioSolicitante: null
+  };
+  /**
    * Estado seleccionado del trámite 630103.
    * Contiene los datos actuales del trámite seleccionados desde el store.
    */
@@ -60,13 +80,7 @@ export class FechaDeImportacionComponent implements OnInit, OnDestroy {
    * Suscripción general para manejar y limpiar las suscripciones del componente.
    */
   private subscription: Subscription = new Subscription();
-
-  /**
-   * Indica si el formulario está en modo solo lectura.
-   * Si es verdadero, los campos del formulario estarán deshabilitados para edición.
-   */
-  esFormularioSoloLectura: boolean = false;
-
+  
   /**
    * Estado actual de la solicitud.
    */
@@ -90,7 +104,7 @@ export class FechaDeImportacionComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
+          this.consultaState.readonly = seccionState.readonly;
           this.inicializarEstadoFormulario();
         })
       )
@@ -102,7 +116,7 @@ export class FechaDeImportacionComponent implements OnInit, OnDestroy {
    * Si es solo lectura, desactiva los campos y carga los datos; si no, los activa.
    */
   inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
+    if (this.consultaState.readonly) {
       this.formularioFechaDeImportacion = this.formularioFechaDeImportacion.map(campo => ({
         ...campo,
         habilitado: false
@@ -123,9 +137,9 @@ export class FechaDeImportacionComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
-    if (this.esFormularioSoloLectura) {
+    if (this.consultaState.readonly) {
       this.FechaDeImportacionTemporalFormulario.disable();
-    } else if (!this.esFormularioSoloLectura) {
+    } else if (!this.consultaState.readonly) {
       this.FechaDeImportacionTemporalFormulario.enable();
     } else {
       // No se requiere ninguna acción en el formulario

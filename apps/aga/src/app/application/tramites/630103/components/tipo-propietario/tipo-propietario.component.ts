@@ -5,9 +5,10 @@
  */
 
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { map, takeUntil } from 'rxjs';
 import { Subject } from 'rxjs';
@@ -43,7 +44,26 @@ import { AutorizacionImportacionTemporalService } from '../../services/autorizac
   styleUrls: ['./tipo-propietario.component.scss'],
 })
 export class TipoPropietarioComponent implements OnInit, OnDestroy {
-
+  /**
+   * Estado de la consulta gestionado por el store `ConsultaioQuery`.
+   * Recibe el estado actual de la consulta, incluyendo si el formulario es de solo lectura,
+   * el identificador del trámite, parámetros, departamento, folio, tipo y estado del trámite,
+   * así como banderas de creación/actualización y el solicitante.
+   * 
+   * Ejemplo de uso:
+   */
+  @Input() consultaState: ConsultaioState = {
+    readonly: false,
+    procedureId: '',
+    parameter: '',
+    department: '',
+    folioTramite: '',
+    tipoDeTramite: '',
+    estadoDeTramite: '',
+    create: false,
+    update: false,
+    consultaioSolicitante: null
+  };
   /**
    * Indicador para mostrar el formulario de personas extranjeras.
    */

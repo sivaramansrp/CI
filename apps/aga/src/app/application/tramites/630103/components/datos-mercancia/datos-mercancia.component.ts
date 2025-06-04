@@ -4,10 +4,10 @@
  */
 import { CommonModule } from '@angular/common';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
-import { ConsultaioQuery, ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
 import { map, takeUntil } from 'rxjs';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
@@ -35,6 +35,26 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject<void>();
 
   /**
+   * Estado de la consulta gestionado por el store `ConsultaioQuery`.
+   * Recibe el estado actual de la consulta, incluyendo si el formulario es de solo lectura,
+   * el identificador del trámite, parámetros, departamento, folio, tipo y estado del trámite,
+   * así como banderas de creación/actualización y el solicitante.
+   * 
+   * Ejemplo de uso:
+   */
+  @Input() consultaState: ConsultaioState = {
+    readonly: false,
+    procedureId: '',
+    parameter: '',
+    department: '',
+    folioTramite: '',
+    tipoDeTramite: '',
+    estadoDeTramite: '',
+    create: false,
+    update: false,
+    consultaioSolicitante: null
+  };
+  /**
    * Estado seleccionado del trámite 630103.
    */
   estadoSeleccionado!: Tramite630103State;
@@ -53,12 +73,6 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * Suscripción general para manejar y limpiar las suscripciones del componente.
    */
   private subscription: Subscription = new Subscription();
-
-  /**
-   * Indica si el formulario está en modo solo lectura.
-   * Si es verdadero, los campos del formulario estarán deshabilitados para edición.
-   */
-  esFormularioSoloLectura: boolean = false;
 
   /**
    * Estado actual de la solicitud.
@@ -83,7 +97,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
+          this.consultaState.readonly = seccionState.readonly;
           this.inicializarEstadoFormulario();
         })
       )
@@ -94,7 +108,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * Inicializa el estado del formulario dependiendo si es solo lectura o editable.
    */
   inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
+    if (this.consultaState.readonly) {
       this.formularioDatosMercancia = this.formularioDatosMercancia.map(campo => ({
         ...campo,
         desactivado: true
@@ -115,9 +129,9 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
-    if (this.esFormularioSoloLectura) {
+    if (this.consultaState.readonly) {
       this.datosMercancia.disable();
-    } else if (!this.esFormularioSoloLectura) {
+    } else if (!this.consultaState.readonly) {
       this.datosMercancia.enable();
     } else {
       // No se requiere ninguna acción en el formulario
