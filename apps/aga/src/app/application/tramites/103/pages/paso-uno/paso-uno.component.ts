@@ -2,18 +2,17 @@ import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChi
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ExencionImpuestosComponent } from '../../components/exencion-impuestos.component';
 import { ExencionImpuestosService } from '../../services/exencion-impuestos.service';
 import { Subject } from 'rxjs';
 import { Tramite103Store } from '../../estados/tramite103.store';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
 
 /**
- * Componente que representa el paso uno del trámite.
- * Este componente muestra los datos del solicitante y su domicilio fiscal,
- * permitiendo seleccionar entre diferentes pestañas según el tipo de información.
+ * Componente que representa el paso uno del trámite de exención de impuestos.
+ * Muestra los datos del solicitante y su domicilio fiscal, permitiendo seleccionar
+ * entre diferentes pestañas según el tipo de información.
  */
 @Component({
   selector: 'paso-uno',
@@ -51,14 +50,37 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
    * @type {number}
    */
   indice: number = 1;
+
+  /**
+   * Datos de consulta del trámite.
+   * @type {ConsultaioState}
+   */
   consultaDatos!: ConsultaioState;
+
+  /**
+   * Subject para gestionar la destrucción de suscripciones.
+   * @type {Subject<void>}
+   */
   public destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * Constructor del componente.
-   * @param cdr Servicio para detectar y aplicar cambios en la vista manualmente.
+   * @param {ExencionImpuestosService} exencionImpuestosService - Servicio para operaciones de exención de impuestos.
+   * @param {ChangeDetectorRef} cdr - Servicio para detectar cambios en la vista.
+   * @param {ConsultaioQuery} consultaioQuery - Query para acceder al estado de consulta.
+   * @param {Tramite103Store} tramite103Store - Store para gestionar el estado del trámite.
    */
-  constructor(private exencionImpuestosService: ExencionImpuestosService, private cdr: ChangeDetectorRef, private consultaioQuery: ConsultaioQuery, private tramite103Store: Tramite103Store) { }
+  constructor(
+    private exencionImpuestosService: ExencionImpuestosService,
+    private cdr: ChangeDetectorRef,
+    private consultaioQuery: ConsultaioQuery,
+    private tramite103Store: Tramite103Store
+  ) {}
 
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Suscribe a los cambios de estado y carga datos si es necesario.
+   */
   ngOnInit(): void {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -74,8 +96,8 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
   }
 
   /**
-   * Método que se ejecuta después de que la vista ha sido completamente inicializada.
-   * Inicializa los formularios y obtiene el tipo de persona.
+   * Método que se ejecuta después de inicializar la vista.
+   * Configura los formularios y obtiene el tipo de persona.
    */
   ngAfterViewInit(): void {
     this.persona = PERSONA_MORAL_NACIONAL;
@@ -86,16 +108,20 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
 
   /**
    * Cambia la pestaña seleccionada mediante su índice.
-   * @param i Índice de la pestaña a seleccionar.
+   * @param {number} i - Índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
 
+  /**
+   * Obtiene los datos de consulta del servicio y actualiza el store.
+   */
   public fetchGetDatosConsulta(): void {
     this.exencionImpuestosService
       .getDatosConsulta()
-      .pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
         if (respuesta.success) {
           this.tramite103Store.setManifesto(respuesta?.datos?.exencionImpuestos?.manifesto);
           this.tramite103Store.setOrganismoPublico(respuesta?.datos?.exencionImpuestos?.organismoPublico);
@@ -128,6 +154,10 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
       });
   }
 
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Limpia las suscripciones activas.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
