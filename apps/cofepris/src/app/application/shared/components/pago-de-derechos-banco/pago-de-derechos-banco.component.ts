@@ -1,3 +1,4 @@
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import {
   Catalogo,
   CatalogosSelect,
@@ -5,8 +6,6 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import {
   SolicitudPagoBancoState,
   TramitePagoBancoStore,
@@ -14,6 +13,7 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { INPUT_FECHA_CONFIG } from '../../constantes/pago-banco.enum';
 import { PagoBancoService } from '../../services/pago-banco.service';
 import { TramitePagoBancoQuery } from '../../estados/queries/pago-banco.query';
@@ -52,6 +52,9 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
    */
   INPUT_FECHA_CONFIG = INPUT_FECHA_CONFIG;
 
+  /** Bandera de solo lectura (puedes adaptarla si tienes lógica para esto) */
+  public esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    */
@@ -60,9 +63,21 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
     private tramitePagoBancoStore: TramitePagoBancoStore,
     private tramitePagoBancoQuery: TramitePagoBancoQuery,
     @Inject(PagoBancoService)
-    private service: PagoBancoService
+    private service: PagoBancoService,
+    private consultaioQuery: ConsultaioQuery
   ) {
     this.fetchBancoData();
+
+    // Inicializa el formulario.
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
   }
 
   /**
@@ -76,6 +91,34 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
   };
 
   /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de estados.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+    /**
+   * Inicializa el formulario reactivo para capturar el estado seleccionado.
+   */
+    inicializarFormulario(): void {
+      this.tramitePagoBancoQuery.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.solicitudState = seccionState;
+          })
+        )
+        .subscribe();
+
+        this.configurarFormularioPagoBanco();
+    }
+
+  /**
    * Método para actualizar el banco seleccionado.
    * @param e {Catalogo} Banco seleccionado.
    */
@@ -87,8 +130,15 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
           this.solicitudState = seccionState;
         })
       )
-      .subscribe();
+      .subscribe();  
+      
+    this.configurarFormularioPagoBanco();
+  }
 
+  /**
+   * Configura el formulario para la sección de pago de derechos en banco.
+   */
+  configurarFormularioPagoBanco(): void {
     this.formSolicitud = this.fb.group({
       datosImportadorExportador: this.fb.group({
         claveDeReferencia: [this.solicitudState?.claveDeReferencia,[Validators.required, Validators.maxLength(9)]],
@@ -99,6 +149,19 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
         importePago: [this.solicitudState?.importePago,[Validators.required, Validators.maxLength(16),PagoDeDerechosBancoComponent.validarNumeroEntero]],
       }),
     });
+  }
+
+  /**
+   * Carga datos y deshabilita el formulario si es solo lectura.
+  */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.formSolicitud.disable();
+      this.datosImportadorExportador.disable();
+    } else {
+      this.formSolicitud.enable();
+    }
   }
 
   /**

@@ -28,17 +28,19 @@ import {
   REGEX_RFC_FISICA,
   REGEX_RFC_MORAL,
 } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ModalComponent } from '../modal/modal.component';
 import NacionalidadRadioOptions from '@libs/shared/theme/assets/json/260501/nacionalidad-options.json';
 import SELECT_OPTIONS_DATA from '@libs/shared/theme/assets/json/260501/fabricante-select-options-data.json';
 import { TablaDatos } from '../../models/terceros-fabricante.model';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TercerosFabricanteService } from '../../services/terceros-fabricante.service';
-import { TercerosFabricanteStore } from '../../estados/stores/terceros-fabricante.store';
+import { TercerosFabricanteState, TercerosFabricanteStore } from '../../estados/stores/terceros-fabricante.store';
 import TipoPersonaRadioOptions from '@libs/shared/theme/assets/json/260501/tipo-persona-options.json';
 import TipoPersonaTresRadioOptions from '@libs/shared/theme/assets/json/260501/tipo-persona-tres-options.json';
+import { TercerosFabricanteQuery } from '../../estados/queries/terceros-fabricante.query';
 
 /**
  * Componente que gestiona los terceros relacionados.
@@ -250,6 +252,14 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   tipoPersonaTresOptions = TipoPersonaTresRadioOptions;
 
+  /** Bandera de solo lectura (puedes adaptarla si tienes lógica para esto) */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
+     * Estado de la solicitud de la sección PagoBanco.
+     */
+    public solicitudState!: TercerosFabricanteState;
+
   /**
    * Constructor del componente.
    * Inyecta el FormBuilder, el store del trámite y el servicio de terceros.
@@ -261,10 +271,77 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tercerosFabricanteStore: TercerosFabricanteStore,
+    private tercerosFabricanteQuery: TercerosFabricanteQuery,
     @Inject(TercerosFabricanteService)
-    private service: TercerosFabricanteService
+    private service: TercerosFabricanteService,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // Inicializa el store del trámite.
+    this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState)=>{
+            this.esFormularioSoloLectura = seccionState.readonly; 
+            this.inicializarEstadoFormulario();
+          })
+        )
+        .subscribe()
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de estados.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+    /**
+   * Inicializa el formulario reactivo para capturar el estado seleccionado.
+   */
+    inicializarFormulario(): void {
+      this.tercerosFabricanteQuery.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.solicitudState = seccionState;
+          })
+        )
+        .subscribe();
+
+        // this.configurarFormularioPagoBanco();
+    }
+
+  /**
+   * Configura el formulario para la sección de pago de derechos en banco.
+   */
+  // configurarFormularioPagoBanco(): void {
+  //   this.formSolicitud = this.fb.group({
+  //     datosImportadorExportador: this.fb.group({
+  //       claveDeReferencia: [this.solicitudState?.claveDeReferencia,[Validators.required, Validators.maxLength(9)]],
+  //       cadenaDependencia: [this.solicitudState?.cadenaDependencia,[Validators.required, Validators.maxLength(14)]],
+  //       banco: [this.solicitudState?.banco],
+  //       llaveDePago: [this.solicitudState?.llaveDePago,[Validators.required, Validators.maxLength(30)]],
+  //       fechaPago: [this.solicitudState?.fechaPago,[Validators.required, PagoDeDerechosBancoComponent.validarFechaNoFutura]],
+  //       importePago: [this.solicitudState?.importePago,[Validators.required, Validators.maxLength(16),PagoDeDerechosBancoComponent.validarNumeroEntero]],
+  //     }),
+  //   });
+  // }
+
+  /**
+   * Carga datos y deshabilita el formulario si es solo lectura.
+  */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    // if (this.esFormularioSoloLectura) {
+    //   this.formSolicitud.disable();
+    // } else {
+    //   this.formSolicitud.enable();
+    // }
   }
 
   /**
