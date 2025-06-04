@@ -1,0 +1,8 @@
+{
+      "claveDeReferencia": "ABC123456",
+      "cadenaDependencia": "COFEPRIS",
+      "banco": "BANAMEX",
+      "llaveDePago": "LLAVE987654",
+      "fechaPago": "2025-06-04",
+      "importePago": "1500.00"
+}
