@@ -5,6 +5,7 @@ import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constan
 import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { map, Subject, takeUntil } from 'rxjs';
+import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
 /**
  * Componente que representa el primer paso del proceso de solicitud.
  * Contiene un componente de solicitante y permite la navegación entre tabs.
@@ -55,7 +56,9 @@ export class PasoUnoComponent implements AfterViewInit {
    */
   constructor(
     private solicitud260502Service: DatosDomicilioLegalService,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private pagoBancoService: PagoBancoService,
+    
   ) {}
 
 
@@ -83,7 +86,7 @@ export class PasoUnoComponent implements AfterViewInit {
     }
   }
 
-   /**
+  /**
    * Método para guardar los datos del formulario.
    * Se suscribe al servicio `getRegistroTomaMuestrasMercanciasData` para obtener los datos del formulario.
    * Si la respuesta es válida, se actualiza el estado del formulario con los datos obtenidos.
@@ -99,6 +102,17 @@ export class PasoUnoComponent implements AfterViewInit {
           this.solicitud260502Service.actualizarEstadoFormulario(resp);
         }
       });
+
+           // También se puede llamar al servicio pagoBancoService si es necesario
+            this.pagoBancoService
+              .getRegistroTomaMuestrasMercanciasData()
+              .pipe(takeUntil(this.destroyNotifier$))
+              .subscribe((resp) => {
+                if (resp) {
+                  this.esDatosRespuesta = true;
+                  this.pagoBancoService.actualizarEstadoFormulario(resp);
+                }
+              });
   }
 
   /**
@@ -109,7 +123,7 @@ export class PasoUnoComponent implements AfterViewInit {
     this.indice = i;
   }
 
-   /**
+  /**
    * Método que se ejecuta cuando el componente se destruye.
    * Cancela las suscripciones activas y libera recursos.
    */
