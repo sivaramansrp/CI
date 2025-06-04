@@ -7,11 +7,13 @@ import {
   CrosslistComponent,
   InputFecha,
   InputFechaComponent,
-  RespuestaCatalogos,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
+
+ import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 import {
   Component,
   OnDestroy,
@@ -19,6 +21,7 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
+import { FECHA_DE_PAGO } from '@libs/shared/data-access-user/src/core/enums/260211/manifiestos.enum';
 
 import {
   FormBuilder,
@@ -42,9 +45,9 @@ import { CROSLISTA_DE_PAISES } from '@libs/shared/data-access-user/src/core/enum
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
-import { FECHA_DE_PAGO } from '@libs/shared/data-access-user/src/core/enums/260211/manifiestos.enum';
+
 import { SanitarioService } from '../../services/sanitario.service';
- import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
  
 /**
  * Interfaz para la respuesta de la tabla de NICO.

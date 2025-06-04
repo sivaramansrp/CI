@@ -1,6 +1,6 @@
 import {Observable , catchError, throwError , } from 'rxjs';
 
-import {RespuestaCatalogos, Catalogo } from '@libs/shared/data-access-user/src';
+import {Catalogo ,RespuestaCatalogos} from '@libs/shared/data-access-user/src';
 
 import { Injectable } from '@angular/core';
 // import { HttpCoreService } from '@libs/shared/data-access-user/src';

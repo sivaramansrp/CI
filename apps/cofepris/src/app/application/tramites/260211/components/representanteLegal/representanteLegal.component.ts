@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnDestroy, OnInit } from '@angular/core';
+ import { ConsultaioQuery } from '@ng-mf/data-access-user';
+ 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260211State, Tramite260211Store } from '../../../../estados/tramites/tramite260211.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
- import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 /**
  * Componente principal para gestionar el formulario de representante.
  */

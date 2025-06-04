@@ -1,13 +1,14 @@
+import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+
 import { Catalogo } from '@libs/shared/data-access-user/src';
 
-import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA,MUNICIPIOSELECTDATA,PAISSELECTDATA,
-  TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '../../../../../../../../../libs/shared/data-access-user/src/core/enums/260211/permiso.enum';
-import { SanitarioService } from '../../services/sanitario.service';
+
+
+  import { SanitarioService } from '../../services/sanitario.service';
 
 import { TablaDatos } from '@libs/shared/data-access-user/src/core/models/260211/detos.model';
 
@@ -19,14 +20,19 @@ import { Sanitario260215Store } from '../../../../estados/tramites/sanitario.sto
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 
 
-import { TituloComponent , InputRadioComponent} from '@libs/shared/data-access-user/src';
+import {InputRadioComponent , TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { TableComponent } from '@ng-mf/data-access-user';
 
 import { ModalComponent } from '../model/modal.component';
+
 import nacionalidadRedio from 'libs/shared/theme/assets/json/260211/nacionalidadRedio.json';
+
 import tipoPersonaoptions from 'libs/shared/theme/assets/json/260211/tipoPersonaoptions.json';
-import { map, Subject, takeUntil } from 'rxjs';
+
+import {Subject, map,takeUntil } from 'rxjs';
+
+import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA, MUNICIPIOSELECTDATA, PAISSELECTDATA, TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '@libs/shared/data-access-user/src/core/enums/260906/permiso.enum';
 
 
  
@@ -291,16 +297,11 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
   }
 
 inicializarFormulario(): void {
-
-  // this.tramite260211Query
-  //     .selectSolicitud$
-  //     .pipe(
-  //       takeUntil(this.destroyNotifier$),
-  //       map((seccionState) => {
-  //         this.solicitudState = seccionState;
-  //       })
-  //     )
-  //     .subscribe();
+this.initializeAgregarFabricanteFormGroup();
+    this.initializeAgregarDestinatarioFormGroup();
+    this.initializeAgregarProveedorFormGroup();
+    this.initializeAgregarFacturadorFormGroup();
+ 
 }
 
     /**

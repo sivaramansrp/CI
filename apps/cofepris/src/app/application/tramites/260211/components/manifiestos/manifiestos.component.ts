@@ -13,7 +13,8 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MENSAJE_DE_ALERTA } from '@libs/shared/data-access-user/src/core/enums/260211/manifiestos.enum';
 import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
-import { ProductoOption, ProductoResponse } from '../../models/permiso-sanitario.enum';
+
+import { ProductoOption } from '../../models/permiso-sanitario.enum';
 import { SanitarioService } from '../../services/sanitario.service';
  
 /**
@@ -117,9 +118,6 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
     )
     .subscribe();
 
- 
- 
- 
   }
    /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.  

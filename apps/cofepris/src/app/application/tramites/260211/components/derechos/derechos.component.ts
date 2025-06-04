@@ -1,19 +1,27 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'; // Import Angular core decorators for component lifecycle.
 import { CommonModule } from '@angular/common'; // Import CommonModule for Angular common directives.
+
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { FECHA_DE_PAGO } from '../../constantes/derechos.model';
+
 import { FormBuilder, FormGroup } from '@angular/forms'; // Import FormBuilder and FormGroup for reactive forms.
+
 import { Catalogo, InputFecha, InputFechaComponent, TituloComponent } from '@ng-mf/data-access-user'; // Import Catalogo and TituloComponent from shared library.
 import { ReactiveFormsModule } from '@angular/forms'; // Import ReactiveFormsModule for reactive form handling.
+
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user'; // Import CatalogoSelectComponent for dropdown selection.
 import { SanitarioService } from '../../services/sanitario.service'; // Import SanitarioService for API calls.
-import { map, Subject, takeUntil } from 'rxjs'; // Import RxJS operators for reactive programming.
+
+import { Subject ,map,takeUntil } from 'rxjs'; // Import RxJS operators for reactive programming.
+
 import {
   Solicitud260211State,
   Tramite260211Store
 } from '../../../../estados/tramites/tramite260211.store';
 import { Permiso260211Query } from '../../../../estados/queries/permiso260211.query'; // Import query for fetching data from the store.
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
-import { FECHA_DE_PAGO } from '../../constantes/derechos.model';
+
 
 /**
  * compondoc
@@ -205,8 +213,9 @@ if (this.esFormularioSoloLectura) {
    * returns {void}
    */
  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260211Store): void {
-  const valor = form.get(campo)?.value; // Obtener el valor del campo especificado del formulario.
-  (this.sanitario260211Store[metodoNombre] as (value: any) => void)(valor); 
+  const VALOR = form.get(campo)?.value; // Obtener el valor del campo especificado del formulario.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (this.sanitario260211Store[metodoNombre] as (value: any) => void)(VALOR); 
 }
 
   /**
