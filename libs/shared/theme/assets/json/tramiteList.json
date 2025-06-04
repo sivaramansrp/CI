@@ -114,8 +114,8 @@
   {
     "id": 17,
     "tramite": 31803,
-    "linkDashboard": "/agace/registro-solicitud/solicitud",
-    "linkDepartment": "/pago/registro-solicitud/solicitud",
+    "linkDashboard": "/agace/registro/solicitud",
+    "linkDepartment": "/pago/registro/solicitud",
     "department": "agace"
   },
   {
@@ -135,8 +135,8 @@
   {
     "id": 20,
     "tramite": 32504,
-    "linkDashboard": "/agace/aviso/aviso-procesos",
-    "linkDepartment": "/agace/aviso/aviso-procesos",
+    "linkDashboard": "/agace/aviso-procesos/aviso-procesos",
+    "linkDepartment": "/pago/aviso-procesos/aviso-procesos",
     "department": "agace"
   },
   {
@@ -1330,12 +1330,12 @@
     "department": "aga"
   },
   {
-        "id": 191,
-        "tramite": 30505,
-        "linkDashboard": "/aga/aviso-de-modificacion/aviso",
-        "linkDepartment": "/pago/aviso-de-modificacion/aviso",
-        "department": "aga"
-    },
+    "id": 191,
+    "tramite": 30505,
+    "linkDashboard": "/aga/aviso-de-modificacion/aviso",
+    "linkDepartment": "/pago/aviso-de-modificacion/aviso",
+    "department": "aga"
+  },
   {
     "id": 192,
     "tramite": 31202,
@@ -1718,7 +1718,7 @@
     "id": 246,
     "tramite": 80301,
     "linkDashboard": "/se/registro-modificacion/registro-modificacion",
-    "linkDepartment":"/pago/registro-modificacion/registro-modificacion",
+    "linkDepartment": "/pago/registro-modificacion/registro-modificacion",
     "department": "se"
   },
   {
@@ -1775,7 +1775,7 @@
     "tramite": 240105,
     "linkDashboard": "/sedena/importacion-de-sustancias/ordinario-para",
     "linkDepartment": "/pago/importacion-de-sustancias/ordinario-para",
-     "department": "sedena"
+    "department": "sedena"
   },
   {
     "id": 255,
@@ -1871,7 +1871,7 @@
   {
     "id": 268,
     "tramite": 240311,
-    "linkDashboard": "/sedena/permiso-ordinario/importacion-artificios", 
+    "linkDashboard": "/sedena/permiso-ordinario/importacion-artificios",
     "linkDepartment": "/pago/permiso-ordinario/importacion-artificios",
     "department": "sedena"
   },
@@ -1983,13 +1983,13 @@
   {
     "id": 284,
     "tramite": 290301,
-   "linkDashboard": "/amecafe/nacional-registro-del-cafe-exportadores/cafeExportadores",
-   "linkDepartment": "/pago/nacional-registro-del-cafe-exportadores/cafeExportadores",
+    "linkDashboard": "/amecafe/nacional-registro-del-cafe-exportadores/cafeExportadores",
+    "linkDepartment": "/pago/nacional-registro-del-cafe-exportadores/cafeExportadores",
     "department": "amecafe"
   },
   {
     "id": 285,
-     "tramite": 80103,
+    "tramite": 80103,
     "linkDashboard": "/se/registro-solicitud-immex-modalidad/action",
     "linkDepartment": "/pago/registro-solicitud-immex-modalidad/action",
     "department": "se"
@@ -1998,7 +1998,7 @@
     "id": 286,
     "tramite": 80104,
     "linkDashboard": "/se/registro-solicitud-immex-modalidad-controladora/action",
-    "linkDepartment": "/pago/registro-solicitud-immex-modalidad-controladora/action",
+    "linkDepartment": "/se/registro-solicitud-immex-modalidad-controladora/action",
     "department": "se"
   },
   {
@@ -2032,8 +2032,8 @@
   {
     "id": 291,
     "tramite": 80316,
-    "linkDashboard": "/se/modificaciones-immex-prosec/tipo-de-persona",
-    "linkDepartment": "/pago/modificaciones-immex-prosec/tipo-de-persona",
+    "linkDashboard": "/se/modificaciones-immex/tipo-de-persona",
+    "linkDepartment": "/pago/modificaciones-immex/tipo-de-persona",
     "department": "se"
   },
   {
@@ -4190,8 +4190,8 @@
     "tramite": 120603,
     "linkDashboard": "/se/registro-como-expresa/registro-empresa",
     "linkDepartment": "/pago/registro-como-expresa/registro-empresa",
-     "department": "se"
-},
+    "department": "se"
+  },
   {
     "id": 602,
     "tramite": 231002,
@@ -4200,9 +4200,9 @@
     "department": "semarnat"
   },
   {
-     "id": 603,
+    "id": 603,
     "tramite": 120403,
-    "linkDashboard": "se/cupos/solicitud",
+    "linkDashboard": "/se/cupos/solicitud",
     "linkDepartment": "/pago/cupos/solicitud",
     "department": "se"
   },
@@ -4220,11 +4220,11 @@
     "linkDepartment": "/pago/autorizacion/mercancia-donada",
     "department": "aga"
   },
- {
+  {
     "id": 606,
     "tramite": 140205,
     "linkDashboard": "/se/cancelaciones-certificado/solicitud",
     "linkDepartment": "/pago/cancelaciones-certificado/solicitud",
     "department": "se"
- }
+  }
 ]

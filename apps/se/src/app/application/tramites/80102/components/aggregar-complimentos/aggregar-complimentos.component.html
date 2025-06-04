@@ -1,4 +1,5 @@
 <app-complimentos
+  [formularioDeshabilitado]="esFormularioSoloLectura"
   [datosFormaComplimentos]="datosComplimentos"
   (complimentosDatos)="modifierComplimentos($event)"
   [datosSocioAccionistas]="(tablaDatosComplimentos$ | async) || []"

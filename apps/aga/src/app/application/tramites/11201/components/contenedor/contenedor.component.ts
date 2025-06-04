@@ -1,25 +1,24 @@
+import { AlertComponent, ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, Pedimento, REGEX_LLAVE_DE_PAGO_DE_DERECHO, REGEX_SOLO_NÚMERO } from '@ng-mf/data-access-user';
+import { ENCABEZADO_TABLA_CONTENEDOR, ENCABEZADO_TABLA_CONTENEDOR_MANIFIESTO } from '../../enum/solicitante.enum';
 import { Aduanas } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
-import { AlertComponent, Notificacion, NotificacionesComponent, Pedimento, REGEX_LLAVE_DE_PAGO_DE_DERECHO, REGEX_SOLO_NÚMERO } from '@libs/shared/data-access-user/src';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { BsModalService } from 'ngx-bootstrap/modal';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component, } from '@angular/core';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { DatosDelContenedor } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
-import { EventEmitter } from '@angular/core';
 import { FECHA_INGRESO } from '../../../../core/enums/11201/tramite11201.enum';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { HEADER_MAP_DATOS } from '../../enum/solicitante.enum';
 import { Input } from '@angular/core';
 import { InputFecha, } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent, } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Output } from '@angular/core';
 import { REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
 import { REGEX_REEMPLAZAR } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -38,7 +37,7 @@ import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import moment from 'moment';
 import { takeUntil } from 'rxjs';
-import { ENCABEZADO_TABLA_CONTENEDOR, HEADER_MAP_DATOS } from '../../enum/solicitante.enum';
+
 
 
 /**
@@ -90,25 +89,18 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Bandera para indicar si se debe mostrar el contenedor.
    */
-  radioContenedor:boolean = false;
- 
+  radioContenedor: boolean = false;
+
   /**
    * Bandera para indicar si se debe mostrar el archivo CSV.
    */
-  radioArchivoCsv:boolean = false
- 
+  radioArchivoCsv: boolean = false
+
   /**
    * Bandera para indicar si se debe mostrar el manifiesto.
    */
-  radioManifesto:boolean = false;
+  radioManifesto: boolean = false;
 
-  /**
-   * Evento emitido cuando se solicita la cancelación de la acción actual.
-   * 
-   * Este evento no emite ningún valor y puede ser utilizado por componentes padres
-   * para manejar la lógica de cancelación, como cerrar diálogos o limpiar formularios.
-   */
-  @Output() cancelarEvento = new EventEmitter<void>();
   /**
    * Representa la fecha de inicio ingresada por el usuario.
    *
@@ -162,11 +154,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   mostrarMensaje: boolean = false;
 
   /**
-   * Mensaje de campos obligatorios.
-   */
-  mensajeCamposObligatorios: string = '* Campos obligatorios';
-
-  /**
    * Lista de aduanas.
    */
   aduanaList: {
@@ -183,11 +170,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     labelNombre: string;
     primerOpcion: string;
   };
-
-  /**
-   * Bandera para requerir guardado parcial.
-   */
-  requiereGuardadoParcial: boolean = false;
 
   /**
    * Índice actual.
@@ -266,7 +248,14 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Configuración de las columnas de la tabla.
    */
   public encabezadoDeTabla = ENCABEZADO_TABLA_CONTENEDOR;
-
+  /**
+ * @property {any} encabezadoDeTablaManifiesto
+ * @description Configuración de las columnas de la tabla para el manifiesto.
+ * 
+ * Esta propiedad utiliza la constante `ENCABEZADO_TABLA_CONTENEDOR_MANIFIESTO` para definir
+ * los encabezados de las columnas que se mostrarán en la tabla del manifiesto.
+ */
+  public encabezadoDeTablaManifiesto = ENCABEZADO_TABLA_CONTENEDOR_MANIFIESTO;
   /**
    * Referencia a la clase o enumeración `TablaSeleccion`.
    *
@@ -296,9 +285,17 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   @ViewChild('plantillademodelo') plantillaDeModelo!: TemplateRef<Element>;
 
   /**
-   * Evento para continuar.
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
    */
-  @Output() continuarEvento = new EventEmitter<string>();
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -306,7 +303,8 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     private validacionesService: ValidacionesFormularioService,
     public tramite11201Store: Tramite11201Store,
     private tramite11201Query: Tramite11201Query,
-    private modalService: BsModalService
+    private modalService: BsModalService,
+    private consultaioQuery: ConsultaioQuery,
   ) {
     this.transporteList = {
       catalogos: [],
@@ -325,7 +323,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     };
     this.contenedores = {
       catalogos: [],
-      labelNombre: 'Aduana/sección aduanera',
+      labelNombre: 'Tipo de equipo',
       primerOpcion: 'Seleccione un valor',
     };
   }
@@ -345,12 +343,22 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+    this.datosDelContenedor = this.solicitud11201State.datosDelContenedor || [];
     this.inicializarFormulario();
     this.cargarCatalogos();
     this.tabSeleccionado();
     this.fetchgetTransporteList();
     this.fetchAduanaList();
-    this.loadDatosTablaData();
   }
 
   /**
@@ -387,6 +395,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         this.solicitud11201State?.numeroContenedor,
         [
           Validators.required,
+          Validators.minLength(6),
           Validators.maxLength(15),
           Validators.pattern(REGEX_LLAVE_DE_PAGO_DE_DERECHO),
         ],
@@ -499,7 +508,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
           'setFechaIngreso'
         );
       });
+    this.inicializarEstadoFormulario();
   }
+
   /**
    * Cargar datos de la tabla.
    *
@@ -518,6 +529,22 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.datosTabla = data;
       });
+  }
+  /**
+  * @method inicializarEstadoFormulario
+  * @description Inicializa el estado del formulario según el modo de solo lectura.
+  * 
+  * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
+  * En caso contrario, habilita los controles del formulario.
+  * 
+  * @returns {void}
+  */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.solicitudForm?.disable();
+    } else {
+      this.solicitudForm?.enable();
+    }
   }
 
   /**
@@ -599,6 +626,9 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     this.mostrarMensaje = false;
     // Deshabilitar controles específicos si es necesario
     this.solicitudForm.get('archivoSeleccionado')?.disable();
+    this.radioContenedor = false;
+    this.radioArchivoCsv = false;
+    this.radioManifesto = false;
   }
 
   /**
@@ -625,7 +655,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     const NUMEROCONTENEDOR = this.solicitudForm.value.numeroContenedor;
     const CONTENEDORES = this.solicitudForm.value.contenedores;
     if (INICIALESCONTENEDOR && NUMEROCONTENEDOR && ADUANA && CONTENEDORES && FECHAINGRESO
- ) {
+    ) {
       this.agregarSolicitud();
     }
   }
@@ -634,7 +664,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * Adjuntar archivo CSV y parsear su contenido.
    */
   adjuntarArchivo(): void {
-        this.mostrarArchivoSeleccionadoTable = true;
+    this.mostrarArchivoSeleccionadoTable = true;
   }
 
   /**
@@ -656,15 +686,15 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     }
   }
 
-    /**
-   * Restablece el estado del componente al regresar de la carga de archivos.
-   * 
-   * - Oculta la tabla de carga de archivos.
-   * - Limpia el valor del input de archivo.
-   * - Restablece la etiqueta del archivo a "Sin archivo seleccionados".
-   * 
-   * @returns {void} No retorna ningún valor.
-   */
+  /**
+ * Restablece el estado del componente al regresar de la carga de archivos.
+ * 
+ * - Oculta la tabla de carga de archivos.
+ * - Limpia el valor del input de archivo.
+ * - Restablece la etiqueta del archivo a "Sin archivo seleccionados".
+ * 
+ * @returns {void} No retorna ningún valor.
+ */
   regresar(): void {
     const FILE_INPUT = document.getElementById(
       'cargarArchivo'
@@ -673,7 +703,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     FILE_INPUT.value = '';
     this.etiquetaDeArchivo = 'Sin archivo seleccionados';
   }
-  
+
   /**
    * Método para analizar una cadena CSV y convertirla en una lista de objetos.
    *
@@ -721,6 +751,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       this.solicitudForm.get('menuDesplegable')?.valid
     ) {
       this.mostrarMensaje = true;
+      this.loadDatosTablaData();
     }
   }
 
@@ -736,8 +767,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       this.datosTramiteService
         .submitSolicitud()
         .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe(() => {
-        });
+        .subscribe();
     } else {
       this.mostrarMensaje = true;
     }
@@ -786,7 +816,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         // Manejar éxito, posiblemente refrescar la grilla o mostrar mensaje
         if (respuesta?.success) {
           respuesta.datos.id = this.datosDelContenedor.length + 1;
-          this.datosDelContenedor.push(respuesta.datos);
+          this.datosDelContenedor = [...this.datosDelContenedor, respuesta.datos];
           (
             this.tramite11201Store.setDelContenedor as (
               valor: DatosDelContenedor[]
@@ -853,16 +883,6 @@ export class ContenedorComponent implements OnInit, OnDestroy {
       id: 1,
       class: 'modal-sm',
     });
-  }
-
-  /**
-   * Emite un evento para continuar.
-   *
-   * Este método emite un evento para indicar que se debe continuar con el siguiente paso.
-   * @returns {void}
-   */
-  continuar(): void {
-    this.continuarEvento.emit('');
   }
 
   /**
@@ -960,15 +980,15 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     };
     this.elementoParaEliminar = i;
   }
-
   /**
-   * Cancela la operación actual.
-   * 
-   * Este método restablece el formulario de solicitud a su estado inicial
-   * y emite un evento para notificar al componente padre que la acción de cancelar ha sido solicitada.
-   */
-  cancelar(): void {
-    this.solicitudForm.reset();
-    this.cancelarEvento.emit();
+    * Verifica si un control del formulario es inválido, tocado o modificado.
+    * @param nombreControl - Nombre del control a verificar.
+    * @returns True si el control es inválido, de lo contrario false.
+    */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.solicitudForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
   }
 }
