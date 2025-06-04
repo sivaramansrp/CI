@@ -871,7 +871,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         ],
         horaInicio: [this.solicitudState?.horaInicio, Validators.required],
         horaFinal: [this.solicitudState?.horaFinal, Validators.required],
-        fechasSeleccionadas: this.fb.array([]),
+        fechasSeleccionadas: this.fb.array([], Validators.required),
       }),
 
       despacho: this.fb.group({
@@ -1317,6 +1317,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   changeFechaFinal(): void {
     this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
+    if (
+      this.datosServicio.get('fechaFinal')?.dirty &&
+      this.datosServicio.get('fechaFinal')?.touched
+    ) {
+      this.rangoFechas();
+    }
     this.setValoresStore(this.datosServicio, 'fechaFinal', 'setFechaFinal');
   }
 
@@ -1364,9 +1370,14 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns
    */
   calcularRangoFechas(): void {
+    this.rangoFechas();
     if (this.tipoSolicitudSeleccionada !== TIPO_SOLICITUD.INDIVIDUAL) {
-      this.rangoFechas();
       this.mostrarRangoFechas = true;
+    } else {
+      this.mostrarRangoFechas = false;
+      this.fechasSeleccionadas?.clear();
+      
+      this.fechasSeleccionadas.push(new FormControl(this.selectRangoDias[0]));
     }
   }
 
@@ -1402,6 +1413,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.datosServicio.get('fechaFinal')?.setValue('');
     this.datosServicio.get('fechaFinal')?.markAsUntouched();
 
+    this.selectRangoDias = [];
+
     this.setValoresStore(this.datosServicio, 'fechaInicio', 'setFechaInicio');
     this.setValoresStore(this.datosServicio, 'horaInicio', 'setHoraInicio');
     this.setValoresStore(this.datosServicio, 'fechaFinal', 'setFechaFinal');
@@ -1415,6 +1428,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   changeFechaInicio(): void {
     this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
+    if (
+      this.datosServicio.get('fechaInicio')?.dirty &&
+      this.datosServicio.get('fechaInicio')?.touched
+    ) {
+      this.rangoFechas();
+    }
     this.setValoresStore(this.datosServicio, 'fechaInicio', 'setFechaInicio');
   }
 

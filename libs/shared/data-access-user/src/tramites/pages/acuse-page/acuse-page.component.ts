@@ -8,8 +8,7 @@ import { AccionesTabla } from '../../../core/models/shared/components.model';
 import { AcuseComponent } from '../../components/acuse/acuse.component';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { TramiteFolioQueries } from '../../../core/queries/tramiteFolio.queries';
-
+import { TramiteFolioQueries } from '../../../core/queries/tramiteFolio.query';
 @Component({
   templateUrl: './acuse-page.component.html',
   styles: ``,
