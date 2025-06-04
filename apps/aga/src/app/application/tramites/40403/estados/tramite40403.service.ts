@@ -25,7 +25,6 @@ export class Tramite40403Service {
    * @returns {Observable<RespuestaConsulta>} Un observable que emite la respuesta de los datos de consulta.
    */
   getDatosConsulta(): Observable<RespuestaConsulta> {
-    console.log('getDatosConsulta');
     return this.http.get<RespuestaConsulta>(`assets/json/40403/consulta_40403.json`);
   }
   /**

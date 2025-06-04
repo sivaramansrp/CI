@@ -52,6 +52,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     private consultaioQuery: ConsultaioQuery
   ) {}
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Se suscribe al estado de la consulta y, si hay datos actualizados, llama al método para obtener los datos de la consulta.
+   */
   ngOnInit(): void {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -109,6 +113,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.indice = i;
   }
 
+  /**
+   * Establece el valor de un campo en el store del trámite.
+   *
+   * @param form - El formulario del cual se obtiene el valor.
+   * @param campo - El nombre del campo del formulario cuyo valor se va a obtener.
+   * @param metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
