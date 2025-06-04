@@ -16,12 +16,12 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
   let fixture: ComponentFixture<SolicitudComponent>;
-  let exportacionPetroliferosService: any;
+  let permisodehidrocarburosServiceMock: any;
   let tramiteStoreMock: any;
   let tramiteQueryMock: any;
 
   beforeEach(async () => {
-    exportacionPetroliferosService = {
+    permisodehidrocarburosServiceMock = {
       getSolicitudeOptions: jest.fn().mockReturnValue(of({ options: [] })),
       getProductoOptions: jest.fn().mockReturnValue(of({ options: [] })),
       getTablaDatos: jest.fn().mockReturnValue(of([{ cantidad: 10, totalUSD: 100 }])),
@@ -54,7 +54,7 @@ describe('SolicitudComponent', () => {
       ],
       providers: [
         FormBuilder,
-        { provide: ExportacionPetroliferosService, useValue: exportacionPetroliferosService },
+        { provide: ExportacionPetroliferosService, useValue: permisodehidrocarburosServiceMock },
         { provide: Tramite130201Store, useValue: tramiteStoreMock },
         { provide: Tramite130201Query, useValue: tramiteQueryMock }
       ],
@@ -86,7 +86,7 @@ describe('SolicitudComponent', () => {
 
   it('debería obtener datos de la tabla y actualizar formForTotalCount', () => {
     component.obtenerTablaDatos();
-    expect(exportacionPetroliferosService.getTablaDatos).toHaveBeenCalled();
+    expect(permisodehidrocarburosServiceMock.getTablaDatos).toHaveBeenCalled();
     expect(component.tableBodyData).toEqual([{ cantidad: 10, totalUSD: 100 }]);
     expect(component.formForTotalCount.value).toEqual({
       cantidadTotal: 10,
@@ -97,6 +97,7 @@ describe('SolicitudComponent', () => {
   it('debería manejar setFraccion actualizando el formulario', () => {
     const form = new FormBuilder().group({ fraccion: [1], umt: [''] });
     component.mercanciaCatalogoArray = [[{ id: 1, descripcion: 'Sample', relacionadaUmtId: 2 }]];
+    component.acotacionCatalogo = []; 
     const spy = jest.spyOn(component, 'setValoresStore');
 
     component.handleStoreUpdate({ form, campo: 'fraccion', metodoNombre: 'setFraccion' });
@@ -132,10 +133,10 @@ describe('SolicitudComponent', () => {
 
   it('debería obtener países por bloque y actualizar selectRangoDias', () => {
     const mockData = [{ descripcion: 'País 1' }, { descripcion: 'País 2' }];
-    exportacionPetroliferosService.getPaisesPorBloque.mockReturnValue(of(mockData));
+    permisodehidrocarburosServiceMock.getPaisesPorBloque.mockReturnValue(of(mockData));
 
     component.fetchPaisesPorBloque(1);
-    expect(exportacionPetroliferosService.getPaisesPorBloque).toHaveBeenCalledWith(1);
+    expect(permisodehidrocarburosServiceMock.getPaisesPorBloque).toHaveBeenCalledWith(1);
     expect(component.paisesPorBloque).toEqual(mockData);
     expect(component.selectRangoDias).toEqual(['País 1', 'País 2']);
   });
