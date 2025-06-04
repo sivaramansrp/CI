@@ -1,11 +1,11 @@
 import { Catalogo, CatalogoSelectComponent,InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud260303State, Tramite260303Store } from '../../../../estados/tramites/260303/tramite260303.store';
 import { Subject,map, takeUntil } from 'rxjs';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FECHA_PAGO } from '../../services/certificados-licencias-permisos.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite260303Query } from '../../../../estados/queries/260303/tramite260303.query';
@@ -21,6 +21,13 @@ import { Tramite260303Query } from '../../../../estados/queries/260303/tramite26
   styleUrl: './pago-de-derechos.component.scss',
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+
+  /**
+* @property consultaState
+* @description
+* Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+*/
+  @Input() consultaState!: ConsultaioState;
 
   /**
    * Representa el catálogo de bancos disponibles para selección.
@@ -49,13 +56,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
    public solicitudState!: Solicitud260303State;
 
-   
-  /**
-   * Indica si el formulario está en modo solo lectura.
-   * Cuando es `true`, los campos del formulario no se pueden editar.
-   */
-  esFormularioSoloLectura: boolean = false;
-
   /**
    * Constructor del componente PagoDeDerechosComponent.
    * 
@@ -69,18 +69,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private tramite260303Store: Tramite260303Store,
     private tramite260303Query: Tramite260303Query,
-    private consultaioQuery: ConsultaioQuery
   ) {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
-
    }
 
   /**
@@ -92,8 +81,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * - Llama a `cerrarPagoDerechosForm` para inicializar o restablecer el formulario de pago.
    */
   ngOnInit(): void {
+    this.inicializarFormulario();
     this.getBancoCatalogDatos();
     this.cerrarPagoDerechosForm();
+    this.deshabilitarFormularios();
   }
 
   /**
@@ -182,29 +173,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       (this.tramite260303Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
-  /**
-   * Determina si se debe cargar un formulario nuevo o uno existente.  
-   * Ejecuta la lógica correspondiente según el estado del componente.
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
-    } else {
-      this.inicializarFormulario();
-    }
-  }
-
-
-  /**
-   * Guarda los datos del formulario y ajusta el estado de solo lectura.
-   * 
-   * Este método inicializa el formulario y, dependiendo del valor de 
-   * `esFormularioSoloLectura`, deshabilita o habilita el formulario 
-   * para evitar o permitir la edición por parte del usuario.
-   */
-  guardarDatosFormulario(): void {
-    this.inicializarFormulario();
-    if (this.esFormularioSoloLectura) {
+  deshabilitarFormularios(): void {
+    if (this.consultaState?.readonly) {
       // Si el formulario está en modo solo lectura, deshabilita todos los controles.
       this.pagoDerechosForm.disable();
     } else {
