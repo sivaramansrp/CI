@@ -2,13 +2,11 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
 import { HttpCoreService } from '@ng-mf/data-access-user';
 
-import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
-
-import { CatalogosSelect } from '@ng-mf/data-access-user';
+import { ReplaySubject, Subject,map, takeUntil } from 'rxjs';
 
 import { Catalogo } from '@ng-mf/data-access-user';
 
@@ -35,9 +33,22 @@ export class TransporteComponent implements OnDestroy, OnInit {
    * Esta variable se utiliza para crear la forma del transporte.
    */
   transporteForm!: FormGroup;
+  /**
+   * Notificador para destruir las suscripciones y evitar fugas de memoria.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * Estado actual de la solicitud 220401.
+   */
   public solicitudState!: solicitud220401State;
+  /**
+   * Indica si el formulario es de solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
 
+  /**
+   * Catálogo de tipos de transporte.
+   */
   public tiposTransporte: Catalogo[] = [];
   /**
    * constructor de la clase
@@ -52,23 +63,73 @@ export class TransporteComponent implements OnDestroy, OnInit {
     private httpCoreService: HttpCoreService,
     private agregar220401Store: Agregar220401Store,
     private agregarQuery: AgregarQuery,
+     private consultaioQuery: ConsultaioQuery,
   ) {
     this.fetchtiposDocumentos();
+     this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+       
+      })
+    )
+    .subscribe()
     
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Inicializa el formulario de transporte.
+   */
   ngOnInit(): void {
-    
-  this.agregarQuery.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      )
-      .subscribe();
+    this.inicializarTransporteFormulario();
+  }
+
+    /**
+     * Inicializa el formulario de transporte obteniendo el estado de la solicitud.
+     */
+    inicializarFormulario():void {
+      this.agregarQuery.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.solicitudState = seccionState;
+          })
+        )
+        .subscribe();
       this.crearFormTransporte();
     }
+
+    /**
+     * Inicializa el formulario de transporte.
+     * Si el formulario es de solo lectura, guarda los datos del formulario.
+     * De lo contrario, inicializa el formulario normalmente.
+     */
+    inicializarTransporteFormulario(): void {
+      if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+      } else {
+      this.inicializarFormulario();
+      }  
+    }
+
+    /**
+     * @function guardarDatosFormulario
+     * @description
+     * Inicializa el formulario de transporte y ajusta su estado de habilitación según si el formulario es de solo lectura.
+     * - Si el formulario es de solo lectura, lo deshabilita.
+     * - Si el formulario no es de solo lectura, lo habilita.
+     * - Si ninguna de las condiciones anteriores se cumple, no realiza ninguna acción adicional.
+     */
+    guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.transporteForm.disable();
+      } else {
+        this.transporteForm.enable();
+      } 
+  }
   /**
    * Este método se utiliza para crear la forma del transporte. - 220401
    */
@@ -79,10 +140,17 @@ export class TransporteComponent implements OnDestroy, OnInit {
       identificationDelTransporte: [this.solicitudState?.identificationDelTransporte],
       numerodeContenedor:[this.solicitudState?.numerodeContenedor],
       fechdeEmbarque:[this.solicitudState?.fechdeEmbarque],
-      numerodeFlejes:[this.solicitudState?.numerodeFlejes]
+      numerodeFlejes:[this.solicitudState?.numerodeFlejes],
+      tipoDeTransporte:[this.solicitudState?.tipoDeTransporte],
      });
   }
 
+  /**
+   * Establece valores en el store a partir del formulario.
+   * @param form Formulario de transporte
+   * @param campo Nombre del campo en el formulario
+   * @param metodoNombre Nombre del método en el store Agregar220401Store
+   */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Agregar220401Store): void {
     const VALOR = form.get(campo)?.value;
     (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);

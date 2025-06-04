@@ -22,11 +22,6 @@ export const FECHA_FINAL = {
 };
 
 /**
- * @description Mensaje de aviso para el cambio de tipo de solicitud.
- */
-export const MSG_CAMBIO_TIPO_SOLICITUD = '';
-
-/**
  * @description Titulo del modal de aviso.
  */
 export const TITULO_MODAL = 'Aviso';
@@ -38,7 +33,7 @@ export const ERR_CAMPOS_OBLIGATORIOS =
   'Debes capturar todos los datos marcados como obligatorios.';
 
 /**
- * @description Mensaje de eeror cuando se hace una busqueda sin datos.
+ * @description Mensaje de error cuando se hace una busqueda sin datos.
  */
 export const ERR_INPUT_BUSQUEDA_VACIO =
   'No has proporcionado información que es requerida.';
@@ -96,7 +91,7 @@ export const TITULO_MODAL_ERROR = 'Aviso';
  *@description Mensaje de error para la validación de fecha
  */
 export const MSJ_ERROR_FECHA =
-  'Fecha inválida. La fecha final no puede ser menor a la fecha de inicio.';
+  'La fecha no es válida para la solicitud seleccionada';
 
 /**
  * @description Mensaje de error cuando los campos obligatorios no están capturados en la consulta de línea de captura..
@@ -109,6 +104,17 @@ export const MSJ_ERROR_LINEA_CAPTURA =
  */
 export const MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA =
   'Línea de captura no es válida, favor de verificar.';
+
+/**
+ * @description Mensaje de error cuando ya existe un responsable del despacho con el mismo gafete que se quiere registrar.
+ */
+export const MSJ_ERROR_GAFETE_EXISTE =
+  'El número de gafete ya se encuentra registrado, intenta de nuevo';
+
+  /**
+   * @description Mensaje de avertencia cuando se va a cambiar de tipo de solicitud y el formulario tiene datos capturados.
+   */
+  export const MSG_CAMBIO_TIPO_SOLICITUD = 'Los datos capturados serán borrados, ¿estás de acuerdo (SI/NO)?';
 
 /**
  * @description Constantes para el manejo de las etiquetas de los inputs de la autorización LDA y DDEX
@@ -191,6 +197,11 @@ export const MSG_INTERVALO_FECHA_NO_VALIDO =
  * @description Constante para el manejo del valor sin valor en el select.
  */
 export const SIN_VALOR = -1;
+
+/**
+ * @description Constante para el manejo del valor del select cuando no hay valores.
+ */
+export const SIN_ITEMS = '-2';
 
 // TODO: Se va a eliminar este valor, cuando el backend actualice el endpoint del guardado y ya no sea necesario enviar este valor
 export const CVE_UNIDAD_ADMIN = 'CV1';

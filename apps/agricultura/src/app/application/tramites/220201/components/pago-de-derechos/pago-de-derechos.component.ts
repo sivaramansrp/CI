@@ -1,62 +1,75 @@
 import { HttpClient } from '@angular/common/http';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { Catalogo, InputFecha, RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputFecha, InputFechaComponent, InputRadioComponent, RespuestaCatalogos, TituloComponent } from '@ng-mf/data-access-user';
 
-import { FECHA_DE_PAGO } from '../../constantes/certificado-zoosanitario.enum';
+import { FECHAPAGODATE,FECHA_DE_PAGO } from '../../constantes/certificado-zoosanitario.enum';
 
 import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
 
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 
-import { skip } from 'rxjs';
+import {Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 
 /**
  * @fileoverview Componente para la gestión del formulario de pago de derechos.
  * Este componente maneja la lógica y la presentación del formulario de pago de derechos,
  * incluyendo la inicialización, la obtención de datos y la gestión de los controles del formulario.
- * @module pagoDeDerechos
+ * @module PagoDeDerechosComponent
  */
 
-/**
- * Componente para el formulario de pago de derechos.
- * @class PagoDeDerechosComponent
- * @implements {OnInit}
- */
 @Component({
   selector: 'app-pago-de-derechos',
   templateUrl: './pago-de-derechos.component.html',
-  styleUrls: ['./pago-de-derechos.component.scss']
+  styleUrls: ['./pago-de-derechos.component.scss'],
+  standalone: true,
+  imports: [
+    CommonModule,
+    TituloComponent,
+    ReactiveFormsModule,
+    InputFechaComponent,
+    CatalogoSelectComponent,
+    InputRadioComponent,
+    FormsModule
+  ]
 })
-export class PagoDeDerechosComponent implements OnDestroy, OnInit {
+export class PagoDeDerechosComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /**
-   * Configuración para el input de fecha de pago.
-   * @property {InputFecha} fechaInicioInput
+   * Configuración predeterminada para el campo de fecha de pago.
    */
   fechaInicioInput: InputFecha = FECHA_DE_PAGO;
 
   /**
-   * Configuración para el selector de justificación.
-   * @property {CatalogosSelect} justificacionSelector
+   * Lista de opciones para el selector de justificación.
    */
   justificacionSelector: Catalogo[] = [];
 
   /**
-   * Configuración para el selector de banco.
-   * @property {CatalogosSelect} bancoSelector
+   * Bandera para determinar si el formulario está en modo solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Fecha de pago predeterminada que se puede actualizar.
+   */
+  fechaPagoDate: string = FECHAPAGODATE;
+
+  /**
+   * Lista de opciones para el selector de banco.
    */
   bancoSelector: Catalogo[] = [];
 
   /**
-   * Grupo de formularios para el pago de derechos.
-   * @property {FormGroup} pagoForm
+   * Formulario reactivo que gestiona los campos del pago de derechos.
    */
   pagoForm: FormGroup = this.fb.group({
-    exentoPago: [{ value: '', disabled: false }],
+    exentoPago: [{ value: 'si', disabled: false }, Validators.required],
     justificacion: [{ value: '', disabled: false }, Validators.required],
     claveReferencia: [{ value: '', disabled: true }],
     cadenaDependencia: [{ value: '', disabled: true }],
@@ -65,82 +78,131 @@ export class PagoDeDerechosComponent implements OnDestroy, OnInit {
     importePago: [{ value: '', disabled: true }]
   });
 
-
   /**
-  * Opciones para el radio button de exención de pago.
-  * @property {RadioOpcion[]} radioOptions
-  */
-  radioOptions: RadioOpcion[] = [
-    {
-      "label": "No",
-      "value": "no"
-    },
-    {
-      "label": "Sí",
-      "value": "Si"
-    }
-  ];
-  /**
-     * Valor seleccionado en el radio button de exención de pago.
-     * @property {string} selectedValue
-     */
-  selectedValue: string = 'no';
-
-  /**
-   * Constructor del componente.
-   * @constructor
-   * @param {FormBuilder} fb - Servicio para la creación de formularios.
-   * @param {HttpClient} httpServicios - Cliente HTTP para realizar solicitudes.
+   * Opciones disponibles para el campo de radio sobre la exención de pago.
    */
-  constructor(private readonly fb: FormBuilder, private readonly httpServicios: HttpClient, private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService) {
+  radioOptions: RadioOpcion[] = [
+    { label: "No", value: "no" },
+    { label: "Sí", value: "si" }
+  ];
+
+  /**
+   * Sujeto para manejar la destrucción de observables y evitar fugas de memoria.
+   */
+  private destroyNotifier$ = new Subject<void>();
+
+  /**
+   * Constructor del componente. Inyecta los servicios y realiza una carga inicial de catálogos.
+   * @param fb Constructor de formularios reactivos.
+   * @param httpServicios Cliente HTTP para peticiones.
+   * @param certificadoZoosanitarioServices Servicio para actualizar datos de pago.
+   * @param certificadoZoosanitarioQuery Fuente de datos del estado actual de certificado.
+   * @param consultaQuery Fuente de datos del estado de consulta.
+   */
+  constructor(
+    private readonly fb: FormBuilder,
+    private readonly httpServicios: HttpClient,
+    private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
+    private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
+    private consultaQuery: ConsultaioQuery
+  ) {
     this.obtenerDetallesDeListaDeOpciones();
   }
 
+  /**
+   * Ciclo de vida de Angular que se ejecuta al iniciar el componente.
+   * Suscribe al estado del formulario para rellenar datos y verificar validez.
+   */
   ngOnInit(): void {
-    this.pagoForm.valueChanges.pipe(skip(1)).subscribe((changes) => {
-      const FORMA_VALIDA_ACTUALIZADA = {
-        pagoDeformaValida: false,
-      };
-      if (this.pagoForm.valid) {
-        FORMA_VALIDA_ACTUALIZADA.pagoDeformaValida = true;
-      }
-      this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
-    });
+    this.certificadoZoosanitarioQuery.seleccionarPagoDerechos$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datosDeLaSolicitud) => {
+        if (datosDeLaSolicitud) {
+          this.pagoForm.patchValue(datosDeLaSolicitud);
+        }
+      });
+
+    this.pagoForm.valueChanges
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(() => {
+        const FORMA_VALIDA_ACTUALIZADA = {
+          pagoDeformaValida: this.pagoForm.valid
+        };
+        this.certificadoZoosanitarioServices.actualizarFormaValida(FORMA_VALIDA_ACTUALIZADA);
+      });
   }
 
+  /**
+   * Ciclo de vida que se ejecuta después de renderizar la vista.
+   * Activa el modo solo lectura si el estado lo requiere.
+   */
+  ngAfterViewInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          if (this.esFormularioSoloLectura) {
+            this.pagoForm.disable();
+          }
+        })
+      ).subscribe();
+  }
 
   /**
-   * Obtiene los detalles de las listas de opciones (banco y justificación).
-   * @method obtenerDetallesDeListaDeOpciones
+   * Cambia el valor de la fecha de pago dentro del formulario.
+   * @param nuevoValor Nueva fecha seleccionada por el usuario.
    */
-  obtenerDetallesDeListaDeOpciones() {
+  cambioFechaFinal(nuevoValor: string): void {
+    this.pagoForm.patchValue({ fechaPago: nuevoValor });
+    this.fechaPagoDate = nuevoValor;
+  }
+
+  /**
+   * Método que agrupa la carga de catálogos: bancos y justificaciones.
+   */
+  obtenerDetallesDeListaDeOpciones(): void {
     this.obtenerBancoSelectorList();
     this.obtenerListaDeJustificaciones();
   }
 
   /**
-   * Obtiene la lista de bancos para el selector.
-   * @method obtenerBancoSelectorList
+   * Realiza una petición para obtener el catálogo de bancos.
    */
-  obtenerBancoSelectorList() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/banco.json').subscribe((data): void => {
-      const DATOS = data?.data;
-      this.bancoSelector = DATOS as Catalogo[];
-    });
+  obtenerBancoSelectorList(): void {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/banco.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        const DATOS = data?.data;
+        this.bancoSelector = DATOS as Catalogo[];
+      });
   }
 
   /**
-   * Obtiene la lista de justificaciones para el selector. --220201
-   * @method obtenerListaDeJustificaciones
+   * Realiza una petición para obtener el catálogo de justificaciones.
    */
-  obtenerListaDeJustificaciones() {
-    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/Justificación.json').subscribe((data): void => {
-      const DATOS = data?.data;
-      this.justificacionSelector = DATOS as Catalogo[];
-    });
+  obtenerListaDeJustificaciones(): void {
+    this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/Justificación.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        const DATOS = data?.data;
+        this.justificacionSelector = DATOS as Catalogo[];
+      });
   }
-  ngOnDestroy(): void {
 
-    this.certificadoZoosanitarioServices.updatePagoDeDerechos(this.pagoForm.value);
+  /**
+   * Envía los valores actuales del formulario al store compartido.
+   */
+  setValoresStore(): void {
+    const VALOR = this.pagoForm.value;
+    this.certificadoZoosanitarioServices.updatePagoDeDerechos(VALOR);
+  }
+
+  /**
+   * Limpia las suscripciones para evitar fugas de memoria al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

@@ -18,6 +18,7 @@ export interface Solicitud140103State {
 
 }
 
+/** Crea y devuelve el estado inicial vacío para el formulario de Solicitud 140103. */
 export function createInitialState(): Solicitud140103State {
   return {
     regimen: '',
@@ -31,6 +32,8 @@ export function createInitialState(): Solicitud140103State {
 
   };
 }
+
+/** Store que gestiona el estado reactivo para el trámite 140103 usando Akita. */
 @Injectable({
     providedIn: 'root',
   })

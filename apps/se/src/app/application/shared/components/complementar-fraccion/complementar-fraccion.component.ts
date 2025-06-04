@@ -44,6 +44,11 @@ export class ComplementarFraccionComponent implements OnInit {
   @Input() complimentarFraccionDatos!: ComplimentarFraccion;
 
   /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
+
+  /**
    * Evento para emitir los datos de complementar fracción.
    */
   @Output()
@@ -68,6 +73,9 @@ export class ComplementarFraccionComponent implements OnInit {
    */
   ngOnInit(): void {
     this.crearFormularioComplimentar();
+    if (this.formularioDeshabilitado) {
+      this.complimentarForm.disable();
+    }
   }
 
   /**

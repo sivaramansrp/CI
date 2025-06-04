@@ -26,6 +26,7 @@
               [label]="'Justificación'"
               [required]="true"
               [isDisabled]="false"
+              [isDisabled]="esFormularioSoloLectura"
               (change)="
               setValoresStore(
                 formularioPago,
@@ -42,6 +43,7 @@
               [required]="true"
               [isDisabled]="true"
               name="justificacion"
+              [isDisabled]="esFormularioSoloLectura"
               (change)="
               setValoresStore(
                 formularioPago,
@@ -100,6 +102,7 @@
               [required]="true"
               [isDisabled]="true"
               name="banco"
+              [isDisabled]="esFormularioSoloLectura"
               (change)="
             setValoresStore(
               formularioPago,
@@ -116,6 +119,7 @@
               [required]="true"
               [isDisabled]="false"
               name="banco"
+              [isDisabled]="esFormularioSoloLectura"
               (change)="
               setValoresStore(
                 formularioPago,
