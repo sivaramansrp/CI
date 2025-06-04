@@ -120,7 +120,6 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
         if (Array.isArray(data?.datos)) {
           this.cuerpoTablaCancelacion = data.datos as Cancelacion[];
         } else {
-          console.error("Expected an array but received:", data?.datos);
           this.cuerpoTablaCancelacion = [];
         }
       });

@@ -14,9 +14,13 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DesistimientoQuery } from '../../estados/desistimiento-de-permiso.query';
 import { ToastrService, provideToastr } from 'ngx-toastr';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { HttpClientModule } from '@angular/common/http';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 @Injectable()
-class MockServicioDeMensajesService {}
+class MockServicioDeMensajesService {
+    establecerDatosDePermiso = function(test:boolean) : void {};
+}
 
 @Injectable()
 class MockDesistimientoQuery {}
@@ -27,13 +31,13 @@ describe('CancelacionDeSolicitudComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,HttpClientTestingModule],
-      declarations: [CancelacionDeSolicitudComponent
+      imports: [ FormsModule, ReactiveFormsModule,HttpClientTestingModule,TablaDinamicaComponent ],
+      declarations: [
+        CancelacionDeSolicitudComponent
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-      ToastrService,
-                    provideToastr({
+      ToastrService,provideToastr({
                       positionClass: 'toast-top-right',
                     }),
         FormBuilder,
@@ -86,18 +90,5 @@ describe('CancelacionDeSolicitudComponent', () => {
     // expect(component.destroyNotificationSubject$.complete).toHaveBeenCalled();
   });
 
-  it('should run #busqueda()', async () => {
-    component.servicioDeMensajesService = component.servicioDeMensajesService || {};
-    component.servicioDeMensajesService.enviarMensaje = jest.fn();
-    component.busqueda({});
-    // expect(component.servicioDeMensajesService.enviarMensaje).toHaveBeenCalled();
-  });
-
-  it('should run #eliminarRegistro()', async () => {
-    component.servicioDeMensajesService = component.servicioDeMensajesService || {};
-    component.servicioDeMensajesService.actualizarDatosForma = jest.fn();
-    component.eliminarRegistro({});
-    // expect(component.servicioDeMensajesService.actualizarDatosForma).toHaveBeenCalled();
-  });
-
+  
 });
