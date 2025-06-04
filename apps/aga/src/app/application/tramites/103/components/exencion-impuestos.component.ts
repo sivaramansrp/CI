@@ -181,7 +181,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.consultaDatos = seccionState;
           this.soloLectura = this.consultaDatos.readonly;
-          // this.inicializarEstadoFormulario();
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
@@ -264,15 +264,15 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
       }),
       importadorExportador: this.fb.group({
         nombre: [this.solicitudState?.nombre, [Validators.required, Validators.maxLength(50)]],
-        calle: [{ value: '', disabled: true }, this.solicitudState?.calle, [Validators.required, Validators.maxLength(80)]],
-        numeroExterior: [{ value: '', disabled: true }, this.solicitudState?.numeroExterior, [Validators.required, Validators.maxLength(40)]],
+        calle: [{ value: this.solicitudState?.calle, disabled: true }, [Validators.required, Validators.maxLength(80)]],
+        numeroExterior: [{ value: this.solicitudState?.numeroExterior, disabled: true }, [Validators.required, Validators.maxLength(40)]],
         numeroInterior: [this.solicitudState?.numeroInterior, [Validators.maxLength(30)]],
         telefono: [this.solicitudState?.telefono, [Validators.required, Validators.pattern(REGEX_TELEFONO_DIGITOS)]],
         correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email, Validators.maxLength(50)]],
         pais: [this.solicitudState?.pais, [Validators.required]],
-        codigoPostal: [{ value: '', disabled: true }, this.solicitudState?.codigoPostal, [Validators.required, Validators.pattern(REGEX_POSTAL)], Validators.maxLength(8)],
-        estado: [{ value: '', disabled: true }, this.solicitudState?.estado, [Validators.required, Validators.maxLength(50)]],
-        colonia: [{ value: '', disabled: true }, this.solicitudState?.colonia, [Validators.required, Validators.maxLength(50)]],
+        codigoPostal: [{ value: this.solicitudState?.codigoPostal, disabled: true }, [Validators.required, Validators.pattern(REGEX_POSTAL)], Validators.maxLength(8)],
+        estado: [{ value: this.solicitudState?.estado, disabled: true }, [Validators.required, Validators.maxLength(50)]],
+        colonia: [{ value: this.solicitudState?.colonia, disabled: true }, [Validators.required, Validators.maxLength(50)]],
         opcion: [this.solicitudState?.opcion]
       })
     });
@@ -291,7 +291,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
         serie: [this.solicitudState?.serie]
       })
     });
-    // this.inicializarEstadoFormulario();
+    this.inicializarEstadoFormulario();
   }
 
   /**

@@ -13,7 +13,7 @@
             <app-catalogo-select [catalogo]="aduana" [label]="'Aduana por la que ingresará la mercancía'" formControlName="aduana" [required]="true" (change)="aduanaSeleccion()" name="aduana" [isDisabled]="soloLectura"></app-catalogo-select>
           </div>
           <div class="col-md-4" style="margin-top: 35px">
-            <lib-input-check [id]="'organismoPublico'" [label]="'Organismo público'" [required]="true" formControlName="organismoPublico" (change)="organismoPublico()"></lib-input-check>
+            <lib-input-check [id]="'organismoPublico'" [label]="'Organismo público'" [required]="true" formControlName="organismoPublico" (change)="organismoPublico()" [isDisabled]="soloLectura"></lib-input-check>
           </div>
         </div>
 
@@ -59,7 +59,7 @@
             </div>
             <div class="col-md-4">
               <label>Estado*:</label>
-              <input type="number" required="true" class="form-control" id="estado" formControlName="estado" (change)="setValoresStore(importadorExportador, 'estado', 'setEstado')" />
+              <input type="text" required="true" class="form-control" id="estado" formControlName="estado" (change)="setValoresStore(importadorExportador, 'estado', 'setEstado')" />
             </div>
           </div>
           <div class="row mt-3">
@@ -73,13 +73,13 @@
             </div>
             <div class="col-md-4">
               <label>Número interior:</label>
-              <input type="number" class="form-control" maxlength="55" id="numeroInterior" formControlName="numeroInterior"  (change)="setValoresStore(importadorExportador, 'numeroInterior', 'setNumeroInterior')" />
+              <input type="text" class="form-control" maxlength="55" id="numeroInterior" formControlName="numeroInterior"  (change)="setValoresStore(importadorExportador, 'numeroInterior', 'setNumeroInterior')" />
             </div>
           </div>
           <div class="row mt-3 mb-3">
             <div class="col-md-4">
               <label>Colonia*:</label>
-              <input type="number" required="true" class="form-control" id="colonia" formControlName="colonia"  (change)="setValoresStore(importadorExportador, 'colonia', 'setColonia')" />
+              <input type="text" required="true" class="form-control" id="colonia" formControlName="colonia"  (change)="setValoresStore(importadorExportador, 'colonia', 'setColonia')" />
             </div>
             <div class="col-md-4">
               <label>Correo electrónico:</label>
