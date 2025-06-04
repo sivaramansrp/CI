@@ -10,7 +10,8 @@ import { CommonModule } from '@angular/common';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
+
+import { ConsultaioQuery, ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
 
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 
@@ -19,7 +20,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { CAMPOS_FORMULARIO_DATOS_DE_INSTALACION } from '../../constantes/sanidad-acuicola-importacion.enum';
 import { Tramite220103Query } from '../../estados/queries/tramites220103.query';
 
-import { Tramite220103State, Tramite220103Store} from '../../estados/tramites/tramites220103.store';
+import { Tramite220103State, Tramite220103Store } from '../../estados/tramites/tramites220103.store';
 /**
  * Componente que gestiona los datos de instalación para el trámite 220103.
  */
@@ -31,8 +32,10 @@ import { Tramite220103State, Tramite220103Store} from '../../estados/tramites/tr
   styleUrl: './datos-de-instalacion.component.scss',
 })
 export class DatosDeInstalacionComponent implements OnInit, OnDestroy {
-
-
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   */
+  esSoloLectura!: boolean;
   /**
    * Notificador para manejar la destrucción de suscripciones y evitar fugas de memoria.
    */
@@ -63,7 +66,8 @@ export class DatosDeInstalacionComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private tramite220103Query: Tramite220103Query,
-    private tramite220103Store: Tramite220103Store
+    private tramite220103Store: Tramite220103Store,
+    private consultaQuery: ConsultaioQuery,
   ) {
     this.formularioDatosDeInstalacion = this.formBuilder.group({});
   }
@@ -73,13 +77,42 @@ export class DatosDeInstalacionComponent implements OnInit, OnDestroy {
    * Suscribe al estado del trámite y actualiza los datos del estado seleccionado.
    */
   ngOnInit(): void {
+    this.obtenerEstadoSeleccionado();
+    this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((estadoConsulta) => {
+        this.esSoloLectura = estadoConsulta.readonly;
+        this.habilitarDeshabilitarFormulario();
+      });
+
+  }
+  /**
+   * Habilita o deshabilita el formulario según el modo de solo lectura.
+   * Si es solo lectura, deshabilita el formulario para evitar modificaciones.
+   * Si no, habilita el formulario para permitir la edición.
+   */
+  habilitarDeshabilitarFormulario(): void {
+    if (this.esSoloLectura) {
+      this.formularioDatosDeInstalacion.disable();
+    } else {
+      this.formularioDatosDeInstalacion.enable();
+    }
+  }
+
+  /**
+   * Suscribe al observable del estado del trámite y actualiza la propiedad `estadoSeleccionado`
+   * con el valor más reciente del estado.
+   * 
+   * La suscripción se mantiene activa hasta que se emite un valor en `notificadorDestruccion$`,
+   * lo que previene fugas de memoria al destruir el componente.
+   */
+  obtenerEstadoSeleccionado(): void {
     this.tramite220103Query.selectTramite220103State$
       .pipe(takeUntil(this.notificadorDestruccion$))
       .subscribe((estado) => {
         this.estadoSeleccionado = estado;
       });
   }
-
   /**
    * Establece un cambio de valor en el estado del trámite.
    * 

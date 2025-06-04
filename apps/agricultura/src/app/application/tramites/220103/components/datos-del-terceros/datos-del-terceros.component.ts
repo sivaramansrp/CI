@@ -24,8 +24,8 @@ import { Subject, takeUntil } from "rxjs";
 
 import {ConsultaioQuery} from "@ng-mf/data-access-user"
 
-import { AlertComponent, ModeloDeFormaDinamica, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from "@libs/shared/data-access-user/src";
-import { CAMPOS_FORMULARIO_DATOS_DEL_TRAMITE, CAMPOS_FORMULARIO_MERCANCIAS, CONFIGURACION_CONTACTO, CONFIGURACION_TABLA_INSTALACION, IMPORTANTE } from "../../constantes/sanidad-acuicola-importacion.enum";
+import { AlertComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from "@libs/shared/data-access-user/src";
+import { CONFIGURACION_CONTACTO, CONFIGURACION_TABLA_INSTALACION, IMPORTANTE } from "../../constantes/sanidad-acuicola-importacion.enum";
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 
@@ -49,6 +49,10 @@ import { AgregarDestinatarioComponent } from "../agregar-destinatario/agregar-de
 export class DatosDelTercerosComponent implements OnInit, OnDestroy {
 
 
+    /**
+     * Indica si el componente está en modo solo lectura.
+     * Se utiliza para deshabilitar la edición de los datos cuando el trámite está en modo de solo lectura.
+     */
     esSoloLectura!: boolean;
   /**
    * Notificador para manejar la destrucción de suscripciones y evitar fugas de memoria.
@@ -63,19 +67,6 @@ export class DatosDelTercerosComponent implements OnInit, OnDestroy {
    */
   mensajeImportante: string = IMPORTANTE.Importante;
 
-  /**
-   * Configuración de los campos del formulario de datos del trámite.
-   * Define la estructura y validaciones de los campos del formulario.
-   */
-  configuracionFormularioDatos: ModeloDeFormaDinamica[] =
-    CAMPOS_FORMULARIO_DATOS_DEL_TRAMITE;
-
-  /**
-   * Configuración de los campos del formulario de mercancías.
-   * Define la estructura y validaciones de los campos relacionados con mercancías.
-   */
-  configuracionFormularioMercancia: ModeloDeFormaDinamica[] =
-    CAMPOS_FORMULARIO_MERCANCIAS;
 
   /**
    * Configuración de la tabla de destinatarios.
@@ -136,24 +127,27 @@ export class DatosDelTercerosComponent implements OnInit, OnDestroy {
    * Esta suscripción se mantiene activa durante toda la vida del componente.
    */
   ngOnInit(): void {
-
-
+    this.cargarDatosDesdeStore();
     this.consultaQuery.selectConsultaioState$
       .pipe(takeUntil(this.notificadorDestruccion$))
       .subscribe((estadoConsulta) => {
         this.esSoloLectura = estadoConsulta.readonly;
-        this.getValorStore()
       });
-
-  
+      
   }
 
-  getValorStore():void
-  {
-  this.tramite220103Query.selectTramite220103State$
+  /**
+   * Carga los datos de destinatarios e instalaciones desde el store.
+   * Se suscribe al estado del trámite y actualiza las tablas correspondientes.
+   * La suscripción se cancela automáticamente al destruir el componente.
+   */
+  cargarDatosDesdeStore(): void {
+    this.tramite220103Query.selectTramite220103State$
       .pipe(takeUntil(this.notificadorDestruccion$))
       .subscribe((estado) => {
+        // Actualiza la tabla de destinatarios con los datos del estado o un arreglo vacío si no existen
         this.datosTabla = estado?.['tablaDestinatario'] || [];
+        // Actualiza la tabla de instalaciones con los datos del estado o un arreglo vacío si no existen
         this.datosTablaInstalacion = estado?.['tablaInstalacion'] || [];
       });
   }

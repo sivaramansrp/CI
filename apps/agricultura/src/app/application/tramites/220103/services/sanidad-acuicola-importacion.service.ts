@@ -106,15 +106,25 @@ export class SanidadAcuicolaImportacionService {
         return this.http.get<Instalacion[]>('/assets/json/220103/instalacion.json');
     }
 
-    getDatos():Observable<Tramite220103State>
-    {
-       return this.http.get<Tramite220103State>('/assets/json/220103/datos.json')
+    /**
+     * Obtiene los datos generales del trámite.
+     * @returns Observable con el estado del trámite 220103.
+     */
+    obtenerDatos(): Observable<Tramite220103State> {
+        return this.http.get<Tramite220103State>('/assets/json/220103/datos.json');
     }
 
-    updateState(valor:Tramite220103State):void{
-        this.store.update(valor)
-        this.store.setTramite220103State("tablaDestinatario",[valor.datosDelTerceroDestinatario])
-        this.store.setTramite220103State("tablaMercancia",[valor.mercancia])
-        this.store.setTramite220103State("tablaInstalacion",[valor.datosDelTerceroInstalacion])
+    /**
+     * Actualiza el estado del store con los datos proporcionados.
+     * @param valor Nuevo estado del trámite 220103.
+     */
+    actualizarEstado(valor: Tramite220103State): void {
+        this.store.update(valor);
+        // Actualiza la tabla de destinatarios en el estado
+        this.store.setTramite220103State("tablaDestinatario", [valor.datosDelTerceroDestinatario]);
+        // Actualiza la tabla de mercancías en el estado
+        this.store.setTramite220103State("tablaMercancia", [valor.mercancia]);
+        // Actualiza la tabla de instalaciones en el estado
+        this.store.setTramite220103State("tablaInstalacion", [valor.datosDelTerceroInstalacion]);
     }
 }

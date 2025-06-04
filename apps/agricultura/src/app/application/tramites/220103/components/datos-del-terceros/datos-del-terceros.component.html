@@ -59,6 +59,7 @@
       [configuracionTabla]="configuracionTablaInstalacion"
       [datos]="datosTablaInstalacion"
       [tipoSeleccionTabla]="seleccionTabla"
+      [disableSeleccionTablaCheckBox]="esSoloLectura"
       (listaDeFilaSeleccionada)="obtenerInstalaciSeleccionadas($event)"
     ></app-tabla-dinamica>
     <nav aria-label="Ejemplo de paginación">
@@ -75,6 +76,7 @@
         class="btn btn-primary"
         data-bs-toggle="modal"
         data-bs-target="#modalInstalaci"
+        [disabled]="esSoloLectura"
       >
         Agregar
       </button>
