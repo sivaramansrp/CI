@@ -7,6 +7,7 @@ import { CamDatosCertificadoComponent } from './components/cam-datos-certificado
 import { CamDestinatarioComponent } from './components/cam-destinatario/cam-destinatario.component';
 import { CertificadoDeOrigenComponent } from '../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CertificadoOrigenComponent } from './components/certificado-origen/certificado-origen.component';
+import { DatosCertificadoDeComponent } from '../../shared/components/datos-certificado-de/datos-certificado-de.component';
 import { DatosDelDestinatarioComponent } from '../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
 import { DestinatarioComponent } from '../../shared/components/destinatario/destinatario.component';
 import { MercanciaComponent } from './components/mercancia/mercancia.component';
@@ -15,7 +16,6 @@ import { PasoUnoComponent } from './page/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.module';
-import { DatosCertificadoDeComponent } from '../../shared/components/datos-certificado-de/datos-certificado-de.component';
 
 
 @NgModule({
@@ -23,8 +23,6 @@ import { DatosCertificadoDeComponent } from '../../shared/components/datos-certi
     CamCertificadoComponent,
     PasoUnoComponent,
     PasoDosComponent,
-    CertificadoOrigenComponent,
-    MercanciaComponent,
     CamDatosCertificadoComponent,
     CamDestinatarioComponent
   ],
@@ -44,7 +42,9 @@ import { DatosCertificadoDeComponent } from '../../shared/components/datos-certi
     DatosCertificadoDeComponent,
     DatosDelDestinatarioComponent,
     DestinatarioComponent,
-    TituloComponent
+    TituloComponent,
+    CertificadoOrigenComponent,
+    MercanciaComponent,
   ]
 })
 export class ValidarCertificadoModule { }

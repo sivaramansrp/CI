@@ -1,9 +1,10 @@
 import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
-import { Catalogo, InputFecha, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, delay, map, of, takeUntil } from 'rxjs';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
+import { CommonModule } from '@angular/common';
 import { FECHA } from '../../constantes/cam-certificado.module';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
@@ -18,6 +19,8 @@ import { camCertificadoQuery } from '../../estados/cam-certificado.query';
   selector: 'app-mercancia',
   templateUrl: './mercancia.component.html',
   styleUrl: './mercancia.component.scss',
+  standalone:true,
+  imports:[CommonModule,ReactiveFormsModule,CatalogoSelectComponent, InputFechaComponent],
 })
 export class MercanciaComponent implements OnInit, OnDestroy {
   /**
