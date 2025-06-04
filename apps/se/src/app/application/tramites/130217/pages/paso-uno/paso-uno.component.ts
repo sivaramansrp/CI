@@ -3,6 +3,16 @@ import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ControlPermisosPreviosExportacionService } from '../../services/control-permisos-previos-exportacion.service';
 
+/**
+ * Componente que representa el primer paso del trámite 130217.
+ *
+ * Este componente gestiona la visualización y lógica del primer paso del flujo,
+ * incluyendo la carga y actualización de datos relacionados con la consulta y el formulario.
+ * Utiliza servicios para obtener información del estado global y para interactuar con el backend.
+ *
+ * @export
+ * @class PasoUnoComponent
+ */
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
@@ -27,6 +37,15 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   public consultaState!:ConsultaioState;
 
+  /**
+   * Constructor del componente PasoUnoComponent.
+   *
+   * @param controlPermisosService Servicio inyectado para gestionar permisos previos de exportación.
+   * @param consultaQuery Servicio para consultar el estado global de la consulta.
+   *
+   * El constructor no realiza inicialización directa; la configuración y carga de datos
+   * se efectúan en métodos específicos y en los ciclos de vida del componente.
+   */
   constructor(
     @Inject(ControlPermisosPreviosExportacionService)
     public controlPermisosService: ControlPermisosPreviosExportacionService,

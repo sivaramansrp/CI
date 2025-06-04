@@ -215,7 +215,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.configuracionFormularioSuscripciones();
-    this.opcionesDeBusqueda(); 
+    this.opcionesDeBusqueda();
     this.formularioTotalCount();
     this.fetchEntidadFederativa();
     this.fetchRepresentacionFederal();

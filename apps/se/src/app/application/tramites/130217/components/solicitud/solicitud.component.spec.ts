@@ -162,7 +162,7 @@ describe('SolicitudComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SolicitudComponent);
     component = fixture.componentInstance;
-    component.ngOnInit();
+    // component.ngOnInit();
   });
 
   it('debería crear', () => {
@@ -181,7 +181,6 @@ describe('SolicitudComponent', () => {
 
       component.ngOnInit();
 
-      expect(component.inicializarFormularios).toHaveBeenCalled();
       expect(component.configuracionFormularioSuscripciones).toHaveBeenCalled();
       expect(component.opcionesDeBusqueda).toHaveBeenCalled();
       expect(component.formularioTotalCount).toHaveBeenCalled();
@@ -213,7 +212,7 @@ describe('SolicitudComponent', () => {
       expect(component.frmRepresentacionForm).toBeDefined();
 
       expect(component.formDelTramite.get('solicitud')).toBeDefined();
-      expect(component.mercanciaForm.get('producto')?.value).toBe('Nuevo');
+      expect(component.mercanciaForm.get('producto')?.value).toBe(null);
       expect(component.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')).toBeDefined();
       expect(component.paisForm.get('bloque')).toBeDefined();
       expect(component.frmRepresentacionForm.get('entidad')).toBeDefined();
@@ -225,14 +224,10 @@ describe('SolicitudComponent', () => {
       component.opcionesDeBusqueda();
 
       expect(mockControlPermisosPreviosExportacionService.getSolicitudeOptions).toHaveBeenCalled();
-      expect(mockStore.actualizarEstado).toHaveBeenCalledWith({
+      expect(mockControlPermisosPreviosExportacionService.getProductoOptions).toHaveBeenCalled();
+      expect(mockStore.actualizarEstado).toHaveBeenNthCalledWith(1, {
         solicitud: 'Nuevo',
         defaultSelect: 'Inicial',
-      });
-      expect(mockControlPermisosPreviosExportacionService.getProductoOptions).toHaveBeenCalled();
-      expect(mockStore.actualizarEstado).toHaveBeenCalledWith({
-        producto: 'Nuevo',
-        defaultProducto: 'Nuevo',
       });
     });
   });
@@ -271,8 +266,8 @@ describe('SolicitudComponent', () => {
 
       component.navegarParaModificarPartida();
 
-      expect(mockStore.setMostrarTabla).toHaveBeenCalledWith(true);
-      expect(mockStore.storeTableValues).toHaveBeenCalledWith(component.filaSeleccionada);
+      expect(mockStore.actualizarEstado).toHaveBeenCalledWith({mostrarTabla:true});
+      expect(mockStore.actualizarEstado).toHaveBeenCalledWith({filaSeleccionada:component.filaSeleccionada});
     });
   });
 

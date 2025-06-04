@@ -3,7 +3,7 @@
   "descripcion": "Equipo de cómputo de última generación",
   "fraccion": "2",
   "cantidad": "10",
-  "valorPartidaUSD": 15000.50,
+  "valorPartidaUSD": 15000,
   "unidadMedida": "1",
   "solicitud": "Importación",
   "defaultSelect": "Inicial",
@@ -29,7 +29,7 @@
     }
   ],
   "cantidadPartidasDeLaMercancia": "2",
-  "valorPartidaUSDPartidasDeLaMercancia": 3000.75,
+  "valorPartidaUSDPartidasDeLaMercancia": 3000,
   "descripcionPartidasDeLaMercancia": "Lote de computadoras para oficina",
   "valorFacturaUSD": "18000.00",
   "bloque": "3",
