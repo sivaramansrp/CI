@@ -9,7 +9,7 @@ import { provideHttpClient } from '@angular/common/http';
 import { NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 
-// Best approach: Simple test without template override
+
 describe('PasoDosComponent - Recommended Approach', () => {
   let component: PasoDosComponent;
   let fixture: ComponentFixture<PasoDosComponent>;
