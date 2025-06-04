@@ -2,8 +2,14 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-import { ESTADO_REGISTRO, TEXTO_FILA_REGISTRO } from '../../../tramites/constantes/constantes';
-import { TablaAcciones, TablaSeleccion } from '../../../core/enums/tabla-seleccion.enum';
+import {
+  ESTADO_REGISTRO,
+  TEXTO_FILA_REGISTRO,
+} from '../../../tramites/constantes/constantes';
+import {
+  TablaAcciones,
+  TablaSeleccion,
+} from '../../../core/enums/tabla-seleccion.enum';
 import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
 
 @Component({
@@ -23,16 +29,28 @@ export class TablaDinamicaComponent<T> {
    */
   @Output() filaClic = new EventEmitter<T>();
 
+  /**
+   * Este input define el tipo de selección que se utilizará en la tabla dinámica.
+   */
   @Input() tipoSeleccionTabla!: TablaSeleccion;
 
-  @Input() disableSeleccionTablaCheckBox:boolean = false;
+  /**
+   * Este input permite deshabilitar la selección de filas mediante checkboxes en la tabla.
+   * Si se establece en `true`, los checkboxes de selección estarán deshabilitados.
+   */
+  @Input() disableSeleccionTablaCheckBox: boolean = false;
 
-  @Input() disableSeleccionTablaRadio:boolean = false;
+  /**
+   * Este input permite deshabilitar la selección de filas mediante botones de radio en la tabla.
+   * Si se establece en `true`, los botones de radio de selección estarán deshabilitados.
+   */
+  @Input() disableSeleccionTablaRadio: boolean = false;
+
   /*
-     * Este valor es necesario para que la plantilla pueda acceder a los diferentes tipos de selección como "CHECKBOX", "RADIO", etc., que definen el comportamiento de la tabla.
-     *
-     * @type {typeof TablaSeleccion}
-     */
+   * Este valor es necesario para que la plantilla pueda acceder a los diferentes tipos de selección como "CHECKBOX", "RADIO", etc., que definen el comportamiento de la tabla.
+   *
+   * @type {typeof TablaSeleccion}
+   */
   TablaSeleccion = TablaSeleccion;
 
   /**
@@ -52,7 +70,6 @@ export class TablaDinamicaComponent<T> {
    */
   @Input() datos: T[] = [];
 
-
   /**
    * Identificador único para la tabla dinámica.
    * Este identificador se utiliza para diferenciar y manejar múltiples tablas dinámicas en la aplicación.
@@ -60,11 +77,11 @@ export class TablaDinamicaComponent<T> {
   @Input() tableId!: string;
 
   /**
-  * Propiedad privada que almacena un valor numérico relacionado con la selección de entrada.
-  * 
-  * @private
-  * @type {number}
-  */
+   * Propiedad privada que almacena un valor numérico relacionado con la selección de entrada.
+   *
+   * @private
+   * @type {number}
+   */
   private _inputSelection!: number;
   /**
    * Setter para la propiedad `inputSelection`.
@@ -76,6 +93,15 @@ export class TablaDinamicaComponent<T> {
   get inputSelection(): number {
     return this._inputSelection; // Devuelve el valor interno de `_inputSelection`
   }
+
+  /**
+   * Establece el valor de la selección de entrada y sincroniza el identificador de la fila seleccionada.
+   *
+   * @param value - El nuevo valor numérico que representa la fila seleccionada.
+   *
+   * Al asignar un valor a esta propiedad, se actualiza tanto la variable interna `_inputSelection`
+   * como la propiedad `idFilaSeleccionada`, asegurando que ambas estén sincronizadas.
+   */
   set inputSelection(value: number) {
     this._inputSelection = value; // Actualiza el valor interno de `_inputSelection`
     this.idFilaSeleccionada = value; // Sincroniza el valor con `idFilaSeleccionada`
@@ -84,6 +110,15 @@ export class TablaDinamicaComponent<T> {
    *   Array que recibe que acciones va a tener la tabla
    */
   @Input() acciones: TablaAcciones[] = [];
+
+  /**
+ * @input desactivarEmitirEvento
+ * @description
+ * Indica si se debe desactivar la emisión del evento al hacer clic en una fila de la tabla.
+ * @type {boolean}
+ * @default true
+ */
+  @Input() desactivarEmitirEvento: boolean = true;
 
   /**
    * Evento que se emite cuando el usuario selecciona una fila de la tabla.
@@ -103,19 +138,17 @@ export class TablaDinamicaComponent<T> {
     true
   );
 
-
   /**
    * Evento de salida que emite un objeto con información sobre una fila y una columna.
-   * 
+   *
    * Este evento se utiliza para alternar o cambiar un valor asociado a una fila y columna específica
    * en una tabla dinámica. El objeto emitido contiene:
    * - `row`: La fila afectada.
    * - `column`: El nombre de la columna afectada.
-   * 
+   *
    * @event
    */
   @Output() alternarValor = new EventEmitter<{ row: T; column: string }>();
-
 
   /**
    * Almacena el ID de la fila seleccionada.
@@ -138,12 +171,16 @@ export class TablaDinamicaComponent<T> {
    */
   public accionesEnum = TablaAcciones;
 
-  public batonValor:string=ESTADO_REGISTRO.BAJA
+  /**
+   * Almacena el valor del botón que se mostrará en la tabla.
+   * Este valor se utiliza para determinar el estado del registro y el texto del botón.
+   */
+  public batonValor: string = ESTADO_REGISTRO.BAJA;
   /**
    * Método para obtener la configuración de las columnas ordenada según el campo "orden".
    *
    * @returns {ConfiguracionColumna<T>[]} La configuración de las columnas ordenada.
-   * 
+   *
    */
   obtenerConfiguracionOrdenada(): ConfiguracionColumna<T>[] {
     return this.configuracionTabla.sort((a, b) => a.orden - b.orden);
@@ -220,11 +257,13 @@ export class TablaDinamicaComponent<T> {
 
   /**
    * Maneja el evento de clic en una fila de la tabla.
-   * 
+   *
    * @param data - Los datos de la fila que fue clickeada.
    */
   onFilaClic(data: T): void {
-    this.filaClic.emit(data);
+    if (this.desactivarEmitirEvento) {
+      this.filaClic.emit(data);
+    }
   }
 
   /**
@@ -232,31 +271,29 @@ export class TablaDinamicaComponent<T> {
    *
    * @param row - La fila cuyos valores se desean cambiar.
    */
-  cambiarValor(row: { row: T; column: string; }): void {
+  cambiarValor(row: { row: T; column: string }): void {
     this.alternarValor.emit(row);
   }
 
-
-/**
- * Obtiene el texto del botón basado en el estado de la fila proporcionada.
- *
- * @param fila - Objeto que representa una fila, el cual puede contener la propiedad `desEstatus`.
- * @returns El valor del botón (`batonValor`) basado en el estado de la fila.
- *
- * @remarks
- * Si la propiedad `desEstatus` de la fila es igual a `TEXTO_FILA_REGISTRO.BAJA`,
- * el valor del botón (`batonValor`) se establece en `ESTADO_REGISTRO.ACTIVAR`.
- */
-// 'fila' proviene de tablas con tipos de fila variables; solo algunas tienen 'desEstatus'.
-// Se usa 'any' para permitir acceso flexible en este componente compartido.
-// El encadenamiento opcional garantiza seguridad en tiempo de ejecución.
-// El uso de 'any' es intencional y limitado a este método.
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-obtenerTextoBoton(fila:any):string{
- if(fila?.desEstatus && fila?.desEstatus===TEXTO_FILA_REGISTRO.BAJA){
-     this.batonValor=ESTADO_REGISTRO.ACTIVAR
-  }
-  return this.batonValor
- 
+  /**
+   * Obtiene el texto del botón basado en el estado de la fila proporcionada.
+   *
+   * @param fila - Objeto que representa una fila, el cual puede contener la propiedad `desEstatus`.
+   * @returns El valor del botón (`batonValor`) basado en el estado de la fila.
+   *
+   * @remarks
+   * Si la propiedad `desEstatus` de la fila es igual a `TEXTO_FILA_REGISTRO.BAJA`,
+   * el valor del botón (`batonValor`) se establece en `ESTADO_REGISTRO.ACTIVAR`.
+   */
+  // 'fila' proviene de tablas con tipos de fila variables; solo algunas tienen 'desEstatus'.
+  // Se usa 'any' para permitir acceso flexible en este componente compartido.
+  // El encadenamiento opcional garantiza seguridad en tiempo de ejecución.
+  // El uso de 'any' es intencional y limitado a este método.
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  obtenerTextoBoton(fila: any): string {
+    if (fila?.desEstatus && fila?.desEstatus === TEXTO_FILA_REGISTRO.BAJA) {
+      this.batonValor = ESTADO_REGISTRO.ACTIVAR;
+    }
+    return this.batonValor;
   }
 }

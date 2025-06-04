@@ -8,9 +8,17 @@
         <th></th>
         } @else if(tipoSeleccionTabla === TablaSeleccion.CHECKBOX) {
         <th>
-          <input class="cursor-pointer" type="checkbox" name="filaSeleccionada"
-            (change)="seleccionarDeseleccionarTodos($event)" aria-label="Seleccionar/Deseleccionar todo"
-            [checked]="datos.length? (filasSeleccionadas.length === datos.length): false " [disabled]="disableSeleccionTablaCheckBox"/>
+          <input
+            class="cursor-pointer"
+            type="checkbox"
+            name="filaSeleccionada"
+            (change)="seleccionarDeseleccionarTodos($event)"
+            aria-label="Seleccionar/Deseleccionar todo"
+            [checked]="
+              datos.length ? filasSeleccionadas.length === datos.length : false
+            "
+            [disabled]="disableSeleccionTablaCheckBox"
+          />
         </th>
         }
         <!-- Crear el encabezado de manera dinámica -->
@@ -43,7 +51,7 @@
             [disabled]="disableSeleccionTablaRadio"
           />
         </td>
- 
+
         } @else if(tipoSeleccionTabla === TablaSeleccion.CHECKBOX) {
         <td>
           <input
@@ -57,7 +65,7 @@
             [disabled]="disableSeleccionTablaCheckBox"
           />
         </td>
- 
+
         } @else if(tipoSeleccionTabla === TablaSeleccion.BUTTON) {
         <td>
           <button
@@ -73,11 +81,13 @@
           </button>
         </td>
         }
- 
+
         <!-- Renderizar cada columna de manera dinámica utilizando la función 'clave' -->
         <td
           *ngFor="let col of obtenerConfiguracionOrdenada()"
-          (click)="col.hiperenlace ? cambiarValor({ row: fila, column: ''}) : null"
+          (click)="
+            col.hiperenlace ? cambiarValor({ row: fila, column: '' }) : null
+          "
           [ngClass]="{ 'cursor-pointer': col.hiperenlace }"
         >
           {{ col.clave(fila) || ' ' }}
@@ -116,4 +126,4 @@
     </tbody>
   </table>
 </div>
- 
+

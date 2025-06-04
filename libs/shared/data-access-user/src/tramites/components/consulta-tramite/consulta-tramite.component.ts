@@ -105,5 +105,4 @@ export class ConsultaTramiteComponent implements OnInit {
      */ 
     this.tramiteStates.update({ [metodoNombre]: VALOR });
   }
-
 }

@@ -68,6 +68,7 @@
           [label]="'Servicios IMMEX'"
           [required]="true"
           name="aduanaIngreso"
+          [isDisabled]="campoDeshabilitar"
           formControlName="entidadFederativa"
           (selectionChange)="procesarDatosDelHijo($event)"
         ></app-catalogo-select> 
@@ -122,19 +123,19 @@
     <div class="col-md-4">
         <div class="form-group">
             <label for="rfdecontri">Registro federal de contribuyentes:</label>
-            <input type="text" id="rfcEmpresa" [(ngModel)]="rfcEmpresa" name="rfdecontri" class="form-control"  (ngModelChange)="enCambioDeCampo('rfcEmpresa', $event)"/>
+            <input type="text" id="rfcEmpresa" [(ngModel)]="rfcEmpresa" [disabled]="campoDeshabilitar"name="rfdecontri" class="form-control"  (ngModelChange)="enCambioDeCampo('rfcEmpresa', $event)"/>
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
             <label for="numeroProgramaImmex">Número del Programa IMMEX:</label>
-            <input type="text" id="numeroPrograma" [(ngModel)]="numeroPrograma" name="numeroProgramaImmex" class="form-control" (ngModelChange)="enCambioDeCampo('numeroPrograma', $event)" />
+            <input type="text" id="numeroPrograma" [(ngModel)]="numeroPrograma" [disabled]="campoDeshabilitar" name="numeroProgramaImmex" class="form-control" (ngModelChange)="enCambioDeCampo('numeroPrograma', $event)" />
         </div>
     </div>
     <div class="col-md-4">
         <div class="form-group">
             <label for="tiempoPrograma">Año del Programa IMMEX:</label>
-            <input type="text" id="tiempoPrograma" [(ngModel)]="tiempoPrograma" name="tiempoPrograma" class="form-control" (ngModelChange)="enCambioDeCampo('tiempoPrograma', $event)"  />
+            <input type="text" id="tiempoPrograma" [(ngModel)]="tiempoPrograma" name="tiempoPrograma" [disabled]="campoDeshabilitar" class="form-control" (ngModelChange)="enCambioDeCampo('tiempoPrograma', $event)"  />
         </div>
     </div>
   </div>

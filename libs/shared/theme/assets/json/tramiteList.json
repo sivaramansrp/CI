@@ -114,8 +114,8 @@
   {
     "id": 17,
     "tramite": 31803,
-    "linkDashboard": "/agace/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda",
-    "linkDepartment": "/pago/registro-solicitud/pagina-uno-acuses-y-resoluciones-busqueda",
+    "linkDashboard": "/agace/registro-solicitud/solicitud",
+    "linkDepartment": "/pago/registro-solicitud/solicitud",
     "department": "agace"
   },
   {
@@ -135,8 +135,8 @@
   {
     "id": 20,
     "tramite": 32504,
-    "linkDashboard": "/agace/aviso/aviso-procesos",
-    "linkDepartment": "/agace/aviso/aviso-procesos",
+    "linkDashboard": "/agace/aviso-procesos/aviso-procesos",
+    "linkDepartment": "/pago/aviso-procesos/aviso-procesos",
     "department": "agace"
   },
   {
@@ -241,7 +241,7 @@
     "id": 35,
     "tramite": 90201,
     "linkDashboard": "/se/expansion-de-productores/registrar-solicitud",
-    "linkDepartment": "/se/expansion-de-productores/registrar-solicitud",
+    "linkDepartment": "/pago/expansion-de-productores/registrar-solicitud",
     "department": "se"
   },
   {
@@ -485,86 +485,86 @@
   {
     "id": 70,
     "tramite": 220102,
-    "linkDashboard": "/agriculture/peticion-requisitos-fitosanitarios/invocar-modulo",
-    "linkDepartment": "/agriculture/peticion-requisitos-fitosanitarios/invocar-modulo",
-    "department": "agriculture"
+    "linkDashboard": "/agricultura/peticion-requisitos-fitosanitarios/invocar-modulo",
+    "linkDepartment": "/pago/peticion-requisitos-fitosanitarios/invocar-modulo",
+    "department": "agricultura"
   },
   {
     "id": 71,
     "tramite": 220201,
-    "linkDashboard": "/agriculture/certificado-zoosanitario/zoosanitario",
-    "linkDepartment": "/agriculture/certificado-zoosanitario/zoosanitario",
-    "department": "agriculture"
+    "linkDashboard": "/agricultura/certificado-zoosanitario/zoosanitario",
+    "linkDepartment": "/pago/certificado-zoosanitario/zoosanitario",
+    "department": "agricultura"
   },
   {
     "id": 72,
     "tramite": 220202,
-    "linkDashboard": "/agriculture/certificado-fitosanitario/agriculture",
-    "linkDepartment": "/agriculture/certificado-fitosanitario/agriculture",
-    "department": "agriculture"
+    "linkDashboard": "/agricultura/certificado-fitosanitario/agricultura",
+    "linkDepartment": "/pago/certificado-fitosanitario/agricultura",
+    "department": "agricultura"
   },
   {
     "id": 73,
     "tramite": 220203,
-    "linkDashboard": "/agriculture/importacion-acuacultura/sanidad",
-    "linkDepartment": "/agriculture/importacion-acuacultura/sanidad",
-    "department": "agriculture"
+    "linkDashboard": "/agricultura/importacion-acuacultura/sanidad",
+    "linkDepartment": "/pago/importacion-acuacultura/sanidad",
+    "department": "agricultura"
   },
   {
     "id": 74,
     "tramite": 220401,
-    "linkDashboard": "/agriculture/pantallas-extraordinarios",
+    "linkDashboard": "/agricultura/pantallas-extraordinarios",
     "linkDepartment": "/pago/pantallas-extraordinarios",
-    "department": "agriculture"
+    "department": "agricultura"
   },
   {
     "id": 75,
     "tramite": 220402,
-    "linkDashboard": "/agriculture/pantallas-captura/solicitud",
+    "linkDashboard": "/agricultura/pantallas-captura/solicitud",
     "linkDepartment": "/pago/pantallas-captura/solicitud",
-    "department": "agriculture"
+    "department": "agricultura"
   },
   {
     "id": 76,
     "tramite": 220404,
-    "linkDashboard": "/agriculture/desistimiento/desistimiento-page",
+    "linkDashboard": "/agricultura/desistimiento/desistimiento-page",
     "linkDepartment": "/pago/desistimiento/desistimiento-page",
-    "department": "agriculture"
+    "department": "agricultura"
   },
   {
     "id": 77,
     "tramite": 220501,
-    "linkDashboard": "/agriculture/sagarpa/datosdelasolicitud",
+    "linkDashboard": "/agricultura/sagarpa/datosdelasolicitud",
     "linkDepartment": "/pago/sagarpa/datosdelasolicitud",
-    "department": "agriculture"
+    "department": "agricultura"
   },
   {
     "id": 78,
     "tramite": 220502,
-    "linkDashboard": "/agriculture/inspeccion-fisica/pantallas",
+    "linkDashboard": "/agricultura/inspeccion-fisica/pantallas",
     "linkDepartment": "/pago/inspeccion-fisica/pantallas",
-    "department": "agriculture"
+    "department": "agricultura"
   },
   {
     "id": 79,
     "tramite": 220701,
-    "linkDashboard": "/agriculture/inspeccion-fisica/inspeccion-fisica-zoosanitario",
+    "linkDashboard": "/agricultura/inspeccion-fisica/inspeccion-fisica-zoosanitario",
     "linkDepartment": "/pago/inspeccion-fisica/inspeccion-fisica-zoosanitario",
-    "department": "agriculture"
+    "department": "agricultura"
   },
   {
     "id": 80,
     "tramite": 220702,
-    "linkDashboard": "/agriculture/inspeccion-fitosanitario/fitosanitario",
-    "linkDepartment": "/agriculture/inspeccion-fitosanitario/fitosanitario",
-    "department": "agriculture"
+    "linkDashboard": "/agricultura/inspeccion-fitosanitario/fitosanitario",
+    "linkDepartment": "/pago/inspeccion-fitosanitario/fitosanitario",
+    "department": "agricultura"
   },
   {
     "id": 81,
     "tramite": 220703,
-    "linkDashboard": "/agriculture/acuicola-fisica/acuicola",
-    "linkDepartment": "/agriculture/acuicola-fisica/acuicola",
-    "department": "agriculture"
+    "linkDashboard": "/agricultura/acuicola-fisica/acuicola",
+    "linkDepartment": "/pago/acuicola-fisica/acuicola",
+    "department": "agricultura"
   },
   {
     "id": 82,
@@ -863,16 +863,16 @@
   {
     "id": 124,
     "tramite": 220503,
-    "linkDashboard": "/agriculture/sanidadacuicola/certificado",
+    "linkDashboard": "/agricultura/sanidadacuicola/certificado",
     "linkDepartment": "/pago/sanidadacuicola/certificado",
-    "department": "agriculture"
+    "department": "agricultura"
   },
   {
     "id": 125,
     "tramite": 221601,
-    "linkDashboard": "/agriculture/zoosanitario/solicitante",
+    "linkDashboard": "/agricultura/zoosanitario/solicitante",
     "linkDepartment": "/pago/zoosanitario/solicitante",
-    "department": "agriculture"
+    "department": "agricultura"
   },
   {
     "id": 126,
@@ -1003,9 +1003,9 @@
   {
     "id": 144,
     "tramite": 220403,
-    "linkDashboard": "/agriculture/certificado-exportacion/acuicola",
+    "linkDashboard": "/agricultura/certificado-exportacion/acuicola",
     "linkDepartment": "/pago/certificado-exportacion/acuicola",
-    "department": "agriculture"
+    "department": "agricultura"
   },
   {
     "id": 145,
@@ -1220,9 +1220,9 @@
   {
     "id": 175,
     "tramite": 221602,
-    "linkDashboard": "/agriculture/fitosanitario/solicitante",
+    "linkDashboard": "/agricultura/fitosanitario/solicitante",
     "linkDepartment": "/pago/fitosanitario/solicitante",
-    "department": "agriculture"
+    "department": "agricultura"
   },
   {
     "id": 176,
@@ -1330,12 +1330,12 @@
     "department": "aga"
   },
   {
-        "id": 191,
-        "tramite": 30505,
-        "linkDashboard": "/aga/aviso-de-modificacion/aviso",
-        "linkDepartment": "/pago/aviso-de-modificacion/aviso",
-        "department": "aga"
-    },
+    "id": 191,
+    "tramite": 30505,
+    "linkDashboard": "/aga/aviso-de-modificacion/aviso",
+    "linkDepartment": "/pago/aviso-de-modificacion/aviso",
+    "department": "aga"
+  },
   {
     "id": 192,
     "tramite": 31202,
@@ -1451,7 +1451,7 @@
   {
     "id": 208,
     "tramite": 221603,
-    "linkDashboard": "/agriculture/sanidad/solicitante",
+    "linkDashboard": "/agricultura/sanidad/solicitante",
     "linkDepartment": "/pago/sanidad/solicitante",
     "department": "agricultura"
   },
@@ -1718,7 +1718,7 @@
     "id": 246,
     "tramite": 80301,
     "linkDashboard": "/se/registro-modificacion/registro-modificacion",
-    "linkDepartment":"/pago/registro-modificacion/registro-modificacion",
+    "linkDepartment": "/pago/registro-modificacion/registro-modificacion",
     "department": "se"
   },
   {
@@ -1775,7 +1775,7 @@
     "tramite": 240105,
     "linkDashboard": "/sedena/importacion-de-sustancias/ordinario-para",
     "linkDepartment": "/pago/importacion-de-sustancias/ordinario-para",
-     "department": "sedena"
+    "department": "sedena"
   },
   {
     "id": 255,
@@ -1871,7 +1871,7 @@
   {
     "id": 268,
     "tramite": 240311,
-    "linkDashboard": "/sedena/permiso-ordinario/importacion-artificios", 
+    "linkDashboard": "/sedena/permiso-ordinario/importacion-artificios",
     "linkDepartment": "/pago/permiso-ordinario/importacion-artificios",
     "department": "sedena"
   },
@@ -1983,13 +1983,13 @@
   {
     "id": 284,
     "tramite": 290301,
-   "linkDashboard": "/amecafe/nacional-registro-del-cafe-exportadores/cafeExportadores",
-   "linkDepartment": "/pago/nacional-registro-del-cafe-exportadores/cafeExportadores",
+    "linkDashboard": "/amecafe/nacional-registro-del-cafe-exportadores/cafeExportadores",
+    "linkDepartment": "/pago/nacional-registro-del-cafe-exportadores/cafeExportadores",
     "department": "amecafe"
   },
   {
     "id": 285,
-     "tramite": 80103,
+    "tramite": 80103,
     "linkDashboard": "/se/registro-solicitud-immex-modalidad/action",
     "linkDepartment": "/pago/registro-solicitud-immex-modalidad/action",
     "department": "se"
@@ -1998,14 +1998,14 @@
     "id": 286,
     "tramite": 80104,
     "linkDashboard": "/se/registro-solicitud-immex-modalidad-controladora/action",
-    "linkDepartment": "/pago/registro-solicitud-immex-modalidad-controladora/action",
+    "linkDepartment": "/se/registro-solicitud-immex-modalidad-controladora/action",
     "department": "se"
   },
   {
     "id": 287,
     "tramite": 80105,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/se/modalidad-terciarizacion/action",
+    "linkDepartment": "/pago/modalidad-terciarizacion/action",
     "department": "se"
   },
   {
@@ -2249,7 +2249,7 @@
   {
     "id": 324,
     "tramite": 110222,
-    "linkDashboard": "se/validar-certificado-inicialmente/certificado",
+    "linkDashboard": "/se/validar-certificado-inicialmente/certificado",
     "linkDepartment": "/pago/validar-certificado-inicialmente/certificado",
     "department": "se"
   },
@@ -3131,9 +3131,9 @@
   {
     "id": 450,
     "tramite": 220103,
-    "linkDashboard": "/agriculture/sanidad-acuicola-importacion/solicitud",
+    "linkDashboard": "/agricultura/sanidad-acuicola-importacion/solicitud",
     "linkDepartment": "/pago/sanidad-acuicola-importacion/solicitud",
-    "department": "agriculture"
+    "department": "agricultura"
   },
   {
     "id": 451,
@@ -4190,8 +4190,8 @@
     "tramite": 120603,
     "linkDashboard": "/se/registro-como-expresa/registro-empresa",
     "linkDepartment": "/pago/registro-como-expresa/registro-empresa",
-     "department": "se"
-},
+    "department": "se"
+  },
   {
     "id": 602,
     "tramite": 231002,
@@ -4200,7 +4200,7 @@
     "department": "semarnat"
   },
   {
-     "id": 603,
+    "id": 603,
     "tramite": 120403,
     "linkDashboard": "se/cupos/solicitud",
     "linkDepartment": "/pago/cupos/solicitud",
@@ -4220,11 +4220,11 @@
     "linkDepartment": "/pago/autorizacion/mercancia-donada",
     "department": "aga"
   },
- {
+  {
     "id": 606,
     "tramite": 140205,
     "linkDashboard": "/se/cancelaciones-certificado/solicitud",
     "linkDepartment": "/pago/cancelaciones-certificado/solicitud",
     "department": "se"
- }
+  }
 ]

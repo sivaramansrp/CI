@@ -4,6 +4,9 @@
     <div class="w-100 p-3">
       <div class="form-group">
         <!-- Input Radio Component -->
+        <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span> ¿Desea obtener la autorización del Esquema Integral modalidad IVA e IEPS, como pre-operativo? (el periodo pre-operativo, únicamente podrá ser solicitado por única ocasión de conformidad con la regla 7.1.2 y el mismo deberá ser solicitado al momento del llenado de la presente solicitud, no podrá solicitarlo posteriormente)
+        </section>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
@@ -155,6 +158,7 @@
             [placeholder]="'Seleccione un valor'"
             [catalogo]="sectorProductivoAgace"
             formControlName="sectorProductivo"
+            [isDisabled]="esFormularioSoloLectura ? true : false"
             (change)="setValoresStore(preOperativeForm,'sectorProductivo', 'setSectorProductivo')"
           >
           </app-catalogo-select>
@@ -165,6 +169,7 @@
             [placeholder]="'Seleccione un valor'"
             [catalogo]="serviciosAgace"
             formControlName="servicio"
+            [isDisabled]="esFormularioSoloLectura ? true : false"
             (change)="setValoresStore(preOperativeForm,'servicio', 'setServicio')"
           >
           </app-catalogo-select>
@@ -180,6 +185,9 @@
 
     <div class="w-100 p-3 mt-4">
       <div class="mt-4 form-group">
+        <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span> Señale si al momento de ingresar su solicitud si se encuentra al corriente en el cumplimiento de sus obligaciones fiscales y aduaneras
+        </section>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
@@ -204,6 +212,9 @@
       </div>
 
       <div class="mt-4 form-group">
+        <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span> Indique si autorizó al S AT hacer pública su opinión positiva sobre el cumplimiento de obligaciones fiscales
+        </section>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
@@ -227,6 +238,9 @@
         </div>
       </div>
       <div class="mt-4 mb-5">
+        <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span> Señale si cuenta con empleados propios
+        </section>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
@@ -284,6 +298,7 @@
             [placeholder]="'Seleccione un valor'"
             [catalogo]="comboBimestresIDC"
             formControlName="bimestre"
+            [isDisabled]="esFormularioSoloLectura ? true : false"
             (change)="setValoresStore(preOperativeForm,'bimestre', 'setBimestre')"
           >
           </app-catalogo-select>
@@ -291,6 +306,9 @@
         <div class="col-md-1"></div>
       </div>
       <div class="mt-4 mb-5">
+        <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span> Señale si al momento de ingresar su solicitud la empresa solicitante cuenta con trabajadores subcontratados en los términos y condiciones que establecen los artículos 15- A al 15-D de la Ley Federal de Trabajo
+        </section>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
@@ -344,18 +362,22 @@
           type="button"
           class="btn btn-default btn-space"
           (click)="openModifyModal()"
+          disabled="esFormularioSoloLectura ? true : false"
         >
           Modificar
         </button>
-        <button type="button" class="btn btn-primary btn-space">
+        <button type="button" class="btn btn-primary btn-space" disabled="esFormularioSoloLectura ? true : false">
           Eliminar
         </button>
         <button type="button"
-          class="btn btn-default btn-primary">
+          class="btn btn-default btn-primary" disabled="esFormularioSoloLectura ? true : false">
           Agregar
         </button>
       </div>
       <div class="mt-4 form-group">
+        <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span> Indique si se encuentra en el listado de empresas publicadas por el SAT en términos de los artículos 69 o 69-B Bis, noveno párrafo, con excepción de lo dispuesto en el 69 fracción VI y 69-B, cuarto párrafo, del Código Fiscal Federal.
+        </section>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
@@ -379,6 +401,9 @@
         </div>
       </div>
       <div class="mt-4 form-group">
+        <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span> Del mismo modo indique si al momento de ingresar su solicitud se encuentra en el listado de empresas publicadas por el SAT en términos de los artículos y 69-B, cuarto párrafo del Código.
+        </section>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
@@ -404,6 +429,9 @@
     </div>
     <div class="w-100 p-3">
       <div class="mt-4 form-group" for="indique">
+        <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span> Señale si al momento de ingresar su solicitud sus certificados de sellos digitales están vigentes.
+        </section>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
@@ -430,6 +458,9 @@
 
     <div class="w-100 p-3">
       <div class="mb-3 form-group">
+        <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span> En caso afirmativo señale si se infringió alguno de los supuestos previstos en el artículo 17-H, Bis del Código, durante los últimos 12 meses, contados a partir de la fecha de presentación de la solicitud.
+        </section>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
@@ -528,6 +559,7 @@
           [placeholder]="'Seleccione un valor'"
           [catalogo]="comboBimestresIDC"
           formControlName="comboBimestresIDCSeleccione"
+          [isDisabled]="esFormularioSoloLectura ? true : false"
           (change)="setValoresStore(preOperativeForm,'comboBimestresIDCSeleccione', 'setComboBimestresIDCSeleccione')"
         >
         </app-catalogo-select>
@@ -567,17 +599,21 @@
           type="button"
           class="btn btn-default btn-space"
           (click)="openInstalacionesModal()"
+          disabled="esFormularioSoloLectura ? true : false"
         >
           Modificar
         </button>
-        <button type="button" class="btn btn-primary btn-space">
+        <button type="button" class="btn btn-primary btn-space" disabled="esFormularioSoloLectura ? true : false">
           Eliminar
         </button>
-        <button type="button" class="btn btn-primary btn-space">Agregar</button>
+        <button type="button" class="btn btn-primary btn-space" disabled="esFormularioSoloLectura ? true : false">Agregar</button>
       </div>
     </div>
     <div class="w-100 p-3">
       <div class="mt-4 form-group">
+        <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span> Señale si al momento de ingresar sus solicitud tiene actualizado su correo electrónico para efectos del Buzón Tributario.
+        </section>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
@@ -601,6 +637,9 @@
         </div>
       </div>
       <div class="mt-4 form-group">
+        <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span> Señale si se encuentra suspendida en el Padrón de Importadores o en el Padrón de Importadores de Sectores Específicos o Padrón de Exportadores Sectorial.
+        </section>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
@@ -660,7 +699,7 @@
             />
           </div>
           <div>
-            <button id="uploadNewFileExtranjerosN" class="btn btn-primary" (click)="subirArchivo(template)">
+            <button id="uploadNewFileExtranjerosN" class="btn btn-primary" (click)="subirArchivo(template)" disabled="esFormularioSoloLectura ? true : false">
               Anexar
             </button>
           </div>
@@ -707,7 +746,7 @@
             />
           </div>
           <div>
-            <button id="uploadNewFileExtranjerosN" class="btn btn-primary" (click)="subirArchivo(template)">
+            <button id="uploadNewFileExtranjerosN" class="btn btn-primary" (click)="subirArchivo(template)" disabled="esFormularioSoloLectura ? true : false">
               Anexar
             </button>
           </div>
@@ -728,6 +767,9 @@
     <div class="w-100 p-3">
       <ng-titulo titulo="Querella"></ng-titulo>
       <div class="mt-4 form-group">
+        <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span> Señale si al momento de ingresar su solicitud el SAT ha interpuesto querella o denuncia penal en contra de los socios, accionistas, según corresponda, representante legal con facultad para actos de dominio, e integrantes de la administración de la empresa solicitante o declaratoria de perjuicio, según corresponda, durante los últimos tres años anteriores a la presentación de la solicitud de certificación.
+        </section>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
@@ -754,6 +796,9 @@
     <div class="w-100 p-3">
       <ng-titulo titulo="Controls Inventarios"></ng-titulo>
       <div class="mt-4 form-group">
+        <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span> Indique si cuenta con un sistema de control de inventarios.
+        </section>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
@@ -856,7 +901,7 @@
         </div>
       </div>
       <div class="d-flex align-items-end justify-content-end">
-        <button type="button" class="btn btn-primary">Agregar</button>
+        <button type="button" class="btn btn-primary" disabled="esFormularioSoloLectura ? true : false">Agregar</button>
       </div>
       <label for=""> Control Inventarios </label>
 
@@ -902,10 +947,11 @@
           type="button"
           class="btn btn-default btn-space"
           (click)="openModifyModal()"
+          disabled="esFormularioSoloLectura ? true : false"
         >
           Modificar
         </button>
-        <button type="button" class="btn btn-primary btn-space">
+        <button type="button" class="btn btn-primary btn-space" disabled="esFormularioSoloLectura ? true : false">
           Eliminar
         </button>
       </div>
@@ -918,6 +964,9 @@
     </div>
     <div class="w-100 p-3">
       <div class="form-group">
+        <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span> Indique si lleva la contabilidad en medios electrónicos y la ingresa mensualmente a través del portal del SAT, de conformidad con el artículo 28, fracciones III y IV, del CFF y las reglas 2.8.1.6. y la 2.8.1.7. de la RMF
+        </section>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
@@ -943,6 +992,9 @@
     </div>
     <div class="w-100 p-3">
       <div class="form-group">
+        <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span> Señale si ingresa mensualmente su información contable a través del portal del SAT, de conformidad con el artículo 28, fracciones III y IV, del CFF y las reglas 2.8.1.5. y la 2.8.1.6 de la RMF.
+        </section>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
@@ -968,6 +1020,9 @@
     </div>
     <div class="w-100 p-3">
       <div class="form-group">
+        <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span> Manifiesta que los socios, accionistas, representantes legales con facultad para actos de dominio e integrantes de la administración, no se encuentren vinculados con alguna empresa a la que se le hubiere cancelado su Registro en el Esquema de Certificación de Empresas, de conformidad con la regla 7.2.4., apartado A, fracciones V, VI y VII y apartado B, fracciones II, y III y V y/o de la regla 7.2.5., fracciones VI, VII y XI.
+        </section>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
@@ -993,6 +1048,9 @@
     </div>
     <div class="w-100 p-3">
       <div class="form-group">
+        <section class="body-text fw-bold mb-2">
+          <span class="text-danger">*</span> Indique si sus proveedores se encuentran en el listado de empresas publicadas por el SAT, en términos del artículo 69- B, cuarto párrafo del CFF.
+        </section>
         <app-input-radio
           [radioOptions]="radioOptions"
           [isRequired]="true"
@@ -1039,6 +1097,7 @@
               [label]="'Entidad Federativa'"
               [placeholder]="'Seleccione un valor'"
               [catalogo]="entidadFederativa"
+              [isDisabled]="esFormularioSoloLectura ? true : false"
             >
             </app-catalogo-select>
           </div>
@@ -1059,10 +1118,10 @@
           </div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" disabled="esFormularioSoloLectura ? true : false">
             Aceptar
           </button>
-          <button type="button" class="btn btn-primary">Cancelar</button>
+          <button type="button" class="btn btn-primary" disabled="esFormularioSoloLectura ? true : false">Cancelar</button>
         </div>
       </div>
     </div>
@@ -1113,7 +1172,7 @@
             </div>
           </div>
           <div class="col-4 d-flex align-items-end">
-            <button type="button" class="btn btn-primary">Buscar</button>
+            <button type="button" class="btn btn-primary" disabled="esFormularioSoloLectura ? true : false">Buscar</button>
           </div>
         </div>
         <div class="row">
@@ -1213,16 +1272,17 @@
               [label]="'Bimestre'"
               [placeholder]="'Seleccione un valor'"
               [catalogo]="comboBimestresIDC"
+              [isDisabled]="esFormularioSoloLectura ? true : false"
             >
             </app-catalogo-select>
           </div>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" disabled="esFormularioSoloLectura ? true : false">
           Aceptar
         </button>
-        <button type="button" class="btn btn-primary">Cancelar</button>
+        <button type="button" class="btn btn-primary" disabled="esFormularioSoloLectura ? true : false">Cancelar</button>
       </div>
     </div>
   </div>
@@ -1232,7 +1292,7 @@
   @if(noSeHaSubidoNingunArchivo) {
     <div class="modal-header">
       <h4 class="modal-title pull-left">Mensaje</h4>
-      <button type="button" class="btn-close close pull-right" aria-label="Close">
+      <button type="button" class="btn-close close pull-right" aria-label="Close" disabled="esFormularioSoloLectura ? true : false">
         <span aria-hidden="true" class="visually-hidden">&times;</span>
       </button>
     </div>
@@ -1240,7 +1300,7 @@
       Error,No se ha seleccionado un archivo
     </div>
     <div class="modal-footer custom-footer">
-      <button type="button" class="btn btn-default" (click)="cerrar()">Aceptar</button>
+      <button type="button" class="btn btn-default" (click)="cerrar()" disabled="esFormularioSoloLectura ? true : false">Aceptar</button>
     </div>
   }
 </ng-template>

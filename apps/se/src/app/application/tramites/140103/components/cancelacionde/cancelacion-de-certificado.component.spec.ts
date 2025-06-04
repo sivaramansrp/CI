@@ -1,13 +1,35 @@
+
+jest.mock('@libs/shared/theme/assets/json/140103/cancelcatalog.json', () => ({
+  __esModule: true,
+  default: {
+    regimen: [{ id: 1, name: 'reg1' }],
+    mecanismo: [{ id: 2, name: 'mec1' }],
+    tratado: [{ id: 3, name: 'tra1' }],
+    producto: [{ id: 4, name: 'prod1' }],
+    subproducto: [{ id: 6, name: 'subprod1' }],
+    representacion: [{ id: 5, name: 'rep1' }]
+  }
+}));
+
+jest.mock('@libs/shared/theme/assets/json/140103/cancelacion.json', () => ({
+  __esModule: true,
+  default: [
+    { id: 1, description: 'desc1' }
+  ]
+}));
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { CancelacionDeCertificateComponent } from './cancelacion-de-certificate.component';
+import { CancelacionDeCertificateComponent } from './cancelacion-de-certificado.component';
 import { CatalogoSelectComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common'; 
 import { OficioComponent } from '../oficio/oficio.component';
 import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 import { TituloComponent } from '@ng-mf/data-access-user'; 
-import cancelations from 'libs/shared/theme/assets/json/140103/cancelacion.json';
-import cancelcatalog from 'libs/shared/theme/assets/json/140103/cancelcatalog.json';
+import cancelacions from '@libs/shared/theme/assets/json/140103/cancelacion.json';
+import cancelcatalog from '@libs/shared/theme/assets/json/140103/cancelcatalog.json';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import {of, Subject} from 'rxjs';
  interface Cupos {
   cupo: number;
   nombreProducto: string;
@@ -46,13 +68,13 @@ describe('CancelacionDeCertificateComponent', () => {
   });
 
   it('should initialize the cancelation property with data from cancelations.json', () => {
-    expect(component.cancelation).toEqual(cancelations);
-    expect(component.cancelation.length).toBeGreaterThan(0);
+    expect(component.Cancelacion).toEqual(cancelacions);
+    expect(component.Cancelacion.length).toBeGreaterThan(0);
   });
 
   it('should initialize the regime property with data from cancelcatalog.regime', () => {
-    expect(component.regime).toEqual(cancelcatalog.regime);
-    expect(component.regime.length).toBeGreaterThan(0);
+    expect(component.regimen).toEqual(cancelcatalog.regimen);
+    expect(component.regimen.length).toBeGreaterThan(0);
   });
 
   it('should initialize the mecanismo property with data from cancelcatalog.mecanismo', () => {
@@ -65,14 +87,14 @@ describe('CancelacionDeCertificateComponent', () => {
     expect(component.tratado.length).toBeGreaterThan(0);
   });
 
-  it('should initialize the nombrede property with data from cancelcatalog.nombrede', () => {
-    expect(component.nombrede).toEqual(cancelcatalog.nombrede);
-    expect(component.nombrede.length).toBeGreaterThan(0);
+  it('should initialize the nombrede property with data from cancelcatalog.producto', () => {
+    expect(component.producto).toEqual(cancelcatalog.producto);
+    expect(component.producto.length).toBeGreaterThan(0);
   });
 
-  it('should initialize the nombredel property with data from cancelcatalog.nombredel', () => {
-    expect(component.nombredel).toEqual(cancelcatalog.nombredel);
-    expect(component.nombredel.length).toBeGreaterThan(0);
+  it('should initialize the nombredel property with data from cancelcatalog.subproducto', () => {
+    expect(component.subproducto).toEqual(cancelcatalog.subproducto);
+    expect(component.subproducto.length).toBeGreaterThan(0);
   });
 
   it('should initialize the representacion property with data from cancelcatalog.representacion', () => {
@@ -91,5 +113,25 @@ describe('CancelacionDeCertificateComponent', () => {
 
     expect(component.configuracionTabla).toEqual(EXPECTEDCONFIGURATION);
     expect(component.configuracionTabla.length).toBe(5); 
+  });
+
+      it('should disable form in readonly mode (guardarDatosFormulario)', () => {
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.CancelacionForm.disabled).toBe(true);
+  });
+
+  it('should enable form in editable mode (guardarDatosFormulario)', () => {
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.CancelacionForm.enabled).toBe(true);
+  });
+
+  it('should clean up observables on destroy', () => {
+    const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

@@ -21,10 +21,14 @@
       <solicitante [tabindex]="1"></solicitante>
       }
       @case (2) {
-      <app-datos-solicitud [tabindex]="2"></app-datos-solicitud>
+        @if(esDatosRespuesta){
+          <app-datos-solicitud [tabindex]="2"></app-datos-solicitud>
+        }
       }
       @case (3) {
-      <app-pago-de-derechos [tabindex]="3"></app-pago-de-derechos>
+        @if(esDatosRespuesta){
+          <app-pago-de-derechos [tabindex]="3"></app-pago-de-derechos>
+        }
       }
       }
     </ng-container>
