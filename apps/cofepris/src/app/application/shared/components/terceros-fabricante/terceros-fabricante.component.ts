@@ -13,11 +13,11 @@ import {
 } from '@angular/forms';
 import {
   Catalogo,
-  CatalogoSelectComponent,
-  InputRadioComponent,
   REGEX_SOLO_NUMEROS,
   TituloComponent,
 } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   DEFAULT_TABLA_ORDEN,
