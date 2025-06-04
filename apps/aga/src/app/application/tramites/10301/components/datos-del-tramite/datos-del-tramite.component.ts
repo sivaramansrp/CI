@@ -184,6 +184,17 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     'Número de serie',
     'Uso específico de la mercancía',
   ];
+tableData = [
+    {
+      "tbodyData": ["Ananas comosus", "P&iacute;na"]
+    }
+  ]
+  esFormularioSoloLectura: boolean = false;
+  /**
+   * Indica si el formulario es de solo lectura.
+   * 
+   */
+  formularioDeshabilitado:boolean = true;
   isPais: boolean = false;
   isDesplegableDepaises: boolean = false;
   isAdunaMarcancia: boolean = false;
@@ -236,6 +247,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+          console.log('esFormularioSoloLectura constructor.........',this.esFormularioSoloLectura)
         })
       )
       .subscribe()
@@ -254,11 +266,11 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
-  esFormularioSoloLectura: boolean = false;
   /**
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
+
     this.getAduanaIngresara();
     this.getAno();
     this.getCondicion();
@@ -474,7 +486,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Establece los valores en el store de tramite5701.
+   * Establece los valores en el store de tramite10301.
    *
    * @param {FormGroup} form - El formulario del cual se obtiene el valor.
    * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
@@ -488,6 +500,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+     this.importadorExportador.get(campo)?.updateValueAndValidity();
+
   }
   /**
    * Obtiene el grupo de formulario de importador/exportador.
@@ -585,6 +599,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       this.isDesplegableDepaises = true;
       this.isAdunaMarcancia = true;
       this.isPais = true;
+      this.formularioDeshabilitado = true;
     }
   }
 

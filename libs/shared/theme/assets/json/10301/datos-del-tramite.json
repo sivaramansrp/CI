@@ -1,12 +1,48 @@
 {
+  "aduna": [
+    {
+      "id": 0,
+      "descripcion": "AGUA PRIETA"
+    },
+    {
+      "id": 1,
+      "descripcion": "AEROPUERTOS"
+    },
+    {
+      "id": 2,
+      "descripcion": "PUERTOS MARÍTIMOS"
+    },
+    {
+      "id": 3,
+      "descripcion": "FRONTERAS TERRESTRES"
+    }    
+  ],
   "nombre": "Electronica",
   "calle": "Calle Principal",
   "numeroExterior": "100",
   "numeroInterior": "15",
   "telefono": "5551234567",
   "correoElectronico": "usuario@ejemplo.com",
-  "pais":1,
   "codigoPostal": "12345",
+  "pais": [
+    {
+      "id": 0,
+      "descripcion": "SPAIN"
+    },
+    {
+      "id": 1,
+      "descripcion": "MEXICO"
+    },
+    {
+      "id": 2,
+      "descripcion": "REPUBLICA DOMINICANA"
+    },
+    {
+      "id": 3,
+      "descripcion": "HONDURAS"
+    }
+  ],
+
   "estado": "11122",
   "colonia": "55",
   "opcion":true

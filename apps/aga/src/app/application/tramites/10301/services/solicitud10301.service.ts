@@ -2,7 +2,7 @@ import { Solicitud10301State, Tramite10301Store } from '../estados/tramite10301.
 import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { catchError, Observable, throwError } from 'rxjs';
+import { Observable } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',

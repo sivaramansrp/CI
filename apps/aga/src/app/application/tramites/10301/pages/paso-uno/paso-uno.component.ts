@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, viewChild, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DatosDelTramiteComponent } from '../../components/datos-del-tramite/datos-del-tramite.component';
