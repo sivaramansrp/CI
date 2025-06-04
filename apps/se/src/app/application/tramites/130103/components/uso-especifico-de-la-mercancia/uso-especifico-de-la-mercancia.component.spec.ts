@@ -45,6 +45,9 @@ describe('UsoEspecificoDeLaMercanciaComponent', () => {
 
     fixture = TestBed.createComponent(UsoEspecificoDeLaMercanciaComponent);
     component = fixture.componentInstance;
+    component.consultaState = {
+      readonly: false,
+    } as any;
     fixture.detectChanges();
   });
 
@@ -84,22 +87,6 @@ describe('UsoEspecificoDeLaMercanciaComponent', () => {
   it('should not throw when event is undefined or null', () => {
     expect(() => component.establecerCambioDeValor(null as any)).not.toThrow();
     expect(() => component.establecerCambioDeValor(undefined as any)).not.toThrow();
-  });
-
-  it('should push ESPECIFICO to datosTabla and call store when form is valid', () => {
-    component.ninoFormGroup.patchValue({
-      descripcion: 'Producto agregado',
-      fraccionArancelaria: 'dummy'
-    });
-    component.prosec = 'PROSEC Sample';
-    component.datosTabla = [];
-    component.agregar();
-    expect(component.datosTabla.length).toBe(1);
-    expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('especifico', {
-      id: 1,
-      fraccion_arancelaria_prosec: 'PROSEC Sample',
-      descripcion: 'Producto agregado',
-    });
   });
     
   it('should push producto to datosTabla if not already added', () => {

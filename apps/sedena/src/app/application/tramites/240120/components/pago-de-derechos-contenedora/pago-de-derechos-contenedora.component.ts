@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
@@ -33,7 +34,18 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    * @property {Subject<void>} destroy$
    */
   private destroy$ = new Subject<void>();
-
+  /**
+   * Identificador único del procedimiento asociado al componente.
+   * 
+   * @constant
+   * @type {number}
+   * @readonly
+   * 
+   * @remarks
+   * Este valor se utiliza para identificar el procedimiento actual en el contexto
+   * de la aplicación.
+   */
+  public readonly idProcedimiento: number = ID_PROCEDIMIENTO;
   /**
    * Constructor del componente.
    *

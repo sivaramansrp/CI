@@ -32,6 +32,22 @@
     "numeroDeProcedimiento": "31601"
   },
   {
+    "folioTramite": "0100001000320251005000002",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "AGA ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "130118"
+  },
+  {
+    "folioTramite": "0100001000320251005000099",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca",
+    "dependencia": "COFEPRIS ADMINITRACION DE APOYO JURIDICO ADUANA 8 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260701"
+  },
+  {
     "folioTramite": "0100001000320251005000003",
     "tipoDeTramite": "Cancelación de Certificados a Petición del Interesado",
     "dependencia": "SE ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
@@ -222,6 +238,14 @@
     "departamento": "SEMARNAT",
     "numeroDeProcedimiento": "230401"
   },
+  {
+    "folioTramite": "0100001000320251005000003",
+    "tipoDeTramite": "Autorización de importación y exportación de contenedores",
+    "dependencia": "AGA ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "11204"
+  },
   { "folioTramite": "0100001000320251005000003",
     "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
     "dependencia": "SEDENA ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
@@ -269,6 +293,14 @@
     "fechInicioTramite": "2025-3-09 0035:05:00",
     "departamento": "SE",
     "numeroDeProcedimiento": "80308"
+  },
+  {
+    "folioTramite": "0100001000320251005090101",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "SE ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "90101"
   }
     ,{
     "folioTramite": "1234567890123451005220203",
@@ -293,6 +325,28 @@
     "fechInicioTramite": "2025-3-09 0035:05:00",
     "departamento": "AGACE",
     "numeroDeProcedimiento": "32504"
+  },
+   {
+    "folioTramite": "0100001000320251005000003",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "AGRICULTURA ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "AGRICULTURA",
+    "numeroDeProcedimiento": "221601"
+  },{
+       "folioTramite": "0100001000320251005000020",
+    "tipoDeTramite": "Autorización para la importación de plaguicidas, nutrientes vegetales, sustancias y materiales tóxicos o peligrosos",
+    "dependencia": "SE ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "80203"
+  },
+  {
+    "folioTramite": "0100001000320251005000004",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "AGA ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "30901"
   }
 ]
-

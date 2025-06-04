@@ -5,6 +5,7 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ProsecComponent } from './prosec.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('ProsecComponent', () => {
   let component: ProsecComponent;
@@ -12,8 +13,8 @@ describe('ProsecComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ProsecComponent, PasoUnoComponent],
-      imports: [WizardComponent, BtnContinuarComponent],
+      imports: [WizardComponent, BtnContinuarComponent, PasoUnoComponent, HttpClientModule],
+      declarations: [ProsecComponent],
       schemas: [NO_ERRORS_SCHEMA] // Add this to allow any custom elements
     })
     .compileComponents();
