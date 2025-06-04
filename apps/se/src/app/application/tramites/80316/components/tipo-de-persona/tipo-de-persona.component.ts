@@ -117,12 +117,16 @@ export class TipoDePersonaComponent implements OnInit, OnDestroy {
    * Si no es válido, marca todos los campos como tocados para mostrar los errores.
    */
   registroModificacion(): void {
+    const CURRENT_URL = this.router.url;
     if (this.tipoDePersonaForm.invalid) {
       this.tipoDePersonaForm.markAllAsTouched();
     } else {
-      this.router.navigate([
-        '/pago/modificaciones-immex-prosec/registro-modificacion',
-      ]);
+      if (CURRENT_URL.includes('se')) {
+        this.router.navigate(['/se/modificaciones-immex/registro-modificacion']);
+      }
+      if (CURRENT_URL.includes('pago')) {
+        this.router.navigate(['/pago/modificaciones-immex/registro-modificacion']);
+      }
     }
   }
 
