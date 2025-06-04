@@ -1,13 +1,30 @@
 <div class="row">
   <div class="col-md-4">
     <div class="form-group">
-      <label class="form-label" for="numeroPedimento">Número de pedimento:</label>
-      <input class="form-control" id="numeroPedimento" placeholder="" type="text" [formControl]="pedimentoForm"
-        [ngClass]="isValid ? 'required' : ''" libSoloNumeros>
+      <label class="form-label" for="numeroPedimento"
+        >Número de pedimento:</label
+      >
+      <input
+        class="form-control"
+        id="numeroPedimento"
+        maxlength="7"
+        placeholder=""
+        type="text"
+        [formControl]="pedimentoForm"
+        [ngClass]="isValid ? 'required' : ''"
+        libSoloNumeros
+      />
     </div>
   </div>
   <div class="col-md-4 d-flex align-items-end">
-    <button type="button" class="btn btn-primary" id="btnAgregar" (click)="agregaPedimento()">Agregar</button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      id="btnAgregar"
+      (click)="agregaPedimento()"
+    >
+      Agregar
+    </button>
   </div>
 </div>
 
@@ -17,21 +34,26 @@
       <thead>
         <tr>
           @for (item of hTabla; track $index) {
-          <th>{{item}}</th>
+          <th>{{ item }}</th>
           }
         </tr>
       </thead>
       <tbody>
         <tr *ngFor="let pedimento of pedimentos; let i = index">
-          <td> {{pedimento.patente}}</td>
-          <td> {{pedimento.pedimento}}</td>
-          <td> {{pedimento.aduana}}</td>
-          <td> {{pedimento.tipoPedimento}} </td>
-          <td> {{pedimento.numero}} </td>
-          <td> {{pedimento.comprobanteValor}} </td>
-          <td> {{pedimento.pedimentoValidado}} </td>
+          <td>{{ pedimento.patente }}</td>
+          <td>{{ pedimento.pedimento }}</td>
+          <td>{{ pedimento.aduana }}</td>
+          <td>{{ pedimento.tipoPedimento }}</td>
+          <td>{{ pedimento.numero }}</td>
+          <td>{{ pedimento.comprobanteValor }}</td>
+          <td>{{ pedimento.pedimentoValidado }}</td>
           <td>
-            <button type="button" class="btn btn-link" title="Eliminar" (click)="abrirModalEliminar(i)">
+            <button
+              type="button"
+              class="btn btn-link"
+              title="Eliminar"
+              (click)="abrirModalEliminar(i)"
+            >
               <i class="bi bi-trash3 bi-c"></i>
             </button>
           </td>

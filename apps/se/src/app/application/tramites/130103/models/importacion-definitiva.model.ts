@@ -20,7 +20,7 @@ export interface Partidas {
   id: number;
   cantidad?: number;
   unidadDeMedida?: string;
-  fraccionArancelariaTigie?: number;
+  fraccionArancelariaTigie?: number | string;
   descripcion?: string;
   precioUnitario?: string;
   totalUsd?: number;
