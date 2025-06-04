@@ -24,7 +24,7 @@ import {
 } from '@angular/forms';
 import { Modal } from 'bootstrap';
 
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 
 import {
   ConfiguracionColumna,
@@ -46,7 +46,7 @@ import { EstablecimientoService } from '../../services/establecimiento.service';
 
 import { ESTABLECIMIENTO_TABLE_CONFIG } from '../../constantes/aviso-de-funcionamiento.enum';
 
-
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /*
 * @description
 */ 
@@ -126,6 +126,12 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   showValue: string = '';
 
+/**
+ * Indica si el formulario debe mostrarse en modo solo lectura.
+ * Cuando es verdadero, los campos del formulario no pueden ser editados por el usuario.
+ */
+ esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    * @param fb FormBuilder para inicializar formularios reactivos.
@@ -136,8 +142,19 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
     private fb: FormBuilder,
     private propietarioStore: DatosDelSolicituteSeccionStateStore,
     private propietarioQuery: DatosDelSolicituteSeccionQuery,
-    private establecimientoService : EstablecimientoService
-  ) {}
+    private establecimientoService : EstablecimientoService,
+    private consultaQuery: ConsultaioQuery
+  ) {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
+  }
 
   /**
    * Ciclo de vida `AfterViewInit`.
@@ -211,6 +228,27 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
        
       });
   }
+
+  /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } 
+  }
+
+    /**
+     * Guarda los datos del formulario y ajusta el estado de solo lectura.
+     */
+    guardarDatosFormulario(): void {
+      this.guardarPropietario();
+      if (this.propietarioradioForm && this.esFormularioSoloLectura) {
+        this.propietarioradioForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.propietarioradioForm.enable();
+      } 
+    }
 
   /**
    * Configuración de columnas de la tabla.

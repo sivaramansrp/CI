@@ -10,6 +10,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  Input,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -80,6 +81,10 @@ export class DomicillioDelEstablecimientoSeccionComponent
    */
   TablaSeleccion = TablaSeleccion;
 
+  /**
+   * Indica si el formulario debe estar deshabilitado.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
   /**
    * Constructor del componente.
    * @param fb FormBuilder para inicializar formularios reactivos.
@@ -188,6 +193,10 @@ export class DomicillioDelEstablecimientoSeccionComponent
       .subscribe((state) => {
         this.domicilioEstablecimiento.patchValue(state, { emitEvent: false });
       });
+
+        if (this.formularioDeshabilitado) {
+      this.domicilioEstablecimiento.disable();
+    }
 
   }
   onControlChange(controlName: string): void {

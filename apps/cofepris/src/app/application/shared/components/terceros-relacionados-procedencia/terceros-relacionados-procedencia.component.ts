@@ -68,6 +68,12 @@ export class TercerosRelacionadosProcedenciaComponent implements OnInit {
    */
   TEXTO_DE_ALERTA: string = MANIFIESTOS_ALERT.DATOS_MANIFIESTOS;
 
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * @constructor
    * @param {FormBuilder} fb - Servicio para construir y gestionar formularios reactivos.

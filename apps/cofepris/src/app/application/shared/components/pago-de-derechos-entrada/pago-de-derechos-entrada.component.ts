@@ -15,9 +15,11 @@ import { PermisoImportacionBiologicaStore } from '../../estados/permiso-importac
 
 import { PermisoImportacionBiologicaQuery } from '../../estados/permiso-importacion-biologica.query';
 
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { map, Observable, Subject, takeUntil } from 'rxjs';
 import { FECHA_PAGO, PAGO , MAXLENGTH } from '../../constantes/permiso-importacion-biologica.enum';
 import { REQUIRED_BANCO } from '../../constantes/datos-solicitud.enum';
+
+import {ConsultaioQuery} from '@ng-mf/data-access-user'
 /**
  * Componente que gestiona el pago de derechos.
  * Utiliza un formulario reactivos para recopilar datos del usuario.
@@ -112,6 +114,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
    */
   fechaFinalInput!: InputFecha;
 
+   esFormularioSoloLectura: boolean = false;
   /**
  * Constructor del componente.
  * Inyecta el FormBuilder y el servicio de pago de derechos.
@@ -123,10 +126,23 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private pagoDeDerechosService: PagoDeDerechosEntradaService,
     private permisoImportacionBiologicaStore: PermisoImportacionBiologicaStore,
-    private permisoImportacionBiologicaQuery: PermisoImportacionBiologicaQuery
+    private permisoImportacionBiologicaQuery: PermisoImportacionBiologicaQuery,
+     private consultaioQuery: ConsultaioQuery,
 
   ) {
     //La lógica del constructor se puede agregar aquí si es necesario
+
+    
+  this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+
+        })
+      )
+      .subscribe()
+
   }
 
   /**
@@ -148,10 +164,49 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
    * Obtiene los datos para el selector de opciones desde el servicio.
    */
   ngOnInit(): void {
+    this.inicializarCertificadoFormulario();
+
+
+  }
+
+  /**
+   * Actualiza el formulario de certificado.
+   * Si el formulario es solo de lectura, guarda los datos del formulario.
+   * De lo contrario, inicializa el formulario.
+   */
+  inicializarCertificadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+  }
+
+    /**
+     * Actualiza los datos del formulario.
+     * Si el formulario es solo de lectura, deshabilita el formulario.
+     * De lo contrario, habilita el formulario.
+     */
+    guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.pagoDerechos.disable();
+      } else {
+        this.pagoDerechos.enable();
+      }
+    }
+
+  /**
+   * Inicializa el formulario y sus valores a partir del estado y servicios.
+   * 
+   * Este método obtiene los datos necesarios para los selectores y campos del formulario,
+   * y suscribe los valores del estado para mantener el formulario sincronizado.
+   * También configura las propiedades de validación y longitud máxima según el procedimiento.
+   */
+  inicializarFormulario() {
     this.pagoDeDerechosService.getData().pipe(takeUntil(this.destroy$)).subscribe((data) => {
       this.dropdownData = data;
     });
-
 
     this.selectedBanco$.subscribe((selectedBanco) => {
       if (selectedBanco) {
@@ -192,7 +247,6 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
 
     this.maxLength = REQUIRED_BANCO.includes(this.idProcedimiento) ? MAXLENGTH : {
     };
-
   }
 
   /**
