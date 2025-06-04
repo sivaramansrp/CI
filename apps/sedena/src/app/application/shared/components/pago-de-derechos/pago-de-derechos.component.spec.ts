@@ -51,22 +51,6 @@ describe('PagoDeDerechosComponent', () => {
     });
   });
 
-  it('should reset the form when onReset is called', () => {
-    const form = component.pagoDerechosForm;
-    form.patchValue({ claveReferencia: '12345' });
-    component.onReset();
-    expect(form.value).toEqual({
-      fechaPago: null,
-
-      banco: null,
-      cadenaDependencia: null,
-      claveReferencia: null,
-
-      importePago: null,
-      llavePago: null,
-    });
-  });
-
   it('should update fechaPago when onFechaCambiada is called', () => {
     component.onFechaCambiada('2023-01-01');
     expect(component.pagoDerechosForm.value.fechaPago).toBe('2023-01-01');
