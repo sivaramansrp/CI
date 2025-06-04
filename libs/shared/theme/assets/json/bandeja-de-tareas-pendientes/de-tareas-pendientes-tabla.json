@@ -6336,7 +6336,7 @@
     "nombreDeLaTarea": "confirmar notificación",
     "fechaDeAsignacion": "2023-10-02",
     "estadoDeTramite": "Pendiente",
-   "departamento": "cofepris",
+    "departamento": "cofepris",
     "numeroDeProcedimiento": "260502",
     "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION"
   },
@@ -6406,7 +6406,7 @@
     "nombreDeLaTarea": "Evaluar solicitud",
     "fechaDeAsignacion": "2023-10-01",
     "estadoDeTramite": "En Proceso",
-   "departamento": "cofepris",
+    "departamento": "cofepris",
     "numeroDeProcedimiento": "260501",
     "origin": "FLUJO_FUNCIONARIO_EVALUAR"
   },
@@ -6416,7 +6416,7 @@
     "nombreDeLaTarea": "confirmar notificación",
     "fechaDeAsignacion": "2023-10-02",
     "estadoDeTramite": "Pendiente",
-   "departamento": "cofepris",
+    "departamento": "cofepris",
     "numeroDeProcedimiento": "260501",
     "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION"
   },

@@ -130,7 +130,6 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$),
       map((seccionState)=>{
         this.esFormularioSoloLectura = seccionState.readonly; 
-        this.inicializarEstadoFormulario();
       })
     )
     .subscribe()
@@ -210,6 +209,8 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
         [Validators.required,Validators.pattern(REGEX_CORREO_ELECTRONICO)]
       ],
     });
+        this.inicializarEstadoFormulario();
+
   }
 
   /**
