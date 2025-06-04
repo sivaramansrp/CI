@@ -5,11 +5,12 @@
  * - ngOnInit: Inicializa el componente y configura las suscripciones necesarias.
  * - crearFormularioPagoDerechos: Crea y configura el formulario para el pago de derechos.
  * - cambioFechaFinal: Maneja el cambio de la fecha final en el formulario.
- * - onBancoSeleccion: Maneja la selección de un banco en el formulario.
  * - onllavaDePagoChange: Maneja el cambio de la llave de pago en el formulario.
+ * - setValoresStore: Actualiza un valor específico en el store.
  * - ngOnDestroy: Limpia las suscripciones cuando el componente se destruye.
  */
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
@@ -20,14 +21,17 @@ import { Validators } from '@angular/forms';
 
 import { InputFecha } from '@libs/shared/data-access-user/src';
 
-import { Subject } from 'rxjs';
+import { map } from 'rxjs';
+
 import { takeUntil } from 'rxjs';
 
 import { FECHA } from '../../enum/fetcha.enum';
 
 import { PermisoCitesService } from '../../services/permiso-cites.service';
+import { Subject } from 'rxjs';
 
 import { Solicitud230902State } from '../../estados/tramite230902.store';
+import { Subscription } from 'rxjs';
 import { Tramite230902Query } from '../../estados/tramite230902.query';
 import { Tramite230902Store } from '../../estados/tramite230902.store';
 
@@ -40,42 +44,98 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
   /**
    * Formulario para el pago de derechos.
+   * Contiene los datos y validaciones del formulario de pago de derechos.
    * {FormGroup}
    */
   formPagoDerechos!: FormGroup;
 
   /**
    * Entrada de fecha final.
+   * Configuración para el input de fecha final.
    * {InputFecha}
    */
   fechaFinalInput: InputFecha = FECHA;
 
   /**
    * Estado de la solicitud 230902.
+   * Contiene el estado actual de la solicitud.
    * {Solicitud230902State}
    */
   solicitud230902State!: Solicitud230902State;
 
   /**
    * Notificador para destruir las suscripciones.
+   * Se utiliza para cancelar suscripciones activas al destruir el componente.
    * {Subject<void>}
    */
   private destroyed$: Subject<void> = new Subject();
 
   /**
-   * Crea una instancia de PagoDeDerechosComponent.
-   * {PermisoCitesService} permisoCitesService - Servicio de permisos CITES.
-   * {Tramite230902Store} tramite230902Store - Almacén de trámites 230902.
-   * {Tramite230902Query} tramite230902Query - Consulta de trámites 230902.
-   * {FormBuilder} formBuilder - Constructor de formularios.
+   * Indica si el formulario está en modo solo lectura.
+   * Si es verdadero, los campos del formulario estarán deshabilitados para edición.
+   * {boolean}
+   */
+  esFormularioSoloLectura: boolean = false; 
+
+  /**
+   * Suscripción general para manejar y limpiar las suscripciones del componente.
+   * Se utiliza para evitar fugas de memoria.
+   * {Subscription}
+   */
+  private subscription: Subscription = new Subscription();
+
+  /**
+   * Constructor del componente.
+   * Inicializa los servicios y dependencias necesarias para la gestión de datos y formularios.
+   * permisoCitesService Servicio de permisos CITES.
+   * tramite230902Store Almacén de trámites 230902.
+   * tramite230902Query Consulta de trámites 230902.
+   * formBuilder Constructor de formularios.
+   * consultaioQuery Consulta de IO.
    */
   constructor(
     public permisoCitesService: PermisoCitesService,
     private tramite230902Store: Tramite230902Store,
     private tramite230902Query: Tramite230902Query,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    // No hacer nada
+     this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+       this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
+  }
+
+  /**
+   * Inicializa el estado del formulario dependiendo si es solo lectura o editable.
+   * Si es solo lectura, deshabilita los campos y ajusta la configuración de la fecha.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.crearFormularioPagoDerechos();
+    }
+  }
+
+  /**
+   * Guarda los datos del formulario y ajusta el estado de solo lectura.
+   * Deshabilita o habilita los campos y la fecha según corresponda.
+   */
+  guardarDatosFormulario(): void {
+    this.crearFormularioPagoDerechos();
+    if (this.esFormularioSoloLectura) {
+      this.formPagoDerechos.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formPagoDerechos.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
   }
 
   /**
@@ -83,15 +143,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Configura las suscripciones necesarias y prepara el formulario.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
     this.permisoCitesService.inicializaPagoDeDerechosDatosCatalogos();
-    this.tramite230902Query.selectSolicitud$
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe(state => { this.solicitud230902State = state });
-
-    /**
-     * Crea el formulario de pago de derechos.
-     */
-    this.crearFormularioPagoDerechos();
   }
 
   /**
@@ -99,6 +152,20 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Configura los campos del formulario con validaciones y valores iniciales.
    */
   crearFormularioPagoDerechos(): void {
+    this.tramite230902Query.selectSolicitud$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe(state => { this.solicitud230902State = state });
+    this.subscription.add(
+      this.tramite230902Query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+            this.solicitud230902State = seccionState;
+          })
+        )
+        .subscribe()
+    );
+
     this.formPagoDerechos = this.formBuilder.group({
       claveDeReferencia: new FormControl(this.solicitud230902State.claveDeReferencia),
       cadenaPagoDependencia: new FormControl(this.solicitud230902State.cadenaPagoDependencia),
@@ -107,7 +174,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       fecPago: new FormControl(this.solicitud230902State.fecPago, Validators.required),
       impPago: new FormControl({ value: this.solicitud230902State.impPago, disabled: true }),
     });
-   
+
     this.formPagoDerechos.get('claveDeReferencia')?.disable();
     this.formPagoDerechos.get('cadenaPagoDependencia')?.disable();
     this.formPagoDerechos.get('impPago')?.disable();
@@ -116,8 +183,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
    * Maneja el cambio de la fecha final en el formulario.
    * Actualiza el valor de la fecha en el estado del formulario y en el almacén.
-   * 
-   * @param nuevo_valor El nuevo valor de la fecha final.
+   * nuevo_valor El nuevo valor de la fecha final.
    */
   cambioFechaFinal(nuevo_valor: string): void {
     this.formPagoDerechos.patchValue({
@@ -130,33 +196,32 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
   /**
    * Maneja el cambio de la llave de pago en el formulario.
-   * Actualiza la llave de pago en el almacén.
+   * Actualiza la llave de pago en el almacén, convirtiéndola a mayúsculas.
    */
-   onllavaDePagoChange(): void {
+  onllavaDePagoChange(): void {
     const CAPITALIZED_VALUE = this.formPagoDerechos
-    .get('llaveDePago')
-    ?.value.toUpperCase();
+      .get('llaveDePago')
+      ?.value.toUpperCase();
     this.formPagoDerechos.get('llaveDePago')?.setValue(CAPITALIZED_VALUE);
   }
 
   /**
    * Método setValoresStore
    * Descripción: Actualiza un valor específico en el store utilizando el método correspondiente.
-   * Parámetros:
-   *   - form: Formulario reactivo que contiene los datos.
-   *   - campo: Nombre del campo cuyo valor se actualizará en el store.
-   *   - metodoNombre: Nombre del método del store que se utilizará para actualizar el valor.
+   * form Formulario reactivo que contiene los datos.
+   * campo Nombre del campo cuyo valor se actualizará en el store.
    */
-    setValoresStore(form: FormGroup, campo: string): void {
-      const VALOR = form.get(campo)?.value;
-      this.tramite230902Store.establecerDatos({ [campo]: VALOR });
-    }
+  setValoresStore(form: FormGroup, campo: string): void {
+    const VALOR = form.get(campo)?.value;
+    this.tramite230902Store.establecerDatos({ [campo]: VALOR });
+  }
 
   /**
    * Limpia las suscripciones cuando el componente se destruye.
    * Evita fugas de memoria al completar el Subject.
    */
   ngOnDestroy(): void {
+    this.subscription.unsubscribe();
     this.destroyed$.next();
     this.destroyed$.complete();
   }

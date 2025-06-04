@@ -1,7 +1,12 @@
 /* eslint-disable no-empty-function */
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, SeccionLibStore, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { Subject,map, takeUntil } from 'rxjs';
+import { Anexo1Component } from '../../components/anexo-1/anexo-1.component';
+import { CommonModule } from '@angular/common';
+import { PermisoImmexDatosService } from '../../servicios/immex/permiso-immex-datos.service';
 import { SECCIONES_TRAMITE_80203 } from '../../constantes/immex-registro-de-solicitud-modality.enums';
-import { SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { immexRegistroform } from '../../modelos/immex-registro-de-solicitud-modality.model';
 /**
  * Componente para mostrar el subtítulo del asistente.
  * @component PasoUnoComponent
@@ -12,7 +17,13 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
-  styleUrl: './paso-uno.component.scss'
+  styleUrl: './paso-uno.component.scss',
+  standalone:true,
+  imports: [
+        CommonModule,
+        SolicitanteComponent,
+        Anexo1Component
+  ]
 })
 
 /**
@@ -21,6 +32,20 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src';
  * Clase que implementa la lógica del primer paso del formulario multipaso.
  */
 export class PasoUnoComponent implements OnInit {
+    /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+    /** Subject para notificar la destrucción del componente. */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+
+  /**
+   * @property consultaState
+   * @description Estado actual de la consulta para el trámite.
+   * @type {ConsultaioState}
+   * @memberof PasoUnoComponent
+   */
+  public consultaState!:ConsultaioState;
 
   /**
    * @property {number} indice
@@ -34,15 +59,44 @@ export class PasoUnoComponent implements OnInit {
    * @description Constructor que inicializa el store de la sección.
    * @param {SeccionLibStore} seccionStore - Servicio para manejar el estado de las secciones.
    */
-  constructor(private seccionStore: SeccionLibStore) {}
+  constructor(private seccionStore: SeccionLibStore,
+       private readonly consultaQuery: ConsultaioQuery,
+      private permisoImmexDatosService: PermisoImmexDatosService,
+  ) {}
 
   /**
    * @method ngOnInit
    * @description Método de inicialización del componente. Asigna las secciones del formulario.
    */
   ngOnInit(): void {
+     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+          this.consultaState = seccionState;
+      })).subscribe();
+    if(this.consultaState.update) {
+      this.guardarDatosFormulario();
+    }
+    else {
+      this.esDatosRespuesta = true;
+    }
     this.asignarSecciones();
   }
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.permisoImmexDatosService
+      .getRegistroTomaMuestrasMercanciasData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+      this.permisoImmexDatosService.actualizarEstadoFormulario(resp?.immexRegistro || {} as immexRegistroform)
+        }
+      });
+  }
+
 
   /**
    * @property {Array<{ index: number; title: string; component: string; }>} seccionesDeLaSolicitud
