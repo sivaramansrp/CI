@@ -826,5 +826,14 @@
         "diasTranscurridos": "4",
         "departamento": "SE",
         "numeroDeProcedimiento": "80203"
+    },
+     {
+      "id": 11201,
+      "tipoDeTramite": "Expedición de Certificados de Cupo Licitación pública",
+      "fecha": "2023-10-01",
+      "fechaActualizacion": "2023-10-05",
+      "diasTranscurridos": "4",
+      "departamento": "AGA",
+      "numeroDeProcedimiento": "11201"
     }
 ]
