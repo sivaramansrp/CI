@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { map, Subject, takeUntil } from 'rxjs';
+import {Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 import { CargarDatosIniciales } from '../../../220502/models/solicitud-pantallas.model';

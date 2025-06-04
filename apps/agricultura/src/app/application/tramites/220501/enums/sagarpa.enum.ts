@@ -1,5 +1,5 @@
-import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
 import { Destinatario, Exportador } from "../models/pago-de-derechos.model";
+import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
 
 /**
  * Matriz de opciones para botones de radio.

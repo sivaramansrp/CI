@@ -1,8 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RespuestaCatalogos } from '@ng-mf/data-access-user';
+
 import { Solicitud220502State, Solicitud220502Store } from '../../../220502/estados/tramites220502.store';
+import { RespuestaCatalogos } from '@ng-mf/data-access-user';
 
 /**
  * Servicio para gestionar las operaciones relacionadas con SAGARPA.

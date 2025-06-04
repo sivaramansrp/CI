@@ -1,13 +1,13 @@
+import { Component, OnInit } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { map, Subject, takeUntil } from 'rxjs';
 
 import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
 import { DatosGeneralesComponent } from '../datos-generales/datos-generales.component';
 import { PagoDeDerechosComponent } from '../pago-de-derechos/pago-de-derechos.component';
-import { TercerosRelacionadosComponent } from '../terceros-relacionados/terceros-relacionados.component';
-import { Solicitud220501Store } from '../../estados/tramites220501.store';
 import { SagarpaService } from '../../services/sagarpa/sagarpa.service';
+import { Solicitud220501Store } from '../../estados/tramites220501.store';
+import { TercerosRelacionadosComponent } from '../terceros-relacionados/terceros-relacionados.component';
 
 /**
  * Componente para la revisión documental.
@@ -19,7 +19,7 @@ import { SagarpaService } from '../../services/sagarpa/sagarpa.service';
   standalone: true,
   imports: [DatosGeneralesComponent, TercerosRelacionadosComponent, PagoDeDerechosComponent, CommonModule],
 })
-export class RevisionDocumentalComponent {
+export class RevisionDocumentalComponent implements OnInit {
 
   /**
   * Índice del tab seleccionado.

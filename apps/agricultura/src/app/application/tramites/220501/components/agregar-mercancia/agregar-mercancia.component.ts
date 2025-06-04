@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { MercanciaTabla } from '../../models/medio-transporte.model';
 import { Solicitud220501Query } from '../../estados/tramites220501.query';
 import { Subject } from 'rxjs';
-import { ConsultaioQuery, TituloComponent } from '@libs/shared/data-access-user/src';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 /**
@@ -63,11 +63,6 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit, OnDestroy {
   solicitud220501State: Solicitud220501State = {} as Solicitud220501State;
 
   /**
-   * Indica si el formulario está deshabilitado.
-   */
-  @Input() formularioDeshabilitado!: boolean;
-
-  /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios.
    */
@@ -76,30 +71,23 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit, OnDestroy {
     public solicitud220501Store: Solicitud220501Store,
     public solicitud220501Query: Solicitud220501Query
   ) {
-    // El constructor se utiliza para la inyección de dependencias.
+    this.crearFormulario();
   }
 
   /**
-   * Método del ciclo de vida que se ejecuta al iniciar el componente.
-   * Llama a la función que determina cómo inicializar el formulario.
+   * Método que se ejecuta cuando el componente se inicializa.
+   * Aquí se debe inicializar el formulario con los datos de entrada.
    */
   ngOnInit(): void {
-    this.inicializarFormulario();
-    if (this.formularioDeshabilitado) {
-      this.agregarMercanciaForm.disable();
-    } else if (!this.formularioDeshabilitado) {
-      this.agregarMercanciaForm.enable();
+    if (this.mercanciasDatos && this.mercanciasDatos.length > 0) {
+      this.setFormData();
     }
   }
 
   /**
    * Método para crear el formulario de agregar mercancía.
    */
-  inicializarFormulario(): void {
-    if (this.mercanciasDatos && this.mercanciasDatos.length > 0) {
-      this.setFormData();
-    }
-
+  crearFormulario(): void {
     this.agregarMercanciaForm = this.fb.group({
       fraccionArancelaria: [{ value: this.solicitud220501State.fraccionArancelaria, disabled: true }],
       descripcionFraccion: [{ value: this.solicitud220501State.descripcionFraccion, disabled: true }],
