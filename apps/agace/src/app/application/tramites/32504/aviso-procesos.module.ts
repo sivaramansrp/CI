@@ -1,9 +1,8 @@
+import { AvisoDatosService } from './services/aviso-datos.service';
+import { AvisoProcesosRoutingModule } from './aviso-procesos-routing.module';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-
-import { AvisoProcesosRoutingModule } from './aviso-procesos-routing.module';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { AvisoDatosService } from './services/aviso-datos.service';
 
 
 @NgModule({

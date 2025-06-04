@@ -183,6 +183,14 @@ export class Tramite80101Query extends Query<Tramite80101State> {
   );
 
   /**
+   * Selecciona los datos de las plantas disponibles del estado.
+   */
+
+  selectDatosFederatariosFormulario$ = this.select(
+    (state) => state.datosFederatarios
+  );
+
+  /**
    * Constructor de la clase Tramite80101Query.
    * @param store - El store que contiene el estado de Tramite80101.
    */
@@ -190,4 +198,3 @@ export class Tramite80101Query extends Query<Tramite80101State> {
     super(store);
   }
 }
-
