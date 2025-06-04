@@ -98,9 +98,6 @@ opcionSeleccionMexicana = [
   /** Valor seleccionado para el tipo de persona */
   public valorSeleccionadoPersona: string = '';
 
-  /** Notificación nueva */
-  public nuevaNotificacion!: Notificacion;
-
   /** Índice del elemento para eliminar */
   elementoParaEliminar!: number;
 
@@ -118,6 +115,16 @@ opcionSeleccionMexicana = [
 
  /** Datos del país */
  public paisData: CatalogosSelect = PAIS_DATA;
+
+  /** Filas seleccionadas en la tabla */
+   selectedRows: Set<number> = new Set<number>();
+
+  /** Indica si el formulario es visible */
+   esFormularioVisible = false;
+   
+  /** Notificación nueva */
+  public nuevaNotificacion: Notificacion | null = null;
+
 
   /** Constructor del componente */
   constructor(
@@ -147,7 +154,6 @@ opcionSeleccionMexicana = [
     this.getSociosYAccionistasExtranjerosData();
     this.getPaisData();
     this.subscribeToEstadoDataChanges();
-
     this.registroComoEmpresa.getRepresentacionFederalData().pipe(takeUntil(this.destroyed$)).subscribe(() => {
       this.subscribeToEstadoDataChanges();
     });
@@ -157,12 +163,17 @@ opcionSeleccionMexicana = [
   private subscribeToTipoEmpresaChanges(): void {
     const TIPO_EMPRESA_CONTROL = this.formularioEmpresa.get('tipoEmpresa');
     const ACTIVIDAD_ECONOMICA_CONTROL = this.formularioEmpresa.get('actividadEconomicaPreponderante');
+    const ESPECIFIQUE_CONTROL = this.formularioEmpresa.get('especifique');
 
     TIPO_EMPRESA_CONTROL?.valueChanges.pipe(takeUntil(this.destroyed$)).subscribe((value) => {
       if (value) {
         ACTIVIDAD_ECONOMICA_CONTROL?.enable();
+        ESPECIFIQUE_CONTROL?.enable(); 
+
       } else {
         ACTIVIDAD_ECONOMICA_CONTROL?.disable();
+        ESPECIFIQUE_CONTROL?.disable();
+
       }
     });
   }
@@ -183,7 +194,7 @@ opcionSeleccionMexicana = [
   createForm(): void {
     this.formularioEmpresa = this.fb.group({
       estado: [this.formularioEmpresaState?.estado],
-      representacionFederal: [this.formularioEmpresaState?.representacionFederal],
+      representacionFederal: [this.formularioEmpresaState?.representacionFederal,Validators.required],
       tipoEmpresa: [this.formularioEmpresaState?.tipoEmpresa || '', Validators.required],
       especifique: [{ value: this.formularioEmpresaState?.especifique || '', disabled: true }, Validators.maxLength(20)],
       actividadEconomicaPreponderante: [{ value: this.formularioEmpresaState?.actividadEconomicaPreponderante || '', disabled: true }],
@@ -201,36 +212,29 @@ opcionSeleccionMexicana = [
       lada: [{ value: this.formularioEmpresaState.lada || '', disabled: true }],
       telefono: [{ value: this.formularioEmpresaState.telefono || '', disabled: true }],
       nacionalidad: [this.formularioEmpresaState?.nacionalidad || '', Validators.required],
-      registroFederal: [this.formularioEmpresaState?.registroFederal || '', Validators.required],
+      registroFederal: [this.formularioEmpresaState?.registroFederal || '', [Validators.required, Validators.minLength(13)]],
       tipoDePersona: [this.formularioEmpresaState?.tipoDePersona || '', Validators.required],
       nombre: [this.formularioEmpresaState.nombre],
-      apellidoPaterno: [this.formularioEmpresaState.apellidoPaterno],
+      apellidoPaterno: [this.formularioEmpresaState.apellidoPaterno,Validators.maxLength(200)],
       apellidoMaterno: [this.formularioEmpresaState.apellidoMaterno],
       // Detalles de la empresa
       taxId: [this.formularioEmpresaState.taxId, Validators.required],
       razonSocial: [this.formularioEmpresaState.razonSocial],
       datosPais: [this.formularioEmpresaState.datosPais, Validators.required],
-      datosCodigoPostal: [this.formularioEmpresaState.datosCodigoPostal],
+      datosCodigoPostal: [this.formularioEmpresaState.datosCodigoPostal,Validators.maxLength(12)],
       datosEstado: [this.formularioEmpresaState.datosEstado],
       correoElectronico: [this.formularioEmpresaState.correoElectronico],
     });
   }
-
-  /** Método para eliminar un pedimento */
-  eliminarPedimento(borrar: boolean): void {
-    if (borrar) {
-      this.pedimentos.splice(this.elementoParaEliminar, 1);
-    }
-  }
-
+ 
   /** Método para abrir un modal */
-  abrirModal(i: number = 0): void {
+  abrirModal(i: number = 0, mensaje: string = ''): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje: 'La entidad federativa seleccionada no cuenta con sucursales asociadas a su RFC para tramitar el Registro como Empresa de la Frontera',
+      mensaje: mensaje || 'La entidad federativa seleccionada no cuenta con sucursales asociadas a su RFC para tramitar el Registro como Empresa de la Frontera',
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
@@ -238,6 +242,20 @@ opcionSeleccionMexicana = [
     };
 
     this.elementoParaEliminar = i;
+  }
+  /** Método para eliminar un pedimento de la lista */
+  eliminarPedimento(borrar: boolean): void {
+    if (borrar) {
+      this.pedimentos.splice(this.elementoParaEliminar, 1);
+    }
+    this.nuevaNotificacion = null;
+  }
+  /** Método para validar el RFC ingresado en el formulario */
+  checkRFCValidation(): void {
+    const RFC_CONTROL = this.formularioEmpresa.get('registroFederal')
+    if (RFC_CONTROL?.invalid && RFC_CONTROL?.errors?.['minlength'] && !this.nuevaNotificacion) {
+      this.abrirModal(0, 'El RFC debe tener al menos 13 caracteres de longitud.');
+    }
   }
 
   /** Getter para obtener la nacionalidad seleccionada */
@@ -299,6 +317,10 @@ opcionSeleccionMexicana = [
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         this.datosGenerales = data as unknown as SociosYAccionistasData[];
+        this.datosGenerales = this.datosGenerales.map((item, index) => ({
+          ...item,
+          id: item.id || index, 
+        }));
       });
   }
 
@@ -335,6 +357,7 @@ opcionSeleccionMexicana = [
       correoElectronico: this.formularioEmpresa.get('correoElectronico')?.value,
       nombre: this.formularioEmpresa.get('nombre')?.value,
       apellidoPaterno: this.formularioEmpresa.get('apellidoPaterno')?.value,
+      id: 0
     };
 
     this.datosTablaExtranjeros.push(NEW_ENTRY);
@@ -362,10 +385,38 @@ opcionSeleccionMexicana = [
         if (REPRESENTACION_FEDERAL) {
           REPRESENTACION_FEDERAL_CONTROL?.setValue(REPRESENTACION_FEDERAL.id);
         } 
+       
         this.abrirModal();
+        
       }
     });
   }
+  
+  /** Método para manejar el cambio de filas seleccionadas en la tabla */
+  onSelectedRowsChange(selectedRows: (SociosYAccionistasData | SociosYAccionistasExtranjerosData)[]): void {
+    this.selectedRows = new Set(selectedRows.map((row) => row.id));
+    this.esFormularioVisible = false;
+    
+  }
+
+  /** Método para eliminar filas seleccionadas de la tabla de datos generales */
+  onDelete(): void{
+    if (this.selectedRows && this.selectedRows.size === 1) {
+      this.datosGenerales = this.datosGenerales.filter((fila) => !this.selectedRows.has(fila.id));
+      this.selectedRows.clear();
+      this.esFormularioVisible = false;
+    }
+  }
+
+  /** Método para eliminar filas seleccionadas de la tabla de datos extranjeros */
+  onEliminar(): void{
+    if (this.selectedRows.size > 0) {
+      this.datosTablaExtranjeros = this.datosTablaExtranjeros.filter((fila) => !this.selectedRows.has(fila.id));
+      this.selectedRows.clear();
+      this.esFormularioVisible = false;
+    }
+  }
+
 
   /** Método para establecer valores en el store de la solicitud */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud120603Store): void {
