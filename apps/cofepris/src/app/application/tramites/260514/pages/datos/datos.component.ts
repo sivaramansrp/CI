@@ -4,14 +4,26 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { DatosDomicilioLegalState } from '../../../../shared/estados/stores/datos-domicilio-legal.store';
 import { SolicitudService } from '../../../../shared/services/solicitud.service';
 import { SolicitudState } from '../../../../shared/estados/stores/aviso-calidad.store';
+
+/**
+ * @component DatosComponent
+ * @description
+ * Componente principal para gestionar la selección de subtítulos en la página de datos del trámite 260514.
+ * Permite cambiar entre diferentes secciones o pestañas utilizando un índice que representa el subtítulo seleccionado.
+ * Además, maneja la obtención y actualización de datos del formulario y la limpieza de recursos al destruirse.
+ * 
+ * @selector app-datos
+ * @templateUrl ./datos.component.html
+ */
 @Component({
   selector: 'app-datos',
   templateUrl: './datos.component.html',
-
 })
 export class DatosComponent implements OnInit, OnDestroy {
 
   /**
+   * @property indice
+   * @description
    * Índice del subtítulo seleccionado.
    * Se utiliza para determinar qué sección de datos se muestra.
    * Inicialmente, el valor es 1.
@@ -86,12 +98,13 @@ export class DatosComponent implements OnInit, OnDestroy {
       this.esDatosRespuesta = true;
     }
   }
+
   /**
-* @method guardarDatosFormulario
-* @description
-* Método encargado de obtener los datos del formulario desde el servicio y actualizar el estado correspondiente.
-* Si se reciben datos, se actualiza el estado del formulario y se marca que hay datos de respuesta.
-*/
+   * @method guardarDatosFormulario
+   * @description
+   * Método encargado de obtener los datos del formulario desde el servicio y actualizar el estado correspondiente.
+   * Si se reciben datos, se actualiza el estado del formulario y se marca que hay datos de respuesta.
+   */
   guardarDatosFormulario(): void {
     this.solicitudService
       .getRegistroTomaMuestrasMercanciasData().pipe(
@@ -106,8 +119,9 @@ export class DatosComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * @method seleccionaTab
+   * @description
    * Método para cambiar el índice del subtítulo seleccionado.
-   *
    * @param i - Índice del nuevo subtítulo seleccionado.
    */
   seleccionaTab(i: number): void {
