@@ -17,7 +17,9 @@
       <solicitante [tabindex]="1"></solicitante>
       }
       @case (2) {
+        @if(esDatosRespuesta){
       <app-cancelar-solicitud [tabindex]="2"></app-cancelar-solicitud>
+        }
       }
       }
     </ng-container>

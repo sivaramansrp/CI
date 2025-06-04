@@ -12,15 +12,38 @@ import { Catalogo } from '@ng-mf/data-access-user';
 })
 export class AgregarDestinatoriaComponent implements OnInit {
 
+  /**
+   * @property pais
+   * @type {Catalogo[]}
+   * @description Arreglo que almacena los datos de los países.
+   */
   public pais!: Catalogo[];
   // eslint-disable-next-line @typescript-eslint/no-inferrable-types
+  /**
+   * @property fisica
+   * @type {boolean}
+   * @description Indica si la persona es física.
+   */
   public fisica: boolean = true;
   // eslint-disable-next-line @typescript-eslint/no-inferrable-types
+  /**
+   * @property moral
+   * @type {boolean}
+   * @description Indica si la persona es moral.
+   */
   public moral: boolean = false;
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function, no-empty-function
+  /**
+   * @constructor
+   * @description Constructor de la clase AgregarDestinatoriaComponent.
+   */
   constructor() { }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Llama al método `getPais()` para obtener la información de países necesaria para el componente.
+   */
   ngOnInit(): void {
     this.getPais();
   }
@@ -29,6 +52,9 @@ export class AgregarDestinatoriaComponent implements OnInit {
    * @description getPais se utiliza para obtener los datos de los paises
    */
 
+  /**
+   * @descripcion getPais se utiliza para obtener los datos de los países.
+   */
   public getPais(): void {
     this.pais = [
       {
@@ -39,10 +65,13 @@ export class AgregarDestinatoriaComponent implements OnInit {
         id: 2,
         descripcion: 'Opción 1',
       }
-    ]
+    ];
   }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function, no-empty-function, @typescript-eslint/no-unused-vars, class-methods-use-this
+  /**
+   * @descripcion Método que se ejecuta cuando se selecciona un documento.
+   */
   docSeleccionado(): void { }
 
   /**

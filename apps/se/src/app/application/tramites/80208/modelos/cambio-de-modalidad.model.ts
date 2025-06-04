@@ -94,3 +94,18 @@ export interface ConfiguracionColumna<T> {
     clave: (ele: T) => string | number | undefined | boolean; // Función que devuelve el valor de la columna para cada fila
     orden: number; // Orden de la columna en la tabla
 }
+
+/**
+ * @interface ServiciosState
+ * @description
+ * Representa el estado relacionado con los servicios en el cambio de modalidad.
+ *
+ * @property {CambioDeModalidadForm} combioDeModalidaDatos - Datos del formulario de cambio de modalidad.
+ * @property {CambioModalidadResponse} cambioModalidad - Respuesta de la API con las modalidades de cambio.
+ * @property {string} serviciosImmx - Información adicional de servicios IMMEX.
+ */
+export interface ServiciosState {
+    combioDeModalidaDatos: CambioDeModalidadForm;
+    cambioModalidad: CambioModalidadResponse;
+    serviciosImmx: string;
+}
