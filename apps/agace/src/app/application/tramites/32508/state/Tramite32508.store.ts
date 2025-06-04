@@ -17,10 +17,14 @@ export interface Catalogo {
 export interface Solicitud32508State {
   /** Clave del fiscalizado. */
   claveFiscalizado: string;
+  /** adace */
+  adace: string;
   /** Tipo de dictamen. */
   tipoDictamen: string;
   /** RFC del fiscalizado. */
   rfc: string;
+  /** nombre */
+  nombre: string;
   /** Número de inscripción. */
   numeroInscripcion: string;
   /** Catálogo de años. */
@@ -62,8 +66,10 @@ export interface Solicitud32508State {
 export function createInitialState(): Solicitud32508State {
   return {
     claveFiscalizado: '',
+    adace: '',
     tipoDictamen: '',
     rfc: '',
+    nombre: '',
     numeroInscripcion: '',
     ano: null,
     mes: null,
@@ -109,6 +115,14 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
   }
 
   /**
+   * Actualiza el adace.
+   * @param adace Nuevo adace.
+   */
+  public setAdace(adace: string) {
+    this.update((state) => ({ ...state, adace }));
+  }
+
+  /**
    * Actualiza el tipo de dictamen.
    * @param tipoDictamen Nuevo tipo de dictamen.
    */
@@ -122,6 +136,14 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
    */
   public setRfc(rfc: string) {
     this.update((state) => ({ ...state, rfc }));
+  }
+
+  /**
+   * Actualiza el nombre del fiscalizado.
+   * @param nombre Nuevo nombre.
+   */
+  public setNombre(nombre: string) {
+    this.update((state) => ({ ...state, nombre }));
   }
 
   /**
