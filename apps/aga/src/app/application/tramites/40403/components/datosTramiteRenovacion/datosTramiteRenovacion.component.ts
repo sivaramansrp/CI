@@ -1,8 +1,10 @@
 import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import {ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
+
 import { AtencionRenovacion40403State, Tramite40403Store } from '../../estados/tramite40403.store';
 import { CAAT } from '../../models/atencion-de-renovacion.model';
 import { Tramite40403Query } from '../../estados/tramite40403.query';
@@ -152,6 +154,7 @@ export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
         { value: this.atencionRenovacionState?.codIataIcao, disabled: true }
       ]
     });
+       this.inicializarEstadoFormulario();
   }
 
   /**
