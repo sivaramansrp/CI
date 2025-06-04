@@ -70,7 +70,20 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
    */
   public datosDePermiso: boolean = false;
 
-  constructor(private fb: FormBuilder, private servicioDeMensajesService: ServicioDeMensajesService, private consultaQuery: ConsultaioQuery,private desistimientoQuery: DesistimientoQuery) { }
+  /**
+   * Constructor del componente.
+   * 
+   * @param fb Servicio para la creación de formularios reactivos.
+   * @param servicioDeMensajesService Servicio para la gestión de mensajes y datos compartidos.
+   * @param consultaQuery Consulta para obtener el estado de la sección de consulta.
+   * @param desistimientoQuery Consulta para obtener el motivo de cancelación.
+   */
+  constructor(
+    private fb: FormBuilder,
+    private servicioDeMensajesService: ServicioDeMensajesService,
+    private consultaQuery: ConsultaioQuery,
+    private desistimientoQuery: DesistimientoQuery
+  ) { }
    /**
    * Método que se ejecuta al iniciar el componente.
    * Inicializa los formularios de solicitud y cancelación, 

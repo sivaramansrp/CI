@@ -18,15 +18,17 @@ export class DesistimientoQuery extends Query<PermisosDatos> {
         super(store);
     }
 
+    
     /**
-     * Selector para obtener todo el estado del trámite.
+     * Selector para obtener el trámite completo del estado.
      */
     selectTramite$ = this.select((state) => {
         return state;
     });
 
+  
     /**
-     * Selector para obtener el motivo de cancelación.
+     * Selector para obtener el motivo de cancelación del estado.
      */
     selectMotivoCancelacion$ = this.select((state) => {
         return state.motivoCancelacion;

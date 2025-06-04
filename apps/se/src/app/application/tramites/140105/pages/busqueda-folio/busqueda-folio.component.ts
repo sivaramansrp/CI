@@ -14,6 +14,20 @@ import { Validators } from '@angular/forms';
   templateUrl: './busqueda-folio.component.html',
   styleUrl: './busqueda-folio.component.scss',
 })
+/**
+ * @component BusquedaFolioComponent
+ * @description
+ * Componente encargado de gestionar la búsqueda de trámites por folio y la visualización de los detalles del permiso correspondiente.
+ * Permite realizar búsquedas, mostrar detalles en modo solo lectura, agregar datos y cancelar acciones relacionadas con la consulta de trámites.
+ * Utiliza formularios reactivos para la validación y presentación de datos, y se comunica con servicios para el manejo de mensajes y estados.
+ *
+ * @example
+ * <app-busqueda-folio></app-busqueda-folio>
+ *
+ * @see ServicioDeMensajesService
+ * @see FormBuilder
+ * @see ConsultaioQuery
+ */
 export class BusquedaFolioComponent implements OnDestroy {
   public busquedaForm!: FormGroup;
   public detalleDelPermisoForm!: FormGroup;
@@ -45,11 +59,13 @@ export class BusquedaFolioComponent implements OnDestroy {
       .subscribe();
   }
 
-        /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.
-   */
-     inicializarEstadoFormulario(): void {
-      if(!this.busquedaForm){
+    
+    /**
+     * Inicializa el estado del formulario de detalles del permiso.
+     * Si el formulario de detalles no está inicializado, lo establece.
+     */
+    inicializarEstadoFormulario(): void {
+      if (!this.detalleDelPermisoForm) {
         this.estableDetalleDelPermisoForm();
       }
     }
