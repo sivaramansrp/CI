@@ -49,6 +49,7 @@
                     [catalogo]="bancoCatalogo"
                     formControlName="banco"
                     [label]="'Banco'"
+                    [isDisabled]="esFormularioSoloLectura"
                     [required]="true"
                     (change)="setValoresStore(formSolicitud,'banco', 'setBanco')">
                   </app-catalogo-select>
@@ -116,7 +117,7 @@
             </div>
           </div>
         <div class="d-flex justify-content-end mt-5">
-            <button type="button" class="btn btn-danger">Borrar datos del pago</button>
+            <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura">Borrar datos del pago</button>
         </div>
     </form>
 </div>

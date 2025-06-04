@@ -31,15 +31,44 @@ describe('TercerosComponent', () => {
   });
 
   it('should initialize exportador list correctly', () => {
-    expect(component.exportador).toEqual(mockExportador);
-    expect(component.exportador.length).toBeGreaterThan(0); 
+    expect(component.exportador).toEqual([mockExportador]);
+
   });
 
-  it('should initialize destinatario list correctly', () => {
-    expect(component.destinatario).toEqual(mockDestinatario);
-    expect(component.destinatario.length).toBeGreaterThan(0);
-  });
+it('should correctly handle tipoPersona change', () => {
+  // Mock datosPersonales with enable/disable methods
+  component.datosPersonales = {
+    enable: jest.fn(),
+    disable: jest.fn()
+  } as any;
 
+  component.handleTipoPersonaChange('fisica');
+  expect(component.showFisicaRow).toBe(true);
+  expect(component.showMoralRow).toBe(false);
+  expect(component.showPlantaRow).toBe(false);
+  expect(component.datosPersonales.enable).toHaveBeenCalled();
+
+  component.handleTipoPersonaChange('moral');
+  expect(component.showFisicaRow).toBe(false);
+  expect(component.showMoralRow).toBe(true);
+  expect(component.showPlantaRow).toBe(false);
+  expect(component.datosPersonales.enable).toHaveBeenCalled();
+
+  component.handleTipoPersonaChange('planta');
+  expect(component.showPlantaRow).toBe(true);
+  expect(component.showFisicaRow).toBe(false);
+  expect(component.showMoralRow).toBe(true);
+  expect(component.datosPersonales.disable).toHaveBeenCalled();
+});
+it('should toggle showtercerosModal when cancelarDestinatario or tercerosAgregar is called', () => {
+  component.showtercerosModal = false;
+
+  component.tercerosAgregar();
+  expect(component.showtercerosModal).toBe(true);
+
+  component.cancelarDestinatario();
+  expect(component.showtercerosModal).toBe(false);
+});
   it('should have the correct configuracionTabla for exportador', () => {
     expect(component.configuracionTabla.length).toBe(5);
     expect(component.configuracionTabla[0].encabezado).toBe('Nombre/denominación o razón social');

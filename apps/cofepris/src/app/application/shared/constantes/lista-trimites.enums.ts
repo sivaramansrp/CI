@@ -27,6 +27,15 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
         }]
     },
     {
+        tramite: 260701,
+        listaComponentes: [{
+            id: 'solicitud',
+            componentPath: () => import('../../tramites/260701/pages/paso-uno/paso-uno.component').then(m => m.PasoUnoComponent),
+            componentName: 'DatosComponent',
+
+        }]
+    },
+    {
         tramite: 260212,
         listaComponentes: [{
             id: 'solicitud',
@@ -35,7 +44,7 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
 
         }]
     },
-     {
+    {
         tramite: 260215,
         listaComponentes: [{
             id: 'solicitud',
