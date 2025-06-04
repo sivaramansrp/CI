@@ -43,6 +43,6 @@
   "cadenaDependencia":"valor ficticio",
   "Llave":"valor ficticio",
   "banco":"1",
-  "importe":"1000"
-
+  "importe":"1000",
+  "tipoFetch":"1-2-2025"
 }
