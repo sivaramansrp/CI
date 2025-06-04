@@ -1,3 +1,4 @@
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import {
   Catalogo,
   CatalogosSelect,
@@ -5,8 +6,6 @@ import {
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import {
   SolicitudPagoBancoState,
   TramitePagoBancoStore,
@@ -157,7 +156,6 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
   */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
-    console.log('inside guardarDatosFormulario esFormularioSoloLectura:', this.esFormularioSoloLectura);
     if (this.esFormularioSoloLectura) {
       this.formSolicitud.disable();
       this.datosImportadorExportador.disable();
