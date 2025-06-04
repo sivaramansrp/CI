@@ -871,6 +871,15 @@
     "diasTranscurridos": "4",
     "departamento": "SE",
     "numeroDeProcedimiento": "130118"
+    },
+    {
+        "id": 220502,
+        "tipoDeTramite": "Solicitud",
+        "fecha": "2024-08-05",
+        "fechaActualizacion": "2022-08-25",
+        "diasTranscurridos": "3",
+        "departamento": "AGRICULTURA",
+        "numeroDeProcedimiento": "220502"
   },
  { "id": 130102,
         "tipoDeTramite": "Solicitud de Permiso",
