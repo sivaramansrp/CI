@@ -1,7 +1,7 @@
 import { AVISO, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
 import { Component, ViewChild } from '@angular/core';
 import { ALERTA } from '@libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component'
 
 /**
  * Interfaz que define la estructura de una acción de botón.
@@ -32,50 +32,49 @@ export class SolicitudPageComponent {
   pasos: ListaPasosWizard[] = PASOS;
 
   /**
-   * Índice del paso actual.
+   * Índice del paso actual en el asistente.
    */
   indice: number = 1;
 
   /**
-   * Referencia al componente del asistente.
+   * Referencia al componente del asistente (wizard).
+   * Permite controlar la navegación entre los pasos.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
-   * Referencia al componente de solicitud.
-
+   * Referencia al componente del primer paso.
+   * Permite acceder a los métodos y propiedades del paso uno.
    */
   @ViewChild('pasoUno') pasoUnoComponent!: PasoUnoComponent;
 
   /**
-   * 
-   * Una cadena que representa la clase CSS para una alerta de información.
-   * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
+   * Clase CSS para mostrar una alerta de información.
    */
   public infoAlert = 'alert-info';
 
   /**
-   * Una cadena que representa la clase CSS para una alerta de error.
+   * Clase CSS para mostrar una alerta de error.
    */
   infoError = 'alert-danger';
 
   /**
-   * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
+   * Texto del aviso de privacidad simplificado.
    */
   TEXTOS = AVISO.Aviso;
 
   /**
-   * Asigna el mensaje de error a mostrar al atributo `ALERTA`.
+   * Mensaje de alerta a mostrar en caso de error.
    */
   ALERTA = ALERTA;
 
   /**
-   * Mensaje de error a mostrar.
+   * Indica si el formulario es válido.
    */
   esValido = true;
 
   /**
-   * Datos de los pasos del asistente.
+   * Datos de los pasos del asistente, incluyendo textos de botones y el índice actual.
    */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
@@ -93,7 +92,8 @@ export class SolicitudPageComponent {
   }
 
   /**
-   * Obtiene el valor del índice de la acción del botón.
+   * Obtiene el valor del índice de la acción del botón y controla la navegación del asistente.
+   * Valida el formulario del primer paso antes de avanzar.
    * @param e Acción del botón.
    */
   getValorIndice(e: AccionBoton): void {
@@ -107,7 +107,7 @@ export class SolicitudPageComponent {
         this.datosPasos.indice = 1;
         return;
       }
-    
+
       this.indice = e.valor;
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
