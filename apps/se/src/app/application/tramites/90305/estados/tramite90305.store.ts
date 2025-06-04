@@ -1,10 +1,9 @@
-import { Injectable } from '@angular/core';
-
 import { Store, StoreConfig } from '@datorama/akita';
 import { CatalogoResponse } from '@libs/shared/data-access-user/src';
+import { Injectable } from '@angular/core';
 
 export interface Tramite90305State {
-  selectedEstado: CatalogoResponse | null;
+  selectedEstado: string | null;
 }
 
 export function createInitialState(): Tramite90305State {
@@ -21,7 +20,7 @@ export class Tramite90305Store extends Store<Tramite90305State> {
     super(createInitialState());
   }
 
-  public setSelectedEstado(selectedEstado: CatalogoResponse) : void {
+  public setSelectedEstado(selectedEstado: string) : void {
     this.update((state) => ({
       ...state,
       selectedEstado,

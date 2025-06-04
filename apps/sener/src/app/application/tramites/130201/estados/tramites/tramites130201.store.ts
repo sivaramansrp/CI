@@ -55,6 +55,13 @@ export interface Tramite130201State {
   acotacion: string;
   /** Descripción del NICO */
   descripcionNico: string;
+   /**
+   * @description Indica si el usuario ha aceptado el manifiesto de aceptación.
+   * Valor booleano que representa el estado del checkbox del manifiesto.
+   * Se utiliza para almacenar y gestionar la aceptación en el store.
+   * @type {boolean}
+   */
+  manifesto: boolean;
 }
 
 /**
@@ -87,6 +94,8 @@ export function createInitialState(): Tramite130201State {
     representacion: '1',
     acotacion: '',
     descripcionNico: '',
+    manifesto: false
+
   };
 }
 

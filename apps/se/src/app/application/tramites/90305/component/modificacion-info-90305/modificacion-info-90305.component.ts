@@ -11,7 +11,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 
-import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service';
 
 
 
@@ -51,7 +51,7 @@ export class ModificacionInfo90305Component implements OnInit, OnDestroy {
   }
 
   /** Método del ciclo de vida de Angular - inicializa el formulario y carga la información */
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadInfo();
     this.modificationInfoForm = this.fb.group({
       registroFederalContribuyentes: [{ value: '', disabled: true }],
