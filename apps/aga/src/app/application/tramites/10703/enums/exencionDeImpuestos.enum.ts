@@ -1,5 +1,5 @@
+import { MercanciaInstalada, RatioOption } from '../models/exencion-impuestos.model';
 import { Catalogo } from '@ng-mf/data-access-user'
-import { RatioOption } from '../models/exencion-impuestos.model';
 /**
  * Definición de las opciones disponibles para indicar si hay mercancía o no.
  * Se representan como un array de objetos `RatioOption` con etiquetas y valores asociados.
@@ -40,5 +40,69 @@ export const DOCUMENTOS_SELECCIONADOS: Catalogo[] = [
        */
       id: 2,
       descripcion: 'Documentos del medio de transporte (Guías, BL o carta porte según corresponda)',
+  },
+];
+
+export const MERCANCIA_INSTALADA:MercanciaInstalada[] = [
+  {
+    TipoDeMercancía: "S",
+    Cantidad: "1",
+    UnidadDeMedidaDeComercialización: "Matro Cubico",
+    Año: "",
+    Modelo: "",
+    Marco: "",
+    NúmeroDeSerie: "",
+    UsoEspecíficoDeLaMercancía: "S",
+    CondiciónDeLaMercancía: "Usado",
+    Vehículo: "No"
+  }
+]
+
+
+export const AGENTES_TABLA_DATOS = [
+  {
+    encabezado: 'Tipo de mercancía',
+    clave: (item: MercanciaInstalada): string => item.TipoDeMercancía,
+    orden: 1,
+  },
+  {
+    encabezado: 'Unidad de medida de Comercialización',
+    clave: (item: MercanciaInstalada): string => item.UnidadDeMedidaDeComercialización,
+    orden: 2,
+  },
+  {
+    encabezado: 'Año',
+    clave: (item: MercanciaInstalada): string => item.Año,
+    orden: 3,
+  },
+  {
+    encabezado: 'Modelo',
+    clave: (item: MercanciaInstalada): string => item.Modelo,
+    orden: 4,
+  },
+  {
+    encabezado: 'Marco',
+    clave: (item: MercanciaInstalada): string => item.Marco,
+    orden: 5,
+  },
+  {
+    encabezado: 'Número de serie',
+    clave: (item: MercanciaInstalada): string => item.NúmeroDeSerie,
+    orden: 6,
+  },
+  {
+    encabezado: 'Uso específico de la mercancía',
+    clave: (item: MercanciaInstalada): string => item.UsoEspecíficoDeLaMercancía,
+    orden: 7,
+  },
+  {
+    encabezado: 'Condición de la mercancía',
+    clave: (item: MercanciaInstalada): string => item.CondiciónDeLaMercancía,
+    orden: 8,
+  },
+  {
+    encabezado: 'Vehículo',
+    clave: (item: MercanciaInstalada): string => item.Vehículo,
+    orden: 9,
   },
 ];

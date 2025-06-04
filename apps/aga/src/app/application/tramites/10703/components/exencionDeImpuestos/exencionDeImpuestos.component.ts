@@ -1,13 +1,24 @@
 import {
+  AGENTES_TABLA_DATOS,
+  MECANCIA_OPTIONS,
+  MERCANCIA_INSTALADA,
+} from '../../enums/exencionDeImpuestos.enum';
+import {
   Catalogo,
   CatalogoSelectComponent,
   InputCheckComponent,
   InputRadioComponent,
-  TableBodyData,
-  TableComponent,
+  TablaDinamicaComponent,
+  TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -15,15 +26,17 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  MercanciaInstalada,
+  RatioOption,
+} from '../../models/exencion-impuestos.model';
+import {
   Solicitud10703State,
   Tramite10703Store,
 } from '../../estados/tramite10703.store';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ExencionDeImpuestosService } from '../../services/exencion-de-impuestos.service';
-import { MECANCIA_OPTIONS } from '../../enums/exencionDeImpuestos.enum';
 import { Modal } from 'bootstrap';
-import { RatioOption } from '../../models/exencion-impuestos.model';
 import { Tramite10703Query } from '../../estados/tramite10703.query';
 @Component({
   selector: 'app-exencion-de-impuestos',
@@ -34,8 +47,8 @@ import { Tramite10703Query } from '../../estados/tramite10703.query';
     TituloComponent,
     CatalogoSelectComponent,
     InputCheckComponent,
-    TableComponent,
     InputRadioComponent,
+    TablaDinamicaComponent,
   ],
   templateUrl: './exencionDeImpuestos.component.html',
 })
@@ -83,11 +96,6 @@ export class ExencionDeImpuestosComponent implements OnInit, OnDestroy {
   public mercanciaHeaderData: string[] = [];
 
   /**
-   * Cuerpo de la tabla de mercancías.
-   */
-  public mercanciaBodyData: TableBodyData[] = [];
-
-  /**
    * Opciones para los botones de radio.
    */
   radioOptions!: RatioOption[];
@@ -110,9 +118,37 @@ export class ExencionDeImpuestosComponent implements OnInit, OnDestroy {
   usoEspecifico!: Catalogo[];
 
   /**
+   * Datos de la tabla de capacidad instalada
+   * @property {any[]} mercanciaDatos
+   */
+  mercanciaDatos: MercanciaInstalada[] = [] as MercanciaInstalada[];
+
+  /**
+   * Configuración para las columnas de la tabla de vehículos.
+   */
+  ParqueAgentes = AGENTES_TABLA_DATOS;
+
+  /**
+   * Tipo de selección para la tabla de capacidad instalada
+   * @property {TablaSeleccion} constructorapacidadInstaladaTablaSeleccion
+   */
+  constructorapacidadInstaladaTablaSeleccion = TablaSeleccion.CHECKBOX;
+
+  /**
+   * Encabezados de la tabla de mercancia instalada
+   * @property {any} mercanciaInstaladaEncabezado
+   */
+  mercanciaInstaladaEncabezado = MERCANCIA_INSTALADA;
+
+  /**
    * Referencia al elemento del modal para agregar mercancías.
    */
   @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
+
+  /**
+   * Tipo de selección de tabla (CHECKBOX).
+   */
+  tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
   constructor(
     private fb: FormBuilder,
@@ -339,16 +375,8 @@ export class ExencionDeImpuestosComponent implements OnInit, OnDestroy {
     this.exencionDeImpuestosService
       .getMercanciaTbl()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((resp) => {
-        /**
-         * Se almacena la información de los encabezados de la tabla.
-         */
-        this.mercanciaHeaderData = resp.tableHeader;
-
-        /**
-         * Se almacena la información del cuerpo de la tabla.
-         */
-        this.mercanciaBodyData = resp.tableBody;
+      .subscribe((resp: MercanciaInstalada[]) => {
+        this.mercanciaDatos = resp;
       });
   }
 
@@ -494,11 +522,11 @@ export class ExencionDeImpuestosComponent implements OnInit, OnDestroy {
     this.store.setAduana(Number(ADUANA));
   }
 
-   /**
+  /**
    * Se ejecuta al destruir el componente.
    * Emite un valor y completa el subject `destroy$` para cancelar las suscripciones.
    */
-   ngOnDestroy(): void {
+  ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }

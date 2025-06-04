@@ -43,3 +43,16 @@ export interface RatioOption {
    */
   value: string | number;
 }
+
+export interface MercanciaInstalada {
+  "TipoDeMercancía": string;
+  "Cantidad": string;
+  "UnidadDeMedidaDeComercialización": string;
+  "Año": string;
+  "Modelo": string;
+  "Marco": string;
+  "NúmeroDeSerie": string;
+  "UsoEspecíficoDeLaMercancía": string;
+  "CondiciónDeLaMercancía": string;
+  "Vehículo": string;
+}
