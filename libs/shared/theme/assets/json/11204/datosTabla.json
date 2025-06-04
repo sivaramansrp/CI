@@ -10,7 +10,9 @@
             "tipoEquipo": "AC",
             "aduana": 430,
             "fechaIngreso": "2024-03-13",
-            "vigencia": "2025-03-13"
+            "vigencia": "2025-03-13",
+            "estadoConstancia": "Válido",
+            "existeEnVUCEM": "Sí"
         }
     }
 ]
