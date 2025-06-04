@@ -370,7 +370,7 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
   * @description Inicializa el estado del formulario según el modo de solo lectura.
   * 
   * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
-  * En caso contrario, habilita los controles del formulario.
+  * En caso contrario, habilita los controles del formulario
   * 
   * @returns {void}
   */
