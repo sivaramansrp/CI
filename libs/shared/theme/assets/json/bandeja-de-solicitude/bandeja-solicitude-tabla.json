@@ -835,5 +835,14 @@
       "diasTranscurridos": "4",
       "departamento": "AGA",
       "numeroDeProcedimiento": "11201"
-    }
+    },
+    {
+      "id": 701,
+      "tipoDeTramite": "Cargar archivos",
+      "fecha": "2023-11-03",
+      "fechaActualizacion": "2023-11-10",
+      "diasTranscurridos": "4",
+      "departamento": "AGA",
+      "numeroDeProcedimiento": "701"
+}
 ]
