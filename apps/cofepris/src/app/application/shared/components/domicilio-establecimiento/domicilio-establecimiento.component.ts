@@ -177,7 +177,6 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$),
       map((seccionState)=>{
         this.esFormularioSoloLectura = seccionState.readonly; 
-        this.inicializarEstadoFormulario();
       })
     )
     .subscribe()
@@ -565,7 +564,9 @@ modalInstance!: Modal; /**
       objetoImportacion: ['', Validators.required],
     });
     this.seleccionadasAduanasEntradaDatos=this.solicitudState?.aduanasDeEntrada;
-    
+        
+  this.inicializarEstadoFormulario();
+  
   }
 
   /**
