@@ -25,7 +25,7 @@
             </div>
           </div>
           <div class="table-container mt-5">
-            <ng-table [commonTableHeader]="mercanciaHeaderData" [commonTableBody]="mercanciaBodyData"></ng-table>
+            <ng-table [disableSeleccionTablaCheckBox]="soloLectura" [commonTableHeader]="mercanciaHeaderData" [commonTableBody]="mercanciaBodyData"></ng-table>
           </div>
           <div class="col-md-12 mt-5 d-flex justify-content-end">
             <button type="button" class="btn btn-default" [disabled]="soloLectura">Modificar</button>
@@ -92,7 +92,7 @@
           </div>
           <div class="row mt-5">
             <label required="true">Señale si la mercancía formará parte del patrimonio de su representada*:</label>
-            <app-input-radio [radioOptions]="radioOpcions" [selectedValue]="valorSeleccionado" (valueChange)="cambiarRadio($event)" id="opcion" formControlName="opcion" (change)="setValoresStore(importadorExportador, 'opcion', 'setOpcion')" [disabled]="soloLectura"></app-input-radio>
+            <app-input-radio [radioOptions]="radioOpcions" [selectedValue]="valorSeleccionado" (valueChange)="cambiarRadio($event)" id="opcion" formControlName="opcion" (change)="setValoresStore(importadorExportador, 'opcion', 'setOpcion')"></app-input-radio>
           </div>
         </ng-container>
     </div>
