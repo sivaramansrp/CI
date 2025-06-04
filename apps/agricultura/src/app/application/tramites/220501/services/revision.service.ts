@@ -1,8 +1,8 @@
+import { catchError, Observable, throwError } from 'rxjs';
+import { Destinatario, Exportador, PagoDeDerechos } from '../models/pago-de-derechos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Movilizacion } from '../models/datos-generales.model';
-import { Observable } from 'rxjs';
-import { PagoDeDerechos } from '../models/pago-de-derechos.model';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Solicitud220501State } from '../estados/tramites220501.store';
 
@@ -132,5 +132,33 @@ export class RevisionService {
   getMovilizacion(): Observable<Movilizacion> {
     /** Obtiene los datos de la movilización desde un archivo JSON. */
     return this.http.get<Movilizacion>('assets/json/220501/movilizacion.json');
+  }
+  /**
+   * Obtiene los datos de la tabla de exportadores.
+   * 
+   * @returns {Observable<Exportador[]>} - Lista de exportadores.
+   */
+  obtenerTablaExportador(): Observable<Exportador[]> {
+    return this.http
+      .get<Exportador[]>('assets/json/220501/exportador-tabla.json')
+      .pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
+  }
+ /**
+   * Obtiene los datos de la tabla de destinatarios.
+   * 
+   * @returns {Observable<Destinatario[]>} - Lista de destinatarios.
+   */
+  obtenerTablaDestinatario(): Observable<Destinatario[]> {
+    return this.http
+      .get<Destinatario[]>('assets/json/220501/destinatario-tabla.json')
+      .pipe(
+        catchError((error) => {
+          return throwError(() => error);
+        })
+      );
   }
 }
