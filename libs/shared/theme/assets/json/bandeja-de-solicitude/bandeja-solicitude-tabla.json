@@ -934,5 +934,14 @@
         "diasTranscurridos": "5",
         "departamento": "AGA",
         "numeroDeProcedimiento": "30901"
+    },
+    {
+        "id": 220501,
+        "tipoDeTramite": "Solicitud de Permiso",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "AGRICULTURA",
+        "numeroDeProcedimiento": "220501"
     }
 ]

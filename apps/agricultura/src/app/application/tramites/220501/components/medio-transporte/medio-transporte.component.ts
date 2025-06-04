@@ -1,4 +1,4 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -121,6 +121,11 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
   opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
   /**
+   * Indica si el formulario está deshabilitado.
+   */
+  formularioDeshabilitado!: boolean;
+
+  /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios.
    * @param sagarpaService Servicio para obtener datos de SAGARPA.
@@ -130,9 +135,51 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private sagarpaService: SagarpaService,
     public solicitud220501Store: Solicitud220501Store,
-    public solicitud220501Query: Solicitud220501Query
+    public solicitud220501Query: Solicitud220501Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Constructor vacío
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.formularioDeshabilitado = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Método del ciclo de vida que se ejecuta al iniciar el componente.
+   * Llama a la función que determina cómo inicializar el formulario.
+   */
+  ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.formularioDeshabilitado) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.formularioDeshabilitado) {
+      this.medioTransporteForm.disable();
+    } else if (!this.formularioDeshabilitado) {
+      this.medioTransporteForm.enable();
+    }
   }
 
   /**
@@ -145,7 +192,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy {
    * 
    * @returns {void}
    */
-  ngOnInit(): void {
+  inicializarFormulario(): void {
     this.crearFormulario();
     this.solicitud220501Query.selectSolicitud$
       .pipe(
