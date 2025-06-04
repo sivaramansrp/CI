@@ -1,0 +1,9 @@
+{
+    "SolicitudState": {
+        "claveDelPadron": "12345",
+        "observaciones": "No hay observaciones disponibles",
+        "requiereInspeccionInmediata": "true",
+        "informacionConfidencial": "true"
+    }
+    
+}
