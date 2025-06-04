@@ -73,8 +73,7 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
-        this.inicializarEstadoFormulario();
+        this.esFormularioSoloLectura = seccionState.readonly;
       })
     )
     .subscribe()
@@ -133,6 +132,8 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
       .subscribe();  
       
     this.configurarFormularioPagoBanco();
+
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -158,7 +159,6 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
       this.formSolicitud.disable();
-      this.datosImportadorExportador.disable();
     } else {
       this.formSolicitud.enable();
     }
