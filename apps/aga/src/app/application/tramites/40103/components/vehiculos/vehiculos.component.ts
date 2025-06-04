@@ -8,7 +8,7 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { Catalogo, TablaSeleccion } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, ConsultaioState, TablaSeleccion } from '@ng-mf/data-access-user';
 import { PagoDerechosLista, Vehiculo } from '../../../40103/models/registro-muestras-mercancias.model';
 import { Chofer40103Query } from '../../estados/chofer40103.query';
 import { Chofer40103Service } from '../../estados/chofer40103.service';
@@ -16,7 +16,7 @@ import { Chofer40103Store } from '../../estados/chofer40103.store';
 import { DatosDelVehículoPaisEmisor } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 import { Modal } from 'bootstrap';
 import { Observable } from 'rxjs/internal/Observable';
-import { ReplaySubject } from 'rxjs';
+import { map, ReplaySubject } from 'rxjs';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
@@ -297,6 +297,12 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
    * Texto del botón para guardar los datos.
    */
   botonGuardar: string = VEHICULO_PAGE.BOTON_GUARDAR;
+
+  /**
+   * Mantiene el estado actual de la consulta (query) para el componente.
+   */
+  datosConsulta!: ConsultaioState;
+
   /**
    * Selecciona una pestaña.
    * @param tabName El nombre de la pestaña a seleccionar.
@@ -459,7 +465,8 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
     private toastr: ToastrService,
     private chofer40103Store: Chofer40103Store,
     private chofer40103Service: Chofer40103Service,
-    private chofer40103Query: Chofer40103Query
+    private chofer40103Query: Chofer40103Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
     //
   }
@@ -571,6 +578,18 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
     this.colorAGAData();
     this.paisEmisor2DaPlacaData();
     this.solicitudVehiculoColorData();
+
+    this.consultaioQuery.selectConsultaioState$
+      .pipe( takeUntil(this.destroy$))
+      .subscribe((state) => {
+        if (state) {
+          this.datosConsulta = state;
+          if(this.datosConsulta.readonly) {
+            this.formVehiculo.disable();
+            //this.formChoferes.disable();
+          }
+        }
+      });
   }
 
   /**

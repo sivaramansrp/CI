@@ -56,12 +56,14 @@
                     class="btn btn-primary btn-Agregar"
                     data-bs-toggle="modal"
                     data-bs-target="#exampleModal"
+                    [disabled]="datosConsulta.readonly"
                   >
                     Agregar
                   </button>
                   <button
                     name="EliminarSPFisica"
                     class="btn btn-danger me-2 btn-Agregar"
+                    [disabled]="datosConsulta.readonly"
                   >
                     Eliminar
                   </button>
@@ -69,6 +71,7 @@
                     style="float: right"
                     class="btn btn-default me-2"
                     type="button"
+                    [disabled]="datosConsulta.readonly"
                   >
                     Modificar
                   </button>
@@ -634,6 +637,7 @@
                                     name="limpiar"
                                     class="mid btn btn-default me-2"
                                     (click)="limpiarDatosVEHARR()"
+                                    [disabled]="datosConsulta.readonly"
                                   >
                                     Limpiar
                                   </button>
@@ -643,6 +647,7 @@
                                     id="cancelarVehiculo"
                                     name="cancelar"
                                     class="cancel btn btn-danger"
+                                    [disabled]="datosConsulta.readonly"
                                   >
                                     Cancelar
                                   </button>
@@ -651,6 +656,7 @@
                                     id="guardarVehiculo"
                                     name="guardar"
                                     class="btn btn-primary"
+                                    [disabled]="datosConsulta.readonly"
                                   >
                                     Guardar
                                   </button>
@@ -690,6 +696,7 @@
                   <button
                     class="btn btn-primary btn-Agregar"
                     (click)="openDialogCapturaSPFisicaValidacion()"
+                    [disabled]="datosConsulta.readonly"
                   >
                     Agregar
                   </button>
@@ -697,6 +704,7 @@
                   <button
                     name="EliminarSPMoral"
                     class="btn btn-danger me-2 btn-Agregar"
+                    [disabled]="datosConsulta.readonly"
                   >
                     Eliminar
                   </button>
@@ -704,6 +712,8 @@
                     style="float: right"
                     class="btn btn-default me-2"
                     type="button"
+                    [disabled]="datosConsulta.readonly"
+                    
                   >
                     Modificar
                   </button>
@@ -976,6 +986,7 @@
                                     name="limpiar"
                                     class="mid btn btn-default"
                                     (click)="limpiarDatosVEHARR()"
+                                    [disabled]="datosConsulta.readonly"
                                   >
                                     Limpiar
                                   </button>
@@ -993,6 +1004,7 @@
                                     id="guardarVehiculo"
                                     name="guardar"
                                     class="btn btn-primary"
+                                    [disabled]="datosConsulta.readonly"
                                   >
                                     Guardar
                                   </button>
