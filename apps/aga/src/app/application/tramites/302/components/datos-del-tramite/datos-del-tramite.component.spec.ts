@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosDelTramiteComponent } from './datos-del-tramite.component';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { FormGroup, FormControl, Validators, ReactiveFormsModule } from '@angular/forms';
 import { of } from 'rxjs';
 import { Solicitud302Service } from '../../services/service302.service'; // <-- Add this import
+import { DATOS_DEL_DONANTE, DOMICILIO_FISCAL, MERCANCIAS } from '../../constantes/datos-del-tramite.enum';
 
 describe('DatosDelTramiteComponent', () => {
   let component: DatosDelTramiteComponent;
@@ -11,7 +11,7 @@ describe('DatosDelTramiteComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DatosDelTramiteComponent],
+      imports: [DatosDelTramiteComponent,ReactiveFormsModule],
       providers: [
         { provide: Solicitud302Service, useValue: { getProductos: jest.fn().mockReturnValue(of([])) } }
       ]
@@ -125,7 +125,10 @@ describe('DatosDelTramiteComponent', () => {
     expect(form.get('unidadDeMedida')?.disabled).toBe(false);
   });
 
-  it('should disable form if esFormularioSoloLectura is true', () => {
+  it('should disable the form group if esFormularioSoloLectura is true', () => {
+    // Arrange
+    component.esFormularioSoloLectura = true;
+    component.certiRegistroState = { campo1: 'valor1' };
     const form = new FormGroup({
       campo1: new FormControl('valor1'),
       campo2: new FormControl('valor2')
@@ -134,11 +137,10 @@ describe('DatosDelTramiteComponent', () => {
       { campo: 'campo1', validators: [], disabled: false } as any,
       { campo: 'campo2', validators: [], disabled: false } as any,
     ];
-    component.certiRegistroState = { campo1: 'valor1', campo2: 'valor2' };
-    component.esFormularioSoloLectura = true;
-
+    // Act
     component.inicializarFormGroup(form, formularioDatos);
 
+    // Assert
     expect(form.disabled).toBe(true);
   });
 
@@ -183,9 +185,26 @@ describe('DatosDelTramiteComponent', () => {
   it('should add product to detallesDelProducto, reset form, close modal, and show confirmation when agregarProductos is called and form is valid', () => {
     // Arrange
     component.formAgregarProductos = new (component.fb.group as any)({
-      nombre: ['Producto 1']
+      tipoDeMercancia: 'Test Product',
+      condicionDeLaMercancia: 'Product Condition',
+      cantidad: 5,
+      unidadDeMedida: "1",
+      enSucaso: '',
+      marca: 'test',
+      anoDeImportacionTemporal: 2,
+      modelo: 'KL001',
+      numeroDeSerie: 1
     });
-    component.formAgregarProductos.setValue({ nombre: 'Producto 1' });
+    component.formAgregarProductos.setValue({tipoDeMercancia: 'Test Product',
+      condicionDeLaMercancia: 'Product Condition',
+      cantidad: 5,
+      unidadDeMedida: "1",
+      enSucaso: '',
+      marca: 'test',
+      anoDeImportacionTemporal: 2,
+      modelo: 'KL001',
+      numeroDeSerie: 1
+    });
     jest.spyOn(component.formAgregarProductos, 'valid', 'get').mockReturnValue(true);
     const cerrarModalSpy = jest.spyOn(component, 'cerrarModal');
     component.detallesDelProducto = [];
@@ -196,7 +215,16 @@ describe('DatosDelTramiteComponent', () => {
 
     // Assert
     expect(component.detallesDelProducto.length).toBe(1);
-    expect(component.detallesDelProducto[0]).toEqual({ nombre: 'Producto 1' });
+    expect(component.detallesDelProducto[0]).toEqual({
+      tipoDeMercancia: 'Test Product',
+      condicionDeLaMercancia: 'Product Condition',
+      cantidad: 5,
+      unidadDeMedida: "1",
+      enSucaso: '',
+      marca: 'test',
+      anoDeImportacionTemporal: 2,
+      modelo: 'KL001',
+      numeroDeSerie: 1});
     expect(component.tramite302Store.setDynamicFieldValue).toHaveBeenCalledWith('detallesDelProducto', component.detallesDelProducto);
     expect(component.formAgregarProductos.pristine).toBe(true); // form reset
     expect(cerrarModalSpy).toHaveBeenCalled();
@@ -205,7 +233,15 @@ describe('DatosDelTramiteComponent', () => {
 
   it('should not add product if formAgregarProductos is invalid', () => {
     component.formAgregarProductos = new (component.fb.group as any)({
-      nombre: ['']
+      tipoDeMercancia: 'Test Product',
+      condicionDeLaMercancia: 'Product Condition',
+      cantidad: 5,
+      unidadDeMedida: "1",
+      enSucaso: '',
+      marca: '',
+      anoDeImportacionTemporal: 2,
+      modelo: 'KL001',
+      numeroDeSerie: 1
     });
     jest.spyOn(component.formAgregarProductos, 'valid', 'get').mockReturnValue(false);
     component.detallesDelProducto = [];
@@ -285,8 +321,7 @@ describe('DatosDelTramiteComponent', () => {
     expect(result.length).toBe(0);
   });
   
-  it('should modify an existing product and update store when modificarProductos is called and form is valid', () => {
-    // Arrange
+  it('should modify an existing product, update store, reset form, clear selection, close modal, and show confirmation when modificarProductos is called and form is valid', () => {
     const oldProduct = {
       tipoDeMercancia: 'Test Product',
       condicionDeLaMercancia: 'Product Condition',
@@ -298,27 +333,27 @@ describe('DatosDelTramiteComponent', () => {
       modelo: 'KL001',
       numeroDeSerie: 1
     };
-    const newProduct = { 
+    const newProduct = {
       tipoDeMercancia: 'Test Product',
       condicionDeLaMercancia: 'Product Condition',
-      cantidad: 5,
-      unidadDeMedida: "1",
+      cantidad: 10,
+      unidadDeMedida: "2",
       enSucaso: '',
-      marca: 'test',
-      anoDeImportacionTemporal: 1,
-      modelo: 'KL001',
-      numeroDeSerie: 1
-     };
+      marca: 'test2',
+      anoDeImportacionTemporal: 3,
+      modelo: 'KL002',
+      numeroDeSerie: 2
+    };
     component.formAgregarProductos = new (component.fb.group as any)({
-      tipoDeMercancia: 'Test Product',
-      condicionDeLaMercancia: 'Product Condition',
-      cantidad: 5,
-      unidadDeMedida: "1",
-      enSucaso: 'test',
-      marca: 'test',
-      anoDeImportacionTemporal: 1,
-      modelo: 'KL001',
-      numeroDeSerie: 1,
+      tipoDeMercancia: [''],
+      condicionDeLaMercancia: [''],
+      cantidad: [''],
+      unidadDeMedida: [''],
+      enSucaso: [''],
+      marca: [''],
+      anoDeImportacionTemporal: [''],
+      modelo: [''],
+      numeroDeSerie: ['']
     });
     component.formAgregarProductos.setValue(newProduct);
     jest.spyOn(component.formAgregarProductos, 'valid', 'get').mockReturnValue(true);
@@ -327,10 +362,8 @@ describe('DatosDelTramiteComponent', () => {
     component.tramite302Store = { setDynamicFieldValue: jest.fn() } as any;
     const cerrarModalSpy = jest.spyOn(component, 'cerrarModal');
 
-    // Act
     component.modificarProductos();
 
-    // Assert
     expect(component.detallesDelProducto[0]).toEqual(newProduct);
     expect(component.tramite302Store.setDynamicFieldValue).toHaveBeenCalledWith('detallesDelProducto', component.detallesDelProducto);
     expect(component.selectedProducto).toEqual([]);
@@ -339,63 +372,51 @@ describe('DatosDelTramiteComponent', () => {
     expect(component.modalConfirmacion).toBe('show');
   });
 
-  it('should not modify product if not found in detallesDelProducto', () => {
+  it('should not modify product if not found in detallesDelProducto but still reset form, clear selection, close modal, and show confirmation', () => {
     const oldProduct = {
       tipoDeMercancia: 'Test Product',
       condicionDeLaMercancia: 'Product Condition',
       cantidad: 5,
       unidadDeMedida: "1",
-      enSucaso: 'test',
+      enSucaso: '',
       marca: 'test',
-      anoDeImportacionTemporal: 1,
+      anoDeImportacionTemporal: 2,
       modelo: 'KL001',
       numeroDeSerie: 1
     };
     const newProduct = {
-      tipoDeMercancia: 'Test Product',
-      condicionDeLaMercancia: 'Product Condition',
-      cantidad: 5,
-      unidadDeMedida: "1",
-      enSucaso: 'test',
-      marca: 'test',
-      anoDeImportacionTemporal: 1,
-      modelo: 'KL001',
-      numeroDeSerie: 1
-     };
+      tipoDeMercancia: 'Another Product',
+      condicionDeLaMercancia: 'Other Condition',
+      cantidad: 10,
+      unidadDeMedida: "2",
+      enSucaso: '',
+      marca: 'test2',
+      anoDeImportacionTemporal: 3,
+      modelo: 'KL002',
+      numeroDeSerie: 2
+    };
     component.formAgregarProductos = new (component.fb.group as any)({
-      tipoDeMercancia: 'Test Product',
-      condicionDeLaMercancia: 'Product Condition',
-      cantidad: 5,
-      unidadDeMedida: "1",
-      enSucaso: 'test',
-      marca: 'test',
-      anoDeImportacionTemporal: 1,
-      modelo: 'KL001',
-      numeroDeSerie: 1
+      tipoDeMercancia: [''],
+      condicionDeLaMercancia: [''],
+      cantidad: [''],
+      unidadDeMedida: [''],
+      enSucaso: [''],
+      marca: [''],
+      anoDeImportacionTemporal: [''],
+      modelo: [''],
+      numeroDeSerie: ['']
     });
     component.formAgregarProductos.setValue(newProduct);
     jest.spyOn(component.formAgregarProductos, 'valid', 'get').mockReturnValue(true);
     component.detallesDelProducto = [oldProduct];
-    component.selectedProducto = 
-    [{
-      tipoDeMercancia: 'Test Product',
-      condicionDeLaMercancia: 'Product Condition',
-      cantidad: 5,
-      unidadDeMedida: "1",
-      enSucaso: 'test',
-      marca: 'test',
-      anoDeImportacionTemporal: 1,
-      modelo: 'KL001',
-      numeroDeSerie: 1 
-    }];
+    component.selectedProducto = [newProduct];
     component.tramite302Store = { setDynamicFieldValue: jest.fn() } as any;
     const cerrarModalSpy = jest.spyOn(component, 'cerrarModal');
 
     component.modificarProductos();
 
-    // Should not update detallesDelProducto
     expect(component.detallesDelProducto[0]).toEqual(oldProduct);
-    // Should still reset form, clear selection, close modal, and show confirmation
+    expect(component.tramite302Store.setDynamicFieldValue).not.toHaveBeenCalledWith('detallesDelProducto', [newProduct]);
     expect(component.selectedProducto).toEqual([]);
     expect(component.formAgregarProductos.pristine).toBe(true);
     expect(cerrarModalSpy).toHaveBeenCalled();
@@ -404,53 +425,98 @@ describe('DatosDelTramiteComponent', () => {
 
   it('should do nothing if formAgregarProductos is invalid', () => {
     component.formAgregarProductos = new (component.fb.group as any)({
-      tipoDeMercancia: 'Test Product',
-      condicionDeLaMercancia: 'Product Condition',
-      cantidad: 5,
-      unidadDeMedida: "1",
-      enSucaso: 'test',
-      marca: 'test',
-      anoDeImportacionTemporal: 1,
-      modelo: 'KL001',
-      numeroDeSerie: 1 
+      tipoDeMercancia: [''],
+      condicionDeLaMercancia: [''],
+      cantidad: [''],
+      unidadDeMedida: [''],
+      enSucaso: [''],
+      marca: [''],
+      anoDeImportacionTemporal: [''],
+      modelo: [''],
+      numeroDeSerie: ['']
     });
     jest.spyOn(component.formAgregarProductos, 'valid', 'get').mockReturnValue(false);
-    component.detallesDelProducto = [{
-      tipoDeMercancia: 'Test Product',
-      condicionDeLaMercancia: 'Product Condition',
-      cantidad: 5,
-      unidadDeMedida: "1",
-      enSucaso: 'test',
-      marca: 'test',
-      anoDeImportacionTemporal: 1,
-      modelo: 'KL001',
-      numeroDeSerie: 1 
-    }];
-    component.selectedProducto = [{  
-      tipoDeMercancia: 'Test Product',
-      condicionDeLaMercancia: 'Product Condition',
-      cantidad: 5,
-      unidadDeMedida: "1",
-      enSucaso: 'test',
-      marca: 'test',
-      anoDeImportacionTemporal: 1,
-      modelo: 'KL001',
-      numeroDeSerie: 1 
-     }];
+    component.detallesDelProducto = [];
+    component.selectedProducto = [];
     component.tramite302Store = { setDynamicFieldValue: jest.fn() } as any;
     const cerrarModalSpy = jest.spyOn(component, 'cerrarModal');
 
     component.modificarProductos();
 
-    // Should not update anything
-    expect(component.detallesDelProducto[0]).toEqual({ nombre: 'Producto 1', cantidad: 1 });
+    expect(component.detallesDelProducto.length).toBe(0);
     expect(component.tramite302Store.setDynamicFieldValue).not.toHaveBeenCalled();
+    expect(component.selectedProducto).toEqual([]);
+    expect(component.formAgregarProductos.pristine).toBe(true);
     expect(cerrarModalSpy).not.toHaveBeenCalled();
     expect(component.modalConfirmacion).not.toBe('show');
   });
 
-  it('should remove selected product, update store, clear selection, and show confirmation when eliminarProducto is called', () => {
+  it('should set modal property to "show"', () => {
+    component.modal = '';
+    component.abrirModal();
+    expect(component.modal).toBe('show');
+  });
+  
+
+  it('should call click on closeModal.nativeElement', () => {
+    const clickSpy = jest.spyOn(component.closeModal.nativeElement, 'click');
+    component.cerrarModal();
+    expect(clickSpy).toHaveBeenCalled();
+    clickSpy.mockRestore();
+  });
+  
+  it('should initialize forms and set detallesDelProducto from certiRegistroState when not readonly', () => {
+    const detalles = [{ tipoDeMercancia: 'Mercancia 1' }];
+    component.readonly = false;
+    component.certiRegistroState = { detallesDelProducto: detalles };
+    component.tramite302Query = {
+      selectRegistro$: of({ detallesDelProducto: detalles })
+    } as any;
+
+    component.ngOnInit();
+
+    expect(component.esFormularioSoloLectura).toBe(false);
+    expect(Array.isArray(component.detallesDelProducto)).toBe(true); // Ensure it's always an array
+    expect(component.detallesDelProducto).toBe(detalles);
+    expect(component.form).toBeDefined();
+    expect(component.formAgregarProductos).toBeDefined();
+    expect(component.formDatosDelDonante).toBeDefined();
+    expect(component.formDomicilioFiscal).toBeDefined();
+  });
+
+  it('should call getProductosSeleccionados and set esFormularioSoloLectura when readonly', () => {
     // Arrange
+    component.readonly = true;
+    const getProductosSeleccionadosSpy = jest.spyOn(component, 'getProductosSeleccionados');
+    component.tramite302Query = {
+      selectRegistro$: of({ detallesDelProducto: [] })
+    } as any;
+
+    // Act
+    component.ngOnInit();
+
+    // Assert
+    expect(component.esFormularioSoloLectura).toBe(true);
+    expect(getProductosSeleccionadosSpy).toHaveBeenCalled();
+  });
+
+  it('should return Validators.required if "required" is in the array', () => {
+    const result = (DatosDelTramiteComponent as any).mapValidadores(['required']);
+    expect(result.length).toBe(1);
+    expect(result[0]).toBe(Validators.required);
+  });
+
+  it('should return empty array if no validators are provided', () => {
+    const result = (DatosDelTramiteComponent as any).mapValidadores([]);
+    expect(result.length).toBe(0);
+  });
+
+  it('should return empty array if input is undefined', () => {
+    const result = (DatosDelTramiteComponent as any).mapValidadores(undefined);
+    expect(result.length).toBe(0);
+  });
+  
+  it('should remove the selected product, update store, clear selection, and show confirmation', () => {
     const product = {
       tipoDeMercancia: 'Test Product',
       condicionDeLaMercancia: 'Product Condition',
@@ -466,17 +532,15 @@ describe('DatosDelTramiteComponent', () => {
     component.selectedProducto = [product];
     component.tramite302Store = { setDynamicFieldValue: jest.fn() } as any;
 
-    // Act
     component.eliminarProducto();
 
-    // Assert
     expect(component.detallesDelProducto.length).toBe(0);
     expect(component.tramite302Store.setDynamicFieldValue).toHaveBeenCalledWith('detallesDelProducto', []);
     expect(component.selectedProducto).toEqual([]);
     expect(component.modalConfirmacion).toBe('show');
   });
 
-  it('should not remove product if selectedProducto is empty', () => {
+  it('should not remove product or update store if selectedProducto is empty', () => {
     component.detallesDelProducto = [{
       tipoDeMercancia: 'Test Product',
       condicionDeLaMercancia: 'Product Condition',
@@ -491,14 +555,8 @@ describe('DatosDelTramiteComponent', () => {
     component.selectedProducto = [];
     component.tramite302Store = { setDynamicFieldValue: jest.fn() } as any;
 
-    // Ensure detallesDelProducto is always an array
-    if (!Array.isArray(component.detallesDelProducto)) {
-      component.detallesDelProducto = [];
-    }
-
     component.eliminarProducto();
 
-    expect(Array.isArray(component.detallesDelProducto)).toBe(true);
     expect(component.detallesDelProducto.length).toBe(1);
     expect(component.tramite302Store.setDynamicFieldValue).not.toHaveBeenCalled();
     expect(component.modalConfirmacion).not.toBe('show');
@@ -708,6 +766,54 @@ describe('DatosDelTramiteComponent', () => {
     expect(component.modal).toBe('modal');
     expect(patchSpy).not.toHaveBeenCalled();
     expect(cerrarModalSpy).not.toHaveBeenCalled();
+  });
+
+  it('should initialize formDatosDelDonante with DATOS_DEL_DONANTE fields', () => {
+    // Arrange
+    component.certiRegistroState = {};
+    DATOS_DEL_DONANTE.forEach((campo: any) => {
+      component.certiRegistroState[campo.campo] = '';
+    });
+    const form = new FormGroup({});
+    // Act
+    component.inicializarFormGroup(form, DATOS_DEL_DONANTE);
+
+    // Assert: check that all fields from DATOS_DEL_DONANTE are present in the form
+    DATOS_DEL_DONANTE.forEach((campo: any) => {
+      expect(form.contains(campo.campo)).toBe(true);
+    });
+  });
+
+  it('should initialize formDomicilioFiscal with DOMICILIO_FISCAL fields', () => {
+    // Arrange
+    component.certiRegistroState = {};
+    DOMICILIO_FISCAL.forEach((campo: any) => {
+      component.certiRegistroState[campo.campo] = '';
+    });
+    const form = new FormGroup({});
+    // Act
+    component.inicializarFormGroup(form, DOMICILIO_FISCAL);
+
+    // Assert: check that all fields from DOMICILIO_FISCAL are present in the form
+    DOMICILIO_FISCAL.forEach((campo: any) => {
+      expect(form.contains(campo.campo)).toBe(true);
+    });
+  });
+
+  it('should initialize form with MERCANCIAS fields', () => {
+    // Arrange
+    component.certiRegistroState = {};
+    MERCANCIAS.forEach((campo: any) => {
+      component.certiRegistroState[campo.campo] = '';
+    });
+    const form = new FormGroup({});
+    // Act
+    component.inicializarFormGroup(form, MERCANCIAS);
+
+    // Assert: check that all fields from MERCANCIAS are present in the form
+    MERCANCIAS.forEach((campo: any) => {
+      expect(form.contains(campo.campo)).toBe(true);
+    });
   });
 
 });
