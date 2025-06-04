@@ -12,10 +12,10 @@
             </app-tabla-dinamica>
             <div class="d-flex justify-content-end mt-4">
                 @if(tieneFilaSeleccionada) {
-                    <button type="button" class="btn btn-danger me-2" (click)="abrirModal(1)">Eliminar</button>
-                    <button type="button" class="btn btn-default me-2">Modificar</button>
+                    <button type="button" class="btn btn-danger me-2" (click)="abrirModal(1)" [disabled]="esFormularioSoloLectura">Eliminar</button>
+                    <button type="button" class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
                 }
-                <button type="button" class="btn btn-primary" (click)="abrirFabricanteModal('Destinatario (destino final)')">Agregar</button>
+                <button type="button" class="btn btn-primary" (click)="abrirFabricanteModal('Destinatario (destino final)')" [disabled]="esFormularioSoloLectura">Agregar</button>
             </div>
         </div>
     </div>
@@ -31,10 +31,10 @@
             </app-tabla-dinamica>
             <div class="d-flex justify-content-end mt-4">
                 @if(tieneFilaSeleccionadaFabricante) {
-                    <button type="button" class="btn btn-danger me-2" (click)="abrirModal(1)">Eliminar</button>
-                    <button type="button" class="btn btn-default me-2">Modificar</button>
+                    <button type="button" class="btn btn-danger me-2" (click)="abrirModal(1)" [disabled]="esFormularioSoloLectura">Eliminar</button>
+                    <button type="button" class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
                 }
-                <button type="button" class="btn btn-primary" (click)="abrirFabricanteModal('Fabricante')">Agregar</button>
+                <button type="button" class="btn btn-primary" (click)="abrirFabricanteModal('Fabricante')" [disabled]="esFormularioSoloLectura">Agregar</button>
             </div>
         </div>
     </div>

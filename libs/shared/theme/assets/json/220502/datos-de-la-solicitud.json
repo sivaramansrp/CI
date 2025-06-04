@@ -1,0 +1,17 @@
+{
+    "certificadosAutorizados": 1,
+    "horaDeInspeccion": 2,
+    "aduanaDeIngreso": 1,
+    "sanidadAgropecuaria": 1,
+    "puntoDeInspeccion": 1,
+    "fechaDeInspeccion": "2023-01-01",
+    "nombre": "Juan",
+    "primerapellido": "Pérez",
+    "segundoapellido": "Gómez",
+    "mercancia": "Frutas",
+    "tipocontenedor": 1,
+    "transporteIdMedio": 1,
+    "identificacionTransporte": "ABC123",
+    "esSolicitudFerros": "Sí",
+    "totalDeGuiasAmparadas": "5"
+}
