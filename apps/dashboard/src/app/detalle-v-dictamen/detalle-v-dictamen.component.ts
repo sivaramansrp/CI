@@ -1,4 +1,8 @@
-import { AccuseComponentes, ListaComponentes, Tabulaciones } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
+import {
+  AccuseComponentes,
+  ListaComponentes,
+  Tabulaciones,
+} from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
 import { Component, OnInit, Type } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DatosComponent } from '@libs/shared/data-access-user/src';
@@ -8,11 +12,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-detalle-v-dictamen',
   standalone: true,
-  imports: [
-    ReviewersTabsComponent,
-    DatosComponent
-  ],
-  templateUrl:'./detalle-v-dictamen.component.html',
+  imports: [ReviewersTabsComponent, DatosComponent],
+  templateUrl: './detalle-v-dictamen.component.html',
   styleUrls: ['./detalle-v-dictamen.component.scss'],
 })
 export class DetalleVDictamenComponent implements OnInit {
@@ -34,23 +35,25 @@ export class DetalleVDictamenComponent implements OnInit {
    */
   slectTramite!: AccuseComponentes | undefined;
 
-  /** 
-   * Formulario de tramite 
+  /**
+   * Formulario de tramite
    */
   public FormObservacion!: FormGroup;
 
   /**
-   * La variable `numeroDeTramite` en la clase `VerificarDictamenComponent` almacena un valor de cadena específico '099226136147361192499352'. 
-   * Este valor se utiliza como identificador para obtener datos relacionados con un trámite particular desde el servicio `verificaDictamenService`. 
-   * El componente utiliza este valor para recuperar y mostrar información asociada a este trámite específico, como el número de trámite, 
-   * fundamento, justificación, plazo y requisitos. 
+   * La variable `numeroDeTramite` en la clase `VerificarDictamenComponent` almacena un valor de cadena específico '099226136147361192499352'.
+   * Este valor se utiliza como identificador para obtener datos relacionados con un trámite particular desde el servicio `verificaDictamenService`.
+   * El componente utiliza este valor para recuperar y mostrar información asociada a este trámite específico, como el número de trámite,
+   * fundamento, justificación, plazo y requisitos.
    */
   numeroDeTramite: string = '099226136147361192499352';
 
-  constructor(
-    private fbOb: FormBuilder,
-    private router: Router,
-  ) { }
+  /**
+   * Constructor del componente `DetalleVDictamenComponent`.
+   * @param {FormBuilder} fbOb - Servicio para construir formularios reactivos.
+   * @param {Router} router - Servicio de enrutamiento de Angular para navegar entre rutas.
+   */
+  constructor(private fbOb: FormBuilder, private router: Router) {}
   /**
    * Método que se ejecuta al inicializar el componente.
    * Inicializa el formulario de tramite y consulta los datos generales del tramite.
@@ -63,8 +66,8 @@ export class DetalleVDictamenComponent implements OnInit {
    * Inicializa el formulario de tramite
    * @returns {void}
    */
-  inicializaFormTramite(): void {    
-    this.FormObservacion = this.fbOb.group({  
+  inicializaFormTramite(): void {
+    this.FormObservacion = this.fbOb.group({
       observacion: [''],
       fecha: [{ value: '', disabled: true }],
       hora: [{ value: '', disabled: true }],
@@ -78,7 +81,9 @@ export class DetalleVDictamenComponent implements OnInit {
    * @returns {void}
    */
   viewChildcambioDePestana(id: Tabulaciones): void {
-    const LI = this.slectTramite?.listaComponentes.find((v: ListaComponentes) => v.id === id.id);
+    const LI = this.slectTramite?.listaComponentes.find(
+      (v: ListaComponentes) => v.id === id.id
+    );
     if (LI) {
       this.loadComponent(LI);
     }
@@ -92,10 +97,10 @@ export class DetalleVDictamenComponent implements OnInit {
    */
   async loadComponent(li: ListaComponentes): Promise<void> {
     if (!li.componentPath) {
-        return;
-      }
-      this.viewChild = await li.componentPath() as Type<unknown>;
+      return;
     }
+    this.viewChild = (await li.componentPath()) as Type<unknown>;
+  }
 
   /**
    * Navega al usuario de regreso a la ruta 'verificar-dictamen'.

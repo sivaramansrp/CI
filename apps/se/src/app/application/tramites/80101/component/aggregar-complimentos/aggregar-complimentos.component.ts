@@ -1,7 +1,7 @@
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplimentosComponent } from '../../../../shared/components/complimentos/complimentos.component';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { DatosComplimentos } from '../../../../shared/models/complimentos.model';
 import { SociaoAccionistas } from '../../../../shared/models/complimentos.model';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
@@ -15,10 +15,14 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
   styleUrl: './aggregar-complimentos.component.scss',
 })
 export class AggregarComplimentosComponent {
+  /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.Add commentMore actions
+   */
+  @Input() formularioDeshabilitado: boolean = false;
 
   /**
    * Propiedad que almacena los datos relacionados con los cumplimientos.
-   * 
+   *
    * @type {DatosComplimentos}
    * @remarks
    * Esta propiedad se utiliza para gestionar y manipular la información
@@ -33,7 +37,7 @@ export class AggregarComplimentosComponent {
   private destroyNotifier$: Subject<void> = new Subject();
   /**
    * Observable que representa los datos de la tabla de complementos.
-   * 
+   *
    * @type {Observable<SociaoAccionistas[]>}
    * @description Este observable contiene una lista de objetos de tipo `SociaoAccionistas`,
    * que se utiliza para mostrar y gestionar los datos relacionados con los complementos
@@ -42,7 +46,7 @@ export class AggregarComplimentosComponent {
   tablaDatosComplimentos$: Observable<SociaoAccionistas[]>;
   /**
    * Observable que representa los datos de la tabla de complementos extranjeros.
-   * 
+   *
    * @type {Observable<SociaoAccionistas[]>}
    * @description Este observable emite una lista de objetos de tipo `SociaoAccionistas`,
    * que contienen información relacionada con los complementos extranjeros.
@@ -53,17 +57,17 @@ export class AggregarComplimentosComponent {
 
   /**
    * Constructor de la clase `AggregarComplimentosComponent`.
-   * 
+   *
    * @param store - Instancia del estado `Tramite80101Store` utilizada para gestionar el estado de la aplicación.
    * @param tramiteQuery - Instancia de `Tramite80101Query` utilizada para realizar consultas relacionadas con los datos del trámite.
-   * 
+   *
    * Este constructor inicializa las propiedades observables `tablaDatosComplimentos$` y `tablaDatosComplimentosExtranjera$`
    * con los valores seleccionados desde `tramiteQuery`. Además, suscribe al observable `selectDatosComplimento$` para
    * actualizar la propiedad `datosComplimentos` con los datos emitidos, hasta que se complete el ciclo de vida del componente.
    */
   constructor(
     private store: Tramite80101Store,
-    private tramiteQuery: Tramite80101Query,
+    private tramiteQuery: Tramite80101Query
   ) {
     this.tablaDatosComplimentos$ =
       this.tramiteQuery.selectTablaDatosComplimentos$;
@@ -78,7 +82,7 @@ export class AggregarComplimentosComponent {
 
   /**
    * Modifica los datos de los cumplimientos y los almacena en el estado.
-   * 
+   *
    * @param complimentos - Objeto de tipo `DatosComplimentos` que contiene los datos de los cumplimientos a actualizar.
    * @returns void
    */
@@ -88,7 +92,7 @@ export class AggregarComplimentosComponent {
 
   /**
    * Agrega datos de accionistas a la tabla correspondiente según el tipo de RFC.
-   * 
+   *
    * @param datos - Objeto de tipo `SociaoAccionistas` que contiene la información del accionista.
    *                Si el objeto incluye un RFC válido, se agrega a la tabla de datos nacionales.
    *                De lo contrario, se agrega a la tabla de datos extranjeros.
@@ -105,7 +109,7 @@ export class AggregarComplimentosComponent {
    * Elimina los datos de los accionistas proporcionados de la tabla de complementos.
    *
    * @param datos - Una lista de objetos de tipo `SociaoAccionistas` que representan los accionistas a eliminar.
-   * 
+   *
    * Este método utiliza el servicio `store` para realizar la eliminación de los datos
    * correspondientes en la tabla de complementos.
    */
@@ -115,7 +119,7 @@ export class AggregarComplimentosComponent {
 
   /**
    * Elimina los datos de los accionistas extranjeros de la tabla de complementos.
-   * 
+   *
    * @param datos - Una lista de objetos de tipo `SociaoAccionistas` que representan
    * los accionistas extranjeros a eliminar.
    */
