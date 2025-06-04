@@ -4,21 +4,10 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
 import {
   AcusePageComponent,
 } from '@ng-mf/data-access-user';
-import { PaginaUnoAcusesYResolucionesBusquedaComponent } from './pages/pagina-uno-acuses-y-resoluciones-busqueda/pagina-uno-acuses-y-resoluciones-busqueda.component';
-import { PaginaDosAcusesYResolucionesDetallesComponent } from './pages/pagina-dos-acuses-y-resoluciones-detalles/pagina-dos-acuses-y-resoluciones-detalles.component';
 const ROUTES: Routes = [
   {
     path: 'solicitud',
     component: SolicitudPageComponent,
-  },
-  {
-    path: 'pagina-uno-acuses-y-resoluciones-busqueda',
-    component: PaginaUnoAcusesYResolucionesBusquedaComponent,
-  },
-
-  {
-    path: 'pagina-dos-acuses-y-resoluciones-detalles',
-    component: PaginaDosAcusesYResolucionesDetallesComponent,
   },
   {
     path: 'acuse',

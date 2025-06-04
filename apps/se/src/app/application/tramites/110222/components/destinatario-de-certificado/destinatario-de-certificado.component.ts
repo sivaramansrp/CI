@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite110222State, Tramite110222Store } from '../../estados/tramite110222.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ID_PROCEDIMIENTO } from '../../constantes/peru-certificado.module';
 import { Tramite110222Query } from '../../estados/tramite110222.query';
 
@@ -74,14 +75,18 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
    * @memberof PeruDestinatarioComponent
    */
   ocultarFax: boolean = true;
-
+  /**
+* Indica si el formulario está en modo solo lectura.
+* Cuando es `true`, los campos del formulario no se pueden editar.
+*/
+  esFormularioSoloLectura: boolean = false;
   /**
    * @descripcion
    * Identificador único del procedimiento asociado al formulario.
    * @type {string}
    * @readonly
    */
-  public readonly idProcedimiento:number = ID_PROCEDIMIENTO;
+  public readonly idProcedimiento: number = ID_PROCEDIMIENTO;
 
   /**
    * @descripcion
@@ -97,7 +102,8 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
     private store: Tramite110222Store,
     private query: Tramite110222Query,
     private seccionStore: SeccionLibStore,
-    private seccionQuery: SeccionLibQuery
+    private seccionQuery: SeccionLibQuery,
+    private consultaQuery: ConsultaioQuery
   ) {
     this.query.selectFormDatosDelDestinatario$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -114,7 +120,16 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((estado) => {
         this.formExportadorValues = estado;
-    });
+      });
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
+
   }
 
   /**
@@ -156,10 +171,10 @@ export class DestinatarioDeCertificadoComponent implements OnInit, OnDestroy {
  * Actualiza el almacén con los datos del formulario de datos del destinatario.
  * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
  */
-setValoresStoreDatos(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
-  const { campo: CAMPO, valor: VALOR } = event;
-  this.store.setFormDatosDelDestinatario({ [CAMPO]: VALOR });
-}
+  setValoresStoreDatos(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
+    const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormDatosDelDestinatario({ [CAMPO]: VALOR });
+  }
 
   /**
    * @descripcion
@@ -171,15 +186,15 @@ setValoresStoreDatos(event: { formGroupName: string, campo: string, valor: undef
     this.store.setFormExportador({ [CAMPO]: VALOR });
   }
 
-/**
- * @descripcion
- * Actualiza el almacén con los datos del formulario de destinatario.
- * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
- */
-setValoresStoreDe(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
-  const { campo: CAMPO, valor: VALOR } = event;
-  this.store.setFormDestinatario({ [CAMPO]: VALOR });
-}
+  /**
+   * @descripcion
+   * Actualiza el almacén con los datos del formulario de destinatario.
+   * @param event - Objeto que contiene el nombre del grupo de formulario, el campo, el valor y el nombre del estado del almacén.
+   */
+  setValoresStoreDe(event: { formGroupName: string, campo: string, valor: undefined, storeStateName: string }): void {
+    const { campo: CAMPO, valor: VALOR } = event;
+    this.store.setFormDestinatario({ [CAMPO]: VALOR });
+  }
   /**
    * @descripcion
    * Actualiza el almacén con el estado de validación del formulario de destinatario.

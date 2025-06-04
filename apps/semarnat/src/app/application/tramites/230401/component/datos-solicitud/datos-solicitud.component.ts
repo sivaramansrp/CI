@@ -2,6 +2,7 @@ import {
   ALERTA_DE_MATERIAL,
   Catalogo,
   CatalogoPaises,
+  ConsultaioQuery,
   CrossListLable,
   MaxDigitsValidator,
   REGEX_SOLO_DIGITOS,
@@ -268,17 +269,42 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       funcion: () => this.quitarTres(CONTINUAR),
     },
   ];
+  /**
+   * Estado de la solicitud de la sección 230401.
+   */
   private seccion!: SeccionLibState;
 
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Constructor de la clase DatosSolicitudComponent.
+   * 
+   * @param pantallasActionService - Servicio para manejar acciones relacionadas con las pantallas.
+   * @param validacionesService - Servicio para realizar validaciones en los formularios.
+   * @param tramite230401Store - Almacén para gestionar el estado del trámite 230401.
+   * @param fb - Constructor para crear instancias de formularios reactivos.
+   * @param solicitud230401Query - Consulta para obtener datos relacionados con la solicitud 230401.
+   * @param consultaQuery - Consulta para manejar datos relacionados con consultas generales.
+   * @param seccionQuery - Consulta para manejar datos relacionados con secciones.
+   * @param seccionStore - Almacén para gestionar el estado de las secciones.
+   * 
+   * Este constructor inicializa los datos de catálogos necesarios para el paso uno
+   * utilizando el servicio `pantallasActionService`.
+   */
   constructor(public pantallasActionService:PantallasActionService,
     public validacionesService:ValidacionesFormularioService,
     public tramite230401Store:Tramite230401Store,public fb:FormBuilder,
-  public solicitud230401Query: Solicitud230401Query,
+  public solicitud230401Query: Solicitud230401Query, private consultaQuery: ConsultaioQuery,
     private seccionQuery: SeccionLibQuery,private seccionStore: SeccionLibStore) {
-    // do nothing
-  }
+      this.pantallasActionService.inicializaPasoUnoDatosCatalogos();
+    }
 
   ngOnInit(): void {
+
     this.solicitud230401Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -287,8 +313,19 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
           this.sustanciasSensiblesTablaDatos = seccionState.sustanciasSensiblesTablaDatos;
         })
       ).subscribe();
-    this.pantallasActionService.inicializaPasoUnoDatosCatalogos();
-    this.creatFormSolicitud();
+
+      this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          if(!seccionState.create && seccionState.procedureId === '230401') {
+            this.esFormularioSoloLectura = seccionState.readonly;
+          }
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -318,6 +355,20 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+     /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+     inicializarEstadoFormulario(): void {
+      if(!this.FormSolicitud){
+        this.creatFormSolicitud();
+      }
+      if (this.esFormularioSoloLectura) {
+          this.FormSolicitud.disable();
+      } else {
+        this.FormSolicitud.enable();
+      }
+    }
+    
   /**
    * Verifica si el formulario es válido.
    * 

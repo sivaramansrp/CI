@@ -1,12 +1,15 @@
-<div style="margin-top: 40px;">
-  <ng-titulo titulo="Manifiesto de aceptación"></ng-titulo>
-  <div class="row">
-    <div class="alert alert-info">
-      <label style="font-weight: normal">
-        <input type="checkbox" id="manifesto" />
-        {{manifestoText.Texto1}}
-        <span style="display:block;"> {{manifestoText.Texto2}}</span>
-      </label>
+<form [formGroup]="manifestoForm">
+  <div style="margin-top: 40px;">
+    <ng-titulo titulo="Manifiesto de aceptación"></ng-titulo>
+    <div class="row">
+      <div class="alert alert-info">
+        <label style="font-weight: normal">
+          <input type="checkbox" id="manifesto" formControlName="manifesto"
+            (change)="setValoresStore(manifestoForm, 'manifesto')" />
+          {{manifestoText.Texto1}}
+          <span style="display:block;"> {{manifestoText.Texto2}}</span>
+        </label>
+      </div>
     </div>
   </div>
-</div>
+</form>

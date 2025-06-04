@@ -1,3 +1,4 @@
+import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../estados/tramites/tramite120101.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -29,7 +30,10 @@ export class SolicitudDeRegistroTplService {
    * Inicializa el servicio con una instancia de HttpClient para realizar solicitudes HTTP.
    * @param {HttpClient} http - Cliente HTTP para realizar las solicitudes.
    */
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private tramite120101Store: Tramite120101Store
+  ) {
     //
   }
 
@@ -209,5 +213,45 @@ export class SolicitudDeRegistroTplService {
  */
   obtenerTablaInsumos(): InsumosTabla[] {
     return this.tablaInsumosTemp;
+  }
+
+  /**
+ * @method getSolicitudRegistroData
+ * @description
+ * Obtiene los datos de la solicitud de registro TPL para el trámite 120101 desde un archivo JSON local.
+ * 
+ * Detalles:
+ * - Realiza una petición HTTP GET para recuperar la información de la solicitud de registro almacenada en el archivo `solicitud-de-registro-tpl.json`.
+ * - Devuelve un observable que emite un objeto de tipo `SolicitudDeRegistroTpl120101State` con los datos obtenidos.
+ * 
+ * @returns {Observable<SolicitudDeRegistroTpl120101State>} Observable con los datos de la solicitud de registro TPL.
+ * 
+ * @example
+ * this.solicitudDeRegistroTplService.getSolicitudRegistroData().subscribe(data => {
+ *   console.log(data);
+ * });
+ */
+  getSolicitudRegistroData(): Observable<SolicitudDeRegistroTpl120101State> {
+    return this.http.get<SolicitudDeRegistroTpl120101State>('assets/json/120101/solicitud-de-registro-tpl.json');
+  }
+
+  /**
+ * @method actualizarEstadoFormulario
+ * @description
+ * Actualiza el valor de un campo específico en el store `Tramite120101Store` de manera dinámica.
+ * 
+ * Detalles:
+ * - Utiliza el método `setDynamicFieldValue` del store para modificar el valor del campo indicado.
+ * - Permite mantener sincronizado el estado global del trámite con los cambios realizados en el formulario.
+ * 
+ * @param {string} campo - Nombre del campo que se desea actualizar en el store.
+ * @param {unknown} valor - Valor que se asignará al campo especificado.
+ * 
+ * @example
+ * this.actualizarEstadoFormulario('pais', 'México');
+ * // Actualiza el campo 'pais' en el store con el valor 'México'.
+ */
+  actualizarEstadoFormulario(campo: string, valor: unknown): void {
+    this.tramite120101Store.setDynamicFieldValue(campo, valor);
   }
 }
