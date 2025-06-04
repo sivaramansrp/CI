@@ -1,3 +1,4 @@
+import { Tramite130217State, Tramite130217Store } from '../../../estados/tramites/tramite130217.store';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -9,7 +10,10 @@ import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados
   providedIn: 'root',
 })
 export class ControlPermisosPreviosExportacionService {
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private tramite130217Store: Tramite130217Store,
+  ) {
     //
   }
   /**
@@ -73,4 +77,25 @@ export class ControlPermisosPreviosExportacionService {
               'assets/json/130217/partidas-de-la.json'
             );
       }
+
+
+   /**
+   * Actualiza el estado del formulario en el store global.
+   *
+   * @param datos - Objeto de tipo Tramite130217State con los datos a establecer en el store.
+   * @returns {void}
+   */
+  actualizarEstadoFormulario(datos: Tramite130217State): void {
+      this.tramite130217Store.actualizarEstado(datos);
+  }
+
+  /**
+   * Obtiene los datos de toma de muestras de mercancías desde un archivo JSON local.
+   *
+   * @returns {Observable<Tramite130217State>} Un observable que emite los datos del trámite 80210.
+   */
+  getRegistroTomaMuestrasMercanciasData(): Observable<Tramite130217State> {
+    return this.http.get<Tramite130217State>('assets/json/130217/control-permisos-datos.json');
+  }
+
 }
