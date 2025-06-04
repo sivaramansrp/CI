@@ -104,7 +104,7 @@ describe('DatosDelTramiteComponent', () => {
     };
     component.listaUnidadDeMedida = [{ id: 1, descripcion: 'Unidad 1' }];
     component.listImportacionTemporal = [{ id: 2, descripcion: '2024' }];
-    component.esFormularioSoloLectura = false;
+    component.soloLectura = false;
 
     // Act
     component.inicializarFormGroup(form, formularioDatos);
@@ -127,7 +127,7 @@ describe('DatosDelTramiteComponent', () => {
 
   it('should disable the form group if esFormularioSoloLectura is true', () => {
     // Arrange
-    component.esFormularioSoloLectura = true;
+    component.soloLectura = true;
     component.certiRegistroState = { campo1: 'valor1' };
     const form = new FormGroup({
       campo1: new FormControl('valor1'),
@@ -272,7 +272,7 @@ describe('DatosDelTramiteComponent', () => {
   
   it('should initialize forms and set detallesDelProducto from certiRegistroState when not readonly', () => {
     const detalles = [{ tipoDeMercancia: 'Mercancia 1' }];
-    component.readonly = false;
+    component.soloLectura = false;
     component.certiRegistroState = { detallesDelProducto: detalles };
     component.tramite302Query = {
       selectRegistro$: of({ detallesDelProducto: detalles })
@@ -280,7 +280,7 @@ describe('DatosDelTramiteComponent', () => {
 
     component.ngOnInit();
 
-    expect(component.esFormularioSoloLectura).toBe(false);
+    expect(component.soloLectura).toBe(false);
     expect(Array.isArray(component.detallesDelProducto)).toBe(true); // Ensure it's always an array
     expect(component.detallesDelProducto).toBe(detalles);
     expect(component.form).toBeDefined();
@@ -291,7 +291,7 @@ describe('DatosDelTramiteComponent', () => {
 
   it('should call getProductosSeleccionados and set esFormularioSoloLectura when readonly', () => {
     // Arrange
-    component.readonly = true;
+    component.soloLectura = true;
     const getProductosSeleccionadosSpy = jest.spyOn(component, 'getProductosSeleccionados');
     component.tramite302Query = {
       selectRegistro$: of({ detallesDelProducto: [] })
@@ -301,7 +301,7 @@ describe('DatosDelTramiteComponent', () => {
     component.ngOnInit();
 
     // Assert
-    expect(component.esFormularioSoloLectura).toBe(true);
+    expect(component.soloLectura).toBe(true);
     expect(getProductosSeleccionadosSpy).toHaveBeenCalled();
   });
 
@@ -467,7 +467,7 @@ describe('DatosDelTramiteComponent', () => {
   
   it('should initialize forms and set detallesDelProducto from certiRegistroState when not readonly', () => {
     const detalles = [{ tipoDeMercancia: 'Mercancia 1' }];
-    component.readonly = false;
+    component.soloLectura = false;
     component.certiRegistroState = { detallesDelProducto: detalles };
     component.tramite302Query = {
       selectRegistro$: of({ detallesDelProducto: detalles })
@@ -475,7 +475,7 @@ describe('DatosDelTramiteComponent', () => {
 
     component.ngOnInit();
 
-    expect(component.esFormularioSoloLectura).toBe(false);
+    expect(component.soloLectura).toBe(false);
     expect(Array.isArray(component.detallesDelProducto)).toBe(true); // Ensure it's always an array
     expect(component.detallesDelProducto).toBe(detalles);
     expect(component.form).toBeDefined();
@@ -486,7 +486,7 @@ describe('DatosDelTramiteComponent', () => {
 
   it('should call getProductosSeleccionados and set esFormularioSoloLectura when readonly', () => {
     // Arrange
-    component.readonly = true;
+    component.soloLectura = true;
     const getProductosSeleccionadosSpy = jest.spyOn(component, 'getProductosSeleccionados');
     component.tramite302Query = {
       selectRegistro$: of({ detallesDelProducto: [] })
@@ -496,7 +496,7 @@ describe('DatosDelTramiteComponent', () => {
     component.ngOnInit();
 
     // Assert
-    expect(component.esFormularioSoloLectura).toBe(true);
+    expect(component.soloLectura).toBe(true);
     expect(getProductosSeleccionadosSpy).toHaveBeenCalled();
   });
 

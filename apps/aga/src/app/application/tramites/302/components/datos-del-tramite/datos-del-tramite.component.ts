@@ -8,7 +8,7 @@ import {
   PRODUCTOS,
 } from '../../constantes/datos-del-tramite.enum';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CertiRegistro302State } from '../../../../../application/core/estados/tramites/tramite302.store';
@@ -198,11 +198,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   public DATOS_ALERT = DATOS_ALERT.message;
 
   /**
-   * Suscripción a los cambios en el formulario reactivo.
-   */
-  private subscription: Subscription = new Subscription();
-
-  /**
    * Subject para notificar la destrucción del componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
@@ -220,14 +215,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @type {boolean}
    * @memberof DatosDelTramiteComponent
    */
-  @Input() public readonly: boolean = false;
-
-  /**
-   * Indica si el formulario debe mostrarse en modo solo lectura.
-   * Cuando es verdadero, los campos del formulario no pueden ser editados por el usuario.
-   */
-  public esFormularioSoloLectura: boolean = false;
-
+  @Input() public soloLectura: boolean = false;
 
   /**
    * Arreglo que contiene los productos seleccionados con sus detalles.
@@ -268,8 +256,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @memberof DatosDelTramiteComponent
    */
   ngOnInit(): void {
-    this.esFormularioSoloLectura = this.readonly;
-    this.subscription.add(
+
       this.tramite302Query.selectRegistro$
         .pipe(
           takeUntil(this.destroyNotifier$),
@@ -278,8 +265,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
           })
         )
         .subscribe()
-    );
-    if(this.esFormularioSoloLectura){
+
+    if(this.soloLectura){
       this.getProductosSeleccionados();
     }
     else{
@@ -325,7 +312,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
           campo.listaDesplegable = [];
         }
       });
-      if(this.esFormularioSoloLectura){
+      if(this.soloLectura){
         nombreDelFormulario.disable();
       }
     }

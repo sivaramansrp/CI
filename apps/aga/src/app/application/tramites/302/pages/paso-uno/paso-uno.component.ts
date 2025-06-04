@@ -19,7 +19,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Variable que almacena el índice del subtítulo seleccionado.
    * Por defecto, el índice inicial es 1.
    */
-  indice: number = 1;
+  public indice: number = 1;
 
    /**
    * Estado actual de la consulta para el componente.
@@ -75,17 +75,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
    ngOnInit(): void {
-    this.consultaStore.establecerConsultaio(
-      '120204',
-      'BANDEJA_SOLICITUDES',
-      'se',
-      '03039399393939393',
-      'tipoTramite',
-      'tipoTramite',
-       false,
-       false,
-       true
-    );
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
           this.consultaState = seccionState;
           this.esFormularioSoloLectura = seccionState.readonly;
