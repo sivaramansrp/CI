@@ -50,6 +50,7 @@
             formControlName="banco"
             [label]="'Banco'"
             [required]="false"
+            [isDisabled]="formularioDeshabilitado"
           ></app-catalogo-select>
         </div>
       } @else {
@@ -60,6 +61,7 @@
           formControlName="estado"
           [label]="'Estado/localidad'"
           [required]="true"
+          [isDisabled]="formularioDeshabilitado"
         ></app-catalogo-select>
       </div>
       }
@@ -94,6 +96,7 @@
         name="fechaPago"
         (valorCambiado)="onFechaCambiada($event)"
         [setFecha]="pagoDerechosForm.get('fechaPago')?.value"
+        [isDisabled]="formularioDeshabilitado"
         ></input-fecha>
 
         <div *ngIf="esInvalido('fechaPago')" class="text-danger">
