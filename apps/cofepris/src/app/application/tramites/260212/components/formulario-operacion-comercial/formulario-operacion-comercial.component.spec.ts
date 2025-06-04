@@ -39,8 +39,7 @@ describe('FormularioOperacionComercialComponent', () => {
         // Angular DI tokens for constructor injection
         { provide: require('../../estados/tramite260212.store').Tramite260212Store, useClass: MockTramite260212Store },
         { provide: require('../../estados/tramite260212.query').Tramite260212Query, useClass: MockTramite260212Query },
-        { provide: require('@ng-mf/data-access-user').ConsultaioQuery, useClass: MockConsultaioQuery },
-      ],
+        ],
     }).compileComponents();
   });
 
