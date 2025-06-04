@@ -3,7 +3,7 @@
     <div class="col-md-4">
       <label>ADACE:</label>
       <input type="text" class="form-control gris-color" formControlName="adace"
-      (change)=" setValoresStore( avisoForm, 'adace', 'setAdace' ) " required />
+        (change)=" setValoresStore( avisoForm, 'adace', 'setAdace' ) " readonly required />
     </div>
   </div>
   <ng-titulo titulo="Datos del recinto fiscalizado que presenta el dictamen" />
@@ -31,7 +31,7 @@
     <div class="col-md-6">
       <label>Nombre:*</label>
       <input type="text" class="form-control gris-color" formControlName="nombre" 
-      (change)=" setValoresStore( avisoForm, 'nombre', 'setNombre' ) "required readonly />
+        (change)=" setValoresStore( avisoForm, 'nombre', 'setNombre' ) "required readonly />
     </div>
   </div>
   <div class="row mt-5">
