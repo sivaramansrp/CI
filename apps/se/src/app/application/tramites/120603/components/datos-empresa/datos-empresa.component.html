@@ -157,7 +157,7 @@
         </div>
     </div>
     <ng-container>
-    @if (selectedNacionalidad === 'Si') {
+    @if (selectedNacionalidad === nacionalidadMexicanaSi) {
     <div class="row">
         <div class="col-md-6">
             <label for="registroFederal" class="form-label">Registro federal de contribuyentes*:</label>
@@ -168,9 +168,9 @@
     </div>
   }
   
-    @if (selectedNacionalidad === 'No' || selectedTipoPersona === 'Persona Moral') {
+    @if (selectedNacionalidad === nacionalidadMexicanaNo || selectedTipoPersona === tipoPersonaMoral) {
    <div>
-      @if(selectedTipoPersona === 'Persona Física') {
+      @if(selectedTipoPersona === tipoPersonaFisica) {
      <div class="row">
         <div class="col-md-6">
             <label for="nombre" class="form-label">Nombre:</label>
@@ -195,7 +195,7 @@
         </div>
      </div>
      <div class="row" >
-        <div class="row" *ngIf="selectedTipoPersona !== 'Persona Física'">
+        <div class="row" *ngIf="selectedTipoPersona !== tipoPersonaFisica">
          <div class="col-md-6">
             <label for="razonSocial" class="form-label">Denominación o razón social:</label>
             <input type="text" id="razonSocial" class="form-control" formControlName="razonSocial"

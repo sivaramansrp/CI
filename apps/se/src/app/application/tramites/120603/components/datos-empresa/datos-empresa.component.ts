@@ -12,6 +12,10 @@ import { CommonModule } from '@angular/common';
 import { RegistroComoEmpresaService } from '../../services/registro-como-empresa.service';
 import { Solicitud120603Query } from '../../estados/tramite120603.query';
 
+import { NacionalidadMexicana, TipoPersona } from '../../constants/tipopersona.enum';
+
+
+
 /** Componente que gestiona los datos de la empresa en el formulario */
 @Component({
   selector: 'app-datos-empresa',
@@ -21,6 +25,18 @@ import { Solicitud120603Query } from '../../estados/tramite120603.query';
   styleUrl: './datos-empresa.component.scss',
 })
 export class DatosEmpresaComponent implements OnInit, OnDestroy {
+
+/** Constante que representa el tipo de persona física */
+tipoPersonaFisica = TipoPersona.FISICA;
+
+/** Constante que representa el tipo de persona moral */
+tipoPersonaMoral = TipoPersona.MORAL;
+
+/** Constante que representa la nacionalidad mexicana como "Sí" */
+nacionalidadMexicanaSi = NacionalidadMexicana.SI;
+
+/** Constante que representa la nacionalidad mexicana como "No" */
+nacionalidadMexicanaNo = NacionalidadMexicana.NO;
 
   /** Formulario reactivo para gestionar los datos de la empresa */
   public formularioEmpresa!: FormGroup;
@@ -65,10 +81,16 @@ export class DatosEmpresaComponent implements OnInit, OnDestroy {
   socioYAccionistasExtranjerosData = SOCIOS_Y_ACCIONISTAS_EXTRANJEROS_DATA;
 
   /** Opciones de selección mexicana */
-  opcionSeleccionMexicana = RADIO_OPCION;
+  opcionSeleccionPersona = [
+    { label: 'Persona Física', value: TipoPersona.FISICA },
+    { label: 'Persona Moral', value: TipoPersona.MORAL },
+  ];
 
-  /** Opciones de selección de tipo de persona */
-  opcionSeleccionPersona = TIPO_DE_PERSONA;
+  /** Opciones de selección mexicana */
+opcionSeleccionMexicana = [
+  { label: 'Sí', value: NacionalidadMexicana.SI },
+  { label: 'No', value: NacionalidadMexicana.NO },
+];
 
   /** Valor seleccionado para la nacionalidad */
   public valorSeleccionadoNacionalidad: string = '';
