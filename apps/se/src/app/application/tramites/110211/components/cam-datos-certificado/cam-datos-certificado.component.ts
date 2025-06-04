@@ -15,7 +15,7 @@ import { camCertificadoStore } from '../../estados/cam-certificado.store';
 @Component({
   selector: 'app-cam-datos-certificado',
   templateUrl: './cam-datos-certificado.component.html',
-  styleUrl: './cam-datos-certificado.component.css',
+  styleUrl: './cam-datos-certificado.component.scss',
 })
 export class CamDatosCertificadoComponent implements OnInit, OnDestroy {
   /**

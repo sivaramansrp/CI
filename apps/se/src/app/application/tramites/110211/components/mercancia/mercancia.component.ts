@@ -17,7 +17,7 @@ import { camCertificadoQuery } from '../../estados/cam-certificado.query';
 @Component({
   selector: 'app-mercancia',
   templateUrl: './mercancia.component.html',
-  styleUrl: './mercancia.component.css',
+  styleUrl: './mercancia.component.scss',
 })
 export class MercanciaComponent implements OnInit, OnDestroy {
   /**

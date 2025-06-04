@@ -16,7 +16,7 @@ interface FormValues {
 @Component({
   selector: 'app-cam-destinatario',
   templateUrl: './cam-destinatario.component.html',
-  styleUrl: './cam-destinatario.component.css',
+  styleUrl: './cam-destinatario.component.scss',
 })
 export class CamDestinatarioComponent implements OnInit, OnDestroy {
   /**
