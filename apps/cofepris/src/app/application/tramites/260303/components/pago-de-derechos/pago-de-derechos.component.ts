@@ -172,7 +172,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       const VALOR = form.get(campo)?.value;
       (this.tramite260303Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
-
+  /**
+   * Habilita o deshabilita los controles del formulario según el estado de solo lectura.
+   * 
+   * Si `consultaState.readonly` es verdadero, deshabilita todos los controles del formulario para evitar modificaciones.
+   * Si es falso, habilita los controles para permitir la edición.
+   */
   deshabilitarFormularios(): void {
     if (this.consultaState?.readonly) {
       // Si el formulario está en modo solo lectura, deshabilita todos los controles.

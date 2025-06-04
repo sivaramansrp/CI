@@ -721,23 +721,28 @@ public static deepCopy<T>(obj: T): T {
       (this.tramite260211Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
+    /**
+     * Habilita o deshabilita todos los formularios del componente según el estado de solo lectura.
+     * Si la propiedad `readonly` de `consultaState` es verdadera, todos los formularios se deshabilitan para evitar la edición.
+     * Si no, se habilitan para permitir la edición.
+     */
     deshabilitarFormularios(): void {
-    if (this.consultaState?.readonly) {
-      // Deshabilita todos los formularios en modo solo lectura
-      this.denominacionForm.disable();
-      this.domicilioDeElstablecimientoForm.disable();
-      this.representanteLegalForm.disable();
-      this.scianForm.disable();
-      this.mercanciasForm.disable();
-    } else {
-       // Habilita todos los formularios para edición
-      this.denominacionForm.enable();
-      this.domicilioDeElstablecimientoForm.enable();
-      this.representanteLegalForm.enable();
-      this.scianForm.enable();
-      this.mercanciasForm.enable();
+      if (this.consultaState?.readonly) {
+        // Deshabilita todos los formularios en modo solo lectura
+        this.denominacionForm.disable();
+        this.domicilioDeElstablecimientoForm.disable();
+        this.representanteLegalForm.disable();
+        this.scianForm.disable();
+        this.mercanciasForm.disable();
+      } else {
+        // Habilita todos los formularios para edición
+        this.denominacionForm.enable();
+        this.domicilioDeElstablecimientoForm.enable();
+        this.representanteLegalForm.enable();
+        this.scianForm.enable();
+        this.mercanciasForm.enable();
+      }
     }
-  }
 
     /**
    * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
