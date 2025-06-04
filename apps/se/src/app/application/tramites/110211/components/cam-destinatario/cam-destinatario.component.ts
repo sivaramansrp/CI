@@ -1,10 +1,14 @@
 import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { SeccionLibQuery, SeccionLibState, SeccionLibStore, TituloComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
+import { CommonModule } from '@angular/common';
+import { DatosCertificadoDeComponent } from '../../../../shared/components/datos-certificado-de/datos-certificado-de.component';
+import { DatosDelDestinatarioComponent } from '../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
+import { DestinatarioComponent } from '../../../../shared/components/destinatario/destinatario.component';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
-
 interface FormValues {
    [key: string]: unknown;
 }
@@ -17,6 +21,10 @@ interface FormValues {
   selector: 'app-cam-destinatario',
   templateUrl: './cam-destinatario.component.html',
   styleUrl: './cam-destinatario.component.scss',
+  standalone: true,
+  imports:[CommonModule,ReactiveFormsModule,CertificadoDeOrigenComponent,
+      DatosCertificadoDeComponent,
+      DatosDelDestinatarioComponent,TituloComponent,DestinatarioComponent]
 })
 export class CamDestinatarioComponent implements OnInit, OnDestroy {
   /**

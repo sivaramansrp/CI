@@ -21,11 +21,8 @@ import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.m
 @NgModule({
   declarations: [
     CamCertificadoComponent,
-    PasoUnoComponent,
-    PasoDosComponent,
-    CamDatosCertificadoComponent,
-    CamDestinatarioComponent
-  ],
+    PasoDosComponent
+     ],
   imports: [
     CommonModule,
     ValidarCertificadoRoutingModule,
@@ -45,6 +42,9 @@ import { ValidarCertificadoRoutingModule } from './validar-certificado-routing.m
     TituloComponent,
     CertificadoOrigenComponent,
     MercanciaComponent,
+    CamDestinatarioComponent,
+    CamDatosCertificadoComponent,
+    PasoUnoComponent,
   ]
 })
 export class ValidarCertificadoModule { }

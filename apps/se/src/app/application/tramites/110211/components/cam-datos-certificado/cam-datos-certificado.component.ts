@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
 import { Catalogo } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { DatosCertificadoDeComponent } from '../../../../shared/components/datos-certificado-de/datos-certificado-de.component';
 import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
@@ -16,6 +18,8 @@ import { camCertificadoStore } from '../../estados/cam-certificado.store';
   selector: 'app-cam-datos-certificado',
   templateUrl: './cam-datos-certificado.component.html',
   styleUrl: './cam-datos-certificado.component.scss',
+  standalone: true,
+  imports:[DatosCertificadoDeComponent,CommonModule]
 })
 export class CamDatosCertificadoComponent implements OnInit, OnDestroy {
   /**
