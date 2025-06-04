@@ -155,11 +155,9 @@ this.inicializarEstadoFormulario();
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
       this.representanteLegalForm.disable();
-    } else if (!this.esFormularioSoloLectura) {
-      this.representanteLegalForm.enable();
     } else {
-      // No se requiere ninguna acción en el formulario
-    }
+      this.representanteLegalForm.enable();
+    } 
   }
 
   /**

@@ -27,6 +27,12 @@ export class DatosPageComponent implements OnInit, OnDestroy, AfterViewInit {
 
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * @property {ConsultaioState} consultaState - Estado actual de la consulta.
+   * @description
+   * Esta variable almacena el estado relacionado con la consulta en el componente.
+   * Es utilizada para gestionar y acceder a la información relevante del proceso de consulta.
+   */
   public consultaState!: ConsultaioState;
   /**
   * Esta variable se utiliza para almacenar el índice del subtítulo.

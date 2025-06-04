@@ -121,11 +121,9 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
       this.datosDelForm.disable();
-    } else if (!this.esFormularioSoloLectura) {
-      this.datosDelForm.enable();
     } else {
-      // No se requiere ninguna acción en el formulario
-    }
+      this.datosDelForm.enable(); 
+    } 
   }
 
   /**
