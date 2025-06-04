@@ -1,13 +1,13 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrossListLable, CrosslistComponent, MANIFIESTOS, MercanciasDatos, ScianDatos, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Component, OnDestroy, OnInit, QueryList, TemplateRef, ViewChildren } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, QueryList, TemplateRef, ViewChildren } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260303State, Tramite260303Store } from '../../../../estados/tramites/260303/tramite260303.store';
 import { Subject,map, takeUntil } from 'rxjs';
 import CROSLISTA_DE_PAISES from '@libs/shared/theme/assets/json/260303/croslista_de_paises.json';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { EstadoCatalogResponse } from '../../models/certificados-licencias-permisos.model';
 import PAISES_DE_ORIGEN from '@libs/shared/theme/assets/json/260303/paises_de_origen.json';
 import { Tramite260303Query } from '../../../../estados/queries/260303/tramite260303.query';
@@ -32,6 +32,13 @@ import USO_ESPECIFICO from '@libs/shared/theme/assets/json/260303/uso_especifico
   styleUrl: './datos-de-la-solicitud.component.scss',
 })
 export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy {
+
+      /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
 
   /**
    * Una referencia a la instancia del modal de Bootstrap.
@@ -256,13 +263,6 @@ public TEXTOS = MANIFIESTOS;
  * Notificador para destruir los observables al finalizar.
  */
 private destroyNotifier$: Subject<void> = new Subject();
-
-  /**
-   * Indica si el formulario está en modo solo lectura.
-   * Cuando es `true`, los campos del formulario no se pueden editar.
-   */
-esFormularioSoloLectura: boolean = false;
-
 /**
  * Constructor para el componente DatosDeLaSolicitudComponent.
  * 
@@ -278,17 +278,7 @@ constructor(
   private certificadosLicenciasSvc: CertificadosLicenciasPermisosService,
   private tramite260211Store: Tramite260303Store,
   private tramite260211Query: Tramite260303Query,
-  private consultaioQuery: ConsultaioQuery,
 ) {
-      this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
 }
 
 /**
@@ -302,11 +292,13 @@ constructor(
  *   `crearElstablecimientoForm`, `crearRepresentanteLegalForm`, `cerrarSCIANForm` y `cerrarMercanciasForm`.
  */
 ngOnInit(): void {
+  this.inicializarFormulario();
   this.inicializarTablaYCatalogoDatos();
   this.crearElstablecimientoForm();
   this.crearRepresentanteLegalForm();
   this.cerrarSCIANForm();
   this.cerrarMercanciasForm();
+   this.deshabilitarFormularios();
 }
 
   /**
@@ -729,28 +721,8 @@ public static deepCopy<T>(obj: T): T {
       (this.tramite260211Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
-    /**
-   * Determina si se debe cargar un formulario nuevo o uno existente.  
-   * Ejecuta la lógica correspondiente según el estado del componente.
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
-    } else {
-      this.inicializarFormulario();
-    }
-  }
-
-  /**
-   * Habilita o deshabilita los formularios del componente según el modo de solo lectura.
-   * 
-   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es true), 
-   * deshabilita todos los formularios para evitar la edición por parte del usuario.
-   * Si no está en modo solo lectura, habilita todos los formularios para permitir la edición.
-   */
-  guardarDatosFormulario(): void {
-    this.inicializarFormulario();
-    if (this.esFormularioSoloLectura) {
+    deshabilitarFormularios(): void {
+    if (this.consultaState?.readonly) {
       // Deshabilita todos los formularios en modo solo lectura
       this.denominacionForm.disable();
       this.domicilioDeElstablecimientoForm.disable();
@@ -758,7 +730,7 @@ public static deepCopy<T>(obj: T): T {
       this.scianForm.disable();
       this.mercanciasForm.disable();
     } else {
-      // Habilita todos los formularios para edición
+       // Habilita todos los formularios para edición
       this.denominacionForm.enable();
       this.domicilioDeElstablecimientoForm.enable();
       this.representanteLegalForm.enable();
