@@ -10,7 +10,7 @@ export const FECHA = {
     /**
      * Indica si el campo de fecha es obligatorio.
      */
-    required: true,
+    required: false,
   
     /**
      * Indica si el campo de fecha está habilitado.

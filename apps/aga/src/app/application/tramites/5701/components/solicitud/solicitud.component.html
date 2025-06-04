@@ -79,6 +79,7 @@
             placeholder="RFC"
             type="text"
             formControlName="RFCImpExp"
+            maxlength="13"
             [ngClass]="
               isValid(datosImportadorExportador, 'RFCImpExp') ? 'required' : ''
             "
@@ -270,14 +271,8 @@
           id="fechaInicio"
           formControlName="fechaInicio"
           [ngClass]="isValid(datosServicio, 'fechaInicio') ? 'required' : ''"
-          (change)="
-            setValoresStore(datosServicio, 'fechaInicio', 'setFechaInicio')
-          "
+          (change)="changeFechaInicio()"
         />
-
-        @if (isValid(datosServicio,'fechaInicio')) {
-        <div class="mensaje-error">Fecha no válida</div>
-        }
       </div>
 
       <div class="col-md-4">
@@ -305,16 +300,6 @@
           [ngClass]="isValid(datosServicio, 'fechaFinal') ? 'required' : ''"
           (change)="changeFechaFinal()"
         />
-
-        @if (isValid(datosServicio,'fechaFinal')) {
-        <div class="mensaje-error">Fecha no válida</div>
-        } @if (intervaloFechaError()) {
-        <div class="mensaje-error">Intervalo de fecha no válido</div>
-        } @if (fechaInicioPasadaFechaFinalError()) {
-        <div class="mensaje-error">
-          La fecha de incio no debe ser despues que la fecha final
-        </div>
-        }
       </div>
 
       <div class="col-md-4">
@@ -325,13 +310,6 @@
           [inputId]="'horaFinal'"
           (change)="changeHoraFinal()"
         ></input-hora>
-        @if (intervaloFechaError()) {
-        <div class="mensaje-error">Intervalo de fecha no válido</div>
-        } @if (fechaInicioPasadaFechaFinalError()) {
-        <div class="mensaje-error">
-          La fecha de incio no debe ser despues que la fecha final
-        </div>
-        }
       </div>
     </div>
 
@@ -491,7 +469,10 @@
           [required]="false"
         >
           <option value="-1">Selecciona una opción...</option>
-          <option *ngFor="let recinto of recintoCatalogo" [value]="recinto">
+          <option
+            *ngFor="let recinto of recintoCatalogo"
+            [value]="recinto.id_recinto_fiscalizado"
+          >
             {{ recinto.descripcion }}
           </option>
         </select>
@@ -568,7 +549,9 @@
           <textarea
             class="form-control h-25"
             id="exampleFormControlTextarea1"
-            rows="3"
+            rows="5"
+            cols="10"
+            maxlength="200"
             formControlName="domicilioDespacho"
             id="domicilioDespacho"
             placeholder=""
@@ -595,7 +578,6 @@
   <div formGroupName="mercancia">
     <div class="row">
       <div class="col-md-4">
-        
         <app-select-paises
           [catalogosPaises]="paisesOrigen"
           formControlName="paisOrigen"
@@ -623,10 +605,12 @@
             >Descripción genérica*:</label
           >
           <textarea
-            class="form-control"
-            rows="3"
+            class="form-control h-25"
+            rows="5"
+            cols="10"
             id="descripcionGenerica"
             formControlName="descripcionGenerica"
+            maxlength="500"
             (change)="
               setValoresStore(
                 mercancia,
@@ -642,10 +626,12 @@
         <div class="form-group">
           <label for="justificacion" class="form-label">Justificación*:</label>
           <textarea
-            class="form-control"
-            rows="3"
+            class="form-control h-25"
+            rows="5"
+            cols="10"
             id="justificacion"
             formControlName="justificacion"
+            maxlength="1000"
             (change)="
               setValoresStore(mercancia, 'justificacion', 'setJustificacion')
             "
@@ -666,8 +652,8 @@
     (datosTabla)="changeAgregarVehiculo($event, 'vehiculo')"
   ></lib-transporte>
 
-   <ng-titulo titulo="Datos del transporte de arribo/salida (al/del país)" />
-   <lib-transporte
+  <ng-titulo titulo="Datos del transporte de arribo/salida (al/del país)" />
+  <lib-transporte
     [catalogoTransporte]="tipoTransporte"
     [tipoTransporteSeleccionado]="solicitudState.tipoTransporteArriboSalida"
     [tablaTransporte]="solicitudState.transporteArriboDatos"
@@ -678,7 +664,12 @@
 
   <ng-titulo titulo="Personas responsables del despacho (máximo 5)" />
 
-  <agrega-personas />
+  <agrega-personas
+    [personasResponsablesDespachoSeleccionados]="
+      solicitudState.personasResponsablesDespacho
+    "
+    (responsablesDespachoChange)="changeResponsablesDespacho($event)"
+  />
 
   <ng-titulo titulo="Pagos" />
   <div formGroupName="pagoCaptura">
@@ -707,6 +698,7 @@
           placeholder=""
           type="text"
           formControlName="lineaCaptura"
+          maxlength="20"
           (change)="
             setValoresStore(pagoCaptura, 'lineaCaptura', 'setLineaCaptura')
           "
@@ -720,6 +712,7 @@
           placeholder=""
           type="text"
           formControlName="monto"
+          maxlength="12"
           (change)="setValoresStore(pagoCaptura, 'monto', 'setMonto')"
         />
       </div>
@@ -733,7 +726,6 @@
             class="btn btn-primary me-2"
             type="button"
             (click)="consultarLineaCaptura()"
-            [disabled]="!FormSolicitud.get('pagoCaptura')?.valid"
           >
             Consultar
           </button>
@@ -742,12 +734,25 @@
       </div>
     </div>
 
-    <div class="row">
+    <div class="row mt-3 mb-5">
       <p class="p-bold">
         A través del siguiente vinculo puedes ingresar a la página para generar
         la línea de captura de la constancia que se solicita:
       </p>
       <p>Generar línea de captura</p>
+    </div>
+
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-8">
+        <app-tabla-dinamica
+          [tipoSeleccionTabla]="tablaSeleccionPagos.CHECKBOX"
+          [configuracionTabla]="encabezadoDeTablaPagos"
+          [datos]="datosTablaPagos"
+        >
+        </app-tabla-dinamica>
+      </div>
+      <div class="col-md-2"></div>
     </div>
   </div>
   }

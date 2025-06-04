@@ -5,6 +5,21 @@ import { Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '../../../enviroments/enviroment';
 
+/**
+ * Servicio para gestionar la expansión de productores en el trámite 90201.
+ *
+ * Este servicio proporciona métodos para obtener catálogos, datos de expansión de productores
+ * y detalles de trámites, utilizando archivos JSON locales y servicios auxiliares.
+ *
+ * @remarks
+ * - Utiliza la URL base definida en la variable de entorno `URL_SERVER_JSON_AUXILIAR`.
+ * - Proporciona métodos para interactuar con archivos JSON locales y servicios HTTP externos.
+ *
+ * @example
+ * ```typescript
+ * constructor(private expansionService: ExpansionDeProductoresService) {}
+ * ```
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -21,10 +36,16 @@ export class ExpansionDeProductoresService {
   * @param http: constructor de HttpClient
   */
   constructor(private http: HttpClient) {
+    // Lógica de inicialización si es necesario {
     // Lógica de inicialización si es necesario
    }
 
 
+  /**
+   * Obtiene el catálogo de sectores desde un archivo JSON local.
+   *
+   * @returns Un observable que emite la respuesta del catálogo de sectores.
+   */
   getSectorCatalog(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/90201/sector.json');
   }
@@ -42,6 +63,13 @@ export class ExpansionDeProductoresService {
       );
     }
 
-
+    /**
+     * Obtiene los datos de expansión de productores desde un archivo JSON local.
+     *
+     * @returns Un observable que emite los datos obtenidos del archivo 'assets/json/90201/informica.json'.
+     */
+    getRegistroExpansionDeProductoresData(): Observable<any> {
+    return this.http.get<any>('assets/json/90201/informica.json');
+  }
 
 }

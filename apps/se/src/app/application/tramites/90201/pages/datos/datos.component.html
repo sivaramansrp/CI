@@ -21,13 +21,19 @@
                     <app-solicitante></app-solicitante>
                 }
                 @case (2) {
+                    @if(esDatosRespuesta){
                    <app-domicilios-de-plantas></app-domicilios-de-plantas>
+                    }
                 }
                 @case(3) {
+                     @if(esDatosRespuesta){
                     <app-sectores-y-mercancias></app-sectores-y-mercancias>
+                     }
                 }
                 @case(4) {
+                     @if(esDatosRespuesta){
                     <app-productor-indirecto></app-productor-indirecto>
+                     }
                 }
 
             }
