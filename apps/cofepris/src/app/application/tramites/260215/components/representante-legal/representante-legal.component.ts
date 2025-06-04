@@ -11,6 +11,7 @@ import {
 } from '../../estados/tramites/tramite260215.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite260215Query } from '../../estados/queries/tramite260215.query';
 
@@ -35,6 +36,12 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+/**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+ public esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    * @param fb
@@ -44,22 +51,60 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   constructor(
     private readonly fb: FormBuilder,
     private tramite260215Store: Tramite260215Store,
-    private tramite260215Query: Tramite260215Query
+    private tramite260215Query: Tramite260215Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Inicializa el estado de la solicitud.
+   this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
+  }
+
+
+  /**
+     * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+     * Luego reinicializa el formulario con los valores actualizados desde el store.
+     */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.representante.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.representante.enable();
+    }
+  }
+
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
   }
 
   /**
-   * Grupo de formularios principal.
-   * @property {FormGroup} representante
+   * Inicializa el formulario del representante legal.
+   * 
+   * - Suscribe al observable `selectSolicitud$` para obtener el estado actual de la solicitud
+   *   y lo asigna a la propiedad `solicitudState`.
+   * - Crea el formulario reactivo `representante` con los campos requeridos y sus validaciones.
+   * - Los campos `nombre`, `apellidoPaterno` y `apellidoMaterno` se inicializan deshabilitados.
+   * 
+   * @remarks
+   * Este método debe llamarse durante la inicialización del componente para asegurar que el formulario
+   * esté correctamente configurado con los datos actuales de la solicitud.
    */
-  representante!: FormGroup;
-
-  /**
-   * Inicializa el componente.
-   */
-  ngOnInit(): void {
-    this.tramite260215Query.selectSolicitud$
+  inicializarFormulario(): void {
+      this.tramite260215Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -76,9 +121,22 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Grupo de formularios principal.
+   * @property {FormGroup} representante
+   */
+ public representante!: FormGroup;
+
+  /**
+   * Inicializa el componente.
+   */
+  ngOnInit(): void {
+ this.inicializarEstadoFormulario()
+  }
+
+  /**
    * Obtiene el valor de un campo en el store de Tramite31601.
    */
-  obtenerValor() {
+  obtenerValor():void {
     this.representante.patchValue({
       nombre: 47875,
       apellidoPaterno: 'Paterno',
@@ -104,7 +162,8 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Limpia los campos del formulario.
+   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+   * Este método completa el observable destroyNotifier$ para cancelar las suscripciones activas.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { DatosComponent } from './datos.component';
 
 fdescribe('DatosComponent', () => {
@@ -8,7 +8,8 @@ fdescribe('DatosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DatosComponent]
+      declarations: [DatosComponent],
+      imports: [HttpClientTestingModule]
     })
     .compileComponents();
     
