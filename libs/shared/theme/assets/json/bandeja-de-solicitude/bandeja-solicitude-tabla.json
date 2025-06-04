@@ -835,5 +835,23 @@
       "diasTranscurridos": "4",
       "departamento": "AGA",
       "numeroDeProcedimiento": "11201"
-    }
+    },
+     {
+      "id": 260603,
+      "tipoDeTramite": "Expedición de Certificados de Cupo Licitación pública",
+      "fecha": "2023-10-01",
+      "fechaActualizacion": "2023-10-05",
+      "diasTranscurridos": "4",
+      "departamento": "COFEPRIS",
+      "numeroDeProcedimiento": "260603"
+     },
+      {
+      "id": 260604,
+      "tipoDeTramite": "Expedición de Certificados de Cupo Licitación pública",
+      "fecha": "2023-10-01",
+      "fechaActualizacion": "2023-10-05",
+      "diasTranscurridos": "4",
+      "departamento": "COFEPRIS",
+      "numeroDeProcedimiento": "260604"
+      }
 ]
