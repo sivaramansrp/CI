@@ -162,9 +162,9 @@ export class SolicitudService {
     }
     this.tramite270201Store.setDescripcionArancelaria(DATOS.descripcionArancelaria);
     this.tramite270201Store.setObraDeArte(DATOS.ObraDeArte);
-    }
+  }
 
-    getRegistroTomaMuestrasMercanciasData(): Observable<Tramite270201State> {
+  getRegistroTomaMuestrasMercanciasData(): Observable<Tramite270201State> {
     return this.http.get<Tramite270201State>('assets/json/270201/aviso-de-importacion.json');
   }
 }

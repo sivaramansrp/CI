@@ -405,21 +405,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   guardarDatosFormulario(): void {
     this.initializeSolicitudFormGroup();
-    // this.initializeObraDeArteFormGroup();
+    this.initializeObraDeArteFormGroup();
     if (this.solicitudFormGroup && this.esFormularioSoloLectura) {
       this.solicitudFormGroup.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.solicitudFormGroup.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
-    }
+    } 
 
     if (this.obraDeArteFormgroup && this.esFormularioSoloLectura) {
       this.obraDeArteFormgroup.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.obraDeArteFormgroup.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
     }
   }
 
@@ -531,6 +527,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe()
+
+        this.solicitudFormGroup.patchValue({
+          tipoDeOperacion: this.solicitudState.tipoDeOperacion,
+          tipoDeMovimiento: this.solicitudState.tipoDeMovimiento,
+          motivo: this.solicitudState.motivo,
+          pais: this.solicitudState.pais,
+          ciudad: this.solicitudState.ciudad,
+          medioTransporte: this.solicitudState.medioTransporte,
+          aduanaEntrada: this.solicitudState.aduanaEntrada,
+        });
   }
 
   /**
@@ -741,6 +747,23 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe()
+
+          this.obraDeArteFormgroup.patchValue({
+          autor: this.solicitudState.autor,
+          titulo: this.solicitudState.titulo,
+          tecnicaDeRealizacion: this.solicitudState.tecnicaDeRealizacion,
+          alto: this.solicitudState.alto,
+          ancho: this.solicitudState.ancho,
+          profundidad: this.solicitudState.profundidad,
+          diametro: this.solicitudState.diametro,
+          variables: this.solicitudState.variables,
+          anoDeCreacion: this.solicitudState.anoDeCreacion,
+          avaluo: this.solicitudState.avaluo,
+          moneda: this.solicitudState.moneda,
+          propietario: this.solicitudState.propietario,
+          fraccionArancelaria: this.solicitudState.fraccionArancelaria,
+          descripcionArancelaria: this.solicitudState.descripcionArancelaria,
+        });
   }
 
   /**
