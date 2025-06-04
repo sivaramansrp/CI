@@ -135,6 +135,10 @@ solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
     if (this.formularioDeshabilitado) {
       this.grupoFormularioPadre.disable();
     }
+
+    if (this.formularioDeshabilitado) {
+      this.grupoFormularioPadre.disable();
+    }
   }
   /**
    * Maneja la selección de un artículo del catálogo.

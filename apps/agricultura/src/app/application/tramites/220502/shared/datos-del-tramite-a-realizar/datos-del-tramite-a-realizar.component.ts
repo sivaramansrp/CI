@@ -67,6 +67,11 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
     return this.parentContainer.control as FormGroup;
   }
 
+  /**
+   * Configuración del campo de fecha para la 'Fecha de Inicio de Vigencia'.
+   *
+   * Contiene las propiedades visuales y de validación del componente de entrada de fecha.
+   */
   configuracionFechaFinVigencia: InputFecha = {
     labelNombre: 'Fecha de Inicio de Vigencia',
     required: false,
@@ -134,33 +139,57 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
       this.grupoFormularioPadre.addControl(
         this.claveDeControl,
         new FormGroup({
-          certificadosAutorizados: new FormControl(this.solicitud220502State.certificadosAutorizados, [Validators.required]),
-          horaDeInspeccion: new FormControl(this.solicitud220502State.horaDeInspeccion, [Validators.required]),
-          aduanaDeIngreso: new FormControl(this.solicitud220502State.aduanaDeIngreso, [Validators.required]),
-          sanidadAgropecuaria: new FormControl(this.solicitud220502State.sanidadAgropecuaria, [Validators.required]),
-          puntoDeInspeccion: new FormControl(this.solicitud220502State.puntoDeInspeccion, [Validators.required]),
-          fechaDeInspeccion: new FormControl(this.solicitud220502State.fechaDeInspeccion, [Validators.required]),
+          certificadosAutorizados: new FormControl(
+            this.solicitud220502State.certificadosAutorizados,
+            [Validators.required]
+          ),
+          horaDeInspeccion: new FormControl(
+            this.solicitud220502State.horaDeInspeccion,
+            [Validators.required]
+          ),
+          aduanaDeIngreso: new FormControl(
+            this.solicitud220502State.aduanaDeIngreso,
+            [Validators.required]
+          ),
+          sanidadAgropecuaria: new FormControl(
+            this.solicitud220502State.sanidadAgropecuaria,
+            [Validators.required]
+          ),
+          puntoDeInspeccion: new FormControl(
+            this.solicitud220502State.puntoDeInspeccion,
+            [Validators.required]
+          ),
+          fechaDeInspeccion: new FormControl(
+            this.solicitud220502State.fechaDeInspeccion,
+            [Validators.required]
+          ),
         })
       );
       this.cargarDatosIniciales();
-      this.solicitud220502Query.selectSolicitud$.pipe(
-        takeUntil(this.destroyed$),
-        map((res:Solicitud220502State)=>{
-          this.solicitud220502State = res;
-          const FORM_GROUP = this.grupoFormularioPadre.get(this.claveDeControl) as FormGroup;
+      this.solicitud220502Query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((res: Solicitud220502State) => {
+            this.solicitud220502State = res;
+            const FORM_GROUP = this.grupoFormularioPadre.get(
+              this.claveDeControl
+            ) as FormGroup;
 
-          if (FORM_GROUP) {
-            FORM_GROUP.patchValue({
-              certificadosAutorizados: this.solicitud220502State.certificadosAutorizados,
-              horaDeInspeccion: this.solicitud220502State.horaDeInspeccion,
-              aduanaDeIngreso: this.solicitud220502State.aduanaDeIngreso,
-              sanidadAgropecuaria: this.solicitud220502State.sanidadAgropecuaria,
-              puntoDeInspeccion: this.solicitud220502State.puntoDeInspeccion,
-              fechaDeInspeccion: this.solicitud220502State.fechaDeInspeccion,
-            });
-          }
-        })
-      ).subscribe();
+            if (FORM_GROUP) {
+              FORM_GROUP.patchValue({
+                certificadosAutorizados:
+                  this.solicitud220502State.certificadosAutorizados,
+                horaDeInspeccion: this.solicitud220502State.horaDeInspeccion,
+                aduanaDeIngreso: this.solicitud220502State.aduanaDeIngreso,
+                sanidadAgropecuaria:
+                  this.solicitud220502State.sanidadAgropecuaria,
+                puntoDeInspeccion: this.solicitud220502State.puntoDeInspeccion,
+                fechaDeInspeccion: this.solicitud220502State.fechaDeInspeccion,
+              });
+            }
+          })
+        )
+        .subscribe();
     }
 
     if (this.formularioDeshabilitado) {
@@ -224,26 +253,50 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
     }
   }
 
-/**
- * Actualiza los datos iniciales de los campos del formulario según la información proporcionada.
- *
- * @param data - El objeto de datos que contiene valores para diferentes campos de catálogo.
- */
-actualizarDatosIniciales(data: DatosDelTramiteRealizar): void {
-  const CATALOGOTEMPLATE = (label: string, required: boolean, catalogos: Catalogo[]): CatalogosSelect => ({
-    labelNombre: label,
-    required,
-    primerOpcion: 'Selecciona un valor',
-    catalogos,
-  });
+  /**
+   * Actualiza los datos iniciales de los campos del formulario según la información proporcionada.
+   *
+   * @param data - El objeto de datos que contiene valores para diferentes campos de catálogo.
+   */
+  actualizarDatosIniciales(data: DatosDelTramiteRealizar): void {
+    const CATALOGOTEMPLATE = (
+      label: string,
+      required: boolean,
+      catalogos: Catalogo[]
+    ): CatalogosSelect => ({
+      labelNombre: label,
+      required,
+      primerOpcion: 'Selecciona un valor',
+      catalogos,
+    });
 
-  this.certificadosAutorizados = CATALOGOTEMPLATE('Certificados autorizados pendientes', true, data.pendientesCertificados);
-  this.horaDeInspeccion = CATALOGOTEMPLATE('Hora de inspección', true, data.horaInspeccion);
-  this.aduanaDeIngreso = CATALOGOTEMPLATE('Aduana de ingreso', false, data.aduanaIngreso);
-  this.sanidadAgropecuaria = CATALOGOTEMPLATE('Oficina de inspección de Sanidad Agropecuaria', false, data.sanidadAgropecuaria);
-  this.puntoDeInspeccion = CATALOGOTEMPLATE('Punto de inspección', false, data.puntoInspeccion);
-}
-
+    this.certificadosAutorizados = CATALOGOTEMPLATE(
+      'Certificados autorizados pendientes',
+      true,
+      data.pendientesCertificados
+    );
+    this.horaDeInspeccion = CATALOGOTEMPLATE(
+      'Hora de inspección',
+      true,
+      data.horaInspeccion
+    );
+    this.aduanaDeIngreso = CATALOGOTEMPLATE(
+      'Aduana de ingreso',
+      false,
+      data.aduanaIngreso
+    );
+    this.sanidadAgropecuaria = CATALOGOTEMPLATE(
+      'Oficina de inspección de Sanidad Agropecuaria',
+      false,
+      data.sanidadAgropecuaria
+    );
+    this.puntoDeInspeccion = CATALOGOTEMPLATE(
+      'Punto de inspección',
+      false,
+      data.puntoInspeccion
+    );
+    this.cdRef.detectChanges();
+  }
 
   /**
    * Carga datos del catálogo inicial para las selecciones de formulario.
@@ -309,8 +362,6 @@ actualizarDatosIniciales(data: DatosDelTramiteRealizar): void {
   setPuntoDeInspeccion(event: Catalogo): void {
     this.solicitud220502Store.setPuntoDeInspeccion(event.id);
   }
-
-
   /**
    * Gancho de ciclo de vida para limpiar los controles de formulario cuando se destruye el componente.
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
