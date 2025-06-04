@@ -10,6 +10,8 @@ import { SolicitudService } from '../../services/solicitud.service';
   standalone: false,
   templateUrl: './datos-270201.component.html',
 })
+/** Componente responsable de gestionar los datos del trámite 270201.  
+ * Implementa lógica de inicialización y limpieza del ciclo de vida. */
 export class Datos270201Component implements OnInit, OnDestroy {
 
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
@@ -35,6 +37,8 @@ export class Datos270201Component implements OnInit, OnDestroy {
     this.indice = i;
   }
 
+  /** Inyecta servicios para gestión de solicitudes y consultas.  
+ * La inicialización se delega a métodos específicos del componente. */
   constructor(
     private solicitudService: SolicitudService,
     private consultaQuery: ConsultaioQuery

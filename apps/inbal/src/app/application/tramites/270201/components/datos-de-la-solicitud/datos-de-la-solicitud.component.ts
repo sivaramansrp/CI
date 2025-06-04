@@ -37,8 +37,6 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TableComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite270201Query } from '../../estados/queries/tramite270201.query';
-// import { takeUntil } from 'rxjs';
-// import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
 /**
  * Constante que contiene el texto del manifiesto de alerta sobre la propiedad y datos técnicos de la obra(s).
@@ -210,10 +208,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   tablaObraDeArteData: string[] = [];
 
-  // private destroyNotifier$: Subject<void> = new Subject();
-
+ /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
    esFormularioSoloLectura: boolean = false;
 
+   /** Estado actual del trámite 270201 asociado a la solicitud. 
+   * Contiene datos del flujo y validaciones del proceso. */
    public solicitudState!: Tramite270201State;
 
   /**
@@ -226,6 +228,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @param {FormBuilder} fb - Utilizado para construir y gestionar formularios reactivos.
    * @param {Tramite270201Store} tramite270201Store - Almacén que gestiona el estado del trámite 270201.
    * @param {SolicitudService} solicitudService - Servicio encargado de realizar solicitudes HTTP
+   * @param {ConsultaioQuery} consultaioQuery - Query para obtener el estado del store de consulta IO.
    * y obtener datos relacionados con el trámite.
    */
   constructor(
@@ -366,6 +369,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
      */
     this.initializeObraDeArteFormGroup();
 
+    /** Llama al método que configura el formulario según el estado de solo lectura. */
     this.inicializarEstadoFormulario();
 
     /**
@@ -381,7 +385,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   `;
   }
 
-
+ /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.  
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
@@ -391,6 +398,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+
+   /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
   guardarDatosFormulario(): void {
     this.initializeSolicitudFormGroup();
     // this.initializeObraDeArteFormGroup();
@@ -509,6 +521,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       aduanaEntrada: new FormControl('', [Validators.required]),
     });
 
+      /** Suscribe al estado de solicitud 270201 y lo asigna a `solicitudState`.  
+      * Usa `takeUntil` para limpiar la suscripción al destruir el componente. */
       this.tramite270201Query.selectDatosSolicitud$
       .pipe(
         takeUntil(this.destroy$),
@@ -716,6 +730,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       descripcionArancelaria: ['', [Validators.required]],
     });
 
+
+  /** Suscribe al estado de solicitud 270201 y lo asigna a `solicitudState`.  
+ * Usa `takeUntil` para limpiar la suscripción al destruir el componente. */
    this.tramite270201Query.selectDatosSolicitud$
       .pipe(
         takeUntil(this.destroy$),

@@ -20,6 +20,8 @@ export class SolicitudService {
    * AppConfig es una inyección de dependencias que proporciona la configuración de la aplicación.
    */
   urlServer = ENVIRONMENT.URL_SERVER;
+
+  /** URL base para obtener catálogos JSON auxiliares */
   urlServerCatalogos = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
   /**
    * @constructor
@@ -122,11 +124,11 @@ export class SolicitudService {
   }
 
   actualizarEstadoFormulario(DATOS: Tramite270201State): void {
-    if(DATOS.operacion){
-      this.tramite270201Store.setOperacion(DATOS.operacion);
+    if(DATOS.tipoDeOperacion){
+      this.tramite270201Store.setOperacion(DATOS.tipoDeOperacion);
     }
-     if(DATOS.movimiento){
-      this.tramite270201Store.setMovimiento(DATOS.movimiento);
+     if(DATOS.tipoDeMovimiento){
+      this.tramite270201Store.setMovimiento(DATOS.tipoDeMovimiento);
     }
     if(DATOS.motivo){
       this.tramite270201Store.setMotivo(DATOS.motivo);
@@ -135,15 +137,15 @@ export class SolicitudService {
       this.tramite270201Store.setPais(DATOS.pais);
     }
     this.tramite270201Store.setCiudad(DATOS.ciudad);
-    if(DATOS.transporte){
-      this.tramite270201Store.setTransporte(DATOS.transporte);
+    if(DATOS.medioTransporte){
+      this.tramite270201Store.setTransporte(DATOS.medioTransporte);
     }
-    if(DATOS.aduana){
-      this.tramite270201Store.setAduana(DATOS.aduana);
+    if(DATOS.aduanaEntrada){
+      this.tramite270201Store.setAduana(DATOS.aduanaEntrada);
     }
     this.tramite270201Store.setAutor(DATOS.autor);
     this.tramite270201Store.setTitulo(DATOS.titulo);
-    this.tramite270201Store.setTecnica(DATOS.tecnica);
+    this.tramite270201Store.setTecnica(DATOS.tecnicaDeRealizacion);
     this.tramite270201Store.setAlto(DATOS.alto);
     this.tramite270201Store.setAncho(DATOS.ancho);
     this.tramite270201Store.setProfundidad(DATOS.profundidad);
