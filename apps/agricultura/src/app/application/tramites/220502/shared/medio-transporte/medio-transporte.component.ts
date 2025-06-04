@@ -72,9 +72,24 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
   get grupoFormularioPadre(): FormGroup {
     return this.parentContainer.control as FormGroup;
   }
+
+  /**
+   * Valor seleccionado para el campo "¿Es solicitud ferros?".
+   */
   esSolicitudFerrosValor!: string;
+
+  /**
+   * Opciones disponibles para el grupo de botones de radio.
+   *
+   * Estas opciones suelen representar valores como "Sí", "No", etc.
+   */
   opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
+  /**
+   * Datos utilizados para renderizar la tabla.
+   *
+   * Contiene encabezados (`tableHeader`) y filas de contenido (`tableBody`).
+   */
   tableData = {
     tableBody: [],
     tableHeader: [],
@@ -176,7 +191,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
   /**
    * Maneja los cambios en las propiedades de entrada y actualiza los datos de la tabla en consecuencia.
    * @param {SimpleChanges} changes - Objeto que contiene las propiedades modificadas.
-   *
+   *  
    */
   ngOnChanges(changes: SimpleChanges): void {
     const TBODYKEY = 'hMercanciaTabla';
@@ -206,7 +221,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
   }
   /**
    * Actualiza el medio de transporte en el estado de la solicitud.
-   *
+   * 
    * @param event - Objeto de tipo Catalogo que contiene el identificador del medio de transporte.
    */
   setTransporteIdMedio(event: Catalogo): void {
@@ -215,7 +230,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
 
   /**
    * Actualiza la identificación del transporte en el estado de la solicitud.
-   *
+   * 
    * @param event - Evento del input que contiene la identificación del transporte.
    */
   setIdentificacionTransporte(event: Event): void {
@@ -225,7 +240,7 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
 
   /**
    * Actualiza el total de guías amparadas en el estado de la solicitud.
-   *
+   * 
    * @param event - Evento del input que contiene el número total de guías amparadas.
    */
   setTotalDeGuiasAmparadas(event: Event): void {

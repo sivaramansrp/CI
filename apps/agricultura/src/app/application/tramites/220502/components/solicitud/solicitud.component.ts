@@ -88,8 +88,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   private destroyed$ = new Subject<void>();
 
+  /** Bandera para deshabilitar el formulario */
   formularioDeshabilitado: boolean =
-    false; /** Bandera para deshabilitar el formulario */
+    false; 
 
   /** Constructor para inyectar dependencias */
   constructor(
@@ -113,7 +114,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
   /** Gancho de ciclo de vida para cargar datos iniciales cuando se inicializa el componente */
   ngOnInit(): void {
-    // this.cargarDatosIniciales();
     this.inicializarEstadoFormulario();
   }
 

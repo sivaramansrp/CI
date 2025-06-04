@@ -47,10 +47,22 @@ export class SolicitudPantallasService {
     return this.http.get<TipoContenedor>(this.dataUrl).pipe();
   }
 
+  /**
+   * Obtiene los datos iniciales de la solicitud desde un archivo JSON local.
+   *
+   * @returns Un observable que emite los datos de la solicitud.
+   */
   getDatosDeLaSolicitud(): Observable<DatosDeLaSolicitud> {
-    return this.http.get<DatosDeLaSolicitud>('assets/json/220502/datos-de-la-solicitud.json').pipe();
+    return this.http
+      .get<DatosDeLaSolicitud>('assets/json/220502/datos-de-la-solicitud.json')
+      .pipe();
   }
 
+  /**
+   * Actualiza el estado del formulario en el store con los datos recibidos.
+   *
+   * @param datos - Objeto que contiene la información de la solicitud.
+   */
   actualizarEstadoFormulario(datos: DatosDeLaSolicitud): void {
     this.solicitud220502Store.setCertificadosAutorizados(
       datos.certificadosAutorizados
