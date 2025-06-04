@@ -100,6 +100,13 @@ export interface Tramite130121State {
   acotacion: string;
   /** Descripción del NICO */
   descripcionNico: string;
+  /**
+   * @description Indica si el usuario ha aceptado el manifiesto de aceptación.
+   * Valor booleano que representa el estado del checkbox del manifiesto.
+   * Se utiliza para almacenar y gestionar la aceptación en el store.
+   * @type {boolean}
+   */
+  manifesto: boolean;
 }
 
 /**
@@ -129,10 +136,11 @@ export function createInitialState(): Tramite130121State {
     usoEspecifico: '',
     justificacionImportacionExportacion: '',
     observaciones: '',
-    entidad: '',
-    representacion: '',
+    entidad: '1',
+    representacion: '1',
     acotacion: '',
     descripcionNico: '',
+    manifesto: false
   };
 }
 /**
@@ -155,38 +163,6 @@ export class Tramite130121Store extends Store<Tramite130121State> {
     super(createInitialState());
   }
 
-  /**
-   * Actualiza múltiples propiedades del estado.
-   *
-   * @param {Partial<Tramite130121State>} updates - Objeto con las propiedades a actualizar.
-   * @memberof Tramite130121Store
-   */
-  public updateState(updates: Partial<Tramite130121State>): void {
-    this.update(updates);
-  }
-
-  /**
-   * Actualiza el indicador que muestra la tabla en el estado.
-   *
-   * @param {boolean} mostrar - Valor booleano para mostrar o no la tabla.
-   * @memberof Tramite130121Store
-   */
-  public setMostrarTabla(mostrar: boolean): void {
-    this.update({ mostrarTabla: mostrar });
-  }
-
-  /**
-   * Almacena el valor de la fila seleccionada en la tabla en el estado.
-   *
-   * @param {null} fila - La fila seleccionada (valor nulo en este caso).
-   * @memberof Tramite130121Store
-   */
-
-  public storeTableValues(fila: PartidasDeLaMercanciaModelo[]): void {
-    this.update({
-      filaSeleccionada: fila,
-    });
-  }
 
   /**
  * @description

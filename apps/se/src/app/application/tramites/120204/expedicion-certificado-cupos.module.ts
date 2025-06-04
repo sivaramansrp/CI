@@ -1,14 +1,14 @@
 import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent,FirmaElectronicaComponent,TablaDinamicaComponent,TituloComponent,WizardComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
-import { NgModule } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
 import { CapturarExpedicionCertificadosComponent } from './components/capturar-expedicion-certificados/capturar-expedicion-certificados.component';
+import { CommonModule } from '@angular/common';
 import { DatosComponent } from './pages/datos/datos.component';
 import { ExpedicionCertificadoRoutingModule } from './expedicion-certificado-cupos-routing.module';
 import { FirmarSolicitudComponent } from './pages/firmar-solicitud/firmar-solicitud.component';
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitanteComponent } from '../../tramites/110101/components/solicitante/solicitante.component';
 import { SolicitudExpedicionPageComponent } from './pages/solicitud-expedicion-page/solicitud-expedicion-page.component';
+import { ToastrService } from 'ngx-toastr';
 
 
 /**

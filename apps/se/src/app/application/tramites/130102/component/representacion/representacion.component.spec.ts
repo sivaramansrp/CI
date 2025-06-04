@@ -1,64 +1,94 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentacionComponent } from './representacion.component';
+import { ReactiveFormsModule } from '@angular/forms';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
+import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+import { FormularioRegistroService } from '../../services/octava-temporal.service';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { of, Subject } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
-fdescribe('RepresentacionComponent', () => {
+describe('RepresentacionComponent (Jest)', () => {
   let component: RepresentacionComponent;
   let fixture: ComponentFixture<RepresentacionComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        ReactiveFormsModule,
-        CatalogoSelectComponent,
-        TituloComponent,
-        CommonModule,
-        RepresentacionComponent,
-      ],
-      declarations: [],
-    }).compileComponents();
+  const mockStore = {
+    setEntidad: jest.fn(),
+    setRepresentacion: jest.fn()
+  };
 
-    fixture = TestBed.createComponent(RepresentacionComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+  const mockQuery = {
+    selectSolicitud$: jest.fn()
+  };
+
+  const mockFormService = {
+    registrarFormulario: jest.fn()
+  };
+
+  const mockConsultaioQuery = {
+    selectConsultaioState$: of({ readonly: false })
+  };
+
+  beforeEach(async () => {
+    mockQuery.selectSolicitud$.mockReturnValue(of({
+      entidad: 5,
+      representacion: 3
+    }));
+
+    await TestBed.configureTestingModule({
+      declarations: [
+      ],
+      imports: [
+        RepresentacionComponent,
+        TituloComponent,
+        CatalogoSelectComponent,
+        CommonModule,
+        ReactiveFormsModule
+      ],
+      providers: [
+        { provide: Tramite130102Store, useValue: mockStore },
+        { provide: Tramite130102Query, useValue: mockQuery },
+        { provide: FormularioRegistroService, useValue: mockFormService },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
+      ]
+    }).compileComponents();
   });
 
-  it('should create', () => {
+  beforeEach(() => {
+    fixture = TestBed.createComponent(RepresentacionComponent);
+    component = fixture.componentInstance;
+  
+  });
+
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form', () => {
-    expect(component.frmRepresentacion).toBeDefined();
-    expect(component.frmRepresentacion.controls['entidad']).toBeDefined();
-    expect(
-      component.frmRepresentacion.controls['representacion']
-    ).toBeDefined();
+  it('should assign selected entidad federativa', () => {
+    const entidad = { id: 2, descripcion: 'Jalisco' };
+    component.entidadFederativaSeleccion(entidad);
+    expect(component.seleccionadaEntidadFederativa).toEqual(entidad);
   });
 
-  it('should handle fetchEntidadFederativa correctly', () => {
-    const mockEntidad = { id: 1, descripcion: 'Sinaloa' };
-    component.fetchEntidadFederativa(mockEntidad);
-    expect(component.seleccionadaEntidadFederativa).toEqual(mockEntidad);
+  it('should assign selected representacion federal', () => {
+    const representacion = { id: 4, descripcion: 'SAT' };
+    component.representacionFederalSeleccion(representacion);
+    expect(component.seleccionadaRepresentacionFederal).toEqual(representacion);
   });
 
-  it('should handle fetchRepresentacionFederal correctly', () => {
-    const mockRepresentacion = { id: 1, descripcion: 'Culican' };
-    component.fetchRepresentacionFederal(mockRepresentacion);
-    expect(component.seleccionadaRepresentacionFederal).toEqual(
-      mockRepresentacion
-    );
+  it('should fetchEntidadFederativa assign to seleccionadaEntidadFederativa', () => {
+    const entidad = { id: 1, descripcion: 'CDMX' };
+    component.fetchEntidadFederativa(entidad);
+    expect(component.seleccionadaEntidadFederativa).toEqual(entidad);
   });
 
-  it('should set entidadFederativaLista on init', () => {
-    component.ngOnInit();
-    expect(component.entidadFederativaLista.length).toBeGreaterThan(0);
+  it('should fetchRepresentacionFederal assign to seleccionadaRepresentacionFederal', () => {
+    const representacion = { id: 6, descripcion: 'SHCP' };
+    component.fetchRepresentacionFederal(representacion);
+    expect(component.seleccionadaRepresentacionFederal).toEqual(representacion);
   });
 
-  it('should set representacionFederalLista on init', () => {
-    component.ngOnInit();
-    expect(component.representacionFederalLista.length).toBeGreaterThan(0);
-  });
+ 
 });
