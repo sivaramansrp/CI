@@ -1,11 +1,12 @@
 
 import { AlertComponent, ConfiguracionColumna, Fabricante, LASTABLA, Otros, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FABRICANTE_TABLA, OTROS_TABLA } from '../../services/certificados-licencias-permisos.enum';
 import { Subject, takeUntil } from 'rxjs';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FabricanteModalComponent } from '../fabricante-modal/fabricante-modal.component';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
 type AllowedValue = string | number | boolean | undefined;
@@ -22,6 +23,13 @@ type AllowedValue = string | number | boolean | undefined;
   styleUrl: './terceros-relacionados.component.scss',
 })
 export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
+
+  /**
+* @property consultaState
+* @description
+* Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+*/
+  @Input() consultaState!: ConsultaioState;
 
   /**
    * Una referencia a la instancia del modal de Bootstrap.
