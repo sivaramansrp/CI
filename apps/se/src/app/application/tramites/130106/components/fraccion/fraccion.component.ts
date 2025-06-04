@@ -1,15 +1,13 @@
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna,CrosslistComponent,TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy,OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, CrosslistComponent,TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Solicitud130106State, Tramite130106Store } from '../../../../estados/tramites/tramite130106.store';
 import {Subject, map,takeUntil } from 'rxjs';
-import { AVISO } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum'
+import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum'
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Partidas } from '@libs/shared/data-access-user/src/core/models/130106/partidas.model';
 import { Tramite130106Query } from '../../../../estados/queries/tramite130106.query';
 import fraccions from '@libs/shared/theme/assets/json/130106/fraccion.json';
-
-
 /**
  * Componente que maneja el formulario de fracción, incluyendo la inicialización y la gestión de fechas seleccionadas.
  */
@@ -20,41 +18,39 @@ import fraccions from '@libs/shared/theme/assets/json/130106/fraccion.json';
   templateUrl: './fraccion.component.html', // Define la plantilla HTML del componente
   styleUrl: './fraccion.component.scss' // Define los estilos CSS del componente
 })
+/* Componente que gestiona la sección de fracción arancelaria del formulario,  
+   implementa lógica de inicialización y limpieza de recursos. */
 export class FraccionComponent implements OnInit, OnDestroy {
-
+/** Indica si el formulario debe mostrarse en modo solo lectura.  
+ *  Controla la habilitación o deshabilitación de los campos. */
+ esFormularioSoloLectura: boolean = false;
   /**
    * Formulario reactivo para manejar los datos de la fracción.
    */
   fraccionForm!: FormGroup;
-
-  /**
+/**
    * Lista de fracciones obtenidas del archivo JSON.
-   */
+   */  
   public fraccion: Catalogo[] = fraccions.fraccion;
-
   /**
    * Lista de unidades de medida obtenidas del archivo JSON.
    */
   public umt: Catalogo[] = fraccions.UMT;
-
-  /**
+ /**
    * Lista de bloques obtenidos del archivo JSON.
    */
-  public bloque: Catalogo[] = fraccions.bloque;
-
+   public bloque: Catalogo[] = fraccions.bloque;
   /**
    * Lista de entidades obtenidas del archivo JSON.
    */
   public entidad: Catalogo[] = fraccions.entidad;
-
-  /**
+ /**
    * Lista de representaciones obtenidas del archivo JSON.
-   */
+   */ 
   public representacion: Catalogo[] = fraccions.representacion;
-
-  /**
+ /**
    * Estado de la solicitud 130106.
-   */
+   */ 
   public solicitudState!: Solicitud130106State;
 
   /**
@@ -73,10 +69,21 @@ export class FraccionComponent implements OnInit, OnDestroy {
    * @param tramite130106Store - Store para manejar el estado de la solicitud.
    * @param tramite130106Query - Query para obtener el estado de la solicitud.
    */
-  constructor(private fb: FormBuilder,
+  constructor(public fb: FormBuilder,
     public tramite130106Store: Tramite130106Store,
-    public tramite130106Query: Tramite130106Query) {
-      //Constructor
+    public tramite130106Query: Tramite130106Query,
+    private consultaioQuery: ConsultaioQuery,
+    ) {
+       this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+       
+          this.inicializarCertificadoFormulario();
+        })
+      )
+      .subscribe()
      }
 
   /**
@@ -90,9 +97,12 @@ export class FraccionComponent implements OnInit, OnDestroy {
     { encabezado: 'Precio unitario USD', clave: (item: Partidas) => item.precio, orden: 5 },
     { encabezado: 'Total USD', clave: (item: Partidas) => item.total, orden: 6 }
   ];
-
+// Enum o clase que representa las opciones de selección en la tabla
   TablaSeleccion = TablaSeleccion;
-
+/**
+ * Constante que contiene los textos del aviso a mostrar en la interfaz.
+ * Se utiliza para mostrar mensajes informativos, advertencias u otros textos fijos.
+ */
   public TEXTOS = AVISO;
 
   /**
@@ -145,7 +155,6 @@ export class FraccionComponent implements OnInit, OnDestroy {
       funcion: (): void => this.quitar('t'),
     },
   ];
-
   /**
    * Agrega elementos a la lista de fechas seleccionadas dependiendo del tipo de acción.
    * @param tipo - El tipo de acción ('t' para agregar todos, otro valor para agregar una sola fecha).
@@ -160,7 +169,6 @@ export class FraccionComponent implements OnInit, OnDestroy {
       this.fechasDatos.splice(FECHAVALOR, 1); // Elimina la fecha seleccionada de las fechas disponibles
     }
   }
-
   /**
    * Elimina elementos de la lista de fechas seleccionadas dependiendo del tipo de acción.
    * @param tipo - El tipo de acción ('t' para eliminar todas, otro valor para eliminar una sola fecha).
@@ -175,16 +183,27 @@ export class FraccionComponent implements OnInit, OnDestroy {
       this.fechasSeleccionadas.splice(FECHAVALOR, 1); // Elimina la fecha seleccionada de la lista
     }
   }
-
   /**
    * Método que se ejecuta cuando el componente es inicializado.
    */
   ngOnInit(): void {
-    this.inicializarFormulario(); // Inicializa el formulario con los valores predeterminados
+   this.inicializarCertificadoFormulario();
     this.selectRangoDias = this.solicitudState.selectRangoDias;
   }
-
-  /**
+/**
+ * Inicializa el formulario de solicitud.
+ * Este método configura los valores predeterminados, validadores 
+ * y estructura del formulario utilizado para capturar los datos de la solicitud.
+ */
+    inicializarCertificadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+     
+     this.inicializarFormulario()
+    }  
+  }
+    /**
    * Establece valores en el store del trámite a partir de los campos del formulario.
    * @param form - El formulario con los valores que se deben asignar.
    * @param campo - El campo específico del formulario.
@@ -194,9 +213,26 @@ export class FraccionComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.tramite130106Store[metodoNombre] as (value: unknown) => void)(VALOR); // Llama al método correspondiente en el store
   }
-
   /**
-   * Inicializa el formulario con los valores predeterminados de la solicitud.
+   * @comdoc
+   * Guarda los datos del formulario de combinación requerida.
+   * 
+   * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
+   * - Si el formulario es de solo lectura, lo deshabilita.
+   * - Si no es de solo lectura, lo habilita.
+   * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+     if (this.esFormularioSoloLectura) {
+  this.fraccionForm.disable();
+} else {
+  this.fraccionForm.enable();
+}
+  }
+  /**
+   * Inicializa el formulario de la solicitud con los valores del estado.
+   * También se suscribe a los cambios en el estado de la solicitud.
    */
   public inicializarFormulario(): void {
     this.tramite130106Query.selectSolicitud$
@@ -207,7 +243,7 @@ export class FraccionComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe(); // Realiza la suscripción para actualizar el estado
-
+ 
     // Crea el formulario con los valores predeterminados
     this.fraccionForm = this.fb.group({
       fraccion: [this.solicitudState.fraccion, Validators.required],
@@ -228,16 +264,22 @@ export class FraccionComponent implements OnInit, OnDestroy {
       disponible: [this.solicitudState.disponible,],
       seleccionado: [this.solicitudState.seleccionado, Validators.required],
     });
+    /* Se suscribe a los cambios del campo 'bloque' del formulario */
     this.fraccionForm.get('bloque')?.valueChanges.subscribe(() => {
       this.selectRangoDias =["ESTADOS UNIDOS DE AMERICA CANADA"];
-      this.tramite130106Store.updateSelectRangoDias(this.selectRangoDias)
-      
+      this.tramite130106Store.updateSelectRangoDias(this.selectRangoDias)      
     });
+    /* Actualiza los campos del formulario con base en la lógica actual */
     this.updateformfied();
   }
-  updateformfied(): void {
-  
-
+  /**
+ * Actualiza los campos del formulario relacionados con fracciones.
+ * 
+ * Este método deshabilita los campos 'cantidadTotal' y 'valorTotal'
+ * para evitar que el usuario los edite manualmente, ya que probablemente
+ * se calculan automáticamente o dependen de otros valores.
+ */
+  updateformfied(): void { 
     // Deshabilita los campos para que no se puedan editar
     this.fraccionForm.get('cantidadTotal')?.disable();
     this.fraccionForm.get('valorTotal')?.disable();
@@ -262,7 +304,6 @@ export class FraccionComponent implements OnInit, OnDestroy {
       valorTotal:FORMDATA.cantidad
     }); // Agrega la nueva partida a la lista
   }
-
   /**
    * Se ejecuta cuando el componente es destruido. Limpia recursos y observables.
    */
