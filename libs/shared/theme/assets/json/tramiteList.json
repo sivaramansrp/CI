@@ -135,8 +135,8 @@
   {
     "id": 20,
     "tramite": 32504,
-    "linkDashboard": "/agace/aviso/aviso-procesos",
-    "linkDepartment": "/agace/aviso/aviso-procesos",
+    "linkDashboard": "/agace/aviso-procesos/aviso-procesos",
+    "linkDepartment": "/pago/aviso-procesos/aviso-procesos",
     "department": "agace"
   },
   {
@@ -1998,7 +1998,7 @@
     "id": 286,
     "tramite": 80104,
     "linkDashboard": "/se/registro-solicitud-immex-modalidad-controladora/action",
-    "linkDepartment": "/pago/registro-solicitud-immex-modalidad-controladora/action",
+    "linkDepartment": "/se/registro-solicitud-immex-modalidad-controladora/action",
     "department": "se"
   },
   {
@@ -2032,8 +2032,8 @@
   {
     "id": 291,
     "tramite": 80316,
-    "linkDashboard": "/se/modificaciones-immex-prosec/tipo-de-persona",
-    "linkDepartment": "/pago/modificaciones-immex-prosec/tipo-de-persona",
+    "linkDashboard": "/se/modificaciones-immex/tipo-de-persona",
+    "linkDepartment": "/pago/modificaciones-immex/tipo-de-persona",
     "department": "se"
   },
   {

@@ -22,6 +22,7 @@
         formControlName="estado"
         [label]="'Estado'"
         [required]="true"
+        [isDisabled]="esFormularioSoloLectura"
         name="estado"
         (change)="setValoresStore(domicilio, 'estado', 'setEstado')"
       ></app-catalogo-select>
@@ -123,11 +124,12 @@
       [datos]="nicoTablaDatos"
     ></app-tabla-dinamica>
     <div class="container text-end mt-5">
-      <button class="btn btn-default me-2">Eliminar</button>
+      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
       <button
         class="btn btn-primary me-2"
         data-bs-toggle="modal"
         data-bs-target="#modalAddAgent"
+        [disabled]="esFormularioSoloLectura"
       >
         Agregar
       </button>
@@ -181,6 +183,7 @@
         formControlName="regimen"
         [label]="'Régimen'"
         [required]="true"
+        [isDisabled]="esFormularioSoloLectura"
         name="regimen"
         (change)="setValoresStore(domicilio, 'regimen', 'setRegimen')"
       ></app-catalogo-select>
@@ -191,6 +194,7 @@
         formControlName="aduanasEntradas"
         [label]="'Aduanas de entradas'"
         [required]="true"
+        [isDisabled]="esFormularioSoloLectura"
         name="aduanasEntradas"
         (change)="
           setValoresStore(domicilio, 'aduanasEntradas', 'setAduanasEntradas')
@@ -235,14 +239,16 @@
         class="btn btn-default me-2"
         data-bs-toggle="modal"
         data-bs-target="#modalAddAgentMercancias"
+        [disabled]="esFormularioSoloLectura"
       >
         Modificar
       </button>
-      <button class="btn btn-default me-2">Eliminar</button>
+      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
       <button
         class="btn btn-primary me-2"
         data-bs-toggle="modal"
         data-bs-target="#modalAddAgentMercancias"
+        [disabled]="esFormularioSoloLectura"
       >
         Agregar
       </button>
@@ -270,6 +276,7 @@
               formControlName="claveScianModal"
               [label]="'Clave S.C.I.A.N.'"
               [required]="true"
+              [isDisabled]="esFormularioSoloLectura"
               name="claveScianModal"
               (change)="
                 setValoresStore(
@@ -286,6 +293,7 @@
               formControlName="claveDescripcionModal"
               [label]="'Descripción del S.C.I.A.N.'"
               [required]="false"
+              [isDisabled]="esFormularioSoloLectura"
               name="claveDescripcionModal"
               (change)="
                 setValoresStore(
@@ -299,13 +307,13 @@
         </form>
       </div>
       <div class="modal-footer custom-footer">
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+        <button [disabled]="esFormularioSoloLectura" type="button" class="btn btn-default" data-bs-dismiss="modal">
           Limpiar
         </button>
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+        <button [disabled]="esFormularioSoloLectura" type="button" class="btn btn-default" data-bs-dismiss="modal">
           Cancelar
         </button>
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+        <button  [disabled]="esFormularioSoloLectura" type="button" class="btn btn-primary" data-bs-dismiss="modal">
           Agregar
         </button>
       </div>
@@ -333,6 +341,7 @@
               formControlName="clasificacion"
               [label]="'Clasificación del producto'"
               [required]="true"
+              [isDisabled]="esFormularioSoloLectura"
               name="clasificacion"
               (change)="
                 setValoresStore(
@@ -349,6 +358,7 @@
               formControlName="especificar"
               [label]="'Especificar clasificación del producto'"
               [required]="true"
+              [isDisabled]="esFormularioSoloLectura"
               name="especificar"
               (change)="
                 setValoresStore(formMercancias, 'especificar', 'setEspecificar')
@@ -415,6 +425,7 @@
               formControlName="tipoDeProducto"
               [label]="'Tipo de producto'"
               [required]="true"
+              [isDisabled]="esFormularioSoloLectura"
               name="tipoDeProducto"
               (change)="
                 setValoresStore(
@@ -431,6 +442,7 @@
               formControlName="estadoFisico"
               [label]="'Estado físico'"
               [required]="true"
+              [isDisabled]="esFormularioSoloLectura"
               name="estadoFisico"
               (change)="
                 setValoresStore(
@@ -515,6 +527,7 @@
               formControlName="UMC"
               [label]="'UMC'"
               [required]="true"
+              [isDisabled]="esFormularioSoloLectura"
               name="UMC"
               (change)="setValoresStore(formMercancias, 'UMC', 'setUMC')"
             ></app-catalogo-select>
@@ -655,13 +668,13 @@
         </form>
       </div>
       <div class="modal-footer custom-footer">
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+        <button [disabled]="esFormularioSoloLectura" type="button" class="btn btn-default" data-bs-dismiss="modal">
           Limpiar
         </button>
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+        <button [disabled]="esFormularioSoloLectura" type="button" class="btn btn-default" data-bs-dismiss="modal">
           Cancelar
         </button>
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+        <button [disabled]="esFormularioSoloLectura" type="button" class="btn btn-primary" data-bs-dismiss="modal">
           Agregar
         </button>
       </div>
