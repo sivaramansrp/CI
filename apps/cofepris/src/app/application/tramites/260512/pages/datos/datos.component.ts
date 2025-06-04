@@ -26,7 +26,7 @@ export class DatosComponent implements OnInit, OnDestroy {
    * Variable que almacena el índice del subtítulo seleccionado.
    * Por defecto, el índice inicial es `1`.
    */
-  indice: number = 1;
+  public indice: number = 1;
 
   /**
    * @property destroyNotifier$

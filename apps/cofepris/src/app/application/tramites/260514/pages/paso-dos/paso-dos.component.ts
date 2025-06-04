@@ -28,7 +28,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * @property {any} TEXTOS
    * @description Constante que contiene los textos utilizados en el componente.
    */
-  TEXTOS = TEXTOS;
+ public TEXTOS = TEXTOS;
 
   /**
    * @property {TableData} tableData
@@ -37,7 +37,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * - tableHeader: Encabezados de la tabla.
    * - tableBody: Cuerpo de la tabla.
    */
-  tableData: TableData = {
+  public tableData: TableData = {
     tableHeader: [],
     tableBody: [],
   };
@@ -56,7 +56,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Array para almacenar los documentos del catálogo.
    * Cada documento es de tipo `Catalogo`, representando un ítem en el catálogo.
    */
-  catalogoDocumentos: Catalogo[] = [];
+  public catalogoDocumentos: Catalogo[] = [];
 
   /**
    * @constructor

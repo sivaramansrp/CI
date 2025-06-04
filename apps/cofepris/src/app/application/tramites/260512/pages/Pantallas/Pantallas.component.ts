@@ -41,27 +41,27 @@ export class PantallasComponent {
    * @description
    * Lista de pasos del wizard cargados desde una constante.
    */
-  solicitudePasos: ListaPasosWizard[] = LISTA_PASOS_WIZARD;
+  public solicitudePasos: ListaPasosWizard[] = LISTA_PASOS_WIZARD;
 
   /**
    * @description
    * Índice actual del paso seleccionado en el wizard.
    * Por defecto, el índice inicial es `1`.
    */
-  indice: number = 1;
+  public indice: number = 1;
 
   /**
    * @description
    * Lista de pasos del wizard cargados desde una constante.
    */
-  pasos: ListaPasosWizard[] = PASOS;
+  public pasos: ListaPasosWizard[] = PASOS;
 
   /**
    * @description
    * Datos relacionados con los pasos del wizard, como el número total de pasos,
    * el índice actual y los textos de los botones de navegación.
    */
-  datosPasos: DatosPasos = {
+  public datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
     txtBtnAnt: 'Guardar',

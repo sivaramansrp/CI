@@ -28,7 +28,7 @@ export class DatosComponent implements OnInit, OnDestroy {
    * Se utiliza para determinar qué sección de datos se muestra.
    * Inicialmente, el valor es 1.
    */
-  indice: number = 1;
+  public indice: number = 1;
 
   /**
    * @property destroyNotifier$
