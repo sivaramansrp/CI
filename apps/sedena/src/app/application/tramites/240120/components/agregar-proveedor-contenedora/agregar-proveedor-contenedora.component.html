@@ -1,3 +1,7 @@
-<app-agregar-proveedor
+<app-agregar-proveedor-custom
+  [idProcedimiento]="idProcedimiento"
+  [formaDatos]="ProveedorDatos"
+  (actualizaExistenteEnProveedorDatos)="
+    actualizaExistenteEnProveedorDatos($event)"
   (updateProveedorTablaDatos)="updateProveedorTablaDatos($event)"
-></app-agregar-proveedor>
+></app-agregar-proveedor-custom>
