@@ -3,15 +3,14 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud260303State, Tramite260303Store } from '../../../../estados/tramites/260303/tramite260303.store';
 import { Subject,map, takeUntil } from 'rxjs';
 import { BsModalRef } from 'ngx-bootstrap/modal';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Catalogo} from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite260303Query } from '../../../../estados/queries/260303/tramite260303.query';
-
 /**
  * FabricanteModalComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
  */
-
 @Component({
   selector: 'app-fabricante-modal',
   standalone: true,
@@ -45,7 +44,13 @@ export class FabricanteModalComponent implements OnInit,OnDestroy {
    * Notificador para destruir los observables al finalizar.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-  
+
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente FabricanteModalComponent.
    * 
@@ -57,8 +62,18 @@ export class FabricanteModalComponent implements OnInit,OnDestroy {
     private fb: FormBuilder,
     private tramite260303Store: Tramite260303Store,
     private tramite260303Query: Tramite260303Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
     this.titulo = '';
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -76,6 +91,21 @@ export class FabricanteModalComponent implements OnInit,OnDestroy {
     )
     .subscribe();
     this.cerrarTercerosRelacionadosForm();
+  }
+
+  /**
+   * Inicializa el formulario obteniendo el estado actual de la solicitud desde el store.
+   * Se suscribe al observable selectSolicitud$ para actualizar la propiedad solicitudState
+   * con los datos más recientes de la solicitud.
+   */
+  inicializarFormulario(): void {
+    this.tramite260303Query.selectSolicitud$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.solicitudState = seccionState;
+      })
+    )
+      .subscribe();
   }
 
   /**
@@ -120,6 +150,35 @@ export class FabricanteModalComponent implements OnInit,OnDestroy {
   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260303Store): void {
       const VALOR = form.get(campo)?.value;
       (this.tramite260303Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+ * Determina si se debe cargar un formulario nuevo o uno existente.  
+ * Ejecuta la lógica correspondiente según el estado del componente.
+ */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+
+  /**
+   * Guarda los datos del formulario y ajusta el estado de solo lectura.
+   * Si el formulario está en modo solo lectura, deshabilita todos los controles del formulario.
+   * Si no, habilita los controles para permitir la edición.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      // Deshabilita el formulario si está en modo solo lectura
+      this.tercerosRelacionadosForm.disable();
+    } else {
+      // Habilita el formulario para edición
+      this.tercerosRelacionadosForm.enable();
+    }
   }
 
   /**

@@ -89,7 +89,6 @@ export * from './core/services/120402/descripcion-del-cupo/descripcionDelCupo.se
 export * from './core/services/120402/representacionFederal/representacion-federal.service';
 export * from './core/services/120402/seleccion-del-cupo/seleccion-del-cupo.service';
 export * from './core/services/120602/empresa-frontera-solicitud.enum';
-export * from './core/services/130118/pexim/pexim.service';
 export * from './core/services/220471/servicios-pantallas.service';
 export * from './core/services/231001/administrar-residuos.service';
 export * from './core/services/231001/materia-prima-formservice.service';
