@@ -377,8 +377,6 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.tramiteForm?.disable();
-    } else {
-      this.tramiteForm?.enable();
     }
   }
 
