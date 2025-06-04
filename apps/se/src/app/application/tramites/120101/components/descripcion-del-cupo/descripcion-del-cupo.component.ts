@@ -168,7 +168,7 @@ export class DescripcionDelCupoComponent implements AfterViewInit, OnInit {
  */
   public establecerValorDeFormulario(): void {
     this.ninoFormGroup.patchValue({
-      fraccionArancelaria: this.objetoDeFormulario.fraccionArancelaria,
+      fraccionArancelariaDescripcion: this.objetoDeFormulario.fraccionArancelaria,
       descripcionProducto: this.objetoDeFormulario.productoDescripcion,
       tratadoBloque: this.objetoDeFormulario.cveTratado,
       clasificacionSubproducto: this.objetoDeFormulario.subProductoClasificacion,

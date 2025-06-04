@@ -15,7 +15,8 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { PagoDerechosFormState } from '../../models/pago-de-derechos.model';
-import { REGEX_VALORES_NUMERICOS } from '@ng-mf/data-access-user';
+import { REGEX_IMPORTE_PAGO } from '@ng-mf/data-access-user';
+import { REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -153,7 +154,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       ],
       importePago: [
         this.pagoDerechoFormState?.importePago || '',
-        [Validators.required, Validators.pattern(REGEX_VALORES_NUMERICOS)],
+        [Validators.required, Validators.pattern(REGEX_IMPORTE_PAGO)],
       ],
       banco: [this.pagoDerechoFormState?.banco || '', Validators.required],
     });
@@ -184,7 +185,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @description Limpia todos los campos del formulario de pago de derechos.
    */
   onReset(): void {
-    this.pagoDerechosForm.reset();
+    if (this.pagoDerechosForm.invalid) {
+      this.pagoDerechosForm.markAllAsTouched();
+      return;
+    }
   }
 
   /**
@@ -204,6 +208,24 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @method ngOnDestroy
    * @returns {void}
    */
+
+    /**
+ * @method onImportePagoInput
+ * @description
+ * Maneja el evento de entrada del campo "importePago" para asegurar que solo se permitan caracteres numéricos
+ * y que la longitud máxima sea de 22 dígitos. Si el usuario ingresa un carácter no numérico, este será eliminado.
+ * Además, si la longitud supera los 22 caracteres, el valor se recorta automáticamente.
+ * El valor limpio se actualiza en el control reactivo sin emitir un nuevo evento de cambio.
+ *
+ * @param {Event} event - El evento de entrada generado por el campo de texto.
+ * 
+ * @returns {void} No retorna ningún valor.
+ */
+  onImportePagoInput(event: Event): void {
+    const INPUT = event.target as HTMLInputElement;
+    INPUT.value = INPUT.value.replace(REGEX_NUMEROS, '').slice(0, 22);
+    this.pagoDerechosForm.get('importePago')?.setValue(INPUT.value, { emitEvent: false });
+  }
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();

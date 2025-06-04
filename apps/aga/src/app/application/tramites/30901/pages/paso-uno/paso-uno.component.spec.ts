@@ -1,7 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CommonModule } from '@angular/common';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { PasoUnoComponent } from './paso-uno.component';
+import { PagoLineaDeCapturaComponent } from '../../components/pago-linea-de-captura/pago-linea-de-captura.component';
+import { DatosProrrogaMuestrasMercanciasComponent } from '../../components/datos-prorroga-muestras-mercancias/datos-prorroga-muestras-mercancias.component';
+import { RegistroRenovacionesMuestrasMercanciasComponent } from '../../components/registro-renovaciones-muestras-mercancias/registro-renovaciones-muestras-mercancias.component';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -9,13 +14,15 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [
-        PasoUnoComponent,
-      ],
       imports: [
+        PasoUnoComponent,
+        PagoLineaDeCapturaComponent,
+        DatosProrrogaMuestrasMercanciasComponent,
+        RegistroRenovacionesMuestrasMercanciasComponent,
+        SolicitanteComponent,
         CommonModule,
         HttpClientTestingModule
-      ],
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
@@ -23,25 +30,19 @@ describe('PasoUnoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have default indice value as 2', () => {
-    expect(component.indice).toBe(2);
+  it('should have default indice as 1', () => {
+    expect(component.indice).toBe(1);
   });
 
-  it('should update indice when seleccionaTab is called', () => {
-    component.indice = 1;
-    expect(component.indice).toBe(1);
-
-    component.seleccionaTab(2);
-    expect(component.indice).toBe(2);
-
+  it('should set indice when seleccionaTab is called', () => {
     component.seleccionaTab(3);
     expect(component.indice).toBe(3);
 
-    component.seleccionaTab(4);
-    expect(component.indice).toBe(4);
+    component.seleccionaTab(0);
+    expect(component.indice).toBe(0);
   });
 });

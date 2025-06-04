@@ -1,6 +1,9 @@
-import { API_POST_SOLICITUD, enviroment } from '@libs/shared/data-access-user/src';
-import { catchError, map, Observable, throwError } from 'rxjs';
-import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
+import {
+  API_POST_SOLICITUD,
+  ENVIRONMENT,
+} from '@libs/shared/data-access-user/src';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Observable, catchError, map, throwError } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { SolicitudPayload } from '../../../models/5701/solicitud-payload.model';
 import { SolicitudResult } from '../../../models/5701/solicitud-result.model';
@@ -9,13 +12,10 @@ import { SolicitudResult } from '../../../models/5701/solicitud-result.model';
   providedIn: 'root',
 })
 export class GuardaSolicitudService {
-
   private readonly host: string;
 
-  constructor(
-    private http: HttpClient
-  ) {
-    this.host = `${enviroment.API_HOST}/api/`;
+  constructor(private http: HttpClient) {
+    this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
 
   /**
@@ -23,7 +23,7 @@ export class GuardaSolicitudService {
    */
   postSolicitud(solicitud: SolicitudPayload): Observable<SolicitudResult> {
     const ENDPOINT = `${this.host}` + API_POST_SOLICITUD;
-  
+
     return this.http.post<SolicitudResult>(ENDPOINT, solicitud).pipe(
       map((response) => {
         return response;
@@ -35,7 +35,9 @@ export class GuardaSolicitudService {
             error: httpError.error,
           }));
         }
-        const ERROR = new Error(`Ocurrió un error al guardar la información ${ENDPOINT} `);
+        const ERROR = new Error(
+          `Ocurrió un error al guardar la información ${ENDPOINT} `
+        );
         return throwError(() => ERROR);
       })
     );

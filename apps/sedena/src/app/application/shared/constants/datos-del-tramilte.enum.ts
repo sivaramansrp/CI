@@ -28,7 +28,7 @@ export const CROSLISTA_ADUANAS_DISPONIBLES: string[] = [
  * @description Representa códigos específicos utilizados en el sistema para identificar tipos de permisos definitivos.
  */
 export const PERMISO_DEFINITIVO_TITULO = [
-  240119, 240118, 240107, 240106, 240108, 240308,240117, 240121, 240405, 240111,240305, 240311, 240411, 240122, 240407, 240123, 240321,240112
+  240119, 240120, 240118, 240107, 240106, 240108, 240308,240117, 240121, 240405, 240111,240305, 240311, 240411, 240122, 240407, 240123, 240321,240112
 ];
 
 /**
@@ -38,7 +38,7 @@ export const PERMISO_DEFINITIVO_TITULO = [
  * @type {number[]}
  * @description Representa códigos específicos utilizados en el sistema para identificar permisos aduaneros.
  */
-export const PERMISO_ADUNA_TITULO = [240119, 240118, 240123];
+export const PERMISO_ADUNA_TITULO = [240119, 240120, 240118, 240123];
 
 /**
  * Identificadores numéricos relacionados con permisos OCULTAR_BOTONES.
@@ -47,7 +47,7 @@ export const PERMISO_ADUNA_TITULO = [240119, 240118, 240123];
  * @type {number[]}
  * @description Representa códigos específicos utilizados en el sistema para identificar permisos OCULTAR_BOTONES.
  */
-export const OCULTAR_BOTONES = [240121, 240107,240311, 240407, 240123,240321];
+export const OCULTAR_BOTONES = [240120, 240121, 240107,240311, 240407, 240123,240321, 240118];
 
  /**
  * @const NO_VISIBILIDAD_UMC
@@ -72,6 +72,7 @@ export const PAISE_DENTINO_EITIQUETA: Map<number, string> = new Map<
   string
 >([
   [240119, 'País de procedencia'],
+  [240120, 'País de procedencia'],
   [240118, 'País de procedencia'],
   [240123, 'País de procedencia'],
   [240108, 'paise destino'],
@@ -120,6 +121,13 @@ export const MANIFIESTOS_DECLARACIONES = [240107, 240106, 240117, 240407, 240123
  */
 export const FETCHA_PAGO = [240107, 240106, 240407];
 
+/**
+ * Identificadores numéricos relacionados con fechas de salida.
+ *
+ * @constant
+ * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos relacionados con fechas de salida en el sistema.
+ */
 export const FETCHA_SALIDA = [240123];
 
 /**
@@ -130,6 +138,15 @@ export const FETCHA_SALIDA = [240123];
  * @description Contiene un arreglo de identificadores numéricos relacionados con CURP en el sistema.
  */
 export const ES_CURP = [240107, 240114, 240118, 240117, 240121,240311];
+
+/**
+ * Identificadores numéricos relacionados con RFC.
+ *
+ * @constant
+ * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos relacionados con NACIONAL en el sistema.
+ */
+export const ES_NACIONAL = [240118];
 
 /**
  * Período del primer semestre.
@@ -217,6 +234,7 @@ export const ES_RFC = [240117];
  * Este valor es utilizado para identificar permisos que no están habilitados o disponibles en ciertas funcionalidades.
  */
 export const DESACTIVADO_PERMISO_GENERAL = [240405, 240411,240321];
+
 /**
  * @constant
  * @name ADUANA_TEXTO
@@ -224,4 +242,4 @@ export const DESACTIVADO_PERMISO_GENERAL = [240405, 240411,240321];
  * @description Contiene un arreglo de identificadores numéricos relacionados con aduanas específicas.
  * Este valor es utilizado en el sistema para identificar trámites o permisos asociados a estas aduanas.
  */
-export const ADUANA_TEXTO = [240123];
+export const ADUANA_TEXTO = [240123, 240120, 240118];

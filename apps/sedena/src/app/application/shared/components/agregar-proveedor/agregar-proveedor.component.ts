@@ -1,4 +1,4 @@
-import { CAMPO_OBLIGATORIO_PROVEEDOR, TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
+import { AGREGARPROVEEDORFORM, CAMPO_OBLIGATORIO_PROVEEDOR, TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
 import { CommonModule, Location } from '@angular/common';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
@@ -113,7 +113,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
   constructor(
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
-    private ubicaccion: Location // eslint-disable-next-line no-empty-function
+    private ubicaccion: Location 
   ) {}
   /**
    * Crea el formulario reactivo `agregarProveedorForm` utilizando `FormBuilder`.
@@ -128,22 +128,22 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
         [
           Validators.required,
           Validators.minLength(2),
-          Validators.maxLength(150),
+          Validators.maxLength(254),
         ],
       ],
-      nombres: ['', Validators.required],
-      primerApellido: ['', Validators.required],
-      segundoApellido: [''],
+      nombres: ['', [Validators.required, Validators.maxLength(200)]],
+      primerApellido: ['', [Validators.required, Validators.maxLength(200)]],
+      segundoApellido: ['', Validators.maxLength(200)],
       pais: ['', Validators.required],
-      estado: ['', Validators.required],
-      codigoPostal: ['', Validators.required],
-      colonia: [''],
-      calle: ['', Validators.required],
-      numeroExterior: ['', Validators.required],
-      numeroInterior: [''],
-      lada: [''],
-      telefono: [''],
-      correoElectronico: ['', [Validators.required, Validators.email]],
+      estado: ['', [Validators.required, Validators.maxLength(120)]],
+      codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
+      colonia: ['', Validators.required],
+      calle: ['', [Validators.required, Validators.maxLength(300)]],
+      numeroExterior: ['', [Validators.required, Validators.maxLength(55)]],
+      numeroInterior: ['', Validators.maxLength(55)],
+      lada: ['', Validators.maxLength(5)],
+      telefono: ['', Validators.maxLength(24)],
+      correoElectronico: ['', [Validators.email, Validators.maxLength(320)]],
     });
     this.agregarProveedorForm.disable();
     this.agregarProveedorForm.get('tipoPersona')?.enable();
@@ -156,6 +156,12 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
     this.crearFormaulario();
     this.campoObligatorio = CAMPO_OBLIGATORIO_PROVEEDOR.includes(this.idProcedimiento)
     this.campoObligatorioChange();
+        if (AGREGARPROVEEDORFORM.includes(this.idProcedimiento)) {
+      this.agregarProveedorForm.enable();
+    }
+    else {
+      this.agregarProveedorForm.disable();
+    }
     this.cargarDatos();
     if(this.formaDatos) {
       this.agregarProveedorForm.patchValue(this.formaDatos);
@@ -219,6 +225,10 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * local, actualiza el store del trámite y luego limpia el formulario y regresa a la vista anterior.
    */
   guardarProveedor(): void {
+    if (this.agregarProveedorForm.invalid) {
+      this.agregarProveedorForm.markAllAsTouched();
+      return;
+    }
     const NUEVO_PROVEEDOR: Proveedor = {
       nombreRazonSocial: `${this.agregarProveedorForm.value.nombres} ${
         this.agregarProveedorForm.value.primerApellido
@@ -253,6 +263,8 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    */
   limpiarFormulario(): void {
     this.agregarProveedorForm.reset();
+    this.agregarProveedorForm.disable();
+    this.agregarProveedorForm.get('tipoPersona')?.enable();
   }
   /**
    * @method cancelar

@@ -1,23 +1,21 @@
-
-import { API_GET_ADUANA, CLAVE_ADUANA_QUERY } from '../../../constants/api-constants';
-import { catchError, map, Observable, throwError } from 'rxjs';
-import { enviroment } from '../../../../enviroments/enviroment'
+import {
+  API_GET_RECINTO,
+  CLAVE_ADUANA_QUERY,
+} from '../../../constants/api-constants';
+import { Observable, catchError, map, throwError } from 'rxjs';
+import { ENVIRONMENT } from '../../../../enviroments/enviroment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RecintoResponse } from '../../../models/shared/recinto.model';
-
 
 @Injectable({
   providedIn: 'root',
 })
 export class RecintoService {
-
   private readonly host: string;
 
-  constructor(
-    private http: HttpClient
-  ) {
-    this.host = `${enviroment.API_HOST}/api/`;
+  constructor(private http: HttpClient) {
+    this.host = `${ENVIRONMENT.API_HOST}/api/`;
   }
 
   /**
@@ -26,14 +24,18 @@ export class RecintoService {
    * @returns {Observable: RecintoResponse} que emite la respuesta del API con la lista de recintos fiscalizados.
    */
   getListaRecintos(claveAduana: string): Observable<RecintoResponse> {
-    const ENDPOINT = `${this.host}`+ API_GET_ADUANA.replace(CLAVE_ADUANA_QUERY, claveAduana);
+    const ENDPOINT =
+      `${this.host}` +
+      API_GET_RECINTO.replace(CLAVE_ADUANA_QUERY, claveAduana);
 
     return this.http.get<RecintoResponse>(ENDPOINT).pipe(
       map((response) => {
         return response;
       }),
       catchError(() => {
-        const ERROR = new Error(`Ocurrió un error al devolver la información ${ENDPOINT} `);
+        const ERROR = new Error(
+          `Ocurrió un error al devolver la información ${ENDPOINT} `
+        );
         return throwError(() => ERROR);
       })
     );

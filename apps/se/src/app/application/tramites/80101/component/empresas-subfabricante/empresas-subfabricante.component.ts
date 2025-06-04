@@ -1,9 +1,16 @@
 import { ActivatedRoute, Router } from '@angular/router';
-import { Catalogo, ConfiguracionColumna, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import {
+  Catalogo,
+  ConfiguracionColumna,
+  TablaSeleccion,
+} from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { DatosSubcontratista, PlantasSubfabricante } from '../../../../shared/models/empresas-subfabricanta.model';
+import {
+  DatosSubcontratista,
+  PlantasSubfabricante,
+} from '../../../../shared/models/empresas-subfabricanta.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { GestionarEmpresasSubfabricantesComponent } from '../../../../shared/components/gestionar-empresas-subfabricante/gestionar-empresas-subfabricante.component';
@@ -15,7 +22,6 @@ import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
 import { takeUntil } from 'rxjs';
 
-
 @Component({
   selector: 'app-empresas-subfabricante',
   standalone: true,
@@ -25,11 +31,15 @@ import { takeUntil } from 'rxjs';
   host: { hostID: crypto.randomUUID().toString() },
 })
 export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
+  /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.Add commentMore actions
+   */
+  @Input() formularioDeshabilitado: boolean = false;
 
   /**
    * Índice de la pestaña actualmente seleccionada.
    * Este valor se utiliza para determinar qué pestaña está activa en el componente.
-   * 
+   *
    * @type {number}
    * @default 0
    */
@@ -40,7 +50,6 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
    * @property {FormGroup} formularioDatosSubcontratista
    */
   formularioDatosSubcontratista!: FormGroup;
-
 
   /**
    * Lista de estados obtenida del servicio.
@@ -86,48 +95,51 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
   listaDeSubfabricantesPorEliminar: PlantasSubfabricante[] = [];
 
   /**
-  * Notificador utilizado para manejar la destrucción o desuscripción de observables.
-  * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
-  *
-  * @property {Subject<void>} destroyNotifier$
-  */
+   * Notificador utilizado para manejar la destrucción o desuscripción de observables.
+   * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
+   *
+   * @property {Subject<void>} destroyNotifier$
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Configuración de la tabla para mostrar las plantas disponibles de subfabricantes.
-   * 
-   * Esta propiedad utiliza una configuración de columnas específica definida por 
-   * `SUBFABRICANTE_DISPONIBLES_PLANTAS_TABLA_CONFIGURACION` para estructurar y 
+   *
+   * Esta propiedad utiliza una configuración de columnas específica definida por
+   * `SUBFABRICANTE_DISPONIBLES_PLANTAS_TABLA_CONFIGURACION` para estructurar y
    * renderizar los datos de las plantas disponibles en la tabla.
-   * 
-   * @type {ConfiguracionColumna<PlantasSubfabricante>[]} 
+   *
+   * @type {ConfiguracionColumna<PlantasSubfabricante>[]}
    */
-  configuracionTablaDisponibles: ConfiguracionColumna<PlantasSubfabricante>[] = SUBFABRICANTE_DISPONIBLES_PLANTAS_TABLA_CONFIGURACION;
+  configuracionTablaDisponibles: ConfiguracionColumna<PlantasSubfabricante>[] =
+    SUBFABRICANTE_DISPONIBLES_PLANTAS_TABLA_CONFIGURACION;
   /**
    * Configuración de la tabla para las plantas seleccionadas de subfabricantes.
-   * 
+   *
    * Esta propiedad define la configuración de las columnas que se utilizarán
    * para mostrar los datos de las plantas seleccionadas en la tabla. Utiliza
-   * una configuración predefinida que se encuentra en 
+   * una configuración predefinida que se encuentra en
    * `SUBFABRICANTE_SELECCIONADAS_PLANTAS_TABLA_CONFIGURACION`.
-   * 
-   * @type {ConfiguracionColumna<PlantasSubfabricante>[]} 
+   *
+   * @type {ConfiguracionColumna<PlantasSubfabricante>[]}
    */
-  configuracionTablaSeleccionadas: ConfiguracionColumna<PlantasSubfabricante>[] = SUBFABRICANTE_SELECCIONADAS_PLANTAS_TABLA_CONFIGURACION
+  configuracionTablaSeleccionadas: ConfiguracionColumna<PlantasSubfabricante>[] =
+    SUBFABRICANTE_SELECCIONADAS_PLANTAS_TABLA_CONFIGURACION;
 
   /**
    * Constructor de la clase EmpresasSubfabricanteComponent.
-   * 
+   *
    * @param nuevoProgramaIndustrialService - Servicio para manejar la lógica relacionada con el programa industrial.
    * @param fb - Instancia de FormBuilder para la creación y gestión de formularios reactivos.
    * @param query - Consulta asociada al trámite 80101.
    * @param store - Almacén para gestionar el estado del trámite 80101.
    * @param router - Servicio de enrutamiento para la navegación entre rutas.
    * @param activatedRoute - Información sobre la ruta activa, incluyendo parámetros y datos asociados.
-   * 
+   *
    * Este constructor inicializa el formulario de datos del subcontratista llamando al método `inicializarFormularioDatosSubcontratista`.
    */
-  constructor(private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,
+  constructor(
+    private nuevoProgramaIndustrialService: NuevoProgramaIndustrialService,
     private fb: FormBuilder,
     public query: Tramite80101Query,
     private store: Tramite80101Store,
@@ -138,21 +150,21 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
   }
 
   /**
- * Inicializa el componente.
- * @method ngOnInit
- */
+   * Inicializa el componente.
+   * @method ngOnInit
+   */
   ngOnInit(): void {
     this.obtenerDatosDelAlmacen();
     this.obtenerListaEstado();
   }
 
   /**
-* Obtiene los datos del almacén y los asigna al formulario de información de registro.
-* Se suscribe al observable `infoRegisterEstado$` para obtener los datos, y cuando se reciben,
-* se actualiza la propiedad `infoRegistro` y se establece el valor del formulario `formularioInfoRegistro`.
-*
-* @method obtenerDatosDelAlmacen
-*/
+   * Obtiene los datos del almacén y los asigna al formulario de información de registro.
+   * Se suscribe al observable `infoRegisterEstado$` para obtener los datos, y cuando se reciben,
+   * se actualiza la propiedad `infoRegistro` y se establece el valor del formulario `formularioInfoRegistro`.
+   *
+   * @method obtenerDatosDelAlmacen
+   */
   obtenerDatosDelAlmacen(): void {
     this.query.datosSubcontratistaEstado$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -169,7 +181,7 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
         if (plantasBuscadas.length > 0) {
           this.datosTablaSubfabricantesDisponibles = plantasBuscadas;
         }
-      })
+      });
 
     this.query.plantasSubfabricantesAgregar$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -177,14 +189,11 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
         if (plantasSubfabricantesAgregar.length > 0) {
           this.datosSubfabricanteParaSerAgregados =
             plantasSubfabricantesAgregar;
-        }
-        else {
+        } else {
           this.datosSubfabricanteParaSerAgregados = [];
         }
       });
-
   }
-
 
   /**
    * Actualiza el estado seleccionado en los datos del subcontratista y lo guarda en el store.
@@ -199,7 +208,7 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
   enEstadoSeleccionado(estadoSeleccionado: Catalogo): void {
     this.formularioDatosSubcontratista.patchValue({
       estado: estadoSeleccionado.id.toString(),
-    })
+    });
     this.store.setDatosSubcontratista(this.formularioDatosSubcontratista.value);
   }
 
@@ -219,9 +228,9 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
   }
 
   /**
-  * Inicializa el formulario de datos del subcontratista con los datos obtenidos o con valores vacíos si no hay datos disponibles.
-  * @method inicializarFormularioDatosSubcontratista
-  */
+   * Inicializa el formulario de datos del subcontratista con los datos obtenidos o con valores vacíos si no hay datos disponibles.
+   * @method inicializarFormularioDatosSubcontratista
+   */
   inicializarFormularioDatosSubcontratista(): void {
     this.formularioDatosSubcontratista = this.fb.group({
       rfc: ['', Validators.required],
@@ -230,9 +239,9 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
   }
 
   /**
- * Obtiene la lista de estados desde el servicio y actualiza la propiedad estadoCatalogo.
- * @method obtenerListaEstado
- */
+   * Obtiene la lista de estados desde el servicio y actualiza la propiedad estadoCatalogo.
+   * @method obtenerListaEstado
+   */
   obtenerListaEstado(): void {
     this.nuevoProgramaIndustrialService
       .obtenerListaEstado()
@@ -245,25 +254,25 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
   }
 
   /**
- * Obtiene la lista de subfabricantes disponibles desde el servicio y actualiza las cabeceras y datos de la tabla correspondiente.
- * @method obtenerSubfabricantesDisponibles
- */
+   * Obtiene la lista de subfabricantes disponibles desde el servicio y actualiza las cabeceras y datos de la tabla correspondiente.
+   * @method obtenerSubfabricantesDisponibles
+   */
   obtenerSubfabricantesDisponibles(): void {
     this.nuevoProgramaIndustrialService
       .getSubfabricantesDisponibles()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((response: PlantasSubfabricante[]) => {
         if (response.length > 0) {
-          this.store.setPlantasBuscadas(response)
+          this.store.setPlantasBuscadas(response);
         }
       });
   }
 
   /**
- * Obtiene el registro seleccionado de la tabla de subfabricantes disponibles.
- * @method obtenerRegistroSeleccionado
- * @param {SubfabricanteDireccionModelo[]} event - Evento con los datos del registro seleccionado.
- */
+   * Obtiene el registro seleccionado de la tabla de subfabricantes disponibles.
+   * @method obtenerRegistroSeleccionado
+   * @param {SubfabricanteDireccionModelo[]} event - Evento con los datos del registro seleccionado.
+   */
   obtenerRegistroSeleccionado(event: PlantasSubfabricante[]): void {
     if (event.length > 0) {
       this.datosDelSubfabricanteSeleccionado = event;
@@ -271,9 +280,9 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
   }
 
   /**
- * Realiza una búsqueda de subfabricantes disponibles.
- * @method realizarBusqueda
- */
+   * Realiza una búsqueda de subfabricantes disponibles.
+   * @method realizarBusqueda
+   */
   realizarBusqueda(): void {
     if (
       this.formularioDatosSubcontratista.get('rfc')?.value !== '' &&
@@ -289,31 +298,27 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
    */
   agregarPlantas(plantasPorAgrupar: PlantasSubfabricante[]): void {
     if (plantasPorAgrupar) {
-      this.store.setPlantasSubfabricantesAgregar(
-        plantasPorAgrupar
-      );
+      this.store.setPlantasSubfabricantesAgregar(plantasPorAgrupar);
     }
   }
 
   /**
-  * Obtiene los datos del subfabricante por eliminar.
-  * @method datosDelSubfabricantePorEliminar
-  * @param {PlantasSubfabricante[]} event - Evento con los datos del subfabricante por eliminar.
-  */
-  datosDelSubfabricantePorEliminar(
-    event: PlantasSubfabricante[]
-  ): void {
+   * Obtiene los datos del subfabricante por eliminar.
+   * @method datosDelSubfabricantePorEliminar
+   * @param {PlantasSubfabricante[]} event - Evento con los datos del subfabricante por eliminar.
+   */
+  datosDelSubfabricantePorEliminar(event: PlantasSubfabricante[]): void {
     this.listaDeSubfabricantesPorEliminar = event;
   }
 
   /**
- * Elimina las plantas de subfabricantes de la lista de subfabricantes a eliminar.
- *
- * Este método actualiza el store con la lista de subfabricantes a eliminar mediante el método
- * `setPlantasSubfabricantesEliminar`, pasando como parámetro la propiedad `listaDeSubfabricantesPorEliminar`.
- *
- * @method eliminarPlantas
- */
+   * Elimina las plantas de subfabricantes de la lista de subfabricantes a eliminar.
+   *
+   * Este método actualiza el store con la lista de subfabricantes a eliminar mediante el método
+   * `setPlantasSubfabricantesEliminar`, pasando como parámetro la propiedad `listaDeSubfabricantesPorEliminar`.
+   *
+   * @method eliminarPlantas
+   */
   eliminarPlantas(plantasPorEliminar: PlantasSubfabricante[]): void {
     if (plantasPorEliminar) {
       this.store.eliminarPlantas(plantasPorEliminar);
@@ -324,7 +329,7 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
    * Complementa las plantas subfabricantes y realiza la navegación a la ruta correspondiente.
    *
    * @param complementarPlantas - Arreglo de objetos de tipo `PlantasSubfabricante` que contiene las plantas a complementar.
-   * 
+   *
    * Este método realiza las siguientes acciones:
    * - Si se proporciona el parámetro `complementarPlantas`, actualiza el estado de las plantas por completar en el store.
    * - Si existe un índice de pestaña (`tabIndex`), lo guarda como índice previo en el store.
@@ -337,7 +342,9 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
     if (this.tabIndex) {
       this.store.setindicePrevioRuta(this.tabIndex);
     }
-    this.router.navigate(['../complementar-plantas'], { relativeTo: this.activatedRoute });
+    this.router.navigate(['../complementar-plantas'], {
+      relativeTo: this.activatedRoute,
+    });
   }
 
   /**
@@ -349,5 +356,4 @@ export class EmpresasSubfabricanteComponent implements OnDestroy, OnInit {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-
 }

@@ -1,3 +1,5 @@
+import { TableBodyData } from "../shared/components.model";
+
 /**
  * Representa la acción de un botón en el wizard.
  */
@@ -38,11 +40,47 @@ export interface Personas {
  */
 export interface TableData {
   tableHeader: string[];
-  tableBody: TableBodyRow[];
+  tableBody: TableBodyData[];
 }
 /**
  * Fila del cuerpo de la tabla con sus celdas.
  */
 export interface TableBodyRow {
   tbodyData: string[][];
+}
+/**
+ * Interfaz que representa los datos básicos de una persona
+ * @description Define la estructura de datos para información personal básica,
+ * incluyendo identificadores oficiales y nombres.
+ * 
+ * @example
+ * const personaEjemplo: Persona = {
+ *   RFC: 'XAXX010101000',
+ *   CURP: 'XAXX010101HDFXXX00',
+ *   Nombre: 'Juan',
+ *   Apellido_paterno: 'Pérez',
+ *   Apellido_materno: 'López'
+ * };
+ */
+export interface Persona {
+  RFC: string;
+  CURP: string;
+  Nombre: string;
+  Apellido_paterno: string;
+  Apellido_materno: string;
+}
+
+/**
+ * Interfaz que representa un documento
+ */
+export interface TipoDocumento {
+  /**
+   * Tipo de documento
+   */
+  tiposdata: string;
+  
+  // Otras propiedades que pueda tener el documento...
+  // id: number;
+  // fecha: Date;
+  // etc...
 }

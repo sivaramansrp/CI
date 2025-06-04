@@ -620,7 +620,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'modalidad-terciarización',
+    path: 'modalidad-terciarizacion',
     loadChildren: () =>
       import('./tramites/80105/modalidad-terciarización.module').then(
         (m) => m.ModalidadTerciarizaciónModule
@@ -680,6 +680,13 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/80103/modalidad-albergue.module').then(
         (m) => m.ModalidadAlbergueModule
+      ),
+  },
+  {
+    path: 'registro-solicitud-immex-modalidad-controladora',
+    loadChildren: () =>
+      import('./tramites/80104/modalidad-controlodora.module').then(
+        (m) => m.ModalidadControlodoraModule
       ),
   },
 

@@ -1,6 +1,4 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
 import { Router } from '@angular/router';
 
 /**
