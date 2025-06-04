@@ -20,14 +20,14 @@ export class DatosPageComponent implements OnInit, OnDestroy, AfterViewInit {
   /**
      * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
      */
-    @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
-  
-    /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
-    public esDatosRespuesta: boolean = false;
-  
-    /** Subject para notificar la destrucción del componente. */
-    private destroyNotifier$: Subject<void> = new Subject();
-    public consultaState!: ConsultaioState;
+  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+  /** Subject para notificar la destrucción del componente. */
+  private destroyNotifier$: Subject<void> = new Subject();
+  public consultaState!: ConsultaioState;
   /**
   * Esta variable se utiliza para almacenar el índice del subtítulo.
   */
@@ -96,5 +96,5 @@ export class DatosPageComponent implements OnInit, OnDestroy, AfterViewInit {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
-}
+  }
 }
