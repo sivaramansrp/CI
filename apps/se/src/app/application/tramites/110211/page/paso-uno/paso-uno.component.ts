@@ -12,6 +12,7 @@ import { Subject,map, takeUntil } from 'rxjs';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
 import { CamDatosCertificadoComponent } from '../../components/cam-datos-certificado/cam-datos-certificado.component';
 import { CamDestinatarioComponent } from '../../components/cam-destinatario/cam-destinatario.component';
+import { CamState } from '../../estados/cam-certificado.store';
 import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
 import { CommonModule } from '@angular/common';
 
@@ -97,7 +98,7 @@ ngOnInit():void {
       .subscribe((resp) => {
         if(resp){
         this.esDatosRespuesta = true;
-        // this.solocitud301Service.actualizarEstadoFormulario(resp);
+       this.camCertificadoService.actualizarEstadoFormulario(resp as CamState);
         }
       });
   }
