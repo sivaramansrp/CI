@@ -1,0 +1,26 @@
+{
+    "infoRegistro": {
+        "modalidad": "Ampliación Submanufactureras",
+        "folio":"8",
+        "ano": "2024"
+    },
+    "datosSubcontratista": {
+     
+      "rfc": "ABC123456789",
+      "estado": "Calle Ficticia 123, Ciudad Ejemplo"
+    },
+    "plantasBuscadas": [
+      {
+        "calle": "Calle Ficticia 123, Ciudad Ejemplo",
+        "numExterior": "123",
+        "numInterior": "123",
+        "codigoPostal": "12345",
+        "colonia": "Colonia Ejemplo"
+      }
+     
+    ],
+    
+    "formaValida": {
+      "esDatosSubcontratistaValido": true
+    }
+  }
