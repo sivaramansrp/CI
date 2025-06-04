@@ -48,7 +48,7 @@
     <div class="row mt-5">
       <div class="col-md-12">
         <div class="pull-right">
-          <button type="button" name="agregarMercancias" class="btn btn-primary ms-2">
+          <button type="button" name="agregarMercancias" class="btn btn-primary ms-2" [disabled]="esFormularioSoloLectura ? true : false">
             Borrar datos del pago
           </button>
         </div>

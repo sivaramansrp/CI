@@ -357,8 +357,8 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
 
     } else {
       this.domicilio.enable();
-      this.formAgente.disable();
-      this.formMercancias.disable();
+      this.formAgente.enable();
+      this.formMercancias.enable();
     }
 
   }

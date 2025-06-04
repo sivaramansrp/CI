@@ -111,8 +111,8 @@
     <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
       [datos]="nicoTablaDatos"   [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"></app-tabla-dinamica>
     <div class="container text-end mt-5">
-      <button class="btn btn-default me-2">Eliminar</button>
-      <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent">
+      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
+      <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura ? true : false" data-bs-toggle="modal" data-bs-target="#modalAddAgent">
         Agregar
       </button>
     </div>
@@ -151,11 +151,11 @@
     <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla"
       [datos]="mercanciasTablaDatos"   [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"></app-tabla-dinamica>
     <div class="container text-end mt-5">
-      <button class="btn btn-default me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias">
+      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias">
         Modificar
       </button>
-      <button class="btn btn-default me-2">Eliminar</button>
-      <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias">
+      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
+      <button class="btn btn-primary me-2"  [disabled]="esFormularioSoloLectura ? true : false" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias">
         Agregar
       </button>
     </div>
@@ -182,13 +182,13 @@
         </form>
       </div>
       <div class="modal-footer custom-footer">
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-default"  [disabled]="esFormularioSoloLectura ? true : false" data-bs-dismiss="modal">
           Limpiar
         </button>
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura ? true : false" data-bs-dismiss="modal">
           Cancelar
         </button>
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura ? true : false" data-bs-dismiss="modal">
           Agregar
         </button>
       </div>
@@ -395,13 +395,13 @@
         </form>
       </div>
       <div class="modal-footer custom-footer">
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura ? true : false" data-bs-dismiss="modal">
           Limpiar
         </button>
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura ? true : false"  data-bs-dismiss="modal">
           Cancelar
         </button>
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura ? true : false" data-bs-dismiss="modal">
           Agregar
         </button>
       </div>
