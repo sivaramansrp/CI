@@ -204,29 +204,6 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
       tercerosSegundoApellido: [''],
       tercerosPrimerApellido: ['', Validators.required],
     });
-
-    // Suscribirse al store para obtener los datos del propietario
-    this.propietarioQuery
-      .select('propietarioData')
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data) => {
-        this.propietarioData = data;
-      });
-      this.establecimientoService
-      .getPropietarioRadioData()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data: PropietarioRadio[]) => {
-        this.propietarioRadioData = data; // Bind the fetched data
-        
-      });
-
-      this.establecimientoService
-      .getPropietarioTipoPersonaData()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((data: PropietarioTipoPersona[]) => {
-        this.propietarioTipoPersonaData = data; // Bind the fetched data
-       
-      });
   }
 
   /**
@@ -235,19 +212,47 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
-    } 
+    } else{
+       this.inicializarFormulario();
+    }
   }
 
     /**
      * Guarda los datos del formulario y ajusta el estado de solo lectura.
      */
     guardarDatosFormulario(): void {
-      this.guardarPropietario();
+      this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {
-        this.propietarioradioForm.disable();
+        this.propietarioradioForm?.disable();
       } else {
         this.propietarioradioForm.enable();
       } 
+    }
+
+    /**
+     * Inicializa los formularios y carga los datos iniciales de propietario, tipo de persona y radio.
+     */
+    inicializarFormulario() {
+      this.propietarioQuery
+      .select('propietarioData')
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.propietarioData = data;
+      });
+
+      this.establecimientoService
+      .getPropietarioRadioData()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data: PropietarioRadio[]) => {
+        this.propietarioRadioData = data; // Asigna los datos obtenidos
+      });
+
+      this.establecimientoService
+      .getPropietarioTipoPersonaData()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data: PropietarioTipoPersona[]) => {
+        this.propietarioTipoPersonaData = data; // Asigna los datos obtenidos
+      });
     }
 
   /**
