@@ -727,8 +727,26 @@
     "diasTranscurridos": "4",
     "departamento": "SE",
     "numeroDeProcedimiento": "80308"
-  },
-  {
+},
+    {
+        "id": 1,
+        "tipoDeTramite": "Solicitud de Permiso",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "301"
+    },
+     {
+        "id": 230401,
+        "tipoDeTramite": "Solicitud de cs Permiso",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "SEMARNAT",
+        "numeroDeProcedimiento": "230401"
+    },
+    {
     "id": 130102,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -836,6 +854,24 @@
       "departamento": "AGA",
       "numeroDeProcedimiento": "11201"
     },
+    {
+      "id": 701,
+      "tipoDeTramite": "Cargar archivos",
+      "fecha": "2023-11-03",
+      "fechaActualizacion": "2023-11-10",
+      "diasTranscurridos": "4",
+      "departamento": "AGA",
+      "numeroDeProcedimiento": "701"
+},
+ {
+    "id": 130118,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "130118"
+  },
         {
           "id": 260303,
           "tipoDeTramite": "Solicitud de Permiso",
