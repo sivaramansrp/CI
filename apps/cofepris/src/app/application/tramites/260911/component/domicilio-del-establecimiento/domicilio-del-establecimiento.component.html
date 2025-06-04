@@ -41,7 +41,9 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="municipioOAlcaldia">Municipio o alcaldía*:</label>
+            <label class="form-label" for="municipioOAlcaldia"
+            >Municipio o alcaldía*:</label
+            >
           <input
               class="form-control"
               type="text"
@@ -51,8 +53,7 @@
               aria-labelledby="municipioOAlcaldia"
               (change)="setValorStore(form, 'municipioOAlcaldia')"
             />
-            <div *ngIf="form.get('municipioOAlcaldia')?.touched && form.get('municipioOAlcaldia')?.hasError('required')"
-              class="text-danger">
+            <div *ngIf="form.get('municipioOAlcaldia')?.touched && form.get('municipioOAlcaldia')?.hasError('required')" class="text-danger">
               Por favor, corrija el municipio.
             </div>
           </div>
@@ -60,7 +61,10 @@
       </div>
 
       <div class="row mt-5">
-        <ng-alert [CONTENIDO]="TEXTOS.ADVERTENCIA" [CUSTOMECLASS]="class"></ng-alert>
+        <ng-alert 
+          [CONTENIDO]="TEXTOS.ADVERTENCIA" 
+          [CUSTOMECLASS]="class"
+        ></ng-alert>
       </div>
 
       <div class="row">
@@ -76,8 +80,7 @@
               aria-labelledby="localidad"
               (change)="setValorStore(form, 'localidad')"
             />
-            <div *ngIf="form.get('localidad')?.touched && form.get('localidad')?.hasError('required')"
-              class="text-danger">
+            <div *ngIf="form.get('localidad')?.touched && form.get('localidad')?.hasError('required')" class="text-danger">
               Por favor, corrija el localidad.
             </div>
           </div>
@@ -95,8 +98,7 @@
               aria-labelledby="colonias"
               (change)="setValorStore(form, 'colonias')"
             />
-            <div *ngIf="form.get('colonias')?.touched && form.get('colonias')?.hasError('required')"
-              class="text-danger">
+            <div *ngIf="form.get('colonias')?.touched && form.get('colonias')?.hasError('required')" class="text-danger">
               Por favor, corrija la colonias.
             </div>
           </div>
@@ -181,7 +183,10 @@
     </app-tabla-dinamica>
     <div class="container text-end mt-5">
       <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
-      <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent"
+      <button 
+        class="btn btn-primary me-2" 
+        data-bs-toggle="modal" 
+        data-bs-target="#modalAddAgent"
         [disabled]="esFormularioSoloLectura">
         Agregar
       </button>
@@ -195,14 +200,15 @@
           [label]="'Aviso de funcionamiento'" 
           [required]="true"
           formControlName="avisoCheckbox" 
-          [isDisabled]="true"
+          [isDisabled]="esFormularioSoloLectura"
           (change)="setValorStore(domicilio, 'avisoCheckbox')"
       ></lib-input-check>
 
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria:
+          <label class="form-label" for="licenciaSanitaria"
+          >No. de licencia sanitaria:
             <span 
               class="bi bi-question-circle-fill" 
               title="No. de licencia sanitaria"
@@ -231,8 +237,7 @@
           [tooltipQuestionCircle]="true"
           (change)="setValorStore(domicilio, 'regimen')"
         ></app-catalogo-select>
-        <div *ngIf="domicilio.get('regimen')?.touched && domicilio.get('regimen')?.hasError('required')"
-          class="text-danger">
+        <div *ngIf="domicilio.get('regimen')?.touched && domicilio.get('regimen')?.hasError('required')" class="text-danger">
           Por favor, corrija la estadoLocalidad.
         </div>
       </div>
@@ -246,8 +251,7 @@
           name="aduanasEntradas"
           (change)="setValorStore(domicilio, 'aduanasEntradas')"
         ></app-catalogo-select>
-        <div *ngIf="domicilio.get('aduanasEntradas')?.touched && domicilio.get('aduanasEntradas')?.hasError('required')"
-          class="text-danger">
+        <div *ngIf="domicilio.get('aduanasEntradas')?.touched && domicilio.get('aduanasEntradas')?.hasError('required')" class="text-danger">
           Por favor, corrija la estadoLocalidad.
         </div>
       </div>
@@ -262,7 +266,7 @@
           [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA).'"
           [required]="true" 
           formControlName="aifaCheckbox" 
-          [isDisabled]="true"
+          [isDisabled]="esFormularioSoloLectura"
           (change)="setValorStore(domicilio, 'aifaCheckbox')"
         ></lib-input-check>
       </div>
@@ -284,8 +288,12 @@
         <div class="container text-end mt-5">
           <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
           <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
-          <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias"
-            [disabled]="esFormularioSoloLectura">
+          <button 
+            class="btn btn-primary me-2" 
+            data-bs-toggle="modal" 
+            data-bs-target="#modalAddAgentMercancias"
+            [disabled]="esFormularioSoloLectura"
+          >
             Agregar
           </button>
         </div>
@@ -301,8 +309,8 @@
               [id]="'manifiesto'" 
               [label]="''" 
               [required]="true"
-               formControlName="manifests"
-              [isDisabled]="true" 
+              formControlName="manifests"
+              [isDisabled]="esFormularioSoloLectura"
               (change)="setValorStore(domicilio, 'manifests')"
             ></lib-input-check>
             <span class="fw-bold align-middle"> *</span>
@@ -338,8 +346,7 @@
               appUppercase aria-labelledby="rfc"
               (change)="setValorStore(representanteLegal, 'rfc')" 
             />
-            <div *ngIf="representanteLegal.get('rfc')?.invalid && representanteLegal.get('rfc')?.touched"
-              class="text-danger">
+            <div *ngIf="representanteLegal.get('rfc')?.invalid && representanteLegal.get('rfc')?.touched" class="text-danger">
               El RFC es obligatorio.
             </div>
           </div>
@@ -352,7 +359,9 @@
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="nombre">Nombre o Razón Social*:</label>
+            <label class="form-label" for="nombre"
+              >Nombre o Razón Social*:</label
+            >
             <input 
               class="form-control" 
               type="text" 
@@ -366,7 +375,9 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="apellidoPaterno">Apellido paterno*:</label>
+            <label class="form-label" for="apellidoPaterno"
+              >Apellido paterno*:</label
+            >
             <input 
               class="form-control" 
               type="text" 
