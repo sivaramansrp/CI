@@ -6309,10 +6309,8 @@
     "departamento": "se",
     "numeroDeProcedimiento": "80203",
     "origin": "READ_PROCEDURE"
-  }
-]
   },
-    {
+  {
     "folioTramite": "0215523965732296454156770",
     "tipoDeTramite": "Solicitud de Proceso Interno",
     "nombreDeLaTarea": "Evaluar solicitud",
