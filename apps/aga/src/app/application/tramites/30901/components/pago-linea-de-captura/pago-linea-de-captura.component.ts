@@ -15,7 +15,6 @@ import { PagoDerechosLista } from '../../models/registro-muestras-mercancias.mod
 import { REGEX_LINEA_CAPTURA } from '@ng-mf/data-access-user';
 import { REGEX_REEMPLAZAR } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
-import { REGEX_REEMPLAZAR } from '@ng-mf/data-access-user';
 import { RenovacionesMuestrasMercanciasService } from '../../services/renovaciones-muestras-mercancias/renovaciones-muestras-mercancias.service';
 import { Solicitud30901Query } from '../../estados/tramites30901.query';
 import { Solicitud30901State } from '../../estados/tramites30901.store';

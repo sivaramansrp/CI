@@ -1,14 +1,14 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { DatosProrrogaMuestrasMercanciasComponent } from '../../components/datos-prorroga-muestras-mercancias/datos-prorroga-muestras-mercancias.component';
 import { PagoLineaDeCapturaComponent } from '../../components/pago-linea-de-captura/pago-linea-de-captura.component';
 import { RegistroRenovacionesMuestrasMercanciasComponent } from '../../components/registro-renovaciones-muestras-mercancias/registro-renovaciones-muestras-mercancias.component';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
-import { ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
 import { Solicitud30901State } from '../../estados/tramites30901.store';
 import { Solocitud30901Service } from '../../services/service30901.service'
+import { ViewChild } from '@angular/core';
 
 /**
  * Componente que representa el primer paso de un trámite.
@@ -25,7 +25,6 @@ import { Solocitud30901Service } from '../../services/service30901.service'
   ],
   templateUrl: './paso-uno.component.html',
   styleUrls: ['./paso-uno.component.scss'],
-  standalone: false
 })
 /**
  * Componente que representa el primer paso de un trámite.

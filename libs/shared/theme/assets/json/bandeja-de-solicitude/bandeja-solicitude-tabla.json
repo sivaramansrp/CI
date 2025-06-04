@@ -826,5 +826,14 @@
         "diasTranscurridos": "4",
         "departamento": "SE",
         "numeroDeProcedimiento": "80203"
+    },
+     {
+        "id": 30901,
+        "tipoDeTramite": "Solicitud de Permiso1s",
+        "fecha": "2023-11-01",
+        "fechaActualizacion": "2023-11-05",
+        "diasTranscurridos": "5",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "30901"
     }
 ]

@@ -168,73 +168,7 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
    * @returns {void}
    */
   ngOnInit(): void {
-    this.formRegistroMuestras = this.fb.group({
-      opcionDeImportador: [this.solicitud30901State.opcionDeImportador],
-      tomaMuestraDespacho: [this.solicitud30901State.tomaMuestraDespacho],
-      descMotivoFaltaMuestra: [
-        {
-          value: this.solicitud30901State.descMotivoFaltaMuestra,
-          disabled: true,
-        },
-      ],
-      comboFraccionConcatenada: [
-        this.solicitud30901State.comboFraccionConcatenada,
-      ],
-      fraccionConcatenada: [this.solicitud30901State.fraccionConcatenada],
-      fracciondescripcion: [
-        { value: this.solicitud30901State.fracciondescripcion, disabled: true },
-      ],
-      comboNicos: [this.solicitud30901State.comboNicos],
-      nicoDescripcion: [
-        { value: this.solicitud30901State.nicoDescripcion, disabled: true },
-      ],
-      nombreQuimico: [
-        { value: this.solicitud30901State.nombreQuimico, disabled: true },
-        [Validators.maxLength(256)],
-      ],
-      nombreComercial: [
-        { value: this.solicitud30901State.nombreComercial, disabled: true },
-        [Validators.maxLength(256)],
-      ],
-      numeroCAS: [
-        { value: this.solicitud30901State.numeroCAS, disabled: true },
-        [Validators.maxLength(120)],
-      ],
-      ideGenerica: [
-        { value: this.solicitud30901State.ideGenerica, disabled: true },
-      ],
-      descClobGenerica: [
-        { value: this.solicitud30901State.descClobGenerica, disabled: true },
-      ],
-    });
-
-    // Se suscribe al observable para obtener el registro de muestras de la tienda.
-    this.solicitud30901Query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((response: Solicitud30901State) => {
-          this.solicitud30901State = response;
-
-          this.formRegistroMuestras.patchValue({
-            opcionDeImportador: this.solicitud30901State.opcionDeImportador,
-            tomaMuestraDespacho: this.solicitud30901State.tomaMuestraDespacho,
-            descMotivoFaltaMuestra:
-              this.solicitud30901State.descMotivoFaltaMuestra,
-            comboFraccionConcatenada:
-              this.solicitud30901State.comboFraccionConcatenada,
-            fraccionConcatenada: this.solicitud30901State.fraccionConcatenada,
-            fracciondescripcion: this.solicitud30901State.fracciondescripcion,
-            comboNicos: this.solicitud30901State.comboNicos,
-            nicoDescripcion: this.solicitud30901State.nicoDescripcion,
-            nombreQuimico: this.solicitud30901State.nombreQuimico,
-            nombreComercial: this.solicitud30901State.nombreComercial,
-            numeroCAS: this.solicitud30901State.numeroCAS,
-            ideGenerica: this.solicitud30901State.ideGenerica,
-            descClobGenerica: this.solicitud30901State.descClobGenerica,
-          });
-        })
-      )
-      .subscribe();
+    this.inicializarEstadoFormulario()
   }
 
   /**
@@ -433,7 +367,7 @@ export class RegistroRenovacionesMuestrasMercanciasComponent
    * con el valor inicial obtenido del store.
    */
 
-  inicializarFormulario(): void {
+  inicializarEstadoFormulario(): void {
     this.formRegistroMuestras = this.fb.group({
       opcionDeImportador: [this.solicitud30901State.opcionDeImportador],
       tomaMuestraDespacho: [this.solicitud30901State.tomaMuestraDespacho],

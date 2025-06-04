@@ -12,7 +12,7 @@
             [label]="opcionDeImportador.labelNombre"
             [required]="opcionDeImportador.required"
             name="opcionDeImportador"
-            [isDisabled]="false"
+            [isDisabled]="esFormularioSoloLectura"
             (selectionChange)="mostrarOcultarPanelTramite($event)"
           ></app-catalogo-select>
         </div>
