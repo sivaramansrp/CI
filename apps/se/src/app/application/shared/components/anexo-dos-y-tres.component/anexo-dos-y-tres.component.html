@@ -32,6 +32,7 @@
              [configuracionTabla]="anexo1y3Configuartion.anexoDosEncabezadoDeTabla"
              [datos]="anexoDosTablaLista"
              (listaDeFilaSeleccionada)="setAnexoDosLista($event)"
+             [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
              ></app-tabla-dinamica>
         </div>
     </form>
@@ -72,6 +73,7 @@
              [configuracionTabla]="anexo1y3Configuartion.anexoTresEncabezadoDeTabla"
              [datos]="anexoTresTablaLista"
              (listaDeFilaSeleccionada)="setAnexoTresLista($event)"
+             [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
              ></app-tabla-dinamica>
         </div>
     </form>
