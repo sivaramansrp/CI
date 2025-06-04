@@ -265,6 +265,17 @@ export class Anexo1Component implements OnInit, OnDestroy,AfterViewInit {
       )
       .subscribe();
   }
+  /**
+ * @inheritdoc
+ * @description
+ * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
+ * 
+ * Suscribe al observable `selectConsultaioState$` para escuchar cambios en el estado de la consulta.
+ * Si el estado indica que no se está creando y el `procedureId` es '80203', actualiza la propiedad `esFormularioSoloLectura`
+ * según el valor de `readonly` en el estado. Luego, inicializa el estado del formulario llamando a `inicializarEstadoFormulario()`.
+ * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$` para evitar fugas de memoria.
+ *
+ */
 ngAfterViewInit(): void {
  this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -279,6 +290,16 @@ ngAfterViewInit(): void {
       .subscribe();
 }
 
+/**
+ * @method
+ * @name creatFormSolicitud
+ * @description
+ * [ES] Inicializa el formulario reactivo `immexRegistroform` con los grupos de controles necesarios para la exportación e importación,
+ * utilizando los valores actuales del estado `immexRegitroAnexoState`. Cada grupo contiene los campos requeridos para el trámite,
+ * permitiendo la gestión y validación de los datos relacionados con la exportación e importación de mercancías.
+ *
+ * @returns {void}
+ */
 creatFormSolicitud():void{
     this.immexRegistroform = this.fb.group({
       exportacionForm: this.fb.group({
@@ -307,12 +328,19 @@ creatFormSolicitud():void{
     });
 }
 
-     inicializarEstadoFormulario(): void {
-      if(!this.immexRegistroform){
+    /**
+     * @method inicializarEstadoFormulario
+     * @description
+     * Inicializa el estado del formulario dependiendo si está en modo solo lectura.
+     * Si el formulario no existe, lo crea. Si el formulario debe ser solo de lectura,
+     * lo deshabilita; de lo contrario, lo habilita.
+     */
+    inicializarEstadoFormulario(): void {
+      if (!this.immexRegistroform) {
         this.creatFormSolicitud();
       }
       if (this.esFormularioSoloLectura) {
-          this.immexRegistroform.disable();
+        this.immexRegistroform.disable();
       } else {
         this.immexRegistroform.enable();
       }
@@ -471,6 +499,14 @@ creatFormSolicitud():void{
   showCommodityImportacion(): void {
     this.showCommodityImport = true;
   }
+  /**
+   * @description
+   * Deshabilita los controles específicos del formulario relacionados con la exportación e importación
+   * dentro del formulario `immexRegistroform`. Los campos deshabilitados incluyen descripciones y códigos
+   * arancelarios de productos de exportación e importación.
+   *
+   * @returns {void}
+   */
   disableFormControls(): void {
     this.immexRegistroform.get('exportacionForm.productoArancelariaExportacion')?.disable();
     this.immexRegistroform.get('exportacionForm.productoDescExportacion')?.disable();
