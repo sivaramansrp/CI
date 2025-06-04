@@ -22,7 +22,6 @@ import {
   TercerosQuery,
   TercerosState,
   TransporteDespacho,
-  WizardComponent,
 } from '@ng-mf/data-access-user';
 import {
   ListFechasSevex,
@@ -35,6 +34,7 @@ import { Observable, Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { GuardaSolicitudService } from '../../../../core/services/5701/guardar/guarda-solicitud.service';
 import { Solicitud5701State } from '../../../../core/estados/tramites/tramite5701.store';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 interface AccionBoton {
   accion: string;
