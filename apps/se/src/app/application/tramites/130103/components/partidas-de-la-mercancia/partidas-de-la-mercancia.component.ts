@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import {
   AlertComponent,
+  Catalogo,
   ConfiguracionColumna,
   TablaDinamicaComponent,
   TablaSeleccion,
@@ -21,6 +22,7 @@ import {
 } from '../../../../estados/tramites/tramite130103.store';
 import {
   MODIFICAR_PARTIDAS_FORM,
+  PARTIDAS_COLUMN_TABLA,
   PARTIDAS_DE_LA_MERCANCIA,
 } from '../../constantes/importacion-definitiva.enum';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -221,39 +223,7 @@ export class PartidasDeLaMercanciaComponent
   /**
    * Configuración de las columnas de la tabla.
    */
-  public encabezadoDeTabla: ConfiguracionColumna<Partidas>[] = [
-    { encabezado: '', clave: (artículo) => artículo.id, orden: 1 },
-    {
-      encabezado: 'Cantidad',
-      clave: (artículo) => artículo.cantidad,
-      orden: 1,
-    },
-    {
-      encabezado: 'Unidad de medida',
-      clave: (artículo) => artículo.unidadDeMedida,
-      orden: 2,
-    },
-    {
-      encabezado: 'Fracción Arancelaria',
-      clave: (artículo) => artículo.fraccionArancelariaTigie,
-      orden: 3,
-    },
-    {
-      encabezado: 'Descripción',
-      clave: (artículo) => artículo.descripcion,
-      orden: 4,
-    },
-    {
-      encabezado: 'Precio unitario USD',
-      clave: (artículo) => artículo.precioUnitario,
-      orden: 5,
-    },
-    {
-      encabezado: 'Total USD',
-      clave: (artículo) => artículo.totalUsd,
-      orden: 6,
-    },
-  ];
+  public encabezadoDeTabla: ConfiguracionColumna<Partidas>[]= PARTIDAS_COLUMN_TABLA;
 
   /**
    * Define los datos que se mostrarán en la tabla dinámica.
@@ -281,6 +251,22 @@ export class PartidasDeLaMercanciaComponent
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+ * @property seleccionFraccionOpciones
+ * @type {Catalogo[]}
+ * @private
+ * @description
+ * Arreglo privado que almacena las opciones disponibles para el campo "Fracción Arancelaria".
+ * Cada elemento contiene un identificador y una descripción de la fracción.
+ * Se utiliza para mostrar las opciones en el formulario dinámico y asociar la fracción seleccionada a la partida.
+ */
+  private seleccionFraccionOpciones: Catalogo[] = [
+      {
+        id: 1,
+        descripcion: '87033302 Usados.',
+      },
+    ]
+
+  /**
    * compo doc
    * @constructor
    * @param {tramite130103Store} tramite130103Store
@@ -293,8 +279,10 @@ export class PartidasDeLaMercanciaComponent
   constructor(
     private tramite130103Store: Tramite130103Store,
     private tramite130103Query: Tramite130103Query
-  ) // eslint-disable-next-line no-empty-function
-  {}
+  )
+  {
+    //
+  }
 
   /**
    * compo doc
@@ -323,13 +311,15 @@ export class PartidasDeLaMercanciaComponent
             'partidas_tabla' in this.importacionstate
           ) {
             const PRODUCTO = this.importacionstate['partidas_tabla'];
-            const IS_ALREADY_ADDED = this.datosTabla.some(
-              (item: { id: number }) => item.id === PRODUCTO.id
+            PRODUCTO.forEach((productoItem: { id: number }) => {
+              const IS_ALREADY_ADDED = this.datosTabla.some(
+              (item: { id: number }) => item.id === productoItem.id
             );
 
             if (!IS_ALREADY_ADDED) {
-              this.datosTabla.push(PRODUCTO);
+              this.datosTabla.push(productoItem);
             }
+            });
           }
         })
       )
@@ -362,16 +352,27 @@ export class PartidasDeLaMercanciaComponent
         id: this.datosTabla?.length + 1,
         cantidad: this.ninoFormGroup.get('partidas_cantidad')?.value,
         unidadDeMedida: this.importacionstate['unidad_de_medida'],
-        fraccionArancelariaTigie: this.importacionstate['seleccion_fraccion'],
+        fraccionArancelariaTigie: this.obtenerFraccionArancelaria(),
         descripcion: this.ninoFormGroup.get('partidas_descripcion')?.value,
         precioUnitario: '1.000',
         totalUsd: this.ninoFormGroup.get('valor_partida_usd')?.value,
       };
       this.datosTabla?.push(PRODUCTOS);
-      this.tramite130103Store.setDynamicFieldValue('partidas_tabla', PRODUCTOS);
+      this.tramite130103Store.setDynamicFieldValue('partidas_tabla', this.datosTabla);
       this.ninoFormGroup.reset();
     }
   }
+
+  /**
+   * @method obtenerFraccionArancelariaProsec
+   * @description
+   * Obtiene la descripción de la fracción arancelaria seleccionada en el formulario dinámico.
+   * @returns {string} Descripción de la fracción arancelaria seleccionada o una cadena vacía si no existe.
+   */
+    public obtenerFraccionArancelaria(): string {
+      const DESCRIPCION = this.seleccionFraccionOpciones.find((ele: Catalogo) => ele.id === Number(this.ninoFormGroup.get('seleccion_fraccion')?.value))?.descripcion;
+      return DESCRIPCION ?? '';
+    }
 
   /**
    * compo doc
@@ -388,7 +389,7 @@ export class PartidasDeLaMercanciaComponent
    *
    * @param {Object} event - Objeto que contiene el campo modificado y su nuevo valor.
    * @param {string} event.campo - Nombre del campo modificado.
-   * @param {any} event.valor - Nuevo valor del campo, que puede ser un objeto con un identificador o un valor directo.
+   * @param {string} event.valor - Nuevo valor del campo, que puede ser un objeto con un identificador o un valor directo.
    *
    * @example
    * this.establecerCambioDeValor({ campo: 'unidad_de_medida', valor: { id: 1, descripcion: 'Kilogramos' } });
@@ -397,19 +398,8 @@ export class PartidasDeLaMercanciaComponent
    * this.establecerCambioDeValor({ campo: 'cantidad', valor: 100 });
    * // Actualiza el estado dinámico del campo "cantidad" con el valor 100.
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  establecerCambioDeValor(event: { campo: string; valor: any }): void {
-    if (
-      event &&
-      typeof event.valor === 'object' &&
-      event.valor !== null &&
-      'id' in event.valor
-    ) {
-      const VALOR = event.valor.id;
-      this.tramite130103Store.setDynamicFieldValue(event.campo, VALOR);
-    } else if (event) {
-      this.tramite130103Store.setDynamicFieldValue(event.campo, event.valor);
-    }
+  establecerCambioDeValor(event: { campo: string; valor: string }): void {
+    this.tramite130103Store.setDynamicFieldValue(event.campo, event.valor);
   }
 
   /**
@@ -513,6 +503,26 @@ export class PartidasDeLaMercanciaComponent
       });
     }
   }
+
+  /**
+ * @method eliminar
+ * @description
+ * Elimina las partidas seleccionadas de la tabla dinámica (`datosTabla`).
+ * Recorre el arreglo de partidas seleccionadas y elimina cada una de ellas de la tabla,
+ * actualizando el estado dinámico del trámite en el store después de cada eliminación.
+ */
+  eliminar(): void {
+    if (this.partidasSeleccionadas.length) {
+      this.partidasSeleccionadas.forEach((ele: Partidas) => {
+        const INDICE = this.datosTabla.findIndex((item) => item.id === ele.id);
+        if (INDICE !== -1) {
+          this.datosTabla.splice(INDICE, 1);
+          this.tramite130103Store.setDynamicFieldValue('partidas_tabla', this.datosTabla);
+        }
+      });
+    }
+  }
+
   /*
    * @method abrirModalEditar
    */

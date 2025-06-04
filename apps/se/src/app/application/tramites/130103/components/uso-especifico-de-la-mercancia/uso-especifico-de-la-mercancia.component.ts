@@ -6,6 +6,7 @@ import {
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ENCABEZADO_TABLA, USO_ESPECIFICO_DE_LA_MERCANCIA } from '../../constantes/importacion-definitiva.enum';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
   ImportacionDefinitiva130103State,
@@ -18,7 +19,6 @@ import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tram
 import { ImportacionDefinitivaService } from '@libs/shared/data-access-user/src/core/services/130103/importacion-definitiva.service';
 import { Partidas } from '../../models/importacion-definitiva.model';
 import { Tramite130103Query } from '../../../../estados/queries/tramite130103.query';
-import { USO_ESPECIFICO_DE_LA_MERCANCIA } from '../../constantes/importacion-definitiva.enum';
 /**
  * compo doc
  * @component
@@ -112,19 +112,7 @@ export class UsoEspecificoDeLaMercanciaComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas de la tabla.
    */
-  public encabezadoDeTabla: ConfiguracionColumna<Partidas>[] = [
-    { encabezado: 'ID', clave: (artículo) => artículo.id, orden: 1 },
-    {
-      encabezado: 'Fracción Arancelaria',
-      clave: (artículo) => artículo.fraccionArancelariaProsec,
-      orden: 2,
-    },
-    {
-      encabezado: 'Descripción',
-      clave: (artículo) => artículo.descripcion,
-      orden: 3,
-    },
-  ];
+  public encabezadoDeTabla: ConfiguracionColumna<Partidas>[] = ENCABEZADO_TABLA;
 
   /**
    * Define los datos que se mostrarán en la tabla dinámica.
@@ -159,6 +147,27 @@ export class UsoEspecificoDeLaMercanciaComponent implements OnInit, OnDestroy {
    * Se utiliza para asociar y mostrar la información correspondiente en la tabla dinámica y en el estado del trámite.
    */
   public prosec!: string;
+
+  /**
+ * @property seleccionadaId
+ * @type {number}
+ * @private
+ * @description
+ * Almacena el identificador de la fila seleccionada en la tabla dinámica (`datosTabla`).
+ * Se utiliza para determinar qué elemento será eliminado o manipulado por las acciones del usuario.
+ * Esta propiedad se actualiza cuando el usuario selecciona una fila en la tabla.
+ */
+  private seleccionadaId!: number;
+
+  /**
+ * @property tablaId
+ * @type {number}
+ * @private
+ * @description
+ * Contador interno utilizado para asignar un identificador único a cada nueva fila agregada a la tabla dinámica.
+ * Se incrementa automáticamente cada vez que se agrega un nuevo elemento, asegurando que cada registro tenga un id distinto.
+ */
+  private tablaId:number = 1;
 
   /**
  * @property fraccionArancelariaArray
@@ -231,13 +240,17 @@ export class UsoEspecificoDeLaMercanciaComponent implements OnInit, OnDestroy {
             'especifico' in this.importacionstate
           ) {
             const PRODUCTO = this.importacionstate['especifico'];
-            const IS_ALREADY_ADDED = this.datosTabla.some(
-              (item: {id: number}) => item.id === PRODUCTO.id
-            );
 
-            if (!IS_ALREADY_ADDED) {
-              this.datosTabla.push(PRODUCTO);
-            }
+            PRODUCTO.forEach((productoItem: { id: number }) => {
+              const IS_ALREADY_ADDED = this.datosTabla.some(
+                (item: { id: number }) => item.id === productoItem.id
+              );
+
+              if (!IS_ALREADY_ADDED) {
+                this.datosTabla.push(productoItem);
+              }
+            });
+
           }
         })
       )
@@ -267,13 +280,14 @@ export class UsoEspecificoDeLaMercanciaComponent implements OnInit, OnDestroy {
   public agregar(): void {
     if (this.ninoFormGroup.valid) {
       const ESPECIFICO = {
-        id: 1,
+        id: this.tablaId,
         fraccionArancelariaProsec: this.obtenerFraccionArancelariaProsec(),
         descripcion: this.ninoFormGroup.get('uso_descripcion')?.value,
       };
       this.datosTabla?.push(ESPECIFICO);
-      this.tramite130103Store.setDynamicFieldValue('especifico', ESPECIFICO);
+      this.tramite130103Store.setDynamicFieldValue('especifico', this.datosTabla);
       this.ninoFormGroup.reset();
+      this.tablaId++;
     }
   }
 
@@ -345,7 +359,7 @@ export class UsoEspecificoDeLaMercanciaComponent implements OnInit, OnDestroy {
    *
    * @param {Object} event - Objeto que contiene el campo modificado y su nuevo valor.
    * @param {string} event.campo - Nombre del campo modificado.
-   * @param {any} event.valor - Nuevo valor del campo, que puede ser un objeto con un identificador o un valor directo.
+   * @param {string} event.valor - Nuevo valor del campo, que puede ser un objeto con un identificador o un valor directo.
    *
    * @example
    * this.establecerCambioDeValor({ campo: 'fraccion_arancelaria', valor: { id: 1, descripcion: 'Fracción A' } });
@@ -354,21 +368,51 @@ export class UsoEspecificoDeLaMercanciaComponent implements OnInit, OnDestroy {
    * this.establecerCambioDeValor({ campo: 'descripcion', valor: 'Descripción específica' });
    * // Actualiza el estado dinámico del campo "descripcion" con el valor "Descripción específica".
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  establecerCambioDeValor(event: { campo: string; valor: any }): void {
-    if (
-      event &&
-      typeof event.valor === 'object' &&
-      event.valor !== null &&
-      'id' in event.valor
-    ) {
-      const VALOR = event.valor.id;
-      this.prosec = event.valor.descripcion;
-      this.tramite130103Store.setDynamicFieldValue(event.campo, VALOR);
-    } else if (event) {
-      this.tramite130103Store.setDynamicFieldValue(event.campo, event.valor);
+  establecerCambioDeValor(event: { campo: string; valor: string }): void {
+    this.tramite130103Store.setDynamicFieldValue(event.campo, event.valor);
+  }
+
+  /**
+ * @method listaDeFilaSeleccionada
+ * @description
+ * Este método se utiliza para establecer la fila seleccionada dentro de un conjunto de partidas.
+ * Si se proporciona un evento con datos, se asigna el `id` de la primera partida a la variable `seleccionadaId`.
+ *
+ * Funcionalidad:
+ * - Reinicia `seleccionadaId` a `0` antes de realizar una nueva asignación.
+ * - Extrae el `id` de la primera partida en la lista y lo asigna a `seleccionadaId`.
+ *
+ * @param {Partidas[]} event - Lista de partidas que representan el evento de selección.
+ *
+ * @example
+ * listaDeFilaSeleccionada(partidasSeleccionadas);
+ */
+  listaDeFilaSeleccionada(event: Partidas[]): void {
+    if (event) {
+      this.seleccionadaId = 0;
+      this.seleccionadaId = event?.[0]?.id;
     }
   }
+
+  /**
+ * @method eliminar
+ * @description
+ * Elimina la fila seleccionada de la tabla dinámica de datos (`datosTabla`).
+ * Verifica que exista una selección válida y, si encuentra el elemento correspondiente,
+ * lo elimina del arreglo. Posteriormente, reinicia el identificador de selección (`seleccionadaId`)
+ * y actualiza el estado dinámico del trámite en el store.
+ */
+  eliminar(): void {
+    if (this.datosTabla && this.seleccionadaId !== undefined && this.seleccionadaId !== null) {
+      const INDEX = this.datosTabla.findIndex(item => item.id === this.seleccionadaId);
+      if (INDEX !== -1) {
+        this.datosTabla.splice(INDEX, 1);
+        this.seleccionadaId = 0;
+        this.tramite130103Store.setDynamicFieldValue('especifico', this.datosTabla);
+      }
+    }
+  }
+
 
   /**
    * compo doc

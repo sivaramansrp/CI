@@ -256,7 +256,7 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
   * 
   * @param {Object} event - Objeto que contiene el campo modificado y su nuevo valor.
   * @param {string} event.campo - Nombre del campo modificado.
-  * @param {any} event.valor - Nuevo valor del campo, que puede ser un objeto con un identificador o un valor directo.
+  * @param {string} event.valor - Nuevo valor del campo, que puede ser un objeto con un identificador o un valor directo.
   * 
   * @example
   * this.establecerCambioDeValor({ campo: 'unidad_de_medida', valor: { id: 1, descripcion: 'Kilogramos' } });
@@ -265,14 +265,8 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
   * this.establecerCambioDeValor({ campo: 'cantidad', valor: 100 });
   * // Actualiza el estado dinámico del campo "cantidad" con el valor 100.
   */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  establecerCambioDeValor(event: { campo: string; valor: any }): void {
-    if (event && typeof event.valor === 'object' && event.valor !== null && 'id' in event.valor) {
-      const VALOR = event.valor.id;
-      this.tramite130103Store.setDynamicFieldValue(event.campo, VALOR);
-    } else if (event) {
-      this.tramite130103Store.setDynamicFieldValue(event.campo, event.valor);
-    }
+  establecerCambioDeValor(event: { campo: string; valor: string }): void {
+    this.tramite130103Store.setDynamicFieldValue(event.campo, event.valor);
   }
 
     /**

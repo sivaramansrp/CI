@@ -4,6 +4,8 @@ import {
   REGEX_PERMITE_11_3_DIGITS,
   REGEX_SOLO_DIGITOS
 } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { Partidas } from '../models/importacion-definitiva.model';
 
 /**
  * @constant DATOS_DEL_TRAMITE_REALIZAR
@@ -627,3 +629,63 @@ export const MODIFICAR_PARTIDAS_FORM = [
  
  
 ];
+
+/**
+ * @constant ENCABEZADO_TABLA
+ * @description
+ * Define la configuración de las columnas para la tabla de partidas en el proceso de importación definitiva.
+ * @type {ConfiguracionColumna<Partidas>[]}
+ */
+export const ENCABEZADO_TABLA: ConfiguracionColumna<Partidas>[] = [
+    { encabezado: 'ID', clave: (artículo) => artículo.id, orden: 1 },
+    {
+      encabezado: 'Fracción Arancelaria',
+      clave: (artículo) => artículo.fraccionArancelariaProsec,
+      orden: 2,
+    },
+    {
+      encabezado: 'Descripción',
+      clave: (artículo) => artículo.descripcion,
+      orden: 3,
+    },
+  ]
+
+  /**
+ * @constant PARTIDAS_COLUMN_TABLA
+ * @description
+ * Define la configuración de las columnas para la tabla de partidas en el proceso de importación definitiva.
+ * @type {ConfiguracionColumna<Partidas>[]}
+ */
+  export const PARTIDAS_COLUMN_TABLA: ConfiguracionColumna<Partidas>[] = [
+      { encabezado: '', clave: (artículo) => artículo.id, orden: 1 },
+      {
+        encabezado: 'Cantidad',
+        clave: (artículo) => artículo.cantidad,
+        orden: 1,
+      },
+      {
+        encabezado: 'Unidad de medida',
+        clave: (artículo) => artículo.unidadDeMedida,
+        orden: 2,
+      },
+      {
+        encabezado: 'Fracción Arancelaria',
+        clave: (artículo) => artículo.fraccionArancelariaTigie,
+        orden: 3,
+      },
+      {
+        encabezado: 'Descripción',
+        clave: (artículo) => artículo.descripcion,
+        orden: 4,
+      },
+      {
+        encabezado: 'Precio unitario USD',
+        clave: (artículo) => artículo.precioUnitario,
+        orden: 5,
+      },
+      {
+        encabezado: 'Total USD',
+        clave: (artículo) => artículo.totalUsd,
+        orden: 6,
+      },
+    ];

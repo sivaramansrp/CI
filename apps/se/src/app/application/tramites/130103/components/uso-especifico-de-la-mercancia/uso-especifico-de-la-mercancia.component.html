@@ -17,12 +17,19 @@
     </div>
     <div class="row mt-5">
         <h6>Fracciones arancelarias uso especifico:</h6>
-        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"  [configuracionTabla]="encabezadoDeTabla"
-            [disableSeleccionTablaCheckBox]="consultaState.readonly" [desactivarEmitirEvento]="!consultaState.readonly" [datos]="datosTabla"></app-tabla-dinamica>
+        <app-tabla-dinamica
+            [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" 
+            [configuracionTabla]="encabezadoDeTabla"
+            [disableSeleccionTablaCheckBox]="consultaState.readonly"
+            [desactivarEmitirEvento]="!consultaState.readonly"
+            [datos]="datosTabla"
+            (listaDeFilaSeleccionada)="listaDeFilaSeleccionada($event)"
+            >
+        </app-tabla-dinamica>
     </div>
     <div class="row btn-right">
         <div>
-            <button type="button" class="btn btn-danger btn-space" [disabled]="consultaState.readonly">Eliminar seleccionado</button>        
+            <button type="button" class="btn btn-danger btn-space" [disabled]="consultaState.readonly" (click)="eliminar()">Eliminar seleccionado</button>        
         </div>
     </div>
 </div>

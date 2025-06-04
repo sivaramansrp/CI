@@ -139,8 +139,9 @@ export class CriterioDeDictamenComponent implements OnInit, OnDestroy {
     public importacionDefinitivaService: ImportacionDefinitivaService,
     private tramite130103Store: Tramite130103Store,
     private tramite130103Query: Tramite130103Query
-  // eslint-disable-next-line no-empty-function
-  ) {}
+  ) {
+    //
+  }
 
   /**
   * compo doc

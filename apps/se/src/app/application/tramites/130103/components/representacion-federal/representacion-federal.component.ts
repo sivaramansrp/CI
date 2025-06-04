@@ -135,8 +135,10 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramite130103Store: Tramite130103Store,
-    private tramite130103Query: Tramite130103Query // eslint-disable-next-line no-empty-function
-  ) {}
+    private tramite130103Query: Tramite130103Query
+  ) {
+    //
+  }
 
   /**
    * compo doc
@@ -274,7 +276,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    *
    * @param {Object} event - Objeto que contiene el campo modificado y su nuevo valor.
    * @param {string} event.campo - Nombre del campo modificado.
-   * @param {any} event.valor - Nuevo valor del campo, que puede ser un objeto con un identificador o un valor directo.
+   * @param {string} event.valor - Nuevo valor del campo, que puede ser un objeto con un identificador o un valor directo.
    *
    * @example
    * this.establecerCambioDeValor({ campo: 'entidad', valor: { id: 1, descripcion: 'Ciudad de México' } });
@@ -283,17 +285,8 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    * this.establecerCambioDeValor({ campo: 'observaciones', valor: 'Sin observaciones' });
    * // Actualiza el estado dinámico del campo "observaciones" con el valor "Sin observaciones".
    */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  establecerCambioDeValor(event: { campo: string; valor: any }): void {
-    if (
-      event &&
-      typeof event.valor === 'object' &&
-      event.valor !== null &&
-      'id' in event.valor
-    ) {
-      const VALOR = event.valor.id;
-      this.tramite130103Store.setDynamicFieldValue(event.campo, VALOR);
-    } else if (event) {
+  establecerCambioDeValor(event: { campo: string; valor: string }): void {
+    if (event) {
       this.tramite130103Store.setDynamicFieldValue(event.campo, event.valor);
     }
   }
