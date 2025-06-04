@@ -1,3 +1,4 @@
+
 import {
   ADV_LIMPIA_CAMPOS,
   CONFIGURACION_ENCABEZADO_TABLA_PAGOS,
@@ -53,6 +54,16 @@ import {
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
 import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import {
   Component,
   Input,
   OnChanges,
@@ -70,25 +81,13 @@ import {
   Observable,
   Subject,
   delay,
-  distinctUntilChanged,
   first,
   map,
   merge,
-  skip,
   switchMap,
   takeUntil,
   tap,
 } from 'rxjs';
-import {
-  AbstractControl,
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ValidationErrors,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
 import {
   Solicitud5701State,
   Tramite5701Store,

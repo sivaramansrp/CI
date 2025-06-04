@@ -39,7 +39,7 @@ export class AcusePageComponent implements OnInit {
    * Luego, se genera un mensaje de alerta utilizando la función `TXT_ALERTA_ACUSE` con el folio obtenido y se asigna a la propiedad `txtAlerta`.
    */
   ngOnInit(): void {
-    const URL_ACTUAL = this.router.url;
+    const URL_ACTUAL = this.router.url;    
     this.url = URL_ACTUAL.split('/')[1];
  
     this.folio = this.tramiteQueries.getTramite();
