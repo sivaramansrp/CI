@@ -8,6 +8,33 @@
     "departamento": "AGA",
     "numeroDeProcedimiento": "301"
   },
+    {
+        "id": 260701,
+        "tipoDeTramite": "Solicitud Procedure 260701",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "COFEPRIS",
+        "numeroDeProcedimiento": "260701"
+    },
+    {
+        "id": 16,
+        "tipoDeTramite": "Antecesor",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "31601"
+    },
+    {
+        "id": 230401,
+        "tipoDeTramite": "Solicitud de cs Permiso",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "SEMARNAT",
+        "numeroDeProcedimiento": "230401"
+    },
   {
     "id": 110101,
     "tipoDeTramite": "Consulta de Proceso",
@@ -799,5 +826,14 @@
     "diasTranscurridos": "4",
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260605"
-  }
+  },
+   {
+        "id": 80203,
+        "tipoDeTramite": "Solicitud de se Permiso",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "80203"
+    }
 ]
