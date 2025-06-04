@@ -4202,7 +4202,7 @@
   {
      "id": 603,
     "tramite": 120403,
-    "linkDashboard": "se/cupos/solicitud",
+    "linkDashboard": "/se/cupos/solicitud",
     "linkDepartment": "/pago/cupos/solicitud",
     "department": "se"
   },
