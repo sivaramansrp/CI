@@ -3,9 +3,10 @@ import {
   DatosComplimentos,
   SociaoAccionistas,
 } from '../../../../shared/models/complimentos.model';
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplimentosComponent } from '../../../../shared/components/complimentos/complimentos.component';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite80102Query } from '../../estados/tramite80102.query';
 import { Tramite80102Store } from '../../estados/tramite80102.store';
 
@@ -56,14 +57,27 @@ export class AggregarComplimentosComponent implements OnDestroy {
   tablaDatosComplimentosExtranjera$: Observable<SociaoAccionistas[]>;
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  public esFormularioSoloLectura: boolean = false; 
+
+  /**
    * Constructor de la clase AggregarComplimentosComponent.
    * @param {Tramite80102Store} store - Servicio para manejar el estado del trámite.
    * @param {Tramite80102Query} tramiteQuery - Servicio para consultar el estado del trámite.
    */
   constructor(
     private store: Tramite80102Store,
-    private tramiteQuery: Tramite80102Query
-  ) {
+    private tramiteQuery: Tramite80102Query, private consultaQuery: ConsultaioQuery) {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe()
     this.tablaDatosComplimentos$ =
       this.tramiteQuery.selectTablaDatosComplimentos$;
     this.tablaDatosComplimentosExtranjera$ =
