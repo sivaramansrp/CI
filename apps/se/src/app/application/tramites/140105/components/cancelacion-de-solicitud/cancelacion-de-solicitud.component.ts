@@ -1,7 +1,10 @@
 import * as formData from '@libs/shared/theme/assets/json/140105/datos-del-formulario.json';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Cancelacion } from '../../models/cancelacion-de-solicitus.model';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DesistimientoQuery } from '../../estados/desistimiento-de-permiso.query';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
@@ -9,14 +12,15 @@ import { OnInit } from '@angular/core';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
-import { map, Subject, takeUntil } from 'rxjs';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 
 @Component({
   selector: 'app-cancelacion-de-solicitud',
   templateUrl: './cancelacion-de-solicitud.component.html',
   styleUrl: './cancelacion-de-solicitud.component.scss',
 })
+
+
 export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Formulario para capturar los datos de la solicitud.
@@ -60,12 +64,13 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
    * Almacena los registros de cancelación para mostrar en la tabla.
    */
   cuerpoTablaCancelacion: Cancelacion[] = [];
+  
   /**
    * Indica si el usuario tiene permiso para realizar ciertas acciones.
    */
   public datosDePermiso: boolean = false;
 
-  constructor(private fb: FormBuilder, private servicioDeMensajesService: ServicioDeMensajesService, private consultaQuery: ConsultaioQuery,) { }
+  constructor(private fb: FormBuilder, private servicioDeMensajesService: ServicioDeMensajesService, private consultaQuery: ConsultaioQuery,private desistimientoQuery: DesistimientoQuery) { }
    /**
    * Método que se ejecuta al iniciar el componente.
    * Inicializa los formularios de solicitud y cancelación, 
@@ -88,14 +93,25 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
     this.cancelacionForm = this.fb.group({
       motivoCancelacion: ['', Validators.required],
     });
+    
+
 
     this.servicioDeMensajesService.datos$.subscribe((datos) => {
       this.datosDePermiso = datos;
       if (this.datosDePermiso) {
         this.cuerpoTablaCancelacion = [formData as Cancelacion];
         this.servicioDeMensajesService.actualizarDatosForma(this.cuerpoTablaCancelacion as Cancelacion[]);
+        this.desistimientoQuery.selectMotivoCancelacion$ 
+         .pipe(takeUntil(this.destroyNotificationSubject$))
+      .subscribe(data => {
+          this.cancelacionForm.patchValue({
+      motivoCancelacion: data,
+    });       
+      });  
+     
       }
     });
+
 
      // Suscripción a los datos del servicio para llenar la tabla
     this.servicioDeMensajesService.obtenerDatos()
@@ -109,17 +125,17 @@ export class CancelacionDeSolicitudComponent implements OnInit, OnDestroy {
         }
       });
 
+      
       this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotificationSubject$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-        
         })
       )
       .subscribe();
-
   }
+  
 
 
   /**

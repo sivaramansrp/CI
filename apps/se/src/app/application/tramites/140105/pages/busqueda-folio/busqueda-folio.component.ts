@@ -1,24 +1,59 @@
 import * as formData from '@libs/shared/theme/assets/json/140105/datos-del-formulario.json';
+import { Component, OnDestroy } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 import { Validators } from '@angular/forms';
+
+
 @Component({
   selector: 'app-busqueda-folio',
   templateUrl: './busqueda-folio.component.html',
   styleUrl: './busqueda-folio.component.scss',
 })
-export class BusquedaFolioComponent {
+export class BusquedaFolioComponent implements OnDestroy {
   public busquedaForm!: FormGroup;
   public detalleDelPermisoForm!: FormGroup;
   public detalleDelPermiso: boolean = false;
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
 
-  constructor(private servicioDeMensajesService: ServicioDeMensajesService, private fb: FormBuilder) {
+    /**
+   * Notificador para destruir las suscripciones al destruir el componente.
+   */
+  public destroyNotifier$: Subject<void> = new Subject();
+
+  constructor(private servicioDeMensajesService: ServicioDeMensajesService, private fb: FormBuilder,
+    private consultaQuery: ConsultaioQuery,
+  ) {
     this.establecerBusquedaForm();
     this.estableDetalleDelPermisoForm();
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
+
+        /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+     inicializarEstadoFormulario(): void {
+      if(!this.busquedaForm){
+        this.estableDetalleDelPermisoForm();
+      }
+    }
+
 
   /**
    * Método que se ejecuta al realizar una búsqueda.
@@ -113,6 +148,13 @@ export class BusquedaFolioComponent {
    */
   public establecerFormularioDeDetallesDe(): void {
     this.detalleDelPermisoForm.patchValue(formData);
+  }
+
+    // Método que se ejecuta cuando se destruye el componente
+  ngOnDestroy(): void {
+    // Liberamos los recursos y notificamos a todos los observadores
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
 }

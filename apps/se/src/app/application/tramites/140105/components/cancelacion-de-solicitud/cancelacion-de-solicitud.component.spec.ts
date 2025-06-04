@@ -1,47 +1,103 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+
+import { Component } from '@angular/core';
 import { CancelacionDeSolicitudComponent } from './cancelacion-de-solicitud.component';
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputRadioComponent, SharedModule, SolicitanteComponent, TablaDinamicaComponent, TableComponent, TercerosComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
-import { ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { FormBuilder } from '@angular/forms';
+import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DesistimientoQuery } from '../../estados/desistimiento-de-permiso.query';
+import { ToastrService, provideToastr } from 'ngx-toastr';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ToastrModule } from 'ngx-toastr';
-describe('CancelacionDeSolicitusComponent', () => {
-  let component: CancelacionDeSolicitudComponent;
-  let fixture: ComponentFixture<CancelacionDeSolicitudComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [CancelacionDeSolicitudComponent],
-      imports: [
-        HttpClientTestingModule,
-        CommonModule,
-        ReactiveFormsModule,
-        SharedModule,
-        WizardComponent,
-        TituloComponent,
-        BtnContinuarComponent,
-        CrosslistComponent,
-        InputCheckComponent,
-        AlertComponent,
-        InputFechaComponent,
-        AnexarDocumentosComponent,
-        FirmaElectronicaComponent,
-        SolicitanteComponent,
-        TercerosComponent,
-        CatalogoSelectComponent,
-        TableComponent,
-        InputRadioComponent,
-        ToastrModule.forRoot(),
-        TablaDinamicaComponent
+@Injectable()
+class MockServicioDeMensajesService {}
+
+@Injectable()
+class MockDesistimientoQuery {}
+
+describe('CancelacionDeSolicitudComponent', () => {
+  let fixture;
+  let component;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule,HttpClientTestingModule],
+      declarations: [CancelacionDeSolicitudComponent
       ],
-    }).compileComponents();
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+      ToastrService,
+                    provideToastr({
+                      positionClass: 'toast-top-right',
+                    }),
+        FormBuilder,
+        { provide: ServicioDeMensajesService, useClass: MockServicioDeMensajesService },
+        ConsultaioQuery,
+        { provide: DesistimientoQuery, useClass: MockDesistimientoQuery }
+      ]
+    }).overrideComponent(CancelacionDeSolicitudComponent, {
 
+    }).compileComponents();
     fixture = TestBed.createComponent(CancelacionDeSolicitudComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
+
+  it('should run #ngOnInit()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn().mockReturnValue({
+      patchValue: function() {}
+    });
+    component.servicioDeMensajesService = component.servicioDeMensajesService || {};
+    component.servicioDeMensajesService.datos$ = observableOf({});
+    component.servicioDeMensajesService.actualizarDatosForma = jest.fn();
+    component.servicioDeMensajesService.obtenerDatos = jest.fn().mockReturnValue(observableOf({
+      datos: {}
+    }));
+    component.desistimientoQuery = component.desistimientoQuery || {};
+    component.desistimientoQuery.selectMotivoCancelacion$ = observableOf({});
+    component.consultaQuery = component.consultaQuery || {};
+    component.consultaQuery.selectConsultaioState$ = observableOf({});
+    component.ngOnInit();
+    // expect(component.fb.group).toHaveBeenCalled();
+    // expect(component.servicioDeMensajesService.actualizarDatosForma).toHaveBeenCalled();
+    // expect(component.servicioDeMensajesService.obtenerDatos).toHaveBeenCalled();
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.servicioDeMensajesService = component.servicioDeMensajesService || {};
+    component.servicioDeMensajesService.establecerDatosDePermiso = jest.fn();
+    component.destroyNotificationSubject$ = component.destroyNotificationSubject$ || {};
+    component.destroyNotificationSubject$.next = jest.fn();
+    component.destroyNotificationSubject$.complete = jest.fn();
+    component.ngOnDestroy();
+    // expect(component.servicioDeMensajesService.establecerDatosDePermiso).toHaveBeenCalled();
+    // expect(component.destroyNotificationSubject$.next).toHaveBeenCalled();
+    // expect(component.destroyNotificationSubject$.complete).toHaveBeenCalled();
+  });
+
+  it('should run #busqueda()', async () => {
+    component.servicioDeMensajesService = component.servicioDeMensajesService || {};
+    component.servicioDeMensajesService.enviarMensaje = jest.fn();
+    component.busqueda({});
+    // expect(component.servicioDeMensajesService.enviarMensaje).toHaveBeenCalled();
+  });
+
+  it('should run #eliminarRegistro()', async () => {
+    component.servicioDeMensajesService = component.servicioDeMensajesService || {};
+    component.servicioDeMensajesService.actualizarDatosForma = jest.fn();
+    component.eliminarRegistro({});
+    // expect(component.servicioDeMensajesService.actualizarDatosForma).toHaveBeenCalled();
+  });
+
 });

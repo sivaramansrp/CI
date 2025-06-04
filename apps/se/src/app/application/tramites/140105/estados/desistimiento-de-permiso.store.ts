@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
 @Injectable({
   providedIn: 'root',
 })
+
 @StoreConfig({ name: 'desistimiento-de-permiso', resettable: true })
 export class DesistimientoStore extends Store<PermisosDatos> {
   constructor() {

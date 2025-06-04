@@ -5,10 +5,10 @@ import { Cancelacion, PermisosDatos } from '../models/cancelacion-de-solicitus.m
 import { DesistimientoStore } from '../estados/desistimiento-de-permiso.store';
 import { HttpClient } from '@angular/common/http';
 
-
 @Injectable({
   providedIn: 'root'
 })
+
 export class ServicioDeMensajesService {
   /**
    * @description Subject that acts as the source of boolean messages.
@@ -107,6 +107,19 @@ Devuelve un observable que emite el estado de la solicitud de cancelación.
 @returns {Observable<CancelarSolicitudState>} Observable que emite los datos del estado de la solicitud de cancelación. */
 getRegistroTomaMuestrasMercanciasData(): Observable<PermisosDatos> {
   return this.http.get<PermisosDatos>('assets/json/140105/permisosCancelar.json');
+}
+
+/**
+ * Carga los datos simulados desde un archivo JSON
+ * y los actualiza en el store.
+ */
+cargarDatosSimulados(): void {
+  this.getRegistroTomaMuestrasMercanciasData().subscribe((respuesta) => {
+    this.desistimientoStore.update((state) => ({
+      ...state,
+      ...respuesta
+    }));
+  });
 }
 
 }

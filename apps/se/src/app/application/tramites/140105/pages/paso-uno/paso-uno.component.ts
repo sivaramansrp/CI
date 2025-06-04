@@ -72,8 +72,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
           this.consultaState = seccionState;
         })
       )
-      .subscribe();
+    .subscribe();
     if (this.consultaState.update) {
+      this.servicioDeMensajesService.establecerDatosDePermiso(true);
       this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;
@@ -85,12 +86,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
+
     this.servicioDeMensajesService.getRegistroTomaMuestrasMercanciasData()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
           this.servicioDeMensajesService.actualizarEstadoFormulario(resp);
+
         }
       });
   }
