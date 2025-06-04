@@ -58,7 +58,7 @@ export class Solocitud260912Service {
    * @returns Observable que emite un objeto con el estado del trámite 120402.
    */
   getRegistroTomaMuestrasMercanciasData(): Observable<Tramites260912State> {
-    return this.http.get<Tramites260912State>('assets/json/260911/consulta-journy-data.json');
+    return this.http.get<Tramites260912State>('assets/json/260912/consulta-journy-data.json');
   }
 
 }

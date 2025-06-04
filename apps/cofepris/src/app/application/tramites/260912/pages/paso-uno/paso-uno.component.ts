@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 
 import { Subject, map, takeUntil } from 'rxjs';
-import { Solocitud260912Service } from '../../services/service260911.service';
+import { Solocitud260912Service } from '../../services/service260912.service';
 
 
 /**
@@ -13,7 +13,7 @@ import { Solocitud260912Service } from '../../services/service260911.service';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
 })
-export class PasoUnoComponent implements OnInit {
+export class PasoUnoComponent implements OnInit, OnDestroy {
 
    /**
    * Indica si se han recibido correctamente los datos desde el servidor.
@@ -92,5 +92,13 @@ export class PasoUnoComponent implements OnInit {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+    /**
+   * Hook del ciclo de vida Angular que se ejecuta al destruir el componente.
+   * Libera recursos cancelando todas las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

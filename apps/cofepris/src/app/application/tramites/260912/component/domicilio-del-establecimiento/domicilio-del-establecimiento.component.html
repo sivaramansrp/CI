@@ -25,10 +25,11 @@
           <div class="form-group">
             <app-catalogo-select
               [catalogo]="estado"
-              [label]="'Estado*'"
+              [label]="'Estado'"
               name="estado"
               [required]="true"
               formControlName="estado"
+              [isDisabled]="esFormularioSoloLectura" 
               (change)="setValorStore(form, 'estado')"
             >
             </app-catalogo-select>
@@ -178,13 +179,15 @@
       [tipoSeleccionTabla]="tablaSeleccionCheckbox"
       [configuracionTabla]="nicoTabla"
       [datos]="nicoTablaDatos"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
     <div class="container text-end mt-5">
-      <button class="btn btn-default me-2">Eliminar</button>
+      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
       <button
         class="btn btn-primary me-2"
         data-bs-toggle="modal"
         data-bs-target="#modalAddAgent"
+        [disabled]="esFormularioSoloLectura"
       >
         Agregar
       </button>
@@ -198,6 +201,7 @@
           [label]="'Aviso de funcionamiento'"
           [required]="true"
           formControlName="avisoCheckbox"
+          [isDisabled]="true"
           (change)="setValorStore(domicilio, 'avisoCheckbox')"
       ></lib-input-check>
 
@@ -230,6 +234,7 @@
           formControlName="regimen"
           [label]="'Régimen'"
           [required]="true"
+          [isDisabled]="esFormularioSoloLectura"
           name="regimen"
           [tooltipQuestionCircle]="true"
           (change)="setValorStore(domicilio, 'regimen')"
@@ -244,6 +249,7 @@
           formControlName="aduanasEntradas"
           [label]="'Aduanas de entradas'"
           [required]="true"
+          [isDisabled]="esFormularioSoloLectura"
           name="aduanasEntradas"
           (change)="setValorStore(domicilio, 'aduanasEntradas')"
         ></app-catalogo-select>
@@ -262,6 +268,7 @@
           [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA).'"
           [required]="true"
           formControlName="aifaCheckbox"
+          [isDisabled]="true"
           (change)="setValorStore(domicilio, 'aifaCheckbox')"
       ></lib-input-check>
       </div>
@@ -278,14 +285,16 @@
           [tipoSeleccionTabla]="tablaSeleccionCheckbox"
           [configuracionTabla]="mercanciasTabla"
           [datos]="mercanciasTablaDatos"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
         ></app-tabla-dinamica>
         <div class="container text-end mt-5">
-          <button class="btn btn-default me-2">Modificar</button>
-          <button class="btn btn-default me-2">Eliminar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
           <button
             class="btn btn-primary me-2"
             data-bs-toggle="modal"
             data-bs-target="#modalAddAgentMercancias"
+            [disabled]="esFormularioSoloLectura"
           >
             Agregar
           </button>
@@ -298,11 +307,12 @@
         <ng-titulo titulo="Manifiesto bajo protesta" />
         <div class="form-check bg-light p-0">
           <div class="alert alert-info content-with-checkbox py-6">
-            <lib-input-check
+        <lib-input-check
           [id]="'manifiesto'"
           [label]="''"
           [required]="true"
           formControlName="manifests"
+          [isDisabled]="true" 
           (change)="setValorStore(domicilio, 'manifests')"
       ></lib-input-check>
             <span class="fw-bold align-middle"> *</span>
@@ -346,7 +356,7 @@
           </div>
         </div>
         <div class="col-md-3 mt-5">
-          <button class="btn btn-default me-2">Modificar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
         </div>
       </div>
 

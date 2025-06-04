@@ -1,3 +1,4 @@
+<div class="container>">
 <div class="col-md-12 datos-de-la-solicitud">
   <div class="row mt-5">
     <div class="col-md-12 accordion-bar">
@@ -8,7 +9,7 @@
               Opciones de pre-llenado de Solicitud
             </p>
             <button type="button" class="collpase-button collapsed"
-              [ngClass]="{ 'expanded': colapsable,'collapsed': !colapsable}">
+              [ngClass]="{ 'expanded': colapsable,'collapsed': !colapsable}" [disabled]="esFormularioSoloLectura">
             </button>
           </div>
           @if(colapsable){
@@ -20,7 +21,7 @@
                 <div class="col-md-6"></div>
                 <div class="col-md-6 text-end">
                   <div class="btn-group">
-                    <button class="btn btn-primary me-2" type="button">
+                    <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura">
                       Copiar datos en una Nueva Solicitud
                     </button>
                   </div>
@@ -38,8 +39,12 @@
     <form [formGroup]="form">
       <h6>Seleccione el tipo de operación que desea realizar*:</h6>
       <div class="row px-3">
-        <app-input-radio [radioOptions]="btonDeRadio" [layout]="'horizontal'" formControlName="btonDeRadio"
-          (change)="setValorStore(form,'btonDeRadio')"></app-input-radio>
+        <app-input-radio 
+          [radioOptions]="btonDeRadio" 
+          [layout]="'horizontal'" 
+          formControlName="btonDeRadio"
+          (change)="setValorStore(form,'btonDeRadio')"
+        ></app-input-radio>
         <div *ngIf="form.get('btonDeRadio')?.invalid && form.get('btonDeRadio')?.touched" class="text-danger">
           Por favor seleccione una opción.
         </div>
@@ -49,8 +54,12 @@
         <div class="col-md-12">
           <div class="form-group">
             <label class="form-label">Justificación*:</label>
-            <textarea class="form-control" rows="3" required="true" formControlName="justificacion"
-              (change)="setValorStore(form,'justificacion')"></textarea>
+            <textarea 
+              class="form-control" 
+              rows="3" required="true" 
+              formControlName="justificacion"
+              (change)="setValorStore(form,'justificacion')"
+            ></textarea>
             <div *ngIf="form.get('justificacion')?.invalid && form.get('justificacion')?.touched" class="text-danger">
               Por favor, corrija el motivo o justificación de la importación temporal.
             </div>
@@ -65,9 +74,12 @@
       <div class="row">
         <div class="col-md-8"></div>
         <div class="col-md-4 d-flex justify-content-end">
-          <button type="button" 
-          class="btn btn-primary" 
-          (click)="toggleFormControls()">
+          <button 
+            type="button" 
+            class="btn btn-primary" 
+            (click)="toggleFormControls()"
+            [disabled]="esFormularioSoloLectura"
+          >
             Seleccionar establecimiento
           </button>
         </div>
@@ -76,15 +88,27 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="rfcDel">RFC del responsable sanitario:</label>
-            <input class="form-control" id="rfcDel" placeholder="" type="text" formControlName="rfcDel"
-              (change)="setValorStore(datosDelEstablecimiento,'rfcDel')" />
+            <input 
+              class="form-control" 
+              id="rfcDel" 
+              placeholder="" 
+              type="text" 
+              formControlName="rfcDel"
+              (change)="setValorStore(datosDelEstablecimiento,'rfcDel')" 
+            />
           </div>
         </div>
         <div class="col-md-8">
           <div class="form-group">
             <label class="form-label" for="denominacion">Denominación o razón social*:</label>
-            <input class="form-control" id="denominacion" placeholder="" type="text" formControlName="denominacion"
-              (change)="setValorStore(datosDelEstablecimiento,'denominacion')" />
+            <input 
+              class="form-control" 
+              id="denominacion" 
+              placeholder="" 
+              type="text" 
+              formControlName="denominacion"
+              (change)="setValorStore(datosDelEstablecimiento,'denominacion')" 
+            />
             <div
               *ngIf="datosDelEstablecimiento.get('denominacion')?.invalid && datosDelEstablecimiento.get('denominacion')?.touched"
               class="text-danger">
@@ -97,10 +121,20 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="correo">Correo electrónico*:
-              <span class="bi bi-question-circle-fill" title="Correo electrónico"
-                data-bs-toggle="tooltip"></span></label>
-            <input class="form-control" id="correo" placeholder="" type="text" formControlName="correo"
-              (change)="setValorStore(datosDelEstablecimiento,'correo')" />
+              <span 
+                class="bi bi-question-circle-fill" 
+                title="Correo electrónico"
+                data-bs-toggle="tooltip"
+                ></span
+                ></label>
+            <input 
+              class="form-control" 
+              id="correo" 
+              placeholder="" 
+              type="text" 
+              formControlName="correo"
+              (change)="setValorStore(datosDelEstablecimiento,'correo')" 
+            />
             <div
               *ngIf="datosDelEstablecimiento.get('correo')?.invalid && datosDelEstablecimiento.get('correo')?.touched"
               class="text-danger">
@@ -116,4 +150,5 @@
       </div>
     </form>
   </div>
+</div>
 </div>
