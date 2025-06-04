@@ -42,11 +42,11 @@
           <div class="row">
             <div class="col-md-4">
               <app-catalogo-select [catalogo]="entidadFederativaOptions" formControlName="entidadFederativa" [label]="'Entidad federativa'"
-                [required]="true" name="federalent" (change)="onCambiarEntiadFederative()"></app-catalogo-select>
+                [required]="true" name="federalent" (change)="onCambiarEntiadFederative()" [isDisabled]="esFormularioSoloLectura" [placeholder]="'Seleccione una opcion'"></app-catalogo-select>
             </div>
             <div class="col-md-4">
               <app-catalogo-select [catalogo]="representacionFederalOptions" formControlName="representacionFederal" [label]="'Representación federal'"
-                [required]="true" name="representfederal" (change)="onCambiarRepresentacionFederal()"></app-catalogo-select>
+                [required]="true" name="representfederal" (change)="onCambiarRepresentacionFederal()" [isDisabled]="esFormularioSoloLectura" [placeholder]="'Seleccione una opcion'"></app-catalogo-select>
             </div>
           </div>
           </form>
@@ -89,7 +89,7 @@
                 (change)="onCambiarMontoAExpedir()">
             </div>
             <div class="col-md-4 text-end">
-            <button type="submit" name="" id="" class="mid btn btn-primary custom-agregar-monto" (click)="AgregarMontoExpedir()">
+            <button type="submit" name="" id="" class="mid btn btn-primary custom-agregar-monto" (click)="AgregarMontoExpedir()" [disabled]="!distribucionSaldoForm.valid || esFormularioSoloLectura">
             Agregar
             </button>
             </div>
@@ -98,12 +98,12 @@
               <div class="col-md-12">
                   <div class="form-check monto-a-expedir">
                     <lib-input-check [id]="'montoAExpedirCheck'" [label]="'Monto a expedir'" [required]="false"
-                      formControlName="montoAExpedirCheck" (change)="onCambiarMontoAExpedirCheck()">
+                      formControlName="montoAExpedirCheck" (change)="onCambiarMontoAExpedirCheck()" [isDisabled]="esFormularioSoloLectura">
                     </lib-input-check>
                   </div>
                 </div>
                 <div class="text-end">
-                  <button type="submit" name="" id="" class="mid btn btn-primary custom-eliminar-monto">
+                  <button type="submit" name="" class="mid btn btn-primary custom-eliminar-monto" [disabled]="!distribucionSaldoForm.valid || esFormularioSoloLectura">
                     Eliminar seleccionado
                   </button>
               </div>
@@ -114,7 +114,7 @@
                 <label class="form-label" for="totalAExpedir">Total a expedir: </label>
                 <input type="text" class="form-control" id="totalAExpedir" formControlName="totalAExpedir">
                 <span>(Tonelada)</span>
-              </div>
+              </div>              
               
           </div>
       </form>     
