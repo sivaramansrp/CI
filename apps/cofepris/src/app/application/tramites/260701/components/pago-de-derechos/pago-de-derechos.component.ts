@@ -5,6 +5,7 @@ import { Solicitud260701State, Tramite260701Store } from '../../estados/tramites
 import { Subject,map, takeUntil } from 'rxjs';
 import { CertificadosLicenciasService } from '../../services/certificados-licencias.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { INPUT_FECHA_CONFIG } from '../../services/certificados-licencias.enum';
 import { Tramite260701Query } from '../../estados/queries/tramite260701.query';
 
@@ -49,6 +50,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
      * Se espera que se inicialice con una instancia de `Solicitud260303State`.
      */
     public solicitudState!: Solicitud260701State;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+    public esFormularioSoloLectura: boolean = false;
 
 
     /**
@@ -62,8 +68,15 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       private fb: FormBuilder,
       private certificadosLicenciasSvc: CertificadosLicenciasService,
       private tramite260701Store: Tramite260701Store,
-      private tramite260701Query: Tramite260701Query
+      private tramite260701Query: Tramite260701Query,
+      private consultaioQuery: ConsultaioQuery
     ) {
+        this.consultaioQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
       this.fetchBancoData();
     }
   
@@ -77,9 +90,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
      * @param e {Catalogo} Banco seleccionado.
      */
     ngOnInit(): void {
-      this.tramite260701Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
-          this.solicitudState = seccionState;
-      })).subscribe();
       this.crearFormSolicitudForm();
     }
 
@@ -98,13 +108,16 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
      * Se aplican validadores para garantizar la integridad de los datos y hacer cumplir formatos de entrada específicos.
      */
     public crearFormSolicitudForm(): void {
+       this.tramite260701Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+          this.solicitudState = seccionState;
+      })).subscribe();
       this.formSolicitud = this.fb.group({
-        claveDeReferencia: [this.solicitudState.claveDeReferencia,[Validators.maxLength(50)]],
-        cadenaDependencia: [this.solicitudState.cadenaDependencia,Validators.maxLength(50)],
-        banco: [this.solicitudState.banco],
-        llaveDePago: [this.solicitudState.llaveDePago,[Validators.required,Validators.pattern(REGEX_LLAVE_DE_PAGO)]],
-        fechaPago: [this.solicitudState.fechaPago],
-        importePago: [this.solicitudState.importePago,Validators.pattern(REGEX_IMPORTE_PAGO)],
+        claveDeReferencia: [this.solicitudState?.claveDeReferencia,[Validators.maxLength(50)]],
+        cadenaDependencia: [this.solicitudState?.cadenaDependencia,Validators.maxLength(50)],
+        banco: [this.solicitudState?.banco],
+        llaveDePago: [this.solicitudState?.llaveDePago,[Validators.required,Validators.pattern(REGEX_LLAVE_DE_PAGO)]],
+        fechaPago: [this.solicitudState?.fechaPago],
+        importePago: [this.solicitudState?.importePago,Validators.pattern(REGEX_IMPORTE_PAGO)],
       });
     }
   
@@ -129,6 +142,33 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         const VALOR = form.get(campo)?.value;
         (this.tramite260701Store[metodoNombre] as (value: unknown) => void)(VALOR);
       }
+
+  /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.  
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  public inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearFormSolicitudForm();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  public guardarDatosFormulario(): void {
+    this.crearFormSolicitudForm();
+    Promise.resolve().then(() => {
+      if (this.esFormularioSoloLectura) {
+      this.formSolicitud.disable();
+      } else if (!this.esFormularioSoloLectura) {
+      this.formSolicitud.enable();
+      }
+    });
+  }
   
     /**
      * Método para actualizar el banco seleccionado.
