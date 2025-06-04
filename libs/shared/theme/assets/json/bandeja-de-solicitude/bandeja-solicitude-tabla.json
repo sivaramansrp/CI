@@ -9,6 +9,15 @@
     "numeroDeProcedimiento": "301"
   },
   {
+    "id": 6001,
+    "tipoDeTramite": "Consulta de Permiso",
+    "fecha": "2021-10-01",
+    "fechaActualizacion": "2022-10-05",
+    "diasTranscurridos": "6",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "6001"
+  },
+  {
     "id": 110101,
     "tipoDeTramite": "Consulta de Proceso",
     "fecha": "2023-10-06",
