@@ -48,10 +48,10 @@ export function createInitialState(): Tramites120601State {
       actividadEconomicaClave: ''
     },
     representacionFederal: {
-      estado: '',         
-      representacion: '', 
+      estado: '',
+      representacion: '',
     }
-  };
+  };  
 }
 
 /**
