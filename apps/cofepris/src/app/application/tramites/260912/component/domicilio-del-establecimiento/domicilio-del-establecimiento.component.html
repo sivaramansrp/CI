@@ -201,7 +201,7 @@
           [label]="'Aviso de funcionamiento'"
           [required]="true"
           formControlName="avisoCheckbox"
-          [isDisabled]="true"
+          [isDisabled]="esFormularioSoloLectura"
           (change)="setValorStore(domicilio, 'avisoCheckbox')"
       ></lib-input-check>
 
@@ -268,7 +268,7 @@
           [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA).'"
           [required]="true"
           formControlName="aifaCheckbox"
-          [isDisabled]="true"
+          [isDisabled]="esFormularioSoloLectura"
           (change)="setValorStore(domicilio, 'aifaCheckbox')"
       ></lib-input-check>
       </div>
