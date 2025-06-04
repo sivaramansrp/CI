@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AlertComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -13,6 +13,8 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MENSAJE_DE_ALERTA } from '@libs/shared/data-access-user/src/core/enums/260211/manifiestos.enum';
 import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
+import { ProductoOption, ProductoResponse } from '../../models/permiso-sanitario.enum';
+import { SanitarioService } from '../../services/sanitario.service';
  
 /**
  * Componente principal para gestionar el formulario de manifiestos.
@@ -25,6 +27,7 @@ import { Tramite260211Query } from '../../../../estados/queries/tramite260211.qu
     TituloComponent,
     AlertComponent,
     ReactiveFormsModule,
+    InputRadioComponent
   ],
   templateUrl: './manifiestos.component.html',
   styleUrl: './manifiestos.component.scss',
@@ -34,6 +37,13 @@ import { Tramite260211Query } from '../../../../estados/queries/tramite260211.qu
  * Componente para gestionar los manifiestos de la solicitud.
  */
 export class ManifiestosComponent implements OnInit, OnDestroy {
+   public producto: ProductoOption[] = [];
+ 
+  /**
+   * Valor por defecto para el campo de selección.
+   * Se utiliza para establecer un valor inicial en el formulario.
+   */
+  defaultSelect: string = 'Si';
   /**
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
@@ -67,6 +77,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
+     private service: SanitarioService,
     private tramite260211Store: Tramite260211Store,
     private tramite260211Query: Tramite260211Query,
     private consultaioQuery: ConsultaioQuery
@@ -79,6 +90,14 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    * Obtiene el estado de la solicitud y crea el formulario de manifiestos.
    */
   ngOnInit(): void {
+
+     this.service.getPermisoData().subscribe((response: ProductoResponse[]) => {
+  if (response && response.length > 0) {
+    this.producto = response[0].options; // <-- assign options array
+    this.defaultSelect = response[0].defaultSelect; // <-- assign default selection
+    this.manifiestos.get('cumplimiento')?.setValue(this.defaultSelect);
+  }
+});
   this.inicializarEstadoFormulario();
      /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -98,7 +117,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
     )
     .subscribe();
 
-  
+ 
  
  
   }
@@ -124,10 +143,12 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
         this.manifiestos.disable();
       } else if (!this.esFormularioSoloLectura) {
         this.manifiestos.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
-      }
+      } 
   }
+  /**
+   * Inicializa el formulario de manifiestos con los valores del estado de la solicitud.
+   * Se suscribe al estado de la solicitud para obtener los valores iniciales.
+   */
 inicializarFormulario(): void {
   this.tramite260211Query.selectSolicitud$
       .pipe(
@@ -141,8 +162,10 @@ inicializarFormulario(): void {
      * Inicialización del formulario de manifiestos.
      */
     this.manifiestos = this.fb.group({
-      cumplimiento: [this.solicitudState?.cumplimiento, Validators.required],
+      cumplimiento: ['Si',this.solicitudState?.cumplimiento, Validators.required],
     });
+
+ 
 }
   /**
    * Establece el valor de un campo en el store de Tramite260211.

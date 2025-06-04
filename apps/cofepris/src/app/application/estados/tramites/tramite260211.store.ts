@@ -6,6 +6,43 @@ import { Injectable } from '@angular/core';
  * Interfaz que representa el estado de Solicitud260211.
  */
 export interface Solicitud260211State {
+      /**
+     * @property {string} referencia
+     * @description Referencia de la solicitud.
+     */
+    referencia: string;
+  
+    /**
+     * @property {string} cadenaDependencia
+     * @description Cadena de dependencia asociada a la solicitud.
+     */
+    cadenaDependencia: string;
+  
+    /**
+     * @property {string} banco
+     * @description Información del banco relacionado.
+     */
+    banco: string;
+  
+    /**
+     * @property {string} Llave
+     * @description Llave única de la solicitud.
+     */
+    Llave: string;
+  
+    /**
+     * @property {string} tipoFetch
+     * @description Información de fetch.
+     */
+    tipoFetch: string;
+  
+    /**
+     * @property {string} importe
+     * @description Importe relacionado con la solicitud.
+     */
+    importe: string;
+  
+    
     /**
      * El valor de rfcResponsableSanitario.
      */
@@ -169,6 +206,42 @@ export interface Solicitud260211State {
  */
 export function createInitialState(): Solicitud260211State {
     return {
+           /**
+         * @property {string} referencia
+         * @description Referencia de la solicitud.
+         */
+        referencia: '',
+
+        /**
+         * @property {string} cadenaDependencia
+         * @description Cadena de dependencia asociada a la solicitud.
+         */
+        cadenaDependencia: '',
+
+        /**
+         * @property {string} banco
+         * @description Información del banco relacionado.
+         */
+        banco: '',
+
+        /**
+         * @property {string} Llave
+         * @description Llave única de la solicitud.
+         */
+        Llave: '',
+
+        /**
+         * @property {string} tipoFetch
+         * @description Información de fetch.
+         */
+        tipoFetch: '',
+
+        /**
+         * @property {string} importe
+         * @description Importe relacionado con la solicitud.
+         */
+        importe: '',
+
         /**
          * El valor de rfcDel.
          */
@@ -350,7 +423,42 @@ export class Tramite260211Store extends Store<Solicitud260211State>{
     constructor() {
         super(createInitialState());
     }
-
+    public setreferencia(referencia: string) {
+            this.update((state) => ({
+                ...state,
+                referencia,
+            }));
+        }
+        public setcadenaDependencia(cadenaDependencia: string) {
+            this.update((state) => ({
+                ...state,
+                cadenaDependencia,
+            }));
+        }
+        public setbanco(banco: string) {
+            this.update((state) => ({
+                ...state,
+                banco,
+            }));
+        }
+        public setLlave(Llave: string) {
+            this.update((state) => ({
+                ...state,
+                Llave,
+            }));
+        }
+        public settipoFetch(tipoFetch: string) {
+            this.update((state) => ({
+                ...state,
+                tipoFetch,
+            }));
+        }
+        public setimporte(importe: string) {
+            this.update((state) => ({
+                ...state,
+                importe,
+            }));
+        }
     /**
      * Establece el estado de rfcResponsableSanitario.
      * @param rfcResponsableSanitario - El valor de rfcResponsableSanitario.

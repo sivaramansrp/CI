@@ -99,13 +99,7 @@ constructor(
    */
   ngOnInit(): void {
      this.inicializarEstadoFormulario();
-     /**
-     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
-     *
-     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
-     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
-     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
-     */
+   
     this.consultaioQuery.selectConsultaioState$
     .pipe(
       takeUntil(this.destroyNotifier$),
@@ -130,6 +124,11 @@ constructor(
     }  
     
   }
+  /**
+   * Inicializa el formulario con los datos de la solicitud.
+   * Se suscribe al estado de la solicitud para obtener los valores iniciales.
+   * Los campos del formulario se configuran como deshabilitados o requeridos según sea necesario.
+   */
   inicializarFormulario():void{
  this.tramite260211Query
       .selectSolicitud$

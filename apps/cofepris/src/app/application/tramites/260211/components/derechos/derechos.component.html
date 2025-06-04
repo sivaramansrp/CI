@@ -42,10 +42,15 @@
             </div>
             <div class="col-md-4">
                 <div class="form-group">
-                  <label class="form-label" for="tipoFetch">Fetch de page</label>
-                  <input class="form-control" id="tipoFetch" placeholder="" type="date"
-                    formControlName="deFetch" (change)="setValoresStore(derechosForm,'tipoFetch', 'settipoFetch')">
-                </div>
+                   <input-fecha [datos]="fechaInicioInput"
+        name="tipoFetch"
+         formControlName="deFetch"
+        (valorCambiado)="onFechaCambiada($event)"
+        [setFecha]="derechosForm.get('fechaPago')?.value"
+         (change)="setValoresStore(derechosForm,'deFetch', 'settipoFetch')" 
+             [isDisabled]="esFormularioSoloLectura ? true : false"
+        ></input-fecha>
+                  </div>
               </div>
               <div class="col-md-4">
                 <div class="form-group">

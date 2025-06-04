@@ -90,6 +90,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    */
   obtenerValor(): void {
     this.representante.patchValue({
+      rfc: 'XAXX010101000', // RFC de ejemplo, considera ajustarlo según tus necesidades.
       nombre: 47875, // Nota: Esto debería ser una cadena, considera ajustar si es necesario.
       apellidoPaterno: 'Paterno',
       apellidoMaterno: 'Materno',
@@ -117,10 +118,13 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
         this.representante.disable();
       } else if (!this.esFormularioSoloLectura) {
         this.representante.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
       }
   }
+  /**
+   * Inicializa el formulario con los valores del estado de la solicitud.
+   * Se suscribe al estado de la solicitud para obtener los valores iniciales.
+   * Los campos del formulario se configuran como deshabilitados o requeridos según sea necesario.
+   */
   inicializarFormulario():void{
 
     this.tramite260211Query.selectSolicitud$

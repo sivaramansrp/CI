@@ -9,7 +9,7 @@
         <h5>Fabricante:</h5>
         <div class="table-responsive mt-5">
           <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData"
-            ></ng-table>
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"  ></ng-table>
         </div>
         <br />
   
@@ -18,7 +18,7 @@
             <button class="btn btn-danger" type="button">Eliminar</button>
             <button class="btn btn-default" type="button">Modificar</button>
           </div>
-          <button type="button" class="btn btn-primary" (click)="toggleDivFabricante()">
+          <button type="button" class="btn btn-primary" (click)="toggleDivFabricante()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
         </div>
@@ -29,7 +29,7 @@
         <h5>Destinatario (destino final)*:</h5>
         <div class="table-responsive mt-5">
           <ng-table [commonTableHeader]="destinatarioHeaderData" [commonTableBody]="destinatarioRowData"
-          >
+           [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"   >
           </ng-table>
         </div>
         <br />
@@ -39,7 +39,7 @@
             <button class="btn btn-danger" type="button">Eliminar</button>
             <button class="btn btn-default" type="button">Modificar</button>
           </div>
-          <button type="button" class="btn btn-primary" (click)="toggleDivDestinatario()">
+          <button type="button" class="btn btn-primary" (click)="toggleDivDestinatario()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
         </div>
@@ -50,7 +50,7 @@
         <h5>Proveedor:</h5>
         <div class="table-responsive mt-5">
           <ng-table [commonTableHeader]="proveedorHeaderData" [commonTableBody]="proveedorRowData"
-            ></ng-table>
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"    ></ng-table>
         </div>
         <br />
   
@@ -59,7 +59,7 @@
             <button class="btn btn-danger" type="button">Eliminar</button>
             <button class="btn btn-default" type="button">Modificar</button>
           </div>
-          <button type="button" class="btn btn-primary" (click)="toggleDivProveedor()">
+          <button type="button" class="btn btn-primary" (click)="toggleDivProveedor()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
         </div>
@@ -70,7 +70,7 @@
         <h5>Facturador:</h5>
         <div class="table-responsive mt-5">
           <ng-table [commonTableHeader]="facturadorHeaderData" [commonTableBody]="facturadorRowData"
-            ></ng-table>
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"    ></ng-table>
         </div>
         <br />
   
@@ -79,7 +79,7 @@
             <button class="btn btn-danger" type="button">Eliminar</button>
             <button class="btn btn-default" type="button">Modificar</button>
           </div>
-          <button type="button" class="btn btn-primary" (click)="toggleDivFacturador()">
+          <button type="button" class="btn btn-primary" (click)="toggleDivFacturador()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
         </div>

@@ -2,7 +2,19 @@
 <ng-alert [CONTENIDO]="mensaje"></ng-alert>
 <form [formGroup]="manifiestos">
     <div class="form mt-5">
-        <div class="row">
+ <div class="form-group">
+          <label for="producto">Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>
+          <app-input-radio
+            [radioOptions]="producto"
+            [isRequired]="true"
+            [selectedValue]="defaultSelect"
+            formControlName="cumplimiento"
+           (change)="setValoresStore(manifiestos,'cumplimiento', 'setCumplimiento')"
+            [layout]="'vertical'"
+          ></app-input-radio>
+        </div>
+
+        <!-- <div class="row">
             <div class="col-md-12">
               <label class="control-label" for="buscar">Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>
             </div>
@@ -14,6 +26,6 @@
               <input class="form-check-input me-3" type="radio" name="cumplimiento" id="cumplimiento_si" formControlName="cumplimiento" value="Si" (change)="setValoresStore(manifiestos,'cumplimiento', 'setCumplimiento')">
               <label class="control-label" for="cumplimiento">Si</label>
             </div>
-          </div>
+          </div> -->
     </div>
 </form>

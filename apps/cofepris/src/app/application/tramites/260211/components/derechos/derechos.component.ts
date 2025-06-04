@@ -1,15 +1,19 @@
 import { Component, OnDestroy, OnInit } from '@angular/core'; // Import Angular core decorators for component lifecycle.
 import { CommonModule } from '@angular/common'; // Import CommonModule for Angular common directives.
 import { FormBuilder, FormGroup } from '@angular/forms'; // Import FormBuilder and FormGroup for reactive forms.
-import { Catalogo, TituloComponent } from '@ng-mf/data-access-user'; // Import Catalogo and TituloComponent from shared library.
+import { Catalogo, InputFecha, InputFechaComponent, TituloComponent } from '@ng-mf/data-access-user'; // Import Catalogo and TituloComponent from shared library.
 import { ReactiveFormsModule } from '@angular/forms'; // Import ReactiveFormsModule for reactive form handling.
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user'; // Import CatalogoSelectComponent for dropdown selection.
 import { SanitarioService } from '../../services/sanitario.service'; // Import SanitarioService for API calls.
 import { map, Subject, takeUntil } from 'rxjs'; // Import RxJS operators for reactive programming.
-import { Solicitud260211State } from '../../../../estados/tramites/sanitario260211.store'; // Import state interface for the application.
-import { Sanitario260211Store } from '../../../../estados/tramites/sanitario260211.store'; // Import store for managing application state.
+import {
+  Solicitud260211State,
+  Tramite260211Store
+} from '../../../../estados/tramites/tramite260211.store';
 import { Permiso260211Query } from '../../../../estados/queries/permiso260211.query'; // Import query for fetching data from the store.
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
+import { FECHA_DE_PAGO } from '../../constantes/derechos.model';
 
 /**
  * compondoc
@@ -33,11 +37,16 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-derechos', // Define the selector for the component.
   standalone: true, // Mark the component as standalone.
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent], // Import required modules and components.
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent,InputFechaComponent], // Import required modules and components.
   templateUrl: './derechos.component.html', // Path to the HTML template.
   styleUrls: ['./derechos.component.scss'], // Path to the CSS styles.
 })
 export class DerechosComponent implements OnInit, OnDestroy {
+/** 
+  * compodoc
+  * property {InputFecha} fechaInicioInput
+*/
+    fechaInicioInput: InputFecha = FECHA_DE_PAGO;
   /**
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
@@ -93,9 +102,10 @@ export class DerechosComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder, // Inject FormBuilder for creating reactive forms.
     private service: SanitarioService, // Inject SanitarioService for API calls.
-    private sanitario260211Store: Sanitario260211Store, // Inject store for managing state.
+    private sanitario260211Store: Tramite260211Store, // Inject store for managing state.
     private permiso260211Query: Permiso260211Query,// Inject query for fetching data from the store.
-    private consultaioQuery: ConsultaioQuery 
+    private consultaioQuery: ConsultaioQuery ,
+    private tramite260211Query : Tramite260211Query // Inject query for fetching data from the store. 
   ) {}
 
   /**
@@ -125,7 +135,11 @@ export class DerechosComponent implements OnInit, OnDestroy {
     )
     .subscribe();
 
-
+if (this.esFormularioSoloLectura) {
+  this.derechosForm.get('deFetch')?.disable();
+} else {
+  this.derechosForm.get('deFetch')?.enable();
+}
     // Carga de datos iniciales
     this.loadComboUnidadMedida(); // Llamar al método para cargar los datos iniciales.
   }
@@ -161,7 +175,7 @@ export class DerechosComponent implements OnInit, OnDestroy {
   inicializarFormulario():void{
     
     // Suscripción al estado de la solicitud
-    this.permiso260211Query.selectSolicitud$ // Observable para obtener el estado actual de la aplicación.
+    this.tramite260211Query.selectSolicitud$ // Observable para obtener el estado actual de la aplicación.
       .pipe(
         takeUntil(this.destroyNotifier$), // Darse de baja automáticamente cuando el componente se destruya..
         map((seccionState) => {
@@ -190,7 +204,7 @@ export class DerechosComponent implements OnInit, OnDestroy {
    * param {keyof Sanitario260211Store} metodoNombre - El método del almacén que se invocará para actualizar el valor.
    * returns {void}
    */
- setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Sanitario260211Store): void {
+ setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260211Store): void {
   const valor = form.get(campo)?.value; // Obtener el valor del campo especificado del formulario.
   (this.sanitario260211Store[metodoNombre] as (value: any) => void)(valor); 
 }
@@ -209,7 +223,17 @@ export class DerechosComponent implements OnInit, OnDestroy {
         this.derechosList = data as Catalogo[]; // Asignar los datos obtenidos a derechosList.
       });
   }
-
+  /**
+   * compodoc
+   * method onFechaCambiada
+   * description Maneja el evento de cambio de fecha en el formulario.
+   * Actualiza el valor del campo 'fechaPago' en el formulario con la nueva fecha seleccionada.
+   * param {string} fecha - La nueva fecha seleccionada por el usuario.
+   * returns {void}
+   */
+onFechaCambiada(fecha: string): void {
+    this.derechosForm.patchValue({ fechaPago: fecha });
+  }
  /**
    * compodoc
    * method ngOnDestroy

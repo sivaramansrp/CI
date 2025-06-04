@@ -144,7 +144,7 @@ export class DomicilloComponent implements OnInit,OnDestroy {
     private service: SanitarioService,
     private consultaioQuery: ConsultaioQuery
   ) {
-    // Dependencia inyectada para uso posterior
+    
   }
  
   /**
@@ -319,10 +319,13 @@ ngOnInit(): void {
         this.domicilio.enable();
         this.formAgente.enable();
         this.formMercancias.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
-      }
+      } 
   }
+  /**
+   * Inicializa el formulario con los datos de la solicitud.
+   * Se suscribe al estado de la solicitud para obtener los valores iniciales.
+   * Los campos del formulario se configuran como deshabilitados o requeridos según sea necesario.
+   */
 inicializarFormulario():void{
 this.tramite260211Query
     .selectSolicitud$
