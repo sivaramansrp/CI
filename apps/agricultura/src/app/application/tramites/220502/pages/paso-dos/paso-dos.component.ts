@@ -1,13 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { TEXTOS } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
 /**
  * Componente para gestionar el paso dos del trámite.
  */
 @Component({
   selector: 'app-paso-dos',
+  standalone: true,
+  imports: [CommonModule, AlertComponent, TituloComponent, AnexarDocumentosComponent],
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
 })
