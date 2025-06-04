@@ -243,9 +243,9 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
      */
     guardarDatosFormulario(): void {
       this.guardarPropietario();
-      if (this.propietarioradioForm && this.esFormularioSoloLectura) {
+      if (this.esFormularioSoloLectura) {
         this.propietarioradioForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
+      } else {
         this.propietarioradioForm.enable();
       } 
     }
@@ -261,7 +261,7 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
   guardarPropietario(): void {
     const PROPIETARIO: PropietarioModel = {
       NombredenominacionORazonSocial:
-        this.formTercerosDatos.get('tercerosDenominacionRazonSocial')?.value,
+        this.formTercerosDatos?.get('tercerosDenominacionRazonSocial')?.value,
       rfc: this.propietarioradioForm.get('tercerosRfc')?.value,
       curp: this.propietarioradioForm.get('tercerosCurp')?.value,
       telefono: this.formTercerosDatos.get('tercerosTelefono')?.value,
