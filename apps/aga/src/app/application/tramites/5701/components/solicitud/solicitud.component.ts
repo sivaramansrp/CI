@@ -1,4 +1,3 @@
-
 import {
   ADV_LIMPIA_CAMPOS,
   CONFIGURACION_ENCABEZADO_TABLA_PAGOS,
@@ -19,6 +18,7 @@ import {
   SIN_ITEMS,
   SIN_VALOR,
   TRANSPORTE,
+  UN_DIA,
   VEHICULO,
 } from '../../../../core/enums/5701/tramite5701.enum';
 import {
@@ -1375,7 +1375,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     } else {
       this.mostrarRangoFechas = false;
       this.fechasSeleccionadas?.clear();
-      
+
       this.fechasSeleccionadas.push(new FormControl(this.selectRangoDias[0]));
     }
   }
@@ -2011,8 +2011,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             ?.getRawValue();
 
           const DIAS_SERVICIO =
-            this.tipoSolicitudSeleccionada === 1
-              ? 1
+            this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL
+              ? UN_DIA
               : this.fechasSeleccionadas.length;
 
           const MONTO_A_CUBRIR = DIAS_SERVICIO * MONTO_A_PAGAR;

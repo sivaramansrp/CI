@@ -6,20 +6,21 @@ import {
   Output,
   inject,
 } from '@angular/core';
-import { Notificacion, NotificacionesComponent } from '../notificaciones/notificaciones.component';
+import {
+  Notificacion,
+  NotificacionesComponent,
+} from '../notificaciones/notificaciones.component';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { SeccionLibQuery, SeccionLibState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { DatosPasos } from '../../../core/models/shared/components.model';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { SeccionLibQuery } from '@ng-mf/data-access-user';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { SeccionLibState } from '@ng-mf/data-access-user';
 import { VistaEmergente } from '../../../core/models/shared/datos-generales.model';
 import { WizardService } from '../../../core/services/shared/wizard/wizard.service';
 
 /**
  * @interface AccionBoton
  * @description Define la estructura de un objeto que representa una acción de botón en el asistente.
- * 
+ *
  * @property {string} accion - Acción a realizar ('cont' para continuar, 'ant' para retroceder).
  * @property {number} valor - Índice del paso al que se debe mover.
  */
@@ -33,7 +34,7 @@ interface AccionBoton {
  * @name BtnContinuarComponent
  * @description Componente que gestiona los botones de navegación (Continuar, Anterior, Guardar) en un asistente.
  * Permite avanzar o retroceder entre los pasos del asistente y emite eventos para manejar estas acciones.
- * 
+ *
  * @selector btn-continuar
  * @template ./btn-continuar.component.html
  * @style ./btn-continuar.component.scss
@@ -62,12 +63,12 @@ export class BtnContinuarComponent implements OnInit {
    */
   @Input() btnGuardar: boolean = false;
   /**
- * @Input dePadre
- * @description
- * Indica si el componente `BtnContinuarComponent` está siendo controlado por un componente padre.
- * @type {boolean}
- * @default false
- */
+   * @Input dePadre
+   * @description
+   * Indica si el componente `BtnContinuarComponent` está siendo controlado por un componente padre.
+   * @type {boolean}
+   * @default false
+   */
   @Input() public dePadre: boolean = false;
 
   /**
@@ -77,7 +78,7 @@ export class BtnContinuarComponent implements OnInit {
    */
   @Input() vistaEmergente: VistaEmergente = {
     abierto: false,
-    indice: 1
+    indice: 1,
   };
 
   /**
@@ -85,7 +86,7 @@ export class BtnContinuarComponent implements OnInit {
    * @description Configuración de la notificación que se mostrará en el componente.
    * @type {Notificacion}
    */
-  @Input() notificacion!:Notificacion;
+  @Input() notificacion!: Notificacion;
 
   /**
    * @property continuarEvento
@@ -151,7 +152,7 @@ export class BtnContinuarComponent implements OnInit {
    * Se suscribe al estado de la sección y actualiza la propiedad `habilitarBoton`.
    * @returns {void}
    */
-  ngOnInit():void {
+  ngOnInit(): void {
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -189,13 +190,17 @@ export class BtnContinuarComponent implements OnInit {
    * @returns {void}
    */
   continuar(): void {
-    const PUEDE_CONTINUAR = this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
+    const PUEDE_CONTINUAR =
+      this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
     let valor = this.datos.indice;
     if (!PUEDE_CONTINUAR) {
       return;
     }
-    if(this.vistaEmergente.abierto && this.datos.indice === this.vistaEmergente.indice){
-      this.moduloEmergente=true;
+    if (
+      this.vistaEmergente.abierto &&
+      this.datos.indice === this.vistaEmergente.indice
+    ) {
+      this.moduloEmergente = true;
     }
     if (!this.dePadre) {
       this.wizardService.cambio_indice(valor);
@@ -215,10 +220,11 @@ export class BtnContinuarComponent implements OnInit {
    * @returns {void}
    */
   anterior(): void {
-    const PUEDE_RETROCEDER = this.datos.indice > 1 && this.datos.indice <= this.datos.nroPasos;
+    const PUEDE_RETROCEDER =
+      this.datos.indice > 1 && this.datos.indice <= this.datos.nroPasos;
     let valor = this.datos.indice;
     if (!PUEDE_RETROCEDER) {
-      return
+      return;
     }
     if (!this.dePadre) {
       valor -= 1;
@@ -238,19 +244,19 @@ export class BtnContinuarComponent implements OnInit {
    * @returns {void}
    */
   eliminarPedimento(borrar: boolean): void {
-    this.moduloEmergente=false;
-    if(borrar){
+    this.moduloEmergente = false;
+    if (borrar) {
       const CONDICION =
-      this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
-    if (CONDICION) {
-      this.wizardService.cambio_indice(this.datos.indice);
-      const DATOS_CONTINUAR: AccionBoton = {
-        accion: 'cont',
-        valor: (this.datos.indice += 1),
-      };
-      this.continuarEvento.emit(DATOS_CONTINUAR);
-    }
-    this.moduloEmergente=false;
+        this.datos.indice > 0 && this.datos.indice < this.datos.nroPasos;
+      if (CONDICION) {
+        this.wizardService.cambio_indice(this.datos.indice);
+        const DATOS_CONTINUAR: AccionBoton = {
+          accion: 'cont',
+          valor: (this.datos.indice += 1),
+        };
+        this.continuarEvento.emit(DATOS_CONTINUAR);
+      }
+      this.moduloEmergente = false;
     }
   }
 
