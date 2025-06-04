@@ -178,7 +178,7 @@ export class PaisProcedenciaComponent implements OnInit, OnDestroy {
   * que es necesario para realizar solicitudes y obtener datos dinámicos que se utilizan en el formulario.
   */
   constructor(
-    public importacionDefinitivaService: ImportacionDefinitivaService,
+    private importacionDefinitivaService: ImportacionDefinitivaService,
     private tramite130103Store: Tramite130103Store,
     private tramite130103Query: Tramite130103Query,
     private formValidator: ValidacionesFormularioService

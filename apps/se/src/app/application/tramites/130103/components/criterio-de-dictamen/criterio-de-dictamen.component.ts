@@ -136,7 +136,7 @@ export class CriterioDeDictamenComponent implements OnInit, OnDestroy {
   * los datos dinámicos del formulario y el estado del trámite. 
   */
   constructor(
-    public importacionDefinitivaService: ImportacionDefinitivaService,
+    private importacionDefinitivaService: ImportacionDefinitivaService,
     private tramite130103Store: Tramite130103Store,
     private tramite130103Query: Tramite130103Query
   ) {
