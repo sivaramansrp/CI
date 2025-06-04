@@ -192,7 +192,7 @@
      </div>
     }
      <div class="row" >
-        <div class="col-md-6" *ngIf="selectedNacionalidad === 'No' && selectedTipoPersona === 'Persona Moral'">
+        <div class="col-md-6" *ngIf="selectedNacionalidad === nacionalidadMexicanaNo && selectedTipoPersona === tipoPersonaMoral">
             <label for="taxId" class="form-label">TAX ID*:</label>
             <input type="text" id="taxId" class="form-control" formControlName="taxId" maxlength="12"
             (change)="setValoresStore(formularioEmpresa,'taxId', 'setTaxId')"
@@ -243,7 +243,7 @@
             (change)="setValoresStore(formularioEmpresa,'correoElectronico', 'setCorreoElectronico')"
          >
         </div>
-        <div class="col-md-6" *ngIf="selectedNacionalidad === 'No' && selectedTipoPersona === 'Persona Física'">
+        <div class="col-md-6" *ngIf="selectedNacionalidad === nacionalidadMexicanaNo && selectedTipoPersona === tipoPersonaFisica">
             <label for="taxId" class="form-label">TAX ID*:</label>
             <input type="text" id="taxId" class="form-control" formControlName="taxId" maxlength="12"
                 (change)="setValoresStore(formularioEmpresa,'taxId', 'setTaxId')">
