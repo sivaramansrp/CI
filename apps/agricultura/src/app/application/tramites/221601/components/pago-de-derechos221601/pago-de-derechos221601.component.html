@@ -40,7 +40,7 @@
           
           <div class="col-md-4">
             <div class="form-group">
-              <app-catalogo-select [catalogo]="bancocatalogo" formControlName="banco" [label]="'Banco'"
+              <app-catalogo-select [catalogo]="bancocatalogo" formControlName="banco" [label]="'Banco'" [isDisabled]="esFormularioSoloLectura"
                 [required]="true" name="banco" (change)="setValoresStore(pagoDerechosForm, 'banco', 'setBanco')">
               </app-catalogo-select>
             </div>
@@ -69,6 +69,7 @@
               <input-fecha
                 [datos]="INPUT_FECHA_CONFIG"
                 [setFecha]="pagoDerechosForm.get('fecha')?.value"
+                [isDisabled]="true"
                 (valorCambiado)="cambioFechaFinal($event)">
               </input-fecha>                       
               </div>

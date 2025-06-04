@@ -19,6 +19,7 @@
               [catalogo]="item.props.catalogos"
               [label]="item.props.labelNombre"
               [required]="true"
+              [isDisabled]="esFormularioSoloLectura"
               name="tipoSolicitud"
               (change)="seleccionCatalogo(item.props.labelNombre, $event)"
             ></app-catalogo-select>
@@ -35,6 +36,8 @@
               [type]="item.props.tipo_input"
               [id]="item.props.campo"
               [placeholder]="item.props.placeholder"
+              [disabled]="esFormularioSoloLectura"
+              (change)="setValoresStore()"
               [formControlName]="item.props.campo"
               libUppercase
             />

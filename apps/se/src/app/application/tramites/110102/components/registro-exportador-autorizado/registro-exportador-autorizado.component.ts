@@ -1,183 +1,212 @@
+/**
+ * Este componente maneja el registro de exportadores autorizados, incluyendo la interacción con el estado global y la validación de formularios.
+ */
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-import { ExportadorAutorizadoService } from "@ng-mf/data-access-user";
-import { InputRadioComponent } from "@ng-mf/data-access-user";
+import { ConsultaioQuery, ExportadorAutorizadoService } from "@ng-mf/data-access-user";
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite110102Query } from '../../estados/queries/tramite110102.query';
 import { Tramite110102Store } from '../../estados/store/tramite110102.store';
 
-import { Subject, takeUntil } from 'rxjs';
-import { map } from 'rxjs/operators';
-
 /**
- * Este componente maneja el registro de exportadores autorizados.
+ * Componente que gestiona el registro de exportadores autorizados, incluyendo opciones específicas para Japón.
  */
 @Component({
   selector: 'app-registro-exportador-autorizado',
   standalone: true,
   imports: [CommonModule, TituloComponent, ReactiveFormsModule, InputRadioComponent],
   templateUrl: './registro-exportador-autorizado.component.html',
-  styleUrl: './registro-exportador-autorizado.component.scss',
+  styleUrls: ['./registro-exportador-autorizado.component.scss'],
 })
 export class RegistroExportadorAutorizadoComponent implements OnInit, OnDestroy {
+  /**
+   * Indica si el formulario está en modo de solo lectura.
+   */
+  esSoloLectura!: boolean;
 
   /**
-   * Subject que emite un evento cuando el componente es destruido,
-   * permitiendo la desuscripción de observables.
-   * @type {Subject<void>}
+   * Opciones de exportador autorizado.
    */
-  private destroyed$ = new Subject<void>();
+  opcionesExportador!: { label: string; value: string | number }[];
 
   /**
-   * Enumeración que representa las opciones de exportador autorizado.
-   * @type {{ label: string; value: string | number }[]}
+   * Opciones de exportador autorizado para Japón.
    */
-  exportadorOptions!: { label: string; value: string | number }[];
+  opcionesExportadorJapon!: { label: string; value: string | number }[];
 
   /**
-   * Enumeración que representa las opciones de exportador autorizado para Japón.
-   * @type {{ label: string; value: string | number }[]}
+   * Formulario reactivo para gestionar los datos del registro de exportador autorizado.
    */
-  exportadorOptionsJPN!: { label: string; value: string | number }[];
+  formularioRegistroExportador!: FormGroup;
 
   /**
-   * FormGroup que contiene los datos del formulario de registro de exportador.
-   * El signo de exclamación (!) indica que la propiedad será inicializada más tarde.
-   * @type {FormGroup}
+   * Indica si se debe mostrar el bloque de opciones de exportador autorizado.
    */
-  registroExportadorForm!: FormGroup;
+  mostrarOpcionesExportador: boolean = false;
 
   /**
-   * Indica si se debe mostrar el div de opciones de exportador autorizado.
-   * @type {boolean}
+   * Indica si se debe mostrar el bloque de opciones de exportador autorizado para Japón.
    */
-  showDivExportador: boolean = false;
+  mostrarOpcionesExportadorJapon: boolean = false;
 
   /**
-   * Indica si se debe mostrar el div de opciones de exportador autorizado para Japón.
-   * @type {boolean}
+   * Subject que emite un evento cuando el componente es destruido, permitiendo la desuscripción de observables.
    */
-  showDivExportadorJPN: boolean = false;
+  private destruido$ = new Subject<void>();
 
   /**
    * Constructor del componente.
-   * Servicio para la creación de formularios reactivos.
-   * @param {FormBuilder} fb - Servicio para la creación de formularios reactivos.
-   * @param {ExportadorAutorizadoService} service - Servicio para obtener datos de exportadores autorizados.
-   * @param {Tramite110102Store} tramite110102Store - Servicio para manejar el estado del trámite.
-   * @param {Tramite110102Query} tramite110102Query - Servicio para consultar el estado del trámite.
+   * @param {FormBuilder} formBuilder - Servicio para la creación de formularios reactivos.
+   * @param {ExportadorAutorizadoService} servicioExportador - Servicio para obtener datos de exportadores autorizados.
+   * @param {Tramite110102Store} estadoTramite - Servicio para manejar el estado del trámite.
+   * @param {Tramite110102Query} consultaTramite - Servicio para consultar el estado del trámite.
    */
-  constructor(private fb: FormBuilder, private service: ExportadorAutorizadoService, private tramite110102Store: Tramite110102Store, private tramite110102Query: Tramite110102Query) {
-    // Lógica del constructor puede ser añadida aquí si es necesario
-  }
+  constructor(
+    private formBuilder: FormBuilder,
+    private consultaQuery: ConsultaioQuery,
+    private servicioExportador: ExportadorAutorizadoService,
+    private estadoTramite: Tramite110102Store,
+    private consultaTramite: Tramite110102Query
+  ) {}
 
   /**
    * Hook del ciclo de vida que se llama después de que las propiedades enlazadas a datos de una directiva se inicializan.
-   * Inicializa el formulario y establece los valores iniciales de los controles.
+   * Inicializa el formulario y configura las suscripciones necesarias.
    */
   ngOnInit(): void {
-    this.registroExportadorForm = this.fb.group({
+    this.inicializarFormulario();
+    this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.destruido$))
+      .subscribe((estadoSeccion) => {
+        this.esSoloLectura = estadoSeccion.readonly;
+        this.habilitarDeshabilitarFormulario();
+      });
+  }
+
+  /**
+   * Inicializa el formulario con los valores predeterminados y obtiene datos del estado global.
+   */
+  inicializarFormulario(): void {
+    this.formularioRegistroExportador = this.formBuilder.group({
       solicitaSeparacionContable: [false],
       solicitaExportadorAutorizado: [false],
       condicionExportador: [''],
       solicitaExportadorAutorizadoJPN: [false],
       condicionExportadorJPN: ['']
     });
-    this.getExportadorAutorizado();
-    this.getExportadorAutorizadoJPN();
-    this.getValorsStore();
+    this.obtenerValoresDelEstado();
+    this.obtenerOpcionesExportador();
+    this.obtenerOpcionesExportadorJapon();
+  }
 
-    this.showDivExportador = this.registroExportadorForm.get('solicitaExportadorAutorizado')?.value;
-    this.showDivExportadorJPN = this.registroExportadorForm.get('solicitaExportadorAutorizadoJPN')?.value;
+  /**
+   * Habilita o deshabilita los controles del formulario según el estado de solo lectura.
+   */
+  habilitarDeshabilitarFormulario(): void {
+    if (this.esSoloLectura) {
+      this.formularioRegistroExportador.disable();
+    } else {
+      this.formularioRegistroExportador.enable();
+    }
   }
 
   /**
    * Maneja el cambio del control `solicitaExportadorAutorizado`.
-   * @param {Event} event - El evento de cambio.
+   * @param {Event} evento - El evento de cambio.
    */
-  onSolicitaExportadorAutorizadoChange(event: Event): void {
-    const INPUT = event.target as HTMLInputElement;
-    this.showDivExportador = INPUT.checked;
-    this.setValoresStore(this.registroExportadorForm, 'solicitaExportadorAutorizado');
+  alCambiarExportadorAutorizado(evento: Event): void {
+    const INPUT = evento.target as HTMLInputElement;
+    this.mostrarOpcionesExportador = INPUT.checked;
+    this.establecerValoresEnEstado(this.formularioRegistroExportador, 'solicitaExportadorAutorizado');
+
+    if (!INPUT.checked) {
+      this.estadoTramite.establecerDatos({ condicionExportador: '' });
+    }
   }
 
   /**
-   * Maneja el cambio del control `solicitaExportadorAutorizadoJPN`.
-   * @param {Event} event - El evento de cambio.
+   * Maneja el cambio del control `solicitaExportadorAutorizadoJapon`.
+   * @param {Event} evento - El evento de cambio.
    */
-  onSolicitaExportadorAutorizadoJPNChange(event: Event): void {
-    const INPUT = event.target as HTMLInputElement;
-    this.showDivExportadorJPN = INPUT.checked;
-    this.setValoresStore(this.registroExportadorForm, 'solicitaExportadorAutorizadoJPN');
+  alCambiarExportadorAutorizadoJapon(evento: Event): void {
+    const INPUT = evento.target as HTMLInputElement;
+    this.mostrarOpcionesExportadorJapon = INPUT.checked;
+    this.establecerValoresEnEstado(this.formularioRegistroExportador, 'solicitaExportadorAutorizadoJPN');
+
+    if (!INPUT.checked) {
+      this.estadoTramite.establecerDatos({ condicionExportadorJPN: '' });
+    }
   }
 
   /**
    * Obtiene las opciones de exportador autorizado desde el servicio.
    */
-  getExportadorAutorizado(): void {
-    this.service.getExportadorAutorizado().pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data) => {
-        this.exportadorOptions = data;
-      }
-    );
+  obtenerOpcionesExportador(): void {
+    this.servicioExportador.getExportadorAutorizado()
+      .pipe(takeUntil(this.destruido$))
+      .subscribe((datos) => {
+        this.opcionesExportador = datos;
+      });
   }
 
   /**
    * Obtiene las opciones de exportador autorizado para Japón desde el servicio.
    */
-  getExportadorAutorizadoJPN(): void {
-    this.service.getExportadorAutorizadoJPN().pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data) => {
-        this.exportadorOptionsJPN = data;
-      }
-    );
+  obtenerOpcionesExportadorJapon(): void {
+    this.servicioExportador.getExportadorAutorizadoJPN()
+      .pipe(takeUntil(this.destruido$))
+      .subscribe((datos) => {
+        this.opcionesExportadorJapon = datos;
+      });
   }
 
   /**
-   * Establece los valores en el store.
-   * Actualiza el estado del store con el valor del campo especificado del formulario.
-   * @param {FormGroup} form - El formulario del cual se obtiene el valor.
-   * @param {string} campo - El nombre del campo del formulario a actualizar en el store.
+   * Establece los valores en el estado global a partir de un campo específico del formulario.
+   * @param {FormGroup} formulario - El formulario reactivo del cual se obtiene el valor.
+   * @param {string} campo - El nombre del campo del formulario cuyo valor se establecerá en el estado.
    */
-  setValoresStore(form: FormGroup, campo: string): void {
-    const VALOR = form.get(campo)?.value;
-    this.tramite110102Store.establecerDatos({ [campo]: VALOR });
+  establecerValoresEnEstado(formulario: FormGroup, campo: string): void {
+    const VALOR = formulario.get(campo)?.value;
+    this.estadoTramite.establecerDatos({ [campo]: VALOR });
   }
 
   /**
-   * Obtiene los valores del store y los asigna al formulario.
+   * Obtiene los valores del estado global y los asigna al formulario.
    */
-  getValorsStore(): void {
-    this.tramite110102Query.selectTramite110102$
+  obtenerValoresDelEstado(): void {
+    this.consultaTramite.selectTramite110102$
       .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.registroExportadorForm.patchValue({
-            solicitaSeparacionContable: seccionState.solicitaSeparacionContable,
-            solicitaExportadorAutorizado: seccionState.solicitaExportadorAutorizado,
-            condicionExportador: seccionState.condicionExportador,
-            solicitaExportadorAutorizadoJPN: seccionState.solicitaExportadorAutorizadoJPN,
-            condicionExportadorJPN: seccionState.condicionExportadorJPN
+        takeUntil(this.destruido$),
+        map((estadoSeccion) => {
+          this.formularioRegistroExportador.patchValue({
+            solicitaSeparacionContable: estadoSeccion.solicitaSeparacionContable,
+            solicitaExportadorAutorizado: estadoSeccion.solicitaExportadorAutorizado,
+            condicionExportador: estadoSeccion.condicionExportador,
+            solicitaExportadorAutorizadoJPN: estadoSeccion.solicitaExportadorAutorizadoJPN,
+            condicionExportadorJPN: estadoSeccion.condicionExportadorJPN
           });
         })
       )
       .subscribe();
+
+    this.mostrarOpcionesExportador = this.formularioRegistroExportador.get('solicitaExportadorAutorizado')?.value;
+    this.mostrarOpcionesExportadorJapon = this.formularioRegistroExportador.get('solicitaExportadorAutorizadoJPN')?.value;
   }
 
   /**
    * Hook del ciclo de vida que se llama cuando la directiva se destruye.
-   * Completa el subject destroyed$ para desuscribirse de todos los observables.
+   * Completa el subject `destruido$` para desuscribirse de todos los observables.
    */
   ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
+    this.destruido$.next();
+    this.destruido$.complete();
   }
 }
+
