@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
-import { Solocitud110208Service } from '../../services/service110208.service';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { map, Subject, takeUntil } from 'rxjs';
+import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
+import { Subject, map, takeUntil } from 'rxjs';
+import { Solocitud110208Service } from '../../services/service110208.service';
 
 /**
  * Componente que representa el primer paso de un trámite.
