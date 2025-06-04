@@ -1,99 +1,126 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { of} from 'rxjs';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
-import { Tramite260303Store } from '../../../../estados/tramites/260303/tramite260303.store';
+import { Tramite260303Store, createInitialState } from '../../../../estados/tramites/260303/tramite260303.store';
 import { Tramite260303Query } from '../../../../estados/queries/260303/tramite260303.query';
+import { ConsultaioQuery, createConsultaInitialState } from '@ng-mf/data-access-user';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('PagoDeDerechosComponent', () => {
-  let component: PagoDeDerechosComponent;
+  let componente: PagoDeDerechosComponent;
   let fixture: ComponentFixture<PagoDeDerechosComponent>;
-  let certificadosLicenciasSvcMock: jest.Mocked<CertificadosLicenciasPermisosService>;
-  let tramite260303StoreMock: jest.Mocked<Tramite260303Store>;
-  let tramite260303QueryMock: jest.Mocked<Tramite260303Query>;
+  let certificadosSvc: jest.Mocked<CertificadosLicenciasPermisosService>;
+  let tramiteQuery: jest.Mocked<Tramite260303Query>;
+  let tramiteStore: jest.Mocked<Tramite260303Store>;
+  let consultaioQuery: jest.Mocked<ConsultaioQuery>;
 
   beforeEach(async () => {
-    certificadosLicenciasSvcMock = {
-      getBancoDatos: jest.fn(),
-    } as unknown as jest.Mocked<CertificadosLicenciasPermisosService>;
+    const certificadosMock: Partial<jest.Mocked<CertificadosLicenciasPermisosService>> = {
+      getBancoDatos: jest.fn().mockReturnValue(of({ data: [{ id: 1, nombre: 'Banco1' }] })),
+    };
 
-    tramite260303StoreMock = {
+    const tramiteQueryMock: Partial<jest.Mocked<Tramite260303Query>> = {
+      selectSolicitud$: of(createInitialState()),
+    };
+
+    const tramiteStoreMock: Partial<jest.Mocked<Tramite260303Store>> = {
       SetFechaDePago: jest.fn(),
-    } as unknown as jest.Mocked<Tramite260303Store>;
+    };
 
-    tramite260303QueryMock = {
-      selectSolicitud$: of({
-        claveDeReferencia: '12345',
-        cadenaDaLaDependencia: 'cadena',
-        banco: 'Banco1',
-        laveDePago: 'clave123',
-        fechaDePago: '2023-01-01',
-        importeDePago: 1000,
-      }),
-    } as unknown as jest.Mocked<Tramite260303Query>;
+    const consultaioQueryMock: Partial<jest.Mocked<ConsultaioQuery>> = {
+      selectConsultaioState$: of(createConsultaInitialState()),
+    };
 
     await TestBed.configureTestingModule({
-      imports: [PagoDeDerechosComponent, ReactiveFormsModule],
+      imports: [ReactiveFormsModule],
       providers: [
-        { provide: CertificadosLicenciasPermisosService, useValue: certificadosLicenciasSvcMock },
-        { provide: Tramite260303Store, useValue: tramite260303StoreMock },
-        { provide: Tramite260303Query, useValue: tramite260303QueryMock },
+        FormBuilder,
+        PagoDeDerechosComponent,
+        { provide: CertificadosLicenciasPermisosService, useValue: certificadosMock },
+        { provide: Tramite260303Query, useValue: tramiteQueryMock },
+        { provide: Tramite260303Store, useValue: tramiteStoreMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
       ],
+      schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    componente = fixture.componentInstance;
+
+    certificadosSvc = TestBed.inject(CertificadosLicenciasPermisosService) as jest.Mocked<CertificadosLicenciasPermisosService>;
+    tramiteQuery = TestBed.inject(Tramite260303Query) as jest.Mocked<Tramite260303Query>;
+    tramiteStore = TestBed.inject(Tramite260303Store) as jest.Mocked<Tramite260303Store>;
+    consultaioQuery = TestBed.inject(ConsultaioQuery) as jest.Mocked<ConsultaioQuery>;
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  afterEach(() => {
+    componente.ngOnDestroy();
   });
 
-  it('should initialize bancoCatalogo on getBancoCatalogDatos call', () => {
-    const mockResponse:any = { data: [{ id: 1, nombre: 'Banco1' }, { id: 2, nombre: 'Banco2' }] };
-    certificadosLicenciasSvcMock.getBancoDatos.mockReturnValue(of(mockResponse));
-
-    component.getBancoCatalogDatos();
-
-    expect(certificadosLicenciasSvcMock.getBancoDatos).toHaveBeenCalled();
-    expect(component.bancoCatalogo).toEqual(mockResponse.data);
+  it('debería crear la instancia del componente', () => {
+    expect(componente).toBeTruthy();
   });
 
-  it('should initialize pagoDerechosForm with solicitudState values', () => {
-    expect(component.pagoDerechosForm.value).toEqual({
-      claveDeReferencia: '12345',
-      cadenaDaLaDependencia: 'cadena',
-      banco: 'Banco1',
-      laveDePago: 'clave123',
-      fechaDePago: '2023-01-01',
-      importeDePago: 1000,
-    });
+  it('debería inicializar el formulario con valores del estado', () => {
+    componente.solicitudState = createInitialState();
+    componente.cerrarPagoDerechosForm();
+
+    const formulario = componente.pagoDerechosForm;
+
+    expect(formulario).toBeDefined();
+    expect(formulario.get('claveDeReferencia')?.value).toBe(createInitialState().claveDeReferencia);
+    expect(formulario.get('cadenaDaLaDependencia')?.value).toBe(createInitialState().cadenaDaLaDependencia);
+    expect(formulario.get('fechaDePago')?.value).toBe(createInitialState().fechaDePago);
   });
 
-  it('should update fechaDePago in the form and store on cambioFechaFinal call', () => {
-    const newDate = '2023-02-01';
-    component.cambioFechaFinal(newDate);
+  it('debería obtener y asignar bancoCatalogo al llamar getBancoCatalogDatos', done => {
+    componente.getBancoCatalogDatos();
 
-    expect(component.pagoDerechosForm.get('fechaDePago')?.value).toBe(newDate);
-    expect(tramite260303StoreMock.SetFechaDePago).toHaveBeenCalledWith(newDate);
+    setTimeout(() => {
+      expect(certificadosSvc.getBancoDatos).toHaveBeenCalled();
+      expect(componente.bancoCatalogo.length).toBeGreaterThan(0);
+      done();
+    }, 0);
   });
 
-  it('should call setValoresStore with correct parameters', () => {
-    const spy = jest.spyOn(component, 'setValoresStore');
-    component.setValoresStore(component.pagoDerechosForm, 'banco', 'SetFechaDePago');
+  it('debería actualizar fechaDePago y llamar a SetFechaDePago del store', () => {
+    componente.solicitudState = createInitialState();
+    componente.cerrarPagoDerechosForm();
 
-    expect(spy).toHaveBeenCalledWith(component.pagoDerechosForm, 'banco', 'SetFechaDePago');
+    const NUEVA_FECHA = '2025-05-01';
+    componente.cambioFechaFinal(NUEVA_FECHA);
+
+    expect(componente.pagoDerechosForm.get('fechaDePago')?.value).toBe(NUEVA_FECHA);
+    expect(tramiteStore.SetFechaDePago).toHaveBeenCalledWith(NUEVA_FECHA);
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+  it('debería deshabilitar el formulario si es de solo lectura', () => {
+    componente.solicitudState = createInitialState();
+    componente.esFormularioSoloLectura = true;
+    componente.cerrarPagoDerechosForm();
+    componente.guardarDatosFormulario();
 
-    component.ngOnDestroy();
+    expect(componente.pagoDerechosForm.disabled).toBe(true);
+  });
 
-    expect(destroySpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+  it('debería habilitar el formulario si no es de solo lectura', () => {
+    componente.solicitudState = createInitialState();
+    componente.esFormularioSoloLectura = false;
+    componente.cerrarPagoDerechosForm();
+    componente.guardarDatosFormulario();
+
+    expect(componente.pagoDerechosForm.enabled).toBe(true);
+  });
+
+  it('debería emitir next y complete del subject destroyNotifier$ en ngOnDestroy', () => {
+    const spyNext = jest.spyOn(componente['destroyNotifier$'], 'next');
+    const spyComplete = jest.spyOn(componente['destroyNotifier$'], 'complete');
+
+    componente.ngOnDestroy();
+
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
   });
 });
