@@ -1,6 +1,5 @@
 import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogosService, FirmaElectronicaComponent, InicioSesionService, SolicitanteComponent, SubirDocumentoService, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { BsModalService } from 'ngx-bootstrap/modal';
 import { CertificadosLicenciasService } from '../services/certificados-licencias.service';
 import { CertificadosRoutingModule } from './certificados-routing.module';
 import { CommonModule } from '@angular/common';
@@ -51,8 +50,7 @@ import { provideHttpClient } from '@angular/common/http';
     InicioSesionService,
     SubirDocumentoService,
     CertificadosLicenciasService,
-    SanitarioService,
-    BsModalService
+    SanitarioService
   ],
 })
 export class CertificadosModule { }
