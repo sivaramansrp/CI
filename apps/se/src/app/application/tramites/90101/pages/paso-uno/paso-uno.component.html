@@ -20,13 +20,13 @@
             <solicitante></solicitante>
             }
             @case (2) {
-                <app-domicilios-de-plantas></app-domicilios-de-plantas>
+                <app-domicilios-de-plantas [formularioDeshabilitado]="formularioDeshabilitado"></app-domicilios-de-plantas>
             }
             @case (3) {
-                <app-sectores-y-mercancias></app-sectores-y-mercancias>
+                <app-sectores-y-mercancias [formularioDeshabilitado]="formularioDeshabilitado"></app-sectores-y-mercancias>
                 }
             @case (4) {
-                <app-productor-indirecto></app-productor-indirecto>
+                <app-productor-indirecto [formularioDeshabilitado]="formularioDeshabilitado"></app-productor-indirecto>
                 }
             }
         </ng-container>
