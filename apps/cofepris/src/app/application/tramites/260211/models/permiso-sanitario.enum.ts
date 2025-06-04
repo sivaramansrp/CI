@@ -3,6 +3,6 @@ export interface ProductoOption {
   value: string;
 }
 export interface ProductoResponse {
-  options: ProductoOption[];
-  defaultSelect: string;
+  label: string;
+  value: string;
 }

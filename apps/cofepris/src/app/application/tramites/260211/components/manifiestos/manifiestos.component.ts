@@ -37,7 +37,7 @@ import { SanitarioService } from '../../services/sanitario.service';
  * Componente para gestionar los manifiestos de la solicitud.
  */
 export class ManifiestosComponent implements OnInit, OnDestroy {
-   public producto: ProductoOption[] = [];
+   producto: ProductoOption[] = [];
  
   /**
    * Valor por defecto para el campo de selección.
@@ -90,14 +90,14 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    * Obtiene el estado de la solicitud y crea el formulario de manifiestos.
    */
   ngOnInit(): void {
-
-     this.service.getPermisoData().subscribe((response: ProductoResponse[]) => {
-  if (response && response.length > 0) {
-    this.producto = response[0].options; // <-- assign options array
-    this.defaultSelect = response[0].defaultSelect; // <-- assign default selection
-    this.manifiestos.get('cumplimiento')?.setValue(this.defaultSelect);
-  }
-});
+  this.service
+      .getPermisoData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data: ProductoOption[]) => {
+        this.producto = data; // Bind the fetched data
+       
+      });
+    
   this.inicializarEstadoFormulario();
      /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -162,10 +162,12 @@ inicializarFormulario(): void {
      * Inicialización del formulario de manifiestos.
      */
     this.manifiestos = this.fb.group({
-      cumplimiento: ['Si',this.solicitudState?.cumplimiento, Validators.required],
+      cumplimiento: [this.solicitudState?.cumplimiento, Validators.required],
     });
 
- 
+   if (this.esFormularioSoloLectura) {
+    this.manifiestos.disable();
+  }
 }
   /**
    * Establece el valor de un campo en el store de Tramite260211.
