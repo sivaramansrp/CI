@@ -39,6 +39,7 @@
         name="estado"
         [placeholder]="'Selecciona un valor'"
         (change)="setValoresStore(domicilio, 'estado', 'setEstado')"
+        [isDisabled]="esFormularioSoloLectura"
       ></app-catalogo-select>
     </div>
     <div class="col-md-4">
@@ -154,12 +155,12 @@
       [configuracionTabla]="nicoTabla"
       [datos]="nicoTablaDatos"
       [tipoSeleccionTabla]="tablaSeleccionCheckbox"
-      formControlName="scian">
+      formControlName="scian"  [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
     </app-tabla-dinamica>
 
     <div class="container text-end mt-5">
-      <button class="btn btn-default me-2">Eliminar</button>
-      <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent">
+      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+      <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent" [disabled]="esFormularioSoloLectura">
         Agregar
       </button>
     </div>
@@ -200,7 +201,7 @@
     <div class="panel-body">
       <crosslist [fechas]="seleccionarAduanasEntrada" [label]="aduanasEntradaLabel"
         [fechasSeleccionadas]="seleccionadasAduanasEntradaDatos" [botones]="aduanasEntradaBotons"
-        (fechasSeleccionadasChange)="aduanasEntradaSeleccionadasChange($event)"></crosslist>
+        (fechasSeleccionadasChange)="aduanasEntradaSeleccionadasChange($event)" [isDisabled]="esFormularioSoloLectura"></crosslist>
     </div>
   </div>
   <div class="row">
@@ -210,7 +211,7 @@
   </div>
   <div class="row mt-5">
     <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla"
-      [datos]="mercanciasTablaDatos"></app-tabla-dinamica>
+      [datos]="mercanciasTablaDatos"  [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
 
     <div class="d-flex justify-content-center" *ngIf="esPaginacionVisible">
       <app-table-pagination [totalItems]="totalElementos" [itemsPerPage]="elementosPorPagina" [currentPage]="paginaActual"
@@ -224,9 +225,7 @@
         class="btn btn-primary me-2"
         data-bs-toggle="modal"
         data-bs-target="#modalAddAgentMercancias"
-      >
-        Agregar
-      </button>
+        [disabled]="esFormularioSoloLectura">Agregar</button>
     </div>
   </div>
   <div class="row" *ngIf="isGarantiasOfrecidasVisible">
@@ -265,10 +264,8 @@
                 onClaveScianChange($event);
                 setValoresStore(
                   formAgente,
-                  'claveScianModal',
-                  'setClaveScianModal'
-                )
-              "></app-catalogo-select>
+                  'claveScianModal', 'setClaveScianModal')"
+                  [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
           </div>
 
           <div class="form-group">
@@ -290,17 +287,17 @@
         </form>
       </div>
       <div class="modal-footer custom-footer">
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal" (click)="limpiarScianForm()">
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal" (click)="limpiarScianForm()" [disabled]="esFormularioSoloLectura">
           Limpiar
         </button>
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">
           Cancelar
         </button>
         <button 
           type="button" 
           class="btn btn-primary" 
           data-bs-dismiss="modal" 
-          (click)="guardarScian()" >
+          (click)="guardarScian()" [disabled]="esFormularioSoloLectura" >
           Agregar
         </button>
       </div>
@@ -629,6 +626,7 @@
                   [placeholder]="'Seleccione un valor'"
                   [tooltipQuestionCircle]="true"
                   (change)="setValoresStore(formMercancias, 'UMC', 'setUMC')"
+                  [isDisabled]="esFormularioSoloLectura"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -706,13 +704,13 @@
               <div class="panel panel-default">
                 <div class="panel-heading" (click)="mostrar_colapsable()" tabindex="0">
                   <p class="panel-title">País de origen</p>
-                  <button type="button" class="collpase-button collapsed"></button>
+                  <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
                 </div>
                 @if (colapsable) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
                     <crosslist [fechas]="seleccionarOrigenDelPais" [label]="paisDeOrigen"
-                      [botones]="paisDeProcedenciaBotones"></crosslist>
+                      [botones]="paisDeProcedenciaBotones" [isDisabled]="esFormularioSoloLectura"></crosslist>
                   </div>
                 </div>
                 }
@@ -731,13 +729,13 @@
                   <p class="panel-title fw-bold">
                     País donde se produce o fabrica el ingrediente activo
                   </p>
-                  <button type="button" class="collpase-button collapsed"></button>
+                  <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
                 </div>
                 @if (colapsable) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
                     <crosslist [fechas]="seleccionarOrigenDelPais" [label]="paisDeProcedenciaLabel"
-                      [botones]="paisDeProcedenciaBotones"></crosslist>
+                      [botones]="paisDeProcedenciaBotones" [isDisabled]="esFormularioSoloLectura"></crosslist>
                   </div>
                 </div>
                 }
@@ -756,14 +754,14 @@
                   <p class="panel-title fw-bold">País donde se elabora el producto</p>
                   <button
                     type="button"
-                    class="collpase-button collapsed"
+                    class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"
                   ></button>
                 </div>
                 @if (colapsableDuos) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
                     <crosslist [fechas]="seleccionarOrigenDelPaisDuos" [label]="paisDeProcedenciaLabel"
-                      [botones]="paisDeProcedenciaBotonesDuos"></crosslist>
+                      [botones]="paisDeProcedenciaBotonesDuos" [isDisabled]="esFormularioSoloLectura"></crosslist>
                   </div>
                 </div>
                 }
@@ -782,14 +780,14 @@
                   <p class="panel-title fw-bold">País proveedor</p>
                   <button
                     type="button"
-                    class="collpase-button collapsed"
+                    class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"
                   ></button>
                 </div>
                 @if (colapsableTres) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
                     <crosslist [fechas]="seleccionarOrigenDelPaisTres" [label]="paisDeProcedenciaLabel"
-                      [botones]="paisDeProcedenciaBotonesTres"></crosslist>
+                      [botones]="paisDeProcedenciaBotonesTres" [isDisabled]="esFormularioSoloLectura"></crosslist>
                   </div>
                 </div>
                 }
@@ -808,13 +806,13 @@
                   <p class="panel-title fw-bold">
                     País de procedencia/País del último puerto de embarque
                   </p>
-                  <button type="button" class="collpase-button collapsed"></button>
+                  <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
                 </div>
                 @if (colapsableTres) {
                 <div class="panel-collapse collapse in" id="panel-01">
                   <div class="panel-body">
                     <crosslist [fechas]="seleccionarOrigenDelPaisCuatro" [label]="paisDeProcedenciaLabel"
-                      [botones]="paisDeProcedenciaBotonesCuatro"></crosslist>
+                      [botones]="paisDeProcedenciaBotonesCuatro" [isDisabled]="esFormularioSoloLectura"></crosslist>
                   </div>
                 </div>
                 }
@@ -825,25 +823,25 @@
           <div class="form-group">
             <app-catalogo-select [catalogo]="estado" formControlName="clasificacionToxicologica"
               [label]="'clasificación toxicológica'" [required]="true" name="clasificacionToxicologica" (change)="
-                setValoresStore(formMercancias, 'especificar', 'setEspecificar')
-              "></app-catalogo-select>
+                setValoresStore(formMercancias, 'especificar', 'setEspecificar')"
+                [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
           </div>
           <div class="form-group">
             <app-catalogo-select [catalogo]="estado" formControlName="objetoImportacion"
               [label]="'objeto de importación'" [required]="true" name="objetoImportacion" (change)="
-                setValoresStore(formMercancias, 'especificar', 'setEspecificar')
-              "></app-catalogo-select>
+                setValoresStore(formMercancias, 'especificar', 'setEspecificar')"
+                [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
           </div>
         </form>
       </div>
       <div class="modal-footer custom-footer">
-        <button type="button" class="btn btn-default" (click)="limpiar(formMercancias)">
+        <button type="button" class="btn btn-default" (click)="limpiar(formMercancias)" [disabled]="esFormularioSoloLectura">
           Limpiar
         </button>
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">
           Cancelar
         </button>
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="agregarMercancia()">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="agregarMercancia()" [disabled]="esFormularioSoloLectura">
           Agregar
         </button>
       </div>
