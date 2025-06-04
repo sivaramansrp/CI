@@ -1,5 +1,5 @@
-import { Catalogo, CatalogoSelectComponent,TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { MenusDesplegables } from '../../models/modificacion.enum';
@@ -12,7 +12,7 @@ import { Subject } from 'rxjs';
   templateUrl: './datos-certificado-de.component.html',
   styleUrl: './datos-certificado-de.component.scss'
 })
-export class DatosCertificadoDeComponent implements OnDestroy {
+export class DatosCertificadoDeComponent implements OnDestroy, OnInit {
   /**
    * Datos de los menús desplegables.
    * @type {MenusDesplegables[]}
@@ -88,15 +88,15 @@ export class DatosCertificadoDeComponent implements OnDestroy {
    * @type {{ [key:string]: unknown }}
    * @input
    */
-  @Input() datosFormCertificado!:{[key:string]:unknown};
+  @Input() datosFormCertificado!: { [key: string]: unknown };
 
   /**
    * Emisor de eventos para indicar si el formulario es válido.
    * @type {EventEmitter<boolean>}
    */
- @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(
-  false
-);  
+  @Output() formaValida: EventEmitter<boolean> = new EventEmitter<boolean>(
+    false
+  );
 
   /**
    * Formulario reactivo que contiene los datos del certificado.
@@ -123,6 +123,11 @@ export class DatosCertificadoDeComponent implements OnDestroy {
    * Observable que contiene la lista de representaciones federales disponibles.
    */
   representacionFederal$: Catalogo[] = [];
+  /**
+ * Indica si el formulario debe mostrarse solo en modo de lectura.
+ * @type {boolean}
+ */
+  @Input() esFormularioSoloLectura!: boolean;
 
   /**
    * Constructor del componente. Inicializa el formulario y las dependencias necesarias.
@@ -134,10 +139,45 @@ export class DatosCertificadoDeComponent implements OnDestroy {
   constructor(
     private fb: FormBuilder,
   ) {
+    // La función se ejecutará después de un segundo.
+    setTimeout(() => {
+      if (this.datosFormCertificado) {
+        this.formDatosCertificado.patchValue(this.datosFormCertificado);
+      }
+    }, 100);
+  }
+  /**
+ * @inheritdoc
+ * 
+ * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+ * Inicializa el estado del formulario llamando a `inicializarEstadoFormulario()`.
+ */
+  ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+  /**
+* Evalúa si se debe inicializar o cargar datos en el formulario.
+*/
+  inicializarEstadoFormulario(): void {
+    if (!this.formDatosCertificado) {
+      this.createForm();
+    }
+    if (this.esFormularioSoloLectura) {
+      this.formDatosCertificado.disable();
+    }
+  }
 
-    /**
-     * Inicialización del formulario reactivo con los controles y validaciones correspondientes.
-     */
+  /**
+   * Crea e inicializa el formulario reactivo `formDatosCertificado` con los controles y validaciones necesarios.
+   * 
+   * @remarks
+   * Este método configura los campos del formulario, asignando validadores según los requisitos del negocio.
+   * 
+   * @command
+   * Genera el formulario para capturar los datos del certificado, incluyendo observaciones, idioma, entidad federativa,
+   * representación federal y precisión, aplicando las validaciones correspondientes.
+   */
+  createForm(): void {
     this.formDatosCertificado = this.fb.group({
       observacionesDates: [''],
       idiomaDates: ['', [Validators.required, Validators.min(0)]],
@@ -146,15 +186,6 @@ export class DatosCertificadoDeComponent implements OnDestroy {
       precisaDates: ['', this.precisa ? [Validators.required] : []]
 
     });
-
-    // La función se ejecutará después de un segundo.
-    setTimeout(() => {
-      if (this.datosFormCertificado) {
-        this.formDatosCertificado.patchValue(this.datosFormCertificado);
-      }
-    }, 100);
-
-
   }
 
   /**
@@ -165,20 +196,20 @@ export class DatosCertificadoDeComponent implements OnDestroy {
     return this.formDatosCertificado.get('') as FormControl;
   }
 
- /**
-   * Establece valores en el store y emite eventos relacionados con el formulario.
-   *
-   * @param formGroupName - El nombre del grupo de formulario al que pertenece el campo.
-   * @param campo - El nombre del campo cuyo valor se desea obtener y procesar.
-   * @param storeStateName - El nombre del estado en el store asociado al campo.
-   * 
-   * @remarks
-   * Este método obtiene el valor de un campo específico del formulario `formDatosDelDestinatario`,
-   * emite un evento para indicar si el formulario es válido y otro evento con los datos del campo
-   * y su estado asociado en el store.
-   */ 
-  setValoresStore(formGroupName: string, campo: string, storeStateName: string):void {    
-    const VALOR = this.formDatosCertificado.get(campo)?.value;    
+  /**
+    * Establece valores en el store y emite eventos relacionados con el formulario.
+    *
+    * @param formGroupName - El nombre del grupo de formulario al que pertenece el campo.
+    * @param campo - El nombre del campo cuyo valor se desea obtener y procesar.
+    * @param storeStateName - El nombre del estado en el store asociado al campo.
+    * 
+    * @remarks
+    * Este método obtiene el valor de un campo específico del formulario `formDatosDelDestinatario`,
+    * emite un evento para indicar si el formulario es válido y otro evento con los datos del campo
+    * y su estado asociado en el store.
+    */
+  setValoresStore(formGroupName: string, campo: string, storeStateName: string): void {
+    const VALOR = this.formDatosCertificado.get(campo)?.value;
     this.formaValida.emit(this.formDatosCertificado.valid);
     this.formDatosCertificadoEvent.emit({ formGroupName, campo, valor: VALOR, storeStateName });
   }

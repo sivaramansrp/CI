@@ -1,37 +1,55 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CantidadSolicitadaComponent } from './cantidad-solicitada.component';
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
-import { Tramite120402Query } from '../../estados/queries/tramite120402.query';
-import { Tramite120402Store } from '../../estados/tramites/tramite120402.store';
+import { CommonModule } from '@angular/common';
+
+import { Tramite120402Query } from '../../estados/tramite120402.query';
+import { Tramite120402Store } from '../../estados/tramite120402.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 describe('CantidadSolicitadaComponent', () => {
   let component: CantidadSolicitadaComponent;
   let fixture: ComponentFixture<CantidadSolicitadaComponent>;
-  let mockStore: any;
-  let mockQuery: any;
 
-  const mockCantidad = '500';
+  let mockTramiteQuery: any;
+  let mockTramiteStore: any;
+  let mockConsultaioQuery: any;
+
+  const solicitudStateMock = {
+    cantidadSolicitada: 10
+  };
+
+  const readonlyState = {
+    readonly: true
+  };
 
   beforeEach(async () => {
-    mockStore = {
-      setCantidadSolicitada: jest.fn(),
+    mockTramiteQuery = {
+      selectSolicitud$: of(solicitudStateMock)
     };
 
-    mockQuery = {
-      cantidadSolicitada$: of(mockCantidad),
+    mockTramiteStore = {
+      setTramite120402State: jest.fn()
+    };
+
+    mockConsultaioQuery = {
+      selectConsultaioState$: new Subject()
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,CantidadSolicitadaComponent],
+      imports: [CommonModule, ReactiveFormsModule, CantidadSolicitadaComponent,TituloComponent],
       declarations: [],
       providers: [
-        FormBuilder,
-        { provide: Tramite120402Store, useValue: mockStore },
-        { provide: Tramite120402Query, useValue: mockQuery },
-      ],
+        { provide: Tramite120402Query, useValue: mockTramiteQuery },
+        { provide: Tramite120402Store, useValue: mockTramiteStore },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
+      ]
     }).compileComponents();
+  });
 
+  beforeEach(() => {
     fixture = TestBed.createComponent(CantidadSolicitadaComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -41,46 +59,78 @@ describe('CantidadSolicitadaComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with empty value', () => {
+  it('should initialize the form on ngOnInit', () => {
+    component.ngOnInit();
     expect(component.form).toBeDefined();
+  });
+
+  it('should set solicitudState and create form correctly', () => {
+    component.crearFormulario();
+    expect(component.solicitudState).toEqual(solicitudStateMock);
     expect(component.form.get('cantidadSolicitada')).toBeTruthy();
   });
 
-  it('should patch the form value from observable', () => {
-    expect(component.form.get('cantidadSolicitada')?.value).toBe(mockCantidad);
+  it('should disable form in readonly mode', () => {
+    component.esFormularioSoloLectura = true;
+    component.crearFormulario();
+    component.guardarDatosFormulario();
+    expect(component.form.disabled).toBe(true);
   });
 
-  it('should mark form as touched if invalid on submit', () => {
-    const markAllAsTouchedSpy = jest.spyOn(component.form, 'markAllAsTouched');
-    component.form.get('cantidadSolicitada')?.setValue('');
-    component.validarYEnviarFormulario();
-    expect(markAllAsTouchedSpy).toHaveBeenCalled();
+  it('should enable form in editable mode', () => {
+    component.esFormularioSoloLectura = false;
+    component.crearFormulario();
+    component.guardarDatosFormulario();
+    expect(component.form.enabled).toBe(true);
   });
 
-  it('should return true when control is invalid and touched', () => {
+  it('should return true if control is invalid and touched or dirty', () => {
+    component.crearFormulario();
     const control = component.form.get('cantidadSolicitada');
     control?.markAsTouched();
-    control?.setValue('');
+    control?.setValue(null);
     expect(component.esInvalido('cantidadSolicitada')).toBe(true);
   });
 
-  it('should return false when control is valid', () => {
-    component.form.get('cantidadSolicitada')?.setValue('100');
+  it('should return false if control is valid', () => {
+    component.crearFormulario();
+    component.form.get('cantidadSolicitada')?.setValue(5);
     expect(component.esInvalido('cantidadSolicitada')).toBe(false);
   });
 
-  it('should call store method with correct value', () => {
-    const value = '300';
-    component.form.get('cantidadSolicitada')?.setValue(value);
-    component.getCantidadSolicitada();
-    expect(mockStore.setCantidadSolicitada).toHaveBeenCalledWith(value);
+  it('should mark form as touched if invalid on submit', () => {
+    component.crearFormulario();
+    const spy = jest.spyOn(component.form, 'markAllAsTouched');
+    component.form.get('cantidadSolicitada')?.setValue(null);
+    component.validarYEnviarFormulario();
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should clean up on ngOnDestroy', () => {
-    const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
-    const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
-    component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+  it('should get value from store', () => {
+    const select$ = new Subject<any>();
+    mockTramiteQuery.selectSolicitud$ = select$;
+    select$.next(solicitudStateMock);
+    expect(component.solicitudState).toEqual(solicitudStateMock);
   });
+
+  it('should set value in store using setValorStore', () => {
+    component.crearFormulario();
+    component.form.get('cantidadSolicitada')?.setValue(20);
+    component.setValorStore(component.form, 'cantidadSolicitada');
+    expect(mockTramiteStore.setTramite120402State).toHaveBeenCalledWith({
+      cantidadSolicitada: 20
+    });
+  });
+
+it('should call inicializarEstadoFormulario when consultaio state changes', () => {
+  const spy = jest.spyOn(CantidadSolicitadaComponent.prototype as any, 'inicializarEstadoFormulario');
+  // Re-create the component so the spy is active during constructor subscription
+  fixture = TestBed.createComponent(CantidadSolicitadaComponent);
+  component = fixture.componentInstance;
+  fixture.detectChanges();
+
+  mockConsultaioQuery.selectConsultaioState$.next(readonlyState);
+
+  expect(spy).toHaveBeenCalled();
+});
 });
