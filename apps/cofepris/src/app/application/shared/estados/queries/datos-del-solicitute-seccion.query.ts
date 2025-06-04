@@ -15,6 +15,12 @@ import { DatosDelSolicituteSeccionState } from '../stores/datos-del-solicitute-s
  */
 @Injectable({ providedIn: 'root' })
 export class DatosDelSolicituteSeccionQuery extends Query<DatosDelSolicituteSeccionState> {
+
+  selectSolicitud$ = this.select((state) => {
+    return state;
+  });
+
+
   representanteRfc$ = this.select('representanteRfc');
   representanteNombre$ = this.select('representanteNombre');
   apellidoPaterno$ = this.select('apellidoPaterno');

@@ -38,6 +38,7 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import {
   CROSLISTA_DE_PAISES,
@@ -67,7 +68,7 @@ import {
   PropietarioTipoPersona,
   ScianModel,
 } from '../../models/datos-de-la-solicitud.model';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, Subscription, takeUntil } from 'rxjs';
 import { ScianData } from '../../../shared/models/datos-modificacion.model';
 
 import { SCIAN_DATA } from '../../constantes/datos-scian.enum';
@@ -470,7 +471,10 @@ export class DatosDelSolicitudModificacionComponent
       );
     }
   }
-
+/**
+   * Suscripción a los cambios en el formulario react
+   */
+  private subscription: Subscription = new Subscription();
   /**
    * Texto de los manifiestos.
    */
@@ -493,7 +497,11 @@ export class DatosDelSolicitudModificacionComponent
    * Datos de la tabla de mercancías.
    */
   mercanciasTablaDatos: MercanciasInfo[] = [];
-
+ /**
+   * Indica si el formulario es de solo lectura.
+   * @type {boolean}
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente.
    *
@@ -505,9 +513,18 @@ export class DatosDelSolicitudModificacionComponent
     private fb: FormBuilder,
     private establecimientoService: EstablecimientoService,
     private domicilioEstablecimientoStore: DatosDelSolicituteSeccionStateStore,
-    private domicilioEstablecimientoQuery: DatosDelSolicituteSeccionQuery
+    private domicilioEstablecimientoQuery: DatosDelSolicituteSeccionQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Constructor
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -526,7 +543,46 @@ export class DatosDelSolicitudModificacionComponent
     }
     this.obtenerScianTablaDatos();
   }
+ /**
+   * Inicializa el estado del formulario.
+   * @returns void
+   * @description Inicializa el estado del formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+   
+  }
 
+    /*
+  **
+    * Guarda los datos del formulario y ajusta su estado según si es de solo lectura o no.
+    * @returns void
+    * @description Guarda los datos del formulario y ajusta su estado según si es de solo lectura o no. 
+    */
+    guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+       this.domicilioEstablecimiento.disable();
+      this.solicitudEstablecimientoForm.disable();
+      this.scianForm.disable();
+      this.formMercancias.disable();
+
+      } else if (!this.esFormularioSoloLectura) {
+        this.domicilioEstablecimiento.enable();
+        this.solicitudEstablecimientoForm.enable();
+        this.scianForm.enable();
+        this.formMercancias.enable();
+
+      } 
+  }
+
+  inicializarFormulario(): void {
+    this.crearAgregarFormulario();
+  }
   /**
   * @method obtenerScianTablaDatos
   * @description
