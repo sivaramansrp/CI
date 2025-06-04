@@ -25,11 +25,18 @@ export class PasoUnoComponent implements OnInit {
   /** Estado de la consulta actual. */
   public consultaState!:ConsultaioState;
 
+  /**
+   * Constructor del componente.
+   */
   constructor(
     private autorizacionDeRayosXService: AutorizacionDeRayosXService,
     private consultaQuery: ConsultaioQuery
   ) {}
 
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Suscribe al estado de la consulta y actualiza el estado del componente según sea necesario.
+   */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
           this.consultaState = seccionState;
