@@ -11,9 +11,9 @@ import { takeUntil } from 'rxjs/operators';
  * @component PasoDosComponent
  * @description
  * Componente que representa el segundo paso del trámite 30901.
- * Permite la gestión y visualización de los tipos de documentos requeridos, 
+ * Permite la gestión y visualización de los tipos de documentos requeridos,
  * así como la carga de los catálogos correspondientes.
- * 
+ *
  * @selector app-paso-dos
  * @templateUrl ./paso-dos.component.html
  * @styleUrl ./paso-dos.component.scss
@@ -68,7 +68,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
   constructor(
     private catalogosServices: CatalogosService,
   ) {
-    // Si es necesario, se puede agregar aquí la lógica de inicialización
+    // Inicialización opcional si es necesario.
   }
 
   /**
@@ -88,6 +88,7 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Obtiene el catálogo de los tipos de documentos disponibles para el trámite.
    * Este método envía una solicitud al servicio `CatalogosService` para obtener los tipos de documentos
    * y los almacena en la propiedad `catalogoDocumentos`.
+   * Si la respuesta está vacía, no modifica el array.
    * @returns {void}
    */
   getTiposDocumentos(): void {
