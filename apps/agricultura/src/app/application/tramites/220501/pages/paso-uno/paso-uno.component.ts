@@ -72,6 +72,10 @@ export class PasoUnoComponent implements OnInit, AfterViewInit {
     // El constructor se utiliza para la inyección de dependencias.
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * @returns {void}
+   */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
       .pipe(takeUntil(this.destroyNotifier$),

@@ -6,7 +6,6 @@ import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/
 import { DatosGeneralesComponent } from '../datos-generales/datos-generales.component';
 import { PagoDeDerechosComponent } from '../pago-de-derechos/pago-de-derechos.component';
 import { SagarpaService } from '../../services/sagarpa/sagarpa.service';
-import { Solicitud220501Store } from '../../estados/tramites220501.store';
 import { TercerosRelacionadosComponent } from '../terceros-relacionados/terceros-relacionados.component';
 
 /**
@@ -48,11 +47,6 @@ export class RevisionDocumentalComponent implements OnInit {
   forma: string = '';
 
   /**
-   * Indica si el formulario está deshabilitado.
-   */
-  formularioDeshabilitado!: boolean;
-
-  /**
    * Estado de la consulta, utilizado para manejar el estado del formulario.
    */
   public consultaState!: ConsultaioState;
@@ -75,7 +69,6 @@ export class RevisionDocumentalComponent implements OnInit {
    */
   constructor(
     private consultaQuery: ConsultaioQuery,
-    private solicitud220501Store: Solicitud220501Store,
     private sagarpaService: SagarpaService,
   ) {
     // El constructor se utiliza para la inyección de dependencias.
@@ -109,8 +102,6 @@ export class RevisionDocumentalComponent implements OnInit {
       .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
-          this.solicitud220501Store.setSagarpaState(resp);
-          this.sagarpaService.actualizarEstadoFormulario(resp);
         }
       });
   }
