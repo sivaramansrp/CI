@@ -21,6 +21,7 @@
 
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
@@ -33,13 +34,18 @@ import {
 
 import {
   Catalogo,
-  CatalogoSelectComponent,
   RepresentacionFederalService,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Observable, Subject, takeUntil } from 'rxjs';
-import { Tramite120402Query } from '../../estados/queries/tramite120402.query';
-import { Tramite120402Store } from '../../estados/tramites/tramite120402.store';
+
+import { Subject, map, takeUntil } from 'rxjs';
+
+import { Tramite120402State, Tramite120402Store } from '../../estados/tramite120402.store';
+
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+
+import { Tramite120402Query } from '../../estados/tramite120402.query';
+
 
 /**
  * @class RepresentacionFederalComponent
@@ -59,7 +65,24 @@ import { Tramite120402Store } from '../../estados/tramites/tramite120402.store';
   styleUrls: ['./representacion-federal.component.scss'],
 })
 export class RepresentacionFederalComponent implements OnInit, OnDestroy {
+
   /**
+    * Indica si el formulario está en modo solo lectura.
+    * Cuando es `true`, los campos del formulario no se pueden editar.
+    */
+    esFormularioSoloLectura: boolean = false;  
+  
+      /**
+     * Subject para notificar la destrucción del componente.
+     */
+    private destroyNotifier$: Subject<void> = new Subject();
+  
+      /**
+     * Estado de la solicitud de la sección 301.
+     */
+    public solicitudState!: Tramite120402State;
+
+       /**
    * @property {FormGroup} representacionForm
    * @description
    * Formulario reactivo que maneja la selección de entidad federativa y representación federal.
@@ -103,23 +126,6 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
   public allRepresentaciones: Catalogo[] = [];
 
   /**
-   * @property {Observable<Catalogo | null>} entidad$
-   * @description
-   * Observable que expone la entidad federativa seleccionada desde el store.
-   * Permite reaccionar a los cambios de la entidad en el formulario.
-   */
-  entidad$: Observable<Catalogo | null> = this.tramite120402Query.entidad$;
-
-  /**
-   * @property {Observable<Catalogo | null>} representacion$
-   * @description
-   * Observable que expone la representación federal seleccionada desde el store.
-   * Permite reaccionar a los cambios de la representación en el formulario.
-   */
-  representacion$: Observable<Catalogo | null> =
-    this.tramite120402Query.representacion$;
-
-  /**
    * @constructor
    * @description
    * Constructor que inyecta `FormBuilder` para la creación del formulario reactivo.
@@ -131,11 +137,53 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private service: RepresentacionFederalService,
     private tramite120402Store: Tramite120402Store,
-    private tramite120402Query: Tramite120402Query
+    private tramite120402Query: Tramite120402Query,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    // Constructor
+   /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
   }
 
+    /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.initializeForm();
+    }  
+  }
+
+     /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.initializeForm();
+      if (this.esFormularioSoloLectura) {
+        this.representacionForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.representacionForm.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
     /**
    * @method ngOnInit
    * @description
@@ -152,36 +200,23 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    */
 
  public ngOnInit(): void {
-    this.initializeForm();
+  this.inicializarEstadoFormulario();
     this.loadEntidad();
     this.loadRepresentacion();
-    this.representacionForm.get('entidad')?.valueChanges.pipe(takeUntil(this.destroyed$)).subscribe((entidad) => {
+     this.representacionForm.get('entidad')?.valueChanges.pipe(takeUntil(this.destroyed$)).subscribe((entidad) => {
       this.updateRepresentacionOptions(entidad);
-      this.representacionForm.get('representacion')?.setValue(''); // Reset representacion
+      this.representacionForm.get('representacion')?.setValue('');
     });
- 
-    this.entidad$.subscribe((entidad) => {
-  if (entidad) {
-    this.representacionForm.get('entidad')?.setValue(entidad);
-  }
-});
-
-this.representacion$.subscribe((representacion) => {
-  if (representacion) {
-    this.representacionForm.get('representacion')?.setValue(representacion);
-  }
-});
-
   }
  
- 
-
   /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
    */
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
   /**
@@ -194,6 +229,14 @@ this.representacion$.subscribe((representacion) => {
    * @access private
    */
   private initializeForm(): void {
+   this.tramite120402Query.selectSolicitud$
+  .pipe(
+    takeUntil(this.destroyNotifier$),
+    map((seccionState) => {
+      this.solicitudState = seccionState;
+    })
+  )
+  .subscribe();
     this.representacionForm = this.fb.group({
       /**
        * @property {string} entidad
@@ -201,7 +244,7 @@ this.representacion$.subscribe((representacion) => {
        * Campo del formulario para la selección de la entidad federativa.
        * Se inicializa como una cadena vacía.
        */
-      entidad: ['', [Validators.required]],
+      entidad: [this.solicitudState?.entidad, [Validators.required]],
 
       /**
        * @property {string} representacion
@@ -209,7 +252,7 @@ this.representacion$.subscribe((representacion) => {
        * Campo del formulario para la selección de la representación federal.
        * Se inicializa como una cadena vacía.
        */
-      representacion: ['', [Validators.required]],
+      representacion: [this.solicitudState?.representacion, [Validators.required]],
     });
   }
 
@@ -274,25 +317,6 @@ this.representacion$.subscribe((representacion) => {
  
  
  
-  
- 
- 
-
-  /**
-   * @method getEntidad
-   * @description
-   * Establece la entidad seleccionada en el store y actualiza el valor del formulario.
-   * Se utiliza para sincronizar el estado del formulario con el store.
-   *
-   * @param {Catalogo} selectedEntidad - Entidad federativa seleccionada.
-   * @returns {void}
-   */
-  getEntidad(selectedEntidad: Catalogo): void {
-    this.tramite120402Store.setEntidad(selectedEntidad);
-    this.representacionForm.get('entidad')?.setValue(selectedEntidad.id.toString(), { emitEvent: false });
-    this.updateRepresentacionOptions(selectedEntidad);
-   }
-
     /**
    * @method setValoresStore
    * @description
@@ -313,19 +337,6 @@ this.representacion$.subscribe((representacion) => {
     (this.tramite120402Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
  
-  /**
-   * @method getRepresentacion
-   * @description
-   * Establece la representación federal seleccionada en el store y actualiza el valor del formulario.
-   * Se utiliza para sincronizar el estado del formulario con el store.
-   *
-   * @param {Catalogo} selectedRepresentacion - Representación federal seleccionada.
-   * @returns {void}
-   */
-  getRepresentacion(selectedRepresentacion: Catalogo): void {
-    this.tramite120402Store.setRepresentacion(selectedRepresentacion);
-    this.representacionForm.get('representacion')?.setValue(selectedRepresentacion.id.toString(), { emitEvent: false });  
-  }
  
   /**
    * Verifica si un control del formulario es inválido, tocado o modificado.
@@ -337,5 +348,18 @@ this.representacion$.subscribe((representacion) => {
     return CONTROL
       ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
       : false;
+  }
+
+     /**
+   * Actualiza un valor específico en el store del trámite.
+   * 
+   * @param FormGroup - Formulario reactivo.
+   * @param control - Nombre del control cuyo valor se actualizará en el store.
+   */
+   setValorStore(FormGroup: FormGroup, control: string): void {
+    const VALOR = FormGroup.get(control)?.value;
+    this.tramite120402Store.setTramite120402State({
+      [control]: VALOR
+    });
   }
 }
