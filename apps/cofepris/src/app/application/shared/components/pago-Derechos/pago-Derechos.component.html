@@ -31,10 +31,20 @@
           (change)="setValoresStore(derechosForm,'llavePago', 'setllavePago')" />
       </div>
 
-      <!-- Fecha de pago -->
+       <!-- Fecha de pago -->
       <div class="col-md-4">
-        <input-fecha [datos]="fechaInicioInput" formControlName="fechaPago" (valorCambiado)="cambioFechaIngreso($event)"
-          [setFecha]="derechosForm.get('fechaPago')?.value" [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
+.
+        <input-fecha [datos]="fechaInicioInput"
+        name="fechaPago"
+        (valorCambiado)="onFechaCambiada($event)"
+        [setFecha]="derechosForm.get('fechaPago')?.value"
+        ></input-fecha>
+
+        <div *ngIf="esInvalido('fechaPago')" class="text-danger">
+          <small *ngIf="derechosForm.controls['fechaPago'].errors?.['esFechaPasada']">
+            La fecha de pago debe ser menor o igual a la fecha actual
+          </small>
+          </div>
       </div>
 
       <!-- Importe de pago -->
@@ -48,7 +58,7 @@
     <div class="row mt-5">
       <div class="col-md-12">
         <div class="pull-right">
-          <button type="button" name="agregarMercancias" class="btn btn-primary ms-2" [disabled]="esFormularioSoloLectura ? true : false">
+          <button type="button" name="agregarMercancias" class="btn btn-primary ms-2"  (click)="alReiniciar()" [disabled]="esFormularioSoloLectura ? true : false">
             Borrar datos del pago
           </button>
         </div>

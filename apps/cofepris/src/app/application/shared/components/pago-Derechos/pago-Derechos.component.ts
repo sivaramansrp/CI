@@ -1,7 +1,7 @@
 import { AvisocalidadStore, SolicitudState } from '../../estados/stores/aviso-calidad.store';
 import { Catalogo, InputFecha, InputFechaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { map, takeUntil } from 'rxjs';
 import { AvisoImportacionService } from '../../services/parmiso-importacion.service';
 import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
@@ -59,6 +59,11 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
    */
   esFormularioSoloLectura: boolean = false;
 
+  /**
+   * Indica si la fecha ingresada es válida.
+   * Cuando es `true`, la fecha es válida; cuando es `false`, la fecha es inválida o pasada.
+   */
+  public esFechaValida: boolean = true;
   /**
    * constructor
    * param {FormBuilder} fb - Constructor para formularios reactivos.
@@ -125,9 +130,9 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
     this.derechosForm = this.fb.group({
       claveReferencia: [this.solicitudState?.claveReferencia], // Campo claveReferencia.
       cadenaDependencia: [this.solicitudState?.cadenaDependencia], // Campo cadenaDependencia.
-      banco: [this.solicitudState?.banco], // Campo banco.
+      banco: [this.solicitudState?.banco , Validators.required], // Campo banco.
       llavePago: [this.solicitudState?.llavePago], // Campo llavePago.
-      fechaPago: [this.solicitudState?.fechaPago], // Campo fechaPago.
+      fechaPago: [this.solicitudState?.fechaPago , Validators.required], // Campo fechaPago.
       importePago: [this.solicitudState?.importePago], // Campo importePago.
     });
 
@@ -156,17 +161,6 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * method cambioFechaIngreso
-   * description Actualiza la fecha de pago en el formulario y en el store.
-   * param {string} nuevo_valor - Nuevo valor de la fecha de pago.
-   */
-  public cambioFechaIngreso(nuevo_valor: string): void {
-    this.derechosForm.get('fechaPago')?.setValue(nuevo_valor); // Actualiza el valor en el formulario.
-    this.derechosForm.get('fechaPago')?.markAsUntouched(); // Marca el campo como no modificado.
-    this.avisocalidadStore.setfechaPago(nuevo_valor); // Actualiza el valor en el store.
-  }
-
-  /**
    * method setValoresStore
    * description Actualiza un valor específico en el store.
    * template T
@@ -178,6 +172,90 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
     const VALOR = form.get(campo)?.value as T; // Obtiene el valor del campo.
     (this.avisocalidadStore[metodoNombre] as (value: T) => void)(VALOR); // Llama al método correspondiente del store.
   }
+
+   /**
+   * @method onReset
+   * @description Limpia todos los campos del formulario de pago de derechos.
+   */
+  alReiniciar(): void {
+    this.derechosForm.reset();
+  }
+
+   /**
+   * @method onFechaCambiada
+   * @description Actualiza la fecha de pago en el formulario.
+   *
+   * @param {string} fecha - Fecha seleccionada en el componente `InputFecha`.
+   */
+  onFechaCambiada(fecha: string): void {
+    this.derechosForm.patchValue({ fechaPago: fecha });
+  }
+
+
+
+  /**
+   * @description Verifica si un control del formulario es inválido.
+   * @param nombreControl El nombre del control a verificar.
+   * @returns Verdadero si el control es inválido y está tocado o modificado, de lo contrario, falso.
+   */
+  esInvalido(nombreControl: string): boolean {
+    if (
+      nombreControl === 'fechaPago' &&
+      this.derechosForm.get('fechaPago')?.value !== '' &&
+      this.derechosForm.get('fechaPago')?.value !== null
+    ) {
+      this.esFechaPasada(this.derechosForm.get('fechaPago')?.value);
+      if (!this.esFechaValida) {
+        this.derechosForm
+          .get('fechaPago')
+          ?.setErrors({ esFechaPasada: true });
+        return true;
+      }
+
+      this.derechosForm
+        .get('fechaPago')
+        ?.setErrors({ esFechaPasada: false });
+      return false;
+    }
+    const CONTROL = this.derechosForm.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
+ /**
+   * @method esFechaPasada
+   * @description Verifica si una fecha proporcionada es anterior a la fecha actual.
+   *
+   * @param {string} fechaStr - La fecha en formato de cadena que se desea evaluar.
+   *
+   * @returns {void} No retorna ningún valor, pero actualiza la propiedad `esFechaValida`
+   * indicando si la fecha proporcionada es una fecha pasada.
+   *
+   * @example
+   * // Supongamos que la fecha actual es 2023-03-15
+   * this.esFechaPasada('2023-03-14'); // esFechaValida será true
+   * this.esFechaPasada('2023-03-16'); // esFechaValida será false
+   */
+  esFechaPasada(fechaStr: string): void {
+    if (!fechaStr) {
+      this.esFechaValida = false;
+      return;
+    }
+
+    const [DAY, MONTH, YEAR] = fechaStr.split('/').map(Number);
+
+    const FECHA_ENTRADA = new Date(YEAR, MONTH - 1, DAY);
+    const HOY = new Date();
+    if (isNaN(FECHA_ENTRADA.getTime())) {
+      this.esFechaValida = false;
+      return;
+    }
+    HOY.setHours(0, 0, 0, 0);
+    FECHA_ENTRADA.setHours(0, 0, 0, 0);
+    this.esFechaValida = FECHA_ENTRADA <= HOY;
+  }
+
 
   /**
    * method ngOnDestroy

@@ -111,7 +111,8 @@
     <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
       [datos]="nicoTablaDatos"   [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"></app-tabla-dinamica>
     <div class="container text-end mt-5">
-      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
+      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false" (click)="eliminar()"
+>Eliminar</button>
       <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura ? true : false" data-bs-toggle="modal" data-bs-target="#modalAddAgent">
         Agregar
       </button>

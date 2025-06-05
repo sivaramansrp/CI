@@ -388,7 +388,19 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     },
   ];
 
-
+  /**
+   * Botones de acción disponibles para gestionar las aduanas de entrada.
+   */
+ eliminar(): void {
+    if (this.datosTabla && this.seleccionadaId !== undefined && this.seleccionadaId !== null) {
+      const INDEX = this.datosTabla.findIndex(item => item.id === this.seleccionadaId);
+      if (INDEX !== -1) {
+        this.datosTabla.splice(INDEX, 1);
+        this.seleccionadaId = 0;
+        this.tramite130103Store.setDynamicFieldValue('especifico', this.datosTabla);
+      }
+    }
+  }
   /**
    * Método para obtener el valor de la fecha seleccionada.
    * @param event
