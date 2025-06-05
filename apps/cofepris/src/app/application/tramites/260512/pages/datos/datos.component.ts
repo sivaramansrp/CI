@@ -88,13 +88,14 @@ export class DatosComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
         this.consultaState = seccionState;
+        if (this.consultaState.update) {
+          this.guardarDatosFormulario();
+        } else {
+          this.esDatosRespuesta = true;
+        }
       })
     ).subscribe();
-    if (this.consultaState.update) {
-      this.guardarDatosFormulario();
-    } else {
-      this.esDatosRespuesta = true;
-    }
+
   }
 
   /**
