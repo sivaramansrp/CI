@@ -191,8 +191,36 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       } else {
         this.inicializarFormulario();
       }
-      // this.getEstadoCatalogo();
+      if(this.esFormularioSoloLectura) {
+        this.obtenerScianTablaDatos();
+        this.obtenerDataMercanciasDatos();
+      }
     }
+
+    /**
+   * Método para obtener el valor de la fecha seleccionada.
+   */
+  obtenerScianTablaDatos(): void {
+    this.service
+      .getObtenerScianTablaDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.nicoTablaDatos = data?.data;
+      });
+  }
+
+  /**
+   * Método para obtener el valor de la fecha seleccionada.
+   */
+  obtenerDataMercanciasDatos(): void {
+    this.service
+      .getObtenerDataMercanciasDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.mercanciasTablaDatos = data?.data;
+      });
+  }
+
       /**
      * Carga datos y deshabilita el formulario si es solo lectura.
      */
@@ -240,6 +268,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       numeroPermiso: [this.solicitudState?.numeroPermiso],
       paisDeOriginDatos: [this.solicitudState?.aduanasDeEntrada || []],
       garantiasOfrecidas: [this.solicitudState?.garantiasOfrecidas],
+      scian: [''], //testing
     });
       }
 

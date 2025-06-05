@@ -144,4 +144,24 @@ export class DatosDomicilioLegalService {
   getRegistroTomaMuestrasMercanciasData(): Observable<DatosDomicilioLegalState> {
     return this.http.get<DatosDomicilioLegalState>('assets/json/260501/registro_toma_muestras_mercancias.json');
   }
+
+  /**
+     * Obtiene los datos de la tabla desde un archivo JSON local.
+     *
+     * @returns Observable que emite un objeto RespuestaTabla.
+     */
+    getObtenerScianTablaDatos(): Observable<RespuestaTabla> {
+      return this.http.get<RespuestaTabla>('assets/json/cofepris/clave-scian.json');
+    }
+  
+    /**
+     * Obtiene los datos de mercancías desde un archivo JSON local.
+     *
+     * @returns Observable que emite un objeto MercanciasTabla.
+     */
+    getObtenerDataMercanciasDatos(): Observable<MercanciasTabla> {
+      return this.http.get<MercanciasTabla>(
+        'assets/json/cofepris/mercancias-tabla.json'
+      );
+    }
 }
