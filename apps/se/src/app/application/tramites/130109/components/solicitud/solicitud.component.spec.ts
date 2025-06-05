@@ -149,7 +149,7 @@ describe('SolicitudComponent', () => {
           options: MOCK_PRODUCTO_OPTIONS,
         })
       ),
-      getTablaDatos: jest.fn().mockReturnValue(of([{ cantidad: 10, totalUSD: 1000 }])), // Mock implementation
+      getTablaDatos: jest.fn().mockReturnValue(of([{ cantidad: 10, totalUSD: 1000 }])), 
     };
   
     await TestBed.configureTestingModule({
@@ -162,7 +162,6 @@ describe('SolicitudComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SolicitudComponent);
     component = fixture.componentInstance;
-    // component.ngOnInit();
   });
 
   it('debería crear', () => {

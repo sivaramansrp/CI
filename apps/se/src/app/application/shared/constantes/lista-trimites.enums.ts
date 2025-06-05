@@ -62,7 +62,7 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
           import(
             '../../tramites/130110/pages/paso-uno/paso-uno.component'
           ).then((m) => m.PasoUnoComponent),
-        componentName: 'PasoUnoComponent',
+        componentName: 'DatosComponent',
       },
     ],
   },
