@@ -15,17 +15,12 @@ export class InformeAnualProgramaService {
    */
   constructor(private http: HttpClient, private solicitud150103Store: Solicitud150103Store) {}
   actualizarEstadoFormulario(DATOS: Solicitud150103State): void {
-    this.solicitud150103Store.actualizarFin(DATOS.fin);
     this.solicitud150103Store.actualizarFolioPrograma(DATOS.folioPrograma);
     this.solicitud150103Store.actualizarModalidad(DATOS.modalidad);
     this.solicitud150103Store.actualizarTipoPrograma(DATOS.tipoPrograma);
     this.solicitud150103Store.actualizarEstatus(DATOS.estatus);
-    this.solicitud150103Store.actualizarInicio(DATOS.inicio);
     this.solicitud150103Store.actualizarVentasTotales(DATOS.ventasTotales);
     this.solicitud150103Store.actualizarTotalExportaciones(DATOS.totalExportaciones);
-    this.solicitud150103Store.actualizarTotalImportaciones(DATOS.totalImportaciones);
-    this.solicitud150103Store.actualizarSaldo(DATOS.saldo);
-    this.solicitud150103Store.actualizarPorcentajeExportacion(DATOS.porcentajeExportacion);
    
   }
   /**
@@ -50,5 +45,8 @@ export class InformeAnualProgramaService {
     return this.http.get<ReporteFechas>(
       'assets/json/150103/reporte-fechas.json'
     );
+  }
+  getRegistroData(): Observable<Solicitud150103State> {
+    return this.http.get<Solicitud150103State>('assets/json/150103/registro.json');
   }
 }

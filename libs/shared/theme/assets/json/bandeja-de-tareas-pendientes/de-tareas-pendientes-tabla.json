@@ -6168,5 +6168,15 @@
     "departamento": "se",
     "numeroDeProcedimiento": "90101",
     "origin": "READ_PROCEDURE"
+  },
+  {
+    "folioTramite": "099226136147361192499352",
+    "tipoDeTramite": "Registro de solicitud de Reporte Anual",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "se",
+    "numeroDeProcedimiento": "150103",
+    "origin": "READ_PROCEDURE"
   }
 ]

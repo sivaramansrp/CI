@@ -1,6 +1,10 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { Subject, takeUntil } from 'rxjs';
+import { Solicitud150103State, Solicitud150103Store } from '../../estados/solicitud150103.store';
+import { Solicitud150103Query } from '../../estados/solicitud150103.query';
+import { InformeAnualProgramaService } from '../../services/informe-anual-programa.service';
 /**
  * Componente que representa el primer paso del trámite.
  *
@@ -14,15 +18,20 @@ import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
   styleUrl: './paso-uno.component.scss',
   
 })
-export class PasoUnoComponent implements AfterViewInit {
+export class PasoUnoComponent implements AfterViewInit,OnInit {
 
   /**
    * Constructor del componente.
    *
    * Se utiliza para la inyección de dependencias.
    */
-  constructor() {
-    // Constructor vacío, no requiere inicialización adicional.
+  constructor(
+    public solicitud150103Store: Solicitud150103Store,
+    public solicitud150103Query: Solicitud150103Query,
+    public informaAnualPrograma: InformeAnualProgramaService,
+    public consultaQuery: ConsultaioQuery,
+  ) {
+     
   }
 
   /**
@@ -65,6 +74,11 @@ export class PasoUnoComponent implements AfterViewInit {
  * Indica si el botón o funcionalidad está habilitado.
  */
 estaHabilitado: boolean = false;
+public esDatosRespuesta: boolean = false;
+  /** Subject para notificar la destrucción del componente. */
+  private destroyNotifier$: Subject<void> = new Subject();
+  /** Estado de la consulta que se obtiene del store. */
+  public consultaState!:ConsultaioState;
   /**
    * Método del ciclo de vida que se ejecuta después de la inicialización de la vista.
    *
@@ -75,7 +89,28 @@ estaHabilitado: boolean = false;
     // Llama al método del componente Solicitante para establecer el tipo de persona.
     this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
   }
-
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+          this.consultaState = seccionState;
+      })).subscribe();
+    if(this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+  guardarDatosFormulario(): void {
+    this.informaAnualPrograma
+      .getRegistroData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp: Solicitud150103State) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.informaAnualPrograma.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
   /**
    * Selecciona una pestaña del asistente.
    *
