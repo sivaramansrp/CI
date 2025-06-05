@@ -6,7 +6,7 @@
       <!-- Título para indicar al usuario que seleccione un programa -->
       <ng-titulo titulo="Elija el programa del que desea realizar el tramite" />
       <!-- Componente de tabla dinámica con opciones de selección y datos -->
-      <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.RADIO" [configuracionTabla]="encabezadoDeTabla" [tableId] = "Id" [inputSelection] = "radioId" [datos]="datosTabla" (filaSeleccionada)="valorDeAlternancia($event)"></app-tabla-dinamica>
+      <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.RADIO" [configuracionTabla]="encabezadoDeTabla" [tableId] = "Id" [inputSelection] = "radioId" [datos]="datosTabla" (filaSeleccionada)="valorDeAlternancia($event)" [disableSeleccionTablaRadio]="soloLectura"></app-tabla-dinamica>
     </div>
     <div class="col-md-12">
       <!-- Navegación para la paginación -->
@@ -38,7 +38,6 @@
           id="folioPrograma"
           formControlName="folioPrograma"
           class="form-control"
-          readonly
         />
         <!-- Campo oculto para almacenar el ID del programa seleccionado -->
         <input type="hidden" id="idProgramaSeleccionado" formControlName="idProgramaSeleccionado" />
@@ -54,7 +53,6 @@
           id="modalidad"
           formControlName="modalidad"
           class="form-control"
-          readonly
         />
       </div>
     </div>
@@ -68,7 +66,6 @@
           id="representacionFederal"
           formControlName="representacionFederal"
           class="form-control"
-          readonly
         />
       </div>
     </div>
@@ -84,7 +81,6 @@
           id="tipoPrograma"
           formControlName="tipoPrograma"
           class="form-control"
-          readonly
         />
       </div>
     </div>
@@ -98,7 +94,6 @@
           id="estatus"
           formControlName="estatus"
           class="form-control"
-          readonly
         />
       </div>
     </div>
@@ -133,20 +128,17 @@
       <div class="row">
         <!-- Checkbox para confirmar la cancelación -->
         <div class="form-check">
-          <input
-            type="checkbox"
-            id="confirmar"
-            formControlName="confirmar"
-            class="form-check-input"
+          <lib-input-check
+           [id]="'etiqueta'"
+            [formControlName]="'confirmar'"
+            [label]="'Confirmo estar de acuerdo con la Cancelación del Programa IMMEX/PROSEC'"
+            [required]="true"
             [ngClass]="isValid('confirmar') ? 'required' : ''"
             (change)="setValoresStore(
               ProgramaForm,
               'confirmar',
               'setConfirmar'
-            )"
-          />
-          <label id="etiqueta" for="confirmar" class="form-check-label">Confirmo estar de acuerdo con la Cancelación del Programa IMMEX/PROSEC</label>
-          <span class="require">*</span>
+            )"></lib-input-check>
         </div>
         </div>
       </div>

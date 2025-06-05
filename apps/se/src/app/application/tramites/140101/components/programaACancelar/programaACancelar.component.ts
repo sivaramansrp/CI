@@ -1,15 +1,16 @@
-import { Component, OnDestroy,OnInit } from '@angular/core';
+import { Component, Input, OnDestroy,OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
-import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TablePaginationComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { InputCheckComponent, TablaDinamicaComponent, TablaSeleccion, TablePaginationComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Programa140101State, Tramite140101Store } from '../../../../estados/tramites/tramite140101.store';
 import { ProgramaACancelar,TABLE_ID} from '../../../../shared/models/programa-cancelar.model';
 import { ProgramaACancelarService } from '../../services/programACancelar.service';
 import { Tramite140101Query } from '../../../../estados/queries/tramite140101.query';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src/core/services/shared/validaciones-formulario/validaciones-formulario.service';
+import { PROGRAMA_TABLA } from '../../../../shared/constantes/programa.enum';
 
 
 /**
@@ -24,6 +25,7 @@ import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src
   standalone: true,
   imports: [
     CommonModule,
+    InputCheckComponent,
     ReactiveFormsModule,
     TablaDinamicaComponent,
     TablePaginationComponent,
@@ -34,7 +36,7 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
   /**
    * Grupo de formularios para gestionar los controles del formulario en el componente.
    */
-  ProgramaForm!: FormGroup;
+  public ProgramaForm!: FormGroup;
   
   /**
    * Notificador utilizado para destruir suscripciones activas en el componente.
@@ -53,12 +55,7 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
    * @see {@link Subject}
    */
   public destroyNotifier$: Subject<void> = new Subject();
-   
-  /**
-   * Suscripción utilizada para gestionar la obtención de datos del programa.
-   */
-  private getProgramaSubscription!: Subscription;
-
+  
   /**
    * Estado de la sección Programa A Cancelar.
    */
@@ -68,48 +65,44 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
    * Identificador único asociado a la tabla.
    * Este valor se inicializa con el identificador proporcionado por `TableId`.
    */
-  Id:string = TABLE_ID;
+  public Id:string = TABLE_ID;
   /**
    * Configuración de las columnas de la tabla mostrada en el componente.
    */
 
-  public encabezadoDeTabla: ConfiguracionColumna<ProgramaACancelar>[] = [
-    { encabezado: 'Folio Programa', clave: (item:ProgramaACancelar) => item.folioPrograma, orden: 1 },
-    { encabezado: 'Selección de Modalidad',clave: (item:ProgramaACancelar) => item.modalidad, orden: 2 },
-    { encabezado: 'Representación Federal', clave: (item:ProgramaACancelar) => item.representacionFederal, orden: 3 },
-    { encabezado: 'Tipo Programa', clave: (item:ProgramaACancelar) => item.tipoPrograma, orden: 4 },
-    { encabezado: 'Estatus', clave: (item:ProgramaACancelar) => item.estatus, orden: 5 },
-  ];
+  public encabezadoDeTabla = PROGRAMA_TABLA;
 
   /**
    * Datos que se mostrarán en la tabla.
    */
-  datosTabla: ProgramaACancelar[] = [];
+  public datosTabla: ProgramaACancelar[] = [];
 
   /**
    * Número total de elementos en la tabla.
    */
-  totalItems = 0;
+  public totalItems = 0;
 
   /**
    * Número de página actual para la paginación.
    */
-  currentPage = 1;
+  public currentPage = 1;
 
   /**
    * Número de elementos por página para la paginación.
    */
-  itemsPerPage = 5;
+  public itemsPerPage = 5;
 
   /**
    * Enumeración para la selección de la tabla.
    */
-  TablaSeleccion = TablaSeleccion;
+  public TablaSeleccion = TablaSeleccion;
 
   /**
    * ID del botón de radio seleccionado en la tabla.
    */
-  radioId!: number;
+  public radioId!: number;
+
+  @Input() soloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -143,7 +136,6 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
    * Inicializa el formulario con datos del estado.
    */
   inicializarFormulario(): void {
-    this.getProgramaSubscription.add(
       this.tramite140101Query.selectSolicitud$
         .pipe(
           takeUntil(this.destroyNotifier$),
@@ -151,8 +143,7 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
             this.ProgramaState = seccionState;
           })
         )
-        .subscribe()
-    );
+        .subscribe();
 
       this.ProgramaForm = this.fb.group({
       folioPrograma: [{ value: this.ProgramaState?.programaACancelar?.folioPrograma, disabled: true }],
@@ -167,6 +158,9 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
 
     this.radioId = this.ProgramaState?.radio;
     this.datosTabla = this.ProgramaState?.datos;
+    if(this.soloLectura) {
+      this.ProgramaForm.disable();
+    }
   }
 
   /**

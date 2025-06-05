@@ -1,6 +1,7 @@
-import { Component, ViewChild } from '@angular/core';
-// Importación del componente Solicitante desde la librería compartida
-import {SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, ConsultaioStore, SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { map, Subject, takeUntil } from 'rxjs';
+import { ProgramaACancelarService } from '../../services/programACancelar.service';
 
 /**
  * Componente DatosComponent.
@@ -13,22 +14,129 @@ import {SolicitanteComponent } from '@libs/shared/data-access-user/src';
   selector: 'app-datos', // Selector del componente
   templateUrl: './datos.component.html' // Ruta del archivo HTML asociado al componente
 })
-export class DatosComponent {
+export class DatosComponent implements OnInit, OnDestroy {
   /**
    * Índice del subtítulo actual.
    * 
    * Esta variable se utiliza para almacenar el índice de la pestaña seleccionada.
    * Por defecto, se inicializa con el valor 1.
    */
-  indice: number = 1;
+  public indice: number = 1;
 
   /**
-   * Referencia al componente hijo SolicitanteComponent.
+   * Estado actual de la consulta para el componente.
    * 
-   * Utiliza el decorador `@ViewChild` para obtener acceso al componente hijo
-   * SolicitanteComponent, lo que permite interactuar con él desde este componente.
+   * @type {ConsultaioState}
+   * @public
+   */
+  public consultaState!: ConsultaioState;
+
+  /**
+   * Referencia al componente hijo `SolicitanteComponent` dentro de la vista.
+   * 
+   * Esta propiedad permite acceder a los métodos y propiedades públicas del componente
+   * `SolicitanteComponent` desde el componente padre, facilitando la interacción y manipulación
+   * de su estado o comportamiento.
+   * 
+   * @see SolicitanteComponent
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+
+
+  /**
+   * Notificador utilizado para gestionar la destrucción de suscripciones en el componente.
+   * 
+   * Este Subject emite un valor cuando el componente se destruye, permitiendo cancelar
+   * suscripciones a observables y evitar fugas de memoria.
+   * 
+   * @private
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  public esFormularioSoloLectura: boolean = false;
+
+
+  /**
+   * Constructor de la clase DatosComponent.
+   * 
+   * @param consultaQuery Servicio para realizar consultas relacionadas con el trámite.
+   * @param consultaStore Almacén para gestionar el estado de las consultas de trámite.
+   * @param productoresService Servicio para la expansión y gestión de productores.
+   * @param tramiteStore Almacén específico para el manejo del estado del trámite 120204.
+   * 
+   * Al inicializar el componente, se establece la consulta inicial en el store de consultas
+   * con los parámetros correspondientes al trámite 120204.
+   */
+  constructor(private consultaQuery: ConsultaioQuery, private consultaStore: ConsultaioStore, private programaService: ProgramaACancelarService) {
+  }
+
+  /**
+  * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+  * 
+  * - Suscribe al observable `selectConsultaioState$` para obtener el estado de la consulta y actualizar la propiedad `consultaState`.
+  * - Dependiendo del valor de `consultaState.update`, decide si guardar los datos del formulario o mostrar los datos de respuesta.
+  * 
+  * @returns {void}
+  */
+  ngOnInit(): void {
+    this.consultaStore.establecerConsultaio(
+      '120204',
+      'BANDEJA_SOLICITUDES',
+      'se',
+      '03039399393939393',
+      'tipoTramite',
+      'tipoTramite',
+      true,
+      false,
+      true
+    );
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
+      this.consultaState = seccionState;
+      this.esFormularioSoloLectura = seccionState.readonly;
+      if (this.consultaState.update) {
+        this.guardarDatosFormulario();
+      } else {
+        this.esDatosRespuesta = true;
+      }
+
+    })).subscribe();
+  }
+
+  /**
+   * Guarda los datos del formulario obteniendo la información de los productores.
+   * 
+   * Este método realiza una solicitud al servicio `productoresService` para obtener
+   * los datos de expansión de productores. Si la respuesta es válida, actualiza
+   * el estado interno del componente y almacena los datos relevantes en el store
+   * de trámites.
+   * 
+   * @remarks
+   * Utiliza el operador `takeUntil` para cancelar la suscripción cuando el componente
+   * se destruye, evitando fugas de memoria.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
+  guardarDatosFormulario(): void {
+    this.programaService
+      .getProgramaDatos().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.programaService.setDatosFormulario(resp);
+        }
+      });
+  }
 
   /**
    * Método para seleccionar una pestaña específica.
@@ -40,5 +148,14 @@ export class DatosComponent {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
+   * Emite una notificación y completa el observable `destroyNotifier$` para limpiar suscripciones y evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
