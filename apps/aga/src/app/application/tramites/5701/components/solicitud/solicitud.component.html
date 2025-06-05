@@ -751,6 +751,7 @@
           [tipoSeleccionTabla]="tablaSeleccionPagos.CHECKBOX"
           [configuracionTabla]="encabezadoDeTablaPagos"
           [datos]="datosTablaPagos"
+          (listaDeFilaSeleccionada)="lineaCapturaSeleccionados = $event"
         >
         </app-tabla-dinamica>
       </div>

@@ -271,3 +271,13 @@ export const LABEL_CROSSLIST: CrossListLable = {
   tituluDeLaIzquierda: 'Fechas dentro del período',
   derecha: 'Fechas seleccionadas para el servicio extraordinario',
 };
+
+/**
+ * @description Mensaje error, no se encontró información
+ */
+export const MSG_ERROR_NO_INFORMACION = 'No se encontró información';
+
+/**
+ *@description Titulo del modal aviso
+ */
+export const TITULO_MODAL_AVISO = 'Aviso';

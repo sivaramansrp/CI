@@ -10,6 +10,8 @@ import {
   LABEL_DESPACHO_LDA,
   MSG_ADUANA_PEDIMENTO,
   MSG_CAMBIO_TIPO_SOLICITUD,
+  MSG_ELIMINA_ELEMENTO,
+  MSG_ERROR_NO_INFORMACION,
   MSJ_ERROR_FECHA,
   MSJ_ERROR_LINEA_CAPTURA,
   MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
@@ -18,6 +20,7 @@ import {
   PATENTES_ID,
   SIN_ITEMS,
   SIN_VALOR,
+  TITULO_MODAL_AVISO,
   TRANSPORTE,
   UN_DIA,
   VEHICULO,
@@ -365,6 +368,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @description Label del crosslist de fechas
    */
   readonly LABEL_CROSSLIST_FECHAS: CrossListLable = LABEL_CROSSLIST;
+
+  /**
+   *@description Alamcena las lineas de capturas seleccionadas por el usuario en la tabla.
+   */
+  lineaCapturaSeleccionados: LineaCaptura[] = [];
 
   //TODO: Estas variables se van a eliminar
   /**
@@ -1739,7 +1747,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
     //Verifica si la tabla de lineas de captura tiene datos y los agrega al formulario.
     if (this.solicitudState.lineasCaptura.length > 0) {
-      this.datosTablaPagos = [...this.solicitudState.lineasCaptura]
+      this.datosTablaPagos = [...this.solicitudState.lineasCaptura];
     }
 
     this.colapsable =
@@ -2483,9 +2491,40 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
   /**
    * Elimina un elemento de la tabla de lineas de captura
+   * @returns {void} No retorna ningún valor.
    */
   eliminarLineaCaptura(): void {
-    console.log('Eliminar linea de captura');
-    
+    if (this.lineaCapturaSeleccionados.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: TITULO_MODAL_AVISO,
+        mensaje: MSG_ERROR_NO_INFORMACION,
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
+    }
+
+    this.datosTablaPagos = this.datosTablaPagos.filter(
+      (item) =>
+        !this.lineaCapturaSeleccionados.some(
+          (seleccionado) => seleccionado.lineaCaptura === item.lineaCaptura
+        )
+    );
+
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: TITULO_MODAL_AVISO,
+      mensaje: MSG_ELIMINA_ELEMENTO,
+      cerrar: false,
+      txtBtnAceptar: 'Cerrar',
+      txtBtnCancelar: '',
+    };
+
+    this.tramite5701Store.setLineasCaptura(this.datosTablaPagos);
   }
 }
