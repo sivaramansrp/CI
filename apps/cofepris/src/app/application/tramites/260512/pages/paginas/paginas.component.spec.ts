@@ -1,30 +1,22 @@
-import { TestBed, ComponentFixture } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PaginasComponent } from './paginas.component';
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { WizardComponent, PASOS } from '@ng-mf/data-access-user';
-import { LISTA_PASOS_WIZARD } from '../../../../shared/constantes/lista-pasos-wizard.enum';
-
-// Mock WizardComponent
-@Component({ selector: 'app-wizard', template: '' })
-class MockWizardComponent {
-  siguiente = jest.fn();
-  atras = jest.fn();
-}
+import { WizardComponent } from '@libs/shared/data-access-user/src';
+import { PANTA_PASOS } from '../../../../../../../../../libs/shared/data-access-user/src/core/enums/120404/pantallas260514.enum';
+import { AccionBoton } from '../../../../../../../../../libs/shared/data-access-user/src/core/models/260514/aviso-pantallas.model';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('PaginasComponent', () => {
   let component: PaginasComponent;
   let fixture: ComponentFixture<PaginasComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [PaginasComponent, MockWizardComponent],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA], // Ignore unknown elements like btn-continuar
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [PaginasComponent],
+      schemas: [NO_ERRORS_SCHEMA], 
     }).compileComponents();
 
     fixture = TestBed.createComponent(PaginasComponent);
     component = fixture.componentInstance;
-    // Inject the mock wizardComponent
-    component.wizardComponent = new MockWizardComponent() as any;
     fixture.detectChanges();
   });
 
@@ -32,50 +24,61 @@ describe('PaginasComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have solicitudePasos equal to LISTA_PASOS_WIZARD', () => {
-    expect(component.solicitudePasos).toBe(LISTA_PASOS_WIZARD);
+  it('should initialize pantallasPasos and datosPasos correctly', () => {
+    expect(component.pantallasPasos).toEqual(PANTA_PASOS);
+    expect(component.datosPasos).toEqual({
+      nroPasos: PANTA_PASOS.length,
+      indice: 1,
+      txtBtnAnt: 'Anterior',
+      txtBtnSig: 'Continuar',
+    });
   });
 
-  it('should have pasos equal to PASOS', () => {
-    expect(component.pasos).toBe(PASOS);
-  });
+  it('should update indice and navigate forward when getValorIndice is called with "cont"', () => {
+    const mockWizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    };
+    component.wizardComponent = mockWizardComponent as unknown as WizardComponent;
 
-  it('should have indice initialized to 1', () => {
-    expect(component.indice).toBe(1);
-  });
+    const accion: AccionBoton = { valor: 2, accion: 'cont' };
+    component.getValorIndice(accion);
 
-  it('should have datosPasos initialized correctly', () => {
-    expect(component.datosPasos.nroPasos).toBe(component.pasos.length);
-    expect(component.datosPasos.indice).toBe(component.indice);
-    expect(component.datosPasos.txtBtnAnt).toBe('Guardar');
-    expect(component.datosPasos.txtBtnSig).toBe('Continuar');
-  });
-
-  it('should update indice and call wizardComponent.siguiente for accion "cont"', () => {
-    component.getValorIndice({ accion: 'cont', valor: 2 });
     expect(component.indice).toBe(2);
-    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+    expect(component.datosPasos.indice).toBe(2);
+    expect(mockWizardComponent.siguiente).toHaveBeenCalled();
+    expect(mockWizardComponent.atras).not.toHaveBeenCalled();
   });
 
-  it('should update indice and call wizardComponent.atras for accion not "cont"', () => {
-    component.getValorIndice({ accion: 'atras', valor: 3 });
-    expect(component.indice).toBe(3);
-    expect(component.wizardComponent.atras).toHaveBeenCalled();
-  });
+  it('should update indice and navigate backward when getValorIndice is called with "atras"', () => {
+    const mockWizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    };
+    component.wizardComponent = mockWizardComponent as unknown as WizardComponent;
 
-  it('should not change indice or call wizard methods for valor <= 0', () => {
-    component.indice = 1;
-    component.getValorIndice({ accion: 'cont', valor: 0 });
+    const accion: AccionBoton = { valor: 1, accion: 'atras' };
+    component.getValorIndice(accion);
+
     expect(component.indice).toBe(1);
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+    expect(component.datosPasos.indice).toBe(1);
+    expect(mockWizardComponent.atras).toHaveBeenCalled();
+    expect(mockWizardComponent.siguiente).not.toHaveBeenCalled();
   });
 
-  it('should not change indice or call wizard methods for valor >= 5', () => {
-    component.indice = 1;
-    component.getValorIndice({ accion: 'cont', valor: 5 });
-    expect(component.indice).toBe(1);
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+  it('should not update indice or call navigation methods if valor is out of range', () => {
+    const mockWizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    };
+    component.wizardComponent = mockWizardComponent as unknown as WizardComponent;
+
+    const accion: AccionBoton = { valor: 0, accion: 'cont' };
+    component.getValorIndice(accion);
+
+    expect(component.indice).toBe(1); 
+    expect(component.datosPasos.indice).toBe(1);
+    expect(mockWizardComponent.siguiente).not.toHaveBeenCalled();
+    expect(mockWizardComponent.atras).not.toHaveBeenCalled();
   });
 });
