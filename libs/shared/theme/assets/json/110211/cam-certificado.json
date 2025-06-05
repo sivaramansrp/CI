@@ -1,8 +1,8 @@
 {
   "formCertificado": {
     "si": true,
-    "entidadFederativa": "CDMX",
-    "bloque": "Bloque A",
+    "entidadFederativa": 1,
+    "bloque": 1,
     "nombreComercialForm": "Producto A",
     "registroProductoForm": "Reg-123",
     "fraccionArancelariaForm": "0101.21.00",
@@ -38,10 +38,10 @@
   "mercanciaTabla": [],
   "formDatosCertificado": {
     "observacionesDates": "Producto conforme",
-    "idiomaDates": "Español",
+    "idiomaDates": 1,
     "precisaDates": "Sí",
-    "EntidadFederativaDates": "CDMX",
-    "representacionFederalDates": "Secretaría de Economía"
+    "EntidadFederativaDates": 1,
+    "representacionFederalDates": 1
   },
   "idiomaDatosSeleccion": { "id": 1, "descripcion": "Español" },
   "entidadFederativaSeleccion": { "id": 9, "descripcion": "CDMX" },
