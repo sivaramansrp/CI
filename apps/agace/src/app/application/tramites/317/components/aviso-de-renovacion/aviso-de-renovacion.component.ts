@@ -19,6 +19,10 @@ import { UnicoStore } from '../../estados/renovacion.store';
 
 import { UnicoQuery } from '../../estados/queries/unico.query';
 
+// import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 /**
  * Componente que representa el aviso de renovación.
  * Este componente es responsable de inicializar el formulario, cargar datos desde servicios y manejar el estado de la aplicación.
@@ -31,6 +35,12 @@ import { UnicoQuery } from '../../estados/queries/unico.query';
   styleUrls: ['./aviso-de-renovacion.component.scss'],
 })
 export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
+
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = true; 
   /**
    * Fecha inicial para el campo de fecha.
    */
@@ -72,7 +82,8 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private service: AvisoUnicoService,
     private unicoStore: UnicoStore,
-    private unicoQuery: UnicoQuery
+    private unicoQuery: UnicoQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // Inicializa el formulario reactivo y el estado de la solicitud.
   }
@@ -82,6 +93,55 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
    * Configura el formulario, carga datos iniciales y suscribe al estado de la aplicación.
    */
   ngOnInit(): void {
+
+     this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly;
+         this.inicializarEstadoFormulario();
+      })
+
+    )
+    .subscribe()
+
+   this.initializeForm();
+    this.loadLocalidad();
+    this.loadAsignacionData();
+    this.cargarRadio();
+  }
+
+   /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.initializeForm();
+    }  
+   
+  }
+
+   /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.initializeForm();
+      if (this.esFormularioSoloLectura) {
+        this.avisoForm.disable();
+      } else {
+        this.avisoForm.enable();
+      } 
+  }
+
+  /**
+   * Inicializa el formulario reactivo con valores predeterminados.
+   */
+  private initializeForm(): void {
+
     this.unicoQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -90,17 +150,6 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    this.initializeForm();
-    this.loadLocalidad();
-    this.loadAsignacionData();
-    this.cargarRadio();
-  }
-
-  /**
-   * Inicializa el formulario reactivo con valores predeterminados.
-   */
-  private initializeForm(): void {
     this.avisoForm = this.fb.group({
       mapTipoTramite: [this.solicitudState?.mapTipoTramite],
       mapDeclaracionSolicitud: [this.solicitudState?.mapDeclaracionSolicitud],
@@ -116,7 +165,7 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
+/**
    * Carga datos de asignación desde el servicio y actualiza el formulario.
    */
   loadAsignacionData(): void {
