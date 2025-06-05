@@ -1,0 +1,22 @@
+
+{
+  "opcionDeImportador": 1,
+  "tomaMuestraDespacho": "",
+  "descMotivoFaltaMuestra": "",
+  "comboFraccionConcatenada": 0,
+  "fraccionConcatenada": "",
+  "fracciondescripcion": "",
+  "comboNicos": 0,
+  "nicoDescripcion": "",
+  "nombreQuimico": "valor ficticio",
+  "nombreComercial": "valor ficticio",
+  "numeroCAS": "",
+  "ideGenerica": 0,
+  "descClobGenerica": "",
+  "fechaInicioVigencia": "",
+  "fechaFinVigencia": "",
+  "lineaCaptura": "",
+  "valorPago": "",
+  "pagoDerechosLista": []
+}
+

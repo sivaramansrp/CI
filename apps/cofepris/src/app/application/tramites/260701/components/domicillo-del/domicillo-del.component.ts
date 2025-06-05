@@ -7,8 +7,8 @@ import { Subject,map, takeUntil } from 'rxjs';
 import { CROSLISTA_DE_PAISES } from '@libs/shared/data-access-user/src/core/enums/260701/domicillo-del.enum';
 import { CertificadosLicenciasService } from '../../services/certificados-licencias.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite260701Query } from '../../estados/queries/tramite260701.query';
-
 /**
  * Componente `DomicilloDelComponent` que representa una sección de la aplicación
  * para gestionar información relacionada con domicilios, agentes y mercancías.
@@ -39,6 +39,11 @@ export class DomicilloDelComponent implements OnInit, OnDestroy {
      * Lista de componentes Crosslist disponibles en la vista.
      */
     @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+    public esFormularioSoloLectura: boolean = false;
    
     /**
      * Constructor del componente DomicilloDelComponent.
@@ -50,9 +55,15 @@ export class DomicilloDelComponent implements OnInit, OnDestroy {
       private readonly fb: FormBuilder,
       private certificadosLicenciasSvc: CertificadosLicenciasService,
       private tramite260701Store: Tramite260701Store,
-      private tramite260701Query: Tramite260701Query
+      private tramite260701Query: Tramite260701Query,
+      private consultaioQuery: ConsultaioQuery
     ) {
-      // Dependencia inyectada para uso posterior
+          this.consultaioQuery.selectConsultaioState$.pipe(takeUntil(this.destroyed$),map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     }
    
     /**
@@ -216,65 +227,11 @@ export class DomicilloDelComponent implements OnInit, OnDestroy {
    * - Inicializa el grupo de formularios `formMercancias` con controles para campos relacionados con las mercancías.
    */
   ngOnInit(): void {
-    this.tramite260701Query.selectSolicitud$.pipe(takeUntil(this.destroyed$),map((seccionState) => {
-        this.solicitudState = seccionState;
-    })).subscribe();
-
     this.obtenerEstadoList();
     this.obtenerTablaDatos();
     this.obtenerMercanciasDatos();
     this.obtenerListaClavesDeLosLotes();
-   
-    /**
-     * Inicialización del formulario de domicilio.
-     */
-    this.domicilio = this.fb.group({
-      codigoPostal: [this.solicitudState.codigoPostal],
-      estado: [this.solicitudState.estado],
-      muncipio: [this.solicitudState.muncipio],
-      localidad: [this.solicitudState.localidad],
-      colonia: [this.solicitudState.colonia],
-      calle: [this.solicitudState.calle],
-      lada: [this.solicitudState.lada],
-      telefono: [this.solicitudState.telefono],
-      avisoCheckbox: [this.solicitudState.avisoCheckbox],
-      licenciaSanitaria: [this.solicitudState.licenciaSanitaria],
-      marcarEnCasoDeQueSea: [this.solicitudState.marcarEnCasoDeQueSea],
-      regimen: [this.solicitudState.regimen],
-      aduanasEntradas: [this.solicitudState.aduanasEntradas],
-      numeroPermiso: [this.solicitudState.numeroPermiso],
-    });
-   
-    /**
-     * Inicialización del formulario de agente.
-     */
-    this.formAgente = this.fb.group({
-      claveScianModal: [this.solicitudState.claveScianModal],
-      claveDescripcionModal: [this.solicitudState.claveDescripcionModal],
-    });
-   
-    /**
-     * Inicialización del formulario de mercancías.
-     */
-    this.formMercancias = this.fb.group({
-      clasificacion: [this.solicitudState.clasificacion],
-      especificarClasificacionProducto: [this.solicitudState.especificarClasificacionProducto],
-      denominacionEspecifica: [this.solicitudState.denominacionEspecifica],
-      denominacionDistintiva: [this.solicitudState.denominacionDistintiva],
-      denominacionComun: [this.solicitudState.denominacionComun],
-      tipoDeProducto: [this.solicitudState.tipoDeProducto],
-      estadoFisico: [this.solicitudState.estadoFisico],
-      fraccionArancelaria: [this.solicitudState.fraccionArancelaria],
-      descripcionFraccion: [this.solicitudState.descripcionFraccion],
-      cantidadUMT: [this.solicitudState.cantidadUMT],
-      UMT: [this.solicitudState.UMT],
-      cantidadUMC: [this.solicitudState.cantidadUMC],
-      UMC: [this.solicitudState.UMC],
-      presentacion: [this.solicitudState.presentacion],
-      numeroRegistro: [this.solicitudState.numeroRegistro],
-      fechaCaducidad: [this.solicitudState.fechaCaducidad],
-      claveDeLosLotes: [this.solicitudState.claveDeLosLotes],
-    });
+    this.inicializarFormulario();
   }
    
   /**
@@ -306,6 +263,82 @@ export class DomicilloDelComponent implements OnInit, OnDestroy {
     { btnNombre: 'Restar selección', class: 'btn-danger', funcion: ():void => this.crossList.toArray()[2].quitar('') },
     { btnNombre: 'Restar todos', class: 'btn-default', funcion: ():void => this.crossList.toArray()[2].quitar('t') },
   ];
+
+  /**
+   * Inicializa el formulario del componente realizando las siguientes acciones:
+   * - Se suscribe al observable `selectSolicitud$` de `tramite260701Query` para actualizar la propiedad local `solicitudState`,
+   *   asegurando que la suscripción se limpie correctamente utilizando el subject `destroyed$`.
+   * - Llama a los métodos para crear e inicializar los formularios de domicilio, agente y mercancías.
+   */
+  public inicializarFormulario(): void {
+    this.tramite260701Query.selectSolicitud$.pipe(takeUntil(this.destroyed$),map((seccionState) => {
+        this.solicitudState = seccionState;
+    })).subscribe();
+
+    this.crearFormularioDomicilio();
+    this.crearFormularioAgente();
+    this.crearFormularioMercancias();
+
+  }
+
+  /**
+   * Inicializa el grupo de formulario `domicilio` con controles poblados a partir del `solicitudState` actual.
+   */
+  public crearFormularioDomicilio(): void {
+    this.domicilio = this.fb.group({
+      codigoPostal: [this.solicitudState?.codigoPostal],
+      estado: [this.solicitudState?.estado],
+      muncipio: [this.solicitudState?.muncipio],
+      localidad: [this.solicitudState?.localidad],
+      colonia: [this.solicitudState?.colonia],
+      calle: [this.solicitudState?.calle],
+      lada: [this.solicitudState?.lada],
+      telefono: [this.solicitudState?.telefono],
+      avisoCheckbox: [this.solicitudState?.avisoCheckbox],
+      licenciaSanitaria: [this.solicitudState?.licenciaSanitaria],
+      marcarEnCasoDeQueSea: [this.solicitudState?.marcarEnCasoDeQueSea],
+      regimen: [this.solicitudState?.regimen],
+      aduanasEntradas: [this.solicitudState?.aduanasEntradas],
+      numeroPermiso: [this.solicitudState?.numeroPermiso],
+    });
+  }
+
+  /**
+   * Inicializa el FormGroup `formAgente` con controles para `claveScianModal` y `claveDescripcionModal`.
+   * Los valores iniciales de estos controles se obtienen de la propiedad `solicitudState`.
+   */
+  public crearFormularioAgente(): void {
+    this.formAgente = this.fb.group({
+      claveScianModal: [this.solicitudState?.claveScianModal],
+      claveDescripcionModal: [this.solicitudState?.claveDescripcionModal],
+    });
+  }
+
+  /**
+   * Inicializa el FormGroup `formMercancias` con controles para varios campos relacionados con el producto,
+   * utilizando los valores del `solicitudState` actual como valores predeterminados.
+   */
+  public crearFormularioMercancias(): void {
+    this.formMercancias = this.fb.group({
+      clasificacion: [this.solicitudState?.clasificacion],
+      especificarClasificacionProducto: [this.solicitudState?.especificarClasificacionProducto],
+      denominacionEspecifica: [this.solicitudState?.denominacionEspecifica],
+      denominacionDistintiva: [this.solicitudState?.denominacionDistintiva],
+      denominacionComun: [this.solicitudState?.denominacionComun],
+      tipoDeProducto: [this.solicitudState?.tipoDeProducto],
+      estadoFisico: [this.solicitudState?.estadoFisico],
+      fraccionArancelaria: [this.solicitudState?.fraccionArancelaria],
+      descripcionFraccion: [this.solicitudState?.descripcionFraccion],
+      cantidadUMT: [this.solicitudState?.cantidadUMT],
+      UMT: [this.solicitudState?.UMT],
+      cantidadUMC: [this.solicitudState?.cantidadUMC],
+      UMC: [this.solicitudState?.UMC],
+      presentacion: [this.solicitudState?.presentacion],
+      numeroRegistro: [this.solicitudState?.numeroRegistro],
+      fechaCaducidad: [this.solicitudState?.fechaCaducidad],
+      claveDeLosLotes: [this.solicitudState?.claveDeLosLotes],
+    });
+  }
    
   /**
    * Obtiene la lista de estados desde un archivo JSON.
@@ -393,6 +426,32 @@ export class DomicilloDelComponent implements OnInit, OnDestroy {
 
     this.formMercancias.get('fechaCaducidad')?.setValue(nuevo_valor);
     this.formMercancias.get('fechaCaducidad')?.markAsUntouched();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  public inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); 
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Inicializa el formulario y alterna el estado habilitado/deshabilitado del control de formulario `domicilio`
+   * según el valor de la bandera `esFormularioSoloLectura`.
+       */
+  public guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      Promise.resolve().then(() => {
+        if (this.esFormularioSoloLectura) {
+          this.domicilio.disable();
+        } else if (!this.esFormularioSoloLectura) {
+          this.domicilio.enable();
+        }
+      });
   }
 
     /**

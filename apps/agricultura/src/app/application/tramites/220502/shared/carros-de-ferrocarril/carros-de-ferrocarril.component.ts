@@ -29,6 +29,11 @@ export class CarrosDeFerrocarrilComponent implements OnChanges {
   };
 
   /**
+   * Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado!: boolean;
+
+  /**
    *  ngOnChanges se utiliza para detectar cambios en la tabla de la componente 
    * @param changes 
    */

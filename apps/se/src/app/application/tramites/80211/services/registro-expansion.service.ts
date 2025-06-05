@@ -2,6 +2,7 @@ import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src'
 import { FormularioDatos, Plantas, RespuestaPlantas } from '../modelos/registro-expansion.model';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, Subject, takeUntil } from 'rxjs';
+import { Tramite80211Store, Tramites80211State } from '../estados/tramites80211.store';
 import { HttpClient } from '@angular/common/http';
 
 /**
@@ -69,7 +70,10 @@ export class registroSolicitudImmexService implements OnDestroy {
    * 
    * @param http - Cliente HTTP inyectado para realizar solicitudes HTTP.
    */
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private tramite80211Store: Tramite80211Store,
+  ) {
     // Si es necesario, se puede agregar aquí la lógica de inicialización
   }
 
@@ -92,6 +96,25 @@ export class registroSolicitudImmexService implements OnDestroy {
         (self[variable] as Catalogo[]) = resp?.code === 200 && resp.data ? resp.data : [];
       });
     }
+  }
+
+/**
+   * Actualiza el estado del formulario en el store global.
+   *
+   * @param datos - Objeto de tipo Tramites80211State con los datos a establecer en el store.
+   * @returns {void}
+   */
+  actualizarEstadoFormulario(datos: Tramites80211State): void {
+      this.tramite80211Store.establecerDatos(datos);
+  }
+
+  /**
+   * Obtiene los datos de toma de muestras de mercancías desde un archivo JSON local.
+   *
+   * @returns {Observable<Tramites80211State>} Un observable que emite los datos del trámite 80211.
+   */
+  getRegistroTomaMuestrasMercanciasData(): Observable<Tramites80211State> {
+    return this.http.get<Tramites80211State>('assets/json/80211/registro_ampliacion_datos.json');
   }
 
   /**
