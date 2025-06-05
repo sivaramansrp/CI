@@ -1971,8 +1971,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     )
       .pipe(
         takeUntil(this.destroyNotifier$),
-        defaultIfEmpty({ datos: false }),
-        first((response) => {
+        first(),
+        tap((response) => {
           this.tramite5701Store.setBlnOEA(response.datos);
           return response.datos;
         })
