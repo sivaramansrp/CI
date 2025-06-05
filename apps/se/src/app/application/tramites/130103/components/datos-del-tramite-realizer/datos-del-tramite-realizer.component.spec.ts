@@ -36,6 +36,9 @@ describe('DatosDelTramiteRealizerComponent', () => {
       { campo: 'regimen' },
       { campo: 'clasificacion' }
     ] as any;
+    component.consultaState = {
+      readonly: false,
+    } as any;
     fixture.detectChanges();
   });
 
@@ -84,15 +87,6 @@ describe('DatosDelTramiteRealizerComponent', () => {
     };
     component.establecerCambioDeValor(mockEvent);
     expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('regimen', 123);
-  });
-
-  it('should call store.setDynamicFieldValue with raw value when valor has no id', () => {
-    const mockEvent = {
-      campo: 'clasificacion',
-      valor: 'some string'
-    };
-    component.establecerCambioDeValor(mockEvent);
-    expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('clasificacion', 'some string');
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {

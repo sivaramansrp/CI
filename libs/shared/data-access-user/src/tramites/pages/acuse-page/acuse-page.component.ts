@@ -8,8 +8,7 @@ import { AccionesTabla } from '../../../core/models/shared/components.model';
 import { AcuseComponent } from '../../components/acuse/acuse.component';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { TramiteFolioQueries } from '../../../core/queries/tramiteFolio.queries';
-
+import { TramiteFolioQueries } from '../../../core/queries/tramiteFolio.query';
 @Component({
   templateUrl: './acuse-page.component.html',
   styles: ``,
@@ -40,7 +39,7 @@ export class AcusePageComponent implements OnInit {
    * Luego, se genera un mensaje de alerta utilizando la función `TXT_ALERTA_ACUSE` con el folio obtenido y se asigna a la propiedad `txtAlerta`.
    */
   ngOnInit(): void {
-    const URL_ACTUAL = this.router.url;
+    const URL_ACTUAL = this.router.url;    
     this.url = URL_ACTUAL.split('/')[1];
  
     this.folio = this.tramiteQueries.getTramite();

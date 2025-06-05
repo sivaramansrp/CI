@@ -212,7 +212,7 @@
                 [required]="true"
                 formControlName="regimenDestinara"
                 name="regimenCatalogo"
-                (change)="setValoresStore(domicilioDeElstablecimientoForm,'regimenDestinara', 'setRegimenDestinara')">
+                (change)="setValoresStore(domicilioDeElstablecimientoForm,'regimenDestinara', 'setRegimenDestinara')" [isDisabled]="consultaState.readonly">
             </app-catalogo-select>
         </div>
     </div>
@@ -223,7 +223,8 @@
             <app-tabla-dinamica
                 [configuracionTabla]="configuracionMercancias"
                 [datos]="mercanciasTablaDatos"
-                [tipoSeleccionTabla]="checkbox">
+                [tipoSeleccionTabla]="checkbox" [disableSeleccionTablaCheckBox]="consultaState.readonly"
+>
             </app-tabla-dinamica>
             <div class="d-flex justify-content-end mt-3">
                 <button class="btn btn-default me-3">Modificar</button>
@@ -239,7 +240,7 @@
                 [required]="true"
                 formControlName="aduana"
                 name="regimenCatalogo"
-                (change)="setValoresStore(domicilioDeElstablecimientoForm,'aduana', 'setAduanasEntradas')">
+                (change)="setValoresStore(domicilioDeElstablecimientoForm,'aduana', 'setAduanasEntradas')" [isDisabled]="consultaState.readonly">
             </app-catalogo-select>
         </div>
     </div>
