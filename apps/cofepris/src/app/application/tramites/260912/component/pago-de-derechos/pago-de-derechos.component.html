@@ -42,6 +42,7 @@
               [required]="true"
               id="clave"
               formControlName="clave"
+              [isDisabled]="esFormularioSoloLectura" 
               (change)="setValoresStore(pagoDeDerechosForm, 'clave')"
             >
             </app-catalogo-select>
@@ -108,7 +109,7 @@
       </div>
   
       <div class="d-flex justify-content-end mt-5">
-        <button type="button" class="btn btn-primary ms-2 d-flex">Borrar datos del pago</button>
+        <button type="button" class="btn btn-primary ms-2 d-flex" [disabled]="esFormularioSoloLectura">Borrar datos del pago</button>
       </div>
     </form>
   </div>

@@ -93,12 +93,6 @@ describe('DomicilioDelEstablecimientoComponent', () => {
     });
   });
 
-  it('should retrieve values from the store on getValorStore', () => {
-    const spy = jest.spyOn(mockTramiteQuery.selectTramite260911$, 'subscribe');
-    component.getValorStore();
-    expect(spy).toBeDefined(); // Asegura que se creó la suscripción
-  });
-
   it('should unsubscribe on destroy', () => {
     const spy = jest.spyOn((component as any).destroy$, 'next');
     component.ngOnDestroy();

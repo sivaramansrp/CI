@@ -4,76 +4,18 @@
     <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA"></ng-alert>
     <div class="row mt-5">
       <div class="col-md-12">
-        <label for="exportador">Exportador</label>
-      </div>
-      <div class="col-md-12">
-        <table class="table table-responsive" [ngClass]="{'enable-scrollbar': enableScrollbar}">
-          <thead>
-            <tr>
-              <th scope="col">
-                <input type="checkbox" aria-label="Select All">
-              </th>
-              <th>Nombre/denominación o razón social</th>
-              <th>Teléfono</th>
-              <th>Correo electrónico</th>
-              <th>Domicilio</th>
-              <th>País</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              @for (item of items; let i = $index; track i) {
-              <td scope="col">
-                <input type="checkbox" aria-label="Select All">
-              </td>
-              <td>{{ item.nombre }}</td>
-              <td>{{ item.telefono}}</td>
-              <td>{{ item.correo }}</td>
-              <td>{{ item.domicilio }}</td>
-              <td>{{ item.pais }}</td>
-              }
-            </tr>
-          </tbody>
-        </table>
+        <label class="form-label" for="">Exportador</label>
+        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+          [configuracionTabla]="exportadorConfiguracionTabla" [datos]="exportadorDatos"
+          [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></app-tabla-dinamica>
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-md-12">
-        <label for="destinatario">Destinatario (destino final)</label>
-      </div>
-      <div class="col-md-12">
-        <table class="table table-responsive" [ngClass]="{'enable-scrollbar': enableScrollbar}">
-          <thead>
-            <tr>
-              <th scope="col">
-                <input type="checkbox" aria-label="Select All">
-              </th>
-              <th>Nombre/denominación o razón social</th>
-              <th>Teléfono</th>
-              <th>Correo electrónico</th>
-              <th>Calle</th>
-              <th>Número exterior</th>
-              <th>Número interior</th>
-              <th>País</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              @for (item of persona; let i = $index; track i) {
-              <td scope="col">
-                <input type="checkbox" aria-label="Select All">
-              </td>
-              <td>{{ item.nombre }}</td>
-              <td>{{ item.telefono}}</td>
-              <td>{{ item.correo }}</td>
-              <td>{{ item.calle }}</td>
-              <td>{{ item.exterior}}</td>
-              <td>{{ item.interior}}</td>
-              <td>{{ item.pais }}</td>
-              }
-            </tr>
-          </tbody>
-        </table>
+        <label class="form-label" for="">Destinatario (destino final)</label>
+        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+          [configuracionTabla]="destinatarioConfiguracionTabla" [datos]="destinatarioDatos"
+          [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></app-tabla-dinamica>
       </div>
     </div>
   </div>
