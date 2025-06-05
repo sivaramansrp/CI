@@ -237,7 +237,7 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
 
 
 /**
- * Constante que define las secciones y pasos de un trámite específico (230401).
+ * Constante que define las secciones y pasos de un trámite específico (80101).
  * 
  * Contiene la configuración de validación para cada paso y sección del trámite.
  * 
@@ -248,7 +248,7 @@ export const FORMA_EMPRESA_ECTRANJERA: DatosCatalago[] = [
  * Esta constante es útil para gestionar el flujo y las validaciones necesarias
  * en los diferentes pasos de un trámite.
  */
-export const SECCIONES_TRAMITE_230401 = {
+export const SECCIONES_TRAMITE_80101 = {
     PASO_1: {
       VALIDACION_SECCION_1: false,
       VALIDACION_SECCION_2: false,
