@@ -17,7 +17,7 @@
 "bloque": "1",
 "disponible": "Sí",
 "seleccionado": "No",
-"solicitud": "SOL-2025-321",
-"producto": "Vacuna contra fiebre aftosa",
+"solicitud": "inicial",
+"producto": "Nuevo",
 "selectRangoDias": ["7", "15", "30"]
 }

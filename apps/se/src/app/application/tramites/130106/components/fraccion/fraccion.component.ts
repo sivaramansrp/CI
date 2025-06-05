@@ -69,7 +69,7 @@ export class FraccionComponent implements OnInit, OnDestroy {
    * @param tramite130106Store - Store para manejar el estado de la solicitud.
    * @param tramite130106Query - Query para obtener el estado de la solicitud.
    */
-  constructor(public fb: FormBuilder,
+  constructor(private fb: FormBuilder,
     public tramite130106Store: Tramite130106Store,
     public tramite130106Query: Tramite130106Query,
     private consultaioQuery: ConsultaioQuery,

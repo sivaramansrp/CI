@@ -111,7 +111,8 @@ describe('FraccionComponent', () => {
   });
 
   it('should set value to store using setValoresStore', () => {
-    const form = component.fb.group({ cantidad: [5] });
+    const fb = TestBed.inject(FormBuilder);
+    const form = fb.group({ cantidad: [5] });
     component.setValoresStore(form, 'cantidad', 'setCantidad');
     expect(mockStore.updateCantidad).toHaveBeenCalledWith(5);
   });
