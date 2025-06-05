@@ -11,7 +11,7 @@ import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
-  Validators,
+  Validators
 } from '@angular/forms';
 import {
   Solicitud110201State,
@@ -33,7 +33,7 @@ import { Tramite110201Query } from '../../state/Tramite110201.query';
     CommonModule,
     TituloComponent,
     CatalogoSelectComponent,
-    ReactiveFormsModule,
+    ReactiveFormsModule
   ],
   templateUrl: './destinatario.component.html',
   styleUrl: './destinatario.component.css',
@@ -89,6 +89,8 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
  */
 options!: Catalogo[];
 
+option!: Catalogo[];
+
 /**
  * Notificador para destruir observables al destruir el componente.
  * Se utiliza para gestionar la cancelación de suscripciones activas y evitar fugas de memoria.
@@ -115,6 +117,7 @@ options!: Catalogo[];
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
+          debugger
           this.consultaDatos = seccionState;
           this.soloLectura = this.consultaDatos.readonly;
           this.inicializarEstadoFormulario();
@@ -145,6 +148,17 @@ options!: Catalogo[];
    * Obtiene los catálogos de países de destino y medios de transporte.
    */
   ngOnInit(): void {
+    this.registroService
+      .getRegistroTomaMuestrasMercanciasData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          console.log('Paso-Uno',resp);
+          // this.esDatosRespuesta = true;
+          this.registroService.actualizarEstadoFormulario(resp);
+        }
+      });
     this.getPaisDestino();
     this.getTransporte();
     this.inicializarEstadoFormulario();
@@ -191,6 +205,8 @@ options!: Catalogo[];
     this.registroService
       .getPaisDestino().pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
+                  console.log('Pais',resp);
+
         if (resp.code === 200) {
           this.options = resp.data as Catalogo[];
         }
@@ -204,8 +220,9 @@ options!: Catalogo[];
     this.registroService
       .getTransporte().pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
+        console.log(resp);
         if (resp.code === 200) {
-          this.options = resp.data as Catalogo[];
+          this.option = resp.data as Catalogo[];
         }
       });
   }
@@ -257,8 +274,8 @@ options!: Catalogo[];
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
       validacionForm: this.fb.group({
-        nacion: [this.solicitudState?.nacion, [Validators.required]],
-        transporte: [this.solicitudState?.transporte, [Validators.required]],
+        nacion: [{value:this.solicitudState?.nacion, disabled: this.soloLectura}],
+        transporte: [{value:this.solicitudState?.transporte, disabled: this.soloLectura}, [Validators.required]],
         nombre: [this.solicitudState?.nombre, [Validators.required]],
         apellidoPrimer: [
           this.solicitudState?.apellidoPrimer,

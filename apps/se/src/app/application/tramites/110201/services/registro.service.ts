@@ -60,7 +60,7 @@ export class RegistroService {
    * @returns Observable con la respuesta del catálogo de países de destino.
    */
   getPaisDestino() {
-    return this.http.get<RespuestaCatalogos>('assets/json/110201/pais.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/110201/paiss.json');
   }
 
   /**

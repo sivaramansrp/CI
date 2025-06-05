@@ -55,7 +55,7 @@
           [label]="'Idioma'"
           [required]="true"
           id="idioma"
-          formControlName="idioma" [isDisabled]="soloLectura"
+          [isDisabled]="soloLectura"
           (change)="setValoresStore(validacionForm, 'idioma', 'setIdioma')"
         ></app-catalogo-select>
       </div>
@@ -107,7 +107,7 @@
             [catalogo]="optionsEntidad"
             [label]="'Entidad federativa'"
             [required]="true"
-            formControlName="entidad" [isDisabled]="soloLectura"
+             [isDisabled]="soloLectura"
             (change)="setValoresStore(validacionForm, 'entidad', 'setEntidad')"
           ></app-catalogo-select>
         </div>
@@ -117,7 +117,7 @@
             [label]="'Representación federal'"
             [required]="true"
             id="representacion"
-            formControlName="representacion" [isDisabled]="soloLectura"
+            [isDisabled]="soloLectura"
             (change)="
               setValoresStore(
                 validacionForm,

@@ -114,6 +114,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit,OnDestroy {
       )
       .subscribe((resp) => {
         if (resp) {
+          console.log('Paso-Uno',resp);
           this.esDatosRespuesta = true;
           this.registro.actualizarEstadoFormulario(resp);
         }

@@ -113,7 +113,7 @@
           <button
             type="button"
             class="btn btn-primary ms-3"
-            (click)="buscarMercancias()"
+            (click)="buscarMercancias()" [disabled]="soloLectura"
           >
             Buscar mercancías
           </button>
@@ -124,14 +124,14 @@
         <div class="table-container mt-5" *ngIf="!hayMercanciasDisponibles">
           <app-tabla-dinamica
             [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
-            [configuracionTabla]="headers"
+            [configuracionTabla]="headers" [disableSeleccionTablaCheckBox]="soloLectura? true : false"
           ></app-tabla-dinamica>
         </div>
         <div class="table-container mt-5" *ngIf="hayMercanciasDisponibles">
           <app-tabla-dinamica
             [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
             [configuracionTabla]="headers"
-            [datos]="mercanciaDisponsiblesTablaDatos"
+            [datos]="mercanciaDisponsiblesTablaDatos" [disableSeleccionTablaCheckBox]="soloLectura? true : false"
             (click)="manejarClic(mercanciaDisponsiblesTablaDatos)"
           ></app-tabla-dinamica>
         </div>
@@ -146,7 +146,7 @@
         <button
           type="button"
           class="btn btn-primary ms-3"
-          (click)="cargaArchivo()"
+          (click)="cargaArchivo()" [disabled]="soloLectura"
         >
           Carga por archivo
         </button>
@@ -193,13 +193,13 @@
             <div class="pull-right">
               <button
                 type="button"
-                class="btn btn-default"
+                class="btn btn-default" [disabled]="soloLectura"
                 (click)="cerrarAdjuntarArchivoMercancias()"
               >
                 Cerrar
               </button>
               <button
-                type="submit"
+                type="submit" [disabled]="soloLectura"
                 class="btn btn-primary"
                 (click)="darError()"
               >
@@ -225,7 +225,7 @@
         <div class="table-container mt-5" *ngIf="!esMercanciaEnEdicion">
           <app-tabla-dinamica
             [tipoSeleccionTabla]="TablaSeleccion.RADIO"
-            [configuracionTabla]="headersData"
+            [configuracionTabla]="headersData" [disableSeleccionTablaRadio]="soloLectura? true : false"
           ></app-tabla-dinamica>
         </div>
 
@@ -233,7 +233,7 @@
           <app-tabla-dinamica
             [tipoSeleccionTabla]="TablaSeleccion.RADIO"
             [configuracionTabla]="headersData"
-            [datos]="mercanciaSeleccionadasTablaData"
+            [datos]="mercanciaSeleccionadasTablaData" [disableSeleccionTablaRadio]="soloLectura? true : false"
           ></app-tabla-dinamica>
         </div>
         <i
@@ -246,11 +246,11 @@
           class="col-md-12 mt-5 d-flex justify-content-end"
           *ngIf="esMercanciaEnEdicion"
         >
-          <button type="button" class="btn btn-default ms-3">Eliminar</button>
+          <button type="button" class="btn btn-default ms-3" [disabled]="soloLectura">Eliminar</button>
           <button
             type="button"
             class="btn btn-primary ms-3"
-            (click)="modificar()"
+            (click)="modificar()" [disabled]="soloLectura"
           >
             Modificar
           </button>
@@ -280,7 +280,7 @@
             [enableScrollbar]="true"
             [commonTableHeader]="mercanciasHeader"
             [commonTableBody]="mercanciasBody"
-            [enableScrollbar]="true"
+            [enableScrollbar]="true" [disableSeleccionTablaCheckBox]="soloLectura? true : false"
           ></ng-table>
         </div>
       </ng-container>
@@ -299,7 +299,7 @@
             type="text"
             required="true"
             class="form-control grisColor"
-            readonly
+            readonly [disabled]="soloLectura"
             formControlName="fraccionMercanciaArancelaria"
             (change)="
               setValoresStore(
@@ -317,7 +317,7 @@
           <input
             type="text"
             required="true"
-            class="form-control grisColor"
+            class="form-control grisColor" [disabled]="soloLectura"
             formControlName="nombreComercialDelaMercancia"
             readonly
             (change)="
@@ -337,7 +337,7 @@
             type="text"
             required="true"
             class="form-control grisColor"
-            formControlName="nombreTecnico"
+            formControlName="nombreTecnico" [disabled]="soloLectura"
             readonly
             (change)="
               setValoresStore(
@@ -356,7 +356,7 @@
             type="text"
             required="true"
             class="form-control grisColor"
-            formControlName="nombreEnIngles"
+            formControlName="nombreEnIngles" [disabled]="soloLectura"
             readonly
             (change)="
               setValoresStore(
@@ -373,7 +373,7 @@
             type="text"
             required="true"
             class="form-control grisColor"
-            formControlName="criterioParaConferir"
+            formControlName="criterioParaConferir" [disabled]="soloLectura"
             readonly
             (change)="
               setValoresStore(
@@ -392,7 +392,7 @@
             type="text"
             required="true"
             class="form-control"
-            formControlName="marca"
+            formControlName="marca" [disabled]="soloLectura"
             (change)="
               setValoresStore(validacionMercanciaForm, 'marca', 'setmarca')
             "
@@ -404,7 +404,7 @@
             type="number"
             required="true"
             class="form-control"
-            formControlName="cantidad"
+            formControlName="cantidad" [disabled]="soloLectura"
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
@@ -436,7 +436,7 @@
             [required]="true"
             [tooltipQuestionCircle]="true"
             id="umc"
-            formControlName="umc"
+            formControlName="umc" [isDisabled]="soloLectura"
             (change)="setValoresStore(validacionMercanciaForm, 'umc', 'setUMC')"
           ></app-catalogo-select>
         </div>
@@ -447,7 +447,7 @@
           <input
             type="text"
             required="true"
-            class="form-control"
+            class="form-control" [disabled]="soloLectura"
             formControlName="valorDelaMercancia"
             (change)="
               setValoresStore(
@@ -462,7 +462,7 @@
           <label>Complemento de la descripción*:</label>
           <textarea
             cols="80"
-            rows="3"
+            rows="3" [disabled]="soloLectura"
             formControlName="complementoDelaDescripcion"
             (change)="
               setValoresStore(
@@ -480,7 +480,7 @@
           <input
             type="text"
             required="true"
-            class="form-control"
+            class="form-control" [disabled]="soloLectura"
             formControlName="masaBruta"
             (change)="
               setValoresStore(
@@ -496,7 +496,7 @@
             [catalogo]="optionsUnidadMedida"
             [label]="'Unidad de medida de la masa bruta'"
             [required]="true"
-            id="unidadMedida"
+            id="unidadMedida" [isDisabled]="soloLectura"
             formControlName="unidadMedida"
             (change)="
               setValoresStore(
@@ -522,7 +522,7 @@
             type="text"
             required="true"
             class="form-control"
-            formControlName="numeroFactura"
+            formControlName="numeroFactura" [disabled]="soloLectura"
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
@@ -538,7 +538,7 @@
             [label]="'Tipo de factura'"
             [required]="true"
             id="tipoFactura"
-            formControlName="tipoFactura"
+            formControlName="tipoFactura" [isDisabled]="soloLectura"
             (change)="
               setValoresStore(
                 validacionMercanciaForm,
@@ -550,8 +550,8 @@
         </div>
       </div>
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" class="btn btn-default ms-3">Cancelar</button>
-        <button type="button" class="btn btn-primary ms-3" (click)="agregar()">
+        <button type="button" class="btn btn-default ms-3" [disabled]="soloLectura">Cancelar</button>
+        <button type="button" class="btn btn-primary ms-3" (click)="agregar()" [disabled]="soloLectura">
           Agregar
         </button>
       </div>

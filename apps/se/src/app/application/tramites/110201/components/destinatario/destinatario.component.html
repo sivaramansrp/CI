@@ -19,14 +19,7 @@
           id="primerApellido"
           formControlName="apellidoPrimer" [disabled]="soloLectura"
           (click)="onClick()"
-          (change)="
-            setValoresStore(
-              validacionForm,
-              'apellidoPrimer',
-              'setApellidoPrimer'
-            )
-          "
-        />
+          (change)=" setValoresStore(validacionForm,'apellidoPrimer','setApellidoPrimer')"/>
       </div>
       <div class="col-md-4 mb-3">
         <label>Segundo apellido:</label>
@@ -35,14 +28,7 @@
           class="form-control"
           id="segundoApellido"
           formControlName="apellidoSegundo" [disabled]="soloLectura"
-          (change)="
-            setValoresStore(
-              validacionForm,
-              'apellidoSegundo',
-              'setApellidoSegundo'
-            )
-          "
-        />
+          (change)="setValoresStore( validacionForm, 'apellidoSegundo','setApellidoSegundo')"/>
       </div>
     </div>
     <div class="row">
@@ -63,19 +49,11 @@
         <input
           type="text"
           class="form-control"
-          [ngClass]="{
-            'gray-class':
-              registroForm.get('validacionForm.apellidoPrimer')?.value !== ''
-          }"
+          [ngClass]="{'gray-class': registroForm.get('validacionForm.apellidoPrimer')?.value !== ''}"
           id="denominacion"
-          [readonly]="
-            registroForm.get('validacionForm.apellidoPrimer')?.value !== ''
-          "
+          [readonly]="registroForm.get('validacionForm.apellidoPrimer')?.value !== ''"
           formControlName="razonSocial" [disabled]="soloLectura"
-          (change)="
-            setValoresStore(validacionForm, 'razonSocial', 'setRazonSocial')
-          "
-        />
+          (change)="setValoresStore(validacionForm, 'razonSocial', 'setRazonSocial')"/>
       </div>
     </div>
     <ng-titulo titulo="Domicilio del destinatario" />
@@ -173,21 +151,20 @@
         <app-catalogo-select
           [catalogo]="options"
           [label]="'País destino'"
-          [required]="true"
-          formControlName="nacion" [isDisabled]="soloLectura"
+          [id]="'nacion'"
+          [required]="true" [isDisabled]="soloLectura"
           (change)="setValoresStore(validacionForm, 'nacion', 'setNacion')"
         ></app-catalogo-select>
       </div>
     </div>
     <ng-titulo titulo="Detalles del transporte" />
     <div class="col-md-8 mb-3">
+      <input type="hidden" formControlName="transporte">
       <app-catalogo-select
-        [catalogo]="options"
-        [label]="'Medio de transporte'"
-        [required]="true"
-        formControlName="transporte" [isDisabled]="soloLectura"
-        (change)="
-          setValoresStore(validacionForm, 'transporte', 'setTransporte')
+        [catalogo]="option" [id]="'transporte'"
+        [label]="'Medio de transporte'" 
+        [required]="true" [isDisabled]="soloLectura"
+        (change)="setValoresStore(validacionForm, 'transporte', 'setTransporte')
         "
       ></app-catalogo-select>
     </div>
