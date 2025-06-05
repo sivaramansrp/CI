@@ -29,6 +29,7 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
   catPais!: Catalogo[];
   private destroyNotifier$: Subject<void> = new Subject();
   socioNacional?: ConsultaSocioNacional;
+  public visualizarTablas: boolean = false;
   constructor(
     private fb: FormBuilder,
     private router: Router,
@@ -198,6 +199,25 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
     ESTADO?.updateValueAndValidity();
     RAZONSOCIAL?.updateValueAndValidity();
   }
+  enviarFirma() {
+    this.router.navigate(['login/firma-electronica']);
+  }
 
-
+  eliminarSeleccionados() {
+    this.socioAccionistaSeleccionado.forEach((socio) => {
+      const INDEX = this.listaSociosAccionistas.indexOf(socio);
+      if (INDEX > -1) {
+        this.listaSociosAccionistas.splice(INDEX, 1);
+      }
+    });
+    this.listaSociosAccionistasExtranjeros.forEach((socio) => {
+      const INDEX = this.listaSociosAccionistasExtranjeros.indexOf(socio);
+      if (INDEX > -1) {
+        this.listaSociosAccionistasExtranjeros.splice(INDEX, 1);
+      }
+    });
+    this.socioAccionistaSeleccionado = [];
+    this.socioAccionistaExtranjerosSeleccionado = [];
+  }
+  
 }
