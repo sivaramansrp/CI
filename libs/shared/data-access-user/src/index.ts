@@ -4,7 +4,6 @@ export { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from './tramites/
 export { AcusesYResolucionesFolioDelTramiteDetallesComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-detalles/acuses-y-resoluciones-folio-del-tramite-detalles.component';
 export { LibBandejaComponent } from './tramites/components/lib-bandeja/lib-bandeja.component';
 export { DatosGeneralesTramiteComponent } from './tramites/components/datos-generales-tramite/datos-generales-tramite.component';
-export { DatosComponent } from './tramites/components/datos/datos.component';
 export { ConsultaTramiteComponent } from './tramites/components/consulta-tramite/consulta-tramite.component';
 export { ReviewersTabsComponent } from './tramites/components/reviewers-tabs/reviewers-tabs.component';
 export { ASIGNACION_REGISTRO } from './tramites/constantes/120404/entidad.enum';
@@ -35,13 +34,12 @@ export { TablePaginationComponent } from './tramites/components/table-pagination
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
 export { TituloComponent } from './tramites/components/titulo/titulo.component';
 export { TramiteDetails } from './core/models/tramiteDetails';
-export { TramiteFolioQueries } from './core/queries/tramiteFolio.queries';
-export {
-  TramiteFolioState,
-  TramiteFolioStore,
-} from './core/estados/tramiteFolio.store';
+export * from './core/queries/tramiteFolio.query';
+export * from './core/estados/tramiteFolio.store';
 export { TramiteStore } from './core/estados/tramite.store';
 export { ValidacionesFormularioService } from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
+export { PANTA_PASOS } from './core/enums/120404/pantallas260514.enum';
+export { AccionBoton } from './core/models/260514/aviso-pantallas.model'
 export * from './core/ambientes';
 export * from './core/constants/api-constants';
 export * from './core/constants/constantes-generales';
@@ -202,3 +200,7 @@ export * from './core/utils/utilerias';
 
 export * from './tramites/components/transporte/transporte.component';
 export * from './tramites/components/agregar-transporte/agregar-transporte.component';
+
+
+
+

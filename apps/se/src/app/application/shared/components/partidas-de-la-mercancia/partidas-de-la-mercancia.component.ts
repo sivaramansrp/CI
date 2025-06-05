@@ -1,5 +1,5 @@
 
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
@@ -28,7 +28,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   templateUrl: './partidas-de-la-mercancia.component.html',
   styleUrl: './partidas-de-la-mercancia.component.scss',
 })
-export class PartidasDeLaMercanciaComponent implements OnInit{
+export class PartidasDeLaMercanciaComponent implements OnChanges{
   /**
   * @description Indica si el formulario debe mostrarse en modo solo lectura.
   */
@@ -110,17 +110,25 @@ export class PartidasDeLaMercanciaComponent implements OnInit{
     //  Constructor del componente
   }
 
+
   /**
-  * Habilita o deshabilita el formulario según el modo de solo lectura.  
-  * Controla el estado del formulario al iniciar el componente.
-  */
-  ngOnInit(): void {
-    if (this.esFormularioSoloLectura) {
+     * Método del ciclo de vida que se ejecuta cuando cambian las propiedades de entrada del componente.
+     *
+     * Si la propiedad `esFormularioSoloLectura` cambia, habilita o deshabilita el formulario según su valor.
+     * Esto permite que el formulario se muestre en modo solo lectura o editable dinámicamente.
+     *
+     * @param changes - Objeto que contiene los cambios detectados en las propiedades de entrada.
+     */
+    ngOnChanges(changes: SimpleChanges): void {
+      // Verifica si el formulario ha cambiado y actualiza su estado
+      if (changes['esFormularioSoloLectura']) {
+        if (this.esFormularioSoloLectura) {
         this.partidasDelaMercanciaForm.disable();
     }else if (!this.esFormularioSoloLectura) {
        this.partidasDelaMercanciaForm.enable();
     }
-  }
+      }
+    }
 
   /**
    * Verifica si un control del formulario es inválido.
