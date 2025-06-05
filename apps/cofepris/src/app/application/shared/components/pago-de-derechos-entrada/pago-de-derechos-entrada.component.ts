@@ -11,7 +11,7 @@ import { CatalogoResponse, CatalogoSelectComponent, InputFecha, InputFechaCompon
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { PagoDeDerechosEntradaService } from '../../services/pago-de-derechos-entrada.service';
-import { PermisoImportacionBiologicaStore } from '../../estados/permiso-importacion-biologica.store';
+import { PermisoImportacionBiologicaState, PermisoImportacionBiologicaStore } from '../../estados/permiso-importacion-biologica.store';
 
 import { PermisoImportacionBiologicaQuery } from '../../estados/permiso-importacion-biologica.query';
 
@@ -115,6 +115,8 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
   fechaFinalInput!: InputFecha;
 
    esFormularioSoloLectura: boolean = false;
+
+    public solicitudState!: PermisoImportacionBiologicaState;
   /**
  * Constructor del componente.
  * Inyecta el FormBuilder y el servicio de pago de derechos.
@@ -138,7 +140,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-
+this.inicializarCertificadoFormulario()
         })
       )
       .subscribe()
@@ -164,9 +166,8 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
    * Obtiene los datos para el selector de opciones desde el servicio.
    */
   ngOnInit(): void {
+
     this.inicializarCertificadoFormulario();
-
-
   }
 
   /**
@@ -203,12 +204,12 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
    * y suscribe los valores del estado para mantener el formulario sincronizado.
    * También configura las propiedades de validación y longitud máxima según el procedimiento.
    */
-  inicializarFormulario() {
+  inicializarFormulario():void {
     this.pagoDeDerechosService.getData().pipe(takeUntil(this.destroy$)).subscribe((data) => {
       this.dropdownData = data;
     });
 
-    this.selectedBanco$.subscribe((selectedBanco) => {
+    this.selectedBanco$.pipe(takeUntil(this.destroy$)).subscribe((selectedBanco) => {
       if (selectedBanco) {
         this.pagoDerechos.get('banco')?.setValue(selectedBanco);
       }
@@ -247,6 +248,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
 
     this.maxLength = REQUIRED_BANCO.includes(this.idProcedimiento) ? MAXLENGTH : {
     };
+   
   }
 
   /**

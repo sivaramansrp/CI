@@ -194,9 +194,10 @@ export class DomicillioDelEstablecimientoSeccionComponent
         this.domicilioEstablecimiento.patchValue(state, { emitEvent: false });
       });
 
+        // Si el formulario debe estar deshabilitado, deshabilítalo
         if (this.formularioDeshabilitado) {
-      this.domicilioEstablecimiento.disable();
-    }
+          this.domicilioEstablecimiento.disable();
+        }
 
   }
   onControlChange(controlName: string): void {

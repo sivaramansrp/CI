@@ -10,5 +10,9 @@
 "establecimientoDomicilioLada": "000",
 "establecimientoDomicilioTelefono": "0000000000",
 "rfcDelProfesionalResponsable": "RFC000000XXX",
-"nombreDelProfesionalResponsable": "Nombre por defecto"
+"nombreDelProfesionalResponsable": "Nombre por defecto",
+"representanteRfc": "RFC000000XXX",
+"representanteNombre": "Nombre por defecto",
+"apellidoPaterno": "Apellido Paterno por defecto",
+"apellidoMaterno": "Apellido Materno por defecto",
 }

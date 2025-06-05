@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject, forkJoin, map, takeUntil } from 'rxjs';
 import { Solocitud260402Service } from '../../services/service260402.service';
 
 /**
@@ -14,18 +14,41 @@ import { Solocitud260402Service } from '../../services/service260402.service';
   templateUrl: './datos-260402.component.html',
 })
 export class Datos260402Component implements OnInit {
+  /**
+   * Indica si se están mostrando los datos de respuesta.
+   */
   public esDatosRespuesta: boolean = false;
+  /**
+   * Estado actual de la consulta.
+   */
   public consultaState!: ConsultaioState;
-   private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * Notificador para destruir las suscripciones y evitar fugas de memoria.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
   /**
  * Índice de la pestaña actualmente seleccionada.
  * Inicializado a 1 por defecto.
  */
   indice = 1;
 
-  constructor( private consultaQuery: ConsultaioQuery, private solocitud220401Service: Solocitud260402Service,) {}
+  /**
+   * Constructor del componente.
+   * 
+   * @param consultaQuery Servicio para consultar el estado de la solicitud.
+   * @param solocitud220401Service Servicio para manejar operaciones relacionadas con el trámite 260402.
+   */
+  constructor(
+    private consultaQuery: ConsultaioQuery,
+    private solocitud220401Service: Solocitud260402Service,
+  ) {}
 
-   ngOnInit(): void {
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Se suscribe al estado de consulta y, dependiendo de si hay una actualización,
+   * guarda los datos del formulario o muestra la respuesta.
+   */
+  ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -49,16 +72,26 @@ export class Datos260402Component implements OnInit {
     this.indice = i;
   }
 
+  /**
+   * Método para guardar los datos del formulario.
+   * Realiza llamadas a los servicios para obtener los datos de registro y pago de derechos,
+   * y actualiza el estado del formulario según la respuesta.
+   */
   guardarDatosFormulario(): void {
-    this.solocitud220401Service
-      .getRegistroTomaMuestrasMercanciasData().pipe(
-        takeUntil(this.destroyNotifier$)
-      )
-      .subscribe((resp) => {
-        if(resp){
-        this.esDatosRespuesta = true;
-        this.solocitud220401Service.actualizarEstadoFormulario(resp);
+    forkJoin({
+      registro: this.solocitud220401Service.getRegistroTomaMuestrasMercanciasData(),
+      permiso: this.solocitud220401Service.getPagoDerechos()
+    })
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(({ registro, permiso }) => {
+        if (registro) {
+          this.esDatosRespuesta = true;
+          this.solocitud220401Service.actualizarEstadoFormulario(registro);
+        }
+        if (permiso) {
+          this.solocitud220401Service.actualizarPagoDerechosFormulario(permiso);
         }
       });
   }
+
 }
