@@ -60,6 +60,23 @@ export interface SolicitudState {
     telefono: string; // Teléfono del establecimiento.
     avisoCheckbox: boolean; // Checkbox de aviso.
     licenciaSanitaria: string; // Licencia sanitaria del establecimiento.
+    claveScianModal: string; // Clave SCIAN seleccionada en el modal.
+    claveDescripcionModal: string; // Descripción de la clave SCIAN seleccionada en el modal.
+    nombreComercial: string; // Nombre comercial del producto o establecimiento.
+    nombreComun: string; // Nombre común del producto.
+    nombreCientifico: string; // Nombre científico del producto.
+    usoEspecifico: string; // Uso específico del producto.
+    estadoFisico: string; // Estado físico del producto.
+    fraccionArancelaria: string; // Fracción arancelaria del producto.
+    descripcionFraccion: string; // Descripción de la fracción arancelaria.
+    cantidadUMT: string; // Cantidad en unidad de medida de trabajo.
+    UMT: string; // Unidad de Medida de Trabajo.
+    cantidadUMC: string; // Cantidad en unidad de medida de comercialización.
+    UMC: string; // Unidad de Medida de Comercialización.
+    numeroCas: string; // Número CAS del producto.
+    porcentajeConcentracion: string; // Porcentaje de concentración del producto.
+    clasificacionToxicologica: string; // Clasificación toxicológica del producto.
+    objetoImportacion: string; // Objeto de importación.
 }
 
 /**
@@ -88,6 +105,23 @@ export function createInitialState(): SolicitudState {
         telefono: '', // Inicializa telefono como una cadena vacía.
         avisoCheckbox: false, // Inicializa avisoCheckbox como falso.
         licenciaSanitaria: '', // Inicializa licenciaSanitaria como una cadena vacía.
+        claveScianModal: '',
+        claveDescripcionModal: '',
+        nombreComercial: '',
+        nombreComun: '',
+        nombreCientifico: '',
+        usoEspecifico: '',
+        estadoFisico: '',
+        fraccionArancelaria: '',
+        descripcionFraccion: '',
+        cantidadUMT: '',
+        UMT: '',
+        cantidadUMC: '',
+        UMC: '',
+        numeroCas: '',
+        porcentajeConcentracion: '',
+        clasificacionToxicologica: '',
+        objetoImportacion: '',
     };
 }
 
@@ -341,7 +375,190 @@ export class AvisocalidadStore extends Store<SolicitudState> {
             licenciaSanitaria,
         }));
     }
+    /**
+     * @property {string} claveScianModal
+     * Clave SCIAN seleccionada en el modal.
+     */
+    public setClaveScianModal(claveScianModal: string): void {
+        this.update((state) => ({
+            ...state,
+            claveScianModal,
+        }));
+    }
 
+    /**
+     * @property {string} claveDescripcionModal
+     * Descripción de la clave SCIAN seleccionada en el modal.
+     */
+    public setClaveDescripcionModal(claveDescripcionModal: string): void {
+        this.update((state) => ({
+            ...state,
+            claveDescripcionModal,
+        }));
+    }
+
+    /**
+     * @property {string} nombreComercial
+     * Nombre comercial del producto o establecimiento.
+     */
+    public setNombreComercial(nombreComercial: string): void {
+        this.update((state) => ({
+            ...state,
+            nombreComercial,
+        }));
+    }
+
+    /**
+     * @property {string} nombreComun
+     * Nombre común del producto.
+     */
+    public setNombreComun(nombreComun: string): void {
+        this.update((state) => ({
+            ...state,
+            nombreComun,
+        }));
+    }
+
+    /**
+     * @property {string} nombreCientifico
+     * Nombre científico del producto.
+     */
+    public setNombreCientifico(nombreCientifico: string): void {
+        this.update((state) => ({
+            ...state,
+            nombreCientifico,
+        }));
+    }
+    /**
+     * @property {string} usoEspecifico
+     * Uso específico del producto.
+     */
+    public setUsoEspecifico(usoEspecifico: string): void {
+        this.update((state) => ({
+            ...state,
+            usoEspecifico,
+        }));
+    }
+
+    /**
+     * @property {string} estadoFisico
+     * Estado físico del producto.
+     */
+    public setEstadoFisico(estadoFisico: string): void {
+        this.update((state) => ({
+            ...state,
+            estadoFisico,
+        }));
+    }
+
+    /**
+     * @property {string} fraccionArancelaria
+     * Fracción arancelaria del producto.
+     */
+    public setFraccionArancelaria(fraccionArancelaria: string): void {
+        this.update((state) => ({
+            ...state,
+            fraccionArancelaria,
+        }));
+    }
+
+    /**
+     * @property {string} descripcionFraccion
+     * Descripción de la fracción arancelaria.
+     */
+    public setDescripcionFraccion(descripcionFraccion: string): void {
+        this.update((state) => ({
+            ...state,
+            descripcionFraccion,
+        }));
+    }
+
+    /**
+     * @property {string} cantidadUMT
+     * Cantidad en unidad de medida de trabajo.
+     */
+    public setCantidadUMT(cantidadUMT: string): void {
+        this.update((state) => ({
+            ...state,
+            cantidadUMT,
+        }));
+    }
+    /**
+     * @property {string} UMT
+     * Unidad de Medida de Trabajo.
+     */
+    public setUMT(UMT: string): void {
+        this.update((state) => ({
+            ...state,
+            UMT,
+        }));
+    }
+
+    /**
+     * @property {string} cantidadUMC
+     * Cantidad en unidad de medida de comercialización.
+     */
+    public setCantidadUMC(cantidadUMC: string): void {
+        this.update((state) => ({
+            ...state,
+            cantidadUMC,
+        }));
+    }
+
+    /**
+     * @property {string} UMC
+     * Unidad de Medida de Comercialización.
+     */
+    public setUMC(UMC: string): void {
+        this.update((state) => ({
+            ...state,
+            UMC,
+        }));
+    }
+
+    /**
+     * @property {string} numeroCas
+     * Número CAS del producto.
+     */
+    public setNumerocas(numeroCas: string): void {
+        this.update((state) => ({
+            ...state,
+            numeroCas,
+        }));
+    }
+
+    /**
+     * @property {string} porcentajeConcentracion
+     * Porcentaje de concentración del producto.
+     */
+    public setPorcentajeConcentracion(porcentajeConcentracion: string): void {
+        this.update((state) => ({
+            ...state,
+            porcentajeConcentracion,
+        }));
+    }
+
+    /**
+     * @property {string} clasificacionToxicologica
+     * Clasificación toxicológica del producto.
+     */
+    public setClasificacionToxicologica(clasificacionToxicologica: string): void {
+        this.update((state) => ({
+            ...state,
+            clasificacionToxicologica,
+        }));
+    }
+
+    /**
+     * @property {string} objetoImportacion
+     * Objeto de importación.
+     */
+    public setObjetoImportacion(objetoImportacion: string): void {
+        this.update((state) => ({
+            ...state,
+            objetoImportacion,
+        }));
+    }
     /**
      * Limpia los datos de la solicitud y restablece el estado inicial.
      */

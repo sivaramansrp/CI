@@ -4,22 +4,18 @@ import { AccionBoton } from '@ng-mf/data-access-user';
 import { PANTA_PASOS } from '@ng-mf/data-access-user';
 
 /**
- * @component PantallasComponent
+ * @component PaginasComponent
  * @description
  * Componente principal para gestionar el flujo de pasos en el wizard del trámite 260514.
  * Permite la navegación entre diferentes pantallas/pasos utilizando el componente Wizard.
  * Controla el índice del paso actual y los datos necesarios para la navegación.
  * 
- * @selector app-pantallas
- * @templateUrl ./pantallas.component.html
- * @styleUrl ./pantallas.component.scss
  */
 @Component({
-  selector: 'app-pantallas',
-  templateUrl: './pantallas.component.html',
-  styleUrl: './pantallas.component.scss',
+  selector: 'app-paginas',
+  templateUrl: './paginas.component.html',
 })
-export class PantallasComponent {
+export class PaginasComponent {
 
   /**
    * @property pantallasPasos

@@ -8980,7 +8980,6 @@
     "numeroDeProcedimiento": "130106",
     "origin": "READ_PROCEDURE"
   },
- 
   {
     "folioTramite": "0201157325726982922695556",
     "tipoDeTramite": "Solicitud de Proceso Interno",
@@ -9071,14 +9070,14 @@
     "numeroDeProcedimiento": "110202",
     "origin": "READ_PROCEDURE"
   },
-   {
+    {
     "folioTramite": "0215523965732296454156770",
     "tipoDeTramite": "Solicitud de Proceso Interno",
     "nombreDeLaTarea": "Evaluar solicitud",
     "fechaDeAsignacion": "2023-10-01",
     "estadoDeTramite": "En Proceso",
     "departamento": "cofepris",
-    "numeroDeProcedimiento": "260603",
+    "numeroDeProcedimiento": "260512",
     "origin": "FLUJO_FUNCIONARIO_EVALUAR"
   },
   {
@@ -9088,7 +9087,7 @@
     "fechaDeAsignacion": "2023-10-02",
     "estadoDeTramite": "Pendiente",
     "departamento": "cofepris",
-    "numeroDeProcedimiento": "260603",
+    "numeroDeProcedimiento": "260512",
     "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION"
   },
   {
@@ -9098,7 +9097,7 @@
     "fechaDeAsignacion": "2023-10-03",
     "estadoDeTramite": "Completado",
     "departamento": "cofepris",
-    "numeroDeProcedimiento": "260603",
+    "numeroDeProcedimiento": "260512",
     "origin": "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO"
   },
   {
@@ -9108,7 +9107,7 @@
     "fechaDeAsignacion": "2023-10-04",
     "estadoDeTramite": "En Proceso",
     "departamento": "cofepris",
-    "numeroDeProcedimiento": "260603",
+    "numeroDeProcedimiento": "260512",
     "origin": "FLUJO_FUNCIONARIO_AUTORIZACION"
   },
   {
@@ -9118,7 +9117,7 @@
     "fechaDeAsignacion": "2023-10-05",
     "estadoDeTramite": "Pendiente",
     "departamento": "cofepris",
-    "numeroDeProcedimiento": "260603",
+    "numeroDeProcedimiento": "260512",
     "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-RESOLUCION"
   },
   {
@@ -9128,18 +9127,8 @@
     "fechaDeAsignacion": "2023-10-06",
     "estadoDeTramite": "Completado",
     "departamento": "cofepris",
-    "numeroDeProcedimiento": "260603",
+    "numeroDeProcedimiento": "260512",
     "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
-  },
-  {
-    "folioTramite": "0453067309596292181625870",
-    "tipoDeTramite": "Registro de solicitud de servicio",
-    "nombreDeLaTarea": "Generar opinión",
-    "fechaDeAsignacion": "2023-10-07",
-    "estadoDeTramite": "En Proceso",
-    "departamento": "cofepris",
-    "numeroDeProcedimiento": "260603",
-    "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
   },
   {
     "folioTramite": "099226136147361192499352",
@@ -9148,19 +9137,9 @@
     "fechaDeAsignacion": "2023-10-09",
     "estadoDeTramite": "Completado",
     "departamento": "cofepris",
-    "numeroDeProcedimiento": "260603",
+    "numeroDeProcedimiento": "260512",
     "origin": "READ_PROCEDURE"
   },
-  {
-    "folioTramite": "099226136147361192499352",
-    "tipoDeTramite": "Registro de solicitud de servicio",
-    "nombreDeLaTarea": "Verificar Dictamen",
-    "fechaDeAsignacion": "2023-10-09",
-    "estadoDeTramite": "Completado",
-    "departamento": "cofepris",
-    "numeroDeProcedimiento": "260603",
-    "origin": "READ_PROCEDURE_VERIFICAR_DICTAMEN"
-  }, 
    {
     "folioTramite": "0215523965732296454156770",
     "tipoDeTramite": "Solicitud de Proceso Interno",
@@ -9168,17 +9147,7 @@
     "fechaDeAsignacion": "2023-10-01",
     "estadoDeTramite": "En Proceso",
     "departamento": "cofepris",
-    "numeroDeProcedimiento": "cofepris",
-    "origin": "FLUJO_FUNCIONARIO_EVALUAR"
-  },
-   {
-    "folioTramite": "0215523965732296454156770",
-    "tipoDeTramite": "Solicitud de Proceso Interno",
-    "nombreDeLaTarea": "Evaluar solicitud",
-    "fechaDeAsignacion": "2023-10-01",
-    "estadoDeTramite": "En Proceso",
-    "departamento": "cofepris",
-    "numeroDeProcedimiento": "260604",
+    "numeroDeProcedimiento": "260514",
     "origin": "FLUJO_FUNCIONARIO_EVALUAR"
   },
   {
@@ -9188,7 +9157,7 @@
     "fechaDeAsignacion": "2023-10-02",
     "estadoDeTramite": "Pendiente",
     "departamento": "cofepris",
-    "numeroDeProcedimiento": "260604",
+    "numeroDeProcedimiento": "260514",
     "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION"
   },
   {
@@ -9198,7 +9167,7 @@
     "fechaDeAsignacion": "2023-10-03",
     "estadoDeTramite": "Completado",
     "departamento": "cofepris",
-    "numeroDeProcedimiento": "260604",
+    "numeroDeProcedimiento": "260514",
     "origin": "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO"
   },
   {
@@ -9208,7 +9177,7 @@
     "fechaDeAsignacion": "2023-10-04",
     "estadoDeTramite": "En Proceso",
     "departamento": "cofepris",
-    "numeroDeProcedimiento": "260604",
+    "numeroDeProcedimiento": "260514",
     "origin": "FLUJO_FUNCIONARIO_AUTORIZACION"
   },
   {
@@ -9218,7 +9187,7 @@
     "fechaDeAsignacion": "2023-10-05",
     "estadoDeTramite": "Pendiente",
     "departamento": "cofepris",
-    "numeroDeProcedimiento": "260604",
+    "numeroDeProcedimiento": "260514",
     "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-RESOLUCION"
   },
   {
@@ -9228,18 +9197,8 @@
     "fechaDeAsignacion": "2023-10-06",
     "estadoDeTramite": "Completado",
     "departamento": "cofepris",
-    "numeroDeProcedimiento": "260604",
+    "numeroDeProcedimiento": "260514",
     "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
-  },
-  {
-    "folioTramite": "0453067309596292181625870",
-    "tipoDeTramite": "Registro de solicitud de servicio",
-    "nombreDeLaTarea": "Generar opinión",
-    "fechaDeAsignacion": "2023-10-07",
-    "estadoDeTramite": "En Proceso",
-    "departamento": "cofepris",
-    "numeroDeProcedimiento": "260604",
-    "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
   },
   {
     "folioTramite": "099226136147361192499352",
@@ -9248,18 +9207,7 @@
     "fechaDeAsignacion": "2023-10-09",
     "estadoDeTramite": "Completado",
     "departamento": "cofepris",
-    "numeroDeProcedimiento": "260604",
+    "numeroDeProcedimiento": "260514",
     "origin": "READ_PROCEDURE"
-  },
-  {
-    "folioTramite": "099226136147361192499352",
-    "tipoDeTramite": "Registro de solicitud de servicio",
-    "nombreDeLaTarea": "Verificar Dictamen",
-    "fechaDeAsignacion": "2023-10-09",
-    "estadoDeTramite": "Completado",
-    "departamento": "cofepris",
-    "numeroDeProcedimiento": "260604",
-    "origin": "READ_PROCEDURE_VERIFICAR_DICTAMEN"
-  } 
+  }
 ]
-
