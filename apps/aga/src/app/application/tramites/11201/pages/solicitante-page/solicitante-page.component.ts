@@ -3,7 +3,6 @@ import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/11201/pasos.enums';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { ContenedorComponent } from '../../components/contenedor/contenedor.component';
 interface AccionBoton {
   accion: string;
   valor: number;
@@ -34,16 +33,6 @@ export class SolicitantePageComponent {
    * Esta propiedad utiliza `@ViewChild` para obtener una referencia al componente `WizardComponent`.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
-
-  /**
-   * Referencia al componente hijo ContenedorComponent.
-   *
-   * Esta propiedad utiliza el decorador `@ViewChild` para obtener una instancia del componente
-   * ContenedorComponent identificado por el template reference variable 'contenedorRef'.
-   * Permite acceder a las propiedades y métodos públicos del componente hijo desde este componente.
-   */
-  @ViewChild('contenedorRef') contenedorComponent!: ContenedorComponent;
-
   /**
    * Datos de los pasos del wizard.
    *
@@ -56,7 +45,7 @@ export class SolicitantePageComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-  
+
 
   /**
    * Método para seleccionar una pestaña específica en el wizard.
@@ -99,9 +88,6 @@ export class SolicitantePageComponent {
    * del proceso o formulario.
    */
   cancelar(): void {
-    if (this.contenedorComponent.solicitudForm) {
-      this.contenedorComponent.solicitudForm.reset();
-    }
     this.indice = 1;
   }
 }

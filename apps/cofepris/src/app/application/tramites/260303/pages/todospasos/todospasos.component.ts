@@ -96,7 +96,7 @@ export class TodospasosComponent implements OnDestroy {
    /**
    * Este método se utiliza para inicializar el componente.
    */
-   public getValorIndice(e: AccionBoton) {
+   public getValorIndice(e: AccionBoton):void{
     this.getHeaderDatos();
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
@@ -117,7 +117,7 @@ export class TodospasosComponent implements OnDestroy {
    * - `indice` igual a 2: Establece `titulo` como `PASO_TRES`.
    * - Caso por defecto: Establece `titulo` como `PASO_UNO`.
    */
-  public getHeaderDatos() {
+  public getHeaderDatos():void {
     switch (this.indice) {
       case 1: {
         this.titulo = PASO_DOS;

@@ -1,5 +1,5 @@
-import { Catalogo } from "@ng-mf/data-access-user";
-import { CatalogosSelect } from "@ng-mf/data-access-user";
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogosSelect } from '@ng-mf/data-access-user';
 
 /** 
  * Interfaz que representa los detalles de la mercancía.
@@ -131,7 +131,7 @@ export interface CargarDatosIniciales {
   
   /** encabezados para mercancia */
   dMercancia: DatosDeMercancias[];
-
+  
   /** Medio de transporte */
   medioDeTransporte: CatalogosSelect;
 }
@@ -155,6 +155,89 @@ export interface DatosDelTramiteRealizar {
  * Contiene un catálogo de opciones disponibles para la selección.
  */
 export interface TipoContenedor {
+  /**
+   * Catálogo del tipo de contenedor disponible para selección.
+   */
   tipoContenedor: CatalogosSelect;
 }
 
+/**
+ * Representa los datos de la solicitud a procesar.
+ */
+export interface DatosDeLaSolicitud {
+  /**
+   * Identificador del certificado autorizado.
+   */
+  certificadosAutorizados: number;
+
+  /**
+   * Hora programada para la inspección (formato 24 horas).
+   */
+  horaDeInspeccion: number;
+
+  /**
+   * Identificador de la aduana de ingreso.
+   */
+  aduanaDeIngreso: number;
+
+  /**
+   * Indicador de sanidad agropecuaria requerida.
+   */
+  sanidadAgropecuaria: number;
+
+  /**
+   * Identificador del punto de inspección.
+   */
+  puntoDeInspeccion: number;
+
+  /**
+   * Fecha programada para la inspección (formato YYYY-MM-DD).
+   */
+  fechaDeInspeccion: string;
+
+  /**
+   * Nombre de la persona responsable de la solicitud.
+   */
+  nombre: string;
+
+  /**
+   * Primer apellido de la persona responsable.
+   */
+  primerapellido: string;
+
+  /**
+   * Segundo apellido de la persona responsable.
+   */
+  segundoapellido: string;
+
+  /**
+   * Nombre o descripción de la mercancía.
+   */
+  mercancia: string;
+
+  /**
+   * Tipo de contenedor utilizado.
+   */
+  tipocontenedor: number;
+
+  /**
+   * Medio de transporte (identificador del tipo de transporte).
+   */
+  transporteIdMedio: number;
+
+  /**
+   * Identificación del medio de transporte.
+   */
+  identificacionTransporte: string;
+
+  /**
+   * Indica si es una solicitud ferroviaria.
+   * Puede ser un número o texto (por ejemplo: 'sí', 'no').
+   */
+  esSolicitudFerros: string | number;
+
+  /**
+   * Total de guías amparadas por la solicitud.
+   */
+  totalDeGuiasAmparadas: string;
+}

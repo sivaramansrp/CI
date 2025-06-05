@@ -1,89 +1,180 @@
 /**
- * Interface representing a step in the wizard.
+ * @descripcion
+ * Interfaz que representa un paso en el asistente (wizard).
  */
 export interface LISTAPASOWIZARD {
-  /** Index of the step */
+  /**
+   * @descripcion Índice del paso.
+   */
   indice: number;
-  /** Title of the step */
+  /**
+   * @descripcion Título del paso.
+   */
   titulo: string;
-  /** Indicates if the step is active */
+  /**
+   * @descripcion Indica si el paso está activo.
+   */
   activo: boolean;
-  /** Indicates if the step is completed */
+  /**
+   * @descripcion Indica si el paso está completado.
+   */
   completado: boolean;
 }
 
 /**
- * Interface representing an action button.
+ * @descripcion
+ * Interfaz que representa un botón de acción.
  */
 export interface ACCIONBOTON {
-  /** Action to be performed */
+  /**
+   * @descripcion Acción que se debe realizar.
+   */
   accion: string;
-  /** Value associated with the action */
+  /**
+   * @descripcion Valor asociado a la acción.
+   */
   valor: number;
 }
 
 /**
- * Interface representing a plant.
+ * @descripcion
+ * Interfaz que representa una planta.
  */
 export interface Plantas {
-  /** Modality of the plant */
+  /**
+   * @descripcion Modalidad de la planta.
+   */
   modalidad: string;
-  /** State where the plant is located */
+  /**
+   * @descripcion Estado donde se encuentra la planta.
+   */
   Estado: string;
-  /** Federal representation of the plant */
+  /**
+   * @descripcion Representación federal de la planta.
+   */
   RepresentacionFederal: string;
-  /** Productive activity of the plant */
+  /**
+   * @descripcion Actividad productiva de la planta.
+   */
   ActividadProductiva: string;
 }
 
+/**
+ * @descripcion
+ * Interfaz que representa una fila de datos de plantas.
+ */
 export interface FilaPlantas {
+  /**
+   * @descripcion Calle de la planta.
+   */
   calle: string;
+  /**
+   * @descripcion Número exterior de la planta.
+   */
   numeroExterior: string;
+  /**
+   * @descripcion Número interior de la planta.
+   */
   numeroInterior: string;
+  /**
+   * @descripcion Código postal de la planta.
+   */
   codigoPostal: number;
+  /**
+   * @descripcion Colonia de la planta.
+   */
   colonia: string;
+  /**
+   * @descripcion Municipio o alcaldía de la planta.
+   */
   municipioOAlcaldia: string;
 }
 
+/**
+ * @descripcion
+ * Interfaz que representa una fila de datos de productos.
+ */
 export interface FilaProductos {
+  /**
+   * @descripcion Registro federal de contribuyentes.
+   */
   contribuyentes: string;
+  /**
+   * @descripcion Denominación o razón social.
+   */
   razonSocial: string;
+  /**
+   * @descripcion Correo electrónico.
+   */
   Correo: string;
 }
 
+/**
+ * @descripcion
+ * Interfaz que representa una fila de sectores.
+ */
 export interface FilaSectors {
+  /**
+   * @descripcion Nombre del sector.
+   */
   sectorLista: string;
+  /**
+   * @descripcion Clave del sector.
+   */
   sectorClave: string;
 }
 
 /**
- * Interface representing sectors and goods.
+ * @descripcion
+ * Interfaz que representa los sectores y mercancías.
  */
 export interface SectoresYMercancias {
-  /** Sector of the goods */
+  /**
+   * @descripcion Sector de la mercancía.
+   */
   sector: string;
-  /** Tariff fraction of the goods */
+  /**
+   * @descripcion Fracción arancelaria de la mercancía.
+   */
   Fraccion_arancelaria: string;
 }
 
 /**
- * Interface representing the final data list.
+ * @descripcion
+ * Interfaz que representa la lista final de datos.
  */
 export interface ListaDeDatosFinal {
-  /** List of plants */
+  /**
+   * @descripcion Lista de plantas.
+   */
   plantas: Plantas[];
-  /** List of sectors and goods */
+  /**
+   * @descripcion Lista de sectores y mercancías.
+   */
   sectoresYMercancias: SectoresYMercancias[];
 }
 
 /**
- * Function to create the state of the data.
- * @param params Partial parameters to initialize the state
- * @returns The initialized state
+ * @descripcion
+ * Función para crear el estado de los datos.
+ * @param params Parámetros parciales para inicializar el estado.
+ * @returns El estado inicializado.
  */
 export function createDatosState(params: Partial<ListaDeDatosFinal> = {}): ListaDeDatosFinal {
   return {
     plantas: params.plantas || [],
     sectoresYMercancias: params.sectoresYMercancias || [],
   };
+}
+
+/**
+ * @descripcion
+ * Interfaz para la respuesta de datos de plantas.
+ */
+export interface PlantasDatosResponse {
+  /**
+   * @descripcion Arreglo de datos de plantas.
+   */
+  plantasDatos: FilaPlantas[];
+  [key: string]: unknown;
 }
