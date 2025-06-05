@@ -1,7 +1,11 @@
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { INSPECCION_FISICA_PASOS } from '../../enums/solicitud-pantallas.enum';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -21,6 +25,14 @@ interface AccionBoton {
  */
 @Component({
   selector: 'app-inspeccion-fisica',
+  standalone: true,
+  imports: [
+    WizardComponent,
+    PasoDosComponent,
+    PasoUnoComponent,
+    PasoTresComponent,
+    BtnContinuarComponent,
+  ],
   templateUrl: './inspeccion-fisica.component.html',
   styleUrl: './inspeccion-fisica.component.scss',
 })

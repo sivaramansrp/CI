@@ -55,8 +55,8 @@ describe('AgregarMercanciaComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form in crearFormulario', () => {
-    component.crearFormulario();
+  it('should initialize the form in inicializarFormulario', () => {
+    component.inicializarFormulario();
     expect(component.agregarMercanciaForm).toBeDefined();
     expect(component.agregarMercanciaForm.get('fraccionArancelaria')?.value).toBe('1234');
     expect(component.agregarMercanciaForm.get('descripcionFraccion')?.value).toBe('Test Description');
