@@ -88,55 +88,53 @@ export class DatosDomicilioLegalService {
    * @param DATOS - Objeto que contiene el estado del trámite.
    */
   actualizarEstadoFormulario(DATOS: DatosDomicilioLegalState): void {
-    if (DATOS) {
-      if (Array.isArray(DATOS.aduanasDeEntrada)) this.datosDomicilioLegalStore.setPaisDeOriginDatos(DATOS.aduanasDeEntrada);
-      if (DATOS.aduanasEntradas) this.datosDomicilioLegalStore.setAduanasEntradas(DATOS.aduanasEntradas);
-      if (DATOS.apellidoMaterno) this.datosDomicilioLegalStore.setApellidoMaterno(DATOS.apellidoMaterno);
-      if (DATOS.apellidoPaterno) this.datosDomicilioLegalStore.setApellidoPaterno(DATOS.apellidoPaterno);
-      if (DATOS.banco) this.datosDomicilioLegalStore.setBanco(DATOS.banco);
-      if (DATOS.cadenaDependencia) this.datosDomicilioLegalStore.setCadenaDependencia(DATOS.cadenaDependencia);
-      if (DATOS.calle) this.datosDomicilioLegalStore.setCalle(DATOS.calle);
-      if (DATOS.cantidadUMC) this.datosDomicilioLegalStore.setCantidadUMC(DATOS.cantidadUMC);
-      if (DATOS.cantidadUMT) this.datosDomicilioLegalStore.setCantidadUMT(DATOS.cantidadUMT);
-      if (DATOS.clasificacion) this.datosDomicilioLegalStore.setClasificacion(DATOS.clasificacion);
-      if (DATOS.claveDeReferencia) this.datosDomicilioLegalStore.setClaveDeReferencia(DATOS.claveDeReferencia);
-      if (DATOS.claveDescripcionModal) this.datosDomicilioLegalStore.setClaveDescripcionModal(DATOS.claveDescripcionModal);
-      if (DATOS.claveScianModal) this.datosDomicilioLegalStore.setClaveScianModal(DATOS.claveScianModal);
-      if (DATOS.codigoPostal) this.datosDomicilioLegalStore.setCodigoPostal(DATOS.codigoPostal);
-      if (DATOS.colonia) this.datosDomicilioLegalStore.setColonia(DATOS.colonia);
-      if (DATOS.correo) this.datosDomicilioLegalStore.setCorreo(DATOS.correo);
-      if (DATOS.cumplimiento) this.datosDomicilioLegalStore.setCumplimiento(DATOS.cumplimiento);
-      if (DATOS.denominacion) this.datosDomicilioLegalStore.setDenominacion(DATOS.denominacion);
-      if (DATOS.denominacionComun) this.datosDomicilioLegalStore.setDenominacionComun(DATOS.denominacionComun);
-      if (DATOS.denominacionDistintiva) this.datosDomicilioLegalStore.setDenominacionDistintiva(DATOS.denominacionDistintiva);
-      if (DATOS.denominacionEspecifica) this.datosDomicilioLegalStore.setDenominacionEspecifica(DATOS.denominacionEspecifica);
-      if (DATOS.descripcionFraccion) this.datosDomicilioLegalStore.setDescripcionFraccion(DATOS.descripcionFraccion);
-      if (DATOS.especificar) this.datosDomicilioLegalStore.setEspecificar(DATOS.especificar);
-      if (DATOS.estado) this.datosDomicilioLegalStore.setEstado(DATOS.estado);
-      if (DATOS.estadoFisico) this.datosDomicilioLegalStore.setEstadoFisico(DATOS.estadoFisico);
-      if (DATOS.fechaCaducidad) this.datosDomicilioLegalStore.setFechaCaducidad(DATOS.fechaCaducidad);
-      if (DATOS.fechaPago) this.datosDomicilioLegalStore.setFechaPago(DATOS.fechaPago);
-      if (DATOS.fraccionArancelaria) this.datosDomicilioLegalStore.setFraccionArancelaria(DATOS.fraccionArancelaria);
-      if (DATOS.garantiasOfrecidas) this.datosDomicilioLegalStore.setGarantiasOfrecidas(DATOS.garantiasOfrecidas);
-      if (DATOS.importePago) this.datosDomicilioLegalStore.setImportePago(DATOS.importePago);
-      if (DATOS.lada) this.datosDomicilioLegalStore.setLada(DATOS.lada);
-      if (DATOS.licenciaSanitaria) this.datosDomicilioLegalStore.setLicenciaSanitaria(DATOS.licenciaSanitaria);
-      if (DATOS.llaveDePago) this.datosDomicilioLegalStore.setllaveDePago(DATOS.llaveDePago);
-      if (DATOS.localidad) this.datosDomicilioLegalStore.setLocalidad(DATOS.localidad);
-      if (DATOS.muncipio) this.datosDomicilioLegalStore.setMuncipio(DATOS.muncipio);
-      if (DATOS.nombre) this.datosDomicilioLegalStore.setNombre(DATOS.nombre);
-      if (DATOS.numeroPermiso) this.datosDomicilioLegalStore.setNumeroPermiso(DATOS.numeroPermiso);
-      if (DATOS.numeroRegistro) this.datosDomicilioLegalStore.setNumeroRegistro(DATOS.numeroRegistro);
-      if (DATOS.presentacion) this.datosDomicilioLegalStore.setPresentacion(DATOS.presentacion);
-      if (DATOS.regimen) this.datosDomicilioLegalStore.setRegimen(DATOS.regimen);
-      if (DATOS.rfc) this.datosDomicilioLegalStore.setRfc(DATOS.rfc);
-      if (DATOS.rfcDel) this.datosDomicilioLegalStore.setRfcDel(DATOS.rfcDel);
-      if (DATOS.telefono) this.datosDomicilioLegalStore.setTelefono(DATOS.telefono);
-      if (DATOS.tipoDeProducto) this.datosDomicilioLegalStore.setTipoDeProducto(DATOS.tipoDeProducto);
-      if (typeof DATOS.avisoCheckbox === 'boolean') this.datosDomicilioLegalStore.setAvisoCheckbox(DATOS.avisoCheckbox);
-      if (DATOS.UMC) this.datosDomicilioLegalStore.setUMC(DATOS.UMC);
-      if (DATOS.UMT) this.datosDomicilioLegalStore.setUMT(DATOS.UMT);
-    }
+      this.datosDomicilioLegalStore.setClaveDeReferencia(DATOS.claveDeReferencia);
+      this.datosDomicilioLegalStore.setCadenaDependencia(DATOS.cadenaDependencia);
+      this.datosDomicilioLegalStore.setBanco(DATOS.banco);
+      this.datosDomicilioLegalStore.setllaveDePago(DATOS.llaveDePago);
+      this.datosDomicilioLegalStore.setFechaPago(DATOS.fechaPago);
+      this.datosDomicilioLegalStore.setImportePago(DATOS.importePago);
+      this.datosDomicilioLegalStore.setRfcDel(DATOS.rfcDel);
+      this.datosDomicilioLegalStore.setDenominacion(DATOS.denominacion);
+      this.datosDomicilioLegalStore.setCorreo(DATOS.correo);
+      this.datosDomicilioLegalStore.setCodigoPostal(DATOS.codigoPostal);
+      this.datosDomicilioLegalStore.setEstado(DATOS.estado);
+      this.datosDomicilioLegalStore.setMuncipio(DATOS.muncipio);
+      this.datosDomicilioLegalStore.setLocalidad(DATOS.localidad);
+      this.datosDomicilioLegalStore.setColonia(DATOS.colonia);
+      this.datosDomicilioLegalStore.setCalle(DATOS.calle);
+      this.datosDomicilioLegalStore.setLada(DATOS.lada);
+      this.datosDomicilioLegalStore.setTelefono(DATOS.telefono);
+      this.datosDomicilioLegalStore.setClaveScianModal(DATOS.claveScianModal);
+      this.datosDomicilioLegalStore.setClaveDescripcionModal(DATOS.claveDescripcionModal);
+      if (typeof DATOS.avisoCheckbox === 'boolean') {this.datosDomicilioLegalStore.setAvisoCheckbox(DATOS.avisoCheckbox);}
+      this.datosDomicilioLegalStore.setLicenciaSanitaria(DATOS.licenciaSanitaria);
+      this.datosDomicilioLegalStore.setRegimen(DATOS.regimen);
+      this.datosDomicilioLegalStore.setAduanasEntradas(DATOS.aduanasEntradas);
+      this.datosDomicilioLegalStore.setNumeroPermiso(DATOS.numeroPermiso);
+      this.datosDomicilioLegalStore.setClasificacion(DATOS.clasificacion);
+      this.datosDomicilioLegalStore.setEspecificar(DATOS.especificar);
+      this.datosDomicilioLegalStore.setDenominacionEspecifica(DATOS.denominacionEspecifica);
+      this.datosDomicilioLegalStore.setDenominacionDistintiva(DATOS.denominacionDistintiva);
+      this.datosDomicilioLegalStore.setDenominacionComun(DATOS.denominacionComun);
+      this.datosDomicilioLegalStore.setTipoDeProducto(DATOS.tipoDeProducto);
+      this.datosDomicilioLegalStore.setEstadoFisico(DATOS.estadoFisico);
+      this.datosDomicilioLegalStore.setFraccionArancelaria(DATOS.fraccionArancelaria);
+      this.datosDomicilioLegalStore.setDescripcionFraccion(DATOS.descripcionFraccion);
+      this.datosDomicilioLegalStore.setCantidadUMT(DATOS.cantidadUMT);
+      this.datosDomicilioLegalStore.setUMT(DATOS.UMT);
+      this.datosDomicilioLegalStore.setCantidadUMC(DATOS.cantidadUMC);
+      this.datosDomicilioLegalStore.setUMC(DATOS.UMC);
+      this.datosDomicilioLegalStore.setPresentacion(DATOS.presentacion);
+      this.datosDomicilioLegalStore.setNumeroRegistro(DATOS.numeroRegistro);
+      this.datosDomicilioLegalStore.setFechaCaducidad(DATOS.fechaCaducidad);
+      this.datosDomicilioLegalStore.setCumplimiento(DATOS.cumplimiento);
+      this.datosDomicilioLegalStore.setRfc(DATOS.rfc);
+      this.datosDomicilioLegalStore.setNombre(DATOS.nombre);
+      this.datosDomicilioLegalStore.setApellidoPaterno(DATOS.apellidoPaterno);
+      this.datosDomicilioLegalStore.setApellidoMaterno(DATOS.apellidoMaterno);
+      if (Array.isArray(DATOS.aduanasDeEntrada)) {this.datosDomicilioLegalStore.setPaisDeOriginDatos(DATOS.aduanasDeEntrada);}
+      this.datosDomicilioLegalStore.setGarantiasOfrecidas(DATOS.garantiasOfrecidas);
   }
 
   /**
