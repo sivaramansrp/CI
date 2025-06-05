@@ -1,124 +1,145 @@
-
-import { TestBed } from '@angular/core/testing';
 import { CapturarExpedicionCertificadosComponent } from './capturar-expedicion-certificados.component';
 import { FormBuilder } from '@angular/forms';
-import { of, Subject } from 'rxjs';
-import { ExpedicionCertificadoService } from '../../services/expedicion-certificado.service';
-import { Expedicion120204Store } from '../../estados/tramites/expedicion120204.store';
-import { Expedicion120204Query } from '../../estados/queries/expedicion120204.query';
+import { of } from 'rxjs';
 
 describe('CapturarExpedicionCertificadosComponent', () => {
   let component: CapturarExpedicionCertificadosComponent;
-  let expedicionCertificadoServiceMock: any;
+  let serviceMock: any;
+  let consultaioQueryMock: any;
   let expedicion120204StoreMock: any;
   let expedicion120204QueryMock: any;
+  let fb: FormBuilder;
 
   beforeEach(() => {
-    expedicionCertificadoServiceMock = {
-      getEntidadFederativa: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Entidad Federativa' }])),
-      getRepresentacionFederal: jest.fn().mockReturnValue(of([{ id: 2, descripcion: 'Representacion Federal' }])),
-      getDetallesDelalicitacion: jest.fn().mockReturnValue(of({ 
-         "numeraDelicitacion":"002/2024",
-        "fechaDelEventoDelicitacion":"2024-03-22",
-        "descripcionDelProducto":"PANTALONES CON PETO Y TIRANTI 100% ALGODON" 
+    serviceMock = {
+      getEntidadFederativa: jest.fn().mockReturnValue(of([{ id: 1, nombre: 'Entidad' }])),
+      getRepresentacionFederal: jest.fn().mockReturnValue(of([{ id: 2, nombre: 'RepFed' }])),
+      getDetallesDelalicitacion: jest.fn().mockReturnValue(of({
+        numeraDelicitacion: 'LIC123',
+        fechaDelEventoDelicitacion: '2024-01-01',
+        descripcionDelProducto: 'Producto'
       })),
-      getDistribucionSaldo: jest.fn().mockReturnValue(of({ 
-        "montoAExpedir":"",
-        "montoAExpedirCheck":false,
-        "montoDisponible":"9985",
-        "totalAExpedir":"" })),
-
-      getTableData: jest.fn().mockReturnValue(of([{
-         "numerodelicitacion":"002/2024 ",
-      "fechadelicitacion":"2024-03-22 ",
-      "descripcion":"",
-      "montoadjudicado":"9985",
-      "fechainiciovigencia":"2024-03-01",
-      "fechafinvigencia":"2024-12-31" }])),
+      obtenerDatosTabla: jest.fn().mockReturnValue(of({ id: 1, nombre: 'Dato' })),
+      getDistribucionSaldo: jest.fn().mockReturnValue(of({ montoDisponible: '100' }))
     };
-
+    consultaioQueryMock = {
+      selectConsultaioState$: of({ readonly: false })
+    };
     expedicion120204StoreMock = {
       setEntidadFederativa: jest.fn(),
       setRepresentacionFederal: jest.fn(),
       setMontoExpedir: jest.fn(),
       setMontoExpedirCheck: jest.fn(),
-      setTotalExpedir: jest.fn(),
+      setTotalExpedir: jest.fn()
     };
-
     expedicion120204QueryMock = {
-      entidadFederativa$: of({ id: 1, descripcion: 'Entidad Federativa' }),
-      representacionFederal$: of({ id: 2, descripcion: 'Representacion Federal' }),
-      montoAExpedir$: of('500'),
-      montoAExpedirCheck$: of(true),
-      totalAExpedir$: of('1500'),
+      selectSolicitud$: of({
+        entidadFederativa: 'Entidad',
+        representacionFederal: 'RepFed',
+        numeraDelicitacion: 'LIC123',
+        fechaDelEventoDelicitacion: '2024-01-01',
+        descripcionDelProducto: 'Producto',
+        montoDisponible: '100',
+        montoAExpedir: '10',
+        montoAExpedirCheck: true,
+        totalAExpedir: '10'
+      })
     };
-
-    TestBed.configureTestingModule({
-      providers: [
-        FormBuilder,
-        { provide: ExpedicionCertificadoService, useValue: expedicionCertificadoServiceMock },
-        { provide: Expedicion120204Store, useValue: expedicion120204StoreMock },
-        { provide: Expedicion120204Query, useValue: expedicion120204QueryMock },
-      ],
-    });
-
-    const fb = TestBed.inject(FormBuilder);
+    fb = new FormBuilder();
     component = new CapturarExpedicionCertificadosComponent(
-      expedicionCertificadoServiceMock,
+      serviceMock,
       fb,
+      consultaioQueryMock,
       expedicion120204StoreMock,
       expedicion120204QueryMock
     );
+    component.solicitudState = {
+      entidadFederativa: 'Entidad',
+      representacionFederal: 'RepFed',
+      numeraDelicitacion: 'LIC123',
+      fechaDelEventoDelicitacion: '2024-01-01',
+      descripcionDelProducto: 'Producto',
+      montoDisponible: '100',
+      montoAExpedir: '10',
+      montoAExpedirCheck: true,
+      totalAExpedir: '10'
+    } as any;
+    component.inicializarExpedicionCertificadoFormulario();
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
+  it('should call getEntidadFederativa and set entidadFederativaOptions on ngOnInit', () => {
+    component.getEntidadFederativa();
+    expect(serviceMock.getEntidadFederativa).toHaveBeenCalled();
+    expect(component.entidadFederativaOptions).toEqual([{ id: 1, nombre: 'Entidad' }]);
   });
 
-  it('should initialize forms and fetch data on ngOnInit', () => {
-    jest.spyOn(component, 'getEntidadFederativa');
-    jest.spyOn(component, 'getRepresentacionFederal');
-    jest.spyOn(component, 'getDetallesDelalicitacion');
-    jest.spyOn(component, 'getDistribucionSaldo');
-    jest.spyOn(component, 'obtenerDatosTabla');
-
-    component.ngOnInit();
-
-    expect(component.getEntidadFederativa).toHaveBeenCalled();
-    expect(component.getRepresentacionFederal).toHaveBeenCalled();
-    expect(component.getDetallesDelalicitacion).toHaveBeenCalled();
-    expect(component.getDistribucionSaldo).toHaveBeenCalled();
-    expect(component.obtenerDatosTabla).toHaveBeenCalled();
+  it('should call getRepresentacionFederal and set representacionFederalOptions on ngOnInit', () => {
+    component.getRepresentacionFederal();
+    expect(serviceMock.getRepresentacionFederal).toHaveBeenCalled();
+    expect(component.representacionFederalOptions).toEqual([{ id: 2, nombre: 'RepFed' }]);
   });
 
-  it('should call setEntidadFederativa on onChangeEntiadFederative', () => {
-    component.formulario.get('entidadFederativa')?.setValue('Entidad 1');
+  it('should patch detalledelaLicitacionForm on getDetallesDelalicitacion', () => {
+    component.getDetallesDelalicitacion();
+    expect(component.detalledelaLicitacionForm.get('numeraDelicitacion')?.value).toBe('LIC123');
+    expect(component.detalledelaLicitacionForm.get('fechaDelEventoDelicitacion')?.value).toBe('2024-01-01');
+    expect(component.detalledelaLicitacionForm.get('descripcionDelProducto')?.value).toBe('Producto');
+  });
+
+  it('should set datos as array on obtenerDatosTabla', () => {
+    component.obtenerDatosTabla();
+    expect(Array.isArray(component.datos)).toBe(true);
+    expect(component.datos[0]).toEqual({ id: 1, nombre: 'Dato' });
+  });
+
+  it('should patch distribucionSaldoForm on getDistribucionSaldo', () => {
+    component.getDistribucionSaldo();
+    expect(component.distribucionSaldoForm.get('montoDisponible')?.value).toBe('100');
+  });
+
+  it('should call setEntidadFederativa on onCambiarEntiadFederative', () => {
+    component.formulario.get('entidadFederativa')?.setValue('EntidadX');
     component.onCambiarEntiadFederative();
-    expect(expedicion120204StoreMock.setEntidadFederativa).toHaveBeenCalledWith('Entidad 1');
+    expect(expedicion120204StoreMock.setEntidadFederativa).toHaveBeenCalledWith('EntidadX');
   });
 
-  it('should call setRepresentacionFederal on onChangeRepresentacionFederal', () => {
-    component.formulario.get('representacionFederal')?.setValue('Representación 1');
+  it('should call setRepresentacionFederal on onCambiarRepresentacionFederal', () => {
+    component.formulario.get('representacionFederal')?.setValue('RepFedX');
     component.onCambiarRepresentacionFederal();
-    expect(expedicion120204StoreMock.setRepresentacionFederal).toHaveBeenCalledWith('Representación 1');
+    expect(expedicion120204StoreMock.setRepresentacionFederal).toHaveBeenCalledWith('RepFedX');
   });
 
-  it('should call setMontoExpedir on onChangeMontoAExpedir', () => {
-    component.distribucionSaldoForm.get('montoAExpedir')?.setValue('500');
+  it('should call setMontoExpedir on onCambiarMontoAExpedir', () => {
+    component.distribucionSaldoForm.get('montoAExpedir')?.setValue('55');
     component.onCambiarMontoAExpedir();
-    expect(expedicion120204StoreMock.setMontoExpedir).toHaveBeenCalledWith('500');
+    expect(expedicion120204StoreMock.setMontoExpedir).toHaveBeenCalledWith('55');
   });
 
-  it('should call setMontoExpedirCheck on onChangeMontoAExpedirCheck', () => {
+  it('should call setMontoExpedirCheck on onCambiarMontoAExpedirCheck', () => {
     component.distribucionSaldoForm.get('montoAExpedirCheck')?.setValue(true);
     component.onCambiarMontoAExpedirCheck();
     expect(expedicion120204StoreMock.setMontoExpedirCheck).toHaveBeenCalledWith(true);
   });
 
-  it('should calculate and update totalAExpedir on AgregarMontoExpedir', () => {
-    component.distribucionSaldoForm.patchValue({ montoAExpedir: '500', totalAExpedir: '1000' });
+  it('should add montoAExpedir to totalAExpedir and call setTotalExpedir on AgregarMontoExpedir', () => {
+    component.distribucionSaldoForm.get('montoAExpedir')?.setValue('10');
+    component.distribucionSaldoForm.get('totalAExpedir')?.setValue('20');
     component.AgregarMontoExpedir();
-    expect(component.distribucionSaldoForm.get('totalAExpedir')?.value).toBe('1500');
-    expect(expedicion120204StoreMock.setTotalExpedir).toHaveBeenCalledWith(1500);
+    expect(component.distribucionSaldoForm.get('totalAExpedir')?.value).toBe('30');
+    expect(expedicion120204StoreMock.setTotalExpedir).toHaveBeenCalledWith(30);
+  });
+
+  it('should disable all forms if esFormularioSoloLectura is true in inicializarExpedicionCertificadoFormulario', () => {
+    component.esFormularioSoloLectura = true;
+    component.inicializarExpedicionCertificadoFormulario();
+    expect(component.formulario.disabled).toBe(true);
+    expect(component.detalledelaLicitacionForm.disabled).toBe(true);
+    expect(component.distribucionSaldoForm.disabled).toBe(true);
+  });
+
+  it('should complete destroyed$ on ngOnDestroy', () => {
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+    component.ngOnDestroy();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });
