@@ -201,7 +201,7 @@
           [label]="'Aviso de funcionamiento'"
           [required]="true"
           formControlName="avisoCheckbox"
-          [isDisabled]="true"
+          [isDisabled]="esFormularioSoloLectura"
           (change)="setValorStore(domicilio, 'avisoCheckbox')"
       ></lib-input-check>
 
@@ -268,7 +268,7 @@
           [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA).'"
           [required]="true"
           formControlName="aifaCheckbox"
-          [isDisabled]="true"
+          [isDisabled]="esFormularioSoloLectura"
           (change)="setValorStore(domicilio, 'aifaCheckbox')"
       ></lib-input-check>
       </div>
@@ -307,12 +307,12 @@
         <ng-titulo titulo="Manifiesto bajo protesta" />
         <div class="form-check bg-light p-0">
           <div class="alert alert-info content-with-checkbox py-6">
-        <lib-input-check
+            <lib-input-check
           [id]="'manifiesto'"
           [label]="''"
           [required]="true"
           formControlName="manifests"
-          [isDisabled]="true" 
+          [isDisabled]="esFormularioSoloLectura"
           (change)="setValorStore(domicilio, 'manifests')"
       ></lib-input-check>
             <span class="fw-bold align-middle"> *</span>
