@@ -1,8 +1,9 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ImportacionDefinitiva130103State, Tramite130103Store } from '../../../../estados/tramites/tramite130103.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { DATOS_DE_LA_MERCANCIA } from '../../constantes/importacion-definitiva.enum';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { ImportacionDefinitivaService } from '@libs/shared/data-access-user/src/core/services/130103/importacion-definitiva.service';
@@ -52,6 +53,14 @@ import { Tramite130103Query } from '../../../../estados/queries/tramite130103.qu
 })
 
 export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
+
+  /**
+    * @property consultaState
+    * @description
+    * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+    */
+    @Input() consultaState!: ConsultaioState;
+    
   /**
     * compo doc
     * @property datosDelTramiteFormData
@@ -124,10 +133,10 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
     * que es necesario para realizar solicitudes y obtener datos dinámicos que se utilizan en el formulario.
     */
     constructor(
-      public importacionDefinitivaService: ImportacionDefinitivaService,
+      private importacionDefinitivaService: ImportacionDefinitivaService,
       private tramite130103Store: Tramite130103Store,
       private tramite130103Query: Tramite130103Query
-    // eslint-disable-next-line no-empty-function
+    //
     ) {}
 
     /**
@@ -247,7 +256,7 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
   * 
   * @param {Object} event - Objeto que contiene el campo modificado y su nuevo valor.
   * @param {string} event.campo - Nombre del campo modificado.
-  * @param {any} event.valor - Nuevo valor del campo, que puede ser un objeto con un identificador o un valor directo.
+  * @param {string} event.valor - Nuevo valor del campo, que puede ser un objeto con un identificador o un valor directo.
   * 
   * @example
   * this.establecerCambioDeValor({ campo: 'unidad_de_medida', valor: { id: 1, descripcion: 'Kilogramos' } });
@@ -256,14 +265,8 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
   * this.establecerCambioDeValor({ campo: 'cantidad', valor: 100 });
   * // Actualiza el estado dinámico del campo "cantidad" con el valor 100.
   */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  establecerCambioDeValor(event: { campo: string; valor: any }): void {
-    if (event && typeof event.valor === 'object' && event.valor !== null && 'id' in event.valor) {
-      const VALOR = event.valor.id;
-      this.tramite130103Store.setDynamicFieldValue(event.campo, VALOR);
-    } else if (event) {
-      this.tramite130103Store.setDynamicFieldValue(event.campo, event.valor);
-    }
+  establecerCambioDeValor(event: { campo: string; valor: string }): void {
+    this.tramite130103Store.setDynamicFieldValue(event.campo, event.valor);
   }
 
     /**
