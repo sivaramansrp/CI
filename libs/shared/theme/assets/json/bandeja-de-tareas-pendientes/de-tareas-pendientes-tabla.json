@@ -6729,6 +6729,86 @@
     "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "220501",
     "origin": "READ_PROCEDURE"
-  } 
+  },
+  {
+    "folioTramite": "1245983214785236478110204",
+    "tipoDeTramite": "Expedición de Certificados de Cupo Licitación pública",
+    "nombreDeLaTarea": "Evaluar solicitud",
+    "fechaDeAsignacion": "2023-10-01",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "se",
+    "numeroDeProcedimiento": "110204",
+    "origin": "FLUJO_FUNCIONARIO_EVALUAR"
+  },
+  {
+    "folioTramite": "8432059673128576123110204",
+    "tipoDeTramite": "Expedición de Certificados de Cupo Licitación pública",
+    "nombreDeLaTarea": "confirmar notificación",
+    "fechaDeAsignacion": "2023-10-02",
+    "estadoDeTramite": "Pendiente",
+    "departamento": "se",
+    "numeroDeProcedimiento": "110204",
+    "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION"
+  },
+  {
+    "folioTramite": "5638124671298453267110204",
+    "tipoDeTramite": "Expedición de Certificados de Cupo Licitación pública",
+    "nombreDeLaTarea": "Atender requerimiento",
+    "fechaDeAsignacion": "2023-10-03",
+    "estadoDeTramite": "Completado",
+    "departamento": "se",
+    "numeroDeProcedimiento": "110204",
+    "origin": "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO"
+  },
+  {
+    "folioTramite": "9108234761290837461110204",
+    "tipoDeTramite": "Expedición de Certificados de Cupo Licitación pública",
+    "nombreDeLaTarea": "Authorizar solicitud",
+    "fechaDeAsignacion": "2023-10-04",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "se",
+    "numeroDeProcedimiento": "110204",
+    "origin": "FLUJO_FUNCIONARIO_AUTORIZACION"
+  },
+  {
+    "folioTramite": "7823645129837562348110201",
+    "tipoDeTramite": "Expedición de Certificados de Cupo Licitación pública",
+    "nombreDeLaTarea": "confirmar notificación de resolución",
+    "fechaDeAsignacion": "2023-10-05",
+    "estadoDeTramite": "Pendiente",
+    "departamento": "se",
+    "numeroDeProcedimiento": "110204",
+    "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-RESOLUCION"
+  },
+  {
+    "folioTramite": "3459087234612098376110204",
+    "tipoDeTramite": "Expedición de Certificados de Cupo Licitación pública",
+    "nombreDeLaTarea": "Functionario verificar requerimiento",
+    "fechaDeAsignacion": "2023-10-06",
+    "estadoDeTramite": "Completado",
+    "departamento": "se",
+    "numeroDeProcedimiento": "110204",
+    "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
+  },
+  {
+    "folioTramite": "9812374621903847612110204",
+    "tipoDeTramite": "Expedición de Certificados de Cupo Licitación pública",
+    "nombreDeLaTarea": "Generar opinión",
+    "fechaDeAsignacion": "2023-10-07",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "se",
+    "numeroDeProcedimiento": "110204",
+    "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
+  },
+  {
+    "folioTramite": "4321098746230987462110204",
+    "tipoDeTramite": "Expedición de Certificados de Cupo Licitación pública",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "se",
+    "numeroDeProcedimiento": "110204",
+    "origin": "READ_PROCEDURE"
+  }
 ]
 

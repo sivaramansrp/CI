@@ -1,5 +1,5 @@
 import { Catalogo, CatalogoSelectComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
@@ -20,6 +20,8 @@ import { Tramite110204Store } from '../../estados/tramite110204.store';
   standalone: true
 })
 export class DatosCertificadoComponent implements OnInit, OnDestroy {
+
+  @Input() formularioDeshabilitado: boolean = false;
   
   /**
    * Formulario reactivo que contiene los datos del certificado.
@@ -53,6 +55,13 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
      */
     private seccion!: SeccionLibState
     ;
+
+    /**
+   * @descripcion
+   * Indica si el formulario se encuentra en modo solo lectura.
+   * Cuando es verdadero, los controles del formulario estarán deshabilitados.
+   */
+  esFormularioSoloLectura: boolean = false;
   
 
   /**
@@ -188,8 +197,22 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     });
     this.cargarRepresentacionFederal();
 
+    if(this.formularioDeshabilitado){
+      this.esFormularioSoloLectura = true;
+      this.inicializarEstadoFormulario();
+    }
+
   }
   
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.formDatosCertificado.disable();
+    }
+    else {
+      this.formDatosCertificado.enable();
+    } 
+  }
+
   /**
    * Método que selecciona un idioma y actualiza el estado en el store.
    * @param estado El estado del idioma seleccionado.
