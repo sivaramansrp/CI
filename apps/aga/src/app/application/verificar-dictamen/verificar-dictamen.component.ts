@@ -1,27 +1,26 @@
-
 import { AccuseComponentes, ListaComponentes, Tabulaciones } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
-import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConsultaioState } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, Type } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { DatosComponent } from '@libs/shared/data-access-user/src/tramites/components/datos/datos.component';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { LISTA_TRIMITES } from '../core/enums/lista-trimites.enums';
 import { Router } from '@angular/router';
 
 import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramites/components/reviewers-tabs/reviewers-tabs.component';
 import { VerificaDictamenService } from '@libs/shared/data-access-user/src/core/services/verificaDictamen/verifica-dictamen.service';
 import { VerificarDictamenModel } from '@libs/shared/data-access-user/src/core/models/shared/verificar-dictamen.models';
 
+
 @Component({
   selector: 'app-verificar-dictamen',
   standalone: true,
   imports: [
     CommonModule,
-    TituloComponent,
     ReactiveFormsModule,
     CatalogoSelectComponent,
     ReviewersTabsComponent,
-    DatosComponent,
   ],
   templateUrl: './verificar-dictamen.component.html',
   styleUrl: './verificar-dictamen.component.scss',
@@ -43,13 +42,8 @@ export class VerificarDictamenComponent implements OnInit, OnDestroy {
    */
   requisitosCombo: Catalogo[] = [];
 
-  /**
-   * La variable `numeroDeTramite` en la clase `VerificarDictamenComponent` almacena un valor de cadena específico '099226136147361192499352'. 
-   * Este valor se utiliza como identificador para obtener datos relacionados con un trámite particular desde el servicio `verificaDictamenService`. 
-   * El componente utiliza este valor para recuperar y mostrar información asociada a este trámite específico, como el número de trámite, 
-   * fundamento, justificación, plazo y requisitos. 
-   */
-  numeroDeTramite: string = '099226136147361192499352';
+  /** Subject para notificar la destrucción del componente. */
+  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Lista de objetos de tipo Catalogo que representa las opciones disponibles
@@ -74,12 +68,43 @@ export class VerificarDictamenComponent implements OnInit, OnDestroy {
    * @description Objeto que representa el trámite seleccionado actualmente.
    */
   slectTramite!: AccuseComponentes | undefined;
+
+  /**
+   * Esta variable se utiliza para almacenar el estado de la consulta.
+   */
+  public consultaState!:ConsultaioState;
+
+  /**
+   * @property {ConsultaioState} guardarDatos
+   * @description Estado actual del trámite consultado.
+   */
+  guardarDatos!: ConsultaioState;
+
+  /**
+   * @property {AccuseComponentes[] } listaTrimites
+   * @description Lista de trámites disponibles para evaluación, obtenida de la constante LISTA_TRIMITES.
+   */
+  listaTrimites = LISTA_TRIMITES;
     
-  constructor(      
-    private fb: FormBuilder,            
-    private router: Router,
-    private verificaDictamenService: VerificaDictamenService,
-  ) { }
+  constructor(
+    private fb: FormBuilder, 
+    private router: Router, 
+    private verificaDictamenService: VerificaDictamenService, 
+    private consultaioQuery: ConsultaioQuery 
+  ) 
+  {
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.consultaState = seccionState;
+        this.tramite = Number (seccionState.procedureId)
+        if (this.tramite) {
+            this.selectTramite(this.tramite);
+        }
+      })
+    ).subscribe()
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -87,7 +112,8 @@ export class VerificarDictamenComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializaFormTramite();
-    this.verificaDictamenService.obtenerDictamen(this.numeroDeTramite)
+    
+    this.verificaDictamenService.obtenerDictamen(this.consultaState.folioTramite ?? "")
       .pipe(takeUntil(this.destruirSuscripcion$))
       .subscribe((dictamen: VerificarDictamenModel) => {
       if (Array.isArray(dictamen.requisitos)) {
@@ -159,7 +185,7 @@ export class VerificarDictamenComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   observacion(): void {
-    this.router.navigate(['detalle-v-dictamen']);
+    this.router.navigate([this.consultaState.department+'/detalle-v-dictamen']);
   }
 
   /**
@@ -195,5 +221,16 @@ export class VerificarDictamenComponent implements OnInit, OnDestroy {
       return;
     }
     this.viewChild = await li.componentPath() as Type<unknown>;
+  }
+
+  /**
+   * @method selectTramite
+   * @description Selecciona el trámite a evaluar y actualiza la referencia del trámite seleccionado.
+   * @param {number} i - Identificador del trámite.
+   * @returns {void}
+   */
+  selectTramite(i: number): void {
+    this.tramite = i;
+    this.slectTramite = LISTA_TRIMITES.find((v) => v.tramite === i);
   }
 }
