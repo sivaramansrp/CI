@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
-import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
+import { Catalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
+import {CatalogoSelectComponent, InputFecha, InputFechaComponent} from '@libs/shared/data-access-user/src'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, delay, map, of, takeUntil } from 'rxjs';
 import { CamCertificadoService } from '../../services/cam-certificado.service';

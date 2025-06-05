@@ -79,6 +79,7 @@ export interface CamState {
   correo: string;
   formaValida: { [key: string]: boolean };
   formDestinatario: { [key: string]: unknown};
+  calle:string;
 }
 
 /**
@@ -87,6 +88,7 @@ export interface CamState {
  */
 export function createInitialState(): CamState {
   return {
+    calle:'',
     formCertificado: {
       si: false,
       entidadFederativa: '',
@@ -169,7 +171,7 @@ export function createInitialState(): CamState {
     formDestinatario: {
       paisDestin: '',
       ciudad: '',
-      celle: '',
+      calle: '',
       numeroLetra: '',
       lada: '',
       telefono: '',
