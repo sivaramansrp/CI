@@ -9,6 +9,7 @@ import {
   LABEL_DESPACHO_DD,
   LABEL_DESPACHO_LDA,
   MSG_ADUANA_PEDIMENTO,
+  MSG_ALERTA_ELIMINAR_ELEMENTO,
   MSG_CAMBIO_TIPO_SOLICITUD,
   MSG_ELIMINA_ELEMENTO,
   MSG_ERROR_NO_INFORMACION,
@@ -20,6 +21,8 @@ import {
   PATENTES_ID,
   SIN_ITEMS,
   SIN_VALOR,
+  TEXTO_ACEPTAR,
+  TEXTO_CANCELAR,
   TITULO_MODAL_AVISO,
   TRANSPORTE,
   UN_DIA,
@@ -315,7 +318,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * @descripcion Notificación para mostrar mensajes al usuario.
    */
-  public nuevaNotificacion!: Notificacion;
+  public nuevaNotificacion!: Notificacion | null;
 
   /**
    * Bandera para saber el tipo de persona del usuario.
@@ -1744,6 +1747,18 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     //Verifica si la tabla de lineas de captura tiene datos y los agrega al formulario.
     if (this.solicitudState.lineasCaptura.length > 0) {
       this.datosTablaPagos = [...this.solicitudState.lineasCaptura];
+
+      this.lineasCaptura?.clear();
+      this.datosTablaPagos.forEach((linea) => {
+        this.lineasCaptura.push(
+          this.fb.group({
+            lineaCaptura: [linea.lineaCaptura, Validators.required],
+            monto: [linea.monto, Validators.required],
+          })
+        );
+      });
+      this.pagoCaptura.get('lineaCaptura')?.reset();
+      this.pagoCaptura.get('monto')?.reset();
     }
 
     this.colapsable =
@@ -2127,6 +2142,34 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         }
         break;
 
+      case 'linea_captura':
+        if (confirmar) {
+          this.datosTablaPagos = this.datosTablaPagos.filter(
+            (item) =>
+              !this.lineaCapturaSeleccionados.some(
+                (seleccionado) =>
+                  seleccionado.lineaCaptura === item.lineaCaptura
+              )
+          );
+          this.lineaCapturaSeleccionados = [];
+          this.tramite5701Store.setLineasCaptura(this.datosTablaPagos);
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: '',
+            modo: 'action',
+            titulo: TITULO_MODAL_AVISO,
+            mensaje: MSG_ELIMINA_ELEMENTO,
+            cerrar: false,
+            txtBtnAceptar: 'Cerrar',
+            txtBtnCancelar: '',
+          };
+          this.procesoModal = '';
+        }
+
+        this.limpiarNotificacion();
+
+        break;
+
       default:
         break;
     }
@@ -2504,24 +2547,26 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    this.datosTablaPagos = this.datosTablaPagos.filter(
-      (item) =>
-        !this.lineaCapturaSeleccionados.some(
-          (seleccionado) => seleccionado.lineaCaptura === item.lineaCaptura
-        )
-    );
-
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: '',
       modo: 'action',
       titulo: TITULO_MODAL_AVISO,
-      mensaje: MSG_ELIMINA_ELEMENTO,
+      mensaje: MSG_ALERTA_ELIMINAR_ELEMENTO,
       cerrar: false,
-      txtBtnAceptar: 'Cerrar',
-      txtBtnCancelar: '',
+      txtBtnAceptar: TEXTO_ACEPTAR,
+      txtBtnCancelar: TEXTO_CANCELAR,
     };
 
-    this.tramite5701Store.setLineasCaptura(this.datosTablaPagos);
+    this.procesoModal = 'linea_captura';
+  }
+
+  /**
+   * Lipia el objeto de notificación y el proceso modal.
+   * @returns {void} No retorna ningún valor.
+   */
+  limpiarNotificacion(): void {
+    this.nuevaNotificacion = null;
+    this.procesoModal = '';
   }
 }

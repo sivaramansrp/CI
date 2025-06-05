@@ -281,3 +281,19 @@ export const MSG_ERROR_NO_INFORMACION = 'No se encontró información';
  *@description Titulo del modal aviso
  */
 export const TITULO_MODAL_AVISO = 'Aviso';
+
+/**
+ * @description Mensaje de alerta al intentar eliminar un elemento de la tabla
+ */
+export const MSG_ALERTA_ELIMINAR_ELEMENTO =
+  '¿Seguro que desea eliminar el registro seleccionado?';
+
+/**
+ * @description Texto 'Aceptar' para el botón de confirmación en el modal de aviso
+ */
+export const TEXTO_ACEPTAR = 'Aceptar';
+
+/**
+ * @description Texto 'Cancelar' para el botón de cancelación en el modal de aviso
+ */
+export const TEXTO_CANCELAR = 'Cancelar';
