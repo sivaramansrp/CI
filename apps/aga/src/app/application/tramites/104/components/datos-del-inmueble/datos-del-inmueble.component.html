@@ -39,9 +39,9 @@
 </div>
 
 <div class=" text-end mt-5">
-    <button class="btn btn-primary  me-2" data-bs-toggle="modal" data-bs-target="#modalAgregar">Agregar</button>
-    <button class="btn btn-default me-2">Modificar</button>
-    <button class="btn btn-primary">Eliminar</button>
+    <button class="btn btn-primary  me-2" data-bs-toggle="modal" data-bs-target="#modalAgregar"  [disabled]="consultaState.readonly">Agregar</button>
+    <button class="btn btn-default me-2"  [disabled]="consultaState.readonly">Modificar</button>
+    <button class="btn btn-primary"  [disabled]="consultaState.readonly">Eliminar</button>
 </div>
 
 <div class="modal" tabindex="-1" [ngClass]="{'show': mostrarAlerta}"
@@ -149,9 +149,9 @@
                     </form>
                 </div>
                 <div class="modal-footer custom-footer justify-content-end">
-                    <button type="button" class="btn btn-primary">Agregar</button>
-                    <button type="button" class="btn btn-default btn-space">Limpiar</button>
-                    <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>
+                    <button type="button" class="btn btn-primary"  [disabled]="consultaState.readonly">Agregar</button>
+                    <button type="button" class="btn btn-default btn-space"  [disabled]="consultaState.readonly">Limpiar</button>
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal"  [disabled]="consultaState.readonly" #closeModal>
                         Cerrar
                     </button>
                 </div>
