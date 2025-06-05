@@ -289,7 +289,6 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
 
         }]
     },
-
     {
         tramite: 80208,
         listaComponentes: [{
@@ -331,12 +330,20 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
         componentName: 'PasoUnoComponent',
     }]
   },
-   {
+  {
+      tramite: 80211,
+        listaComponentes: [{
+          id: 'solicitud',
+          componentPath: () => import('../../tramites/80211/pages/paso-uno/paso-uno.component').then(m => m.PasoUnoComponent),
+          componentName: 'PasoUnoComponent',
+        }]
+    },
+     {
         tramite: 140105,
         listaComponentes: [{
             id: 'solicitud',
             componentPath: () => import('../../tramites/140105/pages/paso-uno/paso-uno.component').then(m => m.PasoUnoComponent),
             componentName: 'PasoUnoComponent',
       }]
-       }
+    }
 ];
