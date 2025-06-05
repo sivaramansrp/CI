@@ -27,7 +27,7 @@
                     [required]="true"
                     formControlName="banco"
                     name="banco"
-                    (change)="setValoresStore(pagoDerechosForm,'banco', 'SetBanco')">
+                    (change)="setValoresStore(pagoDerechosForm,'banco', 'SetBanco')" [isDisabled]="consultaState.readonly">
                 </app-catalogo-select>
             </div>
         </div>

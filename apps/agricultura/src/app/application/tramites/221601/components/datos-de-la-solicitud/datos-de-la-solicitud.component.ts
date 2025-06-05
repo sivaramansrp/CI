@@ -4,14 +4,16 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { CAPTURA_MERCANCIA, DATOS_SOLICITUD, Mercancias, OPCIONES_DE_BOTON_DE_RADIO } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
 import { Solicitud221601State, Tramite221601Store } from '../../../../estados/tramites/tramite221601.store';
 import { CONFIGURATION_TABLAS_MERCANCIAS } from '@libs/shared/data-access-user/src/core/models/221601/zoosanitario.model';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Modal } from 'bootstrap';
 import { Tramite221601Query } from '../../../../estados/queries/tramite221601.query';
 import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
+
 
 /**
  * Componente que gestiona la visualización y el manejo de los datos de la solicitud 221601, incluyendo 
@@ -81,7 +83,9 @@ import realizar from '@libs/shared/theme/assets/json/221601/zoosanitario.json';
  * @method ngOnDestroy() - Se ejecuta cuando el componente es destruido. Limpia los recursos y previene memory leaks.
  */
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
-
+/** Indica si el formulario debe mostrarse en modo solo lectura.  
+ *  Controla la habilitación o deshabilitación de los campos. */
+ esFormularioSoloLectura: boolean = false;
   /**
    * Lista de opciones de régimen obtenidas de un catálogo.
    */
@@ -178,9 +182,22 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite221601Store: Tramite221601Store,
-    private tramite221601Query: Tramite221601Query
+    private tramite221601Query: Tramite221601Query,
+      private consultaioQuery: ConsultaioQuery,
+        private validacionesService: ValidacionesFormularioService,  
   ) {
     // Constructor que inyecta las dependencias necesarias
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+         
+         
+           this.inicializarCombinacionFormulario();
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -204,7 +221,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Inicializa el formulario reactivo y carga los datos necesarios para la solicitud.
    */
   ngOnInit(): void {
-    this.inicializarFormulario();
+   this.inicializarCombinacionFormulario();
   }
 
   /**
@@ -213,7 +230,16 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Este método configura los campos del formulario con los valores actuales del estado de la solicitud
    * y aplica las validaciones necesarias. También deshabilita ciertos campos y establece valores predeterminados.
    */
-  private inicializarFormulario(): void {
+  inicializarCombinacionFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+     this.inicializarFormulario()
+    }  
+  }
+  /** Inicializa los datos del formulario suscribiéndose al estado del trámite.  
+ *  Asigna el estado actual al modelo local del componente. */
+   inicializarFormulario(): void {
     this.tramite221601Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -244,6 +270,25 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.datosSolicitudForm.get('punto')?.setValue(realizar.formData.punto);
     this.datosSolicitudForm.get('capturaMercancia')?.setValue(this.valorSeleccionado);
     this.updateStoreWithFormData();
+  }
+    /**
+   * @comdoc
+   * Guarda los datos del formulario de combinación requerida.
+   * 
+   * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
+   * - Si el formulario es de solo lectura, lo deshabilita.
+   * - Si no es de solo lectura, lo habilita.
+   * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.datosSolicitudForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.datosSolicitudForm.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
   }
   /**
  * Actualiza el estado del store `tramite221601Store` con los datos del formulario `MedioForm`.

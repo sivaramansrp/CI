@@ -2,14 +2,14 @@
     <form [formGroup]="solicitudForm" id="formSolicitud">
         <ng-titulo titulo="Ingresar por:" />
         <ng-container>
-            <div class="row">
+            <div class="row tipo-busqueda-radio">
                 <div class="col-md-12">
-                    <br><br>
                     <div class="col-md-4">
                         <div class="radio">
                             <label>
                                 <input type="radio" formControlName="tipoBusqueda" id="idRadioContenedor"
-                                    value="Contenedor" class="form-check-input" [attr.disabled]="radioContenedor ? true : null">
+                                    value="Contenedor" class="form-check-input"
+                                    [attr.disabled]="radioContenedor ? true : null">
                                 Contenedor
                             </label>
                         </div>
@@ -19,7 +19,8 @@
                         <div class="radio">
                             <label>
                                 <input type="radio" formControlName="tipoBusqueda" id="idRadioManifiesto"
-                                    value="No. de Manifiesto" class="form-check-input" [attr.disabled]="radioManifesto ? true : null">
+                                    value="No. de Manifiesto" class="form-check-input"
+                                    [attr.disabled]="radioManifesto ? true : null">
                                 No. de Manifiesto
                             </label>
                         </div>
@@ -45,14 +46,16 @@
                         <ng-titulo titulo="Datos generales" />
                         <app-catalogo-select [catalogo]="aduanaList.catalogos" [label]="aduana.labelNombre"
                             [placeholder]="aduana.primerOpcion" [required]="true" formControlName="aduana"
-                            (change)="setValoresStore(solicitudForm,'aduana', 'setAduana')"></app-catalogo-select>
+                            (change)="setValoresStore(solicitudForm,'aduana', 'setAduana')"
+                            [isDisabled]="soloLectura"></app-catalogo-select>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group datepicker-group">
-                            <input-fecha [datos]="fechaInicioInput" formControlName="fechaDeIngreso"
-                                (valorCambiado)="cambioFechaIngreso($event)"></input-fecha>
+                            <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaIngreso($event)"
+                                [isDisabled]="soloLectura"
+                                [setFecha]="solicitudForm.get('fechaIngreso')?.value"></input-fecha>
                         </div>
                     </div>
                 </div>
@@ -69,22 +72,34 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-4 mb-4">
                         <div class="form-group">
-                            <label for="inicialesContenedor">Iniciales del equipo</label>
-                            <span class="require">*</span>
+                            <label for="inicialesContenedor">Iniciales del equipo<span class="require">*</span>:</label>
                             <input type="text" formControlName="inicialesContenedor" id="inicialesContenedor"
                                 maxlength="10" class="form-control"
                                 [ngClass]="isValid('inicialesContenedor') ? 'required' : ''">
+                            <div *ngIf="esInvalido('inicialesContenedor')" class="text-danger">
+                                <small *ngIf="solicitudForm.controls['inicialesContenedor'].errors?.['required']">
+                                    Este campo es obligatorio.
+                                </small>
+                            </div>
                         </div>
                     </div>
 
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="numeroContenedor">Número de equipo</label>
-                            <span class="require">*</span>
+                            <label for="numeroContenedor">Número de equipo<span class="require">*</span>:</label>
                             <input type="text" formControlName="numeroContenedor" id="numeroContenedor" maxlength="15"
                                 class="form-control" [ngClass]="isValid('numeroContenedor') ? 'required' : ''">
+                            <div *ngIf="esInvalido('numeroContenedor')" class="text-danger">
+                                <small *ngIf="solicitudForm.controls['numeroContenedor'].errors?.['required']">
+                                    Este campo es obligatorio.
+                                </small>
+                                <div *ngIf="solicitudForm.get('numeroContenedor')?.touched && solicitudForm.get('numeroContenedor')?.errors?.['minlength']"
+                                    class="mensaje-error">
+                                    Por favor, no escribas menos de 6 caracteres
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -92,7 +107,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="digitoDeControl">Dígito verificador</label>
+                            <label for="digitoDeControl">Dígito verificador:</label>
                             <input type="text" formControlName="digitoDeControl" id="digitoDeControl" maxlength="1"
                                 class="form-control">
                         </div>
@@ -101,16 +116,18 @@
                     <div class="col-md-4 menu-desplegable">
                         <app-catalogo-select [catalogo]="contenedores.catalogos" [label]="contenedores.labelNombre"
                             [placeholder]="aduana.primerOpcion" [required]="true" formControlName="contenedores"
-                            (change)="setValoresStore(solicitudForm,'contenedores', 'setContenedores')"></app-catalogo-select>
+                            (change)="setValoresStore(solicitudForm,'contenedores', 'setContenedores')"
+                            [isDisabled]="soloLectura"></app-catalogo-select>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group pull-right">
-                            <button type="button" class="btn btn-default" (click)="limpiarCampos()">Limpiar</button>
-                            <button type="button" class="btn btn-primary ms-2"
-                                (click)="validarDigitoVerificador()">Agregar</button>
+                            <button type="button" class="btn btn-default" (click)="limpiarCampos()"
+                                [disabled]="soloLectura">Limpiar</button>
+                            <button type="button" class="btn btn-primary ms-2" (click)="validarDigitoVerificador()"
+                                [disabled]="soloLectura">Agregar</button>
                         </div>
                     </div>
                 </div>
@@ -128,14 +145,13 @@
                         <app-catalogo-select [catalogo]="catalogoList" [label]="transporteList.labelNombre"
                             [placeholder]="transporteList.primerOpcion" formControlName="menuDesplegable"
                             (change)="setValoresStore(solicitudForm,'menuDesplegable', 'setMenuDesplegable')"
-                            [required]="true"
+                            [isDisabled]="soloLectura" [required]="true"
                             [ngClass]="isValid('numeroManifiesta') ? 'required' : ''"></app-catalogo-select>
                     </div>
 
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label for="numeroManifiesta" class="mt-2">No. Manifiesto</label>
-                            <span class="require">*</span>
+                            <label for="numeroManifiesta">No. Manifiesto<span class="require">*</span>:</label>
                             <input type="text" formControlName="numeroManifiesta" id="numeroManifiesta" maxlength="50"
                                 class="form-control" [ngClass]="isValid('numeroManifiesta') ? 'required' : ''"
                                 (change)="setValoresStore(solicitudForm,'numeroManifiesta', 'setNumeroManifiesta')">
@@ -145,23 +161,30 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group pull-right">
-                            <button type="button" class="btn btn-primary" (click)="enviarManifiesto()">Buscar</button>
+                            <button type="button" class="btn btn-primary" (click)="enviarManifiesto()"
+                                [disabled]="soloLectura">Buscar</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div id="mensaje" style="margin-top: 1em;" *ngIf="mostrarMensaje">
+            <div id="mensaje" style="margin-top: 1em;"
+                *ngIf="!solicitud11201State?.tipoBusqueda || solicitud11201State?.tipoBusqueda === 'No. de Manifiesto'">
                 <ng-alert [CONTENIDO]="TEXTOS.ADVERTENCIA"></ng-alert>
                 <div class="col-md-12" id="IdGridContenedoresITC">
                     <div class="table-responsive">
                         <div class="innercontainer">
-                            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="encabezadoDeTabla" [datos]="datosTabla"></app-tabla-dinamica>
+                            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+                                [disableSeleccionTablaCheckBox]="soloLectura"
+                                [configuracionTabla]="encabezadoDeTablaManifiesto"
+                                [datos]="datosTabla"></app-tabla-dinamica>
                         </div>
                     </div>
                     <div align="center" id="paginGridContenedoresITC">
-                        <div class="page-container">
-                            <div class="page-number">1</div>
-                        </div>
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination d-flex justify-content-center">
+                                <li class="page-item"><a class="page-link" href="Javascript:;">1</a></li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -174,13 +197,18 @@
                         <div class="col-md-4">
                             <ng-titulo titulo="Datos generales" />
                             <app-catalogo-select [catalogo]="catalogoList" [label]="aduana.labelNombre"
-                                [placeholder]="aduana.primerOpcion" [required]="true" formControlName="aduanaMenuDesplegable" (change)="setValoresStore(solicitudForm,'aduanaMenuDesplegable', 'setAduanaMenuDesplegable')"></app-catalogo-select>
+                                [placeholder]="aduana.primerOpcion" [required]="true"
+                                formControlName="aduanaMenuDesplegable"
+                                (change)="setValoresStore(solicitudForm,'aduanaMenuDesplegable', 'setAduanaMenuDesplegable')"
+                                [isDisabled]="soloLectura"></app-catalogo-select>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <div class="form-group datepicker-group">
-                                <input-fecha [datos]="fechaInicioInput" formControlName="fechaDeIngreso" (valorCambiado)="cambioFechaDeIngreso($event)"></input-fecha>
+                                <input-fecha [datos]="fechaInicioInput" (valorCambiado)="cambioFechaDeIngreso($event)"
+                                    [isDisabled]="soloLectura"
+                                    [setFecha]="solicitudForm.get('fechaDeIngreso')?.value"></input-fecha>
                             </div>
                         </div>
                     </div>
@@ -188,10 +216,14 @@
                         <div class="col-md-4">
                             <ng-titulo titulo="Adjuntar archivo" />
                             <label for="archivoSeleccionado" class="form-label">Archivo Seleccionado*:</label>
-                            <input class="form-control" type="string" name="archivoSeleccionado" id="archivoSeleccionado" [value]="etiquetaDeArchivo" readonly>
+                            <input class="form-control" type="string" name="archivoSeleccionado"
+                                id="archivoSeleccionado" [value]="etiquetaDeArchivo" readonly>
                         </div>
                         <div class="col-md-4 d-flex justify-content-end" style="width: 100%">
-                            <button [disabled]="!solicitudForm.get('aduanaMenuDesplegable')?.value || !solicitudForm.get('fechaDeIngreso')?.value" type="button" class="btn btn-default" (click)="adjuntarArchivo() ">Cargar archivo</button>
+                            <button
+                                [disabled]="!solicitudForm.get('aduanaMenuDesplegable')?.value || !solicitudForm.get('fechaDeIngreso')?.value"
+                                type="button" class="btn btn-default" (click)="adjuntarArchivo() ">Cargar
+                                archivo</button>
                         </div>
                         <div class="row" style="margin-top: 20px" *ngIf="mostrarArchivoSeleccionadoTable">
                             <div class="col-md-8">
@@ -211,14 +243,15 @@
                                     </section> }
                                 </div>
                             </div>
-                                <div class="col-md-4 d-flex justify-content-end p-5 gap-3" style="width: 100%">
-                                    <button type="button" class="btn btn-default" (click)="regresar()">Regresar</button>
-                                    <button type="button" class="btn btn-default" (click)="archivo()">Enviar</button>
-                                </div>
+                            <div class="col-md-4 d-flex justify-content-end p-5 gap-3" style="width: 100%">
+                                <button type="button" class="btn btn-default" (click)="regresar()">Regresar</button>
+                                <button type="button" class="btn btn-default" (click)="archivo()">Enviar</button>
+                            </div>
                         </div>
 
-                        <div *ngIf="mostrarCargarArchivoTable" class="table-container">
-                            <app-tabla-dinamica [configuracionTabla]="encabezadoDeTabla"
+                        <div *ngIf="!solicitud11201State?.tipoBusqueda || solicitud11201State?.tipoBusqueda === 'Archivo CSV'"
+                            class="table-container">
+                            <app-tabla-dinamica [configuracionTabla]="encabezadoDeTablaManifiesto"
                                 [datos]="datosTabla"></app-tabla-dinamica>
                         </div>
                     </div>
@@ -240,32 +273,6 @@
                         <li class="page-item"><a class="page-link" href="Javascript:;">1</a></li>
                     </ul>
                 </nav>
-            </div>
-        </div>
-        <div class="row" style="margin-top: 30px;margin-bottom: 30px;">
-            <div class="form-group">
-                <div class="col-md-12">
-                    <div class="pull-left text-muted text-vertical-align-button" id="lblCamposObligatorios">
-                        {{ mensajeCamposObligatorios }}
-                    </div>
-                    <div class="pull-right row">
-                        <div class="col-md-5">
-                            <button type="button" class="btn btn-danger" (click)="cancelar()">
-                                Cancelar
-                            </button>
-                        </div>
-                        <div class="col-md-5" *ngIf="requiereGuardadoParcial">
-                            <button type="button" class="btn btn-default">
-                                Guardar
-                            </button>
-                        </div>
-                        <div class="col-md-5" id="botonGuardar">
-                            <button type="submit" class="btn btn-primary" (click)="continuar()">
-                                Continuar
-                            </button>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </form>
