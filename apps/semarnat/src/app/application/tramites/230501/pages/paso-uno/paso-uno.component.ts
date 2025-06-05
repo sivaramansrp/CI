@@ -44,6 +44,21 @@ export class PasoUnoComponent implements OnDestroy {
 
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * @constructor
+   * Inicializa el componente PasoUno, inyectando los servicios necesarios y configurando el estado inicial.
+   * 
+   * - Suscribe al observable `selectConsultaioState$` para actualizar el estado local `consultaState` cuando cambie el estado global.
+   * - Si el `procedureId` es '230501' y la propiedad `update` está activa, guarda los datos del formulario automáticamente.
+   * - En caso contrario, establece la bandera `esDatosRespuesta` en `true`.
+   * 
+   * @param seccionStore Servicio para manejar el estado de la sección.
+   * @param consultaQuery Servicio para consultar el estado de la aplicación.
+   * @param materialesPeligrososService Servicio para gestionar materiales peligrosos.
+   * 
+   * @remarks
+   * Este constructor es fundamental para la inicialización y manejo del flujo de datos en el paso uno del trámite 230501.
+   */
   constructor(private seccionStore: SeccionLibStore,
     private consultaQuery: ConsultaioQuery,
     public materialesPeligrososService: MaterialesPeligrososService

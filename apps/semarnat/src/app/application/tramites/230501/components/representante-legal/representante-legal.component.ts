@@ -95,6 +95,7 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
    * @param tramiteStore - Store que administra el estado del trámite actual.
    * @param tramiteQuery - Servicio para consultar el estado del trámite.
    * @param ubicaccion - Servicio de Angular para navegación de retroceso.
+   * @param consultaQuery - Consulta para obtener el estado de la sección de consulta.
    */
   constructor(
     private fb: FormBuilder,

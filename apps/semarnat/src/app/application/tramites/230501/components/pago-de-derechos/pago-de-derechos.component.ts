@@ -61,9 +61,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param fb Constructor de formularios reactivos para la creación y gestión de formularios.
    * @param tramite230501Store Almacén para gestionar el estado relacionado con el trámite 230501.
    * @param tramite230501Query Consultas relacionadas con el estado del trámite 230501.
-   * @param seccionQuery Consultas relacionadas con las secciones de la aplicación.
-   * @param seccionStore Almacén para gestionar el estado de las secciones de la aplicación.
-   * 
+   * @param consultaQuery Consulta para obtener el estado de la sección de consulta.
    * @description Este constructor inicializa el componente y llama al servicio de materiales peligrosos
    * para inicializar el catálogo de pago de derechos.
    */

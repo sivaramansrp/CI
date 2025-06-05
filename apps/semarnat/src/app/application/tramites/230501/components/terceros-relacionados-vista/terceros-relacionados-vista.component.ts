@@ -119,6 +119,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    * @param tramiteQuery - Servicio de consulta que expone observables para leer los datos del store.
    * @param router - Servicio para navegar a rutas en la aplicación.
    * @param activatedRoute - Servicio para obtener la ruta activa y parámetros de la misma.
+   * @param consultaQuery - Servicio de consulta que expone el estado de la sección de consulta.
    */
   constructor(
     private tramiteStore: Tramite230501Store,

@@ -137,6 +137,7 @@ export class DestinatarioFinalComponent implements OnDestroy, OnInit {
    * @param {Tramite230501Query} tramiteQuery - Servicio para consultar el estado de "Tramite230501".
    * @param {Location} ubicaccion - Servicio de Angular para navegar hacia atrás en el historial.
    * @param {MaterialesPeligrososService} materialesPeligrososService - Servicio para obtener diferentes listas de datos.
+   * @param {ConsultaioQuery} consultaQuery - Servicio para consultar el estado de la consulta.
    */
   constructor(
     private fb: FormBuilder,

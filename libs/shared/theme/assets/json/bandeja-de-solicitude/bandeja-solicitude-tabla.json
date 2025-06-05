@@ -879,14 +879,5 @@
     "diasTranscurridos": "4",
     "departamento": "SEMARNAT",
     "numeroDeProcedimiento": "230501"
-  },
-  {
-    "id":230201,
-    "tipoDeTramite": "Solicitud de Permiso",
-    "fecha": "2025-10-01",
-    "fechaActualizacion": "2025-10-05",
-    "diasTranscurridos": "4",
-    "departamento": "SEMARNAT",
-    "numeroDeProcedimiento": "230201"
   }
 ]

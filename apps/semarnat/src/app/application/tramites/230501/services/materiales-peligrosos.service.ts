@@ -224,6 +224,6 @@ export class MaterialesPeligrososService {
   *          cargados desde el archivo JSON especificado en la ruta de `assets`.
   */
   getRegistroTomaMuestrasMercanciasData(): Observable<Tramite230501State> {
-    return this.httpServicios.get<Tramite230501State>('assets/json/230501/datos-prefill.json');
+    return this.httpServicios.get<Tramite230501State>('assets/json/230501/datos-previos.json');
   }
 }

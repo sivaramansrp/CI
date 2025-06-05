@@ -120,6 +120,7 @@ export class UsoFinalComponent implements OnDestroy, OnInit {
    * @param {Location} ubicaccion - Servicio para manejar la navegación (volver atrás).
    * @param {Tramite230501Store} tramiteStore - Store que administra el estado del trámite.
    * @param {Tramite230501Query} tramiteQuery - Servicio para consultar el estado actual del trámite.
+   * @param {ConsultaioQuery} consultaQuery - Servicio para consultar el estado de la sección de consulta.
    */
   constructor(
     private fb: FormBuilder,

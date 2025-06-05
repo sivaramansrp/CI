@@ -153,20 +153,21 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
 */
   esFormularioSoloLectura: boolean = false;
   /**
-   * Constructor de la clase ContenedorDeDatosSolicitudComponent.
+   * Constructor del componente `ContenedorDeDatosSolicitudComponent`.
    * 
-   * @param tramite230501Query - Servicio para realizar consultas relacionadas con el trámite 230501.
-   * @param tramite230501Store - Almacén para gestionar el estado del trámite 230501.
-   * @param materialesPeligrososService - Servicio para manejar datos relacionados con materiales peligrosos.
-   * @param seccionStore - Almacén para gestionar el estado de las secciones.
-   * @param seccionQuery - Servicio para realizar consultas relacionadas con las secciones.
-   * @param fb - Constructor de formularios reactivos.
-   * @param router - Servicio para la navegación entre rutas.
-   * @param activatedRoute - Servicio para acceder a información sobre la ruta activa.
+   * @param tramite230501Query Consulta de estado para el trámite 230501.
+   * @param tramite230501Store Almacén de estado para el trámite 230501.
+   * @param materialesPeligrososService Servicio para la gestión de materiales peligrosos.
+   * @param seccionStore Almacén de estado para las secciones.
+   * @param seccionQuery Consulta de estado para las secciones.
+   * @param fb Constructor de formularios reactivos.
+   * @param router Servicio de enrutamiento de Angular.
+   * @param activatedRoute Información sobre la ruta activa.
+   * @param consultaQuery Consulta de estado para la consulta de información.
    * 
-   * Este constructor inicializa el componente y realiza llamadas al servicio 
-   * `materialesPeligrososService` para obtener datos iniciales como la lista de fracciones 
-   * arancelarias, números CAS, estados físicos y unidades de medida.
+   * Inicializa el componente y realiza la carga de catálogos necesarios para el formulario,
+   * utilizando el servicio de materiales peligrosos para obtener listas de fracciones arancelarias,
+   * números CAS, estados físicos y unidades de medida.
    */
   constructor(private tramite230501Query: Tramite230501Query,
     private tramite230501Store: Tramite230501Store, public materialesPeligrososService: MaterialesPeligrososService,
@@ -180,17 +181,20 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
      
   }
 
+
   /**
-   * @override
+   * @method
+   * @description
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe a los estados de los queries para actualizar el estado del trámite y del formulario,
+   * inicializa el estado del formulario y valida la pestaña actual.
    * 
-   * - Suscribe al estado del trámite (`tramite230501Query.selectTramiteState$`) y actualiza la propiedad `tramiteState`.
-   * - Inicializa el formulario de datos de solicitud llamando a `crearDatosSolicitudForm`.
-   * - Suscribe al estado de la sección (`seccionQuery.selectSeccionState$`) y actualiza la propiedad `seccion`.
-   * - Llama al método `datasolicituActualizar` para realizar actualizaciones adicionales.
+   * @remarks
+   * - Suscribe a `tramite230501Query.selectTramiteState$` para mantener actualizado el estado del trámite.
+   * - Suscribe a `consultaQuery.selectConsultaioState$` para inicializar el formulario y establecer si es solo lectura.
+   * - Llama a `pestanaValidar()` para validar la pestaña activa.
    * 
-   * Se asegura de limpiar las suscripciones utilizando `takeUntil` con el observable `destroyNotifier$` 
-   * para evitar fugas de memoria.
+   * @see https://angular.io/guide/lifecycle-hooks
    */
   ngOnInit(): void {
     this.tramite230501Query.selectTramiteState$
