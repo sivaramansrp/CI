@@ -15,8 +15,9 @@
         <app-paso-tres></app-paso-tres>
       }
       }
-
-      <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+      @if (consultaDatos.create) {
+        <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+      }
     </div>
   </div>
 </div>

@@ -13,6 +13,8 @@
             class="form-control"
             formControlName="ventasTotales"
             (change)="obtenerVentasTotales($event)"
+            [disabled]="esFormularioSoloLectura"
+            
           />
         </div>
         <div class="col-md-4">
@@ -25,6 +27,8 @@
             class="form-control"
             formControlName="totalExportaciones"
             (input)="obtenerTotalExportaciones($event)"
+            [disabled]="esFormularioSoloLectura"
+            
           />
         </div>
         <div class="col-md-4">

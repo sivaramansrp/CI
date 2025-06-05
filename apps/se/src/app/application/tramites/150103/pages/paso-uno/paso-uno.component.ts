@@ -1,9 +1,12 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
-import { Subject, takeUntil } from 'rxjs';
+
+import { Subject,map, takeUntil } from 'rxjs';
+
 import { Solicitud150103State, Solicitud150103Store } from '../../estados/solicitud150103.store';
 import { Solicitud150103Query } from '../../estados/solicitud150103.query';
+
 import { InformeAnualProgramaService } from '../../services/informe-anual-programa.service';
 /**
  * Componente que representa el primer paso del trámite.
@@ -74,9 +77,16 @@ export class PasoUnoComponent implements AfterViewInit,OnInit {
  * Indica si el botón o funcionalidad está habilitado.
  */
 estaHabilitado: boolean = false;
+/**
+ * @property {boolean} esDatosRespuesta
+ * @description Indica si los datos de respuesta están disponibles para el formulario.
+ * @default false
+ */
 public esDatosRespuesta: boolean = false;
+
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
+
   /** Estado de la consulta que se obtiene del store. */
   public consultaState!:ConsultaioState;
   /**

@@ -46,7 +46,14 @@ export class InformeAnualProgramaService {
       'assets/json/150103/reporte-fechas.json'
     );
   }
-  getRegistroData(): Observable<Solicitud150103State> {
+
+ /**
+ * @method getRegistroData
+ * @description Método que obtiene los datos de registro desde un archivo JSON.
+ * Realiza una solicitud HTTP para obtener un objeto de tipo `Solicitud150103State`.
+ * @returns Un observable que emite los datos de registro.
+ */
+getRegistroData(): Observable<Solicitud150103State> {
     return this.http.get<Solicitud150103State>('assets/json/150103/registro.json');
-  }
+}
 }

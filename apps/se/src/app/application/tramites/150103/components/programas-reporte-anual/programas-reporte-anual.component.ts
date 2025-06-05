@@ -16,7 +16,8 @@ import { SOLICITUD_CONFIGURACION_TABLA } from '../../constants/tablacolumns.enum
 
 import { InformeAnualProgramaService } from '../../services/informe-anual-programa.service';
 import { Subject } from 'rxjs';
-import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+
+import { ConsultaioQuery, ConsultaioState, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
@@ -45,7 +46,14 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
     dateInputFormat: 'MM-YYYY', // Formato de entrada: mes-año
     minMode: 'month', // Solo permite seleccionar mes y año
   };
-  
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /** Estado actual de la solicitud */
   solicitud150103State: Solicitud150103State = {} as Solicitud150103State;
@@ -58,7 +66,7 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
   @Output() filaDeInformeSeleccionada = new EventEmitter<boolean>();
 
   /** Subject para manejar la destrucción de observables */
-  private destroyed$ = new Subject<void>();
+  private destroyNotifier$: Subject<void> = new Subject();
 
   /** Selección de tabla para los datos de solicitud (radio) */
   solicitudSeleccionTabla = TablaSeleccion.RADIO;
@@ -81,7 +89,8 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     public solicitud150103Store: Solicitud150103Store,
     public solicitud150103Query: Solicitud150103Query,
-    public informaAnualPrograma: InformeAnualProgramaService
+    public informaAnualPrograma: InformeAnualProgramaService,
+    private consultaioQuery: ConsultaioQuery
   ) {
     this.obtenerReporteFechas();
     this.obtenerProgramasReporte();
@@ -109,7 +118,7 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
 
     this.solicitud150103Query.seleccionarSolicitud$
       .pipe(
-        takeUntil(this.destroyed$),
+        takeUntil(this.destroyNotifier$),
         map((respuesta: Solicitud150103State) => {
           this.solicitud150103State = respuesta;
           this.formProgrmasReporte.patchValue({
@@ -123,6 +132,17 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+      this.inicializarEstadoFormulario();
   }
 
   /**
@@ -132,7 +152,7 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
   obtenerReporteFechas(): void {
     this.informaAnualPrograma
       .obtenerReporteFechas()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (respuesta: ReporteFechas) => {
           this.solicitud150103Store.actualizarInicio(respuesta.inicio);
@@ -148,7 +168,7 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
   obtenerProgramasReporte(): void {
     this.informaAnualPrograma
       .obtenerProgramasReporte()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (respuesta: ProgramasReporte[]) => {
           this.solicitudDatos = respuesta;
@@ -169,10 +189,21 @@ export class ProgramasReporteAnualComponent implements OnInit, OnDestroy {
       this.filaDeInformeSeleccionada.emit(true);
     }
   }
-
- 
+/**
+ * @method inicializarEstadoFormulario
+ * @description Método que verifica si el formulario debe estar en modo de solo lectura y, en caso afirmativo, desactiva todos los campos del formulario.
+ */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.formProgrmasReporte?.disable();
+    }
+  }
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Notifica a las suscripciones que deben finalizar y completa el Subject.
+   */
   ngOnDestroy(): void {
-    this.destroyed$.next(); 
-    this.destroyed$.complete(); 
+    this.destroyNotifier$.next(); 
+    this.destroyNotifier$.complete(); 
   }
 }

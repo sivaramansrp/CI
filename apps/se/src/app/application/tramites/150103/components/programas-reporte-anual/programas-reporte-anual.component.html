@@ -52,6 +52,7 @@
             class="form-control"
             size="30"
             formControlName="folioPrograma"
+            [disabled]="esFormularioSoloLectura"
           />
         </div>
         <div class="col-md-4">
@@ -64,6 +65,7 @@
             size="50"
             class="form-control"
             formControlName="modalidad"
+            [disabled]="esFormularioSoloLectura"
           />
         </div>
         <div class="col-md-4"></div>
@@ -75,6 +77,7 @@
             size="30"
             class="form-control"
             formControlName="tipoPrograma"
+            [disabled]="esFormularioSoloLectura"
           />
         </div>
         <div class="col-md-4">
@@ -85,6 +88,7 @@
             size="50"
             class="form-control"
             formControlName="estatus"
+            [disabled]="esFormularioSoloLectura"
           />
         </div>
         <div class="col-md-4"></div>

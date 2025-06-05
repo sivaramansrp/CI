@@ -5,11 +5,13 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { Solicitud150103Query } from '../../estados/solicitud150103.query';
 import { Solicitud150103State } from '../../estados/solicitud150103.store';
 import { Solicitud150103Store } from '../../estados/solicitud150103.store';
+
+import { InformeAnualProgramaService } from '../../services/informe-anual-programa.service';
 
 /**
  * Componente para gestionar los datos del reporte anual.
@@ -36,7 +38,19 @@ export class DatosDeReporteAnualComponent implements OnInit, OnDestroy {
    * Subject utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
    */
   private destroyed$ = new Subject<void>();
+  
+/**
+ * @property {ConsultaioState} consultaDatos
+ * @description Estado que contiene información de consulta, utilizado para determinar si el formulario debe estar en modo de solo lectura.
+ */
+consultaDatos!: ConsultaioState;
 
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente.
    * @param fb - FormBuilder para crear formularios reactivos.
@@ -46,7 +60,10 @@ export class DatosDeReporteAnualComponent implements OnInit, OnDestroy {
   constructor(
     public fb: FormBuilder,
     private solicitud150103Store: Solicitud150103Store,
-    private solicitud150103Query: Solicitud150103Query
+    private solicitud150103Query: Solicitud150103Query,
+     private consultaioQuery: ConsultaioQuery,
+    public informaAnualPrograma: InformeAnualProgramaService,
+     
   ) {}
 
   /**
@@ -98,6 +115,17 @@ export class DatosDeReporteAnualComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+      this.inicializarEstadoFormulario();
   }
 
   /**
@@ -152,6 +180,16 @@ export class DatosDeReporteAnualComponent implements OnInit, OnDestroy {
     this.calcularReporteAnnual();
   }
 
+
+  /**
+ * @method inicializarEstadoFormulario
+ * @description Método que verifica si el formulario debe estar en modo de solo lectura y, en caso afirmativo, desactiva todos los campos del formulario.
+ */
+inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.formReporteAnnual?.disable();
+    }
+}
   /**
    * Método que se ejecuta al destruir el componente.
    * Notifica a las suscripciones que deben finalizar y completa el Subject.
