@@ -18,6 +18,7 @@ export interface DatosDelTramiteFormState {
   informacionConfidencial?: boolean;
   fechaPago?: string;
   fechaSalida?: string;
+  banderaConsultas?: boolean;
 }
 
 /**

@@ -41,9 +41,9 @@
       [label]="aduanasDisponiblesLabel"
       [fechasSeleccionadas]="seleccionarAduanasDisponiblesDatos"
       [botones]="aduanasBotones"
-      (fechasSeleccionadasChange)="
-        aduanasDisponiblesSeleccionadasChange($event)
-      "
+      (fechasSeleccionadasChange)=
+      "aduanasDisponiblesSeleccionadasChange($event)"
+      [isDisabled]="datosDelTramiteFormState.banderaConsultas ?? false">
     ></crosslist>
   </div>
   <div class="row mt-5">
@@ -61,6 +61,7 @@
             formControlName="permisoGeneral"
             [required]="true"
             (input)="onPermisoGeneralInput($event)"
+            [disabled]="datosDelTramiteFormState.banderaConsultas ?? false"
           />
           <div class="error-message">
             <small class="text-danger" *ngIf="form.get('permisoGeneral')?.touched && form.get('permisoGeneral')?.hasError('required')">
@@ -86,6 +87,7 @@
             class="form-control"
             formControlName="paisDestino"
             readonly
+            [disabled]="datosDelTramiteFormState.banderaConsultas ?? false"
           />
         </div>
       </div>
@@ -98,6 +100,7 @@
             name="fechaPago"
             (valorCambiado)="onFechaCambiada($event)"
             [setFecha]="form.get('fechaPago')?.value"
+            [isDisabled]="datosDelTramiteFormState.banderaConsultas ?? false"
           ></input-fecha>
           <div class="error-message">
             <small class="text-danger" *ngIf="form.get('fechaPago')?.touched && form.get('fechaPago')?.hasError('required')">
@@ -116,6 +119,7 @@
             name="fechaSalida"
             (valorCambiado)="onFechaSalidaCambiada($event)"
             [setFecha]="form.get('fechaSalida')?.value"
+            [isDisabled]="datosDelTramiteFormState.banderaConsultas ?? false"
           ></input-fecha>
           <div class="error-message">
             <small class="text-danger" *ngIf="form.get('fechaSalida')?.touched && form.get('fechaSalida')?.hasError('required')">
@@ -142,9 +146,10 @@
           formControlName="usoFinal"
           style="height: 90px"
           [required]="true"
+          [disabled]="datosDelTramiteFormState.banderaConsultas ?? false"
         ></textarea>
         <div class="error-message">
-          <small class="text-danger" *ngIf="form.get('usoFinal')?.touched && form.get('usoFinal')?.hasError('required')">
+          <small class="text-danger" *ngIf="form?.get('usoFinal')?.touched && form?.get('usoFinal')?.hasError('required')">
             Este campo es obligatorio.
           </small>          
         </div>
@@ -158,6 +163,7 @@
       [configuracionTabla]="mercanciaTablaConfiguracion.configuracionTabla"
       [datos]="datosMercanciaTabla"
       (listaDeFilaSeleccionada)="mercanciaTablaSeleccionada = $event"
+      [disableSeleccionTablaCheckBox]="datosDelTramiteFormState.banderaConsultas ?? false"
     ></app-tabla-dinamica>
   </div>
   <div class="row mt-3">
@@ -201,7 +207,7 @@
     <ng-titulo titulo="Periodo"></ng-titulo>
   </div>
   <h4>Periodo * :</h4>
-  <form [formGroup]="form" class="container">
+  <form *ngIf="form" [formGroup]="form" class="container">
     <div class="row">
       <div class="col-md-4">
         <app-input-radio
@@ -210,6 +216,7 @@
           [layout]="'vertical'"
           formControlName="unoSemestre"
           (valueChange)="actualizarUnoSemestre($event)"
+          [disabled]="datosDelTramiteFormState.banderaConsultas ?? false"
         ></app-input-radio>
       </div>
       <div class="col-md-4">
@@ -219,6 +226,7 @@
           [layout]="'vertical'"
           formControlName="dosSemestre"
           (valueChange)="actualizarDosSemestre($event)"
+          [disabled]="datosDelTramiteFormState.banderaConsultas ?? false"
         ></app-input-radio>
       </div>
     </div>
@@ -230,6 +238,7 @@
           [label]="'Año en curso'"
           [required]="false"
           formControlName="anoEnCurso"
+          [isDisabled]="datosDelTramiteFormState.banderaConsultas ?? false"
         ></lib-input-check>
         <div class="error-message">
           <small class="text-danger" *ngIf="form.get('anoEnCurso')?.touched && form.get('anoEnCurso')?.hasError('required')">
@@ -253,6 +262,7 @@
                 formControlName="informacionConfidencial"
                 id="informacionConfidencial"
                 [required]="true"
+                [disabled]="datosDelTramiteFormState.banderaConsultas ?? false"
               />
               <span> *</span>
               <div class="error-message">

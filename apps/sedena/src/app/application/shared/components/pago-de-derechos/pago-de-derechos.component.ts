@@ -126,6 +126,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.crearFormaulario();
     this.cargarDatos();
     this.campoObligatorio = CAMPO_OBLIGATORIO_DERECHOS.includes(this.idProcedimiento)
+
+    if (this.pagoDerechoFormState.banderaConsultas) {
+      this.pagoDerechosForm.disable();
+    }
   }
 
   /**

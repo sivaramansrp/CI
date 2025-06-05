@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
@@ -7,6 +8,7 @@ import { PagoDerechosFormState } from '../../../../shared/models/pago-de-derecho
 import { Subject } from 'rxjs';
 import { Tramite240101Query } from '../../estados/tramite240101Query.query';
 import { Tramite240101Store } from '../../estados/tramite240101Store.store';
+import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 /**
  * @title Pago de Derechos Contenedora
@@ -19,7 +21,7 @@ import { takeUntil } from 'rxjs';
   standalone: true,
   imports: [CommonModule, PagoDeDerechosComponent],
   templateUrl: './pago-de-derechos-contenedora.component.html',
-  styleUrl: './pago-de-derechos-contenedora.component.css',
+  styleUrl: './pago-de-derechos-contenedora.component.scss',
 })
 export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
   /**
@@ -35,6 +37,12 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
   public pagoDerechoFormState!: PagoDerechosFormState;
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * @property {boolean} esFormularioSoloLectura
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    *
    * @method constructor
@@ -44,7 +52,8 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite240101Query,
-    private tramiteStore: Tramite240101Store // eslint-disable-next-line no-empty-function
+    private tramiteStore: Tramite240101Store,
+    private consultaQuery: ConsultaioQuery // eslint-disable-next-line no-empty-function
   ) {}
 
   /**
@@ -60,6 +69,28 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.pagoDerechoFormState = data;
       });
+
+    this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.unsubscribe$),
+      map((seccionState) => {
+        this.esFormularioSoloLectura = seccionState.readonly;
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe();
+  }
+
+    /**
+  * @method inicializarEstadoFormulario
+  * @description Inicializa el estado del formulario según el modo de solo lectura. Si el formulario está en modo solo lectura, deshabilita todos los campos; de lo contrario, los habilita para su edición.
+  * @returns {void}
+  *
+  */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.tramiteStore.setBanderaConsultasPagoDerechos(this.esFormularioSoloLectura);
+    }
   }
 
   /**

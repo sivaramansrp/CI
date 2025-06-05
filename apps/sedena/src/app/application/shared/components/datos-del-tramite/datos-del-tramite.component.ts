@@ -522,7 +522,9 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       permisoGeneral: this.datosDelTramiteFormState.permisoGeneral,
       usoFinal: this.datosDelTramiteFormState.usoFinal,
     });
-
+    if (this.datosDelTramiteFormState.banderaConsultas) {
+      this.form.disable();
+    }
     if (this.esJustificacion) {
       this.crearFormularioJustificacion();
     }
@@ -535,6 +537,9 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       this.formDeJustificacion.patchValue({
         justificacion: this.justificacionTramiteFormState.justificacion,
       });
+      if (this.datosDelTramiteFormState.banderaConsultas) {
+          this.formDeJustificacion.disable();
+      }
     }
 
     if (this.esDessactivadoPermisoGeneral) {

@@ -12,7 +12,7 @@
       [configuracionTabla]="destinoFinalTablaConfiguracion.configuracionTabla"
       [datos]="destinatarioFinalTablaDatos"
       (listaDeFilaSeleccionada)="destinarioTablaSeleccionada = $event"
-      
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
   </div>
   <div class="row mt-5">
@@ -60,6 +60,7 @@
       [configuracionTabla]="dproveedorTablaConfiguracion.configuracionTabla"
       [datos]="proveedorTablaDatos"
       (listaDeFilaSeleccionada)="proveedorTablaSeleccionada = $event"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
   </div>
   <div class="row mt-5">
