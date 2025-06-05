@@ -2,6 +2,7 @@ import {
   ADV_LIMPIA_CAMPOS,
   CONFIGURACION_ENCABEZADO_TABLA_PAGOS,
   EMPRESAS_CERTIFICADAS,
+  ESTATUS_PAGADO,
   ID_NAME_DD,
   ID_NAME_LDA,
   LABEL_DESPACHO_DD,
@@ -11,10 +12,13 @@ import {
   MSJ_ERROR_FECHA,
   MSJ_ERROR_LINEA_CAPTURA,
   MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
+  MSJ_LINEA_CAPTURA_NO_PAGADA,
+  MSJ_LINEA_CAPTURA_USADA,
   PATENTES_ID,
   SIN_ITEMS,
   SIN_VALOR,
   TRANSPORTE,
+  UN_DIA,
   VEHICULO,
 } from '../../../../core/enums/5701/tramite5701.enum';
 import {
@@ -50,6 +54,16 @@ import {
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
 import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import {
   Component,
   Input,
   OnChanges,
@@ -67,25 +81,13 @@ import {
   Observable,
   Subject,
   delay,
-  distinctUntilChanged,
   first,
   map,
   merge,
-  skip,
   switchMap,
   takeUntil,
   tap,
 } from 'rxjs';
-import {
-  AbstractControl,
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  ValidationErrors,
-  ValidatorFn,
-  Validators,
-} from '@angular/forms';
 import {
   Solicitud5701State,
   Tramite5701Store,
@@ -109,6 +111,7 @@ import { SocioComercialService } from '../../../../core/services/5701/socio-come
 import { TITULO_MODAL_ERROR } from '../../../../core/enums/5701/tramite5701.enum';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { UsuarioState } from '@libs/shared/data-access-user/src/core/estados/usuario.store';
+import { ValidaLineaCapturaService } from '../../../../core/services/5701/pago/valida-linea-captura.service';
 import { ValidaLineaPagoService } from '../../../../core/services/5701/pago/valida-linea-pago.service';
 
 //TODO: Estas importaciones deben eliminarse una vez que se obtengan las patentes y los rfcs de la consulta del api.
@@ -342,6 +345,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   public datosTablaPagos: LineaCaptura[] = [];
 
+  /**
+   * @description Almacena los montos a pagar en la solicitud.
+   */
+  montoPagadoLineas: number = 0;
+
   //TODO: Estas variables se van a eliminar
   /**
    * Arrelgo de patentes de la empresa
@@ -377,6 +385,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     private readonly certificacionOrigenService: CertificacionOrigenService,
     private readonly certificacionOeaService: CertificacionOeaService,
     private readonly validaLineaPagoService: ValidaLineaPagoService,
+    private readonly validaLineaCapturaService: ValidaLineaCapturaService,
     private readonly parametroMontoService: ParametroMontoService
   ) {}
 
@@ -418,7 +427,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     // Aqui se busca el nro de patente o autorizacion
     //
     this.obtenerPatente();
-    this.obtenerMontoAPagar();
+
+    this.calcularMontoTotal();
     this.verificarDatosExistentesStore();
   }
 
@@ -510,6 +520,15 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   get personasResponsablesDespacho(): FormArray {
     return this.FormSolicitud.get('personasResponsablesDespacho') as FormArray;
+  }
+
+  /**
+   * Obtiene el array del formulario 'lineasCaptura' del formulario principal 'FormSolicitud'.
+   *
+   * @returns {FormArray} El array de formulario 'lineasCaptura'.
+   */
+  get lineasCaptura(): FormArray {
+    return this.pagoCaptura.get('lineasCaptura') as FormArray;
   }
 
   /**
@@ -851,7 +870,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         ],
         horaInicio: [this.solicitudState?.horaInicio, Validators.required],
         horaFinal: [this.solicitudState?.horaFinal, Validators.required],
-        fechasSeleccionadas: this.fb.array([]),
+        fechasSeleccionadas: this.fb.array([], Validators.required),
       }),
 
       despacho: this.fb.group({
@@ -917,6 +936,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
           [Validators.required],
         ],
         monto: [this.solicitudState.monto, [Validators.required]],
+        lineasCaptura: this.fb.array([], Validators.required),
       }),
     });
     this.despacho.get('idSeccionDespacho')?.disable();
@@ -1093,6 +1113,18 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       SOLICITUD_DESRIPCION
     );
 
+    this.tipoSolicitudSeleccionada = TIPO_SOLICITUD_VALUE;
+
+    this.setValoresStore(
+      this.FormSolicitud,
+      'tipoSolicitud',
+      'setTipoSolicitud'
+    );
+    this.setValoresStore(
+      this.FormSolicitud,
+      'descripcionTipoSolicitud',
+      'setDescripcionTipoSolicitud'
+    );
 
     const FORMA_MODIFICADA = Object.keys(this.FormSolicitud.controls).some(
       (key) => {
@@ -1106,26 +1138,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       }
     );
 
-
     if (FORMA_MODIFICADA) {
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: 'warning',
-        modo: 'action',
-        titulo: 'Avisos',
-        mensaje: MSG_CAMBIO_TIPO_SOLICITUD,
-        cerrar: false,
-        txtBtnAceptar: 'Aceptar',
-        txtBtnCancelar: '',
-      };
       this.limpiarFormulario();
       return;
     }
-
-    this.tipoSolicitudSeleccionada = parseInt(
-      this.FormSolicitud.get('tipoSolicitud')?.value,
-      10
-    );
 
     if (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL) {
       this.pedimento.setValidators([Validators.required]);
@@ -1135,17 +1151,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.pedimento.clearValidators();
       this.pedimento.updateValueAndValidity();
     }
-
-    this.setValoresStore(
-      this.FormSolicitud,
-      'tipoSolicitud',
-      'setTipoSolicitud'
-    );
-    this.setValoresStore(
-      this.FormSolicitud,
-      'descripcionTipoSolicitud',
-      'setDescripcionTipoSolicitud'
-    );
   }
 
   /**
@@ -1298,6 +1303,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   changeFechaFinal(): void {
     this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
+    if (
+      this.datosServicio.get('fechaFinal')?.dirty &&
+      this.datosServicio.get('fechaFinal')?.touched
+    ) {
+      this.rangoFechas();
+    }
     this.setValoresStore(this.datosServicio, 'fechaFinal', 'setFechaFinal');
   }
 
@@ -1345,9 +1356,14 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns
    */
   calcularRangoFechas(): void {
+    this.rangoFechas();
     if (this.tipoSolicitudSeleccionada !== TIPO_SOLICITUD.INDIVIDUAL) {
-      this.rangoFechas();
       this.mostrarRangoFechas = true;
+    } else {
+      this.mostrarRangoFechas = false;
+      this.fechasSeleccionadas?.clear();
+
+      this.fechasSeleccionadas.push(new FormControl(this.selectRangoDias[0]));
     }
   }
 
@@ -1383,6 +1399,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.datosServicio.get('fechaFinal')?.setValue('');
     this.datosServicio.get('fechaFinal')?.markAsUntouched();
 
+    this.selectRangoDias = [];
+
     this.setValoresStore(this.datosServicio, 'fechaInicio', 'setFechaInicio');
     this.setValoresStore(this.datosServicio, 'horaInicio', 'setHoraInicio');
     this.setValoresStore(this.datosServicio, 'fechaFinal', 'setFechaFinal');
@@ -1396,6 +1414,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   changeFechaInicio(): void {
     this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
+    if (
+      this.datosServicio.get('fechaInicio')?.dirty &&
+      this.datosServicio.get('fechaInicio')?.touched
+    ) {
+      this.rangoFechas();
+    }
     this.setValoresStore(this.datosServicio, 'fechaInicio', 'setFechaInicio');
   }
 
@@ -1619,9 +1643,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns void
    */
   changeCrosslist(fechas: string[]): void {
+    this.fechasSeleccionadas.clear();
     fechas.forEach((fecha) => {
       this.fechasSeleccionadas.push(new FormControl(fecha));
     });
+
     this.tramite5701Store.setFechasSeleccionadas(fechas);
   }
 
@@ -1903,10 +1929,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
-   * Consulta si la línea de captura es válida y actualiza el store correspondiente.
+   * Consulta si la línea de captura es válida, ha sido usada y ya fue pagada y actualiza el store correspondiente.
    * @returns {void} No retorna ningún valor.
    */
-  public consultarLineaCaptura(): void {
+  public agregarPagoSea(): void {
     const LINEA_PAGO: string = this.pagoCaptura.get('lineaCaptura')?.value;
     const MONTO: number = this.pagoCaptura.get('monto')?.value;
 
@@ -1924,18 +1950,18 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    this.validaLineaPagoService
-      .getLineaPagoValidacion(LINEA_PAGO)
+    this.validaLineaCapturaService
+      .getValidaLineaCapturaUsada(LINEA_PAGO)
       .pipe(
         takeUntil(this.destroyNotifier$),
-        switchMap((responseValidaPago) => {
-          if (responseValidaPago.codigo !== '00') {
+        switchMap((responseValidaLineaCaptura) => {
+          if (responseValidaLineaCaptura.datos) {
             this.nuevaNotificacion = {
               tipoNotificacion: 'alert',
               categoria: 'danger',
               modo: 'action',
               titulo: TITULO_MODAL_ERROR,
-              mensaje: MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
+              mensaje: MSJ_LINEA_CAPTURA_USADA,
               cerrar: false,
               txtBtnAceptar: 'Aceptar',
               txtBtnCancelar: '',
@@ -1944,28 +1970,60 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             this.pagoCaptura.get('monto')?.reset();
             return EMPTY;
           }
-          return this.parametroMontoService.getParametroMonto();
+          return this.validaLineaCapturaService.getValidaLineaCaptura(
+            LINEA_PAGO
+          );
         }),
-        tap((montoResponse) => {
-          // TODO:Implementar lógica para agregar información a tabla de pagos
-          if (montoResponse) {
-            let numeroDias: number = 0;
-            if (
-              this.tipoSolicitudSeleccionada === 2 ||
-              this.tipoSolicitudSeleccionada === 3
-            ) {
-              numeroDias = this.fechasSeleccionadas.length;
-            }
-            if (montoResponse.datos) {
-              const MONTO_TOTAL: number =
-                numeroDias > 0
-                  ? montoResponse.datos * numeroDias
-                  : montoResponse.datos;
-              const VALIDACION_MONTO: boolean =
-                MONTO >= MONTO_TOTAL ? true : false;
-              this.tramite5701Store.setIsMontoAceptable(VALIDACION_MONTO);
-            }
+        tap((responseLineaCapturaPagada) => {
+          if (
+            responseLineaCapturaPagada.datos.pago_model.estatus !==
+            ESTATUS_PAGADO
+          ) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: TITULO_MODAL_ERROR,
+              mensaje: MSJ_LINEA_CAPTURA_NO_PAGADA,
+              cerrar: false,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+            return;
           }
+
+          //Obtenemos el monto a pagar desde el servicio de parámetros
+          const MONTO_A_PAGAR = this.pagoCaptura
+            .get('montoAPagar')
+            ?.getRawValue();
+
+          const DIAS_SERVICIO =
+            this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL
+              ? UN_DIA
+              : this.fechasSeleccionadas.length;
+
+          const MONTO_A_CUBRIR = DIAS_SERVICIO * MONTO_A_PAGAR;
+
+          //TODO: Aqui se hace la validación del monto a pagar y el monto a cubrir
+
+          const PAGO = {
+            lineaCaptura: LINEA_PAGO,
+            monto: responseLineaCapturaPagada.datos.pago_model.importe,
+          };
+
+          this.montoPagadoLineas +=
+            responseLineaCapturaPagada.datos.pago_model.importe;
+          this.datosTablaPagos.push(PAGO);
+          this.lineasCaptura?.clear();
+          this.lineasCaptura.push(
+            this.fb.group({
+              lineaCaptura: [LINEA_PAGO, Validators.required],
+              monto: [
+                responseLineaCapturaPagada.datos.pago_model.importe,
+                Validators.required,
+              ],
+            })
+          );
         })
       )
       .subscribe();
@@ -1975,7 +2033,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * Obtiene el monto a pagar desde el servicio de parámetros y lo establece en el formulario.
    * @returns {void} No retorna ningún valor.
    */
-  public obtenerMontoAPagar(): void {
+  public calcularMontoTotal(): void {
     this.parametroMontoService
       .getParametroMonto()
       .pipe(
@@ -2365,6 +2423,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       },
     });
 
+    this.selectRangoDias = [];
     this.pedimento.clear();
     this.personasResponsablesDespacho.clear();
 
@@ -2376,7 +2435,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       'setTipoSolicitud'
     );
 
-      this.setValoresStore(
+    this.setValoresStore(
       this.FormSolicitud,
       'descripcionTipoSolicitud',
       'setDescripcionTipoSolicitud'
