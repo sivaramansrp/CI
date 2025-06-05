@@ -1,11 +1,8 @@
-import { CatalogoSelectComponent, ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import {
-  Subject,
-  map,
-  takeUntil,
-} from 'rxjs';
+import { Subject,map,takeUntil } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
 import { PagoDerechosState } from '../../models/materiales-peligrosos.model';
@@ -99,7 +96,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    // this.createPagoDerechos();
   }
   /**
 * Evalúa si se debe inicializar o cargar datos en el formulario.
