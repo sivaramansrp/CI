@@ -1241,8 +1241,8 @@
   {
     "id": 178,
     "tramite": 260906,
-    "linkDashboard": "/cofepris/modificacion-permiso-sanitario",
-    "linkDepartment": "/pago/modificacion-permiso-sanitario",
+    "linkDashboard": "/cofepris/modificacion-permiso-sanitario-importacion-maquila",
+    "linkDepartment": "/pago/modificacion-permiso-sanitario-importacion-maquila",
     "department": "cofepris"
   },
   {
