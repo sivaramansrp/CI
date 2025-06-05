@@ -30,24 +30,26 @@
         <input type="text" id="llavePago" class="form-control" formControlName="llavePago"
           (change)="setValoresStore(derechosForm,'llavePago', 'setllavePago')" />
       </div>
-
-       <!-- Fecha de pago -->
+      <!-- Fecha de pago -->
       <div class="col-md-4">
-.
-        <input-fecha [datos]="fechaInicioInput"
-        name="fechaPago"
-        (valorCambiado)="onFechaCambiada($event)"
-        [setFecha]="derechosForm.get('fechaPago')?.value"
-        [isDisabled]="esFormularioSoloLectura ? true : false"
-        ></input-fecha>
-
-        <div *ngIf="esInvalido('fechaPago')" class="text-danger">
-          <small *ngIf="derechosForm.controls['fechaPago'].errors?.['esFechaPasada']">
-            La fecha de pago debe ser menor o igual a la fecha actual
-          </small>
-          </div>
+        <div class="form-group">
+          <input-fecha [datos]="fechaInicioInput" [setFecha]="
+                  derechosForm.get('fechaPago')
+                    ?.value
+                " (valorCambiado)="cambioFechaPago($event)"
+            [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
+        </div>
+        @if (derechosForm.get('datosImportadorExportador.fechaPago')?.touched &&
+        derechosForm.get('datosImportadorExportador.fechaPago')?.invalid) {
+        <div class="mensaje-error">
+          @if (derechosForm.get('datosImportadorExportador.fechaPago')?.errors?.['required']) {
+          <span>Todos los campos de pago son requeridos</span>
+          } @else if (derechosForm.get('datosImportadorExportador.fechaPago')?.errors?.['fechaFuturaInvalida']) {
+          <span>La fecha de pago debe ser menor o igual a la fecha actual.</span>
+          }
+        </div>
+        }
       </div>
-
       <!-- Importe de pago -->
       <div class="col-md-4">
         <label for="importePago" class="form-label">Importe de pago:</label>
@@ -59,7 +61,8 @@
     <div class="row mt-5">
       <div class="col-md-12">
         <div class="pull-right">
-          <button type="button" name="agregarMercancias" class="btn btn-primary ms-2"  (click)="alReiniciar()" [disabled]="esFormularioSoloLectura ? true : false">
+          <button type="button" name="agregarMercancias" class="btn btn-primary ms-2" (click)="alReiniciar()"
+            [disabled]="esFormularioSoloLectura ? true : false">
             Borrar datos del pago
           </button>
         </div>

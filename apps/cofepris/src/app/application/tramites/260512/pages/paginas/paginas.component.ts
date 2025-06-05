@@ -27,10 +27,17 @@ interface AccionBoton {
  * Este componente permite navegar entre diferentes pasos utilizando un componente de wizard.
  */
 @Component({
-  selector: 'app-pantallas',
-  templateUrl: './Pantallas.component.html',
+  selector: 'app-paginas',
+  templateUrl: './paginas.component.html',
 })
-export class PantallasComponent {
+
+/**
+ * @class PaginasComponent
+ * @description
+ * Componente que gestiona la navegación entre pasos de un wizard.
+ * Utiliza un componente de wizard para controlar el flujo de pasos
+ */
+export class PaginasComponent {
   /**
    * @description
    * Referencia al componente del wizard para controlar la navegación entre pasos.

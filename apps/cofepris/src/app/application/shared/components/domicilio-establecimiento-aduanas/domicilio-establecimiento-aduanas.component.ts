@@ -9,7 +9,9 @@ import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
+import { DatosDomicilioService } from '../../../tramites/260512/services/datos-domicilio.service'
 import { InputCheckComponent } from '@libs/shared/data-access-user/src';
+
 /**
  * Representa la estructura de la respuesta de una tabla.
  */
@@ -113,6 +115,7 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
     private avisocalidadQuery: AvisocalidadQuery,
     private service: DatosDomicilioLegalService,
     private consultaioQuery: ConsultaioQuery,
+    private datosDomicilioService: DatosDomicilioService
   ) {
     // Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
@@ -405,7 +408,7 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    * Método para obtener el valor de la fecha seleccionada.
    */
   obtenerTablaDatos(): void {
-    this.service
+    this.datosDomicilioService
       .getObtenerTablaDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
@@ -417,7 +420,7 @@ export class DomicilioEstablecimientoAduanasComponent implements OnInit, OnDestr
    * Método para obtener el valor de la fecha seleccionada.
    */
   obtenerMercanciasDatos(): void {
-    this.service
+    this.datosDomicilioService
       .getObtenerMercanciasDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {

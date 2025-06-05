@@ -1,5 +1,5 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
-import { PantallasComponent } from './Pantallas.component';
+import { PaginasComponent } from './paginas.component';
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { WizardComponent, PASOS } from '@ng-mf/data-access-user';
 import { LISTA_PASOS_WIZARD } from '../../../../shared/constantes/lista-pasos-wizard.enum';
@@ -11,17 +11,17 @@ class MockWizardComponent {
   atras = jest.fn();
 }
 
-describe('PantallasComponent', () => {
-  let component: PantallasComponent;
-  let fixture: ComponentFixture<PantallasComponent>;
+describe('PaginasComponent', () => {
+  let component: PaginasComponent;
+  let fixture: ComponentFixture<PaginasComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PantallasComponent, MockWizardComponent],
+      declarations: [PaginasComponent, MockWizardComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA], // Ignore unknown elements like btn-continuar
     }).compileComponents();
 
-    fixture = TestBed.createComponent(PantallasComponent);
+    fixture = TestBed.createComponent(PaginasComponent);
     component = fixture.componentInstance;
     // Inject the mock wizardComponent
     component.wizardComponent = new MockWizardComponent() as any;

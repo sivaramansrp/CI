@@ -181,14 +181,16 @@ export class PagoDerechosComponent implements OnDestroy, OnInit {
     this.derechosForm.reset();
   }
 
-   /**
-   * @method onFechaCambiada
-   * @description Actualiza la fecha de pago en el formulario.
+  /**
+   * Actualiza el campo de fecha de pago en el formulario y en el estado global.
    *
-   * @param {string} fecha - Fecha seleccionada en el componente `InputFecha`.
+   * @param nuevo_fechaPago Nueva fecha de pago seleccionada.
    */
-  onFechaCambiada(fecha: string): void {
-    this.derechosForm.patchValue({ fechaPago: fecha });
+  cambioFechaPago(nuevo_fechaPago: string): void {
+    this.derechosForm.patchValue({
+      fechaPago: nuevo_fechaPago,
+    });
+    this.setValoresStore(this.derechosForm, 'fechaPago', 'setfechaPago');
   }
 
 

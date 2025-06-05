@@ -7,8 +7,8 @@ import { DomicilioEstablecimientoAduanasComponent } from '../../shared/component
 import { ExportacionService } from '../../shared/services/exportacion.service';
 import { ManifiestosComponent } from '../../shared/components/manifiestos-declaraciones/manifiestos-declaraciones.component';
 import { NgModule } from '@angular/core';
+import { PaginasComponent } from './pages/paginas/paginas.component';
 import { PagoDerechosComponent } from '../../shared/components/pago-Derechos/pago-Derechos.component';
-import { PantallasComponent } from './pages/Pantallas/Pantallas.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PermisoDeImportacionRoutingModule } from './permiso-de-importacion-routing.module';
@@ -19,7 +19,7 @@ import { provideHttpClient } from '@angular/common/http';
 @NgModule({
   declarations: [
     DatosComponent,
-    PantallasComponent,
+    PaginasComponent,
     PasoDosComponent,
     PasoTresComponent,
   ],
