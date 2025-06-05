@@ -14,12 +14,15 @@
       <ng-container>
         @switch (indice) {
         @case (1) {
+          @if(esDatosRespuesta) {
         <solicitante [tabindex]="1"></solicitante>
         }
+      }
     
          @case (2) {
+          @if(esDatosRespuesta) {
          <app-empresas-subfabricante [tabindex]="2"></app-empresas-subfabricante>
-        }
+        }}
 
         }
       </ng-container>
