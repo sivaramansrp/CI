@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
-import { Catalogo, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
+import { Catalogo, ConsultaioQuery, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, delay, map, of, takeUntil } from 'rxjs';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
@@ -106,6 +106,18 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    */
   @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
 
+
+  /**
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   *
+   * @type {boolean}
+   * @memberof CertificadoOrigenComponent
+   * @compodoc
+   * @description
+   * Esta propiedad controla si el formulario es solo de lectura (`true`) o editable (`false`).
+   */
+  esFormularioSoloLectura:boolean = false;
+
   /**
    * @descripcion
    * Constructor que inicializa los servicios y dependencias requeridas.
@@ -118,13 +130,22 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
     private camCertificadoService: CamCertificadoService,
     private store: camCertificadoStore,
     private query: camCertificadoQuery,
-    private seccionQuery: SeccionLibQuery
+    private seccionQuery: SeccionLibQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
     this.query.formCertificado$
       .pipe(takeUntil(this.destroyNotifier$), delay(100))
       .subscribe((estado) => {
         this.formCertificadoValues = estado;
       });
+        this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+      })
+    )
+    .subscribe()
   }
 
   /**

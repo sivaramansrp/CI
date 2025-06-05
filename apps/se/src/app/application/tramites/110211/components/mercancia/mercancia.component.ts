@@ -1,6 +1,6 @@
+import { AfterViewInit, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
 import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, delay, map, of, takeUntil } from 'rxjs';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
@@ -9,6 +9,7 @@ import { FECHA } from '../../constantes/cam-certificado.module';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
+
 
 /**
  * @descripcion
@@ -22,7 +23,7 @@ import { camCertificadoQuery } from '../../estados/cam-certificado.query';
   standalone:true,
   imports:[CommonModule,ReactiveFormsModule,CatalogoSelectComponent, InputFechaComponent],
 })
-export class MercanciaComponent implements OnInit, OnDestroy {
+export class MercanciaComponent implements OnInit, OnDestroy,AfterViewInit {
   /**
    * @descripcion
    * Indica si se debe mostrar la alerta.
@@ -52,6 +53,13 @@ export class MercanciaComponent implements OnInit, OnDestroy {
    * Evento que se emite al guardar los datos del formulario.
    */
   @Output() guardarClicado = new EventEmitter();
+
+
+    /**
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   * @type {boolean}
+   */
+  @Input() esFormularioSoloLectura!: boolean;
 
   /**
    * @descripcion
@@ -148,7 +156,14 @@ export class MercanciaComponent implements OnInit, OnDestroy {
     this.facturasOpcion();
     this.initActionFormBuild();
   }
-
+ngAfterViewInit(): void {
+ if (this.esFormularioSoloLectura && this.mercanciaForm){
+      this.mercanciaForm.disable();
+ }
+ else{
+  this.mercanciaForm.enable();
+ }
+}
   /**
    * @descripcion
    * Inicializa el formulario de mercancías con los valores actuales del estado.

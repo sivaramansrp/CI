@@ -1,7 +1,7 @@
+import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import {Subject,map, takeUntil } from 'rxjs';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
-import { Catalogo } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoDeComponent } from '../../../../shared/components/datos-certificado-de/datos-certificado-de.component';
 import { FormBuilder } from '@angular/forms';
@@ -54,6 +54,16 @@ export class CamDatosCertificadoComponent implements OnInit, OnDestroy {
    */
   formDatosCertificadoValues!: { [key: string]: unknown};
 
+
+  /**
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   *
+   * @type {boolean}
+   * @memberof CamDatosCertificadoComponent
+   * @see https://compodoc.app/
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * @descripcion
    * Inicializa el componente con los servicios y dependencias requeridos.
@@ -66,12 +76,22 @@ export class CamDatosCertificadoComponent implements OnInit, OnDestroy {
     private camCertificadoService: CamCertificadoService,
     private store: camCertificadoStore,
     private query: camCertificadoQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
     this.query.formDatosCertificado$.pipe(
       takeUntil(this.destroyNotifier$)
     ).subscribe(estado => {
         this.formDatosCertificadoValues = estado;
     });
+      this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+      })
+    )
+    .subscribe()
+    
   }
 
   /**

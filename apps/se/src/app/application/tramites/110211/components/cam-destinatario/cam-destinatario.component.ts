@@ -1,7 +1,7 @@
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, SeccionLibQuery, SeccionLibState, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { SeccionLibQuery, SeccionLibState, SeccionLibStore, TituloComponent } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
 import { CommonModule } from '@angular/common';
@@ -26,7 +26,7 @@ interface FormValues {
       DatosCertificadoDeComponent,
       DatosDelDestinatarioComponent,TituloComponent,DestinatarioComponent]
 })
-export class CamDestinatarioComponent implements OnInit, OnDestroy {
+export class CamDestinatarioComponent implements OnInit, OnDestroy,AfterViewInit {
   /**
    * @descripcion
    * Formulario para capturar los datos del exportador.
@@ -64,6 +64,18 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy {
   private seccionState!: SeccionLibState;
 
   /**
+   * Indicates whether the form is in read-only mode.
+   *
+   * @remarks
+   * When set to `true`, the form fields will be displayed as read-only and cannot be edited by the user.
+   *
+   * @compodoc
+   * @description
+   * Indica si el formulario se encuentra en modo solo lectura. Si es `true`, los campos del formulario no podrán ser editados por el usuario.
+   */
+  esFormularioSoloLectura:boolean=false;
+
+  /**
    * @descripcion
    * Constructor que inicializa los servicios y dependencias requeridas.
    * @param fb - Instancia de FormBuilder para gestionar formularios.
@@ -76,8 +88,8 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder,
     private store: camCertificadoStore,
     private query: camCertificadoQuery,
-    private seccionStore: SeccionLibStore,
-    private seccionQuery: SeccionLibQuery
+    private seccionQuery: SeccionLibQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
     this.query.selectFormDatosDelDestinatario$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -90,6 +102,14 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy {
       .subscribe((estado) => {
         this.formDestinatarioValues = estado;
       });
+        this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+      })
+    )
+    .subscribe()
   }
 
   /**
@@ -106,7 +126,6 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
     this.query.selectCam$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -118,7 +137,26 @@ export class CamDestinatarioComponent implements OnInit, OnDestroy {
 
     this.initActionFormBuild();
   }
-
+/**
+ * @inheritdoc
+ * 
+ * @description
+ * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
+ * 
+ * @remarks
+ * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es verdadero), deshabilita el formulario `exportadorForm`.
+ * En caso contrario, habilita el formulario para permitir la edición.
+ * 
+ * @see https://angular.io/api/core/AfterViewInit
+ */
+ngAfterViewInit(): void {
+  if(this.esFormularioSoloLectura){
+    this.exportadorForm.disable();
+  }
+  else{
+    this.exportadorForm.enable();
+  }
+}
   /**
    * @descripcion
    * Inicializa el formulario de exportador con los valores actuales del estado.
