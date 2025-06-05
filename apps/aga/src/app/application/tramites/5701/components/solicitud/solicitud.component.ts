@@ -1063,10 +1063,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             return EMPTY;
           }),
           tap((idcResponse) => {
-            if (idcResponse.datos?.nombre) {
+            const NOMBRE = idcResponse.datos?.nombre
+              ? idcResponse.datos?.nombre
+              : idcResponse.datos?.razon_social;
+            if (NOMBRE) {
               this.datosImportadorExportador
                 .get('nombre')
-                ?.setValue(idcResponse.datos?.nombre);
+                ?.setValue(NOMBRE);
               this.getCertificaciones(RFC_IMP_EXP);
             }
           })
