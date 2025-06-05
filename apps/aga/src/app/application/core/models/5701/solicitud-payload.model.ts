@@ -215,7 +215,7 @@ export interface TipoServicio {
   cve_tipo_servicio: number;
   desc_tipo_servicio: string;
   numero_svex: string;
-  rni: number;
+  rni: boolean;
   fecha_inicio_servicio: string;
   fecha_fin_servicio: string;
   hora_inicio_servicio: string;

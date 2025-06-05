@@ -288,9 +288,9 @@ this.inicializarEstadoFormulario();
      */
     guardarDatosFormulario(): void {
       this.estadoActualizacion();
-      if (this.datosMercanciaForm && this.esFormularioSoloLectura) {
+      if (this.esFormularioSoloLectura) {
         this.datosMercanciaForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
+      } else {
         this.datosMercanciaForm.enable();
       }
     }

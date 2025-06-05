@@ -1,22 +1,45 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TercerosRelacionadosComponent } from './terceros-relacionados.component';
+import { BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { of} from 'rxjs';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
-import { BsModalService } from 'ngx-bootstrap/modal';
-import { of } from 'rxjs';
+import { Fabricante, Otros } from '@libs/shared/data-access-user/src';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('TercerosRelacionadosComponent', () => {
   let component: TercerosRelacionadosComponent;
   let fixture: ComponentFixture<TercerosRelacionadosComponent>;
-  let certificadosLicenciasSvcMock: jest.Mocked<CertificadosLicenciasPermisosService>;
+  let certificadosSvcMock: jest.Mocked<CertificadosLicenciasPermisosService>;
   let modalServiceMock: jest.Mocked<BsModalService>;
 
+  const FABRICANTE_MOCK: Fabricante[] = [{ nombre: 'Fabricante Test' } as Fabricante];
+  const OTROS_MOCK: Otros[] = [{
+    tercero: 'T1',
+    nombre: 'Nombre Test',
+    rfc: 'RFC123456',
+    curp: 'CURP123456',
+    telefono: '5551234567',
+    correoElectronico: 'test@example.com',
+    calle: 'Calle Falsa',
+    numeroExterior: '123',
+    numeroInterior: '4B',
+    pais: 'México',
+    colonia: 'Centro',
+    municipio: 'Municipio Test',
+    localidad: 'Localidad Test',
+    entidadFederativa: 'CDMX',
+    estado: 'Activo',
+    cp: '01234',
+  }];
+
+
   beforeEach(async () => {
-    certificadosLicenciasSvcMock = {
-      getFabricanteDatos: jest.fn(),
-      getFacturadorDatos: jest.fn(),
-      getProveedorDatos: jest.fn(),
-      getCertificadoDatos: jest.fn(),
-      getOtrosDatos: jest.fn(),
+    certificadosSvcMock = {
+      getFabricanteDatos: jest.fn().mockReturnValue(of(FABRICANTE_MOCK)),
+      getFacturadorDatos: jest.fn().mockReturnValue(of(FABRICANTE_MOCK)),
+      getProveedorDatos: jest.fn().mockReturnValue(of(FABRICANTE_MOCK)),
+      getCertificadoDatos: jest.fn().mockReturnValue(of(FABRICANTE_MOCK)),
+      getOtrosDatos: jest.fn().mockReturnValue(of(OTROS_MOCK)),
     } as unknown as jest.Mocked<CertificadosLicenciasPermisosService>;
 
     modalServiceMock = {
@@ -26,9 +49,10 @@ describe('TercerosRelacionadosComponent', () => {
     await TestBed.configureTestingModule({
       imports: [TercerosRelacionadosComponent],
       providers: [
-        { provide: CertificadosLicenciasPermisosService, useValue: certificadosLicenciasSvcMock },
+        { provide: CertificadosLicenciasPermisosService, useValue: certificadosSvcMock },
         { provide: BsModalService, useValue: modalServiceMock },
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TercerosRelacionadosComponent);
@@ -36,58 +60,31 @@ describe('TercerosRelacionadosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call getFabricanteTablaDatos and populate fabricanteTablaDatos', () => {
-    const mockData:any = [{ id: 1, name: 'Fabricante 1' }];
-    certificadosLicenciasSvcMock.getFabricanteDatos.mockReturnValue(of(mockData));
+  it('debe cargar los datos de todas las tablas al inicializarse', () => {
+    expect(certificadosSvcMock.getFabricanteDatos).toHaveBeenCalled();
+    expect(certificadosSvcMock.getFacturadorDatos).toHaveBeenCalled();
+    expect(certificadosSvcMock.getProveedorDatos).toHaveBeenCalled();
+    expect(certificadosSvcMock.getCertificadoDatos).toHaveBeenCalled();
+    expect(certificadosSvcMock.getOtrosDatos).toHaveBeenCalled();
 
-    component.getFabricanteTablaDatos();
-
-    expect(certificadosLicenciasSvcMock.getFabricanteDatos).toHaveBeenCalled();
-    expect(component.fabricanteTablaDatos).toEqual(mockData);
+    expect(component.fabricanteTablaDatos).toEqual(FABRICANTE_MOCK);
+    expect(component.facturadorTablaDatos).toEqual(FABRICANTE_MOCK);
+    expect(component.proveedorTablaDatos).toEqual(FABRICANTE_MOCK);
+    expect(component.certificadoAnaliticoTablaDatos).toEqual(FABRICANTE_MOCK);
+    expect(component.otrosTablaDatos).toEqual(OTROS_MOCK);
   });
 
-  it('should call getFacturadorTablaDatos and populate facturadorTablaDatos', () => {
-    const mockData:any = [{ id: 2, name: 'Facturador 1' }];
-    certificadosLicenciasSvcMock.getFacturadorDatos.mockReturnValue(of(mockData));
+  it('debe limpiar las suscripciones al destruirse', () => {
+    const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
 
-    component.getFacturadorTablaDatos();
+    component.ngOnDestroy();
 
-    expect(certificadosLicenciasSvcMock.getFacturadorDatos).toHaveBeenCalled();
-    expect(component.facturadorTablaDatos).toEqual(mockData);
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
-
-  it('should call getProveedorTablaDatos and populate proveedorTablaDatos', () => {
-    const mockData:any = [{ id: 3, name: 'Proveedor 1' }];
-    certificadosLicenciasSvcMock.getProveedorDatos.mockReturnValue(of(mockData));
-
-    component.getProveedorTablaDatos();
-
-    expect(certificadosLicenciasSvcMock.getProveedorDatos).toHaveBeenCalled();
-    expect(component.proveedorTablaDatos).toEqual(mockData);
-  });
-
-  it('should call getCertificadoAnaliticoTablaDatos and populate certificadoAnaliticoTablaDatos', () => {
-    const mockData:any = [{ id: 4, name: 'Certificado 1' }];
-    certificadosLicenciasSvcMock.getCertificadoDatos.mockReturnValue(of(mockData));
-
-    component.getCertificadoAnaliticoTablaDatos();
-
-    expect(certificadosLicenciasSvcMock.getCertificadoDatos).toHaveBeenCalled();
-    expect(component.certificadoAnaliticoTablaDatos).toEqual(mockData);
-  });
-
-  it('should call getOtrosTablaDatos and populate otrosTablaDatos', () => {
-    const mockData:any = [{ id: 5, name: 'Otro 1' }];
-    certificadosLicenciasSvcMock.getOtrosDatos.mockReturnValue(of(mockData));
-
-    component.getOtrosTablaDatos();
-
-    expect(certificadosLicenciasSvcMock.getOtrosDatos).toHaveBeenCalled();
-    expect(component.otrosTablaDatos).toEqual(mockData);
-  });
-
 });

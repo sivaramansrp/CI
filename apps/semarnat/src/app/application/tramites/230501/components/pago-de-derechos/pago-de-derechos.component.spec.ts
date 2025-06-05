@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -12,8 +12,7 @@ import { MaterialesPeligrososService } from '../../services/materiales-peligroso
 import { FormBuilder } from '@angular/forms';
 import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
 import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
-import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
-import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 @Injectable()
 class MockMaterialesPeligrososService {
@@ -33,15 +32,13 @@ describe('PagoDeDerechosComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule ],
-      declarations: [],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: MaterialesPeligrososService, useClass: MockMaterialesPeligrososService },
         FormBuilder,
         { provide: Tramite230501Store, useClass: MockTramite230501Store },
         { provide: Tramite230501Query, useClass: MockTramite230501Query },
-        SeccionLibQuery,
-        SeccionLibStore
+        ConsultaioQuery
       ]
     }).overrideComponent(PagoDeDerechosComponent, {
 
@@ -58,29 +55,30 @@ describe('PagoDeDerechosComponent', () => {
   it('should run #ngOnInit()', async () => {
     component.tramite230501Query = component.tramite230501Query || {};
     component.tramite230501Query.seletPagoDerechosState$ = observableOf({});
-    component.createPagoDerechos = jest.fn();
-    component.seccionQuery = component.seccionQuery || {};
-    component.seccionQuery.selectSeccionState$ = observableOf({});
-    component.pagoDerechos = component.pagoDerechos || {};
-    component.pagoDerechos.statusChanges = observableOf({});
-    component.pagoDerechos.valueChanges = observableOf({});
-    component.pagoDerechos.get = jest.fn().mockReturnValue({
-      status: {}
-    });
-    component.pagoDerechos.valid = 'valid';
-    component.seccionStore = component.seccionStore || {};
-    component.seccionStore.establecerFormaValida = jest.fn();
+    component.consultaQuery = component.consultaQuery || {};
+    component.consultaQuery.selectConsultaioState$ = observableOf({});
+    component.inicializarEstadoFormulario = jest.fn();
     component.ngOnInit();
+    expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
+  });
+
+  it('should run #inicializarEstadoFormulario()', async () => {
+    component.pagoDerechos = component.pagoDerechos || {};
+    component.pagoDerechos.disable = jest.fn();
+    component.createPagoDerechos = jest.fn();
+    component.inicializarEstadoFormulario();
+  });
+
+  it('should run #setFormValida()', async () => {
+    component.tramite230501Store = component.tramite230501Store || {};
+    component.tramite230501Store.setFormValida = jest.fn();
+    component.setFormValida({});
+    expect(component.tramite230501Store.setFormValida).toHaveBeenCalled();
   });
 
   it('should run #createPagoDerechos()', async () => {
     component.fb = component.fb || {};
-    component.fb.group = jest.fn().mockReturnValue({
-      valid: {},
-      valueChanges: observableOf({
-        fecha: {}
-      })
-    });
+    component.fb.group = jest.fn();
     component.pagoDerechosState = component.pagoDerechosState || {};
     component.pagoDerechosState.clave = 'clave';
     component.pagoDerechosState.dependencia = 'dependencia';
@@ -88,10 +86,18 @@ describe('PagoDeDerechosComponent', () => {
     component.pagoDerechosState.llavePago = 'llavePago';
     component.pagoDerechosState.fecha = 'fecha';
     component.pagoDerechosState.importePago = 'importePago';
+    component.createPagoDerechos();
+  });
+
+  it('should run #onCambioDeTiempo()', async () => {
     component.setFormValida = jest.fn();
+    component.pagoDerechos = component.pagoDerechos || {};
+    component.pagoDerechos.valid = 'valid';
     component.tramite230501Store = component.tramite230501Store || {};
     component.tramite230501Store.setPagoDerechosStateProperty = jest.fn();
-    component.createPagoDerechos();
+    component.onCambioDeTiempo({});
+    expect(component.setFormValida).toHaveBeenCalled();
+    expect(component.tramite230501Store.setPagoDerechosStateProperty).toHaveBeenCalled();
   });
 
   it('should run #clasificacionSeleccione()', async () => {
