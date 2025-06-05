@@ -18,19 +18,6 @@ import { Tramite261701Query } from '../../estados/query/tramite261701.query';
 export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit, OnDestroy{
 
   /**
-   * Obtiene el mensaje de alerta para los manifiestos.
-   */
-  private getManifiestosAlert = ManifiestosDeclaracionesComponent.getManifiestosAlert;
-
-/** compo doc
- * Constantes importadas desde el archivo de enumeración que contienen textos importantes y de advertencia.
- *
- * @type {string}
- * @memberof ManifiestosDeclaracionesComponent
- */
-  public manifiestosAlert: string = this.getManifiestosAlert().message;
-  
-  /**
    * compo doc
    * Subject para notificar la destrucción del componente.
    */
@@ -111,32 +98,8 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
       )
       .subscribe();
 
-    if(this.esFormularioSoloLectura){
-      this.manifiestosAlert = this.getManifiestosAlert(true).message;
-    }
-  }
-
-  /**
-   * Genera el HTML para el mensaje de manifiestos con la opción de habilitar o deshabilitar el checkbox
-   */
-  static getManifiestosAlert(disabled: boolean = false): { message: string } {
-    return {
-      message: `
-        <div class="row">
-          <div class="col-md-2 d-flex justify-content-center align-items-center">
-            <form>
-              <label>
-                <input type="checkbox" id="manifiestos" name="manifiestos" required ${disabled ? 'disabled' : ''}>
-                <span class="ml-5" style="color: #31708f;">*</span>
-              </label>
-            </form>
-          </div>
-          <div class="col-md-10">
-            <p>Cumplo con los requisitos y la normatividad aplicable, sin que ello me exima de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en las que pueda incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo, acepto que la notificación de este trámite sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.</p>
-          </div>
-        </div>
-        `
-    };
+      const ELEMENTO_CHECKBOX = document.getElementById('manifiestos');
+      (ELEMENTO_CHECKBOX as HTMLInputElement).disabled = this.esFormularioSoloLectura;
   }
 
   /**

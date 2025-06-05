@@ -83,7 +83,6 @@ describe('ManifiestosDeclaracionesComponent', () => {
       expect(component.manifiestosCheckboxChecked).toBe(false);
       expect(component.esFormularioSoloLectura).toBe(false);
       expect(component.destroyNotifier$).toBeInstanceOf(Subject);
-      expect(component.manifiestosAlert).toBeDefined();
     });
 
     it('debería inyectar correctamente los servicios en el constructor', () => {
@@ -112,11 +111,6 @@ describe('ManifiestosDeclaracionesComponent', () => {
       
       expect(newComponent.esFormularioSoloLectura).toBe(true);
     });
-
-    it('debería establecer manifiestosAlert con el mensaje por defecto', () => {
-      const expectedMessage = ManifiestosDeclaracionesComponent.getManifiestosAlert().message;
-      expect(component.manifiestosAlert).toBe(expectedMessage);
-    });
   });
 
   // Pruebas para ngOnInit
@@ -130,24 +124,6 @@ describe('ManifiestosDeclaracionesComponent', () => {
       expect(component.cancelacionPeticionState).toEqual(mockCancelacionPeticionState);
     });
 
-    it('debería actualizar manifiestosAlert cuando esFormularioSoloLectura es true', () => {
-      component.esFormularioSoloLectura = true;
-      
-      component.ngOnInit();
-      
-      const expectedMessage = ManifiestosDeclaracionesComponent.getManifiestosAlert(true).message;
-      expect(component.manifiestosAlert).toBe(expectedMessage);
-    });
-
-    it('no debería cambiar manifiestosAlert cuando esFormularioSoloLectura es false', () => {
-      const originalMessage = component.manifiestosAlert;
-      component.esFormularioSoloLectura = false;
-      
-      component.ngOnInit();
-      
-      expect(component.manifiestosAlert).toBe(originalMessage);
-    });
-
     it('debería usar takeUntil para evitar fugas de memoria', () => {
       const mockPipe = jest.fn().mockReturnValue(of(mockCancelacionPeticionState));
       mockTramite261701Query.select$ = {
@@ -157,52 +133,6 @@ describe('ManifiestosDeclaracionesComponent', () => {
       component.ngOnInit();
       
       expect(mockPipe).toHaveBeenCalledWith(expect.anything(), expect.anything());
-    });
-  });
-
-  // Pruebas para getManifiestosAlert (método estático)
-  describe('getManifiestosAlert', () => {
-    it('debería retornar mensaje con checkbox habilitado por defecto', () => {
-      const result = ManifiestosDeclaracionesComponent.getManifiestosAlert();
-      
-      expect(result).toHaveProperty('message');
-      expect(result.message).toContain('<input type="checkbox"');
-      expect(result.message).not.toContain('disabled');
-    });
-
-    it('debería retornar mensaje con checkbox deshabilitado cuando disabled es true', () => {
-      const result = ManifiestosDeclaracionesComponent.getManifiestosAlert(true);
-      
-      expect(result).toHaveProperty('message');
-      expect(result.message).toContain('<input type="checkbox"');
-      expect(result.message).toContain('disabled');
-    });
-
-    it('debería retornar mensaje con checkbox habilitado cuando disabled es false', () => {
-      const result = ManifiestosDeclaracionesComponent.getManifiestosAlert(false);
-      
-      expect(result).toHaveProperty('message');
-      expect(result.message).toContain('<input type="checkbox"');
-      expect(result.message).not.toContain('disabled');
-    });
-
-    it('debería incluir el texto completo del mensaje', () => {
-      const result = ManifiestosDeclaracionesComponent.getManifiestosAlert();
-      
-      expect(result.message).toContain('Cumplo con los requisitos');
-      expect(result.message).toContain('Ventanilla Única de Comercio Exterior');
-      expect(result.message).toContain('id="manifiestos"');
-      expect(result.message).toContain('required');
-    });
-
-    it('debería mantener la estructura HTML correcta', () => {
-      const result = ManifiestosDeclaracionesComponent.getManifiestosAlert();
-      
-      expect(result.message).toContain('<div class="row">');
-      expect(result.message).toContain('<div class="col-md-2');
-      expect(result.message).toContain('<div class="col-md-10">');
-      expect(result.message).toContain('<form>');
-      expect(result.message).toContain('<label>');
     });
   });
 
@@ -431,10 +361,6 @@ describe('ManifiestosDeclaracionesComponent', () => {
       
       // Ejecutar ngOnInit
       newComponent.ngOnInit();
-      
-      // Verificar que el mensaje incluye disabled
-      const expectedMessage = ManifiestosDeclaracionesComponent.getManifiestosAlert(true).message;
-      expect(newComponent.manifiestosAlert).toBe(expectedMessage);
     });
   });
 
@@ -529,15 +455,6 @@ describe('ManifiestosDeclaracionesComponent', () => {
       const alert = compiled.querySelector('ng-alert');
       expect(alert?.getAttribute('ng-reflect-contenido')).toBeDefined();
     });
-
-    it('debería actualizar la template cuando cambia manifiestosAlert', () => {
-      const newMessage = 'Nuevo mensaje de prueba';
-      component.manifiestosAlert = newMessage;
-      fixture.detectChanges();
-      
-      // Verificar que la template se actualiza
-      expect(component.manifiestosAlert).toBe(newMessage);
-    });
   });
 
   // Pruebas para suscripciones y gestión de memoria
@@ -583,10 +500,6 @@ describe('ManifiestosDeclaracionesComponent', () => {
 
     it('debería tener esFormularioSoloLectura como boolean', () => {
       expect(typeof component.esFormularioSoloLectura).toBe('boolean');
-    });
-
-    it('debería tener manifiestosAlert como string', () => {
-      expect(typeof component.manifiestosAlert).toBe('string');
     });
 
     it('debería poder actualizar manifiestosCheckboxChecked', () => {
