@@ -349,6 +349,7 @@ export class SolicitudPageComponent implements OnInit {
           }
         );
       case '4':
+        //Marítimo
         return this.solicitudState.transporteArriboDatos.map(
           (transporte: Partial<TransporteDespacho>) => {
             const RESULTADO: Partial<TransporteDespacho> = {
@@ -362,17 +363,18 @@ export class SolicitudPageComponent implements OnInit {
             return RESULTADO as TransporteDespacho;
           }
         );
-      case '5':
+      case '3':
+        //Aereo
         return this.solicitudState.transporteArriboDatos.map(
           (transporte: Partial<TransporteDespacho>) => {
             const RESULTADO: Partial<TransporteDespacho> = {
               tipo_transporte: TIPO_TRANSPORTE_ARRIBO_SALIDA,
-              arribo_pendiente_aereo: transporte.arribo_pendiente_aereo,
+              arribo_pendiente_aereo: transporte.arribo_pendiente_aereo === 'Sí' ? true : false,
               guia_master_aereo: transporte.guia_master_aereo || '',
               guia_house_aereo: transporte.guia_house_aereo || '',
               fecha_arribo_aereo: transporte.fecha_arribo_aereo || '',
               hora_arribo_aereo: transporte.hora_arribo_aereo || '',
-              guia_valida: transporte.guia_valida,
+              guia_valida: transporte.guia_valida === 'Sí' ? true : false,
               observaciones: transporte.observaciones,
             };
             return RESULTADO as TransporteDespacho;
@@ -437,7 +439,7 @@ export class SolicitudPageComponent implements OnInit {
             return RESULTADO as TransporteDespacho;
           }
         );
-      case '3':
+      case '5':
         return this.solicitudState.transporte.map(
           (transporte: Partial<TransporteDespacho>) => {
             const RESULTADO: Partial<TransporteDespacho> = {
