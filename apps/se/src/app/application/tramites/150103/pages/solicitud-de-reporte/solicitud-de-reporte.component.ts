@@ -1,14 +1,12 @@
 
-import { Component, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, DatosPasos } from '@libs/shared/data-access-user/src';
+import { Component } from '@angular/core';
+import { DatosPasos } from '@libs/shared/data-access-user/src';
 import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { PASOS } from '@libs/shared/data-access-user/src';
 import { REPORTE_ANUAL_PASOS } from '../../constants/reporte-anual.enum';
 
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
-
-import { Subject,map,takeUntil } from 'rxjs';
 /**
  * Interfaz para definir las acciones de los botones en el flujo del wizard.
  * @property accion - Define la acción a realizar, como avanzar ('cont') o retroceder.
@@ -34,7 +32,7 @@ interface AccionBoton {
  
 })
 
-export class SolicitudDeReporteComponent implements OnInit {
+export class SolicitudDeReporteComponent {
 
   pantallasPasos: ListaPasosWizard[] = REPORTE_ANUAL_PASOS;
   /**
@@ -77,24 +75,8 @@ export class SolicitudDeReporteComponent implements OnInit {
    * Constructor del componente.
    * Inicializa los servicios necesarios para la funcionalidad del componente.
    */
-  consultaDatos!: ConsultaioState;
-
-  /**
-   * Sujeto para notificar la destrucción del componente.
-   */
-  public destroyNotifier$: Subject<void> = new Subject();
-
-  constructor(private consultaioQuery: ConsultaioQuery) { }
-
-  ngOnInit(): void {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.consultaDatos = seccionState;
-        })
-      )
-      .subscribe();
+  constructor() {
+    // Constructor vacío, no requiere inicialización adicional.
   }
 
   /**

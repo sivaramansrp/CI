@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 
@@ -21,7 +21,7 @@ import { InformeAnualProgramaService } from '../../services/informe-anual-progra
   styleUrl: './paso-uno.component.scss',
   
 })
-export class PasoUnoComponent implements AfterViewInit,OnInit {
+export class PasoUnoComponent implements AfterViewInit,OnInit,OnDestroy {
 
   /**
    * Constructor del componente.
@@ -142,5 +142,10 @@ getFilaDeInformeSeleccionada(evento: boolean): void {
   if (evento) {
     this.estaHabilitado = evento;
   }
+}
+
+ngOnDestroy(): void {
+  this.destroyNotifier$.next(); 
+  this.destroyNotifier$.complete(); 
 }
 }

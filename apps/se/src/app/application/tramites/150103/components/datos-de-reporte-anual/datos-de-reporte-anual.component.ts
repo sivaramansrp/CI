@@ -189,6 +189,9 @@ inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.formReporteAnnual?.disable();
     }
+    else {
+      this.formReporteAnnual?.enable();
+    }
 }
   /**
    * Método que se ejecuta al destruir el componente.
