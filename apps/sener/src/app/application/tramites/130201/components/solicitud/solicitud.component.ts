@@ -952,7 +952,7 @@ tituloParte = TITULO_DESTINO;
     // Llamada al servicio para obtener los países por bloque
     this.exportacionPetroliferosService
       .getPaisesPorBloque(_bloqueId)
-      .pipe(takeUntil(this.destroyed$)) // Se asegura de que la suscripción se cancele correctamente
+      .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
         // Asigna los países obtenidos a la propiedad paisesPorBloque
         this.paisesPorBloque = data;
