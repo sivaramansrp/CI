@@ -1,11 +1,17 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoTresComponent } from './paso-tres.component';
-import { ToastrService, TOAST_CONFIG } from 'ngx-toastr';
+import { ToastrService, ToastrModule } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
+import { CommonModule } from '@angular/common';
+import { Location } from '@angular/common';
+import { RouterTestingModule } from '@angular/router/testing';
+import { Router } from '@angular/router';
 
 describe('PasoTresComponent', () => {
   let component: PasoTresComponent;
   let fixture: ComponentFixture<PasoTresComponent>;
+    let router: Router;
+  let navigateSpy: jest.SpyInstance;
 
   // Servicio de tostado simulado
   const mockToastrService = {
@@ -16,22 +22,40 @@ describe('PasoTresComponent', () => {
   };
 
 
-  beforeEach(async () => {
+   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [PasoTresComponent],
-       providers: [
-              { provide: ToastrService, useValue: mockToastrService },
-              { provide: TOAST_CONFIG, useValue: {} }, 
-              provideHttpClient()// Proporcionar una configuración simulada
-            ],
+      imports: [
+        CommonModule,
+        RouterTestingModule.withRoutes([]),
+        ToastrModule.forRoot(),
+        PasoTresComponent
+      ],
+      providers: [
+        { provide: ToastrService, useValue: mockToastrService }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoTresComponent);
     component = fixture.componentInstance;
+    router = TestBed.inject(Router);
+    navigateSpy = jest.spyOn(router, 'navigate').mockImplementation(() => Promise.resolve(true));
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+   describe('obtieneFirma', () => {
+    it('should navigate to acuse page if firma is provided', () => {
+      const testFirma = 'fake-digital-signature';
+      component.obtieneFirma(testFirma);
+      expect(navigateSpy).toHaveBeenCalledWith(['servicios-extraordinarios/acuse']);
+    });
+
+    it('should not navigate if firma is empty', () => {
+      component.obtieneFirma('');
+      expect(navigateSpy).not.toHaveBeenCalled();
+    });
   });
 });
