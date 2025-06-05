@@ -20,7 +20,7 @@ export enum MENSAJES_DOCUMENTOS {
   /**
    * Mensaje que indica que el documento se ha subido exitosamente.
    */
-  UPLOAD = 'Documento subido'
+  UPLOAD = 'Documento subido',
 }
 
 export enum ESTATUS_CARGA_DOCUMENTO {
@@ -33,7 +33,7 @@ export enum ESTATUS_CARGA_DOCUMENTO {
    * Estado que indica que el documento esta pendiente de carga.
 
    */
-  PENDIENTE = 'Pendiente'
+  PENDIENTE = 'Pendiente',
 }
 
 /**
@@ -59,9 +59,12 @@ export enum UNIDADES_DOCUMENTOS {
   /**
    * Representa el tamaño de un documento en kilobytes (KB).
    */
-  KB = 'KB'
+  KB = 'KB',
 }
 
+/**
+ * @description Enum `MENSAJES_MODAL` que define los mensajes para mostrar en modales relacionados con la carga de documentos.
+ */
 export enum MENSAJES_MODAL {
   INFORMACION_SUBIR_DOCUMENTOS = `
           <div class="d-flex flex-column">
@@ -74,5 +77,11 @@ export enum MENSAJES_MODAL {
                <li>No debe contener páginas en blanco</li>
                </ul>
              </div>
-           </div>`
+           </div>`,
 }
+
+
+/**
+ * @descrption Almacena la palabra 'opcinal', usada para identificar si un documento es opcional o no.
+ */
+export const OPCIONAL = 'opcional';

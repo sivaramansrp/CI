@@ -19,16 +19,11 @@ describe('EmpresasTerciarizadasComponent', () => {
   let DATOS_MOCK: Plantas[];
   beforeEach(async () => {
     tramite80210StoreMock = {
-      setPlantasDisponibles: jest.fn(),
-      setPlantasSeleccionada: jest.fn(),
-      setShowPlantas: jest.fn(),
-      setRFC: jest.fn(),
+      establecerDatos: jest.fn(),
     };
 
     tramite80210QueryMock = {
       selectTramite80210$: of({
-        estados: '123',
-        rfc: '432333',
         plantasDisponibles: [],
         plantasSeleccionadas: [],
         showPlantas: false,
@@ -113,16 +108,12 @@ describe('EmpresasTerciarizadasComponent', () => {
     componente.empresasForm.get('estado')?.setValue('Estado1');
     componente.buscarControladoras();
     expect(componente.showPlantas).toBe(true);
-    expect(tramite80210StoreMock.setPlantasDisponibles).toHaveBeenCalledWith([]);
-    expect(tramite80210StoreMock.setShowPlantas).toHaveBeenCalledWith(true);
-    expect(componente.empresasForm.get('rfc')?.value).toBeNull();
-    expect(componente.empresasForm.get('estado')?.value).toBe('');
+    expect(tramite80210StoreMock.establecerDatos).toHaveBeenCalledWith({ plantasDisponibles: [] });
+    expect(tramite80210StoreMock.establecerDatos).toHaveBeenCalledWith({showPlantas:true});
   });
 
   it('debería segregar plantas disponibles y seleccionadas', () => {
     componente.tramites80210State = {
-      rfc: 'RFC123',
-      estados: '',
       plantasDisponibles: [DATOS_MOCK[0]],
       plantasSeleccionadas: [DATOS_MOCK[1]],
       showPlantas: true,
@@ -141,10 +132,11 @@ describe('EmpresasTerciarizadasComponent', () => {
 
     expect(componente.plantasSeleccionadas).toEqual([DATOS_MOCK[1], DATOS_MOCK[0]]);
     expect(componente.plantasDisponibles).toEqual([]);
-    expect(tramite80210StoreMock.setPlantasSeleccionada).toHaveBeenCalledWith([
+    expect(tramite80210StoreMock.establecerDatos).toHaveBeenCalledWith({
+      plantasSeleccionadas:[
       DATOS_MOCK[1],
       DATOS_MOCK[0],
-    ]);
+    ]});
   });
 
   it('debería eliminar plantas seleccionadas evitando duplicados', () => {
@@ -156,16 +148,11 @@ describe('EmpresasTerciarizadasComponent', () => {
 
     expect(componente.plantasSeleccionadas).toEqual([DATOS_MOCK[0]]);
     expect(componente.plantasDisponibles).toEqual([DATOS_MOCK[1]]);
-    expect(tramite80210StoreMock.setPlantasDisponibles).toHaveBeenCalledWith([
+    expect(tramite80210StoreMock.establecerDatos).toHaveBeenCalledWith({plantasDisponibles:[
       DATOS_MOCK[1],
-    ]);
+    ]});
   });
 
-  it('debería establecer valores en el estado global desde el formulario', () => {
-    componente.empresasForm.get('rfc')?.setValue('RFC123');
-    componente.setValoresStore('rfc', 'setRFC');
-    expect(tramite80210StoreMock.setRFC).toHaveBeenCalledWith('RFC123');
-  });
 
   it('debería limpiar los observables al destruir el componente', () => {
     const DESTROY_SPY = jest.spyOn(componente.destoryNotification$, 'next');

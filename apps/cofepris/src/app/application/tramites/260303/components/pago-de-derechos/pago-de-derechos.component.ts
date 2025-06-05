@@ -1,20 +1,18 @@
-import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Catalogo, CatalogoSelectComponent,InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud260303State, Tramite260303Store } from '../../../../estados/tramites/260303/tramite260303.store';
 import { Subject,map, takeUntil } from 'rxjs';
 import { CertificadosLicenciasPermisosService } from '../../services/certificados-licencias-permisos.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FECHA_PAGO } from '../../services/certificados-licencias-permisos.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite260303Query } from '../../../../estados/queries/260303/tramite260303.query';
-
-
 /**
  * PagoDeDerechosComponent es responsable de manejar el primer paso del proceso.
  * para actualizar el componente actual que se está mostrando.
  */
-
 @Component({
   selector: 'app-pago-de-derechos',
   standalone: true,
@@ -23,6 +21,13 @@ import { Tramite260303Query } from '../../../../estados/queries/260303/tramite26
   styleUrl: './pago-de-derechos.component.scss',
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+
+  /**
+* @property consultaState
+* @description
+* Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+*/
+  @Input() consultaState!: ConsultaioState;
 
   /**
    * Representa el catálogo de bancos disponibles para selección.
@@ -63,9 +68,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private certificadosLicenciasSvc: CertificadosLicenciasPermisosService,
     private fb: FormBuilder,
     private tramite260303Store: Tramite260303Store,
-    private tramite260303Query: Tramite260303Query
+    private tramite260303Query: Tramite260303Query,
   ) {
-    //
    }
 
   /**
@@ -77,15 +81,28 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * - Llama a `cerrarPagoDerechosForm` para inicializar o restablecer el formulario de pago.
    */
   ngOnInit(): void {
-    this.tramite260303Query.selectSolicitud$.pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      )
-      .subscribe();
+    this.inicializarFormulario();
     this.getBancoCatalogDatos();
     this.cerrarPagoDerechosForm();
+    this.deshabilitarFormularios();
+  }
+
+  /**
+   * Inicializa el formulario suscribiéndose al estado de la solicitud.
+   * 
+   * Este método se suscribe al observable `selectSolicitud$` del query,
+   * y actualiza la propiedad `solicitudState` cada vez que hay cambios en el estado.
+   * La suscripción se limpia automáticamente cuando el componente se destruye.
+   */
+  inicializarFormulario(): void {
+    this.tramite260303Query.selectSolicitud$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        // Actualiza el estado local de la solicitud con los datos más recientes
+        this.solicitudState = seccionState;
+      })
+    )
+      .subscribe();
   }
 
   /**
@@ -154,6 +171,21 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite260303Store): void {
       const VALOR = form.get(campo)?.value;
       (this.tramite260303Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+  /**
+   * Habilita o deshabilita los controles del formulario según el estado de solo lectura.
+   * 
+   * Si `consultaState.readonly` es verdadero, deshabilita todos los controles del formulario para evitar modificaciones.
+   * Si es falso, habilita los controles para permitir la edición.
+   */
+  deshabilitarFormularios(): void {
+    if (this.consultaState?.readonly) {
+      // Si el formulario está en modo solo lectura, deshabilita todos los controles.
+      this.pagoDerechosForm.disable();
+    } else {
+      // Si el formulario es editable, habilita todos los controles.
+      this.pagoDerechosForm.enable();
+    }
   }
 
   /**

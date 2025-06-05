@@ -1,7 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { registroSolicitudImmexService } from './registro-solicitud-immex.service';
-import { FormularioDatos, RespuestaPlantas } from '../modelos/registro-solicitud-immex.model';
+import { registroSolicitudImmexService } from './registro-expansion.service';
+import { FormularioDatos, RespuestaPlantas } from '../modelos/registro-expansion.model';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
 describe('registroSolicitudImmexService', () => {
