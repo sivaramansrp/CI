@@ -80,6 +80,8 @@ import {
   EMPTY,
   Observable,
   Subject,
+  catchError,
+  defaultIfEmpty,
   delay,
   first,
   map,
@@ -87,6 +89,7 @@ import {
   switchMap,
   takeUntil,
   tap,
+  throwError,
 } from 'rxjs';
 import {
   Solicitud5701State,
@@ -119,6 +122,7 @@ import { ValidaLineaPagoService } from '../../../../core/services/5701/pago/vali
 import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
+import { error } from 'console';
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
@@ -1067,9 +1071,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               ? idcResponse.datos?.nombre
               : idcResponse.datos?.razon_social;
             if (NOMBRE) {
-              this.datosImportadorExportador
-                .get('nombre')
-                ?.setValue(NOMBRE);
+              this.datosImportadorExportador.get('nombre')?.setValue(NOMBRE);
               this.getCertificaciones(RFC_IMP_EXP);
             }
           })
@@ -1843,7 +1845,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((response) => {
-          if (response) {
+          if (response.datos) {
             this.tramite5701Store.setBlnProgramaFomento(
               response.datos.programa_fomento
             );
@@ -1851,6 +1853,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               response.datos.des_programa_fomento
             );
           }
+        }),
+        catchError((error) => {
+          return throwError(() => error);
         })
       )
       .subscribe();
@@ -1860,7 +1865,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((response) => {
-          if (response) {
+          if (response.datos) {
             this.tramite5701Store.setBlnIndustriaAutomotriz(
               response.datos.industrial_automotriz
             );
@@ -1868,6 +1873,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               response.datos.des_industrial_automotriz
             );
           }
+        }),
+        catchError((error) => {
+          return throwError(() => error);
         })
       )
       .subscribe();
@@ -1878,6 +1886,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((response) => {
           this.tramite5701Store.setBlnRevisionOrigen(response.datos);
+        }),
+        catchError((error) => {
+          return throwError(() => error);
         })
       )
       .subscribe();
@@ -1923,6 +1934,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     )
       .pipe(
         takeUntil(this.destroyNotifier$),
+        defaultIfEmpty({ datos: false }),
         first((response) => {
           this.tramite5701Store.setBlnOEA(response.datos);
           return response.datos;

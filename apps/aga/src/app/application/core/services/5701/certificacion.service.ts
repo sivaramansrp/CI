@@ -9,6 +9,9 @@ import { Injectable } from "@angular/core";
     providedIn: 'root',
 })
 export class CertificacionService {
+    /**
+     * @description URL del host de la API para certificación
+     */
     private readonly host: string;
 
     constructor(private http: HttpClient) {

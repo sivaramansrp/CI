@@ -198,3 +198,4 @@ export * from './core/utils/utilerias';
 
 export * from './tramites/components/transporte/transporte.component';
 export * from './tramites/components/agregar-transporte/agregar-transporte.component';
+export * from './core/models/shared/tramite-folio.model'
