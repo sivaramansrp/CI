@@ -112,6 +112,7 @@ this.disableBanco = (this.solicitudState?.exento ?? '') === '1';
 
     this.sanidadService
       .obtenerFormularioDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((formularioDatos: FormularioDatos) => {
         this.formularioDatos = formularioDatos;
         this.actualizarControlesDelFormulario();

@@ -5,6 +5,7 @@ import { Injectable } from '@angular/core';
  * Interface que representa el estado de la solicitud para el trámite 221603.
  * Este estado contiene la información relacionada con los datos de la solicitud.
  */
+
 export interface Solicitud221603State {
   /**
    * Justificación para la solicitud.
@@ -96,6 +97,9 @@ export interface Solicitud221603State {
    */
   importe: string;
 
+  /**
+ * Justificación adicional para la solicitud.
+ */
   justificacion: string;
 }
 
@@ -141,6 +145,18 @@ export class Tramite221603Store extends Store<Solicitud221603State> {
    */
   constructor() {
     super(createInitialState());
+  }
+
+  /**
+   * Actualiza dinámicamente el estado de la solicitud para el campo y valor proporcionados.
+   * Nombre del campo del estado a actualizar.
+   * Valor a establecer en el campo especificado.
+   */
+  public setValoresStore(campo: string, valor: string): void {
+    this.update((state) => ({
+      ...state,
+      [campo]: valor,
+    }));
   }
 
   /**

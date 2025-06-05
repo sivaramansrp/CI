@@ -138,23 +138,11 @@ export class SanidadService {
  * {void}
  */
  public actualizarEstadoFormulario(resp: Solicitud221603State): void {
-    this.tramite221603Store.setJustificacion(resp.justificacion)
-    this.tramite221603Store.setJustificacionDescription(resp.justificacionDescription)
-    this.tramite221603Store.setAduana(resp.aduana)
-    this.tramite221603Store.setOficina(resp.oficina)
-    this.tramite221603Store.setPunto(resp.punto)
-    this.tramite221603Store.setGuia(resp.guia)
-    this.tramite221603Store.setRegimen(resp.regimen)
-    this.tramite221603Store.setCarro(resp.carro)
-    this.tramite221603Store.setMedio(resp.medio)
-    this.tramite221603Store.setTransporte(resp.transporte)
-    this.tramite221603Store.setExentoDePago(resp.exento)
-    this.tramite221603Store.setClave(resp.clave)
-    this.tramite221603Store.setDependencia(resp.dependencia)
-    this.tramite221603Store.setBanco(resp.banco)
-    this.tramite221603Store.setLlave(resp.llave)
-    this.tramite221603Store.setFecha(resp.fecha)
-    this.tramite221603Store.setImporte(resp.importe)
+  for (const CAMPO of Object.keys(resp) as (keyof Solicitud221603State)[]) {
+    if (Object.prototype.hasOwnProperty.call(resp, CAMPO)) {
+      this.tramite221603Store.setValoresStore(CAMPO, resp[CAMPO]);
+    }
+  }
  }
 
   /**
