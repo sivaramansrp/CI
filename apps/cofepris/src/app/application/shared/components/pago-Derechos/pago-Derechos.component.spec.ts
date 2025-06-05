@@ -6,6 +6,11 @@ import { AvisoImportacionService } from '../../services/parmiso-importacion.serv
 import { AvisocalidadStore } from '../../estados/stores/aviso-calidad.store';
 import { AvisocalidadQuery } from '../../estados/queries/aviso-calidad.query';
 import { FECHA_DE_PAGO } from '../../models/pago-derechos.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
+ const mockConsultaioQuery = {
+    selectConsultaioState$: of({ readonly: true }),
+  };
 
 describe('PagoDerechosComponent', () => {
   let component: PagoDerechosComponent;
@@ -39,6 +44,8 @@ describe('PagoDerechosComponent', () => {
         { provide: AvisoImportacionService, useValue: mockService },
         { provide: AvisocalidadStore, useValue: mockStore },
         { provide: AvisocalidadQuery, useValue: mockQuery },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
+
       ],
     }).compileComponents();
 
@@ -132,5 +139,40 @@ describe('PagoDerechosComponent', () => {
     component.ngOnDestroy();
     expect(nextSpy).toHaveBeenCalledWith();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+   it('should set esFormularioSoloLectura from ConsultaioQuery and configure form on ngOnInit', () => {
+      const configurarSpy = jest.spyOn(component, 'configurarGrupoForm');
+
+      component.ngOnInit();
+
+      expect(component.esFormularioSoloLectura).toBe(true);
+      expect(configurarSpy).toHaveBeenCalled();
+    });
+
+    it('should initialize and disable the form when esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+
+    component.configurarGrupoForm();
+
+    const formValue = component.derechosForm.value;
+    expect(formValue).toEqual({
+      claveReferencia: 'ABC123',
+      cadenaDependencia: 'Dependencia XYZ',
+      banco: 'BANXICO',
+      llavePago: 'LLAVE123',
+      fechaPago: '2023-10-01',
+      importePago: 1000
+    });
+
+    expect(component.derechosForm.disabled).toBe(true);
+  });
+
+  it('should initialize and enable the form when esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+
+    component.configurarGrupoForm();
+
+    expect(component.derechosForm.disabled).toBe(false);
   });
 });
