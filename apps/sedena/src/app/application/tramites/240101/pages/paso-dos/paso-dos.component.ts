@@ -1,4 +1,4 @@
-import { AnexarDocumentosComponent, CATALOGOS_ID, ConsultaioQuery, ConsultaioState, TituloComponent } from '@ng-mf/data-access-user';
+import { AnexarDocumentosComponent, CATALOGOS_ID, ConsultaioState, TituloComponent } from '@ng-mf/data-access-user';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
