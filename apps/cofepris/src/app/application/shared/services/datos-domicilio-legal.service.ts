@@ -2,12 +2,12 @@ import {
   Catalogo,
   RespuestaCatalogos,
 } from '@libs/shared/data-access-user/src';
+import { DatosDomicilioLegalState, DatosDomicilioLegalStore } from '../estados/stores/datos-domicilio-legal.store';
 import {
   MercanciasTabla,
   RespuestaTabla,
 } from '../components/domicilio-establecimiento/domicilio-establecimiento.component';
 import { DatosDomicilioLegalQuery } from '../estados/queries/datos-domicilio-legal.query';
-import { DatosDomicilioLegalState, DatosDomicilioLegalStore } from '../estados/stores/datos-domicilio-legal.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';

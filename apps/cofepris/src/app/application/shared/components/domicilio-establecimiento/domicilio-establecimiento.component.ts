@@ -10,10 +10,9 @@ import {
   ConfiguracionColumna,
   CrossListLable,
   CrosslistComponent,
+  REGEX_CODIGO_POSTAL,
   REGEX_NUMERO_15_ENTEROS_3_DECIMALES,
   REGEX_SOLO_DIGITOS,
-  REGEX_CODIGO_POSTAL,
-  REGEX_POSTAL,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -26,7 +25,6 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import {
   ConfiguracionVisibilidad,
   MERCANCIAS_DATA,
@@ -47,10 +45,11 @@ import {
 } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
-import { TablePaginationComponent } from '@ng-mf/data-access-user';import { Modal } from 'bootstrap';
-
+import { Modal } from 'bootstrap';
+import { TablePaginationComponent } from '@ng-mf/data-access-user';
 
 export interface RespuestaTabla {
   code: number;

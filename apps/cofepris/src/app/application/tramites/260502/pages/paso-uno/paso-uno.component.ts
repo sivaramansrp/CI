@@ -1,11 +1,11 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AfterViewInit } from '@angular/core';
+import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
+import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
-import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { map, Subject, takeUntil } from 'rxjs';
-import { PagoBancoService } from '../../../../shared/services/pago-banco.service';
 /**
  * Componente que representa el primer paso del proceso de solicitud.
  * Contiene un componente de solicitante y permite la navegación entre tabs.
@@ -15,7 +15,7 @@ import { PagoBancoService } from '../../../../shared/services/pago-banco.service
   standalone: false,
   templateUrl: './paso-uno.component.html',
 })
-export class PasoUnoComponent implements AfterViewInit {
+export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
    * @type {SolicitanteComponent}
