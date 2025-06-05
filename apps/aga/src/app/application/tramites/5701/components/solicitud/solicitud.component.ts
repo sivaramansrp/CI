@@ -1737,6 +1737,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.mostrarRangoFechas = true;
     }
 
+    //Verifica si la tabla de lineas de captura tiene datos y los agrega al formulario.
+    if (this.solicitudState.lineasCaptura.length > 0) {
+      this.datosTablaPagos = [...this.solicitudState.lineasCaptura]
+    }
+
     this.colapsable =
       this.solicitudState.fechasSeleccionadas.length > 0 ||
       this.selectRangoDias.length > 0
@@ -2042,6 +2047,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
           this.montoPagadoLineas +=
             responseLineaCapturaPagada.datos.pago_model.importe;
           this.datosTablaPagos.push(PAGO);
+          this.tramite5701Store.setLineasCaptura(this.datosTablaPagos);
+
+          //Limpia los campos de la línea de captura y monto
+          this.pagoCaptura.get('lineaCaptura')?.reset();
+          this.pagoCaptura.get('monto')?.reset();
+
           this.lineasCaptura?.clear();
           this.lineasCaptura.push(
             this.fb.group({
@@ -2468,5 +2479,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       'descripcionTipoSolicitud',
       'setDescripcionTipoSolicitud'
     );
+  }
+
+  /**
+   * Elimina un elemento de la tabla de lineas de captura
+   */
+  eliminarLineaCaptura(): void {
+    console.log('Eliminar linea de captura');
+    
   }
 }
