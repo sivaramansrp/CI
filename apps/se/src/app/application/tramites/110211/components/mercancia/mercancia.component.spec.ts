@@ -9,8 +9,8 @@ describe('MercanciaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [MercanciaComponent],
-      imports: [HttpClientTestingModule],
+      declarations: [],
+      imports: [HttpClientTestingModule,MercanciaComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA,NO_ERRORS_SCHEMA],
     }).compileComponents();
 
