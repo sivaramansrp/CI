@@ -157,6 +157,21 @@ export class MercanciaComponent implements OnInit, OnDestroy,AfterViewInit {
     this.facturasOpcion();
     this.initActionFormBuild();
   }
+/**
+ * @inheritdoc
+ * 
+ * Angular lifecycle hook that is called after the component's view has been fully initialized.
+ * 
+ * If the form is in read-only mode (`esFormularioSoloLectura`) and the form instance (`mercanciaForm`) exists,
+ * the form will be disabled to prevent user interaction. Otherwise, the form will be enabled.
+ * 
+ * @see https://angular.io/api/core/AfterViewInit
+ * 
+ * @copodoc
+ * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
+ * Si el formulario está en modo solo lectura y existe la instancia del formulario, este se deshabilita para evitar
+ * la interacción del usuario. En caso contrario, el formulario se habilita.
+ */
 ngAfterViewInit(): void {
  if (this.esFormularioSoloLectura && this.mercanciaForm){
       this.mercanciaForm.disable();
