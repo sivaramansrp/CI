@@ -222,9 +222,6 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
       .subscribe(
         (data: Catalogo[]) => {
           this.store.setaltaPlanta(data);
-        },
-        (error) => {
-          console.error('Error al cargar los TratadoAcuerdo:', error);
         }
       );
   }
@@ -239,9 +236,6 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
       .subscribe(
         (data: Catalogo[]) => {
           this.store.setBloque(data);
-        },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
         }
       );
   }

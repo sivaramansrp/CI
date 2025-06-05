@@ -201,9 +201,6 @@ export class DatosCertificadoComponent implements OnDestroy, OnInit {
       .subscribe(
         (data: Catalogo[]) => {
           this.store.setIdiomaDatos(data);
-        },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
         }
       );
   }
@@ -218,9 +215,6 @@ export class DatosCertificadoComponent implements OnDestroy, OnInit {
       .subscribe(
         (data: Catalogo[]) => {
           this.store.setRepresentacionFederalDatos(data);
-        },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
         }
       );
   }
@@ -235,9 +229,6 @@ export class DatosCertificadoComponent implements OnDestroy, OnInit {
       .subscribe(
         (data: Catalogo[]) => {
           this.store.setEntidadFederativaDatos(data);
-        },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
         }
       );
   }

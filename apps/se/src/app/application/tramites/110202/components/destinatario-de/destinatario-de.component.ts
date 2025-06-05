@@ -260,7 +260,6 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (data: Catalogo[]) => this.store.setPaisDestinatario(data),
-        error: (error) => console.error('Error al cargar los estados:', error)
       });
   }
 
@@ -272,7 +271,6 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (data: Catalogo[]) => this.store.setMedioDeTransporte(data),
-        error: (error) => console.error('Error al cargar los estados:', error)
       });
   }
 
