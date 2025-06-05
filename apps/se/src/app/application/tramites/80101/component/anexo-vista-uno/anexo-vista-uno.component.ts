@@ -5,7 +5,7 @@ import { AnexoDosEncabezado } from '../../../../shared/models/nuevo-programa-ind
 import { AnexoUnoComponent } from '../../../../shared/components/anexo-uno/anexo-uno.component';
 import { AnexoUnoEncabezado } from '../../../../shared/models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -24,16 +24,19 @@ import { takeUntil } from 'rxjs';
   styleUrl: './anexo-vista-uno.component.scss',
 })
 export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
-
   public anexoUnoConfig = {
     anexoUnoTablaSeleccionRadio: TablaSeleccion.RADIO,
     anexoUnoEncabezadoDeTabla: ANEXO_I_SERVICIO,
-  }
+  };
   public anexoImportacionConfig = {
     anexoDosTablaSeleccionRadio: TablaSeleccion.RADIO,
     anexoDosEncabezadoDeTabla: ANEXO_IMPORTACION_SERVICIO,
-  }
+  };
 
+  /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.Add commentMore actions
+   */
+  @Input() formularioDeshabilitado: boolean = false;
   /**
    * Lista de encabezados del anexo Uno.
    * @type {AnexoEncabezado[]}
@@ -41,23 +44,32 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
   public anexoUnoTablaLista: AnexoUnoEncabezado[] = [];
 
   /**
-    * Lista de encabezados del anexo dos.
-    * @type {AnexoEncabezado[]}
-    */
+   * Lista de encabezados del anexo dos.
+   * @type {AnexoEncabezado[]}
+   */
   public anexoDosTablaLista: AnexoDosEncabezado[] = [];
 
   /**
- * Notificador utilizado para manejar la destrucción o desuscripción de observables.
- * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
- *
- * @property {Subject<void>} destroyNotifier$
- */
+   * Notificador utilizado para manejar la destrucción o desuscripción de observables.
+   * Se usa comúnmente para limpiar suscripciones cuando el componente es destruido.
+   *
+   * @property {Subject<void>} destroyNotifier$
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
-  constructor(private router: Router, private activatedRoute: ActivatedRoute,
+  /**
+   * Constructor del componente AnexoVistaUnoComponent.
+   * @param {Router} router - Servicio de enrutamiento de Angular para navegar entre rutas.
+   * @param {ActivatedRoute} activatedRoute - Servicio que proporciona información sobre la ruta activa.
+   * @param {Tramite80101Store} store - Store para manejar el estado del trámite 80101.
+   * @param {Tramite80101Query} query - Query para obtener datos del estado del trámite 80101.
+   */
+  constructor(
+    private router: Router,
+    private activatedRoute: ActivatedRoute,
     private store: Tramite80101Store,
-    // eslint-disable-next-line no-empty-function
-    private query: Tramite80101Query) { }
+    private query: Tramite80101Query
+  ) {}
 
   ngOnInit(): void {
     this.query.selectImportarTablsDatos$
@@ -85,26 +97,25 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
   public obtenerAnexoUnoDevolverLaLlamada(event: AnexoUnoEncabezado[]): void {
     this.anexoUnoTablaLista = event ? event : [];
     this.store.setImportarDatosTabla(this.anexoUnoTablaLista);
-    
   }
-   /**
+  /**
    * Método para obtener la devolución de llamada del anexo Dos.
    * @param {T[]} event - Evento que contiene la lista de encabezados del anexo Dos.
    * @returns {void}
    */
-   public obtenerAnexoDosDevolverLaLlamada(event: AnexoDosEncabezado[]): void {
+  public obtenerAnexoDosDevolverLaLlamada(event: AnexoDosEncabezado[]): void {
     this.anexoDosTablaLista = event ? event : [];
     this.store.setExportarDatosTabla(this.anexoDosTablaLista);
   }
 
   /**
    * Navega a una ruta específica basada en el evento proporcionado.
-   * 
+   *
    * @param event - Objeto de tipo `RutaNombre` que contiene la información necesaria para la navegación.
    *   - `catagoria`: Categoría de la ruta a la que se desea navegar.
    *   - `id`: Identificador único que se utiliza para establecer la sección activa.
    *   - `datos`: Datos adicionales necesarios para la navegación.
-   * 
+   *
    * Este método realiza las siguientes acciones:
    * 1. Establece la sección activa en el store utilizando el `id` del evento.
    * 2. Configura los datos necesarios para la navegación en el store.
@@ -114,15 +125,17 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
     if (event && event.catagoria && event.id && event.datos) {
       this.store.setAnnexoUnoSeccionActiva(event.id);
       this.store.setDatosParaNavegar(event.datos);
-      this.router.navigate([`../${event.catagoria}`], { relativeTo: this.activatedRoute });
+      this.router.navigate([`../${event.catagoria}`], {
+        relativeTo: this.activatedRoute,
+      });
     }
   }
 
   /**
-     * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-     * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
-     * @method ngOnDestroy
-     */
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia las suscripciones y actualiza los BehaviorSubject para ocultar las tablas.
+   * @method ngOnDestroy
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

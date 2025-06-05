@@ -13,50 +13,13 @@
 @if(tipoTransporteForma.get('tipoTransporte')?.value !== -1) {
 <div class="row mt-4">
   <div class="col-md-12">
-    <div class="main-table">
-      <table class="table table-striped">
-        <thead>
-          <tr>
-            <th>
-              <div class="form-check">
-                <input
-                  class="form-check"
-                  type="checkbox"
-                  [(ngModel)]="checkSeleccionarTodos"
-                  (change)="seleccionarTodos($event)"
-                />
-              </div>
-            </th>
-            @for (item of headerTabla; track $index) {
-            <th>{{ item.valor }}</th>
-            }
-          </tr>
-        </thead>
-        <tbody>
-          @for (row of bodyTabla; let i= $index; track i) {
-          <tr>
-            <td>
-              <div class="form-check check-transporte">
-                <input
-                  class="form-check"
-                  type="checkbox"
-                  title="Seleccionar todos"
-                  [(ngModel)]="row.seleccionado"
-                  (change)="seleccionarItemTabla(i)"
-                />
-              </div>
-            </td>
-            @for (item of headerTabla; track $index) { @if (item.llave ===
-            'fecha_porte') {
-            <td>{{ row[item.llave] | date : 'dd/MM/yyyy' }}</td>
-            } @else {
-            <td>{{ row[item.llave] }}</td>
-            } }
-          </tr>
-          }
-        </tbody>
-      </table>
-    </div>
+    <app-tabla-dinamica
+      [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
+      [configuracionTabla]="encabezadoDeTablaTransporte"
+      [datos]="bodyTabla"
+      (listaDeFilaSeleccionada)="transporteSeleccionado = $event"
+    >
+    </app-tabla-dinamica>
   </div>
 </div>
 
@@ -69,7 +32,7 @@
       type="button"
       class="btn btn-default me-2"
       *ngIf="bodyTabla.length > 0"
-      (click)="limpiarFormulario()"
+      (click)="btnModificar()"
     >
       Modificar
     </button>
@@ -127,9 +90,10 @@
               >
               <textarea
                 class="form-control h-25"
-                rows="3"
+                rows="5"
                 [formControl]="observaciones"
                 id="observaciones"
+                maxlength="500"
               ></textarea>
             </div>
           </div>
@@ -157,9 +121,9 @@
         <button
           type="button"
           class="btn btn-primary"
-          (click)="agregarTipoTransporte()"
+          (click)="accionModificar ? modificarTransporte() : agregarTipoTransporte()"
         >
-          Agregar
+          {{ accionModificar ? 'Modificar' : 'Agregar' }}
         </button>
       </div>
     </div>
@@ -179,6 +143,7 @@
           placeholder=""
           type="text"
           formControlName="emp_transportista"
+          maxlength="80"
         />
       </div>
     </div>
@@ -191,6 +156,7 @@
           placeholder=""
           type="text"
           formControlName="numero_porte"
+          maxlength="50"
         />
       </div>
     </div>
@@ -202,6 +168,7 @@
         name="fecha_porte"
         id="fecha_porte"
         formControlName="fecha_porte"
+        maxlength="10"
       />
     </div>
     <div class="col-md-6">
@@ -213,6 +180,7 @@
           placeholder=""
           type="text"
           formControlName="marca_transporte"
+          maxlength="70"
         />
       </div>
     </div>
@@ -235,6 +203,7 @@
           placeholder=""
           type="text"
           formControlName="placas_transporte"
+          maxlength="150"
         />
       </div>
     </div>
@@ -246,7 +215,8 @@
         <textarea
           class="form-control h-25"
           id="contenedor_transporte"
-          rows="3"
+          rows="5"
+          maxlength="600"
           formControlName="contenedor_transporte"
         ></textarea>
       </div>
@@ -266,6 +236,7 @@
             placeholder=""
             type="text"
             formControlName="numero_bl"
+            maxlength="25"
           />
           <button
             class="btn btn-outline-secondary"
@@ -306,6 +277,7 @@
           placeholder=""
           type="text"
           formControlName="iniciales_equipo"
+          maxlength="10"
         />
       </div>
     </div>
@@ -318,6 +290,7 @@
           placeholder=""
           type="text"
           formControlName="numero_equipo"
+          maxlength="15"
         />
       </div>
     </div>
@@ -337,6 +310,7 @@
           placeholder=""
           type="text"
           formControlName="rfc_empresa"
+          maxlength="13"
         />
       </div>
     </div>
@@ -351,6 +325,7 @@
           placeholder=""
           type="text"
           formControlName="emp_transportista"
+          maxlength="80"
         />
       </div>
     </div>
@@ -365,6 +340,7 @@
           placeholder=""
           type="text"
           formControlName="nombre_transportista"
+          maxlength="100"
         />
       </div>
     </div>
@@ -377,6 +353,7 @@
           placeholder=""
           type="text"
           formControlName="num_gafete"
+          maxlength="20"
         />
       </div>
     </div>
@@ -394,6 +371,7 @@
           placeholder=""
           type="text"
           formControlName="guia_bl_Maritimo"
+          maxlength="15"
         />
       </div>
     </div>
@@ -407,6 +385,7 @@
           placeholder=""
           type="text"
           formControlName="guia_house_maritimo"
+          maxlength="15"
         />
       </div>
     </div>
@@ -422,6 +401,7 @@
           placeholder=""
           type="text"
           formControlName="nombre_buque_maritimo"
+          maxlength="70"
         />
       </div>
     </div>
@@ -433,9 +413,10 @@
         >
         <textarea
           class="form-control h-25"
-          rows="3"
+          rows="5"
           formControlName="contenedor_maritimo"
           id="contenedor_maritimo"
+          maxlength="600"
         ></textarea>
       </div>
     </div>
@@ -461,6 +442,7 @@
           placeholder=""
           type="text"
           formControlName="guia_master_aereo"
+          maxlength="12"
         />
       </div>
     </div>
@@ -474,20 +456,20 @@
           placeholder=""
           type="text"
           formControlName="guia_house_aereo"
+          maxlength="25"
         />
       </div>
     </div>
 
     <div class="col-md-6">
-      <label for="fecha_arribo_aereo" class="form-label"
-        >Fecha carta porte:</label
-      >
+      <label for="fecha_arribo_aereo" class="form-label">Fecha llegada:</label>
       <input
         class="form-control"
         type="date"
         name="fecha_arribo_aereo"
         id="fecha_arribo_aereo"
         formControlName="fecha_arribo_aereo"
+        maxlength="15"
       />
     </div>
 
@@ -535,6 +517,7 @@
           placeholder=""
           type="text"
           formControlName="tipo_transporte_des"
+          maxlength="100"
         />
       </div>
     </div>
@@ -549,6 +532,7 @@
           placeholder=""
           type="text"
           formControlName="emp_transportista"
+          maxlength="80"
         />
       </div>
     </div>
@@ -563,6 +547,7 @@
           placeholder=""
           type="text"
           formControlName="datos_transporte"
+          maxlength="250"
         />
       </div>
     </div>

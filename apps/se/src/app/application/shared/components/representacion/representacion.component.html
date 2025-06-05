@@ -8,6 +8,7 @@
             [label]="'Entidad federativa'"
             [required]="true"
             formControlName="entidad"
+            [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(frmRepresentacionForm, 'entidad')"
           ></app-catalogo-select>
           <div
@@ -23,6 +24,7 @@
             [label]="'Representación federal'"
             [required]="true"
             formControlName="representacion"
+            [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(frmRepresentacionForm, 'representacion')"
           ></app-catalogo-select>
           <div
