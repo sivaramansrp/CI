@@ -156,15 +156,6 @@ export class MercanciaComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.consultaQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-        })
-      )
-      .subscribe();
-
     this.umcOpcion();
     this.facturasOpcion();
   }
