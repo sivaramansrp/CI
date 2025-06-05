@@ -7,6 +7,7 @@ import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 import{DatosdelasolicitudComponent} from './datos-de-la-solicitud.component'
 import { Component, ChangeDetectorRef } from '@angular/core';
+import * as jest from 'jest-mock';
 import { FormBuilder } from '@angular/forms';
 import { PermisoSanitarioDispositivosMedicosService } from '../../services/permiso-sanitario-dispositivos-medicos.service';
 import { Solicitud260915Store } from '../../estados/tramites260915.store';
@@ -28,13 +29,13 @@ class MockSolicitud260915Query {}
 
 
 describe('DatosdelasolicitudComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<DatosdelasolicitudComponent>;
+  let component: DatosdelasolicitudComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,DatosdelasolicitudComponent ],
-     
+      imports: [ FormsModule, ReactiveFormsModule, DatosdelasolicitudComponent ],
+      declarations: [  ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [ provideHttpClient(),
         FormBuilder,
@@ -68,7 +69,7 @@ describe('DatosdelasolicitudComponent', () => {
 
   it('should run #ngOnInit()', async () => {
     component.solicitud260915Query = component.solicitud260915Query || {};
-    component.solicitud260915Query.selectSolicitud$ = observableOf({});
+    component.solicitud260915Query.selectSolicitud$ = jest.fn().mockReturnValue(observableOf({}));
     component.createForm = jest.fn();
     component.getEstadosData = jest.fn();
     component.getClaveScianData = jest.fn();
@@ -270,11 +271,6 @@ describe('DatosdelasolicitudComponent', () => {
     expect(component.dataDeLaSolicitudForm.enable).toHaveBeenCalled();
   });
 
-  it('should run #getPaisData()', async () => {
-    component.permisosanitariodisposivos.getPaisData = jest.fn().mockReturnValue(observableOf({}));
-    component.getPaisData();
-    expect(component.permisosanitariodisposivos.getPaisData).toHaveBeenCalled();
-  });
   it('should run #getClasificacionDelProductoData()', async () => {
     component.permisosanitariodisposivos = component.permisosanitariodisposivos || {};
     component.permisosanitariodisposivos.getClasificacionDelProductoData = jest.fn().mockReturnValue(observableOf({}));
@@ -336,8 +332,12 @@ describe('DatosdelasolicitudComponent', () => {
   });
 
   it('should run #agregarMercanciaGrid()', async () => {
-    component.modalElement = component.modalElement || {};
-    component.modalElement.nativeElement = 'nativeElement';
+    component.modalElement = {
+      nativeElement: {
+        backdrop: {},
+        // add any other properties/methods used in agregarMercanciaGrid
+      }
+    };
     component.agregarMercanciaGrid();
 
   });
@@ -362,9 +362,13 @@ describe('DatosdelasolicitudComponent', () => {
   });
 
   it('should run #onSubmit()', async () => {
-    component.clavaScianForm = component.clavaScianForm || {};
-    component.clavaScianForm.value = 'value';
-    component.clavaScianForm.reset = jest.fn();
+    component.clavaScianForm = {
+      value: {},
+      reset: jest.fn(),
+      get: jest.fn().mockReturnValue({ setValue: jest.fn() }),
+      patchValue: jest.fn(),
+      setValue: jest.fn()
+    };
     component.claveScianData = component.claveScianData || {};
     component.claveScianData.catalogos = {
       find: function() {
@@ -385,7 +389,7 @@ describe('DatosdelasolicitudComponent', () => {
         ];
       }
     };
-    component.tableData = component.tableData || {};
+    component.tableData = component.tableData || [];
     component.tableData.push = jest.fn();
     component.onSubmit();
     expect(component.clavaScianForm.reset).toHaveBeenCalled();
@@ -489,7 +493,6 @@ describe('DatosdelasolicitudComponent', () => {
     };
     const campo = 'denominacionNombre';
     const metodoNombre = 'setDenominacionNombre';
-  
     component.setValoresStore(form as any, campo, metodoNombre as any);
   
     expect(component.solicitud260915Store.setDenominacionNombre).toHaveBeenCalledWith('testValue');

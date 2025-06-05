@@ -199,7 +199,7 @@ public estadoFisicoData = ESTADO_FISICO_DATA;
 
 /** Inicialización del componente */
   ngOnInit(): void {
-   this.solicitud260915Query.selectSolicitud$
+   this.solicitud260915Query.selectSolicitud260915$
         .pipe(
           takeUntil(this.destroyed$),
           map((seccionState) => {
@@ -699,22 +699,18 @@ getMercanciasDatosData(): void {
         });
 }
 
-/** Establece un valor en el store a partir de un campo del formulario. 
- * Obtiene el valor del campo especificado en el formulario y lo asigna 
- * al método correspondiente del store.
- * 
- * @param form El formulario reactivo del cual se obtiene el valor.
- * @param campo El nombre del campo en el formulario.
- * @param metodoNombre El nombre del método en el store donde se asignará el valor.
- */
-setValoresStore(
-  form: FormGroup,
-  campo: string,
-  metodoNombre: keyof Solicitud260915Store
-): void {
-  const VALOR = form.get(campo)?.value;
-  (this.solicitud260915Store[metodoNombre] as (value: unknown) => void)(VALOR);
-}
+  /**
+   * Actualiza un valor específico en el store del trámite.
+   *
+   * @param FormGroup Formulario reactivo del cual se obtiene el valor.
+   * @param control Nombre del control cuyo valor se actualizará en el store.
+   */
+  setValoresStore(FormGroup: FormGroup, control: string): void {
+    const VALOR = FormGroup.get(control)?.value;
+    this.solicitud260915Store.setTramite260915State({
+      [control]: VALOR
+    });
+  }
 
   /** Destrucción del componente */
   ngOnDestroy(): void {

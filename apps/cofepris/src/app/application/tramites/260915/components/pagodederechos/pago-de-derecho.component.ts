@@ -67,7 +67,7 @@ public bancoData = BANCO_DATA;
    * Método que se ejecuta al inicializar el componente.
    */
   ngOnInit(): void {
-    this.solicitud260915Query.selectSolicitud$
+    this.solicitud260915Query.selectSolicitud260915$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
@@ -107,13 +107,14 @@ public bancoData = BANCO_DATA;
       }),
     });
   }
- /**
- * Método para seleccionar la fecha de inicio.
- * Actualiza la fecha de pago en el store con el evento recibido.
- * @param evento Fecha seleccionada en formato de cadena.
- */
+//  /**
+//  * Método para seleccionar la fecha de inicio.
+//  * Actualiza la fecha de pago en el store con el evento recibido.
+//  * @param evento Fecha seleccionada en formato de cadena.
+//  */
 seleccionarFechaInicio(evento: string): void {
-  this.solicitud260915Store.setFechadePago(evento);
+  //this.solicitud260915Store.setFechadePago(evento);
+  this.solicitud260915Store.getValue().fechadepago = evento;
 }
 
   /**
@@ -132,20 +133,19 @@ seleccionarFechaInicio(evento: string): void {
     return this.pagoDeDerechosForm.get('pagoDeDerechos') as FormGroup;
   }
 
-  /**
-   * Establece valores en el store a partir del formulario.
-   * @param form Formulario reactivo.
-   * @param campo Nombre del campo en el formulario.
-   * @param metodoNombre Método del store para actualizar el valor.
+/**
+   * Actualiza un valor específico en el store del trámite.
+   *
+   * @param FormGroup Formulario reactivo del cual se obtiene el valor.
+   * @param control Nombre del control cuyo valor se actualizará en el store.
    */
-  setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof Solicitud260915Store
-  ): void {
-    const VALOR = form.get(campo)?.value;
-    (this.solicitud260915Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  setValoresStore(FormGroup: FormGroup, control: string): void {
+    const VALOR = FormGroup.get(control)?.value;
+    this.solicitud260915Store.setTramite260915State({
+      [control]: VALOR
+    });
   }
+
 
   /**
    * Método que se ejecuta al destruir el componente.

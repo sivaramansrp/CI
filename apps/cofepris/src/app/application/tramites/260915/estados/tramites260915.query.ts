@@ -8,7 +8,7 @@ export class Solicitud260915Query extends Query<Solicitud260915State> {
   /**
    * Selecciona el estado completo de la solicitud
    */
-  selectSolicitud$ = this.select((state) => {
+  selectSolicitud260915$ = this.select((state) => {
     return state;
   });
 
