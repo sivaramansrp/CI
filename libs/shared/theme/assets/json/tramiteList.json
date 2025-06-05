@@ -1479,15 +1479,15 @@
   {
     "id": 212,
     "tramite": 260208,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/medicamentos-destinados-uso/contenedor-de-pasos",
+    "linkDepartment": "/pago/medicamentos-destinados-uso/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
     "id": 213,
     "tramite": 260209,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/importacion-destinados-donacio/contenedor-de-pasos",
+    "linkDepartment": "/pago/importacion-destinados-donacio/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
