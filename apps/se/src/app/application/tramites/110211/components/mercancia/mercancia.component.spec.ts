@@ -19,7 +19,11 @@ describe('MercanciaComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+it('should create', async () => {
+  const fixture = TestBed.createComponent(MercanciaComponent);
+  const component = fixture.componentInstance;
+  fixture.detectChanges();
+  expect(component).toBeTruthy();
+});
+
 });
