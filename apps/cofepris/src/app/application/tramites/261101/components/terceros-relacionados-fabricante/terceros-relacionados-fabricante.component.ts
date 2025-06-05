@@ -9,10 +9,13 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FABRICANTE_TABLA } from '../../../../shared/constantes/terceros-relacionados-fabricante.enum';
 import { OTROS_TABLA } from '../../../../shared/constantes/terceros-relacionados-fabricante.enum';
+import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * TercerosRelacionadosComponent es responsable de manejar el primer paso del proceso.
@@ -118,7 +121,33 @@ export class TercerosRelacionadosFabricanteComponent {
    */
   public configuracionOtrosTabla: ConfiguracionColumna<Otros>[] =
     this.generateConfiguracionTabla(this.configuracionOtros);
-
+  /**
+   * Subject para notificar la destrucción del componente.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+  
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+      /**
+       * Constructor para SolicitanteComponent.
+       * 
+       * @param fb - Una instancia de FormBuilder utilizada para crear y gestionar formularios.
+       */
+      constructor(
+        private consultaioQuery: ConsultaioQuery
+      ) {
+          this.consultaioQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState: { readonly: boolean })=>{
+              this.esFormularioSoloLectura = seccionState.readonly; 
+            })
+          )
+          .subscribe()
+      }
   /* eslint-disable @typescript-eslint/no-explicit-any */
   /* eslint-disable class-methods-use-this */
   /**
