@@ -7,9 +7,8 @@ import { OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Validators } from '@angular/forms';
 
-import { Catalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
@@ -162,6 +161,12 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
   private seccion!: SeccionLibState;
 
   /**
+   * @description Indica si el formulario se encuentra en modo solo lectura.
+   * @type {boolean}
+   */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
    * @constructor
    * @description Constructor del componente que inicializa los servicios y dependencias necesarias.
    * @param {FormBuilder} fb - Constructor de formularios.
@@ -178,9 +183,18 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
     public cambioModalidadQuery: CambioModalidadQuery,
     public cambioModalidadStore: CambioModalidadStore,
     private seccionQuery: SeccionLibQuery,
-    private seccionStore: SeccionLibStore
+    private seccionStore: SeccionLibStore,
+    public consultaioQuery: ConsultaioQuery,
   ) {
-    // No se necesita lógica de inicialización adicional.
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.esFormularioSoloLectura = seccionState.readonly;
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe();
   }
 
   /**
@@ -188,7 +202,6 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    * @description Método de inicialización del componente.
    */
   ngOnInit(): void {
-
     this.cambioModalidadQuery.selectCambioModalidad$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -200,7 +213,6 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
       ).subscribe();
     this.inicializarForm();
     this.getCargarDatos();
-    this.disableFormControls();
     this.getCambioDeModalidad();
     this.getServiciosImmx();
     this.seccionQuery.selectSeccionState$
@@ -237,16 +249,45 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    */
   inicializarForm(): void {
     this.cambioDeModalidadForm = this.fb.group({
-      seleccionaLaModalidad: [this.cambioDeModalidadState.seleccionaLaModalidad, Validators.required],
-      folio: [this.cambioDeModalidadState.folio, [Validators.required, Validators.min(1)]],
-      ano: [this.cambioDeModalidadState.ano, [Validators.required, Validators.min(2000), Validators.max(2100)]],
-      seleccionaModalidad: [this.cambioDeModalidadState.seleccionaModalidad, Validators.required],
-      cambioDeModalidad: [this.cambioModalidadState, Validators.required]
+      seleccionaLaModalidad: [{value: this.cambioDeModalidadState?.seleccionaLaModalidad, disabled: true}],
+      folio: [{value: this.cambioDeModalidadState?.folio, disabled: true}],
+      ano: [{value: this.cambioDeModalidadState?.ano, disabled: true}],
+      seleccionaModalidad: [{value: this.cambioDeModalidadState?.seleccionaModalidad, disabled: true}],
+      cambioDeModalidad: [{value:this.cambioModalidadState}]
     });
 
     this.serviciosImmxForm = this.fb.group({
-      serviciosImmx: [this.cambioModalidadState, Validators.required]
+      serviciosImmx: [{value: this.cambioModalidadState}]
     });
+  } 
+
+  /**
+   * @description Inicializa el estado del formulario dependiendo si está en modo solo lectura o edición.
+   * Si el formulario está en modo solo lectura, deshabilita los campos; de lo contrario, los habilita y crea los campos del formulario.
+   * @method inicializarEstadoFormulario
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+      if (this.esFormularioSoloLectura) {
+        this.guardarDatosFormulario();
+      } else {
+        this.inicializarForm();
+      }
+  }
+
+  /**
+   * @description Habilita o deshabilita el formulario según el modo de solo lectura.
+   * Si el formulario está en modo solo lectura, deshabilita todos los controles; si no, los habilita.
+   * @method guardarDatosFormulario
+   * @returns {void}
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarForm();
+      if (this.esFormularioSoloLectura) {
+        this.cambioDeModalidadForm.disable();
+      } else {
+        this.cambioDeModalidadForm.enable();
+      }
   }
 
   /**
@@ -286,16 +327,6 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-   * @method disableFormControls
-   * @description Deshabilita los controles del formulario de cambio de modalidad.
-   */
-  disableFormControls(): void {
-    this.cambioDeModalidadForm.get('seleccionaLaModalidad')?.disable();
-    this.cambioDeModalidadForm.get('folio')?.disable();
-    this.cambioDeModalidadForm.get('ano')?.disable();
-    this.cambioDeModalidadForm.get('seleccionaModalidad')?.disable();
-  }
 
   /**
    * @method toggleServiciosImmx
@@ -317,7 +348,7 @@ export class CambioDeModalidadComponent implements OnInit, OnDestroy {
    * @description Maneja el evento de selección del dropdown.
    * @param {any} event - Evento de selección del dropdown.
    */
-  onDropdownSelect(event: any): void {
+  seleccionarDesplegable(event: any): void {
     if (event?.id) {
       this.toggleServiciosImmx(event.id.toString());
     }

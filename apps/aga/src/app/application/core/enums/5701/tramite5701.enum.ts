@@ -22,11 +22,6 @@ export const FECHA_FINAL = {
 };
 
 /**
- * @description Mensaje de aviso para el cambio de tipo de solicitud.
- */
-export const MSG_CAMBIO_TIPO_SOLICITUD = '';
-
-/**
  * @description Titulo del modal de aviso.
  */
 export const TITULO_MODAL = 'Aviso';
@@ -96,7 +91,7 @@ export const TITULO_MODAL_ERROR = 'Aviso';
  *@description Mensaje de error para la validación de fecha
  */
 export const MSJ_ERROR_FECHA =
-  'Fecha inválida. La fecha final no puede ser menor a la fecha de inicio.';
+  'La fecha no es válida para la solicitud seleccionada';
 
 /**
  * @description Mensaje de error cuando los campos obligatorios no están capturados en la consulta de línea de captura..
@@ -111,10 +106,27 @@ export const MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA =
   'Línea de captura no es válida, favor de verificar.';
 
 /**
+ * @decription Mensaje de advertencia cuando la línea de captura ya ha sido usada
+ */
+export const MSJ_LINEA_CAPTURA_USADA =
+  'La línea de captura ya ha sido utilizada, favor de verificar.';
+
+/**
+ * @description Mensaje de error cuando la línea de captura no ha sido pagada.
+ */
+export const MSJ_LINEA_CAPTURA_NO_PAGADA =
+  'La línea de captura no ha sido pagada, favor de verificar.';
+
+/**
  * @description Mensaje de error cuando ya existe un responsable del despacho con el mismo gafete que se quiere registrar.
  */
 export const MSJ_ERROR_GAFETE_EXISTE =
   'El número de gafete ya se encuentra registrado, intenta de nuevo';
+
+  /**
+   * @description Mensaje de avertencia cuando se va a cambiar de tipo de solicitud y el formulario tiene datos capturados.
+   */
+  export const MSG_CAMBIO_TIPO_SOLICITUD = 'Los datos capturados serán borrados, ¿estás de acuerdo (SI/NO)?';
 
 /**
  * @description Constantes para el manejo de las etiquetas de los inputs de la autorización LDA y DDEX
@@ -228,3 +240,22 @@ export const CONFIGURACION_ENCABEZADO_TABLA_PAGOS: ConfiguracionColumna<LineaCap
      */
     { encabezado: 'monto', clave: (fila) => fila.monto, orden: 2 },
   ];
+
+/**
+ * @description Constante estauts pagado
+ */
+export const ESTATUS_PAGADO = 'Pagado';
+
+/**
+ * @description Mensaje del registro exitoso de la solicitud
+ *@param {string} numeroSolicitud - El número de la solicitud registrada.
+ */
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const MSG_REGISTRO_EXITOSO = (numeroSolicitud: string) =>
+  `<p>La solicitud ha quedado resgitrada con el número temporal ${numeroSolicitud}. Este no tiene válidez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado al momento en que ésta sea firmada.</p>`;
+
+/**
+ * @description Almacena el valor de un dia = 1
+ */
+export const UN_DIA = 1;
