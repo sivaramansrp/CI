@@ -1665,7 +1665,15 @@
     "numeroDeProcedimiento": "32605"
   },
    {
-        "id": 110211,
+    "id": 140105,
+      "tipoDeTramite": "Solicitud de Permiso",
+      "fecha": "2023-10-01",
+      "fechaActualizacion": "2023-10-05",
+      "diasTranscurridos": "4",
+      "departamento": "SE",
+      "numeroDeProcedimiento": "140105"
+    },{
+      "id": 110211,
         "tipoDeTramite": "Solicitud de se Permiso",
         "fecha": "2023-10-01",
         "fechaActualizacion": "2023-10-05",
