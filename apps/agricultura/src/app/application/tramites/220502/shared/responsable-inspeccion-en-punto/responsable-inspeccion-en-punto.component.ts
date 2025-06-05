@@ -78,7 +78,7 @@ solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
   /**
    * Indica si el formulario está deshabilitado.
    */
-  @Input() formularioDeshabilitado: boolean = false;
+  @Input() formularioDeshabilitado!: boolean;
 
   constructor(
     private solicitud220502Store: Solicitud220502Store,
@@ -131,6 +131,10 @@ solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
       )
       .subscribe();
     this.cargarDatosIniciales(); // Cargar datos del catálogo inicial
+
+    if (this.formularioDeshabilitado) {
+      this.grupoFormularioPadre.disable();
+    }
 
     if (this.formularioDeshabilitado) {
       this.grupoFormularioPadre.disable();

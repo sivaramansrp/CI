@@ -31,26 +31,6 @@ class MockTramiteStoreQuery {}
 @Injectable()
 class MockTramiteStore {}
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
 describe('CafeDeExportadoresComponent', () => {
   let fixture;
   let component;
@@ -58,11 +38,7 @@ describe('CafeDeExportadoresComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, RouterTestingModule, FormsModule, ReactiveFormsModule ],
-      declarations: [
-        CafeDeExportadoresComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
+      declarations: [CafeDeExportadoresComponent],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: Router, useClass: MockRouter },
@@ -92,8 +68,12 @@ describe('CafeDeExportadoresComponent', () => {
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
+    if (component) {
+      component.ngOnDestroy = () => {}; 
+    }
+    if (fixture) {
+      fixture.destroy();
+    }
   });
 
   it('should run #constructor()', async () => {
@@ -139,9 +119,11 @@ describe('CafeDeExportadoresComponent', () => {
   });
 
   it('should run #iniciarFormulario()', async () => {
+    component.tramiteStoreQuery = component.tramiteStoreQuery || {};
+    component.tramiteStoreQuery.selectSolicitudTramite$ = observableOf({});
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
-    component.iniciarFormulario();
+    component.inicializarFormulario();
     // expect(component.fb.group).toHaveBeenCalled();
   });
 
