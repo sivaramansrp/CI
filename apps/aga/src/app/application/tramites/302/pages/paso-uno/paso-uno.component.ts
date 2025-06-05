@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, ConsultaioStore } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Solicitud302Service } from '../../services/service302.service';
 
@@ -55,14 +55,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
  * Constructor de la clase DatosComponent.
  * 
  * @param consultaQuery Servicio para realizar consultas relacionadas con el trámite.
- * @param consultaStore Almacén para gestionar el estado de las consultas de trámite.
  * @param productoresService Servicio para la expansión y gestión de productores.
  * @param tramiteStore Almacén específico para el manejo del estado del trámite 120204.
  * 
  * Al inicializar el componente, se establece la consulta inicial en el store de consultas
  * con los parámetros correspondientes al trámite 120204.
  */
-  constructor(private consultaQuery: ConsultaioQuery,private consultaStore: ConsultaioStore,private solicitudService: Solicitud302Service) {
+  constructor(private consultaQuery: ConsultaioQuery,private solicitudService: Solicitud302Service) {
     // Inicializa el estado de la consulta
   }
 
@@ -78,13 +77,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
           this.consultaState = seccionState;
           this.esFormularioSoloLectura = seccionState.readonly;
+          if(this.consultaState.update) {
+            this.guardarDatosFormulario();
+            } else {
+            this.esDatosRespuesta = true;
+            }
 
       })).subscribe();
-    if(this.consultaState.update) {
-      this.guardarDatosFormulario();
-    } else {
-      this.esDatosRespuesta = true;
-    }
+    
   }
 
   /**

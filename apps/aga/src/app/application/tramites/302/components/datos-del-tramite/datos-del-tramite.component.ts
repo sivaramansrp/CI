@@ -300,16 +300,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
 
         if (campo.campo === 'unidadDeMedida') {
           campo.listaDesplegable = this.listaUnidadDeMedida;
-          // this.certiRegistroState['unidadDeMedidaDesc'] = this.listaUnidadDeMedida.find(
-          //   (unidad: Catalogo) => unidad.id === this.certiRegistroState['unidadDeMedida']
-          // )?.descripcion || '';
         } else if (campo.campo === 'anoDeImportacionTemporal') {
           campo.listaDesplegable = this.listImportacionTemporal;
-          // this.certiRegistroState['anoDeImportacionTemporalDesc'] = this.listImportacionTemporal.find(
-          //   (importaciónTemporal: Catalogo) => importaciónTemporal.id === this.certiRegistroState['anoDeImportacionTemporal']
-          // )?.descripcion || '';
-        } else {
-          campo.listaDesplegable = [];
         }
       });
       if(this.soloLectura){

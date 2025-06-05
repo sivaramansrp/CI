@@ -11,7 +11,7 @@
         [required]="mediodetransporte.required" 
         formControlName="transporteIdMedio"
         (selectionChange)="setTransporteIdMedio($event)"
-        [isDisabled]="false"></app-catalogo-select>
+        [isDisabled]="formularioDeshabilitado"></app-catalogo-select>
       </div>
     </div>
     <div class="col-md-4">
@@ -72,7 +72,6 @@
           formControlName="totalDeGuiasAmparadas"
           id="totalDeGuiasAmparadas"
           (change)="setTotalDeGuiasAmparadas($event)"
-          formControlName="totalDeGuiasAmparadas"
         />
       </div>
     </div>

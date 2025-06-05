@@ -5,6 +5,7 @@ import { of } from 'rxjs';
 import { Solicitud302Service } from '../../services/service302.service'; // <-- Add this import
 import { DATOS_DEL_DONANTE, DOMICILIO_FISCAL, MERCANCIAS } from '../../constantes/datos-del-tramite.enum';
 
+
 describe('DatosDelTramiteComponent', () => {
   let component: DatosDelTramiteComponent;
   let fixture: ComponentFixture<DatosDelTramiteComponent>;
@@ -13,7 +14,7 @@ describe('DatosDelTramiteComponent', () => {
     await TestBed.configureTestingModule({
       imports: [DatosDelTramiteComponent,ReactiveFormsModule],
       providers: [
-        { provide: Solicitud302Service, useValue: { getProductos: jest.fn().mockReturnValue(of([])) } }
+        { provide: Solicitud302Service,useValue: { getProductos: jest.fn().mockReturnValue(of([])) } }
       ]
     }).compileComponents();
 

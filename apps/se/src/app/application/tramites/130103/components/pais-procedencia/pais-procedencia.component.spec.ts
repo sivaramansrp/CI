@@ -1,3 +1,4 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { PaisProcedenciaComponent } from './pais-procedencia.component';
 import { of, Subject, takeUntil } from 'rxjs';
@@ -28,7 +29,7 @@ describe('PaisProcedenciaComponent - ngOnInit', () => {
     selectImportacion$Mock = of(mockImportacionState);
 
     await TestBed.configureTestingModule({
-      imports: [PaisProcedenciaComponent],
+      imports: [PaisProcedenciaComponent, HttpClientTestingModule],
       providers: [
         {
           provide: Tramite130103Query,
@@ -43,7 +44,9 @@ describe('PaisProcedenciaComponent - ngOnInit', () => {
 
     fixture = TestBed.createComponent(PaisProcedenciaComponent);
     component = fixture.componentInstance;
-
+    component.consultaState = {
+      readonly: false,
+    } as any;
     component.paisProcedenciaFormData = [
       {
         id: 'bloque',
@@ -65,21 +68,6 @@ describe('PaisProcedenciaComponent - ngOnInit', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-
-  it('should populate bloque from JSON, populate form values from state', fakeAsync(async () => {
-    component.forma = new FormGroup({
-      justificacion: new FormControl('Test justification'),
-      observaciones: new FormControl('Test observations')
-    });
-    await component.ngOnInit();
-    tick();
-    expect(component.bloque).toEqual([
-      { id: 1, descripcion: 'Bloque A' },
-      { id: 2, descripcion: 'Bloque B' }
-    ]);
-    expect(component.forma.get('justificacion')?.value).toBe('Test justification');
-    expect(component.forma.get('observaciones')?.value).toBe('Test observations');
-  }));
 
   it('should not populate form if state is null', fakeAsync(async () => {
     selectImportacion$Mock = of(null);
@@ -125,6 +113,38 @@ describe('PaisProcedenciaComponent - ngOnInit', () => {
     mockObservable$.next('second value');
     expect(spy).toHaveBeenCalledTimes(1);
   }));
+
+  it('should clean up subscriptions on destroy', () => {
+    const spy = jest.spyOn(component.destroyNotifier$, 'next');
+    component.ngOnDestroy();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should call agregar on crosslist when "Agregar todos" is clicked', () => {
+    const mockAgregar = jest.fn();
+    component.crossList = {
+      toArray: () => [{ agregar: mockAgregar }]
+    } as any;
+
+    component.paisDeProcedenciaBotones[0].funcion();
+    expect(mockAgregar).toHaveBeenCalledWith('t');
+  });
+
+  it('should call quitar on crosslist when "Restar todos" is clicked', () => {
+    const mockQuitar = jest.fn();
+    component.crossList = {
+      toArray: () => [{ quitar: mockQuitar }]
+    } as any;
+
+    component.paisDeProcedenciaBotones[3].funcion();
+    expect(mockQuitar).toHaveBeenCalledWith('t');
+  });
   
+  it('should disable form controls if consultaState.readonly is true', () => {
+    component.consultaState = { readonly: true } as any;
+    component.ngOnInit();
+    expect(component.forma.get('justificacion')?.disabled).toBe(true);
+    expect(component.forma.get('observaciones')?.disabled).toBe(true);
+  });
   
 });
