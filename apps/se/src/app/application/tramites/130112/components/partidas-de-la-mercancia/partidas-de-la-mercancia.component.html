@@ -47,6 +47,7 @@
           <div class="form-group">
             <app-catalogo-select [catalogo]="fraccionDescripcionPartidasDeLaMercancia"
               formControlName="fraccionDescripcionPartidasDeLaMercancia"
+              [isDisabled]="esFormularioSoloLectura"
               (change)="setValoresStore(partidasDelaMercanciaForm, 'fraccionDescripcionPartidasDeLaMercancia')"></app-catalogo-select>
           </div>
         </div>
@@ -102,11 +103,11 @@
         <div class="col-md-8"></div>
         <div class="col-md-4 text-end">
           <div class="btn-group">
-            <button class="btn btn-primary me-2" type="button" data-bs-toggle="modal"
+            <button class="btn btn-primary me-2" type="button" data-bs-toggle="modal" [disabled]="esFormularioSoloLectura"
               data-bs-target="#modalCargarArchivo">
               Cargar archivo
             </button>
-            <button class="btn btn-primary ms-2" (click)="validarYEnviarFormulario()">
+            <button class="btn btn-primary ms-2" (click)="validarYEnviarFormulario()" [disabled]="esFormularioSoloLectura">
               Agregar
             </button>
           </div>
@@ -142,11 +143,11 @@
             <div class="col-md-7"></div>
             <div class="col-md-4 text-end">
               <div class="btn-group">
-                <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-primary cancel me-2"
+                <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-primary cancel me-2" [disabled]="esFormularioSoloLectura"
                   data-bs-dismiss="modal">
                   Cerrar
                 </button>
-                <button type="button" class="btn btn-primary ms-2">Enviar</button>
+                <button type="button" class="btn btn-primary ms-2" [disabled]="esFormularioSoloLectura">Enviar</button>
               </div>
             </div>
           </div>
@@ -164,7 +165,7 @@
     <div>
       <h6>Partidas</h6>
       <div *ngIf="mostrarTabla">
-        <app-tabla-dinamica [configuracionTabla]="tableHeaderData" [datos]="tableBodyData"
+        <app-tabla-dinamica [configuracionTabla]="tableHeaderData" [datos]="tableBodyData" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           [tipoSeleccionTabla]="CHECKBOX" (listaDeFilaSeleccionada)="handleListaDeFilaSeleccionada($event)">
         </app-tabla-dinamica>
       </div>
@@ -198,11 +199,11 @@
           <div class="col-md-6 col-sm-6"></div>
           <div class="col-md-6 col-sm-6 text-end">
             <div class="btn-group">
-              <button class="btn btn-primary me-2" type="button">
+              <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura">
                 Elimina Partida
               </button>
               <button class="btn btn-danger" type="button" (click)="navegarParaModificarPartida()" [disabled]="disabled"
-                data-bs-toggle="modal" data-bs-target="#modalModificarPartida">
+                data-bs-toggle="modal" data-bs-target="#modalModificarPartida" [disabled]="esFormularioSoloLectura">
                 Mofificar partida
               </button>
             </div>
@@ -261,6 +262,7 @@
                         <div class="form-group">
                           <app-catalogo-select [catalogo]="fraccionDescripcionPartidasDeLaMercancia"
                             formControlName="fraccionDescripcionPartidasDeLaMercancia"
+                            [isDisabled]="esFormularioSoloLectura"
                             (valueChange)="setValoresStore(partidasDelaMercanciaForm, 'fraccionDescripcionPartidasDeLaMercancia')"></app-catalogo-select>
                         </div>
                       </div>
@@ -316,11 +318,11 @@
                 <div class="col-md-7"></div>
                 <div class="col-md-4 text-end">
                   <div class="btn-group">
-                    <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-primary cancel me-2"
+                    <button type="button" id="cancelarCHN" name="cancelar" class="btn btn-primary cancel me-2" 
                       data-bs-dismiss="modal">
                       Cancelar
                     </button>
-                    <button type="button" class="btn btn-primary ms-2">Modificar</button>
+                    <button type="button" class="btn btn-primary ms-2" [disabled]="esFormularioSoloLectura">Modificar</button>
                   </div>
                 </div>
               </div>
