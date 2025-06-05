@@ -77,9 +77,6 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaState = seccionState;
-
-          // this.formularioDeshabilitado = true;
-          this.guardarDatosFormulario();
           if (this.consultaState.update) {
             this.formularioDeshabilitado = false;
             this.guardarDatosFormulario();
