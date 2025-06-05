@@ -108,7 +108,7 @@ export class DomicilloComponent implements OnInit,OnDestroy {
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
-  esFormularioSoloLectura: boolean = false; 
+ public esFormularioSoloLectura: boolean = false; 
   /**
    * Lista de componentes Crosslist disponibles en la vista.
    */
@@ -131,7 +131,30 @@ export class DomicilloComponent implements OnInit,OnDestroy {
    * private
    */
   private destroyed$ = new Subject<void>();
- 
+selectedRowsEvent: any[] = []; // O usa IDs o índices según tu implementación
+selectedRows: any[] = []; // O usa IDs o índices según tu implementación
+onSeleccionChangeEvent(selected: any[]) {
+  this.selectedRowsEvent = selected;
+}
+// Recibe los seleccionados del componente tabla
+onSeleccionChange(selected: any[]) {
+  this.selectedRows = selected;
+}
+ // Elimina las filas seleccionadas
+eliminarSeleccionados() {
+  this.nicoTablaDatos = this.nicoTablaDatos.filter(
+    (row) => !this.selectedRows.includes(row)
+  );
+  this.selectedRows = [];
+}
+
+ // Elimina las filas seleccionadas
+eliminarMercanciaSeleccionados() {
+  this.mercanciasTablaDatos = this.mercanciasTablaDatos.filter(
+    (row) => !this.selectedRowsEvent.includes(row)
+  );
+  this.selectedRowsEvent = [];
+}
   /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios reactivos.
@@ -147,9 +170,25 @@ export class DomicilloComponent implements OnInit,OnDestroy {
     private service: SanitarioService,
     private consultaioQuery: ConsultaioQuery
   ) {
-    
+      /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+     
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe();
   }
- 
+editMercanciaIndex: number | null = null;
   /**
    * Grupo de formularios para domicilio.
    */
@@ -270,31 +309,73 @@ public fechaCaducidadInput: InputFecha = FECHA_DE_PAGO;
  */
 ngOnInit(): void {
     this.inicializarEstadoFormulario();
-     /**
-     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
-     *
-     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
-     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
-     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
-     */
-    this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
-     
-        this.inicializarEstadoFormulario();
-      })
-    )
-    .subscribe();
-
-  
- 
   this.obtenerEstadoList();
   this.obtenerTablaDatos();
   this.obtenerMercanciasDatos();
  
  
+}
+modificarMercancia() {
+  if (this.selectedRowsEvent && this.selectedRowsEvent.length === 1) {
+    const row = this.selectedRowsEvent[0];
+    this.editMercanciaIndex = this.mercanciasTablaDatos.findIndex(
+      r => r.numeroRegistro === row.numeroRegistro // Use a unique property
+    );
+    this.formMercancias.patchValue(row);
+
+    // Optionally, open the modal programmatically if not using data-bs-toggle
+    // document.getElementById('modalAddAgentMercancias')?.click();
+  }
+}
+ agregarFilaScian() {
+  if (this.formAgente.valid) {
+
+    const NEWVA_FILA: NicoInfo = {
+      clave_Scian: this.formAgente.get('claveScianModal')?.value,
+      descripcion_Scian: this.formAgente.get('claveDescripcionModal')?.value,
+    };
+
+ this.nicoTablaDatos.push(NEWVA_FILA);
+    this.formAgente.reset();
+  } 
+}
+agregarFilaMercancia() {
+  if (this.formMercancias.valid) {
+    const MERCANCIA_DATA: MercanciasInfo = {
+      clasificacion: this.formMercancias.get('clasificacion')?.value,
+      especificar: this.formMercancias.get('especificarClasificacionProducto')?.value,
+      denominacionEspecifica: this.formMercancias.get('denominacionEspecifica')?.value,
+      denominacionDistintiva: this.formMercancias.get('denominacionDistintiva')?.value,
+      denominacionComun: this.formMercancias.get('denominacionComun')?.value,
+      formaFarmaceutica: this.formMercancias.get('formaFarmaceutica')?.value,
+      estadoFisico: this.formMercancias.get('estadoFisico')?.value,
+      fraccionArancelaria: this.formMercancias.get('fraccionArancelaria')?.value,
+      descripcionFraccion: this.formMercancias.get('descripcionFraccion')?.value,
+      cantidadUMC: this.formMercancias.get('cantidadUMC')?.value,
+      unidad: this.formMercancias.get('UMC')?.value,
+      cantidadUMT: this.formMercancias.get('cantidadUMT')?.value,
+      unidadUMT: this.formMercancias.get('UMT')?.value,
+      presentacion: this.formMercancias.get('presentacion')?.value,
+      numeroRegistro: this.formMercancias.get('numeroRegistro')?.value,
+      paisDeOrigen: this.formMercancias.get('paisDeOrigen')?.value,
+      paisDeProcedencia: this.formMercancias.get('paisDeProcedencia')?.value,
+      tipoProducto: this.formMercancias.get('tipoDeProducto')?.value,
+      usoEspecifico: this.formMercancias.get('usoEspecifico')?.value,
+      fechaCaducidad: this.formMercancias.get('fechaCaducidad')?.value,
+    };
+
+    if (this.editMercanciaIndex !== null && this.editMercanciaIndex > -1) {
+      const UPDATED = [...this.mercanciasTablaDatos];
+      UPDATED[this.editMercanciaIndex] = MERCANCIA_DATA;
+      this.mercanciasTablaDatos = UPDATED;
+      this.editMercanciaIndex = null;
+      this.selectedRowsEvent = [];
+    } else {
+      this.mercanciasTablaDatos = [...this.mercanciasTablaDatos, MERCANCIA_DATA];
+    }
+    this.formMercancias.reset();
+    console.log('Updated table:', this.mercanciasTablaDatos);
+  }
 }
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.  
@@ -459,7 +540,12 @@ obtenerMercanciasDatos(): void {
     this.mercanciasTablaDatos = DATOS;
   });
 }
- 
+ limpiarFormAgente() {
+  this.formAgente.reset();
+}
+limpiarForm(){
+  this.formMercancias.reset();
+}
 /**
  * Maneja el cambio del checkbox en el formulario y actualiza el estado correspondiente.
  * @param event Evento del checkbox.

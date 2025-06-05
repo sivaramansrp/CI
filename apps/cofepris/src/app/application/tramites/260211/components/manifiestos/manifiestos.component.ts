@@ -49,7 +49,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
-  esFormularioSoloLectura: boolean = false; 
+  public esFormularioSoloLectura: boolean = false; 
   /**
    * Mensaje de alerta para el usuario.
    */
@@ -83,23 +83,6 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
     private tramite260211Query: Tramite260211Query,
     private consultaioQuery: ConsultaioQuery
   ) {
-    // Dependencia inyectada para uso posterior
-  }
- 
-  /**
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Obtiene el estado de la solicitud y crea el formulario de manifiestos.
-   */
-  ngOnInit(): void {
-  this.service
-      .getPermisoData()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((data: ProductoOption[]) => {
-        this.producto = data; // Bind the fetched data
-       
-      });
-    
-  this.inicializarEstadoFormulario();
      /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
      *
@@ -117,6 +100,23 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
       })
     )
     .subscribe();
+  }
+ 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Obtiene el estado de la solicitud y crea el formulario de manifiestos.
+   */
+  ngOnInit(): void {
+  this.service
+      .getPermisoData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data: ProductoOption[]) => {
+        this.producto = data; // Bind the fetched data
+       
+      });
+    
+  this.inicializarEstadoFormulario();
+   
 
   }
    /**

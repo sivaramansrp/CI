@@ -59,7 +59,7 @@ export class DerechosComponent implements OnInit, OnDestroy {
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
-  esFormularioSoloLectura: boolean = false; 
+ public esFormularioSoloLectura: boolean = false; 
   /**
   /**
    * compodoc
@@ -76,14 +76,7 @@ export class DerechosComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject(); // Subject para notificar la destrucción del componente..
 
-  /**
-   * compodoc
-   * property {Subject<void>} destroyed$
-   * description Sujeto utilizado para manejar la destrucción de observables.
-   * private
-   */
-  private destroyed$ = new Subject<void>(); // Subject para manejar la limpieza de observables.
-
+ 
   /**
    * compodoc
    * property {Catalogo[]} derechosList
@@ -114,18 +107,8 @@ export class DerechosComponent implements OnInit, OnDestroy {
     private permiso260211Query: Permiso260211Query,// Inject query for fetching data from the store.
     private consultaioQuery: ConsultaioQuery ,
     private tramite260211Query : Tramite260211Query // Inject query for fetching data from the store. 
-  ) {}
-
-  /**
-   * compodoc
-   * method ngOnInit
-   * description Método de inicialización del componente.
-   * Se suscribe al estado de la solicitud, configura el formulario reactivo y carga los datos iniciales.
-   * returns {void}
-   */
-  ngOnInit(): void {
- this.inicializarEstadoFormulario();
-     /**
+  ) {
+       /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
      *
      * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
@@ -142,6 +125,18 @@ export class DerechosComponent implements OnInit, OnDestroy {
       })
     )
     .subscribe();
+  }
+
+  /**
+   * compodoc
+   * method ngOnInit
+   * description Método de inicialización del componente.
+   * Se suscribe al estado de la solicitud, configura el formulario reactivo y carga los datos iniciales.
+   * returns {void}
+   */
+  ngOnInit(): void {
+ this.inicializarEstadoFormulario();
+  
 
 if (this.esFormularioSoloLectura) {
   this.derechosForm.get('deFetch')?.disable();
@@ -173,9 +168,7 @@ if (this.esFormularioSoloLectura) {
         this.derechosForm.disable();
       } else if (!this.esFormularioSoloLectura) {
         this.derechosForm.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
-      }
+      } 
   }
   /* * compodoc
    * Inicializa el formulario con los valores del estado de la solicitud.
@@ -227,7 +220,7 @@ if (this.esFormularioSoloLectura) {
    */
   loadComboUnidadMedida(): void {
     this.service.getDatos() // Llamar al método del servicio para obtener datos.
-      .pipe(takeUntil(this.destroyed$)) // Darse de baja automáticamente cuando el componente sea destruido. .
+      .pipe(takeUntil(this.destroyNotifier$)) // Darse de baja automáticamente cuando el componente sea destruido. .
       .subscribe((data): void => {
         this.derechosList = data as Catalogo[]; // Asignar los datos obtenidos a derechosList.
       });
@@ -251,8 +244,6 @@ onFechaCambiada(fecha: string): void {
    * returns {void}
    */
   ngOnDestroy(): void {
-    this.destroyed$.next(); 
-    this.destroyed$.complete(); 
     this.destroyNotifier$.next(); 
     this.destroyNotifier$.complete(); 
   }

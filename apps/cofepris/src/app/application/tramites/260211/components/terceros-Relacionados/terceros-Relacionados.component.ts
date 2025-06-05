@@ -58,7 +58,7 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
-  esFormularioSoloLectura: boolean = false; 
+ public esFormularioSoloLectura: boolean = false; 
   /**
    * Indicador de visibilidad para la sección de la tabla.
    * Inicialmente visible (`true`).
@@ -241,16 +241,7 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
     private service: SanitarioService,
      private consultaioQuery: ConsultaioQuery
   ) {
-    // Inicializa el store del trámite 260215.
-  }
-
-  /**
-   * Ciclo de vida que se ejecuta al iniciar el componente.
-   * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
-   */
-  ngOnInit(): void {
-      this.inicializarEstadoFormulario();
-         /**
+     /**
          * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
          *
          * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
@@ -267,6 +258,17 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
           })
         )
         .subscribe();
+  }
+onFabricanteRowSelection(selectedRows: any[]) {
+  this.showFabricanteButtons = selectedRows && selectedRows.length > 0;
+}
+  /**
+   * Ciclo de vida que se ejecuta al iniciar el componente.
+   * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
+   */
+  ngOnInit(): void {
+      this.inicializarEstadoFormulario();
+       
     /**
      * Obtiene los datos para los selectores desde el servicio de terceros.
      * Actualiza la propiedad `dropdownData` con los datos obtenidos.

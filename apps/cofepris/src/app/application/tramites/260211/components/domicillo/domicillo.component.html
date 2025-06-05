@@ -120,9 +120,9 @@
     </div>
     <div class="row">
         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"   [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
-        [datos]="nicoTablaDatos"></app-tabla-dinamica>
+        [datos]="nicoTablaDatos"  (listaDeFilaSeleccionada)="onSeleccionChange($event)"></app-tabla-dinamica>
         <div class="container text-end mt-5">
-            <button class="btn btn-default me-2">Eliminar</button>
+            <button class="btn btn-default me-2"  (click)="eliminarSeleccionados()" [disabled]="selectedRows.length === 0">Eliminar</button>
             <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent"  [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
     </div>
@@ -197,11 +197,15 @@
         </div>
     </div>
     <div class="row mt-5">
-        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla"
+        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla" (listaDeFilaSeleccionada)="onSeleccionChangeEvent($event)"
         [datos]="mercanciasTablaDatos"   [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"></app-tabla-dinamica>
         <div class="container text-end mt-5">
-            <button class="btn btn-default me-2">Modificar</button>
-            <button class="btn btn-default me-2">Eliminar</button>
+            <button class="btn btn-default me-2"  
+      
+        (click)="modificarMercancia()"
+        data-bs-toggle="modal"
+        data-bs-target="#modalAddAgentMercancias">Modificar</button>
+            <button class="btn btn-default me-2" (click)="eliminarMercanciaSeleccionados()">Eliminar</button>
             <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias"  [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
     </div>
@@ -241,9 +245,9 @@
                 </form>
             </div>
             <div class="modal-footer custom-footer">
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Limpiar</button>
+                <button type="button" class="btn btn-default"  (click)="limpiarFormAgente()">Limpiar</button>
                 <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" >Agregar</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="agregarFilaScian()" >Agregar</button>
             </div>
         </div>
     </div>
@@ -437,9 +441,9 @@
                 </form>
             </div>
             <div class="modal-footer custom-footer">
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Limpiar</button>
+                <button type="button" class="btn btn-default"(click)="limpiarForm()" >Limpiar</button>
                 <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Agregar</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="agregarFilaMercancia()">Agregar</button>
             </div>
         </div>
     </div>

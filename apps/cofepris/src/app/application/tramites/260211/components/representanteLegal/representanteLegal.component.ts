@@ -28,7 +28,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
-  esFormularioSoloLectura: boolean = false; 
+ public esFormularioSoloLectura: boolean = false; 
   /**
    * Estado de la solicitud obtenido desde el store.
    */
@@ -56,16 +56,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     private tramite260211Query: Tramite260211Query,
     private consultaioQuery: ConsultaioQuery
   ) {
-    // Dependencia inyectada para uso posterior
-  }
- 
-  /**
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Obtiene el estado de la solicitud y crea el formulario del representante legal.
-   */
-  ngOnInit(): void {
-  this.inicializarEstadoFormulario();
-     /**
+    /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
      *
      * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
@@ -83,6 +74,15 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     )
     .subscribe();
 
+  }
+ 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Obtiene el estado de la solicitud y crea el formulario del representante legal.
+   */
+  ngOnInit(): void {
+  this.inicializarEstadoFormulario();
+    
 
   }
  

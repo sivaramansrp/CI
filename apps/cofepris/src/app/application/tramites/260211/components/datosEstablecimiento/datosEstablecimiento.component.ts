@@ -44,7 +44,7 @@ export class DatosEstablecimientoComponent implements OnInit, OnDestroy {
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
-  esFormularioSoloLectura: boolean = false; 
+ public esFormularioSoloLectura: boolean = false; 
   /**
    * Estado de la solicitud.
    * @type {Solicitud260211State}
@@ -90,7 +90,15 @@ constructor(
   private tramite260211Query: Tramite260211Query,
    private consultaioQuery: ConsultaioQuery
 ) {
-  // Dependencia inyectada para uso posterior
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+       .subscribe();
 }
   /**
    * Método del ciclo de vida de Angular que se llama al inicializar el componente.
@@ -100,16 +108,6 @@ constructor(
   ngOnInit(): void {
      this.inicializarEstadoFormulario();
    
-    this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
-       
-        this.inicializarEstadoFormulario();
-      })
-    )
-    .subscribe();
 
   }
    /**
@@ -173,8 +171,6 @@ constructor(
         this.forma.disable();
       } else if (!this.esFormularioSoloLectura) {
         this.forma.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
       }
   }
 
@@ -213,7 +209,6 @@ constructor(
     metodoNombre: keyof Tramite260211Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    // eslint-disabled-next-line
     (this.tramite260211Store[metodoNombre] as (value: any) => void)(VALOR);
   }
  
