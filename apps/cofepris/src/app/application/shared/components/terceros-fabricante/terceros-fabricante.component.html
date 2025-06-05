@@ -25,7 +25,8 @@
       <div class="mt-5" *ngIf="tabla.nombre === 'Formulador'">
         <h5>Formulador*:</h5>
         <div class="table-responsive mt-5">
-          <ng-table [commonTableHeader]="formuladorHeaderData" [commonTableBody]="formuladorRowData" (seleccionCambio)="onFormuladorSeleccionCambio($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
+          <ng-table [commonTableHeader]="formuladorHeaderData" [commonTableBody]="formuladorRowData" (seleccionCambio)="onFormuladorSeleccionCambio($event)" 
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
         </div>
         <br />
         <div class="d-flex justify-content-end mt-3">
