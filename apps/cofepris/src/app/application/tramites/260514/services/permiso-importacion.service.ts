@@ -26,7 +26,7 @@ export class DatosDomicilioService {
    * @returns Observable que emite un objeto RespuestaTabla.
    */
   getObtenerTablaDatos(): Observable<RespuestaTabla> {
-    return this.http.get<RespuestaTabla>('assets/json/cofepris/scianTabla.json');
+    return this.http.get<RespuestaTabla>('assets/json/cofepris/clave-scian.json');
   }
 
   /**
@@ -36,7 +36,7 @@ export class DatosDomicilioService {
    */
   getObtenerMercanciasDatos(): Observable<MercanciasTabla> {
     return this.http.get<MercanciasTabla>(
-      'assets/json/260501/mercanciasDatos.json'
+      'assets/json/cofepris/mercancias-tabla.json'
     );
   }
 }
