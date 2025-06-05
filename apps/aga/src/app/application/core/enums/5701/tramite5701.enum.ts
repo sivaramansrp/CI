@@ -1,4 +1,7 @@
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import {
+  ConfiguracionColumna,
+  CrossListLable,
+} from '@libs/shared/data-access-user/src';
 import { LineaCaptura } from '../../models/5701/linea-captura.model';
 
 /**
@@ -123,10 +126,11 @@ export const MSJ_LINEA_CAPTURA_NO_PAGADA =
 export const MSJ_ERROR_GAFETE_EXISTE =
   'El número de gafete ya se encuentra registrado, intenta de nuevo';
 
-  /**
-   * @description Mensaje de avertencia cuando se va a cambiar de tipo de solicitud y el formulario tiene datos capturados.
-   */
-  export const MSG_CAMBIO_TIPO_SOLICITUD = 'Los datos capturados serán borrados, ¿estás de acuerdo (SI/NO)?';
+/**
+ * @description Mensaje de avertencia cuando se va a cambiar de tipo de solicitud y el formulario tiene datos capturados.
+ */
+export const MSG_CAMBIO_TIPO_SOLICITUD =
+  'Los datos capturados serán borrados, ¿estás de acuerdo (SI/NO)?';
 
 /**
  * @description Constantes para el manejo de las etiquetas de los inputs de la autorización LDA y DDEX
@@ -259,3 +263,11 @@ export const MSG_REGISTRO_EXITOSO = (numeroSolicitud: string) =>
  * @description Almacena el valor de un dia = 1
  */
 export const UN_DIA = 1;
+
+/**
+ * @description Etiquetas para el crosslist de fechas
+ */
+export const LABEL_CROSSLIST: CrossListLable = {
+  tituluDeLaIzquierda: 'Fechas dentro del período',
+  derecha: 'Fechas seleccionadas para el servicio extraordinario',
+};

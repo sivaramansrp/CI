@@ -335,6 +335,8 @@
                 <crosslist
                   [fechas]="selectRangoDias"
                   [fechasSeleccionadas]="solicitudState.fechasSeleccionadas"
+                  [label]="LABEL_CROSSLIST_FECHAS"
+                  [mensajeAlerta]="MENSAJE_ALERTA_CROSSLIST"
                   (fechasSeleccionadasChange)="changeCrosslist($event)"
                 ></crosslist>
               </div>

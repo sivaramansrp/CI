@@ -5,6 +5,7 @@ import {
   ESTATUS_PAGADO,
   ID_NAME_DD,
   ID_NAME_LDA,
+  LABEL_CROSSLIST,
   LABEL_DESPACHO_DD,
   LABEL_DESPACHO_LDA,
   MSG_ADUANA_PEDIMENTO,
@@ -26,10 +27,12 @@ import {
   AduanaService,
   Catalogo,
   CatalogoPaises,
+  CrossListLable,
   DatosAgregarFormulario,
   FechasService,
   FormulariosService,
   ICatalogo,
+  MENSAJE_ALERTA_NO_FECHAS,
   Notificacion,
   PROGRAMA_FOMENTO,
   PROGRAMA_IMMEX,
@@ -353,6 +356,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @description Almacena los montos a pagar en la solicitud.
    */
   montoPagadoLineas: number = 0;
+
+  /**
+   * @description Mensaje de alerta que se muestra cuando no se han seleccionado fechas, en el crosslist.
+   */
+  readonly MENSAJE_ALERTA_CROSSLIST = MENSAJE_ALERTA_NO_FECHAS;
+
+  /**
+   * @description Label del crosslist de fechas
+   */
+  readonly LABEL_CROSSLIST_FECHAS: CrossListLable = LABEL_CROSSLIST;
 
   //TODO: Estas variables se van a eliminar
   /**
