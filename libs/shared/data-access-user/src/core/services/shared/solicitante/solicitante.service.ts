@@ -18,7 +18,9 @@ export class SolicitanteService {
    * @param {id} - Id del json auxiliar que trae los datos generales del usuario
    * @returns {Observable<JSONResponse>} - Respuesta de la API de tipo observable de tipo JSONResponse.
    */
-
+  /**
+   * @deprecated Este método está obsoleto y se eliminará en futuras versiones. Utilice `getDatosSolicitante` en su lugar.
+   */
   getDatosGenerales(id: number): Observable<JSONResponse> {
     return this.http.get<JSONResponse>(`${this.urlServer}/${id}`).pipe(
       catchError((error) => {
@@ -26,4 +28,9 @@ export class SolicitanteService {
       })
     );
   }
+
+  /**
+   * Obtiene los datos del solicitante de una API
+   * @returns {Observable<JSONResponse>} - Respuesta de la API de tipo observable de tipo JSONResponse.
+   */
 }
