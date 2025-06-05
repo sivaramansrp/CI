@@ -2,12 +2,12 @@ import {
   Catalogo,
   RespuestaCatalogos,
 } from '@libs/shared/data-access-user/src';
+import { DatosDomicilioLegalState, DatosDomicilioLegalStore } from '../estados/stores/datos-domicilio-legal.store';
 import {
   MercanciasTabla,
   RespuestaTabla,
 } from '../components/domicilio-establecimiento/domicilio-establecimiento.component';
 import { DatosDomicilioLegalQuery } from '../estados/queries/datos-domicilio-legal.query';
-import { DatosDomicilioLegalState, DatosDomicilioLegalStore } from '../estados/stores/datos-domicilio-legal.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -85,7 +85,7 @@ export class DatosDomicilioLegalService {
   }
     /**
    * Método para actualizar el estado del formulario con los datos proporcionados.
-   * @param DATOS - Objeto que contiene el estado del trámite 260501.
+   * @param DATOS - Objeto que contiene el estado del trámite.
    */
   actualizarEstadoFormulario(DATOS: DatosDomicilioLegalState): void {
     if (DATOS) {
@@ -141,7 +141,7 @@ export class DatosDomicilioLegalService {
 
   /**
    * Método para obtener los datos del registro de toma de muestras de mercancías.
-   * @returns Observable que emite el estado del trámite 260501.
+   * @returns Observable que emite el estado del trámite.
    */
   getRegistroTomaMuestrasMercanciasData(): Observable<DatosDomicilioLegalState> {
     return this.http.get<DatosDomicilioLegalState>('assets/json/260501/registro_toma_muestras_mercancias.json');
