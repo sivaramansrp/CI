@@ -8,13 +8,11 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tab
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { UppercaseDirective } from '@ng-mf/data-access-user';
 
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
-import { TableComponent } from '@ng-mf/data-access-user';
 /**
  * PartidasDeLaMercanciaComponent
  * Este componente es responsable de gestionar las partidas de la mercancía.
@@ -28,9 +26,7 @@ import { TableComponent } from '@ng-mf/data-access-user';
     CommonModule,
     ReactiveFormsModule,
     TituloComponent,
-    UppercaseDirective,
     AlertComponent,
-    TableComponent,
     CatalogoSelectComponent,
     TablaDinamicaComponent,
   ],
