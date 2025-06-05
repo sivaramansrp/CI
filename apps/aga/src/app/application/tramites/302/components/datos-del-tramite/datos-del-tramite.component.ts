@@ -233,10 +233,10 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @param tramite302Query - Query para consultar el estado del trámite 302.
    */
   constructor(
-    public fb: FormBuilder,
-    public tramite302Store: Tramite302Store,
-    public tramite302Query: Tramite302Query,
-    public service: Solicitud302Service
+    private fb: FormBuilder,
+    private tramite302Store: Tramite302Store,
+    private tramite302Query: Tramite302Query,
+    private service: Solicitud302Service
   )
   {}
 
