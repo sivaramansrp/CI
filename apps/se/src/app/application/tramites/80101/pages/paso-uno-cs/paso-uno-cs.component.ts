@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { SECCIONES_TRAMITE_230401 } from '../../constantes/nuevo-programa.enum';
+import { SECCIONES_TRAMITE_80101 } from '../../constantes/nuevo-programa.enum';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
 import { map, Subject, takeUntil } from 'rxjs';
 import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-industrial.service';
@@ -55,13 +55,9 @@ export class PasoUnoCsComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaState = seccionState;
-
-          this.formularioDeshabilitado = true;
+          this.formularioDeshabilitado = seccionState.readonly;
           if (this.consultaState.update) {
-            this.formularioDeshabilitado = false;
             this.guardarDatosFormulario();
-          } else if (this.consultaState.readonly) {
-            this.formularioDeshabilitado = true;
           }
         })
       )
@@ -96,7 +92,7 @@ export class PasoUnoCsComponent implements OnInit, OnDestroy {
   private asignarSecciones(): void {
     const SECCIONES: boolean[] = [];
     const FORMA_VALIDA: boolean[] = [];
-    const PREDETERMINADO = SECCIONES_TRAMITE_230401;
+    const PREDETERMINADO = SECCIONES_TRAMITE_80101;
     for (const LLAVE_SECCION in PREDETERMINADO.PASO_1) {
       if (
         Object.prototype.hasOwnProperty.call(
