@@ -36,7 +36,8 @@
              "libs/shared/theme/assets/styles/main.scss"
             ],
         "scripts": [
-          "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+          "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js",
+          "libs/shared/theme/assets/js/FielUtil-1.5.js"
         ],
         "customWebpackConfig": {
           "path": "apps/aga/webpack.config.ts"
