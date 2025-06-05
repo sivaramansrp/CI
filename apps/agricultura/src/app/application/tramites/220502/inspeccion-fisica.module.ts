@@ -1,4 +1,4 @@
-import { AlertComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CarrosDeFerrocarrilComponent } from './shared/carros-de-ferrocarril/carros-de-ferrocarril.component';
@@ -30,13 +30,12 @@ import { ToastrModule } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@ng-mf/data-access-user';
 @NgModule({
-  declarations: [
-    InspeccionFisicaComponent,
-    PasoUnoComponent,
-    PasoDosComponent,
-    PasoTresComponent
-  ],
+  declarations: [],
   imports: [
+    InspeccionFisicaComponent,
+    PasoDosComponent,
+    PasoTresComponent,
+    PasoUnoComponent,
     CommonModule,
     RouterModule,
     FormsModule,
@@ -62,7 +61,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     SolicitudComponent,
     ResponsableInspeccionEnPuntoComponent,
     MedioTransporteComponent,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(), 
+    CatalogoSelectComponent
   ],
   providers:[
     ToastrService

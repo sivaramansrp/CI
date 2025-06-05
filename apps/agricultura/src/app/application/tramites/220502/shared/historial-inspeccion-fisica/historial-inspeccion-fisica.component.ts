@@ -22,6 +22,11 @@ export class HistorialInspeccionFisicaComponent implements OnChanges {
   /** Matriz para contener datos para cada fila de la tabla */
   @Input() tablaFilaDatos: HistorialInspeccionFisica[] = [];
 
+  /**
+   * Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado!: boolean;
+
   /** Matriz para contener datos para cada fila de la tabla */
   tableData = {
     tableBody: [],
