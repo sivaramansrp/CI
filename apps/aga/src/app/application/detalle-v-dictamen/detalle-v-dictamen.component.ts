@@ -3,20 +3,22 @@ import {
   ListaComponentes,
   Tabulaciones,
 } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
-import { Component, OnInit, Type } from '@angular/core';
+import { Component, OnDestroy, OnInit, Type } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { DatosComponent } from '@libs/shared/data-access-user/src';
+import { Subject, map, takeUntil } from 'rxjs';
+import { LISTA_TRIMITES } from '../core/enums/lista-trimites.enums';
 import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramites/components/reviewers-tabs/reviewers-tabs.component';
 import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-detalle-v-dictamen',
   standalone: true,
-  imports: [ReviewersTabsComponent, DatosComponent],
+  imports: [ReviewersTabsComponent],
   templateUrl: './detalle-v-dictamen.component.html',
   styleUrls: ['./detalle-v-dictamen.component.scss'],
 })
-export class DetalleVDictamenComponent implements OnInit {
+export class DetalleVDictamenComponent implements OnInit, OnDestroy {
   /**
    * @property {number} tramite
    * @description Identificador del trámite seleccionado.
@@ -41,19 +43,39 @@ export class DetalleVDictamenComponent implements OnInit {
   public FormObservacion!: FormGroup;
 
   /**
-   * La variable `numeroDeTramite` en la clase `VerificarDictamenComponent` almacena un valor de cadena específico '099226136147361192499352'.
-   * Este valor se utiliza como identificador para obtener datos relacionados con un trámite particular desde el servicio `verificaDictamenService`.
-   * El componente utiliza este valor para recuperar y mostrar información asociada a este trámite específico, como el número de trámite,
-   * fundamento, justificación, plazo y requisitos.
+   * Esta variable se utiliza para almacenar el estado de la consulta.
    */
-  numeroDeTramite: string = '099226136147361192499352';
+  public consultaState!:ConsultaioState;
+
+  /** 
+   * Subject para destruir las suscripciones.
+   */
+  private destruirSuscripcion$: Subject<void> = new Subject();
+  /**
+   * @property {AccuseComponentes[] } listaTrimites
+   * @description Lista de trámites disponibles para evaluación, obtenida de la constante LISTA_TRIMITES.
+   */
+  listaTrimites = LISTA_TRIMITES;
 
   /**
    * Constructor del componente `DetalleVDictamenComponent`.
    * @param {FormBuilder} fbOb - Servicio para construir formularios reactivos.
    * @param {Router} router - Servicio de enrutamiento de Angular para navegar entre rutas.
    */
-  constructor(private fbOb: FormBuilder, private router: Router) {}
+  constructor(private fbOb: FormBuilder, private router: Router, private consultaQuery: ConsultaioQuery) {
+    this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destruirSuscripcion$),
+      map((seccionState) => {
+        this.consultaState = seccionState;
+        this.tramite = Number (seccionState.procedureId)
+        if (this.tramite) {
+            this.selectTramite(this.tramite);
+        }
+      })
+    ).subscribe()
+  }
+
   /**
    * Método que se ejecuta al inicializar el componente.
    * Inicializa el formulario de tramite y consulta los datos generales del tramite.
@@ -112,7 +134,7 @@ export class DetalleVDictamenComponent implements OnInit {
    * @returns {void}
    */
   regresar(): void {
-    this.router.navigate(['verificar-dictamen']);
+    this.router.navigate([this.consultaState.department+'/verificar-dictamen']);
   }
 
   /**
@@ -129,4 +151,23 @@ export class DetalleVDictamenComponent implements OnInit {
   guardarObservacion(): void {
     this.router.navigate(['bandeja-de-tareas-pendientes']);
   }
+
+  /**
+  * Se ejecuta al destruir el componente.
+  * Emite un valor y completa el subject `destruirNotificador$` para cancelar las suscripciones.
+  */
+  ngOnDestroy(): void {
+    this.destruirSuscripcion$.next();
+    this.destruirSuscripcion$.complete();
+  }
+  /**
+     * @method selectTramite
+     * @description Selecciona el trámite a evaluar y actualiza la referencia del trámite seleccionado.
+     * @param {number} i - Identificador del trámite.
+     * @returns {void}
+     */
+    selectTramite(i: number): void {
+      this.tramite = i;
+      this.slectTramite = LISTA_TRIMITES.find((v) => v.tramite === i);
+    }
 }
