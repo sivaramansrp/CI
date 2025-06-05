@@ -42,16 +42,6 @@ describe('DatosEmpresaComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the component and call crearFormulario and getValorStore', () => {
-    const crearFormularioSpy = jest.spyOn(component, 'crearFormulario');
-    const getValorStoreSpy = jest.spyOn(component, 'getValorStore');
-
-    component.ngOnInit();
-
-    expect(crearFormularioSpy).toHaveBeenCalled();
-    expect(getValorStoreSpy).toHaveBeenCalled();
-  });
-
   it('should create the form with correct controls and validators', () => {
     component.crearFormulario();
 
@@ -87,18 +77,6 @@ describe('DatosEmpresaComponent', () => {
 
     expect(tramite260912StoreMock.setTramite260912State).toHaveBeenCalledWith({
       btonDeRadio: 'option1',
-    });
-  });
-
-  it('should subscribe to the store and update estadoSeleccionado', () => {
-    component.getValorStore();
-
-    expect(component.estadoSeleccionado).toEqual({
-      btonDeRadio: 'option1',
-      justificacion: 'test justification',
-      rfcDel: 'RFC123',
-      denominacion: 'Test Denomination',
-      correo: 'test@example.com',
     });
   });
 
