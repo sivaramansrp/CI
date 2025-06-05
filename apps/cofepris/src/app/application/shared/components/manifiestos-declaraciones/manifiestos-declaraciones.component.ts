@@ -69,7 +69,7 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    * @param DatosDomicilioLegalQuery Query para obtener datos del estado del domicilio legal.
    */
   constructor(
-    public fb: FormBuilder,
+    private fb: FormBuilder,
     private DatosDomicilioLegalStore: DatosDomicilioLegalStore,
     private DatosDomicilioLegalQuery: DatosDomicilioLegalQuery,
     private consultaioQuery: ConsultaioQuery,
