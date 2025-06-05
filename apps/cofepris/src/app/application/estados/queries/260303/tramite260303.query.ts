@@ -1,9 +1,6 @@
-/* eslint-disable sort-imports */
-
+import { Solicitud260303State, Tramite260303Store } from '../../tramites/260303/tramite260303.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { Solicitud260303State, Tramite260303Store } from '../../tramites/260303/tramite260303.store';
-
 /**
  * Service to query the state of Solicitud260303.
  */

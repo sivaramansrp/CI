@@ -2,7 +2,7 @@
 // Este conjunto de importaciones cubre funcionalidades relacionadas con la gestión de formularios, validaciones,
 // permisos, configuraciones, así como la obtención y manipulación de datos externos para la aplicación.
 
-import { Catalogo, REGEX_VALORES_NUMERICOS, REG_X } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, REGEX_VALORES_NUMERICOS, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -171,6 +171,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   TEXTOS = TEXTOS;
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param fb Servicio para la creación de formularios reactivos.
    * @param http Servicio para realizar solicitudes HTTP.
@@ -183,16 +189,31 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private http: HttpClient,
     private tramite130217Store: Tramite130217Store,
     private tramite130217Query: Tramite130217Query,
-    private ControlPermisosPreviosExportacionService: ControlPermisosPreviosExportacionService
+    private ControlPermisosPreviosExportacionService: ControlPermisosPreviosExportacionService,
+    private consultaQuery: ConsultaioQuery
   ) {
-    //constructor
+    this.inicializarFormularios();
+    /**
+ * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+    *
+    * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+    * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+    * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+    */
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
    * Ciclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
    */
   ngOnInit(): void {
-    this.inicializarFormularios();
     this.configuracionFormularioSuscripciones();
     this.opcionesDeBusqueda();
     this.formularioTotalCount();
@@ -206,8 +227,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .subscribe((mostrarTabla) => {
         this.mostrarTabla = mostrarTabla;
       });
-
-    
       
   }
 
@@ -222,7 +241,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
 
     this.mercanciaForm = this.fb.group({
-      producto: ['Nuevo'],
+      producto: [],
       descripcion: [
         '',
         [
@@ -373,10 +392,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.productoOpciones = data.options;
-          this.tramite130217Store.actualizarEstado({
-            producto: data.options[0]?.value || 'Nuevo',
-            defaultProducto: data.options[0]?.value || 'Nuevo',
-          });
         },
       });
   }
@@ -390,7 +405,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       ? filasSeleccionadas
       : [];
     if (this.filaSeleccionada) {
-      this.tramite130217Store.storeTableValues(this.filaSeleccionada);
+      this.tramite130217Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
     }
   }
 
@@ -422,8 +437,7 @@ validarYEnviarFormulario(): void {
     this.partidasDelaMercanciaForm.markAllAsTouched();
   } else {
     this.mostrarTabla = true;
-    this.tramite130217Store.setMostrarTabla(true);
-
+    this.tramite130217Store.actualizarEstado({mostrarTabla:true});
   }
 }
 
@@ -432,8 +446,8 @@ validarYEnviarFormulario(): void {
    */
   navegarParaModificarPartida(): void {
     if (this.filaSeleccionada) {
-      this.tramite130217Store.setMostrarTabla(true);
-      this.tramite130217Store.storeTableValues(this.filaSeleccionada);
+      this.tramite130217Store.actualizarEstado({mostrarTabla:true});
+      this.tramite130217Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
     }
   }
 
