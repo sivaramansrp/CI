@@ -4,11 +4,7 @@
       <ng-container formGroupName="importadorExportador">
         <div class="alert alert-info">
           <label style="font-weight: normal">
-            <input
-              type="checkbox"
-              formControlName="manifesto"
-              id="manifesto"
-            />
+            <input type="checkbox" formControlName="manifesto" id="manifesto" />
             *Manifesto bajo protesta de decir verdad que el donante de la
             mercancía es extranjero
           </label>
@@ -20,6 +16,7 @@
               [label]="'Aduana por la que ingresará la mercancía'"
               formControlName="aduana"
               [required]="true"
+              [isDisabled]="esFormularioSoloLectura"
               (change)="aduanaSeleccion()"
               name="aduana"
             >
@@ -50,20 +47,19 @@
           </div>
           <div class="col-12">
             <div class="table-container" style="margin-top: 20px">
-    <app-tabla-dinamica
-    [tipoSeleccionTabla]="tipoSeleccionTabla"
-    [configuracionTabla]="ParqueAgentes"
-    [datos]="mercanciaDatos">
-  </app-tabla-dinamica>
-   <!-- (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)" -->
+              <app-tabla-dinamica
+                [tipoSeleccionTabla]="tipoSeleccionTabla"
+                [configuracionTabla]="ParqueAgentes"
+                [datos]="mercanciaDatos"
+                (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"
+              >
+              </app-tabla-dinamica>
             </div>
           </div>
           <div class="col-md-12 mt-5 d-flex justify-content-end">
             <button
               type="button"
               class="btn btn-primary ms-3"
-              data-bs-toggle="modal"
-              data-bs-target="#modalAgregarMercancias"
               (click)="abrirDialogoMercancias()"
             >
               Consultar
@@ -349,10 +345,10 @@
           </ng-container>
         </form>
       </div>
-      <div class="modal-footer custom-footer">
+      <div class="modal-footer custom-footer justify-content-end">
         <button
           type="button"
-          class="btn btn-default"
+          class="btn btn-default m-5"
           data-bs-dismiss="modal"
           #closeModal
         >
@@ -362,3 +358,10 @@
     </div>
   </div>
 </div>
+
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+  </lib-notificaciones>
+</section>
+}
