@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { catchError, map } from 'rxjs';
+import { catchError, map, tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { TramiteFolioService } from '@ng-mf/data-access-user';
 import { TramiteFolioStore } from '@ng-mf/data-access-user';
@@ -45,10 +45,10 @@ export class PasoTresComponent implements OnInit {
     if (FIRMA) {
       // Obtiene el número de trámite
       this.tramiteFolioServices
-        .obtenerTramite(19)
+        .generarFolio()
         .pipe(
-          map((tramite) => {
-            this.tramiteStore.establecerTramite(tramite.data, FIRMA);
+          tap((tramite) => {           
+            this.tramiteStore.establecerTramite(tramite.datos, FIRMA);
             this.router.navigate([`${this.url}/acuse`]);
           }),
           catchError((_error) => {

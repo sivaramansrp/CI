@@ -87,7 +87,7 @@ export const API_GET_RFC_IDC = `idc/contribuyente/detalle/${RFC_QUERY}`;
  * API que valida si un RFC (Registro Federal de Contribuyentes) está certificado para la revisión de origen.
  * * @param RFC_QUERY El RFC del contribuyente
  */
-export const API_GET_RFC_ORIGEN = `certificacion/origen/valida/${RFC_QUERY}`;
+export const API_GET_RFC_ORIGEN = `catalogo/certificacion/origen/valida/${RFC_QUERY}`;
 /**
  * El tipo de trámite por el que se filtrará la información.
  */
