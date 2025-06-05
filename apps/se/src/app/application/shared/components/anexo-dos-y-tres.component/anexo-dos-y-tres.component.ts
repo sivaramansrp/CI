@@ -1,9 +1,9 @@
+import { Component, OnInit } from '@angular/core';
 import { ANEXO_TRES_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { Anexo1y3Configuartion } from '../../models/nuevo-programa-industrial.model';
 import { AnexoEncabezado } from '../../models/nuevo-programa-industrial.model';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -30,7 +30,7 @@ import { Validators } from '@angular/forms';
 /**
  * Componente AnexoDosYTresComponent
  */
-export class AnexoDosYTresComponent {
+export class AnexoDosYTresComponent implements OnInit {
   /**
    * Formulario del Anexo Dos
    */
@@ -67,6 +67,11 @@ export class AnexoDosYTresComponent {
   @Input() anexoTresTablaLista: AnexoEncabezado[] = [];
 
   /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
+
+  /**
    * Evento para devolver la llamada del Anexo Dos
    */
   @Output() obtenerAnexoDosDevolverLaLlamada: EventEmitter<AnexoEncabezado[]> =
@@ -86,7 +91,18 @@ export class AnexoDosYTresComponent {
     this.crearFormularioAnexoDos();
     this.crearFormularioAnexoTres();
   }
-
+  
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Si el formulario está deshabilitado (`formularioDeshabilitado` es verdadero),
+   * deshabilita los grupos de formularios `anexoDosFormGroup` y `anexoTresFormGroup`.
+   */
+  ngOnInit(): void {
+    if( this.formularioDeshabilitado ) {
+      this.anexoDosFormGroup.disable();
+      this.anexoTresFormGroup.disable();
+    }
+  }
   /**
    * Crea el formulario del Anexo Dos
    */

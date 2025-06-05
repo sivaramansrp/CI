@@ -12,40 +12,15 @@ import { Query } from '@datorama/akita';
  */
 @Injectable({ providedIn: 'root' })
 export class Expedicion120204Query extends Query<Expedicion120204State> {
-
-  /**
-   * Observable que emite el valor actual de la propiedad `entidadFederativa` 
-   * del estado.
+    /**
+   * Selecciona el estado completo de la solicitud
+   * @type {Observable<Expedicion120204State>}
+  selectSolicitud$ = this.select((state) => {
+   * Selecciona el estado completo de la solicitud
    */
-  entidadFederativa$ = this.select((state) => state.entidadFederativa);
-
-  /**
-   * Observable que emite el valor actual de la propiedad `representacionFederal` 
-   * del estado.
-   */
-  representacionFederal$ = this.select((state) => state.representacionFederal);
-   
-  /**
-   * Observable que emite el valor actual de la propiedad `montoAExpedir` 
-   * del estado.
-   */
-
-  montoAExpedir$ = this.select((state) => state.montoAExpedir)
-
-  /**
-   * Observable que emite el valor actual de la propiedad `montoAExpedirCheck` 
-   * del estado.
-   */
-
-  montoAExpedirCheck$ = this.select((state) => state.montoAExpedirCheck)
-  
-  /**
-   * Observable que emite el valor actual de la propiedad `totalAExpedir` 
-   * del estado.
-   */
-
-  totalAExpedir$ = this.select((state) => state.totalAExpedir)
-
+  selectSolicitud$ = this.select((state) => {
+    return state;
+  });
   /**
    * Constructor de la clase `Expedicion120204Query`.
    * 

@@ -53,4 +53,34 @@ describe('AgregarProveedorContenedoraComponent', () => {
     expect(component.tramite240120Store.updateProveedorTablaDatos).toHaveBeenCalled();
   });
 
+  it('should update ProveedorDatos when observable emits a value', () => {
+    const testValue = { nombre: 'Proveedor Juan' };
+    if (component.tramiteQuery && 'emitValue' in component.tramiteQuery) {
+      (component.tramiteQuery as any).emitValue(testValue);
+      expect(component.ProveedorDatos).toEqual(testValue);
+    }
+  });
+
+  it('should set ProveedorDatos to null when observable emits null', () => {
+    if (component.tramiteQuery && 'emitValue' in component.tramiteQuery) {
+      (component.tramiteQuery as any).emitValue(null);
+      expect(component.ProveedorDatos).toBeNull();
+    }
+  });
+
+  it('should clean up subscriptions on ngOnDestroy', () => {
+    const spyNext = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const spyComplete = jest.spyOn((component as any).destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
+  });
+
+  it('should allow multiple ngOnDestroy calls without error', () => {
+    expect(() => {
+      component.ngOnDestroy();
+      component.ngOnDestroy();
+    }).not.toThrow();
+  });
+
 });

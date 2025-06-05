@@ -56,6 +56,7 @@ import {
 } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
 import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 /**
  * @title Datos del Trámite
@@ -458,7 +459,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
  */
   onPermisoGeneralInput(event: Event): void {
     const INPUT = event.target as HTMLInputElement;
-    INPUT.value = INPUT.value.replace(/[^0-9]/g, '').slice(0, 22);
+    INPUT.value = INPUT.value.replace(REGEX_NUMEROS, '').slice(0, 22);
     this.form.get('permisoGeneral')?.setValue(INPUT.value, { emitEvent: false });
   }
 
@@ -493,7 +494,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       if (this.mercanciaTablaSeleccionada.length > 0) {
         this.eliminarMercanciaFinalEvent.emit(this.mercanciaTablaSeleccionada[0]);
       } else {
-        console.error('No row selected for deletion.');
+        console.error('No se ha seleccionado ninguna fila para eliminar.');
       }
     }
   /**
@@ -636,7 +637,6 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       dosSemestre: event,
     });
   }
-  
   /**
    * @method ngOnDestroy
    * @description Hook de destrucción del componente. Libera las suscripciones activas.

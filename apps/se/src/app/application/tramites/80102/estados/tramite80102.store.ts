@@ -22,8 +22,8 @@ import {
   EmpressaSubFabricantePlantas,
   PlantasSubfabricante,
 } from '../../../shared/models/empresas-subfabricanta.model';
+import { FederatariosEncabezado, PlantasDisponibles, PlantasImmex } from '../../../shared/models/federatarios-y-plantas.model';
 import { Store, StoreConfig } from '@datorama/akita';
-import { FederatariosEncabezado } from '../../../shared/models/federatarios-y-plantas.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -32,32 +32,37 @@ import { Injectable } from '@angular/core';
  * para el trámite 80102 en la aplicación. Utiliza Akita para la gestión del estado.
  * 
  */
+
+
 /**
  * @interface Tramite80102State
- * @description Define la estructura del estado para el trámite 80102.
- * 
- * @property {Servicios} infoRegistro - Información del registro del trámite.
- * @property {Catalogo[]} aduanaDeIngreso - Lista de aduanas de ingreso.
- * @property {Servicio[]} datosImmex - Datos relacionados con IMMEX.
- * @property {ServicioInmex[]} datos - Datos generales del trámite.
- * @property {Catalogo} aduanaDeIngresoSelecion - Aduana seleccionada.
- * @property {{ [key: string]: boolean }} formaValida - Validación de formularios.
- * @property {ServicioInmex[]} empresas - Lista de empresas.
- * @property {Servicio[]} servicios - Lista de servicios.
- * @property {string} rfcEmpresa - RFC de la empresa.
- * @property {string} numeroPrograma - Número del programa.
- * @property {string} tiempoPrograma - Tiempo del programa.
- * @property {CatalogoPaises[]} paisesOrigen - Lista de países de origen.
- * @property {DatosEmpresaExtranjera[]} datosEmpresaExtranjera - Datos de empresas extranjeras.
- * @property {DatosEmpresaExtranjera} formaEmpresaExtranjera - Datos del formulario de empresas extranjeras.
- @property {DatosComplimentos} datosComplimentos - Datos de complementos.
- * @property {SociaoAccionistas[]} tablaDatosComplimentos - Tabla de datos de socios o accionistas.
- * @property {SociaoAccionistas[]} tablaDatosComplimentosExtranjera - Tabla de datos de socios o accionistas extranjeros.
- * @property {EmpressaSubFabricantePlantas} empressaSubFabricantePlantas - Datos de subfabricantes.
- * @property {AnnexoDosTres} annexoDosTres - Datos de los anexos dos y tres.
- * @property {AnnexoUno} annexoUno - Datos del anexo uno.
- * @property {number} indicePrevioRuta - Índice previo de la ruta.
- * @property {FederatariosEncabezado[]} tablaDatosFederatarios - Tabla de datos de fedatarios.
+ * @description
+ * Representa el estado de la gestión para el trámite 80102, incluyendo información de registro, catálogos, datos de IMMEX, empresas, servicios, datos de empresa extranjera, complementos, tablas de accionistas, plantas y anexos relacionados.
+ *
+ * @property {Servicios} infoRegistro - Información general del registro del trámite.
+ * @property {Catalogo[]} aduanaDeIngreso - Lista de aduanas de ingreso disponibles.
+ * @property {Servicio[]} datosImmex - Datos relacionados con el programa IMMEX.
+ * @property {ServicioInmex[]} datos - Información específica de servicios IMMEX.
+ * @property {Catalogo} aduanaDeIngresoSelecion - Aduana de ingreso seleccionada por el usuario.
+ * @property {{ [key: string]: boolean }} formaValida - Estado de validez de los formularios, indexado por clave.
+ * @property {ServicioInmex[]} empresas - Lista de empresas asociadas al trámite.
+ * @property {Servicio[]} servicios - Servicios disponibles para el trámite.
+ * @property {string} rfcEmpresa - RFC de la empresa participante.
+ * @property {string} numeroPrograma - Número del programa IMMEX.
+ * @property {string} tiempoPrograma - Duración o vigencia del programa.
+ * @property {CatalogoPaises[]} paisesOrigen - Lista de países de origen relacionados.
+ * @property {DatosEmpresaExtranjera[]} datosEmpresaExtranjera - Datos de empresas extranjeras asociadas.
+ * @property {DatosEmpresaExtranjera} formaEmpresaExtranjera - Información del formulario de empresa extranjera.
+ * @property {DatosComplimentos} datosComplimentos - Datos complementarios del trámite.
+ * @property {SociaoAccionistas[]} tablaDatosComplimentos - Tabla de socios y accionistas nacionales.
+ * @property {SociaoAccionistas[]} tablaDatosComplimentosExtranjera - Tabla de socios y accionistas extranjeros.
+ * @property {EmpressaSubFabricantePlantas} empressaSubFabricantePlantas - Información de subfabricantes y plantas asociadas.
+ * @property {AnnexoDosTres} annexoDosTres - Información correspondiente al Anexo Dos/Tres.
+ * @property {AnnexoUno} annexoUno - Información correspondiente al Anexo Uno.
+ * @property {number} indicePrevioRuta - Índice previo de la ruta de navegación en el trámite.
+ * @property {FederatariosEncabezado[]} tablaDatosFederatarios - Tabla de datos de fedatarios públicos.
+ * @property {PlantasImmex[]} plantasImmexTablaLista - Lista de plantas IMMEX asociadas.
+ * @property {PlantasDisponibles[]} plantasDisponiblesTablaLista - Lista de plantas disponibles para asociación.
  */
 export interface Tramite80102State {
   infoRegistro: Servicios;
@@ -85,7 +90,9 @@ export interface Tramite80102State {
   annexoUno: AnnexoUno;
 
   indicePrevioRuta: number;
-  tablaDatosFederatarios: FederatariosEncabezado[]
+  tablaDatosFederatarios: FederatariosEncabezado[];
+  plantasImmexTablaLista: PlantasImmex[];
+  plantasDisponiblesTablaLista: PlantasDisponibles[];
 }
 
 /**
@@ -196,7 +203,9 @@ export interface Tramite80102State {
  * 
  * @property {number} indicePrevioRuta - Índice previo de la ruta.
  * 
- * @property {Array} tablaDatosFederatarios - Tabla de datos de federatarios.
+ * @property {FederatariosEncabezado[]} tablaDatosFederatarios - Tabla de datos de fedatarios públicos.
+ * @property {PlantasImmex[]} plantasImmexTablaLista - Lista de plantas IMMEX asociadas.
+ * @property {PlantasDisponibles[]} plantasDisponiblesTablaLista - Lista de plantas disponibles para asociación.
  */
 export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80102State = {
   infoRegistro: {
@@ -311,7 +320,9 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80102State = {
 
   indicePrevioRuta: 0,
 
-  tablaDatosFederatarios: []
+  tablaDatosFederatarios: [],
+  plantasImmexTablaLista: [],
+  plantasDisponiblesTablaLista: [],
 };
 
 
