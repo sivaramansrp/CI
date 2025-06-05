@@ -236,12 +236,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private DiamanteBrutoService: DiamanteBrutoService,
     private consultaioQuery: ConsultaioQuery
   ) {
+    this.inicializarFormularios();
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState)=>{
           this.esFormularioSoloLectura = seccionState.readonly; 
-          this.inicializarFormularios();
         })
       )
       .subscribe()
@@ -255,7 +255,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * - Configura la tabla de partidas
    */
   ngOnInit(): void {
-    this.inicializarFormularios();
     this.configuracionFormularioSuscripciones();
     this.opcionesDeBusqueda();
     this.formularioTotalCount();
@@ -312,7 +311,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     });
 
     this.mercanciaForm = this.fb.group({
-      producto: ['Nuevo'],
+      producto: [],
       descripcion: [
         '',
         [
@@ -448,10 +447,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.opcionesSolicitud = data.options;
-          this.Tramite130114Store.actualizarEstado({
-            solicitud: data.options[0]?.value || '',
-            defaultSelect: data.defaultSelect || 'Inicial',
-          });
+        
         },
         error: (error) => console.error('Error loading solicitude options:', error),
       });
@@ -478,7 +474,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       ? filasSeleccionadas
       : [];
     if (this.filaSeleccionada) {
-      this.Tramite130114Store.storeTableValues(this.filaSeleccionada);
+      this.Tramite130114Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
     }
   }
 
@@ -509,7 +505,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.partidasDelaMercanciaForm.markAllAsTouched();
     } else {
       this.mostrarTabla = true;
-      this.Tramite130114Store.setMostrarTabla(true);
+      this.Tramite130114Store.actualizarEstado({mostrarTabla:true});
 
     }
   }
@@ -519,8 +515,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   navegarParaModificarPartida(): void {
     if (this.filaSeleccionada) {
-      this.Tramite130114Store.setMostrarTabla(true);
-      this.Tramite130114Store.storeTableValues(this.filaSeleccionada);
+       this.Tramite130114Store.actualizarEstado({mostrarTabla:true});
+      this.Tramite130114Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
     }
   }
 
