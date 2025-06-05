@@ -319,10 +319,10 @@ export class AvisoComponent implements OnInit, AfterViewInit, OnDestroy {
   donanteDomicilio(): void {
     this.avisoForm = this.fb.group({
       claveFiscalizado: [this.solicitudState?.claveFiscalizado, [Validators.required]],
-      adace: [this.solicitudState?.adace, [Validators.required]],
+      adace: [{ value: this.solicitudState?.adace, disabled: true }, [Validators.required]],
       tipoDictamen: [this.solicitudState?.tipoDictamen, [Validators.required]],
       rfc: [this.solicitudState?.rfc, [Validators.required]],
-      nombre: [this.solicitudState?.nombre, [Validators.required]],
+      nombre: [{ value: this.solicitudState?.nombre, disabled: true }, [Validators.required]],
       numeroInscripcion: [this.solicitudState?.numeroInscripcion, [Validators.required]],
       ano: [this.solicitudState?.ano, [Validators.required]],
       mes: [this.solicitudState?.mes, [Validators.required]],
