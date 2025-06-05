@@ -1,6 +1,9 @@
 
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
+import { Subject, map, takeUntil } from 'rxjs';
+import { Solicitud260401Service } from '../../services/service260401.service';
 
 /**
  * Componente DatosTerritorioComponent
@@ -12,12 +15,52 @@ import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-use
   selector: 'app-datos-territorio',
   templateUrl: './datos-territorio.component.html',
 })
-export class DatosTerritorioComponent implements AfterViewInit {
+export class DatosTerritorioComponent implements AfterViewInit, OnInit {
+
+
+  public esDatosRespuesta: boolean = false;
+
+  public consultaState!: ConsultaioState;
+
+  private destroyNotifier$: Subject<void> = new Subject();
   
   /**
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
+
+  constructor(private consultaQuery: ConsultaioQuery, private solicitud260401Service: Solicitud260401Service) {
+    // Constructor del componente, se pueden inyectar servicios aquí si es necesario.
+  }
+
+ ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
+    if (this.consultaState.update) {
+      // this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+
+  // guardarDatosFormulario(): void {
+  //   this.solicitud260401Service
+  //     .getRegistroTomaMuestrasMercanciasData().pipe(
+  //       takeUntil(this.destroyNotifier$)
+  //     )
+  //     .subscribe((resp) => {
+  //       if(resp){
+  //       this.esDatosRespuesta = true;
+  //       this.solicitud260401Service.actualizarEstadoFormulario(resp);
+  //       }
+  //     });
+  // }
 
   /**
    * Se ejecuta después de que la vista ha sido inicializada.

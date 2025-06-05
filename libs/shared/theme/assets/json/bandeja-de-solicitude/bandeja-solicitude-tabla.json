@@ -943,5 +943,14 @@
         "diasTranscurridos": "4",
         "departamento": "AGRICULTURA",
         "numeroDeProcedimiento": "220501"
+    },
+    {
+        "id": 260401,
+        "tipoDeTramite": "Solicitud de Permiso",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "COFEPRIS",
+        "numeroDeProcedimiento": "260401"
     }
 ]
