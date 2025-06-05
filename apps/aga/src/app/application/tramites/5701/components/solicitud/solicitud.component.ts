@@ -125,7 +125,6 @@ import { ValidaLineaPagoService } from '../../../../core/services/5701/pago/vali
 import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
-import { error } from 'console';
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
@@ -877,10 +876,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       }),
 
       datosServicio: this.fb.group({
-        fechaInicio: [
-          this.solicitudState?.fechaInicio,
-          [Validators.required, ValidacionesFormularioService.validaFechaNoHoy],
-        ],
+        fechaInicio: [this.solicitudState?.fechaInicio, [Validators.required]],
         fechaFinal: [
           this.solicitudState?.fechaFinal,
           [Validators.required, ValidacionesFormularioService.validaFechaNoHoy],
@@ -1325,8 +1321,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.datosServicio.get('fechaFinal')?.dirty &&
       this.datosServicio.get('fechaFinal')?.touched
     ) {
+      // eslint-disable-next-line no-unused-expressions
+      this.datosServicio.hasError('endDateBeforeStartDate') &&
+        this.limpiarFechasHoras();
       this.rangoFechas();
     }
+
     this.setValoresStore(this.datosServicio, 'fechaFinal', 'setFechaFinal');
   }
 
