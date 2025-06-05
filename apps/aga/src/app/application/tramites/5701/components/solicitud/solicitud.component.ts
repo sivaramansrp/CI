@@ -1100,16 +1100,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} Esta función no retorna ningún valor.
    */
   tipoSolicitudSeleccion(): void {
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'toastr',
-      categoria: 'error',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Error al guardar la solicitud. Intente nuevamente.',
-      cerrar: false,
-      txtBtnAceptar: '',
-      txtBtnCancelar: '',
-    };
     // Se obtiene el valor del tipo de solicitud seleccionado y se agrega la descripción correspondiente al formulario.
     const TIPO_SOLICITUD_VALUE = parseInt(
       this.FormSolicitud.get('tipoSolicitud')?.value,
@@ -1121,6 +1111,19 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     )?.descripcion;
     this.FormSolicitud.get('descripcionTipoSolicitud')?.setValue(
       SOLICITUD_DESRIPCION
+    );
+
+    this.tipoSolicitudSeleccionada = TIPO_SOLICITUD_VALUE;
+
+    this.setValoresStore(
+      this.FormSolicitud,
+      'tipoSolicitud',
+      'setTipoSolicitud'
+    );
+    this.setValoresStore(
+      this.FormSolicitud,
+      'descripcionTipoSolicitud',
+      'setDescripcionTipoSolicitud'
     );
 
     const FORMA_MODIFICADA = Object.keys(this.FormSolicitud.controls).some(
@@ -1140,11 +1143,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    this.tipoSolicitudSeleccionada = parseInt(
-      this.FormSolicitud.get('tipoSolicitud')?.value,
-      10
-    );
-
     if (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL) {
       this.pedimento.setValidators([Validators.required]);
       this.pedimento.setValidators([SolicitudComponent.minLengthArray(1)]);
@@ -1153,17 +1151,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.pedimento.clearValidators();
       this.pedimento.updateValueAndValidity();
     }
-
-    this.setValoresStore(
-      this.FormSolicitud,
-      'tipoSolicitud',
-      'setTipoSolicitud'
-    );
-    this.setValoresStore(
-      this.FormSolicitud,
-      'descripcionTipoSolicitud',
-      'setDescripcionTipoSolicitud'
-    );
   }
 
   /**
