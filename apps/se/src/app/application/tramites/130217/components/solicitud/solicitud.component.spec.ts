@@ -162,7 +162,6 @@ describe('SolicitudComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(SolicitudComponent);
     component = fixture.componentInstance;
-    // component.ngOnInit();
   });
 
   it('debería crear', () => {
