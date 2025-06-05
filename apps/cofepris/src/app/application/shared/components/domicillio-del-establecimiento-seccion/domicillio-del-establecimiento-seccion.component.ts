@@ -68,6 +68,9 @@ export class DomicillioDelEstablecimientoSeccionComponent
   /**
    * Referencia al modal del establecimiento.
    */
+  /**
+   * Referencia al elemento del modal del establecimiento.
+   */
   @ViewChild('establecimientoModal', { static: false })
   establecimientoModal!: ElementRef;
 
@@ -200,6 +203,10 @@ export class DomicillioDelEstablecimientoSeccionComponent
         }
 
   }
+  /**
+   * Maneja el cambio de valor en un control del formulario.
+   * @param controlName Nombre del control que cambió.
+   */
   onControlChange(controlName: string): void {
     const UPDATED_VALUE = { [controlName]: this.domicilioEstablecimiento.get(controlName)?.value };
     this.domicilioEstablecimientoStore.update(UPDATED_VALUE);

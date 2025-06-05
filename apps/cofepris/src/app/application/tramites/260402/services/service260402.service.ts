@@ -37,7 +37,10 @@ export class Solocitud260402Service {
     this.tramite301Store.setEstablecimientoDomicilioLada(DATOS.establecimientoDomicilioLada);
     this.tramite301Store.setEstablecimientoDomicilioTelefono(DATOS.establecimientoDomicilioTelefono);
     this.tramite301Store.setRfcDelProfesionalResponsable(DATOS.rfcDelProfesionalResponsable);
-    this.tramite301Store.setNombreDelProfesionalResponsable(DATOS.nombreDelProfesionalResponsable)
+    this.tramite301Store.setNombreDelProfesionalResponsable(DATOS.nombreDelProfesionalResponsable);
+    this.tramite301Store.setRepresentanteRfc(DATOS.representanteRfc);
+    this.tramite301Store.setRepresentanteNombre(DATOS.representanteNombre); 
+    this.tramite301Store.setRepresentanteApellidos(DATOS.apellidoMaterno,DATOS.apellidoPaterno);
   }
 
   

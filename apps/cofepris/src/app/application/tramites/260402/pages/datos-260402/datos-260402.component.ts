@@ -55,8 +55,7 @@ export class Datos260402Component implements OnInit {
         map((seccionState) => {
           this.consultaState = seccionState;
         })
-      )
-      .subscribe();
+      ).subscribe();
     if (this.consultaState.update) {
       this.guardarDatosFormulario();
     } else {
