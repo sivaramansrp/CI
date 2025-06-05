@@ -1,7 +1,7 @@
 import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject,Subscription, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosEmpresaService } from '../../services/datos-empresa.service';
 import { Tramite120601Query } from '../../estados/tramite-120601.query';
@@ -47,13 +47,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false; 
 
-   /**
-   * Suscripción a los cambios en el formulario reactivo.
-   *
-   * @type {Subscription}
-   * @memberof RegistroParaLaComponent
-   */
-  private subscription: Subscription = new Subscription();
 
   /**
    * Constructor de DatosDeLaSolicitudComponent.
