@@ -160,7 +160,7 @@ export class LibBandejaComponent<T> implements OnInit {
       ROW_OBJETO.folioTramite,
       ROW_OBJETO.tipoDeTramite,
       ROW_OBJETO.estadoDeTramite,
-      true,
+      !this.tieneBandeja ? false : true,
       false,
       true
     );
@@ -182,9 +182,8 @@ export class LibBandejaComponent<T> implements OnInit {
     }
     else if (ORIGIN === 'SUBSECUENTES') {
       this.router.navigate(['/subsecuentes']);
-    }
-    if(ORIGIN === 'READ_PROCEDURE_VERIFICAR_DICTAMEN') {
-      this.router.navigate(['/verificar-dictamen']);
+    } else if(ORIGIN === 'READ_PROCEDURE_VERIFICAR_DICTAMEN') {
+      this.router.navigate([`/${this.tramiteData[0].department}/verificar-dictamen`]);
     }
   }
   /*

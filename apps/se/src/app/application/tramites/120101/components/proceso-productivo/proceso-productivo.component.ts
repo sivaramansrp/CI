@@ -1,10 +1,11 @@
 import { Catalogo, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { SolicitudDeRegistroTpl120101State, Tramite120101Store } from '../../../../estados/tramites/tramite120101.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { RADIO_INDICAR } from '../../constantes/solicitud-de-registro-tpl.enum';
 import { ServicioDeFormularioService } from '../../services/forma-servicio/servicio-de-formulario.service';
@@ -33,6 +34,13 @@ import { Tramite120101Query } from '../../../../estados/queries/tramite120101.qu
 })
 
 export class ProcesoProductivoComponent implements OnInit , OnDestroy{
+
+  /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
 
   /**
  * @property procesoProductivoForm
@@ -143,6 +151,9 @@ export class ProcesoProductivoComponent implements OnInit , OnDestroy{
       this.sobreElCambioDeSeleccion(this.solicitudDeRegistroState?.['indicar'] as string | number, 'indicar')
     } else {
       this.sobreElCambioDeSeleccion('1', 'indicar')
+    }
+    if (this.consultaState?.readonly) {
+      this.procesoProductivoForm.get('indicar')?.disable();
     }
   }
 

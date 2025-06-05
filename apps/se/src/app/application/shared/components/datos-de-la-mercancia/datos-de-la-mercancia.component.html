@@ -9,7 +9,7 @@
             [radioOptions]="productoOpciones"
             formControlName="producto"
             [isRequired]="true"
-            (valueChange)="setValoresStore(form, 'producto')"
+            (change)="setValoresStore(form, 'producto')"
             [layout]="'vertical'"
           ></app-input-radio>
         </div>
@@ -43,6 +43,7 @@
         [required]="true"
         formControlName="fraccion"
         (change)="setValoresStore(form, 'fraccion')"
+        [isDisabled]="esFormularioSoloLectura"
       ></app-catalogo-select>
     </div>
     <div class="row">
@@ -101,6 +102,7 @@
           formControlName="unidadMedida"
           [tooltipQuestionCircle]="true"
           (change)="setValoresStore(form, 'unidadMedida')"
+          [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
       </div>
     </div>

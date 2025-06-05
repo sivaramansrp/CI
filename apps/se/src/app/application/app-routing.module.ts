@@ -620,7 +620,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'modalidad-terciarización',
+    path: 'modalidad-terciarizacion',
     loadChildren: () =>
       import('./tramites/80105/modalidad-terciarización.module').then(
         (m) => m.ModalidadTerciarizaciónModule
@@ -634,7 +634,7 @@ const ROUTES: Routes = [
       ).then((m) => m.ImportacionesAgropecuariasModule),
   },
   {
-    path: 'modificaciones-immex-prosec',
+    path: 'modificaciones-immex',
     loadChildren: () =>
       import('./tramites/80316/modificaciones-immex-prosec.module').then(
         (m) => m.ModificacionesImmexProsecModule

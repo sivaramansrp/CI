@@ -10,13 +10,14 @@
           [catalogo]="elementosDeBloque"
           [label]="'Bloque'"
           formControlName="bloque"
+          [isDisabled]="esFormularioSoloLectura"
           (change)="enCambioDeBloque($event); setValoresStore(paisForm,'bloque')"
         ></app-catalogo-select>       
       </div>
       <div
         class="col-md-4 d-flex justify-content-center align-items-center mt-5 mx-4"
       >
-        <button type="button" class="btn-primary btn" name="todos países">Todos los países</button>
+        <button type="button" class="btn-primary btn" name="todos países" [disabled]="esFormularioSoloLectura">Todos los países</button>
       </div>
       <div class="col-md-4"></div>
     </div>
@@ -25,6 +26,7 @@
     [showSearchInput1]="true"
     [showSearchInput2]="true"
     [botonField]="campoDeBotones"
+    [isDisabled]="esFormularioSoloLectura"
     ></crosslist>
   </div>
 

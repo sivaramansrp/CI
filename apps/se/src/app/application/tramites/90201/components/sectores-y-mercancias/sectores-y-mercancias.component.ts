@@ -1,31 +1,32 @@
-/* eslint-disable no-empty-function */
-/* eslint-disable sort-imports */
-/* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
-import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { ExpansionDeProductoresService } from 'libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.service';
-import { map, merge, Subject, Subscription, takeUntil } from 'rxjs';
-import { SECTORESY } from '@libs/shared/data-access-user/src';
-import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import sectoresTabla from 'libs/shared/theme/assets/json/90201/sectores-tabla.json';
-import { SectoresTabla } from 'libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Subject, Subscription, map, merge, takeUntil } from 'rxjs';
+
 import {
   Solicitud90201State,
   Tramite90201Store,
 } from '../../../../estados/tramites/tramite90201.store';
+import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
+import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ExpansionDeProductoresService } from '@libs/shared/data-access-user/src/core/services/90201/expansion-de-productores.service';
+
+import { SECTORESY } from '@libs/shared/data-access-user/src';
+import { SECTORES_TABLA } from '@libs/shared/data-access-user/src/core/enums/90201/productor-indirecto-tabla.enum';
+import { SectoresTabla } from '@libs/shared/data-access-user/src/core/models/90201/expansion-de-productores.model';
+import sectoresTabla from '@libs/shared/theme/assets/json/90201/sectores-tabla.json';
+
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite90201Query } from '../../../../estados/queries/tramite90201.query';
 
 /**
@@ -40,12 +41,12 @@ import { Tramite90201Query } from '../../../../estados/queries/tramite90201.quer
   selector: 'app-sectores-y-mercancias',
   standalone: true,
   imports: [
-    CommonModule,
-    TituloComponent,
-    CatalogoSelectComponent,
     AlertComponent,
-    TablaDinamicaComponent,
+    CatalogoSelectComponent,
+    CommonModule,
     ReactiveFormsModule,
+    TablaDinamicaComponent,
+    TituloComponent
   ],
   templateUrl: './sectores-y-mercancias.component.html',
   styleUrl: './sectores-y-mercancias.component.scss',
@@ -74,29 +75,37 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
   public TEXTOS = SECTORESY;
 
   /**
-   * Configuración para las columnas de la tabla.
-   *
-   * Este array define las columnas para una tabla, incluyendo el nombre del encabezado,
-   * la clave para acceder a los datos en cada fila y el orden de las columnas.
-   *
-   * @type {ConfiguracionColumna<any>[]}
-   *
-   * @property {string} encabezado - El nombre del encabezado de la columna.
-   * @property {Function} clave - Una función que toma un elemento y devuelve el valor para la columna.
-   * @property {number} orden - El orden de la columna en la tabla.
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Representa el estado actual de la solicitud 90201.
+   * 
+   * @type {Solicitud90201State}
+   * @public
    */
-  public configuracionTabla: ConfiguracionColumna<any>[] = [
-    {
-      encabezado: 'Lista de sectores',
-      clave: (item: any) => item.sectores,
-      orden: 1,
-    },
-    {
-      encabezado: 'Clave del sector',
-      clave: (item: any) => item.claveDel,
-      orden: 2,
-    },
-  ];
+  public solicitudState!: Solicitud90201State;
+
+  /**
+  * Notificador utilizado para gestionar la destrucción de suscripciones en el componente.
+  * 
+  * Este Subject emite un valor cuando el componente se destruye, permitiendo cancelar
+  * suscripciones a observables y evitar fugas de memoria.
+  * 
+  * @private
+  */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Configuración de la tabla utilizada para mostrar los sectores y mercancías.
+   * 
+   * Esta propiedad almacena la configuración de columnas, estilos y opciones
+   * específicas para la tabla de sectores y mercancías, utilizando la constante
+   * `SECTORES_TABLA`.
+   */
+  public configuracionTabla = SECTORES_TABLA;
 
   /**
    * Un array de objetos `SectoresTabla` que representa los sectores.
@@ -115,38 +124,84 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    */
   private subscription: Subscription = new Subscription();
 
-  public solicitudState!: Solicitud90201State;
-  private destroyNotifier$: Subject<void> = new Subject();
-
   /**
    * Constructor del componente SectoresYMercanciasComponent.
-   *
-   * @param _expansionDesvc - Servicio para manejar la expansión de productores.
-   * @param fb - Instancia de FormBuilder para crear formularios reactivos.
+   * 
+   * @param _expansionDesvc Servicio para la expansión de productores.
+   * @param fb Instancia de FormBuilder para la creación y gestión de formularios reactivos.
+   * @param tramite90201Store Store para el manejo del estado del trámite 90201.
+   * @param tramite90201Query Query para consultar el estado del trámite 90201.
+   * @param consultaioQuery Query para consultar el estado de consulta IO.
+   * 
+   * Al inicializar el componente, se suscribe al observable `selectConsultaioState$` para actualizar
+   * la propiedad `esFormularioSoloLectura` y establecer el formulario de sectores según el estado de la sección.
    */
   constructor(
     private _expansionDesvc: ExpansionDeProductoresService,
     private fb: FormBuilder,
     private tramite90201Store: Tramite90201Store,
-    private tramite90201Query: Tramite90201Query
-  ) {}
+    private tramite90201Query: Tramite90201Query,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+
+  }
 
   /**
-   * Gancho de ciclo de vida que se llama después de que se inicializan las propiedades enlazadas a datos de una directiva.
-   * Inicializa los catálogos llamando al método `inicializaCatalogos`.
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Inicializa los catálogos necesarios y realiza la consulta inicial.
+   *
+   * @returns void
    */
   ngOnInit(): void {
-    this.subscription.add(
-      this.tramite90201Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.solicitudState = seccionState;
-          })
-        )
-        .subscribe()
-    );
     this.inicializaCatalogos();
+    this.inicializarConsulta();
+  }
+
+  /**
+   * Inicializa la consulta y el formulario asociado.
+   * 
+   * Suscribe al estado de consulta utilizando un observable, actualizando la propiedad
+   * `esFormularioSoloLectura` según el estado de solo lectura (`readonly`) recibido.
+   * Además, inicializa el formulario llamando a `inicializarFormulario()`.
+   * 
+   * @remarks
+   * La suscripción se mantiene activa hasta que se emite un valor en `destroyNotifier$`,
+   * lo que previene fugas de memoria.
+   */
+  inicializarConsulta(): void {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe()
+    this.inicializarFormulario();
+  }
+
+  /**
+   * Inicializa el formulario para el trámite 90201.
+   * 
+   * Este método suscribe al observable `selectSolicitud$` para obtener el estado actual de la solicitud
+   * y lo asigna a la propiedad `solicitudState`. Además, asegura que la suscripción se cancele correctamente
+   * cuando el componente se destruya utilizando `takeUntil` con `destroyNotifier$`.
+   * 
+   * Posteriormente, llama al método `establecerFormSectores` para configurar los sectores del formulario.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
+  inicializarFormulario(): void {
+    this.tramite90201Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+
+        })
+
+      ).subscribe()
+
     this.establecerFormSectores();
   }
 
@@ -162,6 +217,9 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
       sector: [this.solicitudState?.sector],
       fraccion: [this.solicitudState?.fraccion, Validators.maxLength(8)],
     });
+    if (this.esFormularioSoloLectura) {
+      this.sectoresForm.disable();
+    }
   }
 
   /**
@@ -187,7 +245,7 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * Establece la propiedad `seleccion` a `true`.
    * Este método se utiliza para indicar que se ha seleccionado un sector.
    */
-  public sectorSeleccion() {
+  public sectorSeleccion(): void {
     this.seleccion = true;
   }
 
@@ -196,7 +254,8 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
    * Este método se utiliza para indicar que no se ha seleccionado un sector.
    */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
   /**
@@ -212,6 +271,6 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite90201Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite90201Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite90201Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 }

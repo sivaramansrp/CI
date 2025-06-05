@@ -10,10 +10,10 @@
         </div>
         <div class="row mt-5">
           <div class="col-md-8">
-            <app-catalogo-select [catalogo]="aduana" [label]="'Aduana por la que ingresará la mercancía'" formControlName="aduana" [required]="true" (change)="aduanaSeleccion()" name="aduana"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="aduana" [label]="'Aduana por la que ingresará la mercancía'" formControlName="aduana" [required]="true" (change)="aduanaSeleccion()" name="aduana" [isDisabled]="soloLectura"></app-catalogo-select>
           </div>
           <div class="col-md-4" style="margin-top: 35px">
-            <lib-input-check [id]="'organismoPublico'" [label]="'Organismo público'" [required]="true" formControlName="organismoPublico" (change)="organismoPublico()"></lib-input-check>
+            <lib-input-check [id]="'organismoPublico'" [label]="'Organismo público'" [required]="true" formControlName="organismoPublico" (change)="organismoPublico()" [isDisabled]="soloLectura"></lib-input-check>
           </div>
         </div>
 
@@ -21,16 +21,16 @@
         <div class="row">
           <div class="col-md-8">
             <div class="form-group">
-              <app-catalogo-select [catalogo]="destinoMercancia" [label]="'Fin al cual se destinará la mercancía'" formControlName="destinoMercancia" [required]="true" (change)="destinoMercanciaSeleccion()" name="aduana"></app-catalogo-select>
+              <app-catalogo-select [catalogo]="destinoMercancia" [label]="'Fin al cual se destinará la mercancía'" formControlName="destinoMercancia" [required]="true" (change)="destinoMercanciaSeleccion()" name="aduana" [isDisabled]="soloLectura"></app-catalogo-select>
             </div>
           </div>
           <div class="table-container mt-5">
-            <ng-table [commonTableHeader]="mercanciaHeaderData" [commonTableBody]="mercanciaBodyData"></ng-table>
+            <ng-table [disableSeleccionTablaCheckBox]="soloLectura" [commonTableHeader]="mercanciaHeaderData" [commonTableBody]="mercanciaBodyData"></ng-table>
           </div>
           <div class="col-md-12 mt-5 d-flex justify-content-end">
-            <button type="button" class="btn btn-default">Modificar</button>
-            <button type="button" class="btn btn-default ms-3">Eliminar</button>
-            <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancias" (click)="abrirDialogoMercancias()">Agregar</button>
+            <button type="button" class="btn btn-default" [disabled]="soloLectura">Modificar</button>
+            <button type="button" class="btn btn-default ms-3" [disabled]="soloLectura">Eliminar</button>
+            <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancias" (click)="abrirDialogoMercancias()" [disabled]="soloLectura">Agregar</button>
           </div>
         </div>
       </ng-container>
@@ -50,7 +50,7 @@
               [required]="true"
               formControlName="pais"
               (change)="paisSeleccion()"
-              name="pais"
+              name="pais" [isDisabled]="soloLectura"
             ></app-catalogo-select>
             </div>
             <div class="col-md-4">
@@ -59,7 +59,7 @@
             </div>
             <div class="col-md-4">
               <label>Estado*:</label>
-              <input type="number" required="true" class="form-control" id="estado" formControlName="estado" (change)="setValoresStore(importadorExportador, 'estado', 'setEstado')" />
+              <input type="text" required="true" class="form-control" id="estado" formControlName="estado" (change)="setValoresStore(importadorExportador, 'estado', 'setEstado')" />
             </div>
           </div>
           <div class="row mt-3">
@@ -73,13 +73,13 @@
             </div>
             <div class="col-md-4">
               <label>Número interior:</label>
-              <input type="number" class="form-control" maxlength="55" id="numeroInterior" formControlName="numeroInterior"  (change)="setValoresStore(importadorExportador, 'numeroInterior', 'setNumeroInterior')" />
+              <input type="text" class="form-control" maxlength="55" id="numeroInterior" formControlName="numeroInterior"  (change)="setValoresStore(importadorExportador, 'numeroInterior', 'setNumeroInterior')" />
             </div>
           </div>
           <div class="row mt-3 mb-3">
             <div class="col-md-4">
               <label>Colonia*:</label>
-              <input type="number" required="true" class="form-control" id="colonia" formControlName="colonia"  (change)="setValoresStore(importadorExportador, 'colonia', 'setColonia')" />
+              <input type="text" required="true" class="form-control" id="colonia" formControlName="colonia"  (change)="setValoresStore(importadorExportador, 'colonia', 'setColonia')" />
             </div>
             <div class="col-md-4">
               <label>Correo electrónico:</label>
@@ -120,7 +120,7 @@
                 <input type="text" class="form-control" formControlName="usoEspecifico" id="usoEspecifico" maxlength="12" [required]="true" (change)="setValoresStore(exencionImpuestos, 'datosMercancia.usoEspecifico', 'setUsoEspecifico')" />
               </div>
               <div class="col-md-4">
-                <app-catalogo-select [catalogo]="condicionMercancia" [label]="'Condición de la mercancía'" [required]="true" formControlName="condicionMercancia" (change)="condicionMercanciaSeleccion()" name="condicionMercancia"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="condicionMercancia" [label]="'Condición de la mercancía'" [required]="true" formControlName="condicionMercancia" (change)="condicionMercanciaSeleccion()" name="condicionMercancia" [isDisabled]="soloLectura"></app-catalogo-select>
               </div>
             </div>
             <div class="row">
@@ -130,7 +130,7 @@
                 <input type="text" class="form-control" formControlName="cantidad" id="cantidad" maxlength="12" [required]="true" (change)="setValoresStore(exencionImpuestos, 'datosMercancia.cantidad', 'setCantidad')" />
               </div>
               <div class="col-md-4">
-                <app-catalogo-select [catalogo]="unidadMedida" [label]="'Unidad de medida'" [required]="true" name="unidadMedida" formControlName="unidadMedida" (change)="unidadMedidaSeleccion()"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="unidadMedida" [label]="'Unidad de medida'" [required]="true" name="unidadMedida" formControlName="unidadMedida" (change)="unidadMedidaSeleccion()" [isDisabled]="soloLectura"></app-catalogo-select>
               </div>
             </div>
             <div class="row mt-3">
@@ -144,7 +144,7 @@
                 <input type="text" class="form-control" formControlName="marca" id="marca" maxlength="100" (change)="setValoresStore(exencionImpuestos, 'datosMercancia.marca', 'setMarca')" />
               </div>
               <div class="col-md-4">
-                <app-catalogo-select [catalogo]="ano" [label]="'Año'" name="ano" formControlName="ano" [required]="true" (change)="anoSeleccion()"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="ano" [label]="'Año'" name="ano" formControlName="ano" [required]="true" (change)="anoSeleccion()" [isDisabled]="soloLectura"></app-catalogo-select>
               </div>
               <div class="col-md-4">
                 <label for="modelo">Modelo:</label>
@@ -163,9 +163,9 @@
       <div class="row">
         <div class="col-md-12 mt-5 d-flex justify-content-end">
           <div class="modal-footer custom-footer">
-            <button type="button" class="btn btn-primary">Limpiar</button>
-            <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>Cancelar</button>
-            <button type="button" class="btn btn-primary" (click)="agregarConfirmarModal()">Agregar</button>
+            <button type="button" class="btn btn-primary" [disabled]="soloLectura">Limpiar</button>
+            <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal [disabled]="soloLectura">Cancelar</button>
+            <button type="button" class="btn btn-primary" (click)="agregarConfirmarModal()" [disabled]="soloLectura">Agregar</button>
           </div>
         </div>
       </div>
@@ -180,7 +180,7 @@
         <label>La mercancía fue <br />agregada correctamente.</label>
       </div>
       <div class="modal-footer" style="justify-content: center">
-        <button type="button" class="btn btn-primary" (click)="agregarMercancias()" data-bs-dismiss="modal" #closeConfirmarModal>Aceptar</button>
+        <button type="button" class="btn btn-primary" (click)="agregarMercancias()" data-bs-dismiss="modal" #closeConfirmarModal [disabled]="soloLectura">Aceptar</button>
       </div>
     </div>
   </div>

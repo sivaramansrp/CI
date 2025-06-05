@@ -4,8 +4,8 @@
   <form [formGroup]="FormSolicitud">
     <div class="row">
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="pantallasActionService.tiposSolicitud" formControlName="tipoSolicitud" [label]="'Tipo solicitud'"
-          [required]="true" name="tipoSolicitud" (change)="tipoSolicitudSeleccion()"></app-catalogo-select>
+        <app-catalogo-select [catalogo]="pantallasActionService.tiposSolicitud" formControlName="tipoSolicitud" [label]="'Tipo de Producto'"
+          [required]="true" [isDisabled]="esFormularioSoloLectura" name="tipoSolicitud" (change)="tipoSolicitudSeleccion()"></app-catalogo-select>
       </div>
     </div>
 
@@ -26,33 +26,31 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="pantallasActionService.noDePermisocoferprise" formControlName="noDePermisocoferprise"
-          [label]="'No. de permiso COFERPRIS'" [required]="true" name="noDePermisocoferprise"
+          [label]="'No. de permiso COFERPRIS'" [required]="true" [isDisabled]="esFormularioSoloLectura" name="noDePermisocoferprise"
           (change)="noDePermisocoferpriseSeleccion()"></app-catalogo-select>
       </div>
       <div class="col-md-8">
         <div class="form-group">
           <label class="form-label" for="nombreComercial">Nombre comercial del permiso COFERPRIS</label>
-          <input class="form-control" id="nombreComercial" formControlName="nombreComercial"
-            placeholder="Nombre Comercial" type="text">
+          <input class="form-control" id="nombreComercial" formControlName="nombreComercial" type="text">
         </div>
       </div>
     </div>
     <div class="row">
       <div class="col-md-8">
-        <label class="form-label" for="cantidadAutorizada">Cantidad autorizada</label>
-        <input class="form-control" id="cantidadAutorizada" formControlName="cantidadAutorizada"
-          placeholder="Cantidad autorizada" type="text" libUppercase>
+        <label class="form-label" for="cantidadAutorizada">Cantidad autorizada:</label>
+        <input class="form-control" id="cantidadAutorizada" formControlName="cantidadAutorizada" type="text" libUppercase>
       </div>
     </div>
     }
-    <ng-titulo titulo="Datos de las mercancías a importar"/>
+    <ng-titulo titulo="Datos de la mercancía a importar"/>
     <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR" [CUSTOMECLASS]="infoAlert"></ng-alert>
 
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="pantallasActionService.fraccionArancelaria" formControlName="fraccionArancelaria"
-          [label]="'Fracción arancelaria'" [required]="true" name="fraccionArancelaria"
-          (change)="seleccioneAutorizacion()"></app-catalogo-select>
+          [label]="'Fracción arancelaria'" [required]="true" name="fraccionArancelaria" [isDisabled]="esFormularioSoloLectura"
+          (change)="fraccionArancelariaSeleccion()"></app-catalogo-select>
       </div>
       <div class="col-md-8">
         <div class="form-group">
@@ -60,7 +58,6 @@
             class="bi bi-question-circle-fill fs-4 m-1" title="Title" 
             ata-bs-toggle="tooltip"></span></label>
           <input class="form-control" id="descripcionDeLaFraccion" formControlName="descripcionDeLaFraccion"
-            placeholder="Que contengan bifenilos polibromados (PBB), bifenilos policlorados (PCB) o terfenilo."
             type="text">
         </div>
       </div>
@@ -69,7 +66,7 @@
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="pantallasActionService.numeroCas" formControlName="numeroCas" [label]="'Número C.A.S.'"
-          [required]="true" name="numeroCas" (change)="numeroCasSeleccione()"></app-catalogo-select>
+          [required]="true" [isDisabled]="esFormularioSoloLectura" name="numeroCas" (change)="numeroCasSeleccione()"></app-catalogo-select>
       </div>
     </div>
 
@@ -77,8 +74,7 @@
       <div class="col-md-12">
         <div class="form-group">
           <label class="form-label" for="descripcionNoArancelaria">Descripción no arancelaria:</label>
-          <input class="form-control min-hgt" id="descripcionNoArancelaria" formControlName="descripcionNoArancelaria"
-            placeholder="Únicamente; Bifenilos policlorados PCB CAS 1336-36-3" type="text">
+          <input class="form-control min-hgt" id="descripcionNoArancelaria" formControlName="descripcionNoArancelaria" type="text">
         </div>
       </div>
     </div>
@@ -87,142 +83,195 @@
       <div class="col-md-12">
         <div class="form-group">
           <label class="form-label" for="nombreQuimico">Nombre químico:</label>
-            <input class="form-control min-hgt" id="nombreQuimico" formControlName="nombreQuimico"
-            placeholder="Bifenilos policlorados PCB CAS 1336-36-3" type="text">
+            <input class="form-control min-hgt" id="nombreQuimico" formControlName="nombreQuimico" type="text">
         </div>
       </div>
     </div>
-
+    @if(!FormSolicitud.get('autorizacion')?.value) {
+    <div class="row mt-5">
+      <div class="col-md-12">
+        <div class="pull-right">
+          <button type="button" name="modificarListaDeNumeros" class="btn btn-default" (click)="modificarListaDeNumeros()"
+            [disabled]="!sustanciasSensiblesSeleccionadas.length">
+            Modificar
+          </button>
+          <button type="button" name="eliminarListaDeNumeros" class="btn btn-danger ms-2" (click)="eliminarListaDeNumeros()"
+            [disabled]="!sustanciasSensiblesSeleccionadas.length">
+            Eliminar
+          </button>
+          <button type="button" name="agregarListaDeNumeros" class="btn btn-primary ms-2" (click)="agregarListaDeNumeros()"
+            [disabled]="!FormSolicitud.get('numeroCas')?.value || !FormSolicitud.get('fraccionArancelaria')?.value">
+            Agregar
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <h5 class="mt-3">List de Número CAS *:</h5>
+        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" [configuracionTabla]="configuracionSustanciasTabla"
+          [datos]="sustanciasSensiblesTablaDatos"
+          (listaDeFilaSeleccionada)="sustanciasSensiblesSeleccionadas = $event"></app-tabla-dinamica>
+      </div>
+    </div>
+    }
     <div class="row">
       <div class="col-md-6">
         <div class="form-group">
           <label class="form-label" for="nombreDeLaMercancia">Nombre de la mercancía o producto a importar:</label>
           <input class="form-control" id="nombreDeLaMercancia"
-            placeholder="Nombre de la mercancía o producto a importar" type="text" formControlName="nombreDeLaMercancia"
+            type="text" formControlName="nombreDeLaMercancia" maxlength="1000"
             [ngClass]="isValid(FormSolicitud, 'nombreDeLaMercancia') ? 'required' : ''"
-            (change)="setValoresStore(FormSolicitud,'nombreDeLaMercancia', 'setNombreDeLaMercancia')">
+            (change)="setValoresStore(FormSolicitud,'nombreDeLaMercancia')">
         </div>
       </div>
       <div class="col-md-6">
         <div class="form-group">
           <label class="form-label" for="unNumero">Número UN:</label>
-          <input class="form-control" id="unNumero" placeholder="" type="number" formControlName="unNumero"
-            [ngClass]="isValid(FormSolicitud, 'unNumero') ? 'required' : ''"
-            (change)="setValoresStore(FormSolicitud,'unNumero', 'setUnNumero')">
+          <input class="form-control" id="unNumero" type="text" formControlName="unNumero"
+            [ngClass]="isValid(FormSolicitud, 'unNumero') ? 'required' : ''" 
+            (change)="setValoresStore(FormSolicitud,'unNumero')">
+            <div class="mensaje-error" *ngIf="FormSolicitud.get('unNumero')?.errors?.['pattern'] || FormSolicitud.get('unNumero')?.errors?.['maxlength']">
+              Longitud máxima 50 dígitos</div>
+          <div class="mensaje-error" *ngIf="FormSolicitud.get('unNumero')?.errors?.['required'] && FormSolicitud.get('unNumero')?.touched">
+              Este campo es obligatorio</div>
         </div>
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-md-6">
-        <div class="form-group">
-          <label class="form-label" for="datosNombreComercial">Nombre comercial*:</label>
-          <input class="form-control" id="datosNombreComercial" placeholder="Nombre comercial" type="text"
-            formControlName="datosNombreComercial"
-            [ngClass]="isValid(FormSolicitud, 'datosNombreComercial') ? 'required' : ''"
-            (change)="setValoresStore(FormSolicitud,'datosNombreComercial', 'setDatosNombreComercial')">
+    @if(FormSolicitud.get('autorizacion')?.value) {
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label" for="datosNombreComercial">Nombre comercial *:</label>
+            <input class="form-control" id="datosNombreComercial" type="text"
+              formControlName="datosNombreComercial" maxlength="1000"
+              [ngClass]="isValid(FormSolicitud, 'datosNombreComercial') ? 'required' : ''"
+              (change)="setValoresStore(FormSolicitud,'datosNombreComercial')">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label" for="datosNumeroComun">Nombre común *:</label>
+            <input class="form-control" id="datosNumeroComun" type="text" maxlength="250"
+              formControlName="datosNumeroComun" [ngClass]="isValid(FormSolicitud, 'datosNumeroComun') ? 'required' : ''"
+              (change)="setValoresStore(FormSolicitud,'datosNumeroComun')">
+          </div>
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="form-group">
-          <label class="form-label" for="datosNumeroComun">Número común*:</label>
-          <input class="form-control" id="datosNumeroComun" placeholder="Número común" type="text"
-            formControlName="datosNumeroComun" [ngClass]="isValid(FormSolicitud, 'datosNumeroComun') ? 'required' : ''"
-            (change)="setValoresStore(FormSolicitud,'datosNumeroComun', 'setDatosNumeroComun')">
+  
+      <div class="row mt-5">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label" for="datosPorcentaje">Porcentaje de concentración *:</label>
+            <input class="form-control" id="datosPorcentaje" type="number"
+              formControlName="datosPorcentaje" [ngClass]="isValid(FormSolicitud, 'datosPorcentaje') ? 'required' : ''"
+              (change)="setValoresStore(FormSolicitud,'datosPorcentaje')">
+              <div class="mensaje-error" *ngIf="FormSolicitud.get('datosPorcentaje')?.errors?.['maxlength']">
+                Longitud máxima 100 caracteres</div>
+            <div class="mensaje-error" *ngIf="FormSolicitud.get('datosPorcentaje')?.errors?.['required'] && FormSolicitud.get('datosPorcentaje')?.touched">
+                Este campo es obligatorio</div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label class="form-label" for="datosComponentes">Componentes:</label>
+            <input class="form-control" id="datosComponentes" type="text"
+              formControlName="datosComponentes" [ngClass]="isValid(FormSolicitud, 'datosComponentes') ? 'required' : ''"
+              (change)="setValoresStore(FormSolicitud,'datosComponentes')">
+              <div class="mensaje-error" *ngIf="FormSolicitud.get('datosComponentes')?.errors?.['maxlength']">
+                Longitud máxima 250 caracteres</div>
+            <div class="mensaje-error" *ngIf="FormSolicitud.get('datosComponentes')?.errors?.['required'] && FormSolicitud.get('datosComponentes')?.touched">
+                Este campo es obligatorio</div>
+          </div>
         </div>
       </div>
-    </div>
-
-    <div class="row mt-5">
-      <div class="col-md-6">
-        <div class="form-group">
-          <label class="form-label" for="datosPorcentaje">Porcentaje de concentración*:</label>
-          <input class="form-control" id="datosPorcentaje" placeholder="Porcentaje de concentración" type="number"
-            formControlName="datosPorcentaje" [ngClass]="isValid(FormSolicitud, 'datosPorcentaje') ? 'required' : ''"
-            (change)="setValoresStore(FormSolicitud,'datosPorcentaje', 'setDatosPorcentaje')">
+  
+      <div class="row">
+        <div class="col-md-6">
+          <app-catalogo-select [catalogo]="pantallasActionService.clasificacion" formControlName="clasificacion"
+            [label]="'Clasificación toxicológica'" [required]="true" name="clasificacion" [isDisabled]="esFormularioSoloLectura"
+            (change)="clasificacionSeleccione()"></app-catalogo-select>
+        </div>
+        <div class="col-md-6">
+          <app-catalogo-select [catalogo]="pantallasActionService.estadoFisico" formControlName="estadoFisico" [label]="'Estado Físico'"
+            [required]="true" [isDisabled]="esFormularioSoloLectura" name="estadoFisico" (change)="estadoFisicoSeleccione()"></app-catalogo-select>
         </div>
       </div>
-      <div class="col-md-6">
-        <div class="form-group">
-          <label class="form-label" for="datosComponentes">Componentes:</label>
-          <input class="form-control" id="datosComponentes" placeholder="Componentes" type="text"
-            formControlName="datosComponentes" [ngClass]="isValid(FormSolicitud, 'datosComponentes') ? 'required' : ''"
-            (change)="setValoresStore(FormSolicitud,'datosComponentes', 'setDatosComponentes')">
+  
+      <div class="row mt-3">
+        <div class="col-md-6">
+          <app-catalogo-select [catalogo]="pantallasActionService.datosObjecto" formControlName="datosObjecto"
+            [label]="'Objeto de la importación'" [required]="true" name="datosObjecto" [isDisabled]="esFormularioSoloLectura"
+            (change)="datosObjectoSeleccione()"></app-catalogo-select>
+        </div>
+        <div class="col-md-6">
+          @if(FormSolicitud.get('estadoFisico')?.value === '1') {
+            <div class="form-group">
+              <label class="form-label" for="especifique:">Especifique *:</label>
+              <input class="form-control" id="especifique" formControlName="especifique"
+                type="text">
+                <div class="mensaje-error" *ngIf="FormSolicitud.get('especifique')?.errors?.['maxlength']">
+                  Longitud máxima 200 caracteres</div>
+              <div class="mensaje-error" *ngIf="FormSolicitud.get('especifique')?.errors?.['required'] && FormSolicitud.get('especifique')?.touched">
+                  Este campo es obligatorio</div>
+            </div>
+          }
         </div>
       </div>
-    </div>
-
-    <div class="row">
-      <div class="col-md-6">
-        <app-catalogo-select [catalogo]="pantallasActionService.clasificacion" formControlName="clasificacion"
-          [label]="'Clasificación toxicológica'" [required]="true" name="clasificacion"
-          (change)="clasificacionSeleccione()"></app-catalogo-select>
-      </div>
-      <div class="col-md-6">
-        <app-catalogo-select [catalogo]="pantallasActionService.estadoFisico" formControlName="estadoFisico" [label]="'Estado Físico'"
-          [required]="true" name="estadoFisico" (change)="estadoFisicoSeleccione()"></app-catalogo-select>
-      </div>
-    </div>
-
-    <div class="row mt-3">
-      <div class="col-md-6">
-        <app-catalogo-select [catalogo]="pantallasActionService.datosObjecto" formControlName="datosObjecto"
-          [label]="'Objeto de la importación'" [required]="true" name="datosObjecto"
-          (change)="datosObjectoSeleccione()"></app-catalogo-select>
-      </div>
-      <div class="col-md-6">
-        <div class="form-group">
-          <label class="form-label" for="especifique:">Especifique:</label>
-          <input class="form-control" id="especifique" formControlName="especifique" placeholder="Especifique"
-            type="text">
+      @if(FormSolicitud.get('datosObjecto')?.value === '1') {
+        <div class="row mt-3">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label class="form-label" for="especifiqueDos">Especifique *:</label>
+              <input class="form-control" id="especifiqueDos" formControlName="especifiqueDos"
+                type="text">
+                <div class="mensaje-error" *ngIf="FormSolicitud.get('especifiqueDos')?.errors?.['maxlength']">
+                  Longitud máxima 250 caracteres</div>
+              <div class="mensaje-error" *ngIf="FormSolicitud.get('especifiqueDos')?.errors?.['required'] && FormSolicitud.get('especifiqueDos')?.touched">
+                  Este campo es obligatorio</div>
+            </div>
+          </div>
+        </div>
+      }
+  
+  
+      <div class="row mt-5">
+        <div class="col-md-12 mt-5">
+          <crosslist [fechas]="seleccionarOrigenDelPais" [botones]="paisDeProcedenciaBotons"
+            [label]="paisDeProcedenciaLabel"></crosslist>
         </div>
       </div>
-    </div>
-    <div class="row mt-3">
-      <div class="col-md-6">
-        <div class="form-group">
-          <label class="form-label" for="especifiqueDos">Especifique:</label>
-          <input class="form-control" id="especifiqueDos" formControlName="especifiqueDos" placeholder="Especifique"
-            type="text">
+      <div class="row mt-5">
+        <div class="col-md-12 mt-5">
+          <crosslist [fechas]="listaPaisDelProducto" [botones]="paisDelProductoBotons" [label]="paisDelProductoLabel">
+          </crosslist>
         </div>
       </div>
-    </div>
-
-
-    <div class="row mt-5">
-      <div class="col-md-12 mt-5">
-        <crosslist [fechas]="seleccionarOrigenDelPais" [botones]="paisDeProcedenciaBotons"
-          [label]="paisDeProcedenciaLabel"></crosslist>
+      <div class="row mt-5">
+        <div class="col-md-12 mt-5">
+          <crosslist [fechas]="listaDeEntradaPersonalizada" [botones]="aduanasDeEntradaBotons"
+            [label]="aduanasDeEntradaLabel"></crosslist>
+        </div>
       </div>
-    </div>
-    <div class="row mt-5">
-      <div class="col-md-12 mt-5">
-        <crosslist [fechas]="listaPaisDelProducto" [botones]="paisDelProductoBotons" [label]="paisDelProductoLabel">
-        </crosslist>
-      </div>
-    </div>
-    <div class="row mt-5">
-      <div class="col-md-12 mt-5">
-        <crosslist [fechas]="listaDeEntradaPersonalizada" [botones]="aduanasDeEntradaBotons"
-          [label]="aduanasDeEntradaLabel"></crosslist>
-      </div>
-    </div>
+    }
 
     <ng-titulo titulo="Cantidad a importar" />
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <label class="form-label" for="cantidad">Cantidad:</label>
-          <input class="form-control" id="cantidad" placeholder="Introduzca el número" type="number"
+          <label class="form-label" for="cantidad">Cantidad *:</label>
+          <input class="form-control" id="cantidad" type="number"
             formControlName="cantidad" [ngClass]="isValid(FormSolicitud, 'cantidad') ? 'required' : ''"
-            (change)="setValoresStore(FormSolicitud,'cantidad', 'setCantidad')">
+            (change)="setValoresStore(FormSolicitud,'cantidad')">
+            <div class="mensaje-error" *ngIf="FormSolicitud.get('cantidad')?.errors?.['maxDigits']">
+              Este campo permite 12 enteros y tres decimales</div>
         </div>
       </div>
       <div class="col-md-8">
         <div class="form-group">
-          <label class="form-label" for="cantidadLetra">Cantidad (letra):</label>
-          <input class="form-control" id="cantidadLetra" formControlName="cantidadLetra"
-            placeholder="El número en palabras" type="text">
+          <label class="form-label" for="cantidadLetra">Cantidad (letra) *:</label>
+          <input class="form-control" id="cantidadLetra" formControlName="cantidadLetra" type="text">
         </div>
       </div>
     </div>
@@ -230,11 +279,8 @@
     <div class="row">
       <div class="col-md-6">
         <app-catalogo-select [catalogo]="pantallasActionService.unidadDeMedida" formControlName="unidadDeMedida" [label]="'Unidad de medida'"
-          [required]="true" name="unidadDeMedida" (change)="unidadDeMedidaSeleccione()"></app-catalogo-select>
+          [required]="true" [isDisabled]="esFormularioSoloLectura" name="unidadDeMedida" (change)="unidadDeMedidaSeleccione()"></app-catalogo-select>
       </div>
-    </div>
-    <div class="mt-5">
-      <ng-alert [CONTENIDO]="TEXTOS.ADJUNTAR" [CUSTOMECLASS]="infoAlert"></ng-alert>
     </div>
   </form>
 </div>

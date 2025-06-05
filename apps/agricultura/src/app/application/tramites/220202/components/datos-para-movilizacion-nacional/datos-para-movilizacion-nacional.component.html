@@ -1,0 +1,80 @@
+<div class="container">
+    <form [formGroup]="forma">
+      <div class="row">
+        <div class="col-md-12">
+          <ng-titulo titulo="Medio de transporte"></ng-titulo>
+        </div>
+        <div class="col-md-6">
+          <app-catalogo-select
+            [catalogo]="transporteList"
+            formControlName="transporte"
+            [label]="'Medio de transporte'"
+            [required]="true"
+            [isDisabled]="esFormularioSoloLectura"
+            name="transporte"
+            (change)="
+          setValoresStore(
+            forma,
+            'transporte'
+          )
+        "
+          ></app-catalogo-select>
+        </div>
+        <div class="col-md-6 mt-2">
+          <label class="control-label" for="transporte"
+            >Identificación del transporte:</label
+          >
+          <input
+            class="form-control mt-1"
+            id="medioTransporte"
+            placeholder=""
+            type="text"
+            name="medioTransporte"
+            formControlName="medioTransporte"
+            (change)="
+            setValoresStore(
+              forma,
+              'medioTransporte'
+            )
+          "
+          />
+        </div>
+        <div class="col-md-12">
+          <app-catalogo-select
+            [catalogo]="puntoList"
+            formControlName="guiaIdentificacion"
+            [label]="'Punto de verificación federal'"
+            [required]="false"
+            [isDisabled]="esFormularioSoloLectura"
+            name="guiaIdentificacion"
+            (change)="
+            setValoresStore(
+              forma,
+              'guiaIdentificacion'
+            )
+          "
+          ></app-catalogo-select>
+        </div>
+        <div class="col-md-12 mt-2">
+          <label class="control-label" for="empresaTransportista"
+            >Nombre de la empresa transportista:*</label
+          >
+          <input
+            class="form-control mt-1"
+            id="empresaTransportista"
+            name="empresaTransportista"
+            placeholder=""
+            formControlName="empresaTransportista"
+            type="text"
+            (change)="
+            setValoresStore(
+              forma,
+              'empresaTransportista'
+            )
+          "
+            
+          />
+        </div>
+      </div>
+    </form>
+  </div>
