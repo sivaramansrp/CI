@@ -188,6 +188,10 @@ eliminarMercanciaSeleccionados() {
     )
     .subscribe();
   }
+  /**
+   * Índice de la mercancía que se está editando.
+   * Si es `null`, no hay mercancía en edición.
+   */
 editMercanciaIndex: number | null = null;
   /**
    * Grupo de formularios para domicilio.
@@ -315,18 +319,26 @@ ngOnInit(): void {
  
  
 }
+/**
+ * Modifica una fila de la tabla NICO con los datos del formulario de agente.
+ * Si hay una fila seleccionada, actualiza el índice de edición y carga los datos en el formulario.
+ */
 modificarMercancia() {
   if (this.selectedRowsEvent && this.selectedRowsEvent.length === 1) {
-    const row = this.selectedRowsEvent[0];
+    const ROW = this.selectedRowsEvent[0];
     this.editMercanciaIndex = this.mercanciasTablaDatos.findIndex(
-      r => r.numeroRegistro === row.numeroRegistro // Use a unique property
+      r => r.numeroRegistro === ROW.numeroRegistro // Use a unique property
     );
-    this.formMercancias.patchValue(row);
+    this.formMercancias.patchValue(ROW);
 
     // Optionally, open the modal programmatically if not using data-bs-toggle
     // document.getElementById('modalAddAgentMercancias')?.click();
   }
 }
+/**
+ * Agrega una nueva fila a la tabla NICO con los datos del formulario de agente.
+ * Si el formulario es válido, crea un nuevo objeto `NicoInfo` con los valores del formulario y lo agrega a la lista `nicoTablaDatos`.
+ */
  agregarFilaScian() {
   if (this.formAgente.valid) {
 
@@ -339,6 +351,9 @@ modificarMercancia() {
     this.formAgente.reset();
   } 
 }
+/*
+* Método que se ejecuta al inicializar el componente.
+*/
 agregarFilaMercancia() {
   if (this.formMercancias.valid) {
     const MERCANCIA_DATA: MercanciasInfo = {
@@ -374,7 +389,6 @@ agregarFilaMercancia() {
       this.mercanciasTablaDatos = [...this.mercanciasTablaDatos, MERCANCIA_DATA];
     }
     this.formMercancias.reset();
-    console.log('Updated table:', this.mercanciasTablaDatos);
   }
 }
   /**
@@ -540,9 +554,15 @@ obtenerMercanciasDatos(): void {
     this.mercanciasTablaDatos = DATOS;
   });
 }
+/*
+  * Limpia el formulario de domicilio.
+  */
  limpiarFormAgente() {
   this.formAgente.reset();
 }
+/**
+ * Limpia el formulario de mercancías.
+ */
 limpiarForm(){
   this.formMercancias.reset();
 }
