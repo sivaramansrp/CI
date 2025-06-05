@@ -65,6 +65,11 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
       value: 'yes'
     },
   ];
+
+  /**
+   * Estado de la solicitud.
+   * Este estado se obtiene del store `Tramite120404Query`.
+   */
   public solicitudState!: Tramite120404State;
   /**
    * Lista de asignaciones.
@@ -139,17 +144,7 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
       this.initForm();
     }
   }
-  /**
-   * Método para manejar el envío del formulario.
-   */
-  buscar(): void {
-    if (this.asignacionForm.valid) {
-      //
-    } 
-    else {
-      //
-    }
-  }
+
 
   /**
    * Verifica si un control del formulario es inválido.
@@ -179,11 +174,9 @@ export class AsignciontabComponent implements OnInit, OnDestroy {
     this.initForm();
     if (this.esFormularioSoloLectura) {
       this.asignacionForm.disable();
-    } else if (!this.esFormularioSoloLectura) {
+    } else { 
       this.asignacionForm.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
-    }
+    } 
 }
   /**
   * Obtiene el valor de un control en el formulario y lo pasa a un método del store para actualizar el estado.
