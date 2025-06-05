@@ -1,9 +1,9 @@
-import { Catalogo, CatalogoSelectComponent, ConsultaioQuery,TableBodyData, TableComponent, TablePaginationComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent,TableBodyData, TableComponent, TablePaginationComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter,Input,OnDestroy, OnInit, Output } from '@angular/core';
+import {ConsultaioQuery,ConsultaioState} from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, distinctUntilChanged,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import {ConsultaioState} from '@ng-mf/data-access-user';
 import { DatosDelInmueble104Query } from '../../../../core/queries/tramite104.query';
 import { DatosDelInmueble104Store } from '../../../../core/estados/tramites/tramite104.store';
 import { MENSAJEDE_ALERTA } from '@libs/shared/data-access-user/src/core/enums/104/104.enum';
