@@ -14,6 +14,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite260912Store, Tramites260912State } from '../../estados/tramite-260912.store';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { PagoDeDerechosService } from '../../services/pago-de-derechos.service';
 import { Tramite260912Query } from '../../estados/tramite-260912.query';
 
@@ -34,7 +35,17 @@ import { Tramite260912Query } from '../../estados/tramite-260912.query';
   styleUrl: './pago-de-derechos.component.scss',
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+/**
+   * Estado actual de la solicitud del trámite 260911.
+   * Contiene toda la información del formulario y su estado.
+   */
+  public solicitudState!: Tramites260912State;
 
+  /**
+   * Indica si el formulario debe mostrarse en modo de solo lectura.
+   * Cuando es true, todos los controles del formulario se deshabilitan.
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Formulario reactivo para manejar los campos de entrada del usuario.
    */
@@ -61,37 +72,100 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param tramite260912Store - Tienda para gestionar el estado del formulario.
    * @param tramite260912Query - Servicio de consulta para acceder a los datos del store.
    * @param Servicio - Servicio para obtener la lista de bancos.
+   * @param consultaioQuery - Query para el estado de consulta
    */
   constructor(
     public fb: FormBuilder,
     private tramite260912Store: Tramite260912Store,
     private tramite260912Query: Tramite260912Query,
-    private Servicio: PagoDeDerechosService
+    private Servicio: PagoDeDerechosService,
+    public consultaioQuery: ConsultaioQuery,
   ) {
-     // No se necesita lógica de inicialización adicional.
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Inicializa el estado del formulario según el modo de operación.
+   * 
+   * Determina si el formulario debe estar en modo lectura o edición
+   * y ejecuta las acciones correspondientes para configurar el estado inicial.
+   * 
+   * @returns void
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearForm();
+    }
+  }
+
+  /**
+   * Guarda los datos del formulario y configura su estado de habilitación.
+   * 
+   * Crea el formulario y posteriormente lo habilita o deshabilita
+   * según el modo de operación (lectura o edición).
+   * 
+   * @returns void
+   */
+  guardarDatosFormulario(): void {
+    this.crearForm();
+    if (this.esFormularioSoloLectura) {
+      this.pagoDeDerechosForm.disable();
+    } else {
+      this.pagoDeDerechosForm.enable();
+    }
   }
 
   /**
    * Hook de ciclo de vida para inicializar la lógica del componente y cargar datos.
    */
   ngOnInit(): void {
-    this.crearForm();
-    this.getValorStore();
-    this.enPatchStoredFormData();
+   this.inicializarEstadoFormulario();
     this.obtenerBancoList();
   }
 
-  /**
-   * Crea el formulario reactivo con las reglas de validación para cada control.
+ /**
+   * Crea el formulario reactivo con validaciones.
+   * 
+   * Configura todos los controles del formulario con sus respectivas
+   * validaciones síncronas y asíncronas. Se suscribe al estado del trámite
+   * para obtener los valores iniciales.
+   * 
+   * Los controles incluyen:
+   * - claveDeReferencia: Máximo 50 caracteres
+   * - cadenaPagoDependencia: Máximo 50 caracteres  
+   * - clave: Campo requerido
+   * - llaveDePago: Requerido, patrón alfanumérico de 10 caracteres
+   * - fecPago: Requerido, no puede ser fecha futura
+   * - impPago: Máximo 16 caracteres, no debe contener comas
+   * 
+   * @returns void
    */
   crearForm(): void {
+    this.tramite260912Query.selectTramite260912$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.pagoDeDerechosForm = this.fb.group({
-      claveDeReferencia: ['', [Validators.maxLength(50)]],
-      cadenaPagoDependencia: ['', [Validators.maxLength(50)]],
-      clave: ['', Validators.required],
-      llaveDePago: ['', [Validators.required, Validators.pattern('^[A-Z0-9]{10}$')]],
-      fecPago: ['', [Validators.required, PagoDeDerechosComponent.fechaLimValidator()]],
-      impPago: ['', [Validators.maxLength(16), PagoDeDerechosComponent.noComaValidator()]],
+      claveDeReferencia: [this.solicitudState?.claveDeReferencia, [Validators.maxLength(50)]],
+      cadenaPagoDependencia: [this.solicitudState?.cadenaPagoDependencia, [Validators.maxLength(50)]],
+      clave: [this.solicitudState?.clave, Validators.required],
+      llaveDePago: [this.solicitudState?.llaveDePago, [Validators.required, Validators.pattern('^[A-Z0-9]{10}$')]],
+      fecPago: [this.solicitudState?.fecPago, [Validators.required, PagoDeDerechosComponent.fechaLimValidator()]],
+      impPago: [this.solicitudState?.impPago, [Validators.maxLength(16), PagoDeDerechosComponent.noComaValidator()]],
     });
   }
 
@@ -160,26 +234,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Actualiza el formulario con datos obtenidos desde la tienda.
-   */
-  public enPatchStoredFormData(): void {
-    this.tramite260912Query.selectTramite260912$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.pagoDeDerechosForm.patchValue({
-            claveDeReferencia: seccionState.claveDeReferencia,
-            cadenaPagoDependencia: seccionState.cadenaPagoDependencia,
-            clave: seccionState.clave,
-            llaveDePago: seccionState.llaveDePago,
-            fecPago: seccionState.fecPago,
-            impPago: seccionState.impPago,
-          });
-        })
-      )
-      .subscribe();
-  }
 
   /**
    * Verifica si un control del formulario es inválido, tocado o modificado.
@@ -205,18 +259,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     });
   }
   
-  /**
-   * Obtiene el estado actual del trámite desde el store.
-   */
-  getValorStore(): void {
-    this.tramite260912Query.selectTramite260912$.pipe(
-      takeUntil(this.destroyed$)
-    ).subscribe(
-      (data) => {
-        this.estadoSeleccionado = data;
-      }
-    );
-  }
 
   /**
    * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
