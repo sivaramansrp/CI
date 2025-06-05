@@ -598,4 +598,12 @@ export class Solicitud220501Store extends Store<Solicitud220501State> {
       mercanciaTablaDatos,
     }));
   }
+
+  /**
+   * Actualiza el estado de la solicitud con los nuevos datos proporcionados.
+   * @param nuevoDatos Nuevos datos para actualizar el estado de la solicitud.
+   */
+  public setSagarpaState(nuevoDatos: Solicitud220501State): void {
+    this.update(nuevoDatos);
+  }
 }

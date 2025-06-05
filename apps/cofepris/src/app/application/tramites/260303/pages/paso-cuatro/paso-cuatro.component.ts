@@ -10,12 +10,14 @@ import { Component } from '@angular/core';
 })
 export class PasoCuatroComponent {
 
-/**
-  * Maneja el evento para obtener la firma y realiza acciones adicionales.
-  * @param ev - La cadena de texto que representa la firma obtenida.
-  * @return {void}
-  */
+  // Variable para almacenar la firma obtenida
+  public firma: string = '';
+  
+  /**
+   * Método para actualizar la variable 'firma' con el valor recibido.
+   * @param ev - Cadena de texto que representa la firma obtenida
+   */
   public obtieneFirma(ev: string): void {
-    const FIRMA: string = ev;
+    this.firma = ev;
   }
 }
