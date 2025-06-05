@@ -20,13 +20,11 @@
     <div class="container-fluid ps-2">
          <div class="row mt-4">
             <formas-dinamicas [forma]="tipoPropietarioFormulario" [formularioDatos]="formularioDatosPropietarioNombre"
-                [estado]="estadoSeleccionado"
-                (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+                [estado]="estadoSeleccionado" [soloLectura]="esFormularioSoloLectura" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
         </div>
       <div class="row mt-4">
             <formas-dinamicas [forma]="tipoPropietarioFormulario" [formularioDatos]="formularioDatosPropietarioDireccion"
-                [estado]="estadoSeleccionado"
-                (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+                [estado]="estadoSeleccionado" [soloLectura]="esFormularioSoloLectura" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
        </div>
     </div>
         }

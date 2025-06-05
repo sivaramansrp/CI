@@ -6,10 +6,10 @@
 
 import { CommonModule } from '@angular/common';
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { map, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 import { FORMULARIO_FECHA_IMPORTACION } from '../../enum/autorizacion-importacion-temporal.enum';
 
@@ -32,26 +32,11 @@ import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tram
   styleUrl: './fecha-de-importacion.component.scss',
 })
 export class FechaDeImportacionComponent implements OnInit, OnDestroy {
-  /**
-   * Estado de la consulta gestionado por el store `ConsultaioQuery`.
-   * Recibe el estado actual de la consulta, incluyendo si el formulario es de solo lectura,
-   * el identificador del trámite, parámetros, departamento, folio, tipo y estado del trámite,
-   * así como banderas de creación/actualización y el solicitante.
-   * 
-   * Ejemplo de uso:
+   /**
+   * Indica si el formulario está en modo solo lectura.
    */
-  @Input() consultaState: ConsultaioState = {
-    readonly: false,
-    procedureId: '',
-    parameter: '',
-    department: '',
-    folioTramite: '',
-    tipoDeTramite: '',
-    estadoDeTramite: '',
-    create: false,
-    update: false,
-    consultaioSolicitante: null
-  };
+  esSoloLectura!: boolean;
+
   /**
    * Estado seleccionado del trámite 630103.
    * Contiene los datos actuales del trámite seleccionados desde el store.
@@ -100,49 +85,27 @@ export class FechaDeImportacionComponent implements OnInit, OnDestroy {
     private tramite630103Query: Tramite630103Query,
     private consultaioQuery: ConsultaioQuery
   ) {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.consultaState.readonly = seccionState.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
+    this.FechaDeImportacionTemporalFormulario = this.fb.group({});
   }
 
-  /**
-   * Inicializa el estado del formulario dependiendo si es solo lectura o editable.
-   * Si es solo lectura, desactiva los campos y carga los datos; si no, los activa.
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.consultaState.readonly) {
-      this.formularioFechaDeImportacion = this.formularioFechaDeImportacion.map(campo => ({
-        ...campo,
-        habilitado: false
-      }));
-      this.guardarDatosFormulario();
-    } else {
-      this.formularioFechaDeImportacion = this.formularioFechaDeImportacion.map(campo => ({
-        ...campo,
-        habilitado: true
-      }));
-      this.inicializarFormulario();
-    }
-  }
-
+  
   /**
    * Guarda los datos del formulario y ajusta el estado de solo lectura.
    * Deshabilita o habilita los campos según corresponda.
    */
   guardarDatosFormulario(): void {
-    this.inicializarFormulario();
-    if (this.consultaState.readonly) {
+   if (this.esSoloLectura) {
+     this.formularioFechaDeImportacion = this.formularioFechaDeImportacion.map(campo => ({
+        ...campo,
+        habilitado: false
+      }));
       this.FechaDeImportacionTemporalFormulario.disable();
-    } else if (!this.consultaState.readonly) {
-      this.FechaDeImportacionTemporalFormulario.enable();
     } else {
-      // No se requiere ninguna acción en el formulario
+       this.formularioFechaDeImportacion = this.formularioFechaDeImportacion.map(campo => ({
+        ...campo,
+        habilitado: true
+      }));
+      this.FechaDeImportacionTemporalFormulario.enable();
     }
   }
 
@@ -151,20 +114,25 @@ export class FechaDeImportacionComponent implements OnInit, OnDestroy {
    * Inicializa el formulario y obtiene el estado del trámite.
    */
   ngOnInit(): void {
-    this.inicializarEstadoFormulario();
     this.getValorStore();
+    this.obtenerEstadoValor()
   }
-
+  
   /**
-   * Inicializa el formulario reactivo con valores predeterminados y validaciones.
-   * Puedes agregar los controles dinámicamente según la configuración.
+   * Se suscribe al observable del estado del trámite (`Tramite220103Query`)
+   * para obtener y almacenar el estado actual en `estadoSeleccionado`.
+   * La suscripción se gestiona con `takeUntil` para limpiarse automáticamente
+   * en `ngOnDestroy`.
    */
-  inicializarFormulario(): void {
-    this.FechaDeImportacionTemporalFormulario = this.fb.group({
-      // Define los controles del formulario aquí
+  obtenerEstadoValor(): void {
+   this.consultaioQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((estadoConsulta) => {
+      this.esSoloLectura = estadoConsulta.readonly;
+      this.guardarDatosFormulario()
     });
   }
-
+ 
   /**
    * Obtiene el estado actual del trámite desde el store.
    * Actualiza la propiedad estadoSeleccionado con los datos actuales.

@@ -6,18 +6,22 @@
 
 import { CommonModule } from '@angular/common';
 
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { map, takeUntil } from 'rxjs';
+
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
-import { Catalogo, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 
-import { CatalogoSelectComponent, SolicitanteComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { SolicitanteComponent, TituloComponent } from '@ng-mf/data-access-user';
+
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+
+import { Catalogo, ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
 
 import { FORMULARIO_DATOS_PROPIETARIO_DIRECCION, FORMULARIO_DATOS_PROPIETARIO_NOMBRE } from '../../enum/autorizacion-importacion-temporal.enum';
 import { Tramite630103Query } from '../../estados/tramite630103.query';
@@ -44,26 +48,7 @@ import { AutorizacionImportacionTemporalService } from '../../services/autorizac
   styleUrls: ['./tipo-propietario.component.scss'],
 })
 export class TipoPropietarioComponent implements OnInit, OnDestroy {
-  /**
-   * Estado de la consulta gestionado por el store `ConsultaioQuery`.
-   * Recibe el estado actual de la consulta, incluyendo si el formulario es de solo lectura,
-   * el identificador del trámite, parámetros, departamento, folio, tipo y estado del trámite,
-   * así como banderas de creación/actualización y el solicitante.
-   * 
-   * Ejemplo de uso:
-   */
-  @Input() consultaState: ConsultaioState = {
-    readonly: false,
-    procedureId: '',
-    parameter: '',
-    department: '',
-    folioTramite: '',
-    tipoDeTramite: '',
-    estadoDeTramite: '',
-    create: false,
-    update: false,
-    consultaioSolicitante: null
-  };
+ 
   /**
    * Indicador para mostrar el formulario de personas extranjeras.
    */
@@ -123,7 +108,7 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
    * Indica si el formulario está en modo solo lectura.
    * Si es verdadero, los campos del formulario estarán deshabilitados para edición.
    */
-  esFormularioSoloLectura: boolean = false;
+  esFormularioSoloLectura!: boolean;
 
   /**
    * Estado actual de la solicitud.
@@ -145,43 +130,7 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
     private autorizacionImportacionTemporalService: AutorizacionImportacionTemporalService,
     private consultaioQuery: ConsultaioQuery
   ) {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
-  }
-
-  /**
-   * Inicializa el estado del formulario dependiendo si es solo lectura o editable.
-   * Si es solo lectura, desactiva los campos y carga los datos; si no, los activa.
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.formularioDatosPropietarioNombre = this.formularioDatosPropietarioNombre.map(campo => ({
-        ...campo,
-        desactivado: true
-      }));
-      this.formularioDatosPropietarioDireccion = this.formularioDatosPropietarioDireccion.map(campo => ({
-        ...campo,
-        desactivado: true
-      }));
-      this.guardarDatosFormulario();
-    } else {
-      this.formularioDatosPropietarioNombre = this.formularioDatosPropietarioNombre.map(campo => ({
-        ...campo,
-        desactivado: false
-      }));
-      this.formularioDatosPropietarioDireccion = this.formularioDatosPropietarioDireccion.map(campo => ({
-        ...campo,
-        desactivado: false
-      }));
-      this.inicializarFormulario();
-    }
+    this.inicializarFormulario()
   }
 
   /**
@@ -189,14 +138,29 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
    * Deshabilita o habilita los campos según corresponda.
    */
   guardarDatosFormulario(): void {
-    this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {
       this.tipoPropietarioFormulario.disable();
+      this.formularioDatosPropietarioNombre = this.formularioDatosPropietarioNombre.map(campo => ({
+        ...campo,
+        desactivado: true
+      }));
+      this.formularioDatosPropietarioDireccion = this.formularioDatosPropietarioDireccion.map(campo => ({
+        ...campo,
+        desactivado: true
+      }));
+      
     } else if (!this.esFormularioSoloLectura) {
       this.tipoPropietarioFormulario.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
-    }
+      this.formularioDatosPropietarioNombre = this.formularioDatosPropietarioNombre.map(campo => ({
+        ...campo,
+        desactivado: false
+      }));
+      this.formularioDatosPropietarioDireccion = this.formularioDatosPropietarioDireccion.map(campo => ({
+        ...campo,
+        desactivado: false
+      }));
+      
+    } 
   }
 
   /**
@@ -205,12 +169,28 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.getValorStore();
-    this.inicializarEstadoFormulario();
     this.getPropietario();
     this.getTipoDePropietario();
+    this.inicializarFormulario()
+    this.obtenerEstadoValor()
     this.getPais();
     this.cambiarPropietario();
     this.cambiarTipoPropietario();
+  }
+  
+  /**
+   * Se suscribe al observable del estado del trámite (`Tramite220103Query`)
+   * para obtener y almacenar el estado actual en `estadoSeleccionado`.
+   * La suscripción se gestiona con `takeUntil` para limpiarse automáticamente
+   * en `ngOnDestroy`.
+   */
+  obtenerEstadoValor(): void {
+   this.consultaioQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((estadoConsulta) => {
+      this.esFormularioSoloLectura = estadoConsulta.readonly;
+      this.guardarDatosFormulario()
+    });
   }
 
   /**

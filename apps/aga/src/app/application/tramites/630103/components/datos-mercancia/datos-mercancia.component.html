@@ -5,7 +5,7 @@
             [formularioTitulo]="'Datos de la mercancía que se importará al país temporalmente'"
             [formularioDatos]="formularioDatosMercancia"
             [estado]="estadoSeleccionado"
-            [soloLectura]="consultaState.readonly"
+            [soloLectura]="esSoloLectura"
             (emitirCambioDeValor)="establecerCambioDeValor($event)">
         </formas-dinamicas>
     </div>

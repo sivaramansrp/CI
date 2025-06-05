@@ -11,7 +11,9 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Subject} from 'rxjs';
 import { Subscription} from 'rxjs';
 
-import { InputCheckComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { InputCheckComponent } from "@libs/shared/data-access-user/src/tramites/components/input-check/input-check.component";
+
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 import { Tramite630103Query } from '../../estados/tramite630103.query';
 

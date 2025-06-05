@@ -30,30 +30,15 @@ import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tram
 })
 export class DatosMercanciaComponent implements OnInit, OnDestroy {
   /**
+   * Indica si el formulario está en modo solo lectura.
+   */
+  esSoloLectura!: boolean;
+
+  /**
    * Subject utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
    */
   private destroyed$ = new Subject<void>();
 
-  /**
-   * Estado de la consulta gestionado por el store `ConsultaioQuery`.
-   * Recibe el estado actual de la consulta, incluyendo si el formulario es de solo lectura,
-   * el identificador del trámite, parámetros, departamento, folio, tipo y estado del trámite,
-   * así como banderas de creación/actualización y el solicitante.
-   * 
-   * Ejemplo de uso:
-   */
-  @Input() consultaState: ConsultaioState = {
-    readonly: false,
-    procedureId: '',
-    parameter: '',
-    department: '',
-    folioTramite: '',
-    tipoDeTramite: '',
-    estadoDeTramite: '',
-    create: false,
-    update: false,
-    consultaioSolicitante: null
-  };
   /**
    * Estado seleccionado del trámite 630103.
    */
@@ -93,34 +78,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
     private tramite630103Query: Tramite630103Query,
     private consultaioQuery: ConsultaioQuery,
   ) {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.consultaState.readonly = seccionState.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
-  }
-
-  /**
-   * Inicializa el estado del formulario dependiendo si es solo lectura o editable.
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.consultaState.readonly) {
-      this.formularioDatosMercancia = this.formularioDatosMercancia.map(campo => ({
-        ...campo,
-        desactivado: true
-      }));
-      this.guardarDatosFormulario();
-    } else {
-      this.formularioDatosMercancia = this.formularioDatosMercancia.map(campo => ({
-        ...campo,
-        desactivado: false
-      }));
-      this.inicializarFormulario();
-    }
+    this.datosMercancia = this.formBuilder.group({});
   }
 
   /**
@@ -128,13 +86,10 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * Deshabilita o habilita los campos según corresponda.
    */
   guardarDatosFormulario(): void {
-    this.inicializarFormulario();
-    if (this.consultaState.readonly) {
+    if (this.esSoloLectura) {
       this.datosMercancia.disable();
-    } else if (!this.consultaState.readonly) {
-      this.datosMercancia.enable();
     } else {
-      // No se requiere ninguna acción en el formulario
+      this.datosMercancia.enable();
     }
   }
 
@@ -144,15 +99,21 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.getValorStore();
-    this.inicializarEstadoFormulario();
+    this.obtenerEstadoValor()
   }
-
+  
   /**
-   * Inicializa el formulario reactivo con valores predeterminados y validaciones.
+   * Se suscribe al observable del estado del trámite (`Tramite220103Query`)
+   * para obtener y almacenar el estado actual en `estadoSeleccionado`.
+   * La suscripción se gestiona con `takeUntil` para limpiarse automáticamente
+   * en `ngOnDestroy`.
    */
-  inicializarFormulario(): void {
-    this.datosMercancia = this.formBuilder.group({
-      // Aquí puedes agregar los controles dinámicamente si es necesario
+  obtenerEstadoValor(): void {
+   this.consultaioQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((estadoConsulta) => {
+      this.esSoloLectura = estadoConsulta.readonly;
+      this.guardarDatosFormulario()
     });
   }
 
@@ -169,7 +130,6 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
 
   /**
    * Establece un cambio de valor en el store basado en un evento.
-   * 
    * $event - Evento que contiene el campo y el valor a actualizar.
    */
   establecerCambioDeValor($event: { campo: string; valor: unknown }): void {

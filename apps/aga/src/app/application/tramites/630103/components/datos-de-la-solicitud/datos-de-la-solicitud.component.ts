@@ -36,25 +36,9 @@ import { AutorizacionImportacionTemporalService } from '../../services/autorizac
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
-   * Estado de la consulta gestionado por el store `ConsultaioQuery`.
-   * Recibe el estado actual de la consulta, incluyendo si el formulario es de solo lectura,
-   * el identificador del trámite, parámetros, departamento, folio, tipo y estado del trámite,
-   * así como banderas de creación/actualización y el solicitante.
-   * 
-   * Ejemplo de uso:
+   * Indica si el formulario está en modo solo lectura.
    */
-  @Input() consultaState: ConsultaioState = {
-    readonly: false,
-    procedureId: '',
-    parameter: '',
-    department: '',
-    folioTramite: '',
-    tipoDeTramite: '',
-    estadoDeTramite: '',
-    create: false,
-    update: false,
-    consultaioSolicitante: null
-  };
+  esSoloLectura!: boolean;
   
   /**
    * Modelo dinámico del formulario con estructura definida por el trámite.
@@ -107,46 +91,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private tramite630103Query: Tramite630103Query,
     private consultaioQuery: ConsultaioQuery
   ) {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.consultaState.readonly = seccionState.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
+    this.datosImportacionTemporalFormulario = this.formBuilder.group({});
+    
   }
 
-  /**
-   * Inicializa el estado del formulario según si es solo lectura o editable.
-   * {void}
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.consultaState.readonly) {
-      this.formularioDatosSolicitud = this.formularioDatosSolicitud.map(campo => ({
-        ...campo,
-        desactivado: true
-      }));
-      this.guardarDatosFormulario();
-    } else {
-      this.formularioDatosSolicitud = this.formularioDatosSolicitud.map(campo => ({
-        ...campo,
-        desactivado: false
-      }));
-      this.inizializarFormulario();
-    }
-  }
 
   /**
    * Guarda los datos del formulario y ajusta el estado de solo lectura.
    * {void}
    */
   guardarDatosFormulario(): void {
-    this.inizializarFormulario();
-    if (this.consultaState.readonly) {
+    if (this.esSoloLectura) {
       this.datosImportacionTemporalFormulario.disable();
-    } else if (!this.consultaState.readonly) {
+    } else {
       this.datosImportacionTemporalFormulario.enable();
     }
   }
@@ -157,21 +114,26 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.getValorStore();
-    this.inicializarEstadoFormulario();
+    this.obtenerEstadoValor()
     this.getAduanaDeIngreso();
     this.getSeccionAduanera();
   }
-
+  
   /**
-   * Inicializa el formulario reactivo vacío (campos dinámicos se agregan aparte).
-   * {void}
+   * Se suscribe al observable del estado del trámite (`Tramite220103Query`)
+   * para obtener y almacenar el estado actual en `estadoSeleccionado`.
+   * La suscripción se gestiona con `takeUntil` para limpiarse automáticamente
+   * en `ngOnDestroy`.
    */
-  inizializarFormulario(): void {
-    this.datosImportacionTemporalFormulario = this.formBuilder.group({
-      // Define los controles del formulario aquí
+  obtenerEstadoValor(): void {
+   this.consultaioQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroyed$))
+    .subscribe((estadoConsulta) => {
+      this.esSoloLectura = estadoConsulta.readonly;
+      this.guardarDatosFormulario()
     });
   }
-
+  
   /**
    * Obtiene las opciones de Aduanas de Ingreso y las asigna al formulario dinámico.
    * {void}
