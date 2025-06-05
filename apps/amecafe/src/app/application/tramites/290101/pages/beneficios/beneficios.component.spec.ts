@@ -147,9 +147,11 @@ describe('BeneficiosComponent', () => {
   });
 
   it('should run #iniciarFormulario()', async () => {
+    component.tramiteStoreQuery = component.tramiteStoreQuery || {};
+    component.tramiteStoreQuery.selectSolicitudTramite$ = observableOf({});
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
-    component.iniciarFormulario();
+    component.inicializarFormulario();
     // expect(component.fb.group).toHaveBeenCalled();
   });
 

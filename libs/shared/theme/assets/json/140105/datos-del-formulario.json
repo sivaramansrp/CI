@@ -12,5 +12,6 @@
   "procedencia": "",
   "mercancia": "",
   "beneficioQueSeObtiene": "",
-  "observaciones": "QA"
+  "observaciones": "QA",
+  "motivoCancelacion": "Error en la solicitud original"
 }
