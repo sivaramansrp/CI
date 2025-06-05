@@ -259,9 +259,7 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
         )
         .subscribe();
   }
-onFabricanteRowSelection(selectedRows: any[]) {
-  this.showFabricanteButtons = selectedRows && selectedRows.length > 0;
-}
+
   /**
    * Ciclo de vida que se ejecuta al iniciar el componente.
    * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
