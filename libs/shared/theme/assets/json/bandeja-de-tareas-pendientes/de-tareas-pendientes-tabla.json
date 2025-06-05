@@ -8999,7 +8999,6 @@
     "numeroDeProcedimiento": "130106",
     "origin": "READ_PROCEDURE"
   },
-  [
   {
     "folioTramite": "0201157325726982922695556",
     "tipoDeTramite": "Solicitud de Proceso Interno",
@@ -9090,7 +9089,7 @@
     "numeroDeProcedimiento": "110202",
     "origin": "READ_PROCEDURE"
   },
-   {
+    {
     "folioTramite": "0215523965732296454156770",
     "tipoDeTramite": "Solicitud de Proceso Interno",
     "nombreDeLaTarea": "Evaluar solicitud",
@@ -9230,6 +9229,4 @@
     "numeroDeProcedimiento": "260514",
     "origin": "READ_PROCEDURE"
   }
-]
-
 ]
