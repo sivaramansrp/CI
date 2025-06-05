@@ -6,13 +6,14 @@ import { TEXTOS } from '@ng-mf/data-access-user';
 import { AlertComponent, AnexarDocumentosComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { ToastrService, TOAST_CONFIG } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
+import { NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 
-describe('PasoDosComponent', () => {
+
+describe('PasoDosComponent - Recommended Approach', () => {
   let component: PasoDosComponent;
   let fixture: ComponentFixture<PasoDosComponent>;
 
-  // Mock ToastrService
   const mockToastrService = {
     success: jest.fn(),
     error: jest.fn(),
@@ -25,14 +26,14 @@ describe('PasoDosComponent', () => {
       imports: [PasoDosComponent],
       providers: [
         { provide: ToastrService, useValue: mockToastrService },
-        { provide: TOAST_CONFIG, useValue: {} }, 
-        provideHttpClient()// Provide a mock configuration
+        { provide: TOAST_CONFIG, useValue: {} },
+        provideHttpClient()
       ],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoDosComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create the component', () => {

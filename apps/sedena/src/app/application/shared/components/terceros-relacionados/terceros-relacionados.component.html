@@ -18,7 +18,6 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-        <!-- @if((!ocultarBotones&&!ocultarBotonModificar)||(ocultarBotonModificar&& destinarioTablaSeleccionada.length!==0)){ -->
          @if(destinarioTablaSeleccionada.length > 0 && destinatarioFinalTablaDatos.length > 0) {
           <button
             type="button"
@@ -39,7 +38,6 @@
             Eliminar
           </button>
       }
-        <!-- } -->
         <button
           type="button"
           name="agregarMercancias"
@@ -65,7 +63,6 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-       <!-- @if((!ocultarBotones&&!ocultarBotonModificar)||(ocultarBotonModificar&& proveedorTablaSeleccionada.length!==0)){ -->
          @if(proveedorTablaSeleccionada.length > 0 && proveedorTablaDatos.length > 0) {
 
         <button
@@ -87,7 +84,6 @@
           Eliminar
         </button>
       }
-    <!-- } -->
       @if(!tercerosNacionalidad){
         <button
           type="button"

@@ -16,6 +16,7 @@ import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { PagoDerechosFormState } from '../../models/pago-de-derechos.model';
 import { REGEX_IMPORTE_PAGO } from '@ng-mf/data-access-user';
+import { REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -184,7 +185,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @description Limpia todos los campos del formulario de pago de derechos.
    */
   onReset(): void {
-    this.pagoDerechosForm.reset();
+    if (this.pagoDerechosForm.invalid) {
+      this.pagoDerechosForm.markAllAsTouched();
+      return;
+    }
   }
 
   /**
@@ -219,7 +223,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
  */
   onImportePagoInput(event: Event): void {
     const INPUT = event.target as HTMLInputElement;
-    INPUT.value = INPUT.value.replace(/[^0-9]/g, '').slice(0, 22);
+    INPUT.value = INPUT.value.replace(REGEX_NUMEROS, '').slice(0, 22);
     this.pagoDerechosForm.get('importePago')?.setValue(INPUT.value, { emitEvent: false });
   }
   ngOnDestroy(): void {

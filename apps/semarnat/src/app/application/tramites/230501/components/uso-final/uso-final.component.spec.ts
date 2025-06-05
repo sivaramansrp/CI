@@ -1,68 +1,44 @@
 // @ts-nocheck
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
-import { CUSTOM_ELEMENTS_SCHEMA, Injectable, Input, NO_ERRORS_SCHEMA, Output } from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
+
 import { Component } from '@angular/core';
 import { UsoFinalComponent } from './uso-final.component';
 import { FormBuilder } from '@angular/forms';
-import { Location } from '@angular/common';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
+import { Location } from '@angular/common';
 import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
 import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
-import { SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 @Injectable()
-class MockMaterialesPeligrososService {
-  obtenerRespuestaPorUrl = function () { };
-  obtenerListaCodigosPostales = jest.fn().mockReturnValue(observableOf({}));
-  obtenerListaPaises = jest.fn().mockReturnValue(observableOf({}));
-  obtenerListaEstados = jest.fn().mockReturnValue(observableOf({}));
-  obtenerListaMunicipios = jest.fn().mockReturnValue(observableOf({}));
-  obtenerListaLocalidades = jest.fn().mockReturnValue(observableOf({}));
-  obtenerListaColonias = jest.fn().mockReturnValue(observableOf({}));
-}
+class MockMaterialesPeligrososService {}
 
 @Injectable()
-class MockTramite230501Store { }
+class MockTramite230501Store {}
 
 @Injectable()
-class MockTramite230501Query { }
-@Injectable()
-class MockRouter {
-  navigate() { }
-}
+class MockTramite230501Query {}
+
 describe('UsoFinalComponent', () => {
   let fixture;
   let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-    imports: [FormsModule, ReactiveFormsModule],
-      declarations: [],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      imports: [ FormsModule, ReactiveFormsModule ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: Tramite230501Query, useClass: MockTramite230501Query },
-        { provide: Tramite230501Store, useClass: MockTramite230501Store },
-        { provide: MaterialesPeligrososService, useClass: MockMaterialesPeligrososService },
-        SeccionLibStore,
-        SeccionLibQuery,
         FormBuilder,
-        { provide: Router, useClass: MockRouter },
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: { url: 'url', params: {}, queryParams: {}, data: {} },
-            url: observableOf('url'),
-            params: observableOf({}),
-            queryParams: observableOf({}),
-            fragment: observableOf('fragment'),
-            data: observableOf({})
-          }
-        }
+        { provide: MaterialesPeligrososService, useClass: MockMaterialesPeligrososService },
+        Location,
+        { provide: Tramite230501Store, useClass: MockTramite230501Store },
+        { provide: Tramite230501Query, useClass: MockTramite230501Query },
+        ConsultaioQuery
       ]
     }).overrideComponent(UsoFinalComponent, {
 
@@ -75,6 +51,25 @@ describe('UsoFinalComponent', () => {
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should run #onTipoPersonaChange()', async () => {
+    component.tipoPersona = component.tipoPersona || {};
+    component.tipoPersona.FISICA = 'FISICA';
+    component.usuarioFinalForm = component.usuarioFinalForm || {};
+    component.usuarioFinalForm.get = jest.fn().mockReturnValue({
+      updateValueAndValidity: function() {},
+      setValidators: function() {},
+      clearValidators: function() {}
+    });
+    component.onTipoPersonaChange({});
+  });
+
+  it('should run #inicializarEstadoFormulario()', async () => {
+    component.usoFinalForm = component.usoFinalForm || {};
+    component.usoFinalForm.disable = jest.fn();
+    component.createUsoFinalForm = jest.fn();
+    component.inicializarEstadoFormulario();
   });
 
   it('should run #ngOnInit()', async () => {
@@ -91,6 +86,9 @@ describe('UsoFinalComponent', () => {
     component.tramiteStore.usuarioSujeto = observableOf({});
     component.usuarioFinalForm = component.usuarioFinalForm || {};
     component.usuarioFinalForm.patchValue = jest.fn();
+    component.consultaQuery = component.consultaQuery || {};
+    component.consultaQuery.selectConsultaioState$ = observableOf({});
+    component.inicializarEstadoFormulario = jest.fn();
     component.ngOnInit();
     expect(component.onTipoPersonaChange).toHaveBeenCalled();
     expect(component.cargarDatos).toHaveBeenCalled();
@@ -106,9 +104,11 @@ describe('UsoFinalComponent', () => {
   it('should run #guardarUsuarioFinal()', async () => {
     component.usuarioFinalForm = component.usuarioFinalForm || {};
     component.usuarioFinalForm.value = {
-      nombres: {},
-      primerApellido: {},
       segundoApellido: {},
+      primerApellido: {},
+      nombres: {},
+      rfc: {},
+      lada: {},
       telefono: {},
       correoElectronico: {},
       calle: {},
@@ -116,21 +116,35 @@ describe('UsoFinalComponent', () => {
       numeroInterior: {},
       pais: {},
       colonia: {},
-      estado: {},
-      codigoPostal: {}
+      municipio: {},
+      localidad: {},
+      estadoLocalidad: {},
+      codigoPostal: {},
+      codie: {},
+      tipoPersona: {}
     };
+    component.usuarioFinalForm.valid = 'valid';
     component.usuarioFinalForm.reset = jest.fn();
-    component.usoFinalForm = component.usoFinalForm || {};
-    component.usoFinalForm.value = {
-      descripcion: {}
-    };
+    component.setFormValida = jest.fn();
     component.usuarioFinal = component.usuarioFinal || {};
     component.usuarioFinal.push = jest.fn();
+    component.updateUsuario = jest.fn();
     component.addUsuario = jest.fn();
     component.ubicaccion = component.ubicaccion || {};
     component.ubicaccion.back = jest.fn();
     component.guardarUsuarioFinal();
+  });
 
+  it('should run #createUsuarioFinalForm()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.createUsuarioFinalForm();
+  });
+
+  it('should run #createUsoFinalForm()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.createUsoFinalForm();
   });
 
   it('should run #limpiarFormulario()', async () => {
@@ -143,13 +157,20 @@ describe('UsoFinalComponent', () => {
     component.ubicaccion = component.ubicaccion || {};
     component.ubicaccion.back = jest.fn();
     component.cancelar();
- });
+    expect(component.ubicaccion.back).toHaveBeenCalled();
+  });
 
   it('should run #addUsuario()', async () => {
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.addUsuarioTablaDatos = jest.fn();
-    component.tramiteStore.updateUsuarioTablaDatos = jest.fn();
     component.addUsuario({});
+  });
+
+  it('should run #updateUsuario()', async () => {
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.updateUsuarioTablaDatos = jest.fn();
+    component.updateUsuario({});
+    expect(component.tramiteStore.updateUsuarioTablaDatos).toHaveBeenCalled();
   });
 
   it('should run #addUsoFinalTabla()', async () => {
@@ -183,7 +204,9 @@ describe('UsoFinalComponent', () => {
     component.unsubscribe$ = component.unsubscribe$ || {};
     component.unsubscribe$.next = jest.fn();
     component.unsubscribe$.complete = jest.fn();
-    component.ngOnDestroy();;
+    component.ngOnDestroy();
+    expect(component.unsubscribe$.next).toHaveBeenCalled();
+    expect(component.unsubscribe$.complete).toHaveBeenCalled();
   });
 
 });
