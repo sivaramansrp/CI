@@ -23,11 +23,12 @@
 
         <div class="col-md-4">
           <div class="form-group">
-            <app-catalogo-select
+             <app-catalogo-select
               [catalogo]="estado"
               [label]="'Estado*'"
               name="estado"
               [required]="true"
+              [isDisabled]="esFormularioSoloLectura" 
               formControlName="estado"
               (change)="setValorStore(form, 'estado')"
             >
@@ -41,9 +42,9 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="municipioOAlcaldia"
-              >Municipio o alcaldía*:</label
+            >Municipio o alcaldía*:</label
             >
-            <input
+          <input
               class="form-control"
               type="text"
               id="municipioOAlcaldia"
@@ -60,8 +61,8 @@
       </div>
 
       <div class="row mt-5">
-        <ng-alert
-          [CONTENIDO]="TEXTOS.ADVERTENCIA"
+        <ng-alert 
+          [CONTENIDO]="TEXTOS.ADVERTENCIA" 
           [CUSTOMECLASS]="class"
         ></ng-alert>
       </div>
@@ -70,7 +71,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="localidad">Localidad:</label>
-            <input
+             <input
               class="form-control"
               type="text"
               id="localidad"
@@ -154,7 +155,7 @@
               aria-labelledby="telefono"
               (change)="setValorStore(form, 'telefono')"
             />
-          
+
             <div *ngIf="form.get('telefono')?.touched && form.get('telefono')?.invalid" class="text-danger">
               <div *ngIf="form.get('telefono')?.errors?.['required']">
                 El teléfono es obligatorio.
@@ -164,7 +165,7 @@
               </div>
             </div>
           </div>
-          
+
         </div>
       </div>
     </div>
@@ -174,18 +175,19 @@
     <label class="form-label mt-4 text-start">S.C.I.A.N.*:</label>
   </div>
   <div class="row">
-    <app-tabla-dinamica
-      [tipoSeleccionTabla]="tablaSeleccionCheckbox"
+    <app-tabla-dinamica 
+      [tipoSeleccionTabla]="tablaSeleccionCheckbox" 
       [configuracionTabla]="nicoTabla"
-      [datos]="nicoTablaDatos"
-    ></app-tabla-dinamica>
+      [datos]="nicoTablaDatos" 
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
+    </app-tabla-dinamica>
     <div class="container text-end mt-5">
-      <button class="btn btn-default me-2">Eliminar</button>
-      <button
-        class="btn btn-primary me-2"
-        data-bs-toggle="modal"
+      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+      <button 
+        class="btn btn-primary me-2" 
+        data-bs-toggle="modal" 
         data-bs-target="#modalAddAgent"
-      >
+        [disabled]="esFormularioSoloLectura">
         Agregar
       </button>
     </div>
@@ -193,11 +195,12 @@
   <form [formGroup]="domicilio">
     <div class="row align-item-center">
       <div class="col-md-4 mt-5">
-        <lib-input-check
-          [id]="'avisoCheckbox'"
-          [label]="'Aviso de funcionamiento'"
+        <lib-input-check 
+          [id]="'avisoCheckbox'" 
+          [label]="'Aviso de funcionamiento'" 
           [required]="true"
-          formControlName="avisoCheckbox"
+          formControlName="avisoCheckbox" 
+          [isDisabled]="esFormularioSoloLectura"
           (change)="setValorStore(domicilio, 'avisoCheckbox')"
       ></lib-input-check>
 
@@ -205,32 +208,32 @@
       <div class="col-md-4">
         <div class="form-group">
           <label class="form-label" for="licenciaSanitaria"
-            >No. de licencia sanitaria:
-            <span
-              class="bi bi-question-circle-fill"
+          >No. de licencia sanitaria:
+            <span 
+              class="bi bi-question-circle-fill" 
               title="No. de licencia sanitaria"
               data-bs-toggle="tooltip"
-            ></span
-          ></label>
-          <input
-            class="form-control"
-            id="licenciaSanitaria"
-            placeholder=""
+              ></span
+            ></label>
+          <input 
+            class="form-control" 
+            id="licenciaSanitaria" 
+            placeholder="" 
             type="text"
-            formControlName="licenciaSanitaria"
-          />
+            formControlName="licenciaSanitaria" />
         </div>
       </div>
     </div>
 
     <div class="row">
       <div class="col-md-4">
-        <app-catalogo-select
-          [catalogo]="estado"
-          formControlName="regimen"
-          [label]="'Régimen'"
+        <app-catalogo-select 
+          [catalogo]="estado" 
+          formControlName="regimen" 
+          [label]="'Régimen'" 
           [required]="true"
-          name="regimen"
+          [isDisabled]="esFormularioSoloLectura" 
+          name="regimen" 
           [tooltipQuestionCircle]="true"
           (change)="setValorStore(domicilio, 'regimen')"
         ></app-catalogo-select>
@@ -239,11 +242,12 @@
         </div>
       </div>
       <div class="col-md-8">
-        <app-catalogo-select
-          [catalogo]="estado"
-          formControlName="aduanasEntradas"
+        <app-catalogo-select 
+          [catalogo]="estado" 
+          formControlName="aduanasEntradas" 
           [label]="'Aduanas de entradas'"
-          [required]="true"
+          [required]="true" 
+          [isDisabled]="esFormularioSoloLectura" 
           name="aduanasEntradas"
           (change)="setValorStore(domicilio, 'aduanasEntradas')"
         ></app-catalogo-select>
@@ -257,13 +261,14 @@
       <div class="col-md-4"></div>
       <div class="col-md-4">
 
-        <lib-input-check
-          [id]="'aifaCheckbox'"
+        <lib-input-check 
+          [id]="'aifaCheckbox'" 
           [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA).'"
-          [required]="true"
-          formControlName="aifaCheckbox"
+          [required]="true" 
+          formControlName="aifaCheckbox" 
+          [isDisabled]="esFormularioSoloLectura"
           (change)="setValorStore(domicilio, 'aifaCheckbox')"
-      ></lib-input-check>
+        ></lib-input-check>
       </div>
     </div>
 
@@ -274,18 +279,20 @@
         </div>
       </div>
       <div class="row mt-5">
-        <app-tabla-dinamica
-          [tipoSeleccionTabla]="tablaSeleccionCheckbox"
+        <app-tabla-dinamica 
+          [tipoSeleccionTabla]="tablaSeleccionCheckbox" 
           [configuracionTabla]="mercanciasTabla"
-          [datos]="mercanciasTablaDatos"
+          [datos]="mercanciasTablaDatos" 
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
         ></app-tabla-dinamica>
         <div class="container text-end mt-5">
-          <button class="btn btn-default me-2">Modificar</button>
-          <button class="btn btn-default me-2">Eliminar</button>
-          <button
-            class="btn btn-primary me-2"
-            data-bs-toggle="modal"
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+          <button 
+            class="btn btn-primary me-2" 
+            data-bs-toggle="modal" 
             data-bs-target="#modalAddAgentMercancias"
+            [disabled]="esFormularioSoloLectura"
           >
             Agregar
           </button>
@@ -298,13 +305,14 @@
         <ng-titulo titulo="Manifiesto bajo protesta" />
         <div class="form-check bg-light p-0">
           <div class="alert alert-info content-with-checkbox py-6">
-            <lib-input-check
-          [id]="'manifiesto'"
-          [label]="''"
-          [required]="true"
-          formControlName="manifests"
-          (change)="setValorStore(domicilio, 'manifests')"
-      ></lib-input-check>
+            <lib-input-check 
+              [id]="'manifiesto'" 
+              [label]="''" 
+              [required]="true"
+              formControlName="manifests"
+              [isDisabled]="esFormularioSoloLectura"
+              (change)="setValorStore(domicilio, 'manifests')"
+            ></lib-input-check>
             <span class="fw-bold align-middle"> *</span>
             <div>{{ manifests }}</div>
           </div>
@@ -319,9 +327,9 @@
         acuerdo en hacerlos públicos?*:
       </h6>
       <div class="row px-3">
-        <app-input-radio
-          [radioOptions]="opcionDeBotonDeRadio"
-          [layout]="'horizontal'"
+        <app-input-radio 
+          [radioOptions]="opcionDeBotonDeRadio" 
+          [layout]="'horizontal'" 
           formControlName="acuerdoPublico"
           (change)="setValorStore(representanteLegal, 'acuerdoPublico')"
         ></app-input-radio>
@@ -331,14 +339,12 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="rfc">RFC*:</label>
-            <input
-              class="form-control"
-              type="text"
-              id="rfc"
-              formControlName="rfc"
-              appUppercase
-              aria-labelledby="rfc"
-              (change)="setValorStore(representanteLegal, 'rfc')"
+            <input 
+              class="form-control" 
+              type="text" id="rfc" 
+              formControlName="rfc" 
+              appUppercase aria-labelledby="rfc"
+              (change)="setValorStore(representanteLegal, 'rfc')" 
             />
             <div *ngIf="representanteLegal.get('rfc')?.invalid && representanteLegal.get('rfc')?.touched" class="text-danger">
               El RFC es obligatorio.
@@ -346,7 +352,7 @@
           </div>
         </div>
         <div class="col-md-3 mt-5">
-          <button class="btn btn-default me-2">Modificar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
         </div>
       </div>
 
@@ -356,13 +362,13 @@
             <label class="form-label" for="nombre"
               >Nombre o Razón Social*:</label
             >
-            <input
-              class="form-control"
-              type="text"
-              id="nombre"
-              formControlName="nombre"
+            <input 
+              class="form-control" 
+              type="text" 
+              id="nombre" 
+              formControlName="nombre" 
               appUppercase
-              aria-labelledby="nombre"
+              aria-labelledby="nombre" 
             />
           </div>
         </div>
@@ -372,29 +378,27 @@
             <label class="form-label" for="apellidoPaterno"
               >Apellido paterno*:</label
             >
-            <input
-              class="form-control"
-              type="text"
-              id="apellidoPaterno"
-              formControlName="apellidoPaterno"
+            <input 
+              class="form-control" 
+              type="text" 
+              id="apellidoPaterno" 
+              formControlName="apellidoPaterno" 
               appUppercase
-              aria-labelledby="apellidoPaterno"
+              aria-labelledby="apellidoPaterno" 
             />
           </div>
         </div>
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="apellidoMaterno"
-              >Apellido materno:</label
-            >
-            <input
-              class="form-control"
-              type="text"
-              id="apellidoMaterno"
-              formControlName="apellidoMaterno"
+            <label class="form-label" for="apellidoMaterno">Apellido materno:</label>
+            <input 
+              class="form-control" 
+              type="text" 
+              id="apellidoMaterno" 
+              formControlName="apellidoMaterno" 
               appUppercase
-              aria-labelledby="apellidoMaterno"
+              aria-labelledby="apellidoMaterno" 
             />
           </div>
         </div>

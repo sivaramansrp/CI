@@ -66,9 +66,8 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
   @Input() personasResponsablesDespachoSeleccionados: ResponsablesDespacho[] =
     [];
 
-  @Output() responsablesDespachoChange: EventEmitter<ResponsablesDespacho[]> = new EventEmitter<
-    ResponsablesDespacho[]
-  >();
+  @Output() responsablesDespachoChange: EventEmitter<ResponsablesDespacho[]> =
+    new EventEmitter<ResponsablesDespacho[]>();
   /**
    * @description
    * Configuración de la tabla de responsables del despacho.
@@ -297,7 +296,7 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
     ]);
     this.gafeteRespoDespacho.updateValueAndValidity();
 
-    if (this.gafeteRespoDespacho.invalid || this.personaForm.invalid) {
+    if (this.gafeteRespoDespacho.invalid) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: '',
@@ -312,6 +311,20 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
       this.gafeteRespoDespacho.markAllAsTouched();
       this.personaForm.markAllAsTouched();
       this.habilitarCamposFormulario();
+      return;
+    }
+
+    if (this.personaForm.invalid) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: TITULO_MODAL,
+        mensaje: ERR_CAMPOS_OBLIGATORIOS,
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
       return;
     }
 
