@@ -214,7 +214,6 @@ ngAfterViewInit(): void {
         this.umc = data as Catalogo[];
       },
       error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
         this.umc = [];
       },
     });
@@ -232,7 +231,6 @@ ngAfterViewInit(): void {
         this.factura = data as Catalogo[];
       },
       error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
         this.factura = [];
       },
     });

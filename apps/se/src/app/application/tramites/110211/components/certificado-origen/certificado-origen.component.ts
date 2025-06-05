@@ -201,7 +201,6 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
         this.estado = data as Catalogo[];
       },
       error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
         this.estado = [];
       },
     });
@@ -221,7 +220,6 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
         this.pais = data as Catalogo[];
       },
       error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
         this.pais = [];
       },
     });
@@ -246,7 +244,7 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
         }
       },
       error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
+        this.disponiblesDatos = [];
       },
     });
   }

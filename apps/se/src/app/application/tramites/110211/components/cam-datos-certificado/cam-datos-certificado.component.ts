@@ -130,7 +130,6 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
         this.idiomaDatos = data as Catalogo[];
       },
       error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
         this.idiomaDatos = [];
       },
     });
@@ -150,7 +149,6 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
         this.entidadFederativas = data as Catalogo[];
       },
       error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
         this.entidadFederativas = [];
       },
     });
@@ -170,7 +168,6 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
         this.representacionFederal = data as Catalogo[];
       },
       error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
         this.representacionFederal = [];
       },
     });
