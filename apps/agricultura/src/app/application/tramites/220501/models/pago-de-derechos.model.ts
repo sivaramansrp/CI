@@ -123,3 +123,39 @@ export interface Tabla {
   Descripcion: string;
   Nico: string;
 }
+/**
+ * Interfaz que define la estructura de un destinatario.
+ */
+export interface Exportador {
+  /** Nombre o razón social del destinatario. */
+  nombre: string;
+  /** Teléfono del destinatario. */
+  telefono: string;
+  /** Correo electrónico del destinatario. */
+  correoElectronico: string;
+  /** domoicilio del destinatario. */
+  domoicilio: string;
+  /** País del destinatario. */
+  pais: string;
+  
+}
+/**
+ * Interfaz que define la estructura de un destinatario.
+ */
+export interface Destinatario {
+  /** Nombre o razón social del destinatario. */
+  nombre: string;
+  /** Teléfono del destinatario. */
+  telefono: string;
+  /** Correo electrónico del destinatario. */
+  correoElectronico: string;
+   /** Calle del destinatario. */
+  calle: string;
+  /** Número exterior del destinatario. */
+  numeroExterior: string;
+  /** Número interior del destinatario. */
+  numeroInterior: string;
+  /** País del destinatario. */
+  pais: string;
+  
+}

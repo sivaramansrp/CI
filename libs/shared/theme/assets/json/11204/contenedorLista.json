@@ -9,6 +9,8 @@
         "tipoEquipo": "tipo 2",
         "aduana": 100,
         "fechaIngreso": "2020-01-24",
-        "vigencia": "2022-10-15"
+        "vigencia": "2022-10-15",
+        "estado": "Válido",
+        "existe": "Sí"
     }
 }
