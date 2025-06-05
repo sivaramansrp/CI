@@ -225,18 +225,22 @@ export class CrosslistComponent implements OnInit, OnChanges {
       this.fechasDatos = [];
     } else {
       if (this.fecha.value === '' || this.fecha.value === null) {
-        this.nuevaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: '',
-          modo: 'action',
-          titulo: 'Aviso',
-          mensaje: this.mensajeAlerta,
-          cerrar: false,
-          txtBtnAceptar: 'Cerrar',
-          txtBtnCancelar: '',
-        };
+        // eslint-disable-next-line no-unused-expressions
+        this.mensajeAlerta &&
+          (this.nuevaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: '',
+            modo: 'action',
+            titulo: 'Aviso',
+            mensaje: this.mensajeAlerta,
+            cerrar: false,
+            txtBtnAceptar: 'Cerrar',
+            txtBtnCancelar: '',
+          });
+
         return;
       }
+
       const FECHA_VALOR = this.fecha.value.map(Number); //Fechas seleccionadas en el select
 
       const FECHAS_SELECCIONADAS = FECHA_VALOR.map(
@@ -273,17 +277,18 @@ export class CrosslistComponent implements OnInit, OnChanges {
         this.fechaSeleccionada.value === null ||
         this.fechaSeleccionada.value === '-1'
       ) {
-        this.nuevaNotificacion = {
-          tipoNotificacion: 'alert',
-          categoria: '',
-          modo: 'action',
-          titulo: 'Aviso',
-          mensaje: this.mensajeAlerta,
-          cerrar: false,
-          txtBtnAceptar: 'Cerrar',
-          txtBtnCancelar: '',
-        };
-        return;
+        // eslint-disable-next-line no-unused-expressions
+        this.mensajeAlerta &&
+          (this.nuevaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: '',
+            modo: 'action',
+            titulo: 'Aviso',
+            mensaje: this.mensajeAlerta,
+            cerrar: false,
+            txtBtnAceptar: 'Cerrar',
+            txtBtnCancelar: '',
+          });
       }
 
       const FECHA_VALOR = this.fechaSeleccionada.value.map(Number);
