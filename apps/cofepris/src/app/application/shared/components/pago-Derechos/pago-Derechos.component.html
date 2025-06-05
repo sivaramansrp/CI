@@ -38,6 +38,7 @@
         name="fechaPago"
         (valorCambiado)="onFechaCambiada($event)"
         [setFecha]="derechosForm.get('fechaPago')?.value"
+        [isDisabled]="esFormularioSoloLectura ? true : false"
         ></input-fecha>
 
         <div *ngIf="esInvalido('fechaPago')" class="text-danger">
