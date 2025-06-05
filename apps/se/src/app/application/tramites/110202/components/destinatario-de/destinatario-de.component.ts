@@ -14,12 +14,12 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Observable, Subject, map } from 'rxjs';
 import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDelDestinatarioComponent } from '../../../../shared/components/datos-del-destinatario/datos-del-destinatario.component';
 import { DestinatarioComponent } from '../../../../shared/components/destinatario/destinatario.component';
-import { Observable } from 'rxjs';
-import { Subject } from 'rxjs';
 import { Tramite110202Query } from '../../estados/tramite110202.query';
 import { Tramite110202Store } from '../../estados/tramite110202.store';
 import { debounceTime } from 'rxjs';
@@ -77,7 +77,11 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
 
   /** Indica si el formulario se está actualizando programáticamente. */
   private actualizandoFormulario = false;
-
+   /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios reactivos.
@@ -86,6 +90,7 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
    * @param certificadoService Servicio para obtener datos de validación.
    * @param seccionQuery Consultas relacionadas con el estado de la sección.
    * @param seccionStore Almacén para gestionar el estado de la sección.
+   * @param consultaQuery Consultas relacionadas con la consulta de datos.
    */
   constructor(
     private fb: FormBuilder,
@@ -93,7 +98,8 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
     public tramiteQuery: Tramite110202Query,
     public certificadoService: CertificadoValidacionService,
     private seccionQuery: SeccionLibQuery,
-    private seccionStore: SeccionLibStore
+    private seccionStore: SeccionLibStore,
+     public consultaQuery: ConsultaioQuery
   ) {
     this.iniciarFormulario();
     this.inicializarSuscripciones();
@@ -105,6 +111,13 @@ export class DestinatarioDeComponent implements OnDestroy, OnInit {
   ngOnInit(): void {
     this.cargarPaisDestin();
     this.cargarMedioDeTransporte();
+         this.consultaQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {          
+              this.esFormularioSoloLectura = seccionState.readonly;
+            })
+          )
   }
 
   /**

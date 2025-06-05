@@ -9070,5 +9070,15 @@
     "departamento": "se",
     "numeroDeProcedimiento": "130106",
     "origin": "READ_PROCEDURE"
+  },
+    {
+    "folioTramite": "099226136147361192499352",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "se",
+    "numeroDeProcedimiento": "110202",
+    "origin": "READ_PROCEDURE"
   }
 ]

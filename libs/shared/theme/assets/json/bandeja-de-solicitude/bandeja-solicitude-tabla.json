@@ -1681,5 +1681,14 @@
     "diasTranscurridos": "4",
     "departamento": "SE",
     "numeroDeProcedimiento": "130106"
-    }
+    },
+    {
+    "id": 110202,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-11-03",
+    "fechaActualizacion": "2023-03-20",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "110202"
+  }
 ]

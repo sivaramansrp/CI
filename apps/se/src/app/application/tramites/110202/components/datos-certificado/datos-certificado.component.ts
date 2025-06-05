@@ -4,6 +4,7 @@ import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angul
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosCertificadoDeComponent } from "../../../../shared/components/datos-certificado-de/datos-certificado-de.component";
 import { ToastrService } from 'ngx-toastr';
 import { Tramite110202Query } from '../../estados/tramite110202.query';
@@ -60,7 +61,11 @@ export class DatosCertificadoComponent implements OnDestroy, OnInit {
    * @type {SeccionLibState}
    */
   private seccion!: SeccionLibState;
-
+   /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente. Inicializa el formulario y las dependencias necesarias.
    * @param fb Instancia del FormBuilder para la creación del formulario.
@@ -68,6 +73,9 @@ export class DatosCertificadoComponent implements OnDestroy, OnInit {
    * @param tramiteQuery Instancia del query para obtener datos de estado.
    * @param certificadoService Servicio encargado de obtener los datos del certificado.
    * @param toastr Servicio de notificaciones (Toastr).
+   * @param seccionQuery Consulta para obtener el estado de la sección.
+   * @param seccionStore Store para manejar el estado de la sección.
+   * @param consultaQuery Consulta para obtener el estado de la consulta.
    */
   constructor(
     private fb: FormBuilder,
@@ -76,7 +84,8 @@ export class DatosCertificadoComponent implements OnDestroy, OnInit {
     public certificadoService: CertificadoValidacionService,
     private toastr: ToastrService,
     private seccionQuery: SeccionLibQuery,
-    private seccionStore: SeccionLibStore
+    private seccionStore: SeccionLibStore,
+    public consultaQuery: ConsultaioQuery
   ) {
 
     /**
@@ -124,6 +133,13 @@ export class DatosCertificadoComponent implements OnDestroy, OnInit {
     this.cargarIdioma();
     this.cargarEntidadFederativa();
     this.cargarRepresentacionFederal();
+      this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {          
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
   }
 
    /**
