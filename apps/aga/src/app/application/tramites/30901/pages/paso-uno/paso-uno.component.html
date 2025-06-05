@@ -51,11 +51,17 @@
       @switch (indice) { @case (1) {
         <solicitante></solicitante>
       } @case (2) { 
+        @if(esDatosRespuesta){
         <app-registro-renovaciones-muestras-mercancias></app-registro-renovaciones-muestras-mercancias>
+        }
       } @case (3) { 
+        @if(esDatosRespuesta){
         <app-datos-prorroga-muestras-mercancias></app-datos-prorroga-muestras-mercancias>
+        }
       } @case (4) { 
+        @if(esDatosRespuesta){
         <app-pago-linea-de-captura></app-pago-linea-de-captura>
+        }
       } 
     }
     </ng-container>

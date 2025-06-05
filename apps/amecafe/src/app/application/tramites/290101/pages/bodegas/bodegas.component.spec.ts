@@ -31,26 +31,6 @@ class MockTramiteStoreQuery {}
 @Injectable()
 class MockTramiteStore {}
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
 describe('BodegasComponent', () => {
   let fixture;
   let component;
@@ -58,12 +38,7 @@ describe('BodegasComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ HttpClientTestingModule, RouterTestingModule ],
-      declarations: [
-        BodegasComponent,
-        
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
-      ],
+      declarations: [BodegasComponent],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: Router, useClass: MockRouter },
@@ -148,9 +123,11 @@ describe('BodegasComponent', () => {
   });
 
   it('should run #iniciarFormulario()', async () => {
+    component.tramiteStoreQuery = component.tramiteStoreQuery || {};
+    component.tramiteStoreQuery.selectSolicitudTramite$ = observableOf({});
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
-    component.iniciarFormulario();
+    component.inicializarFormulario();
     // expect(component.fb.group).toHaveBeenCalled();
   });
 
