@@ -1,8 +1,9 @@
 import { ANO_CATALOGO, AprovechamientoTextos, FECHA_INICIAL, FECHA_PAGO, MES_CATALOGO, RADIO_OPCIONS, RADIO_PARCIAL, RADIO_TOTAL } from '../constantes/adace32508.enum';
 import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ReplaySubject, map, takeUntil } from 'rxjs';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { Solicitud32508State, Tramite32508Store } from '../state/Tramite32508.store';
 import { AdaceService } from '../services/adace.service';
 import { CommonModule } from '@angular/common';
@@ -123,6 +124,19 @@ export class AvisoComponent implements OnInit, AfterViewInit, OnDestroy {
   mostrarDisminucionYCompensacion: boolean = false;
 
   /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param adace Servicio para gestionar datos relacionados con los catálogos.
    * @param fb Constructor de formularios reactivos.
@@ -135,7 +149,8 @@ export class AvisoComponent implements OnInit, AfterViewInit, OnDestroy {
     public fb: FormBuilder,
     private store: Tramite32508Store,
     private query: Tramite32508Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) { }
   ngAfterViewInit(): void {
     this.avisoForm.get('tipoDictamen')?.value === '' ? 'disminucion' : this.avisoForm.get('tipoDictamen')?.value ;
@@ -153,6 +168,16 @@ export class AvisoComponent implements OnInit, AfterViewInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
@@ -340,7 +365,24 @@ export class AvisoComponent implements OnInit, AfterViewInit, OnDestroy {
       compensacionAplicada: [this.solicitudState?.compensacionAplicada, [Validators.required]],
       saldoPendienteCompensar: [this.solicitudState?.saldoPendienteCompensar, [Validators.required]],
     });
+    this.inicializarEstadoFormulario();
+  }
 
+    /**
+  * @method inicializarEstadoFormulario
+  * @description Inicializa el estado del formulario según el modo de solo lectura.
+  * 
+  * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
+  * En caso contrario, habilita los controles del formulario
+  * 
+  * @returns {void}
+  */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.avisoForm?.disable();
+    } else {
+      this.avisoForm?.enable();
+    }
   }
 
   /**

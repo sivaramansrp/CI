@@ -3,7 +3,7 @@
     <div class="col-md-4">
       <label>ADACE:</label>
       <input type="text" class="form-control" formControlName="adace"
-        (change)=" setValoresStore( avisoForm, 'adace', 'setAdace' ) " required />
+        (change)=" setValoresStore( avisoForm, 'adace', 'setAdace' ) " [disabled]="esFormularioSoloLectura" required />
     </div>
   </div>
   <ng-titulo titulo="Datos del recinto fiscalizado que presenta el dictamen" />
@@ -11,7 +11,7 @@
     <div class="col-md-4">
       <label>Clave de recinto fiscalizado:*</label>
       <input type="text" class="form-control" required formControlName="claveFiscalizado"
-        (change)=" setValoresStore( avisoForm, 'claveFiscalizado', 'setClaveFiscalizador' ) " />
+        (change)=" setValoresStore( avisoForm, 'claveFiscalizado', 'setClaveFiscalizador' ) " [disabled]="esFormularioSoloLectura" />
     </div>
   </div>
   <!-- Tipo de dictamen -->
@@ -26,19 +26,19 @@
     <div class="col-md-4">
       <label>RFC:*</label>
       <input type="text" class="form-control" required formControlName="rfc"
-        (change)=" setValoresStore( avisoForm, 'rfc', 'setRfc' ) " />
+        (change)=" setValoresStore( avisoForm, 'rfc', 'setRfc' ) " [disabled]="esFormularioSoloLectura" />
     </div>
     <div class="col-md-6">
       <label>Nombre:*</label>
       <input type="text" class="form-control" formControlName="nombre" 
-        (change)=" setValoresStore( avisoForm, 'nombre', 'setNombre' ) " required />
+        (change)=" setValoresStore( avisoForm, 'nombre', 'setNombre' ) " [disabled]="esFormularioSoloLectura" required />
     </div>
   </div>
   <div class="row mt-5">
     <div class="col-md-4">
       <label>Número de inscripción o registro:*</label>
       <input type="text" class="form-control" required formControlName="numeroInscripcion"
-        (change)=" setValoresStore( avisoForm, 'numeroInscripcion', 'setNumeroInscripcion' ) " />
+        (change)=" setValoresStore( avisoForm, 'numeroInscripcion', 'setNumeroInscripcion' ) " [disabled]="esFormularioSoloLectura" />
     </div>
   </div>
   <ng-titulo titulo="Datos del dictamen que se presenta" />
@@ -46,12 +46,12 @@
     <div class="col-md-4">
       <app-catalogo-select [catalogo]="anoCatalogo.catalogos" [placeholder]="'Selecciona un valor'"
         [label]="'Año del periodo reportado*'" formControlName="ano"
-        (change)=" setValoresStore( avisoForm, 'ano', 'setAno' ) "></app-catalogo-select>
+        (change)=" setValoresStore( avisoForm, 'ano', 'setAno' ) " [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
     </div>
     <div class="col-md-4">
       <app-catalogo-select [catalogo]="mesCatalogo.catalogos" [placeholder]="'Selecciona un valor'"
         [label]="'Mes del periodo reportado*'" formControlName="mes"
-        (change)=" setValoresStore( avisoForm, 'mes', 'setMes' ) "></app-catalogo-select>
+        (change)=" setValoresStore( avisoForm, 'mes', 'setMes' ) " [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
     </div>
     <div class="col-md-4">
       <input-fecha [setFecha]="avisoForm.get('fechaElaboracion')?.value" [datos]="fechaInitialInput"
@@ -86,24 +86,24 @@
       <div class="col-md-6">
         <label>Saldo pendiente de disminuir del dictamen anterior:*</label>
         <input type="text" class="form-control" required formControlName="saldoPendiente"
-          (change)=" setValoresStore( avisoForm, 'saldoPendiente', 'setSaldoPendiente' ) " />
+          (change)=" setValoresStore( avisoForm, 'saldoPendiente', 'setSaldoPendiente' ) " [disabled]="esFormularioSoloLectura" />
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-md-4">
         <label>Aprovechamiento total a cargo:*</label>
         <input type="text" class="form-control" required formControlName="aprovechamiento"
-          (change)=" setValoresStore( avisoForm, 'aprovechamiento', 'setAprovechamiento' ) " />
+          (change)=" setValoresStore( avisoForm, 'aprovechamiento', 'setAprovechamiento' ) " [disabled]="esFormularioSoloLectura" />
       </div>
       <div class="col-md-4">
         <label>Disminución aplicada:*</label>
         <input type="text" class="form-control" required formControlName="disminucionAplicada"
-          (change)=" setValoresStore( avisoForm, 'disminucionAplicada', 'setDisminucionAplicada' ) " />
+          (change)=" setValoresStore( avisoForm, 'disminucionAplicada', 'setDisminucionAplicada' ) " [disabled]="esFormularioSoloLectura" />
       </div>
       <div class="col-md-4">
         <label>Saldo pendiente de disminuir:*</label>
         <input type="text" class="form-control" required formControlName="saldoPendienteDisminuir"
-          (change)=" setValoresStore( avisoForm, 'saldoPendienteDisminuir', 'setSaldoPendienteDisminuir' ) " />
+          (change)=" setValoresStore( avisoForm, 'saldoPendienteDisminuir', 'setSaldoPendienteDisminuir' ) " [disabled]="esFormularioSoloLectura" />
       </div>
     </div>
     <div class="row mt-5"></div>
@@ -123,7 +123,7 @@
               </div>
               <input class="visually-hidden-file" type="file" id="archivoAdjuntar" size="60"
                 (change)="alSeleccionarArchivo($event)" formControlName="archivo"
-                (change)=" setValoresStore( avisoForm, 'archivo', 'setArchivo' ) " />
+                (change)=" setValoresStore( avisoForm, 'archivo', 'setArchivo' ) " [disabled]="esFormularioSoloLectura" />
               <label class="custome-file-label" for="archivoAdjuntar" value="Seleccionar archivo"
                 style="background-color: lightgrey; font-weight: bold">Seleccionar archivo</label>
               <p style="display: inline-block"> {{ nombreArchivo || 'Sin archivos seleccionados' }} </p>
@@ -151,24 +151,24 @@
       <div class="col-md-6">
         <label>Saldo pendiente de compensar del dictamen anterior:*</label>
         <input type="text" class="form-control" required formControlName="saldoPendiente"
-          (change)=" setValoresStore( avisoForm, 'saldoPendiente', 'setSaldoPendiente' ) " />
+          (change)=" setValoresStore( avisoForm, 'saldoPendiente', 'setSaldoPendiente' ) " [disabled]="esFormularioSoloLectura" />
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-md-4">
         <label>Aprovechamiento total a cargo:*</label>
         <input type="text" class="form-control" required formControlName="aprovechamiento"
-          (change)=" setValoresStore( avisoForm, 'aprovechamiento', 'setAprovechamiento' ) " />
+          (change)=" setValoresStore( avisoForm, 'aprovechamiento', 'setAprovechamiento' ) " [disabled]="esFormularioSoloLectura" />
       </div>
       <div class="col-md-4">
         <label>Compensación aplicada:*</label>
         <input type="text" class="form-control" required formControlName="compensacionAplicada"
-          (change)=" setValoresStore( avisoForm, 'compensacionAplicada', 'setCompensacionAplicada' ) " />
+          (change)=" setValoresStore( avisoForm, 'compensacionAplicada', 'setCompensacionAplicada' ) " [disabled]="esFormularioSoloLectura" />
       </div>
       <div class="col-md-4">
         <label>Saldo pendiente de compensar:*</label>
         <input type="text" class="form-control" required formControlName="saldoPendienteCompensar"
-          (change)=" setValoresStore( avisoForm, 'saldoPendienteCompensar', 'setSaldoPendienteCompensar' ) " />
+          (change)=" setValoresStore( avisoForm, 'saldoPendienteCompensar', 'setSaldoPendienteCompensar' ) " [disabled]="esFormularioSoloLectura" />
       </div>
     </div>
     <div class="row mt-5"></div>
@@ -188,7 +188,7 @@
               </div>
               <input class="visually-hidden-file" type="file" id="archivoAdjuntar" size="60"
                 (change)="alSeleccionarArchivo($event)" formControlName="archivo"
-                (change)=" setValoresStore( avisoForm, 'archivo', 'setArchivo' ) " />
+                (change)=" setValoresStore( avisoForm, 'archivo', 'setArchivo' ) " [disabled]="esFormularioSoloLectura" />
               <label class="custome-file-label" for="archivoAdjuntar" value="Seleccionar archivo"
                 style="background-color: lightgrey; font-weight: bold">Seleccionar archivo</label>
               <p style="display: inline-block"> {{ nombreArchivo || 'Sin archivos seleccionados' }} </p>
@@ -212,41 +212,41 @@
       <div class="col-md-6">
         <label>Saldo pendiente de compensar del dictamen anterior:*</label>
         <input type="text" class="form-control" required formControlName="saldoPendiente"
-          (change)=" setValoresStore( avisoForm, 'saldoPendiente', 'setSaldoPendiente' ) " />
+          (change)=" setValoresStore( avisoForm, 'saldoPendiente', 'setSaldoPendiente' ) " [disabled]="esFormularioSoloLectura" />
       </div>
       <div class="col-md-6">
         <label>Saldo pendiente de disminuir del dictamen anterior:*</label>
         <input type="text" class="form-control" required formControlName="saldoPendiente"
-          (change)=" setValoresStore( avisoForm, 'saldoPendiente', 'setSaldoPendiente' ) " />
+          (change)=" setValoresStore( avisoForm, 'saldoPendiente', 'setSaldoPendiente' ) " [disabled]="esFormularioSoloLectura" />
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-md-4">
         <label>Aprovechamiento total a cargo:*</label>
         <input type="text" class="form-control" required formControlName="aprovechamiento"
-          (change)=" setValoresStore( avisoForm, 'aprovechamiento', 'setAprovechamiento' ) " />
+          (change)=" setValoresStore( avisoForm, 'aprovechamiento', 'setAprovechamiento' ) " [disabled]="esFormularioSoloLectura" />
       </div>
       <div class="col-md-4">
         <label>Compensación aplicada:*</label>
         <input type="text" class="form-control" required formControlName="compensacionAplicada"
-          (change)=" setValoresStore( avisoForm, 'compensacionAplicada', 'setCompensacionAplicada' ) " />
+          (change)=" setValoresStore( avisoForm, 'compensacionAplicada', 'setCompensacionAplicada' ) " [disabled]="esFormularioSoloLectura" />
       </div>
       <div class="col-md-4">
         <label>Disminución aplicada:*</label>
         <input type="text" class="form-control" required formControlName="disminucionAplicada"
-          (change)=" setValoresStore( avisoForm, 'disminucionAplicada', 'setDisminucionAplicada' ) " />
+          (change)=" setValoresStore( avisoForm, 'disminucionAplicada', 'setDisminucionAplicada' ) " [disabled]="esFormularioSoloLectura" />
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-md-4">
         <label>Saldo pendiente de compensar:*</label>
         <input type="text" class="form-control" required formControlName="saldoPendienteCompensar"
-          (change)=" setValoresStore( avisoForm, 'saldoPendienteCompensar', 'setSaldoPendienteCompensar' ) " />
+          (change)=" setValoresStore( avisoForm, 'saldoPendienteCompensar', 'setSaldoPendienteCompensar' ) " [disabled]="esFormularioSoloLectura" />
       </div>
       <div class="col-md-4">
         <label>Saldo pendiente de disminuir:*</label>
         <input type="text" class="form-control" required formControlName="saldoPendienteDisminuir"
-          (change)=" setValoresStore( avisoForm, 'saldoPendienteDisminuir', 'setSaldoPendienteDisminuir' ) " />
+          (change)=" setValoresStore( avisoForm, 'saldoPendienteDisminuir', 'setSaldoPendienteDisminuir' ) " [disabled]="esFormularioSoloLectura" />
       </div>
     </div>
     <ng-titulo titulo="Plantillas" />
@@ -266,7 +266,7 @@
               </div>
               <input class="visually-hidden-file" type="file" id="archivoAdjuntar" size="60"
                 (change)="alSeleccionarArchivo($event)" formControlName="archivo"
-                (change)=" setValoresStore( avisoForm, 'archivo', 'setArchivo' ) " />
+                (change)=" setValoresStore( avisoForm, 'archivo', 'setArchivo' ) " [disabled]="esFormularioSoloLectura" />
               <label class="custome-file-label" for="archivoAdjuntar" value="Seleccionar archivo"
                 style="background-color: lightgrey; font-weight: bold">Seleccionar archivo</label>
               <p style="display: inline-block"> {{ nombreArchivo || 'Sin archivos seleccionados' }} </p>
@@ -299,7 +299,7 @@
               </div>
               <input class="visually-hidden-file" type="file" id="archivoAdjuntar" size="60"
                 (change)="alSeleccionarArchivo($event)" formControlName="archivo"
-                (change)=" setValoresStore( avisoForm, 'archivo', 'setArchivo' ) " />
+                (change)=" setValoresStore( avisoForm, 'archivo', 'setArchivo' ) " [disabled]="esFormularioSoloLectura" />
               <label class="custome-file-label" for="archivoAdjuntar" value="Seleccionar archivo"
                 style="background-color: lightgrey; font-weight: bold">Seleccionar archivo</label>
               <p style="display: inline-block"> {{ nombreArchivo || 'Sin archivos seleccionados' }} </p>
