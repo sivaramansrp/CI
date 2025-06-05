@@ -952,11 +952,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         montoAPagar: [
           { value: this.solicitudState?.montoPagar, disabled: true },
         ],
-        lineaCaptura: [
-          this.solicitudState?.lineaCaptura,
-          [Validators.required],
-        ],
-        monto: [this.solicitudState.monto, [Validators.required]],
+        lineaCaptura: [this.solicitudState?.lineaCaptura],
+        monto: [this.solicitudState.monto],
         lineasCaptura: this.fb.array([], Validators.required),
       }),
     });
@@ -1137,6 +1134,15 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
     this.tipoSolicitudSeleccionada = TIPO_SOLICITUD_VALUE;
 
+    if (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL) {
+      this.pedimento.setValidators([Validators.required]);
+      this.pedimento.setValidators([SolicitudComponent.minLengthArray(1)]);
+      this.pedimento.updateValueAndValidity();
+    } else {
+      this.pedimento.clearValidators();
+      this.pedimento.updateValueAndValidity();
+    }
+
     this.setValoresStore(
       this.FormSolicitud,
       'tipoSolicitud',
@@ -1162,16 +1168,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
     if (FORMA_MODIFICADA) {
       this.limpiarFormulario();
-      return;
-    }
-
-    if (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL) {
-      this.pedimento.setValidators([Validators.required]);
-      this.pedimento.setValidators([SolicitudComponent.minLengthArray(1)]);
-      this.pedimento.updateValueAndValidity();
-    } else {
-      this.pedimento.clearValidators();
-      this.pedimento.updateValueAndValidity();
     }
   }
 
@@ -2505,6 +2501,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         txtBtnAceptar: 'Cerrar',
         txtBtnCancelar: '',
       };
+      return;
     }
 
     this.datosTablaPagos = this.datosTablaPagos.filter(
