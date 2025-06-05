@@ -114,8 +114,8 @@
   {
     "id": 17,
     "tramite": 31803,
-    "linkDashboard": "/agace/registro-solicitud/solicitud",
-    "linkDepartment": "/pago/registro-solicitud/solicitud",
+    "linkDashboard": "/agace/registro/solicitud",
+    "linkDepartment": "/pago/registro/solicitud",
     "department": "agace"
   },
   {
@@ -276,7 +276,7 @@
     "id": 40,
     "tramite": 110202,
     "linkDashboard": "/se/certificado-validacion/validacion",
-    "linkDepartment": "/se/certificado-validacion/validacion",
+    "linkDepartment": "/pago/certificado-validacion/validacion",
     "department": "se"
   },
   {
@@ -1241,8 +1241,8 @@
   {
     "id": 178,
     "tramite": 260906,
-    "linkDashboard": "/cofepris/modificacion-permiso-sanitario",
-    "linkDepartment": "/pago/modificacion-permiso-sanitario",
+    "linkDashboard": "/cofepris/modificacion-permiso-sanitario-importacion-maquila",
+    "linkDepartment": "/pago/modificacion-permiso-sanitario-importacion-maquila",
     "department": "cofepris"
   },
   {
@@ -1479,15 +1479,15 @@
   {
     "id": 212,
     "tramite": 260208,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/medicamentos-destinados-uso/contenedor-de-pasos",
+    "linkDepartment": "/pago/medicamentos-destinados-uso/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
     "id": 213,
     "tramite": 260209,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/importacion-destinados-donacio/contenedor-de-pasos",
+    "linkDepartment": "/pago/importacion-destinados-donacio/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
@@ -1920,8 +1920,8 @@
   {
     "id": 275,
     "tramite": 230501,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/semarnat/materiales-peligrosos/solicitud",
+    "linkDepartment": "/pago/materiales-peligrosos/solicitud",
     "department": "semarnat"
   },
   {
@@ -2032,8 +2032,8 @@
   {
     "id": 291,
     "tramite": 80316,
-    "linkDashboard": "/se/modificaciones-immex-prosec/tipo-de-persona",
-    "linkDepartment": "/pago/modificaciones-immex-prosec/tipo-de-persona",
+    "linkDashboard": "/se/modificaciones-immex/tipo-de-persona",
+    "linkDepartment": "/pago/modificaciones-immex/tipo-de-persona",
     "department": "se"
   },
   {
@@ -4202,7 +4202,7 @@
   {
     "id": 603,
     "tramite": 120403,
-    "linkDashboard": "se/cupos/solicitud",
+    "linkDashboard": "/se/cupos/solicitud",
     "linkDepartment": "/pago/cupos/solicitud",
     "department": "se"
   },

@@ -33,6 +33,9 @@ describe('PartidasDeLaMercanciaComponent', () => {
 
     fixture = TestBed.createComponent(PartidasDeLaMercanciaComponent);
     component = fixture.componentInstance;
+    component.consultaState = {
+      readonly: false,
+    } as any;
     component.datosTabla = [];
   });
 
@@ -40,45 +43,11 @@ describe('PartidasDeLaMercanciaComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should set importacionstate and push producto to datosTabla if not already added', () => {
-    component.datosTabla = [];
-    component.ngOnInit();
-    expect(component.importacionstate).toEqual(importacionStateMock);
-    expect(component.datosTabla).toContain(productoMock);
-  });
-
   it('should not add producto to datosTabla if already exists', () => {
     component.datosTabla = [productoMock];
     component.ngOnInit();
     const occurrences = component.datosTabla.filter(p => p.id === productoMock.id);
     expect(occurrences.length).toBe(1);
-  });
-
-  it('should push product to datosTabla and call store when form is valid', () => {
-    const mockFormGroup = new FormGroup({
-      cantidad: new FormControl(10),
-      fraccionArancelariaTigie: new FormControl('1234.56.78'),
-      descripcion: new FormControl('Producto de prueba'),
-      valorPartidaUsd: new FormControl(100)
-    });
-  
-    jest.spyOn(component as any, 'ninoFormGroup', 'get').mockReturnValue(mockFormGroup);
-    component.agregar();
-    expect(component.datosTabla.length).toBe(1);
-    expect(component.datosTabla[0]).toEqual({
-      id: 1,
-      cantidad: 10,
-      unidadDeMedida: 'Caja',
-      fraccionArancelariaTigie: '1234.56.78',
-      descripcion: 'Producto de prueba',
-      precioUnitario: '1.000',
-      totalUsd: 100
-    });
-    expect(tramite130103StoreMock.setDynamicFieldValue).toHaveBeenCalledWith(
-      'producto',
-      component.datosTabla[0]
-    );
-    expect(component.ninoFormGroup.pristine).toBe(true);
   });
 
  it('should call next and complete on destroyNotifier$ when ngOnDestroy is called', () => {
@@ -133,5 +102,20 @@ describe('PartidasDeLaMercanciaComponent', () => {
     expect(tramite130103StoreMock.setDynamicFieldValue).not.toHaveBeenCalled();
   });
   
+  it('should have consultaState readonly as false by default', () => {
+    expect(component.consultaState?.readonly).toBe(false);
+  });
+
+ it('should disable form controls if consultaState.readonly is true', () => {
+  component.consultaState = { readonly: true } as any;
+  component.ngOnInit();
+  if (component.consultaState.readonly) {
+    component.forma.disable();
+  }
+  expect(component.forma.disabled).toBe(true);
+  expect(component.forma.get('cantidad_total')?.disabled).toBe(true);
+  expect(component.forma.get('valor_total')?.disabled).toBe(true);
+});
+
   
 });

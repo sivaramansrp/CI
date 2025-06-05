@@ -9,9 +9,8 @@
  * Contiene la lógica para la obtención de datos, la gestión de formularios y la interacción con tablas dinámicas.
  */
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
 
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
@@ -19,7 +18,7 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { Catalogo, SeccionLibQuery, SeccionLibState } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, SeccionLibQuery, SeccionLibState } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
@@ -59,7 +58,7 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src';
     CatalogoSelectComponent,
   ]
 })
-export class Anexo1Component implements OnInit, OnDestroy {
+export class Anexo1Component implements OnInit, OnDestroy,AfterViewInit {
   /**
    * @property {FormGroup} immexRegistroform
    * @description Formulario principal del registro IMMEX.
@@ -127,10 +126,10 @@ export class Anexo1Component implements OnInit, OnDestroy {
   immexRegistro!: string;
 
   /**
-   * @property {Subject<void>} unsubscribe$
+   * @property {Subject<void>} destroyNotifier$
    * @description Subject para manejar la desuscripción de observables.
    */
-  private unsubscribe$ = new Subject<void>();
+  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * @property {any[]} permisoImmexDatos - Array de datos permiso immex.
@@ -166,7 +165,15 @@ export class Anexo1Component implements OnInit, OnDestroy {
   showCommodityImport: boolean = false;
 
   private seccion!: SeccionLibState;
-  private destroyNotifier$: Subject<void> = new Subject();
+
+
+  /**
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   *
+   * @type {boolean}
+   * @memberof Anexo1Component
+   */
+  esFormularioSoloLectura:boolean=false;
   /**
    * @constructor
    * @param {FormBuilder} fb - Constructor de formularios.
@@ -177,12 +184,12 @@ export class Anexo1Component implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private permisoImmexDatosService: PermisoImmexDatosService,
-    private readonly httpServicios: HttpClient,
     private readonly nicoService: NicoService,
     private immexRegistroQuery: ImmexRegistroQuery,
     private immexRegistroStore: ImmexRegistroStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
+    private readonly consultaQuery: ConsultaioQuery,
   ) {}
 
   /**
@@ -190,6 +197,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
    * @description Inicializa el componente y obtiene los datos necesarios.
    */
   ngOnInit(): void {
+    
     this.immexRegistroQuery.selectImmexRegistro$.pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
@@ -197,31 +205,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
       })
     ).subscribe();
 
-    this.immexRegistroform = this.fb.group({
-      exportacionForm: this.fb.group({
-        permisoImmexDatos: [this.immexRegitroAnexoState.permisoImmexDatos || [], []],
-        fraccionDatos: [this.immexRegitroAnexoState?.fraccionDatos || [], []],
-        nicoDatos: [this.immexRegitroAnexoState?.nicoDatos || [], []],
-        fraccionArancelariaExportacion: [this.immexRegitroAnexoState?.fraccionArancelariaExportacion || '', []],
-        productoArancelariaExportacion: [this.immexRegitroAnexoState?.productoArancelariaExportacion || '', []],
-        fraccionArancelariaDesc: [this.immexRegitroAnexoState?.fraccionArancelariaDesc || '', []],
-        productoDescExportacion: [this.immexRegitroAnexoState?.productoDescExportacion || '', []],
-        FraccionDescExportacion: [this.immexRegitroAnexoState?.FraccionDescExportacion || '', []],
-        exportacionDescExportacion: [this.immexRegitroAnexoState?.exportacionDescExportacion || '', []],
-        Nico: [this.immexRegitroAnexoState?.Nico || '', []],
-      }),
-      importacionForm: this.fb.group({
-        fraccionDatos: [this.immexRegitroAnexoState?.fraccionDatos || [], []],
-        nicoDatos: [this.immexRegitroAnexoState?.nicoDatos || [], []],
-        commodityImportacion: [this.immexRegitroAnexoState?.commodityImportacion || '', []],
-        commodityDescImportacion: [this.immexRegitroAnexoState?.commodityDescImportacion || '', []],
-        commodityNicoDescImportacion: [this.immexRegitroAnexoState?.commodityNicoDescImportacion || '', []],
-        candiadAnual: [this.immexRegitroAnexoState?.candiadAnual || '', []],
-        capacidadPeriodo: [this.immexRegitroAnexoState?.capacidadPeriodo || '', []],
-        candidadPorPeriodo: [this.immexRegitroAnexoState?.candidadPorPeriodo || '', []],
-        Nico: [this.immexRegitroAnexoState?.Nico || '', []],
-      })
-    });
+    this.creatFormSolicitud();
 
     // Asegúrese de que immexRegitroAnexoState esté asignado antes de acceder a sus propiedades
     this.immexRegistroQuery.selectImmexRegistro$
@@ -281,14 +265,91 @@ export class Anexo1Component implements OnInit, OnDestroy {
       )
       .subscribe();
   }
+  /**
+ * @inheritdoc
+ * @description
+ * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
+ * 
+ * Suscribe al observable `selectConsultaioState$` para escuchar cambios en el estado de la consulta.
+ * Si el estado indica que no se está creando y el `procedureId` es '80203', actualiza la propiedad `esFormularioSoloLectura`
+ * según el valor de `readonly` en el estado. Luego, inicializa el estado del formulario llamando a `inicializarEstadoFormulario()`.
+ * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$` para evitar fugas de memoria.
+ *
+ */
+ngAfterViewInit(): void {
+ this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          if(!seccionState.create && seccionState.procedureId === '80203') {
+            this.esFormularioSoloLectura = seccionState.readonly;
+          }
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+}
 
+/**
+ * @method
+ * @name creatFormSolicitud
+ * @description
+ * [ES] Inicializa el formulario reactivo `immexRegistroform` con los grupos de controles necesarios para la exportación e importación,
+ * utilizando los valores actuales del estado `immexRegitroAnexoState`. Cada grupo contiene los campos requeridos para el trámite,
+ * permitiendo la gestión y validación de los datos relacionados con la exportación e importación de mercancías.
+ *
+ * @returns {void}
+ */
+creatFormSolicitud():void{
+    this.immexRegistroform = this.fb.group({
+      exportacionForm: this.fb.group({
+        permisoImmexDatos: [this.immexRegitroAnexoState.permisoImmexDatos || [], []],
+        fraccionDatos: [this.immexRegitroAnexoState?.fraccionDatos || [], []],
+        nicoDatos: [this.immexRegitroAnexoState?.nicoDatos || [], []],
+        fraccionArancelariaExportacion: [this.immexRegitroAnexoState?.fraccionArancelariaExportacion || '', []],
+        productoArancelariaExportacion: [this.immexRegitroAnexoState?.productoArancelariaExportacion || '', []],
+        fraccionArancelariaDesc: [this.immexRegitroAnexoState?.fraccionArancelariaDesc || '', []],
+        productoDescExportacion: [this.immexRegitroAnexoState?.productoDescExportacion || '', []],
+        FraccionDescExportacion: [this.immexRegitroAnexoState?.FraccionDescExportacion || '', []],
+        exportacionDescExportacion: [this.immexRegitroAnexoState?.exportacionDescExportacion || '', []],
+        Nico: [this.immexRegitroAnexoState?.Nico || '', []],
+      }),
+      importacionForm: this.fb.group({
+        fraccionDatos: [this.immexRegitroAnexoState?.fraccionDatos || [], []],
+        nicoDatos: [this.immexRegitroAnexoState?.nicoDatos || [], []],
+        commodityImportacion: [this.immexRegitroAnexoState?.commodityImportacion || '', []],
+        commodityDescImportacion: [this.immexRegitroAnexoState?.commodityDescImportacion || '', []],
+        commodityNicoDescImportacion: [this.immexRegitroAnexoState?.commodityNicoDescImportacion || '', []],
+        candiadAnual: [this.immexRegitroAnexoState?.candiadAnual || '', []],
+        capacidadPeriodo: [this.immexRegitroAnexoState?.capacidadPeriodo || '', []],
+        candidadPorPeriodo: [this.immexRegitroAnexoState?.candidadPorPeriodo || '', []],
+        Nico: [this.immexRegitroAnexoState?.Nico || '', []],
+      })
+    });
+}
+
+    /**
+     * @method inicializarEstadoFormulario
+     * @description
+     * Inicializa el estado del formulario dependiendo si está en modo solo lectura.
+     * Si el formulario no existe, lo crea. Si el formulario debe ser solo de lectura,
+     * lo deshabilita; de lo contrario, lo habilita.
+     */
+    inicializarEstadoFormulario(): void {
+      if (!this.immexRegistroform) {
+        this.creatFormSolicitud();
+      }
+      if (this.esFormularioSoloLectura) {
+        this.immexRegistroform.disable();
+      } else {
+        this.immexRegistroform.enable();
+      }
+    }
   /**
    * @method ngOnDestroy
    * @description Maneja la limpieza de recursos antes de destruir el componente.
    */
   ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
@@ -299,7 +360,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
    */
   fetchData(): void {
     this.permisoImmexDatosService.getDatos()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe({
         next: (response: any) => {
           if (response && Array.isArray(response.permisoImmexDatos) &&
@@ -355,7 +416,7 @@ export class Anexo1Component implements OnInit, OnDestroy {
         }
       });
       this.permisoImmexDatosService.getDatos()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.immexRegistroform.patchValue(data);
       });
@@ -438,6 +499,14 @@ export class Anexo1Component implements OnInit, OnDestroy {
   showCommodityImportacion(): void {
     this.showCommodityImport = true;
   }
+  /**
+   * @description
+   * Deshabilita los controles específicos del formulario relacionados con la exportación e importación
+   * dentro del formulario `immexRegistroform`. Los campos deshabilitados incluyen descripciones y códigos
+   * arancelarios de productos de exportación e importación.
+   *
+   * @returns {void}
+   */
   disableFormControls(): void {
     this.immexRegistroform.get('exportacionForm.productoArancelariaExportacion')?.disable();
     this.immexRegistroform.get('exportacionForm.productoDescExportacion')?.disable();

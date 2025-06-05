@@ -9,7 +9,7 @@
         <a (click)="seleccionaTab(2)" (keyup.enter)="seleccionaTab(2)" (keydown.space)="seleccionaTab(2)" tabindex="1"
           data-toggle="tab">Certificado de origen</a>
       </li>
-           <li [ngClass]="indice === 3 ? 'active' : ''">
+      <li [ngClass]="indice === 3 ? 'active' : ''">
         <a (click)="seleccionaTab(3)" (keyup.enter)="seleccionaTab(3)" (keydown.space)="seleccionaTab(3)" tabindex="2"
           data-toggle="tab">Destinatario</a>
       </li>
@@ -23,16 +23,21 @@
       @case (1) {
       <solicitante #Solicitante></solicitante>
       }
-     @case (2) {
+      @case (2) {
+      @if(esDatosRespuesta){
       <app-certificado-origen></app-certificado-origen>
       }
-     @case (3) {
-       <app-destinatario></app-destinatario>
+      }
+      @case (3) {
+      @if(esDatosRespuesta){
+      <app-destinatario></app-destinatario>
+      }
       }
       @case (4) {
-        <app-datos-certificado></app-datos-certificado>
+      @if(esDatosRespuesta){
+      <app-datos-certificado></app-datos-certificado>
       }
-      
+      }
       }
     </ng-container>
   </div>
