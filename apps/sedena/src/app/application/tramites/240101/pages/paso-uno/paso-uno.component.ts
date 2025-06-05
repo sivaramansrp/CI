@@ -79,7 +79,6 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       .subscribe((tab) => {
         this.indice = tab;
       });
-    console.log('Paso Uno Component Initialized');
     if (this.consultaState.update) {
       this.guardarDatosFormulario();
     } else {
