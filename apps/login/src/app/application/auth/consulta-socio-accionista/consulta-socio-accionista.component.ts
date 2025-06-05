@@ -22,16 +22,6 @@ export class ConsultaSocioAccionistaComponent implements OnInit {
   crearFormSocioAccionista(){
 this.formConsultaSocioAccionista = this.fb.group({
       rfc: [''],
-      curp: [''],
-      nombre: [''],
-      apellidoPaterno: [''],
-      apellidoMaterno: [''],
-      fechaNacimiento: [''],
-      nacionalidad: [''],
-      tipoPersona: [''],
-      tipoSocioAccionista: [''],
-      tipoPersonaMoral: [''],
-      tipoPersonaFisica: ['']
     });
   }
 }

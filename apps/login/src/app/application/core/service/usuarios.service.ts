@@ -1,7 +1,9 @@
+import { ConsultaSocioExtranjeroFisica, ConsultaSocioExtranjeroMoral } from '../models/consulta-socio-extranjero.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { Capturista } from '../models/capturista.model';
 import { ConsultaRegistro } from '../models/consulta-registro.model';
+import { ConsultaSocioNacional } from '../models/consulta-socio-nacional.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -50,6 +52,52 @@ export class UsuariosService {
                 return capturistas.find(c =>
                     (rfc ? c.rfc === rfc : true) &&
                     (curp ? c.curp === curp : true)
+                );
+            })
+        );
+    }
+
+    /**
+     * Consulta un socio nacional por RFC o CURP.
+     * Realiza una petición GET para obtener la lista de socios nacionales y busca el primero que coincida
+     * con el RFC o CURP proporcionados. Si no se proporciona ningún parámetro, retorna el primer socio nacional.
+     *
+     * @param rfc RFC del socio nacional (opcional).
+     * @param curp CURP del socio nacional (opcional).
+     * @returns Observable con el socio nacional encontrado o undefined si no existe coincidencia.
+     */
+    consultaSocioNacional(rfc: string): Observable<ConsultaSocioNacional | undefined> {
+        return this.http.get<ConsultaSocioNacional[]>(`/assets/json/login/lista-socio-nacional.json`).pipe(
+            map((socio) => {
+                return socio.find(s =>
+                    (rfc ? s.rfc === rfc : true)
+                );
+            })
+        );
+    }
+
+    consultaSocioExtranjeroFisica(nombre: string, apellidoPaterno: string, pais: string, codigoPostal: string, estado: string): Observable<ConsultaSocioExtranjeroFisica | undefined> {
+        return this.http.get<ConsultaSocioExtranjeroFisica[]>(`/assets/json/login/lista-socio-extranjero-fisica.json`).pipe(
+            map((socio) => {
+                return socio.find(s =>
+                    (nombre ? s.nombre === nombre : true)&&
+                    (apellidoPaterno ? s.apellidoPaterno === apellidoPaterno : true) &&
+                    (pais ? s.pais === pais : true) &&
+                    (codigoPostal ? s.codigoPostal === codigoPostal : true) &&
+                    (estado ? s.estado === estado : true)
+                );
+            })
+        );
+    }
+
+    consultaSocioExtranjerMoral(razonSocial: string, pais: string, codigoPostal: string, estado: string): Observable<ConsultaSocioExtranjeroMoral | undefined> {
+        return this.http.get<ConsultaSocioExtranjeroMoral[]>(`/assets/json/login/lista-socio-extranjero-moral.json`).pipe(
+            map((socio) => {
+                return socio.find(s =>
+                    (razonSocial ? s.razonSocial === razonSocial : true)&&
+                    (pais ? s.pais === pais : true) &&
+                    (codigoPostal ? s.codigoPostal === codigoPostal : true) &&
+                    (estado ? s.estado === estado : true)
                 );
             })
         );

@@ -1,0 +1,27 @@
+[
+    {
+        "nombre": "Socio Extranjero Fisica",
+        "apellidoPaterno": "Extranjero",
+        "apellidoMaterno": "Fisica",
+        "pais": "Extranjero",
+        "codigoPostal": "54321",
+        "estado": "Extranjero",
+        "calle": "Calle Extranjera Fisica",
+        "numeroInterior": "2B",
+        "numeroExterior": "456",
+        "numeroSeguroSocial": "0987654321",
+        "NumeroIdentificacionFiscal": "987654321"
+    },{
+        "nombre": "Socio Extranjero Fisica 2",
+        "apellidoPaterno": "Extranjero",
+        "apellidoMaterno": "Fisica 2",
+        "pais": "Extranjero 2",
+        "codigoPostal": "54322",
+        "estado": "Extranjero 2",
+        "calle": "Calle Extranjera Fisica 2",
+        "numeroInterior": "3C",
+        "numeroExterior": "789",
+        "numeroSeguroSocial": "1234567890",
+        "NumeroIdentificacionFiscal": "123456789"
+    }
+]
