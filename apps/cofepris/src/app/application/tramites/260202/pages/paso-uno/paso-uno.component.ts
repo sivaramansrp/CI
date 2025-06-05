@@ -1,11 +1,15 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { map, Subject, takeUntil } from 'rxjs';
+import { map, Observable, Subject, takeUntil } from 'rxjs';
 import {
   ConsultaioQuery,
   ConsultaioState,
 } from '@libs/shared/data-access-user/src';
 import { Tramite260202Query } from '../../estados/tramite260202Query.query';
-import { Tramite260202Store } from '../../estados/tramite260202Store.store';
+import {
+  Tramite260202State,
+  Tramite260202Store,
+} from '../../estados/tramite260202Store.store';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-paso-uno',
@@ -47,7 +51,8 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   constructor(
     private tramite260202Query: Tramite260202Query,
     private tramite260202Store: Tramite260202Store,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private readonly http: HttpClient
   ) {
     // El constructor necesita inyectar las dependencias.
   }
@@ -73,7 +78,8 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
         map((seccionState) => {
           this.consultaState = seccionState;
 
-          this.formularioDeshabilitado = true;
+          // this.formularioDeshabilitado = true;
+          this.guardarDatosFormulario();
           if (this.consultaState.update) {
             this.formularioDeshabilitado = false;
             this.guardarDatosFormulario();
@@ -84,19 +90,43 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       )
       .subscribe();
   }
+  /**More actions
+   * Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.
+   *
+   * @returns Observable con los datos del estado de la solicitud `Tramite260202State`,
+   *          cargados desde el archivo JSON especificado en la ruta de `assets`.
+   */
+  getRegistroTomaMuestrasMercanciasData(): Observable<Tramite260202State> {
+    return this.http.get<Tramite260202State>(
+      'assets/json/260202/respuestaDeActualizacionDe.json'
+    );
+  }
+
   /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.More actions
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
-    // this.autorizacionProgrmaNuevoService
-    //   .getRegistroTomaMuestrasMercanciasData()
-    //   .pipe(takeUntil(this.destroyNotifier$))
-    //   .subscribe((resp) => {
-    //     if (resp) {
-    //       this.autorizacionProgrmaNuevoService.actualizarEstadoFormulario(resp);
-    //     }
-    //   });
+    this.getRegistroTomaMuestrasMercanciasData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        if (resp) {
+          this.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
+
+  /**
+   * Actualiza el estado del formulario con los datos proporcionados.
+   *
+   * @param DATOS - Estado de la solicitud `Solicitud230401State` con la información
+   *                del tipo de solicitud a actualizar en el store.
+   */
+  actualizarEstadoFormulario(DATOS: Tramite260202State): void {
+    this.tramite260202Store.update((state) => ({
+      ...state,
+      ...DATOS,
+    }));
   }
   /**
    * Selecciona una pestaña específica en el flujo del trámite.
