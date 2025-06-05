@@ -145,7 +145,6 @@ export class PasoUnoComponent implements OnInit, AfterViewInit {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaDatos = seccionState;
-          console.log('fdsfsdfds', this.consultaDatos);
         })
       )
       .subscribe();
