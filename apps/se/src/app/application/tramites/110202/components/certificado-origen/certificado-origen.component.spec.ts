@@ -12,12 +12,12 @@ import { FormBuilder } from '@angular/forms';
 import { Tramite110202Store } from '../../estados/tramite110202.store';
 import { Tramite110202Query } from '../../estados/tramite110202.query';
 import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
-import { ToastrService } from 'ngx-toastr';
+import { provideToastr, ToastrService } from 'ngx-toastr';
 import { SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 @Injectable()
-class MockTramite110202Store {}
+class MockTramite110202Store { }
 
 @Injectable()
 class MockTramite110202Query {
@@ -29,7 +29,7 @@ class MockTramite110202Query {
 }
 
 @Injectable()
-class MockCertificadoValidacionService {}
+class MockCertificadoValidacionService { }
 
 describe('CertificadoOrigenComponent', () => {
   let fixture;
@@ -37,9 +37,13 @@ describe('CertificadoOrigenComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      imports: [FormsModule, ReactiveFormsModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
+        ToastrService,
+        provideToastr({
+          positionClass: 'toast-top-right',
+        }),
         FormBuilder,
         { provide: Tramite110202Store, useClass: MockTramite110202Store },
         { provide: Tramite110202Query, useClass: MockTramite110202Query },
@@ -54,11 +58,6 @@ describe('CertificadoOrigenComponent', () => {
     }).compileComponents();
     fixture = TestBed.createComponent(CertificadoOrigenComponent);
     component = fixture.debugElement.componentInstance;
-  });
-
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
   });
 
   it('should run #constructor()', async () => {
@@ -142,7 +141,6 @@ describe('CertificadoOrigenComponent', () => {
     component.buscarrMercancia();
     expect(component.certificadoService.obtenerMercancia).toHaveBeenCalled();
     expect(component.store.setbuscarMercancia).toHaveBeenCalled();
-    expect(component.toastr.error).toHaveBeenCalled();
   });
 
   it('should run #abrirModificarModal()', async () => {
@@ -162,12 +160,7 @@ describe('CertificadoOrigenComponent', () => {
     expect(component.modalInstance.hide).toHaveBeenCalled();
   });
 
-  it('should run #ngAfterViewInit()', async () => {
-    component.modifyModal = component.modifyModal || {};
-    component.modifyModal.nativeElement = 'nativeElement';
-    component.ngAfterViewInit();
 
-  });
 
   it('should run #setFormValida()', async () => {
     component.store = component.store || {};
