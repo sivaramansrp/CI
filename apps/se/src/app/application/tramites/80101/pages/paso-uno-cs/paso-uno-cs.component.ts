@@ -55,13 +55,9 @@ export class PasoUnoCsComponent implements OnInit {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaState = seccionState;
-
-          this.formularioDeshabilitado = true;
+          this.formularioDeshabilitado = seccionState.readonly;
           if (this.consultaState.update) {
-            this.formularioDeshabilitado = false;
             this.guardarDatosFormulario();
-          } else if (this.consultaState.readonly) {
-            this.formularioDeshabilitado = true;
           }
         })
       )
