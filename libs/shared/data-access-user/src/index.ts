@@ -1,8 +1,9 @@
+import exp from 'constants';
+
 export { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-busqueda/acuses-y-resoluciones-folio-del-tramite-busqueda.component';
 export { AcusesYResolucionesFolioDelTramiteDetallesComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-detalles/acuses-y-resoluciones-folio-del-tramite-detalles.component';
 export { LibBandejaComponent } from './tramites/components/lib-bandeja/lib-bandeja.component';
 export { DatosGeneralesTramiteComponent } from './tramites/components/datos-generales-tramite/datos-generales-tramite.component';
-export { DatosComponent } from './tramites/components/datos/datos.component';
 export { ConsultaTramiteComponent } from './tramites/components/consulta-tramite/consulta-tramite.component';
 export { ReviewersTabsComponent } from './tramites/components/reviewers-tabs/reviewers-tabs.component';
 export { ASIGNACION_REGISTRO } from './tramites/constantes/120404/entidad.enum';
@@ -33,11 +34,8 @@ export { TablePaginationComponent } from './tramites/components/table-pagination
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
 export { TituloComponent } from './tramites/components/titulo/titulo.component';
 export { TramiteDetails } from './core/models/tramiteDetails';
-export { TramiteFolioQueries } from './core/queries/tramiteFolio.queries';
-export {
-  TramiteFolioState,
-  TramiteFolioStore,
-} from './core/estados/tramiteFolio.store';
+export * from './core/queries/tramiteFolio.query';
+export * from './core/estados/tramiteFolio.store';
 export { TramiteStore } from './core/estados/tramite.store';
 export { ValidacionesFormularioService } from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
 export * from './core/ambientes';
@@ -89,9 +87,7 @@ export * from './core/services/120402/asignacion-directa-de-cupo.enum';
 export * from './core/services/120402/descripcion-del-cupo/descripcionDelCupo.service';
 export * from './core/services/120402/representacionFederal/representacion-federal.service';
 export * from './core/services/120402/seleccion-del-cupo/seleccion-del-cupo.service';
-export * from './core/services/120501/licitacionesDisponibles.service';
 export * from './core/services/120602/empresa-frontera-solicitud.enum';
-export * from './core/services/130118/pexim/pexim.service';
 export * from './core/services/220471/servicios-pantallas.service';
 export * from './core/services/231001/administrar-residuos.service';
 export * from './core/services/231001/materia-prima-formservice.service';

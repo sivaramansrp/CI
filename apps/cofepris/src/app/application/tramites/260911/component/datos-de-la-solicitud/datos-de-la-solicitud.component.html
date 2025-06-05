@@ -9,7 +9,7 @@
               Opciones de pre-llenado de Solicitud
             </p>
             <button type="button" class="collpase-button collapsed"
-            [ngClass]="{ 'expanded': colapsable,'collapsed': !colapsable}" >
+            [ngClass]="{ 'expanded': colapsable,'collapsed': !colapsable}" [disabled]="esFormularioSoloLectura" >
           </button>
           </div>
           @if(colapsable){
@@ -20,7 +20,7 @@
                 <div class="col-md-6"></div>
                 <div class="col-md-6 text-end">
                   <div class="btn-group">
-                    <button class="btn btn-primary me-2" type="button">
+                    <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura">
                       Copiar datos en una Nueva Solicitud
                     </button>
                   </div>
@@ -78,6 +78,7 @@
             type="button"
             class="btn btn-primary"
             (click)="toggleFormControls()"
+            [disabled]="esFormularioSoloLectura"
           >
             Seleccionar establecimiento
           </button>

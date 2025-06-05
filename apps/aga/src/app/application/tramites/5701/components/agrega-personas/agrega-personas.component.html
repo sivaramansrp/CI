@@ -7,6 +7,7 @@
       [formControl]="gafeteRespoDespacho"
       placeholder=""
       type="text"
+      maxlength="30"
       [ngClass]="gafeteIsValid ? 'required' : ''"
       libUppercase
     />
@@ -37,6 +38,7 @@
         placeholder=""
         type="text"
         formControlName="nombreRespoDespacho"
+        maxlength="30"
         [ngClass]="isValid('nombreRespoDespacho') ? 'required' : ''"
       />
     </div>
@@ -50,6 +52,7 @@
         placeholder=""
         type="text"
         formControlName="paternoRespoDespacho"
+        maxlength="30"
         [ngClass]="isValid('paternoRespoDespacho') ? 'required' : ''"
       />
     </div>
@@ -63,6 +66,7 @@
         placeholder=""
         type="text"
         formControlName="maternoRespoDespacho"
+        maxlength="30"
         [ngClass]="isValid('maternoRespoDespacho') ? 'required' : ''"
       />
     </div>

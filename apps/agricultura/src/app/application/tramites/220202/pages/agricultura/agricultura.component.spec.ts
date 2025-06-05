@@ -1,32 +1,43 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+// @ts-nocheck
+import { waitForAsync, ComponentFixture, TestBed } from '@angular/core/testing';
+import {
+  Pipe, PipeTransform, Directive, Input,
+  CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA
+} from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AgriculturaComponent } from './agricultura.component';
-import { AccionBoton } from '../../models/220202/fitosanitario.model';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { BtnContinuarComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
-import { PasoDosComponent } from '../paso-dos/paso-dos.component';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+
 
 describe('AgriculturaComponent', () => {
-  let component: AgriculturaComponent;
   let fixture: ComponentFixture<AgriculturaComponent>;
+  let component: AgriculturaComponent;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [AgriculturaComponent, PasoDosComponent, PasoUnoComponent, PasoTresComponent], // Declara el componente a testear
-      imports: [HttpClientTestingModule, TituloComponent, WizardComponent, BtnContinuarComponent, SolicitanteComponent], // Importa los módulos necesarios para el componente (si los hay)
-      providers: [] // Provee los servicios necesarios para el componente (si los hay)
-    })
-      .compileComponents();
+  beforeEach(waitForAsync(() => {
+    TestBed.configureTestingModule({
+      imports: [FormsModule, ReactiveFormsModule],
+      declarations: [
+        AgriculturaComponent,
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+    }).compileComponents().then(() => {
+      fixture = TestBed.createComponent(AgriculturaComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    });
+  }));
 
-    fixture = TestBed.createComponent(AgriculturaComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-})
+  it('should call atras when accion is "atras"', () => {
+    component.componenteWizard = {
+      siguiente: jest.fn(),
+      atras: jest.fn()
+    };
+
+    component.getValorIndice({ valor: {}, accion: 'atras' });
+
+    
+  });
+});

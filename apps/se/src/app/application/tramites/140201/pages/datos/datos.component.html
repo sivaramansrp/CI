@@ -20,10 +20,14 @@
             <solicitante #Solicitante></solicitante>
             }
             @case (2) {
+                   @if(esDatosRespuesta){
             <app-cancelacion-de-autorizaciones> </app-cancelacion-de-autorizaciones>
+                   }
             }
             @case (3) {
+                    @if(esDatosRespuesta){
             <app-entidad-externa> </app-entidad-externa>
+                    }
             }
             }
         </ng-container>

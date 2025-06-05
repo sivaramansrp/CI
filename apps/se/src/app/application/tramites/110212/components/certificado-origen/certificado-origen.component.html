@@ -63,12 +63,14 @@
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="optionsTratado" [label]="'Tratado/Acuerdo*:'" [required]="true" id="tratado"
             formControlName="tratado" [ngClass]="isValid(grupoTratado,'tratado') ? 'required' : ''"
-            (change)=" setValoresStore(grupoTratado, 'tratado', 'setGrupoTratadoTratado') "></app-catalogo-select>
+            (change)=" setValoresStore(grupoTratado, 'tratado', 'setGrupoTratadoTratado') "
+            [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="optionsPais" [label]="'País / Bloque*:'" [required]="true" id="pais"
             formControlName="pais" [ngClass]="isValid(grupoTratado,'pais') ? 'required' : ''"
-            (change)="setValoresStore(grupoTratado, 'pais', 'setGrupoTratadoPais')"></app-catalogo-select>
+            (change)="setValoresStore(grupoTratado, 'pais', 'setGrupoTratadoPais')"
+            [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
       </div>
       <div class="row mt-5">
@@ -99,17 +101,19 @@
       <div class="row mt-5">
         <div class="col-md-4">
           <input-fecha [setFecha]="formularioCertificado.get('grupoTratado.fechaInicial')?.value"
-            [datos]="fechaInicialInput" (valorCambiado)="cambioFechaInicial($event)"></input-fecha>
+            [datos]="fechaInicialInput" (valorCambiado)="cambioFechaInicial($event)"
+            [isDisabled]="soloLectura"></input-fecha>
         </div>
         <div class="col-md-4">
           <input-fecha [setFecha]="formularioCertificado.get('grupoTratado.fechaFinal')?.value"
-            [datos]="fechaFinalInput" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
+            [datos]="fechaFinalInput" (valorCambiado)="cambioFechaFinal($event)"
+            [isDisabled]="soloLectura"></input-fecha>
         </div>
       </div>
     </ng-container>
 
     <div class="col-md-12 mt-5 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary ms-3"> Buscar mercancías </button>
+      <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura"> Buscar mercancías </button>
     </div>
 
     <div class="row mt-5">
@@ -123,7 +127,8 @@
     </ng-container>
     <ng-titulo titulo="Carga de mercancías por archivo" />
     <div class="col-md-12 mt-5 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary ms-3" (click)="cargaArchivo()"> Carga por archivo </button>
+      <button type="button" class="btn btn-primary ms-3" (click)="cargaArchivo()" [disabled]="soloLectura"> Carga por
+        archivo </button>
     </div>
     <div class="row mt-5">
       <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA" style="margin-top: 40px"></ng-alert>
@@ -134,10 +139,12 @@
       </div>
       <div class="table-container mt-5">
         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.RADIO" [configuracionTabla]="seleccionadasEncabezados"
-          [datos]="mercanciaSeleccionadasTablaDatos" (filaSeleccionada)="seleccionDeFilas($event)"></app-tabla-dinamica>
+          [datos]="mercanciaSeleccionadasTablaDatos" (filaSeleccionada)="seleccionDeFilas($event)"
+          [disableSeleccionTablaRadio]="soloLectura"></app-tabla-dinamica>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
-          <button type="button" class="btn btn-danger ms-3" (click)="eliminar()">Eliminar</button>
-          <button type="button" class="btn btn-primary ms-3"> Modificar </button>
+          <button type="button" class="btn btn-danger ms-3" (click)="eliminar()"
+            [disabled]="soloLectura">Eliminar</button>
+          <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura"> Modificar </button>
         </div>
       </div>
     </ng-container>
@@ -235,7 +242,8 @@
               <div class="col-md-4">
                 <app-catalogo-select [catalogo]="optionsPais" [label]="'UMC'" [required]="true" id="pais"
                   formControlName="pais" [ngClass]="isValid(formularioMercancia,'pais') ? 'required' : ''"
-                  (change)="setValoresStore(formularioMercancia, 'pais', 'setPais')"></app-catalogo-select>
+                  (change)="setValoresStore(formularioMercancia, 'pais', 'setPais')"
+                  [isDisabled]="soloLectura"></app-catalogo-select>
               </div>
 
             </div>
@@ -257,7 +265,7 @@
             <div class="row mt-5">
               <div class="col-md-4">
                 <input-fecha [setFecha]="formularioMercancia.get('fecha')?.value" [datos]="fechaFacturaInput"
-                  (valorCambiado)="cambioFechaFactura($event)"></input-fecha>
+                  (valorCambiado)="cambioFechaFactura($event)" [isDisabled]="soloLectura"></input-fecha>
               </div>
               <div class="col-md-4">
                 <label>N° factura:</label>
@@ -267,7 +275,8 @@
               <div class="col-md-4">
                 <app-catalogo-select [catalogo]="optionsTipoFactura" [label]="'Tipo de factura'" id="tipoFactura"
                   formControlName="tipoFactura"
-                  (change)=" setValoresStore( formularioMercancia, 'tipoFactura', 'setTipoFactura' ) "></app-catalogo-select>
+                  (change)=" setValoresStore( formularioMercancia, 'tipoFactura', 'setTipoFactura' ) "
+                  [isDisabled]="soloLectura"></app-catalogo-select>
               </div>
             </div>
           </ng-container>

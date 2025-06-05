@@ -29,6 +29,7 @@
                 [type]="item.props.tipo_input"
                 [id]="item.props.campo"
                 [placeholder]="item.props.placeholder"
+                [disabled]="esFormularioSoloLectura"
                 [formControlName]="item.props.campo"
                 libUppercase
               />
@@ -133,6 +134,7 @@
                   [type]="item.props.tipo_input"
                   [id]="item.props.campo"
                   [placeholder]="item.props.placeholder"
+                  [disabled]="esFormularioSoloLectura"
                   [formControlName]="item.props.campo"
                   libUppercase
                 />

@@ -47,18 +47,26 @@ export interface Tramite260911State {
   acuerdoPublico: string;
   /** RFC */
   rfc: string;
-   /** Clave de referencia del trámite */
-   claveDeReferencia: string;
-   /** Cadena de pago de la dependencia */
-   cadenaPagoDependencia: string;
-   /** Clave del trámite */
-   clave: string;
-   /** Llave de pago */
-   llaveDePago: string;
-   /** Fecha de pago */
-   fecPago: string;
-   /** Importe del pago */
-   impPago: string;
+  /** Clave de referencia del trámite */
+  claveDeReferencia: string;
+  /** Cadena de pago de la dependencia */
+  cadenaPagoDependencia: string;
+  /** Clave del trámite */
+  clave: string;
+  /** Llave de pago */
+  llaveDePago: string;
+  /** Fecha de pago */
+  fecPago: string;
+  /** Importe del pago */
+  impPago: string;
+  /** Licencia sanitaria */
+  licenciaSanitaria: string;
+  /** Nombre del representante legal */
+  nombre: string;
+  /** Apellido paterno del representante legal */
+  apellidoPaterno: string;
+  /** Apellido materno del representante legal */
+  apellidoMaterno: string;
 }
 
 /**
@@ -93,6 +101,10 @@ export function createInitialState(): Tramite260911State {
     llaveDePago: '',
     fecPago: '',
     impPago: '',
+    licenciaSanitaria: '',
+    nombre: '',
+    apellidoPaterno: '',
+    apellidoMaterno: '',
   };
 }
 
@@ -123,5 +135,5 @@ export class Tramite260911Store extends Store<Tramite260911State> {
       ...valores,
     })));
   }
- 
+
 }

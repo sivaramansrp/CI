@@ -4,6 +4,8 @@ import {
   REGEX_PERMITE_11_3_DIGITS,
   REGEX_SOLO_DIGITOS
 } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { Partidas } from '../models/importacion-definitiva.model';
 
 /**
  * @constant DATOS_DEL_TRAMITE_REALIZAR
@@ -144,8 +146,7 @@ export const DATOS_DE_LA_MERCANCIA = [
     soloLectura: false,
     validadores: [
       {
-        tipo: 'required',
-        mensaje: '',
+        tipo: 'required'
       },
       {
         tipo: 'maxlength',
@@ -183,7 +184,7 @@ export const DATOS_DE_LA_MERCANCIA = [
   {
     id: 'cantidad',
     labelNombre: 'Cantidad',
-    campo: 'cantidad',
+    campo: 'datos_cantidad',
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: false,
@@ -258,9 +259,9 @@ export const DATOS_DE_LA_MERCANCIA = [
  */
 export const PARTIDAS_DE_LA_MERCANCIA = [
   {
-    id: 'cantidad',
+    id: 'partidas_cantidad',
     labelNombre: 'Cantidad',
-    campo: 'cantidad',
+    campo: 'partidas_cantidad',
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: false,
@@ -288,7 +289,7 @@ export const PARTIDAS_DE_LA_MERCANCIA = [
     marginTop: 0,
   },
   {
-    id: '',
+    id: 'seleccion_fraccion',
     labelNombre: '',
     campo: 'seleccion_fraccion',
     clase: 'col-md-4',
@@ -306,17 +307,16 @@ export const PARTIDAS_DE_LA_MERCANCIA = [
     marginTop: 0,
   },
   {
-    id: 'descripcion',
+    id: 'partidas_descripcion',
     labelNombre: 'Descripción',
-    campo: 'descripcion',
+    campo: 'partidas_descripcion',
     clase: 'col-md-8',
     tipoInput: 'textarea',
     desactivado: false,
     soloLectura: false,
     validadores: [
       {
-        tipo: 'required',
-        mensaje: '',
+        tipo: 'required'
       },
       {
         tipo:'maxlength',
@@ -327,9 +327,9 @@ export const PARTIDAS_DE_LA_MERCANCIA = [
     marginTop: 0
   },
   {
-    id: 'valor_partida_usd',
+    id: 'partidas_valor_factura_USD',
     labelNombre: 'Valor partida USD',
-    campo: 'valor_partida_usd',
+    campo: 'partidas_valor_factura_USD',
     clase: 'col-md-4',
     tipoInput: 'text',
     desactivado: false,
@@ -364,10 +364,10 @@ export const PARTIDAS_DE_LA_MERCANCIA = [
  */
 export const USO_ESPECIFICO_DE_LA_MERCANCIA = [
   {
-    id: 'fraccion_arancelaria',
+    id: 'uso_fraccion_arancelaria',
     labelNombre:
       'Fracción arancelaria PROSEC (Especificar la fracción arancelaria del producto en el que se utilizará la mercancía a importar)',
-    campo: 'fraccion_arancelaria',
+    campo: 'uso_fraccion_arancelaria',
     clase: 'col-md-8',
     tipoInput: 'select-catalogos',
     desactivado: false,
@@ -377,10 +377,10 @@ export const USO_ESPECIFICO_DE_LA_MERCANCIA = [
     marginTop: 0,
   },
   {
-    id: 'descripcion',
+    id: 'uso_descripcion',
     labelNombre:
       'Descripción fracción PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizará la mercancía a importar)',
-    campo: 'descripcion',
+    campo: 'uso_descripcion',
     clase: 'col-md-8',
     tipoInput: 'textarea',
     desactivado: false,
@@ -629,3 +629,63 @@ export const MODIFICAR_PARTIDAS_FORM = [
  
  
 ];
+
+/**
+ * @constant ENCABEZADO_TABLA
+ * @description
+ * Define la configuración de las columnas para la tabla de partidas en el proceso de importación definitiva.
+ * @type {ConfiguracionColumna<Partidas>[]}
+ */
+export const ENCABEZADO_TABLA: ConfiguracionColumna<Partidas>[] = [
+    { encabezado: 'ID', clave: (artículo) => artículo.id, orden: 1 },
+    {
+      encabezado: 'Fracción Arancelaria',
+      clave: (artículo) => artículo.fraccionArancelariaProsec,
+      orden: 2,
+    },
+    {
+      encabezado: 'Descripción',
+      clave: (artículo) => artículo.descripcion,
+      orden: 3,
+    },
+  ]
+
+  /**
+ * @constant PARTIDAS_COLUMN_TABLA
+ * @description
+ * Define la configuración de las columnas para la tabla de partidas en el proceso de importación definitiva.
+ * @type {ConfiguracionColumna<Partidas>[]}
+ */
+  export const PARTIDAS_COLUMN_TABLA: ConfiguracionColumna<Partidas>[] = [
+      { encabezado: '', clave: (artículo) => artículo.id, orden: 1 },
+      {
+        encabezado: 'Cantidad',
+        clave: (artículo) => artículo.cantidad,
+        orden: 1,
+      },
+      {
+        encabezado: 'Unidad de medida',
+        clave: (artículo) => artículo.unidadDeMedida,
+        orden: 2,
+      },
+      {
+        encabezado: 'Fracción Arancelaria',
+        clave: (artículo) => artículo.fraccionArancelariaTigie,
+        orden: 3,
+      },
+      {
+        encabezado: 'Descripción',
+        clave: (artículo) => artículo.descripcion,
+        orden: 4,
+      },
+      {
+        encabezado: 'Precio unitario USD',
+        clave: (artículo) => artículo.precioUnitario,
+        orden: 5,
+      },
+      {
+        encabezado: 'Total USD',
+        clave: (artículo) => artículo.totalUsd,
+        orden: 6,
+      },
+    ];
