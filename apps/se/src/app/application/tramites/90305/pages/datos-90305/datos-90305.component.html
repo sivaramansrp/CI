@@ -17,13 +17,14 @@
         
 <solicitante #Solicitante></solicitante>
             }
-            @case (2) {
+            @case (2) {@if (esDatosRespuesta) {
           <app-modificacion-90305></app-modificacion-90305>
-            }
+            }}
           @case (3) {
-<app-bitacora-90305></app-bitacora-90305>
-          }
-            }
+            @if(esDatosRespuesta){
+      <app-bitacora-90305></app-bitacora-90305>
+         }
+        }}
         </ng-container>
     </div>
 </div>

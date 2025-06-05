@@ -33,7 +33,6 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   declarations: [
     PasoDosComponent,
     PasoTresComponent,
-    PasoUnoComponent,
     ImmexRegistroSolicitudModalityComponent,
   ],
   imports: [
@@ -51,7 +50,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     CatalogoSelectComponent,
     Anexo1Component,
     TablaDinamicaComponent,
-    SolicitanteComponent
+    SolicitanteComponent,
+    PasoUnoComponent
   ],
   providers: [ToastrService],
 })

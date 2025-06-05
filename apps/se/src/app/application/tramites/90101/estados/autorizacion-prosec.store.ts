@@ -1,19 +1,50 @@
-import { ListaDeDatosFinal, Plantas, SectoresYMercancias, createDatosState } from '../models/prosec.module';
 import { Store, StoreConfig } from '@datorama/akita';
-import { Injectable } from '@angular/core';
 import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Injectable } from '@angular/core';
 
+/**
+ * @descripcion
+ * Interfaz que define la estructura del estado para la autorización PROSEC.
+ */
 export interface ProsecState {
+    /**
+     * @descripcion Modalidad seleccionada en el trámite.
+     */
     modalidad: string;
+    /**
+     * @descripcion Lista de estados seleccionados.
+     */
     Estado: Catalogo[];
+    /**
+     * @descripcion Lista de representaciones federales seleccionadas.
+     */
     RepresentacionFederal: Catalogo[];
+    /**
+     * @descripcion Lista de actividades productivas seleccionadas.
+     */
     ActividadProductiva: Catalogo[];
+    /**
+     * @descripcion Lista de sectores seleccionados.
+     */
     Sector: Catalogo[];
+    /**
+     * @descripcion Fracción arancelaria seleccionada.
+     */
     Fraccion_arancelaria: string;
+    /**
+     * @descripcion Contribuyentes registrados.
+     */
     contribuyentes: string;
+    /**
+     * @descripcion Estado de validez del formulario.
+     */
     formaValida: Catalogo[];
 }
 
+/**
+ * @descripcion
+ * Función que retorna el estado inicial para la autorización PROSEC.
+ */
 export function createInitialState(): ProsecState {
     return {
         modalidad: '',
@@ -26,8 +57,11 @@ export function createInitialState(): ProsecState {
         formaValida: []
     }
 }
+
 /**
- * Store to manage the state of Prosec authorization.
+ * @descripcion
+ * Store encargado de gestionar el estado de la autorización PROSEC.
+ * Permite actualizar y consultar los datos relacionados con el trámite de autorización PROSEC.
  */
 @Injectable({
     providedIn: 'root',
@@ -39,27 +73,34 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
     }
 
     /**
-     * Updates the state with the information of sectors and goods.
-     * @param sectoresYMercancias Data of sectors and goods.
+     * @descripcion
+     * Actualiza el estado con la modalidad seleccionada.
+     * @param modalidad Modalidad seleccionada.
      */
     public setModalidad(modalidad: string) {
         this.update((state) => ({
             ...state,
-            modalidad, // Wraps the data in an array
+            modalidad,
         }));
     }
 
     /**
-     * Updates the state with the information of plants.
-     * @param Plantas Data of plants.
+     * @descripcion
+     * Actualiza el estado con la información de los estados seleccionados.
+     * @param Estado Lista de estados seleccionados.
      */
     public setEstado(Estado: Catalogo[]) {
         this.update((state) => ({
             ...state,
-            Estado, // Wraps the data in an array
+            Estado,
         }));
     }
 
+    /**
+     * @descripcion
+     * Actualiza el estado con la información de la representación federal seleccionada.
+     * @param RepresentacionFederal Lista de representaciones federales seleccionadas.
+     */
     public setRepresentacionFederal(RepresentacionFederal: Catalogo[]) {
         this.update((state) => ({
             ...state,
@@ -67,6 +108,11 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
         }));
     }
 
+    /**
+     * @descripcion
+     * Actualiza el estado con la información de la actividad productiva seleccionada.
+     * @param ActividadProductiva Lista de actividades productivas seleccionadas.
+     */
     public setActividadProductiva(ActividadProductiva: Catalogo[]) {
         this.update((state) => ({
             ...state,
@@ -74,6 +120,11 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
         }));
     }
 
+    /**
+     * @descripcion
+     * Actualiza el estado con la información de los sectores seleccionados.
+     * @param Sector Lista de sectores seleccionados.
+     */
     public setSector(Sector: Catalogo[]) {
         this.update((state) => ({
             ...state,
@@ -81,6 +132,11 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
         }));
     }
 
+    /**
+     * @descripcion
+     * Actualiza el estado con la fracción arancelaria seleccionada.
+     * @param Fraccion_arancelaria Fracción arancelaria seleccionada.
+     */
     public setFraccionArancelaria(Fraccion_arancelaria: string) {
         this.update((state) => ({
             ...state,
@@ -88,6 +144,11 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
         }));
     }
 
+    /**
+     * @descripcion
+     * Actualiza el estado con los contribuyentes registrados.
+     * @param contribuyentes Contribuyentes registrados.
+     */
     public setcontribuyentes(contribuyentes: string) {
         this.update((state) => ({
             ...state,
@@ -95,6 +156,11 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
         }));
     }
 
+    /**
+     * @descripcion
+     * Actualiza el estado de validez del formulario.
+     * @param formaValida Lista que indica el estado de validez del formulario.
+     */
     public setFormaValida(formaValida: Catalogo[]){
         this.update((state) => ({
             ...state,
