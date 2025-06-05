@@ -130,7 +130,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
    this.inicializarEstadoFormulario();
-    //this.enPatchStoredFormData();
     this.obtenerBancoList();
   }
 
@@ -235,26 +234,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       });
   }
 
-  /**
-   * Actualiza el formulario con datos obtenidos desde la tienda.
-   */
-  public enPatchStoredFormData(): void {
-    this.tramite260912Query.selectTramite260912$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.pagoDeDerechosForm.patchValue({
-            claveDeReferencia: seccionState.claveDeReferencia,
-            cadenaPagoDependencia: seccionState.cadenaPagoDependencia,
-            clave: seccionState.clave,
-            llaveDePago: seccionState.llaveDePago,
-            fecPago: seccionState.fecPago,
-            impPago: seccionState.impPago,
-          });
-        })
-      )
-      .subscribe();
-  }
 
   /**
    * Verifica si un control del formulario es inválido, tocado o modificado.
