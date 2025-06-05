@@ -289,6 +289,7 @@ export class CrosslistComponent implements OnInit, OnChanges {
             txtBtnAceptar: 'Cerrar',
             txtBtnCancelar: '',
           });
+          return;
       }
 
       const FECHA_VALOR = this.fechaSeleccionada.value.map(Number);
