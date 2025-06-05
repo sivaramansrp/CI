@@ -1,13 +1,14 @@
-import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
+import { Injectable } from '@angular/core';
 
 import { Cancelacion, PermisosDatos } from '../models/cancelacion-de-solicitus.model';
 import { DesistimientoStore } from '../estados/desistimiento-de-permiso.store';
-
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
 })
+
 export class ServicioDeMensajesService {
   /**
    * @description Subject that acts as the source of boolean messages.
@@ -39,7 +40,7 @@ export class ServicioDeMensajesService {
    * 
    * @param {DesistimientoStore} desistimientoStore - Store responsible for managing form data.
    */
-  constructor(private readonly desistimientoStore: DesistimientoStore) {
+  constructor(private readonly desistimientoStore: DesistimientoStore,private http: HttpClient) {
 
   }
 
@@ -49,7 +50,8 @@ export class ServicioDeMensajesService {
    * 
    * @param mensaje El valor booleano que se enviará a los suscriptores.
    */
-  enviarMensaje(mensaje: boolean) {
+  enviarMensaje(mensaje: boolean): void {
+    // Emite el mensaje a todos los suscriptores del observable
     this.fuenteDelMensaje.next(mensaje);
   }
 
@@ -60,7 +62,7 @@ export class ServicioDeMensajesService {
    * 
    * @param valor El valor booleano que se enviará para indicar el estado de los datos de permiso.
    */
-  establecerDatosDePermiso(valor: boolean) {
+  establecerDatosDePermiso(valor: boolean): void{
     this.datosDePermiso.next(valor);
   }
 
@@ -71,7 +73,7 @@ export class ServicioDeMensajesService {
    * 
    * @param valor Array de objetos de tipo Cancelacion con los nuevos datos del formulario.
    */
-  actualizarDatosForma(valor: Cancelacion[]) {
+  actualizarDatosForma(valor: Cancelacion[]):void{
     this.desistimientoStore.actualizarDatosForma(valor as Cancelacion[]);
   }
 
@@ -84,4 +86,40 @@ export class ServicioDeMensajesService {
   public obtenerDatos(): Observable<PermisosDatos> {
     return this.desistimientoStore._select(state => state); // Devuelve el estado completo
   }
+
+   /**
+ * Actualiza el estado del formulario con los datos proporcionados.
+ * 
+ * @param DATOS - Estado de la solicitud `Solicitud230401State` con la información 
+ *                del tipo de solicitud a actualizar en el store.
+ */
+actualizarEstadoFormulario(DATOS: Partial<PermisosDatos>): void {
+  this.desistimientoStore.update((state) => ({
+    ...state,
+    ...DATOS
+  }));
+}
+
+/**
+Obtiene los datos simulados para el registro de toma de muestras de mercancías.
+Realiza una solicitud HTTP al archivo 'requestCancallar.json' ubicado en la carpeta de assets.
+Devuelve un observable que emite el estado de la solicitud de cancelación.
+@returns {Observable<CancelarSolicitudState>} Observable que emite los datos del estado de la solicitud de cancelación. */
+getRegistroTomaMuestrasMercanciasData(): Observable<PermisosDatos> {
+  return this.http.get<PermisosDatos>('assets/json/140105/permisosCancelar.json');
+}
+
+/**
+ * Carga los datos simulados desde un archivo JSON
+ * y los actualiza en el store.
+ */
+cargarDatosSimulados(): void {
+  this.getRegistroTomaMuestrasMercanciasData().subscribe((respuesta) => {
+    this.desistimientoStore.update((state) => ({
+      ...state,
+      ...respuesta
+    }));
+  });
+}
+
 }

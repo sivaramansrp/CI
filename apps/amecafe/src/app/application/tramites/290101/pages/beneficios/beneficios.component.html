@@ -13,7 +13,7 @@
               id="razonSocial"
               class="form-control"
               formControlName="razonSocial"
-              
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
           <div class="col-md-4">
@@ -26,7 +26,7 @@
                 [isDisabled]="false"
                 formControlName="propAlquil"
                 [required]="true"
-               
+               [isDisabled]="esFormularioSoloLectura"
               ></app-catalogo-select>
             </div>
           </div>
@@ -42,6 +42,7 @@
               id="calle"
               class="form-control"
               formControlName="calle"
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
           <div class="col-md-4 form-group">
@@ -53,6 +54,7 @@
               id="numeroExterior"
               class="form-control"
               formControlName="numeroExterior"
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
           <div class="col-md-4 form-group">
@@ -64,6 +66,7 @@
               id="numeroInterior"
               class="form-control"
               formControlName="numeroInterior"
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
           <div class="col-md-4 form-group">
@@ -75,6 +78,7 @@
               id="colonia"
               class="form-control"
               formControlName="colonia"
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
           <div class="col-md-4">
@@ -87,6 +91,7 @@
                 [isDisabled]="false"
                 formControlName="estado"
                 [required]="true"
+                [isDisabled]="esFormularioSoloLectura"
                 
               ></app-catalogo-select>
             </div>
@@ -101,6 +106,7 @@
               id="codigoPostal"
               class="form-control"
               formControlName="codigoPostal"
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
           <div class="col-md-4 form-group">
@@ -112,6 +118,7 @@
               id="capacidadAlmacenaje"
               class="form-control"
               formControlName="capacidadAlmacenaje"
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
           <div class="col-md-4 form-group">
@@ -123,6 +130,7 @@
               id="volumenAlmacenaje"
               class="form-control"
               formControlName="volumenAlmacenaje"
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
 
