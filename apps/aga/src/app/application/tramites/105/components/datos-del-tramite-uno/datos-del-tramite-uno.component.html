@@ -153,7 +153,7 @@
     <div class="row">
       <p class="fw-bold">Seleccione la aduana por la que llevará a cabo las operaciones</p>
       <div class="col-md-8 mt-3">
-        <app-catalogo-select [isDisabled]="deshabilitarSeleccion" [catalogo]="aduana" formControlName="aduana" [label]="'Aduana'"
+        <app-catalogo-select [isDisabled]="esFormularioSoloLectura" [catalogo]="aduana" formControlName="aduana" [label]="'Aduana'"
           [required]="true" (change)="setValoresStore(datosDelTramite, 'aduana', 'setAduana')"></app-catalogo-select>
       </div>
     </div>
