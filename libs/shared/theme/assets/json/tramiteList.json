@@ -1241,8 +1241,8 @@
   {
     "id": 178,
     "tramite": 260906,
-    "linkDashboard": "/cofepris/modificacion-permiso-sanitario",
-    "linkDepartment": "/pago/modificacion-permiso-sanitario",
+    "linkDashboard": "/cofepris/modificacion-permiso-sanitario-importacion-maquila",
+    "linkDepartment": "/pago/modificacion-permiso-sanitario-importacion-maquila",
     "department": "cofepris"
   },
   {
@@ -1479,15 +1479,15 @@
   {
     "id": 212,
     "tramite": 260208,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/medicamentos-destinados-uso/contenedor-de-pasos",
+    "linkDepartment": "/pago/medicamentos-destinados-uso/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
     "id": 213,
     "tramite": 260209,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/importacion-destinados-donacio/contenedor-de-pasos",
+    "linkDepartment": "/pago/importacion-destinados-donacio/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
