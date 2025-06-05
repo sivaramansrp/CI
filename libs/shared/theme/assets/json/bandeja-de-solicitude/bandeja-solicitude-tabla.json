@@ -18,6 +18,15 @@
     "numeroDeProcedimiento": "260701"
   },
   {
+    "id": 6001,
+    "tipoDeTramite": "Consulta de Permiso",
+    "fecha": "2021-10-01",
+    "fechaActualizacion": "2022-10-05",
+    "diasTranscurridos": "6",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "6001"
+  },
+  {
     "id": 110101,
     "tipoDeTramite": "Consulta de Proceso",
     "fecha": "2023-10-06",
@@ -1672,6 +1681,15 @@
       "diasTranscurridos": "4",
       "departamento": "SE",
       "numeroDeProcedimiento": "140105"
+    },
+   {
+    "id": 130106,
+    "tipoDeTramite": "Expedición de Certificados de Cupo Licitación pública",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "130106"
     },{
       "id": 110211,
         "tipoDeTramite": "Solicitud de se Permiso",
