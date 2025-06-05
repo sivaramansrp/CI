@@ -1,9 +1,4 @@
 import {
-  CVE_UNIDAD_ADMIN,
-  MSG_REGISTRO_EXITOSO,
-  TIPO_TRAMITE,
-} from '../../../../core/enums/5701/tramite5701.enum';
-import {
   Component,
   EventEmitter,
   OnInit,
@@ -30,6 +25,10 @@ import {
   PersonaResponsableDespacho,
   SolicitudPayload,
 } from '../../../../core/models/5701/solicitud-payload.model';
+import {
+  MSG_REGISTRO_EXITOSO,
+  TIPO_TRAMITE,
+} from '../../../../core/enums/5701/tramite5701.enum';
 import { Observable, Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { GuardaSolicitudService } from '../../../../core/services/5701/guardar/guarda-solicitud.service';
 import { Solicitud5701State } from '../../../../core/estados/tramites/tramite5701.store';
