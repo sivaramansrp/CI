@@ -1,8 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+} from '@libs/shared/data-access-user/src';
 import { Tramite260202Query } from '../../estados/tramite260202Query.query';
 import { Tramite260202Store } from '../../estados/tramite260202Store.store';
-
 
 @Component({
   selector: 'app-paso-uno',
@@ -10,34 +13,41 @@ import { Tramite260202Store } from '../../estados/tramite260202Store.store';
   styleUrl: './paso-uno.component.scss',
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
-    /**
+  /**
+   * @description Constructor del componente.
+   * Inicializa el componente y establece el índice de la pestaña seleccionada.
+   */
+  formularioDeshabilitado: boolean = false;
+
+  /**
+   * @property {Subject<void>} destroyNotifier$ - Subject para notificar la destrucción del componente.
+   * Utilizado para cancelar suscripciones y evitar fugas de memoria.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+  /**
    * The index of the currently selected tab.
-   * 
+   *
    * @type {number | undefined}
    * @default 1
    */
   indice: number | undefined = 1;
-
-   /**
-   * A `Subject` used as a notifier to signal the destruction of the component.
-   * This is typically used to unsubscribe from observables to prevent memory leaks.
-   * 
-   * @private
-   * @type {Subject<void>}
+  /**
+   * @property {ConsultaioState} consultaState - Estado actual relacionado con la consulta.
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  public consultaState!: ConsultaioState;
 
   /**
    * Constructor de la clase PasoUnoComponent.
-   * 
+   *
    * Este constructor inyecta las dependencias necesarias para el funcionamiento del componente.
-   * 
+   *
    * @param tramite260202Query - Servicio que proporciona acceso a las consultas relacionadas con el flujo del trámite.
    * @param tramite260202Store - Servicio que gestiona el estado del flujo del trámite.
    */
   constructor(
     private tramite260202Query: Tramite260202Query,
-    private tramite260202Store: Tramite260202Store
+    private tramite260202Store: Tramite260202Store,
+    private consultaQuery: ConsultaioQuery
   ) {
     // El constructor necesita inyectar las dependencias.
   }
@@ -45,9 +55,9 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   /**
    * @override
    * @method ngOnInit
-   * @description Este método se ejecuta al inicializar el componente. Se suscribe al observable `getTabSeleccionado$` 
+   * @description Este método se ejecuta al inicializar el componente. Se suscribe al observable `getTabSeleccionado$`
    * del servicio `tramite260202Query` para obtener el índice de la pestaña seleccionada y lo asigna a la propiedad `indice`.
-   * También utiliza el operador `takeUntil` para gestionar la suscripción y evitar fugas de memoria, 
+   * También utiliza el operador `takeUntil` para gestionar la suscripción y evitar fugas de memoria,
    * deteniéndola cuando se emite un valor en el observable `destroyNotifier$`.
    * @returns {void}
    */
@@ -57,8 +67,37 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       .subscribe((tab) => {
         this.indice = tab;
       });
-  }
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
 
+          this.formularioDeshabilitado = true;
+          if (this.consultaState.update) {
+            this.formularioDeshabilitado = false;
+            this.guardarDatosFormulario();
+          } else if (this.consultaState.readonly) {
+            this.formularioDeshabilitado = true;
+          }
+        })
+      )
+      .subscribe();
+  }
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    // this.autorizacionProgrmaNuevoService
+    //   .getRegistroTomaMuestrasMercanciasData()
+    //   .pipe(takeUntil(this.destroyNotifier$))
+    //   .subscribe((resp) => {
+    //     if (resp) {
+    //       this.autorizacionProgrmaNuevoService.actualizarEstadoFormulario(resp);
+    //     }
+    //   });
+  }
   /**
    * Selecciona una pestaña específica en el flujo del trámite.
    *
