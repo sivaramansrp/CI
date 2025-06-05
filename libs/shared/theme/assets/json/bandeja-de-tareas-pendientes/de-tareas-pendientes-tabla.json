@@ -9224,6 +9224,16 @@
     "origin": "READ_PROCEDURE"
   },
   {
+    "folioTramite": "0987612345678901234567890",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-01",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "aga",
+    "numeroDeProcedimiento": "104",
+    "origin": "READ_PROCEDURE"
+  },
+  {
     "folioTramite": "1234567890123456789012345",
     "tipoDeTramite": "Solicitud de Proceso Interno",
     "nombreDeLaTarea": "Evaluar solicitud",
