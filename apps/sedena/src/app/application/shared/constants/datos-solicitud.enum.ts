@@ -111,6 +111,7 @@ export const NUMERO_TRAMITE = {
   TRAMITE_240114: 240114,
   TRAMITE_240308: 240308,
   TRAMITE_240117: 240117,
+  TRAMITE_240120: 240120,
   TRAMITE_240121: 240121,
   TRAMITE_240405: 240405,
   TRAMITE_240305: 240305,
@@ -200,6 +201,18 @@ export const MOSTRAR_INFORMACION = [240118];
 export const CAMPO_OBLIGATORIO_PROVEEDOR = [240111];
 
 /**
+ * Constante que representa los campos obligatorios para el formulario de agregar proveedor.
+ * 
+ * @const AGREGARPROVEEDORFORM
+ * @type {number[]}
+ * @description Contiene un arreglo de identificadores numéricos que indican 
+ * los campos que son requeridos para el formulario de agregar proveedor en el sistema.
+ * Estos identificadores se utilizan para validar y mostrar los campos correspondientes
+ * en el formulario de proveedores.
+ */
+export const AGREGARPROVEEDORFORM =[240118, 240120];
+
+/**
  * Constante que representa los campos obligatorios para los derechos.
  * 
  * @const CAMPO_OBLIGATORIO_DERECHOS
@@ -207,7 +220,7 @@ export const CAMPO_OBLIGATORIO_PROVEEDOR = [240111];
  * @description Contiene un arreglo de identificadores numéricos que indican 
  * los campos que son requeridos para los derechos en el sistema.
  */
-export const CAMPO_OBLIGATORIO_DERECHOS = [240111,240112, 240118];
+export const CAMPO_OBLIGATORIO_DERECHOS = [240111,240112, 240118, 240120];
 
 
 /**
