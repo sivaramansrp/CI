@@ -45,60 +45,48 @@ export class PasoTresComponent implements OnInit {
    * @param ev - La cadena de texto que representa la firma obtenida.
    */
   obtieneFirma(ev: string): void {
-    const FIRMA: string = ev;
-    if (FIRMA) {
-      // Obtener id_solicitud del session storage
-      const idSolicitud = localStorage.getItem('id_solicitud');
+  const FIRMA: string = ev;
+  if (FIRMA) {
+    const idSolicitud = localStorage.getItem('id_solicitud');
+    const payload: FirmarRequest = {
+      id_solicitud: +idSolicitud!,
+      ...this.datosFirmaSimulada,
+    };
 
-      // Crear payload con datos simulados
-      const payload: FirmarRequest = {
-        id_solicitud: +idSolicitud!,
-        ...this.datosFirmaSimulada,
-      };
-
-      // Enviar firma simulada al backend
-      this.firmaService.enviarFirma(payload).pipe(
-        tap((response: BaseResponse<string>) => {
-          // Guardar el valor de datos en localStorage
-          if (response.datos) {
-            localStorage.setItem('folioFirma', response.datos);
-          }
-        }),
-        switchMap(() => {
-          // Si la firma se envía correctamente, obtener el trámite
-          return this.tramiteFolioServices.obtenerTramite(19);
-        }),
-        map((tramite) => {
-          this.tramiteStore.establecerTramite(tramite.data, FIRMA);
-          this.router.navigate([`${this.url}/acuse`]);
-        }),
-        catchError((error) => {
-          console.error('Error en el proceso de firma:', error);
-          return throwError(() => error);
-        })
-      ).subscribe();
-      // Obtiene el número de trámite
-      this.tramiteFolioServices
-        .generarFolio()
-        .pipe(
-          tap((tramite) => {   
-
-            //TO DO: Estas líneas serán eliminadas cuando se implemente el backend
-            // Aquí se simula la obtención de un número de trámite
-            // Genera un número aleatorio para el folio
-            const NUM_ALEATORIO = Math.floor(Math.random() * 90) + 10;    
-            const FOLIO_TRAMITE = `${tramite.datos}${NUM_ALEATORIO}`;   
-
-            this.tramiteStore.establecerTramite(FOLIO_TRAMITE, FIRMA);
-            this.router.navigate([`${this.url}/acuse`]);
-          }),
-          catchError((_error) => {
-            return _error;
+    this.firmaService.enviarFirma(payload).pipe(
+      // 1. Guardar folio en localStorage
+      tap((response: BaseResponse<string>) => {
+        if (response.datos) localStorage.setItem('folioFirma', response.datos);
+      }),
+      
+      // 2. Obtener trámite principal
+      switchMap(() => this.tramiteFolioServices.obtenerTramite(19)),
+      
+      // 3. Generar número de folio (con mock integrado)
+      switchMap((tramite) => {
+        this.tramiteStore.establecerTramite(tramite.data, FIRMA);
+        return this.tramiteFolioServices.generarFolio().pipe(
+          map(tramiteConFolio => {
+            const NUM_ALEATORIO = Math.floor(Math.random() * 90) + 10;
+            return `${tramiteConFolio.datos}${NUM_ALEATORIO}`;
           })
-        )
-        .subscribe();
-    }
+        );
+      }),
+      
+      // 4. Actualizar store y redirigir
+      tap((folioCompleto) => {
+        this.tramiteStore.establecerTramite(folioCompleto, FIRMA);
+        this.router.navigate([`${this.url}/acuse`]);
+      }),
+      
+      // Manejo centralizado de errores
+      catchError((error) => {
+        console.error('Error en el proceso de firma:', error);
+        return throwError(() => error);
+      })
+    ).subscribe();
   }
+}
 
   
   private datosFirmaSimulada = {
