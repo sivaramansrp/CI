@@ -1,8 +1,8 @@
-import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputRadioComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule, Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/materiales-peligrosos.enum';
 import { Representante } from '../../models/terceros-relacionados.model';
@@ -79,6 +79,11 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
    * Cuando es falso, el componente opera en modo de solo lectura.
    */
   public esElModoDeEdicion = false;
+    /**
+* Indica si el formulario está en modo solo lectura.
+* Cuando es `true`, los campos del formulario no se pueden editar.
+*/
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * @constructor
@@ -90,6 +95,7 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
    * @param tramiteStore - Store que administra el estado del trámite actual.
    * @param tramiteQuery - Servicio para consultar el estado del trámite.
    * @param ubicaccion - Servicio de Angular para navegación de retroceso.
+   * @param consultaQuery - Consulta para obtener el estado de la sección de consulta.
    */
   constructor(
     private fb: FormBuilder,
@@ -97,6 +103,7 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
     private ubicaccion: Location,
     private tramiteStore: Tramite230501Store,
     public tramiteQuery: Tramite230501Query,
+    private consultaQuery:ConsultaioQuery
   ) {
     //No hacer nada
   }
@@ -153,6 +160,16 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
       .subscribe(modo => {
         this.esElModoDeEdicion = modo;
       });
+
+       this.consultaQuery.selectConsultaioState$
+            .pipe(
+              takeUntil(this.unsubscribe$),
+              map((seccionState) => {
+                this.esFormularioSoloLectura = seccionState.readonly;
+                this.inicializarEstadoFormulario();
+              })
+            )
+            .subscribe();
   }
 
   /**
@@ -286,6 +303,17 @@ export class RepresentanteLegalComponent implements OnDestroy, OnInit {
       telefono: ['', Validators.required],
       correoElectronico: ['', [Validators.required, Validators.email]],
     });
+  }
+    /**
+* Evalúa si se debe inicializar o cargar datos en el formulario.
+*/
+  inicializarEstadoFormulario(): void {
+    if (!this.representanteLegalForm) {
+      this.createRepresentForm();
+    }
+    if (this.esFormularioSoloLectura) {
+      this.representanteLegalForm.disable();
+    }
   }
 
   /**
