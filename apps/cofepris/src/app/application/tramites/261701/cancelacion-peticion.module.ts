@@ -8,9 +8,9 @@ import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PermisoCancelarComponent } from './components/permiso-cancelar/permiso-cancelar.component';
 import { PermisoSanitarioModule } from '../260211/permiso-sanitario.module';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentanteLegalComponent } from './components/representante-legal/representante-legal.component';
 import { TramiteAsociadosComponent } from '../../shared/components/tramite-asociados/tramite-asociados.component';
-import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
