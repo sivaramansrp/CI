@@ -3,7 +3,7 @@
   <form [formGroup]="datosDelForm">
     <div class="container text-end mt-5">
       <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAgregar"
-        (click)="abrirModal()">Seleccionar establecimiento</button>
+        (click)="abrirModal()" [disabled]="esFormularioSoloLectura ? true : false">Seleccionar establecimiento</button>
     </div>
     <div class="row">
       <div class="col-md-4">

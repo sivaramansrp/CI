@@ -3,6 +3,7 @@ import {DatosDomicilioLegalState,DatosDomicilioLegalStore,} from '../../estados/
 import {FormBuilder,FormGroup,ReactiveFormsModule,Validators,} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
@@ -27,6 +28,12 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+    /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    * @param fb
@@ -36,7 +43,8 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
   constructor(
     private readonly fb: FormBuilder,
     private DatosDomicilioLegalStore: DatosDomicilioLegalStore,
-    private DatosDomicilioLegalQuery: DatosDomicilioLegalQuery
+    private DatosDomicilioLegalQuery: DatosDomicilioLegalQuery,
+    private consultaioQuery: ConsultaioQuery,
   ) {
     //Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
@@ -51,14 +59,23 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
    * Inicializa el componente.
    */
   ngOnInit(): void {
-    this.DatosDomicilioLegalQuery.selectSolicitud$
+    /**
+    * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+    *
+    * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+    * - Llama a `configurarGrupoForm()` para aplicar configuraciones basadas en el estado recibido.
+    * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+    */
+    this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.solicitudState = seccionState;
+          this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
-      .subscribe();
+      .subscribe()
+
+   
       this.configurarGrupoForm(); // Configura el formulario reactivo.
   
   }
@@ -68,12 +85,32 @@ export class RepresentanteLegalRfcComponent implements OnInit, OnDestroy {
    */
   configurarGrupoForm(): void // Configura el formulario reactivo.
   {
+     this.DatosDomicilioLegalQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+
     this.representante = this.fb.group({
       rfc: [this.solicitudState?.rfc, Validators.required],
       nombre: [{ value: '', disabled: true }, Validators.required],
       apellidoPaterno: [{ value: '', disabled: true }, Validators.required],
       apellidoMaterno: [{ value: '', disabled: true }],
     });
+
+     /*
+     * Si el formulario está en modo solo lectura, deshabilita todos los campos.
+     * En caso contrario, habilita los campos para permitir la edición.
+     * Esto asegura que el formulario refleje correctamente el estado de solo lectura.
+     */
+    if (this.esFormularioSoloLectura && this.representante ) {
+      this.representante.disable();
+    } else {
+      this.representante.enable();
+    }
   }
   /**
    * Obtiene el valor de un campo en el store de Tramite31601.

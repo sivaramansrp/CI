@@ -4,11 +4,18 @@ import { Subject, of } from 'rxjs';
 import { DatosDomicilioLegalStore } from '../../estados/stores/datos-domicilio-legal.store';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { RepresentanteLegalRfcComponent } from './representante-legal-rfc.component';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
+
+ const mockConsultaioQuery = {
+    selectConsultaioState$: of({ readonly: true }),
+  };
 
 describe('RepresentanteLegalRfcComponent', () => {
   let component: RepresentanteLegalRfcComponent;
   let mockStore: jest.Mocked<DatosDomicilioLegalStore>;
   let mockQuery: jest.Mocked<DatosDomicilioLegalQuery>;
+  let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
 
   beforeEach(() => {
     mockStore = {
@@ -23,17 +30,24 @@ describe('RepresentanteLegalRfcComponent', () => {
       }),
     } as unknown as jest.Mocked<DatosDomicilioLegalQuery>;
 
+      mockConsultaioQuery = {
+      selectConsultaioState$: of({
+        readonly: true
+      })
+    } as unknown as jest.Mocked<ConsultaioQuery>;
+
     TestBed.configureTestingModule({
       imports: [ReactiveFormsModule],
       providers: [
         FormBuilder,
         { provide: DatosDomicilioLegalStore, useValue: mockStore },
         { provide: DatosDomicilioLegalQuery, useValue: mockQuery },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
       ],
     });
 
     const fb = TestBed.inject(FormBuilder);
-    component = new RepresentanteLegalRfcComponent(fb, mockStore, mockQuery);
+    component = new RepresentanteLegalRfcComponent(fb, mockStore, mockQuery,mockConsultaioQuery);
   });
 
   it('should create the component', () => {
@@ -74,5 +88,29 @@ describe('RepresentanteLegalRfcComponent', () => {
 
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+   it('should set esFormularioSoloLectura from ConsultaioQuery and configure form on ngOnInit', () => {
+    const configurarSpy = jest.spyOn(component, 'configurarGrupoForm');
+
+    component.ngOnInit();
+
+    expect(component.esFormularioSoloLectura).toBe(true);
+    expect(configurarSpy).toHaveBeenCalled();
+  });
+   test('should disable representante FormGroup when esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+
+    component.configurarGrupoForm();
+
+    expect(component.representante.disabled).toBe(true);
+  });
+
+  test('should enable representante FormGroup when esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+
+    component.configurarGrupoForm();
+
+    expect(component.representante.enabled).toBe(true);
   });
 });
