@@ -1079,6 +1079,15 @@
     "departamento": "SE",
     "numeroDeProcedimiento": "110202"
   },
+  {
+    "id": 260210,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260210"
+  },
    {
     "id": 260512,
     "tipoDeTramite": "Solicitud de Permiso",
