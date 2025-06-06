@@ -16,21 +16,21 @@
             <lib-input-check [label]="'* Bajo protesta de decir verdad, manifiesto que los datos asentados en el presente documento son ciertos
         y que las facultades que me fueron otorgadas para representar a la solicitante no me han sido
         modificadas y/o revocadas.'" [id]="'acepto3061'" [required]="true" formControlName="mapDeclaracionSolicitud"
-                (change)="setValoresStore(avisoForm,'mapDeclaracionSolicitud', 'setmapDeclaracionSolicitud')"></lib-input-check>
+                (change)="setValoresStore(avisoForm,'mapDeclaracionSolicitud', 'setmapDeclaracionSolicitud')" [Disabled]="esFormularioSoloLectura ? true : false"></lib-input-check>
         </div>
         <div class="mt-3">
             <lib-input-check [label]="'* Con el envío del presente aviso, me doy por enterado que en caso de que se presente fuera de los
             plazos legales señalados en la normatividad vigente, se tendrá por no presentado sin que medie
             declaración, notificación o requerimiento por parte de la autoridad..'" [id]="'envioAviso'"
                 [required]="true" formControlName="envioAviso"
-                (change)="setValoresStore(avisoForm,'envioAviso', 'setenvioAviso')"></lib-input-check>
+                (change)="setValoresStore(avisoForm,'envioAviso', 'setenvioAviso')" [Disabled]="esFormularioSoloLectura ? true : false"></lib-input-check>
         </div>
         <div class="mt-3">
 
             <lib-input-check [label]="' * Que las circunstancias por la cual se me otorgó el registro en el Esquema Integral de Certificación,
             en el rubro que ostento, no han variado y se continúan cumpliendo con los requisitos inherentes de la
             misma.'" [id]="'numeroAviso'" [required]="true" formControlName="numeroAviso"
-                (change)="setValoresStore(avisoForm,'numeroAviso', 'setnumeroAviso')"></lib-input-check>
+                (change)="setValoresStore(avisoForm,'numeroAviso', 'setnumeroAviso')"[Disabled]="esFormularioSoloLectura ? true : false"></lib-input-check>
         </div>
     </div>
 
@@ -68,7 +68,7 @@
             <div class="col-md-4 custom-fetchapago">
                 <input-fecha [datos]="fechaInicioInput" formControlName="fechaPago"
                     (valorCambiado)="onFechaCambiada($event)"
-                    [setFecha]="avisoForm.get('fechaPago')?.value"></input-fecha>
+                    [setFecha]="avisoForm.get('fechaPago')?.value" [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
             </div>
             <div class="col-md-4">
                 <label for="importePago">Importe de pago:</label>
