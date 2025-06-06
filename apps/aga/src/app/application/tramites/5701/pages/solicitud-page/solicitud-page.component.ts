@@ -612,6 +612,7 @@ export class SolicitudPageComponent implements OnInit {
           if (response.datos.id_solicitud) {
             this.solicitudState.idSolicitud = response.datos.id_solicitud;
             this.folioTemporal = response.datos.id_solicitud;
+            localStorage.setItem('id_solicitud', response.datos.id_solicitud.toString());
             return true;
           }
 
