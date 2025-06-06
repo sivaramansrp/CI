@@ -94,21 +94,8 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
 
-     this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyed$),
-      map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly;
-         this.inicializarEstadoFormulario();
-      })
-
-    )
-    .subscribe()
-
-   this.initializeForm();
-    this.loadLocalidad();
-    this.loadAsignacionData();
-    this.cargarRadio();
+  this.inicializarEstadoFormulario();
+    this.actualizarEstado();
   }
 
    /**
@@ -119,7 +106,7 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
-      this.initializeForm();
+      this.actualizarEstado();
     }  
    
   }
@@ -129,7 +116,7 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
-      this.initializeForm();
+      this.actualizarEstado();
       if (this.esFormularioSoloLectura) {
         this.avisoForm.disable();
       } else {
@@ -137,11 +124,7 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
       } 
   }
 
-  /**
-   * Inicializa el formulario reactivo con valores predeterminados.
-   */
-  private initializeForm(): void {
-
+  actualizarEstado(): void {
     this.unicoQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -150,7 +133,8 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.avisoForm = this.fb.group({
+    
+     this.avisoForm = this.fb.group({
       mapTipoTramite: [this.solicitudState?.mapTipoTramite],
       mapDeclaracionSolicitud: [this.solicitudState?.mapDeclaracionSolicitud],
       envioAviso: [this.solicitudState?.envioAviso],
@@ -163,13 +147,7 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
       fechaPago: [this.solicitudState?.fechaPago],
       importePago: [{ value: '', disabled: true }],
     });
-  }
-
-/**
-   * Carga datos de asignación desde el servicio y actualiza el formulario.
-   */
-  loadAsignacionData(): void {
-    this.service.getSolicitante()
+     this.service.getSolicitante()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data: AvisoValor) => {
         this.avisoForm.patchValue({
@@ -179,31 +157,31 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
           });
         
       });
-  }
 
-  /**
-   * Carga la lista de localidades desde el servicio.
-   */
-  loadLocalidad(): void {
-    this.service.obtenerDatosLocalidad()
+      this.service.obtenerDatosLocalidad()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data): void => {
         this.localidadList = data as Catalogo[];
       });
-  }
 
-  /**
-   * Carga las opciones de tipo de persona desde el servicio.
-   */
-  cargarRadio(): void {
-    this.service.obtenerRadio()
+        this.service.obtenerRadio()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
         this.tipoPersonaOptions = resp;
       });
+       this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly;
+         this.inicializarEstadoFormulario();
+      })
+
+    )
+    .subscribe();
   }
 
-  /**
+ /**
    * Maneja el cambio de valor en el campo de fecha.
    * @param nuevo_valor Nuevo valor de la fecha.
    */

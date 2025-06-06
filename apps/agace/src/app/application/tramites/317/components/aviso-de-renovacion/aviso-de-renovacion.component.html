@@ -56,7 +56,7 @@
             </div>
             <div class="col-md-6  custom-banco">
                 <app-catalogo-select [catalogo]="localidadList" formControlName="banco" [label]="'Banco'"
-                    [required]="false" (change)="setValoresStore(avisoForm,'banco', 'setbanco')"></app-catalogo-select>
+                    [required]="false" (change)="setValoresStore(avisoForm,'banco', 'setbanco')" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
             </div>
         </div>
         <div class="row mt-5">
