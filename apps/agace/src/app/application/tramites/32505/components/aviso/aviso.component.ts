@@ -1,30 +1,17 @@
-import { CommonModule } from '@angular/common';
+import { ALPHANUMERIC_PATTERN, ENCABEZADAS_CONSTANT, RADIO_OPCIONS, RADIO_OPCIONS_AVISO, RADIO_TIPO_AVISO, TABLA_DE_DATOS_AVISO } from '../../constants/avios-procesos.enum';
+import { AvisoTablaDatos, CatalogoLista, ColumnasTabla } from '../../models/avios-model';
+import { BotonAccionesTipos, Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TablaSeleccion, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Modal } from 'bootstrap';
-import { map, Subject, takeUntil } from 'rxjs';
 import { InputRadioComponent, Notificacion, NotificacionesComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import {
-  BotonAccionesTipos,
-  Catalogo,
-  CatalogoSelectComponent,
-  TablaDinamicaComponent,
-  TablaSeleccion,
-  ValidacionesFormularioService,
-} from '@libs/shared/data-access-user/src';
+import { Solicitud32502State, tramite32505Store } from '../../../../estados/tramites/trimite32505.store';
+import { map, takeUntil } from 'rxjs';
 import { AvisoService } from '../../services/aviso.service';
 import { CargaMasivaComponent } from '../carga-masiva/carga-masiva.component';
-import {
-  AvisoTablaDatos,
-  CatalogoLista,
-  ColumnasTabla,
-} from '../../models/avios-model';
-import {
-  Solicitud32502State,
-  tramite32505Store,
-} from '../../../../estados/tramites/trimite32505.store';
+import { CommonModule } from '@angular/common';
+import { Modal } from 'bootstrap';
+import { Subject } from 'rxjs';
 import { Tramite32505Query } from '../../../../estados/queries/tramite32505.query';
-import{ALPHANUMERIC_PATTERN, ENCABEZADAS_CONSTANT, RADIO_OPCIONS, RADIO_OPCIONS_AVISO, RADIO_TIPO_AVISO, TABLA_DE_DATOS_AVISO} from '../../constants/avios-procesos.enum';
 
 /**
  * @component AvisoComponent
@@ -52,216 +39,174 @@ import{ALPHANUMERIC_PATTERN, ENCABEZADAS_CONSTANT, RADIO_OPCIONS, RADIO_OPCIONS_
   ],
   standalone: true,
 })
-export class AvisoComponent implements OnInit,OnDestroy {
-
-    /**
-   * Opciones de radio.
+export class AvisoComponent implements OnInit, OnDestroy {
+  /**
+   * @property {typeof RADIO_OPCIONS} radioOpcions
+   * @description Opciones de radio disponibles para selección.
    */
-    radioOpcions = RADIO_OPCIONS;
+  radioOpcions = RADIO_OPCIONS;
 
-    /**
-     * Opciones de radio.
-     */
-    radioTipoAviso = RADIO_TIPO_AVISO;
-   /**
-     * Opciones de radio.
-     */
-    radioOpcionsAviso = RADIO_OPCIONS_AVISO;
+  /**
+   * @property {typeof RADIO_TIPO_AVISO} radioTipoAviso
+   * @description Opciones de tipo de aviso disponibles para selección.
+   */
+  radioTipoAviso = RADIO_TIPO_AVISO;
 
-/**
+  /**
+   * @property {typeof RADIO_OPCIONS_AVISO} radioOpcionsAviso
+   * @description Opciones de radio específicas para avisos.
+   */
+  radioOpcionsAviso = RADIO_OPCIONS_AVISO;
+
+  /**
    * @property {boolean} esPopupAbierto
-   * Indica si el popup está abierto.
+   * @description Indica si el popup está abierto.
    */
-esPopupAbierto: boolean = false;
+  esPopupAbierto: boolean = false;
 
-/**
- * @property {boolean} datosDelVehiculo
- * Indica si se deben mostrar los datos del vehículo.
- */
-datosDelVehiculo: boolean = false;
+  /**
+   * @property {boolean} datosDelVehiculo
+   * @description Indica si se deben mostrar los datos del vehículo.
+   */
+  datosDelVehiculo: boolean = false;
 
-/**
- * @property {boolean} datosDelImportacion
- * Indica si se deben mostrar los datos de importación.
- */
-datosDelImportacion: boolean = false;
+  /**
+   * @property {boolean} datosDelImportacion
+   * @description Indica si se deben mostrar los datos de importación.
+   */
+  datosDelImportacion: boolean = false;
 
-/**
- * @property {boolean} datosFolioVUCEM
- * Indica si se deben mostrar los datos relacionados con el folio VUCEM.
- */
-datosFolioVUCEM: boolean = false;
+  /**
+   * @property {boolean} datosFolioVUCEM
+   * @description Indica si se deben mostrar los datos relacionados con el folio VUCEM.
+   */
+  datosFolioVUCEM: boolean = false;
 
-/**
- * @property {boolean} datosDelVenta
- * Indica si se deben mostrar los datos de la venta.
- */
-datosDelVenta: boolean = false;
+  /**
+   * @property {boolean} datosDelVenta
+   * @description Indica si se deben mostrar los datos de la venta.
+   */
+  datosDelVenta: boolean = false;
 
-/**
- * @property {boolean} datosNIVNumeroSerie
- * Indica si se deben mostrar los datos del NIV o número de serie.
- */
-datosNIVNumeroSerie: boolean = false;
+  /**
+   * @property {boolean} datosNIVNumeroSerie
+   * @description Indica si se deben mostrar los datos del NIV o número de serie.
+   */
+  datosNIVNumeroSerie: boolean = false;
 
-/**
- * @property {boolean} abrirPopup
- * Indica si el popup está abierto.
- * */
-  abrirPopup() :void{
-    this.esPopupAbierto = true;
-  }
   /**
    * @property {boolean} esManualAsivoAgregarClicked
-   * Indica si se ha hecho clic en el botón para agregar manualmente un aviso.
+   * @description Indica si se ha hecho clic en el botón para agregar manualmente un aviso.
    */
   esManualAsivoAgregarClicked = false;
 
   /**
-   * @property {TablaSeleccion} TablaSeleccion
-   * Referencia a la clase TablaSeleccion para gestionar tablas dinámicas.
+   * @property {typeof TablaSeleccion} TablaSeleccion
+   * @description Referencia a la clase TablaSeleccion para gestionar tablas dinámicas.
    */
   TablaSeleccion = TablaSeleccion;
 
   /**
-   * @property {BotonAccionesTipos} botonAccionesTipos
-   * Referencia a las acciones disponibles para los botones.
+   * @property {typeof BotonAccionesTipos} botonAccionesTipos
+   * @description Referencia a las acciones disponibles para los botones.
    */
   botonAccionesTipos = BotonAccionesTipos;
-  
-/**
- * @property {Object} tablaDeDatos
- * @description Propiedad que contiene la configuración de la tabla de datos utilizada en el componente.
- * Incluye las encabezadas y los datos que se mostrarán en la tabla.
- * 
- * @property {typeof ENCABEZADAS_CONSTANT[]} encabezadas - Arreglo que define las columnas o encabezados de la tabla.
- * @property {ColumnasTabla[]} datos - Arreglo que contiene los datos que se mostrarán en las filas de la tabla.
- * 
- * @default TABLA_DE_DATOS_AVISO
- */
+
+  /**
+   * @property {Object} tablaDeDatos
+   * @description Configuración de la tabla de datos utilizada en el componente.
+   */
   tablaDeDatos: {
     encabezadas: typeof ENCABEZADAS_CONSTANT[];
     datos: ColumnasTabla[];
   } = TABLA_DE_DATOS_AVISO;
+
   /**
-   * Referencia al elemento del modal para buscar mercancías.
-   *
-   * Se utiliza para abrir o cerrar el modal de búsqueda.
+   * @property {ElementRef} datosAviso
+   * @description Referencia al elemento del modal para buscar mercancías.
    */
   @ViewChild('datosAviso') datosAviso!: ElementRef;
 
   /**
-   * Muestra el modal para cargar un archivo.
-   *
-   * Este método utiliza el modal de Bootstrap para mostrar el modal de carga de archivos.
-   */
-  datosDelAviso(): void {
-    this.esPopupAbierto = true;
-    if (this.datosAviso) {
-      const MODAL_INSTANCE = new Modal(this.datosAviso.nativeElement);
-      MODAL_INSTANCE.show();
-    }
-  }
-  /**
-   * La función maneja las acciones del botón.
-   * @param accione - Parámetro que tiene la acción de ser del tipo BotonAccionesTipos.
-   */
-  accionesBotones(accione: BotonAccionesTipos): void {
-    switch (accione) {
-      case BotonAccionesTipos.AGREGAR:
-        this.esManualAsivoAgregarClicked = true;
-        break;
-      case BotonAccionesTipos.ELIMINAR:
-        break;
-      case BotonAccionesTipos.MODIFICAR:
-        break;
-
-      default:
-        break;
-    }
-  }
-  /**
-   * Formulario para capturar datos adicionales relacionados con el registro.
+   * @property {FormGroup} aviosForm
+   * @description Formulario para capturar datos adicionales relacionados con el registro.
    */
   aviosForm!: FormGroup;
 
   /**
-   * Estado de la solicitud.
+   * @property {Solicitud32502State} solicitudState
+   * @description Estado de la solicitud.
    */
   public solicitudState!: Solicitud32502State;
 
   /**
-   * Sujeto para manejar la destrucción de observables.
-   *
-   * Se utiliza para evitar fugas de memoria al destruir el componente.
+   * @property {Subject<void>} destroyNotifier$
+   * @description Sujeto para manejar la destrucción de observables.
    */
   destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Opciones disponibles para los países.
-   *
-   * Contiene una lista de países que el usuario puede seleccionar.
-   */
-  /**
    * @property {Catalogo[]} optionsPais
-   * Opciones disponibles para los países.
+   * @description Opciones disponibles para los países.
    */
   optionsPais!: Catalogo[];
 
   /**
    * @property {Catalogo[]} optionsAnio
-   * Opciones disponibles para los años.
+   * @description Opciones disponibles para los años.
    */
   optionsAnio!: Catalogo[];
 
   /**
    * @property {Catalogo[]} optionCilindros
-   * Opciones disponibles para los cilindros.
+   * @description Opciones disponibles para los cilindros.
    */
   optionCilindros!: Catalogo[];
 
   /**
    * @property {Catalogo[]} optionCombustible
-   * Opciones disponibles para los tipos de combustible.
+   * @description Opciones disponibles para los tipos de combustible.
    */
   optionCombustible!: Catalogo[];
 
   /**
    * @property {Catalogo[]} optionAduana
-   * Opciones disponibles para las aduanas.
+   * @description Opciones disponibles para las aduanas.
    */
   optionAduana!: Catalogo[];
 
   /**
    * @property {Catalogo[]} paisIssued
-   * Opciones de países que emitieron el título de propiedad.
+   * @description Opciones de países que emitieron el título de propiedad.
    */
   paisIssued!: Catalogo[];
 
-
   /**
-   * @property {boolean} seccionContenedorVisible
-   * Indicates whether the container section is visible.
+   * @property {boolean} datosDelAvisoVisible
+   * @description Indica si la sección de datos del aviso es visible.
    */
   datosDelAvisoVisible: boolean = false;
 
   /**
-   * @property {boolean} datosDelAvisoVisible
-   * Indicates whether the vehicle data is visible.
+   * @property {boolean} datosCargaMasiva
+   * @description Indica si la sección de carga masiva es visible.
    */
   datosCargaMasiva: boolean = false;
 
+  /**
+   * @property {Notificacion} nuevaNotificacion
+   * @description Representa una nueva instancia de notificación asociada con el componente.
+   */
+  public nuevaNotificacion!: Notificacion;
 
-   /**
-     * Representa una nueva instancia de notificación asociada con el componente.
-     * Esta propiedad se utiliza para gestionar y almacenar datos de notificaciones.
-     */
-    public nuevaNotificacion!: Notificacion;
+  /**
+   * @property {ColumnasTabla[]} filaSeleccionadaLista
+   * @description Lista de filas seleccionadas en la tabla de avisos.
+   */
+  filaSeleccionadaLista: ColumnasTabla[] = [];
 
-  
-   /**
+  /**
    * @constructor
-   * @description Constructor del componente. Inicializa servicios y dependencias necesarias.
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
    * @param {tramite32505Store} store - Store para gestionar el estado del trámite.
    * @param {Tramite32505Query} tramiteQuery - Servicio para realizar consultas relacionadas con el trámite.
@@ -275,20 +220,10 @@ datosNIVNumeroSerie: boolean = false;
     private avisoService: AvisoService,
     private validacionesService: ValidacionesFormularioService
   ) {}
-  /**
-   * Método para validar el formulario.
-   * @param form Formulario a validar.
-   * @param field Campo a validar.
-   * @returns {boolean} Regresa un booleano si el campo es válido o no.
-   */
-  isValid(form: FormGroup, field: string): boolean | null {
-    return this.validacionesService.isValid(form, field);
-  }
 
- 
   /**
    * @method ngOnInit
-   * @description Método de inicialización del componente. Configura formularios, carga datos iniciales y suscribe observables.
+   * @description Método de inicialización del componente.
    */
   ngOnInit(): void {
     this.tramiteQuery.selectSolicitud$
@@ -309,70 +244,142 @@ datosNIVNumeroSerie: boolean = false;
     this.cargarPaisIssued();
     this.cargarAduana();
     this.openModalCancelarTramite();
-   
   }
 
   /**
-   * Obtiene el grupo de formulario 'adaceForm' del formulario principal 'FormSolicitud'.
-   * @returns {FormGroup} El grupo de formulario 'adaceForm'.
+   * @method ngOnDestroy
+   * @description Método de limpieza al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
+  /**
+   * @method abrirPopup
+   * @description Abre el popup estableciendo esPopupAbierto a true.
+   */
+  abrirPopup(): void {
+    this.esPopupAbierto = true;
+  }
+
+  /**
+   * @method datosDelAviso
+   * @description Muestra el modal para cargar un archivo.
+   */
+  datosDelAviso(): void {
+    this.esPopupAbierto = true;
+    if (this.datosAviso) {
+      const MODAL_INSTANCE = new Modal(this.datosAviso.nativeElement);
+      MODAL_INSTANCE.show();
+    }
+  }
+
+  /**
+   * @method accionesBotones
+   * @description Maneja las acciones de los botones.
+   * @param {BotonAccionesTipos} accione - Acción del botón.
+   */
+  accionesBotones(accione: BotonAccionesTipos): void {
+    switch (accione) {
+      case BotonAccionesTipos.AGREGAR:
+        this.esManualAsivoAgregarClicked = true;
+        break;
+      case BotonAccionesTipos.ELIMINAR:
+        break;
+      case BotonAccionesTipos.MODIFICAR:
+        break;
+      default:
+        break;
+    }
+  }
+
+  /**
+   * @method isValid
+   * @description Valida un campo del formulario.
+   * @param {FormGroup} form - Formulario a validar.
+   * @param {string} field - Campo a validar.
+   * @returns {boolean | null} Resultado de la validación.
+   */
+  isValid(form: FormGroup, field: string): boolean | null {
+    return this.validacionesService.isValid(form, field);
+  }
+
+  /**
+   * @method get adaceForm
+   * @description Obtiene el grupo de formulario 'adaceForm'.
+   * @returns {FormGroup} Grupo de formulario.
    */
   get adaceForm(): FormGroup {
     return this.aviosForm.get('adaceForm') as FormGroup;
   }
 
   /**
-   * Obtiene el campo 'adace' del formulario 'adaceForm'.
-   * @returns {FormGroup} El campo 'adace' del formulario 'adaceForm'.
+   * @method get adace
+   * @description Obtiene el campo 'adace' del formulario.
+   * @returns {FormGroup} Campo del formulario.
    */
   get adace(): FormGroup {
     return this.aviosForm.get('adaceForm.adace') as FormGroup;
   }
-/**
-   * Obtiene el campo 'pais' del formulario 'adaceForm'.
-   * @returns {FormGroup} El campo 'pais' del formulario 'adaceForm'.
-   * */
+
+  /**
+   * @method get pais
+   * @description Obtiene el campo 'pais' del formulario.
+   * @returns {FormGroup} Campo del formulario.
+   */
   get pais(): FormGroup {
     return this.aviosForm.get('adaceForm.pais') as FormGroup;
   }
 
   /**
-   * Obtiene el campo 'anio' del formulario 'adaceForm'.
-   * @returns {FormGroup} El campo 'anio' del formulario 'adaceForm'.
+   * @method get anio
+   * @description Obtiene el campo 'anio' del formulario.
+   * @returns {FormGroup} Campo del formulario.
    */
-    get anio(): FormGroup {
+  get anio(): FormGroup {
     return this.aviosForm.get('adaceForm.anio') as FormGroup;
   }
 
   /**
-   * Obtiene el campo 'tipoBusqueda' del formulario 'adaceForm'.
-   * @returns {FormGroup} El campo 'tipoBusqueda' del formulario 'adaceForm'.
+   * @method get tipoBusqueda
+   * @description Obtiene el campo 'tipoBusqueda' del formulario.
+   * @returns {FormGroup} Campo del formulario.
    */
   get tipoBusqueda(): FormGroup {
     return this.aviosForm.get('adaceForm.tipoBusqueda') as FormGroup;
   }
+
   /**
-   * Obtiene el campo 'tipoBusquedaAviso' del formulario 'adaceForm'.
-   * @returns {FormGroup} El campo 'tipoBusquedaAviso' del formulario 'adaceForm'.
+   * @method get tipoBusquedaAviso
+   * @description Obtiene el campo 'tipoBusquedaAviso' del formulario.
+   * @returns {FormGroup} Campo del formulario.
    */
   get tipoBusquedaAviso(): FormGroup {
     return this.aviosForm.get('adaceForm.tipoBusquedaAviso') as FormGroup;
   }
+
   /**
-   * Obtiene el campo 'numeroSerie' del formulario 'adaceForm'.
-   * @returns {FormGroup} El campo 'numeroSerie' del formulario 'adaceForm'.
+   * @method get folioTipo
+   * @description Obtiene el campo 'folioTipo' del formulario.
+   * @returns {FormGroup} Campo del formulario.
    */
   get folioTipo(): FormGroup {
     return this.aviosForm.get('adaceForm.folioTipo') as FormGroup;
   }
+
   /**
-   * Obtiene el campo 'numeroSerie' del formulario 'adaceForm'.
-   * @returns {FormGroup} El campo 'numeroSerie' del formulario 'adaceForm'.
+   * @method get cilindros
+   * @description Obtiene el campo 'cilindros' del formulario.
+   * @returns {FormGroup} Campo del formulario.
    */
   get cilindros(): FormGroup {
     return this.aviosForm.get('adaceForm.cilindros') as FormGroup;
   }
+
   /**
-   * Método para crear el formulario principal de la solicitud.
+   * @method crearFormSolicitud
+   * @description Crea el formulario principal de la solicitud.
    */
   crearFormSolicitud(): void {
     this.aviosForm = this.fb.group({
@@ -461,20 +468,20 @@ datosNIVNumeroSerie: boolean = false;
         ],
         valorVenta: [this.solicitudState?.valorVenta, [Validators.required]],
       }),
-     
     });
 
     this.mostrarCampos();
     this.mostrarCamposAviso();
-   
- 
   }
+
   /**
-   * Muestra los campos según el tipo de búsqueda seleccionado.
+   * @method mostrarCamposAviso
+   * @description Muestra los campos según el tipo de búsqueda seleccionado.
    */
   mostrarCamposAviso(): void {
     const AVISO_TIPO_BUSQUEDA = this.adaceForm.get('tipoBusquedaAviso')?.value;
     const FOLIO_TIPO = this.adaceForm.get('folioTipo')?.value;
+    
     if (AVISO_TIPO_BUSQUEDA === 'Importación') {
       this.datosDelVehiculo = true;
       this.datosFolioVUCEM = false;
@@ -506,17 +513,16 @@ datosNIVNumeroSerie: boolean = false;
       this.datosFolioVUCEM = false;
       this.datosDelImportacion = true;
       this.datosDelVenta = true;
-    } else
-    {
-        this.datosFolioVUCEM = true;
-        this.datosDelVehiculo = true;
-        this.datosDelImportacion = true;
-        this.datosDelImportacion = true;
+    } else {
+      this.datosFolioVUCEM = true;
+      this.datosDelVehiculo = true;
+      this.datosDelImportacion = true;
     }
   }
 
   /**
-   * Muestra los campos según el tipo de búsqueda seleccionado.
+   * @method mostrarCampos
+   * @description Muestra los campos según el tipo de búsqueda seleccionado.
    */
   mostrarCampos(): void {
     const TIPO_BUSQUEDA = this.adaceForm.get('tipoBusqueda')?.value;
@@ -527,18 +533,15 @@ datosNIVNumeroSerie: boolean = false;
     } else if (TIPO_BUSQUEDA === 'Carga masiva') {
       this.datosDelAvisoVisible = true;
       this.datosCargaMasiva = true;
-    } else {
     }
   }
 
   /**
-   * Actualiza un valor en el store del trámite.
-   *
-   * Este método permite actualizar un valor específico en el store del trámite utilizando el formulario y el método correspondiente.
-   *
-   * @param {FormGroup} form - El formulario que contiene el valor a actualizar.
-   * @param {string} campo - El nombre del campo en el formulario.
-   * @param {keyof Tramite110217Store} metodoNombre - El nombre del método en el store que se debe invocar.
+   * @method setValoresStore
+   * @description Actualiza un valor en el store del trámite.
+   * @param {FormGroup} form - Formulario que contiene el valor.
+   * @param {string} campo - Nombre del campo.
+   * @param {keyof tramite32505Store} metodoNombre - Nombre del método en el store.
    */
   setValoresStore(
     form: FormGroup,
@@ -550,9 +553,8 @@ datosNIVNumeroSerie: boolean = false;
   }
 
   /**
-   * Carga las opciones disponibles para los países.
-   *
-   * Este método obtiene las opciones de países desde el servicio `CertificadosOrigenService` y las asigna a `optionsPais` y `optionsTipoFactura`.
+   * @method cargarPais
+   * @description Carga las opciones disponibles para los países.
    */
   cargarPais(): void {
     this.avisoService
@@ -560,14 +562,12 @@ datosNIVNumeroSerie: boolean = false;
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos: CatalogoLista) => {
         this.optionsPais = datos.datos;
-        
       });
   }
 
   /**
-   * Carga las opciones disponibles para los años.
-   *
-   * Este método obtiene las opciones de años desde el servicio `avisoService` y las asigna a `optionsAnio`.
+   * @method cargarAnio
+   * @description Carga las opciones disponibles para los años.
    */
   cargarAnio(): void {
     this.avisoService
@@ -579,9 +579,8 @@ datosNIVNumeroSerie: boolean = false;
   }
 
   /**
-   * Carga las opciones disponibles para los cilindros.
-   *
-   * Este método obtiene las opciones de cilindros desde el servicio `avisoService` y las asigna a `optionCilindros`.
+   * @method cargarCilindros
+   * @description Carga las opciones disponibles para los cilindros.
    */
   cargarCilindros(): void {
     this.avisoService
@@ -593,22 +592,8 @@ datosNIVNumeroSerie: boolean = false;
   }
 
   /**
-   * Carga las opciones disponibles para los países que emitieron el título de propiedad.
-   *
-   * Este método obtiene las opciones de países desde el servicio `avisoService` y las asigna a `paisIssued`.
-   */
-  cargarPaisIssued(): void {
-    this.avisoService
-      .obtenerPaisIssued()
-      .pipe(takeUntil(this.destroyNotifier$))
-      .subscribe((datos: CatalogoLista) => {
-        this.paisIssued = datos.datos;
-      });
-  }
-  /**
-   * Carga las opciones disponibles para los tipos de combustible.
-   *
-   * Este método obtiene las opciones de combustible desde el servicio `avisoService` y las asigna a `optionCombustible`.
+   * @method cargarCombustible
+   * @description Carga las opciones disponibles para los tipos de combustible.
    */
   cargarCombustible(): void {
     this.avisoService
@@ -620,9 +605,21 @@ datosNIVNumeroSerie: boolean = false;
   }
 
   /**
-   * Carga las opciones disponibles para las aduanas.
-   *
-   * Este método obtiene las opciones de aduanas desde el servicio `avisoService` y las asigna a `optionAduana`.
+   * @method cargarPaisIssued
+   * @description Carga las opciones disponibles para los países que emitieron el título de propiedad.
+   */
+  cargarPaisIssued(): void {
+    this.avisoService
+      .obtenerPaisIssued()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos: CatalogoLista) => {
+        this.paisIssued = datos.datos;
+      });
+  }
+
+  /**
+   * @method cargarAduana
+   * @description Carga las opciones disponibles para las aduanas.
    */
   cargarAduana(): void {
     this.avisoService
@@ -635,13 +632,9 @@ datosNIVNumeroSerie: boolean = false;
 
   /**
    * @method cargarAvisoTabla
-   * @description Método para cargar los datos de la tabla de avisos desde el servicio `avisoTrasladoService`.
-   * Los datos obtenidos se asignan a la propiedad `tablaDeDatos.datos`.
-   *
-   * @returns {void}
+   * @description Carga los datos de la tabla de avisos.
    */
   public cargarAvisoTabla(): void {
-  
     this.avisoService
       .obtenerAvisoTabla()
       .pipe(takeUntil(this.destroyNotifier$))
@@ -653,25 +646,24 @@ datosNIVNumeroSerie: boolean = false;
   /**
    * @property {ElementRef} closeDomicilio
    * @description Referencia al botón o elemento que cierra el modal de domicilio.
-   * Utilizado para cerrar el modal de manera programática.
    */
   @ViewChild('closeDomicilio') public closeDomicilio!: ElementRef;
+
   /**
    * @method agregarDomicilio
-   * @description Método para agregar domicilios a la tabla de avisos.
-   *
-   * - Carga los datos de la tabla de avisos y cierra el modal de domicilio.
-   *
-   * @returns {void}
+   * @description Agrega domicilios a la tabla de avisos.
    */
   agregarDomicilio(): void {
     this.cargarAvisoTabla();
     this.closeDomicilio.nativeElement.click();
-     this.abrirModal();
+    this.abrirModal();
   }
 
+  /**
+   * @method abrirModal
+   * @description Configura y abre un modal de notificación.
+   */
   public abrirModal(): void {
-    console.log('abrir modal');
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -682,44 +674,24 @@ datosNIVNumeroSerie: boolean = false;
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
-    }
+    };
   }
 
   /**
-   * @property {AvisoTabla[]} filaSeleccionadaLista
-   * @description Lista de filas seleccionadas en la tabla de avisos.
-   * Contiene los datos de las filas seleccionadas por el usuario.
-   */
-  filaSeleccionadaLista: ColumnasTabla[] = [];
-
-  /**
    * @method filaSeleccionada
-   * @description Método para manejar las filas seleccionadas en la tabla de avisos.
-   *
-   * - Actualiza la propiedad `filaSeleccionadaLista` con las filas seleccionadas.
-   *
-   * @param {AvisoTabla[]} evento - Lista de filas seleccionadas en la tabla de avisos.
-   * @returns {void}
+   * @description Maneja las filas seleccionadas en la tabla de avisos.
+   * @param {ColumnasTabla[]} evento - Filas seleccionadas.
    */
   filaSeleccionada(evento: ColumnasTabla[]): void {
     this.filaSeleccionadaLista = evento;
   }
 
   /**
-   * Abre el modal para cancelar el trámite.
+   * @method openModalCancelarTramite
+   * @description Abre el modal para cancelar el trámite.
    */
   openModalCancelarTramite(): void {
     this.adaceForm.reset();
     this.optionsPais = [];
-  }
-
-  /**
-   * Limpia los observables al destruir el componente.
-   *
-   * Este método emite un valor en el `destroyNotifier$` y completa el observable para evitar fugas de memoria.
-   */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
   }
 }
