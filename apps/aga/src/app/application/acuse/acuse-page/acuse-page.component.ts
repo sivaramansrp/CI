@@ -1,9 +1,7 @@
 
-import { ACUSE_SERVICIOS_EXTRAORDINARIOS, TITULO_ACUSE, TXT_ALERTA_ACUSE } from '@libs/shared/data-access-user/src';
-import { Component, OnInit } from '@angular/core';
-import { AccionesTabla } from '@libs/shared/data-access-user/src';
-import { AcuseComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
+import { AccionesTabla, ACUSE_SERVICIOS_EXTRAORDINARIOS, AcuseComponent, TITULO_ACUSE, TXT_ALERTA_ACUSE } from '@libs/shared/data-access-user/src';
 
 @Component({
   templateUrl: './acuse-page.component.html',
@@ -28,7 +26,7 @@ export class AcusePageComponent implements OnInit {
    * Luego, se genera un mensaje de alerta utilizando la función `TXT_ALERTA_ACUSE` con el folio obtenido y se asigna a la propiedad `txtAlerta`.
    */
   ngOnInit(): void {
-    this.folio = '01010101010101010101010101010101';
+    this.folio = localStorage.getItem('folioFirma') || '';
     this.txtAlerta = TXT_ALERTA_ACUSE(this.folio);
   }
 }
