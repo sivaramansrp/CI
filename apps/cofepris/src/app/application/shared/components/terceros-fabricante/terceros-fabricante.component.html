@@ -7,17 +7,16 @@
     <div *ngFor="let tabla of getSortedTablas()">
       <div class="mt-5" *ngIf="tabla.nombre === 'Fabricante'">
         <h5>Fabricante*:</h5>
-        <h5>Fabricante*:</h5>
         <div class="table-responsive mt-5">
-          <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData" (seleccionCambio)="onFabricanteSeleccionCambio($event)"></ng-table>
+          <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData" (seleccionCambio)="onFabricanteSeleccionCambio($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
         </div>
         <br />
         <div class="d-flex justify-content-end mt-3">
           <div *ngIf="showFabricanteButtons">
-            <button class="btn btn-danger me-2" type="button">Eliminar</button>
-            <button class="btn btn-default me-2" type="button" >Modificar</button>
+            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura">Eliminar</button>
+            <button class="btn btn-default me-2" type="button" [disabled]="esFormularioSoloLectura">Modificar</button>
           </div>
-          <button type="button" class="btn btn-primary" (click)="toggleDivFabricante()">
+          <button type="button" class="btn btn-primary" (click)="toggleDivFabricante()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
         </div>
@@ -26,15 +25,16 @@
       <div class="mt-5" *ngIf="tabla.nombre === 'Formulador'">
         <h5>Formulador*:</h5>
         <div class="table-responsive mt-5">
-          <ng-table [commonTableHeader]="formuladorHeaderData" [commonTableBody]="formuladorRowData" (seleccionCambio)="onFormuladorSeleccionCambio($event)"></ng-table>
+          <ng-table [commonTableHeader]="formuladorHeaderData" [commonTableBody]="formuladorRowData" (seleccionCambio)="onFormuladorSeleccionCambio($event)" 
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
         </div>
         <br />
         <div class="d-flex justify-content-end mt-3">
           <div *ngIf="showFormuladorButtons">
-            <button class="btn btn-danger me-2" type="button">Eliminar</button>
-            <button class="btn btn-default me-2" type="button" >Modificar</button>
+            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura">Eliminar</button>
+            <button class="btn btn-default me-2" type="button" [disabled]="esFormularioSoloLectura">Modificar</button>
           </div>
-          <button type="button" class="btn btn-primary" (click)="toggleDivFormulador()">
+          <button type="button" class="btn btn-primary" (click)="toggleDivFormulador()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
         </div>
@@ -43,15 +43,15 @@
       <div class="mt-5" *ngIf="tabla.nombre === 'Proveedor'">
         <h5>Proveedor*:</h5>
         <div class="table-responsive mt-5">
-          <ng-table [commonTableHeader]="proveedorHeaderData" [commonTableBody]="proveedorRowData"  (seleccionCambio)="onProveedorSeleccionCambio($event)"></ng-table>
+          <ng-table [commonTableHeader]="proveedorHeaderData" [commonTableBody]="proveedorRowData"  (seleccionCambio)="onProveedorSeleccionCambio($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
         </div>
         <br />
         <div class="d-flex justify-content-end mt-3">
           <div *ngIf="showProveedorButtons">
-            <button class="btn btn-danger me-2" type="button">Eliminar</button>
-            <button class="btn btn-default me-2" type="button">Modificar</button>
+            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura">Eliminar</button>
+            <button class="btn btn-default me-2" type="button" [disabled]="esFormularioSoloLectura">Modificar</button>
           </div>
-          <button type="button" class="btn btn-primary" (click)="toggleDivProveedor()">
+          <button type="button" class="btn btn-primary" (click)="toggleDivProveedor()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
         </div>
