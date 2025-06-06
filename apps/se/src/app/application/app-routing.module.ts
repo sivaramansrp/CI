@@ -683,6 +683,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'registro-solicitud-immex-modalidad-controladora',
+    loadChildren: () =>
+      import('./tramites/80104/modalidad-controlodora.module').then(
+        (m) => m.ModalidadControlodoraModule
+      ),
+  },
+  {
     path: 'certificado-origen',
     loadChildren: () =>
       import('./tramites/110217/certificado-origen.module').then(
