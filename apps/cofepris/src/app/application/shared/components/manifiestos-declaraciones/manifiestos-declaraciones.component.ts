@@ -1,14 +1,14 @@
-import {AlertComponent,InputRadioComponent,TituloComponent,} from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {DatosDomicilioLegalState, DatosDomicilioLegalStore,} from '../../estados/stores/datos-domicilio-legal.store';
 import {FormBuilder,FormGroup,ReactiveFormsModule,Validators,} from '@angular/forms';
+import { InputRadioComponent,TituloComponent,} from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import CumplimientoOptions from '@libs/shared/theme/assets/json/260501/cumplimiento-options.json';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
-import { MENSAJE_DE_ALERTA } from '../../constantes/datos-domicilio-legal.enum';
-
 import { MANIFIESTOS_DECLARACION } from '../../constantes/aviso-de-funcionamiento.enum';
+import { MENSAJE_DE_ALERTA } from '../../constantes/datos-domicilio-legal.enum';
 
 /**
  * @description
@@ -56,6 +56,12 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
   cumplimientoOptions = CumplimientoOptions;
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * @description
    * Constructor del componente.
    * @param fb Constructor de formularios reactivos.
@@ -63,9 +69,10 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    * @param DatosDomicilioLegalQuery Query para obtener datos del estado del domicilio legal.
    */
   constructor(
-    public fb: FormBuilder,
+    private fb: FormBuilder,
     private DatosDomicilioLegalStore: DatosDomicilioLegalStore,
-    private DatosDomicilioLegalQuery: DatosDomicilioLegalQuery
+    private DatosDomicilioLegalQuery: DatosDomicilioLegalQuery,
+    private consultaioQuery: ConsultaioQuery,
   ) {
     //Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
@@ -82,6 +89,31 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    * Configura el formulario reactivo y sus valores iniciales basados en el estado de la solicitud.
    */
   ngOnInit(): void {
+
+    /**
+    * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+    *
+    * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+    * - Llama a `configurarGrupoForm()` para aplicar configuraciones basadas en el estado recibido.
+    * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+    */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe()
+      this.configurarGrupoForm(); // Configura el formulario reactivo.
+  }
+
+  /**
+   * @method configurarGrupoForm
+   * @description Configura el formulario reactivo para los manifiestos, estableciendo los controles necesarios
+   * y asignando valores iniciales desde el estado de la solicitud.
+   */
+  configurarGrupoForm(): void {
     this.mensajeManifiestos = MANIFIESTOS_DECLARACION.MANIFIESTOS;
     this.DatosDomicilioLegalQuery.selectSolicitud$
       .pipe(
@@ -92,18 +124,21 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-      this.configurarGrupoForm(); // Configura el formulario reactivo.
-  }
-
-  /**
-   * @method configurarGrupoForm
-   * @description Configura el formulario reactivo para los manifiestos, estableciendo los controles necesarios
-   * y asignando valores iniciales desde el estado de la solicitud.
-   */
-  configurarGrupoForm(): void {
   this.manifiestos = this.fb.group({
+    mensaje: [Validators.required],
     cumplimiento: [this.solicitudState?.cumplimiento, Validators.required],
   });
+
+   /*
+     * Si el formulario está en modo solo lectura, deshabilita todos los campos.
+     * En caso contrario, habilita los campos para permitir la edición.
+     * Esto asegura que el formulario refleje correctamente el estado de solo lectura.
+     */
+    if (this.esFormularioSoloLectura && this.manifiestos ) {
+      this.manifiestos.disable();
+    } else {
+      this.manifiestos.enable();
+    }
 }
   /**
    * @description

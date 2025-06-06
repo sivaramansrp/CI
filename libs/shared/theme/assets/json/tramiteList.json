@@ -276,7 +276,7 @@
     "id": 40,
     "tramite": 110202,
     "linkDashboard": "/se/certificado-validacion/validacion",
-    "linkDepartment": "/se/certificado-validacion/validacion",
+    "linkDepartment": "/pago/certificado-validacion/validacion",
     "department": "se"
   },
   {
@@ -325,7 +325,7 @@
     "id": 47,
     "tramite": 110217,
     "linkDashboard": "/se/certificado-origen/solicitante",
-    "linkDepartment": "/se/certificado-origen/solicitante",
+    "linkDepartment": "/pago/certificado-origen/solicitante",
     "department": "se"
   },
   {
@@ -1920,8 +1920,8 @@
   {
     "id": 275,
     "tramite": 230501,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/semarnat/materiales-peligrosos/solicitud",
+    "linkDepartment": "/pago/materiales-peligrosos/solicitud",
     "department": "semarnat"
   },
   {

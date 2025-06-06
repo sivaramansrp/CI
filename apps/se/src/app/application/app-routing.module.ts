@@ -690,6 +690,13 @@ const ROUTES: Routes = [
       ),
   },
   {
+    path: 'certificado-origen',
+    loadChildren: () =>
+      import('./tramites/110217/certificado-origen.module').then(
+        (m) => m.CertificadoOrigenModule
+      ),
+  },
+  {
     path: 'verificar-dictamen',
     loadComponent: () =>
       import('./verificar-dictamen/verificar-dictamen.component').then((m) => m.VerificarDictamenComponent),
