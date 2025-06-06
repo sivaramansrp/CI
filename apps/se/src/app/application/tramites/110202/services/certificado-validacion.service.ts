@@ -1,4 +1,5 @@
 import { Observable, map } from 'rxjs';
+import { Tramite110202Store, TramiteState } from '../estados/tramite110202.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -9,7 +10,7 @@ import { Mercancia } from '../models/configuracion-columna.model';
 })
 export class CertificadoValidacionService {
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,public tramite110222Store: Tramite110202Store) {
     // No se necesita lógica de inicialización adicional.
   }
 
@@ -120,6 +121,29 @@ export class CertificadoValidacionService {
       .get<{ data: Catalogo[] }>(`assets/json/110202/medio-de-transporte.json`)
       .pipe(map((res) => res.data));
   }
+  /**
+ * Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.
+ * 
+ * @returns Observable con los datos del estado de la solicitud `TramiteState`,
+ *          cargados desde el archivo JSON especificado en la ruta de `assets`.
+ */
+  getRegistroTomaMuestrasMercanciasData(): Observable<TramiteState> {
+    return this.http.get<TramiteState>('assets/json/110202/datos-previos.json');
+  }
 
+
+  /**
+   * Actualiza el estado del formulario con los datos proporcionados.
+   * 
+   * @param DATOS - Estado de la solicitud `TramiteState` con la información 
+   *                del tipo de solicitud a actualizar en el store.
+   */
+  actualizarEstadoFormulario(DATOS: TramiteState): void {
+    this.tramite110222Store.update((state) => ({
+      ...state,
+      ...DATOS
+    }))
+
+  }
 
 }

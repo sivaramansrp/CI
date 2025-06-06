@@ -38,6 +38,8 @@ export * from './core/queries/tramiteFolio.query';
 export * from './core/estados/tramiteFolio.store';
 export { TramiteStore } from './core/estados/tramite.store';
 export { ValidacionesFormularioService } from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
+export { PANTA_PASOS } from './core/enums/120404/pantallas260514.enum';
+export { AccionBoton } from './core/models/260514/aviso-pantallas.model'
 export * from './core/ambientes';
 export * from './core/constants/api-constants';
 export * from './core/constants/constantes-generales';
@@ -188,9 +190,7 @@ export * from './core/services/shared/catalogos/tipo-despacho.service';
 export * from './core/services/shared/catalogos/tipo-pedimento.service';
 export * from './core/services/shared/catalogos/paises.service';
 
-
-export * from './tramites/constantes/120501/participantes.enum'
-
+export * from './tramites/constantes/120501/participantes.enum';
 
 export * from './core/services/shared/subsecuentes/subsecuentes.service';
 export * from './core/models/shared/subsecuentes.model';
@@ -198,3 +198,9 @@ export * from './core/utils/utilerias';
 
 export * from './tramites/components/transporte/transporte.component';
 export * from './tramites/components/agregar-transporte/agregar-transporte.component';
+export * from './core/models/shared/tramite-folio.model';
+export * from './core/enums/crosslist.enums';
+
+
+
+
