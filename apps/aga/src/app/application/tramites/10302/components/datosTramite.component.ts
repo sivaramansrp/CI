@@ -1,4 +1,19 @@
-import { CommonModule } from '@angular/common';
+import {
+  AlertComponent,
+  CatalogoSelectComponent,
+  InputCheckComponent,
+  REGEX_POSTAL,
+  REGEX_TELEFONO_DIGITOS,
+  TableBodyData,
+  TableComponent,
+  TituloComponent,
+  ValidacionesFormularioService,
+} from '@libs/shared/data-access-user/src';
+import {
+  Catalogo,
+  Solicitud10302State,
+  Tramite10302Store,
+} from '../estados/tramite10302.store';
 import {
   Component,
   ElementRef,
@@ -14,28 +29,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Modal } from 'bootstrap';
-import { map, merge, Subject, takeUntil } from 'rxjs';
-import {
-  AlertComponent,
-  CatalogoSelectComponent,
-  InputCheckComponent,
-  REGEX_POSTAL,
-  REGEX_TELEFONO_DIGITOS,
-  TableBodyData,
-  TableComponent,
-  TituloComponent,
-  ValidacionesFormularioService,
-} from '@libs/shared/data-access-user/src';
-import mercanciaTable from 'libs/shared/theme/assets/json/10302/mercancia-table.json';
-import { datosDelMercancia } from '../models/exencion-impuestos.model';
+import { Subject, map, merge, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { DatosDelMercancia } from '../models/exencion-impuestos.model';
 import { ExencionImpuestosService } from '../services/exencion-impuestos.service';
-import {
-  Catalogo,
-  Solicitud10302State,
-  Tramite10302Store,
-} from '../estados/tramite10302.store';
+import { Modal } from 'bootstrap';
 import { Tramite10302Query } from '../estados/tramite10302.query';
+import mercanciaTable from '@libs/shared/theme/assets/json/10302/mercancia-table.json';
 
 /**
  * Componente que representa la funcionalidad de datos del trámite.
@@ -157,7 +157,7 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
   /**
    * Datos de las mercancías.
    */
-  public datosDelMercancia: datosDelMercancia[] = [];
+  public datosDelMercancia: DatosDelMercancia[] = [];
 
   /**
    * @property {ConsultaioState} consultaDatos
@@ -377,10 +377,9 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.tramiteForm?.disable();
-    } 
-    else {
+    } else {
       this.tramiteForm?.enable();
-      const campos = [
+      const CAMPOS_DESHABILITADOS = [
         'razonSocial',
         'calle',
         'numeroExterior',
@@ -391,8 +390,8 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
         'estado',
         'colonia'
       ];
-      const grupo = this.tramiteForm.get('exencionImpuestos');
-      campos.forEach(campo => grupo?.get(campo)?.disable());
+      const GRUPO = this.tramiteForm.get('exencionImpuestos');
+      CAMPOS_DESHABILITADOS.forEach(campo => GRUPO?.get(campo)?.disable());
     }
   }
 
@@ -530,7 +529,7 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
             respuesta.datos.id = this.datosDelMercancia.length + 1;
             this.datosDelMercancia.push(respuesta.datos);
             (
-              this.store.setDelMercancia as (valor: datosDelMercancia[]) => void
+              this.store.setDelMercancia as (valor: DatosDelMercancia[]) => void
             )(this.datosDelMercancia);
             const DATOS = {
               tbodyData: [
@@ -557,6 +556,7 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
   /**
    * Limpia los datos de mercancías.
    */
+  // eslint-disable-next-line class-methods-use-this
   limpiarMercancias(): void {
     // Implementar la lógica para limpiar las mercancías.
   }

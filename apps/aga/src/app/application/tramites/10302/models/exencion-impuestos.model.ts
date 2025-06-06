@@ -1,4 +1,3 @@
-import { SrvRecord } from "dns";
 import { Catalogo } from "../estados/tramite10302.store";
 
 /**
@@ -13,9 +12,9 @@ export interface RespuestaMercancia {
 
   /**
    * Datos del contenedor relacionados con la mercancía.
-   * @type {datosDelMercancia}
+   * @type {DatosDelMercancia}
    */
-  datos: datosDelMercancia;
+  datos: DatosDelMercancia;
 
   /**
    * Mensaje de la respuesta.
@@ -27,7 +26,7 @@ export interface RespuestaMercancia {
 /**
  * Interfaz que representa los datos de una mercancía.
  */
-export interface datosDelMercancia {
+export interface DatosDelMercancia {
   /**
    * Identificador único de la mercancía.
    * @type {number}
