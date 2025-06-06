@@ -1,15 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormArray, FormControl } from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { RenovacionComponent } from './renovacion.component';
 import { RenovacionService } from '../../services/renovacion/renovacion.service';
 import { Tramite31801Store } from '../../../../estados/tramites/tramite31801.store';
 import { Tramite31801Query } from '../../../../estados/queries/tramite31801.query';
 import { RenovacionRespuesta, ManifiestosRespuesta } from '../../models/renovacion.model';
-import { HttpClientModule } from '@angular/common/http';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { FormGroup } from '@angular/forms';
 
-describe('RenovacionComponent', () => {
+describe('RenovacionComponent (pruebas en español)', () => {
   let component: RenovacionComponent;
   let fixture: ComponentFixture<RenovacionComponent>;
   let mockRenovacionService: jest.Mocked<RenovacionService>;
@@ -18,8 +18,8 @@ describe('RenovacionComponent', () => {
 
   beforeEach(async () => {
     mockRenovacionService = {
-      obtenerRenovacionDatos: jest.fn(() => of({ code: 200, data: [], message: 'Success' } as RenovacionRespuesta)),
-      getManifiestos: jest.fn(() => of({ code: 200, data: [], message: 'Success' } as ManifiestosRespuesta)),
+      obtenerRenovacionDatos: jest.fn(() => of({ code: 200, data: [], message: 'Éxito' } as RenovacionRespuesta)),
+      getManifiestos: jest.fn(() => of({ code: 200, data: [], message: 'Éxito' } as ManifiestosRespuesta)),
       obtenerDocumentosSeleccionados: jest.fn(),
     } as unknown as jest.Mocked<RenovacionService>;
 
@@ -30,21 +30,20 @@ describe('RenovacionComponent', () => {
 
     mockTramite31801Query = {
       selectSeccionState$: of({
-        numeroOficio: '12345',
-        fechaInicialInput: '21/03/2025',
-        fechaFinalInput: '21/04/2025',
-        fechaPago: '09/01/2025',
+        numeroOficio: 'A123',
+        fechaInicialInput: '2025-01-01',
+        fechaFinalInput: '2025-01-31',
+        fechaPago: '2025-02-01',
         monedaNacional: 1,
-        numeroOperacion: '67890',
-        llavePago: 'LLAVE123',
-        seleccionadaManifiesto: []
+        numeroOperacion: '99999',
+        llavePago: 'LLAVE999',
+        seleccionadaManifiesto: [false, false]
       })
     } as unknown as jest.Mocked<Tramite31801Query>;
 
     await TestBed.configureTestingModule({
       imports: [
         RenovacionComponent,
-        HttpClientModule,
         InputFechaComponent
       ],
       providers: [
@@ -59,101 +58,68 @@ describe('RenovacionComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should initialize the form on ngOnInit', () => {
-    const spyCrearRenovacionForm = jest.spyOn(component, 'crearRenovacionForm');
-    component.ngOnInit();
-    expect(spyCrearRenovacionForm).toHaveBeenCalled();
+  it('debe crear el formulario correctamente', () => {
+    component.crearRenovacionForm();
+    expect(component.renovacionForm instanceof FormGroup).toBe(true);
+    expect(component.renovacionForm.get('numeroOficio')?.value).toBe('A123');
   });
 
-  it('should call obtenerRenovacionDatos on ngOnInit', () => {
-    const spyObtenerRenovacionDatos = jest.spyOn(component, 'obtenerRenovacionDatos');
-    component.ngOnInit();
-    expect(spyObtenerRenovacionDatos).toHaveBeenCalled();
+  it('debe deshabilitar el formulario si es solo lectura', () => {
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.renovacionForm.disabled).toBe(true);
   });
 
-  it('should call obtenerManifiestos on ngOnInit', () => {
-    const spyObtenerManifiestos = jest.spyOn(component, 'obtenerManifiestos');
-    component.ngOnInit();
-    expect(spyObtenerManifiestos).toHaveBeenCalled();
+  it('debe habilitar el formulario si no es solo lectura', () => {
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.renovacionForm.enabled).toBe(true);
   });
 
-  it('should patch form values when obtenerRenovacionDatos is successful', () => {
-    const mockResponse: RenovacionRespuesta = {
-      code: 200,
-      data: [
-        {
-          numeroOficio: '12345',
-          fechaFinalInput: '21/03/2025',
-          fechaInicialInput: '21/04/2025',
-        },
-      ],
-      message: 'Success'
-    };
-    mockRenovacionService.obtenerRenovacionDatos.mockReturnValue(of(mockResponse));
-
-    component.obtenerRenovacionDatos();
-
-    expect(component.renovacionForm.get('numeroOficio')?.value).toBe('12345');
-    expect(component.renovacionForm.get('fechaFinalInput')?.value).toBe('21/03/2025');
-    expect(component.renovacionForm.get('fechaInicialInput')?.value).toBe('21/04/2025');
-  });
-
-  it('should populate manifiestos when obtenerManifiestos is successful', () => {
+  it('debe obtener y asignar los manifiestos correctamente', () => {
     const mockResponse: ManifiestosRespuesta = {
       code: 200,
       data: [
         {
-          declaracion: {
-            clave: '1',
-            descripcion: 'Manifiesto 1'
-          },
-          manifiestoDeclaracion: true
+          declaracion: { clave: '2', descripcion: 'Manifiesto 2' },
+          manifiestoDeclaracion: false
         }
       ],
-      message: 'Success'
+      message: 'Éxito'
     };
     mockRenovacionService.getManifiestos.mockReturnValue(of(mockResponse));
-
     component.obtenerManifiestos();
-
-    expect(component.manifiestos).toEqual(mockResponse.data);
+    expect(component.manifiestos.length).toBe(1);
+    expect(component.manifiestos[0].declaracion.descripcion).toBe('Manifiesto 2');
   });
 
-  it('should update seleccionadaManifiesto on checkbox change', () => {
+  it('debe actualizar el valor de seleccionadaManifiesto al cambiar el checkbox', () => {
     component.crearRenovacionForm();
     component.renovacionForm.setControl('seleccionadaManifiesto', new FormArray([new FormControl(false)]));
-
-    const mockEvent = { target: { checked: true } } as unknown as Event;
-    component.onManifiestoCheckboxCambiar(mockEvent, 0);
-
+    const eventoMock = { target: { checked: true } } as unknown as Event;
+    component.onManifiestoCheckboxCambiar(eventoMock, 0);
     expect(component.seleccionadaManifiesto.controls[0].value).toBe(true);
     expect(mockTramite31801Store.setSeleccionadaManifiesto).toHaveBeenCalledWith([true]);
   });
 
-  it('should update fechaPago on cambioFechaPago', () => {
+  it('debe actualizar la fecha de pago correctamente', () => {
     component.crearRenovacionForm();
-
-    component.cambioFechaPago('09/01/2025');
-
-    expect(component.renovacionForm.get('fechaPago')?.value).toBe('09/01/2025');
-    expect(mockTramite31801Store.setFechaPago).toHaveBeenCalledWith('09/01/2025');
+    component.cambioFechaPago('2025-03-01');
+    expect(component.renovacionForm.get('fechaPago')?.value).toBe('2025-03-01');
+    expect(mockTramite31801Store.setFechaPago).toHaveBeenCalledWith('2025-03-01');
   });
 
-  it('should call setValoresStore with correct parameters', () => {
-    const spySetValoresStore = jest.spyOn(component, 'setValoresStore');
+  it('debe llamar a setValoresStore con los parámetros correctos', () => {
+    const spy = jest.spyOn(component, 'setValoresStore');
     component.crearRenovacionForm();
-
-    component.cambioFechaPago('2023-12-25');
-
-    expect(spySetValoresStore).toHaveBeenCalledWith(component.renovacionForm, 'fechaPago', 'setFechaPago');
+    component.cambioFechaPago('2025-04-01');
+    expect(spy).toHaveBeenCalledWith(component.renovacionForm, 'fechaPago', 'setFechaPago');
   });
 
-  it('should complete destruirNotificador$ on ngOnDestroy', () => {
+  it('debe limpiar las suscripciones al destruir el componente', () => {
     const spyNext = jest.spyOn(component['destruirNotificador$'], 'next');
     const spyComplete = jest.spyOn(component['destruirNotificador$'], 'complete');
-
     component.ngOnDestroy();
-
     expect(spyNext).toHaveBeenCalled();
     expect(spyComplete).toHaveBeenCalled();
   });

@@ -1,7 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputFecha, InputFechaComponent, REG_X, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Subject, map, takeUntil } from 'rxjs';
+import { REG_X, TituloComponent } from '@libs/shared/data-access-user/src';
+
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { InputFechaComponent } from '@libs/shared/data-access-user/src';
+
+import { InputFecha } from '@libs/shared/data-access-user/src';
+
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 import { FECHA_FINAL, FECHA_INICIAL, FECHA_PAGO } from '../../constantes/renovacion.enum';
@@ -64,6 +70,16 @@ export class RenovacionComponent implements OnInit, OnDestroy {
   private destruirNotificador$: Subject<void> = new Subject();
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Si es verdadero, los campos del formulario estarán deshabilitados para edición.
+   * {boolean}
+   */
+  esFormularioSoloLectura: boolean = false; 
+
+  /** Suscripción general para manejar y limpiar las suscripciones del componente. Se utiliza para evitar fugas de memoria. */
+  private subscription: Subscription = new Subscription();
+
+  /**
    * Constructor del componente.
    * @param fb FormularioBuilder para crear formularios reactivos.
    * @param tramite31801Store Tienda para gestionar el estado del trámite 31801. 
@@ -74,8 +90,46 @@ export class RenovacionComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     private tramite31801Store: Tramite31801Store,
     private tramite31801Query: Tramite31801Query,
-    private renovacionService: RenovacionService
-  ) { }
+    private renovacionService: RenovacionService,
+    private consultaioQuery: ConsultaioQuery,
+  ) { 
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destruirNotificador$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+       this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
+  }
+  
+  /**
+   * Inicializa el estado del formulario dependiendo si es solo lectura o editable.
+   * Si es solo lectura, deshabilita los campos y ajusta la configuración de la fecha.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.crearRenovacionForm();
+    }
+  }
+
+  /**
+   * Guarda los datos del formulario y ajusta el estado de solo lectura.
+   * Deshabilita o habilita los campos y la fecha según corresponda.
+   */
+  guardarDatosFormulario(): void {
+    this.crearRenovacionForm();
+    if (this.esFormularioSoloLectura) {
+      this.renovacionForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.renovacionForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
 
   /**
    * Inicializa los catálogos necesarios para el componente.
@@ -93,9 +147,7 @@ export class RenovacionComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    // Inicializar el formulario principal
-    this.crearRenovacionForm();
+    this.inicializarEstadoFormulario()
   }
 
   /**
@@ -103,6 +155,17 @@ export class RenovacionComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   crearRenovacionForm(): void {
+    this.subscription.add(
+      this.tramite31801Query.selectSeccionState$
+        .pipe(
+          takeUntil(this.destruirNotificador$),
+          map((seccionState) => {
+            this.renovacionState = seccionState;
+          })
+        )
+        .subscribe()
+    );
+
     this.renovacionForm = this.fb.group({
       numeroOficio: [
         { value: this.renovacionState?.numeroOficio || '', disabled: true },
