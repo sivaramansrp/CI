@@ -14,7 +14,6 @@ import { takeUntil } from 'rxjs';
 import { FORMULARIO_FECHA_IMPORTACION } from '../../enum/autorizacion-importacion-temporal.enum';
 
 import { Subject } from 'rxjs';
-import { Subscription } from 'rxjs';
 import { Tramite630103Query } from '../../estados/tramite630103.query';
 
 import { Tramite630103State, Tramite630103Store } from '../../estados/tramite630103.store';
@@ -61,11 +60,6 @@ export class FechaDeImportacionComponent implements OnInit, OnDestroy {
    */
   FechaDeImportacionTemporalFormulario!: FormGroup;
 
-  /**
-   * Suscripción general para manejar y limpiar las suscripciones del componente.
-   */
-  private subscription: Subscription = new Subscription();
-  
   /**
    * Estado actual de la solicitud.
    */
@@ -158,7 +152,6 @@ export class FechaDeImportacionComponent implements OnInit, OnDestroy {
    * Libera las suscripciones activas para evitar fugas de memoria.
    */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
     this.destroyed$.next();
     this.destroyed$.complete();
   }
