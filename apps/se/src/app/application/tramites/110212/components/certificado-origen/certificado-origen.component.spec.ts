@@ -173,7 +173,8 @@ describe('CertificadoOrigenComponent', () => {
   it('should handle disponiblesSeleccionDeFilas and show modalBuscar', () => {
     const modalElement = fixture.debugElement.nativeElement.querySelector('#modalBuscar');
     component.modalBuscar = { nativeElement: modalElement };
-    const clickSpy = jest.spyOn(Modal.prototype, 'show');
+    component.soloLectura = false;
+    const clickSpy = jest.spyOn(Modal.prototype, 'show');    
     component.disponiblesSeleccionDeFilas(disponiblesTabla);
     expect(clickSpy).toHaveBeenCalled();
   });
