@@ -1,7 +1,5 @@
-import { SeccionLibStore, SolicitanteComponent } from '@libs/shared/data-access-user/src';
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ConcluirRelacionComponent } from '../../components/concluir-relacion/concluir-relacion.component';
+import { SeccionLibStore} from '@libs/shared/data-access-user/src';
 
 /**
  * @class PasoUnoComponent
@@ -11,12 +9,6 @@ import { ConcluirRelacionComponent } from '../../components/concluir-relacion/co
  */
 @Component({
   selector: 'app-paso-uno',
-  standalone: true,
-  imports: [
-    CommonModule,
-    SolicitanteComponent,
-    ConcluirRelacionComponent,
-  ],
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
 })

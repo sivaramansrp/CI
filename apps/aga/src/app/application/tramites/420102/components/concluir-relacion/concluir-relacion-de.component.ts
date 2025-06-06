@@ -16,7 +16,7 @@ import { Tramite420102Query } from '../../estados/tramite420102.query';
  * Este componente incluye un formulario reactivo para capturar datos, manejar fechas y mostrar una tabla dinámica.
  */
 @Component({
-  selector: 'app-concluir-relacion',
+  selector: 'app-concluir-relacion-de',
   standalone: true,
   imports: [
     CommonModule,
@@ -25,8 +25,8 @@ import { Tramite420102Query } from '../../estados/tramite420102.query';
     TablaDinamicaComponent,
     InputFechaComponent,
   ],
-  templateUrl: './concluir-relacion.component.html',
-  styleUrl: './concluir-relacion.component.scss',
+  templateUrl: './concluir-relacion-de.component.html',
+  styleUrl: './concluir-relacion-de.component.scss',
 })
 export class ConcluirRelacionComponent implements OnInit, OnDestroy {
   /**

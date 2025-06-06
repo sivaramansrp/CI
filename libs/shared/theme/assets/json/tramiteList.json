@@ -2186,8 +2186,8 @@
   {
     "id": 313,
     "tramite": 420102,
-    "linkDashboard": "/aga/concluir-relacion/solicitud",
-    "linkDepartment": "/pago/concluir-relacion/solicitud",
+    "linkDashboard": "/aga/concluir-relacion-de/solicitud",
+    "linkDepartment": "/pago/concluir-relacion-de/solicitud",
     "department": "aga"
   },
   {
