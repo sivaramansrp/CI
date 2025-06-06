@@ -29,4 +29,8 @@ export class DesistimientoQuery extends Query<DesistimientoState> {
     selectDesistimiento$ = this.select((state) => {
         return state;
     });
+
+    selectDescripcion$ = this.select((state) => {
+        return state.descripcion;
+    });
 }
