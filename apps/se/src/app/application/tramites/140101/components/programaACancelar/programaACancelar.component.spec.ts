@@ -120,4 +120,69 @@ describe('ProgramaACancelarComponent', () => {
     expect(destroyNotifierSpy).toHaveBeenCalled();
     expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
   });
+
+  it('should initialize ProgramaForm and set radioId and datosTabla in inicializarFormulario', () => {
+    // Arrange
+    const mockState = {
+      programaACancelar: {
+        folioPrograma: 'FOLIO123',
+        idProgramaSeleccionado: 'ID123',
+        modalidad: 'MODALIDAD',
+        representacionFederal: 'FEDERAL',
+        tipoPrograma: 'TIPO',
+        estatus: 'ESTATUS'
+      },
+      solicitudObservaciones: 'Observaciones',
+      confirmar: true,
+      radio: 5,
+      datos: [{ folioPrograma: 'FOLIO123', idProgramaSeleccionado: 'ID123' }]
+    };
+    component.ProgramaState = mockState;
+    component.soloLectura = false;
+
+    // Act
+    component.inicializarFormulario();
+
+    // Assert
+    expect(component.ProgramaForm).toBeTruthy();
+    expect(component.ProgramaForm.get('folioPrograma')?.value).toBe('FOLIO123');
+    expect(component.ProgramaForm.get('folioPrograma')?.disabled).toBe(true);
+    expect(component.ProgramaForm.get('idProgramaSeleccionado')?.value).toBe('ID123');
+    expect(component.ProgramaForm.get('modalidad')?.value).toBe('MODALIDAD');
+    expect(component.ProgramaForm.get('modalidad')?.disabled).toBe(true);
+    expect(component.ProgramaForm.get('representacionFederal')?.value).toBe('FEDERAL');
+    expect(component.ProgramaForm.get('tipoPrograma')?.value).toBe('TIPO');
+    expect(component.ProgramaForm.get('estatus')?.value).toBe('ESTATUS');
+    expect(component.ProgramaForm.get('solicitudObservaciones')?.value).toBe('Observaciones');
+    expect(component.ProgramaForm.get('confirmar')?.value).toBe(true);
+    expect(component.radioId).toBe(5);
+    expect(component.datosTabla).toEqual([{ folioPrograma: 'FOLIO123', idProgramaSeleccionado: 'ID123' }]);
+    expect(component.ProgramaForm.enabled).toBe(true);
+  });
+
+  it('should disable ProgramaForm if soloLectura is true', () => {
+    // Arrange
+    const mockState = {
+      programaACancelar: {
+        folioPrograma: 'FOLIO123',
+        idProgramaSeleccionado: 'ID123',
+        modalidad: 'MODALIDAD',
+        representacionFederal: 'FEDERAL',
+        tipoPrograma: 'TIPO',
+        estatus: 'ESTATUS'
+      },
+      solicitudObservaciones: 'Observaciones',
+      confirmar: true,
+      radio: 5,
+      datos: [{ folioPrograma: 'FOLIO123', idProgramaSeleccionado: 'ID123' }]
+    };
+    component.ProgramaState = mockState;
+    component.soloLectura = true;
+
+    // Act
+    component.inicializarFormulario();
+
+    // Assert
+    expect(component.ProgramaForm.disabled).toBe(true);
+  });
 });

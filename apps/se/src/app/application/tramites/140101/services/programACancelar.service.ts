@@ -1,8 +1,8 @@
+import { Programa140101State, Tramite140101Store } from '../../../estados/tramites/tramite140101.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import {ProgramaACancelar} from '../../../shared/models/programa-cancelar.model';
-import { Programa140101State, Tramite140101Store } from '../../../estados/tramites/tramite140101.store';
+import { ProgramaACancelar } from '../../../shared/models/programa-cancelar.model';
 // Decorador Injectable que permite que este servicio sea inyectable en cualquier módulo.
 /**
  * Servicio para gestionar las operaciones relacionadas con el programa a cancelar.
@@ -33,33 +33,27 @@ export class ProgramaACancelarService {
     return this.http.get<ProgramaACancelar>(`assets/json/140101/Programa.json`);
   }
 
+ 
   /**
-   * Obtiene el estado del expediente de certificado.
+   * Obtiene los datos del programa para cancelar.
    *
-   * Realiza una solicitud HTTP GET para recuperar los datos del expediente de certificado
-   * desde un archivo JSON local ubicado en 'assets/json/120204/expedicion-certificado.json'.
+   * Realiza una solicitud HTTP GET para recuperar la información del programa
+   * desde un archivo JSON localizado en 'assets/json/140101/programa-cancelar.json'.
    *
-   * @returns Un observable que emite el estado de la expedición del certificado (`Expedicion120204State`).
+   * @returns Un Observable que emite el estado del programa de tipo Programa140101State.
    */
   getProgramaDatos(): Observable<Programa140101State> {
     return this.http.get<Programa140101State>('assets/json/140101/programa-cancelar.json');
   }
 
+
   /**
    * Establece los datos del formulario en el store del trámite.
    *
-   * @param datos - Objeto de tipo `Expedicion120204State` que contiene la información a establecer en el store, incluyendo:
-   *   - entidadFederativa: La entidad federativa seleccionada.
-   *   - representacionFederal: La representación federal correspondiente.
-   *   - montoAExpedir: El monto que se va a expedir.
-   *   - montoAExpedirCheck: Indicador de validación del monto a expedir.
-   *   - montoDisponible: El monto disponible para expedir.
-   *   - totalAExpedir: El total a expedir.
-   *   - numeraDelicitacion: El número de la licitación.
-   *   - fechaDelEventoDelicitacion: La fecha del evento de licitación.
-   *   - descripcionDelProducto: Descripción del producto relacionado.
+   * @param datos - Objeto de tipo `Programa140101State` que contiene la información del formulario,
+   * incluyendo la confirmación, observaciones de la solicitud, el programa a cancelar y la selección de radio.
    *
-   * Esta función actualiza el estado del store con los valores proporcionados en el objeto `datos`.
+   * Este método actualiza el estado del store del trámite con los valores proporcionados en el objeto `datos`.
    */
   setDatosFormulario(datos: Programa140101State): void {
     this.tramiteStore.setConfirmar(datos.confirmar);

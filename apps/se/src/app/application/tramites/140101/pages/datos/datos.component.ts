@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, ConsultaioStore, SolicitanteComponent } from '@libs/shared/data-access-user/src';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { ProgramaACancelarService } from '../../services/programACancelar.service';
 
 /**
@@ -88,17 +88,6 @@ export class DatosComponent implements OnInit, OnDestroy {
   * @returns {void}
   */
   ngOnInit(): void {
-    this.consultaStore.establecerConsultaio(
-      '120204',
-      'BANDEJA_SOLICITUDES',
-      'se',
-      '03039399393939393',
-      'tipoTramite',
-      'tipoTramite',
-      true,
-      false,
-      true
-    );
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
       this.consultaState = seccionState;
       this.esFormularioSoloLectura = seccionState.readonly;
