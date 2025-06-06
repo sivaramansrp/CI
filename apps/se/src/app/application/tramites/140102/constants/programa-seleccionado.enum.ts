@@ -4,6 +4,7 @@ import { CancelacionTabla } from "../models/Cancelacion-de-autorizaciones";
  * Constante que define los datos del formulario dinámico para el programa seleccionado.
  * Contiene la configuración de los campos, incluyendo etiquetas, tipos de entrada, valores predeterminados, y más.
  */
+
 export const PROGRAMA_SELECCIONADO = [
   {
     id: 'folioDePrograma',

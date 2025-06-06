@@ -16,7 +16,6 @@ import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { ToastrService } from 'ngx-toastr';
 import { WizardComponent } from '@libs/shared/data-access-user/src';
-
 @NgModule({
   declarations: [
     DatosComponent,

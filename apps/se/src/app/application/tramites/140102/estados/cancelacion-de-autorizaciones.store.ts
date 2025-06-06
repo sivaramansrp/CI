@@ -10,6 +10,7 @@ import { Injectable } from '@angular/core';
  * @property {string} [key] - Las claves son cadenas que representan los nombres de los campos.
  * @property {any} [value] - Los valores pueden ser de cualquier tipo, dependiendo del campo.
  */
+
 export interface CancelacionState {
     [key: string]: any;
 }
