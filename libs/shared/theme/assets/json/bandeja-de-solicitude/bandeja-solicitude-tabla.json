@@ -1097,7 +1097,16 @@
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260514"
   },
-  {
+{
+  "id": 104,
+  "tipoDeTramite": "Solicitud de Permiso",
+  "fecha": "2023-10-01",
+  "fechaActualizacion": "2023-10-05",
+  "diasTranscurridos": "4",
+  "departamento": "AGA",
+  "numeroDeProcedimiento": "104"
+},
+ {
         "id": 302,
         "tipoDeTramite": "Solicitud de cs Permiso",
         "fecha": "2023-10-01",
