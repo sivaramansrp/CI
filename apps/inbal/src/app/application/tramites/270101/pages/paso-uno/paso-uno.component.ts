@@ -1,4 +1,7 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
+import { ConsultaioState } from '@ng-mf/data-access-user';
+import { ExportarIlustracionesService } from '../../services/exportar-ilustraciones.service';
 import { FormGroup } from '@angular/forms';
 
 /**
@@ -20,7 +23,7 @@ import { FormGroup } from '@angular/forms';
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
 })
-export class PasoUnoComponent {
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * @property formaEventoEmitir
    * @type {EventEmitter<FormGroup>}
@@ -76,6 +79,79 @@ export class PasoUnoComponent {
   @Output() pestanaCambiado = new EventEmitter<number>();
 
   /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+  /** Subject para notificar la destrucción del componente. */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+     * @constructor
+     * @description
+     * Este constructor inicializa el componente `DatosDeLaSolicitudComponent` e inyecta los servicios necesarios
+     * para gestionar los datos y validaciones del formulario.
+     *
+     * Servicios inyectados:
+     * - `ExportarIlustracionesService`: Servicio utilizado para obtener datos relacionados con monedas y fracciones arancelarias.
+     *
+     * @param {ExportarIlustracionesService} exportarIlustracionesService - Servicio para gestionar datos de exportación.
+     */
+    constructor(
+      public exportarIlustracionesService: ExportarIlustracionesService
+        ) {
+      //
+    }
+
+    /**
+   * @method ngOnInit
+   * @description
+   * Método de inicialización del componente `DatosComponent`.
+   * 
+   * Detalles:
+   * - Se suscribe al observable `selectConsultaioState$` del store `ConsultaioQuery` para obtener el estado actual de la consulta.
+   * - Utiliza `takeUntil` para cancelar la suscripción cuando el componente se destruye, evitando fugas de memoria.
+   * - Actualiza la propiedad `consultaState` con el estado recibido.
+   * - Si la propiedad `update` del estado es verdadera, llama al método `guardarDatosFormulario()`.
+   * - Si no, establece la bandera `esDatosRespuesta` en `true` para indicar que se deben mostrar los datos de respuesta.
+   * 
+   * @example
+   * this.ngOnInit();
+   * // Inicializa el componente y gestiona el flujo de datos según el estado de la consulta.
+   */
+  ngOnInit(): void {
+    if(this.consultaState?.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.exportarIlustracionesService
+      .getExportarIlustracionesData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          Object.entries(resp).forEach(([key, value]) => {
+            this.exportarIlustracionesService.actualizarEstadoFormulario(key, value);
+          });
+        }
+      });
+  }
+
+  /**
    * compo doc
    * Método para cambiar el índice del subtítulo seleccionado.
    *
@@ -110,5 +186,21 @@ export class PasoUnoComponent {
     } else {
       this.desactivarPestana = false;
     }
+  }
+
+  /**
+ * @method ngOnDestroy
+ * @description
+ * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+ * 
+ * Detalles:
+ * - Emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores que el componente está siendo destruido.
+ * - Completa el observable para liberar recursos y evitar fugas de memoria.
+ * 
+ * @returns {void} No retorna ningún valor.
+ */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

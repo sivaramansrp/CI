@@ -19,6 +19,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  Input,
   OnDestroy,
   OnInit,
   Output,
@@ -37,6 +38,7 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { AduanaDeSalida } from '../../models/exportar-ilustraciones.model';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { ExportarIlustracionesService } from '../../services/exportar-ilustraciones.service';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { Modal } from 'bootstrap';
@@ -86,6 +88,14 @@ import { ValidadoresDeFormulariosComponent } from '@libs/shared/data-access-user
   styleUrl: './aduana.component.scss',
 })
 export class AduanaComponent implements OnInit, OnDestroy {
+
+  /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
+
   /**
    * @property registroAlert
    * @type {string}
@@ -411,6 +421,9 @@ export class AduanaComponent implements OnInit, OnDestroy {
       .subscribe();
     this.obtenerAduanaDeSalida();
     this.obtrenerTipoDeTraslado();
+    if (this.consultaState.readonly) {
+      this.forma.get('extentoPago')?.disable();
+    }
   }
 
   /**

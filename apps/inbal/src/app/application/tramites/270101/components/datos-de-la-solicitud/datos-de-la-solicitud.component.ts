@@ -1,10 +1,11 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ModeloDeFormaDinamica, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService, Validadores } from '@libs/shared/data-access-user/src';
 import { CONFIGURACION_DATOS_SOLICITUD_DE_TABLA, DATOS_DE_LA_SOLICICTUD, INFORMACION_DE_LA_OBRA_ARTE, OBRA_DE_ARTE_ALERT } from '../../constantes/exportar-ilustraciones.enum';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ExportarIlustraciones270101State, Tramite270101Store } from '../../../../estados/tramites/270101/tramite270101.store';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosDelSolicitud } from '../../models/exportar-ilustraciones.model';
 import { ExportarIlustracionesService } from '../../services/exportar-ilustraciones.service';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
@@ -55,6 +56,14 @@ import { ValidadoresDeFormulariosComponent } from '@libs/shared/data-access-user
 })
 
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+
+  /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
+  
   /**
    * Referencia al elemento del modal para agregar mercancías.
    */

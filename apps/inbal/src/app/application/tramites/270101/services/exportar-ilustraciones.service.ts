@@ -2,6 +2,7 @@ import {
   AduanaDeSalida,
   DatosDelSolicitud,
 } from '../models/exportar-ilustraciones.model';
+import { ExportarIlustraciones270101State, Tramite270101Store } from '../../../estados/tramites/270101/tramite270101.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -97,7 +98,7 @@ export class ExportarIlustracionesService {
    * Inicializa el servicio con una instancia de HttpClient para realizar solicitudes HTTP.
    * @param {HttpClient} http - Cliente HTTP para realizar las solicitudes.
    */
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private tramite270101Store: Tramite270101Store) {
     //
   }
 
@@ -328,5 +329,29 @@ export class ExportarIlustracionesService {
    */
   getBancoData(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/270101/bancos.json');
+  }
+
+  getExportarIlustracionesData(): Observable<ExportarIlustraciones270101State> {
+    return this.http.get<ExportarIlustraciones270101State>('assets/json/270101/exportar-ilustraciones.json');
+  }
+
+  /**
+ * @method actualizarEstadoFormulario
+ * @description
+ * Actualiza el valor de un campo específico en el store `tramite270101Store` de manera dinámica.
+ * 
+ * Detalles:
+ * - Utiliza el método `setDynamicFieldValue` del store para modificar el valor del campo indicado.
+ * - Permite mantener sincronizado el estado global del trámite con los cambios realizados en el formulario.
+ * 
+ * @param {string} campo - Nombre del campo que se desea actualizar en el store.
+ * @param {unknown} valor - Valor que se asignará al campo especificado.
+ * 
+ * @example
+ * this.actualizarEstadoFormulario('pais', 'México');
+ * // Actualiza el campo 'pais' en el store con el valor 'México'.
+ */
+  actualizarEstadoFormulario(campo: string, valor: unknown): void {
+    this.tramite270101Store.setDynamicFieldValue(campo, valor);
   }
 }
