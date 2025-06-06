@@ -123,6 +123,11 @@ export class SolicitudService {
     return this.http.get<ObraTablaDatos>('assets/json/270201/obra-de-arte.json');
   }
 
+  /**
+ * Actualiza el estado del formulario con los datos proporcionados.
+ *
+ * @param DATOS - Objeto que contiene el nuevo estado del trámite (Tramite270201State).
+ */
   actualizarEstadoFormulario(DATOS: Tramite270201State): void {
     if(DATOS.tipoDeOperacion){
       this.tramite270201Store.setOperacion(DATOS.tipoDeOperacion);

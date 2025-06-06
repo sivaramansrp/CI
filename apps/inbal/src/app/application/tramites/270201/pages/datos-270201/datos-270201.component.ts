@@ -46,16 +46,25 @@ export class Datos270201Component implements OnInit, OnDestroy {
   // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
-
+/**
+ * Inicializa la suscripción al estado de la consulta y actualiza el formulario
+ * según el valor de `update`. Utiliza `takeUntil` para gestionar la cancelación
+ * de la suscripción al destruir el componente.
+ */
     ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$))
+        .subscribe((seccionState) => {
           this.consultaState = seccionState;
-      })).subscribe();
-    if(this.consultaState.update) {
-      this.guardarDatosFormulario();
-    } else {
-      this.esDatosRespuesta = true;
-    }
+          if (this.consultaState.update) {
+             this.guardarDatosFormulario();
+             } else {
+              this.esDatosRespuesta = true;
+            }
+        })
+
+
   }
 
     /**
