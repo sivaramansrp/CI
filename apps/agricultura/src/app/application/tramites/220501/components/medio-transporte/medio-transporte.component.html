@@ -2,9 +2,10 @@
     <ng-titulo titulo="Medio de transporte" />
     <div class="row">
         <div class="col-md-4">
-            <app-catalogo-select id="transporteIdMedio" [catalogo]="medioDeTransporte" formControlName="medioDeTransporte"
-                [label]="'Medio de transporte'" [required]="true"
-                name="medioDeTransporte" (selectionChange)="medioDeTransporteSeleccion($event)"></app-catalogo-select>
+            <app-catalogo-select id="transporteIdMedio" [catalogo]="medioDeTransporte"
+                formControlName="medioDeTransporte" [label]="'Medio de transporte'" [required]="true"
+                [isDisabled]="formularioDeshabilitado" name="medioDeTransporte"
+                (selectionChange)="medioDeTransporteSeleccion($event)"></app-catalogo-select>
         </div>
         <div class="col-md-4">
             <label for="identificacionTransporte" class="form-label">Identificación del transporte:</label>
@@ -18,14 +19,9 @@
                 por
                 Ferrocarril o por Partes II?*:</label>
 
-                <app-input-radio
-                [radioOptions]="opcionDeBotonDeRadio"
-                [isRequired]="true"
-                [selectedValue]="esSolicitudFerrosValor"
-                [layout]="'vertical'"
-                formControlName="esSolicitudFerros"
-                (valueChange)="estableceSeleccionSolicitudFerro($event)"
-              ></app-input-radio>
+            <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true"
+                [selectedValue]="esSolicitudFerrosValor" [layout]="'vertical'" formControlName="esSolicitudFerros"
+                (valueChange)="estableceSeleccionSolicitudFerro($event)"></app-input-radio>
         </div>
     </div>
     @if (esSolicitudFerrosValor === '1') {
@@ -34,18 +30,20 @@
 
     <h6>Datos de la mercancía:</h6>
 
-    <ng-table [commonTableHeader]="mercanciaHeaderData" [commonTableBody]="mercanciaBodyData"></ng-table>
+    <ng-table [commonTableHeader]="mercanciaHeaderData" [commonTableBody]="mercanciaBodyData"
+        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></ng-table>
 
     @if (esSolicitudFerrosValor === '1') {
     <div class="row">
         <div class="text-end">
             <button name="modificarSaldoMercancia" id="btnSaldoMercancia" class="btn btn-primary"
-                (click)="modificarSaldosMercancia()">Modificar</button>
+                (click)="modificarSaldosMercancia()" [disabled]="formularioDeshabilitado">Modificar</button>
         </div>
     </div>
 
     @if (mostrarAgregarMercancia) {
-    <app-agregar-mercancia [mercanciasDatos]="mercanciaBodyData" (actualizarMercancia)="actualizarMercanciaEnTabla($event)"
+    <app-agregar-mercancia [mercanciasDatos]="mercanciaBodyData"
+        (actualizarMercancia)="actualizarMercanciaEnTabla($event)"
         (cancelarEvento)="obtenerAgregarMercanciaEvent($event)"></app-agregar-mercancia>
     }
     }
@@ -55,7 +53,8 @@
         <div class="col-md-4">
             <label for="totalGuia" class="form-label">Total de guías amparadas:<span class="bi bi-question-circle-fill"
                     title="" data-bs-toggle="tooltip"></span></label>
-            <input class="form-control" type="text" formControlName="totalGuias" id="totalGuia" (input)="getTotalGuiasAmparadas()" />
+            <input class="form-control" type="text" formControlName="totalGuias" id="totalGuia"
+                (input)="getTotalGuiasAmparadas()" />
         </div>
     </div>
     }

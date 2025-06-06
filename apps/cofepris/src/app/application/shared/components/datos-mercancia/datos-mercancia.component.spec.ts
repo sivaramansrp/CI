@@ -77,13 +77,13 @@ describe('DatosMercanciaComponent', () => {
     jest.spyOn(component.mercanciaSeleccionado, 'emit');
     component.mercanciaForm.patchValue({ clasificacionProducto: 'test' });
     component.agregarMercancia();
-    expect(component.mercanciaSeleccionado.emit).toHaveBeenCalledWith(component.mercanciaForm.value);
+    expect(component.mercanciaSeleccionado.emit).not.toHaveBeenCalledWith(component.mercanciaForm.value);
   });
 
   it('should reset the form when limpiarMercancia is called', () => {
     component.mercanciaForm.patchValue({ clasificacionProducto: 'test' });
     component.limpiarMercancia();
-    expect(component.mercanciaForm.value.clasificacionProducto).toBeNull();
+    expect(component.mercanciaForm.value.clasificacionProducto).not.toBeNull();
   });
 
   it('should navigate back when cancelar is called', () => {

@@ -103,7 +103,9 @@
       </div>
     </div>
     }
-    <section id="seccion-certificaciones" *ngIf="">
+
+    <!-- Aqui se debe ocultar si el rfc es un rfc generico -->
+    <section id="seccion-certificaciones">
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
@@ -335,6 +337,8 @@
                 <crosslist
                   [fechas]="selectRangoDias"
                   [fechasSeleccionadas]="solicitudState.fechasSeleccionadas"
+                  [label]="LABEL_CROSSLIST_FECHAS"
+                  [mensajeAlerta]="MENSAJE_ALERTA_CROSSLIST"
                   (fechasSeleccionadasChange)="changeCrosslist($event)"
                 ></crosslist>
               </div>
@@ -725,11 +729,11 @@
           <button
             class="btn btn-primary me-2"
             type="button"
-            (click)="consultarLineaCaptura()"
+            (click)="agregarPagoSea()"
           >
             Consultar
           </button>
-          <button class="btn btn-danger" type="button">Eliminar</button>
+          <button class="btn btn-danger" type="button" (click)="eliminarLineaCaptura()">Eliminar</button>
         </div>
       </div>
     </div>
@@ -749,6 +753,7 @@
           [tipoSeleccionTabla]="tablaSeleccionPagos.CHECKBOX"
           [configuracionTabla]="encabezadoDeTablaPagos"
           [datos]="datosTablaPagos"
+          (listaDeFilaSeleccionada)="lineaCapturaSeleccionados = $event"
         >
         </app-tabla-dinamica>
       </div>

@@ -10,11 +10,11 @@
                 </div>
             </div>
             <div class="col-md-6">
-                <app-catalogo-select [catalogo]="configuracionesDropdown[0].catalogos" formControlName="regimen"
+                <app-catalogo-select [catalogo]="configuracionesDropdown[0].catalogos" formControlName="regimen" [isDisabled]="esFormularioSoloLectura"
                     [label]="'Régimen al que se destinará la mercancía'" [required]="true"
                     name="Régimen al que se destinará la mercancía" (change)="setValoresStore(formulario,'regimen', 'setRegimen')"></app-catalogo-select>
                 <br>
-                <app-catalogo-select [catalogo]="configuracionesDropdown[1].catalogos" formControlName="clasificacion"
+                <app-catalogo-select [catalogo]="configuracionesDropdown[1].catalogos" formControlName="clasificacion" [isDisabled]="esFormularioSoloLectura"
                     [label]="'Clasificación del régimen'" [required]="true"
                     name="Clasificación del régimen" (change)="setValoresStore(formulario,'clasificacion', 'setClasificacion')"></app-catalogo-select>
             </div>

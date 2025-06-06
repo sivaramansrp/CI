@@ -12,6 +12,12 @@ import {
   AlertComponent,
   InputRadioComponent,
 } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { MANIFIESTOS_DECLARACION } from '../../constantes/aviso-de-funcionamiento.enum';
+
+const mockConsultaioQuery = {
+  selectConsultaioState$: of({ readonly: true }),
+};
 
 describe('ManifiestosComponent', () => {
   let component: ManifiestosComponent;
@@ -43,6 +49,7 @@ describe('ManifiestosComponent', () => {
         FormBuilder,
         { provide: DatosDomicilioLegalQuery, useValue: mockQuery },
         { provide: DatosDomicilioLegalStore, useValue: mockStore },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
       ],
     }).compileComponents();
 
@@ -107,5 +114,41 @@ describe('ManifiestosComponent', () => {
 
   it('should use cumplimientoOptions correctly', () => {
     expect(component.cumplimientoOptions).toBe(CumplimientoOptions);
+  });
+
+  it('should set esFormularioSoloLectura from ConsultaioQuery and configure form on ngOnInit', () => {
+    const configurarSpy = jest.spyOn(component, 'configurarGrupoForm');
+
+    component.ngOnInit();
+
+    expect(component.esFormularioSoloLectura).toBe(true);
+    expect(configurarSpy).toHaveBeenCalled();
+  });
+
+  it('should set mensajeManifiestos and initialize manifiestos FormGroup', () => {
+    component.esFormularioSoloLectura = false;
+
+    component.configurarGrupoForm();
+
+    expect(component.mensajeManifiestos).toBe(MANIFIESTOS_DECLARACION.MANIFIESTOS);
+    expect(component.manifiestos).toBeDefined();
+    expect(component.manifiestos.get('cumplimiento')?.value).toBe('Sí');
+    expect(component.manifiestos.enabled).toBe(true);
+  });
+
+  it('should disable manifiestos FormGroup when esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+
+    component.configurarGrupoForm();
+
+    expect(component.manifiestos.disabled).toBe(true);
+  });
+
+  it('should enable manifiestos FormGroup when esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+
+    component.configurarGrupoForm();
+
+    expect(component.manifiestos.enabled).toBe(true);
   });
 });
