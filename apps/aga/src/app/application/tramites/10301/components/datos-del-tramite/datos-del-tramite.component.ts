@@ -184,7 +184,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     'Número de serie',
     'Uso específico de la mercancía',
   ];
-tableData = [
+  tableData = [
     {
       "tbodyData": ["Ananas comosus", "P&iacute;na"]
     }
@@ -194,7 +194,7 @@ tableData = [
    * Indica si el formulario es de solo lectura.
    * 
    */
-  formularioDeshabilitado:boolean = true;
+  formularioDeshabilitado: boolean = true;
   isPais: boolean = false;
   isDesplegableDepaises: boolean = false;
   isAdunaMarcancia: boolean = false;
@@ -205,22 +205,22 @@ tableData = [
     {
       btnNombre: 'Agregar',
       class: 'btn-primary',
-      funcion: () => this.agregar(''),
+      funcion: (): void => this.agregar(''),
     },
     {
       btnNombre: 'Agregar todo',
       class: 'btn-default',
-      funcion: () => this.agregar(SELECCION.SELECT_ALL),
+      funcion: ():void => this.agregar(SELECCION.SELECT_ALL),
     },
     {
       btnNombre: 'Remover',
       class: 'btn-danger',
-      funcion: () => this.quitar(''),
+      funcion: ():void => this.quitar(''),
     },
     {
       btnNombre: 'Remover todo',
       class: 'btn-default',
-      funcion: () => this.quitar(SELECCION.SELECT_ALL),
+      funcion: ():void => this.quitar(SELECCION.SELECT_ALL),
     },
   ];
 
@@ -247,7 +247,7 @@ tableData = [
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          console.log('esFormularioSoloLectura constructor.........',this.esFormularioSoloLectura)
+          this.datosDeltrimiteForm()
         })
       )
       .subscribe()
@@ -284,7 +284,7 @@ tableData = [
         })
       )
       .subscribe();
-    this.donanteDomicilio();
+    this.inicializarEstadoFormulario();
 
     this.subscriptions.push(
       this.query.selectFechasSeleccionadas$.subscribe((fechas) => {
@@ -333,10 +333,22 @@ tableData = [
     );
   }
   /**
+   * Inicializa el estado del formulario según si es de solo lectura o no.
+   * Si es de solo lectura, guarda los datos del formulario; de lo contrario, inicializa el formulario con los datos del donante y domicilio.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosDelFormulario();
+    } else {
+      this.donanteDomicilio();
+    }
+  }
+
+  /**
    * Agrega elementos a la lista de fechas según el tipo especificado.
    * @param {string} tipo - Tipo de acción a realizar.
    */
-  agregar(tipo: string) {
+  agregar(tipo: string): void {
     if (tipo === SELECCION.SELECT_ALL) {
       this.fechasSeleccionadas = [...this.selectRangoDias];
       this.fechasDatos = [];
@@ -359,7 +371,7 @@ tableData = [
    * Elimina elementos de la lista de fechas según el tipo especificado.
    * @param {string} tipo - Tipo de acción a realizar.
    */
-  quitar(tipo: string = '') {
+  quitar(tipo: string = ''): void {
     if (tipo === SELECCION.SELECT_ALL) {
       this.fechasDatos = [...this.fechasSeleccionadas];
       this.fechasSeleccionadas = [];
@@ -389,7 +401,7 @@ tableData = [
    * Cambia el valor seleccionado del radio.
    * @param value Valor seleccionado.
    */
-  cambiarRadio(value: string | number) {
+  cambiarRadio(value: string | number):void {
     this.valorSeleccionado = value as string;
     this.store.setValorSeleccionado(this.valorSeleccionado);
   }
@@ -451,7 +463,7 @@ tableData = [
   /**
    * Abre el popup.
    */
-  openPopup() {
+  openPopup():void{
     this.isPopupOpen = true;
     this.store.setIsPopupOpen(this.isPopupOpen);
   }
@@ -459,7 +471,7 @@ tableData = [
   /**
    * Cierra el popup.
    */
-  closePopup() {
+  closePopup():void {
     this.isPopupOpen = false;
     this.isPopupClose = false;
     this.store.setIsPopupOpen(this.isPopupOpen);
@@ -469,7 +481,7 @@ tableData = [
   /**
    * Muestra la siguiente tabla.
    */
-  nextTabla() {
+  nextTabla():void{
     this.showTabla = false;
     this.store.setShowTabla(this.showTabla);
   }
@@ -485,6 +497,13 @@ tableData = [
     return this.validacionesService.isValid(form, field) || false;
   }
 
+  guardarDatosDelFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.tramiteForm.disable();
+    } else {
+      this.tramiteForm.enable();
+    }
+  }
   /**
    * Establece los valores en el store de tramite10301.
    *
@@ -583,6 +602,13 @@ tableData = [
       }),
     });
 
+    this.datosDeltrimiteForm()
+  }
+  /**
+   * datosDeltrimiteForm los campos del formulario si es de solo lectura.
+   * Si el formulario es de solo lectura, deshabilita los campos del formulario de importador/exportador.
+   */
+  datosDeltrimiteForm(): void {
     if (this.esFormularioSoloLectura) {
       this.importadorExportador?.get('aduana')?.disable();
       this.importadorExportador?.get('nombre')?.disable();
