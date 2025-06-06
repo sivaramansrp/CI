@@ -1,40 +1,27 @@
 // @ts-nocheck
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
-import { CUSTOM_ELEMENTS_SCHEMA, Injectable, Input, NO_ERRORS_SCHEMA, Output } from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
+
 import { Component } from '@angular/core';
 import { TercerosRelacionadosVistaComponent } from './terceros-relacionados-vista.component';
-import { FormBuilder } from '@angular/forms';
-import { Location } from '@angular/common';
-import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
 import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
 import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
-import { SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { ActivatedRoute, Router } from '@angular/router';
-
-
-@Injectable()
-class MockMaterialesPeligrososService {
-  obtenerRespuestaPorUrl = function () { };
-  obtenerListaCodigosPostales = jest.fn().mockReturnValue(observableOf({}));
-  obtenerListaPaises = jest.fn().mockReturnValue(observableOf({}));
-  obtenerListaEstados = jest.fn().mockReturnValue(observableOf({}));
-  obtenerListaMunicipios = jest.fn().mockReturnValue(observableOf({}));
-  obtenerListaLocalidades = jest.fn().mockReturnValue(observableOf({}));
-  obtenerListaColonias = jest.fn().mockReturnValue(observableOf({}));
-}
+import { Router, ActivatedRoute } from '@angular/router';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 @Injectable()
-class MockTramite230501Store { }
+class MockTramite230501Store {}
 
 @Injectable()
-class MockTramite230501Query { }
+class MockTramite230501Query {}
+
 @Injectable()
 class MockRouter {
-  navigate() { }
+  navigate() {};
 }
 
 describe('TercerosRelacionadosVistaComponent', () => {
@@ -43,35 +30,31 @@ describe('TercerosRelacionadosVistaComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-           imports: [FormsModule, ReactiveFormsModule],
-             declarations: [],
-             schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-             providers: [
-               { provide: Tramite230501Query, useClass: MockTramite230501Query },
-               { provide: Tramite230501Store, useClass: MockTramite230501Store },
-               { provide: MaterialesPeligrososService, useClass: MockMaterialesPeligrososService },
-               SeccionLibStore,
-               SeccionLibQuery,
-               FormBuilder,
-               { provide: Router, useClass: MockRouter },
-               {
-                 provide: ActivatedRoute,
-                 useValue: {
-                   snapshot: { url: 'url', params: {}, queryParams: {}, data: {} },
-                   url: observableOf('url'),
-                   params: observableOf({}),
-                   queryParams: observableOf({}),
-                   fragment: observableOf('fragment'),
-                   data: observableOf({})
-                 }
-               }
-             ]
+      imports: [ FormsModule, ReactiveFormsModule ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        { provide: Tramite230501Store, useClass: MockTramite230501Store },
+        { provide: Tramite230501Query, useClass: MockTramite230501Query },
+        { provide: Router, useClass: MockRouter },
+        {
+          provide: ActivatedRoute,
+          useValue: {
+            snapshot: {url: 'url', params: {}, queryParams: {}, data: {}},
+            url: observableOf('url'),
+            params: observableOf({}),
+            queryParams: observableOf({}),
+            fragment: observableOf('fragment'),
+            data: observableOf({})
+          }
+        },
+        ConsultaioQuery
+      ]
     }).overrideComponent(TercerosRelacionadosVistaComponent, {
 
     }).compileComponents();
     fixture = TestBed.createComponent(TercerosRelacionadosVistaComponent);
     component = fixture.debugElement.componentInstance;
-  }); 
+  });
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
@@ -79,10 +62,13 @@ describe('TercerosRelacionadosVistaComponent', () => {
 
   it('should run #ngOnInit()', async () => {
     component.tramiteQuery = component.tramiteQuery || {};
-    component.tramiteQuery.selectTramiteState$ = observableOf({});
-    component.tramiteQuery.getDestinatarioFinalTablaDatos$ = observableOf({});
-    component.tramiteQuery.getRepresentanteTablaDatos$ = observableOf({});
-    component.tramiteQuery.getUsuarioTablaDatos$ = observableOf({});
+    component.tramiteQuery.selectTramiteState$ = observableOf({
+      destinatarioFinalTablaDatos: {},
+      representanteLegalTablaDatos: {},
+      usuarioTablaDatos: {}
+    });
+    component.consultaQuery = component.consultaQuery || {};
+    component.consultaQuery.selectConsultaioState$ = observableOf({});
     component.pestanaValidar = jest.fn();
     component.ngOnInit();
   });
@@ -109,7 +95,7 @@ describe('TercerosRelacionadosVistaComponent', () => {
 
   it('should run #modificarRepresentanteLegal()', async () => {
     component.irAAcciones = jest.fn();
-    component.representanteFilaSeleccionada = component.representanteFilaSeleccionada || {};
+    component.reprexsentanteFilaSeleccionada = component.representanteFilaSeleccionada || {};
     component.representanteFilaSeleccionada = '0';
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.update = jest.fn().mockReturnValue([
@@ -150,7 +136,9 @@ describe('TercerosRelacionadosVistaComponent', () => {
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.eliminarRepresentanteLegal = jest.fn();
     component.pestanaValidar = jest.fn();
-    component.eliminarRepresentanteLegal();;
+    component.eliminarRepresentanteLegal();
+    expect(component.tramiteStore.eliminarRepresentanteLegal).toHaveBeenCalled();
+    expect(component.pestanaValidar).toHaveBeenCalled();
   });
 
   it('should run #eliminarUsuarioFinal()', async () => {
@@ -165,6 +153,7 @@ describe('TercerosRelacionadosVistaComponent', () => {
   it('should run #ngOnDestroy()', async () => {
     component.destroy$ = component.destroy$ || {};
     component.destroy$.next = jest.fn();
+    component.destroy$.complete = jest.fn();
     component.ngOnDestroy();
   });
 

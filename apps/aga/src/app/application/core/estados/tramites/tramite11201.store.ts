@@ -1,4 +1,4 @@
-import { DatosSolicitante } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
+import { DatosDelContenedor, DatosSolicitante } from '@libs/shared/data-access-user/src/core/models/11201/datos-tramite.model';
 import { Injectable } from '@angular/core';
 import { Store, } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
@@ -10,8 +10,8 @@ import { StoreConfig } from '@datorama/akita';
 
 export interface Solicitud11201State {
   menuDesplegable: string;
-  datosSolicitante: DatosSolicitante  
-  datosDelContenedor: [];
+  datosSolicitante: DatosSolicitante
+  datosDelContenedor: DatosDelContenedor[];
   tipoBusqueda: string;
   aduana: string;
   fechaIngreso: string;
@@ -21,7 +21,7 @@ export interface Solicitud11201State {
   contenedores: string;
   aduanaMenuDesplegable: string;
   casillaDeVerificacionindividual: boolean[];
-  numeroManifiesta: number;
+  numeroManifiesta: string;
   fechaDeIngreso: string;
   archivoSeleccionado: string;
   /**
@@ -48,7 +48,7 @@ export function createInitialState(): Solicitud11201State {
       denominacion: "",
       actividadEconomica: "",
       correoElectronico: ""
-    },    
+    },
     datosDelContenedor: [],
     tipoBusqueda: '',
     aduana: '',
@@ -59,7 +59,7 @@ export function createInitialState(): Solicitud11201State {
     fechaIngreso: '',
     aduanaMenuDesplegable: '',
     casillaDeVerificacionindividual: [false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false],
-    numeroManifiesta: 0,
+    numeroManifiesta: '',
     fechaDeIngreso: '',
     archivoSeleccionado: '',
     linea: '',
@@ -90,7 +90,7 @@ export class Tramite11201Store extends Store<Solicitud11201State> {
     }));
   }
 
-  public setNumeroManifiesta(numeroManifiesta: number): void {
+  public setNumeroManifiesta(numeroManifiesta: string): void {
     this.update((state) => ({
       ...state,
       numeroManifiesta,
@@ -125,8 +125,8 @@ export class Tramite11201Store extends Store<Solicitud11201State> {
       datosSolicitante
     }));
   }
-  
-  public setDelContenedor(datosDelContenedor: []): void {
+
+  public setDelContenedor(datosDelContenedor: DatosDelContenedor[]): void {
     this.update((state) => ({
       ...state,
       datosDelContenedor

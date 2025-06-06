@@ -21,6 +21,7 @@
       [datos]="fabricanteTablaDatos"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
       (listaDeFilaSeleccionada)="fabricanteSeleccionadoDatos=$event"
+       [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
     ></app-tabla-dinamica>
   </div>
 
@@ -34,6 +35,7 @@
           name="modificarMercancias"
           class="btn btn-default"
          (click)="modificarFabricante()"
+         [disabled]="formularioDeshabilitado"
         >
           Modificar
         </button>
@@ -42,6 +44,7 @@
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
           (click)="eliminarFabricante()"
+         [disabled]="formularioDeshabilitado"
         >
           Eliminar
         </button>
@@ -53,6 +56,7 @@
           data-bs-toggle="modal"
           data-bs-target="#modalAgregarMercancias"
           (click)="irAAcciones('../agregar-fabricante')"
+         [disabled]="formularioDeshabilitado"
         >
           Agregar
         </button>
@@ -73,6 +77,7 @@
       [datos]="destinatarioFinalTablaDatos"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
        (listaDeFilaSeleccionada)="destinatarioSeleccionadoDatos=$event"
+       [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
     ></app-tabla-dinamica>
   </div>
 
@@ -85,6 +90,7 @@
           name="modificarMercancias"
           class="btn btn-default"
           (click)="modificarDestinatario()"
+         [disabled]="formularioDeshabilitado"
         >
           Modificar
         </button>
@@ -93,6 +99,7 @@
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
           (click)="eliminarDestinatario()"
+         [disabled]="formularioDeshabilitado"
         >
           Eliminar
         </button>
@@ -104,6 +111,7 @@
           data-bs-toggle="modal"
           data-bs-target="#modalAgregarMercancias"
           (click)="irAAcciones('../agregar-destinatario-final')"
+         [disabled]="formularioDeshabilitado"
         >
           Agregar
         </button>
@@ -119,6 +127,7 @@
       [datos]="proveedorTablaDatos"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
        (listaDeFilaSeleccionada)="proveedorSeleccionadoDatos=$event"
+       [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
     ></app-tabla-dinamica>
   </div>
 
@@ -131,6 +140,7 @@
           name="modificarMercancias"
           class="btn btn-default"
            (click)="modificarProveedor()"
+         [disabled]="formularioDeshabilitado"
         >
           Modificar
         </button>
@@ -139,6 +149,7 @@
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
           (click)="eliminarProveedor()"
+         [disabled]="formularioDeshabilitado"
         >
           Eliminar
         </button>
@@ -150,6 +161,7 @@
           data-bs-toggle="modal"
           data-bs-target="#modalAgregarMercancias"
           (click)="irAAcciones('../agregar-proveedor')"
+         [disabled]="formularioDeshabilitado"
         >
           Agregar
         </button>
@@ -164,6 +176,7 @@
       [datos]="facturadorTablaDatos"
       [tipoSeleccionTabla]="tipoSeleccionTabla"
        (listaDeFilaSeleccionada)="facturadorSeleccionadoDatos=$event"
+       [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
     ></app-tabla-dinamica>
   </div>
 
@@ -176,6 +189,7 @@
           name="modificarMercancias"
           class="btn btn-default"
              (click)="modificarFacturador()"
+         [disabled]="formularioDeshabilitado"
         >
           Modificar
         </button>
@@ -184,6 +198,7 @@
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
           (click)="eliminarFacturador()"
+         [disabled]="formularioDeshabilitado"
         >
           Eliminar
         </button>
@@ -195,6 +210,7 @@
           data-bs-toggle="modal"
           data-bs-target="#modalAgregarMercancias"
           (click)="irAAcciones('../agregar-facturador')"
+         [disabled]="formularioDeshabilitado"
         >
           Agregar
         </button>

@@ -3,8 +3,10 @@ import { CafExportFormaInt} from '../../modelos/datos-de-interfaz.model';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CatalogosService } from '../../servicios/catalogos.service';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { Input } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SeccionLibQuery} from '@libs/shared/data-access-user/src';
@@ -37,6 +39,12 @@ export class CafeDeExportadoresComponent implements OnInit {
    * @type {CafExportFormaInt}
    */
   cafeExportFormState!: CafExportFormaInt;
+
+  /**
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   * @type {boolean}
+   */
+  @Input() esFormularioSoloLectura!: boolean;
 
   /**
    * Catálogo de clasificación o tipo.
@@ -76,16 +84,81 @@ export class CafeDeExportadoresComponent implements OnInit {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Constructor del componente.
+   * Inicializa los servicios y dependencias necesarias.
+   * @param {Router} router - Servicio de enrutamiento para navegar entre páginas.
+   * @param {FormBuilder} fb - Constructor de formularios reactivos.
+   * @param {CatalogosService} catalogosService - Servicio para cargar catálogos.
+   * @param {TramiteStoreQuery} tramiteStoreQuery - Consulta del estado del trámite.
+   * @param {TramiteStore} tramiteStore - Store para gestionar el estado del trámite.
+   * @param {SeccionLibQuery} seccionQuery - Consulta del estado de la sección.
+   * @param {SeccionLibStore} seccionStore - Store para gestionar el estado de la sección.
+   * @param {ActivatedRoute} activatedRoute - Servicio para obtener información de la ruta activa.
+   * @param {ConsultaioQuery} consultaioQuery - Consulta Akita para manejar y actualizar el estado de una sección.
+   */
   constructor(private router: Router,
     private fb: FormBuilder,
-    private catalogosService :CatalogosService ,
+    private catalogosService: CatalogosService,
     private tramiteStoreQuery: TramiteStoreQuery,
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    // Se puede agregar aquí la lógica del constructor si es necesario
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
+  }
+
+      /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+    /**
+     * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+     * Luego reinicializa el formulario con los valores actualizados desde el store.
+     */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.cafeExportForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.cafeExportForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+    inicializarFormulario(): void {
+    this.tramiteStoreQuery.selectSolicitudTramite$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.cafeExportFormState = seccionState.CafeExportFormState;
+        })
+      )
+      .subscribe()
+      this.cafeExportForm = this.fb.group({
+        descripcionMercancia: ['', [Validators.required, Validators.maxLength(15)]],
+        clasificacion: ['', Validators.required],
+        porcentajeConcentracion: ['', Validators.required],
+      });
   }
 
     /**
@@ -106,13 +179,12 @@ export class CafeDeExportadoresComponent implements OnInit {
     }
   
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
     this.tramiteStoreQuery.selectSolicitudTramite$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe(seccionState => {
         this.cafeExportFormState = seccionState.CafeExportFormState;
       });
-
-    this.iniciarFormulario();
     this.cargarClasificacion();
 
     /**
@@ -163,16 +235,6 @@ export class CafeDeExportadoresComponent implements OnInit {
 
   }
 
-  /**
-   * Inicializa el formulario reactivo con validaciones.
-   */
-  iniciarFormulario(): void {
-    this.cafeExportForm = this.fb.group({
-      descripcionMercancia: ['', [Validators.required, Validators.maxLength(15)]],
-      clasificacion: ['', Validators.required],
-      porcentajeConcentracion: ['', Validators.required],
-    });
-  }
   /**
    * Carga la clasificación o tipo de café desde el servicio de catálogos.
    * Se suscribe a los cambios y actualiza el catálogo en el formulario.
