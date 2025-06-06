@@ -682,13 +682,6 @@ const ROUTES: Routes = [
         (m) => m.ModalidadAlbergueModule
       ),
   },
-    {
-    path: 'certificado-origen',
-    loadChildren: () =>
-      import('./tramites/110217/certificado-origen-routing.module').then(
-        (m) => m.CertificadoOrigenRoutingModule
-      ),
-  },
   {
     path: 'certificado-origen',
     loadChildren: () =>
