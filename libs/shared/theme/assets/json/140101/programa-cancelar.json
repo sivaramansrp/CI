@@ -1,0 +1,13 @@
+ { 
+    "solicitudObservaciones": "solicitud",
+    "confirmar": true,
+    "radio": 1, 
+    "programaACancelar": {
+      "folioPrograma": "Folio Programa 2",
+      "idProgramaSeleccionado": "2", 
+      "modalidad": "Modalidad 2", 
+      "representacionFederal": "Representacion Federal 2",
+      "tipoPrograma": "Tipo de Programa",
+      "estatus": "Estatus"
+    }
+}

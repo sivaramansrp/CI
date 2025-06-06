@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import {ProgramaACancelar} from '../../../shared/models/programa-cancelar.model';
-import { Programa140101State } from '../../../estados/tramites/tramite140101.store';
+import { Programa140101State, Tramite140101Store } from '../../../estados/tramites/tramite140101.store';
 // Decorador Injectable que permite que este servicio sea inyectable en cualquier módulo.
 /**
  * Servicio para gestionar las operaciones relacionadas con el programa a cancelar.
@@ -20,7 +20,7 @@ export class ProgramaACancelarService {
    * 
    * @param http - Cliente HTTP utilizado para realizar solicitudes a recursos externos.
    */
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,private tramiteStore: Tramite140101Store) {
      // El constructor se utiliza para la inyección de dependencias.
   }
 
@@ -42,7 +42,7 @@ export class ProgramaACancelarService {
    * @returns Un observable que emite el estado de la expedición del certificado (`Expedicion120204State`).
    */
   getProgramaDatos(): Observable<Programa140101State> {
-    return this.http.get<Programa140101State>('assets/json/120204/expedicion-certificado.json');
+    return this.http.get<Programa140101State>('assets/json/140101/programa-cancelar.json');
   }
 
   /**
@@ -62,14 +62,9 @@ export class ProgramaACancelarService {
    * Esta función actualiza el estado del store con los valores proporcionados en el objeto `datos`.
    */
   setDatosFormulario(datos: Programa140101State): void {
-  //  this.tramiteStore.setEntidadFederativa(datos.entidadFederativa);
-  //  this.tramiteStore.setRepresentacionFederal(datos.representacionFederal);
-  //   this.tramiteStore.setMontoExpedir(datos.montoAExpedir);
-  //   this.tramiteStore.setMontoExpedirCheck(datos.montoAExpedirCheck);
-  //   this.tramiteStore.setMontoDisponsible(datos.montoDisponible);
-  //   this.tramiteStore.setTotalExpedir(datos.totalAExpedir);
-  //   this.tramiteStore.setNumeraDelicitacion(datos.numeraDelicitacion);
-  //   this.tramiteStore.setFechaDelEventoDelicitacion(datos.fechaDelEventoDelicitacion);
-  //   this.tramiteStore.setDescripcionDelProducto(datos.descripcionDelProducto);
-  }
+    this.tramiteStore.setConfirmar(datos.confirmar);
+    this.tramiteStore.setSolicitudObservaciones(datos.solicitudObservaciones);
+    this.tramiteStore.setPrograma(datos.programaACancelar);
+    this.tramiteStore.setRadioSelection(datos.radio);
+}
 }

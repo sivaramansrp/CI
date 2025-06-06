@@ -133,6 +133,7 @@
             [formControlName]="'confirmar'"
             [label]="'Confirmo estar de acuerdo con la Cancelación del Programa IMMEX/PROSEC'"
             [required]="true"
+            [isDisabled]="soloLectura"
             [ngClass]="isValid('confirmar') ? 'required' : ''"
             (change)="setValoresStore(
               ProgramaForm,
