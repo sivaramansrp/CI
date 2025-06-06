@@ -60,7 +60,7 @@ export class RegistroService {
    * @returns Observable con la respuesta del catálogo de países de destino.
    */
   getPaisDestino() {
-    return this.http.get<RespuestaCatalogos>('assets/json/110201/paiss.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/110201/pais-destino.json');
   }
 
   /**
@@ -68,7 +68,7 @@ export class RegistroService {
    * @returns Observable con la respuesta del catálogo de transportes.
    */
   getTransporte() {
-    return this.http.get<RespuestaCatalogos>('assets/json/110201/pais.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/110201/transporte.json');
   }
 
   /**
@@ -84,7 +84,7 @@ export class RegistroService {
    * @returns Observable con la respuesta del catálogo de representaciones.
    */
   getRepresentacion() {
-    return this.http.get<RespuestaCatalogos>('assets/json/110201/entidad.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/110201/representacion.json');
   }
 
   /**

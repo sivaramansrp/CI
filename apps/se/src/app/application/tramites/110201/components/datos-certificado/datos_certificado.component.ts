@@ -245,7 +245,7 @@ optionsRepresentacion!: Catalogo[];
       .getRepresentacion().pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
         if (resp.code === 200) {
-          this.optionsRepresentacion = resp.data= resp.data as Catalogo [];
+          this.optionsRepresentacion = resp.data as Catalogo [];
         }
       });
   }

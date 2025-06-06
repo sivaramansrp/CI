@@ -152,6 +152,7 @@
           [catalogo]="options"
           [label]="'País destino'"
           [id]="'nacion'"
+          formControlName="nacion"
           [required]="true" [isDisabled]="soloLectura"
           (change)="setValoresStore(validacionForm, 'nacion', 'setNacion')"
         ></app-catalogo-select>
@@ -163,6 +164,7 @@
       <app-catalogo-select
         [catalogo]="option" [id]="'transporte'"
         [label]="'Medio de transporte'" 
+        formControlName="transporte"
         [required]="true" [isDisabled]="soloLectura"
         (change)="setValoresStore(validacionForm, 'transporte', 'setTransporte')
         "

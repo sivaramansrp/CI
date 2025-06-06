@@ -205,9 +205,7 @@ option!: Catalogo[];
     this.registroService
       .getPaisDestino().pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
-                  console.log('Pais',resp);
-
-        if (resp.code === 200) {
+       if (resp.code === 200) {
           this.options = resp.data as Catalogo[];
         }
       });
@@ -220,7 +218,6 @@ option!: Catalogo[];
     this.registroService
       .getTransporte().pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
-        console.log(resp);
         if (resp.code === 200) {
           this.option = resp.data as Catalogo[];
         }

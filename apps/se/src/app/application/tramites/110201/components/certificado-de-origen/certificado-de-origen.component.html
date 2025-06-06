@@ -123,7 +123,7 @@
         </div>
         <div class="table-container mt-5" *ngIf="!hayMercanciasDisponibles">
           <app-tabla-dinamica
-            [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
+            [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED" [datos]="mercanciaDisponsiblesTablaDatos"
             [configuracionTabla]="headers" [disableSeleccionTablaCheckBox]="soloLectura? true : false"
           ></app-tabla-dinamica>
         </div>
@@ -224,7 +224,7 @@
 
         <div class="table-container mt-5" *ngIf="!esMercanciaEnEdicion">
           <app-tabla-dinamica
-            [tipoSeleccionTabla]="TablaSeleccion.RADIO"
+            [tipoSeleccionTabla]="TablaSeleccion.RADIO" [datos]="mercanciaSeleccionadasTablaData"
             [configuracionTabla]="headersData" [disableSeleccionTablaRadio]="soloLectura? true : false"
           ></app-tabla-dinamica>
         </div>
