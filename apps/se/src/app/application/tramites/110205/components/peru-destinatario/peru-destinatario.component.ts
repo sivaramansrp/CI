@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite110205Query } from '../../estados/tramite110205.query';
 
 interface FormValues {
@@ -76,6 +77,12 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
 
   /**
    * @descripcion
+   * Indica si el formulario se encuentra en modo solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * @descripcion
    * Constructor que inicializa los servicios y dependencias requeridas.
    * @param fb - Instancia de FormBuilder para gestionar formularios.
    * @param store - Almacén para gestionar el estado del formulario de certificado.
@@ -87,7 +94,8 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
     private readonly fb: FormBuilder,
     private store: Tramite110205Store,
     private query: Tramite110205Query,
-    private seccionQuery: SeccionLibQuery
+    private seccionQuery: SeccionLibQuery,
+    private consultaQuery: ConsultaioQuery
   ) {
     this.query.selectFormDatosDelDestinatario$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -118,6 +126,15 @@ export class PeruDestinatarioComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.seccionState = seccionState;
+        })
+      )
+      .subscribe();
+
+      this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
       .subscribe();
