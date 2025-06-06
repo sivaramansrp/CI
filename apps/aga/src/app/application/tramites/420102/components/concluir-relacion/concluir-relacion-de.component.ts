@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DOMICILIO_TABLA_COLUMNAS, FECHA_INGRESO } from '../../constantes/concluir-relacion.enum';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, } from '@angular/forms';
 import { InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite420102State, Tramite420102Store } from '../../estados/tramite420102.store';
 import { CommonModule } from '@angular/common';
 import { ConcluirRelacionService } from '../../services/concluir-relacion.service';
-import { ConsultaioQuery} from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDelContenedorTabla } from '../../models/tramite420102.enum';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Tramite420102Query } from '../../estados/tramite420102.query';
@@ -129,6 +129,12 @@ export class ConcluirRelacionComponent implements OnInit, OnDestroy {
     this.crearDesistimientoForm();
   }
 
+  /**
+   * @method inicializarEstadoFormulario
+   * @description Inicializa el estado del formulario dependiendo si está en modo solo lectura o editable.
+   * Si el formulario es solo lectura, guarda y deshabilita los datos del formulario.
+   * Si no, crea el formulario para permitir edición.
+   */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
@@ -137,6 +143,12 @@ export class ConcluirRelacionComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @method guardarDatosFormulario
+   * @description Guarda los datos actuales del formulario y ajusta su estado según el modo de solo lectura.
+   * Si el formulario está en modo solo lectura, lo deshabilita para evitar modificaciones.
+   * Si no, lo habilita para permitir la edición de los campos.
+   */
   guardarDatosFormulario(): void {
     this.crearDesistimientoForm();
     if (this.esFormularioSoloLectura) {
@@ -145,15 +157,17 @@ export class ConcluirRelacionComponent implements OnInit, OnDestroy {
       this.concluirFormulario.enable();
     }
   }
-  
+
   /**
    * @method crearDesistimientoForm
    * @description Método para inicializar el formulario reactivo con los campos requeridos.
    */
-  crearDesistimientoForm(): void { 
+  crearDesistimientoForm(): void {
     this.concluirFormulario = this.fb.group({
       rfc: [this.solicitudState?.rfc || ''],
-      fechaInicial: [{ value: this.solicitudState?.fechaInicial, disabled: true }],
+      fechaInicial: [
+        { value: this.solicitudState?.fechaInicial, disabled: true },
+      ],
       fechaFinal: [{ value: this.solicitudState?.fechaFinal, disabled: true }],
     });
   }

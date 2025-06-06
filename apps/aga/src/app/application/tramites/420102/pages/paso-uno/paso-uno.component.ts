@@ -88,11 +88,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$)
       )
       .subscribe((resp) => {
-        console.log('Respuesta del servicio:', resp);
-        
         if (resp) {
-          console.log('Datos del formulario guardados:', resp);
-          
           this.esDatosRespuesta = true;
           this.concluirRelacionService.actualizarEstadoFormulario(resp);
           

@@ -54,7 +54,7 @@ export class ConcluirRelacionService {
     );
   }
 
-    /**
+ /**
   * @description Actualiza el estado del formulario en el store con los datos proporcionados.
   * @param {Tramite420102State} DATOS - Objeto que contiene los nuevos datos para actualizar el estado.
   */
@@ -72,4 +72,5 @@ export class ConcluirRelacionService {
   getRegistroTomaMuestrasMercanciasData(): Observable<Tramite420102State> {
     return this.http.get<Tramite420102State>('assets/json/420102/datos-prefill.json');
   }
+  
 }

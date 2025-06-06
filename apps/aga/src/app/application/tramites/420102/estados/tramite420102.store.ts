@@ -100,6 +100,13 @@ export class Tramite420102Store extends Store<Tramite420102State> {
     }));
   }
 
+ /**
+  * @method establecerTablaDatos
+  * @description Método para actualizar los datos de la tabla en el estado del trámite.
+  *
+  * @param {DatosDelContenedorTabla[]} tableDatos - Nuevos datos de la tabla a establecer en el estado.
+  * @returns {void}
+  */
   public establecerTablaDatos(tableDatos: DatosDelContenedorTabla[]): void {
     this.update((state) => ({
       ...state,
