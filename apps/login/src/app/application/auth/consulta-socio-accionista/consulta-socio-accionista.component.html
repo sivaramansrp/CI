@@ -4,7 +4,7 @@
             <div class="col-12">
                 <h2 class="fw-bold my-5 titulo-tasks">Confirma datos de accionista</h2>
             </div>
-            <div class="bg-primary"></div>
+            <hr class="red">
             <form [formGroup]="formConsultaSocioAccionista">
                 <div class="row ">
                     <div class="col-md-4">
@@ -29,16 +29,11 @@
                         <input type="text" id="rfc" formControlName="rfc"
                             class="form-control font-weight-titulo text-title" />
                     </div>
-                    <div class="col-md-4">
-                        <label for="rfc" class="form-label">Clave Unica de Registro de Población</label>
-                        <input type="text" id="rfc" formControlName="curp"
-                            class="form-control font-weight-titulo text-title" />
-                    </div>
                 </div>
             </form>
             <div class="row">
                 <div class="d-flex justify-content-lg-end h1">
-                    <button class="btn btn-primary ms-2" type="button" >Confirma datos</button>
+                    <button class="btn btn-primary ms-2" type="button" (click)="confirmarSocioNacional()">Confirma datos</button>
                     <button type="button" class="btn btn-default ms-2">Cancelar</button>
                 </div>
             </div>

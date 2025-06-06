@@ -1,6 +1,5 @@
 import { ConsultaSocioExtranjeroFisica, ConsultaSocioExtranjeroMoral } from "../application/core/models/consulta-socio-extranjero.model";
 import { Store, StoreConfig } from "@datorama/akita";
-import { ConsultaSocioAccionista } from "../application/core/models/consulta-socio-accionista.model";
 import { ConsultaSocioNacional } from "../application/core/models/consulta-socio-nacional.model";
 import { Injectable } from "@angular/core";
 
@@ -10,6 +9,7 @@ export interface AccionistaStore {
     rfc: string;
     nombre: string;
     apellidoPaterno: string;
+    apellidoMaterno?: string;
     pais: string;
     codigoPostal: string;
     estado: string;
@@ -17,12 +17,13 @@ export interface AccionistaStore {
     accionistaNacional: ConsultaSocioNacional;
     listaAccionistasNacionales: ConsultaSocioNacional[];
     accionistaExtranjeroFisica: ConsultaSocioExtranjeroFisica;
-    listaAccionistasExtranjeros: ConsultaSocioAccionista[];
+    listaAccionistasExtranjeros: ConsultaSocioExtranjeroMoral[];
     accionistaExtranjeroMoral: ConsultaSocioExtranjeroMoral;
     listaAccionistasExtranjerosMoral?: ConsultaSocioExtranjeroMoral[];
     visaulizarTablas: boolean;
-    accionistaNacionalSeleccionado: ConsultaSocioAccionista[];
-    accionistaExtranjeroSeleccionado: ConsultaSocioAccionista[];
+    registrarDatos: boolean;
+    accionistaNacionalSeleccionado: ConsultaSocioExtranjeroMoral[];
+    accionistaExtranjeroSeleccionado: ConsultaSocioExtranjeroMoral[];
 }
 export function createInitialState(): AccionistaStore {
     return {
@@ -31,6 +32,7 @@ export function createInitialState(): AccionistaStore {
         rfc: '',
         nombre: '',
         apellidoPaterno: '',
+        apellidoMaterno: '',
         pais: '',
         codigoPostal: '',
         estado: '',
@@ -45,6 +47,7 @@ export function createInitialState(): AccionistaStore {
         },
         listaAccionistasNacionales: [],
         accionistaExtranjeroFisica: {
+            razonSocial: '',
             nombre: '',
             apellidoPaterno: '',
             apellidoMaterno: '',
@@ -69,6 +72,7 @@ export function createInitialState(): AccionistaStore {
         },
         listaAccionistasExtranjerosMoral: [],
         visaulizarTablas: false,
+        registrarDatos: false,
         accionistaNacionalSeleccionado: [],
         accionistaExtranjeroSeleccionado: []
     }
@@ -95,5 +99,34 @@ export class AccionistaStoreService extends Store<AccionistaStore> {
         this.state = createInitialState();
         this.update(this.state);
     }
+
+
+    public setsocioAccionistaNacional(accionistaNacional: ConsultaSocioNacional): void {
+        this.update((state) => ({
+            ...state,
+            accionistaNacional,
+        }));
+    }
+
+    public setVisualizarTabla(visualizarTabla: boolean): void {
+        this.update((state) => ({
+            ...state,
+            visualizarTabla,
+        }));
+    }
+
+    public setRegistraDatosNacional(registrarDatos: boolean): void {
+        this.update((state) => ({
+            ...state,
+            registrarDatos,
+        }));
+    }
+
+    public setListaSociosNacionales(listaAccionistasNacionales: ConsultaSocioNacional[]): void {
+            this.update((state) => ({
+                ...state,
+                listaAccionistasNacionales,
+            }));
+        }
 
 }

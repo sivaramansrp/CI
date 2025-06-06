@@ -9,7 +9,7 @@
     },
     {
         "idCapturista": "02",
-        "nombre": "Luis Ramirez",
+        "nombre": "Luis",
         "apellidoPaterno": "Gonzalez",
         "apellidoMaterno": "Perez",
         "rfc": "LRG987654321",
@@ -17,7 +17,7 @@
     },
     {
         "idCapturista": "03",
-        "nombre": "Sofia Jimenez",
+        "nombre": "Sofia",
         "apellidoPaterno": "Martinez",
         "apellidoMaterno": "Lopez",
         "rfc": "SJM456789123",
@@ -25,7 +25,7 @@
     },
     {
         "idCapturista": "04",
-        "nombre": "Diego Hernandez",
+        "nombre": "Diego",
         "apellidoPaterno": "Perez",
         "apellidoMaterno": "Gonzalez",
         "rfc": "DHP123456789",
@@ -33,7 +33,7 @@
     },
     {
         "idCapturista": "05",
-        "nombre": "Valeria Cruz",
+        "nombre": "Valeria",
         "apellidoPaterno": "Lopez",
         "apellidoMaterno": "Martinez",
         "rfc": "VCL987654321",

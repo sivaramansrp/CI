@@ -14,6 +14,7 @@
  * @property numeroIdentificacionFiscal - Número de identificación fiscal del socio.
  */
 export interface ConsultaSocioExtranjeroFisica {
+    razonSocial: string;
     nombre: string;
     apellidoPaterno: string;
     apellidoMaterno: string;

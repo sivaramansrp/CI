@@ -1,10 +1,12 @@
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { AccionistaStore, AccionistaStoreService } from '../../../estados/accionista.store';
+import { CONFIGURACION_ENCABEZADO_SOCIO, CONFIGURACION_ENCABEZADO_SOCIO_EXTRANJERO } from '../../core/constantes/socio-accionista.enum';
 import { Catalogo, CatalogoSelectComponent, REGEX_RFC_FISICA, REGEX_RFC_MORAL, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, catchError, map, of, takeUntil } from 'rxjs';
-import { CONFIGURACION_ENCABEZADO_SOCIO } from '../../core/constantes/socio-accionista.enum';
+import { AccionistaDatosQuery } from '../../../queries/accionista.query';
 import { CommonModule } from '@angular/common';
-import { ConsultaSocioAccionista } from '../../core/models/consulta-socio-accionista.model';
+import { ConsultaSocioExtranjeroFisica } from '../../core/models/consulta-socio-extranjero.model';
 import { ConsultaSocioNacional } from '../../core/models/consulta-socio-nacional.model';
 import { OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -21,19 +23,25 @@ import data from '@libs/shared/theme/assets/json/login/cat-pais.json';
 export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
   FormSocioAccionista!: FormGroup;
   tablaSeleccion = TablaSeleccion;
-  encabezadoDeTablaAccionista = CONFIGURACION_ENCABEZADO_SOCIO;
-  public listaSociosAccionistas: ConsultaSocioAccionista[] = [];
-  public listaSociosAccionistasExtranjeros: ConsultaSocioAccionista[] = [];
-  public socioAccionistaSeleccionado: ConsultaSocioAccionista[] = [];
-  public socioAccionistaExtranjerosSeleccionado: ConsultaSocioAccionista[] = [];
   catPais!: Catalogo[];
+  encabezadoDeTablaAccionista = CONFIGURACION_ENCABEZADO_SOCIO;
+  encabezadoDeTablaAccionistaExtranjero = CONFIGURACION_ENCABEZADO_SOCIO_EXTRANJERO;
+  public listaSociosAccionistas: ConsultaSocioNacional[] = [];
+  public listaSociosAccionistasExtranjeros: ConsultaSocioExtranjeroFisica[] = [];
+  public socioAccionistaSeleccionado: ConsultaSocioNacional[] = [];
+  public socioAccionistaExtranjerosSeleccionado: ConsultaSocioExtranjeroFisica[] = [];
+
   private destroyNotifier$: Subject<void> = new Subject();
   socioNacional?: ConsultaSocioNacional;
-  public visualizarTablas: boolean = false;
+  public visualizarTabla: boolean = false;
+  public accionistaInicialStore!: AccionistaStore;
+
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private usuariosService: UsuariosService,
+    private busquedaQuery: AccionistaDatosQuery,
+    private accionistaStore: AccionistaStoreService
   ) {
     this.FormSocioAccionista = this.fb.group({
       tipoNacionalidad: ['si'], // Inicializado como "sí"
@@ -50,6 +58,15 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.catPais = data;
+    this.busquedaQuery.selectSolicitud$
+      .pipe(
+        map((seccionState) => {
+          this.accionistaInicialStore = seccionState;
+        }),
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe();
+
     // Escucha cambios para aplicar validaciones dinámicas
     this.FormSocioAccionista.get('tipoNacionalidad')?.valueChanges.subscribe(() => {
       this.actualizarValidaciones();
@@ -57,8 +74,8 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
     this.FormSocioAccionista.get('personaNacional')?.valueChanges.subscribe(() => {
       this.actualizarValidaciones();
     });
-
     this.actualizarValidaciones();
+    this.listaSociosAccionistas = this.accionistaInicialStore.listaAccionistasNacionales;
   }
 
   get tipoNacionalidad() {
@@ -88,6 +105,7 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
           map((data) => {
             if (data) {
               this.socioNacional = data;
+              this.accionistaStore.setsocioAccionistaNacional(this.socioNacional);
               this.router.navigate(['login/consulta-socio-accionista']);
             } else {
               console.error('No se encontró un socio accionista con el RFC proporcionado.');
@@ -219,5 +237,5 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
     this.socioAccionistaSeleccionado = [];
     this.socioAccionistaExtranjerosSeleccionado = [];
   }
-  
+
 }

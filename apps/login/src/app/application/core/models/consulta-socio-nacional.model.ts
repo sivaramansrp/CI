@@ -1,3 +1,7 @@
+/**
+ * Modelo para la consulta de socios accionistas.
+ * Este modelo define la estructura de los datos que se obtienen al consultar
+ */
 export interface ConsultaSocioNacional {
     /** Identificador único del socio nacional. */
     rfc: string;
