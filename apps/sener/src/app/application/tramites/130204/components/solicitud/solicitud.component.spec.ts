@@ -160,4 +160,57 @@ describe('SolicitudComponent', () => {
 
     expect(paisComponentMock.crosslistComponent.fechasDatos).toEqual(['Ciudad 1']);
   });
+
+  it('no debería fallar si acotacionCatalogo es undefined en setFraccion', () => {
+  const form = new FormBuilder().group({ fraccion: [1], umt: [''], acotacion: [''] });
+  component.mercanciaCatalogoArray = [[{ id: 1, descripcion: 'Sample', relacionadaUmtId: 2, relacionadaAcotacionId: 3 }]];
+  component.acotacionCatalogo = undefined as any; // or just don't set it
+  expect(() => {
+    component.handleStoreUpdate({ form, campo: 'fraccion', metodoNombre: 'setFraccion' });
+  }).not.toThrow();
+});
+
+it('no debería actualizar acotacion si no hay coincidencia en acotacionCatalogo', () => {
+  const form = new FormBuilder().group({ fraccion: [1], umt: [''], acotacion: [''] });
+  component.mercanciaCatalogoArray = [[{ id: 1, descripcion: 'Sample', relacionadaUmtId: 2, relacionadaAcotacionId: 99 }]];
+  component.acotacionCatalogo = [{ id: 3, descripcion: 'Acotación 3' }];
+  component.handleStoreUpdate({ form, campo: 'fraccion', metodoNombre: 'setFraccion' });
+  expect(form.value.acotacion).toBe('');
+});
+
+it('debería deshabilitar todos los formularios si esFormularioSoloLectura es true', () => {
+  component.esFormularioSoloLectura = true;
+  component.inicializarFormularios();
+  component.guardarDatosFormulario();
+  expect(component.formDelTramite.disabled).toBe(true);
+  expect(component.mercanciaForm.disabled).toBe(true);
+  expect(component.partidasDelaMercanciaForm.disabled).toBe(true);
+  expect(component.paisForm.disabled).toBe(true);
+  expect(component.frmRepresentacionForm.disabled).toBe(true);
+  expect(component.manifestoForm.disabled).toBe(true);
+});
+
+it('debería habilitar todos los formularios si esFormularioSoloLectura es false', () => {
+  component.esFormularioSoloLectura = false;
+  component.inicializarFormularios();
+  component.guardarDatosFormulario();
+  expect(component.formDelTramite.enabled).toBe(true);
+  expect(component.mercanciaForm.enabled).toBe(true);
+  expect(component.partidasDelaMercanciaForm.enabled).toBe(true);
+  expect(component.paisForm.enabled).toBe(true);
+  expect(component.frmRepresentacionForm.enabled).toBe(true);
+  expect(component.manifestoForm.enabled).toBe(true);
+});
+
+it('no debería fallar si metodoNombre es desconocido en handleStoreUpdate', () => {
+  const form = new FormBuilder().group({ campo: ['valor'] });
+  expect(() => {
+    component.handleStoreUpdate({ form, campo: 'campo', metodoNombre: 'desconocido' });
+  }).not.toThrow();
+});
+
+it('debería manejar setValoresStore con formulario vacío', () => {
+  const form = new FormBuilder().group({});
+  expect(() => component.setValoresStore(form, 'campo')).not.toThrow();
+});
 });

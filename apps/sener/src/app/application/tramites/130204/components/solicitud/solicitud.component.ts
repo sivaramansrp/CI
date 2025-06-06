@@ -766,20 +766,22 @@ tituloParte = TITULO_DESTINO;
         (frac) => frac.id === SELECTED_FRACCION
       );
 
-      if (FRACTION_OBJ) {
-        if (FRACTION_OBJ.relacionadaUmtId) {
-          event.form.patchValue({ umt: FRACTION_OBJ.relacionadaUmtId });
-          this.setValoresStore(event.form, 'umt');
-        } 
-      const ACOT_OPT = this.acotacionCatalogo.find(a => a.id === FRACTION_OBJ.relacionadaAcotacionId);
-      if (ACOT_OPT) {
-        event.form.patchValue({ acotacion: ACOT_OPT.descripcion });
-        this.setValoresStore(event.form, 'acotacion');
-      }
-      }
-      else {
-        console.warn('No se encontró el objeto fracción para el ID seleccionado.');
-      }
+    if (FRACTION_OBJ) {
+  if (FRACTION_OBJ.relacionadaUmtId) {
+    event.form.patchValue({ umt: FRACTION_OBJ.relacionadaUmtId });
+    this.setValoresStore(event.form, 'umt');
+  }
+  const ACOT_OPT = Array.isArray(this.acotacionCatalogo)
+    ? this.acotacionCatalogo.find(a => a.id === FRACTION_OBJ.relacionadaAcotacionId)
+    : undefined;
+  if (ACOT_OPT) {
+    event.form.patchValue({ acotacion: ACOT_OPT.descripcion });       
+    this.setValoresStore(event.form, 'acotacion');
+  }
+}
+ else {
+  console.warn('No se encontró el objeto fracción para el ID seleccionado.');
+}
     }
     else if (event.metodoNombre === 'setNico') {
 
