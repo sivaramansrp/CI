@@ -365,7 +365,7 @@ optionsTipoFactura!: Catalogo[];
   constructor(
     private registroService: RegistroService,
     public fb: FormBuilder,
-    private store: Tramite110201Store,
+    public store: Tramite110201Store,
     private query: Tramite110201Query,
     private validacionesService: ValidacionesFormularioService,
     private consultaioQuery: ConsultaioQuery
