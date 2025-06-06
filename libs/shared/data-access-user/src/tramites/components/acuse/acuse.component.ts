@@ -51,7 +51,9 @@ export class AcuseComponent implements OnChanges {
    * @returns void
    */
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['txtAlerta']?.currentValue) {
+    if (changes['txtAlerta'].currentValue) {
+      console.log('Texto de alerta actualizado:', changes['txtAlerta'].currentValue);
+      
       this.txtAlerta = changes['txtAlerta'].currentValue;
     }
   }
@@ -127,6 +129,6 @@ export class AcuseComponent implements OnChanges {
   }
 
   salir(): void {
-    this.router.navigate(['funcionario/app-seleccion-modulo']);
+    this.router.navigate(['/seleccion-tramite']);
   }
 }

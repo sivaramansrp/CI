@@ -77,6 +77,19 @@ export class PasoTresComponent implements OnInit {
           return throwError(() => error);
         })
       ).subscribe();
+      // Obtiene el número de trámite
+      this.tramiteFolioServices
+        .generarFolio()
+        .pipe(
+          tap((tramite) => {           
+            this.tramiteStore.establecerTramite(tramite.datos, FIRMA);
+            this.router.navigate([`${this.url}/acuse`]);
+          }),
+          catchError((_error) => {
+            return _error;
+          })
+        )
+        .subscribe();
     }
   }
 
