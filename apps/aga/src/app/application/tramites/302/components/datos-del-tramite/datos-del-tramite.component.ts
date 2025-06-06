@@ -266,16 +266,12 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         )
         .subscribe()
 
-    if(this.soloLectura){
-      this.getProductosSeleccionados();
-    }
-    else{
-    this.detallesDelProducto = this.certiRegistroState['detallesDelProducto'];
-    }
+    this.getProductosSeleccionados();
     this.inicializarFormGroup(this.form, MERCANCIAS);
     this.inicializarFormGroup(this.formAgregarProductos, PRODUCTOS);
     this.inicializarFormGroup(this.formDatosDelDonante, DATOS_DEL_DONANTE);
     this.inicializarFormGroup(this.formDomicilioFiscal, DOMICILIO_FISCAL);
+    this.detallesDelProducto = this.certiRegistroState['detallesDelProducto'] || [];
 
   }
 
