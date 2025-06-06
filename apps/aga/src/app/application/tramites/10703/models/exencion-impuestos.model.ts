@@ -44,6 +44,10 @@ export interface RatioOption {
   value: string | number;
 }
 
+/**
+ * Definición de la interfaz `MercanciaInstalada`.
+ * Representa la estructura de los datos relacionados con mercancías instaladas.
+ */
 export interface MercanciaInstalada {
   "TipoDeMercancía": string;
   "Cantidad": string;
