@@ -36,13 +36,13 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   indice: number = 1;
 
-    /** Subject para notificar la destrucción del componente. */
+  /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
 
-   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
 
-   /**
+  /**
    * Estado de consulta que contiene la información del formulario y su estado.
    * Se obtiene a través de la consulta ConsultaioQuery.
    */
@@ -50,18 +50,15 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
 
   /**
    * Constructor del componente Datos260502Component.
-   * 
+   *
    * @param solicitud260502Service - Servicio para manejar la lógica de negocio relacionada con el trámite 260502.
    * @param consultaQuery - Consulta para obtener el estado actual del formulario y su configuración.
    */
   constructor(
     private solicitud260502Service: DatosDomicilioLegalService,
     private consultaQuery: ConsultaioQuery,
-    private pagoBancoService: PagoBancoService,
-    
+    private pagoBancoService: PagoBancoService
   ) {}
-
-
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -75,15 +72,14 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaState = seccionState;
+          if (this.consultaState?.update) {
+            this.guardarDatosFormulario();
+          } else {
+            this.esDatosRespuesta = true;
+          }
         })
       )
       .subscribe();
-
-    if (this.consultaState?.update) {
-      this.guardarDatosFormulario();
-    } else {
-      this.esDatosRespuesta = true;
-    }
   }
 
   /**
@@ -92,7 +88,6 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * Si la respuesta es válida, se actualiza el estado del formulario con los datos obtenidos.
    */
   guardarDatosFormulario(): void {
-    
     this.solicitud260502Service
       .getRegistroTomaMuestrasMercanciasData()
       .pipe(takeUntil(this.destroyNotifier$))
@@ -103,16 +98,16 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
         }
       });
 
-           // También se puede llamar al servicio pagoBancoService si es necesario
-            this.pagoBancoService
-              .getRegistroTomaMuestrasMercanciasData()
-              .pipe(takeUntil(this.destroyNotifier$))
-              .subscribe((resp) => {
-                if (resp) {
-                  this.esDatosRespuesta = true;
-                  this.pagoBancoService.actualizarEstadoFormulario(resp);
-                }
-              });
+    // También se puede llamar al servicio pagoBancoService si es necesario
+    this.pagoBancoService
+      .getRegistroTomaMuestrasMercanciasData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.pagoBancoService.actualizarEstadoFormulario(resp);
+        }
+      });
   }
 
   /**
