@@ -1,14 +1,14 @@
 <div class="container">
     <div class="row">
-        <label>Folio Tramite: <span class="font-weight-normal">{{ folioTramite.folioTramite }}</span></label>
-        <label>Folio Tramite: <span>{{ folioTramite.tipoTramite }}</span></label>
+        <label>Folio Tramite: <span class="font-weight-normal">{{ folioTramite?.folioTramite }}</span></label>
+        <label>Tipo de solicitud: <span>{{ folioTramite?.tipoTramite }}</span></label>
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group pull-right">
-                    <button type="button" class="btn btn-danger" (click)="cancelar()">
+                    <button type="button" class="btn btn-danger" (click)="cancelar()" [disabled]="consultaDatos.readonly">
                         Cancelar
                     </button>
-                    <button type="submit" class="btn btn-primary" (click)="continuar()">
+                    <button type="submit" class="btn btn-primary" (click)="continuar()" [disabled]="consultaDatos.readonly">
                         Continuar
                     </button>
                 </div>

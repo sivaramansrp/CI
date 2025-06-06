@@ -3,7 +3,8 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/cor
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CapturarRequerimientoComponent } from '../capturar-requerimiento/capturar-requerimiento.component';
 import { CommonModule } from '@angular/common';
-import { Subject } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
+import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
 
 @Component({
   selector: 'app-requiremento',
@@ -42,16 +43,36 @@ export class RequirementoComponent implements OnInit, OnDestroy {
      */
     private destroy$: Subject<void> = new Subject<void>();
 
+    /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+     /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
+
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private router: Router,
-    ) {
-      //
-     }
+    private consultaioQuery: ConsultaioQuery,
+    ) {}
 
   ngOnInit(): void {
     this.folioTramite = history.state.data;
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroy$),
+      map((seccionState) => {
+        this.consultaDatos = seccionState;
+        this.soloLectura = this.consultaDatos.readonly;
+      })
+    )
+    .subscribe();
   }
 
   /**

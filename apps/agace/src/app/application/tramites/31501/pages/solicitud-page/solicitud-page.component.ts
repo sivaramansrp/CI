@@ -1,7 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { map, Subject, takeUntil } from 'rxjs';
 
 export const PASOS = [
   {
@@ -77,6 +78,32 @@ export class SolicitudPageComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+    /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+    /**
+   * Sujeto para notificar la destrucción del componente.
+   */
+  public destroyNotifier$: Subject<void> = new Subject();
+
+  constructor(
+    private consultaioQuery: ConsultaioQuery
+  ) {}
+
+  ngOnInit(): void {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+        })
+      )
+      .subscribe();
+  }
 
   /**
    * Selecciona una pestaña del asistente.
