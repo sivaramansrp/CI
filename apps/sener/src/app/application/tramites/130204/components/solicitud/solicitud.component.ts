@@ -1,8 +1,8 @@
-import { Catalogo, REGEX_CARACTERES_NO_PERMITIDOS, REGEX_NUMERO_DECIMAL_ENTERO, REGEX_TEXTO_PREFIJO, REG_X } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, REGEX_CARACTERES_NO_PERMITIDOS, REGEX_NUMERO_DECIMAL_ENTERO, REGEX_TEXTO_PREFIJO, REG_X } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DATOS_INPUT_FIELDS, MERCANCIA_INPUT_VALUES } from '../../../../shared/constantes/valores-constantes.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite130204State, Tramite130204Store } from '../../estados/tramites/tramites130204.store';
 
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
@@ -265,6 +265,13 @@ tituloParte = TITULO_DESTINO;
  */
   public seccionState!: Tramite130204State;
 
+  
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+
   /**
    * Constructor de la clase.
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
@@ -278,9 +285,19 @@ tituloParte = TITULO_DESTINO;
     private http: HttpClient,
     private tramite130204Store: Tramite130204Store,
     private tramite130204Query: Tramite130204Query,
-    private exportacionHidrocarburosService: ExportacionHidrocarburosService
+    private exportacionHidrocarburosService: ExportacionHidrocarburosService,
+    private consultaioQuery: ConsultaioQuery,
+
   ) {
-    // Constructor vacío, solo se inyectan los servicios
+     this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
   }
 
   /**
@@ -302,14 +319,25 @@ tituloParte = TITULO_DESTINO;
    * @returns void
    */
   ngOnInit(): void {
-    this.configuracionFormularioSuscripciones();
-    this.inicializarFormularios();
+    this.inicializarEstadoFormulario();
     this.opcionesDeBusqueda();
     this.formularioTotalCount();
     this.fetchEntidadFederativa();
     this.fetchRepresentacionFederal();
     this.listaDePaisesDisponibles();
 
+  }
+
+    /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormularios();
+    }  
   }
 
   /**
@@ -519,6 +547,40 @@ tituloParte = TITULO_DESTINO;
     });
   }
 
+  /**
+ * @description
+ * Inicializa los formularios y obtiene los datos de la tabla. 
+ * Dependiendo del modo de solo lectura (`esFormularioSoloLectura`), 
+ * habilita o deshabilita todos los formularios del componente.
+ * 
+ * - Si el formulario está en modo solo lectura, deshabilita todos los formularios para evitar modificaciones.
+ * - Si no está en modo solo lectura, habilita todos los formularios para permitir la edición.
+ * 
+ * Este método se utiliza para asegurar que el estado de los formularios coincida con el modo de visualización actual.
+ * 
+ * @returns {void}
+ */
+    guardarDatosFormulario(): void {
+      this.inicializarFormularios();
+      this.obtenerTablaDatos();
+      if (this.esFormularioSoloLectura) {
+        this.formDelTramite.disable();
+        this.mercanciaForm.disable();
+        this.partidasDelaMercanciaForm.disable();
+        this.paisForm.disable();
+        this.frmRepresentacionForm.disable();
+        this.manifestoForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.formDelTramite.enable();
+        this.mercanciaForm.enable();
+        this.partidasDelaMercanciaForm.enable();
+        this.paisForm.enable();
+        this.frmRepresentacionForm.enable();
+        this.manifestoForm.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
 
   /**
   * Método para configurar las suscripciones de los formularios, actualizando sus valores
@@ -646,26 +708,6 @@ tituloParte = TITULO_DESTINO;
       });
   }
 
-
-  /**
- * Método encargado de manejar la fila seleccionada en una tabla.
- * Si hay filas seleccionadas, se guarda la primera fila en la propiedad `filaSeleccionada`.
- * Si no hay filas seleccionadas, se establece como un arreglo vacío.
- * Luego, si existe una fila seleccionada, se actualiza el estado de la tienda `tramite130204Store` 
- * con los valores de la fila seleccionada mediante el método `storeTableValues`.
- * 
- * @param {PartidasDeLaMercanciaModelo[]} filasSeleccionadas - Arreglo de filas seleccionadas en la tabla.
- * @returns {void}
- */
-  manejarlaFilaSeleccionada(filasSeleccionadas: PartidasDeLaMercanciaModelo[]): void {
-    this.filaSeleccionada = filasSeleccionadas.length
-      ? filasSeleccionadas
-      : [];
-    if (this.filaSeleccionada) {
-      this.tramite130204Store.storeTableValues(this.filaSeleccionada);
-    }
-
-  }
   /**
 * Método para obtener los datos de la tabla dinámica.
 * Este método realiza una solicitud al servicio `ImportacionDeVehiculosService` para obtener los datos
@@ -820,23 +862,6 @@ tituloParte = TITULO_DESTINO;
  * this.obtenerTablaDatos();
  */
       this.obtenerTablaDatos();
-    }
-  }
-
-
-  /**
-  * Método que se encarga de navegar a la página de modificación de partida.
-  * Si hay una fila seleccionada, muestra la tabla de valores y guarda los valores
-  * de la fila seleccionada en el estado del store correspondiente.
-  */
-  /**
-   * navegarParaModificarPartida
-   * Navega para modificar una partida específica y actualiza el estado global.
-   */
-  navegarParaModificarPartida(): void {
-    if (this.filaSeleccionada) {
-      this.tramite130204Store.setMostrarTabla(true);
-      this.tramite130204Store.storeTableValues(this.filaSeleccionada);
     }
   }
 
