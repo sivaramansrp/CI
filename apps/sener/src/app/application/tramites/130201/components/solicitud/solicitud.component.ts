@@ -317,8 +317,6 @@ tituloParte = TITULO_DESTINO;
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
-    // this.configuracionFormularioSuscripciones();
-    // this.inicializarFormularios();
     this.opcionesDeBusqueda();
     this.formularioTotalCount();
     this.fetchEntidadFederativa();
@@ -571,16 +569,14 @@ tituloParte = TITULO_DESTINO;
         this.paisForm.disable();
         this.frmRepresentacionForm.disable();
         this.manifestoForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
+      } else {
         this.formDelTramite.enable();
         this.mercanciaForm.enable();
         this.partidasDelaMercanciaForm.enable();
         this.paisForm.enable();
         this.frmRepresentacionForm.enable();
         this.manifestoForm.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
-      }
+      } 
   }
 
   /**
