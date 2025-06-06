@@ -92,13 +92,14 @@ export class ConcluirRelacionComponent implements OnInit, OnDestroy {
    * @param {ConcluirRelacionService} concluirrelacionService - Servicio para manejar la lógica de negocio del trámite.
    * @param {Tramite420102Store} tramite420102Store - Store para manejar el estado del trámite 420102.
    * @param {Tramite420102Query} tramite420102Query - Query para consultar el estado del trámite 420102.
+   * @param {ConsultaioQuery} consultaioQuery - Query para consultar el estado de la aplicación.
    */
   constructor(
     private fb: FormBuilder,
     private concluirrelacionService: ConcluirRelacionService,
     private tramite420102Store: Tramite420102Store,
     private tramite420102Query: Tramite420102Query,
-    private readonly consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(

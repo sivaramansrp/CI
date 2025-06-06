@@ -26,6 +26,7 @@ export class ConcluirRelacionService {
    * @constructor
    * @description Constructor que inicializa el servicio HTTP necesario para realizar solicitudes.
    * @param {HttpClient} http - Servicio de Angular para realizar solicitudes HTTP.
+   * @param {Tramite420102Store} tramite420102Store - Store que maneja el estado del trámite 420102.
    */
   constructor(
     private readonly http: HttpClient,
