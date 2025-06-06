@@ -1,4 +1,6 @@
 import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -46,6 +48,21 @@ export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$ = new Subject<void>();
 
+
+   /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+    /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
+  
+
   /**
    * Constructor del componente.
    * @param fb - FormBuilder para inicializar el formulario reactivo.
@@ -57,7 +74,8 @@ export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private tramite40403Service: Tramite40403Service,
     private tramite40403Store: Tramite40403Store,
-    private tramite40403Query: Tramite40403Query
+    private tramite40403Query: Tramite40403Query,
+     private consultaioQuery: ConsultaioQuery,
   ) { }
 
   /**
@@ -73,10 +91,39 @@ export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+
     this.inicializarFormulario();
 
     this.tipoDeCaatAereaData();
     this.ideCodTransportacionAereaData();
+  }
+
+
+  /**
+  * @method inicializarEstadoFormulario
+  * @description Inicializa el estado del formulario según el modo de solo lectura.
+  * 
+  * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
+  * En caso contrario, habilita los controles del formulario.
+  * 
+  * @returns {void}
+  */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.formulario?.disable();
+    } else {
+      this.formulario?.enable();
+    }
   }
 
   /**
@@ -107,6 +154,7 @@ export class DatosTramiteRenovacionComponent implements OnInit, OnDestroy {
         { value: this.atencionRenovacionState?.codIataIcao, disabled: true }
       ]
     });
+       this.inicializarEstadoFormulario();
   }
 
   /**
