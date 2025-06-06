@@ -4,9 +4,7 @@ import {
   EventEmitter,
   HostListener,
   Input,
-  OnChanges,
-  Output,
-  SimpleChanges,
+  OnInit, Output
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MESES, SEMANA } from '../../../core/enums/constantes-alertas.enum';
@@ -21,7 +19,7 @@ import { InputFecha } from '../../../core/models/shared/components.model';
   templateUrl: './input-fecha.component.html',
   styleUrl: './input-fecha.component.scss',
 })
-export class InputFechaComponent implements OnChanges {
+export class InputFechaComponent implements OnInit {
   /**
    * Emite el valor seleccionado cuando cambia.
    */
@@ -90,15 +88,17 @@ export class InputFechaComponent implements OnChanges {
     this.generarFormulario(OBJECT_DATE);
   }
 
-  ngOnChanges(): void {
-    if (this.setFecha !== '' && this.setFecha !== null) {
+  ngOnInit(): void {
+    if (this.setFecha !== '' && this.setFecha !== null && this.setFecha !== undefined) {
       const FECHA = this.setFecha.split('/');
-      const OBJECT_DATE = moment.utc(`${FECHA[2]}-${FECHA[1]}-${FECHA[0]}`);
+      const OBJECT_DATE = moment(`${FECHA[2]}-${FECHA[1]}-${FECHA[0]}`, 'YYYY-MM-DD');
+      // const OBJECT_DATE = moment.utc(`${FECHA[2]}-${FECHA[1]}-${FECHA[0]}`);
       this.generarFormulario(OBJECT_DATE);
       this.Formulario.controls['fechaString'].enable();
-      this.Formulario.get('fechaString')?.setValue(
-        moment.utc(OBJECT_DATE).format('DD/MM/YYYY')
-      );
+      // this.Formulario.get('fechaString')?.setValue(
+      //   moment.utc(OBJECT_DATE).format('DD/MM/YYYY')
+      // );
+      this.Formulario.get('fechaString')?.setValue(OBJECT_DATE.format('DD/MM/YYYY'));
       this.Formulario.controls['fechaString'].disable();
     } else {
       this.Formulario.controls['fechaString'].enable();
@@ -233,22 +233,36 @@ export class InputFechaComponent implements OnChanges {
   }
 
   clickDay(day: { name: string; value: number; indexWeek: number }): void {
-    const MOUNT_YEAR =
-      this.Formulario.get('fechaSeleccionada')?.value.format('YYYY-MM');
-    const DIA = day.value > 9 ? day.value : '0' + day.value;
-    const PARSE = `${MOUNT_YEAR}-${DIA}`;
-    const OBJECT_DATE = moment(PARSE);
+    const SELECTED_MOMENT = this.Formulario.get('fechaSeleccionada')?.value.clone();
+    if (!SELECTED_MOMENT) {
+      return;
+    }
+    SELECTED_MOMENT.set('date', day.value);
     this.Formulario.get('dia')?.setValue(day.value);
-    this.Formulario.controls['fechaString'].enable();
-    this.Formulario.get('fechaString')?.setValue(
-      moment.utc(OBJECT_DATE).format('DD/MM/YYYY')
-    );
-    this.Formulario.controls['fechaString'].disable();
-    this.Formulario.get('fechaSeleccionada')?.setValue(OBJECT_DATE);
+    this.Formulario.get('fechaString')?.setValue(SELECTED_MOMENT.format('DD/MM/YYYY'));
+    this.Formulario.get('fechaSeleccionada')?.setValue(SELECTED_MOMENT);
     this.mostrar = false;
-
     this.valorCambiado.emit(this.Formulario.get('fechaString')?.value);
   }
+
+
+  // clickDay(day: { name: string; value: number; indexWeek: number }): void {
+  //   const MOUNT_YEAR =
+  //     this.Formulario.get('fechaSeleccionada')?.value.format('YYYY-MM');
+  //   const DIA = day.value > 9 ? day.value : '0' + day.value;
+  //   const PARSE = `${MOUNT_YEAR}-${DIA}`;
+  //   const OBJECT_DATE = moment(PARSE);
+  //   this.Formulario.get('dia')?.setValue(day.value);
+  //   this.Formulario.controls['fechaString'].enable();
+  //   this.Formulario.get('fechaString')?.setValue(
+  //     moment.utc(OBJECT_DATE).format('DD/MM/YYYY')
+  //   );
+  //   this.Formulario.controls['fechaString'].disable();
+  //   this.Formulario.get('fechaSeleccionada')?.setValue(OBJECT_DATE);
+  //   this.mostrar = false;
+
+  //   this.valorCambiado.emit(this.Formulario.get('fechaString')?.value);
+  // }
 
   mostrarCalendario(): void {
     if (this.datos.habilitado) {
