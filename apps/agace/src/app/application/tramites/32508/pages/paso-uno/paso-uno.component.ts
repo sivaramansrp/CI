@@ -4,6 +4,9 @@ import { ConsultaioQuery, ConsultaioState, FormularioDinamico, TIPO_PERSONA } fr
 import { Router } from '@angular/router';
 import { SolicitanteComponent, } from '@libs/shared/data-access-user/src';
 import { map, Subject, takeUntil } from 'rxjs';
+import { FormGroup } from '@angular/forms';
+import { Tramite32508Store } from '../../state/Tramite32508.store';
+import { AdaceService } from '../../services/adace.service';
 /**
  * Componente que representa el primer paso del trámite.
  */
@@ -13,7 +16,8 @@ import { map, Subject, takeUntil } from 'rxjs';
   styleUrl: './paso-uno.component.css',
 })
 export class PasoUnoComponent implements AfterViewInit {
-  constructor(private router: Router, private consultaioQuery: ConsultaioQuery) {
+  constructor(private router: Router, private consultaioQuery: ConsultaioQuery,
+     public tramite32508Store: Tramite32508Store, private adaceService: AdaceService,) {
     // El constructor se utiliza para la inyección de dependencias.
   }
   /**
@@ -53,7 +57,10 @@ export class PasoUnoComponent implements AfterViewInit {
    */
   consultaDatos!: ConsultaioState;
 
+  solicitanteForm!: FormGroup;
+
   ngOnInit(): void {
+    this.solicitanteForm.get('adace')?.disable();
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -62,9 +69,49 @@ export class PasoUnoComponent implements AfterViewInit {
         })
       )
       .subscribe();
-    // if (this.consultaDatos.update) {
-    //   this.fetchGetDatosConsulta();
-    // }
+    if (this.consultaDatos.update) {
+      this.fetchGetDatosConsulta();
+    }
+  }
+
+  /**
+ * @method fetchGetDatosConsulta
+ * @description Método para obtener los datos de consulta desde el servicio `DatosTramiteService` y actualizar el estado del store `tramite32508Store`.
+ * 
+ * Este método realiza una solicitud HTTP para obtener los datos de consulta y, si la respuesta es exitosa, actualiza múltiples propiedades del store con los datos recibidos.
+ * Utiliza el operador `takeUntil` para cancelar la suscripción cuando el componente se destruye, evitando fugas de memoria.
+ * 
+ * @returns {void}
+ */
+  public fetchGetDatosConsulta(): void {
+    this.adaceService
+      .getDatosConsulta()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
+        if (respuesta.success) {
+          this.tramite32508Store.setClaveFiscalizador(respuesta.datos.claveFiscalizado);
+          this.tramite32508Store.setAdace(respuesta.datos.adace);
+          this.tramite32508Store.setTipoDictamen(respuesta.datos.tipoDictamen);
+          this.tramite32508Store.setRfc(respuesta.datos.rfc);
+          this.tramite32508Store.setNombre(respuesta.datos.nombre);
+          this.tramite32508Store.setNumeroInscripcion(respuesta.datos.numeroInscripcion);
+          this.tramite32508Store.setAno(respuesta.datos.ano);
+          this.tramite32508Store.setMes(respuesta.datos.mes);
+          this.tramite32508Store.setRadioPartial(respuesta.datos.radioParcial);
+          this.tramite32508Store.setRadioTotal(respuesta.datos.radioTotal);
+          this.tramite32508Store.setSaldoPendiente(respuesta.datos.saldoPendiente);
+          this.tramite32508Store.setAprovechamiento(respuesta.datos.aprovechamiento);
+          this.tramite32508Store.setDisminucionAplicada(respuesta.datos.disminucionAplicada);
+          this.tramite32508Store.setCompensacionAplicada(respuesta.datos.compensacionAplicada);
+          this.tramite32508Store.setSaldoPendienteDisminuir(respuesta.datos.saldoPendienteDisminuir);
+          this.tramite32508Store.setCantidad(respuesta.datos.cantidad);
+          this.tramite32508Store.setLlaveDePago(respuesta.datos.llaveDePago);
+          this.tramite32508Store.setArchivo(respuesta.datos.archivo);
+          this.tramite32508Store.setFechaPago(respuesta.datos.fechaPago);
+          this.tramite32508Store.setFechaElaboracion(respuesta.datos.fechaElaboracion);
+          this.tramite32508Store.setSaldoPendienteCompensar(respuesta.datos.saldoPendienteCompensar);
+        }
+      });
   }
 
   /**
@@ -84,4 +131,14 @@ export class PasoUnoComponent implements AfterViewInit {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Se utiliza para limpiar las suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
 }

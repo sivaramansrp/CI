@@ -382,6 +382,7 @@ export class AvisoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.avisoForm?.disable();
     } else {
       this.avisoForm?.enable();
+      ['adace', 'nombre'].map(field =>this.avisoForm.get(field)?.disable());
     }
   }
 

@@ -19,7 +19,7 @@
   <div class="row mt-5 radios">
     <app-input-radio [selectedValue]="valorSeleccionado" [radioOptions]="radioOpcions" [isRequired]="true"
       [layout]="'horizontal'" formControlName="tipoDictamen"
-      (change)=" setValoresStore( avisoForm, 'tipoDictamen', 'setTipoDictamen' ) "></app-input-radio>
+      (change)=" setValoresStore( avisoForm, 'tipoDictamen', 'setTipoDictamen' ) " [disabled]="esFormularioSoloLectura"></app-input-radio>
   </div>
   <ng-titulo titulo="Datos del CPI que elaboró el dictamen" />
   <div class="row mt-5">
@@ -55,7 +55,7 @@
     </div>
     <div class="col-md-4">
       <input-fecha [setFecha]="avisoForm.get('fechaElaboracion')?.value" [datos]="fechaInitialInput"
-        (valorCambiado)="cambioFechaInitial($event)"></input-fecha>
+        (valorCambiado)="cambioFechaInitial($event)" [isDisabled]="esFormularioSoloLectura"></input-fecha>
     </div>
   </div>
   <ng-titulo titulo="Resultado del periodo" />
@@ -66,7 +66,7 @@
     <div class="col" style="margin-left: 245px;">
       <app-input-radio [selectedValue]="this.avisoForm.get('tipoDictamen')?.value" [radioOptions]="radioParcial"
         [isRequired]="true" [layout]="'horizontal'" formControlName="radioParcial"
-        (change)=" setValoresStore( avisoForm, 'radioParcial', 'setRadioPartial' ) "></app-input-radio>
+        (change)=" setValoresStore( avisoForm, 'radioParcial', 'setRadioPartial' ) " [disabled]="esFormularioSoloLectura"></app-input-radio>
     </div>
   </div>
   <div class="row">
@@ -76,7 +76,7 @@
     <div class="col" style="margin-left: 350px;">
       <app-input-radio [selectedValue]="valorSeleccionado" [radioOptions]="radioTotal" [isRequired]="true"
         [layout]="'horizontal'" formControlName="radioTotal"
-        (change)=" setValoresStore( avisoForm, 'radioTotal', 'setRadioTotal' ) "></app-input-radio>
+        (change)=" setValoresStore( avisoForm, 'radioTotal', 'setRadioTotal' ) " [disabled]="esFormularioSoloLectura"></app-input-radio>
     </div>
   </div>
   <ng-titulo titulo="Cantidades del periodo dictaminado" />
