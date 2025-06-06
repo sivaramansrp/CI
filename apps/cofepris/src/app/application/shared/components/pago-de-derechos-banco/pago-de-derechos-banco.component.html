@@ -74,7 +74,7 @@
                   [catalogo]="bancoCatalogo.catalogos"
                   formControlName="banco"
                   [label]="'Banco'"
-                  
+                  [isDisabled]="esFormularioSoloLectura"
                   (change)="
                     setValoresStore(
                       datosImportadorExportador,
@@ -135,6 +135,7 @@
                     ?.value
                 "
                 (valorCambiado)="cambioFechaPago($event)"
+                [isDisabled]="esFormularioSoloLectura"
               ></input-fecha>
             </div>
             @if (formSolicitud.get('datosImportadorExportador.fechaPago')?.touched && formSolicitud.get('datosImportadorExportador.fechaPago')?.invalid) {
@@ -199,6 +200,7 @@
                 type="button"
                 class="btn btn-danger"
                 (click)="borrarDatos()"
+                [disabled]="esFormularioSoloLectura"
               >
                 Borrar datos del pago
               </button>
