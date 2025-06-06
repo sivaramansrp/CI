@@ -1,16 +1,18 @@
 import { ALFANUMERICO_ESPACIO } from '@libs/shared/data-access-user/src';
-import { Catalogo} from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CatalogosService } from '../../servicios/catalogo.service';
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { HECHOS_SERVICIO } from '../../modelos/acta-de-hechos.model';
 import { HechosInfo } from '../../modelos/acta-de-hechos.model';
 import { HechosTablaServicios } from '../../servicios/hechos-tabla.service';
+import { Input } from '@angular/core';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -45,7 +47,7 @@ import { Validators } from '@angular/forms';
     TituloComponent,
     CatalogoSelectComponent,
     TablaDinamicaComponent,
-    InputRadioComponent
+    InputRadioComponent,
   ],
   templateUrl: './tipo-de-aviso.component.html',
   styleUrls: ['./tipo-de-aviso.component.scss'],
@@ -62,15 +64,21 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * Contiene la información manejada dentro del componente.
    * @type {SolicitudForm}
    */
-    solicitudState!: SolicitudForm;
+  solicitudState!: SolicitudForm;
+
+  /**
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   * @type {boolean}
+   */
+  @Input() esFormularioSoloLectura!: boolean;
 
   /**
    * Subject utilizado para gestionar la desuscripción de observables.
    * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
-   * @property {Subject<void>} unsubscribe$
+   * @property {Subject<void>} destroyNotifier$
    * @private
    */
-  private unsubscribe$ = new Subject<void>();
+  private destroyNotifier$ = new Subject<void>();
 
   /**
    * Configuración para el select de unidad de medida.
@@ -88,14 +96,14 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * Tipo de selección de la tabla utilizando checkbox.
    * @type {TablaSeleccion}
    */
-    tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
    * Configuración de las columnas de la tabla para la lista de hechos.
    * Define las propiedades y formato de las columnas en la tabla de hechos.
    * @type {ConfiguracionColumna<HechosInfo>[]}
    */
-    hechosTabla: ConfiguracionColumna<HechosInfo>[] = HECHOS_SERVICIO;
+  hechosTabla: ConfiguracionColumna<HechosInfo>[] = HECHOS_SERVICIO;
 
   /**
    * Datos procesados para la tabla de hechos.
@@ -111,15 +119,15 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * @type {SeccionLibState}
    * @private
    */
-    private seccion!: SeccionLibState;
+  private seccion!: SeccionLibState;
 
-    /**
- * Opciones para el componente de radio buttons.
- * Contiene un arreglo de objetos con etiquetas y valores para las opciones.
- * @property {Array<{ label: string; value: string }>} radioOpcion
- */
+  /**
+   * Opciones para el componente de radio buttons.
+   * Contiene un arreglo de objetos con etiquetas y valores para las opciones.
+   * @property {Array<{ label: string; value: string }>} radioOpcion
+   */
 
-    radioOpcion: { label: string; value: string }[] = [];
+  radioOpcion: { label: string; value: string }[] = [];
 
   /**
    * Constructor del componente.
@@ -133,6 +141,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * @param {TramiteStore} tramiteStore - Store para manejar el estado del trámite.
    * @param {SeccionLibQuery} seccionQuery - Query para el estado de la sección.
    * @param {ChangeDetectorRef} cdr - Servicio para detectar y optimizar cambios en la vista.
+   * @param {ConsultaioQuery} consultaioQuery - Consulta Akita para manejar y actualizar el estado de una sección.
    */
   constructor(
     private fb: FormBuilder,
@@ -143,10 +152,71 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
     private cdr: ChangeDetectorRef,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Se puede agregar aquí la lógica del constructor si es necesario
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.solicitudForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.solicitudForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  inicializarFormulario(): void {
+    this.tramiteStoreQuery.selectSolicitudTramite$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState.SolicitudState;
+        })
+      )
+      .subscribe();
+
+    this.solicitudForm = this.fb.group({
+      cantidadBienes: ['', [Validators.required]],
+      descripcionGenerica1: ['', [Validators.required]],
+      descripcionGenerica2: ['', [Validators.required]],
+      descripcionGenerica3: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(250),
+          Validators.pattern(ALFANUMERICO_ESPACIO),
+        ],
+      ],
+      capacidadAlmacenamiento: ['', [Validators.required]],
+    });
+  }
   /**
    * Método para navegar a la página de agregar.
    * Redirige a diferentes rutas según la URL actual.
@@ -157,7 +227,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
       this.router.navigate([
         '/pago/acta-de-hechos/mercancias-destruidas-forma',
       ]);
-    }else{
+    } else {
       this.router.navigate([
         '/agace/acta-de-hechos/mercancias-destruidas-forma',
       ]);
@@ -169,92 +239,91 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * Se utiliza para inicializar el formulario y cargar los datos necesarios.
    */
   ngOnInit(): void {
-    this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
-      takeUntil(this.unsubscribe$),
-      map((seccionState) => {
-        this.solicitudState = seccionState.SolicitudState;
-      })
-    ).subscribe();
-
-    this.solicitudForm = this.fb.group({
-      cantidadBienes: ['', [Validators.required]],
-      descripcionGenerica1: ['', [Validators.required]],
-      descripcionGenerica2: ['', [Validators.required]],
-      descripcionGenerica3: ['', [Validators.required, Validators.maxLength(250), Validators.pattern(ALFANUMERICO_ESPACIO)]],
-      capacidadAlmacenamiento: ['', [Validators.required]]
-    });
+    this.inicializarEstadoFormulario();
+    this.tramiteStoreQuery.selectSolicitudTramite$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState.SolicitudState;
+        })
+      )
+      .subscribe();
 
     this.handleConditionalValidation();
     this.obtenerListasDesplegables();
     this.obtenerLevantarActaDesplegables();
     this.radioOpcion = this.catalogosService.RadioOpcion;
 
-        /**
- * Se suscribe a los cambios en el estado de la solicitud de trámite.
- * Actualiza el formulario con los datos obtenidos del estado.
- */
-        this.tramiteStoreQuery.selectSolicitudTramite$
-        .pipe(
-          takeUntil(this.unsubscribe$),
-          map((seccionState: TramiteState) => {
-            if (seccionState) {
-              this.solicitudState = seccionState?.SolicitudState;
-              this.solicitudForm.patchValue(this.solicitudState);
-            }
-          })
-        ).subscribe();
+    /**
+     * Se suscribe a los cambios en el estado de la solicitud de trámite.
+     * Actualiza el formulario con los datos obtenidos del estado.
+     */
+    this.tramiteStoreQuery.selectSolicitudTramite$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState: TramiteState) => {
+          if (seccionState) {
+            this.solicitudState = seccionState?.SolicitudState;
+            this.solicitudForm.patchValue(this.solicitudState);
+          }
+        })
+      )
+      .subscribe();
     /**
      * Se suscribe a los cambios en el estado del formulario.
      * Después de un breve retraso, actualiza el estado de la solicitud en el store.
      */
-      this.solicitudForm.statusChanges
-        .pipe(
-          takeUntil(this.unsubscribe$),
-          delay(10),
-          tap(() => {
-            const ACTIVE_STATE = { ...this.solicitudForm.value };
-            this.tramiteStore.setSolicitudTramite(ACTIVE_STATE);
-          })
-        )
-        .subscribe();
-
+    this.solicitudForm.statusChanges
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        delay(10),
+        tap(() => {
+          const ACTIVE_STATE = { ...this.solicitudForm.value };
+          this.tramiteStore.setSolicitudTramite(ACTIVE_STATE);
+        })
+      )
+      .subscribe();
 
     this.buscarDatos();
 
-          /**
-   * Se suscribe a los cambios en el estado de la sección.
-   * Almacena la información de la sección en la propiedad `seccion`.
-   * Para el botón de validación Continuar
-   */
+    /**
+     * Se suscribe a los cambios en el estado de la sección.
+     * Almacena la información de la sección en la propiedad `seccion`.
+     * Para el botón de validación Continuar
+     */
 
-          this.seccionQuery.selectSeccionState$
-          .pipe(
-            takeUntil(this.unsubscribe$),
-            map((seccionState) => {
-              this.seccion = seccionState;
-            })
-          )
-          .subscribe();
+    this.seccionQuery.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccion = seccionState;
+        })
+      )
+      .subscribe();
   }
-  
+
   /**
    * Maneja la validación condicional en el formulario.
    * Agrega o elimina validadores según el valor de `cantidadBienes`.
    * @private
    */
   private handleConditionalValidation(): void {
-    this.solicitudForm.get('cantidadBienes')?.valueChanges.subscribe(value => {
-      const DESCRIPCION_GENERICA_3 = this.solicitudForm.get('descripcionGenerica3');
-      if (value === '1') {
-        DESCRIPCION_GENERICA_3?.setValidators([Validators.required]);
-      } else {
-        DESCRIPCION_GENERICA_3?.clearValidators();
-      }
-      DESCRIPCION_GENERICA_3?.updateValueAndValidity();
-    });
+    this.solicitudForm
+      .get('cantidadBienes')
+      ?.valueChanges.subscribe((value) => {
+        const DESCRIPCION_GENERICA_3 = this.solicitudForm.get(
+          'descripcionGenerica3'
+        );
+        if (value === '1') {
+          DESCRIPCION_GENERICA_3?.setValidators([Validators.required]);
+        } else {
+          DESCRIPCION_GENERICA_3?.clearValidators();
+        }
+        DESCRIPCION_GENERICA_3?.updateValueAndValidity();
+      });
   }
 
-    /**
+  /**
    * Obtiene las listas desplegables.
    * @method obtenerListasDesplegables
    */
@@ -268,68 +337,60 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    */
   obtenerHechosSelectList(): void {
     this.catalogosService
-    .obtenerMenuDesplegable('acta-de-hechos.json')
-    .pipe(takeUntil(this.unsubscribe$))
-    .subscribe({
-      next: (data: Catalogo[]) => {
-        this.actaDeHechos = data;
-      },
-      error: (error) => {
-        console.error('Error al obtener el menú desplegable:', error);
-      },
-    });
+      .obtenerMenuDesplegable('acta-de-hechos.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (data: Catalogo[]) => {
+          this.actaDeHechos = data;
+        }
+      });
   }
 
   /**
    * Obtiene las listas desplegables para levantar acta.
    * @method obtenerLevantarActaDesplegables
    */
-    obtenerLevantarActaDesplegables(): void {
-      this.obtenerLevantarActaSelectList();
-    }
-  
+  obtenerLevantarActaDesplegables(): void {
+    this.obtenerLevantarActaSelectList();
+  }
+
   /**
    * Obtiene la lista para el select de levantar acta.
    * @method obtenerLevantarActaSelectList
    */
-    obtenerLevantarActaSelectList(): void {
-      this.catalogosService
-        .obtenerLevantarActaDesplegable('levantar.json')
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((data: Catalogo[]) => {
-          this.levantarActa = data;
-        });
-    }
- 
+  obtenerLevantarActaSelectList(): void {
+    this.catalogosService
+      .obtenerLevantarActaDesplegable('levantar.json')
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data: Catalogo[]) => {
+        this.levantarActa = data;
+      });
+  }
 
   /**
    * Método para buscar y cargar los datos de las tablas.
    * Realiza una llamada al servicio para obtener los datos de hechos.
    */
-    buscarDatos(): void {
-      this.hechosTablaServicios.obtenerDatos()
-      .pipe(takeUntil(this.unsubscribe$))
-        .subscribe({
-          next: (response: { hechosApiDatos: HechosInfo[]}) => {
-            if (response && Array.isArray(response.hechosApiDatos)) {
-              this.hechosTableDatos = response.hechosApiDatos;
-            } else {
-              console.error("La respuesta de la API no tiene el formato esperado: ", response);
-            }
-          },
-          error: (error) => {
-            console.error("Error al obtener datos: ", error);
+  buscarDatos(): void {
+    this.hechosTablaServicios
+      .obtenerDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (response: { hechosApiDatos: HechosInfo[] }) => {
+          if (response && Array.isArray(response.hechosApiDatos)) {
+            this.hechosTableDatos = response.hechosApiDatos;
           }
-        });
-    }
-  
+        }
+      });
+  }
+
   /**
    * Maneja la limpieza de recursos antes de destruir el componente.
-   * Completa el Subject `unsubscribe$` para evitar fugas de memoria.
+   * Completa el Subject `destroyNotifier$` para evitar fugas de memoria.
    * @method ngOnDestroy
    */
   ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

@@ -1062,7 +1062,7 @@
     "numeroDeProcedimiento": "130118"
   },
   {
-    "id":230501,
+    "id": 230501,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2025-10-01",
     "fechaActualizacion": "2025-10-05",
@@ -1097,7 +1097,7 @@
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260512"
   },
-     {
+  {
     "id": 260514,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-11-03",
