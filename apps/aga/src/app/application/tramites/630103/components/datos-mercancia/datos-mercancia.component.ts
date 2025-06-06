@@ -4,13 +4,13 @@
  */
 import { CommonModule } from '@angular/common';
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
-import { ConsultaioQuery, ConsultaioState, ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
-import { map, takeUntil } from 'rxjs';
+import { ConsultaioQuery, ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
+import { takeUntil } from 'rxjs';
+
 import { Subject } from 'rxjs';
-import { Subscription } from 'rxjs';
 
 import { FORMULARIO_DATOS_MERCANCIA } from '../../enum/autorizacion-importacion-temporal.enum';
 import { Tramite630103Query } from '../../estados/tramite630103.query';
@@ -53,11 +53,6 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * Formulario dinámico que define la estructura del formulario de datos de mercancía.
    */
   formularioDatosMercancia: ModeloDeFormaDinamica[] = FORMULARIO_DATOS_MERCANCIA;
-
-  /**
-   * Suscripción general para manejar y limpiar las suscripciones del componente.
-   */
-  private subscription: Subscription = new Subscription();
 
   /**
    * Estado actual de la solicitud.
@@ -141,7 +136,6 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * Libera las suscripciones activas para evitar fugas de memoria.
    */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
     this.destroyed$.next();
     this.destroyed$.complete();
   }

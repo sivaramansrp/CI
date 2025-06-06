@@ -12,7 +12,6 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Subject } from 'rxjs';
-import { Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
@@ -98,11 +97,6 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
    * Subject utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
    */
   private destroyed$ = new Subject<void>();
-
-  /**
-   * Suscripción general para manejar y limpiar las suscripciones del componente.
-   */
-  private subscription: Subscription = new Subscription();
 
   /**
    * Indica si el formulario está en modo solo lectura.
@@ -297,7 +291,6 @@ export class TipoPropietarioComponent implements OnInit, OnDestroy {
    * Libera las suscripciones activas para evitar fugas de memoria.
    */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
     this.destroyed$.next();
     this.destroyed$.complete();
   }

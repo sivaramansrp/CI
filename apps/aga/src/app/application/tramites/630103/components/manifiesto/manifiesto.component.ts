@@ -9,7 +9,6 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { map, takeUntil } from 'rxjs';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Subject} from 'rxjs';
-import { Subscription} from 'rxjs';
 
 import { InputCheckComponent } from "@libs/shared/data-access-user/src/tramites/components/input-check/input-check.component";
 
@@ -47,11 +46,6 @@ export class ManifiestoComponent implements OnInit, OnDestroy {
    * Contiene los datos actuales del trámite seleccionados desde el store.
    */
   estadoSeleccionado!: Tramite630103State;
-
-  /**
-   * Suscripción general para manejar y limpiar las suscripciones del componente.
-   */
-  private subscription: Subscription = new Subscription();
 
   /**
    * Indica si el formulario está en modo solo lectura.
@@ -108,10 +102,8 @@ export class ManifiestoComponent implements OnInit, OnDestroy {
     this.inizializarFormulario();
     if (this.esFormularioSoloLectura) {
       this.manifiestoFormulario.disable();
-    } else if (!this.esFormularioSoloLectura) {
-      this.manifiestoFormulario.enable();
     } else {
-      // No se requiere ninguna acción en el formulario
+       this.manifiestoFormulario.enable();
     }
   }
 
@@ -163,7 +155,6 @@ export class ManifiestoComponent implements OnInit, OnDestroy {
    * Libera las suscripciones activas para evitar fugas de memoria.
    */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
     this.destroyed$.next();
     this.destroyed$.complete();
   }

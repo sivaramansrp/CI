@@ -3,15 +3,15 @@
  * Componente que gestiona los datos de la solicitud para el trámite 630103.
  * Permite inicializar formularios, obtener datos de catálogos y manejar el estado del formulario.
  */
-import { ConsultaioQuery, ConsultaioState, ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ModeloDeFormaDinamica } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 
-import { map, takeUntil } from 'rxjs';
+import { takeUntil } from 'rxjs';
+
 import { Subject} from 'rxjs';
-import { Subscription} from 'rxjs';
 
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 
@@ -63,12 +63,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * {Tramite630103State}
    */
   estadoSeleccionado!: Tramite630103State;
-
-  /**
-   * Suscripción general para manejar y limpiar las suscripciones del componente.
-   * {Subscription}
-   */
-  private subscription: Subscription = new Subscription();
 
   /**
    * Estado de la solicitud actual.
@@ -194,7 +188,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * {void}
    */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
     this.destroyed$.next();
     this.destroyed$.complete();
   }
