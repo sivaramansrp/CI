@@ -80,6 +80,7 @@ export class PasoDosComponent {
               this.catalogoDocumentos = resp;
             }
           },
+          error: (_error): void => {},
         });
     }
     /**

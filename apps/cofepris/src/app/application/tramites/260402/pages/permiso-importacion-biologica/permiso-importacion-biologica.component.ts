@@ -77,7 +77,7 @@ export class PermisoImportacionBiologicaComponent {
       if (e.accion === 'cont') {
         this.wizardComponent?.siguiente();
       } else {
-        this.wizardComponent.atras();
+        this.wizardComponent?.atras();
       }
     }
   }
