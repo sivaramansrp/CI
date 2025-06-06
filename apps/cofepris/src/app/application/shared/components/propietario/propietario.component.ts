@@ -24,7 +24,7 @@ import {
 } from '@angular/forms';
 import { Modal } from 'bootstrap';
 
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 
 import {
   ConfiguracionColumna,
@@ -46,7 +46,7 @@ import { EstablecimientoService } from '../../services/establecimiento.service';
 
 import { ESTABLECIMIENTO_TABLE_CONFIG } from '../../constantes/aviso-de-funcionamiento.enum';
 
-
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /*
 * @description
 */ 
@@ -126,6 +126,12 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
    */
   showValue: string = '';
 
+/**
+ * Indica si el formulario debe mostrarse en modo solo lectura.
+ * Cuando es verdadero, los campos del formulario no pueden ser editados por el usuario.
+ */
+ esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    * @param fb FormBuilder para inicializar formularios reactivos.
@@ -136,8 +142,19 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
     private fb: FormBuilder,
     private propietarioStore: DatosDelSolicituteSeccionStateStore,
     private propietarioQuery: DatosDelSolicituteSeccionQuery,
-    private establecimientoService : EstablecimientoService
-  ) {}
+    private establecimientoService : EstablecimientoService,
+    private consultaQuery: ConsultaioQuery
+  ) {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
+  }
 
   /**
    * Ciclo de vida `AfterViewInit`.
@@ -187,30 +204,56 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
       tercerosSegundoApellido: [''],
       tercerosPrimerApellido: ['', Validators.required],
     });
+  }
 
-    // Suscribirse al store para obtener los datos del propietario
-    this.propietarioQuery
+  /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else{
+       this.inicializarFormulario();
+    }
+  }
+
+    /**
+     * Guarda los datos del formulario y ajusta el estado de solo lectura.
+     */
+    guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.propietarioradioForm?.disable();
+      } else {
+        this.propietarioradioForm.enable();
+      } 
+    }
+
+    /**
+     * Inicializa los formularios y carga los datos iniciales de propietario, tipo de persona y radio.
+     */
+    inicializarFormulario() {
+      this.propietarioQuery
       .select('propietarioData')
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
         this.propietarioData = data;
       });
+
       this.establecimientoService
       .getPropietarioRadioData()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data: PropietarioRadio[]) => {
-        this.propietarioRadioData = data; // Bind the fetched data
-        
+        this.propietarioRadioData = data; // Asigna los datos obtenidos
       });
 
       this.establecimientoService
       .getPropietarioTipoPersonaData()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data: PropietarioTipoPersona[]) => {
-        this.propietarioTipoPersonaData = data; // Bind the fetched data
-       
+        this.propietarioTipoPersonaData = data; // Asigna los datos obtenidos
       });
-  }
+    }
 
   /**
    * Configuración de columnas de la tabla.
@@ -223,7 +266,7 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
   guardarPropietario(): void {
     const PROPIETARIO: PropietarioModel = {
       NombredenominacionORazonSocial:
-        this.formTercerosDatos.get('tercerosDenominacionRazonSocial')?.value,
+        this.formTercerosDatos?.get('tercerosDenominacionRazonSocial')?.value,
       rfc: this.propietarioradioForm.get('tercerosRfc')?.value,
       curp: this.propietarioradioForm.get('tercerosCurp')?.value,
       telefono: this.formTercerosDatos.get('tercerosTelefono')?.value,
