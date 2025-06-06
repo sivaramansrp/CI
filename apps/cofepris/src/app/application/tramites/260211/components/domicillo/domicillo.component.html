@@ -204,8 +204,9 @@
       
         (click)="modificarMercancia()"
         data-bs-toggle="modal"
-        data-bs-target="#modalAddAgentMercancias">Modificar</button>
-            <button class="btn btn-default me-2" (click)="eliminarMercanciaSeleccionados()">Eliminar</button>
+        data-bs-target="#modalAddAgentMercancias"
+        [disabled]="esFormularioSoloLectura">Modificar</button>
+            <button class="btn btn-default me-2" (click)="eliminarMercanciaSeleccionados()" [disabled]="esFormularioSoloLectura">Eliminar</button>
             <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias"  [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
     </div>
