@@ -53,6 +53,7 @@ describe('PasoUnoComponent', () => {
 
   it('should render the DestinatarioComponent when indice is 3', () => {
     component.indice = 3;
+    component.esDatosRespuesta = true;
     fixture.detectChanges();
     const destinatarioElement = fixture.debugElement.nativeElement.querySelector('app-destinatario');
     expect(destinatarioElement).toBeTruthy();
@@ -60,6 +61,7 @@ describe('PasoUnoComponent', () => {
 
   it('should render the DatosCertificadoComponent when indice is 4', () => {
     component.indice = 4;
+    component.esDatosRespuesta = true;
     fixture.detectChanges();
     const datosCertificadoElement = fixture.debugElement.nativeElement.querySelector('app-datos-certificado');
     expect(datosCertificadoElement).toBeTruthy();

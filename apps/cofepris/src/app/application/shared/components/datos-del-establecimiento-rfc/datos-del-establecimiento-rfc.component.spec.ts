@@ -4,12 +4,21 @@ import { of, Subject } from 'rxjs';
 import { DatosDelEstablecimientoRFCComponent } from './datos-del-establecimiento-rfc.component';
 import { DomicilioStore } from '../../estados/stores/domicilio.store'; 
 import { DomicilioQuery } from '../../estados/queries/domicilio.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 describe('DatosDelEstablecimientoRFCComponent', () => {
   let component: DatosDelEstablecimientoRFCComponent;
   let fixture: ComponentFixture<DatosDelEstablecimientoRFCComponent>;
   let mockTramiteStore: jest.Mocked<DomicilioStore>;
   let mockTramiteQuery: jest.Mocked<DomicilioQuery>;
+
+   const mockConsultaioQuery = {
+    selectConsultaioState$: of({ readonly: true }),
+  };
+
+  const mockAvisocalidadQuery = {
+    selectSolicitud$: of({ solicitudId: 123 }),
+  };
 
   beforeEach(async () => {
     mockTramiteStore = {
@@ -30,6 +39,7 @@ describe('DatosDelEstablecimientoRFCComponent', () => {
         FormBuilder,
         { provide: DomicilioStore, useValue: mockTramiteStore },
         { provide: DomicilioQuery, useValue: mockTramiteQuery },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
       ],
     }).compileComponents();
   });
@@ -80,4 +90,68 @@ describe('DatosDelEstablecimientoRFCComponent', () => {
     expect(destroyNotifierSpy).toHaveBeenCalled();
     expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
   });
+
+   it('should disable form if esFormularioSoloLectura is true and datosDelForm exists', () => {
+    component.esFormularioSoloLectura = true;
+
+    const disableSpy = jest.spyOn(component.datosDelForm, 'disable');
+    const enableSpy = jest.spyOn(component.datosDelForm, 'enable');
+
+    component.configurarGrupoForm();
+
+    expect(disableSpy).toHaveBeenCalled();
+    expect(enableSpy).not.toHaveBeenCalled();
+  });
+
+  it('should enable form if esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+
+    const disableSpy = jest.spyOn(component.datosDelForm, 'disable');
+    const enableSpy = jest.spyOn(component.datosDelForm, 'enable');
+
+    component.configurarGrupoForm();
+
+    expect(enableSpy).toHaveBeenCalled();
+    expect(disableSpy).not.toHaveBeenCalled();
+  });
 });
+
+ describe('Standalone: esFormularioSoloLectura from ConsultaioQuery', () => {
+    let component: DatosDelEstablecimientoRFCComponent;
+    let fixture: ComponentFixture<DatosDelEstablecimientoRFCComponent>;
+
+    beforeEach(async () => {
+      await TestBed.configureTestingModule({
+        imports: [DatosDelEstablecimientoRFCComponent, ReactiveFormsModule],
+        providers: [
+          FormBuilder,
+          { provide: DomicilioStore, useValue: {
+            setDenominacion: jest.fn(),
+            setCorreoElectronico: jest.fn(),
+          }},
+          { provide: DomicilioQuery, useValue: {
+            selectSolicitud$: of({
+              denominacion: 'Test Denominacion',
+              correoElectronico: 'test@example.com',
+            }),
+          }},
+          { provide: ConsultaioQuery, useValue: {
+            selectConsultaioState$: of({ readonly: true }),
+          }},
+        ],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(DatosDelEstablecimientoRFCComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    });
+
+    it('should set esFormularioSoloLectura from ConsultaioQuery and configure form on ngOnInit', () => {
+      const configurarSpy = jest.spyOn(component, 'configurarGrupoForm');
+
+      component.ngOnInit();
+
+      expect(component.esFormularioSoloLectura).toBe(true);
+      expect(configurarSpy).toHaveBeenCalled();
+    });
+  });
