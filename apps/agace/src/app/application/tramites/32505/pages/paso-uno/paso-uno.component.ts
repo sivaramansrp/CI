@@ -1,8 +1,9 @@
 
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { SolicitanteComponent } from "@ng-mf/data-access-user";
+
 import { AvisoComponent } from '../../components/aviso/aviso.component';
+import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
 
 /**
  * Componente PasoUnoComponent
@@ -18,7 +19,7 @@ import { AvisoComponent } from '../../components/aviso/aviso.component';
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
-  imports: [CommonModule, SolicitanteComponent,AvisoComponent],
+  imports: [CommonModule, SolicitanteComponent, AvisoComponent],
   standalone: true,
 })
 export class PasoUnoComponent {

@@ -40,7 +40,7 @@
         </ng-container>
 
         <ng-container formGroupName="adaceForm">
-            <ng-titulo titulo="Tipo de aviso" />
+            <ng-titulo titulo="Tipo de carga" />
             <div class="row">
                 <div class="col-md-12">
                     <div class="col-md-6">
@@ -89,7 +89,7 @@
                 <div class="modal-dialog modal-dialog-centered modal-xl">
                     <div class="modal-content">
                         <div class="modal-body">
-                            <ng-titulo titulo="Datos del aviso" />
+                            <ng-titulo titulo="Agregar aviso" />
                             <div class="row align-items-center">
                                 <ng-titulo titulo="Tipo de operación" />
                                 <div class="row">
@@ -419,13 +419,19 @@
                             <div class="mt-5 d-flex justify-content-end">
                                 <button type="button" class="btn btn-danger" data-bs-dismiss="modal" #closeDomicilio>
                                     Cancelar </button>
-                                <button type="submit" class="btn btn-primary" (click)="agregarDomicilio()"> Agregar
+                                <button type="submit" class="btn btn-primary" (click)="agregarDomicilio()"> Guardar
                                 </button>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+            @if (nuevaNotificacion) {
+            <section>
+                <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+                </lib-notificaciones>
+            </section>
+            }
         </ng-container>
     </div>
 </form>
