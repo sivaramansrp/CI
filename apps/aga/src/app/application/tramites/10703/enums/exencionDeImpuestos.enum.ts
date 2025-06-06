@@ -43,6 +43,9 @@ export const DOCUMENTOS_SELECCIONADOS: Catalogo[] = [
   },
 ];
 
+/**
+ * Definición de la interfaz `MercanciaInstalada` que describe la estructura de los datos de la mercancía instalada.
+ */
 export const MERCANCIA_INSTALADA:MercanciaInstalada[] = [
   {
     TipoDeMercancía: "S",
@@ -57,7 +60,10 @@ export const MERCANCIA_INSTALADA:MercanciaInstalada[] = [
     Vehículo: "No"
   }
 ]
-
+/**
+ * Definición de las columnas de la tabla que se utilizará para mostrar los datos de las mercancías instaladas.
+ * Cada objeto en el array representa una columna con su encabezado, clave para acceder a los datos y orden.
+ */
 
 export const AGENTES_TABLA_DATOS = [
   {
