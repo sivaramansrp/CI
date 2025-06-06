@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CancelacionPeticion261701State, Tramite261701Store } from '../../estados/store/tramite261701.store';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite261701Query } from '../../estados/query/tramite261701.query';
@@ -16,6 +17,11 @@ import { Tramite261701Query } from '../../estados/query/tramite261701.query';
   styleUrl: './manifiestos-declaraciones.component.scss',
 })
 export class ManifiestosDeclaracionesComponent implements OnInit, OnDestroy {
+  /**
+   * Grupo de formularios principal.
+   * @property {FormGroup} manifiestosForm
+   */
+  manifiestosForm!: FormGroup;
 
   /**
    * compo doc
@@ -57,6 +63,7 @@ export class ManifiestosDeclaracionesComponent implements OnInit, OnDestroy {
  * @param tramite261701Query Consulta que facilita la obtención de datos específicos del estado del trámite 261701.
  */
   constructor(
+    public readonly fb: FormBuilder,
     private tramite261701Store: Tramite261701Store,
     private tramite261701Query: Tramite261701Query,
     private consultaioQuery: ConsultaioQuery, 
@@ -91,40 +98,22 @@ export class ManifiestosDeclaracionesComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.cancelacionPeticionState = seccionState;
-          setTimeout(() => {
-            this.establecerValor();
-          }, 0);
         })
       )
       .subscribe();
+
+    this.manifiestosForm = this.fb.group({
+      manifiestos: [this.cancelacionPeticionState?.['manifiestos'], Validators.required],
+    });
   }
 
   /**
    * compo doc
    * Este método se ejecuta cuando el usuario hace clic en el checkbox "manifiestos".
    */
-  alHacerClicEnCheckbox(event: Event): void {
-    const TARGET = event.target as HTMLInputElement;
-    this.manifiestosCheckboxChecked = TARGET.checked;
-    this.tramite261701Store.establecerDatos('manifiestos', this.manifiestosCheckboxChecked);
-  }
-
-  /**
-   * compo doc
-   * @method establecerValor
-   * @description
-   * Este método se utiliza para establecer el estado del checkbox "manifiestos"
-   * basado en el valor almacenado en el estado `cancelacionPeticionState`.
-   * 
-   * @returns {void}
-   * @memberof ManifiestosDeclaracionesComponent
-   */
-  establecerValor(): void {
-    const CHECKBOX_ELEMENT = document.getElementById('manifiestos');
-    if (CHECKBOX_ELEMENT) {
-      (CHECKBOX_ELEMENT as HTMLInputElement).checked = this.cancelacionPeticionState['manifiestos'];
-      (CHECKBOX_ELEMENT as HTMLInputElement).disabled = this.esFormularioSoloLectura;
-    }
+  alHacerClicEnCheckbox(form: FormGroup, campo: string): void {
+    const VALOR = form.get(campo)?.value;
+    this.tramite261701Store.establecerDatos('manifiestos', VALOR);
   }
 
   /**

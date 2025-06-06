@@ -2,16 +2,10 @@
 <div class="alert alert-info">
     <div class="row">
         <div class="col-md-2 d-flex justify-content-center align-items-center">
-          <form>
-            <label>
-              <input 
-                type="checkbox" 
-                id="manifiestos" 
-                name="manifiestos" 
-                required
-                (click)="alHacerClicEnCheckbox($event)">
-              <span class="ml-5" style="color: #31708f;">*</span>
-            </label>
+          <form [formGroup]="manifiestosForm">
+            <lib-input-check [label]="'*'" [id]="'manifiestos'" [required]="true" formControlName="manifiestos"
+              [isDisabled]="esFormularioSoloLectura"
+              (change)="alHacerClicEnCheckbox(manifiestosForm, 'manifiestos')"></lib-input-check>
           </form>
         </div>
         <div class="col-md-10">

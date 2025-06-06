@@ -134,59 +134,6 @@ describe('ManifiestosDeclaracionesComponent', () => {
     });
   });
 
-  // Pruebas para establecerValor
-  describe('establecerValor', () => {
-    beforeEach(() => {
-      component.cancelacionPeticionState = mockCancelacionPeticionState;
-    });
-
-    it('debería establecer el valor checked del checkbox cuando el elemento existe', () => {
-      component.cancelacionPeticionState['manifiestos'] = true;
-      
-      component.establecerValor();
-      
-      expect(mockCheckboxElement.checked).toBe(true);
-    });
-
-    it('debería establecer checked como false cuando el estado es false', () => {
-      component.cancelacionPeticionState['manifiestos'] = false;
-      
-      component.establecerValor();
-      
-      expect(mockCheckboxElement.checked).toBe(false);
-    });
-
-    it('no debería lanzar error cuando el elemento no existe', () => {
-      jest.spyOn(document, 'getElementById').mockReturnValue(null);
-      
-      expect(() => component.establecerValor()).not.toThrow();
-    });
-
-    it('debería llamar a document.getElementById con el id correcto', () => {
-      const getElementByIdSpy = jest.spyOn(document, 'getElementById');
-      
-      component.establecerValor();
-      
-      expect(getElementByIdSpy).toHaveBeenCalledWith('manifiestos');
-    });
-
-    it('debería manejar cuando cancelacionPeticionState.manifiestos es undefined', () => {
-      component.cancelacionPeticionState['manifiestos'] = undefined as any;
-      
-      expect(() => component.establecerValor()).not.toThrow();
-      expect(mockCheckboxElement.checked).toBe(false); // undefined se convierte en false
-    });
-  });
-
-  // Pruebas para ngAfterViewInit
-  describe('ngAfterViewInit', () => {
-    let establecerValorSpy: jest.SpyInstance;
-
-    beforeEach(() => {
-      establecerValorSpy = jest.spyOn(component, 'establecerValor');
-    });
-  });
-
   // Pruebas para ngOnDestroy
   describe('ngOnDestroy', () => {
     it('no debería lanzar error cuando el elemento no existe', () => {
@@ -274,28 +221,6 @@ describe('ManifiestosDeclaracionesComponent', () => {
       mockTramite261701Query.select$ = emptySubject.asObservable() as Observable<CancelacionPeticion261701State>;
       
       expect(() => component.ngOnInit()).not.toThrow();
-    });
-
-    it('debería manejar cancelacionPeticionState undefined', () => {
-      component.cancelacionPeticionState = undefined as any;
-      
-      expect(() => component.establecerValor()).not.toThrow();
-    });
-
-    it('debería manejar checkbox element null en múltiples métodos', () => {
-      jest.spyOn(document, 'getElementById').mockReturnValue(null);
-      
-      expect(() => {
-        component.establecerValor();
-        component.ngOnDestroy();
-      }).not.toThrow();
-    });
-
-    it('debería manejar tipo de elemento incorrecto', () => {
-      const mockDivElement = document.createElement('div');
-      jest.spyOn(document, 'getElementById').mockReturnValue(mockDivElement);
-      
-      expect(() => component.establecerValor()).not.toThrow();
     });
   });
 
