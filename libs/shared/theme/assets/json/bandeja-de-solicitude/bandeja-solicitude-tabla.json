@@ -1087,5 +1087,32 @@
     "diasTranscurridos": "4",
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260210"
-  }
+  },
+   {
+    "id": 260512,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-11-03",
+    "fechaActualizacion": "2023-03-20",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260512"
+  },
+     {
+    "id": 260514,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-11-03",
+    "fechaActualizacion": "2023-03-20",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260514"
+  },
+{
+  "id": 104,
+  "tipoDeTramite": "Solicitud de Permiso",
+  "fecha": "2023-10-01",
+  "fechaActualizacion": "2023-10-05",
+  "diasTranscurridos": "4",
+  "departamento": "AGA",
+  "numeroDeProcedimiento": "104"
+}
 ]
