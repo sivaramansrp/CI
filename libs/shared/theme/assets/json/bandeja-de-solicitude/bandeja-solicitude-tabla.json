@@ -855,6 +855,15 @@
     "numeroDeProcedimiento": "80208"
   },
   {
+    "id": 80202,
+    "tipoDeTramite": "Solicitud de se Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "80202"
+  },
+  {
     "id": 80203,
     "tipoDeTramite": "Solicitud de se Permiso",
     "fecha": "2023-10-01",
