@@ -287,6 +287,14 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   @Input() datosDelTramiteFormState!: DatosDelTramiteFormState;
 
   /**
+   * Indica si el formulario se encuentra en modo solo lectura.
+   * Cuando es verdadero, los campos del formulario no pueden ser editados.
+   * @property {boolean} esFormularioSoloLectura
+   * @default false
+   */
+  @Input() esFormularioSoloLectura: boolean = false;
+  
+  /**
    * Estado del formulario de justificación del trámite recibido desde el componente padre.
    * @property {JustificacionTramiteFormState} justificacionTramiteFormState
    */
@@ -523,7 +531,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       permisoGeneral: this.datosDelTramiteFormState.permisoGeneral,
       usoFinal: this.datosDelTramiteFormState.usoFinal,
     });
-    if (this.datosDelTramiteFormState.banderaConsultas) {
+    if (this.esFormularioSoloLectura) {
       this.form.disable();
     }
     if (this.esJustificacion) {
@@ -538,7 +546,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       this.formDeJustificacion.patchValue({
         justificacion: this.justificacionTramiteFormState.justificacion,
       });
-      if (this.datosDelTramiteFormState.banderaConsultas) {
+      if (this.esFormularioSoloLectura) {
           this.formDeJustificacion.disable();
       }
     }

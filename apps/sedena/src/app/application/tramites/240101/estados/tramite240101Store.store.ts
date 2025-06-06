@@ -160,38 +160,4 @@ export class Tramite240101Store extends Store<Tramite240101State> {
       merccancialTablaDatos: [...state.merccancialTablaDatos, ...newMercancia],
     }));
   }
-
-  /**
-   * Establece el valor de banderaConsultas en el estado.
-   *
-   * @method setBanderaConsultasDatosDelTramite
-   * @param {boolean} value - Nuevo valor para banderaConsultas.
-   * @returns {void}
-   */
-  public setBanderaConsultasDatosDelTramite(value: boolean): void {
-    this.update((state) => ({
-      ...state,
-      datosDelTramite: {
-        ...state.datosDelTramite,
-        banderaConsultas: value,
-      },
-    }));
-  }
-
-  /**
-   * Establece el valor de banderaConsultas en pagoDerechos.
-   *
-   * @method setBanderaConsultasPagoDerechos
-   * @param {boolean} value - Nuevo valor para banderaConsultas.
-   * @returns {void}
-   */
-  public setBanderaConsultasPagoDerechos(value: boolean): void {
-    this.update((state) => ({
-      ...state,
-      pagoDerechos: {
-        ...state.pagoDerechos,
-        banderaConsultas: value,
-      },
-    }));
-  }
 }

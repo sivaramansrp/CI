@@ -43,7 +43,7 @@
       [botones]="aduanasBotones"
       (fechasSeleccionadasChange)=
       "aduanasDisponiblesSeleccionadasChange($event)"
-      [isDisabled]="datosDelTramiteFormState.banderaConsultas ?? false">
+      [isDisabled]="esFormularioSoloLectura">
     ></crosslist>
   </div>
   <div class="row mt-5">
@@ -61,7 +61,7 @@
             formControlName="permisoGeneral"
             [required]="true"
             (input)="onPermisoGeneralInput($event)"
-            [disabled]="datosDelTramiteFormState.banderaConsultas ?? false"
+            [disabled]="esFormularioSoloLectura"
           />
           <div class="error-message">
             <small class="text-danger" *ngIf="form.get('permisoGeneral')?.touched && form.get('permisoGeneral')?.hasError('required')">
@@ -87,7 +87,7 @@
             class="form-control"
             formControlName="paisDestino"
             readonly
-            [disabled]="datosDelTramiteFormState.banderaConsultas ?? false"
+            [disabled]="esFormularioSoloLectura"
           />
         </div>
       </div>
@@ -100,7 +100,7 @@
             name="fechaPago"
             (valorCambiado)="onFechaCambiada($event)"
             [setFecha]="form.get('fechaPago')?.value"
-            [isDisabled]="datosDelTramiteFormState.banderaConsultas ?? false"
+            [isDisabled]="esFormularioSoloLectura"
           ></input-fecha>
           <div class="error-message">
             <small class="text-danger" *ngIf="form.get('fechaPago')?.touched && form.get('fechaPago')?.hasError('required')">
@@ -119,7 +119,7 @@
             name="fechaSalida"
             (valorCambiado)="onFechaSalidaCambiada($event)"
             [setFecha]="form.get('fechaSalida')?.value"
-            [isDisabled]="datosDelTramiteFormState.banderaConsultas ?? false"
+            [isDisabled]="esFormularioSoloLectura"
           ></input-fecha>
           <div class="error-message">
             <small class="text-danger" *ngIf="form.get('fechaSalida')?.touched && form.get('fechaSalida')?.hasError('required')">
@@ -146,7 +146,7 @@
           formControlName="usoFinal"
           style="height: 90px"
           [required]="true"
-          [disabled]="datosDelTramiteFormState.banderaConsultas ?? false"
+          [disabled]="esFormularioSoloLectura"
         ></textarea>
         <div class="error-message">
           <small class="text-danger" *ngIf="form?.get('usoFinal')?.touched && form?.get('usoFinal')?.hasError('required')">
@@ -163,7 +163,7 @@
       [configuracionTabla]="mercanciaTablaConfiguracion.configuracionTabla"
       [datos]="datosMercanciaTabla"
       (listaDeFilaSeleccionada)="mercanciaTablaSeleccionada = $event"
-      [disableSeleccionTablaCheckBox]="datosDelTramiteFormState.banderaConsultas ?? false"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
   </div>
   <div class="row mt-3">
@@ -216,7 +216,7 @@
           [layout]="'vertical'"
           formControlName="unoSemestre"
           (valueChange)="actualizarUnoSemestre($event)"
-          [disabled]="datosDelTramiteFormState.banderaConsultas ?? false"
+          [disabled]="esFormularioSoloLectura"
         ></app-input-radio>
       </div>
       <div class="col-md-4">
@@ -226,7 +226,7 @@
           [layout]="'vertical'"
           formControlName="dosSemestre"
           (valueChange)="actualizarDosSemestre($event)"
-          [disabled]="datosDelTramiteFormState.banderaConsultas ?? false"
+          [disabled]="esFormularioSoloLectura"
         ></app-input-radio>
       </div>
     </div>
@@ -238,7 +238,7 @@
           [label]="'Año en curso'"
           [required]="false"
           formControlName="anoEnCurso"
-          [isDisabled]="datosDelTramiteFormState.banderaConsultas ?? false"
+          [isDisabled]="esFormularioSoloLectura"
         ></lib-input-check>
         <div class="error-message">
           <small class="text-danger" *ngIf="form.get('anoEnCurso')?.touched && form.get('anoEnCurso')?.hasError('required')">
@@ -262,7 +262,7 @@
                 formControlName="informacionConfidencial"
                 id="informacionConfidencial"
                 [required]="true"
-                [disabled]="datosDelTramiteFormState.banderaConsultas ?? false"
+                [disabled]="esFormularioSoloLectura"
               />
               <span> *</span>
               <div class="error-message">

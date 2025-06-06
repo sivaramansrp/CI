@@ -94,22 +94,9 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
       takeUntil(this.unsubscribe$),
       map((seccionState) => {
         this.esFormularioSoloLectura = seccionState.readonly;
-        this.inicializarEstadoFormulario();
       })
     )
     .subscribe();
-  }
-
-  /**
-  * @method inicializarEstadoFormulario
-  * @description Inicializa el estado del formulario según el modo de solo lectura. Si el formulario está en modo solo lectura, deshabilita todos los campos; de lo contrario, los habilita para su edición.
-  * @returns {void}
-  *
-  */
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.tramiteStore.setBanderaConsultasDatosDelTramite(this.esFormularioSoloLectura);
-    }
   }
 
   /**

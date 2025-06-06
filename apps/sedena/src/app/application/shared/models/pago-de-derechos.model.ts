@@ -29,5 +29,4 @@ export interface PagoDerechosFormState {
   llavePago: string;
   fechaPago: string;
   importePago: string;
-  banderaConsultas?: boolean;
 }
