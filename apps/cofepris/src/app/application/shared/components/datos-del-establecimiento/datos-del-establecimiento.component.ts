@@ -96,7 +96,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
           this.inicializarEstadoFormulario();
         })
       )
-      .subscribe()
+      .subscribe();
     this.inicializarEstadoFormulario();
   }
 
