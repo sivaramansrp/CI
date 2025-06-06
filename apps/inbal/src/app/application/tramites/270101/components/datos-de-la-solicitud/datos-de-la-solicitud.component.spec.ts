@@ -90,13 +90,6 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(cerrarSpy).toHaveBeenCalled();
   });
 
-  // it('should update value in store from input event', () => {
-  //   const storeSpy = jest.spyOn(component, 'cambioEnValoresStore');
-  //   const mockEvent = { target: { value: '123' }, campo: 'avaluo' };
-  //   component.cambioEvento(mockEvent, 'avaluo');
-  //   expect(storeSpy).toHaveBeenCalledWith('avaluo', '123');
-  // });
-
   it('should update value in store from input event', () => {
   const storeSpy = jest.spyOn(component, 'cambioEnValoresStore');
   const inputElement = document.createElement('input');
