@@ -37,8 +37,12 @@ import { Validators } from '@angular/forms';
 /**
  * Componente para manejar el tipo de aviso en el trámite.
  * Proporciona funcionalidad para gestionar formularios, tablas y datos relacionados.
- */
-@Component({
+ *
+ * @export
+ * @class TipoDeAvisoComponent
+ * @implements {OnInit}
+ * @implements {OnDestroy}
+ */ @Component({
   selector: 'tipo-de-aviso',
   standalone: true,
   imports: [
@@ -60,7 +64,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   solicitudForm!: FormGroup;
 
   /**
-   * Estado actual de la solicitud basado en el modelo `DatosDeLaSolicitudInt`.
+   * Estado actual de la solicitud basado en el modelo `SolicitudForm`.
    * Contiene la información manejada dentro del componente.
    * @type {SolicitudForm}
    */
@@ -75,20 +79,20 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   /**
    * Subject utilizado para gestionar la desuscripción de observables.
    * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
-   * @property {Subject<void>} destroyNotifier$
    * @private
+   * @type {Subject<void>}
    */
   private destroyNotifier$ = new Subject<void>();
 
   /**
-   * Configuración para el select de unidad de medida.
-   * @property {Catalogo[]} actaDeHechos
+   * Configuración para el select de acta de hechos.
+   * @type {Catalogo[]}
    */
   actaDeHechos: Catalogo[] = [];
 
   /**
    * Configuración para el select de levantar acta.
-   * @property {Catalogo[]} levantarActa
+   * @type {Catalogo[]}
    */
   levantarActa: Catalogo[] = [];
 
@@ -116,24 +120,23 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   /**
    * Estado de la sección actual.
    * Contiene información sobre el estado de la sección.
-   * @type {SeccionLibState}
    * @private
+   * @type {SeccionLibState}
    */
   private seccion!: SeccionLibState;
 
   /**
    * Opciones para el componente de radio buttons.
    * Contiene un arreglo de objetos con etiquetas y valores para las opciones.
-   * @property {Array<{ label: string; value: string }>} radioOpcion
+   * @type {Array<{ label: string; value: string }>}
    */
-
   radioOpcion: { label: string; value: string }[] = [];
 
   /**
    * Constructor del componente.
    * Inicializa servicios y el formulario reactivo.
+   *
    * @param {FormBuilder} fb - Constructor para formularios reactivos.
-   * @param {HttpClient} httpServicios - Servicio HTTP para realizar solicitudes.
    * @param {CatalogosService} catalogosService - Servicio para obtener catálogos.
    * @param {HechosTablaServicios} hechosTablaServicios - Servicio para obtener datos de la tabla.
    * @param {Router} router - Servicio para navegación.
@@ -154,6 +157,10 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private consultaioQuery: ConsultaioQuery
   ) {
+    /**
+     * Suscripción al estado de solo lectura del formulario.
+     * Cuando cambia el estado, se inicializa el formulario en modo lectura o edición.
+     */
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -168,6 +175,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.
    * Además, obtiene la información del catálogo de mercancía.
+   * @returns {void}
    */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
@@ -180,6 +188,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
+   * @returns {void}
    */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
@@ -192,6 +201,11 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Inicializa el formulario reactivo con los campos requeridos y sus validaciones.
+   * También obtiene el estado de la solicitud desde el store.
+   * @returns {void}
+   */
   inicializarFormulario(): void {
     this.tramiteStoreQuery.selectSolicitudTramite$
       .pipe(
@@ -206,20 +220,15 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
       cantidadBienes: ['', [Validators.required]],
       descripcionGenerica1: ['', [Validators.required]],
       descripcionGenerica2: ['', [Validators.required]],
-      descripcionGenerica3: [
-        '',
-        [
-          Validators.required,
-          Validators.maxLength(250),
-          Validators.pattern(ALFANUMERICO_ESPACIO),
-        ],
-      ],
+      descripcionGenerica3: ['', [ Validators.required, Validators.maxLength(250), Validators.pattern(ALFANUMERICO_ESPACIO)],],
       capacidadAlmacenamiento: ['', [Validators.required]],
     });
   }
+
   /**
    * Método para navegar a la página de agregar.
    * Redirige a diferentes rutas según la URL actual.
+   * @returns {void}
    */
   irAPaginaAgregar(): void {
     const CURRENT_URL = this.router.url;
@@ -237,6 +246,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   /**
    * Método que se ejecuta al inicializar el componente.
    * Se utiliza para inicializar el formulario y cargar los datos necesarios.
+   * @returns {void}
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
@@ -269,6 +279,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
     /**
      * Se suscribe a los cambios en el estado del formulario.
      * Después de un breve retraso, actualiza el estado de la solicitud en el store.
@@ -289,9 +300,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
     /**
      * Se suscribe a los cambios en el estado de la sección.
      * Almacena la información de la sección en la propiedad `seccion`.
-     * Para el botón de validación Continuar
      */
-
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -306,6 +315,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
    * Maneja la validación condicional en el formulario.
    * Agrega o elimina validadores según el valor de `cantidadBienes`.
    * @private
+   * @returns {void}
    */
   private handleConditionalValidation(): void {
     this.solicitudForm
@@ -325,15 +335,15 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
 
   /**
    * Obtiene las listas desplegables.
-   * @method obtenerListasDesplegables
+   * @returns {void}
    */
   obtenerListasDesplegables(): void {
     this.obtenerHechosSelectList();
   }
 
   /**
-   * Obtiene la lista para el select de unidad de medida.
-   * @method obtenerHechosSelectList
+   * Obtiene la lista para el select de acta de hechos.
+   * @returns {void}
    */
   obtenerHechosSelectList(): void {
     this.catalogosService
@@ -342,13 +352,13 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data: Catalogo[]) => {
           this.actaDeHechos = data;
-        }
+        },
       });
   }
 
   /**
    * Obtiene las listas desplegables para levantar acta.
-   * @method obtenerLevantarActaDesplegables
+   * @returns {void}
    */
   obtenerLevantarActaDesplegables(): void {
     this.obtenerLevantarActaSelectList();
@@ -356,7 +366,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
 
   /**
    * Obtiene la lista para el select de levantar acta.
-   * @method obtenerLevantarActaSelectList
+   * @returns {void}
    */
   obtenerLevantarActaSelectList(): void {
     this.catalogosService
@@ -370,6 +380,7 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   /**
    * Método para buscar y cargar los datos de las tablas.
    * Realiza una llamada al servicio para obtener los datos de hechos.
+   * @returns {void}
    */
   buscarDatos(): void {
     this.hechosTablaServicios
@@ -380,14 +391,14 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
           if (response && Array.isArray(response.hechosApiDatos)) {
             this.hechosTableDatos = response.hechosApiDatos;
           }
-        }
+        },
       });
   }
 
   /**
    * Maneja la limpieza de recursos antes de destruir el componente.
    * Completa el Subject `destroyNotifier$` para evitar fugas de memoria.
-   * @method ngOnDestroy
+   * @returns {void}
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();

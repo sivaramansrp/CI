@@ -32,6 +32,11 @@ import { Validators } from '@angular/forms';
 /**
  * Componente para manejar el formulario de mercancías destruidas.
  * Proporciona funcionalidad para gestionar formularios y datos relacionados.
+ *
+ * @export
+ * @class MercanciasDestruidasFormaComponent
+ * @implements {OnInit}
+ * @implements {OnDestroy}
  */
 @Component({
   selector: 'app-mercancias-destruidas-forma',
@@ -91,6 +96,7 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
   /**
    * Constructor del componente.
    * Inicializa servicios y el formulario reactivo.
+   *
    * @param {FormBuilder} fb - Constructor para formularios reactivos.
    * @param {Router} router - Servicio para navegación.
    * @param {CatalogosService} catalogosService - Servicio para obtener catálogos.
@@ -108,6 +114,10 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
     private seccionQuery: SeccionLibQuery,
     private consultaioQuery: ConsultaioQuery
   ) {
+    /**
+     * Suscripción al estado de solo lectura del formulario.
+     * Cuando cambia el estado, se inicializa el formulario en modo lectura o edición.
+     */
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -121,7 +131,10 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
 
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.
-   * Además, obtiene la información del catálogo de mercancía.
+   * Si el formulario está en modo solo lectura, lo deshabilita.
+   * Si no, lo inicializa en modo edición.
+   *
+   * @returns {void}
    */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
@@ -134,6 +147,8 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
   /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
+   *
+   * @returns {void}
    */
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
@@ -146,6 +161,12 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Inicializa el formulario reactivo con los campos requeridos y sus validaciones.
+   * También obtiene el estado de la mercancía desde el store.
+   *
+   * @returns {void}
+   */
   inicializarFormulario(): void {
     this.tramiteStoreQuery.selectSolicitudTramite$
       .pipe(
@@ -203,7 +224,9 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
 
   /**
    * Método que se ejecuta al inicializar el componente.
-   * Configura el formulario y carga los datos necesarios.
+   * Configura el formulario, carga los datos necesarios y suscribe a los cambios de estado.
+   *
+   * @returns {void}
    */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
@@ -253,7 +276,6 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
      * Se suscribe a los cambios en el estado de la sección.
      * Almacena la información de la sección en la propiedad `seccion`.
      */
-
     this.seccionQuery.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -265,8 +287,10 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene las listas desplegables.
+   * Obtiene las listas desplegables necesarias para el formulario.
    * Llama al método para cargar las opciones de unidad de medida.
+   *
+   * @returns {void}
    */
   obtenerUnidadDesplegable(): void {
     this.obtenerUnidadMedidaSelectList();
@@ -275,6 +299,8 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
   /**
    * Obtiene la lista para el select de unidad de medida.
    * Realiza una llamada al servicio para cargar las opciones.
+   *
+   * @returns {void}
    */
   obtenerUnidadMedidaSelectList(): void {
     this.catalogosService
@@ -288,7 +314,10 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
 
   /**
    * Cambia la pestaña activa en la interfaz.
+   * Navega a la pestaña seleccionada según el índice proporcionado.
+   *
    * @param {number} index - Índice de la pestaña a seleccionar.
+   * @returns {void}
    */
   seleccionaTab(index: number): void {
     const CURRENT_URL = this.router.url;
@@ -306,6 +335,8 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
   /**
    * Resetea el formulario de mercancías destruidas.
    * Limpia todos los campos del formulario.
+   *
+   * @returns {void}
    */
   cancelarMercancia(): void {
     this.mercanciaForm.reset();
@@ -314,6 +345,8 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
   /**
    * Método de limpieza al destruir el componente.
    * Libera los recursos y cancela las suscripciones.
+   *
+   * @returns {void}
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
