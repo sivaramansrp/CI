@@ -55,7 +55,7 @@
         <input
           id="idTransaccionVU"
           formControlName="idTransaccionVU"
-          (change)="actualizarIdTransaccionVU($event)"
+          (change)="actualizarNumeroValor('idTransaccionVU', $event)"
           class="form-control"
           type="text"
         />
@@ -83,6 +83,7 @@
           <input-fecha
             [setFecha]="formAviso.get('fechaIniExposicion')?.value"
             [datos]="fechaInicioInput"
+            (valorCambiado)="cambiarInputFecha($event)"
           ></input-fecha>
         </div>
       </div>
@@ -103,7 +104,7 @@
           [label]="opcionFraccionArancelaria.labelNombre"
           [required]="opcionFraccionArancelaria.required"
           name="cveFraccionArancelaria"
-          (selectionChange)="actualizarCveFraccionArancelaria($event)"
+          (selectionChange)="establecerValoresEnEstado(formAviso, 'cveFraccionArancelaria')"
         ></app-catalogo-select>
         <div *ngIf="noEsValido('cveFraccionArancelaria')" class="text-danger">
           Este campo es obligatorio
@@ -122,7 +123,7 @@
         <input
           id="nico"
           formControlName="nico"
-          (change)="actualizarNico($event)"
+          (change)="actualizarNumeroValor('nico', $event)"
           class="form-control"
           type="number"
           [ngClass]="esValido('nico') ? 'required' : ''"
@@ -152,7 +153,7 @@
         <input
           id="peso"
           formControlName="peso"
-          (change)="actualizarPeso($event)"
+          (change)="actualizarNumeroValor('peso', $event)"
           class="form-control"
           type="text"
           [ngClass]="esValido('peso') ? 'required' : ''"
@@ -187,7 +188,7 @@
         <input
           id="valorUSD"
           formControlName="valorUSD"
-          (change)="actualizarValorUSD($event)"
+          (change)="actualizarNumeroValor('valorUSD', $event)"  
           class="form-control"
           type="text"
           [ngClass]="esValido('valorUSD') ? 'required' : ''"
@@ -226,7 +227,7 @@
           id="descripcionMercancia"
           formControlName="descripcionMercancia"
           rows="5"
-          (change)="actualizarDescripcionMercancia($event)"
+          (change)="establecerValoresEnEstado(formAviso, 'descripcionMercancia')"
           class="form-control no-resize textarea-height"
           [ngClass]="esValido('descripcionMercancia') ? 'required  no-resize textarea-height' : ' no-resize textarea-height'"
         ></textarea>
@@ -258,7 +259,7 @@
           formControlName="nombreComercial"
           class="form-control"
           type="text"
-          (change)="actualizarNombreComercial($event)"
+          (change)="establecerValoresEnEstado(formAviso, 'nombreComercial')"
         />
         <div *ngIf="noEsValido('nombreComercial')" class="text-danger">
           <span *ngIf="formAviso.get('nombreComercial')?.errors?.['maxlength']">
@@ -274,7 +275,7 @@
           [label]="opcionEntidadFederativa.labelNombre"
           [required]="opcionEntidadFederativa.required"
           name="entidadFederativa"
-          (selectionChange)="actualizarEntidadFederativa($event)"
+          (selectionChange)="establecerValoresEnEstado(formAviso, 'entidadFederativa')"
         ></app-catalogo-select>
         <div *ngIf="noEsValido('entidadFederativa')" class="text-danger">
           Este campo es obligatorio
@@ -288,7 +289,7 @@
           [required]="opcionDelegacionMunicipio.required"
           name="delegacionMunicipio"
           [isDisabled]="!formAviso.get('entidadFederativa')?.value"
-          (selectionChange)="actualizarDelegacionMunicipio($event)"
+          (selectionChange)="establecerValoresEnEstado(formAviso, 'delegacionMunicipio')"
         ></app-catalogo-select>
         <div *ngIf="noEsValido('delegacionMunicipio')" class="text-danger">
           Este campo es obligatorio
@@ -302,7 +303,7 @@
           [required]="opcionColonia.required"
           [isDisabled]="!formAviso.get('delegacionMunicipio')?.value"
           name="colonia"
-          (selectionChange)="actualizarColonia($event)"
+          (selectionChange)="establecerValoresEnEstado(formAviso, 'colonia')"
         ></app-catalogo-select>
         <div *ngIf="noEsValido('colonia')" class="text-danger">
           Este campo es obligatorio
@@ -315,7 +316,7 @@
           formControlName="calle"
           class="form-control"
           type="text"
-          (change)="actualizarCalle($event)"
+          (change)="establecerValoresEnEstado(formAviso, 'calle')"
           [ngClass]="esValido('calle') ? 'required' : ''"
         />
         <div *ngIf="noEsValido('calle')" class="text-danger">
@@ -335,7 +336,7 @@
           class="form-control"
           type="text"
           [ngClass]="esValido('numeroExterior') ? 'required' : ''"
-          (change)="actualizarNumeroExterior($event)"
+          (change)="establecerValoresEnEstado(formAviso, 'numeroExterior')"
         />
         <div *ngIf="noEsValido('numeroExterior')" class="text-danger">
           <span *ngIf="formAviso.get('numeroExterior')?.errors?.['required']">
@@ -353,7 +354,7 @@
           formControlName="numeroInterior"
           class="form-control"
           type="text"
-          (change)="actualizarNumeroInterior($event)"
+          (change)="establecerValoresEnEstado(formAviso, 'numeroInterior')"
         />
         <div *ngIf="noEsValido('numeroInterior')" class="text-danger">
           <span *ngIf="formAviso.get('numeroInterior')?.errors?.['required']">
@@ -372,7 +373,7 @@
           class="form-control"
           type="number"
           [ngClass]="esValido('codigoPostal') ? 'required' : ''"
-          (change)="actualizarCodigoPostal($event)"
+          (change)="establecerValoresEnEstado(formAviso, 'codigoPostal')"
         />
         <div *ngIf="noEsValido('codigoPostal')" class="text-danger">
           <span *ngIf="formAviso.get('codigoPostal')?.errors?.['required']">

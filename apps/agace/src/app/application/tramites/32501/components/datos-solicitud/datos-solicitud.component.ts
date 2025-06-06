@@ -1,26 +1,19 @@
-import { AlertComponent } from '@libs/shared/data-access-user/src';
-import { AnexarDocumentosComponent } from '@libs/shared/data-access-user/src';
 import { AvisoCatalogo } from '../../models/aviso-catalogo.model';
 import { AvisoOpcionesDeRadio } from '../../models/aviso-catalogo.model';
-import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
-import { Catalogo } from '@libs/shared/data-access-user/src';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent} from '@libs/shared/data-access-user/src';
+import { CatalogosSelect } from '@libs/shared/data-access-user/src'; 
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import { CrosslistComponent } from '@libs/shared/data-access-user/src';
 import { ElementRef } from '@angular/core';
 import { FECHA_INGRESO } from '../../enums/solicitud32501.enum';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { InputFecha } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
-import { InputHoraComponent } from '@libs/shared/data-access-user/src';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { InputRadioComponent } from "@libs/shared/data-access-user/src";
 import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
 import { Modal } from 'bootstrap';
 import { ModalOperacionComponent } from '../modal-operacion/modal-operacion.component';
@@ -30,8 +23,7 @@ import { OperacionDeImportacion } from '../../models/aviso-catalogo.model';
 import { REGEX_NUMEROS_USD } from '@libs/shared/data-access-user/src';
 import { REGEX_REEMPLAZAR } from '@libs/shared/data-access-user/src';
 import { REGEX_SOLO_NUMEROS } from '@libs/shared/data-access-user/src';
-import { ReactiveFormsModule } from '@angular/forms';
-import { SelectPaisesComponent } from '@libs/shared/data-access-user/src';
+import {ReactiveFormsModule } from '@angular/forms';
 import { Solicitud32501Query } from '../../estados/solicitud32501.query';
 import { Solicitud32501State } from '../../estados/solicitud32501.store';
 import { Solicitud32501Store } from '../../estados/solicitud32501.store';
@@ -41,9 +33,9 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 import { ViewChild } from '@angular/core';
-import { WizardComponent } from '@libs/shared/data-access-user/src';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
+
 
 /**
  * Componente `DatosSolicitudComponent` que gestiona la lógica y la interfaz de usuario
@@ -54,25 +46,17 @@ import { takeUntil } from 'rxjs';
   selector: 'app-datos-solicitud',
   standalone: true,
   imports: [
+    ReactiveFormsModule,
+    CatalogoSelectComponent,
     CommonModule,
     FormsModule,
     HttpClientModule,
-    WizardComponent,
-    BtnContinuarComponent,
-    InputCheckComponent,
     InputFechaComponent,
-    InputHoraComponent,
-    CrosslistComponent,
-    ReactiveFormsModule,
     TituloComponent,
-    SelectPaisesComponent,
-    AnexarDocumentosComponent,
-    AlertComponent,
-    CatalogoSelectComponent,
-    InputRadioComponent,
     TablaDinamicaComponent,
-    ModalOperacionComponent
-  ],
+    ModalOperacionComponent,
+    InputRadioComponent
+],
   providers: [MercanciasDesmontadasOSinMontarService],
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.scss',
@@ -209,26 +193,38 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    *   se destruye, evitando fugas de memoria.
    */
   ngOnInit(): void {
+    this.obtenerValoresDelStore();
+    this.inicializarFormulario();
+  }
+
+  /**
+   * Inicializa el formulario `formAviso` con los controles y validaciones necesarios.
+   * Utiliza el `FormBuilder` para crear un grupo de controles con valores iniciales
+   * basados en el estado actual de la solicitud (`solicitud32501State`).
+   * Cada control tiene sus respectivas validaciones, como requerimientos y patrones.
+   */
+
+  inicializarFormulario(): void {
     this.formAviso = this.fb.group({
-      adace: [{ value: this.solicitud32501State.adace, disabled: true }],
+      adace: [{ value: this.solicitud32501State?.adace, disabled: true }],
       fechaIniExposicion: [
-        { value: this.solicitud32501State.fechaIniExposicion, disabled: true },
+        { value: this.solicitud32501State?.fechaIniExposicion, disabled: true },
         Validators.required,
       ],
       ideGenerica1: [
-        this.solicitud32501State.ideGenerica1,
+        this.solicitud32501State?.ideGenerica1,
         [Validators.required],
       ],
       idTransaccionVU: [
-        this.solicitud32501State.idTransaccionVU,
+        this.solicitud32501State?.idTransaccionVU,
         [Validators.maxLength(25), Validators.minLength(25)],
       ],
       cveFraccionArancelaria: [
-        this.solicitud32501State.cveFraccionArancelaria,
+        this.solicitud32501State?.cveFraccionArancelaria,
         Validators.required,
       ],
       nico: [
-        this.solicitud32501State.nico,
+        this.solicitud32501State?.nico,
         [
           Validators.required,
           Validators.pattern(REGEX_SOLO_NUMEROS),
@@ -237,7 +233,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         ],
       ],
       peso: [
-        this.solicitud32501State.peso,
+        this.solicitud32501State?.peso,
         [
           Validators.required,
           Validators.pattern(REGEX_NUMEROS_USD),
@@ -247,7 +243,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         ],
       ],
       valorUSD: [
-        this.solicitud32501State.valorUSD,
+        this.solicitud32501State?.valorUSD,
         [
           Validators.required,
           Validators.pattern(REGEX_NUMEROS_USD),
@@ -257,37 +253,37 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         ],
       ],
       descripcionMercancia: [
-        this.solicitud32501State.descripcionMercancia,
-        Validators.required,
-        Validators.maxLength(250),
+        this.solicitud32501State?.descripcionMercancia,
+        [Validators.required,
+        Validators.maxLength(250)],
       ],
       nombreComercial: [
-        this.solicitud32501State.nombreComercial,
+        this.solicitud32501State?.nombreComercial,
         [Validators.maxLength(250)],
       ],
       entidadFederativa: [
-        this.solicitud32501State.entidadFederativa,
+        this.solicitud32501State?.entidadFederativa,
         Validators.required,
       ],
       delegacionMunicipio: [
-        this.solicitud32501State.delegacionMunicipio,
+        this.solicitud32501State?.delegacionMunicipio,
         Validators.required,
       ],
-      colonia: [this.solicitud32501State.colonia, [Validators.required]],
+      colonia: [this.solicitud32501State?.colonia, [Validators.required]],
       calle: [
-        this.solicitud32501State.calle,
+        this.solicitud32501State?.calle,
         [Validators.required, Validators.maxLength(250)],
       ],
       numeroExterior: [
-        this.solicitud32501State.numeroExterior,
+        this.solicitud32501State?.numeroExterior,
         [Validators.required, Validators.maxLength(15)],
       ],
       numeroInterior: [
-        this.solicitud32501State.numeroInterior,
+        this.solicitud32501State?.numeroInterior,
         [Validators.maxLength(15)],
       ],
       codigoPostal: [
-        this.solicitud32501State.codigoPostal,
+        this.solicitud32501State?.codigoPostal,
         [
           Validators.required,
           Validators.pattern(REGEX_SOLO_NUMEROS),
@@ -295,37 +291,27 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         ],
       ],
     });
+  }
 
+  /**
+   * Obtiene los valores del store `solicitud32501Query` y actualiza el estado
+   * `solicitud32501State` con la respuesta obtenida.
+   *
+   * Utiliza el operador `takeUntil` para asegurarse de que la suscripción se cancele
+   * cuando el componente sea destruido, evitando fugas de memoria.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  obtenerValoresDelStore(): void {
     this.solicitud32501Query.seleccionarSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
         map((respuesta: Solicitud32501State) => {
           this.solicitud32501State = respuesta;
-          this.formAviso.patchValue({
-            adace: this.solicitud32501State.adace,
-            fechaIniExposicion: this.solicitud32501State.fechaIniExposicion,
-            ideGenerica1: this.solicitud32501State.ideGenerica1,
-            idTransaccionVU: this.solicitud32501State.idTransaccionVU,
-            cveFraccionArancelaria:
-              this.solicitud32501State.cveFraccionArancelaria,
-            nico: this.solicitud32501State.nico,
-            peso: this.solicitud32501State.peso,
-            valorUSD: this.solicitud32501State.valorUSD,
-            descripcionMercancia: this.solicitud32501State.descripcionMercancia,
-            nombreComercial: this.solicitud32501State.nombreComercial,
-            entidadFederativa: this.solicitud32501State.entidadFederativa,
-            delegacionMunicipio: this.solicitud32501State.delegacionMunicipio,
-            colonia: this.solicitud32501State.colonia,
-            calle: this.solicitud32501State.calle,
-            numeroExterior: this.solicitud32501State.numeroExterior,
-            numeroInterior: this.solicitud32501State.numeroInterior,
-            codigoPostal: this.solicitud32501State.codigoPostal,
-          });
         })
       )
       .subscribe();
   }
-
   /**
    * Obtiene un aviso del catálogo utilizando el servicio `mercanciasDesmontadasOSinMontarService`.
    * Se suscribe al observable y actualiza las opciones relacionadas con la fracción arancelaria,
@@ -346,7 +332,12 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
         },
       });
   }
-
+  /**
+   * Obtiene las opciones de radio para el aviso desde el servicio `MercanciasDesmontadasOSinMontarService`.
+   * Se suscribe al observable y actualiza la propiedad `avisoOpcionesDeRadio` con la respuesta obtenida.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
   obtenerAvisoOpcionesDeRadio(): void {
     this.mercanciasDesmontadasOSinMontarService
       .obtenerAvisoOpcionesDeRadio()
@@ -386,171 +377,42 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   setTipoDeAviso(evento: string | number): void {
     this.tipoAviso = evento;
+    this.solicitud32501Store.establecerDatos({ ideGenerica1: evento });
+  }
+/*
+    * Establece los valores del formulario en el estado de la solicitud.
+    *
+    * @param formulario - El formulario del cual se obtienen los valores.
+    * @param campo - El nombre del campo cuyo valor se desea establecer en el estado.
+    *
+    * Este método obtiene el valor del campo especificado en el formulario y lo establece
+    * en el estado de la solicitud utilizando el store `solicitud32501Store`.
+    */
+  establecerValoresEnEstado(formulario: FormGroup, campo: string): void {
+    const VALOR = formulario.get(campo)?.value;
+    this.solicitud32501Store.establecerDatos({ [campo]: VALOR });
+  }
+/**
+ * Cambia el valor del campo `fechaIniExposicion` en el formulario y actualiza el estado de la solicitud.
+ * @param evento - El nuevo valor de la fecha de inicio de exposición.
+ */
+  cambiarInputFecha(evento: string): void {
+  this.formAviso.patchValue({
+    fechaIniExposicion: evento,
+  });
+  this.establecerValoresEnEstado(this.formAviso, 'fechaIniExposicion');
   }
 
   /**
-   * Actualiza la clave de la fracción arancelaria en el estado de la solicitud.
-   *
-   * @param evento - Objeto de tipo `Catalogo` que contiene la información de la fracción arancelaria seleccionada.
+   * Actualiza el número de valor en el estado de la solicitud basado en el evento del input.
+   * @param control - El nombre del control cuyo valor se actualizará.
+   * @param evento - El evento que contiene el nuevo valor del input.
    */
-  actualizarCveFraccionArancelaria(evento: Catalogo): void {
-    this.solicitud32501Store.actualizarCveFraccionArancelaria(evento.id);
-  }
-
-  /**
-   * Actualiza la entidad federativa en el estado de la solicitud.
-   *
-   * @param evento - Objeto de tipo `Catalogo` que contiene la información de la entidad federativa seleccionada.
-   *                 Se utiliza el `id` de este objeto para actualizar la entidad federativa en el store.
-   *
-   * @returns void
-   */
-  actualizarEntidadFederativa(evento: Catalogo): void {
-    this.solicitud32501Store.actualizarEntidadFederativa(evento.id);
-  }
-
-  /**
-   * Actualiza la delegación o municipio en el estado de la solicitud.
-   *
-   * @param evento - Objeto de tipo `Catalogo` que contiene la información
-   *                 necesaria para actualizar la delegación o municipio,
-   *                 incluyendo su identificador único (`id`).
-   */
-  actualizarDelegacionMunicipio(evento: Catalogo): void {
-    this.solicitud32501Store.actualizarDelegacionMunicipio(evento.id);
-  }
-
-  /**
-   * Actualiza la colonia en el estado de la solicitud utilizando el identificador proporcionado.
-   *
-   * @param evento - Objeto de tipo `Catalogo` que contiene la información de la colonia seleccionada,
-   * incluyendo su identificador único (`id`).
-   */
-  actualizarColonia(evento: Catalogo): void {
-    this.solicitud32501Store.actualizarColonia(evento.id);
-  }
-
-  /**
-   * Actualiza el ID de transacción VU en el estado de la solicitud.
-   *
-   * @param evento - El evento que contiene el elemento de entrada HTML.
-   *                 Se espera que sea un evento de tipo `Event`.
-   *
-   * El método extrae el valor del elemento de entrada, elimina caracteres no deseados
-   * utilizando una expresión regular (`REGEX_REEMPLAZAR`) y actualiza el ID de transacción
-   * VU en el store correspondiente (`solicitud32501Store`).
-   */
-  actualizarIdTransaccionVU(evento: Event): void {
+  actualizarNumeroValor(control: string, evento: Event): void {
     const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
     const VALOR = ELEMENTO_DE_ENTRADA.value.replace(REGEX_REEMPLAZAR, '');
-    this.solicitud32501Store.actualizarIdTransaccionVU(VALOR);
+    this.solicitud32501Store.establecerDatos({ [control]: VALOR });
   }
-
-  /**
-   * Actualiza el valor de "Nico" en el estado de la solicitud.
-   *
-   * @param evento - El evento que se dispara al interactuar con el elemento de entrada.
-   *                  Se espera que sea un evento de tipo `Event`.
-   *
-   * El método toma el valor del elemento de entrada asociado al evento,
-   * lo procesa eliminando caracteres no deseados según un patrón definido
-   * por `REGEX_REEMPLAZAR`, y luego actualiza el estado de la solicitud
-   * utilizando el valor procesado.
-   */
-  actualizarNico(evento: Event): void {
-    const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
-    const VALOR = ELEMENTO_DE_ENTRADA.value.replace(REGEX_REEMPLAZAR, '');
-    this.solicitud32501Store.actualizarNico(VALOR);
-  }
-
-  /**
-   * Actualiza el peso en la tienda de la solicitud 32501.
-   *
-   * @param evento - El evento que contiene el elemento de entrada HTML.
-   *                 Se espera que sea un evento de tipo `Event`.
-   *
-   * El valor del elemento de entrada se procesa eliminando caracteres
-   * no deseados utilizando una expresión regular antes de actualizar
-   * el peso en la tienda.
-   */
-  actualizarPeso(evento: Event): void {
-    const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
-    const VALOR = ELEMENTO_DE_ENTRADA.value.replace(REGEX_REEMPLAZAR, '');
-    this.solicitud32501Store.actualizarPeso(VALOR);
-  }
-
-  /**
-   * Actualiza el valor en USD en el estado de la solicitud.
-   *
-   * @param evento - El evento que contiene el valor ingresado por el usuario.
-   *                  Se espera que sea un evento de entrada (input).
-   *
-   * El método toma el valor del elemento de entrada del evento,
-   * elimina caracteres no deseados utilizando una expresión regular,
-   * y actualiza el valor en el store correspondiente.
-   */
-  actualizarValorUSD(evento: Event): void {
-    const ELEMENTO_DE_ENTRADA = evento.target as HTMLInputElement;
-    const VALOR = ELEMENTO_DE_ENTRADA.value.replace(REGEX_REEMPLAZAR, '');
-    this.solicitud32501Store.actualizarValorUSD(VALOR);
-  }
-
-  /**
-   * Actualiza la descripción de la mercancía en el estado de la solicitud.
-   *
-   * @param evento - El evento que contiene el valor ingresado en el campo de entrada.
-   */
-  actualizarDescripcionMercancia(evento: Event): void {
-    const VALOR = evento.target as HTMLInputElement;
-    this.solicitud32501Store.actualizarDescripcionMercancia(VALOR.value);
-  }
-
-  /**
-   * Actualiza el código postal en el estado de la solicitud.
-   *
-   * @param evento - El evento que contiene el valor del código postal ingresado por el usuario.
-   */
-  actualizarCodigoPostal(evento: Event): void {
-    const VALOR = evento.target as HTMLInputElement;
-    this.solicitud32501Store.actualizarCodigoPostal(VALOR.value);
-  }
-
-  /**
-   * Actualiza el número interior en el estado de la solicitud.
-   * @param evento Evento del input que contiene el nuevo valor.
-   */
-  actualizarNumeroInterior(evento: Event): void {
-    const VALOR = evento.target as HTMLInputElement;
-    this.solicitud32501Store.actualizarNumeroInterior(VALOR.value);
-  }
-
-  /**
-   * Actualiza el número exterior en el estado de la solicitud.
-   * @param evento Evento del input que contiene el nuevo valor.
-   */
-  actualizarNumeroExterior(evento: Event): void {
-    const VALOR = evento.target as HTMLInputElement;
-    this.solicitud32501Store.actualizarNumeroExterior(VALOR.value);
-  }
-
-  /**
-   * Actualiza la calle en el estado de la solicitud.
-   * @param evento Evento del input que contiene el nuevo valor.
-   */
-  actualizarCalle(evento: Event): void {
-    const VALOR = evento.target as HTMLInputElement;
-    this.solicitud32501Store.actualizarCalle(VALOR.value);
-  }
-
-  /**
-   * Actualiza el nombre comercial en el estado de la solicitud.
-   * @param evento Evento del input que contiene el nuevo valor.
-   */
-  actualizarNombreComercial(evento: Event): void {
-    const VALOR = evento.target as HTMLInputElement;
-    this.solicitud32501Store.actualizarNombreComercial(VALOR.value);
-  }
-
   /**
    * Muestra el modal para modificar una operación de importación.
    */
