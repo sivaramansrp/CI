@@ -41,7 +41,7 @@ export function createInitialState(): Tramites120601State {
     datosGeneralesSocios: {
       nacionalidad: 'No',
       persona: 'No',
-      cadenaDependencia: ''  
+      cadenaDependencia: ''
     },
     datosDeLaSolicitud: {
       tipoDeEmpresa: '',           
