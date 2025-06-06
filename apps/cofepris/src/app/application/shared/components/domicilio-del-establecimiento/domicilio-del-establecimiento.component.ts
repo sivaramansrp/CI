@@ -261,13 +261,11 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       this.domicilioForm.disable();
       this.claveScianForm.disable();
       this.DatosMercanciaForm.disable();
-    } else if (!this.esFormularioSoloLectura) {
+    } else {
       this.domicilioForm.enable();
       this.claveScianForm.enable();
       this.DatosMercanciaForm.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
-    }
+    } 
   }
 
   /**

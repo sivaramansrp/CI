@@ -82,7 +82,7 @@ this.consultaioQuery.selectConsultaioState$
           this.inicializarEstadoFormulario();
         })
       )
-      .subscribe()
+      .subscribe();
 this.inicializarEstadoFormulario();
   }
 
