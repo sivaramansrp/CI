@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
   PERSONA_MORAL_NACIONAL,
@@ -23,7 +23,7 @@ import { map, Subject, takeUntil } from 'rxjs';
   templateUrl: './paso-uno.component.html',
   styles: ``,
   })
-export class PasoUnoComponent implements AfterViewInit, OnInit {
+export class PasoUnoComponent implements AfterViewInit, OnInit,OnDestroy {
   /**
    * Catálogo de entidades federativas.
    */
@@ -73,7 +73,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit {
   constructor(private registro: RegistroService, private consultaQuery: ConsultaioQuery) {
     // El constructor se utiliza para la inyección de dependencias.
   }
-
+  
   /**
    * Método que se ejecuta al inicializar el componente.
    * Obtiene el catálogo de entidades federativas y lo procesa.
@@ -132,4 +132,13 @@ export class PasoUnoComponent implements AfterViewInit, OnInit {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Cancela las suscripciones y libera recursos.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
 }
