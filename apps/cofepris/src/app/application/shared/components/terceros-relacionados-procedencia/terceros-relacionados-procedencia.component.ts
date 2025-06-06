@@ -19,7 +19,9 @@ import { MANIFIESTOS_ALERT } from '../../constantes/permiso-importacion-biologic
 
 import { TercerosProcedenciaService } from '../../services/terceros-procedencia.service';
 
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
+
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * Componente que gestiona los terceros relacionados.
  * Utiliza formularios reactivos y componentes personalizados para mostrar datos.
@@ -81,9 +83,17 @@ export class TercerosRelacionadosProcedenciaComponent implements OnInit {
    * 
    * La lógica del constructor se puede agregar aquí si es necesario.
    */
-  constructor(private fb: FormBuilder,
+  constructor(private fb: FormBuilder, private consultaioQuery: ConsultaioQuery,
     private tercerosProcedenciaService: TercerosProcedenciaService) {
     //La lógica del constructor se puede agregar aquí si es necesario
+    this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroy$),
+          map((seccionState)=>{
+            this.esFormularioSoloLectura = seccionState.readonly; 
+          })
+        )
+        .subscribe()
   }
 
   /**
@@ -170,6 +180,4 @@ export class TercerosRelacionadosProcedenciaComponent implements OnInit {
     this.fabricanteRowData.push({ tbodyData: Object.values(TABLE_ROW) });
     this.cerrarProcedencia();
   }
-
-
 }

@@ -75,7 +75,7 @@ export class PermisoImportacionBiologicaComponent {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
+        this.wizardComponent?.siguiente();
       } else {
         this.wizardComponent.atras();
       }

@@ -41,7 +41,13 @@ export class Solocitud260402Service {
     this.tramite301Store.setRepresentanteRfc(DATOS.representanteRfc);
     this.tramite301Store.setRepresentanteNombre(DATOS.representanteNombre); 
     this.tramite301Store.setRepresentanteApellidos(DATOS.apellidoMaterno,DATOS.apellidoPaterno);
+    this.tramite301Store.setInformacionConfidencial(DATOS.informacionConfidencialRadio)
+    this.tramite301Store.setAduanaDeSalida(DATOS.aduanaDeSalida);
+    this.tramite301Store.setRegimenAlQueSeDestinaraLaMercancía(DATOS.regimenAlQueSeDestinaraLaMercancía);
+    this.tramite301Store.setNoDeLicenciaSanitariaObservaciones(DATOS.noDeLicenciaSanitariaObservaciones);
+    this.tramite301Store.setNoDeLicenciaSanitaria(DATOS.noDeLicenciaSanitaria);
   }
+
 
   
 /**

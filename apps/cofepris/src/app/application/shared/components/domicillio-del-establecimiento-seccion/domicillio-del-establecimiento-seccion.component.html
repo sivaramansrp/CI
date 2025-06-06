@@ -217,11 +217,13 @@
             id="message"
             class="form-control mb-5"
             placeholder=""
+            formControlName="noDeLicenciaSanitariaObservaciones"
+            (change)="onControlChange('noDeLicenciaSanitariaObservaciones')"
             rows="15"
           ></textarea>
         </div>
         <div>
-          <button type="button" class="btn btn-primary" [disabled]="isCheckboxChecked()" >Eliminar</button>
+          <button type="button" class="btn btn-primary" [disabled]="isCheckboxChecked()" [disabled]="formularioDeshabilitado ? true : false">Eliminar</button>
         </div>
       </div>
     </div>

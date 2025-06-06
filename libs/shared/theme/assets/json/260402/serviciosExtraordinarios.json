@@ -14,5 +14,10 @@
 "representanteRfc": "RFC000000XXX",
 "representanteNombre": "Nombre por defecto",
 "apellidoPaterno": "Apellido Paterno por defecto",
-"apellidoMaterno": "Apellido Materno por defecto"
+"apellidoMaterno": "Apellido Materno por defecto",
+"informacionConfidencialRadio":"Si",
+"aduanaDeSalida":"1",
+"regimenAlQueSeDestinaraLaMercancía":"1",
+"noDeLicenciaSanitariaObservaciones":"Observaciones por defecto",
+"noDeLicenciaSanitaria":"0000000000"
 }

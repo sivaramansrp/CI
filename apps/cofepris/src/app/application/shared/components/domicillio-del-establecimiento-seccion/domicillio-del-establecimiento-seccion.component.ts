@@ -182,6 +182,7 @@ export class DomicillioDelEstablecimientoSeccionComponent
       regimenAlQueSeDestinaraLaMercancía: [''],
       aduanaDeSalida: [''],
       avisoDeFuncionamiento: [false],
+      noDeLicenciaSanitariaObservaciones: [''],
     });
 
     this.scianForm = this.fb.group({

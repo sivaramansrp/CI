@@ -53,9 +53,9 @@ export class Datos260402Component implements OnInit {
       .pipe(
         takeUntil(this.destroyNotifier$))
         .subscribe((seccionState) => {
-          this.consultaState = seccionState;
+          this.consultaState = seccionState
           if (this.consultaState.update) {
-             this.guardarDatosFormulario();
+             this.guardarDatosFormulario()
              } else {
               this.esDatosRespuesta = true;
             }

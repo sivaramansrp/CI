@@ -208,6 +208,11 @@ export interface DatosDelSolicituteSeccionState {
  * * Descripción del SCIAN.
  */
   descripcionScian: string;
+  noDeLicenciaSanitaria:string;
+  noDeLicenciaSanitariaObservaciones:string;
+  regimenAlQueSeDestinaraLaMercancía:string;
+  aduanaDeSalida:string
+  
 }
 
 /**
@@ -257,6 +262,10 @@ export function createInitialState(): DatosDelSolicituteSeccionState {
           regimen:'',
           aduanasEntradas: '',
           aifaCheckbox: '',
+          noDeLicenciaSanitaria:'',
+          noDeLicenciaSanitariaObservaciones:'',
+          regimenAlQueSeDestinaraLaMercancía:'',
+          aduanaDeSalida:''
   };
 }
 
@@ -402,6 +411,18 @@ export class DatosDelSolicituteSeccionStateStore extends Store<DatosDelSolicitut
    */
   setNombreDelProfesionalResponsable(nombreDelProfesionalResponsable: string): void {
     this.update({ nombreDelProfesionalResponsable });
+  }
+  setNoDeLicenciaSanitaria(noDeLicenciaSanitaria: string): void {
+    this.update({ noDeLicenciaSanitaria });
+  }
+  setNoDeLicenciaSanitariaObservaciones(noDeLicenciaSanitariaObservaciones: string): void {
+    this.update({ noDeLicenciaSanitariaObservaciones });
+  }
+  setRegimenAlQueSeDestinaraLaMercancía(regimenAlQueSeDestinaraLaMercancía: string): void {
+    this.update({ regimenAlQueSeDestinaraLaMercancía });
+  }
+  setAduanaDeSalida(aduanaDeSalida: string): void {
+    this.update({ aduanaDeSalida });
   }
 
 }

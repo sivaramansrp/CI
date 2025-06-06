@@ -139,8 +139,7 @@ export class PagoDeDerechosEntradaComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-this.inicializarCertificadoFormulario()
+          this.esFormularioSoloLectura = seccionState.readonly
         })
       )
       .subscribe()
