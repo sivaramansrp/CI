@@ -1,7 +1,8 @@
-import { Catalogo, CatalogoSelectComponent, TableBodyData, TableComponent, TablePaginationComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Catalogo, CatalogoSelectComponent,TableBodyData, TableComponent, TablePaginationComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter,Input,OnDestroy, OnInit, Output } from '@angular/core';
+import {ConsultaioQuery,ConsultaioState} from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, distinctUntilChanged, takeUntil } from 'rxjs';
+import { Subject, distinctUntilChanged,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDelInmueble104Query } from '../../../../core/queries/tramite104.query';
 import { DatosDelInmueble104Store } from '../../../../core/estados/tramites/tramite104.store';
@@ -29,6 +30,14 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
    * Puede utilizarse para manejar el cierre del componente desde el padre.
    */
   @Output() cerrarClicado = new EventEmitter();
+
+    /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
+
 
   /**
    * **Formulario de Fomento a la Exportación**  
@@ -116,6 +125,12 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
    */
   itemsPerPage: number = 5;
 
+    /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+
 
   /**
    * **Constructor del componente**  
@@ -123,7 +138,7 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
    * - Inicializa el `FormBuilder` para la creación de formularios reactivos.
    */
 
-  constructor(private fb: FormBuilder, private datosDelInmueble104Store: DatosDelInmueble104Store, private datosDelInmueble104Query: DatosDelInmueble104Query) {
+  constructor(private fb: FormBuilder, private datosDelInmueble104Store: DatosDelInmueble104Store, private datosDelInmueble104Query: DatosDelInmueble104Query,private consultaioQuery: ConsultaioQuery,) {
     // Inicializa
   }
 
@@ -153,6 +168,7 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
     });
     this.cargarDatosGuardados(); // Carga los datos guardados en el formulario.
     this.escucharCambiosFormulario();
+    this.deshabilitarFormularios(); // Guarda los datos del formulario en el store.
   }
 
 
@@ -310,8 +326,6 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
     this.colapsable = !this.colapsable;
   }
 
-
-
   /**
    * Actualiza la paginación de la tabla de establecimientos.
    * Corta los datos de la tabla según la página actual y el número de elementos por página.
@@ -344,6 +358,23 @@ export class DatosDelInmuebleComponent implements OnInit, OnDestroy {
     this.updatePagination();
   }
 
+  /**
+   * Habilita o deshabilita los formularios según el estado de solo lectura.
+   * 
+   * Si `consultaState.readonly` es verdadero, deshabilita ambos formularios para que no puedan ser editados.
+   * Si es falso, los habilita para permitir la edición.
+   */
+  deshabilitarFormularios(): void {
+    if (this.consultaState?.readonly) {
+      // Deshabilita los formularios si el estado es solo lectura
+      this.fomentoExportacionForm.disable();
+      this.formularioDireccion.disable();
+    } else {
+      // Habilita los formularios si el estado permite edición
+      this.fomentoExportacionForm.enable();
+      this.formularioDireccion.enable();
+    }
+  }
 
   /**
    * **Limpia las suscripciones al destruir el componente**  
