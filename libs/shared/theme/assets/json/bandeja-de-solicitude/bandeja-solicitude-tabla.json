@@ -27,6 +27,15 @@
     "numeroDeProcedimiento": "110101"
   },
   {
+    "id": 31602,
+    "tipoDeTramite": "Consulta de Proceso 31602",
+    "fecha": "2021-10-01",
+    "fechaActualizacion": "2021-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "31602"
+  },
+  {
     "id": 16,
     "tipoDeTramite": "Antecesor",
     "fecha": "2023-10-01",

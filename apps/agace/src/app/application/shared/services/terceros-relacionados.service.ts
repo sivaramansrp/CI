@@ -2,6 +2,7 @@ import { Observable,catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { JSONResponse } from '@libs/shared/data-access-user/src';
+import { TercerosRelacionadosState, TercerosRelacionadosStore } from '../estados/stores/terceros-relacionados.store';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,10 @@ export class TercerosRelacionadosService {
    * 
    * @param http - Una instancia de `HttpClient` utilizada para realizar solicitudes HTTP.
    */
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private tercerosRelacionadosStore: TercerosRelacionadosStore
+  ) {
     // Constructor de la clase TercerosRelacionadosService
    }
 
@@ -41,5 +45,17 @@ export class TercerosRelacionadosService {
         return throwError(() => error);
       })
     );
+  }
+
+  getConsultaDatos(): Observable<TercerosRelacionadosState> {
+    return this.http.get<TercerosRelacionadosState>('./assets/json/31602/consulta-tercer.json').pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  }
+
+  actualizarEstadoFormulario(campo: string, valor: string | number | boolean): void {
+      this.tercerosRelacionadosStore.setDynamicFieldValue(campo, valor);
   }
 }

@@ -2,6 +2,7 @@ import { AGREGAR_MIEMBRO_TABLA, DATOS_COMUNES_TEXTOS, DATOS_COMUNES_TEXTOS_DOS, 
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputCheckComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosComunesState, DatosComunesStore } from '../../estados/stores/datos-comunes.store';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject,map, takeUntil } from 'rxjs';
@@ -154,6 +155,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * de los datos compartidos dentro del componente.
    */
   public solicitudState!: DatosComunesState;
+  public consultaState!: ConsultaioState;
 
 
   /**
@@ -170,9 +172,15 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     private modalService: BsModalService,
     private fb: FormBuilder,
     private datosComunesStore: DatosComunesStore,
-    private datosComunesQuery: DatosComunesQuery
+    private datosComunesQuery: DatosComunesQuery,
+    private consultaQuery: ConsultaioQuery
   ) {
-    // Constructor de la clase DatosComunesComponent
+        this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+          this.consultaState = seccionState;
+          if(this.consultaState.update) {
+            this.guardarDatosFormulario();
+          }
+        })).subscribe();
   }
 
   /**
@@ -385,6 +393,12 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof DatosComunesStore): void {
     const VALOR = form.get(campo)?.value;
     (this.datosComunesStore[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  public guardarDatosFormulario(): void {
+    this.datosComunesSvc.getConsultaDatosComunes().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
+      this.datosComunesSvc.actualizarEstadoFormulario(response);
+    })
   }
 
   /**

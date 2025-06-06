@@ -1,6 +1,7 @@
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { ENLACE_TABLA, EnlaceOperativo, PERSONAS_PARA,Personas } from '../../models/terceros-relacionados.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject,map,takeUntil } from 'rxjs';
@@ -93,6 +94,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    * Esta propiedad se utiliza para gestionar y rastrear el estado de los datos relacionados con terceros.
    */
   public importacionstate!: TercerosRelacionadosState;
+  public consultaState!: ConsultaioState;
 
   /**
    * Constructor del componente TercerosRelacionadosComponent.
@@ -108,9 +110,15 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
     private modalService: BsModalService,
     private tercerosRelacionadosSvc: TercerosRelacionadosService,
     private tercerosRelacionadosStore: TercerosRelacionadosStore,
-    private tercerosRelacionadosQuery: TercerosRelacionadosQuery
+    private tercerosRelacionadosQuery: TercerosRelacionadosQuery,
+    private consultaQuery: ConsultaioQuery
   ) {
-    //
+      this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+        this.consultaState = seccionState;
+        if(this.consultaState.update) {
+          this.guardarDatosFormulario();
+        }
+    })).subscribe();
   }
 
   /**
@@ -249,6 +257,14 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
       const DATO = { campo: campo, valor: VALOR };
       this.establecerCambioDeValor(DATO);
     }
+  }
+
+  public guardarDatosFormulario(): void {
+    this.tercerosRelacionadosSvc.getConsultaDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
+      Object.entries(response).forEach(([key, value]) => {
+          this.tercerosRelacionadosSvc.actualizarEstadoFormulario(key, value);
+      });
+    })
   }
 
   /**
