@@ -131,16 +131,32 @@ export class DomicilloComponent implements OnInit,OnDestroy {
    * private
    */
   private destroyed$ = new Subject<void>();
-selectedRowsEvent: any[] = []; // O usa IDs o índices según tu implementación
-selectedRows: any[] = []; // O usa IDs o índices según tu implementación
+  /**
+   * Lista de filas seleccionadas del componente tabla de NICO.
+   * Se utiliza para manejar la selección de filas en la tabla.
+   */
+  selectedRowsEvent: any[] = []; 
+ /*
+  * Lista de filas seleccionadas del componente tabla de mercancías.
+  * Se utiliza para manejar la selección de filas en la tabla de mercancías.
+  */
+ selectedRows: any[] = []; 
+/*
+  * Maneja el evento de cambio de selección en la tabla de NICO.
+  * @param selected Lista de filas seleccionadas.
+  */
 onSeleccionChangeEvent(selected: any[]) {
   this.selectedRowsEvent = selected;
 }
-// Recibe los seleccionados del componente tabla
+/** 
+ Recibe los seleccionados del componente tabla
+*/
 onSeleccionChange(selected: any[]) {
   this.selectedRows = selected;
 }
- // Elimina las filas seleccionadas
+ /**
+  *  Elimina las filas seleccionadas
+  *  */
 eliminarSeleccionados() {
   this.nicoTablaDatos = this.nicoTablaDatos.filter(
     (row) => !this.selectedRows.includes(row)
@@ -148,7 +164,9 @@ eliminarSeleccionados() {
   this.selectedRows = [];
 }
 
- // Elimina las filas seleccionadas
+ /**
+  * Elimina las filas seleccionadas
+  */
 eliminarMercanciaSeleccionados() {
   this.mercanciasTablaDatos = this.mercanciasTablaDatos.filter(
     (row) => !this.selectedRowsEvent.includes(row)

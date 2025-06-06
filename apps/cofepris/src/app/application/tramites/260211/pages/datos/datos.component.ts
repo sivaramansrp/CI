@@ -32,17 +32,29 @@ export class DatosComponent implements OnInit, OnDestroy {
   constructor( private consultaQuery: ConsultaioQuery,
      private sanitarioService: SanitarioService
   ){}
-  ngOnInit(): void {
-
-     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
-          this.consultaState = seccionState;
-      })).subscribe();
-    if(this.consultaState.update) {
-      this.guardarDatosFormulario();
-    } else {
-      this.esDatosRespuesta = true;
-    }
-  }
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   */
+ ngOnInit(): void {
+  this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.consultaState = seccionState;
+        if (this.consultaState.update) {
+          this.guardarDatosFormulario();
+        } else {
+          this.esDatosRespuesta = true;
+        }
+      })
+    )
+    .subscribe();
+}
+  /**
+   * Método que guarda los datos del formulario.
+   * Se suscribe al servicio sanitario para obtener los datos de la solicitud
+   * y actualiza el estado del formulario si hay respuesta.
+   */
   guardarDatosFormulario(): void {
     this.sanitarioService
       .getSolicitudData().pipe(

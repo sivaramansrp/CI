@@ -295,9 +295,11 @@ export class TercerosRelacionadoesComponent implements OnInit , OnDestroy{
     }  
     
   }
-
-inicializarFormulario(): void {
-this.initializeAgregarFabricanteFormGroup();
+/**
+ * Inicializa el formulario con los grupos de formularios para agregar fabricantes, destinatarios, proveedores y facturadores.
+ */
+ inicializarFormulario(): void {
+    this.initializeAgregarFabricanteFormGroup();
     this.initializeAgregarDestinatarioFormGroup();
     this.initializeAgregarProveedorFormGroup();
     this.initializeAgregarFacturadorFormGroup();
