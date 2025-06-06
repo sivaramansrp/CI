@@ -688,6 +688,8 @@ export class TransporteComponent implements OnInit, OnChanges {
       case LISTA_TIPO_TRANSPORTE[2].id: {
         // Aéreo
         const TRANSPORTE: TransporteDespacho = this.aereoForma.getRawValue();
+        TRANSPORTE.arribo_pendiente_aereo = TRANSPORTE.arribo_pendiente_aereo ? 'Sí' : 'No';
+        TRANSPORTE.guia_valida = TRANSPORTE.guia_valida ? 'Sí' : 'No';
         TRANSPORTE.observaciones = this.observaciones.value;
         TRANSPORTE.seleccionado = false;
 
