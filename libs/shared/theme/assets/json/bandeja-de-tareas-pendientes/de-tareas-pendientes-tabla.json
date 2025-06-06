@@ -9238,5 +9238,75 @@
     "departamento": "aga",
     "numeroDeProcedimiento": "104",
     "origin": "READ_PROCEDURE"
+  },
+  {
+    "folioTramite": "7482910564738291056473829",
+    "tipoDeTramite": "Solicitud de Proceso Interno",
+    "nombreDeLaTarea": "Evaluar solicitud",
+    "fechaDeAsignacion": "2023-10-01",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "cofepris",
+    "numeroDeProcedimiento": "260901",
+    "origin": "FLUJO_FUNCIONARIO_EVALUAR"
+  },
+  {
+    "folioTramite": "5619283746501928374650192",
+    "tipoDeTramite": "Consulta de Proceso",
+    "nombreDeLaTarea": "confirmar notificación",
+    "fechaDeAsignacion": "2023-10-02",
+    "estadoDeTramite": "Pendiente",
+    "departamento": "cofepris",
+    "numeroDeProcedimiento": "260901",
+    "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION"
+  },
+  {
+    "folioTramite": "9203847561829304756192837",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Atender requerimiento",
+    "fechaDeAsignacion": "2023-10-03",
+    "estadoDeTramite": "Completado",
+    "departamento": "cofepris",
+    "numeroDeProcedimiento": "260901",
+    "origin": "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO"
+  },
+  {
+    "folioTramite": "3748291056473829105647382",
+    "tipoDeTramite": "Solicitud de Proceso Interno",
+    "nombreDeLaTarea": "Authorizar solicitud",
+    "fechaDeAsignacion": "2023-10-04",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "cofepris",
+    "numeroDeProcedimiento": "260901",
+    "origin": "FLUJO_FUNCIONARIO_AUTORIZACION"
+  },
+  {
+    "folioTramite": "8573920461827364950283746",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "confirmar notificación de resolución",
+    "fechaDeAsignacion": "2023-10-05",
+    "estadoDeTramite": "Pendiente",
+    "departamento": "cofepris",
+    "numeroDeProcedimiento": "260901",
+    "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-RESOLUCION"
+  },
+  {
+    "folioTramite": "1938475629103847562938475",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Functionario verificar requerimiento",
+    "fechaDeAsignacion": "2023-10-06",
+    "estadoDeTramite": "Completado",
+    "departamento": "cofepris",
+    "numeroDeProcedimiento": "260901",
+    "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
+  },
+  {
+    "folioTramite": "4829301745628391047263815",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "cofepris",
+    "numeroDeProcedimiento": "260901",
+    "origin": "READ_PROCEDURE"
   }
 ]

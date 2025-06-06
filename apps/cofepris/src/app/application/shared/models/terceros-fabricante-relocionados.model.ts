@@ -39,3 +39,27 @@ export interface FabricanteRowData {
   telefono: string;
   correoElectronico: string;
 }
+
+export interface FraccionArancelariaProsec {
+    fraccionArancelariaProsec: number,
+    descripción: string
+}
+
+export interface FacricanteModel {
+  denominacionRazonSocial: string;
+  rfc: string;
+  curp: string;
+  telefono: string;
+  CorreoElectronico: string;
+  calle:string;
+  numeroExterior:string;
+  numeroInterior:string;
+  pais:string;
+  colonia:string;
+  municipioOAlcaldia:string;
+  localidad:string;
+  entidadFederativa:string;
+  estadoLocalidad:string;
+  codigoPostal:string;
+  coloniaoEquivalente: string; 
+}

@@ -11,7 +11,9 @@
       <div class="mt-5">
         <h5>Fabricante:</h5>
         <div class="table-responsive mt-5">
-          <ng-table [commonTableHeader]="tablaEncabezadoData" [commonTableBody]="fabricanteRowData"></ng-table>
+          <!-- <ng-table [commonTableHeader]="tablaEncabezadoData" [commonTableBody]="fabricanteRowData" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"></ng-table> -->
+         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="configuracionTabla" 
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"></app-tabla-dinamica>
         </div>
         <br />
   

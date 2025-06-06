@@ -1,15 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 
 import { AlertComponent, Catalogo, CatalogoSelectComponent, InputRadioComponent, REGEX_CURP, REGEX_RFC_FISICA, REGEX_RFC_MORAL, REGEX_TELEFONO, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DatosSeleccionados, FabricanteRowData } from '../../models/terceros-fabricante-relocionados.model';
+import { DatosSeleccionados, FacricanteModel } from '../../models/terceros-fabricante-relocionados.model';
 
-import { NACIONALIDAD_OPCIONES_DE_BOTON_DE_RADIO, PERSONA_OPCIONES_DE_BOTON_DE_RADIO, TERCEROS_TEXTO_DE_ALERTA } from '../../constantes/tereceros-relacionados-fab-seccion.enum';
+import { FABRICANTE_TABLE_CONFIG, NACIONALIDAD_OPCIONES_DE_BOTON_DE_RADIO, PERSONA_OPCIONES_DE_BOTON_DE_RADIO, TERCEROS_TEXTO_DE_ALERTA } from '../../constantes/tereceros-relacionados-fab-seccion.enum';
 import { ModalComponent } from '../modal/modal.component';
 
-import { Subject, takeUntil } from 'rxjs';
+import {Subject ,map, takeUntil } from 'rxjs';
 
 import { TercerosRelacionadosFebService } from '../../services/tereceros-relacionados-feb.service';
 
@@ -31,11 +32,19 @@ import { TramiteRelacionadaseStore } from '../../estados/stores/terceros-relacio
       ReactiveFormsModule,
       ModalComponent,
       CatalogoSelectComponent,
-      InputRadioComponent],
+      InputRadioComponent,
+    TablaDinamicaComponent],
   templateUrl: './terceros-relacionados-fab-seccion.component.html',
   styleUrl: './terceros-relacionados-fab-seccion.component.scss',
-})
+}) 
 export class TercerosRelacionadosFabSeccionComponent implements OnInit, OnDestroy {
+
+  tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  configuracionTabla: ConfiguracionColumna<FacricanteModel>[] =FABRICANTE_TABLE_CONFIG;
+
+
+
+
    /**
      * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
      */
@@ -283,7 +292,18 @@ public extranjero = false;
      * @description Se utiliza para validar y procesar los datos del facturador.
      */
     agregarFacturadorFormGroup!: FormGroup;
-  
+    
+  /**
+   * Subject para notificar la destrucción del componente.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  public esFormularioSoloLectura: boolean = false;
+
     /**
      * Constructor del componente.
      * Inyecta el FormBuilder, el store del trámite y el servicio de terceros.
@@ -295,9 +315,18 @@ public extranjero = false;
     constructor(
       private fb: FormBuilder,
      private tramiteStore: TramiteRelacionadaseStore,
-      private tercerosService: TercerosRelacionadosFebService
+      private tercerosService: TercerosRelacionadosFebService,
+        private consultaioQuery: ConsultaioQuery,
     ) {
-      //construtor
+       this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        //  this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     }
   
     /**
@@ -305,7 +334,7 @@ public extranjero = false;
      * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
      */
     ngOnInit(): void {
-      
+         //this.inicializarEstadoFormulario();
       this.tercerosService.getEncabezadoDeTabla()
         .pipe(takeUntil(this.destroy$)).subscribe((data:{ columns: string[] }) => {
         this.tablaEncabezadoData = data.columns;
