@@ -18,11 +18,15 @@
                     <solicitante [tabindex]="1"></solicitante>
                 }              
                 @case (2) {
+                    @if(esDatosRespuesta){
                     <cancelacion [tabindex]="2"></cancelacion>
+                    }
                 }
-                @case (3){ 
+                @case (3){
+                    @if(esDatosRespuesta){ 
                     <app-tramite-asociados
                     [configuracionTabla]="configuracionTabla" [tramiteAsociados]="tramiteAsociados"></app-tramite-asociados>
+                    }
                 } 
             }
         </ng-container>
