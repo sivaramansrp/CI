@@ -182,7 +182,7 @@ export class LibBandejaComponent<T> implements OnInit {
     }
     else if (ORIGIN === 'SUBSECUENTES') {
       this.router.navigate(['/subsecuentes']);
-    } else if(ORIGIN === 'READ_PROCEDURE_VERIFICAR_DICTAMEN') {
+    } else if(ORIGIN === 'FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION') {
       this.router.navigate([`/${this.tramiteData[0].department}/verificar-dictamen`]);
     }
   }

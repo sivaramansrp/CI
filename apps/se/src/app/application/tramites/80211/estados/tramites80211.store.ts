@@ -10,15 +10,6 @@ import { Plantas } from '../modelos/registro-expansion.model';
  * Contiene propiedades relacionadas con los datos del trámite, como información de pago, datos de vehículos, agentes y más.
  */
 export interface Tramites80211State {
-  /**
-   * RFC asociado al trámite.
-   */
-  rfc: string;
-
-  /**
-   * Estado seleccionado en el trámite.
-   */
-  estados: string;
 
   /**
    * Lista de identificadores de plantas disponibles.
@@ -37,14 +28,15 @@ export interface Tramites80211State {
 }
 
 /**
+ * @función
+ * @nombre createInitialState
+ * @descripción
  * Crea y devuelve el estado inicial para el trámite 80211.
  *
- * {Tramites80211State} El estado inicial del trámite.
+ * @retorna {Tramites80211State} El estado inicial del trámite.
  */
 export function createInitialState(): Tramites80211State {
   return {
-    rfc: '',
-    estados: '',
     plantasDisponibles: [],
     plantasSeleccionadas: [],
     showPlantas: false,
@@ -77,76 +69,16 @@ export class Tramite80211Store extends Store<Tramites80211State> {
 
   /**
    * @método
-   * @nombre setRFC
+   * @nombre establecerDatos
    * @descripción
-   * Actualiza el RFC en el estado global.
-   *
-   * @param rfc - RFC a establecer.
+   * Actualiza el estado con los valores proporcionados.
+   * 
+   * @param {Partial<Tramites80211State>} values - Valores parciales para actualizar el estado.
    */
-  public setRFC(rfc: string): void {
+  public establecerDatos(values: Partial<Tramites80211State>): void {
     this.update((state) => ({
       ...state,
-      rfc,
-    }));
-  }
-
-  /**
-   * @método
-   * @nombre setEstado
-   * @descripción
-   * Actualiza el estado seleccionado en el estado global.
-   *
-   * @param estados - Estado a establecer.
-   */
-  public setEstado(estados: string): void {
-    this.update((state) => ({
-      ...state,
-      estados,
-    }));
-  }
-
-  /**
-   * @método
-   * @nombre setShowPlantas
-   * @descripción
-   * Actualiza la visibilidad de las plantas en el estado global.
-   *
-   * @param values - Valor booleano que indica si se deben mostrar las plantas.
-   */
-  public setShowPlantas(values: boolean): void {
-    this.update((state) => ({
-      ...state,
-      showPlantas: values,
-    }));
-  }
-
-  /**
-   * @método
-   * @nombre setPlantasDisponibles
-   * @descripción
-   * Actualiza la lista de plantas disponibles en el estado global.
-   *
-   * @param values - Lista de identificadores de plantas disponibles.
-   */
-  public setPlantasDisponibles(plantasDisponibles: Plantas[]): void {
-    this.update((state) => ({
-      ...state,
-      plantasDisponibles: plantasDisponibles,
-    }));
-  }
-
-  /**
-   * @método
-   * @nombre setPlantasSeleccionada
-   * @descripción
-   * Actualiza la lista de plantas seleccionadas en el estado global.
-   *
-   * @param values - Lista de identificadores de plantas seleccionadas.
-   */
-  public setPlantasSeleccionada(plantasSeleccionadas: Plantas[]): void {
-    this.update((state) => ({
-      ...state,
-      plantasSeleccionadas: plantasSeleccionadas,
+      ...values,
     }));
   }
 }
