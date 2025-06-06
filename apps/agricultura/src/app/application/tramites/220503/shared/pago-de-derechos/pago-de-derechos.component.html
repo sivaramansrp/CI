@@ -14,6 +14,7 @@
         [layout]="'vertical'"
         formControlName="exentoPagoNo"
         (valueChange)="setExentoPagoNo($event)"
+    
       ></app-input-radio>
       </div>
       <div class="row">
@@ -22,7 +23,7 @@
             [catalogo]="justificacion.catalogos"
             [label]="justificacion.labelNombre"
             [placeholder]="justificacion.primerOpcion"
-            [isDisabled]="true"
+            [isDisabled]="esFormularioSoloLectura"
             formControlName="justificacion"
             (selectionChange)="selectJustificacionCatalogo($event)"
           ></app-catalogo-select>
@@ -68,7 +69,7 @@
             [catalogo]="banco.catalogos"
             [label]="banco.labelNombre"
             [placeholder]="banco.primerOpcion"
-            [isDisabled]="true"
+            [isDisabled]="esFormularioSoloLectura"
             formControlName="banco"
             (selectionChange)="selectBancoCatalogo($event)"
           ></app-catalogo-select>
