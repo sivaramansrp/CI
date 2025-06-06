@@ -8,8 +8,7 @@ import { AccionesTabla } from '../../../core/models/shared/components.model';
 import { AcuseComponent } from '../../components/acuse/acuse.component';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { TramiteFolioQueries } from '../../../core/queries/tramiteFolio.queries';
-
+import { TramiteFolioQueries } from '../../../core/queries/tramiteFolio.query';
 @Component({
   templateUrl: './acuse-page.component.html',
   styles: ``,
@@ -17,21 +16,46 @@ import { TramiteFolioQueries } from '../../../core/queries/tramiteFolio.queries'
   imports: [CommonModule, AcuseComponent],
 })
 export class AcusePageComponent implements OnInit {
+  /**
+   * @description Mensaje de alerta que se muestra al usuario en la página de acuse.
+   */
   txtAlerta!: string;
+
+  /**
+   * @description Subtítulo que se muestra en la página de acuse.
+   */
   subtitulo = TITULO_ACUSE;
+
+  /**
+   * @description Encabezado de la tabla de acuse que se muestra en la página.
+   */
   encabezadoTablaAcuse = ACUSE_SERVICIOS_EXTRAORDINARIOS.encabezadoTablaAcuse;
+
+  /**
+   * @description Acciones disponibles en la tabla de acuse.
+   */
   accionesTablaAcuse: AccionesTabla[] =
     ACUSE_SERVICIOS_EXTRAORDINARIOS.accionesTablaAcuse;
+
+  /**
+   * @description Datos que se muestran en la tabla de acuse.
+   */
   datosTablaAcuse = ACUSE_SERVICIOS_EXTRAORDINARIOS.datosTablaAcuse;
 
+  /**
+   * @description Folio del trámite que se muestra en la página de acuse.
+   */
   folio!: string;
+
+  /**
+   * @description URL de la aplicación, se utiliza para redirigir al usuario al acuse del trámite.
+   */
   url!: string;
 
-  constructor(private tramiteQueries: TramiteFolioQueries,
-    private router: Router,
-  ) {
-    // Lógica de inicialización si es necesario
-  }
+  constructor(
+    private tramiteQueries: TramiteFolioQueries,
+    private router: Router
+  ) {}
 
   /**
    * Método de ciclo de vida de Angular que se llama una vez que el componente ha sido inicializado.
@@ -42,10 +66,8 @@ export class AcusePageComponent implements OnInit {
   ngOnInit(): void {
     const URL_ACTUAL = this.router.url;
     this.url = URL_ACTUAL.split('/')[1];
- 
+
     this.folio = this.tramiteQueries.getTramite();
     this.txtAlerta = TXT_ALERTA_ACUSE(this.folio);
   }
-
-
 }

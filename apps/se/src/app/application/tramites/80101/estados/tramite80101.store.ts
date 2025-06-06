@@ -152,7 +152,7 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
     },
     obligacionesFiscales: {
       opinionPositiva: 'Si',
-      fechaExpedicion: '2025-03-15',
+      fechaExpedicion: '',
       aceptarObligacionFiscal: '',
     },
     formaModificaciones: {
@@ -160,9 +160,9 @@ export const INITIAL_AMPLIACION_SERVICIOS_STATE: Tramite80101State = {
       nombreDeNotaria: '',
       estado: '',
       nombreDeActa: '',
-      fechaDeActa: '2025-01-20',
+      fechaDeActa: '',
       rfc: '',
-      nombreDeRepresentante: 'Maria Lopez',
+      nombreDeRepresentante: '',
     },
     formaCertificacion: {
       certificada: 'No',

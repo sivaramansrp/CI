@@ -335,7 +335,14 @@ export class DatosMercanciaComponent implements OnInit {
       this.datosMercancia.get('umc')?.disable();
     }
   }
-    onCantidadUMTInput(event: Event): void {
+    /**
+   * Maneja el evento de entrada en el campo cantidadUMT, permitiendo solo números y limitando la longitud a 22 caracteres.
+   * 
+   * @method onCantidadUMTInput
+   * @param {Event} event - Evento de entrada del campo cantidadUMT.
+   * @returns {void}
+   */
+  onCantidadUMTInput(event: Event): void {
       const INPUT = event.target as HTMLInputElement;
       INPUT.value = INPUT.value.replace(REGEX_NUMEROS, '').slice(0, 22);
       this.datosMercancia.get('cantidadUMT')?.setValue(INPUT.value, { emitEvent: false });
