@@ -2,7 +2,7 @@
     (tipoEstadoSeleccionEvent)="tipoEstadoSeleccion($event)" (paisBloquEvent)="tipoSeleccion($event)"
     (setbuscarMercanciaEvent)="buscarrMercancia()" [tratadoAcuerdo]="(estados$ | async ) || []"
     [paisBloqu]="(pais$ | async) || []" [tableData]="(datos1$ | async) || []" (filaClics)="abrirModificarModal($event)"
-    [datosForm]="formCertificadoValues" [tablaSeleccionEvent]="tablaSeleccionEvent"
+    [datosForm]="formCertificadoValues" [esFormularioSoloLectura]="esFormularioSoloLectura" [tablaSeleccionEvent]="tablaSeleccionEvent"
     [guardarClicado]="(datosTabla$ | async) ||  []" (formaValida)="setFormValida($event)"></app-certificado-de-origen>
 
 

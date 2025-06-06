@@ -13,7 +13,7 @@ export interface TramiteFolioState {
  * Creación del estado inicial para el trámite
  * @returns TramiteFolioState
  */
-export function createInitialState(): TramiteFolioState {
+export function createInitialFolioTramiteState(): TramiteFolioState {
   return {
     idTramite: null,
     firma: null,
@@ -26,7 +26,7 @@ export function createInitialState(): TramiteFolioState {
 @StoreConfig({ name: 'tramite', resettable: true })
 export class TramiteFolioStore extends Store<TramiteFolioState> {
   constructor() {
-    super(createInitialState());
+    super(createInitialFolioTramiteState());
   }
 
   /**
