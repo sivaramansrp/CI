@@ -72,8 +72,8 @@
   {
     "id": 11,
     "tramite": 11105,
-    "linkDashboard": "/aga/retirada-de-la-autorizacion-de-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
-    "linkDepartment": "/pago/retirada-de-la-autorizacion-de-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
+    "linkDashboard": "/aga/retirada-de-la-autorizacion-de-donaciones/solicitud",
+    "linkDepartment": "/pago/retirada-de-la-autorizacion-de-donaciones/solicitud",
     "department": "aga"
   },
   {
@@ -1318,8 +1318,8 @@
   {
     "id": 189,
     "tramite": 11106,
-    "linkDashboard": "/aga/cancelacion-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
-    "linkDepartment": "/pago/cancelacion-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
+    "linkDashboard": "/aga/cancelacion-donaciones/solicitante",
+    "linkDepartment": "/pago/cancelacion-donaciones/solicitante",
     "department": "aga"
   },
   {
