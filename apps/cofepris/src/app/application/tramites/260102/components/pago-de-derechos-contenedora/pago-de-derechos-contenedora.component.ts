@@ -19,7 +19,21 @@ export class PagoDeDerechosContenedoraComponent {
    */
   @Input()
   formularioDeshabilitado: boolean = false;
+
+  /**
+   * @property {PagoDerechosFormState} pagoDerechos
+   * @description
+   * Contiene el estado del formulario de pago de derechos.
+   */
   public pagoDerechos: PagoDerechosFormState;
+
+  /**
+   * @constructor
+   * @param {Tramite260102Store} tramiteStore
+   * @description
+   * Crea una instancia del componente `PagoDeDerechosContenedoraComponent`.
+   * Inicializa el estado de pago de derechos obteniéndolo del store del trámite.
+   */
   constructor(public tramiteStore: Tramite260102Store) {
     this.pagoDerechos = this.tramiteStore.getValue().pagoDerechos;
   }
