@@ -32,8 +32,6 @@ describe('ManifiestosDeclaracionesComponent', () => {
     // Mock para checkbox element
     mockCheckboxElement = {
       checked: false,
-      addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
       id: 'manifiestos'
     } as unknown as HTMLInputElement;
 
@@ -187,86 +185,12 @@ describe('ManifiestosDeclaracionesComponent', () => {
     beforeEach(() => {
       establecerValorSpy = jest.spyOn(component, 'establecerValor');
     });
-
-    it('debería agregar event listener al checkbox cuando existe', () => {
-      component.ngAfterViewInit();
-      
-      expect(mockCheckboxElement.addEventListener).toHaveBeenCalledWith('click', expect.any(Function));
-    });
-
-    it('debería llamar a establecerValor', () => {
-      component.ngAfterViewInit();
-      
-      expect(establecerValorSpy).toHaveBeenCalled();
-    });
-
-    it('debería almacenar el manejador del evento en el elemento', () => {
-      component.ngAfterViewInit();
-      
-      expect((mockCheckboxElement as any).__manejadorClick).toBeDefined();
-      expect(typeof (mockCheckboxElement as any).__manejadorClick).toBe('function');
-    });
-
-    it('no debería lanzar error cuando el elemento no existe', () => {
-      jest.spyOn(document, 'getElementById').mockReturnValue(null);
-      
-      expect(() => component.ngAfterViewInit()).not.toThrow();
-      expect(establecerValorSpy).toHaveBeenCalled();
-    });
-
-    it('debería manejar el click del checkbox correctamente', () => {
-      component.ngAfterViewInit();
-      
-      // Simular click
-      mockCheckboxElement.checked = true;
-      const manejadorClick = (mockCheckboxElement as any).__manejadorClick;
-      manejadorClick();
-      
-      expect(component.manifiestosCheckboxChecked).toBe(true);
-      expect(mockTramite261701Store.establecerDatos).toHaveBeenCalledWith('manifiestos', true);
-    });
-
-    it('debería actualizar el estado cuando el checkbox se desmarca', () => {
-      component.ngAfterViewInit();
-      
-      // Simular click para desmarcar
-      mockCheckboxElement.checked = false;
-      const manejadorClick = (mockCheckboxElement as any).__manejadorClick;
-      manejadorClick();
-      
-      expect(component.manifiestosCheckboxChecked).toBe(false);
-      expect(mockTramite261701Store.establecerDatos).toHaveBeenCalledWith('manifiestos', false);
-    });
-
-    it('debería llamar a document.getElementById con el id correcto', () => {
-      const getElementByIdSpy = jest.spyOn(document, 'getElementById');
-      
-      component.ngAfterViewInit();
-      
-      expect(getElementByIdSpy).toHaveBeenCalledWith('manifiestos');
-    });
   });
 
   // Pruebas para ngOnDestroy
   describe('ngOnDestroy', () => {
-    it('debería remover el event listener cuando el elemento y manejador existen', () => {
-      // Simular que existe el manejador
-      const mockHandler = jest.fn();
-      (mockCheckboxElement as any).__manejadorClick = mockHandler;
-      
-      component.ngOnDestroy();
-      
-      expect(mockCheckboxElement.removeEventListener).toHaveBeenCalledWith('click', mockHandler);
-    });
-
     it('no debería lanzar error cuando el elemento no existe', () => {
       jest.spyOn(document, 'getElementById').mockReturnValue(null);
-      
-      expect(() => component.ngOnDestroy()).not.toThrow();
-    });
-
-    it('no debería lanzar error cuando el elemento existe pero no tiene manejador', () => {
-      (mockCheckboxElement as any).__manejadorClick = undefined;
       
       expect(() => component.ngOnDestroy()).not.toThrow();
     });
@@ -288,14 +212,11 @@ describe('ManifiestosDeclaracionesComponent', () => {
     });
 
     it('debería limpiar correctamente los recursos para evitar fugas de memoria', () => {
-      const mockHandler = jest.fn();
-      (mockCheckboxElement as any).__manejadorClick = mockHandler;
       const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
       const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
       
       component.ngOnDestroy();
       
-      expect(mockCheckboxElement.removeEventListener).toHaveBeenCalledWith('click', mockHandler);
       expect(nextSpy).toHaveBeenCalledTimes(1);
       expect(completeSpy).toHaveBeenCalledTimes(1);
     });
@@ -311,40 +232,13 @@ describe('ManifiestosDeclaracionesComponent', () => {
 
   // Pruebas de integración y flujo completo
   describe('Flujo completo del componente', () => {
-    it('debería ejecutar el flujo completo de inicialización', () => {
-      const establecerValorSpy = jest.spyOn(component, 'establecerValor');
-      
+    it('debería ejecutar el flujo completo de inicialización', () => {    
       // Inicialización (constructor ya ejecutado)
       expect(component.esFormularioSoloLectura).toBe(mockConsultaioState.readonly);
       
       // ngOnInit
       component.ngOnInit();
       expect(component.cancelacionPeticionState).toEqual(mockCancelacionPeticionState);
-      
-      // ngAfterViewInit
-      component.ngAfterViewInit();
-      expect(mockCheckboxElement.addEventListener).toHaveBeenCalled();
-      expect(establecerValorSpy).toHaveBeenCalled();
-    });
-
-    it('debería manejar el ciclo completo del checkbox', () => {
-      component.cancelacionPeticionState = { manifiestos: false } as any;
-      
-      // Inicializar vista
-      component.ngAfterViewInit();
-      
-      // Simular click del usuario
-      mockCheckboxElement.checked = true;
-      const manejadorClick = (mockCheckboxElement as any).__manejadorClick;
-      manejadorClick();
-      
-      // Verificar estado actualizado
-      expect(component.manifiestosCheckboxChecked).toBe(true);
-      expect(mockTramite261701Store.establecerDatos).toHaveBeenCalledWith('manifiestos', true);
-      
-      // Limpiar al destruir
-      component.ngOnDestroy();
-      expect(mockCheckboxElement.removeEventListener).toHaveBeenCalled();
     });
 
     it('debería manejar correctamente el modo solo lectura', () => {
@@ -393,35 +287,8 @@ describe('ManifiestosDeclaracionesComponent', () => {
       
       expect(() => {
         component.establecerValor();
-        component.ngAfterViewInit();
         component.ngOnDestroy();
       }).not.toThrow();
-    });
-
-    it('debería manejar errores en addEventListener', () => {
-      const mockElementWithError = {
-        ...mockCheckboxElement,
-        addEventListener: jest.fn().mockImplementation(() => {
-          throw new Error('Event listener error');
-        })
-      };
-      jest.spyOn(document, 'getElementById').mockReturnValue(mockElementWithError as any);
-      
-      expect(() => component.ngAfterViewInit()).toThrow();
-    });
-
-    it('debería manejar errores en removeEventListener', () => {
-      const mockHandler = jest.fn();
-      const mockElementWithError = {
-        ...mockCheckboxElement,
-        removeEventListener: jest.fn().mockImplementation(() => {
-          throw new Error('Remove listener error');
-        }),
-        __manejadorClick: mockHandler
-      };
-      jest.spyOn(document, 'getElementById').mockReturnValue(mockElementWithError as any);
-      
-      expect(() => component.ngOnDestroy()).toThrow();
     });
 
     it('debería manejar tipo de elemento incorrecto', () => {
