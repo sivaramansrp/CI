@@ -5,10 +5,10 @@ import {
   AnexoUnoEncabezado,
   RutaNombre,
 } from '../../models/nuevo-programa-industrial.model';
+import { Component, OnInit } from '@angular/core';
 import { ANEXO_UNO_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -32,7 +32,7 @@ import { Validators } from '@angular/forms';
   templateUrl: './anexo-uno.component.html',
   styleUrl: './anexo-uno.component.scss',
 })
-export class AnexoUnoComponent {
+export class AnexoUnoComponent implements OnInit {
   public anexoUnoAlerta = ANEXO_UNO_ALERTA;
   public anexoUnoFormGroup!: FormGroup;
   public anexoDosFormGroup!: FormGroup;
@@ -55,6 +55,12 @@ export class AnexoUnoComponent {
    * Lista de tabla del Anexo Dos
    */
   @Input() anexoDosTablaLista: AnexoDosEncabezado[] = [];
+
+  /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
+
   /**
    * Evento para devolver la llamada del Anexo Uno
    */
@@ -99,6 +105,18 @@ export class AnexoUnoComponent {
   constructor(private fb: FormBuilder) {
     this.crearFormularioAnexoUno();
     this.crearFormularioAnexoDos();
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Si el formulario está deshabilitado (`formularioDeshabilitado` es verdadero),
+   * deshabilita los grupos de formularios `anexoUnoFormGroup` y `anexoDosFormGroup`.
+   */
+  ngOnInit(): void {
+        if (this.formularioDeshabilitado) {
+      this.anexoUnoFormGroup.disable();
+      this.anexoDosFormGroup.disable();
+    }
   }
 
   /**

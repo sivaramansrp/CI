@@ -28,7 +28,7 @@ import { BitacoraModel } from '../../models/prosec-modificacion.model';
 
 import { TEXTO_ALERT } from '../../constantes/prosec-modificacion.enum';
 
-import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service.ts.service';
+import { ProsecModificacionServiceTsService } from '../../services/prosec-modificacion.service';
 /**
  * compo doc
  * @component Bitacora90305Component

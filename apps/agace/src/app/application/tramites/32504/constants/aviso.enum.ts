@@ -1,3 +1,11 @@
+import { Catalogo } from '@libs/shared/data-access-user/src';
+
+/**
+ * @constant
+ * @name DATOS_EMPRESA
+ * @description Configuración de los campos para los datos de la empresa IMMEX que transfiere y presenta el aviso.
+ * @type {Array<Object>}
+ */
 export const DATOS_EMPRESA = [
     {
         labelNombre: 'Número de programa IMMEX:',
@@ -33,6 +41,12 @@ export const DATOS_EMPRESA = [
     },
 ];
 
+/**
+ * @constant
+ * @name CARGO_TIPO
+ * @description Configuración para el tipo de carga (manual o masiva).
+ * @type {Array<Object>}
+ */
 export const CARGO_TIPO = [
     {
         labelNombre: 'Tipo de carga',
@@ -44,6 +58,12 @@ export const CARGO_TIPO = [
     },
 ];
 
+/**
+ * @constant
+ * @name DATOS_QUIEN_RECIBE
+ * @description Configuración de los campos para los datos de quien recibe las mercancías.
+ * @type {Array<Object>}
+ */
 export const DATOS_QUIEN_RECIBE = [
     {
         labelNombre: 'RFC:',
@@ -74,6 +94,12 @@ export const DATOS_QUIEN_RECIBE = [
     },
 ];
 
+/**
+ * @constant
+ * @name DATOS_DOMICILIO_LUGAR
+ * @description Configuración de los campos para el domicilio donde se llevará a cabo la submanufactura.
+ * @type {Array<Object>}
+ */
 export const DATOS_DOMICILIO_LUGAR = [
     {
         labelNombre: 'Nombre comercial:',
@@ -143,6 +169,12 @@ export const DATOS_DOMICILIO_LUGAR = [
     },
 ];
 
+/**
+ * @constant
+ * @name DATOS_MERCANCIA_SUBMANUFACTURA
+ * @description Configuración de los campos para los datos de la mercancía transferida para submanufactura.
+ * @type {Array<Object>}
+ */
 export const DATOS_MERCANCIA_SUBMANUFACTURA = [
     {
         labelNombre: 'Fracción arancelaria:',
@@ -196,6 +228,12 @@ export const DATOS_MERCANCIA_SUBMANUFACTURA = [
     },
 ];
 
+/**
+ * @constant
+ * @name TEXTOS
+ * @description Textos de ayuda e instrucciones para la carga de archivos y requisitos.
+ * @type {Object}
+ */
 export const TEXTOS = {
     INSTRUCCIONES: `
     <p>- El archivo no debe exceder los 1000 registros. Para descargar plantilla del archivo de excel de click</p>`,
@@ -204,6 +242,12 @@ export const TEXTOS = {
     CARGA_DE_ARCHIVO_DE_TEXTO_EXITOSO: `El formato del archivo es correcto. Se enviará un correo de notificación con el resultado.`,
 };
 
+/**
+ * @constant
+ * @name TEXTO_REQUISITOS
+ * @description Textos para los requisitos obligatorios y opcionales.
+ * @type {Object}
+ */
 export const TEXTO_REQUISITOS = {
     REQUISITOS_OBLIGATORIOS: 'Requisitos obligatorios',
     REQUISITOS_OPCIONALES: 'Requisitos opcionales',
@@ -213,6 +257,12 @@ export const TEXTO_REQUISITOS = {
   <p>- Si necesitas anexar más de un documento del mismo tipo selecciónalo de la lista y presiona "Agregar nuevo".</p>`,
 }
 
+/**
+ * @constant
+ * @name TEXTO_ANEXAR_REQUISITOS
+ * @description Textos para la sección de anexar documentos y requisitos.
+ * @type {Object}
+ */
 export const TEXTO_ANEXAR_REQUISITOS = {
     INIT_DOCUMENTO: `
     <p>- Si deseas adjuntar un nuevo documento, selecciona la opción --Adjuntar nuevo documento--y persiona el botón "Adjuntar documentos"</p>`,
@@ -223,3 +273,38 @@ export const TEXTO_ANEXAR_REQUISITOS = {
   <ul>No debe contener páginas en blanco</ul>
   `
 }
+
+/**
+ * @constant
+ * @name MES_CONFIG
+ * @description Catálogo de meses para la selección en formularios.
+ * @type {Catalogo[]}
+ */
+export const MES_CONFIG: Catalogo[] = [
+    { descripcion: 'Enero', id: 1 },
+    { descripcion: 'Febrero', id: 2 },
+    { descripcion: 'Marzo', id: 3 },
+    { descripcion: 'Abril', id: 4 },
+    { descripcion: 'Mayo', id: 5 },
+    { descripcion: 'Junio', id: 6 },
+    { descripcion: 'Julio', id: 7 },
+    { descripcion: 'Agosto', id: 8 },
+    { descripcion: 'Septiembre', id: 9 },
+    { descripcion: 'Octubre', id: 10 },
+    { descripcion: 'Noviembre', id: 11 },
+    { descripcion: 'Diciembre', id: 12 },
+];
+
+/**
+ * @constant
+ * @name ANIO_CONFIG
+ * @description Catálogo de años para la selección en formularios.
+ * @type {Catalogo[]}
+ */
+export const ANIO_CONFIG: Catalogo[] = [
+    { descripcion: '2023', id: 2023 },
+    { descripcion: '2024', id: 2024 },
+    { descripcion: '2025', id: 2025 },
+    { descripcion: '2026', id: 2026 },
+    { descripcion: '2027', id: 2027 },
+];

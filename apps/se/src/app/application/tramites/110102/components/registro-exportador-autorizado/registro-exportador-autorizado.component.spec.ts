@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { RegistroExportadorAutorizadoComponent } from './registro-exportador-autorizado.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { ExportadorAutorizadoService } from "@ng-mf/data-access-user";
@@ -8,6 +8,7 @@ import { of } from 'rxjs';
 
 describe('RegistroExportadorAutorizadoComponent', () => {
   let component: RegistroExportadorAutorizadoComponent;
+  let fixture: ComponentFixture<RegistroExportadorAutorizadoComponent>;
   let mockService: any;
   let mockStore: any;
   let mockQuery: any;
@@ -27,7 +28,7 @@ describe('RegistroExportadorAutorizadoComponent', () => {
     }) };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,RegistroExportadorAutorizadoComponent],
+      imports: [ReactiveFormsModule, RegistroExportadorAutorizadoComponent],
       providers: [
         FormBuilder,
         { provide: ExportadorAutorizadoService, useValue: mockService },
@@ -36,9 +37,9 @@ describe('RegistroExportadorAutorizadoComponent', () => {
       ]
     }).compileComponents();
 
-    const FIXTURE = TestBed.createComponent(RegistroExportadorAutorizadoComponent);
-    component = FIXTURE.componentInstance;
-    FIXTURE.detectChanges();
+    fixture = TestBed.createComponent(RegistroExportadorAutorizadoComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
   it('debe crear el componente', () => {
@@ -46,56 +47,56 @@ describe('RegistroExportadorAutorizadoComponent', () => {
   });
 
   it('ngOnInit debe inicializar el formulario y cargar opciones', () => {
-    expect(component.registroExportadorForm).toBeDefined();
+    expect(component.formularioRegistroExportador).toBeDefined();
     expect(mockService.getExportadorAutorizado).toHaveBeenCalled();
     expect(mockService.getExportadorAutorizadoJPN).toHaveBeenCalled();
-    expect(component.exportadorOptions).toEqual([{ label: 'A', value: 1 }]);
-    expect(component.exportadorOptionsJPN).toEqual([{ label: 'B', value: 2 }]);
-    expect(component.showDivExportador).toBe(true);
-    expect(component.showDivExportadorJPN).toBe(false);
+    expect(component.opcionesExportador).toEqual([{ label: 'A', value: 1 }]);
+    expect(component.opcionesExportadorJapon).toEqual([{ label: 'B', value: 2 }]);
+    expect(component.mostrarOpcionesExportador).toBe(true);
+    expect(component.mostrarOpcionesExportadorJapon).toBe(false);
   });
 
-  it('onSolicitaExportadorAutorizadoChange debe actualizar showDivExportador y llamar setValoresStore', () => {
+  it('alCambiarExportadorAutorizado debe actualizar mostrarOpcionesExportador y llamar establecerValoresEnEstado', () => {
     const EVENT = { target: { checked: true } } as any;
-    const SPY = jest.spyOn(component, 'setValoresStore');
-    component.onSolicitaExportadorAutorizadoChange(EVENT);
-    expect(component.showDivExportador).toBe(true);
-    expect(SPY).toHaveBeenCalledWith(component.registroExportadorForm, 'solicitaExportadorAutorizado');
+    const SPY = jest.spyOn(component, 'establecerValoresEnEstado');
+    component.alCambiarExportadorAutorizado(EVENT);
+    expect(component.mostrarOpcionesExportador).toBe(true);
+    expect(SPY).toHaveBeenCalledWith(component.formularioRegistroExportador, 'solicitaExportadorAutorizado');
   });
 
-  it('onSolicitaExportadorAutorizadoJPNChange debe actualizar showDivExportadorJPN y llamar setValoresStore', () => {
+  it('alCambiarExportadorAutorizadoJapon debe actualizar mostrarOpcionesExportadorJapon y llamar establecerValoresEnEstado', () => {
     const EVENT = { target: { checked: true } } as any;
-    const SPY = jest.spyOn(component, 'setValoresStore');
-    component.onSolicitaExportadorAutorizadoJPNChange(EVENT);
-    expect(component.showDivExportadorJPN).toBe(true);
-    expect(SPY).toHaveBeenCalledWith(component.registroExportadorForm, 'solicitaExportadorAutorizadoJPN');
+    const SPY = jest.spyOn(component, 'establecerValoresEnEstado');
+    component.alCambiarExportadorAutorizadoJapon(EVENT);
+    expect(component.mostrarOpcionesExportadorJapon).toBe(true);
+    expect(SPY).toHaveBeenCalledWith(component.formularioRegistroExportador, 'solicitaExportadorAutorizadoJPN');
   });
 
-  it('setValoresStore debe llamar a establecerDatos en el store', () => {
-    component.registroExportadorForm.get('condicionExportador')?.setValue('VALOR');
-    component.setValoresStore(component.registroExportadorForm, 'condicionExportador');
+  it('establecerValoresEnEstado debe llamar a establecerDatos en el store', () => {
+    component.formularioRegistroExportador.get('condicionExportador')?.setValue('VALOR');
+    component.establecerValoresEnEstado(component.formularioRegistroExportador, 'condicionExportador');
     expect(mockStore.establecerDatos).toHaveBeenCalledWith({ condicionExportador: 'VALOR' });
   });
 
-  it('getValorsStore debe actualizar el formulario con valores del store', () => {
-    component.registroExportadorForm.patchValue({
+  it('obtenerValoresDelEstado debe actualizar el formulario con valores del store', () => {
+    component.formularioRegistroExportador.patchValue({
       solicitaSeparacionContable: false,
       solicitaExportadorAutorizado: false,
       condicionExportador: '',
       solicitaExportadorAutorizadoJPN: false,
       condicionExportadorJPN: ''
     });
-    component.getValorsStore();
-    expect(component.registroExportadorForm.get('solicitaSeparacionContable')?.value).toBe(true);
-    expect(component.registroExportadorForm.get('solicitaExportadorAutorizado')?.value).toBe(true);
-    expect(component.registroExportadorForm.get('condicionExportador')?.value).toBe('COND');
-    expect(component.registroExportadorForm.get('solicitaExportadorAutorizadoJPN')?.value).toBe(false);
-    expect(component.registroExportadorForm.get('condicionExportadorJPN')?.value).toBe('CONDJPN');
+    component.obtenerValoresDelEstado();
+    expect(component.formularioRegistroExportador.get('solicitaSeparacionContable')?.value).toBe(true);
+    expect(component.formularioRegistroExportador.get('solicitaExportadorAutorizado')?.value).toBe(true);
+    expect(component.formularioRegistroExportador.get('condicionExportador')?.value).toBe('COND');
+    expect(component.formularioRegistroExportador.get('solicitaExportadorAutorizadoJPN')?.value).toBe(false);
+    expect(component.formularioRegistroExportador.get('condicionExportadorJPN')?.value).toBe('CONDJPN');
   });
 
-  it('ngOnDestroy debe completar el subject destroyed$', () => {
-    const SPY_NEXT = jest.spyOn((component as any).destroyed$, 'next');
-    const SPY_COMPLETE = jest.spyOn((component as any).destroyed$, 'complete');
+  it('ngOnDestroy debe completar el subject destruido$', () => {
+    const SPY_NEXT = jest.spyOn((component as any).destruido$, 'next');
+    const SPY_COMPLETE = jest.spyOn((component as any).destruido$, 'complete');
     component.ngOnDestroy();
     expect(SPY_NEXT).toHaveBeenCalled();
     expect(SPY_COMPLETE).toHaveBeenCalled();

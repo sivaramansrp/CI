@@ -3,6 +3,7 @@
         <div class="form-group">
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="sector" [label]="'Sector'" [required]="true" formControlName="sector" name="sector" 
+                [isDisabled]="esFormularioSoloLectura"
                 (change)="
                 setValoresStore(
                 sectoresYMercancias,

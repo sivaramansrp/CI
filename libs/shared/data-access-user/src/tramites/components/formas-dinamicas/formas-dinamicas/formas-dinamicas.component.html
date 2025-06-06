@@ -156,6 +156,7 @@
                             type="button" 
                             class="btn btn-primary" 
                             [value]="item.labelNombre" 
+                            [disabled]="item.desactivado || soloLectura"
                             (click)="alHacerClicEnElBoton(item)" 
                           />
                         </div>

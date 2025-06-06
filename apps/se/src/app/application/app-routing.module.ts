@@ -634,7 +634,7 @@ const ROUTES: Routes = [
       ).then((m) => m.ImportacionesAgropecuariasModule),
   },
   {
-    path: 'modificaciones-immex-prosec',
+    path: 'modificaciones-immex',
     loadChildren: () =>
       import('./tramites/80316/modificaciones-immex-prosec.module').then(
         (m) => m.ModificacionesImmexProsecModule
@@ -689,7 +689,13 @@ const ROUTES: Routes = [
         (m) => m.CertificadoOrigenRoutingModule
       ),
   },
-
+  {
+    path: 'certificado-origen',
+    loadChildren: () =>
+      import('./tramites/110217/certificado-origen.module').then(
+        (m) => m.CertificadoOrigenModule
+      ),
+  }
 ];
 
 @NgModule({

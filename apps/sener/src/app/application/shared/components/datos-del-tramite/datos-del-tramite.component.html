@@ -26,6 +26,7 @@
             [label]="inputFields[i].label"
             [placeholder]="inputFields[i].placeholder"
             [required]="inputFields[i].required"
+            [isDisabled]="esFormularioSoloLectura"
             [formControlName]="inputFields[i].controlName"
             (change)="setValoresStore(form, inputFields[i].controlName)"
           ></app-catalogo-select>

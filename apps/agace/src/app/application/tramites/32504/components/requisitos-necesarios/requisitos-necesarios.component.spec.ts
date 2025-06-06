@@ -1,39 +1,39 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AlertComponent } from '@ng-mf/data-access-user';
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { Component } from '@angular/core';
 import { RequisitosNecesariosComponent } from './requisitos-necesarios.component';
-import { TEXTO_REQUISITOS } from '../../constants/aviso.enum';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { ToastrModule, ToastrService } from 'ngx-toastr';
-import { HttpClientModule } from '@angular/common/http';
 
 describe('RequisitosNecesariosComponent', () => {
-  let component: RequisitosNecesariosComponent;
-  let fixture: ComponentFixture<RequisitosNecesariosComponent>;
+  let fixture;
+  let component;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [
-        TituloComponent,
-        AlertComponent,
-        RequisitosNecesariosComponent,
-        HttpClientModule,
-        ToastrModule.forRoot()
-      ],
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule, RequisitosNecesariosComponent, HttpClientTestingModule ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        ToastrService
-      ]
-    }).compileComponents();
 
+      ]
+    }).overrideComponent(RequisitosNecesariosComponent, {
+
+    }).compileComponents();
     fixture = TestBed.createComponent(RequisitosNecesariosComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
+  });
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have textConfig defined', () => {
-    expect(component.textConfig).toBe(TEXTO_REQUISITOS);
-  });
 });

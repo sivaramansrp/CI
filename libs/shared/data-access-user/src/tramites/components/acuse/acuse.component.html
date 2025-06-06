@@ -25,7 +25,7 @@
         <tbody>
           @for (row of datosTablaAcuse; track $index) {
           <tr>
-            @for (item of encabezadoTablaAcuse;  let i = $index; track $index) {
+            @for (item of encabezadoTablaAcuse; let i = $index; track $index) {
             <td>{{ row[item.key] }}</td>
             }
             <td class="center">

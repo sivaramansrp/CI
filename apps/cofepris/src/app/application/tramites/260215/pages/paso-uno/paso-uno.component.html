@@ -52,12 +52,19 @@
       <solicitante #Solicitante></solicitante>
       }
       @case (2) {
+         @if(esDatosRespuesta){
         <app-datos-de-la></app-datos-de-la>
-        } @case (3) {
+       }
+       } @case (3) {
+         @if(esDatosRespuesta){
       <app-terceros-relacionados></app-terceros-relacionados>
-      } @case (4) {
+     
+    }
+  } @case (4) {
+     @if(esDatosRespuesta){
       <app-pago-de-derechos></app-pago-de-derechos>
-      } }
+     }  
+    } }
     </ng-container>
   </div>
 </div>
