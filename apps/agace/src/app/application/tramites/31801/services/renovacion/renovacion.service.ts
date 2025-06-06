@@ -60,14 +60,7 @@ export class RenovacionService {
    * {Solicitud230902State} DATOS - Datos para actualizar el estado.
    */
   actualizarEstadoFormulario(DATOS: Renovacion31801State): void {
-    this.Tramite31801Store.setNumeroOficio(DATOS.numeroOficio ?? '');
-    this.Tramite31801Store.setFechaInicialInput(DATOS.fechaInicialInput ?? '');
-    this.Tramite31801Store.setFechaFinalInput(DATOS.fechaFinalInput ?? '');
-    this.Tramite31801Store.setFechaPago(DATOS.fechaPago ?? '');
-    this.Tramite31801Store.setMonedaNacional(DATOS.monedaNacional ?? null);
-    this.Tramite31801Store.setNumeroOperacion(DATOS.numeroOperacion ?? '');
-    this.Tramite31801Store.setLlavePago(DATOS.llavePago ?? '');
-    this.Tramite31801Store.setSeleccionadaManifiesto(DATOS.seleccionadaManifiesto);
+    this.Tramite31801Store.setTramite31801State(DATOS);
   }
 
   /**

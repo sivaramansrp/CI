@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormArray, FormControl } from '@angular/forms';
+import { FormArray, FormControl, FormGroup } from '@angular/forms';
 import { of } from 'rxjs';
 import { RenovacionComponent } from './renovacion.component';
 import { RenovacionService } from '../../services/renovacion/renovacion.service';
@@ -7,14 +7,13 @@ import { Tramite31801Store } from '../../../../estados/tramites/tramite31801.sto
 import { Tramite31801Query } from '../../../../estados/queries/tramite31801.query';
 import { RenovacionRespuesta, ManifiestosRespuesta } from '../../models/renovacion.model';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
-import { FormGroup } from '@angular/forms';
 
 describe('RenovacionComponent (pruebas en español)', () => {
   let component: RenovacionComponent;
   let fixture: ComponentFixture<RenovacionComponent>;
   let mockRenovacionService: jest.Mocked<RenovacionService>;
-  let mockTramite31801Store: jest.Mocked<Tramite31801Store>;
-  let mockTramite31801Query: jest.Mocked<Tramite31801Query>;
+  let mockTramite31801Store: any;
+  let mockTramite31801Query: any;
 
   beforeEach(async () => {
     mockRenovacionService = {
@@ -26,7 +25,8 @@ describe('RenovacionComponent (pruebas en español)', () => {
     mockTramite31801Store = {
       setSeleccionadaManifiesto: jest.fn(),
       setFechaPago: jest.fn(),
-    } as unknown as jest.Mocked<Tramite31801Store>;
+      setTramite31801State: jest.fn()
+    };
 
     mockTramite31801Query = {
       selectSeccionState$: of({
@@ -39,7 +39,7 @@ describe('RenovacionComponent (pruebas en español)', () => {
         llavePago: 'LLAVE999',
         seleccionadaManifiesto: [false, false]
       })
-    } as unknown as jest.Mocked<Tramite31801Query>;
+    };
 
     await TestBed.configureTestingModule({
       imports: [
@@ -99,21 +99,21 @@ describe('RenovacionComponent (pruebas en español)', () => {
     const eventoMock = { target: { checked: true } } as unknown as Event;
     component.onManifiestoCheckboxCambiar(eventoMock, 0);
     expect(component.seleccionadaManifiesto.controls[0].value).toBe(true);
-    expect(mockTramite31801Store.setSeleccionadaManifiesto).toHaveBeenCalledWith([true]);
+    expect(mockTramite31801Store.setTramite31801State).toHaveBeenCalledWith({ seleccionadaManifiesto: [true] });
   });
 
   it('debe actualizar la fecha de pago correctamente', () => {
     component.crearRenovacionForm();
     component.cambioFechaPago('2025-03-01');
     expect(component.renovacionForm.get('fechaPago')?.value).toBe('2025-03-01');
-    expect(mockTramite31801Store.setFechaPago).toHaveBeenCalledWith('2025-03-01');
+    expect(mockTramite31801Store.setTramite31801State).toHaveBeenCalledWith({ fechaPago: '2025-03-01' });
   });
 
-  it('debe llamar a setValoresStore con los parámetros correctos', () => {
-    const spy = jest.spyOn(component, 'setValoresStore');
+  it('debe llamar a setValorStore con los parámetros correctos', () => {
+    const spy = jest.spyOn(component, 'setValorStore');
     component.crearRenovacionForm();
     component.cambioFechaPago('2025-04-01');
-    expect(spy).toHaveBeenCalledWith(component.renovacionForm, 'fechaPago', 'setFechaPago');
+    expect(spy).toHaveBeenCalledWith(component.renovacionForm, 'fechaPago');
   });
 
   it('debe limpiar las suscripciones al destruir el componente', () => {
@@ -122,5 +122,11 @@ describe('RenovacionComponent (pruebas en español)', () => {
     component.ngOnDestroy();
     expect(spyNext).toHaveBeenCalled();
     expect(spyComplete).toHaveBeenCalled();
+  });
+
+  it('debe obtener el estado seleccionado del store', () => {
+    component.getValorStore();
+    expect(component.estadoSeleccionado).toBeDefined();
+    expect(component.estadoSeleccionado.numeroOficio).toBe('A123');
   });
 });

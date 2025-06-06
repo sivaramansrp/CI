@@ -78,7 +78,12 @@ export class RenovacionComponent implements OnInit, OnDestroy {
 
   /** Suscripción general para manejar y limpiar las suscripciones del componente. Se utiliza para evitar fugas de memoria. */
   private subscription: Subscription = new Subscription();
-
+  
+  /**
+   * Estado seleccionado del trámite 110218.
+   * Contiene los valores actuales almacenados en el estado global.
+   */
+  estadoSeleccionado!: Renovacion31801State;
   /**
    * Constructor del componente.
    * @param fb FormularioBuilder para crear formularios reactivos.
@@ -263,7 +268,7 @@ export class RenovacionComponent implements OnInit, OnDestroy {
   onManifiestoCheckboxCambiar(event: Event, index: number): void {
     const VALOR_ENTRADA = event.target as HTMLInputElement;
     this.seleccionadaManifiesto.controls[index].setValue(VALOR_ENTRADA.checked);
-    this.setValoresStore(this.renovacionForm, 'seleccionadaManifiesto', 'setSeleccionadaManifiesto');
+    this.setValorStore(this.renovacionForm, 'seleccionadaManifiesto');
   }
 
   /**
@@ -275,21 +280,32 @@ export class RenovacionComponent implements OnInit, OnDestroy {
     this.renovacionForm.patchValue({
       fechaPago: nuevo_fechaPago,
     });
-    this.setValoresStore(this.renovacionForm, 'fechaPago', 'setFechaPago');
+    this.setValorStore(this.renovacionForm, 'fechaPago');
   }
 
   /**
-   * Establece los valores en el store de tramite31801.
-   *
-   * @param {FormGroup} form - El formulario del cual se obtiene el valor.
-   * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
-   * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
-   * @returns {void}
+   * Obtiene el estado actual del trámite desde el store.
+   * Suscribe al observable del estado y actualiza la propiedad `estadoSeleccionado`.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31801Store): void {
-    const VALOR = form.get(campo)?.value;
-    (this.tramite31801Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  getValorStore(): void {
+    this.tramite31801Query.selectSeccionState$
+      .pipe(takeUntil(this.destruirNotificador$))
+      .subscribe((data) => {
+        this.estadoSeleccionado = data;
+      });
   }
+  
+  /**
+   * Actualiza un valor específico en el store del trámite.
+   * FormGroup - Formulario reactivo.
+   * control - Nombre del control cuyo valor se actualizará en el store.
+   */
+   setValorStore(FormGroup: FormGroup, control: string): void {
+    const VALOR = FormGroup.get(control)?.value;
+    this.tramite31801Store.setTramite31801State({
+      [control]: VALOR,
+    });
+   }
 
   /**
    * Se ejecuta al destruir el componente.
