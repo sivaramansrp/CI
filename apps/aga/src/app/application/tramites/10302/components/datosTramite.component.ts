@@ -377,6 +377,22 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.tramiteForm?.disable();
+    } 
+    else {
+      this.tramiteForm?.enable();
+      const campos = [
+        'razonSocial',
+        'calle',
+        'numeroExterior',
+        'numeroInterior',
+        'telefono',
+        'correoElectronico',
+        'codigoPostal',
+        'estado',
+        'colonia'
+      ];
+      const grupo = this.tramiteForm.get('exencionImpuestos');
+      campos.forEach(campo => grupo?.get(campo)?.disable());
     }
   }
 

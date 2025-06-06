@@ -89,29 +89,138 @@ export interface datosDelMercancia {
   datosDelMercancia: [];
 }
 
+/**
+ * Interfaz que representa la respuesta de una consulta general.
+ */
 export interface RespuestaConsulta {
+  /**
+   * Indica si la operación fue exitosa.
+   * @type {boolean}
+   */
   success: boolean;
+
+  /**
+   * Datos obtenidos de la consulta.
+   * @type {ConsultaDatos}
+   */
   datos: ConsultaDatos;
+
+  /**
+   * Mensaje de la respuesta.
+   * @type {string}
+   */
   message: string;
 }
 
+/**
+ * Interfaz que representa los datos generales obtenidos de una consulta.
+ */
 export interface ConsultaDatos {
-  organismoPublico: string
+  /**
+   * Nombre del organismo público relacionado.
+   * @type {string}
+   */
+  organismoPublico: string;
+
+  /**
+   * Uso específico de la mercancía o trámite.
+   * @type {string}
+   */
   usoEspecifico: string;
+
+  /**
+   * Lista de aduanas asociadas.
+   * @type {Catalogo[]}
+   */
   aduana: Catalogo[];
+
+  /**
+   * Lista de países asociados.
+   * @type {Catalogo[]}
+   */
   pais: Catalogo[];
+
+  /**
+   * RFC del solicitante.
+   * @type {string}
+   */
   rfc: string;
+
+  /**
+   * Número de programa IMMEX.
+   * @type {string}
+   */
   numeroProgramaImmex: string;
+
+  /**
+   * Razón social del solicitante.
+   * @type {string}
+   */  
   razonSocial: string;
+
+  /**
+   * Calle del domicilio.
+   * @type {string}
+   */
   calle: string;
+
+  /**
+   * Número exterior del domicilio.
+   * @type {string}
+   */
   numeroExterior: string;
+
+  /**
+   * Número interior del domicilio.
+   * @type {string}
+   */
   numeroInterior: string;
+
+  /**
+   * Correo electrónico principal.
+   * @type {string}
+   */
   correoElectronico: string;
+
+  /**
+   * Teléfono principal.
+   * @type {string}
+   */
   telefono: string;
+
+  /**
+   * Correo electrónico opcional.
+   * @type {string}
+   */
   correoElectronicoOpcional: string;
+
+  /**
+   * Teléfono opcional.
+   * @type {string}
+   */
   telefonoOpcional: string;
+
+  /**
+   * Código postal del domicilio.
+   * @type {string}
+   */
   codigoPostal: string;
+
+  /**
+   * Estado del domicilio.
+   * @type {string}
+   */
   estado: string;
+
+  /**
+   * Colonia del domicilio.
+   * @type {string}
+   */
   colonia: string;
+
+  /**
+   * Lista de datos relacionados con la mercancía.
+   * @type {Array<any>}
+   */
   datosDelMercancia: [];
 }

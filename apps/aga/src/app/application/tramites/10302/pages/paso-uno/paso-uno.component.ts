@@ -59,6 +59,10 @@ export class PasoUnoComponent implements AfterViewInit {
      private consultaioQuery: ConsultaioQuery, public tramite10302Store: Tramite10302Store,
     private exencionImpuestosService: ExencionImpuestosService) {}
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Configura el formulario, obtiene datos iniciales y suscribe al estado global.
+   */
   ngOnInit(): void {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -124,5 +128,14 @@ export class PasoUnoComponent implements AfterViewInit {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Se utiliza para limpiar las suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

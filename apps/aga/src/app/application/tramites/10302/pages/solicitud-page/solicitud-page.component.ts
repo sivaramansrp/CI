@@ -1,11 +1,10 @@
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, ConsultaioQuery, ConsultaioState, DatosPasos, ListaPasosWizard, PASOS, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, DatosPasos, ListaPasosWizard, PASOS, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PasoDosComponent } from '../paso-dos/paso-dos.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { map, Subject, takeUntil } from 'rxjs';
 
 /**
  * Texto de alerta para terceros.
@@ -65,30 +64,6 @@ export class SolicitudPageComponent {
    * Referencia al componente del asistente.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
-
-  /**
-   * @property {ConsultaioState} consultaDatos
-   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
-   */
-  consultaDatos!: ConsultaioState;
-
-  /**
-   * Sujeto para notificar la destrucción del componente.
-   */
-  public destroyNotifier$: Subject<void> = new Subject();
-
-  constructor(private consultaioQuery: ConsultaioQuery  ) { }
-
-  ngOnInit(): void {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.consultaDatos = seccionState;
-        })
-      )
-      .subscribe();
-  }
 
   /**
    * Datos de los pasos del asistente.
