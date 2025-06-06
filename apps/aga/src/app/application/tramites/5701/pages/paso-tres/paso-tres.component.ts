@@ -47,8 +47,15 @@ export class PasoTresComponent implements OnInit {
       this.tramiteFolioServices
         .generarFolio()
         .pipe(
-          tap((tramite) => {           
-            this.tramiteStore.establecerTramite(tramite.datos, FIRMA);
+          tap((tramite) => {   
+
+            //TO DO: Estas líneas serán eliminadas cuando se implemente el backend
+            // Aquí se simula la obtención de un número de trámite
+            // Genera un número aleatorio para el folio
+            const NUM_ALEATORIO = Math.floor(Math.random() * 90) + 10;    
+            const FOLIO_TRAMITE = `${tramite.datos}${NUM_ALEATORIO}`;   
+
+            this.tramiteStore.establecerTramite(FOLIO_TRAMITE, FIRMA);
             this.router.navigate([`${this.url}/acuse`]);
           }),
           catchError((_error) => {
