@@ -1,7 +1,7 @@
 /**
  * El RFC del solicitante y/o apoderado
  */
-export const RFC_QUERY = '{rfc}'
+export const RFC_QUERY = '{rfc}';
 /**
  * API para recuperar las patentes asociadas a un solicitante
  * @param RFC_QUERY El RFC del solicitante
@@ -19,18 +19,19 @@ export const API_GET_PATENTE_APODERADO = `patente/busca/apoderado?rfc=${RFC_QUER
 /**
  * La clave de la patente por la que se filtrará la información.
  */
-export const CLAVE_PATENTE_QUERY = '{clavePatente}'
+export const CLAVE_PATENTE_QUERY = '{clavePatente}';
 /**
  * El tipo de la patente por la que se filtrará la información.
  */
-export const TIPO_PATENTE_QUERY = '{tipoPatente}'
+export const TIPO_PATENTE_QUERY = '{tipoPatente}';
 /**
  * API para recuperar el catálogo de empresas
  * @param CLAVE_PATENTE_QUERY La clave de la pantente seleccionada por el usuario
  * @param TIPO_PATENTE_QUERY El tipo de patente seleccionada por el usuario
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/patente/swagger-ui/index.html#/Patente/consulta-lista-rfc-empresas-asociadas
  */
-export const API_GET_EMPRESA = 'patente/rfc/asociados/{CLAVE_PATENTE_QUERY}/{TIPO_PATENTE_QUERY}';
+export const API_GET_EMPRESA =
+  'patente/rfc/asociados/{CLAVE_PATENTE_QUERY}/{TIPO_PATENTE_QUERY}';
 /**
  * La clave del socio comercial por la que se filtrará la información.
  */
@@ -51,11 +52,11 @@ export const API_GET_INDUSTRIA_AUTOMOTRIZ = `programa-se/cert-automotriz/${RFC_Q
 /**
  * El número de gafete por el que se filtrará la información.
  */
-export const NUMERO_GAFETE_QUERY = '{numeroGafete}'
+export const NUMERO_GAFETE_QUERY = '{numeroGafete}';
 /**
  * El tipo de gafete por el que se filtrará la información.
  */
-export const TIPO_GAFETE_QUERY = '{tipoGafete}'
+export const TIPO_GAFETE_QUERY = '{tipoGafete}';
 /**
  * API que permite obtener información relacionada a los gafetes.
  * @param NUMERO_GAFETE_QUERY
@@ -81,12 +82,12 @@ export const API_CERTIFICACION = `programa-se/certificacion/${RFC_QUERY}`;
  * API que obtiene la información del contribuyente por RFC.
  * @param RFC_QUERY El RFC del contribuyente
  */
-export const API_GET_RFC_IDC = `idc/contribuyente/detalle/${RFC_QUERY}`
+export const API_GET_RFC_IDC = `idc/contribuyente/detalle/${RFC_QUERY}`;
 /**
  * API que valida si un RFC (Registro Federal de Contribuyentes) está certificado para la revisión de origen.
  * * @param RFC_QUERY El RFC del contribuyente
  */
-export const API_GET_RFC_ORIGEN = `certificacion/origen/valida/${RFC_QUERY}`;
+export const API_GET_RFC_ORIGEN = `catalogo/certificacion/origen/valida/${RFC_QUERY}`;
 /**
  * El tipo de trámite por el que se filtrará la información.
  */
@@ -117,3 +118,22 @@ export const API_GET_PARAMETRO_MONTO = `sat-t5701/parametro/monto`;
  * API para validar el pedimento
  */
 export const API_VALIDAR_PEDIMENTO = 'sat-t5701/pedimento/estado';
+
+/**
+ * Constante para la linea de captura que se utilizará en las consultas
+ */
+export const LINEA_CAPTURA_QUERY = '{lineaCaptura}';
+
+/**
+ * API para validar la línea de captura
+ * @param LINEA_CAPTURA_QUERY La línea de captura a validar
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/pago/swagger-ui/index.html#/Pago/pago_2
+ */
+export const API_GET_VALIDA_LINEA_CAPTURA = `pago/linea-captura/${LINEA_CAPTURA_QUERY}/usada`;
+
+/**
+ * API para validar si una línea de captura ha sido pagada
+ * @param LINEA_CAPTURA_QUERY La línea de captura a validar
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/pago/swagger-ui/index.html#/Pago/pago
+ */
+export const API_GET_VALIDA_LINEA_CAPTURA_PAGADA = `pago/valida/${LINEA_CAPTURA_QUERY}`;

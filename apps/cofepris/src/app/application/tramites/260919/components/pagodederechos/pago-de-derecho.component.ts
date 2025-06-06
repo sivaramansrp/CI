@@ -1,4 +1,3 @@
-
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -15,6 +14,11 @@ import { Solicitud260919Query } from '../../estados/tramites260919.query';
 import { Catalogo, InputFecha, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
+import {
+  REGEX_SOLO_DIGITOS,
+  REGEX_REEMPLAZAR,
+} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+
 /**
  * Componente para gestionar el pago de derechos en el trámite.
  */
@@ -98,12 +102,24 @@ public bancoData = BANCO_DATA;
   crearFormulario(): void {
     this.pagoDeDerechosForm = this.fb.group({
       pagoDeDerechos: this.fb.group({
-        clavedereferencia: [this.pagoDeDerechosState?.clavedereferencia, Validators.required],
-        cadenadeladependencia: [this.pagoDeDerechosState?.cadenadeladependencia, Validators.required],
-        banco: [this.pagoDeDerechosState?.banco, Validators.required],
-        llavedepago: [this.pagoDeDerechosState?.llavedepago, Validators.required],
-        fechadepago: [this.pagoDeDerechosState?.fechadepago, Validators.required],
-        importedepago: [this.pagoDeDerechosState?.importedepago, Validators.required],
+        clavedereferencia: [
+          this.pagoDeDerechosState?.clavedereferencia,
+          [Validators.required, Validators.pattern(REGEX_REEMPLAZAR)],
+        ],
+        cadenadeladependencia: [
+          this.pagoDeDerechosState?.cadenadeladependencia,
+          [Validators.pattern(REGEX_REEMPLAZAR)],
+        ],
+        banco: [this.pagoDeDerechosState?.banco],
+        llavedepago: [
+          this.pagoDeDerechosState?.llavedepago,
+          [Validators.pattern(REGEX_REEMPLAZAR)],
+        ],
+        fechadepago: [this.pagoDeDerechosState?.fechadepago],
+        importedepago: [
+          this.pagoDeDerechosState?.importedepago,
+          [Validators.pattern(REGEX_SOLO_DIGITOS)],
+        ],
       }),
     });
   }
@@ -112,17 +128,18 @@ public bancoData = BANCO_DATA;
  * Actualiza la fecha de pago en el store con el evento recibido.
  * @param evento Fecha seleccionada en formato de cadena.
  */
-seleccionarFechaInicio(evento: string): void {
+ seleccionarFechaInicio(evento: string): void {
   this.solicitud260919Store.setFechadePago(evento);
 }
-
   /**
    * Limpia los datos del formulario.
    */
   clearForm(): void {
-    const BANCO_VALUE = this.pagoDeDerechos.get('banco')?.value; // Preservar el valor del banco
     this.pagoDeDerechosForm.reset(); // Restablecer el formulario
-    this.pagoDeDerechos.get('banco')?.setValue(BANCO_VALUE); // Restaurar el valor del banco
+    this.pagoDeDerechosForm.get('pagoDeDerechos.fechadepago')?.setValue(null);
+    this.pagoDeDerechosForm.get('pagoDeDerechos.fechadepago')?.markAsPristine();
+    this.pagoDeDerechosForm.get('pagoDeDerechos.fechadepago')?.markAsUntouched();
+  this.solicitud260919Store.setFechadePago('');
   }
 
   /**

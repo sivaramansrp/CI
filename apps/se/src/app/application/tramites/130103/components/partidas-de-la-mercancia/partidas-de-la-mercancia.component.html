@@ -8,7 +8,7 @@
         </div>
         <div class="row">
             <formas-dinamicas [forma]="ninoFormGroup" [formularioDatos]="partidasDeLaMercanciaFormData"
-            [estado]="importacionstate" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+            [estado]="importacionstate" [soloLectura]="consultaState.readonly" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
         </div>
         <div class="row mt-5">
             <div class="col-md-8"></div>
@@ -17,12 +17,14 @@
                 <button
                 class="btn btn-danger me-2"
                 type="button"
+                [disabled]="consultaState.readonly"
                 (click)="cargarArchivo()"
                 >
                 Cargar archivo
                 </button>
                 <button
                 class="btn btn-primary ms-2"
+                [disabled]="consultaState.readonly"
                 (click)="agregar()"
             >
                 Agregar
@@ -35,8 +37,14 @@
         </div>
         <div class="row">
             <h6>Partidas:</h6>
-            <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"  [configuracionTabla]="encabezadoDeTabla"
-                [datos]="datosTabla"   (listaDeFilaSeleccionada)="onPartidasSeleccion($event)"></app-tabla-dinamica>
+            <app-tabla-dinamica
+              [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+              [configuracionTabla]="encabezadoDeTabla"
+              [datos]="datosTabla"
+              [disableSeleccionTablaCheckBox]="consultaState.readonly"
+              [desactivarEmitirEvento]="!consultaState.readonly"
+              (listaDeFilaSeleccionada)="onPartidasSeleccion($event)">
+            </app-tabla-dinamica>
         </div>
         <div class="row mt-5">
             <div class="col-md-6 d-flex justify-content-between">
@@ -63,8 +71,8 @@
         </div>
         <div class="row mt-5 text-end">
             <div>
-                <button type="button" class="btn btn-danger me-2 btn-space" >Eliminar partida</button>
-                <button type="button" class="btn btn-primary btn-space" (click)="abrirModalEditar()">Modificar partida mercancía</button>
+                <button type="button" class="btn btn-danger me-2 btn-space" [disabled]="consultaState.readonly" (click)="eliminar()">Eliminar partida</button>
+                <button type="button" class="btn btn-primary btn-space" [disabled]="consultaState.readonly" (click)="abrirModalEditar()">Modificar partida mercancía</button>
             </div>
         </div>
     </form>
