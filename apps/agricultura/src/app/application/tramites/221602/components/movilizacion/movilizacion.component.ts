@@ -4,6 +4,7 @@ import { Component, OnDestroy,OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud221602State, Tramite221602Store } from '../../../../estados/tramites/tramite221602.store';
 import { Subject,map,takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite221602Query } from '../../../../estados/queries/tramite221602.query';
 import realizar from '@libs/shared/theme/assets/json/221602/realizar.json';
 
@@ -63,7 +64,9 @@ import realizar from '@libs/shared/theme/assets/json/221602/realizar.json';
  * @method setValoresStore() - Método para actualizar el store del trámite con los valores del formulario.
  */
 export class MovilizacionComponent implements OnInit, OnDestroy {
- 
+ /** Indica si el formulario debe mostrarse en modo solo lectura.  
+ *  Controla la habilitación o deshabilitación de los campos. */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Lista de opciones de medio de transporte obtenidas de un catálogo.
    */
@@ -99,19 +102,59 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite221602Store: Tramite221602Store,
-    private tramite221602Query: Tramite221602Query
+    private tramite221602Query: Tramite221602Query,
+  private consultaioQuery: ConsultaioQuery,         
   ) { 
-    // Constructor que inyecta las dependencias necesarias
-  }
-
-  /**
+       this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        
+          this.inicializarCertificadoFormulario();
+        })
+      )
+      .subscribe()
+    }
+ /**
    * Método que se ejecuta cuando el componente es inicializado.
    * 
    * Inicializa el formulario reactivo con los valores actuales de la solicitud.
    */
   ngOnInit(): void {
-    this.inicializarFormulario();
+    this.inicializarCertificadoFormulario();
   }
+  /**
+   * Método para inicializar el formulario reactivo con los datos de la solicitud.
+   * 
+   * Este método configura los campos del formulario con los valores actuales del estado de la solicitud
+   * y aplica las validaciones necesarias. También deshabilita ciertos campos y establece valores predeterminados.
+   */
+  inicializarCertificadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+     this.inicializarFormulario()
+    }  
+  }
+     /**
+   * @comdoc
+   * Guarda los datos del formulario de combinación requerida.
+   * 
+   * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
+   * - Si el formulario es de solo lectura, lo deshabilita.
+   * - Si no es de solo lectura, lo habilita.
+   * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.MedioForm.disable();
+      } else {
+        this.MedioForm.enable();        
+      }
+  }
+ 
 
   /**
    * Inicializa el formulario reactivo con los valores actuales de la solicitud.
