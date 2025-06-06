@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, ConsultaioStore, SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ProgramaACancelarService } from '../../services/programACancelar.service';
 
@@ -76,7 +76,7 @@ export class DatosComponent implements OnInit, OnDestroy {
    * Al inicializar el componente, se establece la consulta inicial en el store de consultas
    * con los parámetros correspondientes al trámite 120204.
    */
-  constructor(private consultaQuery: ConsultaioQuery, private consultaStore: ConsultaioStore, private programaService: ProgramaACancelarService) {
+  constructor(private consultaQuery: ConsultaioQuery, private programaService: ProgramaACancelarService) {
   }
 
   /**
