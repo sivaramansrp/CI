@@ -15,24 +15,6 @@
   text-align: center;
 }
 
-.alert {
-  padding: 1rem;
-  margin-bottom: 1rem;
-  border-radius: 4px;
-  
-  &.alert-success {
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-    color: #155724;
-  }
-  
-  &.alert-danger {
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-    color: #721c24;
-  }
-}
-
 .form-section {
   background-color: #f8f9fa;
   border: 1px solid #dee2e6;
@@ -43,7 +25,7 @@
   h3 {
     color: #2c3e50;
     margin-bottom: 1.5rem;
-    font-size: 1.25rem;
+    //font-size: 1.25rem;
   }
 }
 
@@ -53,7 +35,7 @@
   label {
     margin-bottom: 0.5rem;
     color: #495057;
-    font-weight: 500;
+    //font-weight: 500;
   }
 
   .form-control {
@@ -108,18 +90,18 @@
   }
 }
 
-.btn-outline-primary {
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    padding: 10px 20px;
-    background-color: #f8f9fa;
-    color: #6c757d;
-    font-size: 16px;
-  }
+// .btn-outline-primary {
+//     border: 1px solid #ccc;
+//     border-radius: 20px;
+//     padding: 10px 20px;
+//     background-color: #f8f9fa;
+//     color: #6c757d;
+//     font-size: 16px;
+//   }
   
-  .btn-outline-primary:hover, .btn-outline-primary:hover:disabled {
-    background-color: #e2e6ea;
-  }
+//   .btn-outline-primary:hover, .btn-outline-primary:hover:disabled {
+//     background-color: #e2e6ea;
+//   }
 
   .radio-button {
     border-radius: 4px;
@@ -130,41 +112,41 @@
         border-color: #9F803C;
     }
 
-button {
-  border: none;
-  cursor: pointer;
-  transition: all 0.3s ease;
+// button {
+//   border: none;
+//   cursor: pointer;
+//   transition: all 0.3s ease;
 
-  &.btn-salir {
-    background-color: #6c757d;
-    color: white;
+//   &.btn-salir {
+//     background-color: #6c757d;
+//     color: white;
 
-    &:hover {
-      background-color: #5a6268;
-    }
-  }
+//     &:hover {
+//       background-color: #5a6268;
+//     }
+//   }
 
-  &.btn-recuperar {
-    color: white;
+//   &.btn-recuperar {
+//     color: white;
 
-    &:hover:not(:disabled) {
-      cursor: auto;
-    }
+//     &:hover:not(:disabled) {
+//       cursor: auto;
+//     }
 
-    &:disabled {
-      cursor: not-allowed;
-    }
-  }
-}
+//     &:disabled {
+//       cursor: not-allowed;
+//     }
+//   }
+// }
 
 @media (max-width: 768px) {
   .container {
     padding: 1rem;
   }
 
-  .form-section {
-    padding: 1rem;
-  }
+//   .form-section {
+//     padding: 1rem;
+//   }
 
   .radio-group {
     flex-direction: column;

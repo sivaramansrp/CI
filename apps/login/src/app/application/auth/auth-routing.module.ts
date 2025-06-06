@@ -4,6 +4,7 @@ import { CambioContrasenaComponent } from './cambio-contrasena/cambio-contrasena
 import { ConsultaCapturistaPrivadoComponent } from './consulta-capturista-privado/consulta-capturista-privado.component';
 import { ConsultaPersonaNotificacionesComponent } from './consulta-persona-notificaciones/consulta-persona-notificaciones.component';
 import { FirmaPageComponent } from '@libs/shared/data-access-user/src';
+import { MantenimientoCuentaComponent } from './mantenimiento-cuenta/mantenimiento-cuenta.component';
 import { NgModule } from '@angular/core';
 import { RegistroCapturistaPrivadoComponent } from './registro-capturista-privado/registro-capturista-privado.component';
 import { RegistroPersonaNotificacionesComponent } from './registro-persona-notificaciones/registro-persona-notificaciones.component';
@@ -36,6 +37,10 @@ export const ROUTES_AUTH: Routes = [
   {
     path: 'consulta-capturista',
     component: ConsultaCapturistaPrivadoComponent
+  },
+  {
+    path: 'mantenimiento-cuenta',
+    component: MantenimientoCuentaComponent
   },
 
 ];
