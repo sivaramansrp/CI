@@ -573,7 +573,15 @@
     "departamento": "SE",
     "numeroDeProcedimiento": "130106"
   },
-    {
+   {
+    "folioTramite": "0100001000320251005999999",
+    "tipoDeTramite": "Permiso sanitario de importación de medicamentos destinados a pruebas de laboratorio",
+    "dependencia": "COFEPRIS ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260210"
+  },
+  {
     "folioTramite": "0215523965732296454156770",
     "tipoDeTramite": "Solicitud de Proceso Interno",
     "nombreDeLaTarea": "Evaluar solicitud",
