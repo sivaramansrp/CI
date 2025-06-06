@@ -1,9 +1,9 @@
+import { Component, OnDestroy } from '@angular/core';
 import {
   FirmaElectronicaComponent,
   TramiteFolioService,
 } from '@ng-mf/data-access-user';
-import { catchError, map, Subscription } from 'rxjs';
-import { Component } from '@angular/core';
+import { Subscription, catchError, map } from 'rxjs';
 import { Router } from '@angular/router';
 import { TramiteStore } from '../../../../estados/tramite.store';
 /**
@@ -16,7 +16,7 @@ import { TramiteStore } from '../../../../estados/tramite.store';
   standalone: true,
   imports: [FirmaElectronicaComponent],
 })
-export class PasoTresComponent {
+export class PasoTresComponent implements OnDestroy {
    /**
    * Suscripción para obtener el trámite.
    */

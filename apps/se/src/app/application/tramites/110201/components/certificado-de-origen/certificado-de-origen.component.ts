@@ -29,11 +29,11 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import {
   Solicitud110201State,
   Tramite110201Store,
 } from '../../state/Tramite110201.store';
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
 import { RegistroService } from '../../services/registro.service';
@@ -499,7 +499,7 @@ optionsTipoFactura!: Catalogo[];
    * Además, actualiza los catálogos necesarios llamando a los métodos `getTratado`, `getPais`, `getUMC`, `getUnidadMedida` y `getTipoFactura`.
    */
   buscarMercancias() {
-    if (this.registroForm.get('validacionForm.tratado')?.value == 0) {
+    if (this.registroForm.get('validacionForm.tratado')?.value === 0) {
       this.hayMercanciasDisponibles = false;
     } else {
       this.hayMercanciasDisponibles = true;

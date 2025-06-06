@@ -1,9 +1,9 @@
 import { ColumnasTabla, SeleccionadasTabla } from '../models/registro.model';
 import { ENVIRONMENT, JSONResponse, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Observable, catchError, throwError } from 'rxjs';
+import { Solicitud110201State, Tramite110201Store } from '../state/Tramite110201.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Solicitud110201State, Tramite110201Store } from '../state/Tramite110201.store';
 
 /**
  * Servicio para gestionar las solicitudes relacionadas con los catálogos y datos del trámite 110201.

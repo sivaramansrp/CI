@@ -1,19 +1,19 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import {
   DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
   PERSONA_MORAL_NACIONAL,
 } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { ConsultaioQuery, ConsultaioState, FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import {
   SharedModule,
   SolicitanteComponent,
 } from '@libs/shared/data-access-user/src';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CertificadoDeOrigenComponent } from '../../components/certificado-de-origen/certificado-de-origen.component';
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos_certificado.component';
 import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
 import { RegistroService } from '../../services/registro.service';
-import { map, Subject, takeUntil } from 'rxjs';
 
 /**
  * Componente que representa el primer paso del trámite.
@@ -114,7 +114,6 @@ export class PasoUnoComponent implements AfterViewInit, OnInit,OnDestroy {
       )
       .subscribe((resp) => {
         if (resp) {
-          console.log('Paso-Uno',resp);
           this.esDatosRespuesta = true;
           this.registro.actualizarEstadoFormulario(resp);
         }

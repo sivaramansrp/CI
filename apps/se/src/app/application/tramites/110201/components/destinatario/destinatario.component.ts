@@ -13,11 +13,11 @@ import {
   ReactiveFormsModule,
   Validators
 } from '@angular/forms';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import {
   Solicitud110201State,
   Tramite110201Store,
 } from '../../state/Tramite110201.store';
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { RegistroService } from '../../services/registro.service';
@@ -117,7 +117,6 @@ option!: Catalogo[];
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          debugger
           this.consultaDatos = seccionState;
           this.soloLectura = this.consultaDatos.readonly;
           this.inicializarEstadoFormulario();
@@ -154,8 +153,6 @@ option!: Catalogo[];
       )
       .subscribe((resp) => {
         if (resp) {
-          console.log('Paso-Uno',resp);
-          // this.esDatosRespuesta = true;
           this.registroService.actualizarEstadoFormulario(resp);
         }
       });
