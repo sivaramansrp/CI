@@ -16,10 +16,13 @@ import { CapturarColumns, FABRICANTE_TABLE_COLUMNS } from '../../modelos/fabrica
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DESTINATARIO_TABLE_COLUMNS, DestinatarioCapturarColumns } from '../../modelos/destinatario-datos.model';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 
+import { Tramites260912State } from '../../estados/tramite-260912.store';
+
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TEXTOS } from '../../enums/terceros-relacionados.enum';
 import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
 
@@ -63,7 +66,16 @@ import { TercerosRelacionadosService } from '../../services/terceros-relacionado
   styleUrl: './terceros-relacionados.component.scss',
 })
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
- 
+ /**
+   * Estado actual de la solicitud proveniente del store.
+   */
+  public solicitudState!: Tramites260912State;
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
+
  /**
   * @property {typeof TEXTOS} TEXTOS
   * @description Constantes de texto utilizadas en el componente para mostrar etiquetas,
@@ -131,9 +143,22 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   * @param {TercerosRelacionadosService} fabricanteService - Servicio para obtener datos
   * relacionados con terceros relacionados. Proporciona métodos para comunicarse con el
   * backend y obtener información de fabricantes y destinatarios.
+  * @param {ConsultaioQuery} consultaioQuery - Consulta para acceder al estado de la aplicación
+  * y obtener información relacionada con la solicitud actual. Permite acceder a datos
   */
- constructor(private fb: FormBuilder, private fabricanteService: TercerosRelacionadosService) {
-   //
+
+
+ constructor(private fb: FormBuilder, private fabricanteService: TercerosRelacionadosService,
+   public consultaioQuery: ConsultaioQuery,
+ ) {
+   this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
  }
 
  /**

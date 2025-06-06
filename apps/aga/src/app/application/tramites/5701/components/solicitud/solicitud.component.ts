@@ -2,18 +2,30 @@ import {
   ADV_LIMPIA_CAMPOS,
   CONFIGURACION_ENCABEZADO_TABLA_PAGOS,
   EMPRESAS_CERTIFICADAS,
+  ESTATUS_PAGADO,
   ID_NAME_DD,
   ID_NAME_LDA,
+  LABEL_CROSSLIST,
   LABEL_DESPACHO_DD,
   LABEL_DESPACHO_LDA,
   MSG_ADUANA_PEDIMENTO,
+  MSG_ALERTA_ELIMINAR_ELEMENTO,
+  MSG_CAMBIO_TIPO_SOLICITUD,
+  MSG_ELIMINA_ELEMENTO,
+  MSG_ERROR_NO_INFORMACION,
   MSJ_ERROR_FECHA,
   MSJ_ERROR_LINEA_CAPTURA,
   MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
+  MSJ_LINEA_CAPTURA_NO_PAGADA,
+  MSJ_LINEA_CAPTURA_USADA,
   PATENTES_ID,
   SIN_ITEMS,
   SIN_VALOR,
+  TEXTO_ACEPTAR,
+  TEXTO_CANCELAR,
+  TITULO_MODAL_AVISO,
   TRANSPORTE,
+  UN_DIA,
   VEHICULO,
 } from '../../../../core/enums/5701/tramite5701.enum';
 import {
@@ -21,10 +33,12 @@ import {
   AduanaService,
   Catalogo,
   CatalogoPaises,
+  CrossListLable,
   DatosAgregarFormulario,
   FechasService,
   FormulariosService,
   ICatalogo,
+  MENSAJE_ALERTA_NO_FECHAS,
   Notificacion,
   PROGRAMA_FOMENTO,
   PROGRAMA_IMMEX,
@@ -49,6 +63,16 @@ import {
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
 import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormControl,
+  FormGroup,
+  ValidationErrors,
+  ValidatorFn,
+  Validators,
+} from '@angular/forms';
+import {
   Component,
   Input,
   OnChanges,
@@ -59,11 +83,14 @@ import {
 import {
   DatosComponentePedimento,
   Pedimento,
+  ResponsablesDespacho,
 } from '../../../../core/models/5701/tramite5701.model';
 import {
   EMPTY,
   Observable,
   Subject,
+  catchError,
+  defaultIfEmpty,
   delay,
   first,
   map,
@@ -71,14 +98,8 @@ import {
   switchMap,
   takeUntil,
   tap,
+  throwError,
 } from 'rxjs';
-import {
-  FormArray,
-  FormBuilder,
-  FormControl,
-  FormGroup,
-  Validators,
-} from '@angular/forms';
 import {
   Solicitud5701State,
   Tramite5701Store,
@@ -102,6 +123,7 @@ import { SocioComercialService } from '../../../../core/services/5701/socio-come
 import { TITULO_MODAL_ERROR } from '../../../../core/enums/5701/tramite5701.enum';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { UsuarioState } from '@libs/shared/data-access-user/src/core/estados/usuario.store';
+import { ValidaLineaCapturaService } from '../../../../core/services/5701/pago/valida-linea-captura.service';
 import { ValidaLineaPagoService } from '../../../../core/services/5701/pago/valida-linea-pago.service';
 
 //TODO: Estas importaciones deben eliminarse una vez que se obtengan las patentes y los rfcs de la consulta del api.
@@ -296,7 +318,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * @descripcion Notificación para mostrar mensajes al usuario.
    */
-  public nuevaNotificacion!: Notificacion;
+  public nuevaNotificacion!: Notificacion | null;
 
   /**
    * Bandera para saber el tipo de persona del usuario.
@@ -335,6 +357,26 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   public datosTablaPagos: LineaCaptura[] = [];
 
+  /**
+   * @description Almacena los montos a pagar en la solicitud.
+   */
+  montoPagadoLineas: number = 0;
+
+  /**
+   * @description Mensaje de alerta que se muestra cuando no se han seleccionado fechas, en el crosslist.
+   */
+  readonly MENSAJE_ALERTA_CROSSLIST = MENSAJE_ALERTA_NO_FECHAS;
+
+  /**
+   * @description Label del crosslist de fechas
+   */
+  readonly LABEL_CROSSLIST_FECHAS: CrossListLable = LABEL_CROSSLIST;
+
+  /**
+   *@description Alamcena las lineas de capturas seleccionadas por el usuario en la tabla.
+   */
+  lineaCapturaSeleccionados: LineaCaptura[] = [];
+
   //TODO: Estas variables se van a eliminar
   /**
    * Arrelgo de patentes de la empresa
@@ -370,6 +412,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     private readonly certificacionOrigenService: CertificacionOrigenService,
     private readonly certificacionOeaService: CertificacionOeaService,
     private readonly validaLineaPagoService: ValidaLineaPagoService,
+    private readonly validaLineaCapturaService: ValidaLineaCapturaService,
     private readonly parametroMontoService: ParametroMontoService
   ) {}
 
@@ -412,7 +455,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     //
     this.obtenerPatente();
 
-    this.obtenerMontoAPagar();
+    this.calcularMontoTotal();
     this.verificarDatosExistentesStore();
   }
 
@@ -493,8 +536,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    *
    * @returns {FormGroup} El grupo de formulario 'pedimento'.
    */
-  get pedimento(): FormGroup {
-    return this.FormSolicitud.get('pedimento') as FormGroup;
+  get pedimento(): FormArray {
+    return this.FormSolicitud.get('pedimento') as FormArray;
   }
 
   /**
@@ -504,6 +547,15 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   get personasResponsablesDespacho(): FormArray {
     return this.FormSolicitud.get('personasResponsablesDespacho') as FormArray;
+  }
+
+  /**
+   * Obtiene el array del formulario 'lineasCaptura' del formulario principal 'FormSolicitud'.
+   *
+   * @returns {FormArray} El array de formulario 'lineasCaptura'.
+   */
+  get lineasCaptura(): FormArray {
+    return this.pagoCaptura.get('lineasCaptura') as FormArray;
   }
 
   /**
@@ -550,6 +602,22 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   get fechasSeleccionadas(): FormArray {
     return this.datosServicio.get('fechasSeleccionadas') as FormArray;
+  }
+
+  /**
+   * Valida que el FormArray tenga al menos un elemento.
+   * @param min {number} - El número mínimo de elementos que debe tener el FormArray.
+   * @returns {ValidatorFn} - Una función de validador que verifica la longitud del FormArray.
+   */
+  static minLengthArray(min: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      if (control instanceof FormArray && control.length < min) {
+        return {
+          minLengthArray: { requiredLength: min, actualLength: control.length },
+        };
+      }
+      return null;
+    };
   }
 
   /**
@@ -819,17 +887,14 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       }),
 
       datosServicio: this.fb.group({
-        fechaInicio: [
-          this.solicitudState?.fechaInicio,
-          [Validators.required, ValidacionesFormularioService.validaFechaNoHoy],
-        ],
+        fechaInicio: [this.solicitudState?.fechaInicio, [Validators.required]],
         fechaFinal: [
           this.solicitudState?.fechaFinal,
           [Validators.required, ValidacionesFormularioService.validaFechaNoHoy],
         ],
         horaInicio: [this.solicitudState?.horaInicio, Validators.required],
         horaFinal: [this.solicitudState?.horaFinal, Validators.required],
-        fechasSeleccionadas: this.fb.array([]),
+        fechasSeleccionadas: this.fb.array([], Validators.required),
       }),
 
       despacho: this.fb.group({
@@ -874,7 +939,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
       pedimento: this.fb.array([]),
 
-      personasResponsablesDespacho: this.fb.array([]),
+      personasResponsablesDespacho: this.fb.array([], Validators.required),
 
       vehiculo: this.fb.group({
         tipoTransporte: [this.solicitudState?.tipoTransporte],
@@ -890,11 +955,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         montoAPagar: [
           { value: this.solicitudState?.montoPagar, disabled: true },
         ],
-        lineaCaptura: [
-          this.solicitudState?.lineaCaptura,
-          [Validators.required],
-        ],
-        monto: [this.solicitudState.monto, [Validators.required]],
+        lineaCaptura: [this.solicitudState?.lineaCaptura],
+        monto: [this.solicitudState.monto],
+        lineasCaptura: this.fb.array([], Validators.required),
       }),
     });
     this.despacho.get('idSeccionDespacho')?.disable();
@@ -907,8 +970,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {Function} Una función que toma un `FormGroup` y devuelve un objeto con una clave booleana indicando si el intervalo es inválido, o `null` si el intervalo es válido.
    */
   fechaIntervaloValidator(): void {
-    const FECHA_INICIO = new Date(this.datosServicio.get('fechaInicio')?.value);
-    const FECHA_FINAL = new Date(this.datosServicio.get('fechaFinal')?.value);
+    const FECHA_INICIO_STR = this.datosServicio.get('fechaInicio')?.value;
+    const FECHA_FINAL_STR = this.datosServicio.get('fechaFinal')?.value;
+
+    const FECHA_INICIO = new Date(`${FECHA_INICIO_STR}T00:00:00`);
+    const FECHA_FINAL = new Date(`${FECHA_FINAL_STR}T00:00:00`);
     const HORA_INICIO = this.datosServicio.get('horaInicio')?.value;
     const HORA_FINAL = this.datosServicio.get('horaFinal')?.value;
     const INTERVALO_DIAS = SolicitudComponent.getIntervaloDias(
@@ -929,8 +995,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         parseInt(HORA_FINAL.split(':')[0], 10),
         parseInt(HORA_FINAL.split(':')[1], 10)
       );
+
       const DIFERENCIA_EN_TIEMPO =
         FECHA_FINAL.getTime() - FECHA_INICIO.getTime();
+
       const DIFERENCIA_EN_HORAS = DIFERENCIA_EN_TIEMPO / (1000 * 3600);
 
       if (DIFERENCIA_EN_TIEMPO <= 0) {
@@ -947,20 +1015,14 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       }
 
       const DIFERENCIA_EN_DIAS = DIFERENCIA_EN_TIEMPO / (1000 * 3600 * 24);
+
       if (
         (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.SEMANAL &&
           DIFERENCIA_EN_DIAS > 7) ||
         (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.MENSUAL &&
           DIFERENCIA_EN_DIAS > 30)
       ) {
-        const FECHA_FINAL_CONTROL = this.datosServicio.get('fechaFinal');
-        if (FECHA_FINAL_CONTROL) {
-          FECHA_FINAL_CONTROL.setErrors({ invalidIntervalo: true });
-        }
-      }
-
-      if (DIFERENCIA_EN_TIEMPO < 0) {
-        this.datosServicio.setErrors({ endDateBeforeStartDate: true });
+        this.datosServicio.setErrors({ invalidIntervalo: true });
       }
     }
   }
@@ -1022,10 +1084,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             return EMPTY;
           }),
           tap((idcResponse) => {
-            if (idcResponse.datos?.nombre) {
-              this.datosImportadorExportador
-                .get('nombre')
-                ?.setValue(idcResponse.datos?.nombre);
+            const NOMBRE = idcResponse.datos?.nombre
+              ? idcResponse.datos?.nombre
+              : idcResponse.datos?.razon_social;
+            if (NOMBRE) {
+              this.datosImportadorExportador.get('nombre')?.setValue(NOMBRE);
               this.getCertificaciones(RFC_IMP_EXP);
             }
           })
@@ -1059,22 +1122,29 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} Esta función no retorna ningún valor.
    */
   tipoSolicitudSeleccion(): void {
-    const TIPO_SOLICITUD = parseInt(
+    // Se obtiene el valor del tipo de solicitud seleccionado y se agrega la descripción correspondiente al formulario.
+    const TIPO_SOLICITUD_VALUE = parseInt(
       this.FormSolicitud.get('tipoSolicitud')?.value,
       10
     );
 
     const SOLICITUD_DESRIPCION = this.tiposSolicitud.find(
-      (tipo) => tipo.id === TIPO_SOLICITUD
+      (tipo) => tipo.id === TIPO_SOLICITUD_VALUE
     )?.descripcion;
     this.FormSolicitud.get('descripcionTipoSolicitud')?.setValue(
       SOLICITUD_DESRIPCION
     );
 
-    this.tipoSolicitudSeleccionada = parseInt(
-      this.FormSolicitud.get('tipoSolicitud')?.value,
-      10
-    );
+    this.tipoSolicitudSeleccionada = TIPO_SOLICITUD_VALUE;
+
+    if (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL) {
+      this.pedimento.setValidators([Validators.required]);
+      this.pedimento.setValidators([SolicitudComponent.minLengthArray(1)]);
+      this.pedimento.updateValueAndValidity();
+    } else {
+      this.pedimento.clearValidators();
+      this.pedimento.updateValueAndValidity();
+    }
 
     this.setValoresStore(
       this.FormSolicitud,
@@ -1086,6 +1156,22 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       'descripcionTipoSolicitud',
       'setDescripcionTipoSolicitud'
     );
+
+    const FORMA_MODIFICADA = Object.keys(this.FormSolicitud.controls).some(
+      (key) => {
+        if (key !== 'tipoSolicitud' && key !== 'descripcionTipoSolicitud') {
+          return (
+            this.FormSolicitud.controls[key].dirty ||
+            this.FormSolicitud.controls[key].touched
+          );
+        }
+        return false;
+      }
+    );
+
+    if (FORMA_MODIFICADA) {
+      this.limpiarFormulario();
+    }
   }
 
   /**
@@ -1238,6 +1324,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   changeFechaFinal(): void {
     this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
+    if (
+      this.datosServicio.get('fechaFinal')?.dirty &&
+      this.datosServicio.get('fechaFinal')?.touched
+    ) {
+      // eslint-disable-next-line no-unused-expressions
+      this.datosServicio.hasError('endDateBeforeStartDate') &&
+        this.limpiarFechasHoras();
+      this.rangoFechas();
+    }
+
     this.setValoresStore(this.datosServicio, 'fechaFinal', 'setFechaFinal');
   }
 
@@ -1252,7 +1348,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.fechaIntervaloValidator();
     this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
 
-    if (this.datosServicio.hasError('endDateBeforeStartDate')) {
+    if (this.fechaInicioPasadaFechaFinalError()) {
+      this.limpiarFechasHoras();
+      return;
+    }
+
+    if (
+      this.datosServicio.hasError('endDateBeforeStartDate') ||
+      this.datosServicio.hasError('invalidIntervalo')
+    ) {
+      this.limpiarFechasHoras();
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
@@ -1266,9 +1371,24 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
+    this.calcularRangoFechas();
+  }
+
+  /**
+   * Calcula el rango de días entre las fechas y horas seleccionadas,
+   * actualiza el valor de mostrarRangoFechas y colapsable,
+   * y establece los valores correspondientes en el store.
+   * @returns
+   */
+  calcularRangoFechas(): void {
+    this.rangoFechas();
     if (this.tipoSolicitudSeleccionada !== TIPO_SOLICITUD.INDIVIDUAL) {
-      this.rangoFechas();
       this.mostrarRangoFechas = true;
+    } else {
+      this.mostrarRangoFechas = false;
+      this.fechasSeleccionadas?.clear();
+
+      this.fechasSeleccionadas.push(new FormControl(this.selectRangoDias[0]));
     }
   }
 
@@ -1289,6 +1409,43 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       HORA_FINAL
     );
     this.colapsable = true;
+  }
+
+  /**
+   * Método que limpia el formulario de las fechas y horas.
+   */
+  limpiarFechasHoras(): void {
+    this.datosServicio.get('horaInicio')?.setValue('');
+    this.datosServicio.get('horaInicio')?.markAsUntouched();
+    this.datosServicio.get('fechaInicio')?.setValue('');
+    this.datosServicio.get('fechaInicio')?.markAsUntouched();
+    this.datosServicio.get('horaFinal')?.setValue('');
+    this.datosServicio.get('horaFinal')?.markAsUntouched();
+    this.datosServicio.get('fechaFinal')?.setValue('');
+    this.datosServicio.get('fechaFinal')?.markAsUntouched();
+
+    this.selectRangoDias = [];
+
+    this.setValoresStore(this.datosServicio, 'fechaInicio', 'setFechaInicio');
+    this.setValoresStore(this.datosServicio, 'horaInicio', 'setHoraInicio');
+    this.setValoresStore(this.datosServicio, 'fechaFinal', 'setFechaFinal');
+    this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
+  }
+
+  /**
+   * Cambia la fecha de inicio del servicio.
+   *
+   */
+  changeFechaInicio(): void {
+    this.datosServicio.updateValueAndValidity();
+    this.fechaIntervaloValidator();
+    if (
+      this.datosServicio.get('fechaInicio')?.dirty &&
+      this.datosServicio.get('fechaInicio')?.touched
+    ) {
+      this.rangoFechas();
+    }
+    this.setValoresStore(this.datosServicio, 'fechaInicio', 'setFechaInicio');
   }
 
   /**
@@ -1511,9 +1668,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns void
    */
   changeCrosslist(fechas: string[]): void {
+    this.fechasSeleccionadas.clear();
     fechas.forEach((fecha) => {
       this.fechasSeleccionadas.push(new FormControl(fecha));
     });
+
     this.tramite5701Store.setFechasSeleccionadas(fechas);
   }
 
@@ -1585,6 +1744,23 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.mostrarRangoFechas = true;
     }
 
+    //Verifica si la tabla de lineas de captura tiene datos y los agrega al formulario.
+    if (this.solicitudState.lineasCaptura.length > 0) {
+      this.datosTablaPagos = [...this.solicitudState.lineasCaptura];
+
+      this.lineasCaptura?.clear();
+      this.datosTablaPagos.forEach((linea) => {
+        this.lineasCaptura.push(
+          this.fb.group({
+            lineaCaptura: [linea.lineaCaptura, Validators.required],
+            monto: [linea.monto, Validators.required],
+          })
+        );
+      });
+      this.pagoCaptura.get('lineaCaptura')?.reset();
+      this.pagoCaptura.get('monto')?.reset();
+    }
+
     this.colapsable =
       this.solicitudState.fechasSeleccionadas.length > 0 ||
       this.selectRangoDias.length > 0
@@ -1640,6 +1816,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
                   descripcion: 'No cuenta con recinto',
                 },
               ];
+
               this.despacho.get('nombreRecinto')?.setValue(SIN_ITEMS);
               this.despacho.get('nombreRecinto')?.disable();
             }
@@ -1705,7 +1882,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((response) => {
-          if (response) {
+          if (response.datos) {
             this.tramite5701Store.setBlnProgramaFomento(
               response.datos.programa_fomento
             );
@@ -1713,6 +1890,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               response.datos.des_programa_fomento
             );
           }
+        }),
+        catchError((error) => {
+          return throwError(() => error);
         })
       )
       .subscribe();
@@ -1722,7 +1902,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((response) => {
-          if (response) {
+          if (response.datos) {
             this.tramite5701Store.setBlnIndustriaAutomotriz(
               response.datos.industrial_automotriz
             );
@@ -1730,6 +1910,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               response.datos.des_industrial_automotriz
             );
           }
+        }),
+        catchError((error) => {
+          return throwError(() => error);
         })
       )
       .subscribe();
@@ -1740,6 +1923,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((response) => {
           this.tramite5701Store.setBlnRevisionOrigen(response.datos);
+        }),
+        catchError((error) => {
+          return throwError(() => error);
         })
       )
       .subscribe();
@@ -1785,7 +1971,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     )
       .pipe(
         takeUntil(this.destroyNotifier$),
-        first((response) => {
+        first(),
+        tap((response) => {
           this.tramite5701Store.setBlnOEA(response.datos);
           return response.datos;
         })
@@ -1794,10 +1981,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
-   * Consulta si la línea de captura es válida y actualiza el store correspondiente.
+   * Consulta si la línea de captura es válida, ha sido usada y ya fue pagada y actualiza el store correspondiente.
    * @returns {void} No retorna ningún valor.
    */
-  public consultarLineaCaptura(): void {
+  public agregarPagoSea(): void {
     const LINEA_PAGO: string = this.pagoCaptura.get('lineaCaptura')?.value;
     const MONTO: number = this.pagoCaptura.get('monto')?.value;
 
@@ -1815,18 +2002,18 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    this.validaLineaPagoService
-      .getLineaPagoValidacion(LINEA_PAGO)
+    this.validaLineaCapturaService
+      .getValidaLineaCapturaUsada(LINEA_PAGO)
       .pipe(
         takeUntil(this.destroyNotifier$),
-        switchMap((responseValidaPago) => {
-          if (responseValidaPago.codigo !== '00') {
+        switchMap((responseValidaLineaCaptura) => {
+          if (responseValidaLineaCaptura.datos) {
             this.nuevaNotificacion = {
               tipoNotificacion: 'alert',
               categoria: 'danger',
               modo: 'action',
               titulo: TITULO_MODAL_ERROR,
-              mensaje: MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
+              mensaje: MSJ_LINEA_CAPTURA_USADA,
               cerrar: false,
               txtBtnAceptar: 'Aceptar',
               txtBtnCancelar: '',
@@ -1835,28 +2022,66 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             this.pagoCaptura.get('monto')?.reset();
             return EMPTY;
           }
-          return this.parametroMontoService.getParametroMonto();
+          return this.validaLineaCapturaService.getValidaLineaCaptura(
+            LINEA_PAGO
+          );
         }),
-        tap((montoResponse) => {
-          // TODO:Implementar lógica para agregar información a tabla de pagos
-          if (montoResponse) {
-            let numeroDias: number = 0;
-            if (
-              this.tipoSolicitudSeleccionada === 2 ||
-              this.tipoSolicitudSeleccionada === 3
-            ) {
-              numeroDias = this.fechasSeleccionadas.length;
-            }
-            if (montoResponse.datos) {
-              const MONTO_TOTAL: number =
-                numeroDias > 0
-                  ? montoResponse.datos * numeroDias
-                  : montoResponse.datos;
-              const VALIDACION_MONTO: boolean =
-                MONTO >= MONTO_TOTAL ? true : false;
-              this.tramite5701Store.setIsMontoAceptable(VALIDACION_MONTO);
-            }
+        tap((responseLineaCapturaPagada) => {
+          if (
+            responseLineaCapturaPagada.datos.pago_model.estatus !==
+            ESTATUS_PAGADO
+          ) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: TITULO_MODAL_ERROR,
+              mensaje: MSJ_LINEA_CAPTURA_NO_PAGADA,
+              cerrar: false,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+            return;
           }
+
+          //Obtenemos el monto a pagar desde el servicio de parámetros
+          const MONTO_A_PAGAR = this.pagoCaptura
+            .get('montoAPagar')
+            ?.getRawValue();
+
+          const DIAS_SERVICIO =
+            this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL
+              ? UN_DIA
+              : this.fechasSeleccionadas.length;
+
+          const MONTO_A_CUBRIR = DIAS_SERVICIO * MONTO_A_PAGAR;
+
+          //TODO: Aqui se hace la validación del monto a pagar y el monto a cubrir
+
+          const PAGO = {
+            lineaCaptura: LINEA_PAGO,
+            monto: responseLineaCapturaPagada.datos.pago_model.importe,
+          };
+
+          this.montoPagadoLineas +=
+            responseLineaCapturaPagada.datos.pago_model.importe;
+          this.datosTablaPagos.push(PAGO);
+          this.tramite5701Store.setLineasCaptura(this.datosTablaPagos);
+
+          //Limpia los campos de la línea de captura y monto
+          this.pagoCaptura.get('lineaCaptura')?.reset();
+          this.pagoCaptura.get('monto')?.reset();
+
+          this.lineasCaptura?.clear();
+          this.lineasCaptura.push(
+            this.fb.group({
+              lineaCaptura: [LINEA_PAGO, Validators.required],
+              monto: [
+                responseLineaCapturaPagada.datos.pago_model.importe,
+                Validators.required,
+              ],
+            })
+          );
         })
       )
       .subscribe();
@@ -1866,7 +2091,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * Obtiene el monto a pagar desde el servicio de parámetros y lo establece en el formulario.
    * @returns {void} No retorna ningún valor.
    */
-  public obtenerMontoAPagar(): void {
+  public calcularMontoTotal(): void {
     this.parametroMontoService
       .getParametroMonto()
       .pipe(
@@ -1915,6 +2140,34 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             }
           }
         }
+        break;
+
+      case 'linea_captura':
+        if (confirmar) {
+          this.datosTablaPagos = this.datosTablaPagos.filter(
+            (item) =>
+              !this.lineaCapturaSeleccionados.some(
+                (seleccionado) =>
+                  seleccionado.lineaCaptura === item.lineaCaptura
+              )
+          );
+          this.lineaCapturaSeleccionados = [];
+          this.tramite5701Store.setLineasCaptura(this.datosTablaPagos);
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: '',
+            modo: 'action',
+            titulo: TITULO_MODAL_AVISO,
+            mensaje: MSG_ELIMINA_ELEMENTO,
+            cerrar: false,
+            txtBtnAceptar: 'Cerrar',
+            txtBtnCancelar: '',
+          };
+          this.procesoModal = '';
+        }
+
+        this.limpiarNotificacion();
+
         break;
 
       default:
@@ -2081,6 +2334,26 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún v(alor.
    */
   changeAgregarPedimento(datosPedimento: Pedimento[]): void {
+    this.pedimento.clear();
+    if (datosPedimento.length > 0) {
+      datosPedimento.forEach((pedimento) => {
+        this.pedimento.push(
+          this.fb.group({
+            idPedimento: [pedimento.idPedimento],
+            patente: [pedimento.patente],
+            pedimento: [pedimento.pedimento],
+            aduana: [pedimento.aduana],
+            tipoPedimento: [pedimento.tipoPedimento],
+            estadoPedimento: [pedimento.estadoPedimento],
+            subEstadoPedimento: [pedimento.subEstadoPedimento],
+            descTipoPedimento: [pedimento.descTipoPedimento],
+            numero: [pedimento.numero],
+            comprobanteValor: [pedimento.comprobanteValor],
+            pedimentoValidado: [pedimento.pedimentoValidado],
+          })
+        );
+      });
+    }
     this.tramite5701Store.setPedimentos(datosPedimento);
   }
 
@@ -2131,5 +2404,169 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       'tipoTransporteArriboSalida',
       'setTipoTransporteArriboSalida'
     );
+  }
+
+  /**
+   * Cambia los responsables de despacho y actualiza el store correspondiente.
+   * @param personas - Lista de responsables de despacho.
+   * @returns {void} No retorna ningún valor.
+   */
+  changeResponsablesDespacho(personas: ResponsablesDespacho[]): void {
+    this.tramite5701Store.setPersonasResponsablesDespacho(personas);
+
+    this.personasResponsablesDespacho.clear();
+    if (personas.length > 0) {
+      personas.forEach((persona) => {
+        this.personasResponsablesDespacho.push(
+          this.fb.group({
+            gafeteRespoDespacho: [persona.gafeteRespoDespacho],
+            nombre: [persona.nombre],
+            primerApellido: [persona.primerApellido],
+            segundoApellido: [persona.segundoApellido],
+          })
+        );
+      });
+    }
+  }
+
+  /**
+   * Limpia el formulario FormSolicitud, excepto el campo de tipoSolicitud y actualiza el store correspondiente.
+   * @returns {void} No retorna ningún valor.
+   */
+  limpiarFormulario(): void {
+    this.FormSolicitud.reset({
+      folioSolicitud: null,
+      tipoSolicitud: this.FormSolicitud.get('tipoSolicitud')?.value,
+      descripcionTipoSolicitud: this.FormSolicitud.get(
+        'descripcionTipoSolicitud'
+      )?.value,
+      datosImportadorExportador: {
+        apoderadoPatente: null,
+        empresaApoderado: null,
+        empresasApoderado: null,
+        RFCImpExp: '',
+        nombre: '',
+        desNumeroRegistro: '',
+        programa: false,
+        desProgramaFomento: '',
+        checkIMMEX: false,
+        desImmex: '',
+        industriaAutomotriz: false,
+        desIndustrialAutomotriz: '',
+        tipoEmpresaCertificada: '',
+        socioComercial: false,
+        certificacionOEA: false,
+        revision: false,
+        idSocioComercial: '',
+      },
+      datosServicio: {
+        fechaInicio: '',
+        fechaFinal: '',
+        horaInicio: '',
+        horaFinal: '',
+        fechasSeleccionadas: [],
+      },
+      despacho: {
+        lda: false,
+        rfcDespachoLDA: '',
+        dd: false,
+        folioDDEX: '',
+        idAduanaDespacho: '-1',
+        aduanaDespacho: '',
+        idSeccionDespacho: '-1',
+        seccionAduanera: '',
+        idRecinto: null,
+        nombreRecinto: '-1',
+        tipoDespacho: -1,
+        descripcionTipoDespacho: '',
+        tipoOperacion: '-1',
+        patente: this.despacho.get('patente')?.value,
+        relacionSociedad: false,
+        encargoConferido: false,
+        domicilioDespacho: '',
+        especifique: '',
+      },
+      mercancia: {
+        paisOrigen: 0,
+        paisProcedencia: 0,
+        descripcionGenerica: '',
+        justificacion: '',
+      },
+      pedimento: [],
+      personasResponsablesDespacho: [],
+      vehiculo: {
+        tipoTransporte: '',
+        vehiculoDatos: [],
+      },
+      transporteArriboSalida: {
+        tipoTransporte: '',
+        transporteArriboDatos: [],
+      },
+      pagoCaptura: {
+        montoAPagar: this.pagoCaptura.get('montoAPagar')?.value,
+        lineaCaptura: '',
+        monto: '',
+      },
+    });
+
+    this.selectRangoDias = [];
+    this.pedimento.clear();
+    this.personasResponsablesDespacho.clear();
+
+    this.tramite5701Store.limpiarSolicitud();
+
+    this.setValoresStore(
+      this.FormSolicitud,
+      'tipoSolicitud',
+      'setTipoSolicitud'
+    );
+
+    this.setValoresStore(
+      this.FormSolicitud,
+      'descripcionTipoSolicitud',
+      'setDescripcionTipoSolicitud'
+    );
+  }
+
+  /**
+   * Elimina un elemento de la tabla de lineas de captura
+   * @returns {void} No retorna ningún valor.
+   */
+  eliminarLineaCaptura(): void {
+    if (this.lineaCapturaSeleccionados.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: TITULO_MODAL_AVISO,
+        mensaje: MSG_ERROR_NO_INFORMACION,
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: TITULO_MODAL_AVISO,
+      mensaje: MSG_ALERTA_ELIMINAR_ELEMENTO,
+      cerrar: false,
+      txtBtnAceptar: TEXTO_ACEPTAR,
+      txtBtnCancelar: TEXTO_CANCELAR,
+    };
+
+    this.procesoModal = 'linea_captura';
+  }
+
+  /**
+   * Lipia el objeto de notificación y el proceso modal.
+   * @returns {void} No retorna ningún valor.
+   */
+  limpiarNotificacion(): void {
+    this.nuevaNotificacion = null;
+    this.procesoModal = '';
   }
 }
