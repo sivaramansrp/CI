@@ -424,6 +424,9 @@ export class AduanaComponent implements OnInit, OnDestroy {
     if (this.consultaState.readonly) {
       this.forma.get('extentoPago')?.disable();
     }
+    if (this.consultaState.update) {
+      this.forma.get('extentoPago')?.setValue(true);
+    }
   }
 
   /**

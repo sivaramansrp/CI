@@ -1,10 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { PasoDosComponent } from './paso-dos.component';
 import { HttpClientModule } from '@angular/common/http';
-import {
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { Component } from '@angular/core';
 import { Subject } from 'rxjs';

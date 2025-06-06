@@ -2,8 +2,7 @@ import {
   AVISO,
   AccionBoton,
   DatosPasos,
-  ListaPasosWizard,
-  WizardComponent,
+  ListaPasosWizard
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
@@ -14,7 +13,7 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { ExportarIlustracionesService } from '../../services/exportar-ilustraciones.service';
 import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantallas.enum';
-
+import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
 /**
  * @component PantallasComponent
  * @selector pantallas
@@ -142,9 +141,7 @@ export class PantallasComponent implements OnInit, OnDestroy {
    */
   get formaError(): boolean {
     return (
-      this.exportarIlustracionesService.getFormValidity(
-        'periodoEnElExtranjero'
-      ) &&
+      this.exportarIlustracionesService.getFormValidity('periodoEnElExtranjero') &&
       this.exportarIlustracionesService.getFormValidity('motivo') &&
       this.exportarIlustracionesService.getFormValidity('lugar') &&
       this.exportarIlustracionesService.getFormValidity('aduana')
@@ -184,9 +181,6 @@ export class PantallasComponent implements OnInit, OnDestroy {
   */
   public avisoPrivacidadAlert: string = AVISO.Aviso;
 
-  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
-  public esDatosRespuesta: boolean = false;
-
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
 
@@ -196,6 +190,15 @@ export class PantallasComponent implements OnInit, OnDestroy {
   * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
   */
   public consultaState!: ConsultaioState;
+
+  /**
+ * @property desactivarPagoDerechos
+ * @type {boolean}
+ * @description
+ * Esta propiedad indica si la pestaña correspondiente al "Pago de derechos" debe estar desactivada.
+ * @default false
+ */
+  public desactivarPagoDerechos: boolean = false;
 
   /**
    * @constructor
@@ -226,7 +229,6 @@ export class PantallasComponent implements OnInit, OnDestroy {
    * - Utiliza `takeUntil` para cancelar la suscripción cuando el componente se destruye, evitando fugas de memoria.
    * - Actualiza la propiedad `consultaState` con el estado recibido.
    * - Si la propiedad `update` del estado es verdadera, llama al método `guardarDatosFormulario()`.
-   * - Si no, establece la bandera `esDatosRespuesta` en `true` para indicar que se deben mostrar los datos de respuesta.
    * 
    * @example
    * this.ngOnInit();
@@ -237,10 +239,13 @@ export class PantallasComponent implements OnInit, OnDestroy {
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
-        this.consultaState = { ...seccionState, update: true, readonly: false };
+        this.consultaState = { ...seccionState, update: true, readonly: true };
         // this.consultaState = seccionState;
       })
     ).subscribe();
+    if (this.consultaState.readonly) {
+      this.desactivarPagoDerechos = true;
+    }
   }
 
   /**
@@ -251,24 +256,35 @@ export class PantallasComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   public getValorIndice(e: AccionBoton): void {
-    this.esElFormularioValido();
-    if (
-      this.exportarIlustracionesService.aduanaArray.length > 1 &&
-      this.exportarIlustracionesService.datosDeSolicitudArray.length
-    ) {
-      if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
-        this.indice = e.valor;
-        this.datosPasos.indice = e.valor;
+    if (!this.consultaState.readonly) {
+      this.esElFormularioValido();
+      if (
+        this.exportarIlustracionesService.aduanaArray.length > 1 &&
+        this.exportarIlustracionesService.datosDeSolicitudArray.length
+      ) {
+        if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
+          this.indice = e.valor;
+          this.datosPasos.indice = e.valor;
 
-        if (e.accion === 'cont') {
-          this.wizardComponent.siguiente();
-        } else {
-          this.wizardComponent.atras();
-        }
-        if (e.valor!==1) {
-          this.indiceDePestanaSeleccionada=1;
+          if (e.accion === 'cont') {
+            this.wizardComponent.siguiente();
+          } else {
+            this.wizardComponent.atras();
+          }
+          if (e.valor!==1) {
+            this.indiceDePestanaSeleccionada=1;
+          }
         }
       }
+    } else {
+      if (e.valor > 0 && e.valor < this.pantallasPasos.length) {
+      this.indice = e.valor;
+      if (e.accion === 'cont') {
+        this.wizardComponent?.siguiente();
+      } else {
+        this.wizardComponent?.atras();
+      }
+    }
     }
   }
 

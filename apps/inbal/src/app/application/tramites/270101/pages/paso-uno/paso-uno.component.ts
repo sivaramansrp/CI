@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ConsultaioState } from '@ng-mf/data-access-user';
 import { ExportarIlustracionesService } from '../../services/exportar-ilustraciones.service';
@@ -23,7 +23,7 @@ import { FormGroup } from '@angular/forms';
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
 })
-export class PasoUnoComponent implements OnInit, OnDestroy {
+export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
    * @property formaEventoEmitir
    * @type {EventEmitter<FormGroup>}
@@ -66,7 +66,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Se utiliza para determinar qué sección de datos se muestra.
    * Inicialmente, el valor es 1.
    */
-  indice: number = 1;
+  public indice: number = 1;
 
   /**
    * compo doc
@@ -92,6 +92,15 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * @property desactivarPagoDerechos
+   * @type {boolean}
+   * @description
+   * Propiedad de entrada (`@Input`) que indica si la pestaña correspondiente al "Pago de derechos" debe estar desactivada.
+   * @default false
+   */
+  @Input() desactivarPagoDerechos: boolean = false;
+
+  /**
      * @constructor
      * @description
      * Este constructor inicializa el componente `DatosDeLaSolicitudComponent` e inyecta los servicios necesarios
@@ -103,7 +112,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
      * @param {ExportarIlustracionesService} exportarIlustracionesService - Servicio para gestionar datos de exportación.
      */
     constructor(
-      public exportarIlustracionesService: ExportarIlustracionesService
+      public exportarIlustracionesService: ExportarIlustracionesService,
+      private changeDetectorRef: ChangeDetectorRef
         ) {
       //
     }
@@ -164,6 +174,18 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   }
 
   /**
+ * @method ngAfterViewInit
+ * @description
+ * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido completamente inicializada
+ */
+  ngAfterViewInit(): void {
+    if (this.desactivarPagoDerechos) {
+      this.desactivarPestana=this.desactivarPagoDerechos;
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+
+  /**
    * @method formularioEventoEmitir
    * @description
    * Este método se utiliza para manejar los eventos relacionados con el formulario.
@@ -186,6 +208,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     } else {
       this.desactivarPestana = false;
     }
+    this.changeDetectorRef.detectChanges();
   }
 
   /**
