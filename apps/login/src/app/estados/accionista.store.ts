@@ -1,5 +1,5 @@
-import { ConsultaSocioExtranjeroFisica, ConsultaSocioExtranjeroMoral } from "../application/core/models/consulta-socio-extranjero.model";
 import { Store, StoreConfig } from "@datorama/akita";
+import { ConsultaSocioExtranjero } from "../application/core/models/consulta-socio-extranjero.model";
 import { ConsultaSocioNacional } from "../application/core/models/consulta-socio-nacional.model";
 import { Injectable } from "@angular/core";
 
@@ -16,14 +16,14 @@ export interface AccionistaStore {
     razonSocial: string;
     accionistaNacional: ConsultaSocioNacional;
     listaAccionistasNacionales: ConsultaSocioNacional[];
-    accionistaExtranjeroFisica: ConsultaSocioExtranjeroFisica;
-    listaAccionistasExtranjeros: ConsultaSocioExtranjeroMoral[];
-    accionistaExtranjeroMoral: ConsultaSocioExtranjeroMoral;
-    listaAccionistasExtranjerosMoral?: ConsultaSocioExtranjeroMoral[];
+    accionistaExtranjeroFisica: ConsultaSocioExtranjero;
+    listaAccionistasExtranjeros: ConsultaSocioExtranjero[];
+    accionistaExtranjeroMoral: ConsultaSocioExtranjero;
+    listaAccionistasExtranjerosMoral?: ConsultaSocioExtranjero[];
     visaulizarTablas: boolean;
     registrarDatos: boolean;
-    accionistaNacionalSeleccionado: ConsultaSocioExtranjeroMoral[];
-    accionistaExtranjeroSeleccionado: ConsultaSocioExtranjeroMoral[];
+    accionistaNacionalSeleccionado: ConsultaSocioExtranjero[];
+    accionistaExtranjeroSeleccionado: ConsultaSocioExtranjero[];
 }
 export function createInitialState(): AccionistaStore {
     return {
@@ -63,12 +63,17 @@ export function createInitialState(): AccionistaStore {
         listaAccionistasExtranjeros: [],
         accionistaExtranjeroMoral: {
             razonSocial: '',
+            nombre: '',
+            apellidoPaterno: '',
+            apellidoMaterno: '',
             pais: '',
             codigoPostal: '',
             estado: '',
             calle: '',
             numeroInterior: '',
-            numeroExterior: ''
+            numeroExterior: '',
+            numeroSeguroSocial: '',
+            numeroIdentificacionFiscal: ''
         },
         listaAccionistasExtranjerosMoral: [],
         visaulizarTablas: false,
@@ -123,10 +128,37 @@ export class AccionistaStoreService extends Store<AccionistaStore> {
     }
 
     public setListaSociosNacionales(listaAccionistasNacionales: ConsultaSocioNacional[]): void {
-            this.update((state) => ({
-                ...state,
-                listaAccionistasNacionales,
-            }));
-        }
+        this.update((state) => ({
+            ...state,
+            listaAccionistasNacionales,
+        }));
+    }
 
+    public setsocioAccionistaExtranjero(accionistaExtranjeroFisica: ConsultaSocioExtranjero): void {
+        this.update((state) => ({
+            ...state,
+            accionistaExtranjeroFisica,
+        }));
+    }
+
+    public setsocioAccionistaExtranjeroMoral(accionistaExtranjeroMoral: ConsultaSocioExtranjero): void {
+        this.update((state) => ({
+            ...state,
+            accionistaExtranjeroMoral,
+        }));
+    }
+
+    public setListaSociosExtrajero(listaAccionistasExtranjeros: ConsultaSocioExtranjero[]): void {
+        this.update((state) => ({
+            ...state,
+            listaAccionistasExtranjeros,
+        }));
+    }
+
+     public setRegistraDatosExtranjero(registrarDatos: boolean): void {
+        this.update((state) => ({
+            ...state,
+            registrarDatos,
+        }));
+    }
 }

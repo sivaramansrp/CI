@@ -6,7 +6,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { Subject, catchError, map, of, takeUntil } from 'rxjs';
 import { AccionistaDatosQuery } from '../../../queries/accionista.query';
 import { CommonModule } from '@angular/common';
-import { ConsultaSocioExtranjeroFisica } from '../../core/models/consulta-socio-extranjero.model';
+import { ConsultaSocioExtranjero } from '../../core/models/consulta-socio-extranjero.model';
 import { ConsultaSocioNacional } from '../../core/models/consulta-socio-nacional.model';
 import { OnInit } from '@angular/core';
 import { Router } from '@angular/router';
@@ -27,12 +27,14 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
   encabezadoDeTablaAccionista = CONFIGURACION_ENCABEZADO_SOCIO;
   encabezadoDeTablaAccionistaExtranjero = CONFIGURACION_ENCABEZADO_SOCIO_EXTRANJERO;
   public listaSociosAccionistas: ConsultaSocioNacional[] = [];
-  public listaSociosAccionistasExtranjeros: ConsultaSocioExtranjeroFisica[] = [];
+  public listaSociosAccionistasExtranjeros: ConsultaSocioExtranjero[] = [];
   public socioAccionistaSeleccionado: ConsultaSocioNacional[] = [];
-  public socioAccionistaExtranjerosSeleccionado: ConsultaSocioExtranjeroFisica[] = [];
+  public socioAccionistaExtranjerosSeleccionado: ConsultaSocioExtranjero[] = [];
 
   private destroyNotifier$: Subject<void> = new Subject();
   socioNacional?: ConsultaSocioNacional;
+  socioExtranjero?: ConsultaSocioExtranjero;
+  socioExtranjeroMoral?: ConsultaSocioExtranjero;
   public visualizarTabla: boolean = false;
   public accionistaInicialStore!: AccionistaStore;
 
@@ -76,6 +78,7 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
     });
     this.actualizarValidaciones();
     this.listaSociosAccionistas = this.accionistaInicialStore.listaAccionistasNacionales;
+    this.listaSociosAccionistasExtranjeros = this.accionistaInicialStore.listaAccionistasExtranjeros;
   }
 
   get tipoNacionalidad() {
@@ -130,7 +133,9 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
           .pipe(
             map((data) => {
               if (data) {
-                this.router.navigate(['login/consulta-socio-accionista']);
+                this.socioExtranjero = data;
+                this.accionistaStore.setsocioAccionistaExtranjero(this.socioExtranjero);
+                this.router.navigate(['login/consulta-accionista-extranjero-fisica']);
               } else {
                 console.error('No se encontró un socio nacional con el nombre proporcionado.');
               }
@@ -152,7 +157,9 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
           .pipe(
             map((data) => {
               if (data) {
-                this.router.navigate(['login/consulta-socio-accionista']);
+                this.socioExtranjeroMoral = data;
+                this.accionistaStore.setsocioAccionistaExtranjeroMoral(this.socioExtranjeroMoral);
+                this.router.navigate(['login/consulta-accionista-extranjero-moral']);
               } else {
                 console.error('No se encontró un socio nacional con la razón social proporcionada.');
               }

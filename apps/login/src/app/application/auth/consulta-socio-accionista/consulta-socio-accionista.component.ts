@@ -15,7 +15,6 @@ import { Router } from '@angular/router';
   styleUrl: './consulta-socio-accionista.component.scss',
 })
 export class ConsultaSocioAccionistaComponent implements OnInit {
-  /** Formulario reactivo para la consulta de socio accionista */
   public formConsultaSocioAccionista!: FormGroup;
   public socioAccionistaConsultado?: AccionistaStore;
   private destroyNotifier$: Subject<void> = new Subject();

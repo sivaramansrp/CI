@@ -1,8 +1,8 @@
-import { ConsultaSocioExtranjeroFisica, ConsultaSocioExtranjeroMoral } from '../models/consulta-socio-extranjero.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { Capturista } from '../models/capturista.model';
 import { ConsultaRegistro } from '../models/consulta-registro.model';
+import { ConsultaSocioExtranjero } from '../models/consulta-socio-extranjero.model';
 import { ConsultaSocioNacional } from '../models/consulta-socio-nacional.model';
 import { Injectable } from '@angular/core';
 
@@ -76,28 +76,21 @@ export class UsuariosService {
         );
     }
 
-    consultaSocioExtranjeroFisica(nombre: string, apellidoPaterno: string, pais: string, codigoPostal: string, estado: string): Observable<ConsultaSocioExtranjeroFisica | undefined> {
-        return this.http.get<ConsultaSocioExtranjeroFisica[]>(`/assets/json/login/lista-socio-extranjero-fisica.json`).pipe(
+    consultaSocioExtranjeroFisica(nombre: string, apellidoPaterno: string, pais: string, codigoPostal: string, estado: string): Observable<ConsultaSocioExtranjero | undefined> {
+        return this.http.get<ConsultaSocioExtranjero[]>(`/assets/json/login/lista-socio-extranjero.json`).pipe(
             map((socio) => {
                 return socio.find(s =>
-                    (nombre ? s.nombre === nombre : true)&&
-                    (apellidoPaterno ? s.apellidoPaterno === apellidoPaterno : true) &&
-                    (pais ? s.pais === pais : true) &&
-                    (codigoPostal ? s.codigoPostal === codigoPostal : true) &&
-                    (estado ? s.estado === estado : true)
+                    (nombre ? s.nombre === nombre : true)
                 );
             })
         );
     }
 
-    consultaSocioExtranjerMoral(razonSocial: string, pais: string, codigoPostal: string, estado: string): Observable<ConsultaSocioExtranjeroMoral | undefined> {
-        return this.http.get<ConsultaSocioExtranjeroMoral[]>(`/assets/json/login/lista-socio-extranjero-moral.json`).pipe(
-            map((socio) => {
+    consultaSocioExtranjerMoral(razonSocial: string, pais: string, codigoPostal: string, estado: string): Observable<ConsultaSocioExtranjero | undefined> {
+        return this.http.get<ConsultaSocioExtranjero[]>(`/assets/json/login/lista-socio-extranjero.json`).pipe(
+            map((socio) => { 
                 return socio.find(s =>
-                    (razonSocial ? s.razonSocial === razonSocial : true)&&
-                    (pais ? s.pais === pais : true) &&
-                    (codigoPostal ? s.codigoPostal === codigoPostal : true) &&
-                    (estado ? s.estado === estado : true)
+                    (razonSocial ? s.razonSocial === razonSocial : true)
                 );
             })
         );
