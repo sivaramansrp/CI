@@ -59,8 +59,14 @@ export class PasoUnoComponent implements AfterViewInit {
 
   solicitanteForm!: FormGroup;
 
+  /**
+   * @property {boolean} adaceDisabled
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default true
+   */
+  adaceDisabled: boolean = true;
+
   ngOnInit(): void {
-    this.solicitanteForm.get('adace')?.disable();
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),

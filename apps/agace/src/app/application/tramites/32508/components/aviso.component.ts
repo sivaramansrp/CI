@@ -163,21 +163,21 @@ export class AvisoComponent implements OnInit, AfterViewInit, OnDestroy {
    * Configura el formulario, obtiene datos iniciales y suscribe al estado global.
    */
   ngOnInit(): void {
-    this.query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      )
-      .subscribe();
-      this.consultaioQuery.selectConsultaioState$
+    this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.consultaDatos = seccionState;
           this.esFormularioSoloLectura = this.consultaDatos.readonly;
           this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+    this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
         })
       )
       .subscribe();
