@@ -2,6 +2,7 @@ import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } fr
 import { Catalogo, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, delay, map, of, takeUntil } from 'rxjs';
 import { Tramite110205State, Tramite110205Store } from '../../estados/tramite110205.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
@@ -105,6 +106,12 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
   private seccionState!: SeccionLibState;
 
   /**
+  * @descripcion
+  * Indica si el formulario se encuentra en modo solo lectura.
+  */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * @descripcion
    * Referencia al elemento del modal de modificación.
    */
@@ -125,7 +132,8 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
     private peruCertificadoService: PeruCertificadoService,
     private store: Tramite110205Store,
     private query: Tramite110205Query,
-    private seccionQuery: SeccionLibQuery
+    private seccionQuery: SeccionLibQuery,
+    public consultaQuery: ConsultaioQuery
   ) {
     this.query.formCertificado$
       .pipe(takeUntil(this.destroyNotifier$), delay(100))
@@ -145,6 +153,15 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.seccionState = seccionState;
+        })
+      )
+      .subscribe();
+
+      this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {          
+          this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
       .subscribe();
