@@ -14,11 +14,12 @@
 import { AlertComponent, ConfiguracionColumna, TablaSeleccion } from '@ng-mf/data-access-user';
 import { CapturarColumns, FABRICANTE_TABLE_COLUMNS } from '../../modelos/fabricante-datos.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery,
+  ConsultaioStore,} from "@ng-mf/data-access-user";
 import { DESTINATARIO_TABLE_COLUMNS, DestinatarioCapturarColumns } from '../../modelos/destinatario-datos.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject ,map, takeUntil } from 'rxjs';
 import { TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
- 
 import { CommonModule } from '@angular/common';
  
 import { TEXTOS } from '@libs/shared/data-access-user/src/tramites/constantes/octava-temporal.enum';
@@ -119,6 +120,12 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @public
    */
   destinatarioTableColumns: ConfiguracionColumna<DestinatarioCapturarColumns>[] = DESTINATARIO_TABLE_COLUMNS;
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
  
   /**
    * @property {Subject<void>} destroyed$
@@ -139,10 +146,18 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * relacionados con terceros relacionados. Proporciona métodos para comunicarse con el
    * backend y obtener información de fabricantes y destinatarios.
    */
-  constructor(private fb: FormBuilder, private fabricanteService: TercerosRelacionadosService) {
-    //
+  constructor(private fb: FormBuilder, private fabricanteService: TercerosRelacionadosService, private consultaQuery: ConsultaioQuery,
+    private consultaStore: ConsultaioStore
+  ) {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly || true;
+        })
+      )
+      .subscribe();
   }
- 
   /**
    * @method ngOnInit
    * @description Hook del ciclo de vida que inicializa el componente. Se ejecuta una vez

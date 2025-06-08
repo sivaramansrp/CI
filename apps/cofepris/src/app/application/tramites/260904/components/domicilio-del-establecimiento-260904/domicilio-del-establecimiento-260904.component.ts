@@ -1,4 +1,5 @@
 import { AlertComponent, InputCheckComponent } from '@libs/shared/data-access-user/src';
+import { Subject, map } from 'rxjs';
 import {Tramite260904State, Tramite260904Store } from '../../estados/tramite260904.store';
 import { ALERT } from '../../enums/domicilio-del-establecimiento-260904.enum';
 import { Catalogo } from '@libs/shared/data-access-user/src';
@@ -6,10 +7,10 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery} from "@ng-mf/data-access-user";
 import { DomicilioDelEstablecimientoService } from '../../services/domicilio-del-establecimiento/domicilio-del-establecimiento.service';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
-import { HttpClient } from '@angular/common/http';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { MERCANCIAS_DATA } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
 import { MercanciasInfo } from '../../modelos/modificación-del-permiso-sanitario-de-importación-de-insumo.model';
@@ -19,7 +20,6 @@ import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/domicilio-del-establecim
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
@@ -143,6 +143,12 @@ export class DomicilioDelEstablecimiento260904Component
       * Estado seleccionado del trámite 260911.
       */
      estadoSeleccionado!: Tramite260904State;
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
  
  
    /**
@@ -155,14 +161,21 @@ export class DomicilioDelEstablecimiento260904Component
     */
    constructor(
      private fb: FormBuilder,
-     private httpServicios: HttpClient,
      private tramite260904Query: Tramite260904Query,
      private tramite260904Store: Tramite260904Store,
-     private domicilioDelEstablecimientoService:DomicilioDelEstablecimientoService
-   ) {
-     // Constructor
-   }
- 
+     private domicilioDelEstablecimientoService:DomicilioDelEstablecimientoService,
+    private consultaQuery: ConsultaioQuery,
+         ) {
+           this.consultaQuery.selectConsultaioState$
+             .pipe(
+               takeUntil(this.destroy$),
+               map((seccionState) => {
+                 this.esFormularioSoloLectura = seccionState.readonly || true;
+                 this.inicializarEstadoFormulario();
+               })
+             )
+             .subscribe();
+         }
    /**
     * Método de inicialización del componente.
     */
@@ -172,8 +185,42 @@ export class DomicilioDelEstablecimiento260904Component
      this.obtenerTablaDatos();
      this.obtenerEstadoList();
      this.obtenerMercanciasDatos();
-  
+     this.inicializarEstadoFormulario();
  }
+
+ inicializarEstadoFormulario():void {
+   if (this.esFormularioSoloLectura) {
+      this.form.get('codigoPostal')?.disable();
+      this.form.get('municipioOAlcaldia')?.disable();
+      this.form.get('localidad')?.disable();
+      this.form.get('colonias')?.disable();
+      this.form.get('calle')?.disable();
+      this.form.get('lada')?.disable();
+      this.form.get('telefono')?.disable();
+      this.domicilio.get('avisoCheckbox')?.disable();
+      this.domicilio.get('licenciaSanitaria')?.disable();
+      this.domicilio.get('aduanasEntradas')?.disable();
+      this.domicilio.get('aifaCheckbox')?.disable();
+      this.domicilio.get('manifests')?.disable();
+      this.representanteLegal.get('acuerdoPublico')?.disable();
+      this.representanteLegal.get('rfc')?.disable();
+    } else {
+       this.form.get('codigoPostal')?.enable();
+      this.form.get('municipioOAlcaldia')?.enable();
+      this.form.get('localidad')?.enable();
+      this.form.get('colonias')?.enable();
+      this.form.get('calle')?.enable();
+      this.form.get('lada')?.enable();
+      this.form.get('telefono')?.enable();
+      this.domicilio.get('avisoCheckbox')?.enable();
+      this.domicilio.get('licenciaSanitaria')?.enable();
+      this.domicilio.get('aduanasEntradas')?.enable();
+      this.domicilio.get('aifaCheckbox')?.enable();
+      this.domicilio.get('manifests')?.enable();
+      this.representanteLegal.get('acuerdoPublico')?.enable();
+      this.representanteLegal.get('rfc')?.enable();
+ }
+}
  
    ngOnDestroy(): void {
      this.destroy$.next();
@@ -185,28 +232,28 @@ export class DomicilioDelEstablecimiento260904Component
     */
    crearFormulario(): void {
      this.form = this.fb.group({
-       codigoPostal: ['', [Validators.required]],
-       estado: [],
-       municipioOAlcaldia: ['', [Validators.required]],
-       localidad: [''],
-       colonias: [''],
-       calle: ['', [Validators.required]],
-       lada: [''],
-       telefono: ['', [Validators.required]],
+       codigoPostal: [this.estadoSeleccionado.codigoPostal, [Validators.required]],
+       estado: [this.estadoSeleccionado.estado],
+       municipioOAlcaldia: [this.estadoSeleccionado.municipioOAlcaldia, [Validators.required]],
+       localidad: [this.estadoSeleccionado.localidad],
+       colonias: [this.estadoSeleccionado.colonias],
+       calle: [this.estadoSeleccionado.calle, [Validators.required]],
+       lada: [this.estadoSeleccionado.lada],
+       telefono: [this.estadoSeleccionado.telefono, [Validators.required]],
      });
  
      this.domicilio = this.fb.group({
        avisoCheckbox: [true],
        licenciaSanitaria: [{ value: '', disabled: true }],
-       regimen: [],
-       aduanasEntradas: [],
+       regimen: [this.estadoSeleccionado.regimen],
+       aduanasEntradas: [this.estadoSeleccionado.aduanasEntradas],
        aifaCheckbox: [true],
        manifests: [true],
      });
  
      this.representanteLegal = this.fb.group({
-       acuerdoPublico: [],
-       rfc: ['', [Validators.required]],
+       acuerdoPublico: [this.estadoSeleccionado.acuerdoPublico],
+       rfc: [this.estadoSeleccionado.rfc, [Validators.required]],
        nombre: [{ value: 'LUIS AMBROSIO', disabled: true }, [Validators.required]],
        apellidoPaterno: [{ value: 'MARTINEZ', disabled: true }, [Validators.required]],
        apellidoMaterno: [{ value: 'VALENZUELA', disabled: true }, [Validators.required]],
