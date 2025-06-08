@@ -19,17 +19,36 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   indice: number = 1;
 
+  /**
+   * Indica si los datos de respuesta están disponibles.
+   */
   esDatosRespuesta: boolean = false;
 
+  /**
+   * Notificador para destruir las suscripciones y evitar fugas de memoria.
+   */
   destroyNotifier$: Subject<void> = new Subject<void>();
 
-   consultaioState!: ConsultaioState;
+  /**
+   * Estado actual de la consulta.
+   */
+  consultaioState!: ConsultaioState;
 
-   constructor(
+  /**
+   * Constructor del componente.
+   * consultaQuery Servicio para consultar el estado de la consulta.
+   * modificacionDelPermisoSanitarioService Servicio para manejar la modificación del permiso sanitario.
+   */
+  constructor(
     private consultaQuery: ConsultaioQuery,
     private modificacionDelPermisoSanitarioService: ModificacionDelPermisoSanitarioService
   ) {}
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe al observable del estado de consulta y actualiza la propiedad `consultaioState`.
+   * Dependiendo del valor de `consultaioState.update`, guarda los datos del formulario o marca que los datos son de respuesta.
+   */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -39,8 +58,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    if (true) {
-      // this.consultaioState.update
+    if (this.consultaioState.update) {
+      
       this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;
@@ -63,15 +82,18 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       });
   }
 
-
   /**
    * Selecciona una pestaña estableciendo su índice.
-   * @param i El índice de la pestaña a seleccionar.
+   * i El índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente se destruye.
+   * Libera los recursos y evita fugas de memoria completando el notificador.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

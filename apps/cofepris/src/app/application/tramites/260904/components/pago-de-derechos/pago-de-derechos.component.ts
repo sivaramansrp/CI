@@ -15,8 +15,7 @@ import {
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
-import { ConsultaioQuery,
-  ConsultaioStore,} from "@ng-mf/data-access-user";
+import { ConsultaioQuery} from "@ng-mf/data-access-user";
 
 import { Tramite260904State, Tramite260904Store } from '../../estados/tramite260904.store';
 
@@ -24,7 +23,6 @@ import { Subject, map, takeUntil } from 'rxjs';
 
 import { BancoList } from '../../modelos/pago-de-derechos.model';
 import { CommonModule } from '@angular/common';
-import { ModificacionDelPermisoSanitarioService } from '../../services/modificacion-del-permiso-sanitario.service';
 import { PagoDeDerechosService } from '../../services/pago-de-derechos.service';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite260904Query } from '../../estados/tramite260904.query';
@@ -75,6 +73,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
   disableBanco: boolean = false;
 
+  /**
+   * @desc Sujeto utilizado para notificar la destrucción del componente.
+   * Se emplea comúnmente para cancelar suscripciones y evitar fugas de memoria
+   * cuando el componente se destruye.
+   * @type {Subject<void>}
+   */
   destroyNotifier$: Subject<void> = new Subject<void>();
 
   /**

@@ -89,7 +89,6 @@ export class DatosDeLaSolicitud260904Component implements OnInit, OnDestroy {
  * Observable utilizado para gestionar la destrucción de suscripciones y evitar fugas de memoria.
  * Se emite un valor y se completa cuando el componente se destruye.
  */
- 
    private destroy$ = new Subject<void>();
  
    /**
@@ -134,6 +133,11 @@ export class DatosDeLaSolicitud260904Component implements OnInit, OnDestroy {
     this.inicializarEstadoFormulario();
   }
 
+  /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   * Si el formulario está en modo solo lectura, deshabilita los controles correspondientes.
+   * Si no, habilita los controles para permitir la edición.
+   */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.form.get('btonDeRadio')?.disable();
@@ -148,13 +152,7 @@ export class DatosDeLaSolicitud260904Component implements OnInit, OnDestroy {
       this.datosDelEstablecimiento.get('denominacion')?.disable();
       this.datosDelEstablecimiento.get('correo')?.disable();
   }
-  }
-
-   ngOnDestroy(): void {
-     this.destroy$.next();
-     this.destroy$.complete();
-   }
- 
+}
  
    /**
     * Método para mostrar u ocultar el formulario colapsable.
@@ -218,5 +216,15 @@ export class DatosDeLaSolicitud260904Component implements OnInit, OnDestroy {
          this.estadoSeleccionado = data;
        }
      );
+   }
+    /**
+     * @inheritdoc
+     * @description
+     * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
+     * Se utiliza para emitir y completar el observable `destroy$`, permitiendo limpiar suscripciones y evitar fugas de memoria.
+     */
+    ngOnDestroy(): void {
+     this.destroy$.next();
+     this.destroy$.complete();
    }
  }

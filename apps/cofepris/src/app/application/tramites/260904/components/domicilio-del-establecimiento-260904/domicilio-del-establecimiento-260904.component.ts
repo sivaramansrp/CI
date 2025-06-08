@@ -188,6 +188,17 @@ export class DomicilioDelEstablecimiento260904Component
      this.inicializarEstadoFormulario();
  }
 
+/**
+ * @method inicializarEstadoFormulario
+ * @description
+ * Inicializa el estado de los controles del formulario dependiendo si el formulario es de solo lectura o editable.
+ * 
+ * Si `esFormularioSoloLectura` es verdadero, deshabilita los campos del formulario principal, del domicilio y del representante legal.
+ * Si es falso, habilita dichos campos para su edición.
+ *
+ * @memberof DomicilioDelEstablecimiento260904Component
+ * @returns {void}
+ */
  inicializarEstadoFormulario():void {
    if (this.esFormularioSoloLectura) {
       this.form.get('codigoPostal')?.disable();
@@ -221,11 +232,6 @@ export class DomicilioDelEstablecimiento260904Component
       this.representanteLegal.get('rfc')?.enable();
  }
 }
- 
-   ngOnDestroy(): void {
-     this.destroy$.next();
-     this.destroy$.complete();
-   }
  
    /**
     * Método para crear el formulario.
@@ -321,6 +327,17 @@ export class DomicilioDelEstablecimiento260904Component
          this.estadoSeleccionado = data;
        }
      );
+   }
+
+    /**
+     * @inheritdoc
+     * @description
+     * Método del ciclo de vida de Angular que se llama justo antes de destruir el componente.
+     * Aquí se emite y completa el observable `destroy$` para limpiar suscripciones y evitar fugas de memoria.
+     */
+     ngOnDestroy(): void {
+     this.destroy$.next();
+     this.destroy$.complete();
    }
    
  }

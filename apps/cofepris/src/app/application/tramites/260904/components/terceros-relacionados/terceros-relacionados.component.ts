@@ -146,8 +146,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * relacionados con terceros relacionados. Proporciona métodos para comunicarse con el
    * backend y obtener información de fabricantes y destinatarios.
    */
-  constructor(private fb: FormBuilder, private fabricanteService: TercerosRelacionadosService, private consultaQuery: ConsultaioQuery,
-    private consultaStore: ConsultaioStore
+  constructor(private fb: FormBuilder, private fabricanteService: TercerosRelacionadosService, private consultaQuery: ConsultaioQuery
   ) {
     this.consultaQuery.selectConsultaioState$
       .pipe(
