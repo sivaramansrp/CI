@@ -25,7 +25,11 @@
           <app-complementaria-immex></app-complementaria-immex>
         </div>
       </div>
-      } @case (2) {
+      @if (consultaDatos.create) {
+            <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+          }
+      } 
+      @case (2) {
       <app-modificacion (continuarEvento)="continuar()"></app-modificacion>
       <app-alta-planta (continuarEvento)="continuar()"></app-alta-planta>
       } @case (3) {

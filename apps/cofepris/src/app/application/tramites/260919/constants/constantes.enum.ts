@@ -43,3 +43,20 @@ export const HACERLOS_RADIO_OPTIONS = [
 export const LOCALIDAD_COLONIA = {
   mensaje: `<p>¡Precaución! Debes capturar localidad y colonia</p>`,
 };
+
+/**
+ * Opciones para el botón de radio de tipo de persona.
+ */
+export const TIPO_PERSONA_RADIO_OPTIONS = [
+  { label: 'Física', value: 'fisica' },
+  { label: 'Moral', value: 'moral' },
+];
+
+/**
+ * Opciones para el botón de radio de nacionalidad de terceros.
+ */
+
+export const TERCEROS_NACIONALIDAD_RADIO_OPTIONS = [
+  { label: 'Nacional', value: 'nacional' },
+  { label: 'Extranjero', value: 'extranjero' },
+];
