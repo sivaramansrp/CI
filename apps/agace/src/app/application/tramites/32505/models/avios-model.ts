@@ -90,3 +90,26 @@ export interface ColumnasTabla {
   headerFormaPago: string;
   headerMontoDTA: string;
 }
+
+
+/**
+ * Representa los datos generales del solicitante.
+ */
+export interface DatosSolicitante {
+  rfc: string;
+  denominacion: string;
+  actividadEconomica: string;
+  correoElectronico: string;
+  pais: string;
+  codigoPostal: string;
+  entidadFederativa: string;
+  municipio: string;
+  localidad: string;
+  colonia: string;
+  calle: string;
+  nExt: string;
+  nInt: string;
+  lada: string;
+  telefono: string;
+  adace: string;
+}
