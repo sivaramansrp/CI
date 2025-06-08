@@ -18,6 +18,10 @@ export class Solicitud10301Service {
         // Lógica de inicialización si es necesario
     }
 
+    /**
+     * Actualiza el estado del formulario en el store con los datos proporcionados.
+     * @param DATOS Objeto con los datos del formulario de tipo Solicitud10301State.
+     */
     actualizarEstadoFormulario(DATOS: Solicitud10301State): void {
         this.tramite10301Store.setTipoMercancia(DATOS.tipoMercancia);
         this.tramite10301Store.setUsoEspecifico(DATOS.usoEspecifico);
@@ -35,6 +39,10 @@ export class Solicitud10301Service {
         this.tramite10301Store.setOpcion(DATOS.opcion);
     }
 
+    /**
+     * Obtiene los datos del trámite desde un archivo JSON local.
+     * @returns Observable con los datos del formulario de tipo Solicitud10301State.
+     */
     public getDatosDeTrtamitelDoc(): Observable<Solicitud10301State> {
         return this.http.get<Solicitud10301State>(
             'assets/json/10301/datos-del-tramite.json'
