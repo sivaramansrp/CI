@@ -72,8 +72,8 @@
   {
     "id": 11,
     "tramite": 11105,
-    "linkDashboard": "/aga/retirada-de-la-autorizacion-de-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
-    "linkDepartment": "/pago/retirada-de-la-autorizacion-de-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
+    "linkDashboard": "/aga/retirada-de-la-autorizacion-de-donaciones/solicitud",
+    "linkDepartment": "/pago/retirada-de-la-autorizacion-de-donaciones/solicitud",
     "department": "aga"
   },
   {
@@ -276,7 +276,7 @@
     "id": 40,
     "tramite": 110202,
     "linkDashboard": "/se/certificado-validacion/validacion",
-    "linkDepartment": "/se/certificado-validacion/validacion",
+    "linkDepartment": "/pago/certificado-validacion/validacion",
     "department": "se"
   },
   {
@@ -325,7 +325,7 @@
     "id": 47,
     "tramite": 110217,
     "linkDashboard": "/se/certificado-origen/solicitante",
-    "linkDepartment": "/se/certificado-origen/solicitante",
+    "linkDepartment": "/pago/certificado-origen/solicitante",
     "department": "se"
   },
   {
@@ -1241,8 +1241,8 @@
   {
     "id": 178,
     "tramite": 260906,
-    "linkDashboard": "/cofepris/modificacion-permiso-sanitario",
-    "linkDepartment": "/pago/modificacion-permiso-sanitario",
+    "linkDashboard": "/cofepris/modificacion-permiso-sanitario-importacion-maquila",
+    "linkDepartment": "/pago/modificacion-permiso-sanitario-importacion-maquila",
     "department": "cofepris"
   },
   {
@@ -1318,8 +1318,8 @@
   {
     "id": 189,
     "tramite": 11106,
-    "linkDashboard": "/aga/cancelacion-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
-    "linkDepartment": "/pago/cancelacion-donaciones/pagina-uno-acuses-y-resoluciones-busqueda",
+    "linkDashboard": "/aga/cancelacion-donaciones/solicitante",
+    "linkDepartment": "/pago/cancelacion-donaciones/solicitante",
     "department": "aga"
   },
   {
@@ -1479,15 +1479,15 @@
   {
     "id": 212,
     "tramite": 260208,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/medicamentos-destinados-uso/contenedor-de-pasos",
+    "linkDepartment": "/pago/medicamentos-destinados-uso/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
     "id": 213,
     "tramite": 260209,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/cofepris/importacion-destinados-donacio/contenedor-de-pasos",
+    "linkDepartment": "/pago/importacion-destinados-donacio/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
@@ -1920,8 +1920,8 @@
   {
     "id": 275,
     "tramite": 230501,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/semarnat/materiales-peligrosos/solicitud",
+    "linkDepartment": "/pago/materiales-peligrosos/solicitud",
     "department": "semarnat"
   },
   {

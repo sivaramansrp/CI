@@ -32,6 +32,8 @@ export interface SeleccionDeSucursalData {
  * relacionada con los socios y accionistas de una empresa.
  */
 export interface SociosYAccionistasData {
+    /** Identificador único */
+    id: number,
     /** Calle donde reside el socio o accionista */
     calle: string,
     /** Razón social de la empresa asociada */
@@ -52,6 +54,8 @@ export interface SociosYAccionistasData {
  * relacionada con los socios y accionistas extranjeros de una empresa.
  */
 export interface SociosYAccionistasExtranjerosData {
+    /** Identificador único */
+    id: number
     /** Identificación fiscal (Tax ID) del socio o accionista extranjero */
     taxId: number,
     /** Razón social de la empresa asociada */

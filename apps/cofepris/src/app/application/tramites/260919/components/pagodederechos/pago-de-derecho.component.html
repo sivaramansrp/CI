@@ -19,7 +19,6 @@
                   formControlName="banco"
                   [catalogo]="bancoData.catalogos" 
                   [label]="'Banco'" 
-                  [required]="true"
                   [placeholder]="bancoData.primerOpcion"
                   (change)="setValoresStore(pagoDeDerechos,'banco', 'setBanco')"
                   >
@@ -31,11 +30,17 @@
                 <label class="form-label" for="llavedepago">Llave de pago:</label>
                 <input class="form-control" id="llavedepago" type="text" formControlName="llavedepago"
                 (change)="setValoresStore(pagoDeDerechos,'llavedepago', 'setLlavedoPago')"/>
+                <div *ngIf="pagoDeDerechos.get('cadenadeladependencia')?.invalid && pagoDeDerechos.get('cadenadeladependencia')?.touched" class="text-danger">
+                  <small *ngIf="pagoDeDerechos.get('cadenadeladependencia')?.errors?.['required']">Este campo es obligatorio.</small>
+                  <small *ngIf="pagoDeDerechos.get('cadenadeladependencia')?.errors?.['pattern']">
+                    Existen datos incorrectos que no cumplen con el formato esperado.
+                  </small>
+                </div>
               </div>
               <div class="col-md-4 mb-3">
                 <input-fecha
                 [datos]="fechaPago"
-                [setFecha]="pagoDeDerechosForm.get('fechaDePago')?.value"
+                [setFecha]="pagoDeDerechosForm.get('pagoDeDerechos.fechadepago')?.value"
                 (valorCambiado)="seleccionarFechaInicio($event)"
               ></input-fecha>
               </div>
@@ -43,6 +48,17 @@
                 <label class="form-label" for="importedepago">Importe de pago:</label>
                 <input class="form-control" id="importedepago" type="text" formControlName="importedepago"
                 (change)="setValoresStore(pagoDeDerechos,'importedepago', 'setImportedePago')"/>
+                <div
+    *ngIf="pagoDeDerechos.get('importedepago')?.invalid && pagoDeDerechos.get('importedepago')?.touched"
+    class="text-danger"
+  >
+    <small *ngIf="pagoDeDerechos.get('importedepago')?.errors?.['required']">
+      Este campo es obligatorio.
+    </small>
+    <small *ngIf="pagoDeDerechos.get('importedepago')?.errors?.['pattern']">
+      Por favor, escribe un número entero válido.
+    </small>
+  </div>
               </div>
             </div>
               <div class="col-md-12 d-flex justify-content-end">
