@@ -21,7 +21,7 @@ import { TramiteList } from '../../models/datos-tramite.model';
     SolicitanteComponent,
   ],
   templateUrl: './capturar-requerimiento.component.html',
-  styleUrl: './capturar-requerimiento.component.css',
+  styleUrl: './capturar-requerimiento.component.scss',
 })
 export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
   tramiteList: {
