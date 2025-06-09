@@ -190,9 +190,7 @@ export * from './core/services/shared/catalogos/tipo-despacho.service';
 export * from './core/services/shared/catalogos/tipo-pedimento.service';
 export * from './core/services/shared/catalogos/paises.service';
 
-
-export * from './tramites/constantes/120501/participantes.enum'
-
+export * from './tramites/constantes/120501/participantes.enum';
 
 export * from './core/services/shared/subsecuentes/subsecuentes.service';
 export * from './core/models/shared/subsecuentes.model';
@@ -200,6 +198,8 @@ export * from './core/utils/utilerias';
 
 export * from './tramites/components/transporte/transporte.component';
 export * from './tramites/components/agregar-transporte/agregar-transporte.component';
+export * from './core/models/shared/tramite-folio.model';
+export * from './core/enums/crosslist.enums';
 
 
 
