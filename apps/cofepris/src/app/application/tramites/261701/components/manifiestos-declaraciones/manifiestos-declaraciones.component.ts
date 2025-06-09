@@ -1,7 +1,8 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { CancelacionPeticion261701State, Tramite261701Store } from '../../estados/store/tramite261701.store';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { MANIFIESTOS_ALERT } from '../../constantes/cancelacion-peticion.enum';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite261701Query } from '../../estados/query/tramite261701.query';
 
 /**
@@ -15,15 +16,13 @@ import { Tramite261701Query } from '../../estados/query/tramite261701.query';
   templateUrl: './manifiestos-declaraciones.component.html',
   styleUrl: './manifiestos-declaraciones.component.scss',
 })
-export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit, OnDestroy{
-/** compo doc
- * Constantes importadas desde el archivo de enumeración que contienen textos importantes y de advertencia.
- *
- * @type {string}
- * @memberof ManifiestosDeclaracionesComponent
- */
-  public manifiestosAlert: string = MANIFIESTOS_ALERT.message;
-  
+export class ManifiestosDeclaracionesComponent implements OnInit, OnDestroy {
+  /**
+   * Grupo de formularios principal.
+   * @property {FormGroup} manifiestosForm
+   */
+  manifiestosForm!: FormGroup;
+
   /**
    * compo doc
    * Subject para notificar la destrucción del componente.
@@ -49,6 +48,11 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
    */
     public cancelacionPeticionState!: CancelacionPeticion261701State;
 
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
       
   /**
  * compo doc
@@ -59,22 +63,35 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
  * @param tramite261701Query Consulta que facilita la obtención de datos específicos del estado del trámite 261701.
  */
   constructor(
+    public readonly fb: FormBuilder,
     private tramite261701Store: Tramite261701Store,
-    private tramite261701Query: Tramite261701Query 
+    private tramite261701Query: Tramite261701Query,
+    private consultaioQuery: ConsultaioQuery, 
   ) {
-    // Constructor vacio
-  }
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe()
+}
 
   /**
   * compo doc
   * @method ngOnInit
   * @description 
-  * /**
-    El gancho ngOnInit se llama para inicializar el formulario
+  * El gancho ngOnInit se llama para inicializar el formulario
   * @memberof ManifiestosDeclaracionesComponent
   * @returns {void}
   */
-  
   ngOnInit(): void {
     this.tramite261701Query.select$
       .pipe(
@@ -84,70 +101,31 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
         })
       )
       .subscribe();
+
+    this.manifiestosForm = this.fb.group({
+      manifiestos: [this.cancelacionPeticionState?.['manifiestos'], Validators.required],
+    });
   }
 
   /**
    * compo doc
-   * @method establecerValor
-   * @description
-   * Este método se utiliza para establecer el estado del checkbox "manifiestos"
-   * basado en el valor almacenado en el estado `cancelacionPeticionState`.
-   * 
-   * @returns {void}
-   * @memberof ManifiestosDeclaracionesComponent
+   * Este método se ejecuta cuando el usuario hace clic en el checkbox "manifiestos".
    */
-  establecerValor(): void {
-    const CHECKBOX_ELEMENT = document.getElementById('manifiestos');
-    if (CHECKBOX_ELEMENT) {
-      (CHECKBOX_ELEMENT as HTMLInputElement).checked = this.cancelacionPeticionState['manifiestos'];
-    }
-  }
-
-  /**
-   * @method ngAfterViewInit
-   * @description
-   * Este método se ejecuta después de que la vista del componente ha sido inicializada.
-   * - Agrega un evento de escucha al checkbox "manifiestos" para rastrear los clics.
-   * - Actualiza dinámicamente el estado del checkbox y almacena el valor en el store.
-   * - Establece el valor inicial del checkbox según el estado actual.
-   * 
-   * @memberof ManifiestosDeclaracionesComponent
-   * @returns {void}
-   */
-  ngAfterViewInit(): void {
-    const ELEMENTO_CHECKBOX = document.getElementById('manifiestos');
-    if (ELEMENTO_CHECKBOX) {
-      // Definir el manejador del evento
-      const MANEJADOR_CLICK = () => {
-        this.manifiestosCheckboxChecked = (ELEMENTO_CHECKBOX as HTMLInputElement).checked;
-        this.tramite261701Store.establecerDatos('manifiestos', this.manifiestosCheckboxChecked);
-      };
-
-      // Agregar el evento de escucha al checkbox
-      ELEMENTO_CHECKBOX.addEventListener('click', MANEJADOR_CLICK);
-
-      // Almacenar el manejador en el elemento para eliminarlo posteriormente
-      (ELEMENTO_CHECKBOX as any).__manejadorClick = MANEJADOR_CLICK;
-    }
-    this.establecerValor();
+  alHacerClicEnCheckbox(form: FormGroup, campo: string): void {
+    const VALOR = form.get(campo)?.value;
+    this.tramite261701Store.establecerDatos('manifiestos', VALOR);
   }
 
   /**
    * @method ngOnDestroy
    * @description
    * Este método se ejecuta cuando el componente se destruye.
-   * - Elimina el evento de escucha del checkbox "manifiestos" para evitar fugas de memoria.
    * - Notifica la destrucción del componente a través del Subject `destroyNotifier$`.
    * 
    * @memberof ManifiestosDeclaracionesComponent
    * @returns {void}
    */
   ngOnDestroy(): void {
-    const ELEMENTO_CHECKBOX = document.getElementById('manifiestos');
-    if (ELEMENTO_CHECKBOX && (ELEMENTO_CHECKBOX as any).__manejadorClick) {
-      // Eliminar el evento de escucha del checkbox
-      ELEMENTO_CHECKBOX.removeEventListener('click', (ELEMENTO_CHECKBOX as any).__manejadorClick);
-    }
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

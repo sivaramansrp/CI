@@ -4,7 +4,7 @@ import { BotonAccionesTipos, Catalogo, CatalogoSelectComponent, TablaDinamicaCom
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputRadioComponent, Notificacion, NotificacionesComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Solicitud32502State, tramite32505Store } from '../../../../estados/tramites/trimite32505.store';
+import { Solicitud32505State, Tramite32505Store } from '../../../../estados/tramites/trimite32505.store';
 import { map, takeUntil } from 'rxjs';
 import { AvisoService } from '../../services/aviso.service';
 import { CargaMasivaComponent } from '../carga-masiva/carga-masiva.component';
@@ -134,10 +134,10 @@ export class AvisoComponent implements OnInit, OnDestroy {
   aviosForm!: FormGroup;
 
   /**
-   * @property {Solicitud32502State} solicitudState
+   * @property {Solicitud32505State} solicitudState
    * @description Estado de la solicitud.
    */
-  public solicitudState!: Solicitud32502State;
+  public solicitudState!: Solicitud32505State;
 
   /**
    * @property {Subject<void>} destroyNotifier$
@@ -208,14 +208,14 @@ export class AvisoComponent implements OnInit, OnDestroy {
   /**
    * @constructor
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
-   * @param {tramite32505Store} store - Store para gestionar el estado del trámite.
+   * @param {Tramite32505Store} store - Store para gestionar el estado del trámite.
    * @param {Tramite32505Query} tramiteQuery - Servicio para realizar consultas relacionadas con el trámite.
    * @param {AvisoService} avisoService - Servicio para gestionar datos relacionados con avisos.
    * @param {ValidacionesFormularioService} validacionesService - Servicio para validar formularios.
    */
   constructor(
     private fb: FormBuilder,
-    public store: tramite32505Store,
+    public store: Tramite32505Store,
     public tramiteQuery: Tramite32505Query,
     private avisoService: AvisoService,
     private validacionesService: ValidacionesFormularioService
@@ -541,12 +541,12 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @description Actualiza un valor en el store del trámite.
    * @param {FormGroup} form - Formulario que contiene el valor.
    * @param {string} campo - Nombre del campo.
-   * @param {keyof tramite32505Store} metodoNombre - Nombre del método en el store.
+   * @param {keyof Tramite32505Store} metodoNombre - Nombre del método en el store.
    */
   setValoresStore(
     form: FormGroup,
     campo: string,
-    metodoNombre: keyof tramite32505Store
+    metodoNombre: keyof Tramite32505Store
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
