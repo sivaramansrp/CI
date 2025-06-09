@@ -19,6 +19,7 @@ import { AmpliacionServiciosQuery } from '../../estados/tramite90302.query';
 import { AmpliacionServiciosService } from '../../services/ampliacion-servicios.service';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '../../models/configuracion-columna.model';
+import { Input } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Tramite90302Store } from '../../estados/tramite90302.store';
 import { takeUntil } from 'rxjs/operators';
@@ -74,6 +75,8 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    */
   datosTabla: DatosDelModificacion[] = [];
 
+  @Input() esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    * @constructor
@@ -96,6 +99,9 @@ export class ModificacionComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getDatos();
     this.inicializarFormularioInfoRegistro();
+    if(this.esFormularioSoloLectura) {
+      this.formularioInfoRegistro.disable();
+    }
     this.inicializarFormularioDesdeAlmacen();
     this.loadDatosTablaData();
   }

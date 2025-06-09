@@ -18,8 +18,10 @@ import {
   SectorRespuesta,
 } from '../models/datos-info.model';
 import { Observable, map } from 'rxjs';
+import { AmpliacionServiciosState } from '../estados/tramite90302.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import {Tramite90302Store} from '../estados/tramite90302.store';
 
 @Injectable({
   providedIn: 'root',
@@ -36,7 +38,7 @@ export class AmpliacionServiciosService {
    * @constructor
    * @param {HttpClient} http - Cliente HTTP de Angular para realizar solicitudes.
    */
-  constructor(private readonly http: HttpClient) {
+  constructor(private readonly http: HttpClient, private tramiteStore: Tramite90302Store) {
     // No se necesita lógica de inicialización adicional.
   }
 
@@ -131,4 +133,20 @@ export class AmpliacionServiciosService {
       `${this.apiUrl}modificacion-tabla-datos.json`
     );
   }
+  /**
+   * Actualiza el estado del formulario con los datos proporcionados.
+   * @method actualizarEstadoFormulario
+   * @param {AmpliacionServiciosState} DATOS - Datos de ampliación de servicios.
+   */
+
+  actualizarEstadoFormulario(DATOS:AmpliacionServiciosState): void {
+    this.tramiteStore.setInfoRegistro(DATOS.infoRegistro);
+  }
+    
+  /**
+   * Obtiene los datos de ampliación de servicios desde un archivo JSON.
+   * @returns {Observable<AmpliacionServiciosState>} - Observable con el estado de ampliación de servicios.
+   */
+  getServiciosData(): Observable<AmpliacionServiciosState> {
+    return this.http.get<AmpliacionServiciosState>('assets/json/90302/datos-prefill.json')}
 }
