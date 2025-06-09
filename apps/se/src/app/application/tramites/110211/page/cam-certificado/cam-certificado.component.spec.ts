@@ -13,7 +13,7 @@ describe('CamCertificadoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CamCertificadoComponent,PasoUnoComponent,PasoDosComponent],
+      declarations: [CamCertificadoComponent,PasoDosComponent],
       imports: [
     SharedModule,
     ReactiveFormsModule,
@@ -22,6 +22,7 @@ describe('CamCertificadoComponent', () => {
     CatalogoSelectComponent,
     CertificadoDeOrigenComponent,
     SolicitanteComponent,
+    PasoUnoComponent,
     HttpClientTestingModule
       ],
     }).compileComponents();
