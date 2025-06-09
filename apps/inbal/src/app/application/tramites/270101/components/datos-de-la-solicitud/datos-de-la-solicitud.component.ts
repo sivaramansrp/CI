@@ -510,7 +510,7 @@ ngOnInit(): void {
       };
       this.configuracionTablaDatos?.push(DETALLES);
       this.exportarIlustracionesService.setDatosDeSolicitudArray(DETALLES);
-      this.cambioEnValoresStore('configuracionTablaDatos', DETALLES)
+      this.cambioEnValoresStore('configuracionTablaDatos', this.configuracionTablaDatos)
       this.ninoFormGroup.reset();
       this.forma.reset();
       this.cerrarModal();
