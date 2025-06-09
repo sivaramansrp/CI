@@ -8,6 +8,7 @@
           <app-tabla-dinamica
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           >
           </app-tabla-dinamica>
         </div>
@@ -18,6 +19,7 @@
             class="btn btn-primary ms-3"
             data-bs-toggle="modal"
             data-bs-target="#modalAgregarMercancias"
+            [disabled]="esFormularioSoloLectura"
           >
             Agregar
           </button>
@@ -28,6 +30,7 @@
           <app-tabla-dinamica
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           >
           </app-tabla-dinamica>
         </div>
@@ -38,6 +41,7 @@
             class="btn btn-primary ms-3"
             data-bs-toggle="modal"
             data-bs-target="#modalAgregarMercancias"
+            [disabled]="esFormularioSoloLectura"
           >
             Agregar
           </button>
@@ -50,6 +54,7 @@
             [configuracionTabla]="destinatarioConfiguracionTabla"
              [datos]="tableData"
              (listaDeFilaSeleccionada)="onSelectedRowsChange($event)"
+             [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
              >
           </app-tabla-dinamica>
         </div>
@@ -63,6 +68,7 @@
               type="button"
               data-bs-toggle="modal"
              (click)="onDeleted()"
+             [disabled]="esFormularioSoloLectura"
             >
               Eliminar
             </button>
@@ -72,7 +78,8 @@
               data-bs-toggle="modal"
               data-bs-target="#modalAgregarMercancias"
               class="btn btn-default btn-space ms-3"
-              (click)="openModificarMercancias()"    
+              (click)="openModificarMercancias()" 
+              [disabled]="esFormularioSoloLectura"   
             >
               Modificar
             </button>
@@ -83,6 +90,7 @@
               data-bs-toggle="modal"
               data-bs-target="#modalAgregarMercancias"
               (click)="agregarMercancias()"
+              [disabled]="esFormularioSoloLectura"
             >
               Agregar
             </button>
@@ -93,6 +101,7 @@
           <app-tabla-dinamica
             [tipoSeleccionTabla]="destinatarioSeleccionTabla"
             [configuracionTabla]="destinatarioConfiguracionTabla"
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           >
           </app-tabla-dinamica>
         </div>
@@ -103,6 +112,7 @@
             class="btn btn-primary ms-3"
             data-bs-toggle="modal"
             data-bs-target="#modalAgregarMercancias"
+            [disabled]="esFormularioSoloLectura"
           >
             Agregar
           </button>
@@ -129,7 +139,7 @@
             </div>
             <app-input-radio 
             [radioOptions]="tipoPersonaRadioOptions" 
-            [selectedValue]="tipoDePublicos" 
+            [selectedValue]="agregarDestinatario.get('tipoPersona')?.value" 
            
             (valueChange)="setTipoPersona($event)" 
             formControlName="tipoPersona" 
@@ -181,6 +191,7 @@
                [label]="'Pais'"
                 [required]="true"
                 (change)="setValoresStore(agregarDestinatario,'pais')"
+                [isDisabled]="esFormularioSoloLectura"
                 ></app-catalogo-select>
             </div>
             <div class="col-md-4 mb-3">
@@ -241,9 +252,9 @@
         </ng-container>
         <div class="col-md-12 d-flex justify-content-end">
         <div class="btn-group">
-          <button class="btn btn-danger" type="button" (click)="cancelarFormulario()" >Cancelar</button>
-          <button class="btn btn-danger" type="button" (click)="limpiarFormulario()" >Limpiar</button>
-          <button class="btn btn-primary me-2" type="button" (click)="onGuardar()">Guardar</button>
+          <button class="btn btn-danger" type="button" (click)="cancelarFormulario()" [disabled]="esFormularioSoloLectura">Cancelar</button>
+          <button class="btn btn-danger" type="button" (click)="limpiarFormulario()" [disabled]="esFormularioSoloLectura">Limpiar</button>
+          <button class="btn btn-primary me-2" type="button" (click)="onGuardar()" [disabled]="esFormularioSoloLectura">Guardar</button>
         </div>
       </div>
         </form>

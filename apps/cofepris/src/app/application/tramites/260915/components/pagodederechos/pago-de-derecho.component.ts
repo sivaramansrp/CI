@@ -13,6 +13,8 @@ import { PermisoSanitarioDispositivosMedicosService } from '../../services/permi
 import { BANCO_DATA } from '../../constants/catalogs.enum';
 import { Solicitud260915Query } from '../../estados/tramites260915.query';
 
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { InputFechaComponent } from '@libs/shared/data-access-user/src';
 /**
@@ -26,6 +28,11 @@ import { InputFechaComponent } from '@libs/shared/data-access-user/src';
   styleUrls: ['./pago-de-derecho.component.scss'],
 })
 export class PagoDeDerechoComponent implements OnInit, OnDestroy {
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /** Formulario reactivo para gestionar los datos del pago de derechos */
   pagoDeDerechosForm!: FormGroup;
 
@@ -60,8 +67,18 @@ public bancoData = BANCO_DATA;
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
     private solicitud260915Store: Solicitud260915Store,
-    private solicitud260915Query: Solicitud260915Query
-  ) {}
+    private solicitud260915Query: Solicitud260915Query,
+    public consultaioQuery: ConsultaioQuery,
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -76,8 +93,41 @@ public bancoData = BANCO_DATA;
       )
       .subscribe();
 
-    this.crearFormulario();
+    this.inicializarEstadoFormulario();
     this.getBancoData();
+  }
+
+
+  /**
+   * Inicializa el formulario dependiendo del modo (solo lectura o editable).
+   * Si está en solo lectura, carga y bloquea el formulario.
+   * Si no, crea un formulario editable.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearFormulario();
+ 
+    }
+  }
+
+  /**
+   * Crea el formulario y, si está en modo solo lectura, lo deshabilita.
+   * De lo contrario, lo habilita para edición.
+   */
+  guardarDatosFormulario(): void {
+    this.crearFormulario();
+
+    if (this.esFormularioSoloLectura) {
+      this.pagoDeDerechosForm.disable();
+     
+   
+    } else {
+      this.pagoDeDerechosForm.enable();
+   
+     
+    }
   }
 
   /**

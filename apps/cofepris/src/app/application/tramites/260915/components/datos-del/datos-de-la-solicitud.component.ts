@@ -1,6 +1,7 @@
 import { ADUANA_DATA, CLASIFICACION_PRODUCTO_DATA, CLAVE_SCIAN_DATA, DESCRIPCION_SCIAN_DATA, ESPECIFICAR_DATA, ESTADO_DATA, ESTADO_FISICO_DATA, REGIMEN_AL_QUE_DATA, TIPO_PRODUCTO_DATA } from '../../constants/catalogs.enum';
 import { Catalogo, InputFecha, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { CONFIGURACION_COLUMNAS_MERCANCIAS, CONFIGURACION_COLUMNAS_SOLI } from '../../constants/column-config.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -8,9 +9,8 @@ import { HACERLOS_RADIO_OPTIONS, OPCION_DE_BOTON_DE_RADIO, TEXTOS } from '../../
 
 import { CrossList,MercanciaCrossList,MercanciasInfo } from '../../models/mercancia.model';
 import { FilaData, FilaData2, ListaClave } from '../../models/fila-modal';
-import { ReplaySubject, map, takeUntil } from 'rxjs';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { Solicitud260915State, Solicitud260915Store } from '../../estados/tramites260915.store';
-
 import { CommonModule } from '@angular/common';
 
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
@@ -44,7 +44,10 @@ export class DatosdelasolicitudComponent implements OnInit,OnDestroy {
 
    /** Constantes de texto utilizadas en el componente */
    TEXTOS = TEXTOS;
- 
+
+     /** Indica si el formulario está en modo solo lectura */
+  esFormularioSoloLectura: boolean = false;
+
    /** Estado actual de los datos de la solicitud */
    dataDeLaSolicitudState!: Solicitud260915State;
  
@@ -184,12 +187,60 @@ mercanciasData: MercanciasInfo[] = [];
  */
 public estadoFisicoData = ESTADO_FISICO_DATA;
 
-  /** Constructor del componente */
+  /** Constructor del componente 
+   * @param consultaioQuery Consulta de estado de solo lectura.*/
+
   constructor(private fb: FormBuilder, 
     private permisosanitariodisposivos: PermisoSanitarioDispositivosMedicosService,
      private cdr: ChangeDetectorRef,
      private solicitud260915Store: Solicitud260915Store,
-    private solicitud260915Query: Solicitud260915Query) {}
+    private solicitud260915Query: Solicitud260915Query,
+    public consultaioQuery: ConsultaioQuery,
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Inicializa el formulario dependiendo del modo (solo lectura o editable).
+   * Si está en solo lectura, carga y bloquea el formulario.
+   * Si no, crea un formulario editable.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.createForm();
+      this.createclaveScianForm();
+    }
+  }
+
+  /**
+   * Crea el formulario y, si está en modo solo lectura, lo deshabilita.
+   * De lo contrario, lo habilita para edición.
+   */
+  guardarDatosFormulario(): void {
+    this.createForm();
+    this.createclaveScianForm();
+    if (this.esFormularioSoloLectura) {
+      this.dataDeLaSolicitudForm.disable();
+      this.clavaScianForm.disable();
+      this.datosDelTramiteRealizar.disable();
+    } else {
+      this.dataDeLaSolicitudForm.enable();
+      this.clavaScianForm.enable();
+      this.datosDelTramiteRealizar.enable();
+     
+    }
+  }
+
 
  /** Configuración de columnas para la tabla de solicitud */
  configuracionColumnasoli = CONFIGURACION_COLUMNAS_SOLI;
@@ -199,16 +250,7 @@ public estadoFisicoData = ESTADO_FISICO_DATA;
 
 /** Inicialización del componente */
   ngOnInit(): void {
-   this.solicitud260915Query.selectSolicitud260915$
-        .pipe(
-          takeUntil(this.destroyed$),
-          map((seccionState) => {
-            this.dataDeLaSolicitudState = seccionState;
-          })
-        )
-        .subscribe();
-    
-    this.createForm();
+    this.inicializarEstadoFormulario();
     this.getEstadosData();
     this.getClaveScianData();
     this.getClaveDescripcionDelData();
@@ -229,6 +271,14 @@ public estadoFisicoData = ESTADO_FISICO_DATA;
  * ambos marcados como requeridos.
  */
   createclaveScianForm(): void {
+    this.solicitud260915Query.selectSolicitud260915$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.dataDeLaSolicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.clavaScianForm = this.fb.group({
       claveScianG: this.fb.group({
         claveScian: ['', Validators.required],
@@ -239,6 +289,14 @@ public estadoFisicoData = ESTADO_FISICO_DATA;
 
   /** Configuración del formulario con validaciones para los campos del trámite. */
 createForm(): void{
+    this.solicitud260915Query.selectSolicitud260915$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.dataDeLaSolicitudState = seccionState;
+        })
+      )
+      .subscribe();
   this.dataDeLaSolicitudForm = this.fb.group({
       descripcionFraccionArancelaria: [this.dataDeLaSolicitudState?.descripcionFraccionArancelaria, Validators.required],
       cantidadUMT:[this.dataDeLaSolicitudState?.cantidadUMT, Validators.required],
@@ -254,8 +312,10 @@ createForm(): void{
       estadoFisico:[this.dataDeLaSolicitudState?.estadoFisico, Validators.required],
       presentacionFarmaceutica:[this.dataDeLaSolicitudState?.presentacionFarmaceutica, Validators.required],
       fraccionArancelaria:[this.dataDeLaSolicitudState?.fraccionArancelaria, Validators.required],
-    datosDelTramiteRealizar: this.fb.group({
-      tipoOperacion:[{ value: this.dataDeLaSolicitudState.tipoOperacion || ''}],
+      
+      
+      datosDelTramiteRealizar: this.fb.group({
+      tipoOperacion:[this.dataDeLaSolicitudState?.tipoOperacion],
       justification: [{ value: this.dataDeLaSolicitudState.justification || '', disabled: true }],
       denominacion: [this.dataDeLaSolicitudState?.denominacion, Validators.required],
       correoElectronico: [this.dataDeLaSolicitudState?.correoElectronico, Validators.required],
@@ -268,16 +328,20 @@ createForm(): void{
       lada: [this.dataDeLaSolicitudState?.lada, Validators.required],
       telefono: [this.dataDeLaSolicitudState?.telefono, Validators.required],
       avisoDeFuncionamiento: [this.dataDeLaSolicitudState?.avisoDeFuncionamiento || false, Validators.required],
+     
       licenciaSanitaria: [
         { value: this.dataDeLaSolicitudState?.licenciaSanitaria || '', disabled: !this.dataDeLaSolicitudState?.avisoDeFuncionamiento },
         Validators.required,
       ],
       regimenalque: [this.dataDeLaSolicitudState?.regimenalque, Validators.required],
       aduana: [this.dataDeLaSolicitudState?.aduana, Validators.required],
+      maniFestos:[this.dataDeLaSolicitudState?.maniFestos, Validators.required],
+      LosDatosNotifier: [this.dataDeLaSolicitudState?.LosDatosNotifier],
       rfc: [this.dataDeLaSolicitudState?.rfc, Validators.required],
       legalRazonSocial: [this.dataDeLaSolicitudState?.legalRazonSocial, Validators.required],
       apellidoPaterno: [this.dataDeLaSolicitudState?.apellidoPaterno, Validators.required],
       apellidoMaterno: [this.dataDeLaSolicitudState?.apellidoMaterno,Validators.required],
+       
     }),
    
   });

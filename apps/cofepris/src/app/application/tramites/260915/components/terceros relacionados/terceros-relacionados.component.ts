@@ -8,6 +8,8 @@ import { Solicitud260915State, Solicitud260915Store } from '../../estados/tramit
 import { map, takeUntil } from 'rxjs/operators';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 import { DESTINATARIO_CONFIGURACION_TABLA } from '../../constants/column-config.enum';
 import { Destinatario } from '../../models/destinatario.model';
 import { Modal } from 'bootstrap';
@@ -37,6 +39,12 @@ import { TercerosRelacionadosComponent } from '../../../../shared/components/ter
   styleUrl: './terceros-relacionados.component.scss',
 })
 export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /** Constantes de texto utilizadas en el componente */
   TEXTOS = TEXTOS;
 
@@ -116,13 +124,22 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private permisosanitariodisposivos: PermisoSanitarioDispositivosMedicosService,
     private solicitud260915Store: Solicitud260915Store,
-    private solicitud260915Query: Solicitud260915Query
+    private solicitud260915Query: Solicitud260915Query,
+    public consultaioQuery: ConsultaioQuery,
   ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
     this.crearFormTransporte();
   }
 
   /**
-   * Crea el formulario reactivo para gestionar los datos del destinatario.
+   * Crea el formulario reactivo para gestionar los datos del destinatario.   * 
    */
   crearFormTransporte(): void {
     this.destinatarioForm = this.fb.group({
@@ -185,9 +202,44 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.crearFormTransporte();
+    this.inicializarEstadoFormulario();
     this.getPaisData();
   }
+
+
+
+    /**
+   * Inicializa el formulario dependiendo del modo (solo lectura o editable).
+   * Si está en solo lectura, carga y bloquea el formulario.
+   * Si no, crea un formulario editable.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearFormTransporte();
+ 
+    }
+  }
+
+  /**
+   * Crea el formulario y, si está en modo solo lectura, lo deshabilita.
+   * De lo contrario, lo habilita para edición.
+   */
+  guardarDatosFormulario(): void {
+    this.crearFormTransporte();
+
+    if (this.esFormularioSoloLectura) {
+      this.destinatarioForm.disable();
+     
+   
+    } else {
+      this.destinatarioForm.enable();
+   
+     
+    }
+  }
+
   /**
    * Elimina un pedimento de la lista.
    * @param borrar Indica si se debe proceder con la eliminación.
