@@ -38,6 +38,7 @@ export class DatosServiceService {
    * @param DATOS Objeto con los datos del domicilio a actualizar.
    */
   actualizarEstadoFormulario(DATOS: DomicilioState): void {
+    this.domicilioStore.setrRfc(DATOS.rfc);
     this.domicilioStore.setDenominacion(DATOS.denominacion);
     this.domicilioStore.setCorreoElectronico(DATOS.correoElectronico);
     this.domicilioStore.setCodigoPostal(DATOS.codigoPostal);
