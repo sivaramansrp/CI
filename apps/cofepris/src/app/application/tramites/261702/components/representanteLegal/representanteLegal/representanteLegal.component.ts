@@ -1,10 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioState, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { RetirosCofepris261702State, Tramite261702Store } from '../../../../../estados/tramites/tramite261702.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
 import { REPRESENTANTE_LEGAL } from '../../../constantes/retiros-cofepris.enum';
 import { Tramite261702Query } from '../../../../../estados/queries/tramite261702.query';
 
@@ -64,6 +64,13 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
     * @memberof RepresentanteLegalComponent
     */
     public retirosState!: RetirosCofepris261702State;
+
+/**
+    * @property consultaState
+    * @description
+    * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+    */
+    @Input() consultaState!: ConsultaioState;
 
    /**
   * compo doc

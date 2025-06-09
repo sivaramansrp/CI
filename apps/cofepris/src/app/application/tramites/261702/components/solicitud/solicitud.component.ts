@@ -1,5 +1,6 @@
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ConsultaioState } from '@libs/shared/data-access-user/src';
 import { ManifiestosDeclaracionesComponent } from '../manifiestosDeclaraciones/manifiestosDeclaraciones.component';
 import { PermisoDesistirComponent } from '../permisoDesistir/permisoDesistir.component';
 import { RepresentanteLegalComponent } from '../representanteLegal/representanteLegal/representanteLegal.component';
@@ -23,4 +24,13 @@ import { RepresentanteLegalComponent } from '../representanteLegal/representante
   templateUrl: './solicitud.component.html',
   styleUrl: './solicitud.component.scss',
 })
-export class SolicitudComponent {}
+export class SolicitudComponent {
+
+/**
+    * @property consultaState
+    * @description
+    * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+    */
+    @Input() consultaState!: ConsultaioState;
+
+}

@@ -8,7 +8,7 @@
       <div class="row">
         @switch (indice) { 
         @case (1) {
-          <paso-uno (pestanaCambiado)="pestanaCambiado($event)"></paso-uno>
+          <paso-uno [consultaState]="consultaState" (pestanaCambiado)="pestanaCambiado($event)"></paso-uno>
         } @case (2) {
           <app-pasoduos></app-pasoduos>
         } @case (3) {

@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
-import { AlertComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { AlertComponent, ConsultaioState, TituloComponent } from '@libs/shared/data-access-user/src';
 import { RetirosCofepris261702State, Tramite261702Store } from '../../../../estados/tramites/tramite261702.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -32,6 +32,13 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
  */
   public manifiestosAlert: string = MANIFIESTOS_ALERT.message;
   
+/**
+    * @property consultaState
+    * @description
+    * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+    */
+    @Input() consultaState!: ConsultaioState;
+
   /**
    * compo doc
    * Subject para notificar la destrucción del componente.
