@@ -148,7 +148,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    *
    */
   crearFormaulario(): void {
-    this.cargarDatos();
     this.pagoDerechosForm = this.fb.group({
       claveReferencia: [
         this.pagoDerechoFormState?.claveReferencia || '',
