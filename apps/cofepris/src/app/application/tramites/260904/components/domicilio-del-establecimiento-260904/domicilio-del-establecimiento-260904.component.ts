@@ -170,7 +170,7 @@ export class DomicilioDelEstablecimiento260904Component
              .pipe(
                takeUntil(this.destroy$),
                map((seccionState) => {
-                 this.esFormularioSoloLectura = seccionState.readonly || true;
+                 this.esFormularioSoloLectura = seccionState.readonly;
                  this.inicializarEstadoFormulario();
                })
              )
