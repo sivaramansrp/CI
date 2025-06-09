@@ -106,7 +106,7 @@ export interface RegistroDeDonacion10303State {
 export function createInitialState(): RegistroDeDonacion10303State {
     return {
         seleccionadaManifiesto: [false, false, false, false, false],
-        aduana: '',
+        aduana: '-1',
         seleccionadaBasicoRequerimiento: [false, false, false, false, false, false],
 
         numeroConsecutivo: '1',

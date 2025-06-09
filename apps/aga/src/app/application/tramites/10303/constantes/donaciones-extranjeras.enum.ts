@@ -33,7 +33,7 @@ export const TEXTOS = {
     DESCRIPCION_DONACION: 'Debe capturar la descripción de la mercancía en los mismos términos de la carta de donación',
     REGULACIONES_RESTRICCIONES_NO_ARANCELARIAS: '<p>Tratándose de mercancía sujeta a regulaciones y restricciones no arancelarias, adicional debe proporcionar la siguiente información</p>',
     REQUISITOS_CLAVES_CATALOGO_CAMPOS_PLANTILLA: '<p>En el caso de usar plantilla, para los campos: requerimiento básico, destino donación, UMC, UMT, país de procedencia, país de origen, condición mercancía y tipo vehículo, se deberá ingresar la clave del catálogo correspondiente. Los datos válidos de cada catálogo se encuentran en cada plantilla en la hoja correspondiente. <a href=""> Descargar plantilla</a></p>',
-    ETIQUETA_DE_ARCHIVO: 'Sin archivo seleccionados'
+    ETIQUETA_DE_ARCHIVO: ' Sin archivo seleccionados'
 }
 
 /**
@@ -42,7 +42,7 @@ export const TEXTOS = {
 export const FECHA_CADUCIDAD = {
     labelNombre: 'Fecha de caducidad',
     required: true,
-    habilitado: false,
+    habilitado: true,
 }
 
 /**

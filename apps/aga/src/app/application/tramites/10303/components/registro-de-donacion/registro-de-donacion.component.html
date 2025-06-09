@@ -22,7 +22,7 @@
             <div class="col-md-8">
                 <div class="form-group">
                     <app-catalogo-select [catalogo]="aduana" [label]="'Aduana por la que ingresará la mercancía'"
-                        [required]="true" name="aduana" formControlName="aduana"
+                        [required]="true" name="aduana" formControlName="aduana" [placeholder]="'Selecciona un valor'"
                         (change)="aduanaSeleccion()"></app-catalogo-select>
                 </div>
             </div>
@@ -263,13 +263,9 @@
                             <div id="cargaUnitariaVehiculos">
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <div class="input-group">
-                                            <label for="fechaCaducidad">Fecha de caducidad*:</label>
-                                            <input class="form-control" type="date" name="fechaCaducidad"
-                                                id="fechaCaducidad" formControlName="fechaCaducidad"
-                                                [ngClass]="isValid(datosCofepris,'fechaCaducidad') ? 'required' : ''"
-                                                (change)="setValoresStore(datosCofepris,'fechaCaducidad', 'setFechaCaducidad')">
-                                        </div>
+                                        <input-fecha [datos]="fechaCaducidad" name="fechaCaducidad"
+                                            (valorCambiado)="cambioFechaCaducidad($event)"
+                                            [setFecha]="registroDonacionForm.get('fechaCaducidad')?.value"></input-fecha>
                                     </div>
                                     <div class="col-md-4">
                                         <label for="ingredienteActivo" class="form-label">Ingrediente activo*:</label>
@@ -340,7 +336,7 @@
                         <ng-alert [CONTENIDO]="TEXTOS.REQUISITOS_CLAVES_CATALOGO_CAMPOS_PLANTILLA"></ng-alert>
 
                         <div class="row" style="margin-top: 20px">
-                            <div class="col-md-8">
+                            <div class="col-md-6">
                                 <button type="button" for="archivoMedicamentos" class="file-upload"
                                     (click)="activarSeleccionArchivo()">
                                     Seleccionar archivo
@@ -350,7 +346,7 @@
                                     class="file-upload" style="display: none;">
                             </div>
 
-                            <div class="col-md-4 text-end">
+                            <div class="col-md-6 text-end">
                                 <button class="btn btn-primary mr-5px" (click)="cargarArchivo()">Cargar
                                     archivo</button>
                                 <button class="btn btn-danger" (click)="eliminacionMedicamento()">Eliminar</button>
