@@ -33,8 +33,8 @@ describe('CertificadoOrigenComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
-      declarations: [CertificadoOrigenComponent],
+      imports: [FormsModule, ReactiveFormsModule,CertificadoOrigenComponent],
+      declarations: [],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         FormBuilder,

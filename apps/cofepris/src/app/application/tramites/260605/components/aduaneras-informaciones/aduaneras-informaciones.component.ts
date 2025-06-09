@@ -168,7 +168,7 @@ export class AduanerasInformacionesComponent implements OnInit, OnDestroy {
    * 
    * @memberof AduanerasInformacionesComponent
    */
-  onSubmit(): void {
+  enEnviar(): void {
     this.esFormularioValido = true;
   }
 

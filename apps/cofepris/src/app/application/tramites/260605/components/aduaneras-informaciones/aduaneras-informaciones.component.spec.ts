@@ -124,7 +124,7 @@ describe('AduanerasInformacionesComponent', () => {
   });
 
   it('should mark the form as valid on submit', () => {
-    component.onSubmit();
+    component.enEnviar();
     expect(component.esFormularioValido).toBe(true);
   });
 
