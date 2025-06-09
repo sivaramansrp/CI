@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 
 import { AvisoProcesosRoutingModule } from './aviso-procesos-routing.module';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { AvisoService } from './services/aviso.service';
 
 
 @NgModule({
@@ -11,6 +12,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     CommonModule,
     AvisoProcesosRoutingModule,
     WizardComponent
-  ]
+  ],
+  providers:[AvisoService]
 })
 export class AvisoProcesosModule { }

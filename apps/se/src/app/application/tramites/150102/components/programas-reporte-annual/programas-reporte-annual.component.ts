@@ -1,6 +1,7 @@
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -87,6 +88,12 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
   ];
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * @description Constructor que inicializa los servicios y estado necesarios.
    * @param fb Servicio para crear formularios reactivos.
    * @param solicitud150102Store Servicio para manejar el estado de la solicitud.
@@ -97,8 +104,26 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     public solicitud150102Store: Solicitud150102Store,
     public solicitud150102Query: Solicitud150102Query,
-    public solicitudService: SolicitudService
+    public solicitudService: SolicitudService,
+    private consultaioQuery: ConsultaioQuery
   ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+
     this.obtenerReporteFechas();
     this.obtenerProgramasReporte();
   }
@@ -108,6 +133,44 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
    * Configura el formulario y sincroniza los datos iniciales con el estado.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.formProgrmasReporte.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formProgrmasReporte.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  /**
+   * Inicializa el formulario `formProgrmasReporte` con los valores actuales del estado `solicitud150102State`.
+   *
+   * - Deshabilita todos los campos para solo lectura.
+   * - Se suscribe al observable `seleccionarSolicitud$` para actualizar el formulario en tiempo real
+   *   cuando haya cambios en el estado de la solicitud.
+   */
+
+  inicializarFormulario(): void {
     this.formProgrmasReporte = this.fb.group({
       inicio: [{ value: this.solicitud150102State.inicio, disabled: true }],
       fin: [{ value: this.solicitud150102State.fin, disabled: true }],
