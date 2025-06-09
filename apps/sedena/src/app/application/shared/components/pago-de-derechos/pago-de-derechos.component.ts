@@ -1,6 +1,6 @@
 import { CAMPO_OBLIGATORIO_DERECHOS } from '../../constants/datos-solicitud.enum';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
@@ -70,6 +70,15 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   @Input() idProcedimiento!: number;
 
+
+  /**
+   * Indica si el formulario se encuentra en modo solo lectura.
+   * Cuando es verdadero, los campos del formulario no pueden ser editados.
+   * @property {boolean} esFormularioSoloLectura
+   * @default false
+   */
+  @Input() esFormularioSoloLectura: boolean = false;
+
   /**
    * @property {Subject<void>} unsubscribe$
    * Subject utilizado para gestionar las desuscripciones automáticas y evitar fugas de memoria.
@@ -127,6 +136,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.crearFormaulario();
     this.cargarDatos();
     this.campoObligatorio = CAMPO_OBLIGATORIO_DERECHOS.includes(this.idProcedimiento)
+
+    if (this.esFormularioSoloLectura) {
+      this.pagoDerechosForm.disable();
+    }
   }
 
   /**
@@ -163,7 +176,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       this.updatePagoDerechos.emit(valores);
     });
 
-    this.cargarDatos();
   }
 
   /**

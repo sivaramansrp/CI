@@ -11,6 +11,7 @@
         <div class="col-md-6">
           <app-catalogo-select [label]="'Idioma'" [catalogo]="(idioma$ | async) || []" 
           [required]="true" name="estado" formControlName="idiomaDates"
+          [isDisabled]="esFormularioSoloLectura"
           (selectionChange)="idiomaSeleccion($event)"></app-catalogo-select>
         </div>
       </div>
@@ -19,11 +20,13 @@
         <div class="col-md-6">
           <app-catalogo-select [label]="'Entidad federativa'" [catalogo]="(entidadFederativas$ | async) || []" 
           [required]="true" name="estado"formControlName="EntidadFederativaDates"
+          [isDisabled]="esFormularioSoloLectura"
           (selectionChange)="entidadFederativaSeleccion($event)"></app-catalogo-select>
         </div>
         <div class="col-md-6">
           <app-catalogo-select [label]="'Representación federal'"  [catalogo]="(representacionFederal$ | async) || []" 
           [required]="true" name="estado" formControlName="representacionFederalDates"
+          [isDisabled]="esFormularioSoloLectura"
           (selectionChange)="representacionFederalSeleccion($event)"></app-catalogo-select>
         </div>
       </div>

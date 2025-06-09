@@ -28,12 +28,11 @@
       <div class="row">
         <div class="col-md-8 mt-4">
           <app-catalogo-select
-            [catalogo]="operacione.catalogos"
+            [catalogo]="operaciones"
             [label]="'Selecciona el tipo de figura para promover las operaciones'"
             [required]="true"
-            formControlName="operaciones"  (change)="
-            setValoresStore(datosDelTramiteDos, 'operaciones', 'setOperaciones')
-          ">
+            [isDisabled]="esFormularioSoloLectura"
+            formControlName="operaciones"  (change)="setValoresStore(datosDelTramiteDos, 'operaciones', 'setOperaciones')">
           </app-catalogo-select>
         </div>
       </div>
@@ -42,15 +41,15 @@
 
       <div class="row">
         <div class="col-md-12 mb-5 d-flex justify-content-end">
-          <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modalAgregar" (click)="abrirModal()">
+          <button type="button" class="btn btn-primary ms-3" data-bs-toggle="modal" data-bs-target="#modalAgregar" (click)="abrirModal()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
-          <button type="button" class="btn btn-default ms-3">Eliminar</button>
-          <button type="button" class="btn btn-default">Modificar</button>
+          <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura">Eliminar</button>
+          <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">Modificar</button>
         </div>
 
         <div class="table-container">
-          <ng-table [commonTableHeader]="mercanciaHeaderData" [commonTableBody]="mercanciaBodyData"> </ng-table>
+          <ng-table [disableSeleccionTablaCheckBox]="esFormularioSoloLectura" [commonTableHeader]="mercanciaHeaderData" [commonTableBody]="mercanciaBodyData"> </ng-table>
         </div>
       </div>
     </form>

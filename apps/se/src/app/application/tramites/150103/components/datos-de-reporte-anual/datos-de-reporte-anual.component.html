@@ -1,9 +1,9 @@
 <div class="container">
     <form [formGroup]="formReporteAnnual">
       <ng-titulo
-        titulo="Reporte anual balanza comercial (Capture todas las cantidades en miles de pesos)"
+      style="white-space: nowrap;"
+        titulo="Reporte anual balanza comercial (capture todas las cantidades en miles de pesos)"
       />
-  
       <div class="row mt-3">
         <div class="col-md-4">
           <label class="form-label" for="ventasTotales">Ventas totales(a)*:</label>
@@ -13,6 +13,8 @@
             class="form-control"
             formControlName="ventasTotales"
             (change)="obtenerVentasTotales($event)"
+            [disabled]="esFormularioSoloLectura"
+            
           />
         </div>
         <div class="col-md-4">
@@ -25,6 +27,8 @@
             class="form-control"
             formControlName="totalExportaciones"
             (input)="obtenerTotalExportaciones($event)"
+            [disabled]="esFormularioSoloLectura"
+            
           />
         </div>
         <div class="col-md-4">
