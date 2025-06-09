@@ -42,7 +42,11 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
     * Cuando es `true`, los campos del formulario no se pueden editar.
     */
   esFormularioSoloLectura: boolean = false;
-
+  /**
+    * Indica si el formulario está en modo solo lectura.
+    * Cuando es `true`, los campos del formulario no se pueden editar.
+    */
+  esFormularioSoloLecturaActualizar: boolean = false;
   constructor(private fb: FormBuilder, private invoCarService: InvoCarService, private store: Tramite105Store,
     private query: Tramite105Query, private consultaioQuery: ConsultaioQuery) {
     /**
@@ -57,6 +61,7 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+          this.esFormularioSoloLecturaActualizar = seccionState.update;
           if (seccionState.update) {
             this.fetchTableDummyJson();
           }
@@ -200,7 +205,12 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
     this.getFraccionArancelariae();
     this.obtenerMercancia();
     this.crearFormularioAgregar();
-
+    if (this.esFormularioSoloLecturaActualizar) {
+      this.crearDatosDelTramiteForm()
+      this.alternarControles(true);
+      this.esFormularioSoloLectura=false;
+      this.deshabilitarSeleccion=false;
+    }
   }
   /**
      * Evalúa si se debe inicializar o cargar datos en el formulario.  

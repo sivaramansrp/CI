@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
-import { Subject,map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { InvoCarService } from '../../services/invocar.service';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 
@@ -13,73 +13,74 @@ import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constan
   standalone: false,
   templateUrl: './datos.component.html',
 })
-export class DatosComponent implements AfterViewInit,OnInit,OnDestroy {
+export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
   /** Subject para notificar la destrucción del componente. */
-    private destroyNotifier$: Subject<void> = new Subject();
+  private destroyNotifier$: Subject<void> = new Subject();
 
- /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
 
-/**
- * Estado actual de la consulta de información.
- * 
- * Esta propiedad almacena el estado relacionado con la consulta de datos
- * de tipo `ConsultaioState`, permitiendo gestionar y acceder a la información
- * relevante durante el ciclo de vida del componente.
- */
-public consultaState!:ConsultaioState;
-
-/**
- * Constructor de la clase.
- * 
- * @param consultaQuery Servicio utilizado para realizar consultas relacionadas con la entidad Consultaio.
- * @param invoCarService Servicio encargado de gestionar operaciones relacionadas con InvoCar.
- * 
- * La inicialización de las propiedades se realizará en métodos específicos según sea necesario.
- */
- constructor(private consultaQuery: ConsultaioQuery,private invoCarService: InvoCarService) {
-// Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
- }
-
-/**
- * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
- * 
- * - Suscribe al observable `selectConsultaioState$` para obtener el estado de la consulta y actualizar la propiedad `consultaState`.
- * - Si la propiedad `update` de `consultaState` es verdadera, llama al método `guardarDatosFormulario()`.
- * - Si no, establece la bandera `esDatosRespuesta` en `true`.
- * 
- * @returns void
- */
-ngOnInit(): void {
- this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
-          this.consultaState = seccionState;
-      })).subscribe();
-    if(this.consultaState.update) {
-      this.guardarDatosFormulario();
-    } else {
-      this.esDatosRespuesta = true;
-    }
-}
-
-
-/**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
+  /**
+   * Estado actual de la consulta de información.
+   * 
+   * Esta propiedad almacena el estado relacionado con la consulta de datos
+   * de tipo `ConsultaioState`, permitiendo gestionar y acceder a la información
+   * relevante durante el ciclo de vida del componente.
    */
+  public consultaState!: ConsultaioState;
+
+  /**
+   * Constructor de la clase.
+   * 
+   * @param consultaQuery Servicio utilizado para realizar consultas relacionadas con la entidad Consultaio.
+   * @param invoCarService Servicio encargado de gestionar operaciones relacionadas con InvoCar.
+   * 
+   * La inicialización de las propiedades se realizará en métodos específicos según sea necesario.
+   */
+  constructor(private consultaQuery: ConsultaioQuery, private invoCarService: InvoCarService) {
+    // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * 
+   * - Suscribe al observable `selectConsultaioState$` para obtener el estado de la consulta y actualizar la propiedad `consultaState`.
+   * - Si la propiedad `update` de `consultaState` es verdadera, llama al método `guardarDatosFormulario()`.
+   * - Si no, establece la bandera `esDatosRespuesta` en `true`.
+   * 
+   * @returns void
+   */
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
+      this.consultaState = seccionState;
+      if (this.consultaState.update) {
+        this.guardarDatosFormulario();
+      } else {
+        this.esDatosRespuesta = true;
+      }
+    })).subscribe();
+
+  }
+
+
+  /**
+     * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+     * Luego reinicializa el formulario con los valores actualizados desde el store.
+     */
   guardarDatosFormulario(): void {
     this.invoCarService
       .getRegistroTomaMuestrasMercanciasData().pipe(
         takeUntil(this.destroyNotifier$)
       )
       .subscribe((resp) => {
-        if(resp){
-        this.esDatosRespuesta = true;
-        this.invoCarService.actualizarEstadoFormulario(resp);
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.invoCarService.actualizarEstadoFormulario(resp);
         }
       });
   }

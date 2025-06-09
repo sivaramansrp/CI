@@ -6,7 +6,7 @@
   "distribucionGas": "0",
   "serviciosTerceros": "1",
   "industriaAutomotriz": "1",
-  "domicilio": false,
+  "domicilio": true,
   "ubicacion": false,
   "pais": "1",
   "codigoPostal": "01234",
