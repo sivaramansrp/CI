@@ -2207,6 +2207,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       }
       return false;
     });
+
     if ((ADUANA || DESPACHO || RECINTO) > 0 && FORMA_MODIFICADA) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -2219,9 +2220,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         txtBtnCancelar: 'No',
       };
       this.procesoModal = 'lda_dd';
+    } else if (!this.despacho.get(tipo)?.value) {
+      this.despacho.get('rfcDespachoLDA')?.clearValidators();
+      this.despacho.get('rfcDespachoLDA')?.updateValueAndValidity();
+      this.despacho.get('folioDDEX')?.clearValidators();
+      this.despacho.get('folioDDEX')?.updateValueAndValidity();
     } else {
-      console.log('entro aqui');
-
       this.activaDesactivaCheckLDA_DDEX(tipo);
     }
   }
@@ -2232,7 +2236,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   activaDesactivaCheckLDA_DDEX(tipo: string): void {
-
     this.despachoSeleccionado = !this.despachoSeleccionado;
 
     if (!this.despachoSeleccionado) {
@@ -2555,6 +2558,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   eliminarLineaCaptura(): void {
+    console.log(this.despacho);
+    
+
+
     if (this.lineaCapturaSeleccionados.length === 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
