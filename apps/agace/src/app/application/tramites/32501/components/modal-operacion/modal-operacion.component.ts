@@ -50,18 +50,6 @@ import { takeUntil } from 'rxjs';
  * También maneja la limpieza de suscripciones al destruirse el componente.
  */
 export class ModalOperacionComponent implements OnInit, OnDestroy {
-  actualizarAduana(mockCatalogo: { id: number; descripcion: string; }) {
-    throw new Error('Method not implemented.');
-  }
-  actualizarPatente(mockEvent: Event) {
-    throw new Error('Method not implemented.');
-  }
-  actualizaRFC(mockEvent: Event) {
-    throw new Error('Method not implemented.');
-  }
-  actualizarPedimento(mockEvent: Event) {
-    throw new Error('Method not implemented.');
-  }
   /**
    * Formulario para los datos de la operación de importación.
    */
