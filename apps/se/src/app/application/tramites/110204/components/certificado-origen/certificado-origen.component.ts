@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Catalogo, InputFecha, InputFechaComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Observable, Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { CONFIGURACION_MERCANCIA } from '../../constantes/modificacion.enum';
+import { CatalogoSelectComponent} from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
@@ -64,6 +65,14 @@ export const FECHA_FINAL = {
   styleUrl: './certificado-origen.component.scss',
 })
 export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewInit {
+
+  /**
+   * @input
+   * @description
+   * Indica si el formulario debe estar deshabilitado. Cuando es `true`, los controles del formulario estarán inactivos y no permitirán la edición por parte del usuario.
+   * @type {boolean}
+   */
+   @Input() formularioDeshabilitado: boolean = false;
 
   /**
    * Formulario reactivo utilizado para la gestión de los datos del certificado.
@@ -166,6 +175,14 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
    * @param seccionStore Store para actualizar el estado de la sección.
    */
   private actualizandoFormulario = false;
+
+  /**
+   * @descripcion
+   * Indica si el formulario se encuentra en modo solo lectura.
+   * Cuando es verdadero, los controles del formulario estarán deshabilitados.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private store: Tramite110204Store,
@@ -255,8 +272,29 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
       this.validarFormulario();
       }
     });
+    if(this.formularioDeshabilitado){
+      this.esFormularioSoloLectura = true;
+      this.inicializarEstadoFormulario();
+    }
+
   }
 
+  /**
+   * Inicializa el estado del formulario según si está en modo solo lectura o editable.
+   * Si el formulario está en modo solo lectura, deshabilita todos los controles.
+   * Si no, habilita los controles para permitir la edición.
+   *
+   * @method
+   * @memberof CertificadoOrigenComponent
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.formCertificado.disable();
+    }
+    else {
+      this.formCertificado.enable();
+    } 
+  }
   /**
    * Carga la lista de estados desde el servicio y actualiza el store con los datos.
    */

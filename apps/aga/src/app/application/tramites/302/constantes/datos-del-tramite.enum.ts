@@ -1,3 +1,6 @@
+import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
+import { DetallesDelProducto } from "../models/certi-registro.model";
+
 /**
  * MERCANCIAS:
  * Contiene la configuración de los campos relacionados con las mercancías.
@@ -145,7 +148,27 @@ export const MERCANCIAS = [
         tooltip: '',
         validators: [''],
         placeholder: '',
-      }
+      },
+      {
+        labelNombre: 'Año de importación temporal',
+        campo: 'anoDeImportacionTemporalDesc',
+        class: 'col-md-4',
+        tipo_input: 'hidden',
+        disabled: false,
+        tooltip: '',
+        validators: [''],
+        placeholder: '',
+      },
+      {
+        labelNombre: 'Unidad de medida',
+        campo: 'unidadDeMedidaDesc',
+        class: 'col-md-4',
+        tipo_input: 'hidden',
+        disabled: false,
+        tooltip: '',
+        validators: [''],
+        placeholder: '',
+      },
   ];
 
   /**
@@ -330,3 +353,54 @@ export const MERCANCIAS = [
 export const DATOS_ALERT = {
   message: `<p>Debes capturar la descripción de la mercancía en los mismos términos de la carta de donación.</p>`,
 };
+
+/**
+ * Arreglo de configuraciones de columnas para mostrar los detalles de un producto.
+ * Cada objeto define la información que se mostrará en la tabla de productos, incluyendo:
+ * - El encabezado de la columna.
+ * - La clave o función para obtener el valor correspondiente del producto.
+ * - El orden en el que se mostrará la columna.
+ *
+ * @type {ConfiguracionColumna<DetallesDelProducto>[]}
+ * 
+ * @ejemplo
+ * Este arreglo puede ser utilizado para generar dinámicamente las columnas de una tabla
+ * que muestre información relevante sobre los productos en el trámite 302.
+ */
+export const DATOS_DEL_PRODUCTO : ConfiguracionColumna<DetallesDelProducto>[] = [
+      {
+        encabezado: 'Tipo de mercancía',
+        clave: (item: DetallesDelProducto) => item.tipoDeMercancia,
+        orden: 1,
+      },
+      { 
+        encabezado: 'Cantidad',
+        clave: (item: DetallesDelProducto) => item.cantidad,
+        orden: 2
+      },
+      {
+        encabezado: 'Unidad de medida de comercialización',
+        clave: (item: DetallesDelProducto) => item.unidadDeMedida,
+        orden: 3,
+      },
+      {
+        encabezado: 'Año de importación temporal',
+        clave: (item: DetallesDelProducto) => item.anoDeImportacionTemporal,
+        orden: 4,
+      },
+      {
+        encabezado: 'Modelo',
+        clave: (item: DetallesDelProducto) => item.modelo,
+        orden: 5,
+      },
+      {
+        encabezado: 'Marca',
+        clave: (item: DetallesDelProducto) => item.marca,
+        orden: 6,
+      },
+      {
+        encabezado: 'Número de serie',
+        clave: (item: DetallesDelProducto) => item.numeroDeSerie,
+        orden: 7,
+      },
+    ];
