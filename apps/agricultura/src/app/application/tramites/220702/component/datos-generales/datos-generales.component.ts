@@ -9,6 +9,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MERCANCIA_SERVICIO, MercanciaInfo } from '../../constantes/acuicola.enum';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery} from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudInt } from '../../modelos/acuicola.model';
 import { FitosanitarioService } from '../../service/fitosanitario.service';
 import { OnDestroy } from '@angular/core';
@@ -136,6 +137,21 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    */
   private seccion!: SeccionLibState;
 
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+   esFormularioSoloLectura: boolean = false; 
+
+   /**
+    * Indica si el campo debe ser deshabilitado.
+    * @property {boolean} campoDeshabilitar
+    */
+   campoDeshabilitar:boolean= false;
+ 
+   
+
+
   /**
    * Constructor del componente.
    * @constructor
@@ -153,8 +169,29 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
+    private readonly consultaioQuery: ConsultaioQuery
   ) { 
-    // No se necesita lógica de inicialización adicional.
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      ).subscribe();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.iniciarFormulario();
+    }  
+
   }
 
   /**
@@ -164,6 +201,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
     this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
@@ -210,6 +248,26 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+  }
+
+  /**
+   * Guarda los datos del formulario y actualiza el estado del componente.
+   * Si el formulario está en modo solo lectura, deshabilita los campos.
+   * Si no, habilita los campos para permitir la edición.
+   *
+   * @method guardarDatosFormulario
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  guardarDatosFormulario(): void {
+    this.iniciarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.campoDeshabilitar=true;
+      this.datosGeneralesForm.disable();
+    } else {
+      this.campoDeshabilitar=false;
+      this.datosGeneralesForm.enable();
+    }
+
   }
 
   /**

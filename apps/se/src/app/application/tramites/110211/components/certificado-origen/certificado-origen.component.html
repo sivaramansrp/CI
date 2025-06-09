@@ -12,10 +12,11 @@
     [guardarClicado]="(datosTabla$ | async) ||  []"
     (formaValida)="setFormValida($event)"
     [datosForm]="formCertificadoValues"
-    (formCertificadoEvent)="setValoresStore($event)" >
+    (formCertificadoEvent)="setValoresStore($event)"
+    [esFormularioSoloLectura]="esFormularioSoloLectura">
 </app-certificado-de-origen>
 
 <div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
     <app-mercancia [datosSeleccionados]="datosSeleccionados" (guardarClicado)="abrirModificarModal($event)"
-        (cerrarClicado)="cerrarModificarModal()"></app-mercancia>
+        (cerrarClicado)="cerrarModificarModal()" [esFormularioSoloLectura]="esFormularioSoloLectura"></app-mercancia>
 </div>
