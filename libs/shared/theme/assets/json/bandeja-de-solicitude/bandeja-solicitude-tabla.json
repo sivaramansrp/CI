@@ -1185,8 +1185,26 @@
       "fechaActualizacion": "2022-10-25",
       "diasTranscurridos": "3",
       "departamento": "SE",
-      "numeroDeProcedimiento": "110205"
-},
+      "numeroDeProcedimiento": "140105"
+    },
+   {
+    "id": 130106,
+    "tipoDeTramite": "Expedición de Certificados de Cupo Licitación pública",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "130106"
+      },
+    {
+        "id": 220702,
+        "tipoDeTramite": "Solicitud",
+        "fecha": "2024-10-05",
+        "fechaActualizacion": "2022-10-25",
+        "diasTranscurridos": "3",
+        "departamento": "AGRICULTURA",
+        "numeroDeProcedimiento": "220702"
+  },
 {
    "id": 302,
    "tipoDeTramite": "Solicitud de cs Permiso",
