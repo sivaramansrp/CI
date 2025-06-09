@@ -90,205 +90,205 @@ export function createInitialSolicitudState(): Solicitud290201State {
       super(createInitialSolicitudState());
     }
   
-    public setFormasDelCafe(formasdelcafe: string) {
+    public setFormasDelCafe(formasdelcafe: string): void {
       this.update((state) => ({
         ...state,
         formasdelcafe
       }));
     }
-    public setTipos(tipos: string) {
+    public setTipos(tipos: string): void {
       this.update((state) => ({
         ...state,
         tipos
       }));
     }
-    public setCalidad(calidad: string) {
+    public setCalidad(calidad: string): void {
       this.update((state) => ({
         ...state,
         calidad
       }));
     }
-    public setProcesos(procesos: string) {
+    public setProcesos(procesos: string): void {
       this.update((state) => ({
         ...state,
         procesos
       }));
     }
-    public setCertifications(certifications: string) {
+    public setCertifications(certifications: string): void {
       this.update((state) => ({
         ...state,
         certifications
       }));
     }
-    public setAdunadesalida(adunadesalida: string) {
+    public setAdunadesalida(adunadesalida: string): void {
       this.update((state) => ({
         ...state,
         adunadesalida
       }));
     }
-    public setPaisdestino(paisdestino: string) {
+    public setPaisdestino(paisdestino: string): void {
       this.update((state) => ({
         ...state,
         paisdestino
       }));
     }
-    public setEntidaddeprocedencia(entidaddeprocedencia: string) {
+    public setEntidaddeprocedencia(entidaddeprocedencia: string): void {
       this.update((state) => ({
         ...state,
         entidaddeprocedencia
       }));
     }
-    public setCiclocafetalero(ciclocafetalero: string) {
+    public setCiclocafetalero(ciclocafetalero: string): void {
       this.update((state) => ({
         ...state,
         ciclocafetalero
       }));
     }
-    public setEnvasadoen(envasadoen: string) {
+    public setEnvasadoen(envasadoen: string): void {
       this.update((state) => ({
         ...state,
         envasadoen
       }));
     }
-    public setUtilizoCafeComo(utilizoCafeComo: string) {
+    public setUtilizoCafeComo(utilizoCafeComo: string): void {
       this.update((state) => ({
         ...state,
         utilizoCafeComo
       }));
     }
-    public setCantidadutilizada(cantidadutilizada: string) {
+    public setCantidadutilizada(cantidadutilizada: string): void {
       this.update((state) => ({
         ...state,
         cantidadutilizada
       }));
     }
-    public setNumerodepedimento(numerodepedimento: string) {
+    public setNumerodepedimento(numerodepedimento: string): void {
       this.update((state) => ({
         ...state,
         numerodepedimento
       }));
     }
-    public setPaisdeimportacion(paisdeimportacion: []) {
+    public setPaisdeimportacion(paisdeimportacion: []): void {
       this.update((state) => ({
         ...state,
         paisdeimportacion
       }));
     }
-    public setFraccionarancelaria(fraccionarancelaria: []) {
+    public setFraccionarancelaria(fraccionarancelaria: []): void {
       this.update((state) => ({
         ...state,
         fraccionarancelaria
       }));
     }
-    public setCantidad(cantidad: string) {
+    public setCantidad(cantidad: string): void {
       this.update((state) => ({
         ...state,
         cantidad
       }));
     }
-    public setUnidaddemedida(unidaddemedida: string) {
+    public setUnidaddemedida(unidaddemedida: string): void {
       this.update((state) => ({
         ...state,
         unidaddemedida
       }));
     }
-    public setPrecioapplicable(precioapplicable: string) {
+    public setPrecioapplicable(precioapplicable: string): void {
       this.update((state) => ({
         ...state,
         precioapplicable
       }));
     }
-    public setDolar(dolar: string) {
+    public setDolar(dolar: string): void {
       this.update((state) => ({
         ...state,
         dolar
       }));
     }
-    public setLote(lote: string) {
+    public setLote(lote: string): void {
       this.update((state) => ({
         ...state,
         lote
       }));
     }
-    public setOtrasmarcas(otrasmarcas: string) {
+    public setOtrasmarcas(otrasmarcas: string): void {
       this.update((state) => ({
         ...state,
         otrasmarcas
       }));
     }
-    public setElcafe(elcafe: string) {
+    public setElcafe(elcafe: string): void {
       this.update((state) => ({
         ...state,
         elcafe
       }));
     }
-    public setFechaexportacion(fechaexportacion: string) {
+    public setFechaexportacion(fechaexportacion: string): void {
       this.update((state) => ({
         ...state,
         fechaexportacion
       }));
     }
-    public setPaisdetransbordo(paisdetransbordo: string) {
+    public setPaisdetransbordo(paisdetransbordo: string): void {
       this.update((state) => ({
         ...state,
         paisdetransbordo
       }));
     }
-    public setMediodetransporte(mediodetransporte: string) {
+    public setMediodetransporte(mediodetransporte: string): void {
       this.update((state) => ({
         ...state,
         mediodetransporte
       }));
     }
-    public setIdentificadordel(Identificadordel: string) {
+    public setIdentificadordel(Identificadordel: string): void {
       this.update((state) => ({
         ...state,
         Identificadordel
       }));
     }
-    public setObservaciones(observaciones: string) {
+    public setObservaciones(observaciones: string): void {
       this.update((state) => ({
         ...state,
         observaciones
       }));
     }
-    public setTipoPersona(tipoPersona: string) {
+    public setTipoPersona(tipoPersona: string): void {
       this.update((state) => ({
         ...state,
         tipoPersona
       }));
     }
-    public setDenominacion(denominacion: string) {
+    public setDenominacion(denominacion: string): void {
       this.update((state) => ({
         ...state,
         denominacion
       }));
     }
-    public setDomicilio(domicilio: string) {
+    public setDomicilio(domicilio: string): void {
       this.update((state) => ({
         ...state,
         domicilio
       }));
     }
-    public setPais(pais: string) {
+    public setPais(pais: string): void {
       this.update((state) => ({
         ...state,
         pais
       }));
     }
-    public setCodigopostal(codigopostal: string) {
+    public setCodigopostal(codigopostal: string): void {
       this.update((state) => ({
         ...state,
         codigopostal
       }));
     }
-    public setTelefono(telefono: string) {
+    public setTelefono(telefono: string): void {
       this.update((state) => ({
         ...state,
         telefono
       }));
     }
-    public setCorreoelectronico(correoelectronico: string) {
+    public setCorreoelectronico(correoelectronico: string): void {
       this.update((state) => ({
         ...state,
         correoelectronico

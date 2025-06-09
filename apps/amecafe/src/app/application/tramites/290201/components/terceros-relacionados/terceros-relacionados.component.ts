@@ -1,25 +1,31 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ReplaySubject,Subject,map,takeUntil } from 'rxjs';
+
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FilaData2 } from '../../models/fila-model';
+
+import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
 
 import {
   Catalogo,
   CatalogosSelect,
   ConfiguracionColumna,
+  ConsultaioQuery,
+  ConsultaioState,
   TablaSeleccion,
   TableComponent,
 } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { RegistrarSolicitudService } from '../../services/registrar-solicitud.service';
 import { Solicitud290201Query } from '../../../../estados/queries/tramites290201.query';
+
 import {
   Solicitud290201State,
   Solicitud290201Store,
 } from '../../../../estados/tramites/tramites290201.store';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { FilaData, FilaData2 } from '../../models/fila-model';
+
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 /**
  * Componente: TercerosRelacionadosComponent
@@ -39,7 +45,7 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.css',
 })
-export class TercerosRelacionadosComponent implements OnInit {
+export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   /**
    * Observable para manejar la destrucción del componente.
    */
@@ -95,6 +101,9 @@ export class TercerosRelacionadosComponent implements OnInit {
    */
   selectedRows: Set<number> = new Set();
 
+  public esDatosRespuesta: boolean = false;
+
+
   /**
    * Método para manejar el cambio de selección de tipo de persona.
    */
@@ -104,6 +113,15 @@ export class TercerosRelacionadosComponent implements OnInit {
    * Lista que almacena los datos de los destinatarios registrados.
    */
   newDestinatarioData: Array<any> = [];
+
+  consultaDatos!: ConsultaioState;
+    
+      /**
+       * @property {boolean} soloLectura
+       * @description Indica si el formulario o los campos están en modo de solo lectura.
+       * @default false
+       */
+      esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -118,7 +136,9 @@ export class TercerosRelacionadosComponent implements OnInit {
     private fb: FormBuilder,
     private changeDetectorRef: ChangeDetectorRef,
     private solicitud290201Store: Solicitud290201Store,
-    private solicitud290201Query: Solicitud290201Query
+    private solicitud290201Query: Solicitud290201Query,
+    private consultaioQuery: ConsultaioQuery,
+    
   ) {
     this.getPaisData();
   }
@@ -170,16 +190,40 @@ export class TercerosRelacionadosComponent implements OnInit {
   ngOnInit(): void {
     this.solicitud290201Query.selectSolicitud$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.destroyed$),
         map((seccionState) => {
           this.destinatarioState = seccionState;
         })
       )
       .subscribe();
+     
 
     this.createForm();
-  }
 
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+        this.consultaDatos = seccionState;
+        this.esFormularioSoloLectura = this.consultaDatos.readonly;
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe();
+    this.inicializarEstadoFormulario();
+  }
+  guardarDatosFormulario(): void {
+    this.registrarsolicitud
+      .getConsultaData().pipe(
+        takeUntil(this.destroyed$)
+      )
+      .subscribe((resp: Solicitud290201State) => {
+        if(resp){    
+        this.esDatosRespuesta = true;
+        this.registrarsolicitud.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
   /**
    * Método para crear el formulario reactivo.
    */
@@ -369,6 +413,15 @@ export class TercerosRelacionadosComponent implements OnInit {
   get datosDelTramiteRealizar(): FormGroup {
     return this.destinatarioForm.get('datosDelTramiteRealizar') as FormGroup;
   }
+
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.destinatarioForm?.disable();
+    }
+    else {
+      this.destinatarioForm?.enable();
+    }
+}
 
   /**
    * Método para establecer valores en el store.

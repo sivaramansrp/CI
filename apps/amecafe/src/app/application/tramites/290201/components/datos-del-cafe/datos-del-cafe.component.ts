@@ -4,11 +4,12 @@
  * Permite al usuario agregar, editar, eliminar y visualizar datos en una tabla.
  */
 import { CommonModule } from '@angular/common';
+
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
+import { ReplaySubject,map, takeUntil } from 'rxjs';
 
-import { AcuseComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { AcuseComponent, ConsultaioQuery, ConsultaioState, InputFecha, InputFechaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Catalogo, CatalogosSelect, ConfiguracionColumna, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -17,13 +18,14 @@ import { TableComponent } from '@libs/shared/data-access-user/src';
 import { DatosDeLaSolicitudComponent } from '../datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { RegistrarSolicitudService } from '../../services/registrar-solicitud.service';
 import { Solicitud290201Query } from '../../../../estados/queries/tramites290201.query';
+
 import { Solicitud290201State, Solicitud290201Store } from '../../../../estados/tramites/tramites290201.store';
 import { FilaData } from '../../models/fila-model';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 @Component({
   selector: 'app-datos-del-cafe',
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, TableComponent, AcuseComponent, DatosDeLaSolicitudComponent,TablaDinamicaComponent],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, CatalogoSelectComponent, TableComponent, AcuseComponent, DatosDeLaSolicitudComponent,TablaDinamicaComponent,InputFechaComponent],
   templateUrl: './datos-del-cafe.component.html',
   styleUrl: './datos-del-cafe.component.css',
 })
@@ -32,7 +34,6 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
    * Observable para gestionar la destrucción del componente y evitar fugas de memoria.
    */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-
 
 
   /**
@@ -150,6 +151,18 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
    */
   selectedRows: Set<number> = new Set();
 
+  consultaDatos!: ConsultaioState;
+
+  public esDatosRespuesta: boolean = false;
+
+  
+    /**
+     * @property {boolean} soloLectura
+     * @description Indica si el formulario o los campos están en modo de solo lectura.
+     * @default false
+     */
+    esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    * @param registrarsolicitud Servicio para obtener datos de los catálogos.
@@ -162,7 +175,9 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
     private fb: FormBuilder,
     private solicitud290201Store: Solicitud290201Store,
     private solicitud290201Query: Solicitud290201Query,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private consultaioQuery: ConsultaioQuery,
+    
   ) {
     this.getEnvasadoenData();
     this.getUtilicoCafeComoData();
@@ -272,8 +287,18 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       orden: 18,
     },
   ];
-
-
+  fechaexportacion: InputFecha = {
+    labelNombre: 'Fecha de pago*:',
+    required: false,
+    habilitado: true,
+  };
+  
+  cambioFechaFinal(nuevo_valor: string): void {
+    this.datosDelTramiteRealizar.patchValue({
+      fechaexportacion: nuevo_valor,
+    });
+    this.solicitud290201Store.setFechaexportacion(nuevo_valor);
+  }
   /**
    * Crea el formulario reactivo con los campos necesarios y sus validaciones.
    */
@@ -314,10 +339,33 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
         }),
       )
       .subscribe();
-
+      
     this.createForm();
-  }
 
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+      this.inicializarEstadoFormulario();
+  }
+  guardarDatosFormulario(): void {
+    this.registrarsolicitud
+      .getConsultaData().pipe(
+        takeUntil(this.destroyed$)
+      )
+      .subscribe((resp: Solicitud290201State) => {
+        if(resp){    
+        this.esDatosRespuesta = true;
+        this.registrarsolicitud.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
   /**
    * Obtiene los datos del catálogo "Envasado".
    */
@@ -507,6 +555,14 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
     return this.dataCafeForm.get('datosDelTramiteRealizar') as FormGroup;
   }
 
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.dataCafeForm?.disable();
+    }
+    else {
+      this.dataCafeForm?.enable();
+    }
+}
   /**
    * Este método se utiliza para actualizar un valor específico en el store de la solicitud.
    * @param form 

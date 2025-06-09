@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { from } from 'rxjs';
 import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
 
-import { Catalogo, CatalogosSelect, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogosSelect, ConsultaioQuery, ConsultaioState, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { TableComponent } from '@libs/shared/data-access-user/src';
 
@@ -42,9 +42,20 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
     tableBody: [],
     tableHeader: [],
   };
+  
+  consultaDatos!: ConsultaioState;
 
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false;
   /** Sujeto para manejar la destrucción del componente */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
+  public esDatosRespuesta: boolean = false;
+
 
   /** Configuración de datos para el campo "Tipos" */
   public tiposData: CatalogosSelect = {
@@ -118,6 +129,13 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
     catalogos: [],
   };
 
+  public certificacionsData: CatalogosSelect = {
+    labelNombre: 'Certificacion',
+    required: true,
+    primerOpcion: 'Selecciona un medio de transporte',
+    catalogos: [],
+  };
+
   constructor(
     /** Servicio para registrar solicitudes */
     private registrarsolicitud: RegistrarSolicitudService,
@@ -129,13 +147,16 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
     private solicitud290201Store: Solicitud290201Store,
 
     /** Consulta de estado para la solicitud */
-    private solicitud290201Query: Solicitud290201Query
+    private solicitud290201Query: Solicitud290201Query,
+
+    /**  */
+    private consultaioQuery: ConsultaioQuery,
   ) {}
 
   
 
   /** Crea el formulario para la información del café */
-  createForm() {
+  createForm(): void{
     this.informationCafeForm = this.fb.group({
       datosDelTramiteRealizar: this.fb.group({
         formasdelcafe: [this.informationCafeState?.formasdelcafe, Validators.required],
@@ -161,6 +182,8 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
         })
       )
       .subscribe();
+      
+
     this.createForm();
     this.getTiposData();
     this.getFormasdelcafeData();
@@ -169,10 +192,35 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
     this.getAduanadesalidaData();
     this.getEntidadDeProcedenciaData();
     this.getCiclocafetaleroData();
+    this.getPaisDestinoData();
+    this.getCertificacionData();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+      this.inicializarEstadoFormulario();
+  }
+  guardarDatosFormulario(): void {
+    this.registrarsolicitud
+      .getConsultaData().pipe(
+        takeUntil(this.destroyed$)
+      )
+      .subscribe((resp: Solicitud290201State) => {
+        if(resp){    
+        this.esDatosRespuesta = true;
+        this.registrarsolicitud.actualizarEstadoFormulario(resp);
+        }
+      });
   }
 
   /** Obtiene los datos para el campo "Tipos" */
-  getTiposData() {
+  getTiposData(): void {
     this.registrarsolicitud
       .getTiposData()
       .pipe(takeUntil(this.destroyed$))
@@ -182,7 +230,7 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
   }
 
   /** Obtiene los datos para el campo "Formas del café" */
-  getFormasdelcafeData() {
+  getFormasdelcafeData(): void {
     this.registrarsolicitud
       .getFormasdelcafeData()
       .pipe(takeUntil(this.destroyed$))
@@ -192,7 +240,7 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
   }
 
   /** Obtiene los datos para el campo "Calidad" */
-  getCalidadData() {
+  getCalidadData(): void {
     this.registrarsolicitud
       .getCalidadData()
       .pipe(takeUntil(this.destroyed$))
@@ -202,7 +250,7 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
   }
 
   /** Obtiene los datos para el campo "Procesos" */
-  getProcesosData() {
+  getProcesosData(): void {
     this.registrarsolicitud
       .getProcesosData()
       .pipe(takeUntil(this.destroyed$))
@@ -212,7 +260,7 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
   }
 
   /** Obtiene los datos para el campo "Aduana de salida" */
-  getAduanadesalidaData() {
+  getAduanadesalidaData(): void {
     this.registrarsolicitud
       .getAduanadesalidaData()
       .pipe(takeUntil(this.destroyed$))
@@ -222,7 +270,7 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
   }
 
   /** Obtiene los datos para el campo "Entidad de procedencia" */
-  getEntidadDeProcedenciaData() {
+  getEntidadDeProcedenciaData(): void {
     this.registrarsolicitud
       .getEntidadDeProcedenciaData()
       .pipe(takeUntil(this.destroyed$))
@@ -232,7 +280,7 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
   }
 
   /** Obtiene los datos para el campo "Ciclo cafetalero" */
-  getCiclocafetaleroData() {
+  getCiclocafetaleroData(): void {
     this.registrarsolicitud
       .getCiclocafetaleroData()
       .pipe(takeUntil(this.destroyed$))
@@ -241,11 +289,37 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
       });
   }
 
+  getPaisDestinoData(): void{
+    this.registrarsolicitud
+      .getPaisDestinoData()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.paisdestinoData.catalogos = data as Catalogo[];
+      });
+  }
+  getCertificacionData(): void{
+    this.registrarsolicitud
+      .getCertificacionData()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        this.certificacionsData.catalogos = data as Catalogo[];
+      });
+  }
+   
+  
   /** Obtiene el formulario anidado "datosDelTramiteRealizar" */
   get datosDelTramiteRealizar(): FormGroup {
     return this.informationCafeForm.get('datosDelTramiteRealizar') as FormGroup;
   }
 
+ inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.informationCafeForm?.disable();
+    }
+    else {
+      this.informationCafeForm?.enable();
+    }
+}
   /**
    * Establece valores en el almacén de estado
    * @param form Formulario del cual se obtiene el valor
