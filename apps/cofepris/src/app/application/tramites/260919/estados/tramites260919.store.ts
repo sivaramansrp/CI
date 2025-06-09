@@ -170,6 +170,18 @@ presentacionFarmaceutica: string;
  * Puede ser utilizado para diferenciar entre operaciones como alta, modificación o baja.
  */
 tipoOperacion: boolean,
+/** Número de registro sanitario */
+numeroDeRegistoSanitario: string,
+/** Presentación del producto */
+presentacion: string,
+/** Forma farmacéutica del producto */
+formaFarmaceutica: string,
+/** Número de registro sanitario del producto */
+numeroDeRegistroSanitario: string,
+/** Fecha de pago del trámite */
+fechaDePago: string,
+  /** CURP de la persona */
+curp: string,
 }
 
 /**
@@ -345,6 +357,19 @@ export function createInitialSolicitudState(): Solicitud260919State {
  * Indica si la operación es de alta, modificación o baja.
  */
   tipoOperacion: false,
+
+  /** Número de registro sanitario */
+  numeroDeRegistoSanitario: '',
+  /** Presentación del producto */
+  presentacion:'',
+  /** Forma farmacéutica del producto */
+  formaFarmaceutica: '',
+  /** Número de registro sanitario del producto */
+  numeroDeRegistroSanitario: '',
+  /** Fecha de pago del trámite */
+  fechaDePago: '',
+  /** CURP de la persona */
+  curp: '',
   };
 }
 /**
@@ -936,6 +961,68 @@ public setRfcDel(rfcDel: string): void {
   this.update((state) => ({
     ...state,
     rfcDel,
+  }));
+}
+
+/**
+ * Actualiza el número de registro sanitario en el estado.
+ * @param numeroDeRegistoSanitario Número de registro sanitario a establecer.
+ */
+public setNumeroDeRegistoSanitario(numeroDeRegistoSanitario: string): void {
+  this.update((state) => ({
+    ...state,
+    numeroDeRegistoSanitario,
+  }));
+}
+
+/**
+ * Actualiza la presentación del producto en el estado.
+ * @param presentacion Presentación a establecer.
+ */
+public setPresentacion(presentacion: string): void {
+  this.update((state) => ({
+    ...state,
+    presentacion,
+  }));
+}
+/**
+ * Actualiza la forma farmacéutica del producto en el estado.
+ * @param formaFarmaceutica Forma farmacéutica a establecer.
+ */
+public setFormaFarmaceutica(formaFarmaceutica: string): void {
+  this.update((state) => ({
+    ...state,
+    formaFarmaceutica,
+  }));
+}
+/**
+ * Actualiza el número de registro sanitario en el estado.
+ * @param numeroDeRegistroSanitario Número de registro sanitario a establecer.
+ */
+public setNumeroDeRegistroSanitario(numeroDeRegistroSanitario: string): void {
+  this.update((state) => ({
+    ...state,
+    numeroDeRegistroSanitario,
+  }));
+}
+/**
+ * Actualiza la fecha de pago en el estado.
+ * @param fechaDePago Fecha de pago a establecer.
+ */
+public setFechaDePago(fechaDePago: string): void {
+  this.update((state) => ({
+    ...state,
+    fechaDePago,
+  }));
+}
+/**
+ * Actualiza el CURP en el estado.
+ * @param curp CURP a establecer.
+ */
+public setCurp(curp: string): void {
+  this.update((state) => ({
+    ...state,
+    curp,
   }));
 }
 
