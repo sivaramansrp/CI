@@ -1759,8 +1759,8 @@
   {
     "id": 252,
     "tramite": 240101,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-ordinario-importacion-armas-municiones/contenedor-de-pasos",
+    "linkDepartment": "/pago/permiso-ordinario-importacion-armas-municiones/contenedor-de-pasos",
     "department": "sedena"
   },
   {
