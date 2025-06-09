@@ -2140,6 +2140,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               this.despachoSeleccionado = false;
             }
           }
+
+          this.despacho.get('rfcDespachoLDA')?.clearValidators();
+          this.despacho.get('rfcDespachoLDA')?.updateValueAndValidity();
+          this.despacho.get('folioDDEX')?.clearValidators();
+          this.despacho.get('folioDDEX')?.updateValueAndValidity();
         }
         break;
 
@@ -2227,7 +2232,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   activaDesactivaCheckLDA_DDEX(tipo: string): void {
-    console.log(this.solicitudState);
 
     this.despachoSeleccionado = !this.despachoSeleccionado;
 
