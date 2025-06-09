@@ -1,8 +1,10 @@
+import { Component, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Subject,map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { OperacionService } from '../../services/operacion.service';
 import { OperacionesDeComercioExteriorComponent } from '../../components/operaciones-de-comercio-exterior/operaciones-de-comercio-exterior.component';
-import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 
 @Component({
   selector: 'app-paso-uno',
@@ -17,7 +19,7 @@ import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
     SolicitanteComponent
   ]
 })
-export class PasoUnoComponent {
+export class PasoUnoComponent implements OnInit{
     /**
    * Índice de la pestaña seleccionada.
    * Este índice indica cuál pestaña está actualmente seleccionada en el formulario.
@@ -26,7 +28,9 @@ export class PasoUnoComponent {
    * @default 1
    */
     indice: number = 1;
-
+  private destroyNotifier$: Subject<void> = new Subject();
+  public consultaState!:ConsultaioState; 
+  esDatosRespuesta:boolean = false;
     /**
      * Lista de las secciones del formulario, cada sección tiene su índice, título y componente asociado.
      * Esta lista define el flujo y los pasos del formulario.
@@ -42,7 +46,36 @@ export class PasoUnoComponent {
       { index: 1, title: 'Solicitante', component: 'solicitante' },
       { index: 2, title: 'Operaciones de Comercio Exterior', component: 'app-operaciones-de-comercio-exterior' }
     ];
+  constructor(private consultaQuery: ConsultaioQuery, private readonly operacionService: OperacionService){
+
+  }
+  ngOnInit(): void {
+        this.guardarDatosFormulario();
+    // this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+    //       this.consultaState = seccionState;
+    //   })).subscribe();
+    // if(this.consultaState.update) {
+    //   this.guardarDatosFormulario();
+    // } else {
+    //   this.esDatosRespuesta = true;
+    // }
+
+  }
+
   
+guardarDatosFormulario(): void {
+    this.operacionService
+      .getRegistroTomaMuestrasMercanciasData('finalDataToSend.json').pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.operacionService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
+
     /**
      * Método que cambia el índice de la pestaña seleccionada en función del valor recibido.
      * Este método se utiliza para navegar entre las diferentes pestañas del formulario.
