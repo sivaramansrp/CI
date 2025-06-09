@@ -43,10 +43,9 @@
             <div class="col-md-4">
                 <div class="form-group">
                    <input-fecha [datos]="fechaInicioInput"
-        name="tipoFetch"
-         formControlName="deFetch"
+         name="deFetch"
         (valorCambiado)="onFechaCambiada($event)"
-        [setFecha]="derechosForm.get('fechaPago')?.value"
+        [setFecha]="derechosForm.get('deFetch')?.value"
          (change)="setValoresStore(derechosForm,'deFetch', 'settipoFetch')" 
              [isDisabled]="esFormularioSoloLectura ? true : false"
         ></input-fecha>

@@ -2,14 +2,17 @@ import { Component, OnDestroy, OnInit } from '@angular/core'; // Import Angular 
 import { CommonModule } from '@angular/common'; // Import CommonModule for Angular common directives.
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { InputFechaComponent } from '@libs/shared/data-access-user/src'; // Import InputFechaComponent for date input handling.
+
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { FECHA_DE_PAGO } from '../../constantes/derechos.model';
+
 
 import { FormBuilder, FormGroup } from '@angular/forms'; // Import FormBuilder and FormGroup for reactive forms.
 
-import { Catalogo, InputFecha, InputFechaComponent, TituloComponent } from '@ng-mf/data-access-user'; // Import Catalogo and TituloComponent from shared library.
+import { Catalogo, TituloComponent } from '@ng-mf/data-access-user'; // Import Catalogo and TituloComponent from shared library.
 import { ReactiveFormsModule } from '@angular/forms'; // Import ReactiveFormsModule for reactive form handling.
 
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user'; // Import CatalogoSelectComponent for dropdown selection.
 import { SanitarioService } from '../../services/sanitario.service'; // Import SanitarioService for API calls.
 
 import { Subject ,map,takeUntil } from 'rxjs'; // Import RxJS operators for reactive programming.
@@ -54,7 +57,7 @@ export class DerechosComponent implements OnInit, OnDestroy {
   * compodoc
   * property {InputFecha} fechaInicioInput
 */
-    fechaInicioInput: InputFecha = FECHA_DE_PAGO;
+   public fechaInicioInput = FECHA_DE_PAGO;
   /**
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
@@ -191,7 +194,7 @@ if (this.esFormularioSoloLectura) {
       cadenaDependencia: [this.solicitudState?.cadenaDependencia], 
       Llave: [this.solicitudState?.Llave], 
       banco: [this.solicitudState?.banco], 
-      tipoFetch: [this.solicitudState?.tipoFetch], 
+      deFetch: [this.solicitudState?.deFetch], 
       importe: [this.solicitudState?.importe], 
     });
   }
@@ -234,7 +237,7 @@ if (this.esFormularioSoloLectura) {
    * returns {void}
    */
 onFechaCambiada(fecha: string): void {
-    this.derechosForm.patchValue({ fechaPago: fecha });
+    this.derechosForm.patchValue({ deFetch: fecha });
   }
  /**
    * compodoc

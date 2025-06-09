@@ -30,10 +30,10 @@ export interface Solicitud260211State {
   Llave: string;
 
   /**
-   * @property {string} tipoFetch
+   * @property {string} deFetch
    * @description Información de fetch.
    */
-  tipoFetch: string;
+  deFetch: string;
 
   /**
    * @property {string} importe
@@ -229,10 +229,10 @@ export function createInitialState(): Solicitud260211State {
     Llave: '',
 
     /**
-     * @property {string} tipoFetch
+     * @property {string} deFetch
      * @description Información de fetch.
      */
-    tipoFetch: '',
+    deFetch: '',
 
     /**
      * @property {string} importe
@@ -464,12 +464,12 @@ export class Tramite260211Store extends Store<Solicitud260211State> {
   }
   /**
    * Establece el estado de tipoFetch.
-   * @param tipoFetch - El valor de tipoFetch.
+   * @param deFetch - El valor de deFetch.
    */
-  public settipoFetch(tipoFetch: string) {
+  public settipoFetch(deFetch: string) {
     this.update((state) => ({
       ...state,
-      tipoFetch,
+      deFetch,
     }));
   }
   /**

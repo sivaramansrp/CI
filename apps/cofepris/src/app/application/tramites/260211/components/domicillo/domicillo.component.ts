@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Catalogo,
-  CatalogoSelectComponent,
   ConfiguracionColumna,
   CrossListLable,
   CrosslistComponent,
@@ -21,6 +20,7 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { FECHA_DE_PAGO } from '@libs/shared/data-access-user/src/core/enums/260211/manifiestos.enum';
 
 import {

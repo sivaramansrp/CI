@@ -172,7 +172,7 @@ actualizarEstadoFormulario(DATOS: Solicitud260211State ): void {
     this.tramite260211Store.setcadenaDependencia(DATOS.cadenaDependencia);
     this.tramite260211Store.setbanco(DATOS.banco);
     this.tramite260211Store.setLlave(DATOS.Llave);
-    this.tramite260211Store.settipoFetch(DATOS.tipoFetch);
+    this.tramite260211Store.settipoFetch(DATOS.deFetch);
     this.tramite260211Store.setimporte(DATOS.importe);
 
    
