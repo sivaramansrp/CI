@@ -1,4 +1,4 @@
-import { AlertComponent, Catalogo,ConsultaioQuery, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, ConsultaioQuery, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud105State, Tramite105Store, } from '../../estados/tramite105.store';
@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { InputCheckComponent } from '@libs/shared/data-access-user/src/tramites/components/input-check/input-check.component';
 import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { InvoCarService } from '../../services/invocar.service';
-import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/datos-del-tramite.enum';
+import { FRACCIONES_TABLEDOS_TABLE_BODY_DATA, OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/datos-del-tramite.enum';
 import { Tramite105Query } from '../../estados/tramite105.query';
 import mercanciaTable from 'libs/shared/theme/assets/json/105/mercancia-table.json';
 interface TableBodyData {
@@ -37,29 +37,32 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    * @param query - Consulta para obtener datos del estado de la solicitud.
    */
 
-/**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
-  esFormularioSoloLectura: boolean = false; 
+  /**
+    * Indica si el formulario está en modo solo lectura.
+    * Cuando es `true`, los campos del formulario no se pueden editar.
+    */
+  esFormularioSoloLectura: boolean = false;
 
   constructor(private fb: FormBuilder, private invoCarService: InvoCarService, private store: Tramite105Store,
-    private query: Tramite105Query,private consultaioQuery: ConsultaioQuery) {
-   /**
-     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
-     *
-     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
-     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
-     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
-     */
+    private query: Tramite105Query, private consultaioQuery: ConsultaioQuery) {
+    /**
+      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+      *
+      * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+      * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+      * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+      */
     this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-       this.esFormularioSoloLectura = seccionState.readonly;
-      })
-    )
-    .subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          if (seccionState.update) {
+            this.fetchTableDummyJson();
+          }
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -89,23 +92,23 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
   /**
    * Catálogo de países.
    */
-  pais:Catalogo[] = [];
+  pais: Catalogo[] = [];
 
   /**
    * Catálogo de entidades federativas.
    */
-  entidadFederativa:Catalogo[] = [];
+  entidadFederativa: Catalogo[] = [];
 
 
   /**
    * Catálogo de municipios o delegaciones.
    */
-  municipioDelegacion:Catalogo[] = [];
+  municipioDelegacion: Catalogo[] = [];
 
   /**
    * Catálogo de colonias.
    */
-  colonia:Catalogo[] = [];
+  colonia: Catalogo[] = [];
 
   /**
    * Valor seleccionado del radio.
@@ -117,12 +120,12 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
   /**
    * Catálogo de aduanas.
    */
-  aduana:Catalogo[] = [];
+  aduana: Catalogo[] = [];
 
   /**
    * Catálogo de fracciones arancelarias.
    */
-  fraccionArancelaria:Catalogo[] = [];
+  fraccionArancelaria: Catalogo[] = [];
 
   /**
    * Notificador para destruir observables al destruir el componente.
@@ -188,7 +191,7 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-     this.crearDatosDelTramiteForm();
+    this.crearDatosDelTramiteForm();
     this.getPais();
     this.getAduana();
     this.getEntidadFederativa();
@@ -197,18 +200,18 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
     this.getFraccionArancelariae();
     this.obtenerMercancia();
     this.crearFormularioAgregar();
-   
+
   }
-/**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.  
-   * Además, obtiene la información del catálogo de mercancía.
-   */
+  /**
+     * Evalúa si se debe inicializar o cargar datos en el formulario.  
+     * Además, obtiene la información del catálogo de mercancía.
+     */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
       this.inicializarFormulario();
-    }  
+    }
   }
 
   /**
@@ -219,14 +222,14 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    */
 
   inicializarFormulario(): void {
-      this.query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.solicitudState = seccionState;
-          })
-        )
-        .subscribe();
+    this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.crearDatosDelTramiteForm();
   }
 
@@ -235,14 +238,14 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
-      this.inicializarFormulario();
-      if (this.esFormularioSoloLectura) {
-        this.datosDelTramite.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.datosDelTramite.enable();
-      } 
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.datosDelTramite.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.datosDelTramite.enable();
+    }
   }
-  
+
   /**
    * Crea e inicializa el formulario reactivo `agregarForm` con los campos necesarios
    * para agregar un nuevo trámite. Los campos incluyen:
@@ -294,7 +297,7 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
       exportacion: [this.solicitudState?.exportacion],
       depositoFiscalGas: [this.solicitudState?.depositoFiscalGas],
       depositoFiscalVehiculos: [this.solicitudState?.depositoFiscalVehiculos],
-      distribucionGasSi: ["1"],
+      distribucionGasSi: [this.solicitudState?.distribucionGas],
       distribucionGasNo: [this.solicitudState?.distribucionGas],
       serviciosTercerosSi: [this.solicitudState?.serviciosTerceros],
       serviciosTercerosNo: [this.solicitudState?.serviciosTerceros],
@@ -314,7 +317,7 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
       ubicacion: [this.solicitudState?.ubicacion],
 
       // Inputsimportacion
-      pais: [{value:this.solicitudState?.pais, disabled: true }, Validators.required],
+      pais: [{ value: this.solicitudState?.pais, disabled: true }, Validators.required],
       codigoPostal: [{ value: this.solicitudState?.codigoPostal, disabled: true }],
       entidadFederativa: [{ value: this.solicitudState?.entidadFederativa, disabled: true }],
       municipioDelegacion: [{ value: this.solicitudState?.municipioDelegacion, disabled: true }],
@@ -361,7 +364,7 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
     'pais', 'codigoPostal', 'entidadFederativa', 'localidad', 'municipioDelegacion',
     'colonia', 'entidadFederativaDos', 'calle', 'numeroExterior', 'numeroInterior'
   ];
-  
+
   /**
    * Maneja el evento de cambio en un checkbox y asegura la exclusividad entre las opciones
    * 'domicilio' y 'ubicacion'.
@@ -379,10 +382,10 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
   onCambioCheckbox(evento: Event, opcion: 'domicilio' | 'ubicacion'): void {
     const ELEMENTO_INPUT = evento.target as HTMLInputElement;
     const ESTA_SELECCIONADO = ELEMENTO_INPUT?.checked ?? false;
-  
+
     this.alternarControles(ESTA_SELECCIONADO);
     this.deshabilitarSeleccion = !ESTA_SELECCIONADO;
-  
+
     // Asegurar exclusividad entre las opciones
     if (opcion === 'domicilio') {
       this.datosDelTramite.get('ubicacion')?.setValue(false);
@@ -390,7 +393,7 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
       this.datosDelTramite.get('domicilio')?.setValue(false);
     }
   }
-  
+
   /**
    * Alterna el estado de habilitación de un conjunto de controles en un formulario.
    *
@@ -416,8 +419,18 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    */
   public obtenerMercancia(): void {
     this.mercanciaHeaderData = this.getMercanciaTableData.mercanciaTable.tableHeader;
-    this.mercanciaBodyData = this.getMercanciaTableData.mercanciaTable.tableBody;
   }
+
+  /**
+   * Método para obtener datos de ejemplo para la tabla.
+   * Retorna un arreglo vacío de tipo TablaDatos.
+   *
+   * @returns Un arreglo vacío de TablaDatos.
+   */
+  fetchTableDummyJson(): void {
+    this.mercanciaBodyData.push(FRACCIONES_TABLEDOS_TABLE_BODY_DATA);
+  }
+
 
   /**
    * @method setValoresStore
@@ -480,11 +493,11 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
   getEntidadFederativa(): void {
     this.invoCarService.getEntidadFederativa().pipe(
       takeUntil(this.destroyNotifier$)).subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-         this.entidadFederativa =RESPONSE;
-      }
-    });
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.entidadFederativa = RESPONSE;
+        }
+      });
   }
 
   /**
@@ -494,25 +507,25 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
   getMunicipioDelegacion(): void {
     this.invoCarService.getMunicipioDelegacion().pipe(
       takeUntil(this.destroyNotifier$)).subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-       this.municipioDelegacion = RESPONSE;
-      }
-    });
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.municipioDelegacion = RESPONSE;
+        }
+      });
   }
 
   /**
    * @method getColonia
    * @description Obtiene el catálogo de colonias desde el servicio y lo almacena en el store.
    */
-    getColonia(): void {
+  getColonia(): void {
     this.invoCarService.getColonia().pipe(
       takeUntil(this.destroyNotifier$)).subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-       this.colonia = RESPONSE;
-      }
-    });
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.colonia = RESPONSE;
+        }
+      });
   }
 
   /**
@@ -520,13 +533,13 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
    * @description Obtiene el catálogo de aduanas desde el servicio y lo almacena en el store.
    */
   getAduana(): void {
-   this.invoCarService.getAduana().pipe(
+    this.invoCarService.getAduana().pipe(
       takeUntil(this.destroyNotifier$)).subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
-        this.aduana = RESPONSE
-      }
-    });
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
+          this.aduana = RESPONSE
+        }
+      });
   }
 
   /**
@@ -536,12 +549,12 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
   getFraccionArancelariae(): void {
     this.invoCarService.getFraccionArancelariaOptions().pipe(
       takeUntil(this.destroyNotifier$)).subscribe((resp) => {
-      if (resp.code === 200) {
-        const RESPONSE = resp.data;
+        if (resp.code === 200) {
+          const RESPONSE = resp.data;
           this.fraccionArancelaria = RESPONSE;
-    
-      }
-    });
+
+        }
+      });
   }
 
   /**

@@ -135,7 +135,7 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    * @type {CatalogosSelect}
    * @memberof DatosDelTramiteDosComponent
    */
-  operaciones:Catalogo[] = []
+  operaciones: Catalogo[] = []
 
 
 
@@ -177,7 +177,7 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
-  esFormularioSoloLectura: boolean = false; 
+  esFormularioSoloLectura: boolean = false;
 
   constructor(
     private fb: FormBuilder,
@@ -194,13 +194,16 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
      * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
      */
     this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-       this.esFormularioSoloLectura = seccionState.readonly;
-      })
-    )
-    .subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          if (seccionState.update) {
+            this.fetchTableDummyJson();
+          }
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -215,7 +218,7 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.solicitudState = seccionState;
         })
-       
+
       )
       .subscribe();
 
@@ -224,17 +227,16 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
     this.crearFormularios()
     this.inicializarEstadoFormulario();
   }
-/**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.  
-   * Además, obtiene la información del catálogo de mercancía.
-   */
+  /**
+     * Evalúa si se debe inicializar o cargar datos en el formulario.  
+     * Además, obtiene la información del catálogo de mercancía.
+     */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
-      this.fetchTableDummyJson();
       this.guardarDatosFormulario();
     } else {
       this.inicializarFormulario();
-    }  
+    }
   }
 
   /**
@@ -245,14 +247,14 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    */
 
   inicializarFormulario(): void {
-      this.query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.solicitudState = seccionState;
-          })
-        )
-        .subscribe()
+    this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe()
     this.crearFormularios();
   }
 
@@ -261,14 +263,14 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
-      this.inicializarFormulario();
-      if (this.esFormularioSoloLectura) {
-        this.datosDelTramiteDos.disable();
-        this.agenteForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
-         this.datosDelTramiteDos.enable();
-        this.agenteForm.enable();
-      } 
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.datosDelTramiteDos.disable();
+      this.agenteForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.datosDelTramiteDos.enable();
+      this.agenteForm.enable();
+    }
   }
 
   /**
@@ -277,9 +279,9 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
  *
  * @returns Un arreglo vacío de TablaDatos.
  */
-fetchTableDummyJson(): void {
-  this.mercanciaBodyData.push(MERCANCIA_TABLEDOS_TABLE_BODY_DATA);
-}
+  fetchTableDummyJson(): void {
+    this.mercanciaBodyData.push(MERCANCIA_TABLEDOS_TABLE_BODY_DATA);
+  }
 
   /**
    * Inicializa y crea los formularios reactivos utilizados en el componente.
@@ -306,7 +308,7 @@ fetchTableDummyJson(): void {
       numeroPatente: ['', Validators.required],
     });
 
-   }
+  }
   /**
    * Cierra el modal.
    * 
@@ -325,7 +327,6 @@ fetchTableDummyJson(): void {
    */
   public obtenerMercancia(): void {
     this.mercanciaHeaderData = this.getMercanciaTableData.mercanciaTabledos.tableHeader;
-    this.mercanciaBodyData = this.getMercanciaTableData.mercanciaTabledos.tableBody;
   }
 
   /**
@@ -360,10 +361,10 @@ fetchTableDummyJson(): void {
    * @memberof DatosDelTramiteDosComponent
    */
   getOperaciones(): void {
-   this.invoCarService.getPais().pipe( takeUntil(this.destroyNotifier$)).subscribe((resp) => {
+    this.invoCarService.getPais().pipe(takeUntil(this.destroyNotifier$)).subscribe((resp) => {
       if (resp.code === 200) {
         const RESPONSE = resp.data;
-         this.operaciones = RESPONSE;
+        this.operaciones = RESPONSE;
       }
     });
   }

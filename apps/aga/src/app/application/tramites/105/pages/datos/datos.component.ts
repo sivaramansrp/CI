@@ -90,7 +90,7 @@ ngOnInit(): void {
    * para establecer el tipo de persona como MORAL_NACIONAL.
    */
   ngAfterViewInit(): void {
-    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+    this.solicitante?.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
   }
   /**
    * Esta variable se utiliza para almacenar el índice del subtítulo.

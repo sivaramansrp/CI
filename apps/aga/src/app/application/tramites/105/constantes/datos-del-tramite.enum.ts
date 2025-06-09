@@ -17,3 +17,10 @@ export const MERCANCIA_TABLEDOS_TABLE_BODY_DATA = {
     "PA12345678"
   ]
 };
+export const FRACCIONES_TABLEDOS_TABLE_BODY_DATA = {
+  tbodyData: [
+    "0101.21.01",
+    "Carlos Alberto",
+    "CABALLOS DESTINADOS PARA REPRODUCCIÓN CON PEDIGRÍ CERTIFICADO",
+  ]
+};
