@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
 import { map, Subject, takeUntil } from 'rxjs';
 import { Tramite10303Store } from '../../estados/tramites/tramite10303.store';
-import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 
 /**
  * Componente para gestionar el paso uno del trámite.
