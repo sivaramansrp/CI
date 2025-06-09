@@ -66,7 +66,13 @@ export const FECHA_FINAL = {
 })
 export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewInit {
 
-  @Input() formularioDeshabilitado: boolean = false;
+  /**
+   * @input
+   * @description
+   * Indica si el formulario debe estar deshabilitado. Cuando es `true`, los controles del formulario estarán inactivos y no permitirán la edición por parte del usuario.
+   * @type {boolean}
+   */
+   @Input() formularioDeshabilitado: boolean = false;
 
   /**
    * Formulario reactivo utilizado para la gestión de los datos del certificado.
@@ -273,6 +279,14 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy,AfterViewIn
 
   }
 
+  /**
+   * Inicializa el estado del formulario según si está en modo solo lectura o editable.
+   * Si el formulario está en modo solo lectura, deshabilita todos los controles.
+   * Si no, habilita los controles para permitir la edición.
+   *
+   * @method
+   * @memberof CertificadoOrigenComponent
+   */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.formCertificado.disable();

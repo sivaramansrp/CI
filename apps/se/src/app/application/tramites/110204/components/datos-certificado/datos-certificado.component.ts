@@ -21,6 +21,13 @@ import { Tramite110204Store } from '../../estados/tramite110204.store';
 })
 export class DatosCertificadoComponent implements OnInit, OnDestroy {
 
+  /**
+   * @input
+   * @desc Indica si el formulario debe estar deshabilitado.
+   * @type {boolean}
+   * @default false
+   * @compodoc
+   */
   @Input() formularioDeshabilitado: boolean = false;
   
   /**
@@ -63,18 +70,29 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
   
-
   /**
-   * Constructor del componente. Inicializa el formulario y las dependencias necesarias.
-   * @param fb Instancia del FormBuilder para la creación del formulario.
-   * @param store Instancia del store para el manejo de datos.
-   * @param tramiteQuery Instancia del query para obtener datos de estado.
-   * @param certificadoService Servicio encargado de obtener los datos del certificado.
-   * @param toastr Servicio de notificaciones (Toastr).
+   * @private
+   * @desc Bandera para evitar bucles infinitos al actualizar el formulario.
+   * Se utiliza para distinguir entre actualizaciones programáticas y del usuario.
    */
-
   private actualizandoFormulario = false;
 
+  /**
+   * @constructor
+   * @desc
+   * Constructor del componente `DatosCertificadoComponent`.
+   * 
+   * Inicializa el formulario reactivo con sus controles y validaciones, suscribe el estado del formulario y de la sección
+   * para mantener los datos sincronizados, y asigna los observables de los catálogos requeridos.
+   * 
+   * @param fb - Servicio para la creación de formularios reactivos.
+   * @param store - Store para la gestión del estado del trámite 110204.
+   * @param tramiteQuery - Query para consultar el estado del trámite 110204.
+   * @param certificadoService - Servicio para la gestión de certificados de origen.
+   * @param toastr - Servicio para mostrar notificaciones al usuario.
+   * @param seccionQuery - Query para consultar el estado de la sección.
+   * @param seccionStore - Store para la gestión del estado de la sección.
+   */
   constructor(
     private fb: FormBuilder, public store: Tramite110204Store,
     public tramiteQuery: Tramite110204Query,
@@ -204,6 +222,12 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
 
   }
   
+  /**
+   * @method inicializarEstadoFormulario
+   * @description Inicializa el estado del formulario de datos del certificado, habilitándolo o deshabilitándolo según si el formulario es de solo lectura.
+   * @memberof DatosCertificadoComponent
+   * @returns {void}
+   */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.formDatosCertificado.disable();
