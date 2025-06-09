@@ -23,7 +23,7 @@
         </div>
     </div>
     @if (nuevaNotificacion) {
-        <section >
+        <section>
         <lib-notificaciones 
         [notificacionInput]="nuevaNotificacion" 
         (confirmacionModal)="eliminarPedimento($event)">
@@ -43,7 +43,7 @@
         <div class="col-md-4">
             <app-catalogo-select 
                 [catalogo]="tipoEmpresaData.catalogos" 
-                [label]="'Tipo de empresa:'" 
+                [label]="'Tipo de empresa'" 
                 [required]="true" 
                 formControlName="tipoEmpresa"
                 (change)="setValoresStore(formularioEmpresa,'tipoEmpresa', 'setTipoEmpresa')"
@@ -57,14 +57,14 @@
         </div>
         <div class="col-md-12">
             <label for="actividad-economica-preponderante" class="form-label">Clasificación del Catálogo de Actividades
-                Económicas del SAT conforme a la Actividad Económica Preponderante":</label>
+                Económicas del SAT conforme a la Actividad Económica Preponderante*:</label>
             <input type="text" id="actividad-economica-preponderante" class="form-control"
                 name="actividadEconomicaPreponderante" formControlName="actividadEconomicaPreponderante"
                 (change)="setValoresStore(formularioEmpresa,'actividadEconomicaPreponderante', 'setActividadEconomicaPreponderante')"
                 >
         </div>
         <div class="col-md-12">
-            <label for="descripcion" class="form-label">Descripción:</label>
+            <label for="descripcion" class="form-label">Descripción de la Actividad Económica del SAT:</label>
             <textarea id="descripcion" class="form-control" formControlName="descripcion" [readonly]="true"
             (change)="setValoresStore(formularioEmpresa,'descripcion', 'setDescripcion')"
             ></textarea>
@@ -85,7 +85,7 @@
                 [disabled]="true">
         </div>
         <div class="col-md-4">
-            <label for="EstadoDomicilio" class="form-label">Estado</label>
+            <label for="EstadoDomicilio" class="form-label">Estado:</label>
             <input type="text" id="estadoDomicilio" class="form-control" formControlName="estadoDomicilio" readonly [disabled]="true">
         </div>
         <div class="col-md-4">
@@ -157,20 +157,25 @@
         </div>
     </div>
     <ng-container>
-    @if (selectedNacionalidad === 'Si') {
+    @if (selectedNacionalidad === nacionalidadMexicanaSi) {
     <div class="row">
         <div class="col-md-6">
             <label for="registroFederal" class="form-label">Registro federal de contribuyentes*:</label>
             <input type="text" id="registroFederal" class="form-control" formControlName="registroFederal"
             (change)="setValoresStore(formularioEmpresa,'registroFederal', 'setRegistroFederal')"
+            (blur)="checkRFCValidation()"
                >
         </div>
     </div>
   }
+  <section *ngIf="nuevaNotificacion">
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+    </lib-notificaciones>
+    </section>
   
-    @if (selectedNacionalidad === 'No' || selectedTipoPersona === 'Persona Moral') {
+    @if (selectedNacionalidad === nacionalidadMexicanaNo || selectedTipoPersona === tipoPersonaMoral) {
    <div>
-      @if(selectedTipoPersona === 'Persona Física') {
+      @if(selectedTipoPersona === tipoPersonaFisica) {
      <div class="row">
         <div class="col-md-6">
             <label for="nombre" class="form-label">Nombre:</label>
@@ -180,22 +185,22 @@
         </div>
         <div class="col-md-6">
             <label for="apellidoPaterno" class="form-label">Apellido paterno*:</label>
-            <input type="text" id="apellidoPaterno" class="form-control" formControlName="apellidoPaterno"
+            <input type="text" id="apellidoPaterno" class="form-control" formControlName="apellidoPaterno" maxlength="200"
             (change)="setValoresStore(formularioEmpresa,'apellidoPaterno', 'setApellidoPaterno')"
                >
         </div>
      </div>
     }
-     <div class="row">
-        <div class="col-md-6">
+     <div class="row" >
+        <div class="col-md-6" *ngIf="selectedNacionalidad === nacionalidadMexicanaNo && selectedTipoPersona === tipoPersonaMoral">
             <label for="taxId" class="form-label">TAX ID*:</label>
-            <input type="text" id="taxId" class="form-control" formControlName="taxId"
+            <input type="text" id="taxId" class="form-control" formControlName="taxId" maxlength="12"
             (change)="setValoresStore(formularioEmpresa,'taxId', 'setTaxId')"
                >
         </div>
      </div>
      <div class="row" >
-        <div class="row" *ngIf="selectedTipoPersona !== 'Persona Física'">
+        <div class="row" *ngIf="selectedTipoPersona !== tipoPersonaFisica">
          <div class="col-md-6">
             <label for="razonSocial" class="form-label">Denominación o razón social:</label>
             <input type="text" id="razonSocial" class="form-control" formControlName="razonSocial"
@@ -204,7 +209,8 @@
             >
         </div>
       </div>
-        <div class="col-md-6">
+      <div class="row">
+        <div class="col-md-6" >
             <app-catalogo-select 
               [catalogo]="paisData.catalogos" 
               [label]="'País'" 
@@ -216,25 +222,31 @@
             </app-catalogo-select>
 
         </div>
+    </div>
         <div class="col-md-6">
             <label for="Código postal" class="form-label">Código postal:</label>
-            <input type="text" id="Código postal" class="form-control" formControlName="datosCodigoPostal"
+            <input type="text" id="Código postal" class="form-control" formControlName="datosCodigoPostal" maxlength="12"
             (change)="setValoresStore(formularioEmpresa,'datosCodigoPostal', 'setDatosCodigoPostal')"
 
              >
         </div>
         <div class="col-md-6">
-            <label for="Estado" class="form-label">Estado:</label>
+            <label for="Estado" class="form-label">Estado*:</label>
             <input type="text" id="Estado" class="form-control" formControlName="datosEstado"
             (change)="setValoresStore(formularioEmpresa,'datosEstado', 'setDatosEstado')"
 
            >
         </div>
         <div class="col-md-6">
-            <label for="Correo electrónico" class="form-label">Correo electrónico:</label>
+            <label for="Correo electrónico" class="form-label">Correo electrónico*:</label>
             <input type="text" id="Correo electrónico" class="form-control" formControlName="correoElectronico"
             (change)="setValoresStore(formularioEmpresa,'correoElectronico', 'setCorreoElectronico')"
          >
+        </div>
+        <div class="col-md-6" *ngIf="selectedNacionalidad === nacionalidadMexicanaNo && selectedTipoPersona === tipoPersonaFisica">
+            <label for="taxId" class="form-label">TAX ID*:</label>
+            <input type="text" id="taxId" class="form-control" formControlName="taxId" maxlength="12"
+                (change)="setValoresStore(formularioEmpresa,'taxId', 'setTaxId')">
         </div>
       </div> 
     </div>
@@ -250,10 +262,12 @@
     <app-tabla-dinamica 
     [tipoSeleccionTabla]="tipoSeleccionTabla" 
     [configuracionTabla]="sociosYAccionistasData"
-    [datos]="datosGenerales"></app-tabla-dinamica>
+    [datos]="datosGenerales"
+    (listaDeFilaSeleccionada)="onSelectedRowsChange($event)">
+   </app-tabla-dinamica>
 
     <div class=" text-end">
-        <button type="button" class="btn btn-primary">Eliminar</button>
+        <button type="button" class="btn btn-primary" (click)="onDelete()">Eliminar</button>
     </div>
 
     <h6 class="margin-header">Socios y Accionistas Extranjeros</h6>
@@ -263,9 +277,10 @@
         [tipoSeleccionTabla]="tipoSeleccionTabla" 
         [configuracionTabla]="socioYAccionistasExtranjerosData"
         [datos]="datosTablaExtranjeros"
+        (listaDeFilaSeleccionada)="onSelectedRowsChange($event)">
         ></app-tabla-dinamica>
 
     <div class="text-end mt-5">
-        <button type="button" class="btn btn-primary">Eliminar</button>
+        <button type="button" class="btn btn-primary" (click)="onEliminar()">Eliminar</button>
     </div>
 </div>

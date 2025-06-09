@@ -16,21 +16,46 @@ import { TramiteFolioQueries } from '../../../core/queries/tramiteFolio.query';
   imports: [CommonModule, AcuseComponent],
 })
 export class AcusePageComponent implements OnInit {
+  /**
+   * @description Mensaje de alerta que se muestra al usuario en la página de acuse.
+   */
   txtAlerta!: string;
+
+  /**
+   * @description Subtítulo que se muestra en la página de acuse.
+   */
   subtitulo = TITULO_ACUSE;
+
+  /**
+   * @description Encabezado de la tabla de acuse que se muestra en la página.
+   */
   encabezadoTablaAcuse = ACUSE_SERVICIOS_EXTRAORDINARIOS.encabezadoTablaAcuse;
+
+  /**
+   * @description Acciones disponibles en la tabla de acuse.
+   */
   accionesTablaAcuse: AccionesTabla[] =
     ACUSE_SERVICIOS_EXTRAORDINARIOS.accionesTablaAcuse;
+
+  /**
+   * @description Datos que se muestran en la tabla de acuse.
+   */
   datosTablaAcuse = ACUSE_SERVICIOS_EXTRAORDINARIOS.datosTablaAcuse;
 
+  /**
+   * @description Folio del trámite que se muestra en la página de acuse.
+   */
   folio!: string;
+
+  /**
+   * @description URL de la aplicación, se utiliza para redirigir al usuario al acuse del trámite.
+   */
   url!: string;
 
-  constructor(private tramiteQueries: TramiteFolioQueries,
-    private router: Router,
-  ) {
-    // Lógica de inicialización si es necesario
-  }
+  constructor(
+    private tramiteQueries: TramiteFolioQueries,
+    private router: Router
+  ) {}
 
   /**
    * Método de ciclo de vida de Angular que se llama una vez que el componente ha sido inicializado.
@@ -39,12 +64,10 @@ export class AcusePageComponent implements OnInit {
    * Luego, se genera un mensaje de alerta utilizando la función `TXT_ALERTA_ACUSE` con el folio obtenido y se asigna a la propiedad `txtAlerta`.
    */
   ngOnInit(): void {
-    const URL_ACTUAL = this.router.url;    
+    const URL_ACTUAL = this.router.url;
     this.url = URL_ACTUAL.split('/')[1];
- 
+
     this.folio = this.tramiteQueries.getTramite();
     this.txtAlerta = TXT_ALERTA_ACUSE(this.folio);
   }
-
-
 }

@@ -4,8 +4,12 @@
  * incluyendo la selección de pestañas.
  * @module SolicitanteAsigncionComponent
  */
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
+import { SolicitudService } from '../../services/solicitud.service';
 
-import { Component } from '@angular/core';
+
 
 /**
  * Componente para la gestión del solicitante de asignación.
@@ -18,19 +22,81 @@ import { Component } from '@angular/core';
   templateUrl: './solicitante-entidad.component.html',
   styleUrls: ['./solicitante-entidad.component.scss'],
 })
-export class SolicitanteAsigncionComponent {
+export class SolicitanteAsigncionComponent implements OnInit, OnDestroy {
   /**
    * Índice de la pestaña seleccionada.
    */
   indice: number = 1;
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
 
+  /** Subject para notificar la destrucción del componente. */
+  public destroyNotifier$: Subject<void> = new Subject();
+
+  /** Estado de la consulta, utilizado para determinar si el formulario es de solo lectura. */
+  public consultaState!: ConsultaioState;
+  /** Subject para manejar la destrucción del componente. */
+  public destroyed$ = new Subject<void>();
+  
   /**
    * Selecciona una pestaña.
    * @param i Índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
-  }
 
-  
+
+  }
+  /**
+   * Constructor del componente.
+   * @param solocitud120404Service Servicio para manejar la solicitud de asignación.
+   * @param consultaQuery Consulta para obtener el estado de la consulta.
+   */
+
+  constructor(
+    private solocitud120404Service: SolicitudService,
+    private consultaQuery: ConsultaioQuery
+  ) {}
+
+  /**
+   * Método de inicialización del componente.
+   * Este método se ejecuta al iniciar el componente y se suscribe a los cambios en el estado de la consulta.
+   */
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState; 
+        })
+      )
+      .subscribe();
+    if (this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+  /**
+   * Guarda los datos del formulario de solicitud.
+   * Este método se suscribe a los datos de la solicitud y actualiza el estado del formulario.
+   */
+  guardarDatosFormulario(): void {
+    this.solocitud120404Service
+      .getRegistroTomaMuestrasMercanciasData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.solocitud120404Service.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
+  /**
+   * Método de destrucción del componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next();
+    this.destroyed$.complete();
+  }
 }

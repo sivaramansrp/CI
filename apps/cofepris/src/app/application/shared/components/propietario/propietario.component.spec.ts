@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+
 import { of, Subject } from 'rxjs';
 import { ElementRef } from '@angular/core';
 import { Modal } from 'bootstrap';
@@ -107,12 +107,33 @@ describe('PropietarioComponent', () => {
           codigoPostal: '12345',
         },
       ],
-      establecimientoData: []
+      establecimientoData: [],
+      ideGenerica1: '',
+      observaciones: '',
+      establecimientoRFCResponsableSanitario: '',
+      establecimientoRazonSocial: '',
+      establecimientoEstados: '',
+      descripcionMunicipio: '',
+      localidad: '',
+      colonias: '',
+      calle: '',
+      lada: '',
+      telefono: '',
+      scian: '',
+      establishomentoColonias: '',
+      noLicenciaSanitaria: '',
+      avisoCheckbox: '',
+      licenciaSanitaria: '',
+      regimen: '',
+      aduanasEntradas: '',
+      aifaCheckbox: '',
+      descripcionScian: ''
     };
   
     mockQuery.select.mockReturnValue(of(mockState));
   
     component.ngOnInit();
+     component.inicializarEstadoFormulario();
   
     expect(component.propietarioData).toEqual(mockState.propietarioData);
   });
