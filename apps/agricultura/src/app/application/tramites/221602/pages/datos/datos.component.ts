@@ -53,20 +53,20 @@ export class DatosComponent implements OnInit {
   /** Inicializa el componente suscribiéndose al estado de consulta.  a
  *  Ejecuta lógica según si se requiere actualización o solo visualización. */
       ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$
+     this.consultaQuery.selectConsultaioState$
       .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.consultaState = seccionState;
+        takeUntil(this.destroyNotifier$))
+        .subscribe((seccionState) => {
+          this.consultaState = seccionState
+          if (this.consultaState.update) {
+             this.guardarDatosFormulario()
+             } else {
+              this.esDatosRespuesta = true;
+            }
         })
-      )
-      .subscribe();
-    if (this.consultaState.update) {
-      this.guardarDatosFormulario();
-    } else {
-      this.esDatosRespuesta = true;
-    }
+        
   }
+ 
 /** Obtiene los datos del formulario desde un JSON simulado y actualiza el store.  
  *  Marca la bandera de respuesta si la información es válida. */
      guardarDatosFormulario(): void {
