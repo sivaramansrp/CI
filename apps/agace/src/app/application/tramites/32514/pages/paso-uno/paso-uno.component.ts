@@ -49,6 +49,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   
     /** Subject para notificar la destrucción del componente. */
     private destroyNotifier$: Subject<void> = new Subject();
+
+    /**
+     * Constructor del componente que inyecta los servicios necesarios para consultar
+     * el estado general de la solicitud y realizar operaciones relacionadas con ADACE.
+     *
+     * @param {ConsultaioQuery} consultaQuery - Servicio para consultar el estado general de la solicitud.
+     * @param {AdaceService} adace - Servicio para operaciones relacionadas con ADACE.
+     */
     constructor(
       private consultaQuery: ConsultaioQuery,
       private adace: AdaceService

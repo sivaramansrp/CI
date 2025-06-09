@@ -94,12 +94,14 @@ export class AvisoRetornoComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura!: boolean;
 
   /**
-   * Constructor del componente.
-   * @param adace Servicio para gestionar datos relacionados con los catálogos.
-   * @param fb Constructor de formularios reactivos.
-   * @param store Almacén global para gestionar el estado del trámite.
-   * @param query Consulta para obtener el estado actual del trámite.
-   * @param validacionesService Servicio para validar campos del formulario.
+   * Constructor del componente que inyecta los servicios necesarios para la gestión del formulario
+   * del trámite 32514, incluyendo creación de formularios, acceso al estado del trámite y consulta general.
+   *
+   * @param {AdaceService} adace - Servicio para operaciones relacionadas con ADACE.
+   * @param {FormBuilder} fb - Utilidad de Angular para construir formularios reactivos.
+   * @param {Tramite32514Store} store - Store que gestiona el estado del trámite 32514.
+   * @param {Tramite32514Query} query - Servicio para consultar el estado del trámite 32514.
+   * @param {ConsultaioQuery} consultaQuery - Servicio para consultar el estado general de la solicitud.
    */
   constructor(
     private adace: AdaceService,
