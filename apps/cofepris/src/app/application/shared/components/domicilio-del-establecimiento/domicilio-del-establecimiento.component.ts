@@ -51,7 +51,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
   styleUrls: ['./domicilio-del-establecimiento.component.scss'],
 })
 export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
-
+ defaultSelect: string = 'Si';
   /**
  * Indica si el formulario está en modo solo lectura.
  * Cuando es `true`, los campos del formulario no se pueden editar.

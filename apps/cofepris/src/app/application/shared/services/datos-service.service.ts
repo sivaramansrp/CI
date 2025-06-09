@@ -56,7 +56,11 @@ export class DatosServiceService {
     if (DATOS.aduana) {
       this.domicilioStore.setAduana(DATOS.aduana);
     }
+
+    if (DATOS.autorizacionIVAIEPS) {
+      this.domicilioStore.setAutorizacionIVAIEPS(DATOS.autorizacionIVAIEPS);
     }
+  }
 
   /**
    * Obtiene los datos de registro para toma de muestras de mercancías desde un archivo JSON local.

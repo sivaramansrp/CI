@@ -11,8 +11,10 @@
         "calle": "valor ficticio",
         "lada": "valor ficticio",
          "telefono": "valor ficticio",
+         "autorizacionIVAIEPS": "Si",
         "noLicenciaSanitaria": "1",
         "regimenDestinado": "1",
         "aduanaregimenDestinado": "1",
         "aduana": "1"
+        
       }
