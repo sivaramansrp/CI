@@ -63,7 +63,7 @@ export class DatosTerritorioComponent implements AfterViewInit, OnInit {
         .subscribe((seccionState) => {
           this.consultaState = seccionState
           if (this.consultaState.update) {
-             this.guardarDatosFormulario()
+             this.guardarDatosFormulario();
              } else {
               this.esDatosRespuesta = true;
             }

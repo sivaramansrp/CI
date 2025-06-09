@@ -84,6 +84,9 @@ actualizarPagoDerechosFormulario(DATOS: PermisoImportacionBiologicaState): void 
     this.tramite260401.setLlaveDePago(DATOS.setLlaveDePago);
     this.tramite260401.setFechaDePago(DATOS.setFechaDePago);
     this.tramite260401.setImporteDePago(DATOS.setImporteDePago);
+    if (DATOS.setBanco) {
+      this.tramite260401.setBanco(DATOS.setBanco);
+    }
 }
 
   /**
