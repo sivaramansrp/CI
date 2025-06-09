@@ -184,9 +184,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     public solicitud32501Store: Solicitud32501Store,
     private consultaQuery: ConsultaioQuery
   ) {
-    this.obtenerAvisoDelCatalogo();
-    this.obtenerOperacionDeImportacion();
-    this.obtenerAvisoOpcionesDeRadio();
+    
   }
 
   /**
@@ -200,14 +198,19 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    *   se destruye, evitando fugas de memoria.
    */
   ngOnInit(): void {
+    this.obtenerValoresDelStore();
+    this.inicializarFormulario();
+    this.obtenerAvisoDelCatalogo();
+    this.obtenerOperacionDeImportacion();
+    this.obtenerAvisoOpcionesDeRadio();
     this.consultaQuery.selectConsultaioState$
       .pipe(takeUntil(this.destroyed$))
       .subscribe((estadoSeccion) => {
-        this.esSoloLectura = estadoSeccion.update;
+        this.esSoloLectura = estadoSeccion.readonly;
+        this.habilitarDeshabilitarFormulario();
       });
 
-    this.obtenerValoresDelStore();
-    this.inicializarFormulario();
+
   }
 
   /**
@@ -306,6 +309,33 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+  habilitarDeshabilitarFormulario(): void {
+    if (this.esSoloLectura) {
+      this.formAviso.get('ideGenerica1')?.disable();
+      this.formAviso.get('idTransaccionVU')?.disable();
+      this.formAviso.get('nico')?.disable();
+      this.formAviso.get('peso')?.disable();
+      this.formAviso.get('valorUSD')?.disable();
+      this.formAviso.get('descripcionMercancia')?.disable();
+      this.formAviso.get('nombreComercial')?.disable();
+      this.formAviso.get('calle')?.disable();
+      this.formAviso.get('numeroExterior')?.disable();
+      this.formAviso.get('numeroInterior')?.disable();
+      this.formAviso.get('codigoPostal')?.disable();
+    } else {
+      this.formAviso.get('ideGenerica1')?.enable();
+      this.formAviso.get('idTransaccionVU')?.enable();
+      this.formAviso.get('nico')?.enable();
+      this.formAviso.get('peso')?.enable();
+      this.formAviso.get('valorUSD')?.enable();
+      this.formAviso.get('descripcionMercancia')?.enable();
+      this.formAviso.get('nombreComercial')?.enable();
+      this.formAviso.get('calle')?.enable();
+      this.formAviso.get('numeroExterior')?.enable();
+      this.formAviso.get('numeroInterior')?.enable();
+      this.formAviso.get('codigoPostal')?.enable();
+    }
+  }
   /**
    * Obtiene los valores del store `solicitud32501Query` y actualiza el estado
    * `solicitud32501State` con la respuesta obtenida.

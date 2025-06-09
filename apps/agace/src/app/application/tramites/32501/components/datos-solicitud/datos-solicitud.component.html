@@ -11,7 +11,6 @@
           id="adace"
           [readonly]="true"
           size="15"
-          [disabled]="esSoloLectura"
         />
       </div>
       <div class="col-md-8"></div>
@@ -34,7 +33,6 @@
           [labelName]="'first'"
           (valueChange)="setTipoDeAviso($event)"
           formControlName="ideGenerica1"
-          [disabled]="esSoloLectura"
         ></app-input-radio>
       </div>
     </div>
@@ -61,7 +59,6 @@
           (change)="actualizarNumeroValor('idTransaccionVU', $event)"
           class="form-control"
           type="text"
-          [disabled]="esSoloLectura"
         />
         <div *ngIf="noEsValido('idTransaccionVU')" class="text-danger">
           <span *ngIf="formAviso.get('idTransaccionVU')?.errors?.['required']">
@@ -88,8 +85,7 @@
             [setFecha]="formAviso.get('fechaIniExposicion')?.value"
             [datos]="fechaInicioInput"
             (valorCambiado)="cambiarInputFecha($event)"
-            [disabled]="esSoloLectura"
-            [formControlName]="'fechaIniExposicion'"
+            [isDisabled]="esSoloLectura"
           ></input-fecha>
         </div>
       </div>
@@ -134,7 +130,6 @@
           class="form-control"
           type="number"
           [ngClass]="esValido('nico') ? 'required' : ''"
-          [disabled]="esSoloLectura"
         />
         <div *ngIf="noEsValido('nico')" class="text-danger">
           <span *ngIf="formAviso.get('nico')?.errors?.['required']">
@@ -165,7 +160,6 @@
           class="form-control"
           type="text"
           [ngClass]="esValido('peso') ? 'required' : ''"
-          [disabled]="esSoloLectura"
         />
         <div *ngIf="noEsValido('peso')" class="text-danger">
           <span *ngIf="formAviso.get('peso')?.errors?.['required']">
@@ -201,7 +195,6 @@
           class="form-control"
           type="text"
           [ngClass]="esValido('valorUSD') ? 'required' : ''"
-          [disabled]="esSoloLectura"
         />
         <div *ngIf="noEsValido('valorUSD')" class="text-danger">
           <span *ngIf="formAviso.get('valorUSD')?.errors?.['required']">
@@ -240,7 +233,6 @@
           (change)="establecerValoresEnEstado(formAviso, 'descripcionMercancia')"
           class="form-control no-resize textarea-height"
           [ngClass]="esValido('descripcionMercancia') ? 'required  no-resize textarea-height' : ' no-resize textarea-height'"
-          [disabled]="esSoloLectura"
         ></textarea>
         <div *ngIf="noEsValido('descripcionMercancia')" class="text-danger">
           <span
@@ -271,7 +263,6 @@
           class="form-control"
           type="text"
           (change)="establecerValoresEnEstado(formAviso, 'nombreComercial')"
-          [disabled]="esSoloLectura"
         />
         <div *ngIf="noEsValido('nombreComercial')" class="text-danger">
           <span *ngIf="formAviso.get('nombreComercial')?.errors?.['maxlength']">
@@ -333,7 +324,6 @@
           type="text"
           (change)="establecerValoresEnEstado(formAviso, 'calle')"
           [ngClass]="esValido('calle') ? 'required' : ''"
-          [disabled]="esSoloLectura"
         />
         <div *ngIf="noEsValido('calle')" class="text-danger">
           <span *ngIf="formAviso.get('calle')?.errors?.['required']">
@@ -353,7 +343,6 @@
           type="text"
           [ngClass]="esValido('numeroExterior') ? 'required' : ''"
           (change)="establecerValoresEnEstado(formAviso, 'numeroExterior')"
-          [disabled]="esSoloLectura"
         />
         <div *ngIf="noEsValido('numeroExterior')" class="text-danger">
           <span *ngIf="formAviso.get('numeroExterior')?.errors?.['required']">
@@ -372,7 +361,6 @@
           class="form-control"
           type="text"
           (change)="establecerValoresEnEstado(formAviso, 'numeroInterior')"
-          [disabled]="esSoloLectura"
         />
         <div *ngIf="noEsValido('numeroInterior')" class="text-danger">
           <span *ngIf="formAviso.get('numeroInterior')?.errors?.['required']">
@@ -392,7 +380,6 @@
           type="number"
           [ngClass]="esValido('codigoPostal') ? 'required' : ''"
           (change)="establecerValoresEnEstado(formAviso, 'codigoPostal')"
-          [disabled]="esSoloLectura"
         />
         <div *ngIf="noEsValido('codigoPostal')" class="text-danger">
           <span *ngIf="formAviso.get('codigoPostal')?.errors?.['required']">
