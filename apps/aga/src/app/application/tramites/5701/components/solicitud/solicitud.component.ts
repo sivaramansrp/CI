@@ -901,10 +901,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         folioDDEX: [this.solicitudState?.autorizacionDDEX],
         idAduanaDespacho: [
           this.solicitudState?.idAduanaDespacho,
-          [Validators.required],
+          [Validators.required, ValidacionesFormularioService.noMenosUnoValor],
         ],
         aduanaDespacho: [this.solicitudState?.aduanaDespacho],
-        idSeccionDespacho: [this.solicitudState?.idSeccionDespacho],
+        idSeccionDespacho: [this.solicitudState?.idSeccionDespacho, [ValidacionesFormularioService.noMenosUnoValor]],
         seccionAduanera: [this.solicitudState?.seccionAduanera],
         idRecinto: [],
         nombreRecinto: [this.solicitudState?.nombreRecinto],
@@ -2177,6 +2177,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               this.despachoSeleccionado = false;
             }
           }
+
+          this.despacho.get('rfcDespachoLDA')?.clearValidators();
+          this.despacho.get('rfcDespachoLDA')?.updateValueAndValidity();
+          this.despacho.get('folioDDEX')?.clearValidators();
+          this.despacho.get('folioDDEX')?.updateValueAndValidity();
         }
         break;
 
@@ -2220,13 +2225,27 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @param tipo - Tipo de despacho seleccionado ('lda' o 'dd').
    * @returns {void} No retorna ningún valor.
    */
-  showConfirmDialogLDA_DD(tipo: string): void {
+  showConfirmDialogLDA_DD(event: Event, tipo: string): void {
+    const CHECKED = event.target as HTMLInputElement;
+
+    this.despacho.get(tipo)?.setValue(CHECKED.checked);
+
     this.tipoDespacho = tipo;
     const ADUANA = this.despacho.get('idAduanaDespacho')?.value;
     const DESPACHO = this.despacho.get('idSeccionDespacho')?.value;
     const RECINTO = this.despacho.get('nombreRecinto')?.value;
 
-    if ((ADUANA || DESPACHO || RECINTO) && this.despacho.touched) {
+    const FORMA_MODIFICADA = Object.keys(this.despacho.controls).some((key) => {
+      if (key !== 'lda' && key !== 'dd') {
+        return (
+          this.despacho.controls[key].dirty ||
+          this.despacho.controls[key].touched
+        );
+      }
+      return false;
+    });
+
+    if ((ADUANA || DESPACHO || RECINTO) > 0 && FORMA_MODIFICADA) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: '',
@@ -2238,6 +2257,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         txtBtnCancelar: 'No',
       };
       this.procesoModal = 'lda_dd';
+    } else if (!this.despacho.get(tipo)?.value) {
+      this.despacho.get('rfcDespachoLDA')?.clearValidators();
+      this.despacho.get('rfcDespachoLDA')?.updateValueAndValidity();
+      this.despacho.get('folioDDEX')?.clearValidators();
+      this.despacho.get('folioDDEX')?.updateValueAndValidity();
     } else {
       this.activaDesactivaCheckLDA_DDEX(tipo);
     }
