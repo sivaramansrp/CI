@@ -28,9 +28,40 @@ export class PasoUnoComponent implements OnInit{
    * @default 1
    */
     indice: number = 1;
-  private destroyNotifier$: Subject<void> = new Subject();
-  public consultaState!:ConsultaioState; 
-  esDatosRespuesta:boolean = false;
+/**
+ * @property destroyNotifier$
+ * @private
+ * @description
+ * Sujeto utilizado para cancelar suscripciones activas y prevenir fugas de memoria.
+ * Generalmente se utiliza con el operador `takeUntil` en observables dentro del ciclo de vida del componente.
+ * 
+ * @example
+ * this.observable$.pipe(takeUntil(this.destroyNotifier$)).subscribe(...);
+ */
+private destroyNotifier$: Subject<void> = new Subject();
+
+/**
+ * @property consultaState
+ * @public
+ * @description
+ * Representa el estado actual de la consulta. 
+ * Este estado puede incluir información obtenida de una API o de algún servicio.
+ * Debe ser inicializado antes de usarse.
+ */
+public consultaState!: ConsultaioState;
+
+/**
+ * @property esDatosRespuesta
+ * @public
+ * @description
+ * Bandera booleana que indica si existen datos disponibles como respuesta de una consulta.
+ * Se puede usar para mostrar u ocultar secciones del template dependiendo del resultado.
+ * 
+ * @example
+ * *ngIf="esDatosRespuesta"
+ */
+public esDatosRespuesta: boolean = false;
+
     /**
      * Lista de las secciones del formulario, cada sección tiene su índice, título y componente asociado.
      * Esta lista define el flujo y los pasos del formulario.
@@ -46,23 +77,51 @@ export class PasoUnoComponent implements OnInit{
       { index: 1, title: 'Solicitante', component: 'solicitante' },
       { index: 2, title: 'Operaciones de Comercio Exterior', component: 'app-operaciones-de-comercio-exterior' }
     ];
+      /**
+   * @constructor
+   * @param consultaQuery - Servicio para consultar información relacionada con el trámite.
+   * @param operacionService - Servicio encargado de gestionar las operaciones del trámite.
+   *
+   * @description
+   * Constructor de la clase. Inicializa los servicios necesarios para la gestión y consulta de información en el paso uno del trámite.
+   */
   constructor(private consultaQuery: ConsultaioQuery, private readonly operacionService: OperacionService){
 
   }
+  /**
+   * @inheritdoc
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe al observable del estado de consulta y actualiza la propiedad local `consultaState`.
+   * Si el estado indica que se debe actualizar, guarda los datos del formulario;
+   * de lo contrario, establece la bandera `esDatosRespuesta` en verdadero.
+   *
+   * @memberof PasoUnoComponent
+   */
   ngOnInit(): void {
-        this.guardarDatosFormulario();
-    // this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
-    //       this.consultaState = seccionState;
-    //   })).subscribe();
-    // if(this.consultaState.update) {
-    //   this.guardarDatosFormulario();
-    // } else {
-    //   this.esDatosRespuesta = true;
-    // }
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+          this.consultaState = seccionState;
+      })).subscribe();
+    if(this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
 
   }
 
   
+/**
+ * @description
+ * Guarda los datos del formulario obteniendo la información desde un archivo JSON
+ * y actualiza el estado del formulario en el servicio correspondiente.
+ *
+ * @remarks
+ * Utiliza el servicio `operacionService` para obtener los datos de muestra de mercancías
+ * y actualiza el estado del formulario si la respuesta es válida.
+ * 
+ * @returns {void}
+ */
 guardarDatosFormulario(): void {
     this.operacionService
       .getRegistroTomaMuestrasMercanciasData('finalDataToSend.json').pipe(
