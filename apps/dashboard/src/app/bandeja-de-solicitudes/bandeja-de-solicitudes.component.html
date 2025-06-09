@@ -8,6 +8,9 @@
           [configuracionTabla]="bandejaConfiguracionTabla"
           [configuracionTablaDatos]="bandejaTablaDatos"
           [bandejaSolicitudeDatos]="bandejaSolicitudeFormaDatos"
+          [seleccionadoDepartamento]="selectedDepartamentoObj"
+          [duplicarDatos]="copiarBandejaTablaDatos"
+          (obtenerNombreDelDepartamento)="procedureNumero($event)"
         >
         </lib-bandeja>
       </ng-container>
