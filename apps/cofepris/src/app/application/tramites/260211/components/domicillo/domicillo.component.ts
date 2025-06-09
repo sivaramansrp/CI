@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Catalogo,
-  CatalogoSelectComponent,
   ConfiguracionColumna,
   CrossListLable,
   CrosslistComponent,
   InputFecha,
   InputFechaComponent,
-  RespuestaCatalogos,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
+
+ import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 import {
   Component,
   OnDestroy,
@@ -19,6 +20,9 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { FECHA_DE_PAGO } from '@libs/shared/data-access-user/src/core/enums/260211/manifiestos.enum';
+
 import {
   FormBuilder,
   FormControl,
@@ -41,9 +45,9 @@ import { CROSLISTA_DE_PAISES } from '@libs/shared/data-access-user/src/core/enum
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
-import { FECHA_DE_PAGO } from '@libs/shared/data-access-user/src/core/enums/260211/manifiestos.enum';
+
 import { SanitarioService } from '../../services/sanitario.service';
- 
+
  
 /**
  * Interfaz para la respuesta de la tabla de NICO.
@@ -97,9 +101,14 @@ export interface MercanciasTabla {
     InputFechaComponent
   ],
   templateUrl: './domicillo.component.html',
-  styleUrl: './domicillo.component.css',
+  styleUrl: './domicillo.component.scss',
 })
 export class DomicilloComponent implements OnInit,OnDestroy {
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+ public esFormularioSoloLectura: boolean = false; 
   /**
    * Lista de componentes Crosslist disponibles en la vista.
    */
@@ -122,7 +131,48 @@ export class DomicilloComponent implements OnInit,OnDestroy {
    * private
    */
   private destroyed$ = new Subject<void>();
- 
+  /**
+   * Lista de filas seleccionadas del componente tabla de NICO.
+   * Se utiliza para manejar la selección de filas en la tabla.
+   */
+  selectedRowsEvent: any[] = []; 
+ /*
+  * Lista de filas seleccionadas del componente tabla de mercancías.
+  * Se utiliza para manejar la selección de filas en la tabla de mercancías.
+  */
+ selectedRows: any[] = []; 
+/*
+  * Maneja el evento de cambio de selección en la tabla de NICO.
+  * @param selected Lista de filas seleccionadas.
+  */
+onSeleccionChangeEvent(selected: any[]) {
+  this.selectedRowsEvent = selected;
+}
+/** 
+ Recibe los seleccionados del componente tabla
+*/
+onSeleccionChange(selected: any[]) {
+  this.selectedRows = selected;
+}
+ /**
+  *  Elimina las filas seleccionadas
+  *  */
+eliminarSeleccionados() {
+  this.nicoTablaDatos = this.nicoTablaDatos.filter(
+    (row) => !this.selectedRows.includes(row)
+  );
+  this.selectedRows = [];
+}
+
+ /**
+  * Elimina las filas seleccionadas
+  */
+eliminarMercanciaSeleccionados() {
+  this.mercanciasTablaDatos = this.mercanciasTablaDatos.filter(
+    (row) => !this.selectedRowsEvent.includes(row)
+  );
+  this.selectedRowsEvent = [];
+}
   /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios reactivos.
@@ -136,10 +186,31 @@ export class DomicilloComponent implements OnInit,OnDestroy {
     private tramite260211Store: Tramite260211Store,
     private tramite260211Query: Tramite260211Query,
     private service: SanitarioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Dependencia inyectada para uso posterior
+      /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+     
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe();
   }
- 
+  /**
+   * Índice de la mercancía que se está editando.
+   * Si es `null`, no hay mercancía en edición.
+   */
+editMercanciaIndex: number | null = null;
   /**
    * Grupo de formularios para domicilio.
    */
@@ -259,7 +330,120 @@ public fechaCaducidadInput: InputFecha = FECHA_DE_PAGO;
  * Método que se ejecuta al inicializar el componente.
  */
 ngOnInit(): void {
-  this.tramite260211Query
+    this.inicializarEstadoFormulario();
+  this.obtenerEstadoList();
+  this.obtenerTablaDatos();
+  this.obtenerMercanciasDatos();
+ 
+ 
+}
+/**
+ * Modifica una fila de la tabla NICO con los datos del formulario de agente.
+ * Si hay una fila seleccionada, actualiza el índice de edición y carga los datos en el formulario.
+ */
+modificarMercancia() {
+  if (this.selectedRowsEvent && this.selectedRowsEvent.length === 1) {
+    const ROW = this.selectedRowsEvent[0];
+    this.editMercanciaIndex = this.mercanciasTablaDatos.findIndex(
+      r => r.numeroRegistro === ROW.numeroRegistro // Use a unique property
+    );
+    this.formMercancias.patchValue(ROW);
+
+    // Optionally, open the modal programmatically if not using data-bs-toggle
+    // document.getElementById('modalAddAgentMercancias')?.click();
+  }
+}
+/**
+ * Agrega una nueva fila a la tabla NICO con los datos del formulario de agente.
+ * Si el formulario es válido, crea un nuevo objeto `NicoInfo` con los valores del formulario y lo agrega a la lista `nicoTablaDatos`.
+ */
+ agregarFilaScian() {
+  if (this.formAgente.valid) {
+
+    const NEWVA_FILA: NicoInfo = {
+      clave_Scian: this.formAgente.get('claveScianModal')?.value,
+      descripcion_Scian: this.formAgente.get('claveDescripcionModal')?.value,
+    };
+
+ this.nicoTablaDatos.push(NEWVA_FILA);
+    this.formAgente.reset();
+  } 
+}
+/*
+* Método que se ejecuta al inicializar el componente.
+*/
+agregarFilaMercancia() {
+  if (this.formMercancias.valid) {
+    const MERCANCIA_DATA: MercanciasInfo = {
+      clasificacion: this.formMercancias.get('clasificacion')?.value,
+      especificar: this.formMercancias.get('especificarClasificacionProducto')?.value,
+      denominacionEspecifica: this.formMercancias.get('denominacionEspecifica')?.value,
+      denominacionDistintiva: this.formMercancias.get('denominacionDistintiva')?.value,
+      denominacionComun: this.formMercancias.get('denominacionComun')?.value,
+      formaFarmaceutica: this.formMercancias.get('formaFarmaceutica')?.value,
+      estadoFisico: this.formMercancias.get('estadoFisico')?.value,
+      fraccionArancelaria: this.formMercancias.get('fraccionArancelaria')?.value,
+      descripcionFraccion: this.formMercancias.get('descripcionFraccion')?.value,
+      cantidadUMC: this.formMercancias.get('cantidadUMC')?.value,
+      unidad: this.formMercancias.get('UMC')?.value,
+      cantidadUMT: this.formMercancias.get('cantidadUMT')?.value,
+      unidadUMT: this.formMercancias.get('UMT')?.value,
+      presentacion: this.formMercancias.get('presentacion')?.value,
+      numeroRegistro: this.formMercancias.get('numeroRegistro')?.value,
+      paisDeOrigen: this.formMercancias.get('paisDeOrigen')?.value,
+      paisDeProcedencia: this.formMercancias.get('paisDeProcedencia')?.value,
+      tipoProducto: this.formMercancias.get('tipoDeProducto')?.value,
+      usoEspecifico: this.formMercancias.get('usoEspecifico')?.value,
+      fechaCaducidad: this.formMercancias.get('fechaCaducidad')?.value,
+    };
+
+    if (this.editMercanciaIndex !== null && this.editMercanciaIndex > -1) {
+      const UPDATED = [...this.mercanciasTablaDatos];
+      UPDATED[this.editMercanciaIndex] = MERCANCIA_DATA;
+      this.mercanciasTablaDatos = UPDATED;
+      this.editMercanciaIndex = null;
+      this.selectedRowsEvent = [];
+    } else {
+      this.mercanciasTablaDatos = [...this.mercanciasTablaDatos, MERCANCIA_DATA];
+    }
+    this.formMercancias.reset();
+  }
+}
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+    
+  }
+    /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.domicilio.disable();
+        this.formAgente.disable();
+        this.formMercancias.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.domicilio.enable();
+        this.formAgente.enable();
+        this.formMercancias.enable();
+      } 
+  }
+  /**
+   * Inicializa el formulario con los datos de la solicitud.
+   * Se suscribe al estado de la solicitud para obtener los valores iniciales.
+   * Los campos del formulario se configuran como deshabilitados o requeridos según sea necesario.
+   */
+inicializarFormulario():void{
+this.tramite260211Query
     .selectSolicitud$
     .pipe(
       takeUntil(this.destroyNotifier$),
@@ -268,12 +452,7 @@ ngOnInit(): void {
       })
     )
     .subscribe();
- 
-  this.obtenerEstadoList();
-  this.obtenerTablaDatos();
-  this.obtenerMercanciasDatos();
- 
-  /**
+     /**
    * Inicialización del formulario de domicilio.
    */
   this.domicilio = this.fb.group({
@@ -321,8 +500,13 @@ ngOnInit(): void {
     numeroRegistro: [this.solicitudState?.numeroRegistro, Validators.required],
     fechaCaducidad: [this.solicitudState?.fechaCaducidad],
   });
+
+     if (this.esFormularioSoloLectura) {
+      this.domicilio.disable();
+        this.formAgente.disable();
+        this.formMercancias.disable();
+  }
 }
- 
 /**
  * Botones de acción para gestionar listas de países en la primera sección.
  */
@@ -388,7 +572,18 @@ obtenerMercanciasDatos(): void {
     this.mercanciasTablaDatos = DATOS;
   });
 }
- 
+/*
+  * Limpia el formulario de domicilio.
+  */
+ limpiarFormAgente() {
+  this.formAgente.reset();
+}
+/**
+ * Limpia el formulario de mercancías.
+ */
+limpiarForm(){
+  this.formMercancias.reset();
+}
 /**
  * Maneja el cambio del checkbox en el formulario y actualiza el estado correspondiente.
  * @param event Evento del checkbox.
