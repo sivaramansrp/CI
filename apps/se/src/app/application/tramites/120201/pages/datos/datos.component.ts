@@ -7,7 +7,7 @@ import { FormularioDinamico } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-datos',
   templateUrl: './datos.component.html',
-  styleUrl: './datos.component.css'
+  styleUrl: './datos.component.scss'
 })
 export class DatosComponent {
   /** 

@@ -10,7 +10,7 @@ import { CUPOS_PASOS } from '../../constantes/cupos-constantes.enum';
 @Component({
   selector: 'app-pantallas',
   templateUrl: './pantallas.component.html',
-  styleUrls: ['./pantallas.component.css']
+  styleUrls: ['./pantallas.component.scss']
 })
 export class PantallasComponent {
   /**
