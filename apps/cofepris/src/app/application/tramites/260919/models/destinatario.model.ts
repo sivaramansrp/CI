@@ -73,6 +73,20 @@ export interface Destinatario {
  * Interfaz que representa los trámites asociados.
  */
 export interface TramitesAsociados {
+  /**
+   * Razón social legal del destinatario.
+   */
+  nombreORazónSocial: string;
+
+  /**
+   * Apellido paterno del destinatario.
+   */
+  apellidoPaterno: string;
+
+  /**
+   * Apellido materno del destinatario.
+   */
+  apellidoMaterno: string;
   /** Número del trámite asociado. */
   No: number;
 
