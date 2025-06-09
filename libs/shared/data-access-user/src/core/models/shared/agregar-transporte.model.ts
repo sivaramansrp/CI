@@ -91,17 +91,17 @@ export interface TransporteDespacho {
   guia_house_maritimo?: string;
   nombre_buque_maritimo?: string;
   contenedor_maritimo?: string;
-  
-  guia_house_valida?: boolean;
-  guia_master_valida?: boolean;
+
+  guia_house_valida?: boolean | string;
+  guia_master_valida?: boolean | string;
   descripcion_equipo?: string;
 
-  arribo_pendiente_aereo?: boolean;
+  arribo_pendiente_aereo?: boolean | string;
   guia_master_aereo?: string;
   guia_house_aereo?: string;
   fecha_arribo_aereo?: string;
   hora_arribo_aereo?: string;
-  guia_valida?: boolean;
+  guia_valida?: boolean | string;
 
   tipo_transporte_des?: string;
   datos_transporte?: string;
