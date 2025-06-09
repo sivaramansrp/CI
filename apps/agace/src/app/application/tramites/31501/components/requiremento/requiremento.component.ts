@@ -4,7 +4,7 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CapturarRequerimientoComponent } from '../capturar-requerimiento/capturar-requerimiento.component';
 import { CommonModule } from '@angular/common';
 import { map, Subject, takeUntil } from 'rxjs';
-import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-requiremento',

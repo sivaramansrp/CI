@@ -5,10 +5,10 @@
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group pull-right">
-                    <button type="button" class="btn btn-danger" (click)="cancelar()" [disabled]="consultaDatos.readonly">
+                    <button type="button" class="btn btn-danger" (click)="cancelar()" [disabled]="soloLectura">
                         Cancelar
                     </button>
-                    <button type="submit" class="btn btn-primary" (click)="continuar()" [disabled]="consultaDatos.readonly">
+                    <button type="submit" class="btn btn-primary" (click)="continuar()" [disabled]="soloLectura">
                         Continuar
                     </button>
                 </div>

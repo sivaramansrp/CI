@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud31501State, Tramite31501Store } from '../../../../estados/tramites/tramite31501.store';
@@ -122,7 +122,7 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.inicializarFormulario();
+      this.inicializarFormulario();
     this.fetchAduanaList();
   }
 
