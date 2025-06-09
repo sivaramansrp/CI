@@ -76,6 +76,16 @@ export class ModificatNoticeService {
       );
   }
 
+/**
+ * Actualiza el estado del formulario con los datos proporcionados.
+ *
+ * Este método toma un objeto de tipo `Solicitud260605State` y actualiza los valores
+ * correspondientes en el store `tramite260605Store`, incluyendo número de permiso,
+ * costumbres actuales, RFC, nombre, apellidos, aduanas disponibles y seleccionadas,
+ * así como la cantidad solicitada.
+ *
+ * @param DATOS - Objeto que contiene los datos del formulario a actualizar.
+ */
  actualizarEstadoFormulario(DATOS: Solicitud260605State): void {
     this.tramite260605Store.setNumeroDPmiso(DATOS.numeroDePermiso);
   this.tramite260605Store.setCstumbresAtuales(DATOS.costumbresActuales);
@@ -90,6 +100,14 @@ export class ModificatNoticeService {
   
   }
 
+/**
+ * Obtiene los datos del registro de toma de muestras de mercancías.
+ *
+ * Realiza una solicitud HTTP GET para recuperar la información almacenada en el archivo JSON correspondiente
+ * a la toma de muestras de mercancías para el trámite 260605.
+ *
+ * @returns Un observable que emite el estado de la solicitud (`Solicitud260605State`) con los datos obtenidos.
+ */
 getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud260605State> {
     return this.http.get<Solicitud260605State>('assets/json/260605/registro_toma_muestras_mercancias.json');
   }

@@ -98,6 +98,11 @@ export class AduanerasInformacionesComponent implements OnInit, OnDestroy {
     },
   ];
 
+  /**
+   * Arreglo que contiene los identificadores de las aduanas seleccionadas por el usuario.
+   * 
+   * Cada elemento del arreglo representa una aduana disponible que ha sido seleccionada.
+   */
   aduanasDisponiblesSeleccionadas: string[] = [];
 
   /**
