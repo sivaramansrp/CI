@@ -70,7 +70,6 @@ import {ConsultaioQuery } from '@ng-mf/data-access-user';
 export class DatosSolicitudComponent implements OnInit, OnDestroy {
    /**
    * Indica si el formulario está en modo solo lectura.
-   * @type {boolean}
    */
   esSoloLectura!: boolean;
   /**
@@ -309,6 +308,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Habilita o deshabilita los campos del formulario según el modo de solo lectura.
+   * Si `esSoloLectura` es verdadero, deshabilita los controles especificados.
+   * Si es falso, los habilita para permitir la edición.
+   */
   habilitarDeshabilitarFormulario(): void {
     if (this.esSoloLectura) {
       this.formAviso.get('ideGenerica1')?.disable();

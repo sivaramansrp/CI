@@ -4,7 +4,7 @@ import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
 import { Solicitud32501Query } from '../../estados/solicitud32501.query';
 import { Solicitud32501Store } from '../../estados/solicitud32501.store';
-import { of, Subject } from 'rxjs';
+import { of } from 'rxjs';
 import { ElementRef, NO_ERRORS_SCHEMA } from '@angular/core';
 import { Modal } from 'bootstrap';
 import { CommonModule } from '@angular/common';
@@ -23,7 +23,7 @@ import {
   TituloComponent,
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import * as bootstrap from 'bootstrap';
 
 describe('DatosSolicitudComponent', () => {
@@ -229,10 +229,10 @@ describe('DatosSolicitudComponent', () => {
       actualizarNumeroExterior: jest.fn(() => of('B2')),
       actualizarCalle: jest.fn(() => of('Main Street')),
       actualizarNombreComercial: jest.fn(() => of('Test Business')),
+      establecerDatos: jest.fn(() => of({})), // Mock the missing method
     };
 
     await TestBed.configureTestingModule({
-      declarations: [],
       imports: [
         DatosSolicitudComponent,
         ReactiveFormsModule,
@@ -251,10 +251,10 @@ describe('DatosSolicitudComponent', () => {
         CatalogoSelectComponent,
         InputRadioComponent,
         TablaDinamicaComponent,
-        HttpClientTestingModule,
       ],
       providers: [
         FormBuilder,
+        provideHttpClientTesting(),
         {
           provide: MercanciasDesmontadasOSinMontarService,
           useValue: mercDesmSinMonServiceMock,

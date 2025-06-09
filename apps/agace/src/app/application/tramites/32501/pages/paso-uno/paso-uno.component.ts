@@ -78,6 +78,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     private servicio: MercanciasDesmontadasOSinMontarService,
     private consultaQuery: ConsultaioQuery
   ) { }
+  /**
+   * Hook del ciclo de vida que se llama al inicializar el componente.
+   * Realiza la suscripción al estado de la consulta y obtiene los datos de la bandeja de solicitudes si es necesario.
+   */
      ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
       .pipe(takeUntil(this.notificadorDestruccion$))
