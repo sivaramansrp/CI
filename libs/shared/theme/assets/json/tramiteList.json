@@ -2179,8 +2179,8 @@
   {
     "id": 312,
     "tramite": 319,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/operaciones-de-comercio/exterior",
+    "linkDepartment": "/pago/operaciones-de-comercio/exterior",
     "department": "aga"
   },
   {
