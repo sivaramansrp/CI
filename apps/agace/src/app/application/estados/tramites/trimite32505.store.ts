@@ -3,10 +3,10 @@ import { DatosSolicitante } from '../../tramites/32505/models/avios-model';
 import { Injectable } from '@angular/core';
 
 /**
- * @interface Solicitud32502State
+ * @interface Solicitud32505State
  * @description Define el estado inicial para el trámite 32502.
  */
-export interface Solicitud32502State {
+export interface Solicitud32505State {
   /**
    * Número de serie del vehículo.
    */
@@ -190,10 +190,10 @@ export interface Solicitud32502State {
 
 /**
  * @function createInitialState
- * @description Crea el estado inicial para el trámite 32502.
- * @returns {Solicitud32502State} El estado inicial.
+ * @description Crea el estado inicial para el trámite 32505.
+ * @returns {Solicitud32505State} El estado inicial.
  */
-export function createInitialState(): Solicitud32502State {
+export function createInitialState(): Solicitud32505State {
   return {
     adace: 'default',
     pais: '',
@@ -254,13 +254,13 @@ export function createInitialState(): Solicitud32502State {
 /**
  * @class Tramite32505Store
  * @description Store para gestionar el estado del trámite 32505.
- * @extends {Store<Solicitud32502State>}
+ * @extends {Store<Solicitud32505State>}
  */
 @Injectable({
   providedIn: 'root'
 })
 @StoreConfig({ name: 'tramite32505', resettable: true })
-export class Tramite32505Store extends Store<Solicitud32502State> {
+export class Tramite32505Store extends Store<Solicitud32505State> {
   /**
    * @constructor
    * @description Inicializa el store con el estado inicial.
