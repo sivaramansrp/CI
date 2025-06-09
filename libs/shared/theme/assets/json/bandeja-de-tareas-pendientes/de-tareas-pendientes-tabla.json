@@ -9638,5 +9638,25 @@
     "departamento": "cofepris",
     "numeroDeProcedimiento": "260402",
     "origin": "READ_PROCEDURE"
+  },
+  {
+    "folioTramite": "099226136147361192499354",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "se",
+    "numeroDeProcedimiento": "110205",
+    "origin": "READ_PROCEDURE"
+  },
+  {
+    "folioTramite": "099226136147361192499354",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "aga",
+    "numeroDeProcedimiento": "302",
+    "origin": "READ_PROCEDURE"
   }
 ]
