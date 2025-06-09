@@ -65,6 +65,7 @@
                 <formas-dinamicas 
                     [forma]="bandejaSolicitudeFormGroup" 
                     [formularioDatos]="bandejaSolicitudeDatos"
+                    (emitirCambioDeValor)="obtenerProcedure($event)"
                     >
                 </formas-dinamicas>
             </div>
