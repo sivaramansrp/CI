@@ -1,14 +1,14 @@
 <div class="container">
-    <div class="row">
+    <div class="row" *ngIf="!soloLectura">
         <label>Folio Tramite: <span class="font-weight-normal">{{ folioTramite?.folioTramite }}</span></label>
         <label>Tipo de solicitud: <span>{{ folioTramite?.tipoTramite }}</span></label>
         <div class="row">
             <div class="col-md-12">
                 <div class="form-group pull-right">
-                    <button type="button" class="btn btn-danger" (click)="cancelar()" [disabled]="soloLectura">
+                    <button type="button" class="btn btn-danger" (click)="cancelar()">
                         Cancelar
                     </button>
-                    <button type="submit" class="btn btn-primary" (click)="continuar()" [disabled]="soloLectura">
+                    <button type="submit" class="btn btn-primary" (click)="continuar()">
                         Continuar
                     </button>
                 </div>
