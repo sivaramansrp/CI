@@ -63,3 +63,38 @@ export interface CAATRespuesta {
      */
     message: string;
 }
+
+/**
+ * @interface RespuestaConsulta
+ * @description Representa la respuesta de la API para una consulta.
+ * 
+ * @property {boolean} success - Indica si la operación fue exitosa.
+ * @property {ConsultaDatos} datos - Datos de la consulta.
+ * @property {string} message - Mensaje de la respuesta.
+ */
+export interface RespuestaConsulta {
+  success: boolean;
+  datos: ConsultaDatos;
+  message: string;
+}
+
+/**
+ * @interface ConsultaDatos
+ * @description Representa los datos de una consulta de CAAT.
+ * 
+ * @property {string} claveFolioCAAT - Clave del folio CAAT.
+ * @property {string} cveFolioCaat - Clave del folio CAAT.
+ * @property {string} descripcionTipoCaat - Descripción del tipo de CAAT.
+ * @property {string} tipoDeCaatAerea - Tipo de CAAT aéreo.
+ * @property {string} ideCodTransportacionAerea - Código de transportación aérea.
+ * @property {string} codIataIcao - Código IATA/ICAO.
+ */
+export interface ConsultaDatos {
+    claveFolioCAAT: string;
+    cveFolioCaat: string; 
+    descripcionTipoCaat: string;
+    tipoDeCaatAerea: string;
+    ideCodTransportacionAerea: string;
+    codIataIcao: string;
+  
+}

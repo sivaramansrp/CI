@@ -61,6 +61,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   @Input() public idProcedimiento!: number;
 
   /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
+
+  /**
    * @property {EventEmitter<PagoDerechosFormState>} updatePagoDerechos
    * @description Output property that emits the updated state of the payment form whenever changes occur.
    * This allows the parent component to stay synchronized with the form's state.
@@ -179,6 +184,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
     this.cargarDatos();
     this.getBancoDatos();
+    if(this.formularioDeshabilitado){
+      this.pagoDerechosForm.disable();
+    }
   }
 
   /**
