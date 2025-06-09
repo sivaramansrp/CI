@@ -1,6 +1,7 @@
-import { CatalogoSelectComponent, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Catalogo } from '../../models/validar-inicialmente-certificado.model';
 import { CatalogoLista } from '../../models/validar-inicialmente-certificado.model';
+import { CatalogoSelectComponent } from "@libs/shared/data-access-user/src";
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
