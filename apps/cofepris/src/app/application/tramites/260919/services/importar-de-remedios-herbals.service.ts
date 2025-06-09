@@ -31,8 +31,17 @@ export class ImportarDeRemediosHerbalsService {
    * @returns Observable con la lista de claves SCIAN.
    */
   getClaveScianData(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('./assets/json/260919/clavescian.json');
-  }
+      return this.http.get<Catalogo[]>('./assets/json/260919/clavescian.json');
+    }
+  
+    /**
+     * Obtiene los datos de las descripciones de claves desde un archivo JSON.
+     * @returns Observable con la lista de descripciones de claves.
+     */
+    getClaveDescripcionDelData(): Observable<Catalogo[]> {
+      return this.http.get<Catalogo[]>('./assets/json/260919/clavedescripciondel.json');
+    }
+  
 
   /**
    * Obtiene los datos del régimen desde un archivo JSON.
@@ -82,6 +91,23 @@ export class ImportarDeRemediosHerbalsService {
     return this.http.get<FilaTablaData[]>('./assets/json/260919/fabricante.json');
   }
 
+  getTipoProductoData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('./assets/json/260919/tipoproducto.json');
+  }
+  getClasificacionDelProductoData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('./assets/json/260919/delproducto.json');
+  }
+getEstadoFisicoData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('./assets/json/260919/estadofisico.json');
+  }
+  /**
+   * Obtiene los datos para especificar productos desde un archivo JSON.
+   * @returns Observable con la lista de especificaciones de productos.
+   */
+  getEspificarData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('./assets/json/260919/espicificar.json');
+  }
+
   /**
    * Obtiene los datos de los destinatarios desde un archivo JSON.
    * @returns Observable con la lista de destinatarios.
@@ -105,4 +131,17 @@ export class ImportarDeRemediosHerbalsService {
   getFacturadorData(): Observable<FilaTablaData[]> {
     return this.http.get<FilaTablaData[]>('./assets/json/260919/facturador.json');
   }
+
+  getSolicitudData(): Observable<TramitesAsociados[]> {
+      return this.http.get<TramitesAsociados[]>('./assets/json/260919/solicitud.json');
+    }
+
+    /**
+   * Obtiene los datos de los países desde un archivo JSON.
+   * @returns Observable con la lista de países.
+   */
+  getPaisData(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('./assets/json/260919/pais.json');
+  }
+  
 }
