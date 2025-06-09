@@ -1,5 +1,5 @@
 import { ANO_CATALOGO, FECHA_FRANJO, FECHA_INICIAL, FECHA_PAGO, RADIO_PARCIAL, RADIO_RESIDENTE, RADIO_TIPO_SOLICITUDE, RADIO_VEHICULO } from '../constantes/aviso32514.enum';
-import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, NotificacionesComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputFecha, InputFechaComponent, InputRadioComponent, NotificacionesComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
@@ -85,7 +85,13 @@ export class AvisoRetornoComponent implements OnInit, OnDestroy {
    */
   public solicitudState!: Solicitud32514State;
 
-
+  /**
+   * Observable que indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.
+   *
+   * @type {boolean}
+   */
+  esFormularioSoloLectura!: boolean;
 
   /**
    * Constructor del componente.
@@ -100,6 +106,7 @@ export class AvisoRetornoComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     private store: Tramite32514Store,
     private query: Tramite32514Query,
+    private consultaQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -117,6 +124,30 @@ export class AvisoRetornoComponent implements OnInit, OnDestroy {
       .subscribe();
     this.donanteDomicilio();
     this.obtenerDatosAnoPeriodo();
+
+    this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+        if(!seccionState.create && seccionState.procedureId === '32514') {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        } else {
+          this.esFormularioSoloLectura = false;
+        }
+        this.inicializarEstadoFormulario();
+      })
+    ).subscribe();
+  }
+
+   /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+   inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+        this.avisoForm.disable();
+    } else {
+      this.avisoForm.enable();
+    }
   }
 
   /**
