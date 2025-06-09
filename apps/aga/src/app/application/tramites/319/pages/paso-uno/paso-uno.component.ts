@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject,map, takeUntil } from 'rxjs';
@@ -19,7 +19,7 @@ import { OperacionesDeComercioExteriorComponent } from '../../components/operaci
     SolicitanteComponent
   ]
 })
-export class PasoUnoComponent implements OnInit{
+export class PasoUnoComponent implements OnInit,OnDestroy{
     /**
    * Índice de la pestaña seleccionada.
    * Este índice indica cuál pestaña está actualmente seleccionada en el formulario.
@@ -147,4 +147,24 @@ guardarDatosFormulario(): void {
     seleccionaTab(i: number): void {
       this.indice = i;
     }
+
+/**
+ * @method ngOnDestroy
+ * @description
+ * Método del ciclo de vida de Angular que se ejecuta cuando el componente o servicio es destruido.
+ * 
+ * Se utiliza para limpiar suscripciones y liberar recursos, evitando fugas de memoria.
+ * Emite un valor en `destroyNotifier$` y luego completa el observable, lo cual se usa comúnmente
+ * con el operador `takeUntil` para cancelar suscripciones activas.
+ * 
+ * @example
+ * this.miObservable$
+ *   .pipe(takeUntil(this.destroyNotifier$))
+ *   .subscribe(...);
+ */
+ngOnDestroy(): void {
+  this.destroyNotifier$.next();
+  this.destroyNotifier$.complete();
+}
+
 }
