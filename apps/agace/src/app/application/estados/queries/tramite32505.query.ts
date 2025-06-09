@@ -1,10 +1,10 @@
 
+import { Solicitud32505State, Tramite32505Store } from '../tramites/trimite32505.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { Solicitud32502State, tramite32505Store } from '../tramites/trimite32505.store';
 
 @Injectable({ providedIn: 'root' })
-export class Tramite32505Query extends Query<Solicitud32502State> {
+export class Tramite32505Query extends Query<Solicitud32505State> {
 
   /**
    * Selecciona el estado completo de la solicitud
@@ -15,7 +15,7 @@ export class Tramite32505Query extends Query<Solicitud32502State> {
 
   /**Guarda el estado completo del formulario de la solicitud */
   constructor(
-    protected override store: tramite32505Store) {
+    protected override store: Tramite32505Store) {
     super(store);
   }
 }

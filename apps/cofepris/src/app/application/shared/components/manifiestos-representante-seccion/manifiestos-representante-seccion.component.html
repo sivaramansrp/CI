@@ -58,6 +58,7 @@
         name="representanteRfcBuscar"
         class="btn btn-primary"
         (click)="buscarRepresentanteRfc()"
+        [disabled]="formularioDeshabilitado ? true : false"
       >
         Buscar
       </button>

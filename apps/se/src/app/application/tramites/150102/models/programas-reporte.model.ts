@@ -53,3 +53,63 @@ export interface BienesProducidos {
   /** Volumen destinado a exportaciones */
   exportaciones: string;
 }
+
+/**
+ * Interfaz que representa los datos guardados del formulario 150102.
+ */
+export interface GuardarDatosFormulario {
+  /**
+   * Fecha de inicio del programa.
+   */
+  inicio: string;
+
+  /**
+   * Fecha de fin del programa.
+   */
+  fin: string;
+
+  /**
+   * Folio asignado al programa.
+   */
+  folioPrograma: string;
+
+  /**
+   * Modalidad del programa.
+   */
+  modalidad: string;
+
+  /**
+   * Tipo de programa.
+   */
+  tipoPrograma: string;
+
+  /**
+   * Estatus actual del programa.
+   */
+  estatus: string;
+
+  /**
+   * Monto total de ventas registradas.
+   */
+  ventasTotales: string;
+
+  /**
+   * Monto total de exportaciones.
+   */
+  totalExportaciones: string;
+
+  /**
+   * Monto total de importaciones.
+   */
+  totalImportaciones: string;
+
+  /**
+   * Saldo actual del programa.
+   */
+  saldo: string;
+
+  /**
+   * Porcentaje correspondiente a las exportaciones.
+   */
+  porcentajeExportacion: string;
+}

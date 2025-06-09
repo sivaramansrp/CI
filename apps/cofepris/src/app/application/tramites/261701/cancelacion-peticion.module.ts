@@ -1,4 +1,4 @@
-import { AlertComponent, BtnContinuarComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, BtnContinuarComponent, InputCheckComponent, SolicitanteComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { CancelacionComponent } from './components/cancelacion/cancelacion.component';
 import { CancelacionPeticionRoutingModule } from './cancelacion-peticion-routing.module';
 import { CommonModule } from '@angular/common';
@@ -8,6 +8,7 @@ import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PermisoCancelarComponent } from './components/permiso-cancelar/permiso-cancelar.component';
 import { PermisoSanitarioModule } from '../260211/permiso-sanitario.module';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentanteLegalComponent } from './components/representante-legal/representante-legal.component';
 import { TramiteAsociadosComponent } from '../../shared/components/tramite-asociados/tramite-asociados.component';
 
@@ -31,6 +32,8 @@ import { TramiteAsociadosComponent } from '../../shared/components/tramite-asoci
     PermisoCancelarComponent,
     RepresentanteLegalComponent,
     TramiteAsociadosComponent,
+    InputCheckComponent,
+    ReactiveFormsModule,
   ]
 })
 export class CancelacionPeticionModule { }
