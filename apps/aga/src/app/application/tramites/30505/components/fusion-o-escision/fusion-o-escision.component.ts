@@ -452,7 +452,7 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
    * @param evento - Arreglo de objetos `FusionEscision` seleccionados.
    */
   getFusionDatos(evento: FusionEscision[]): void {
-    if (this.gridFusionEscisionData?.length > 0) {
+    if(this.gridFusionEscisionData?.length > 0) {
       this.selectedFusion = evento;
       this.tercerosService.setFusionada(this.selectedFusion); // Pass data to the shared service
     }
@@ -465,7 +465,7 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
    * este método llama a `removeFusionadoDato` del store para eliminar 
    * el primer elemento de la selección.
    */
-   eliminarFusion():void{
+   eliminarFusion():void {
     if (this.selectedFusion.length > 0) {
       this.tramiteStore.removeFusionadoDato(this.selectedFusion[0]);
     }
