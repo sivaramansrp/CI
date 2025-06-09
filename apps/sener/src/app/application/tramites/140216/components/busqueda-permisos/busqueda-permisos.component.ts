@@ -6,7 +6,7 @@ import { Modal } from 'bootstrap';
 
 import { BusquedaPermisos140216State, Tramite140216Store } from '../../estados/tramites/tramite140216.store';
 import { FECHA_SALIDA, PERMISOS_VIGENTES_ENCABEZADO_DE_TABLA } from '../../constantes/suspension-permiso.enum';
-import { InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { InputFecha, InputFechaComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { PermisosVigentes, PermisosVigentesRespuesta } from '../../models/suspension-permiso.model';
 import { DetalleDelPermisoComponent } from '../detalle-del-permiso/detalle-del-permiso.component';
 import { DetalleTitularComponent } from '../detalle-titular/detalle-titular.component';
@@ -29,7 +29,8 @@ import { Tramite140216Query } from '../../estados/queries/tramite140216.query';
     InputFechaComponent,
     DetalleDelPermisoComponent,
     DetalleTitularComponent,
-    PersonasNotificarComponent
+    PersonasNotificarComponent,
+    NotificacionesComponent
   ],
   templateUrl: './busqueda-permisos.component.html',
   styleUrl: './busqueda-permisos.component.scss',
@@ -93,6 +94,27 @@ export class BusquedaPermisosComponent implements OnInit, OnDestroy {
   modalElemento!: HTMLElement | null;
 
   /**
+   * Indica si una fila está seleccionada.
+   */
+  esSeleccionado: boolean = false;
+
+  /**
+   * Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaAlertaNotificacion!: Notificacion;
+
+  /**
+   * Configuración de notificación para mostrar mensajes al usuario.
+   */
+  public alertaFolioNotificacion!: Notificacion;
+
+  /**
+   * Notificación para mostrar mensajes al usuario cuando el folio es incorrecto.
+   * @type {Notificacion}
+   */
+  public alertaFolioIncorrectoNotificacion!: Notificacion;
+
+  /**
    * Subject para destruir notificador.
    */
   private destruirNotificador$: Subject<void> = new Subject();
@@ -144,11 +166,17 @@ export class BusquedaPermisosComponent implements OnInit, OnDestroy {
       ],
       motivoSuspension: [
         this.busquedaPermisosState?.motivoSuspension,
-        [Validators.required]
+        [
+          Validators.required,
+          Validators.maxLength(5000)
+        ]
       ],
       numAutorizacion: [
         this.busquedaPermisosState?.numAutorizacion,
-        [Validators.required]
+        [
+          Validators.required,
+          Validators.maxLength(20)
+        ]
       ],
       fechaSuspension: [
         this.busquedaPermisosState?.fechaSuspension,
@@ -162,32 +190,45 @@ export class BusquedaPermisosComponent implements OnInit, OnDestroy {
    * Actualiza los valores en el store y llama al servicio para buscar permisos vigentes.
    * @returns {void}
    */
-  relanzarGrid(): void {
-    this.suspensionPermisoService.obtenerPermisosVigentes()
-      .pipe(takeUntil(this.destruirNotificador$))
-      .subscribe({
-        next: (permisosVigentes: PermisosVigentesRespuesta) => {
-          this.permisosVigentesTabla = permisosVigentes.data.map((permiso: PermisosVigentes) => {
-            return {
-              numeroResolucion: permiso.numeroResolucion,
-              tipoSolicitud: permiso.tipoSolicitud,
-              regimen: permiso.regimen,
-              clasificacionRegimen: permiso.clasificacionRegimen,
-              periodoDeVigencia: permiso.periodoDeVigencia,
-              fraccionArancelaria: permiso.fraccionArancelaria,
-              unidad: permiso.unidad,
-              nico: permiso.nico,
-              nicoDescripcion: permiso.nicoDescripcion,
-              acotacion: permiso.acotacion,
-              cantidadAutorizada: permiso.cantidadAutorizada,
-              valorAutorizada: permiso.valorAutorizada,
-              fechaInicioVigencia: permiso.fechaInicioVigencia,
-              fechaFinVigencia: permiso.fechaFinVigencia
-            };
-          });
-          this.tramite140216Store.setPermisosVigentesTabla(this.permisosVigentesTabla);
-        }
-      });
+  relanzarGrid(folioTramiteBusqueda: string): void {
+    if (folioTramiteBusqueda?.length <= 0 || folioTramiteBusqueda === null) {
+      this.abrirAlertaFolioModal();
+    } else {
+      this.suspensionPermisoService.obtenerPermisosVigentes()
+        .pipe(takeUntil(this.destruirNotificador$))
+        .subscribe({
+          next: (permisosVigentes: PermisosVigentesRespuesta) => {
+            const PERMISOS_FILTRADOS = permisosVigentes.data.filter(
+              (permiso: PermisosVigentes) => permiso.folioTramite === folioTramiteBusqueda
+            );
+            if (PERMISOS_FILTRADOS.length === 0) {
+              this.permisosVigentesTabla = [];
+              this.tramite140216Store.setPermisosVigentesTabla(this.permisosVigentesTabla);
+              this.abrirModalAlertaFolioIncorrecto();
+            } else {
+              this.permisosVigentesTabla = permisosVigentes.data.map((permiso: PermisosVigentes) => {
+                return {
+                  numeroResolucion: permiso.numeroResolucion,
+                  tipoSolicitud: permiso.tipoSolicitud,
+                  regimen: permiso.regimen,
+                  clasificacionRegimen: permiso.clasificacionRegimen,
+                  periodoDeVigencia: permiso.periodoDeVigencia,
+                  fraccionArancelaria: permiso.fraccionArancelaria,
+                  unidad: permiso.unidad,
+                  nico: permiso.nico,
+                  nicoDescripcion: permiso.nicoDescripcion,
+                  acotacion: permiso.acotacion,
+                  cantidadAutorizada: permiso.cantidadAutorizada,
+                  valorAutorizado: permiso.valorAutorizado,
+                  fechaInicioVigencia: permiso.fechaInicioVigencia,
+                  fechaFinVigencia: permiso.fechaFinVigencia
+                };
+              });
+              this.tramite140216Store.setPermisosVigentesTabla(this.permisosVigentesTabla);
+            }
+          }
+        });
+    }
   }
 
   /**
@@ -209,7 +250,65 @@ export class BusquedaPermisosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   obtenerDetallePermiso(): void {
-    this.mostrarModal('detalle-del-permiso');
+    if (this.esSeleccionado) {
+      this.mostrarModal('detalle-del-permiso');
+    } else {
+      this.abrirAlertaModal();
+    }
+  }
+
+  /**
+   * Abre un modal de alerta si no se ha seleccionado ningún elemento.
+   * @returns {void}
+   */
+  abrirAlertaModal(): void {
+    this.nuevaAlertaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Alerta',
+      mensaje: 'Debe seleccionar un elemento',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    }
+  }
+
+  /**
+   * Abre un modal de alerta si el campo "Folio trámites" está vacío.
+   * @returns {void}
+   */
+  abrirAlertaFolioModal(): void {
+    this.alertaFolioNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Alerta',
+      mensaje: 'Folio trámites es un campo obligatorio.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    }
+  }
+
+  /**
+   * Abre un modal de alerta si el folio del trámite ingresado es incorrecto.
+   * @returns {void}
+   */
+  abrirModalAlertaFolioIncorrecto(): void {
+    this.alertaFolioIncorrectoNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: 'Alerta',
+      mensaje: 'El Folio del trámite ingresado no puede ser suspendido.Favor de verificar',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: '',
+    };
   }
 
   /**
@@ -217,7 +316,11 @@ export class BusquedaPermisosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   obtenerDetalleTitular(): void {
-    this.mostrarModal('detalle-rfc-facultad');
+    if (this.esSeleccionado) {
+      this.mostrarModal('detalle-rfc-facultad');
+    } else {
+      this.abrirAlertaModal();
+    }
   }
 
   /**
@@ -225,7 +328,11 @@ export class BusquedaPermisosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   obtenerPersonasNotificacion(): void {
-    this.mostrarModal('personas-notificar');
+    if (this.esSeleccionado) {
+      this.mostrarModal('personas-notificar');
+    } else {
+      this.abrirAlertaModal();
+    }
   }
 
   /**
@@ -252,6 +359,17 @@ export class BusquedaPermisosComponent implements OnInit, OnDestroy {
       const MODAL = Modal.getOrCreateInstance(this.modalElemento);
       MODAL.show();
     }
+  }
+
+  /**
+   * Método para validar el formulario.
+   * @returns boolean
+   */
+  validarFormulario(): boolean {
+    if (this.busquedaPermisosForm.invalid) {
+      this.busquedaPermisosForm.markAllAsTouched();
+    }
+    return this.busquedaPermisosForm.valid;
   }
 
   /**
