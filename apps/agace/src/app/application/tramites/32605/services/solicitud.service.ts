@@ -108,4 +108,15 @@ export class SolicitudService {
       'assets/json/32605/inventarios-datos.json'
     );
   }
+
+  guardarDatosFormulario(): Observable<any> {
+    return this.http.get<any>('assets/json/32605/guardar-datos-formulario.json');
+  }
+
+  actualizarEstadoFormulario(resp: any): void {
+    // Aquí se puede implementar la lógica para actualizar el estado del formulario
+    // con los datos recibidos en 'resp'. Por ejemplo, se podría guardar en un servicio
+    // o en un store de estado global.
+    console.log('Estado del formulario actualizado:', resp);
+  }
 }
