@@ -17,7 +17,7 @@ export const PERMISOS_VIGENTES_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Permiso
     { encabezado: 'Descripción NICO', clave: (fila) => fila.nicoDescripcion, orden: 9 },
     { encabezado: 'Acotación', clave: (fila) => fila.acotacion, orden: 10 },
     { encabezado: 'Cantidad autorizada', clave: (fila) => fila.cantidadAutorizada, orden: 11 },
-    { encabezado: 'Valor autorizada', clave: (fila) => fila.valorAutorizada, orden: 12 },
+    { encabezado: 'Valor autorizado', clave: (fila) => fila.valorAutorizado, orden: 12 },
     { encabezado: 'Fecha inicio de vigencia de la resolución', clave: (fila) => fila.fechaInicioVigencia, orden: 13 },
     { encabezado: 'Fecha fin de vigencia de la resolución', clave: (fila) => fila.fechaFinVigencia, orden: 14 }
 ]
