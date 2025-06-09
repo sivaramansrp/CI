@@ -193,9 +193,6 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
       .subscribe(
         (data: Catalogo[]) => {
           this.store.setFactura(data)
-        },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
         }
       );
   }
@@ -221,9 +218,6 @@ export class MercanciasModalComponent implements OnInit, OnDestroy {
         (data: Catalogo[]) => {
           this.store.setUmc(data)
           this.store.setMasaBruta(data);
-        },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
         }
       );
   }
