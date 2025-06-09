@@ -2,11 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Location } from '@angular/common';
 
+import { CatalogoSelectComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent,} from '@libs/shared/data-access-user/src';
 import { CAPACIDAD_INSTALADA } from '../../constantes/capacidad-instalada.enum';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
+
 
 /**
  * Componente para la capacidad instalada
