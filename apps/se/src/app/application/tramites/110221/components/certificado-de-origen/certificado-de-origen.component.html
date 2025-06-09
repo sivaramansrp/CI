@@ -61,7 +61,7 @@
           <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.UNDEFINED" [configuracionTabla]="headers" [disableSeleccionTablaRadio]="soloLectura"></app-tabla-dinamica>
         </div>
         <div class="table-container mt-5" *ngIf="hayMercanciasDisponibles">
-          <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.UNDEFINED" [configuracionTabla]="headers" [datos]="mercanciaDisponsiblesTablaDatos" (click)="manejarClic(mercanciaDisponsiblesTablaDatos)" [disableSeleccionTablaRadio]="soloLectura"></app-tabla-dinamica>
+          <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.UNDEFINED" [configuracionTabla]="headers" [datos]="mercanciaDisponsiblesTablaDatos" (click)="manejarClic()" [disableSeleccionTablaRadio]="soloLectura"></app-tabla-dinamica>
         </div>
         <nav aria-label="Page navigation example"  *ngIf="hayMercanciasDisponibles">
           <ul class="pagination d-flex justify-content-center mb-3">

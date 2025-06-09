@@ -19,7 +19,7 @@ import { Tramite110221Store } from '../../../../estados/tramites/Tramite110221.s
     CommonModule,
     ReactiveFormsModule,
     TituloComponent,
-],
+  ],
   templateUrl: './datos_certificado.component.html',
   styleUrl: './datos_certificado.component.css',
 })
@@ -69,31 +69,31 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    */
   entidadDescripcion: unknown[] = [];
 
-/**
- * Opciones del catálogo de idiomas.
- * Contiene una lista de objetos del catálogo de idiomas obtenidos desde el servicio.
- */
-optionsIdioma!: Catalogo[];
-
-/**
- * Opciones del catálogo de entidades federativas.
- * Contiene una lista de objetos del catálogo de entidades federativas obtenidos desde el servicio.
- */
-optionsEntidad!: Catalogo[];
-
-/**
- * Opciones del catálogo de representaciones federales.
- * Contiene una lista de objetos del catálogo de representaciones federales obtenidos desde el servicio.
- */
-optionsRepresentacion!: Catalogo[];
   /**
-   * @property {ConsultaioState} consultaDatos
-   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   * Opciones del catálogo de idiomas.
+   * Contiene una lista de objetos del catálogo de idiomas obtenidos desde el servicio.
+   */
+  optionsIdioma!: Catalogo[];
+
+  /**
+   * Opciones del catálogo de entidades federativas.
+   * Contiene una lista de objetos del catálogo de entidades federativas obtenidos desde el servicio.
+   */
+  optionsEntidad!: Catalogo[];
+
+  /**
+   * Opciones del catálogo de representaciones federales.
+   * Contiene una lista de objetos del catálogo de representaciones federales obtenidos desde el servicio.
+   */
+  optionsRepresentacion!: Catalogo[];
+
+  /**
+   * Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
    */
   consultaDatos!: ConsultaioState;
+
   /**
-   * @property {boolean} soloLectura
-   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * Indica si el formulario o los campos están en modo de solo lectura.
    * @default false
    */
   soloLectura: boolean = false;
@@ -105,6 +105,7 @@ optionsRepresentacion!: Catalogo[];
    * @param store Tienda para gestionar el estado del trámite.
    * @param query Consultas para obtener datos del estado del trámite.
    * @param validacionesService Servicio para validar formularios.
+   * @param consultaioQuery Consulta para obtener datos del estado de consulta.
    */
   constructor(
     private registroService: RegistroService,
@@ -112,7 +113,7 @@ optionsRepresentacion!: Catalogo[];
     private store: Tramite110221Store,
     private query: Tramite110221Query,
     private validacionesService: ValidacionesFormularioService,
-            private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -162,19 +163,17 @@ optionsRepresentacion!: Catalogo[];
         })
       )
       .subscribe();
-   
   }
 
   /**
    * Obtiene el catálogo de idiomas desde el servicio.
    */
   getIdioma(): void {
-   this.registroService
+    this.registroService
       .getIdioma().pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
-          this.optionsIdioma = resp.data as Catalogo [];
-          
+          this.optionsIdioma = resp.data as Catalogo[];
         }
       });
   }
@@ -187,7 +186,7 @@ optionsRepresentacion!: Catalogo[];
       .getEntidad().pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
-          this.optionsEntidad = resp.data as Catalogo [];
+          this.optionsEntidad = resp.data as Catalogo[];
         }
       });
   }
@@ -196,12 +195,11 @@ optionsRepresentacion!: Catalogo[];
    * Obtiene el catálogo de representaciones desde el servicio.
    */
   getRepresentacion(): void {
-    
     this.registroService
       .getRepresentacion().pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp.code === 200) {
-          this.optionsRepresentacion = resp.data= resp.data as Catalogo [];
+          this.optionsRepresentacion = resp.data as Catalogo[];
         }
       });
   }
@@ -235,7 +233,6 @@ optionsRepresentacion!: Catalogo[];
     } else {
       this.isJustificacion = false;
     }
-
   }
 
   /**
@@ -275,19 +272,22 @@ optionsRepresentacion!: Catalogo[];
   }
 
   /**
-   * Método que se ejecuta al destruir el componente.
-   * Cancela todas las suscripciones activas.
+   * Inicializa el estado del formulario (habilitado/deshabilitado) basado en el modo de solo lectura.
    */
-  ngOnDestroy(): void {
-    
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
   inicializarEstadoFormulario(): void {
     if (this.soloLectura) {
       this.registroForm?.disable();
     } else {
       this.registroForm?.enable();
     }
+  }
+
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Cancela todas las suscripciones activas.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

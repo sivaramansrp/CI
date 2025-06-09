@@ -31,6 +31,7 @@ import { Tramite110221Store } from '../../../../estados/tramites/Tramite110221.s
 export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
   /**
    * Catálogo de entidades federativas.
+   * @type {Object}
    */
   entidadFederativa!: { data: string; domicilioFiscal?: { entidadFederativa?: string } };
 
@@ -39,8 +40,13 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
    * @type {ConsultaioState}
    */
   consultaDatos!: ConsultaioState;
-  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+
+  /**
+   * Bandera que indica si se están utilizando datos de respuesta del servidor.
+   * @type {boolean}
+   */
   public esDatosRespuesta: boolean = false;
+
   /**
    * Subject para gestionar la destrucción de suscripciones.
    * @type {Subject<void>}
@@ -50,15 +56,21 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
   /**
    * Constructor del componente.
    * @param registroService Servicio para obtener datos de catálogos.
+   * @param consultaioQuery Query para acceder al estado de consulta.
+   * @param tramite110221Store Store del trámite 110221.
    */
-  constructor(private registroService: RegistroService, private consultaioQuery: ConsultaioQuery,
-    private tramite110221Store: Tramite110221Store) {
+  constructor(
+    private registroService: RegistroService,
+    private consultaioQuery: ConsultaioQuery,
+    private tramite110221Store: Tramite110221Store
+  ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
 
   /**
    * Método que se ejecuta al inicializar el componente.
-   * Obtiene el catálogo de entidades federativas y lo procesa.
+   * Obtiene el catálogo de entidades federativas y procesa los datos de consulta.
+   * @returns {void}
    */
   ngOnInit(): void {
     this.consultaioQuery.selectConsultaioState$
@@ -69,6 +81,7 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
         })
       )
       .subscribe();
+
     if (this.consultaDatos?.update) {
       this.fetchGetDatosConsulta();
     } else {
@@ -77,41 +90,45 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
 
     this.registroService.getCatalogoById(21).subscribe((resp) => {
       this.entidadFederativa = resp;
-
       const DATA = JSON.parse(this.entidadFederativa.data);
-
       this.entidadFederativa = DATA?.domicilioFiscal?.entidadFederativa;
     });
   }
 
   /**
    * Referencia al componente de solicitante.
+   * @type {SolicitanteComponent}
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
   /**
    * Tipo de persona seleccionada.
+   * @type {number}
    */
   tipoPersona!: number;
 
   /**
    * Configuración del formulario dinámico para la persona.
+   * @type {FormularioDinamico[]}
    */
   persona: FormularioDinamico[] = [];
 
   /**
    * Configuración del formulario dinámico para el domicilio fiscal.
+   * @type {FormularioDinamico[]}
    */
   domicilioFiscal: FormularioDinamico[] = [];
 
   /**
    * Índice del paso actual.
+   * @type {number}
    */
   indice: number = 1;
 
   /**
-   * Método que se ejecuta después de que las vistas del componente han sido inicializadas.
-   * Configura los formularios dinámicos y obtiene el tipo de persona.
+   * Método que se ejecuta después de inicializar la vista.
+   * Configura formularios dinámicos y obtiene el tipo de persona.
+   * @returns {void}
    */
   ngAfterViewInit(): void {
     this.persona = PERSONA_MORAL_NACIONAL;
@@ -121,15 +138,17 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
 
   /**
    * Selecciona una pestaña del asistente.
-   * @param i Índice de la pestaña a seleccionar.
+   * @param {number} i - Índice de la pestaña a seleccionar.
+   * @returns {void}
    */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
 
   /**
- * Obtiene los datos de consulta del servicio y actualiza el store.
- */
+   * Obtiene datos de consulta del servicio y actualiza el store.
+   * @returns {void}
+   */
   public fetchGetDatosConsulta(): void {
     this.registroService
       .getDatosConsulta()
@@ -185,6 +204,7 @@ export class PasoUnoComponent implements AfterViewInit, OnDestroy, OnInit {
   /**
    * Método que se ejecuta al destruir el componente.
    * Limpia las suscripciones activas.
+   * @returns {void}
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
