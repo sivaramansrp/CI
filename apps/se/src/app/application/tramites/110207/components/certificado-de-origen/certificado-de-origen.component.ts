@@ -274,7 +274,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   constructor(
     private registroService: RegistroService,
     public fb: FormBuilder,
-    private store: Tramite110207Store,
+    public store: Tramite110207Store,
     private query: Tramite110207Query,
     private validacionesService: ValidacionesFormularioService,
     private consultaioQuery: ConsultaioQuery

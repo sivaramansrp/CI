@@ -1,10 +1,10 @@
 import { ColumnasTabla, SeleccionadasTabla } from '../models/registro.model';
+import { ENVIRONMENT, JSONResponse } from '@ng-mf/data-access-user';
 import { Observable, catchError, throwError } from 'rxjs';
+import { Solicitud110207State, Tramite110207Store } from '../state/Tramite110207.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ENVIRONMENT, JSONResponse } from '@ng-mf/data-access-user';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { Solicitud110207State, Tramite110207Store } from '../state/Tramite110207.store';
 
 
 /**
