@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 
@@ -48,6 +48,11 @@ export class DatosDonanteExtranjeroComponent implements OnInit, OnDestroy {
   public registroDeDonacionState: RegistroDeDonacion10303State | undefined;
 
   /**
+   * Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado!: boolean;
+
+  /**
    * Constructor del componente.
    * 
    * @param donacionesExtranjerasService Servicio para gestionar las donaciones extranjeras.
@@ -81,6 +86,12 @@ export class DatosDonanteExtranjeroComponent implements OnInit, OnDestroy {
 
     this.paisSeleccion();
     this.documentoResidenciaSeleccion();
+
+    if (this.formularioDeshabilitado) {
+      this.datosDonanteExtranjeroForm.disable();
+    } else if (!this.formularioDeshabilitado) {
+      this.datosDonanteExtranjeroForm.enable();
+    }
   }
 
   /**

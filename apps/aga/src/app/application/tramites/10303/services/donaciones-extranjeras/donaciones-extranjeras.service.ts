@@ -160,4 +160,12 @@ export class DonacionesExtranjerasService {
   buscarContribuyente(rfc: string): Observable<ContribuyenteRespuesta> {
     return this.http.get<ContribuyenteRespuesta>('assets/json/10303/donatario-datos.json');
   }
+
+  /**
+   * Obtiene los datos del registro de donación desde un archivo JSON.
+   * @returns Observable con los datos del registro de donación.
+   */
+  getRegistroDeDonacionDatos(): Observable<any> {
+    return this.http.get<any>('assets/json/10303/registro-de-donacion-datos.json');
+  }
 }
