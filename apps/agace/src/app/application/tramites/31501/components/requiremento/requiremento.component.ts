@@ -3,8 +3,10 @@ import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/cor
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { AutoridadService } from '../../services/autoridad.service';
 import { CapturarRequerimientoComponent } from '../capturar-requerimiento/capturar-requerimiento.component';
 import { CommonModule } from '@angular/common';
+import { FormaRequerimiento } from '../../models/datos-tramite.model';
 
 @Component({
   selector: 'app-requiremento',
@@ -55,13 +57,26 @@ export class RequirementoComponent implements OnInit, OnDestroy {
    */
   soloLectura: boolean = false;
 
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
   constructor(
     private route: ActivatedRoute,
     private fb: FormBuilder,
     private router: Router,
     private consultaioQuery: ConsultaioQuery,
+    private autoridadService: AutoridadService
     ) {}
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * 
+   * - Obtiene el valor de `folioTramite` desde el estado del historial de navegación.
+   * - Se suscribe al observable `selectConsultaioState$` para obtener el estado de la consulta,
+   *   actualizando las propiedades `consultaDatos` y `soloLectura` según corresponda.
+   * - Si la propiedad `update` de `consultaDatos` es verdadera, llama al método `guardarDatosFormulario()`.
+   * - En caso contrario, establece el modo de solo lectura (`soloLectura`) en verdadero.
+   */
   ngOnInit(): void {
     this.folioTramite = history.state.data;
     this.consultaioQuery.selectConsultaioState$
@@ -73,6 +88,32 @@ export class RequirementoComponent implements OnInit, OnDestroy {
       })
     )
     .subscribe();
+     if (this.consultaDatos.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+
+   /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.autoridadService
+      .agregarRequerimiento()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((resp: FormaRequerimiento) => {
+        if (resp) {
+          this.folioTramite = {
+            folioTramite: resp.folioTramite,
+            tipoTramite: resp.tipoTramite,
+          };
+
+          this.esDatosRespuesta = true;
+          this.autoridadService.actualizarEstadoFormulario(resp);
+        }
+      });
   }
 
   /**
