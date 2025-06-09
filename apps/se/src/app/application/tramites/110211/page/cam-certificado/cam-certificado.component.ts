@@ -18,7 +18,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-cam-certificado',
   templateUrl: './cam-certificado.component.html',
-  styleUrl: './cam-certificado.component.css',
+  styleUrl: './cam-certificado.component.scss',
 })
 export class CamCertificadoComponent {
 
