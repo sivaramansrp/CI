@@ -60,9 +60,9 @@ export interface PermisosVigentes {
     cantidadAutorizada: string;
 
     /**
-     * Valor autorizada del permiso.
+     * Valor autorizado del permiso.
      */
-    valorAutorizada: string;
+    valorAutorizado: string;
 
     /**
      * Fecha de inicio de vigencia del permiso.
@@ -88,6 +88,12 @@ export interface PermisosVigentes {
      * País de procedencia del permiso.
      */
     paisProcedencia?: string;
+
+    /**
+     * Número de folio del trámite asociado al permiso.
+     * @type {string}
+     */
+    folioTramite?: string;
 }
 
 /**

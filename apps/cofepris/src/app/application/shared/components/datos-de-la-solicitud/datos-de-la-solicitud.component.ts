@@ -120,6 +120,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   @Input() public idProcedimiento!: number;
 
   /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
+
+  /**
    * @event opcionSeleccionado
    * Emite las opciones seleccionadas al componente padre.
    */
@@ -493,6 +498,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       this.idProcedimiento === NUMERO_TRAMITE.TRAMITE_260103
         ? 'Municipio y alcaldía'
         : 'Municipio o alcaldía';
+
+    if(this.formularioDeshabilitado) {
+      this.datosSolicitudForm.disable();
+    }
   }
 
   /**

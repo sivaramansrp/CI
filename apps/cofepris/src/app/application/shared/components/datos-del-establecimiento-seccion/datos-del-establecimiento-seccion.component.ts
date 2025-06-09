@@ -10,6 +10,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  Input,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -78,6 +79,11 @@ export class DatosDelEstablecimientoSeccionComponent
   establecimientoModalInstance!: Modal;
 
   /**
+   * Indica si el formulario debe estar deshabilitado.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param fb FormBuilder para inicializar formularios reactivos.
    * @param establecimientoStore StateStore para sincronizar datos del establecimiento.
@@ -106,8 +112,9 @@ export class DatosDelEstablecimientoSeccionComponent
       .subscribe((state) => {
         this.detosEstablecimiento.patchValue(state, { emitEvent: false });
       });
-
-  
+ if (this.formularioDeshabilitado) {
+      this.detosEstablecimiento.disable();
+    }
   }
   onControlChange(controlName: string): void {
     const UPDATED_VALUE = { [controlName]: this.detosEstablecimiento.get(controlName)?.value };
