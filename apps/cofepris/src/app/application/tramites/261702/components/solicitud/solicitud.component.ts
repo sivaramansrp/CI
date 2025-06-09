@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ConsultaioState } from '@libs/shared/data-access-user/src';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { ManifiestosDeclaracionesComponent } from '../manifiestosDeclaraciones/manifiestosDeclaraciones.component';
 import { PermisoDesistirComponent } from '../permisoDesistir/permisoDesistir.component';
 import { RepresentanteLegalComponent } from '../representanteLegal/representanteLegal/representanteLegal.component';
