@@ -15,7 +15,7 @@ import { Tramite240101Store } from '../../estados/tramite240101Store.store';
   standalone: true,
   imports: [CommonModule, AgregarDestinatarioFinalComponent],
   templateUrl: './agregar-destinatario-final-contenedora.component.html',
-  styleUrl: './agregar-destinatario-final-contenedora.component.css',
+  styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
   /**

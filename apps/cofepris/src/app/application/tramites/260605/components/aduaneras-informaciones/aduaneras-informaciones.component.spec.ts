@@ -121,11 +121,9 @@ describe('RepresentanteComponent', () => {
     expect(component.representante.get('apellidoMaterno')?.value).toBe('Gómez');
   });
 
-  it('debe llamar al método correspondiente del store en setValoresStore', () => {
-    component.inicializarFormulario();
-    component.representante.get('rfc')?.setValue('RFC999');
-    component.setValoresStore(component.representante, 'rfc', 'setRfc');
-    expect(tramite260605StoreMock.setRfc).toHaveBeenCalledWith('RFC999');
+  it('should mark the form as valid on submit', () => {
+    component.enEnviar();
+    expect(component.esFormularioValido).toBe(true);
   });
 
   it('debe limpiar el subject al destruir el componente', () => {
