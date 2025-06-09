@@ -55,8 +55,7 @@ export class DatosServiceService {
     if (DATOS.aduana) {
       this.domicilioStore.setAduana(DATOS.aduana);
     }
-    this.domicilioStore.setAduana(DATOS.aduana);
-  }
+    }
 
   /**
    * Obtiene los datos de registro para toma de muestras de mercancías desde un archivo JSON local.

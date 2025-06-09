@@ -11,6 +11,7 @@
         "lada": "valor ficticio",
          "telefono": "valor ficticio",
         "noLicenciaSanitaria": "1",
+        "regimenDestinado": "1",
         "aduanaregimenDestinado": "1",
-        "aduana": "2023-10-01"
+        "aduana": "1"
       }
