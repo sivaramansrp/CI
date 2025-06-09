@@ -30,7 +30,7 @@ export class PasoUnoComponent implements AfterViewInit,OnInit,OnDestroy {
    * 
    * @type {number}
    */
-  indice: number = 1;
+  public indice: number = 1;
 
   /**
  * Indica si ya se cargaron los datos de respuesta para mostrar en el formulario.

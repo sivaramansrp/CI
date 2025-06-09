@@ -33,7 +33,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
   /**
    * Determina si el formulario debe estar en modo solo lectura.
    */
-    esFormularioSoloLectura: boolean = false;
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Notificador para manejar la destrucción de suscripciones.
@@ -43,12 +43,12 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
   /**
    * Datos del formulario del Certificado Kimberley.
    */
-  certificadoKimberleyDatos: CertificadoKimberleyForma[] = [];
+  public certificadoKimberleyDatos: CertificadoKimberleyForma[] = [];
 
   /**
    * Lista de estados obtenidos del servicio.
    */
-  estado: Catalogo[] = [];
+  public estado: Catalogo[] = [];
 
   /**
    * Estado actual de la solicitud.
