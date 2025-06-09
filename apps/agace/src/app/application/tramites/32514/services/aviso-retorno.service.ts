@@ -12,8 +12,11 @@ import { Observable } from 'rxjs';
 })
 export class AdaceService {
   /**
-   * Constructor del servicio.
-   * @param http Cliente HTTP utilizado para realizar solicitudes a los recursos JSON.
+   * Constructor que inyecta el cliente HTTP y el store del trámite 32514,
+   * utilizados para realizar peticiones y gestionar el estado del trámite.
+   *
+   * @param {HttpClient} http - Cliente HTTP para realizar solicitudes al backend.
+   * @param {Tramite32514Store} store - Store que gestiona el estado del trámite 32514.
    */
   constructor(private http: HttpClient, private store: Tramite32514Store,) {
     // Constructor utilizado para la creación de objetos requeridos en el componente
