@@ -294,7 +294,7 @@ export class DatosDelTramiteUnoComponent implements OnInit, OnDestroy {
       exportacion: [this.solicitudState?.exportacion],
       depositoFiscalGas: [this.solicitudState?.depositoFiscalGas],
       depositoFiscalVehiculos: [this.solicitudState?.depositoFiscalVehiculos],
-      distribucionGasSi: [this.solicitudState?.distribucionGas],
+      distribucionGasSi: ["1"],
       distribucionGasNo: [this.solicitudState?.distribucionGas],
       serviciosTercerosSi: [this.solicitudState?.serviciosTerceros],
       serviciosTercerosNo: [this.solicitudState?.serviciosTerceros],

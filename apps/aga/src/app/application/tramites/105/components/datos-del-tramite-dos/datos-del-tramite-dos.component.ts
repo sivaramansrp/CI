@@ -18,6 +18,7 @@ import { CommonModule } from '@angular/common';
 import { InvoCarService } from '../../services/invocar.service';
 import { Tramite105Query } from '../../estados/tramite105.query';
 import mercanciaTable from 'libs/shared/theme/assets/json/105/mercancia-table.json';
+import { MERCANCIA_TABLEDOS_TABLE_BODY_DATA } from '../../constantes/datos-del-tramite.enum';
 /**
  * Interfaz que representa los datos del cuerpo de la tabla de mercancías.
  * 
@@ -229,6 +230,7 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
    */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
+      this.fetchTableDummyJson();
       this.guardarDatosFormulario();
     } else {
       this.inicializarFormulario();
@@ -268,6 +270,16 @@ export class DatosDelTramiteDosComponent implements OnInit, OnDestroy {
         this.agenteForm.enable();
       } 
   }
+
+  /**
+ * Método para obtener datos de ejemplo para la tabla.
+ * Retorna un arreglo vacío de tipo TablaDatos.
+ *
+ * @returns Un arreglo vacío de TablaDatos.
+ */
+fetchTableDummyJson(): void {
+  this.mercanciaBodyData.push(MERCANCIA_TABLEDOS_TABLE_BODY_DATA);
+}
 
   /**
    * Inicializa y crea los formularios reactivos utilizados en el componente.
