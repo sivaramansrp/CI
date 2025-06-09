@@ -4,8 +4,10 @@ import {
   SolicitudPermisoState,
   Tramite260703Store,
 } from '../../estados/store/tramite260703.store';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite260703Query } from '../../estados/query/tramite260703.query';
+
 
 /**
  * Componente que representa la sección de datos del establecimiento.
@@ -34,6 +36,12 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
   destruirNotificacion$ = new Subject<void>();
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+   esFormularioSoloLectura: boolean = false; 
+
+  /**
    * Constructor del componente.
    * formBuilder Servicio para construir formularios reactivos.
    * tramite260703Store Servicio para gestionar el estado del trámite.
@@ -42,8 +50,35 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
   constructor(
     private formBuilder: FormBuilder,
     private tramite260703Store: Tramite260703Store,
-    private tramite260703Query: Tramite260703Query
-  ) {}
+    private tramite260703Query: Tramite260703Query,
+     private consultaioQuery: ConsultaioQuery
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destruirNotificacion$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = true;//seccionState.readonly;
+       
+      })
+    )
+    .subscribe()
+  }
+
+
+/**
+   * Guarda los datos del formulario de importador/exportador.
+   * Deshabilita los campos si el formulario está en modo solo lectura.
+   */
+
+  guardarDatosFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+    this.datosDelEstablecimientoForm.get('correoElectronico')?.disable();
+    this.datosDelEstablecimientoForm.get('razonSocial')?.disable();
+  }else if (!this.esFormularioSoloLectura){
+    this.datosDelEstablecimientoForm.get('correoElectronico')?.enable();
+    this.datosDelEstablecimientoForm.get('razonSocial')?.enable();
+  }
+}
 
   /**
    * Método del ciclo de vida que se ejecuta al inicializar el componente.
@@ -56,6 +91,7 @@ export class DatosDelEstablecimientoComponent implements OnInit, OnDestroy {
         this.solicitudPermisoState = state;
       });
     this.crearFormularioDatosDelEstablecimiento();
+    this.guardarDatosFormulario();
   }
 
   /**

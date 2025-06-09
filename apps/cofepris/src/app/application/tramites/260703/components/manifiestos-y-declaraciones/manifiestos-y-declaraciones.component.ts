@@ -8,7 +8,8 @@ import {
   SolicitudPermisoState,
   Tramite260703Store,
 } from '../../estados/store/tramite260703.store';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { OPCIONES_DE_BOTON_DE_RADIO_INFORMACION_CONFIDENCIAL } from '../../enum/solicitud-permiso.enum';
 import { SolicitudPermisoService } from '../../services/solicitud-permiso.service';
 import { Tramite260703Query } from '../../estados/query/tramite260703.query';
@@ -49,6 +50,12 @@ export class ManifiestosYDeclaracionesComponent implements OnInit, OnDestroy {
    */
   destruirNotificador$ = new Subject<void>();
 
+    /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+   esFormularioSoloLectura: boolean = false; 
+
   /**
    * Constructor del componente.
    * Inicializa los servicios necesarios para gestionar el formulario y el estado.
@@ -61,8 +68,35 @@ export class ManifiestosYDeclaracionesComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private tramite260703Store: Tramite260703Store,
     private tramite260703Query: Tramite260703Query,
-    private SolicitudPermisoService: SolicitudPermisoService
-  ) {}
+    private SolicitudPermisoService: SolicitudPermisoService,
+     private consultaioQuery: ConsultaioQuery
+  ) {
+    // Si es necesario, se puede agregar aquí la lógica del constructor.
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destruirNotificador$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = true;//seccionState.readonly;
+       
+      })
+    )
+    .subscribe()
+  }
+
+  /**
+   * Guarda los datos del formulario de importador/exportador.
+   * Deshabilita los campos si el formulario está en modo solo lectura.
+   */
+
+  guardarDatosFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+    this.manifiestosForm.disable();
+    this.manifiestosForm.get('informacionConfidencial')?.disable();
+  }else if (!this.esFormularioSoloLectura){
+    this.manifiestosForm.disable();
+    this.manifiestosForm.get('informacionConfidencial')?.enable();
+  }
+}
 
   /**
    * Método del ciclo de vida que se ejecuta al inicializar el componente.
@@ -76,6 +110,7 @@ export class ManifiestosYDeclaracionesComponent implements OnInit, OnDestroy {
       });
 
     this.createManifiestosForm();
+     this.guardarDatosFormulario();
   }
 
   /**

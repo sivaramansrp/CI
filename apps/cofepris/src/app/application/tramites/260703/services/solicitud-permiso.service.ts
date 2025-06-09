@@ -4,6 +4,7 @@ import {
   RespuestaCatalogos,
 } from '@libs/shared/data-access-user/src';
 import { Fabricante, ManifiestosRespuesta } from '../model/solicitud-permiso.model';
+import { SolicitudPermisoState, Tramite260703Store } from '../estados/store/tramite260703.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -28,7 +29,7 @@ export class SolicitudPermisoService {
    * Inicializa el cliente HTTP para realizar solicitudes.
    * http Cliente HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private tramite260703Store: Tramite260703Store) {}
 
   /**
    * Obtiene los trámites asociados desde un archivo JSON.
@@ -107,5 +108,48 @@ export class SolicitudPermisoService {
             resp?.code === 200 && resp.data ? resp.data : [];
         });
     }
+  }
+
+  /**
+   * Actualiza el estado del store con todos los datos de la empresa.
+   * @param datos Objeto de tipo SolicitudPermisoState con los datos a almacenar.
+   */
+  actualizarEstadoFormulario(datos: SolicitudPermisoState): void {
+    if (!datos) { return; }
+
+    this.tramite260703Store.actualizarEstado({
+      claveDeReferencia: datos.claveDeReferencia,
+      cadenaPagoDependencia: datos.cadenaPagoDependencia,
+      bancoClave: datos.bancoClave,
+      llaveDePago: datos.llaveDePago,
+      fecPago: datos.fecPago,
+      impPago: datos.impPago,
+    });
+
+    if (datos.preOperativFormState) {
+      this.tramite260703Store.actualizarEstadoFormularioPreOperativo(datos.preOperativFormState);
+    }
+    if (datos.datosDelEstablecimientoFormState) {
+      this.tramite260703Store.actualizarDatosDelFormularioDelEstablecimiento(datos.datosDelEstablecimientoFormState);
+    }
+    if (datos.manifiestosFormState) {
+      this.tramite260703Store.actualizarEstadoFormularioManifiestos(datos.manifiestosFormState);
+    }
+    if (datos.representanteLegalFormState) {
+      this.tramite260703Store.actualizarEstadoFormularioRepresentanteLegal(datos.representanteLegalFormState);
+    }
+    if (datos.domicilloDelEstablecimientoFormState) {
+      this.tramite260703Store.actualizarEstadoFormularioDomicilioDelEstablecimiento(datos.domicilloDelEstablecimientoFormState);
+    }
+  }
+
+
+   /**
+   * Obtiene los datos de la empresa desde un archivo JSON.
+   * 
+   * @returns {Observable<SolicitudPermisoState>} Observable que emite los datos de la empresa.
+   */
+  getRegistroTomaMuestrasMercanciasData(): Observable<SolicitudPermisoState> {
+    return this.http.get<SolicitudPermisoState>('assets/json/260703/previoporDatos.json');
   }
 }

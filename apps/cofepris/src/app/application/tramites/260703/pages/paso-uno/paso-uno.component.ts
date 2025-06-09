@@ -3,6 +3,7 @@ import {
   ConfiguracionColumna,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormControl,
@@ -13,7 +14,7 @@ import {
   SolicitudPermisoState,
   Tramite260703Store,
 } from '../../estados/store/tramite260703.store';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CONFIGURACIONCOLUMNA } from '../../enum/solicitud-permiso.enum';
 import { SolicitudPermisoService } from '../../services/solicitud-permiso.service';
 import { Tramite260703Query } from '../../estados/query/tramite260703.query';
@@ -64,6 +65,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   private notificadorDestruccion$: Subject<void> = new Subject();
 
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+  /**
+   * Estado de la consulta, que contiene información sobre el estado actual del formulario.
+   */
+  public consultaState!: ConsultaioState;
+
   /**
    * Constructor del componente.
    * Inicializa los servicios y dependencias necesarias.
@@ -72,7 +81,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private solicitudPermisoService: SolicitudPermisoService,
     private tramite260703Store: Tramite260703Store,
-    private tramite260703Query: Tramite260703Query
+    private tramite260703Query: Tramite260703Query,
+    private consultaQuery: ConsultaioQuery
   ) {
     //no hacer nada
   }
@@ -82,6 +92,32 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Configura las suscripciones necesarias y carga los datos iniciales.
    */
   ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.notificadorDestruccion$),
+        map((seccionState) => {
+          // this.consultaState = seccionState;
+          this.consultaState = {
+            procedureId: '260703',
+            parameter: '',
+            department: 'cofepris',
+            folioTramite: '',
+            tipoDeTramite: '',
+            estadoDeTramite: '',
+            readonly: true,
+            create: true,
+            update: true,
+            consultaioSolicitante: null,
+          };
+        })
+      )
+      .subscribe();
+    if (this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+
     this.tramite260703Query.selectSolicitudPermiso$
       .pipe(takeUntil(this.notificadorDestruccion$))
       .subscribe((estadoSolicitudPermiso: SolicitudPermisoState) => {
@@ -96,6 +132,22 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       });
 
     this.solicitudPermisoService.inicializaPagoDeDerechosDatosCatalogos();
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.solicitudPermisoService
+      .getRegistroTomaMuestrasMercanciasData()
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.solicitudPermisoService.actualizarEstadoFormulario(resp);
+        }
+      });
   }
 
   /**

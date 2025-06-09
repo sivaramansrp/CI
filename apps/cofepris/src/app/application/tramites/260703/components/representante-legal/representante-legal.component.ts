@@ -1,7 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { SolicitudPermisoState, Tramite260703Store } from '../../estados/store/tramite260703.store';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { SolicitudPermisoService } from '../../services/solicitud-permiso.service';
 import { Tramite260703Query } from '../../estados/query/tramite260703.query';
 
@@ -26,6 +27,12 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy{
       * Subject para destruir las suscripciones.
       */
     private destruirNotificador$: Subject<void> = new Subject();
+
+     /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+   esFormularioSoloLectura: boolean = false; 
   
     /**
      * Constructor del componente.
@@ -42,9 +49,32 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy{
       private tramite260703Store: Tramite260703Store,
       private tramite260703Query: Tramite260703Query,
       private solicitudPermisoService: SolicitudPermisoService,
+      private consultaioQuery: ConsultaioQuery
     ) {
-      // El constructor se utiliza para la inyección de dependencias.
+        // Si es necesario, se puede agregar aquí la lógica del constructor.
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destruirNotificador$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = true;//seccionState.readonly;
+       
+      })
+    )
+    .subscribe()
     }
+
+    /**
+   * Guarda los datos del formulario de importador/exportador.
+   * Deshabilita los campos si el formulario está en modo solo lectura.
+   */
+
+  guardarDatosFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+    this.representanteLegalForm.disable();
+  }else if (!this.esFormularioSoloLectura){
+    this.representanteLegalForm.enable();
+  }
+}
   
     /**
      * Inicializa el componente.
@@ -59,6 +89,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy{
         });
   
       this.crearFormulario();
+      this.guardarDatosFormulario();
     }
   
     /**
