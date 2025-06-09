@@ -33,8 +33,7 @@
     </div>
     <div class="row mt-100">
         <div class="col-md-4">
-            <input-fecha [datos]="fechaPagoInput" name="fechaPago" (valorCambiado)="cambioFechaPago($event)"
-                [setFecha]="renovacionForm.get('fechaPago')?.value"></input-fecha>
+            <input-fecha [datos]="fechaPagoInput" name="fechaPago" (valorCambiado)="cambioFechaPago($event)" [isDisabled]="esFormularioSoloLectura" [setFecha]="renovacionForm.get('fechaPago')?.value"></input-fecha>
         </div>
         <div class="col-md-4">
             <label class="form-label">Monto en moneda nacional*:</label>
