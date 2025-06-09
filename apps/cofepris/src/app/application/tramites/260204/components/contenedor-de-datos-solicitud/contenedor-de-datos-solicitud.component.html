@@ -5,4 +5,5 @@
 (opcionSeleccionado)="opcionSeleccionado($event)"
 (scianSeleccionado)="scianSeleccionado($event)"
 (mercanciasSeleccionado)="mercanciasSeleccionado($event)"
-(datosDeTablaSeleccionados)="datosDeTablaSeleccionados($event)"></app-datos-de-la-solicitud>
+(datosDeTablaSeleccionados)="datosDeTablaSeleccionados($event)"
+[formularioDeshabilitado]="(esFormularioSoloLectura | async) || false"></app-datos-de-la-solicitud>
