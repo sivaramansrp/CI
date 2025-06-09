@@ -14,7 +14,6 @@ import { ToastrService } from 'ngx-toastr';
 
 @NgModule({
   declarations: [
-    PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
     SolicitudPageComponent,
@@ -40,7 +39,8 @@ import { ToastrService } from 'ngx-toastr';
     AlertComponent,
     DatosCertificadoComponent,
     CatalogoSelectComponent,
-    CertificadoOrigenComponent
+    CertificadoOrigenComponent,
+    PasoUnoComponent,
   ],
   exports: [
     DatosCertificadoComponent,
