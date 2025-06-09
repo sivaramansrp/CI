@@ -36,7 +36,6 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
 
         }]
     },
-    },
     {
         tramite: 32501,
         listaComponentes: [{
