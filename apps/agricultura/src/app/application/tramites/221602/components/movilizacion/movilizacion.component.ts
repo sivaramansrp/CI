@@ -114,7 +114,7 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
           this.inicializarCertificadoFormulario();
         })
       )
-      .subscribe()
+      .subscribe();
     }
  /**
    * Método que se ejecuta cuando el componente es inicializado.
@@ -134,7 +134,7 @@ export class MovilizacionComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
-     this.inicializarFormulario()
+     this.inicializarFormulario();
     }  
   }
      /**
