@@ -132,7 +132,16 @@ optionsRepresentacion!: Catalogo[];
     private validacionesService: ValidacionesFormularioService,
     private consultaioQuery: ConsultaioQuery
   ) {
-   
+   this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
 
   /**
