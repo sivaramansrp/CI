@@ -131,7 +131,6 @@ import { ValidaLineaPagoService } from '../../../../core/services/5701/pago/vali
 import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
-import { log } from 'console';
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
@@ -891,7 +890,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         fechaInicio: [this.solicitudState?.fechaInicio, [Validators.required]],
         fechaFinal: [
           this.solicitudState?.fechaFinal,
-          [Validators.required, ValidacionesFormularioService.validaFechaNoHoy],
+          [Validators.required],
         ],
         horaInicio: [this.solicitudState?.horaInicio, Validators.required],
         horaFinal: [this.solicitudState?.horaFinal, Validators.required],
@@ -905,10 +904,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         folioDDEX: [this.solicitudState?.autorizacionDDEX],
         idAduanaDespacho: [
           this.solicitudState?.idAduanaDespacho,
-          [Validators.required],
+          [Validators.required, ValidacionesFormularioService.noMenosUnoValor],
         ],
         aduanaDespacho: [this.solicitudState?.aduanaDespacho],
-        idSeccionDespacho: [this.solicitudState?.idSeccionDespacho],
+        idSeccionDespacho: [this.solicitudState?.idSeccionDespacho, [ValidacionesFormularioService.noMenosUnoValor]],
         seccionAduanera: [this.solicitudState?.seccionAduanera],
         idRecinto: [],
         nombreRecinto: [this.solicitudState?.nombreRecinto],
@@ -2558,10 +2557,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   eliminarLineaCaptura(): void {
-    console.log(this.despacho);
-    
-
-
     if (this.lineaCapturaSeleccionados.length === 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
