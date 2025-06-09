@@ -183,8 +183,8 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.productoresExportador = this.tramiteState.productoresExportador;
-    this.mercanciaSeleccionadasTablaDatos = this.tramiteState.historicoMercanciaSeleccionadasTablaDatos;
+    this.productoresExportador = this.tramiteState.productoresExportador ?? [];
+    this.mercanciaSeleccionadasTablaDatos = this.tramiteState.historicoMercanciaSeleccionadasTablaDatos ?? [];
     this.initFormulario();
     this.initAgregarDatosProductorFormulario();
   }
