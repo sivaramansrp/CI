@@ -1,7 +1,11 @@
 import {
+  AlertComponent,
+  CatalogoSelectComponent,
   CatalogosService,
   FormularioDinamico,
   InputConfig,
+  InputFechaComponent,
+  InputRadioComponent,
   InputTypes,
   LabelValueDatos,
   MenuConfig,
@@ -9,15 +13,20 @@ import {
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
+  TablaDinamicaComponent,
+  TituloComponent,
 } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { DATOS_TRANSPORTE } from '../../constants/input-datos-config';
 import { ExportaccionAcuicolaService } from '../../services/exportaccion-acuicola.service';
 import { Tramite220403Query } from '../../estados/tramite220403.query';
@@ -38,6 +47,8 @@ import { Transporte } from '../../models/acuicola.module';
   selector: 'app-transporte',
   templateUrl: './transporte.component.html',
   styleUrl: './transporte.component.css',
+  standalone: true,
+  imports: [TituloComponent, AlertComponent, TablaDinamicaComponent, InputRadioComponent, InputFechaComponent, CatalogoSelectComponent, FormsModule, ReactiveFormsModule, CommonModule ], 
 })
 export class TransporteComponent implements OnInit, OnDestroy {
   /**
@@ -169,8 +180,8 @@ export class TransporteComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$)) // Asegura la desuscripción al destruir el componente
       .subscribe(
         () => {
+    this.tramite220403store.setTransporte(this.formulario.get('transporte')?.value);
     if (this.formulario.get('transporte')?.valid) {
-      this.tramite220403store.setTransporte(this.formulario.get('transporte')?.value);
       const VALIDA = this.formulario.get('transporte')?.valid ? true : false;
       this.tramite220403store.setTransporteValidada(VALIDA);
       this.exportaccionAcuicolaServcios.actualizarFormaValida();

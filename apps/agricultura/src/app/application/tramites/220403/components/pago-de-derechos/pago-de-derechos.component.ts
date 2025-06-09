@@ -1,7 +1,11 @@
 import {
+  AlertComponent,
+  CatalogoSelectComponent,
   CatalogosService,
   FormularioDinamico,
   InputConfig,
+  InputFechaComponent,
+  InputRadioComponent,
   InputTypes,
   LabelValueDatos,
   MenuConfig,
@@ -9,15 +13,20 @@ import {
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
+  TablaDinamicaComponent,
+  TituloComponent,
 } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { DATOS_PAGO_DERECHOS } from '../../constants/input-datos-config';
 import { ExportaccionAcuicolaService } from '../../services/exportaccion-acuicola.service';
 import { PagoDerechos } from '../../models/acuicola.module';
@@ -38,6 +47,8 @@ import { Tramite220403Store } from '../../estados/tramite220403.store';
   selector: 'app-pago-de-derechos',
   templateUrl: './pago-de-derechos.component.html',
   styleUrl: './pago-de-derechos.component.css',
+  standalone: true,
+  imports: [ TituloComponent, AlertComponent, TablaDinamicaComponent, InputRadioComponent, InputFechaComponent, CatalogoSelectComponent, FormsModule, ReactiveFormsModule, CommonModule ],
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   /**
@@ -189,17 +200,17 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$)) // Asegura la desuscripción al destruir el componente
       .subscribe(
         () => {
-    if( (this.formulario.get('pagoDerechos')?.valid) ){
-      this.tramite220403store.setPagoDerechos(this.formulario.get('pagoDerechos')?.value);
-      const VALIDA = this.formulario.get('pagoDerechos')?.valid ? true : false;
-      this.tramite220403store.setPagoDerechosValidada(VALIDA);
-      this.exportaccionAcuicolaServcios.actualizarFormaValida();
-    }
-    else{
-      this.seccionStore.establecerSeccion([true]);
-      this.seccionStore.establecerFormaValida([false]);
-    }
-  });
+          this.tramite220403store.setPagoDerechos(this.formulario.get('pagoDerechos')?.value);
+          if( (this.formulario.get('pagoDerechos')?.valid) ){
+            const VALIDA = this.formulario.get('pagoDerechos')?.valid ? true : false;
+            this.tramite220403store.setPagoDerechosValidada(VALIDA);
+            this.exportaccionAcuicolaServcios.actualizarFormaValida();
+          }
+          else{
+            this.seccionStore.establecerSeccion([true]);
+            this.seccionStore.establecerFormaValida([false]);
+          }
+        });
   }
 
   /**

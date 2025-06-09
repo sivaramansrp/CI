@@ -2,10 +2,14 @@
  * Componente para gestionar los datos de la solicitud en el trámite.
  */
 import {
+  AlertComponent,
+  CatalogoSelectComponent,
   CatalogosService,
   ConfiguracionColumna,
   FormularioDinamico,
   InputConfig,
+  InputFechaComponent,
+  InputRadioComponent,
   InputTypes,
   LabelValueDatos,
   MenuConfig,
@@ -13,7 +17,9 @@ import {
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
+  TablaDinamicaComponent,
   TablaSeleccion,
+  TituloComponent,
 } from '@ng-mf/data-access-user';
 import { ColumnasTabla, CombinacionRequerida, DatosRealizar } from '../../models/acuicola.module';
 import { Component, OnDestroy, OnInit } from '@angular/core';
@@ -21,10 +27,13 @@ import { DATOS_COMBINACION_REQUERIDA, DATOS_TRAMITE_REALIZAR } from '../../const
 import {
   FormBuilder,
   FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { ExportaccionAcuicolaService } from '../../services/exportaccion-acuicola.service';
 import { MENSAJE_DOBLE_CLIC } from '../../constants/acuicola.module';
 import { Tramite220403Query } from '../../estados/tramite220403.query';
@@ -41,6 +50,8 @@ interface FilaSolicitud {
   selector: 'app-datos-de-la-solicitud',
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.css',
+  standalone: true,
+  imports: [ TituloComponent, AlertComponent, TablaDinamicaComponent, InputRadioComponent, InputFechaComponent, CatalogoSelectComponent, FormsModule, ReactiveFormsModule, CommonModule],
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
@@ -354,9 +365,9 @@ private seccionState!: SeccionLibState
       .pipe(takeUntil(this.destroyNotifier$)) // Ensures unsubscribe on component destruction
       .subscribe(
         () => {
-    if( (this.formulario.get('datosRealizar')?.valid) && (this.formulario.get('combinacionRequerida')?.valid) ){
       this.tramite220403store.setDatosRealizar(this.formulario.get('datosRealizar')?.value);
       this.tramite220403store.setCombinacionRequerida(this.formulario.get('combinacionRequerida')?.value);
+    if( (this.formulario.get('datosRealizar')?.valid) && (this.formulario.get('combinacionRequerida')?.valid) ){
       const VALIDA = this.formulario.get('datosRealizar')?.valid ? true : false;
       this.tramite220403store.setDatosRealizarValidada(VALIDA);
       this.tramite220403store.setCombinacionRequeridaValidada(VALIDA);
