@@ -1,9 +1,21 @@
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { OperacionesDeComercioExteriorComponent } from '../../components/operaciones-de-comercio-exterior/operaciones-de-comercio-exterior.component';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
+  standalone:true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    OperacionesDeComercioExteriorComponent,
+    SolicitanteComponent
+  ]
 })
 export class PasoUnoComponent {
     /**
