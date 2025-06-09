@@ -188,8 +188,6 @@ export class AvisoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
 
-  
-
   /**
    * Obtiene los datos del catálogo de años.
    */
@@ -368,7 +366,7 @@ export class AvisoComponent implements OnInit, AfterViewInit, OnDestroy {
     this.inicializarEstadoFormulario();
   }
 
-    /**
+  /**
   * @method inicializarEstadoFormulario
   * @description Inicializa el estado del formulario según el modo de solo lectura.
   * 

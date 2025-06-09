@@ -9,10 +9,10 @@
       </li>
     </ul>
     <ng-container> @switch (indice) { @case (1) { <solicitante [tabindex]="1" #Solicitante></solicitante>
-    <div class="row mt-3">
+    <div class="row mt-3" [formGroup]="solicitanteForm">
       <div class="col-md-4">
         <label>ADACE:</label>
-        <input type="text" class="form-control" formControlName="adace" [disabled]="adaceDisabled" required/>
+        <input type="text" class="form-control" formControlName="adace" required/>
       </div>
     </div>
     } @case (2) { <app-aviso [tabIndex]="2"></app-aviso> } } </ng-container>
