@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AccionBoton } from '../../models/certificado-origen.model';
-import { DatosPasos } from '@ng-mf/data-access-user';
+import { AlertComponent, BtnContinuarComponent, DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constants/certificado-origen.enum';
 import { Subject } from 'rxjs';
@@ -11,6 +11,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 
 
 /**
@@ -23,6 +25,10 @@ import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/avi
   selector: 'app-solicitante-page',
   templateUrl: './solicitante-page.component.html',
   styleUrl: './solicitante-page.component.scss',
+  standalone:true,
+  imports: [
+    WizardComponent,PasoUnoComponent,PasoTresComponent,BtnContinuarComponent,AlertComponent
+  ]
 })
 export class SolicitantePageComponent implements OnInit, OnDestroy {
   /**

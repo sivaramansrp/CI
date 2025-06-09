@@ -1,12 +1,16 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CamState, camCertificadoStore } from '../../estados/cam-certificado.store';
-import { Catalogo, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { Catalogo, ConsultaioQuery, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, delay, map, of, takeUntil } from 'rxjs';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
-import { FormBuilder } from '@angular/forms';
+import { CertificadoDeOrigenComponent } from '../../../../shared/components/certificado-de-origen/certificado-de-origen.component';
+import { CommonModule } from '@angular/common';
+import { DestinatarioComponent } from '../../../110201/components/destinatario/destinatario.component';
 import { HttpErrorResponse } from '@angular/common/http';
 import { Mercancia } from '../../../../shared/models/modificacion.enum';
+import { MercanciaComponent } from '../mercancia/mercancia.component';
 import { Modal } from 'bootstrap';
+import { ReactiveFormsModule } from '@angular/forms';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
 
 /**
@@ -17,7 +21,11 @@ import { camCertificadoQuery } from '../../estados/cam-certificado.query';
 @Component({
   selector: 'app-certificado-origen',
   templateUrl: './certificado-origen.component.html',
-  styleUrl: './certificado-origen.component.css',
+  styleUrl: './certificado-origen.component.scss',
+  standalone: true,
+  imports: [CommonModule,ReactiveFormsModule,CertificadoDeOrigenComponent,
+      DestinatarioComponent,
+    MercanciaComponent]
 })
 export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDestroy {
   /**
@@ -98,29 +106,46 @@ export class CertificadoOrigenComponent implements OnInit, AfterViewInit, OnDest
    */
   @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
 
+
+  /**
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   *
+   * @type {boolean}
+   * @memberof CertificadoOrigenComponent
+   * @compodoc
+   * @description
+   * Esta propiedad controla si el formulario es solo de lectura (`true`) o editable (`false`).
+   */
+  esFormularioSoloLectura:boolean = false;
+
   /**
    * @descripcion
    * Constructor que inicializa los servicios y dependencias requeridas.
-   * @param fb - Instancia de FormBuilder para gestionar formularios.
    * @param camCertificadoService - Servicio para obtener datos relacionados con el certificado.
    * @param store - Almacén para gestionar el estado del formulario de certificado.
    * @param query - Consulta para obtener el estado del formulario.
-   * @param seccionStore - Almacén para gestionar el estado de la sección.
    * @param seccionQuery - Consulta para obtener el estado de la sección.
    */
   constructor(
-    private readonly fb: FormBuilder,
     private camCertificadoService: CamCertificadoService,
     private store: camCertificadoStore,
     private query: camCertificadoQuery,
-    private seccionStore: SeccionLibStore,
-    private seccionQuery: SeccionLibQuery
+    private seccionQuery: SeccionLibQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
     this.query.formCertificado$
       .pipe(takeUntil(this.destroyNotifier$), delay(100))
       .subscribe((estado) => {
         this.formCertificadoValues = estado;
       });
+        this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+      })
+    )
+    .subscribe()
   }
 
   /**
@@ -176,7 +201,6 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
         this.estado = data as Catalogo[];
       },
       error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
         this.estado = [];
       },
     });
@@ -196,7 +220,6 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
         this.pais = data as Catalogo[];
       },
       error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
         this.pais = [];
       },
     });
@@ -221,7 +244,7 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
         }
       },
       error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
+        this.disponiblesDatos = [];
       },
     });
   }

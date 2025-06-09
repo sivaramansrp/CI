@@ -1,10 +1,17 @@
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { DatosDelTramiteContenedoraComponent } from '../../components/datos-del-tramite-contenedora/datos-del-tramite-contenedora.component';
+import { ImportacionArmasMunicionesService } from '../../services/importacion-armas-municiones.service';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 import { Subject } from 'rxjs';
+import { TercerosRelacionadosContenedoraComponent } from '../../components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
 import { Tramite240101Query } from '../../estados/tramite240101Query.query';
 import { Tramite240101Store } from '../../estados/tramite240101Store.store';
-import { takeUntil } from 'rxjs';
+import { map} from 'rxjs';
+import { takeUntil} from 'rxjs';
 
 /**
  * @title Paso Uno
@@ -13,8 +20,10 @@ import { takeUntil } from 'rxjs';
  */
 @Component({
   selector: 'app-paso-uno',
+  standalone: true,
   templateUrl: './paso-uno.component.html',
-  styleUrl: './paso-uno.component.css',
+  styleUrl: './paso-uno.component.scss',
+  imports: [CommonModule, SolicitanteComponent, DatosDelTramiteContenedoraComponent, TercerosRelacionadosContenedoraComponent, PagoDeDerechosContenedoraComponent ],
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
   /**
@@ -32,6 +41,15 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+   /**
+   * Esta variable se utiliza para almacenar el índice del subtítulo.
+   */
+  public consultaState!: ConsultaioState;
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+
   /**
    * Initializes the component with required query and store for state management.
    *
@@ -40,8 +58,14 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   constructor(
     private tramite240101Query: Tramite240101Query,
-    private tramite240101Store: Tramite240101Store // eslint-disable-next-line no-empty-function
-  ) {}
+    private tramite240101Store: Tramite240101Store,
+    private consultaQuery: ConsultaioQuery,
+    private armasMunicionesService: ImportacionArmasMunicionesService
+  ) {
+     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
+      this.consultaState = seccionState;
+    })).subscribe();
+  }
 
   /**
    * Angular lifecycle method that runs on component initialization.
@@ -54,6 +78,27 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((tab) => {
         this.indice = tab;
+      });
+    if (this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+
+  /**
+   * Guarda los datos del formulario obtenidos del servicio.
+   */
+  guardarDatosFormulario(): void {
+    this.armasMunicionesService
+      .obtenerRegistroTomarMuestrasDatos().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp) {
+          this.esDatosRespuesta = true;
+          this.armasMunicionesService.actualizarEstadoFormulario(resp);
+        }
       });
   }
 
