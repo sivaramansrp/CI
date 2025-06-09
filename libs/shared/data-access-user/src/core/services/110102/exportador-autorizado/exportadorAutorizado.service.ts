@@ -12,11 +12,11 @@ export class ExportadorAutorizadoService {
   }
 
 
-  getExportadorAutorizado(): Observable<any> {
+  getExportadorAutorizado(): Observable<{ label: string; value: string | number }[]> {
       return this.http.get('./assets/json/110102/exportadorautorizado.json');
     }
 
-    getExportadorAutorizadoJPN(): Observable<any> {
+    getExportadorAutorizadoJPN(): Observable<{ label: string; value: string | number }[]> {
       return this.http.get('./assets/json/110102/exportadorautorizadojpn.json');
     }
     

@@ -1,37 +1,36 @@
 import { ColumnasTabla, SeleccionadasTabla } from '../models/registro.model';
-import { JSONResponse, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { ENVIRONMENT, JSONResponse, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Observable, catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { APPINJECT } from 'apps/se/src/app/app.inject';
+import { Injectable } from '@angular/core';
 
 /**
  * Servicio para gestionar las solicitudes relacionadas con los catálogos y datos del trámite 110223.
+ * Este servicio proporciona métodos para recuperar catálogos desde archivos JSON locales y desde servidores remotos.
  */
 @Injectable({
   providedIn: 'root',
 })
 export class RegistroService {
-    /**
-   * AppConfig es una inyección de dependencias que proporciona la configuración de la aplicación.
-   */
-  private readonly appConfig = inject(APPINJECT);
+
   /**
    * URL base del servidor principal.
+   * Se utiliza para peticiones directas al backend principal.
    */
-  URL_SERVER = this.appConfig.URL_SERVER;
+  URL_SERVER = ENVIRONMENT.URL_SERVER;
 
   /**
    * URL base del servidor de catálogos auxiliares.
+   * Se usa para recuperar información adicional desde el servidor auxiliar.
    */
-  URL_SERVER_CATALOGOS = this.appConfig.URL_SERVER_JSON_AUXILIAR;
+  URL_SERVER_CATALOGOS = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
   /**
    * Constructor del servicio.
    * @param http Cliente HTTP para realizar solicitudes al servidor.
    */
   constructor(private http: HttpClient) {
-    // El constructor se utiliza para la inyección de dependencias.
+    // Constructor utilizado para inyección de dependencias.
   }
 
   /**
@@ -124,8 +123,8 @@ export class RegistroService {
   }
 
   /**
-   * Recupera la lista de "Registro de Solicitudes" desde un archivo JSON.
-   * @returns Observable que contiene un array de objetos RegistroDeSolicitudesTabla.
+   * Recupera la lista de solicitudes desde un archivo JSON local.
+   * @returns Observable que contiene un arreglo de objetos de tipo ColumnasTabla.
    * @throws Lanzará un error si la solicitud HTTP falla.
    */
   getSolicitudesTabla(): Observable<ColumnasTabla[]> {
@@ -135,8 +134,8 @@ export class RegistroService {
   }
 
   /**
-   * Recupera la lista de "Solicitudes Seleccionadas" desde un archivo JSON.
-   * @returns Observable que contiene un array de objetos SeleccionadasTabla.
+   * Recupera la lista de solicitudes seleccionadas desde un archivo JSON local.
+   * @returns Observable que contiene un arreglo de objetos de tipo SeleccionadasTabla.
    * @throws Lanzará un error si la solicitud HTTP falla.
    */
   getSolicitudesDataTabla(): Observable<SeleccionadasTabla[]> {

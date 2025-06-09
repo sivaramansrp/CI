@@ -8,6 +8,7 @@ import {
 import {
   DatosPasos,
   ListaPasosWizard,
+  Notificacion,
   PASOS,
   SECCIONES_TRAMITE_5701,
   SeccionLibQuery,
@@ -15,26 +16,24 @@ import {
   SeccionLibStore,
   TercerosQuery,
   TercerosState,
-  TercerosStore,
-  WizardComponent,
+  TransporteDespacho,
 } from '@ng-mf/data-access-user';
 import {
+  ListFechasSevex,
   ListPersonaNoti,
+  Pedimento,
   PersonaResponsableDespacho,
   SolicitudPayload,
 } from '../../../../core/models/5701/solicitud-payload.model';
-import { map, Subject, takeUntil } from 'rxjs';
 import {
-  Solicitud5701State,
-  Tercero5701State,
-} from '../../../../core/estados/tramites/tramite5701.store';
-import { GuardaSolicitudService } from '../../../../core/services/5701/guardar/guarda-solicitud.service';
-import { Pedimento } from '../../../../core/models/5701/solicitud-payload.model';
-import {
-  CVE_UNIDAD_ADMIN,
+  MSG_REGISTRO_EXITOSO,
   TIPO_TRAMITE,
 } from '../../../../core/enums/5701/tramite5701.enum';
+import { Observable, Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
+import { GuardaSolicitudService } from '../../../../core/services/5701/guardar/guarda-solicitud.service';
+import { Solicitud5701State } from '../../../../core/estados/tramites/tramite5701.store';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 interface AccionBoton {
   accion: string;
@@ -98,6 +97,12 @@ export class SolicitudPageComponent implements OnInit {
   @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
 
   /**
+   * Inicializa la variable de alertaNotificación con un objeto de tipo Notificacion.
+   * @type {Notificacion}
+   */
+  public alertaNotificacion!: Notificacion;
+
+  /**
    * Representa los datos de configuración para los pasos de un proceso.
    * @property nroPasos - Número total de pasos.
    * @property indice - Índice actual del paso.
@@ -122,6 +127,16 @@ export class SolicitudPageComponent implements OnInit {
    */
   seccionCargarDocumentos: boolean = true;
 
+  /**
+   * @descripcion Notificación para mostrar mensajes al usuario.
+   */
+  public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Estado del tramite Folio
+   */
+  public folioTemporal: number = 0;
+
   constructor(
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
@@ -129,7 +144,7 @@ export class SolicitudPageComponent implements OnInit {
     private tercerosQuery: TercerosQuery,
     private guardarSolicitudService: GuardaSolicitudService
   ) {}
-  
+
   /**
    * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
    *
@@ -189,66 +204,304 @@ export class SolicitudPageComponent implements OnInit {
   getValorIndice(e: AccionBoton): void {
     // Nos encontramos en el paso 1, se guarda parcialmente la información.
     if (this.indice === 1) {
-      this.enviaSolicitudRequest();
-    }
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+      this.enviaSolicitudRequest()
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          tap((respuesta) => {
+            if (!respuesta) {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'toastr',
+                categoria: 'error',
+                modo: 'action',
+                titulo: '',
+                mensaje: 'Error al guardar la solicitud. Intente nuevamente.',
+                cerrar: false,
+                txtBtnAceptar: '',
+                txtBtnCancelar: '',
+              };
+            } else {
+              if (e.valor > 0 && e.valor < 5) {
+                this.alertaNotificacion = {
+                  tipoNotificacion: 'banner',
+                  categoria: 'success',
+                  modo: 'action',
+                  titulo: '',
+                  mensaje: MSG_REGISTRO_EXITOSO(this.folioTemporal.toString()),
+                  cerrar: true,
+                  txtBtnAceptar: '',
+                  txtBtnCancelar: '',
+                };
+                this.indice = e.valor;
+                if (e.accion === 'cont') {
+                  this.wizardComponent.siguiente();
+                } else {
+                  this.wizardComponent.atras();
+                }
+              }
+            }
+          })
+        )
+        .subscribe();
+    } else {
+      if (e.valor > 0 && e.valor < 5) {
+        this.indice = e.valor;
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
       }
     }
   }
 
-  private enviaSolicitudRequest(): void {
-    const RESPONSABLES_DESPACHO: PersonaResponsableDespacho[] =
-      this.solicitudState.personasResponsablesDespacho.map((persona) => {
-        return {
-          gafete: persona.gafeteRespoDespacho,
-          nombre: persona.nombre,
-          apellido_paterno: persona.primerApellido,
-          apellido_materno: persona.segundoApellido,
-        };
-      });
+  /**
+   * @description Obtiene la lista de personas notificadas a partir del estado de terceros.
+   * @returns Una lista de objetos `ListPersonaNoti` que representan las personas notificadas.
+   */
+  obtenerPersonasNotificacion(): ListPersonaNoti[] {
+    return this.tercerosState.terceros.map((persona, i) => {
+      return {
+        id_persona_noti: i + 1,
+        correo_electronico: persona.correo,
+        nombreTercero: persona.nombre,
+      };
+    });
+  }
 
-    const PERSONAS_NOTIFICACION: ListPersonaNoti[] =
-      this.tercerosState.terceros.map((persona, i) => {
-        return {
-          id_persona_noti: i + 1,
-          correo_electronico: persona.nombre,
-          nombreTercero: persona.correo,
-        };
-      });
+  /**
+   * @description Obtiene la lista de responsables de despacho a partir del estado de la solicitud.
+   * @returns Una lista de objetos `PersonaResponsableDespacho` que representan a los responsables de despacho.
+   */
+  obtenerResponsablesDespacho(): PersonaResponsableDespacho[] {
+    return this.solicitudState.personasResponsablesDespacho.map((persona) => {
+      return {
+        gafete: persona.gafeteRespoDespacho,
+        nombre: persona.nombre,
+        apellido_paterno: persona.primerApellido,
+        apellido_materno: persona.segundoApellido,
+      };
+    });
+  }
 
-    const PEDIMENTOS_LISTA: Pedimento[] = this.solicitudState.pedimentos.map(
-      (pedimento, i) => {
-        return {
-          id_pedimento: i + 1,
-          patente: pedimento.patente,
-          pedimento: pedimento.pedimento.toString(),
-          aduana: pedimento.aduana.toString(),
-          tipo_pedimento: pedimento.tipoPedimento.toString(),
-          numeros: pedimento.numero,
-          cove: pedimento.comprobanteValor,
-          estado_pedimento: parseInt(pedimento.estadoPedimento, 10),
-          sub_estado_pedimento: parseInt(pedimento.subEstadoPedimento, 10),
-          numero_pedimento: pedimento.pedimento,
-          tipo_pedimento_por_evaluacion: '',
-          bln_valido_pedimento:
-            pedimento.pedimentoValidado === 'SI' ? true : false,
-          fecha_edo_ws_pedimento: '',
-          bln_activo: false,
-        };
-      }
-    );
+  /**
+   * @description Obtiene una lista de pedimentos a partir del estado de la solicitud.
+   * @returns Una lista de objetos `Pedimento` que representan los pedimentos obtenidos del estado de la solicitud.
+   */
+  obtenerPedimentosLista(): Pedimento[] {
+    return this.solicitudState.pedimentos.map((pedimento, i) => {
+      return {
+        id_pedimento: i + 1,
+        patente: pedimento.patente,
+        pedimento: pedimento.pedimento.toString(),
+        aduana: pedimento.aduana.toString(),
+        tipo_pedimento: pedimento.tipoPedimento.toString(),
+        numeros: pedimento.numero,
+        cove: pedimento.comprobanteValor,
+        estado_pedimento: parseInt(pedimento.estadoPedimento, 10),
+        sub_estado_pedimento: parseInt(pedimento.subEstadoPedimento, 10),
+        numero_pedimento: pedimento.pedimento,
+        tipo_pedimento_por_evaluacion: '',
+        bln_valido_pedimento:
+          pedimento.pedimentoValidado === 'SI' ? true : false,
+        fecha_edo_ws_pedimento: '',
+        bln_activo: false,
+      };
+    });
+  }
 
-    const CONSTRUYE_SOLICITUD_PAYLOAD: SolicitudPayload = {
-      id_solicitud: this.solicitudState.idSolicitud,
+  /**
+   * @description Obtiene una lista de transporte de arribo/salida a partir del estado de la solicitud.
+   * @returns Una lista de objetos `TransporteDespacho` que representan los transportes de despacho obtenidos del estado de la solicitud.
+   */
+  obtenerTransporteArriboSalida(): TransporteDespacho[] {
+    const TIPO_TRANSPORTE_ARRIBO_SALIDA =
+      this.solicitudState.tipoTransporteArriboSalida;
+    switch (TIPO_TRANSPORTE_ARRIBO_SALIDA) {
+      case '1':
+        return this.solicitudState.transporteArriboDatos.map(
+          (transporte: Partial<TransporteDespacho>) => {
+            const RESULTADO: Partial<TransporteDespacho> = {
+              tipo_transporte: TIPO_TRANSPORTE_ARRIBO_SALIDA,
+              emp_transportista: (transporte.emp_transportista || '') as string,
+              numero_porte: transporte.numero_porte || '',
+              fecha_porte: (transporte.fecha_porte || '') as string,
+              marca_transporte: transporte.marca_transporte || '',
+              modelo_transporte: transporte.modelo_transporte || '',
+              placas_transporte: transporte.placas_transporte || '',
+              contenedor_transporte: transporte.contenedor_transporte || '',
+              observaciones: transporte.observaciones,
+            };
+            return RESULTADO as TransporteDespacho;
+          }
+        );
+      case '2':
+        return this.solicitudState.transporteArriboDatos.map(
+          (transporte: Partial<TransporteDespacho>) => {
+            const RESULTADO: Partial<TransporteDespacho> = {
+              tipo_transporte: TIPO_TRANSPORTE_ARRIBO_SALIDA,
+              numero_bl: transporte.numero_bl || '',
+              tipo_equipo: transporte.tipo_equipo || '',
+              iniciales_equipo: transporte.iniciales_equipo || '',
+              numero_equipo: transporte.numero_equipo || '',
+              observaciones: transporte.observaciones,
+            };
+            return RESULTADO as TransporteDespacho;
+          }
+        );
+      case '4':
+        //Marítimo
+        return this.solicitudState.transporteArriboDatos.map(
+          (transporte: Partial<TransporteDespacho>) => {
+            const RESULTADO: Partial<TransporteDespacho> = {
+              tipo_transporte: TIPO_TRANSPORTE_ARRIBO_SALIDA,
+              guia_bl_Maritimo: transporte.guia_bl_Maritimo || '',
+              guia_house_maritimo: transporte.guia_house_maritimo || '',
+              nombre_buque_maritimo: transporte.nombre_buque_maritimo || '',
+              contenedor_maritimo: transporte.contenedor_maritimo || '',
+              observaciones: transporte.observaciones,
+            };
+            return RESULTADO as TransporteDespacho;
+          }
+        );
+      case '3':
+        //Aereo
+        return this.solicitudState.transporteArriboDatos.map(
+          (transporte: Partial<TransporteDespacho>) => {
+            const RESULTADO: Partial<TransporteDespacho> = {
+              tipo_transporte: TIPO_TRANSPORTE_ARRIBO_SALIDA,
+              arribo_pendiente_aereo: transporte.arribo_pendiente_aereo === 'Sí' ? true : false,
+              guia_master_aereo: transporte.guia_master_aereo || '',
+              guia_house_aereo: transporte.guia_house_aereo || '',
+              fecha_arribo_aereo: transporte.fecha_arribo_aereo || '',
+              hora_arribo_aereo: transporte.hora_arribo_aereo || '',
+              guia_valida: transporte.guia_valida === 'Sí' ? true : false,
+              observaciones: transporte.observaciones,
+            };
+            return RESULTADO as TransporteDespacho;
+          }
+        );
+      case '6':
+        return this.solicitudState.transporte.map(
+          (transporte: Partial<TransporteDespacho>) => {
+            const RESULTADO: Partial<TransporteDespacho> = {
+              tipo_transporte: TIPO_TRANSPORTE_ARRIBO_SALIDA,
+              emp_transportista: transporte.emp_transportista || '',
+              tipo_transporte_des: transporte.tipo_transporte_des || '',
+              datos_transporte: transporte.datos_transporte || '',
+              observaciones: transporte.observaciones,
+            };
+            return RESULTADO as TransporteDespacho;
+          }
+        );
+      default:
+        return [] as TransporteDespacho[];
+    }
+  }
+
+  /**
+   * @description Obtiene una lista de transporte de despacho a partir del estado de la solicitud.
+   * @returns Una lista de objetos `TransporteDespacho` que representan los transportes de despacho obtenidos del estado de la solicitud.
+   */
+  obtenerTransporteDespacho(): TransporteDespacho[] {
+    const TIPO_TRANSPORTE_DESPACHO = this.solicitudState.tipoTransporte;
+
+    switch (TIPO_TRANSPORTE_DESPACHO) {
+      case '1':
+        return this.solicitudState.transporte.map(
+          (transporte: Partial<TransporteDespacho>) => {
+            const RESULTADO: Partial<TransporteDespacho> = {
+              tipo_transporte: TIPO_TRANSPORTE_DESPACHO,
+              emp_transportista: (transporte.emp_transportista || '') as string,
+              numero_porte: transporte.numero_porte || '',
+              fecha_porte: (transporte.fecha_porte || '') as string,
+              marca_transporte: transporte.marca_transporte || '',
+              modelo_transporte: transporte.modelo_transporte || '',
+              placas_transporte: transporte.placas_transporte || '',
+              contenedor_transporte: transporte.contenedor_transporte || '',
+              observaciones: transporte.observaciones,
+              mismosDatosTransporte: false,
+            };
+            return RESULTADO as TransporteDespacho;
+          }
+        );
+      case '2':
+        return this.solicitudState.transporte.map(
+          (transporte: Partial<TransporteDespacho>) => {
+            const RESULTADO: Partial<TransporteDespacho> = {
+              tipo_transporte: TIPO_TRANSPORTE_DESPACHO,
+              numero_bl: transporte.numero_bl || '',
+              tipo_equipo: transporte.tipo_equipo || '',
+              iniciales_equipo: transporte.iniciales_equipo || '',
+              numero_equipo: transporte.numero_equipo || '',
+              observaciones: transporte.observaciones,
+              mismosDatosTransporte: false,
+            };
+            return RESULTADO as TransporteDespacho;
+          }
+        );
+      case '5':
+        return this.solicitudState.transporte.map(
+          (transporte: Partial<TransporteDespacho>) => {
+            const RESULTADO: Partial<TransporteDespacho> = {
+              tipo_transporte: TIPO_TRANSPORTE_DESPACHO,
+              rfc_empresa: transporte.rfc_empresa || '',
+              emp_transportista: transporte.emp_transportista || '',
+              nombre_transportista: transporte.nombre_transportista || '',
+              num_gafete: transporte.num_gafete || '',
+              observaciones: transporte.observaciones,
+              mismosDatosTransporte: false,
+            };
+            return RESULTADO as TransporteDespacho;
+          }
+        );
+      case '6':
+        return this.solicitudState.transporte.map(
+          (transporte: Partial<TransporteDespacho>) => {
+            const RESULTADO: Partial<TransporteDespacho> = {
+              tipo_transporte: TIPO_TRANSPORTE_DESPACHO,
+              emp_transportista: transporte.emp_transportista || '',
+              tipo_transporte_des: transporte.tipo_transporte_des || '',
+              datos_transporte: transporte.datos_transporte || '',
+              observaciones: transporte.observaciones,
+              mismosDatosTransporte: false,
+            };
+            return RESULTADO as TransporteDespacho;
+          }
+        );
+
+      default:
+        return [] as TransporteDespacho[];
+    }
+  }
+
+  /**
+   * @description Obtiene una lista de fechas del servicio a partir del estado de la solicitud.
+   * @returns {ListFechasSevex[]} Una lista de fechas del servicio obtenidas del estado de la solicitud.
+   */
+  obtenerFechasSevex(): ListFechasSevex[] {
+    return this.solicitudState.selectRangoDias.map((fecha) => {
+      return {
+        fecha: fecha,
+        fecha_desc: fecha,
+        hora_inicio_svex: this.solicitudState.horaInicio,
+        hora_final_svex: this.solicitudState.horaFinal,
+      };
+    });
+  }
+
+  /**
+   * @description Construye el payload de la solicitud para el trámite 5701
+   * @returns {SolicitudPayload} Un objeto que representa la solicitud con todos los datos necesarios.
+   */
+  construyeSolicitudPayload(): SolicitudPayload {
+    return {
+      id_solicitud:
+        this.solicitudState.idSolicitud === 0
+          ? null
+          : this.solicitudState.idSolicitud,
       id_tipo_tramite: TIPO_TRAMITE,
-      cve_unidad_administrativa: CVE_UNIDAD_ADMIN, //TODO: Este campo se va a eliminar
       costo_total: '',
-      rfc: '', //Este viene del store con los datos del inicio de sesión
+      rfc: this.solicitudState.RFCImportadorExportador, //Este viene del store con los datos del inicio de sesión
       representante_legal: {
         rfc: '',
         telefono: '',
@@ -282,7 +535,7 @@ export class SolicitudPageComponent implements OnInit {
           revision_origen: this.solicitudState.revision,
         },
         despacho: {
-          aduana_despacho: this.solicitudState.aduanaDespacho,
+          aduana_despacho: 850, //this.solicitudState.aduanaDespacho,
           id_seccion_despacho: parseInt(
             this.solicitudState.idSeccionDespacho,
             10
@@ -304,13 +557,13 @@ export class SolicitudPageComponent implements OnInit {
           relacion: this.solicitudState.relacionSociedad,
           bln_despacho: true,
         },
-        pedimentos: PEDIMENTOS_LISTA,
+        pedimentos: this.obtenerPedimentosLista(),
         tipo_servicio: {
           bln_activo: false,
           cve_tipo_servicio: this.solicitudState.tipoSolicitud,
           desc_tipo_servicio: this.solicitudState.descripcionTipoSolicitud,
           numero_svex: '',
-          rni: 0,
+          rni: true,
           fecha_inicio_servicio: this.solicitudState.fechaInicio,
           fecha_fin_servicio: this.solicitudState.fechaFinal,
           hora_inicio_servicio: this.solicitudState.horaInicio,
@@ -333,24 +586,42 @@ export class SolicitudPageComponent implements OnInit {
           justificacion: this.solicitudState.justificacion,
           pais_procedencia: this.solicitudState.paisProcedencia.toString(),
         },
-        tipo_transporte_despacho: this.solicitudState.tipoTransporte,
-        list_transporte_despacho: this.solicitudState.transporte,
-        tipo_transporte_arribo: this.solicitudState.tipoTransporteArriboSalida,
-        list_unidad_arribo: this.solicitudState.transporteArriboDatos,
-        persona_responsable: RESPONSABLES_DESPACHO,
-        list_persona_noti: PERSONAS_NOTIFICACION,
+        list_transporte_despacho: this.obtenerTransporteDespacho(),
+        list_unidad_arribo: this.obtenerTransporteArriboSalida(),
+        persona_responsable: this.obtenerResponsablesDespacho(),
+        list_persona_noti: this.obtenerPersonasNotificacion(),
+        list_fechas_sevex: this.obtenerFechasSevex(),
       },
     };
+  }
 
-    this.guardarSolicitudService
+  /**
+   * @description Este método construye un objeto `SolicitudPayload` con los datos necesarios para enviar una solicitud
+   * del tramite 5701.
+   * @returns {void} No retorna ningún valor.   *
+   */
+
+  private enviaSolicitudRequest(): Observable<boolean> {
+    const CONSTRUYE_SOLICITUD_PAYLOAD: SolicitudPayload =
+      this.construyeSolicitudPayload();
+
+    return this.guardarSolicitudService
       .postSolicitud(CONSTRUYE_SOLICITUD_PAYLOAD)
       .pipe(
         map((response) => {
-          return response;
+          if (response.datos.id_solicitud) {
+            this.solicitudState.idSolicitud = response.datos.id_solicitud;
+            this.folioTemporal = response.datos.id_solicitud;
+            localStorage.setItem('id_solicitud', response.datos.id_solicitud.toString());
+            return true;
+          }
+
+          return false;
         }),
+        catchError(() => of(false)),
+
         takeUntil(this.destroyNotifier$)
-      )
-      .subscribe();
+      );
   }
 
   /**

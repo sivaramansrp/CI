@@ -56,7 +56,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'registro-solicitud',
+    path: 'registro',
     loadChildren: () =>
       import('./tramites/31803/registro-solicitud.module').then(
         (m) => m.RegistroSolicitudModule
@@ -239,6 +239,16 @@ const ROUTES: Routes = [
       import('./proceso-requerimiento/proceso-requerimiento.component').then(
         (m) => m.ProcesoRequerimientoComponent
       ),
+  },
+  {
+    path: 'verificar-dictamen',
+    loadComponent: () =>
+      import('./verificar-dictamen/verificar-dictamen.component').then((m) => m.VerificarDictamenComponent),
+  },
+  {
+    path: 'detalle-v-dictamen',
+    loadComponent: () =>
+      import('./detalle-v-dictamen/detalle-v-dictamen.component').then((m) => m.DetalleVDictamenComponent),
   },
 ];
 

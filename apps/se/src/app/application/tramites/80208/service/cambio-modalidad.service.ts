@@ -1,4 +1,5 @@
-import { CambioDeModalidadForm, CambioModalidadResponse } from '../modelos/cambio-de-modalidad.model';
+import { CambioDeModalidadForm, CambioModalidadResponse, ServiciosState } from '../modelos/cambio-de-modalidad.model';
+import { CambioModalidadStore } from '../estados/tramite80208.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -27,7 +28,10 @@ export class CambioModalidadService {
    * @description Constructor del servicio.
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    public cambioModalidadStore: CambioModalidadStore,
+  ) {
     // No se necesita lógica de inicialización adicional.
   }
 
@@ -56,6 +60,28 @@ export class CambioModalidadService {
    */
   getCambioDeModalidad(): Observable<CambioModalidadResponse> {
     return this.http.get<CambioModalidadResponse>(`${this.datosSimuladosUrl}cambio-de-modalidad.json`);
+  }
+
+  /**
+   * @method actualizarEstadoFormulario
+   * @description
+   * Actualiza el estado del formulario en el store de cambio de modalidad.
+   * @returns {void}
+   */
+  actualizarEstadoFormulario(DATOS:ServiciosState): void {
+    this.cambioModalidadStore.setCambioDeModalidad(DATOS.combioDeModalidaDatos);
+    this.cambioModalidadStore.setCambioModalidad(JSON.stringify(DATOS.cambioModalidad));
+    this.cambioModalidadStore.setServiciosImmx(DATOS.serviciosImmx);
+  }
+
+  /**
+   * @method getDatosDeLaSolicitudData
+   * @description
+   * Obtiene los datos de la solicitud de cambio de modalidad desde un archivo JSON simulado.
+   * @returns {Observable<ServiciosState>} Observable que emite los datos de la solicitud.
+   */
+  getDatosDeLaSolicitudData(): Observable<ServiciosState> {
+    return this.http.get<ServiciosState>('assets/json/80208/cambio-de-modalidad-datos.json');
   }
 
 }

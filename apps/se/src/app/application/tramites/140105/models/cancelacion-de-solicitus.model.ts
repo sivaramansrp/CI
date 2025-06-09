@@ -1,3 +1,16 @@
+/**
+ * Interfaz que representa una cancelación de solicitud.
+ * 
+ * @property folioTramite - Folio del trámite.
+ * @property tipoDeSolicitud - Tipo de solicitud.
+ * @property regimen - Régimen aduanero.
+ * @property cdr - Código de documento relacionado.
+ * @property condicionDeLaMercancia - Condición de la mercancía.
+ * @property fraccionArancelaria - Fracción arancelaria.
+ * @property umt - Unidad de medida de transacción.
+ * @property cantidad - Cantidad de mercancía.
+ * @property usd - Valor en dólares estadounidenses.
+ */
 export interface Cancelacion {
     folioTramite: string;
     tipoDeSolicitud: string;
@@ -9,9 +22,18 @@ export interface Cancelacion {
     cantidad: string;
     usd: string;
 }
+/**
+ * Interfaz que representa los datos de permisos para la cancelación de solicitudes.
+ * 
+ * @property datos - Arreglo de objetos de tipo Cancelacion.
+ * @property motivoCancelacion - (Opcional) Motivo de la cancelación.
+ */
 export interface PermisosDatos {
     datos: Cancelacion[];
+    motivoCancelacion?: string;
 }
+
+
 
 /**
  * Función para crear el estado inicial de los datos de permiso.
@@ -29,6 +51,7 @@ export interface PermisosDatos {
 
 export function createDatosState(params: Partial<PermisosDatos> = {}): PermisosDatos {
     return {
-        datos: params as Cancelacion[]
+        datos: params as Cancelacion[],
+        motivoCancelacion: params.motivoCancelacion || '',
     }
 }

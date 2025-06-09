@@ -1,246 +1,267 @@
-/* eslint-disable dot-notation */
-import { AlertComponent, BtnContinuarComponent,CatalogoSelectComponent,CrosslistComponent,TituloComponent } from '@ng-mf/data-access-user';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { DatosSolicitudComponent } from './datos-solicitud.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { PantallasActionService } from '../../services/pantallas-action.service';
-import { PantallasModuloModule } from '../../pantallas-modulo.module';
-describe('DatosSolicitudComponent', () => {
-  let component: DatosSolicitudComponent;
-  let fixture: ComponentFixture<DatosSolicitudComponent>;
-  let pantallasActionService: PantallasActionService;
-  let form: FormGroup;
+// @ts-nocheck
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { Observable, of as observableOf, throwError } from 'rxjs';
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [DatosSolicitudComponent],
-      imports: [
-        AlertComponent,
-        HttpClientTestingModule,
-        ReactiveFormsModule,
-        TituloComponent,
-        PantallasModuloModule,
-        CatalogoSelectComponent, BtnContinuarComponent, CrosslistComponent
+import { Component } from '@angular/core';
+import { DatosSolicitudComponent } from './datos-solicitud.component';
+import { PantallasActionService } from '../../services/pantallas-action.service';
+import { ValidacionesFormularioService, SeccionLibQuery } from '@ng-mf/data-access-user';
+import { Tramite230401Store } from '../../estados/tramite230401.store';
+import { FormBuilder } from '@angular/forms';
+import { Solicitud230401Query } from '../../estados/queries/solicitud230401.query';
+import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
+
+@Injectable()
+class MockPantallasActionService {
+  inicializaPasoUnoDatosCatalogos() {}
+  inicializaPagoDerechosCatalogo() {}
+}
+
+@Injectable()
+class MockTramite230401Store {}
+
+@Injectable()
+class MockSolicitud230401Query {}
+
+
+
+describe('DatosSolicitudComponent', () => {
+  let fixture;
+  let component;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [ FormsModule, ReactiveFormsModule ],
+      declarations: [
+        DatosSolicitudComponent
       ],
-    })
-    .compileComponents();
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      providers: [
+        { provide: PantallasActionService, useClass: MockPantallasActionService },
+        ValidacionesFormularioService,
+        { provide: Tramite230401Store, useClass: MockTramite230401Store },
+        FormBuilder,
+        { provide: Solicitud230401Query, useClass: MockSolicitud230401Query },
+        SeccionLibQuery,
+        SeccionLibStore
+      ]
+    }).overrideComponent(DatosSolicitudComponent, {
+
+    }).compileComponents();
     fixture = TestBed.createComponent(DatosSolicitudComponent);
-    component = fixture.componentInstance;
-    pantallasActionService = TestBed.inject(PantallasActionService);
-    fixture.detectChanges();
-    form = new FormGroup({
-      cantidad: new FormControl(''),
-      otherField: new FormControl('')
-    });
+    component = fixture.debugElement.componentInstance;
   });
 
-  it('should create', () => {
+  afterEach(() => {
+    component.ngOnDestroy = function() {};
+    fixture.destroy();
+  });
+
+  it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
-  it('should have a defined component', () => {
-    expect(component).toBeDefined();
+
+  it('should run #isValid()', async () => {
+    component.validacionesService = component.validacionesService || {};
+    component.validacionesService.isValid = jest.fn();
+    component.isValid({}, {});
+    expect(component.validacionesService.isValid).toHaveBeenCalled();
   });
-  it('should have a defined service', () => {
-    expect(pantallasActionService).toBeDefined();
-  });
-  it('should have defined a variable listoBanco', () => {  
-    expect(pantallasActionService.listoBanco).toBeDefined();
-  });
-  it('should have defined listoBanco array empty', () => {  
-    pantallasActionService.inicializaPagoDerechosCatalogo();
-    fixture.detectChanges();
-    expect(pantallasActionService.listoBanco.length).toBe(0);
-  });
-  it('should have defined a variable tiposSolicitud', () => {  
-    expect(pantallasActionService.tiposSolicitud).toBeDefined();
-  });
-  it('should have defined tiposSolicitud array empty', () => {  
-    pantallasActionService.inicializaPagoDerechosCatalogo();
-    fixture.detectChanges();
-    expect(pantallasActionService.tiposSolicitud.length).toBe(0);
-  });
-  it('should have defined a variable noDePermisocoferprise', () => {  
-    expect(pantallasActionService.noDePermisocoferprise).toBeDefined();
-  });
-  it('should have defined noDePermisocoferprise array empty', () => {  
-    pantallasActionService.inicializaPagoDerechosCatalogo();
-    fixture.detectChanges();
-    expect(pantallasActionService.noDePermisocoferprise.length).toBe(0);
-  });
-  it('should have defined a variable fraccionArancelaria', () => {  
-    expect(pantallasActionService.fraccionArancelaria).toBeDefined();
-  });
-  it('should have defined fraccionArancelaria array empty', () => {  
-    pantallasActionService.inicializaPagoDerechosCatalogo();
-    fixture.detectChanges();
-    expect(pantallasActionService.fraccionArancelaria.length).toBe(0);
-  });
-  it('should have defined a variable tipoPersona', () => {  
-    expect(pantallasActionService.numeroCas).toBeDefined();
-  });
-  it('should have defined numeroCas array empty', () => {  
-    pantallasActionService.inicializaPagoDerechosCatalogo();
-    fixture.detectChanges();
-    expect(pantallasActionService.numeroCas.length).toBe(0);
-  });
-  it('should have defined a variable clasificacion', () => {  
-    expect(pantallasActionService.clasificacion).toBeDefined();
-  });
-  it('should have defined clasificacion array empty', () => {  
-    pantallasActionService.inicializaPagoDerechosCatalogo();
-    fixture.detectChanges();
-    expect(pantallasActionService.clasificacion.length).toBe(0);
-  });
-  it('should have defined a variable estadoFisico', () => {  
-    expect(pantallasActionService.estadoFisico).toBeDefined();
-  });
-  it('should have defined estadoFisico array empty', () => {  
-    pantallasActionService.inicializaPagoDerechosCatalogo();
-    fixture.detectChanges();
-    expect(pantallasActionService.estadoFisico.length).toBe(0);
-  });
-  it('should have defined a variable datosObjecto', () => {  
-    expect(pantallasActionService.datosObjecto).toBeDefined();
-  });
-  it('should have defined datosObjecto array empty', () => {  
-    pantallasActionService.inicializaPagoDerechosCatalogo();
-    fixture.detectChanges();
-    expect(pantallasActionService.datosObjecto.length).toBe(0);
-  });
-  it('should have defined a variable unidadDeMedida', () => {  
-    expect(pantallasActionService.unidadDeMedida).toBeDefined();
-  });
-  it('should have defined unidadDeMedida array empty', () => {  
-    pantallasActionService.inicializaPagoDerechosCatalogo();
-    fixture.detectChanges();
-    expect(pantallasActionService.unidadDeMedida.length).toBe(0);
-  });
-  it('should call ngOnInit', () => {
-    const NG_ON_INIT_SPY = jest.spyOn(component, 'ngOnInit').mockImplementation();
-    component.ngOnInit();
-    expect(NG_ON_INIT_SPY).toHaveBeenCalled();
-  });
-  it('should call ngOnDestroy', () => {
-    const NG_ON_DESTROY_SPY = jest.spyOn(component, 'ngOnDestroy').mockImplementation();
-    component.ngOnDestroy();
-    expect(NG_ON_DESTROY_SPY).toHaveBeenCalled();
-  });
-  it('should format and set cantidad value correctly', () => {
-    const SET_VALORES_STORE_SPY = jest.spyOn(component, 'setValoresStore').mockImplementation();
-    form.get('cantidad')?.setValue('65'); // ASCII code for 'A'
-    component.setValoresStore(form, 'cantidad', 'setCantidadLetra');
-    expect(SET_VALORES_STORE_SPY).toHaveBeenCalled();
-    fixture.detectChanges();
-    expect(form.get('cantidad')?.value).toEqual('65');
-    form.get('cantidad')?.setValue('60'); // ASCII code for 'A'
-    component.setValoresStore(form, 'cantidad', 'setCantidadLetra');
-    fixture.detectChanges();
-    expect(form.get('cantidad')?.value).not.toEqual('65');
-  });
-  it('should call tipoSolicitudSeleccion', () => {
-    const TIPO_SOLICITUD_SELECCIONY_SPY = jest.spyOn(component, 'tipoSolicitudSeleccion').mockImplementation();
+
+  it('should run #tipoSolicitudSeleccion()', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.tramite230401Store = component.tramite230401Store || {};
+    component.tramite230401Store.setTipoSolicitud = jest.fn();
     component.tipoSolicitudSeleccion();
-    expect(TIPO_SOLICITUD_SELECCIONY_SPY ).toHaveBeenCalled();
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.tramite230401Store.setTipoSolicitud).toHaveBeenCalled();
   });
-  it('should call noDePermisocoferpriseSeleccion', () => {
-    const NO_DE_PERMISOCOFERPRISE_SELECCION_SPY = jest.spyOn(component, 'noDePermisocoferpriseSeleccion').mockImplementation();
+
+  it('should run #noDePermisocoferpriseSeleccion()', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.tramite230401Store = component.tramite230401Store || {};
+    component.tramite230401Store.setNoDePermisocoferprise = jest.fn();
     component.noDePermisocoferpriseSeleccion();
-    expect(NO_DE_PERMISOCOFERPRISE_SELECCION_SPY ).toHaveBeenCalled();
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.tramite230401Store.setNoDePermisocoferprise).toHaveBeenCalled();
   });
-  it('should call fraccionArancelariaSeleccion', () => {
-    const FRACCION_ARANCELARIA_SELECCION_SPY = jest.spyOn(component, 'fraccionArancelariaSeleccion').mockImplementation();
+
+  it('should run #fraccionArancelariaSeleccion()', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.FormSolicitud.patchValue = jest.fn();
+    component.tramite230401Store = component.tramite230401Store || {};
+    component.tramite230401Store.setDescripcionDeLaFraccion = jest.fn();
+    component.tramite230401Store.setFraccionArancelaria = jest.fn();
     component.fraccionArancelariaSeleccion();
-    expect(FRACCION_ARANCELARIA_SELECCION_SPY).toHaveBeenCalled();
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.FormSolicitud.patchValue).toHaveBeenCalled();
+    expect(component.tramite230401Store.setDescripcionDeLaFraccion).toHaveBeenCalled();
+    expect(component.tramite230401Store.setFraccionArancelaria).toHaveBeenCalled();
   });
-  it('should call seleccioneAutorizacion', () => {
-    const SELECCIONE_AUTORIZACION_SPY = jest.spyOn(component, 'seleccioneAutorizacion').mockImplementation();
+
+  it('should run #seleccioneAutorizacion()', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.tramite230401Store = component.tramite230401Store || {};
+    component.tramite230401Store.setAutorizacion = jest.fn();
     component.seleccioneAutorizacion();
-    expect(SELECCIONE_AUTORIZACION_SPY ).toHaveBeenCalled();
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.tramite230401Store.setAutorizacion).toHaveBeenCalled();
   });
-  it('should call numeroCasSeleccione', () => {
-    const NUMERO_CAS_SELECCIONE_SPY = jest.spyOn(component, 'numeroCasSeleccione').mockImplementation();
+
+  it('should run #numeroCasSeleccione()', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.FormSolicitud.patchValue = jest.fn();
+    component.tramite230401Store = component.tramite230401Store || {};
+    component.tramite230401Store.setDescripcionNoArancelaria = jest.fn();
+    component.tramite230401Store.setNombreQuimico = jest.fn();
+    component.tramite230401Store.setNumeroCas = jest.fn();
     component.numeroCasSeleccione();
-    expect(NUMERO_CAS_SELECCIONE_SPY).toHaveBeenCalled();
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.FormSolicitud.patchValue).toHaveBeenCalled();
+    expect(component.tramite230401Store.setDescripcionNoArancelaria).toHaveBeenCalled();
+    expect(component.tramite230401Store.setNombreQuimico).toHaveBeenCalled();
+    expect(component.tramite230401Store.setNumeroCas).toHaveBeenCalled();
   });
-  it('should call clasificacionSeleccione', () => {
-    const CLASIFICACION_SELECCIONE_SPY = jest.spyOn(component, 'clasificacionSeleccione').mockImplementation();
+
+  it('should run #clasificacionSeleccione()', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.tramite230401Store = component.tramite230401Store || {};
+    component.tramite230401Store.setClasificacion = jest.fn();
     component.clasificacionSeleccione();
-    expect(CLASIFICACION_SELECCIONE_SPY ).toHaveBeenCalled();
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.tramite230401Store.setClasificacion).toHaveBeenCalled();
   });
-  it('should call estadoFisicoSeleccione', () => {
-    const ESTADO_FISICO_SELECCIONE_SPY = jest.spyOn(component, 'estadoFisicoSeleccione').mockImplementation();
+
+  it('should run #estadoFisicoSeleccione()', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.tramite230401Store = component.tramite230401Store || {};
+    component.tramite230401Store.setEstadoFisico = jest.fn();
     component.estadoFisicoSeleccione();
-    expect(ESTADO_FISICO_SELECCIONE_SPY ).toHaveBeenCalled();
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.tramite230401Store.setEstadoFisico).toHaveBeenCalled();
   });
-  it('should call datosObjectoSeleccione', () => {
-    const DATOS_OBJECTO_SELECCIONE_SPY = jest.spyOn(component, 'datosObjectoSeleccione').mockImplementation();
+
+  it('should run #datosObjectoSeleccione()', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.tramite230401Store = component.tramite230401Store || {};
+    component.tramite230401Store.setDatosObjecto = jest.fn();
     component.datosObjectoSeleccione();
-    expect(DATOS_OBJECTO_SELECCIONE_SPY).toHaveBeenCalled();
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.tramite230401Store.setDatosObjecto).toHaveBeenCalled();
   });
-  it('should call unidadDeMedidaSeleccione', () => {
-    const UNIDAD_DE_MEDIDA_SELECCION_SPY = jest.spyOn(component, 'unidadDeMedidaSeleccione').mockImplementation();
+
+  it('should run #unidadDeMedidaSeleccione()', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.tramite230401Store = component.tramite230401Store || {};
+    component.tramite230401Store.setUnidadDeMedida = jest.fn();
     component.unidadDeMedidaSeleccione();
-    expect(UNIDAD_DE_MEDIDA_SELECCION_SPY).toHaveBeenCalled();
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.tramite230401Store.setUnidadDeMedida).toHaveBeenCalled();
   });
-  it('should call creatFormSolicitud', () => {
-    const CREATE_FORM_SOLICITUD_SPY = jest.spyOn(component, 'creatFormSolicitud').mockImplementation();
+
+  it('should run #creatFormSolicitud()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.solicitudState = component.solicitudState || {};
+    component.solicitudState.tipoSolicitud = 'tipoSolicitud';
+    component.solicitudState.autorizada = 'autorizada';
+    component.solicitudState.noDePermisocoferprise = 'noDePermisocoferprise';
+    component.solicitudState.nombreComercial = 'nombreComercial';
+    component.solicitudState.cantidadAutorizada = 'cantidadAutorizada';
+    component.solicitudState.fraccionArancelaria = 'fraccionArancelaria';
+    component.solicitudState.descripcionDeLaFraccion = 'descripcionDeLaFraccion';
+    component.solicitudState.descripcionNoArancelaria = 'descripcionNoArancelaria';
+    component.solicitudState.nombreQuimico = 'nombreQuimico';
+    component.solicitudState.numeroCas = 'numeroCas';
+    component.solicitudState.nombreDeLaMercancia = 'nombreDeLaMercancia';
+    component.solicitudState.unNumero = 'unNumero';
+    component.solicitudState.datosNombreComercial = 'datosNombreComercial';
+    component.solicitudState.datosNumeroComun = 'datosNumeroComun';
+    component.solicitudState.datosPorcentaje = 'datosPorcentaje';
+    component.solicitudState.datosComponentes = 'datosComponentes';
+    component.solicitudState.clasificacion = 'clasificacion';
+    component.solicitudState.estadoFisico = 'estadoFisico';
+    component.solicitudState.datosObjecto = 'datosObjecto';
+    component.solicitudState.especifique = 'especifique';
+    component.solicitudState.especifiqueDos = 'especifiqueDos';
+    component.solicitudState.cantidad = 'cantidad';
+    component.solicitudState.cantidadLetra = 'cantidadLetra';
+    component.solicitudState.unidadDeMedida = 'unidadDeMedida';
     component.creatFormSolicitud();
-    expect(CREATE_FORM_SOLICITUD_SPY ).toHaveBeenCalled();
+    expect(component.fb.group).toHaveBeenCalled();
   });
-  it('should not be empty variable paisDeProcedenciaBotons', () => {
-    expect(component.paisDeProcedenciaBotons).toBeDefined();
-    expect(component.paisDeProcedenciaBotons.length).toBeGreaterThan(0);
+
+  it('should run #aggregarListaDeNumeros()', async () => {
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.get = jest.fn().mockReturnValue({
+      value: {}
+    });
+    component.sustanciasSensiblesTablaDatos = component.sustanciasSensiblesTablaDatos || {};
+    component.sustanciasSensiblesTablaDatos.findIndex = jest.fn().mockReturnValue([
+      {
+        "numeroCAS": {}
+      }
+    ]);
+    component.tramite230401Store = component.tramite230401Store || {};
+    component.tramite230401Store.setSustanciasSensiblesTablaDatos = jest.fn();
+    component.aggregarListaDeNumeros();
+    expect(component.FormSolicitud.get).toHaveBeenCalled();
+    expect(component.sustanciasSensiblesTablaDatos.findIndex).toHaveBeenCalled();
+    expect(component.tramite230401Store.setSustanciasSensiblesTablaDatos).toHaveBeenCalled();
   });
-  it('should not be empty variable paisDelProductoBotons', () => {
-    expect(component.paisDelProductoBotons).toBeDefined();
-    expect(component.paisDelProductoBotons.length).toBeGreaterThan(0);
+
+  it('should run #modificarListaDeNumeros()', async () => {
+    component.sustanciasSensiblesSeleccionadas = component.sustanciasSensiblesSeleccionadas || {};
+    component.sustanciasSensiblesSeleccionadas = [{
+      numeroCAS: {},
+      cas: {},
+      descripcionNoArancelaria: {},
+      nombreQuimico: {}
+    }];
+    component.FormSolicitud = component.FormSolicitud || {};
+    component.FormSolicitud.patchValue = jest.fn();
+    component.modificarListaDeNumeros();
+    expect(component.FormSolicitud.patchValue).toHaveBeenCalled();
   });
-  it('should not be empty variable aduanasDeEntradaBotons', () => {
-    expect(component.aduanasDeEntradaBotons).toBeDefined();
-    expect(component.aduanasDeEntradaBotons.length).toBeGreaterThan(0);
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroyNotifier$ = component.destroyNotifier$ || {};
+    component.destroyNotifier$.next = jest.fn();
+    component.destroyNotifier$.complete = jest.fn();
+    component.ngOnDestroy();
+    expect(component.destroyNotifier$.next).toHaveBeenCalled();
+    expect(component.destroyNotifier$.complete).toHaveBeenCalled();
   });
-  it('should not be empty variable paisDeProcedenciaLabel', () => {
-    expect(component.paisDeProcedenciaLabel.tituluDeLaIzquierda).toBeDefined();
-    expect(component.paisDeProcedenciaLabel.derecha).toBeDefined();
-  });
-  it('should not be empty variable paisDelProductoLabel', () => {
-    expect(component.paisDelProductoLabel.tituluDeLaIzquierda).toBeDefined();
-    expect(component.paisDelProductoLabel.derecha).toBeDefined();
-  });
-  it('should not be empty variable aduanasDeEntradaLabel', () => {
-    expect(component.aduanasDeEntradaLabel.tituluDeLaIzquierda).toBeDefined();
-    expect(component.aduanasDeEntradaLabel.derecha).toBeDefined();
-  });
-  
-  // eslint-disable-next-line complexity
-  it('should initialize the form', () => {
-    expect(component.FormSolicitud).toBeDefined();
-    expect(
-      component.FormSolicitud.controls['tipoSolicitud']?.value &&
-      component.FormSolicitud.controls['autorizacion']?.value &&
-      component.FormSolicitud.controls['noDePermisocoferprise']?.value &&
-      component.FormSolicitud.controls['nombreComercial']?.value &&
-      component.FormSolicitud.controls['cantidadAutorizada']?.value &&
-      component.FormSolicitud.controls['cantidad']?.value &&
-      component.FormSolicitud.controls['fraccionArancelaria']?.value &&
-      component.FormSolicitud.controls['descripcionDeLaFraccion']?.value &&
-      component.FormSolicitud.controls['numeroCas']?.value &&
-      component.FormSolicitud.controls['descripcionNoArancelaria']?.value &&
-      component.FormSolicitud.controls['nombreQuimico']?.value &&
-      component.FormSolicitud.controls['nombreDeLaMercancia']?.value &&
-      component.FormSolicitud.controls['unNumero']?.value &&
-      component.FormSolicitud.controls['datosNombreComercial']?.value &&
-      component.FormSolicitud.controls['datosNumeroComun']?.value &&
-      component.FormSolicitud.controls['datosPorcentaje']?.value &&
-      component.FormSolicitud.controls['datosComponentes']?.value &&
-      component.FormSolicitud.controls['clasificacion']?.value &&
-      component.FormSolicitud.controls['estadoFisico']?.value &&
-      component.FormSolicitud.controls['datosObjecto']?.value &&
-      component.FormSolicitud.controls['especifique']?.value &&
-      component.FormSolicitud.controls['especifiqueDos']?.value &&
-      component.FormSolicitud.controls['unidadDeMedida']?.value
-    ).toBeDefined();
-  }); 
-  
+
 });

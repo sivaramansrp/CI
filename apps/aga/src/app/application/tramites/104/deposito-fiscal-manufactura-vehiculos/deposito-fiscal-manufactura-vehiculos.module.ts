@@ -1,4 +1,4 @@
-import { AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, SolicitanteComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { DatosDelInmuebleComponent } from '../components/datos-del-inmueble/datos-del-inmueble.component';
 import { DepositoFiscalManufacturaVehiculosRoutingModule } from './deposito-fiscal-manufactura-vehiculos-routing.module';
@@ -19,7 +19,9 @@ import { WizardComponent } from '@libs/shared/data-access-user/src';
     DatosDelInmuebleComponent,
     AnexarDocumentosComponent,
     BtnContinuarComponent,
-    FirmaElectronicaComponent
+    FirmaElectronicaComponent,
+    AlertComponent,
+    TituloComponent
   ]
 })
 export class DepositoFiscalManufacturaVehiculosModule { }

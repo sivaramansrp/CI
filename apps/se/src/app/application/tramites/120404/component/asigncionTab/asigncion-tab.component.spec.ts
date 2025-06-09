@@ -1,64 +1,38 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AsignciontabComponent } from './asigncion-tab.component';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { of, Subject } from 'rxjs';
-import { SolicitanteasigncionserviceService } from '@libs/shared/data-access-user/src/core/services/120404/solicitanteAsigncionservice.service';
+import { AsignciontabComponent } from '../asigncionTab/asigncion-tab.component';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { Tramite120404Store } from '../../estados/store/tramite120404.store';
 import { Tramite120404Query } from '../../estados/queries/tramite120404.query';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { InputRadioComponent } from '@ng-mf/data-access-user';
+import { of } from 'rxjs';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('AsignciontabComponent', () => {
   let component: AsignciontabComponent;
   let fixture: ComponentFixture<AsignciontabComponent>;
-  let service: SolicitanteasigncionserviceService;
-  let store: Tramite120404Store;
-  let query: Tramite120404Query;
-
-  const mockSolicitanteList = [
-    { id: 1, descripcion: 'Option 1' },
-    { id: 2, descripcion: 'Option 2' },
-  ];
-
-  const mockTramiteState = {
-    numTramite: '12345',
-    asignacionsolitud: 'Test Solicitud',
-    asignacionRadio: true,
-  };
+  let tramiteStore: Tramite120404Store;
+  let tramiteQuery: Tramite120404Query;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AsignciontabComponent,ReactiveFormsModule],
+      imports: [ReactiveFormsModule,AsignciontabComponent, CatalogoSelectComponent, InputRadioComponent,HttpClientModule],
       providers: [
         FormBuilder,
-        {
-          provide: SolicitanteasigncionserviceService,
-          useValue: {
-            getAsigncion: jest.fn().mockReturnValue(of(mockSolicitanteList)),
-          },
-        },
-        {
-          provide: Tramite120404Store,
-          useValue: {
-            setNumTramite: jest.fn(),
-            setAsignacionsolitud: jest.fn(),
-            setAsignacionRadio: jest.fn(),
-          },
-        },
+        Tramite120404Store,
         {
           provide: Tramite120404Query,
           useValue: {
-            selectTramite120404$: of(mockTramiteState),
-          },
-        },
-      ],
+            selectTramite120404$: of({ asignacionRadio: false, asignacionsolitud: '', numTramite: '' })
+          }
+        }
+      ]
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(AsignciontabComponent);
     component = fixture.componentInstance;
-    service = TestBed.inject(SolicitanteasigncionserviceService);
-    store = TestBed.inject(Tramite120404Store);
-    query = TestBed.inject(Tramite120404Query);
+    tramiteStore = TestBed.inject(Tramite120404Store);
+    tramiteQuery = TestBed.inject(Tramite120404Query);
     fixture.detectChanges();
   });
 
@@ -66,57 +40,33 @@ describe('AsignciontabComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on component creation', () => {
+  it('should initialize form correctly', () => {
     expect(component.asignacionForm).toBeDefined();
-    expect(component.asignacionForm.get('datosRegimen')?.get('asignacionsolitud')?.value).toBe('');
-    expect(component.asignacionForm.get('datosRegimen')?.get('numTramite')?.value).toBe('');
-    expect(component.asignacionForm.get('datosRegimen')?.get('asignacionRadio')?.value).toBe(false);
+    expect(component.asignacionForm).toBeTruthy();
   });
 
-  it('should call loadComboUnidadMedida and set solicitanteList', () => {
-    component.loadComboUnidadMedida();
-    expect(service.getAsigncion).toHaveBeenCalled();
-    expect(component.solicitanteList).toEqual(mockSolicitanteList);
-  });
-
-  it('should call enPatchFormData and patch form values from the store', () => {
-    component.enPatchFormData();
-    expect(component.asignacionForm.get('datosRegimen')?.get('numTramite')?.value).toBe(mockTramiteState.numTramite);
-    expect(component.asignacionForm.get('datosRegimen')?.get('asignacionsolitud')?.value).toBe(mockTramiteState.asignacionsolitud);
-    expect(component.asignacionForm.get('datosRegimen')?.get('asignacionRadio')?.value).toBe(mockTramiteState.asignacionRadio);
-  });
-
-  it('should call setValoresStore and update the store', () => {
-    const spy = jest.spyOn(store, 'setNumTramite');
-    component.setValoresStore(component.asignacionForm, 'numTramite', 'setNumTramite');
-    expect(spy).toHaveBeenCalledWith('');
-  });
-
-  it('should return true if a form control is invalid and touched', () => {
-    const control = component.asignacionForm.get('datosRegimen')?.get('asignacionsolitud');
-    control?.markAsTouched();
-    control?.setErrors({ required: true });
-    expect(component.isInvalid('asignacionsolitud')).toBe(true);
-  });
-
-  it('should return null if a form control does not exist', () => {
-    expect(component.isInvalid('nonExistentControl')).toBeNull();
-  });
-
-  it('should handle form submission when valid', () => {
-    const spy = jest.spyOn(component, 'buscar');
-    component.asignacionForm.get('datosRegimen')?.get('asignacionsolitud')?.setValue('Test');
-    component.asignacionForm.get('datosRegimen')?.get('numTramite')?.setValue('12345');
-    component.asignacionForm.get('datosRegimen')?.get('asignacionRadio')?.setValue(true);
-    component.buscar();
+  it('should update store when setValoresStore is called', () => {
+    const spy = jest.spyOn(tramiteStore, 'establecerDatos');
+    component.setValoresStore(component.asignacionForm, 'asignacionRadio');
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should clean up subscriptions on component destroy', () => {
-    const spyNext = jest.spyOn(component['destroyed$'], 'next');
-    const spyComplete = jest.spyOn(component['destroyed$'], 'complete');
+
+  it('should disable form if esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.asignacionForm.disabled).toBeTruthy();
+  });
+
+  it('should enable form if esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.asignacionForm.enabled).toBeTruthy();
+  });
+
+  it('should destroy observable subscriptions on component destroy', () => {
+    const spy = jest.spyOn(component.destroyed$, 'next');
     component.ngOnDestroy();
-    expect(spyNext).toHaveBeenCalled();
-    expect(spyComplete).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
   });
 });

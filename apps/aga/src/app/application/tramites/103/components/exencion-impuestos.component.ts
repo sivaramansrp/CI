@@ -1,4 +1,4 @@
-import { AlertComponent, CatalogoSelectComponent, InputCheckComponent, InputRadioComponent, REGEX_POSTAL, REGEX_TELEFONO_DIGITOS, TableComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { AlertComponent, CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, InputCheckComponent, InputRadioComponent, REGEX_POSTAL, REGEX_TELEFONO_DIGITOS, TableBodyData, TableComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Catalogo, Solicitud103State, Tramite103Store } from '../estados/tramite103.store';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -7,10 +7,10 @@ import { CommonModule } from '@angular/common';
 import { DatosDelMercancia } from '../models/exencion-impuestos.model';
 import { ExencionImpuestosService } from '../services/exencion-impuestos.service';
 import { Modal } from 'bootstrap';
+import { RADIO_OPCIONS } from '../constants/exencion-impuestos.enum';
 import { Subject } from 'rxjs';
 import { Tramite103Query } from '../estados/tramite103.query';
 import mercanciaTable from '@libs/shared/theme/assets/json/103/mercancia-table.json';
-import { RADIO_OPCIONS } from '../constants/exencion-impuestos.enum';
 
 /**
  * Componente para la gestión de exención de impuestos
@@ -63,7 +63,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   /**
    * Cuerpo de la tabla de mercancías
    */
-  public mercanciaBodyData: unknown = [];
+  public mercanciaBodyData: TableBodyData[] = [];
 
   /**
    * Datos de la tabla de mercancías
@@ -141,6 +141,19 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   radioOpcions = RADIO_OPCIONS;
 
   /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
+
+  /**
    * Constructor del componente
    * @param exencionImpuestoService Servicio para exención de impuestos
    * @param store Almacén de estado del trámite
@@ -153,13 +166,26 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
     private store: Tramite103Store,
     private query: Tramite103Query,
     public fb: FormBuilder,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {}
 
   /**
    * Inicialización del componente
    */
   ngOnInit(): void {
+
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+
     this.inicializaCatalogos();
     this.obtenerEstadoSolicitud();
     this.donanteDomicilio();
@@ -233,38 +259,39 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
       exencionImpuestos: this.fb.group({
         manifesto: [this.solicitudState?.manifesto, [Validators.required]],
         aduana: [this.solicitudState?.aduana, [Validators.required]],
-        organismoPublico: [this.solicitudState?.organismoPublico, Validators.required],
+        organismoPublico: [this.solicitudState?.organismoPublico, [Validators.required]],
         destinoMercancia: [this.solicitudState?.destinoMercancia, [Validators.required]]
       }),
       importadorExportador: this.fb.group({
         nombre: [this.solicitudState?.nombre, [Validators.required, Validators.maxLength(50)]],
-        calle: [{ value: '', disabled: true }, this.solicitudState?.calle, [Validators.required, Validators.maxLength(80)]],
-        numeroExterior: [{ value: '', disabled: true }, this.solicitudState?.numeroExterior, [Validators.required, Validators.maxLength(40)]],
+        calle: [{ value: this.solicitudState?.calle, disabled: true }, [Validators.required, Validators.maxLength(80)]],
+        numeroExterior: [{ value: this.solicitudState?.numeroExterior, disabled: true }, [Validators.required, Validators.maxLength(40)]],
         numeroInterior: [this.solicitudState?.numeroInterior, [Validators.maxLength(30)]],
         telefono: [this.solicitudState?.telefono, [Validators.required, Validators.pattern(REGEX_TELEFONO_DIGITOS)]],
         correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email, Validators.maxLength(50)]],
-        pais: [this.solicitudState?.pais, Validators.required],
-        codigoPostal: [{ value: '', disabled: true }, this.solicitudState?.codigoPostal, [Validators.required, Validators.pattern(REGEX_POSTAL)], Validators.maxLength(8)],
-        estado: [{ value: '', disabled: true }, this.solicitudState?.estado, [Validators.required, Validators.maxLength(50)]],
-        colonia: [{ value: '', disabled: true }, this.solicitudState?.colonia, [Validators.required, Validators.maxLength(50)]],
+        pais: [this.solicitudState?.pais, [Validators.required]],
+        codigoPostal: [{ value: this.solicitudState?.codigoPostal, disabled: true }, [Validators.required, Validators.pattern(REGEX_POSTAL)], Validators.maxLength(8)],
+        estado: [{ value: this.solicitudState?.estado, disabled: true }, [Validators.required, Validators.maxLength(50)]],
+        colonia: [{ value: this.solicitudState?.colonia, disabled: true }, [Validators.required, Validators.maxLength(50)]],
         opcion: [this.solicitudState?.opcion]
       })
     });
 
     this.agregarMercanciasForm = this.fb.group({
       datosMercancia: this.fb.group({
-        tipoDeMercancia: [this.solicitudState?.tipoDeMercancia, Validators.required],
-        usoEspecifico: [this.solicitudState?.usoEspecifico, Validators.required],
-        condicionMercancia: [this.solicitudState?.condicionMercancia, Validators.required],
-        unidadMedida: [this.solicitudState?.unidadMedida, Validators.required],
-        vehiculo: [this.solicitudState?.vehiculo, Validators.required],
-        ano: [this.solicitudState?.ano, Validators.required],
-        cantidad: [this.solicitudState?.cantidad, Validators.required],
+        tipoDeMercancia: [this.solicitudState?.tipoDeMercancia, [Validators.required]],
+        usoEspecifico: [this.solicitudState?.usoEspecifico, [Validators.required]],
+        condicionMercancia: [this.solicitudState?.condicionMercancia, [Validators.required]],
+        unidadMedida: [this.solicitudState?.unidadMedida, [Validators.required]],
+        vehiculo: [this.solicitudState?.vehiculo, [Validators.required]],
+        ano: [this.solicitudState?.ano, [Validators.required]],
+        cantidad: [this.solicitudState?.cantidad, [Validators.required]],
         marca: [this.solicitudState?.marca],
         modelo: [this.solicitudState?.modelo],
         serie: [this.solicitudState?.serie]
       })
     });
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -470,4 +497,15 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.tramiteForm?.disable();
+      this.agregarMercanciasForm?.disable();
+    } else {
+      this.tramiteForm?.enable();
+      this.agregarMercanciasForm?.enable();
+    }
+  }
+
 }

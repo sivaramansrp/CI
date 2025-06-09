@@ -100,7 +100,8 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy{
         rfc: [
           this.solicitudPermisoState?.representanteLegalFormState.rfc,
           [
-            Validators.required
+            Validators.required,
+            Validators.maxLength(13)
           ]
         ],
         nombreOrazonsocial: [

@@ -3,17 +3,10 @@ import {
   ResponsablesDespacho,
 } from '../../models/5701/tramite5701.model';
 import { Store, StoreConfig } from '@datorama/akita';
-import {
-  TransporteAereo,
-  TransporteCarretero,
-  TransporteFerroviario,
-  TransporteMaritimo,
-  TransporteOtro,
-  TransportePeatonal,
-} from '@ng-mf/data-access-user';
-
 import { Injectable } from '@angular/core';
 import { Patente } from '../../models/5701/Patente.model';
+import { TransporteDespacho } from '@ng-mf/data-access-user';
+import { LineaCaptura } from '../../models/5701/linea-captura.model';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 5701
@@ -98,23 +91,14 @@ export interface Solicitud5701State {
   personasResponsablesDespacho: ResponsablesDespacho[];
 
   tipoTransporte: string;
-  transporte:
-    | TransporteCarretero[]
-    | TransporteFerroviario[]
-    | TransporteOtro[]
-    | TransportePeatonal[];
+  transporte: TransporteDespacho[];
 
   tipoTransporteArriboSalida: string;
-  transporteArriboDatos:
-    | TransporteAereo[]
-    | TransporteCarretero[]
-    | TransporteFerroviario[]
-    | TransporteMaritimo[]
-    | TransporteOtro[];
-
+  transporteArriboDatos: TransporteDespacho[];
   montoPagar: string;
   lineaCaptura: string;
   monto: string;
+  lineasCaptura: LineaCaptura[];
   isMontoAceptable: boolean;
   rangoFechas: boolean;
   selectRangoDias: string[];
@@ -167,14 +151,14 @@ export function createInitialState(): Solicitud5701State {
     autorizacionLDA: '',
     dd: false,
     autorizacionDDEX: '',
-    idAduanaDespacho: '',
+    idAduanaDespacho: '-1',
     aduanaDespacho: '',
-    idSeccionDespacho: '',
+    idSeccionDespacho: '-1',
     seccionAduanera: '',
-    nombreRecinto: '',
+    nombreRecinto: '-1',
     tipoDespacho: -1,
     descripcionTipoDespacho: '',
-    tipoOperacion: '',
+    tipoOperacion: '-1',
     patente: {} as Patente,
     patenteApoderado: [],
     relacionSociedad: false,
@@ -194,6 +178,7 @@ export function createInitialState(): Solicitud5701State {
     montoPagar: '',
     lineaCaptura: '',
     monto: '',
+    lineasCaptura: [],
     isMontoAceptable: false,
     rangoFechas: false,
     selectRangoDias: [],
@@ -915,13 +900,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    *
    * @param transporte - El transporte que se va a guardar.
    */
-  public setTransporte(
-    transporte:
-      | TransporteCarretero[]
-      | TransporteFerroviario[]
-      | TransporteOtro[]
-      | TransportePeatonal[]
-  ): void {
+  public setTransporte(transporte: TransporteDespacho[]): void {
     this.update((state) => ({
       ...state,
       transporte: Array.isArray(transporte) ? transporte : [transporte],
@@ -948,12 +927,7 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
    * @param transporteArriboDatos - El transporte de arribo/salida que se va a guardar.
    */
   public setTransporteArriboDatos(
-    transporteArriboDatos:
-      | TransporteAereo[]
-      | TransporteCarretero[]
-      | TransporteFerroviario[]
-      | TransporteMaritimo[]
-      | TransporteOtro[]
+    transporteArriboDatos: TransporteDespacho[]
   ): void {
     this.update((state) => ({
       ...state,
@@ -1008,6 +982,18 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     this.update((state) => ({
       ...state,
       isMontoAceptable,
+    }));
+  }
+
+  /**
+   * Guarda las lineas de captura en el estado.
+   */
+  public setLineasCaptura(lineasCaptura: LineaCaptura[]): void {
+    this.update((state) => ({
+      ...state,
+      lineasCaptura: Array.isArray(lineasCaptura)
+        ? lineasCaptura
+        : [lineasCaptura],
     }));
   }
 

@@ -3,7 +3,7 @@ import {
   Destinatario,
   RespuestaCatalogos,
 } from '@libs/shared/data-access-user/src';
-import { Fabricante, ManifiestosRespuesta } from '../model/solicitud-permiso.model';
+import { Fabricante, ManifiestosRespuesta, Mercancia } from '../model/solicitud-permiso.model';
 import { SolicitudPermisoState, Tramite260703Store } from '../estados/store/tramite260703.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -23,6 +23,19 @@ export class SolicitudPermisoService {
    * Lista de bancos obtenidos desde un archivo JSON.
    */
   banco!: Catalogo[];
+
+  /**
+   * Arreglo que contiene los elementos del catálogo relacionados con el régimen.
+   * Este catálogo se utiliza para definir las opciones disponibles en el contexto
+   * de los trámites de solicitud de permiso.
+   */
+  regimen!: Catalogo[];
+
+  /**
+   * Representa un catálogo de aduanas utilizado en el sistema.
+   * Este atributo almacena una lista de objetos del tipo `Catalogo`.
+   */
+  aduana!: Catalogo[];
 
   /**
    * Constructor del servicio.
@@ -83,6 +96,32 @@ export class SolicitudPermisoService {
    */
   obtenerScianData(): Observable<ScianData[]> {
     return this.http.get<ScianData[]>('assets/json/260703/scian.json');
+  }
+
+  /**
+   * Obtiene los datos de mercancías desde un archivo JSON local.
+   * Realiza una solicitud HTTP GET para recuperar un arreglo de objetos de tipo Mercancia.
+   * 
+   * Un Observable que emite un arreglo de objetos Mercancia.
+   */
+  obtenerMercanciaData(): Observable<Mercancia[]> {
+    return this.http.get<Mercancia[]>(
+      'assets/json/260703/mercancia.json'
+    );
+  }
+
+  /**
+   * Método que realiza la obtención de datos de catálogos relacionados con domicilio.
+   * Este método llama a `obtenerRespuestaPorUrl` para obtener los datos de los catálogos
+   * de aduana y régimen desde las rutas especificadas.
+   *
+   * 
+   * obtenerDomicilioCatalogo
+   * {void} Este método no retorna ningún valor.
+   */
+  obtenerDomicilioCatalogo(): void {
+    this.obtenerRespuestaPorUrl(this, 'aduana', '/260703/aduana.json');
+    this.obtenerRespuestaPorUrl(this, 'regimen', '/260703/regimen.json');
   }
 
   /**

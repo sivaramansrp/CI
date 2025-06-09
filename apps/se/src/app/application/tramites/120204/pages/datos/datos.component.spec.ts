@@ -1,44 +1,54 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosComponent } from './datos.component';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { of, Subject } from 'rxjs';
 
 describe('DatosComponent', () => {
   let component: DatosComponent;
-  let fixture: ComponentFixture<DatosComponent>;
+  let consultaQueryMock: any;
+  let consultaStoreMock: any;
+  let expedicionServiceMock: any;
+  let tramiteStoreMock: any;
 
-  // Mock for SolicitanteComponent
-  const solicitanteMock = {
-    obtenerTipoPersona: jest.fn(), // Mock the obtenerTipoPersona method
-  };
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [DatosComponent], // Declare the component to be tested
-      schemas: [NO_ERRORS_SCHEMA], // Ignore unknown elements in the template
-    }).compileComponents();
-
-    fixture = TestBed.createComponent(DatosComponent); // Create an instance of the component
-    component = fixture.componentInstance; // Get the component instance
-
-    // Mock the @ViewChild `solicitante` property
-    Object.defineProperty(component, 'solicitante', {
-      value: solicitanteMock, // Assign the mock to the solicitante property
-      writable: true, // Allow the property to be writable
-    });
-
-    fixture.detectChanges(); // Detect changes in the component
+  beforeEach(() => {
+    consultaQueryMock = {
+      selectConsultaioState$: of({ update: true })
+    };
+    consultaStoreMock = {
+      establecerConsultaio: jest.fn()
+    };
+    expedicionServiceMock = {
+      getExpedienteCertificado: jest.fn().mockReturnValue(of({ foo: 'bar' })),
+      setDatosFormulario: jest.fn()
+    };
+    tramiteStoreMock = {};
+    component = new DatosComponent(
+      consultaQueryMock,
+      consultaStoreMock,
+      expedicionServiceMock,
+      tramiteStoreMock
+    );
   });
 
-  it('should create the component', () => {
-    // Verify that the component is created successfully
-    expect(component).toBeTruthy();
-  });
-
-  it('should set the index correctly when seleccionaTab is called', () => {
-    // Call the seleccionaTab method with index 2
+  it('should set indice on seleccionaTab', () => {
     component.seleccionaTab(2);
-
-    // Verify that the index is set correctly
     expect(component.indice).toBe(2);
+  });
+
+  it('should call guardarDatosFormulario if consultaState.update is true on ngOnInit', () => {
+    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.consultaState = { update: true } as any;
+    component.ngOnInit();
+    expect(guardarSpy).toHaveBeenCalled();
+  });
+
+  it('should set esDatosRespuesta true and call setDatosFormulario in guardarDatosFormulario', () => {
+    component.guardarDatosFormulario();
+    expect(component.esDatosRespuesta).toBe(true);
+    expect(expedicionServiceMock.setDatosFormulario).toHaveBeenCalledWith({ foo: 'bar' });
+  });
+
+  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    component.ngOnDestroy();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

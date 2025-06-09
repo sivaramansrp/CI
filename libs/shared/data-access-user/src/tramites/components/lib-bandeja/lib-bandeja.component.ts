@@ -160,7 +160,7 @@ export class LibBandejaComponent<T> implements OnInit {
       ROW_OBJETO.folioTramite,
       ROW_OBJETO.tipoDeTramite,
       ROW_OBJETO.estadoDeTramite,
-      true,
+      !this.tieneBandeja ? false : true,
       false,
       true
     );
@@ -182,9 +182,11 @@ export class LibBandejaComponent<T> implements OnInit {
     }
     else if (ORIGIN === 'SUBSECUENTES') {
       this.router.navigate(['/subsecuentes']);
+    } else if(ORIGIN === 'FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION') {
+      this.router.navigate([`/${this.tramiteData[0].department}/verificar-dictamen`]);
     }
   }
-   /*
+  /*
    * Alterna la visibilidad del contenido colapsable basado en el orden
    */
   public mostrarColapsable(orden: number): void {

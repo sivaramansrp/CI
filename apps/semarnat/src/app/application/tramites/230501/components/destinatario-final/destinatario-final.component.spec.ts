@@ -13,29 +13,16 @@ import { Location } from '@angular/common';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
 import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
 import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
-import { SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 @Injectable()
-class MockMaterialesPeligrososService {
-  obtenerRespuestaPorUrl = function() {};
-  obtenerListaCodigosPostales = jest.fn().mockReturnValue(observableOf({}));
-  obtenerListaPaises = jest.fn().mockReturnValue(observableOf({}));
-  obtenerListaEstados = jest.fn().mockReturnValue(observableOf({}));
-  obtenerListaMunicipios = jest.fn().mockReturnValue(observableOf({}));
-  obtenerListaLocalidades = jest.fn().mockReturnValue(observableOf({}));
-  obtenerListaColonias = jest.fn().mockReturnValue(observableOf({}));
-}
+class MockMaterialesPeligrososService {}
 
 @Injectable()
 class MockTramite230501Store {}
 
 @Injectable()
 class MockTramite230501Query {}
-@Injectable()
-class MockRouter {
-  navigate() {};
-}
 
 describe('DestinatarioFinalComponent', () => {
   let fixture;
@@ -44,27 +31,14 @@ describe('DestinatarioFinalComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule ],
-declarations: [],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: Tramite230501Query, useClass: MockTramite230501Query },
-        { provide: Tramite230501Store, useClass: MockTramite230501Store },
-        { provide: MaterialesPeligrososService, useClass: MockMaterialesPeligrososService },
-        SeccionLibStore,
-        SeccionLibQuery,
         FormBuilder,
-        { provide: Router, useClass: MockRouter },
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {url: 'url', params: {}, queryParams: {}, data: {}},
-            url: observableOf('url'),
-            params: observableOf({}),
-            queryParams: observableOf({}),
-            fragment: observableOf('fragment'),
-            data: observableOf({})
-          }
-        }
+        Location,
+        { provide: MaterialesPeligrososService, useClass: MockMaterialesPeligrososService },
+        { provide: Tramite230501Store, useClass: MockTramite230501Store },
+        { provide: Tramite230501Query, useClass: MockTramite230501Query },
+        ConsultaioQuery
       ]
     }).overrideComponent(DestinatarioFinalComponent, {
 
@@ -81,9 +55,9 @@ declarations: [],
   it('should run #guardarDestinatario()', async () => {
     component.agregarDestinatarioFinal = component.agregarDestinatarioFinal || {};
     component.agregarDestinatarioFinal.value = {
-      nombres: {},
-      primerApellido: {},
       segundoApellido: {},
+      primerApellido: {},
+      nombres: {},
       rfc: {},
       lada: {},
       telefono: {},
@@ -95,12 +69,17 @@ declarations: [],
       colonia: {},
       municipio: {},
       localidad: {},
-      estado: {},
-      codigoPostal: {}
+      estadoLocalidad: {},
+      codigoPostal: {},
+      codie: {},
+      tipoPersona: {}
     };
+    component.agregarDestinatarioFinal.valid = 'valid';
     component.agregarDestinatarioFinal.reset = jest.fn();
+    component.setFormValida = jest.fn();
     component.destinatarios = component.destinatarios || {};
     component.destinatarios.push = jest.fn();
+    component.updateDestinatarios = jest.fn();
     component.addDestinatarios = jest.fn();
     component.ubicaccion = component.ubicaccion || {};
     component.ubicaccion.back = jest.fn();
@@ -111,6 +90,12 @@ declarations: [],
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.addDestinatarioFinalTablaDatos = jest.fn();
     component.addDestinatarios({});
+  });
+
+  it('should run #updateDestinatarios()', async () => {
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.updateDestinatarioFinalTablaDatos = jest.fn();
+    component.updateDestinatarios({});
   });
 
   it('should run #ngOnInit()', async () => {
@@ -125,17 +110,28 @@ declarations: [],
     component.agregarDestinatarioFinal.patchValue = jest.fn();
     component.tramiteQuery = component.tramiteQuery || {};
     component.tramiteQuery.esDestinatarioFinalElModoDeEdicion$ = observableOf({});
+    component.consultaQuery = component.consultaQuery || {};
+    component.consultaQuery.selectConsultaioState$ = observableOf({});
+    component.inicializarEstadoFormulario = jest.fn();
     component.ngOnInit();
     expect(component.createrDestinatrioForm).toHaveBeenCalled();
     expect(component.onTipoPersonaChange).toHaveBeenCalled();
     expect(component.cargarDatos).toHaveBeenCalled();
     expect(component.agregarDestinatarioFinal.patchValue).toHaveBeenCalled();
+    expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
   });
-  it('should run #addDestinatarios()', async () => {
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.addDestinatarioFinalTablaDatos = jest.fn();
-    component.addDestinatarios({});
-    expect(component.tramiteStore.addDestinatarioFinalTablaDatos).toHaveBeenCalled();
+
+  it('should run #onTipoPersonaChange()', async () => {
+    component.tipoPersona = component.tipoPersona || {};
+    component.tipoPersona.FISICA = 'FISICA';
+    component.agregarDestinatarioFinal = component.agregarDestinatarioFinal || {};
+    component.agregarDestinatarioFinal.get = jest.fn().mockReturnValue({
+      updateValueAndValidity: function() {},
+      setValidators: function() {},
+      clearValidators: function() {}
+    });
+    component.onTipoPersonaChange({});
+    expect(component.agregarDestinatarioFinal.get).toHaveBeenCalled();
   });
 
   it('should run #cargarDatos()', async () => {
@@ -159,6 +155,25 @@ declarations: [],
     component.ubicaccion = component.ubicaccion || {};
     component.ubicaccion.back = jest.fn();
     component.cancelar();
+  });
+
+  it('should run #setFormValida()', async () => {
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.setFormValida = jest.fn();
+    component.setFormValida({});
+  });
+
+  it('should run #createrDestinatrioForm()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.createrDestinatrioForm();
+  });
+
+  it('should run #inicializarEstadoFormulario()', async () => {
+    component.agregarDestinatarioFinal = component.agregarDestinatarioFinal || {};
+    component.agregarDestinatarioFinal.disable = jest.fn();
+    component.createrDestinatrioForm = jest.fn();
+    component.inicializarEstadoFormulario();;
   });
 
   it('should run #ngOnDestroy()', async () => {

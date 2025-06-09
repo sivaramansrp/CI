@@ -1,14 +1,18 @@
 import { BtnContinuarComponent, DatosPasos, ListaPasosWizard, TituloComponent } from '@ng-mf/data-access-user';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
-import { certificadosCancelar} from 'libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
-
-import { ConfiguracionColumna } from 'libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CertificadosCancelar} from '@libs/shared/data-access-user/src/core/models/140103/cancelacion.model';
+import { CommonModule } from '@angular/common';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DetalleComponent } from '../detalle/detalle.component';
 import { HttpClient } from '@angular/common/http';
-import { TablaDinamicaComponent } from 'libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
-import { TablaSeleccion } from 'libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
-import oficiodata from 'libs/shared/theme/assets/json/140103/oficiotable.json';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src/tramites/components/tabla-dinamica/tabla-dinamica.component';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
+import oficiodata from '@libs/shared/theme/assets/json/140103/oficiotable.json';
+
+/** Representa la configuración de un ítem de oficio con datos del certificado y su origen. */
 interface ConfiguracionItem {
   folioOficioCertificado: string;
   nombreRazonSocial: string;
@@ -43,7 +47,8 @@ interface ConfiguracionItem {
     FormsModule,
     ReactiveFormsModule,
     TituloComponent,
-    BtnContinuarComponent
+    BtnContinuarComponent,
+    CommonModule
   ],
   templateUrl: './oficio.component.html',
   styleUrls: ['./oficio.component.scss']
@@ -69,7 +74,7 @@ interface ConfiguracionItem {
  * @property {ConfiguracionColumna<any>[]} configuracionTabla - Configuración de las columnas para la tabla de oficios.
  * @property {any[]} filteredData - Datos filtrados de los oficios para mostrar solo los que cumplen con un criterio específico.
  * @property {TablaSeleccion} TablaSeleccion - Tipo de selección de tabla (checkbox).
- * @property {FormGroup} OficioForm - Formulario reactivo que captura la información del oficio.
+ * @property {FormGroup} oficioForm - Formulario reactivo que captura la información del oficio.
  * @property {ListaPasosWizard[]} pasos - Lista de pasos del asistente de navegación (wizard).
  * @property {number} indice - Índice del paso actual del asistente de navegación.
  * @property {DatosPasos} datosPasos - Datos del asistente de pasos que incluyen la cantidad de pasos, texto de los botones, etc.
@@ -77,7 +82,7 @@ interface ConfiguracionItem {
  * @method ngOnInit() - Inicializa el formulario reactivo y llama a `updateformfied` para establecer valores predeterminados en los campos.
  * @method updateformfied() - Actualiza los valores del formulario y deshabilita los campos de entrada para evitar modificaciones del usuario.
  */
-export class OficioComponent implements OnInit {
+export class OficioComponent implements OnInit, OnDestroy{
 
   /**
    * Lista de certificados cargados desde un archivo JSON.
@@ -88,7 +93,7 @@ export class OficioComponent implements OnInit {
   /**
    * Lista de datos de oficios, cada uno representando un certificado que será mostrado en la tabla.
    */
-  oficio: certificadosCancelar[] = oficiodata;
+  oficio: CertificadosCancelar[] = oficiodata;
 
   /**
    * Configuración de las columnas para la tabla de oficios.
@@ -117,7 +122,22 @@ export class OficioComponent implements OnInit {
    * Formulario reactivo que captura datos relacionados con el oficio, incluyendo
    * asignado, monto y cancelar.
    */
-  OficioForm!: FormGroup;
+  oficioForm!: FormGroup;
+
+/**
+ * @property {Subject<void>} destroyNotifier$
+ * Sujeto utilizado para manejar la destrucción de suscripciones en los observables.
+ *
+ * Se usa comúnmente junto con el operador `takeUntil` en pipes de RxJS
+ * para evitar fugas de memoria al destruir el componente.
+ */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+    /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente. Inicializa el formulario reactivo utilizando FormBuilder
@@ -126,8 +146,16 @@ export class OficioComponent implements OnInit {
    * @param http - HttpClient utilizado para hacer solicitudes HTTP.
    * @param fb - FormBuilder utilizado para crear y gestionar el formulario reactivo.
    */
-  constructor(public http: HttpClient, public fb: FormBuilder) {
-    // Initialization logic can be added here if needed
+  constructor(public http: HttpClient, public fb: FormBuilder,private consultaioQuery: ConsultaioQuery) {
+            this.consultaioQuery.selectConsultaioState$
+              .pipe(
+                takeUntil(this.destroyNotifier$),
+                map((seccionState) => {
+                  this.esFormularioSoloLectura = seccionState.readonly;
+                  this.inicializarEstadoFormulario();
+                })
+              )
+              .subscribe();
   }
 
   /**
@@ -157,7 +185,7 @@ export class OficioComponent implements OnInit {
    */
   ngOnInit(): void {
     // Inicializa el formulario con los controles y validaciones necesarias
-    this.OficioForm = this.fb.group({
+    this.oficioForm = this.fb.group({
       oficioData: this.fb.group({
         asignado: ['', Validators.required], // Campo obligatorio para el monto asignado
         monto: ['', Validators.required], // Campo obligatorio para el monto
@@ -167,6 +195,32 @@ export class OficioComponent implements OnInit {
 
     // Llama al método para actualizar el campo 'monto' con valores predeterminados
     this.updateformfied();
+
+    /** Llama al método que configura el formulario según el estado de solo lectura. */
+    this.inicializarEstadoFormulario();
+
+  }
+
+ /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.oficioForm && this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } 
+  }
+
+    /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.oficioForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.oficioForm.enable();
+    } 
   }
 
   /**
@@ -174,11 +228,23 @@ export class OficioComponent implements OnInit {
    * También deshabilita los campos para que no puedan ser modificados por el usuario.
    */
   updateformfied(): void {
-    this.OficioForm.get('oficioData.asignado')?.disable(); // Deshabilita el campo 'asignado'
-    this.OficioForm.get('oficioData.monto')?.disable(); // Deshabilita el campo 'monto'
-    this.OficioForm.get('oficioData.asignado')?.setValue('2500'); // Asigna un valor predeterminado al campo 'asignado'
-    this.OficioForm.get('oficioData.monto')?.setValue('-3991'); // Asigna un valor predeterminado al campo 'monto'
-    this.OficioForm.get('oficioData.cancelar')?.setValue('12'); // Asigna un valor predeterminado al campo 'cancelar'
+    this.oficioForm.get('oficioData.asignado')?.disable(); // Deshabilita el campo 'asignado'
+    this.oficioForm.get('oficioData.monto')?.disable(); // Deshabilita el campo 'monto'
+    this.oficioForm.get('oficioData.asignado')?.setValue('2500'); // Asigna un valor predeterminado al campo 'asignado'
+    this.oficioForm.get('oficioData.monto')?.setValue('-3991'); // Asigna un valor predeterminado al campo 'monto'
+    this.oficioForm.get('oficioData.cancelar')?.setValue('12'); // Asigna un valor predeterminado al campo 'cancelar'
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta justo antes de destruir el componente.
+   * 
+   * Este método se utiliza para limpiar recursos, específicamente para completar
+   * el `Subject` `destroyNotifier$`, el cual es usado en combinación con el operador `takeUntil`
+   * para cancelar automáticamente las suscripciones a observables y evitar fugas de memoria.
+   * 
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }
