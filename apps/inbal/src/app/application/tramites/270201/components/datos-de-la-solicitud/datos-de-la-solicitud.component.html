@@ -65,7 +65,7 @@
                         <div class="form-group">
                             <app-catalogo-select [catalogo]="transporteData" [label]="'Medio de transporte'"
                                 [required]="true" for="medioTransporte" id="medioTransporte"
-                                formControlname="medioTransporte" (change)="actualizarTransporte()" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
+                                formControlName="medioTransporte" (change)="actualizarTransporte()" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                         </div>
                     </div>
                 </div>
@@ -79,7 +79,7 @@
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="aduanaData" [label]="'Aduana de entrada'" [required]="true"
                             for="aduanaEntrada" id="aduanaEntrada"
-                            formControlname="aduanaEntrada" name="aduanaData" (change)="actualizarAduana()" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
+                            formControlName="aduanaEntrada" name="aduanaData" (change)="actualizarAduana()" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                     </div>
                 </div>
             </div>
