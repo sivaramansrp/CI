@@ -40,6 +40,13 @@ export class PasoUnoComponent implements OnDestroy {
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Constructor del componente que inicializa el estado de la consulta
+   * y determina si se deben guardar los datos del formulario o mostrar solo los datos de respuesta.
+   *
+   * @param {ConsultaioQuery} consultaQuery - Servicio para obtener el estado de la consulta.
+   * @param {PermisoSanitarioImportacionMedicamentosService} permisoSanitarioImportacionMedicamentosService - Servicio para gestionar el permiso sanitario de importación de medicamentos.
+   */
   constructor(
     private consultaQuery: ConsultaioQuery,
     private permisoSanitarioImportacionMedicamentosService: PermisoSanitarioImportacionMedicamentosService

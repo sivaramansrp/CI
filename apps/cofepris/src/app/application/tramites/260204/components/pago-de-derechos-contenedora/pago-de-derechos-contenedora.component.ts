@@ -30,6 +30,12 @@ export class PagoDeDerechosContenedoraComponent {
   */
   esFormularioSoloLectura!: Observable<boolean>;
 
+  /**
+   * Constructor de la clase que inicializa el estado del trámite y determina si el formulario es de solo lectura.
+   * 
+   * @param {Tramite260204Store} tramiteStore - Store que contiene el estado del trámite 260204.
+   * @param {ConsultaioQuery} consultaQuery - Query para obtener el estado de la sección de consulta.
+   */
   constructor(public tramiteStore: Tramite260204Store,
          private consultaQuery: ConsultaioQuery 
   ){
