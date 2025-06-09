@@ -19,10 +19,10 @@
         <solicitante #Solicitante></solicitante>
         }
         @case (2) {
-        <app-certificado-origen></app-certificado-origen>
+        <app-certificado-origen [formularioDeshabilitado]="formularioDeshabilitado"></app-certificado-origen>
         } 
         @case (3) {
-          <app-datos-certificado></app-datos-certificado>
+          <app-datos-certificado [formularioDeshabilitado]="formularioDeshabilitado"></app-datos-certificado>
           } 
         }
       </ng-container>
