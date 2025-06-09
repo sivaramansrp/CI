@@ -1,0 +1,11 @@
+{
+  "numeroOperacion": 123456,
+  "llave": "ABC123XYZ",
+  "manifiesto1": "MNFT001",
+  "manifiesto2": "MNFT002",
+  "manifiesto3": "MNFT003",
+  "fechaPago": "2025-06-09",
+  "monedaNacional": "EUR",
+  "renovacion": false,
+  "homologacion": false
+}

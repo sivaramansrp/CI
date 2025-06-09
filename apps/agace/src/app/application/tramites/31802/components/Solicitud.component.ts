@@ -13,12 +13,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ReplaySubject, map, takeUntil } from 'rxjs';
+import { ReplaySubject, Subject, map, of, takeUntil } from 'rxjs';
 import {
   Solicitud31802State,
   Tramite31802Store,
 } from '../state/Tramite31802.store';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { RegistroSolicitudService } from './../services/registro-solicitud-service.service';
 import { Solicitud31802Enum } from '../constants/solicitud31802.enum';
 import { Tramite31802Query } from '../state/Tramite31802.query';
@@ -78,23 +79,43 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   registroForm!: FormGroup;
 
-   /**
-   * Constructor del componente.
-   * Se utiliza para la inyección de dependencias.
-   *
-   * @param registroSolicitud Servicio para obtener datos relacionados con la solicitud.
-   * @param fb Constructor de formularios reactivos.
-   * @param store Almacén global para gestionar el estado del trámite.
-   * @param query Consulta para obtener el estado actual del trámite.
-   * @param validacionesService Servicio para validar campos del formulario.
+
+  esFormularioSoloLectura: boolean = false;
+
+
+  private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * Notificador para cancelar suscripciones activas.
+   * Se utiliza para evitar fugas de memoria al destruir el componente.
    */
+
+  /**
+  * Constructor del componente.
+  * Se utiliza para la inyección de dependencias.
+  *
+  * @param registroSolicitud Servicio para obtener datos relacionados con la solicitud.
+  * @param fb Constructor de formularios reactivos.
+  * @param store Almacén global para gestionar el estado del trámite.
+  * @param query Consulta para obtener el estado actual del trámite.
+  * @param validacionesService Servicio para validar campos del formulario.
+  */
   constructor(
+    private consultaioQuery: ConsultaioQuery,
     public fb: FormBuilder,
     public store: Tramite31802Store,
     private query: Tramite31802Query,
     public validacionesService: ValidacionesFormularioService
   ) {
-    // El constructor se utiliza para la inyección de dependencias.
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          // Inicializa el formulario con los valores actuales del estado.
+          this.datosDeAvisoForm()
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -102,18 +123,25 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Configura el formulario, obtiene datos iniciales y suscribe al estado global.
    */
   ngOnInit(): void {
-
     this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          this.donanteDomicilio()
         })
       )
       .subscribe();
-    this.donanteDomicilio();
+    this.inicializarEstadoFormulario();
   }
 
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosDelFormulario();
+    } else {
+          this.datosDeAvisoForm()
+    }
+  }
   /**
    * Actualiza el campo de fecha de pago en el formulario y en el estado global.
    *
@@ -158,6 +186,15 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
+
+  guardarDatosDelFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.registroForm.disable();
+    } else {
+      this.registroForm.enable();
+    }
+  }
+
   /**
    * Actualiza un valor en el estado global utilizando el almacén.
    *
@@ -177,18 +214,39 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Inicializa el formulario con los valores actuales del estado.
    */
-  donanteDomicilio(): void {
-    this.registroForm = this.fb.group({
-      llave: [this.solicitudState?.llave, [Validators.required]],
-      manifiesto1: [this.solicitudState?.manifiesto1, [Validators.required]],
-      manifiesto2: [this.solicitudState?.manifiesto2, [Validators.required]],
-      manifiesto3: [this.solicitudState?.manifiesto3, [Validators.required]],
-      numeroOperacion: [this.solicitudState?.numeroOperacion, [Validators.required],],
-      fechaPago: [this.solicitudState?.fechaPago, [Validators.required]],
-      monedaNacional: [this.solicitudState?.monedaNacional, [Validators.required]],
-    });
-  }
+donanteDomicilio(): void {
+  this.registroForm = this.fb.group({
+    llave: [this.solicitudState?.llave, [Validators.required]],
+    manifiesto1: [this.solicitudState?.manifiesto1, [Validators.required]],
+    manifiesto2: [this.solicitudState?.manifiesto2, [Validators.required]],
+    manifiesto3: [this.solicitudState?.manifiesto3, [Validators.required]],
+    numeroOperacion: [this.solicitudState?.numeroOperacion, [Validators.required]],
+    fechaPago: [this.solicitudState?.fechaPago, [Validators.required]],
+    monedaNacional: [this.solicitudState?.monedaNacional, [Validators.required]],
+  });
 
+  // Solo deshabilita el formulario si es de solo lectura
+  if (this.esFormularioSoloLectura) {
+    this.registroForm.disable();
+  }
+}
+
+  /**
+ * datosDeltrimiteForm los campos del formulario si es de solo lectura.
+ * Si el formulario es de solo lectura, deshabilita los campos del formulario de importador/exportador.
+ */
+
+  datosDeAvisoForm(): void {
+    if (this.esFormularioSoloLectura) {
+      this.registroForm.get('llave')?.disable();
+      this.registroForm.get('manifiesto1')?.disable();
+      this.registroForm.get('manifiesto2')?.disable();
+      this.registroForm.get('manifiesto3')?.disable();
+      this.registroForm.get('numeroOperacion')?.disable();
+      this.registroForm.get('fechaPago')?.disable();
+      this.registroForm.get('monedaNacional')?.disable();
+    }
+  }
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Cancela todas las suscripciones activas.
