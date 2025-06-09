@@ -98,6 +98,11 @@ export class PasoUnoComponent {
     this.indice = i;
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Se utiliza para limpiar los recursos y evitar fugas de memoria.
+   * @return {void}
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
