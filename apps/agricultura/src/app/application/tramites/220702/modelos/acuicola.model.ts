@@ -67,7 +67,13 @@ export interface DatosDeLaSolicitudInt {
     identificacionTransporte: string;
     esSolicitudFerros: string;
     banco:string;
-
+    regimenAlQueDestina: string;
+    nombreDeLaEmpresaTransportista: string;
+    puntoDeVerificacion: string;
+    identificacionDelTransporte: string;
+    datosParaMovilizacion: string;
+    oficinaDeInspeccion: string;
+    
 }
 
 export interface InternaDatosGeneralesInt {
@@ -225,6 +231,7 @@ export interface DestinoInfo {
   export interface PagoDeDerechosRevisionResponse {
     data: PagoDeRevisionData;
   }
+
   
   
   
