@@ -36,6 +36,7 @@ import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
+import {ConsultaioQuery } from '@ng-mf/data-access-user';
 
 /**
  * Componente `DatosSolicitudComponent` que gestiona la lógica y la interfaz de usuario
@@ -67,6 +68,11 @@ import { takeUntil } from 'rxjs';
  *
  */
 export class DatosSolicitudComponent implements OnInit, OnDestroy {
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * @type {boolean}
+   */
+  esSoloLectura!: boolean;
   /**
    * Formulario para la gestión de avisos.
    */
@@ -175,7 +181,8 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     public mercanciasDesmontadasOSinMontarService: MercanciasDesmontadasOSinMontarService,
     public solicitud32501Query: Solicitud32501Query,
-    public solicitud32501Store: Solicitud32501Store
+    public solicitud32501Store: Solicitud32501Store,
+    private consultaQuery: ConsultaioQuery
   ) {
     this.obtenerAvisoDelCatalogo();
     this.obtenerOperacionDeImportacion();
@@ -193,6 +200,12 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    *   se destruye, evitando fugas de memoria.
    */
   ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((estadoSeccion) => {
+        this.esSoloLectura = estadoSeccion.update;
+      });
+
     this.obtenerValoresDelStore();
     this.inicializarFormulario();
   }

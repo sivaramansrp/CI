@@ -3,7 +3,14 @@ import { Component } from '@angular/core';
 import { DatosSolicitudComponent } from '../../components/datos-solicitud/datos-solicitud.component';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { ViewChild } from '@angular/core';
+
+import { OnDestroy, OnInit, ViewChild } from '@angular/core';
+
+import { ConsultaioQuery,ConsultaioState } from '@ng-mf/data-access-user';
+import { Subject, takeUntil } from 'rxjs';
+
+import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
+import { Solicitud32501State } from '../../estados/solicitud32501.store';
 
 /**
  * Componente correspondiente al paso uno del proceso.
@@ -18,7 +25,7 @@ import { ViewChild } from '@angular/core';
 /**
  * Componente correspondiente al paso uno del proceso.
  */
-export class PasoUnoComponent {
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /** Referencia al componente de solicitante */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
@@ -40,5 +47,69 @@ export class PasoUnoComponent {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+  /**
+  * Indica si los datos de respuesta del servidor están disponibles.
+  */
+  public datosRespuestaDisponibles: boolean = false;
+
+  /**
+/**
+ * Subject para notificar la destrucción del componente y desuscribirse de observables.
+ */
+  private notificadorDestruccion$: Subject<void> = new Subject();
+
+  /**
+   * Estado actual de la consulta.
+   */
+  public estadoConsulta!: ConsultaioState;
+
+  /**
+   * Índice de la pestaña actualmente seleccionada.
+   * Inicializado a 1 por defecto.
+   */
+
+  /**
+   * Constructor del componente.
+   * @param servicio Servicio para obtener datos de la solicitud.
+   * @param consultaQuery Consulta para obtener el estado de la consulta.
+   */
+  constructor(
+    private servicio: MercanciasDesmontadasOSinMontarService,
+    private consultaQuery: ConsultaioQuery
+  ) { }
+     ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((estadoSeccion) => {
+        this.estadoConsulta = estadoSeccion;
+      });
+
+    if (this.estadoConsulta.update) {
+      this.obtenerDatosBandejaSolicitudes();
+    } else {
+      this.datosRespuestaDisponibles = true;
+    }
+  }
+
+  /**
+   * Obtiene los datos de la bandeja de solicitudes desde el servidor.
+   */
+  obtenerDatosBandejaSolicitudes(): void {
+    this.servicio.obtenerDatosEstado()
+      .pipe(takeUntil(this.notificadorDestruccion$))
+      .subscribe((datos: Solicitud32501State) => {
+        if (datos) {
+          this.datosRespuestaDisponibles = true;
+          this.servicio.establecerDatosEstado(datos);
+        }
+      });
+  }
+  /**
+   * Hook del ciclo de vida que se llama cuando el componente es destruido.
+   */
+  ngOnDestroy(): void {
+    this.notificadorDestruccion$.next();
+    this.notificadorDestruccion$.complete();
   }
 }
