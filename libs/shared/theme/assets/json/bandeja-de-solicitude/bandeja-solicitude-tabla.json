@@ -1,6 +1,6 @@
 [
   {
-    "id": 1,
+    "id": 301,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
     "fechaActualizacion": "2023-10-05",
@@ -27,7 +27,7 @@
     "numeroDeProcedimiento": "110101"
   },
   {
-    "id": 16,
+    "id": 31601,
     "tipoDeTramite": "Antecesor",
     "fecha": "2023-10-01",
     "fechaActualizacion": "2023-10-05",
@@ -63,7 +63,7 @@
     "numeroDeProcedimiento": "110102"
   },
   {
-    "id": 3,
+    "id": 90201,
     "tipoDeTramite": "Ampliación Productor directo",
     "fecha": "2023-10-10",
     "fechaActualizacion": "2023-10-15",
@@ -611,6 +611,15 @@
     "departamento": "SE",
     "numeroDeProcedimiento": "120602"
   },
+    {
+        "id": 105,
+        "tipoDeTramite": "Solicitud de Permiso",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "105"
+    },
   {
     "id": 90305,
     "tipoDeTramite": "Solicitud de Permiso",
