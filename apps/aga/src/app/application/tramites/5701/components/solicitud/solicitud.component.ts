@@ -131,6 +131,7 @@ import { ValidaLineaPagoService } from '../../../../core/services/5701/pago/vali
 import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
+import { log } from 'console';
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
@@ -2182,13 +2183,26 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @param tipo - Tipo de despacho seleccionado ('lda' o 'dd').
    * @returns {void} No retorna ningún valor.
    */
-  showConfirmDialogLDA_DD(tipo: string): void {
+  showConfirmDialogLDA_DD(event: Event, tipo: string): void {
+    const CHECKED = event.target as HTMLInputElement;
+
+    this.despacho.get(tipo)?.setValue(CHECKED.checked);
+
     this.tipoDespacho = tipo;
     const ADUANA = this.despacho.get('idAduanaDespacho')?.value;
     const DESPACHO = this.despacho.get('idSeccionDespacho')?.value;
     const RECINTO = this.despacho.get('nombreRecinto')?.value;
 
-    if ((ADUANA || DESPACHO || RECINTO) && this.despacho.touched) {
+    const FORMA_MODIFICADA = Object.keys(this.despacho.controls).some((key) => {
+      if (key !== 'lda' && key !== 'dd') {
+        return (
+          this.despacho.controls[key].dirty ||
+          this.despacho.controls[key].touched
+        );
+      }
+      return false;
+    });
+    if ((ADUANA || DESPACHO || RECINTO) > 0 && FORMA_MODIFICADA) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: '',
@@ -2201,6 +2215,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       };
       this.procesoModal = 'lda_dd';
     } else {
+      console.log('entro aqui');
+
       this.activaDesactivaCheckLDA_DDEX(tipo);
     }
   }
@@ -2211,6 +2227,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   activaDesactivaCheckLDA_DDEX(tipo: string): void {
+    console.log(this.solicitudState);
+
     this.despachoSeleccionado = !this.despachoSeleccionado;
 
     if (!this.despachoSeleccionado) {
