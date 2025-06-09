@@ -645,21 +645,29 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
+   * Error pattern
+   * @returns {boolean} - Retorna `true` si el campo tiene un error de patrón, de lo contrario `false`.
+   */
+  isErrorPattern(): boolean {
+    const CONTROL = this.datosImportadorExportador.get(
+      'RFCImpExp'
+    ) as FormControl;
+
+    if (CONTROL) {
+      const ERROR_PATTERN = CONTROL.hasError('pattern');
+      return ERROR_PATTERN;
+    }
+
+    return false;
+  }
+
+  /**
    * Verifica si el control 'idSocioComercial' tiene el validador 'Validators.required'.
    *
    * @returns {boolean} `true` si el control es requerido, de lo contrario `false`.
    */
-  isRequired(): boolean {
-    const CONTROL = this.datosImportadorExportador.get(
-      'idSocioComercial'
-    ) as FormControl;
-
-    if (CONTROL) {
-      const REQUERIDO = CONTROL.hasValidator(Validators.required);
-      return REQUERIDO;
-    }
-
-    return false;
+  isRequired(form: FormGroup, field: string): boolean | null {
+    return this.validacionesService.errorCampoRequerido(form, field);
   }
 
   /**
@@ -853,7 +861,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         nombre: [{ value: this.solicitudState?.nombre, disabled: true }],
         desNumeroRegistro: [
           this.solicitudState?.descripcionNumeroRegistro,
-          [Validators.maxLength(25)],
+          [Validators.maxLength(30)],
         ],
 
         programa: [this.solicitudState?.programa],
@@ -904,7 +912,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
           [Validators.required, ValidacionesFormularioService.noMenosUnoValor],
         ],
         aduanaDespacho: [this.solicitudState?.aduanaDespacho],
-        idSeccionDespacho: [this.solicitudState?.idSeccionDespacho, [ValidacionesFormularioService.noMenosUnoValor]],
+        idSeccionDespacho: [
+          this.solicitudState?.idSeccionDespacho,
+          [ValidacionesFormularioService.noMenosUnoValor],
+        ],
         seccionAduanera: [this.solicitudState?.seccionAduanera],
         idRecinto: [],
         nombreRecinto: [this.solicitudState?.nombreRecinto],
