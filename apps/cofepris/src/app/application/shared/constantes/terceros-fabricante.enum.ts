@@ -89,3 +89,13 @@ export const DEFAULT_TABLA_ORDEN = [
   { nombre: 'Formulador', orden: 2, esVisible: true },
   { nombre: 'Proveedor', orden: 3, esVisible: true },
 ];
+
+
+/**
+ * Datos del cuerpo de la tabla de terceros relacionados.
+ */
+export const TERCEROS_RELACIONADOS_TABLE_BODY_DATA = {
+  tbodyData: [
+    "FEREZ", "RFC2113", "DUMYD", "12-42322445", "5234", "Avenida Insurgentes", "DUMYD", "23", "1", "DUMYD", "DUMYD", "DUMYD", "DUMYD", "BAJA CALIFORNIA", "DUMYD", "DUMYD"
+  ]
+};

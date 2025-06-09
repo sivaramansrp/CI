@@ -5,10 +5,14 @@ import {
   ESTATUS_PAGADO,
   ID_NAME_DD,
   ID_NAME_LDA,
+  LABEL_CROSSLIST,
   LABEL_DESPACHO_DD,
   LABEL_DESPACHO_LDA,
   MSG_ADUANA_PEDIMENTO,
+  MSG_ALERTA_ELIMINAR_ELEMENTO,
   MSG_CAMBIO_TIPO_SOLICITUD,
+  MSG_ELIMINA_ELEMENTO,
+  MSG_ERROR_NO_INFORMACION,
   MSJ_ERROR_FECHA,
   MSJ_ERROR_LINEA_CAPTURA,
   MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
@@ -17,6 +21,9 @@ import {
   PATENTES_ID,
   SIN_ITEMS,
   SIN_VALOR,
+  TEXTO_ACEPTAR,
+  TEXTO_CANCELAR,
+  TITULO_MODAL_AVISO,
   TRANSPORTE,
   UN_DIA,
   VEHICULO,
@@ -26,10 +33,12 @@ import {
   AduanaService,
   Catalogo,
   CatalogoPaises,
+  CrossListLable,
   DatosAgregarFormulario,
   FechasService,
   FormulariosService,
   ICatalogo,
+  MENSAJE_ALERTA_NO_FECHAS,
   Notificacion,
   PROGRAMA_FOMENTO,
   PROGRAMA_IMMEX,
@@ -80,6 +89,8 @@ import {
   EMPTY,
   Observable,
   Subject,
+  catchError,
+  defaultIfEmpty,
   delay,
   first,
   map,
@@ -87,6 +98,7 @@ import {
   switchMap,
   takeUntil,
   tap,
+  throwError,
 } from 'rxjs';
 import {
   Solicitud5701State,
@@ -306,7 +318,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * @descripcion Notificación para mostrar mensajes al usuario.
    */
-  public nuevaNotificacion!: Notificacion;
+  public nuevaNotificacion!: Notificacion | null;
 
   /**
    * Bandera para saber el tipo de persona del usuario.
@@ -349,6 +361,21 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @description Almacena los montos a pagar en la solicitud.
    */
   montoPagadoLineas: number = 0;
+
+  /**
+   * @description Mensaje de alerta que se muestra cuando no se han seleccionado fechas, en el crosslist.
+   */
+  readonly MENSAJE_ALERTA_CROSSLIST = MENSAJE_ALERTA_NO_FECHAS;
+
+  /**
+   * @description Label del crosslist de fechas
+   */
+  readonly LABEL_CROSSLIST_FECHAS: CrossListLable = LABEL_CROSSLIST;
+
+  /**
+   *@description Alamcena las lineas de capturas seleccionadas por el usuario en la tabla.
+   */
+  lineaCapturaSeleccionados: LineaCaptura[] = [];
 
   //TODO: Estas variables se van a eliminar
   /**
@@ -860,10 +887,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       }),
 
       datosServicio: this.fb.group({
-        fechaInicio: [
-          this.solicitudState?.fechaInicio,
-          [Validators.required, ValidacionesFormularioService.validaFechaNoHoy],
-        ],
+        fechaInicio: [this.solicitudState?.fechaInicio, [Validators.required]],
         fechaFinal: [
           this.solicitudState?.fechaFinal,
           [Validators.required, ValidacionesFormularioService.validaFechaNoHoy],
@@ -931,11 +955,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         montoAPagar: [
           { value: this.solicitudState?.montoPagar, disabled: true },
         ],
-        lineaCaptura: [
-          this.solicitudState?.lineaCaptura,
-          [Validators.required],
-        ],
-        monto: [this.solicitudState.monto, [Validators.required]],
+        lineaCaptura: [this.solicitudState?.lineaCaptura],
+        monto: [this.solicitudState.monto],
         lineasCaptura: this.fb.array([], Validators.required),
       }),
     });
@@ -1063,10 +1084,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             return EMPTY;
           }),
           tap((idcResponse) => {
-            if (idcResponse.datos?.nombre) {
-              this.datosImportadorExportador
-                .get('nombre')
-                ?.setValue(idcResponse.datos?.nombre);
+            const NOMBRE = idcResponse.datos?.nombre
+              ? idcResponse.datos?.nombre
+              : idcResponse.datos?.razon_social;
+            if (NOMBRE) {
+              this.datosImportadorExportador.get('nombre')?.setValue(NOMBRE);
               this.getCertificaciones(RFC_IMP_EXP);
             }
           })
@@ -1100,16 +1122,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} Esta función no retorna ningún valor.
    */
   tipoSolicitudSeleccion(): void {
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'toastr',
-      categoria: 'error',
-      modo: 'action',
-      titulo: '',
-      mensaje: 'Error al guardar la solicitud. Intente nuevamente.',
-      cerrar: false,
-      txtBtnAceptar: '',
-      txtBtnCancelar: '',
-    };
     // Se obtiene el valor del tipo de solicitud seleccionado y se agrega la descripción correspondiente al formulario.
     const TIPO_SOLICITUD_VALUE = parseInt(
       this.FormSolicitud.get('tipoSolicitud')?.value,
@@ -1123,27 +1135,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       SOLICITUD_DESRIPCION
     );
 
-    const FORMA_MODIFICADA = Object.keys(this.FormSolicitud.controls).some(
-      (key) => {
-        if (key !== 'tipoSolicitud' && key !== 'descripcionTipoSolicitud') {
-          return (
-            this.FormSolicitud.controls[key].dirty ||
-            this.FormSolicitud.controls[key].touched
-          );
-        }
-        return false;
-      }
-    );
-
-    if (FORMA_MODIFICADA) {
-      this.limpiarFormulario();
-      return;
-    }
-
-    this.tipoSolicitudSeleccionada = parseInt(
-      this.FormSolicitud.get('tipoSolicitud')?.value,
-      10
-    );
+    this.tipoSolicitudSeleccionada = TIPO_SOLICITUD_VALUE;
 
     if (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL) {
       this.pedimento.setValidators([Validators.required]);
@@ -1164,6 +1156,22 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       'descripcionTipoSolicitud',
       'setDescripcionTipoSolicitud'
     );
+
+    const FORMA_MODIFICADA = Object.keys(this.FormSolicitud.controls).some(
+      (key) => {
+        if (key !== 'tipoSolicitud' && key !== 'descripcionTipoSolicitud') {
+          return (
+            this.FormSolicitud.controls[key].dirty ||
+            this.FormSolicitud.controls[key].touched
+          );
+        }
+        return false;
+      }
+    );
+
+    if (FORMA_MODIFICADA) {
+      this.limpiarFormulario();
+    }
   }
 
   /**
@@ -1320,8 +1328,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.datosServicio.get('fechaFinal')?.dirty &&
       this.datosServicio.get('fechaFinal')?.touched
     ) {
+      // eslint-disable-next-line no-unused-expressions
+      this.datosServicio.hasError('endDateBeforeStartDate') &&
+        this.limpiarFechasHoras();
       this.rangoFechas();
     }
+
     this.setValoresStore(this.datosServicio, 'fechaFinal', 'setFechaFinal');
   }
 
@@ -1732,6 +1744,23 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.mostrarRangoFechas = true;
     }
 
+    //Verifica si la tabla de lineas de captura tiene datos y los agrega al formulario.
+    if (this.solicitudState.lineasCaptura.length > 0) {
+      this.datosTablaPagos = [...this.solicitudState.lineasCaptura];
+
+      this.lineasCaptura?.clear();
+      this.datosTablaPagos.forEach((linea) => {
+        this.lineasCaptura.push(
+          this.fb.group({
+            lineaCaptura: [linea.lineaCaptura, Validators.required],
+            monto: [linea.monto, Validators.required],
+          })
+        );
+      });
+      this.pagoCaptura.get('lineaCaptura')?.reset();
+      this.pagoCaptura.get('monto')?.reset();
+    }
+
     this.colapsable =
       this.solicitudState.fechasSeleccionadas.length > 0 ||
       this.selectRangoDias.length > 0
@@ -1853,7 +1882,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((response) => {
-          if (response) {
+          if (response.datos) {
             this.tramite5701Store.setBlnProgramaFomento(
               response.datos.programa_fomento
             );
@@ -1861,6 +1890,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               response.datos.des_programa_fomento
             );
           }
+        }),
+        catchError((error) => {
+          return throwError(() => error);
         })
       )
       .subscribe();
@@ -1870,7 +1902,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((response) => {
-          if (response) {
+          if (response.datos) {
             this.tramite5701Store.setBlnIndustriaAutomotriz(
               response.datos.industrial_automotriz
             );
@@ -1878,6 +1910,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               response.datos.des_industrial_automotriz
             );
           }
+        }),
+        catchError((error) => {
+          return throwError(() => error);
         })
       )
       .subscribe();
@@ -1888,6 +1923,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((response) => {
           this.tramite5701Store.setBlnRevisionOrigen(response.datos);
+        }),
+        catchError((error) => {
+          return throwError(() => error);
         })
       )
       .subscribe();
@@ -1933,7 +1971,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     )
       .pipe(
         takeUntil(this.destroyNotifier$),
-        first((response) => {
+        first(),
+        tap((response) => {
           this.tramite5701Store.setBlnOEA(response.datos);
           return response.datos;
         })
@@ -2027,6 +2066,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
           this.montoPagadoLineas +=
             responseLineaCapturaPagada.datos.pago_model.importe;
           this.datosTablaPagos.push(PAGO);
+          this.tramite5701Store.setLineasCaptura(this.datosTablaPagos);
+
+          //Limpia los campos de la línea de captura y monto
+          this.pagoCaptura.get('lineaCaptura')?.reset();
+          this.pagoCaptura.get('monto')?.reset();
+
           this.lineasCaptura?.clear();
           this.lineasCaptura.push(
             this.fb.group({
@@ -2095,6 +2140,34 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             }
           }
         }
+        break;
+
+      case 'linea_captura':
+        if (confirmar) {
+          this.datosTablaPagos = this.datosTablaPagos.filter(
+            (item) =>
+              !this.lineaCapturaSeleccionados.some(
+                (seleccionado) =>
+                  seleccionado.lineaCaptura === item.lineaCaptura
+              )
+          );
+          this.lineaCapturaSeleccionados = [];
+          this.tramite5701Store.setLineasCaptura(this.datosTablaPagos);
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: '',
+            modo: 'action',
+            titulo: TITULO_MODAL_AVISO,
+            mensaje: MSG_ELIMINA_ELEMENTO,
+            cerrar: false,
+            txtBtnAceptar: 'Cerrar',
+            txtBtnCancelar: '',
+          };
+          this.procesoModal = '';
+        }
+
+        this.limpiarNotificacion();
+
         break;
 
       default:
@@ -2453,5 +2526,47 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       'descripcionTipoSolicitud',
       'setDescripcionTipoSolicitud'
     );
+  }
+
+  /**
+   * Elimina un elemento de la tabla de lineas de captura
+   * @returns {void} No retorna ningún valor.
+   */
+  eliminarLineaCaptura(): void {
+    if (this.lineaCapturaSeleccionados.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: TITULO_MODAL_AVISO,
+        mensaje: MSG_ERROR_NO_INFORMACION,
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: TITULO_MODAL_AVISO,
+      mensaje: MSG_ALERTA_ELIMINAR_ELEMENTO,
+      cerrar: false,
+      txtBtnAceptar: TEXTO_ACEPTAR,
+      txtBtnCancelar: TEXTO_CANCELAR,
+    };
+
+    this.procesoModal = 'linea_captura';
+  }
+
+  /**
+   * Lipia el objeto de notificación y el proceso modal.
+   * @returns {void} No retorna ningún valor.
+   */
+  limpiarNotificacion(): void {
+    this.nuevaNotificacion = null;
+    this.procesoModal = '';
   }
 }
