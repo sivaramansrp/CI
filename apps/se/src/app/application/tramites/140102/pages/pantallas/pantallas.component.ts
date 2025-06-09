@@ -1,10 +1,11 @@
 import { ALERTA_DE_APLICACION_REGISTRADA, ERROR_FORMA_ALERT } from '../../constants/programa-seleccionado.enum';
-import { AVISO, DatosPasos, ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild, inject } from '@angular/core';
-import { WizardComponent, WizardService } from '@ng-mf/data-access-user';
-import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/260604/aviso-exportacion.model';
-import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/enums/260604/aviso-exportacion.enum';
+import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AVISO } from '@libs/shared/data-access-user/src';
+import { AccionBoton } from '@ng-mf/data-access-user';
+import { PANTA_PASOS } from '@ng-mf/data-access-user';
 import { ValidacionDeFormularioService } from '../../services/forma-servicio/validacion-de-formulario.service';
+import { WizardService } from '@ng-mf/data-access-user';
 
 /**
  * @description
@@ -114,7 +115,12 @@ export class PantallasComponent {
   * @memberof PantallasComponent
   */
   public avisoPrivacidadAlert: string = AVISO.Aviso;
-
+ /**
+  * compo doc
+  * variable para contener el índice de la pestaña seleccionada
+  * @type {number}
+  */
+  public indiceDePestanaSeleccionada: number = 1;
   /**
    * @description
    * Constructor del componente.
@@ -165,17 +171,17 @@ export class PantallasComponent {
    * @param {AccionBoton} e Objeto que contiene la acción (`cont` o `ant`) y el valor del paso.
    */
   getValorIndice(e: AccionBoton): void {
-    this.esFormaValido = this.verificarLaValidezDelFormulario();
-    if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
+     if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
+      this.indice = e.valor;
+      this.datosPasos.indice = e.valor;
+
       if (e.accion === 'cont') {
-        this.continuar(e);
-      } else if (e.accion === 'ant' && this.esFormaValido) {
-        this.indice = e.valor - 1;
-        this.datosPasos.indice = e.valor - 1;
+        this.wizardComponent.siguiente();
+      } else {
         this.wizardComponent.atras();
-      } else if (!this.esFormaValido) {
-        this.indice = e.valor;
-        this.datosPasos.indice = e.valor;
+      }
+      if (e.valor!==1) {
+        this.indiceDePestanaSeleccionada=1;
       }
     }
   }
