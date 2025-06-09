@@ -1,4 +1,4 @@
-import { AlertComponent,ConfiguracionColumna, InputFecha,InputFechaComponent,TablaDinamicaComponent, TablaSeleccion,TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { AlertComponent,ConfiguracionColumna, ConsultaioQuery, ConsultaioState, InputFecha,InputFechaComponent,TablaDinamicaComponent, TablaSeleccion,TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FECHA_VENCIMIENTO, FECHA_EXPEDICION, MercanciaCertificado, ProductoresAsociados } from '../../models/certificado.model';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -28,6 +28,16 @@ const TEXTO_DE_ALERTA_PRODUCTORES = 'Productores asociados';
   styleUrl: './certificado-de-origen.component.css',
 })
 export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
+  /**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
+
   /** Formulario para la cancelación de certificados. */
   cancelacionForm!: FormGroup;
 
@@ -95,18 +105,22 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     private certificadoService: CertificadoService,
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
-    private store: Tramite110219Store,
-    private query: Tramite110219Query
+    public store: Tramite110219Store,
+    private query: Tramite110219Query,
+     private consultaioQuery: ConsultaioQuery
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
 
   /** Inicializa el componente. */
   ngOnInit(): void {
+    
     this.cancelacionForm = new FormGroup({
       motivoCancelacion: new FormControl('', Validators.required),
     });
     this.getMercanciaCertificadoTabla();
+
+    this.inicializarEstadoFormulario();
 
     this.query.selectSolicitud$
       .pipe(
@@ -118,7 +132,30 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       .subscribe();
     this.donanteDomicilio();
   }
+/**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.donanteDomicilio();
+    }
+  }
 
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.donanteDomicilio();
+    if (this.soloLectura) {
+      this.cancelacionForm.disable();
+    } else {
+      this.cancelacionForm.enable();
+    }
+  }
   /** Valida el formulario del destinatario. */
   validarDestinatarioFormulario(): void {
     if (this.cancelacionForm.invalid) {

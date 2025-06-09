@@ -90,10 +90,10 @@ export interface Solicitud110219State {
   numeroCertificado: string;
 
   /** Lista de países asociados al trámite. */
-  pais: Catalogo[] | null;
+  pais: Catalogo[];
 
   /** Lista de tratados asociados al trámite. */
-  tratado: Catalogo[] | null;
+  tratado: Catalogo[];
 
   /** Fecha inicial del trámite. */
   fechaInicial: string;
@@ -123,8 +123,8 @@ export function createInitialState(): Solicitud110219State {
     pasoActual: 1,
     certificadoDeOrigen: false,
     numeroCertificado: '',
-    pais: null,
-    tratado: null,
+    pais: [],
+    tratado: [],
     fechaInicial: '',
     fechaFinal: '',
     motivoCancelacion: '',
