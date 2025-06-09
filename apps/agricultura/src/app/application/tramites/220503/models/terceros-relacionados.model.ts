@@ -21,4 +21,8 @@ export interface Exportador {
     exterior: number;
     interior: number;
     pais: string;
+    colonia: string;
+    codigoPostal: string;
+    municipio: string;
+    entidadFederativa: string;
   }

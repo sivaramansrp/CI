@@ -539,7 +539,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
 
   /**
    * Obtiene la movilización nacional.
-   * Este método llama al servicio de revisión para obtener la movilización nacional.
+   * Este método llama al servicio de revisión para obtener la Datos para movilización nacional:.
    * @returns {void}
    */
   getMovilizacionNacional(): void {
@@ -551,7 +551,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
           const RESPONSE = resp.data;
 
           this.movilizacionNacional = {
-            labelNombre: 'Movilización Nacional',
+            labelNombre: 'Datos para movilización nacional',
             required: false,
             primerOpcion: 'Selecciona un valor',
             catalogos: RESPONSE,

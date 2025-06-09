@@ -1,10 +1,11 @@
-import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
 import { DatosDeMercancias } from '../../models/solicitud-pantallas.model';
+import { ES_SOLICITUD_FERROS_VALOR } from '../../enums/texto-enum';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
@@ -38,6 +39,7 @@ import { takeUntil } from 'rxjs';
     CatalogoSelectComponent,
     TableComponent,
     InputRadioComponent,
+    AlertComponent,
   ],
   viewProviders: [
     {
@@ -97,7 +99,15 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
    * @type {Subject<void>}
    */
   private destroyed$ = new Subject<void>();
+ /**
+   * Obtiene los datos de enumeración y establece valores de TEXTOS
+   */
+  /** Constante que almacena los textos utilizados en el componente.
+    * Se importa desde el archivo `texto-enum.ts`.
+    */
+  ES_SOLICITUD_FERROS_VALOR = ES_SOLICITUD_FERROS_VALOR;
 
+  enCambioValor: number | string = 0;
   constructor(
     public solicitud220503Query: Solicitud220503Query,
     public solicitud220503Store: Solicitud220503Store,
@@ -216,7 +226,8 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
    *
    * Este método es para la etiqueta de radio de producto.
    */
-  enCambioDeValor(value: string | number): void {
+  enCambioDeValor(value: number | string): void {
+    this.enCambioValor = value;
     this.solicitud220503Store.setEsSolicitudFerros(value);
   }
 
