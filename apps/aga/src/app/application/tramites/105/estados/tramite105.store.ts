@@ -65,7 +65,7 @@ export interface Solicitud105State {
   /**
    * List of countries involved in the operation.
    */
-  pais: Catalogo[] | null;
+  pais: string | null;
 
   /**
    * Postal code of the location.
@@ -75,12 +75,12 @@ export interface Solicitud105State {
   /**
    * List of federal entities involved in the operation.
    */
-  entidadFederativa: Catalogo[] | null;
+  entidadFederativa: string | null;
 
   /**
    * List of municipalities or delegations involved in the operation.
    */
-  municipioDelegacion: Catalogo[] | null;
+  municipioDelegacion: string | null;
 
   /**
    * Name of the locality.
@@ -90,7 +90,7 @@ export interface Solicitud105State {
   /**
    * List of colonies involved in the operation.
    */
-  colonia: Catalogo[] | null;
+  colonia: string | null;
 
   /**
    * Name of the second federal entity, if applicable.
@@ -120,12 +120,12 @@ export interface Solicitud105State {
   /**
    * List of customs offices involved in the operation.
    */
-  aduana: Catalogo[] | null;
+  aduana: string | null;
 
   /**
    * List of tariff fractions involved in the operation.
    */
-  fraccionarancelaria: Catalogo[] | null;
+  fraccionarancelaria: string | null;
 
   /**
    * Description of the loading and unloading procedure.
@@ -145,7 +145,7 @@ export interface Solicitud105State {
   /**
    * List of operations involved in the process.
    */
-  operaciones: Catalogo[] | null;
+  operaciones: string | null;
 }
 
 export function createInitialState(): Solicitud105State {
@@ -175,7 +175,7 @@ export function createInitialState(): Solicitud105State {
     procedimientoCargaDescarga: "",
     sistemasMedicionUbicacion: "",
     motivoNoDespachoAduana: "",
-    operaciones:null
+    operaciones:""
   };
 }
 @Injectable({
@@ -308,10 +308,10 @@ export class Tramite105Store extends Store<Solicitud105State> {
   /**
  * @method setPais
  * @description Actualiza el valor del país.
- * @param {Catalogo[]} pais - Lista de países.
+ * @param {string} pais - Lista de países.
  */
 
-  public setPais(pais: Catalogo[]): void {
+  public setPais(pais: string): void {
     this.update((state) => ({
       ...state,
       pais,
@@ -334,11 +334,11 @@ export class Tramite105Store extends Store<Solicitud105State> {
   /**
  * @method setEntidadFederativa
  * @description Actualiza el valor de la entidad federativa.
- * @param {Catalogo[]} entidadFederativa - Lista de entidades federativas.
+ * @param {string} entidadFederativa - Lista de entidades federativas.
  */
 
 
-  public setEntidadFederativa(entidadFederativa: Catalogo[]): void {
+  public setEntidadFederativa(entidadFederativa: string): void {
     this.update((state) => ({
       ...state,
       entidadFederativa,
@@ -348,10 +348,10 @@ export class Tramite105Store extends Store<Solicitud105State> {
   /**
  * @method setMunicipioDelegacion
  * @description Actualiza el valor del municipio o delegación.
- * @param {Catalogo[]} municipioDelegacion - Lista de municipios o delegaciones.
+ * @param {string} municipioDelegacion - Lista de municipios o delegaciones.
  */
 
-  public setMunicipioDelegacion(municipioDelegacion: Catalogo[]): void {
+  public setMunicipioDelegacion(municipioDelegacion: string): void {
     this.update((state) => ({
       ...state,
       municipioDelegacion,
@@ -374,10 +374,10 @@ export class Tramite105Store extends Store<Solicitud105State> {
 /**
  * @method setColonia
  * @description Actualiza el valor de la colonia.
- * @param {Catalogo[]} colonia - Lista de colonias.
+ * @param {string} colonia - Lista de colonias.
  */
 
-  public setColonia(colonia: Catalogo[]): void {
+  public setColonia(colonia: string): void {
     this.update((state) => ({
       ...state,
       colonia,
@@ -452,10 +452,10 @@ export class Tramite105Store extends Store<Solicitud105State> {
 /**
  * @method setAduana
  * @description Actualiza el valor de la aduana.
- * @param {Catalogo[]} aduana - Lista de aduanas.
+ * @param {string} aduana - Lista de aduanas.
  */
 
-  public setAduana(aduana: Catalogo[]): void {
+  public setAduana(aduana: string): void {
     this.update((state) => ({
       ...state,
       aduana,
@@ -465,10 +465,10 @@ export class Tramite105Store extends Store<Solicitud105State> {
   /**
  * @method setFraccionarancelaria
  * @description Actualiza el valor de la fracción arancelaria.
- * @param {Catalogo[]} fraccionarancelaria - Lista de fracciones arancelarias.
+ * @param {string} fraccionarancelaria - Lista de fracciones arancelarias.
  */
 
-  public setFraccionarancelaria(fraccionarancelaria: Catalogo[]): void {
+  public setFraccionarancelaria(fraccionarancelaria: string): void {
     this.update((state) => ({
       ...state,
       fraccionarancelaria,
@@ -517,10 +517,10 @@ export class Tramite105Store extends Store<Solicitud105State> {
   /**
  * @method setOperaciones
  * @description Actualiza el valor de las operaciones.
- * @param {Catalogo[]} operaciones - Lista de operaciones.
+ * @param {string} operaciones - Lista de operaciones.
  */
 
-  public setOperaciones(operaciones: Catalogo[]): void {
+  public setOperaciones(operaciones: string): void {
     this.update((state) => ({
       ...state,
       operaciones,
