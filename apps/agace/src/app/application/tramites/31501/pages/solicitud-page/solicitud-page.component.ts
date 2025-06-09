@@ -1,8 +1,8 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, DatosPasos } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
-import { map, Subject, takeUntil } from 'rxjs';
 
 export const PASOS = [
   {
@@ -53,7 +53,7 @@ interface AccionBoton {
 /**
  * Componente que representa la página de solicitud.
  */
-export class SolicitudPageComponent {
+export class SolicitudPageComponent implements OnInit {
   /**
    * Lista de pasos del asistente.
    */

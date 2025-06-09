@@ -1,10 +1,10 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CapturarRequerimientoComponent } from '../capturar-requerimiento/capturar-requerimiento.component';
 import { CommonModule } from '@angular/common';
-import { map, Subject, takeUntil } from 'rxjs';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-requiremento',
