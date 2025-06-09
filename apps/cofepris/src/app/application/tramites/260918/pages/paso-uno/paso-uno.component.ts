@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
 import {Subject, map,takeUntil } from 'rxjs';
+import { ModificacionPermisoLabService } from '../../services/modificacion-permiso-lab.service';
 /**
  * Componente que representa el paso uno del formulario.
  */
@@ -38,11 +39,12 @@ export class PasoUnoComponent implements OnInit {
  }
 
   constructor(
-    private consultaQuery: ConsultaioQuery) {
+    private consultaQuery: ConsultaioQuery,private modificacionPermisoLabService: ModificacionPermisoLabService) {
 
   }
 
   ngOnInit(): void {
+    // Se suscribe al observable del estado y actualiza la propiedad local.
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -51,9 +53,24 @@ export class PasoUnoComponent implements OnInit {
         })
       )
       .subscribe();
+
+    // Si el estado indica actualización, carga los datos del formulario.
     if (this.consultaState.update) {
-      //
-    }
+      this.guardarDatosFormulario();
+    } 
+  }
+ 
+
+  guardarDatosFormulario(): void {
+    this.modificacionPermisoLabService
+      .obtenerDatosInicialesFormulario().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.modificacionPermisoLabService.actualizarEstadoFormulario(resp);
+        }
+      });
   }
  
 }
