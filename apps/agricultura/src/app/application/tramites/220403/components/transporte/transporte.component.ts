@@ -16,7 +16,7 @@ import {
   TablaDinamicaComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -51,6 +51,22 @@ import { Transporte } from '../../models/acuicola.module';
   imports: [TituloComponent, AlertComponent, TablaDinamicaComponent, InputRadioComponent, InputFechaComponent, CatalogoSelectComponent, FormsModule, ReactiveFormsModule, CommonModule ], 
 })
 export class TransporteComponent implements OnInit, OnDestroy {
+
+  /**
+   * @input
+   * @description
+   * Indica si el formulario debe estar deshabilitado. Cuando es `true`, los controles del formulario estarán inactivos y no permitirán la edición por parte del usuario.
+   * @type {boolean}
+   */
+   @Input() formularioDeshabilitado: boolean = false;
+
+   /**
+   * @descripcion
+   * Indica si el formulario se encuentra en modo solo lectura.
+   * Cuando es verdadero, los controles del formulario estarán deshabilitados.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Notificador para la destrucción de suscripciones.
    * @access private
@@ -191,6 +207,29 @@ export class TransporteComponent implements OnInit, OnDestroy {
       this.seccionStore.establecerFormaValida([false]);
     }
   });
+
+  if(this.formularioDeshabilitado){
+      this.esFormularioSoloLectura = true;
+      this.inicializarEstadoFormulario();
+  }
+
+  }
+
+  /**
+   * Inicializa el estado del formulario según si está en modo solo lectura o editable.
+   * Si el formulario está en modo solo lectura, deshabilita todos los controles.
+   * Si no, habilita los controles para permitir la edición.
+   *
+   * @method
+   * @memberof CertificadoOrigenComponent
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.formulario.disable();
+    }
+    else {
+      this.formulario.enable();
+    } 
   }
 
   /**

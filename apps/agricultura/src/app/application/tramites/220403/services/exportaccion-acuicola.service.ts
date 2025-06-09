@@ -139,4 +139,23 @@ export class ExportaccionAcuicolaService {
       this.seccionStore.establecerFormaValida([false]);
     }
   }
+
+  /**
+   * @description Obtiene los datos del formulario de certificados de origen desde un archivo JSON local.
+   * @returns {Observable<TramiteState>} Observable con el estado del trámite.
+   */
+  public getAcuiculturaData(): Observable<FormularioGrupo> {
+    return this.httpClient.get<FormularioGrupo>('assets/json/220403/certificadosOrigenForm.json');
+  }
+
+  /**
+   * @description Actualiza el estado completo del formulario en el store de acuicultura.
+   * @param DATOS Objeto de tipo Acuicultura con los datos a actualizar.
+   */
+  public actualizarEstadoFormulario(DATOS: FormularioGrupo): void {
+    this.store.setDatosRealizar(DATOS.datosRealizar);
+    this.store.setCombinacionRequerida(DATOS.combinacionRequerida);
+    this.store.setTransporte(DATOS.transporte);
+    this.store.setPagoDerechos(DATOS.pagoDerechos);
+  }
 }
