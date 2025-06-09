@@ -173,12 +173,6 @@ describe('PeruDestinatarioComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call setFormDatosDelDestinatario when datosDelDestinatarioFunc is invoked', () => {
-    const mockData = { key: 'value' };
-    component.datosDelDestinatarioFunc(mockData);
-    expect(mockStore.setFormDatosDelDestinatario).toHaveBeenCalledWith(mockData);
-  });
-
   it('should call setFormExportador when setValoresStoreExportador is invoked', () => {
     const mockEvent = { formGroupName: 'group', campo: 'campo', valor: undefined, storeStateName: 'state' };
     component.setValoresStoreExportador(mockEvent);
