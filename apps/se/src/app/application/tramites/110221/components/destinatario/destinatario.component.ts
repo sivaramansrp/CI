@@ -1,4 +1,4 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, PAGO_DE_DERECHOS, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, PAGO_DE_DERECHOS, REGEX_SOLO_DIGITOS, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -69,6 +69,19 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
 options!: Catalogo[];
 
   /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
+
+
+  /**
    * Constructor del componente.
    * @param registroService Servicio para obtener datos de catálogos.
    * @param fb Constructor de formularios reactivos.
@@ -81,7 +94,8 @@ options!: Catalogo[];
     public fb: FormBuilder,
     private store: Tramite110221Store,
     private query: Tramite110221Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+        private consultaioQuery: ConsultaioQuery
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -118,7 +132,16 @@ options!: Catalogo[];
       )
       .subscribe();
     this.donanteDomicilio();
-
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -214,15 +237,16 @@ options!: Catalogo[];
         lada: [this.solicitudState?.lada, [Validators.required]],
         telefono: [
           this.solicitudState?.telefono,
-          [Validators.required, Validators.pattern(/^\d+$/)],
+          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
         ],
-        fax: [this.solicitudState?.fax, [Validators.pattern(/^\d+$/)]],
+        fax: [this.solicitudState?.fax, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
         correoElectronico: [
           this.solicitudState?.correoElectronico,
           [Validators.required, Validators.email],
         ],
       }),
     });
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -233,5 +257,13 @@ options!: Catalogo[];
    
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.registroForm?.disable();
+    } else {
+      this.registroForm?.enable();
+    }
   }
 }

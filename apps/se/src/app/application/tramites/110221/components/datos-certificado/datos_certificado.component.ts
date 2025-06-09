@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, CatalogosSelect, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConsultaioQuery, ConsultaioState, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -86,6 +86,17 @@ optionsEntidad!: Catalogo[];
  * Contiene una lista de objetos del catálogo de representaciones federales obtenidos desde el servicio.
  */
 optionsRepresentacion!: Catalogo[];
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -100,7 +111,8 @@ optionsRepresentacion!: Catalogo[];
     public fb: FormBuilder,
     private store: Tramite110221Store,
     private query: Tramite110221Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+            private consultaioQuery: ConsultaioQuery
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -140,7 +152,16 @@ optionsRepresentacion!: Catalogo[];
     } else {
       this.isJustificacion = false;
     }
-
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
    
   }
 
@@ -250,6 +271,7 @@ optionsRepresentacion!: Catalogo[];
         ],
       }),
     });
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -260,5 +282,12 @@ optionsRepresentacion!: Catalogo[];
     
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.registroForm?.disable();
+    } else {
+      this.registroForm?.enable();
+    }
   }
 }

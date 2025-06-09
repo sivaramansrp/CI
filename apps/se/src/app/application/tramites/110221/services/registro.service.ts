@@ -1,4 +1,4 @@
-import { ColumnasTabla, SeleccionadasTabla } from '../models/registro.model';
+import { ColumnasTabla, RespuestaConsulta, SeleccionadasTabla } from '../models/registro.model';
 import { ENVIRONMENT, JSONResponse, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Observable, catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -143,10 +143,18 @@ export class RegistroService {
    * @throws Lanzará un error si la solicitud HTTP falla.
    */
   public getSolicitudesDataTabla(): Observable<SeleccionadasTabla[]> {
-    return this.http.get<SeleccionadasTabla[]>('assets/json/110221/mercancia-seleccionadas.json').pipe(
+    return this.http.get<SeleccionadasTabla[]>('assets/json/110221/mercancias-seleccionadas.json').pipe(
       catchError((error) => {
         return throwError(() => error);
       })
     );
+  }
+
+  /**
+ * Obtiene los datos para la consulta del trámite.
+ * @returns {Observable<RespuestaConsulta>} Observable con los datos de consulta.
+ */
+  getDatosConsulta(): Observable<RespuestaConsulta> {
+    return this.http.get<RespuestaConsulta>('assets/json/110221/consulta_110221.json');
   }
 }
