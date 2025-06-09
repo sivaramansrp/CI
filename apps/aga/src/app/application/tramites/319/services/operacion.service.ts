@@ -85,6 +85,24 @@ export class OperacionService {
        const BASEURL = this.url + fileName;
       return this.http.get<FinalDataToSend>(BASEURL);
     }
+    /**
+ * @method actualizarEstadoFormulario
+ * @description
+ * Actualiza el estado completo del formulario en la tienda (`store`) mediante el servicio `solocitud319Service`.
+ * 
+ * Este método delega la actualización del estado llamando al método `actualizarTodo`, 
+ * que reemplaza completamente los datos actuales (`datos`) y la operación (`operacion`)
+ * con el nuevo objeto `resp` de tipo `FinalDataToSend`.
+ * 
+ * @param {FinalDataToSend} resp - Objeto que contiene los nuevos datos y operación a establecer en el estado del store.
+ * 
+ * @example
+ * const nuevosDatos: FinalDataToSend = {
+ *   datos: [...],
+ *   operacion: 'editar'
+ * };
+ * this.actualizarEstadoFormulario(nuevosDatos);
+ */
     actualizarEstadoFormulario(resp:FinalDataToSend): void {
       this.solocitud319Service.actualizarTodo(resp); 
 
