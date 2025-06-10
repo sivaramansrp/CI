@@ -1,3 +1,6 @@
+import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
+import { HistoricoColumnas } from "./certificado-origen.model";
+
 /**
  * Interfaz que define la estructura de las columnas de la tabla.
  * 
@@ -105,3 +108,93 @@ export const DESPACHO_LDA = {
   required: false,
   alfanumerico: true,
 };
+
+
+
+/**
+ * Representa la respuesta de una consulta realizada en el trámite.
+ */
+export interface RespuestaConsulta {
+  /**
+   * Indica si la consulta fue exitosa.
+   */
+  success: boolean;
+
+  /**
+   * Contiene los datos obtenidos de la consulta.
+   */
+  datos: ConsultaDatos;
+
+  /**
+   * Mensaje asociado a la respuesta de la consulta.
+   */
+  message: string;
+}
+
+/**
+ * Contiene los datos obtenidos de una consulta.
+ */
+export interface ConsultaDatos {
+  tercerOperador: boolean;
+  tratado: string;
+  pais: string;
+  fraccionArancelaria: string;
+  numeroRegistro: string;
+  nombreComercial: string;
+  fechaInicial: string;
+  fechaFinal: string;
+  archivo: string;
+  fraccionMercanciaArancelaria: string;
+  nombreTecnico: string;
+  nombreComercialDelaMercancia: string;
+  criterioParaPreferencial: string;
+  valorContenidoRegional: string;
+  otrasInstancias: string;
+  cantidad: string;
+  umc: string;
+  valorDelaMercancia: string;
+  complementoDelaDescripcion: string;
+  tipoFactura: string;
+  fecha: string;
+  numeroFactura: string;
+  numeroSerie: string;
+  observaciones: string;
+  entidad: string;
+  representacion: string;
+  casillaVerificacion: boolean;
+  justificacion: string;
+  nombre: string;
+  numeroFiscal: string;
+  ciudad: string;
+  calle: string;
+  numeroLetra: string;
+  numeroDeRegistroFiscal: string;
+  telefono: string;
+  fax: string;
+  correoElectronico: string;
+  nacion: string;
+  datosConfidencialesProductor: boolean;
+  productorMismoExportador: boolean;
+  numeroRegistroFiscal: string;
+  agregarDatosProductorFax: string;
+}
+
+export const historicoTableColumns: ConfiguracionColumna<HistoricoColumnas>[] = [
+    { encabezado: 'Nombre del productor', clave: (elementos) => elementos.nombreProductor, orden: 1 },
+    { encabezado: 'Número de registro fiscal', clave: (elementos) => elementos.numeroRegistroFiscal, orden: 2 },
+    { encabezado: 'Dirección', clave: (elementos) => elementos.direccion, orden: 3 },
+    { encabezado: 'Correo Electrónico', clave: (elementos) => elementos.correoElectronico, orden: 4 },
+    { encabezado: 'Teléfono', clave: (elementos) => elementos.telefono, orden: 5 },
+    { encabezado: 'Fax', clave: (elementos) => elementos.fax, orden: 6 },
+  ];
+
+  export const headersDataSeleccionadasTabla: ConfiguracionColumna<SeleccionadasTabla>[] = [
+    { encabezado: 'Fracción arancelaria', clave: (ele: SeleccionadasTabla) => ele.fraccionArancelaria, orden: 1 },
+    { encabezado: 'Cantidad', clave: (ele: SeleccionadasTabla) => ele.cantidad, orden: 2 },
+    { encabezado: 'Unidad de medida', clave: (ele: SeleccionadasTabla) => ele.unidadMedida, orden: 3 },
+    { encabezado: 'Valor mercancía', clave: (ele: SeleccionadasTabla) => ele.valorMercancia, orden: 4 },
+    { encabezado: 'Tipo de factura', clave: (ele: SeleccionadasTabla) => ele.tipoFactura, orden: 5 },
+    { encabezado: 'Número factura', clave: (ele: SeleccionadasTabla) => ele.numFactura, orden: 6 },
+    { encabezado: 'Complemento descripción', clave: (ele: SeleccionadasTabla) => ele.complementoDescripcion, orden: 7 },
+    { encabezado: 'Fecha factura', clave: (ele: SeleccionadasTabla) => ele.fechaFactura, orden: 8 },
+  ];

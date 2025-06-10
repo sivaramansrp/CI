@@ -1383,5 +1383,14 @@
     "diasTranscurridos": "4",
     "departamento": "AGA",
     "numeroDeProcedimiento": "319"
+},
+{
+  "id": 110223,
+  "tipoDeTramite": "Validar certificado posteriori — Alianza del Pacífico",
+  "fecha": "2022-10-05",
+  "fechaActualizacion": "2022-10-25",
+  "diasTranscurridos": "4",
+  "departamento": "SE",
+  "numeroDeProcedimiento": "110223"
 }
 ]
