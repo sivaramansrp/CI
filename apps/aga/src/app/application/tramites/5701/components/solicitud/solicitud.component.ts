@@ -358,6 +358,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   public datosTablaPagos: LineaCaptura[] = [];
 
   /**
+   * @description Almacena el monto total a pagar en la solicitud.
+   */
+  montoACubrir: number = 0;
+
+  /**
+   * @description Almacena el monto por dia.
+   */
+  montoPorDia: number = 0;
+
+  /**
    * @description Almacena los montos a pagar en la solicitud.
    */
   montoPagadoLineas: number = 0;
@@ -649,9 +659,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {boolean} - Retorna `true` si el campo tiene un error de patrón, de lo contrario `false`.
    */
   isErrorPattern(field: string): boolean {
-    const CONTROL = this.datosImportadorExportador.get(
-      field
-    ) as FormControl;
+    const CONTROL = this.datosImportadorExportador.get(field) as FormControl;
 
     if (CONTROL) {
       const ERROR_PATTERN = CONTROL.hasError('pattern');
@@ -1444,7 +1452,14 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       HORA_INICIO,
       HORA_FINAL
     );
+
+    this.montoACubrir = this.selectRangoDias.length * this.montoPorDia; // Ejemplo de cálculo, ajustar según lógica real
+    this.pagoCaptura.get('montoAPagar')?.enable();
+    this.pagoCaptura.get('montoAPagar')?.setValue(this.montoACubrir);
+    this.pagoCaptura.get('montoAPagar')?.disable();
     this.colapsable = true;
+
+    this.setValoresStore(this.pagoCaptura, 'montoAPagar', 'setMontoPagar');
   }
 
   /**
@@ -2102,17 +2117,14 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             return;
           }
 
-          //Obtenemos el monto a pagar desde el servicio de parámetros
-          const MONTO_A_PAGAR = this.pagoCaptura
-            .get('montoAPagar')
-            ?.getRawValue();
+      
 
           const DIAS_SERVICIO =
             this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL
               ? UN_DIA
               : this.fechasSeleccionadas.length;
 
-          const MONTO_A_CUBRIR = DIAS_SERVICIO * MONTO_A_PAGAR;
+          const MONTO_A_CUBRIR = DIAS_SERVICIO * this.montoPorDia;
 
           const PAGO = {
             lineaCaptura: LINEA_PAGO,
@@ -2171,6 +2183,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         tap((montoResponse) => {
+          this.montoPorDia = montoResponse.datos;
           this.pagoCaptura.get('montoAPagar')?.enable();
           this.pagoCaptura.get('montoAPagar')?.setValue(montoResponse.datos);
           this.pagoCaptura.get('montoAPagar')?.disable();
