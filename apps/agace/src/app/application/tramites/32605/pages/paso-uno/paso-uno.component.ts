@@ -1,14 +1,21 @@
 import { CTPATComponent } from '../../components/c-tpat/c-tpat.component';
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component} from '@angular/core';
+import { ConsultaioQuery} from '@libs/shared/data-access-user/src';
+import { ConsultaioState } from '@libs/shared/data-access-user/src';
 import { DatosComunesComponent } from '../../components/datos-comunes/datos-comunes.component';
+import { GuardarDatosFormulario } from '../../models/solicitud.model';
 import { ImportadorExportadorComponent } from '../../components/importador-exportador/importador-exportador.component';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { SolicitudService } from '../../services/solicitud.service';
+import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
 import { ViewChild } from '@angular/core';
-import { map, Subject, takeUntil } from 'rxjs';
-import { SolicitudService } from '../../services/solicitud.service';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente que representa el primer paso de un trámite.
