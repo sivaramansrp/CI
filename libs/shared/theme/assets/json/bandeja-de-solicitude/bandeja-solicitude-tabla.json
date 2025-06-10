@@ -1357,5 +1357,15 @@
   "diasTranscurridos": "4",
   "departamento": "AGACE",
   "numeroDeProcedimiento": "32514"
+},
+{
+  "id": 317,
+  "tipoDeTramite": "Solicitud de Permiso",
+  "fecha": "2023-11-03",
+  "fechaActualizacion": "2023-03-20",
+  "diasTranscurridos": "4",
+  "departamento": "AGACE",
+  "numeroDeProcedimiento": "317"
 }
+
 ]
