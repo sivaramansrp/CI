@@ -1,150 +1,169 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-} from '@angular/forms';
-import { of, Subject } from 'rxjs';
 import { DestinatarioComponent } from './destinatario.component';
 import { RegistroService } from '../../services/registro.service';
 import { Tramite110201Store } from '../../state/Tramite110201.store';
 import { Tramite110201Query } from '../../state/Tramite110201.query';
-import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { ValidacionesFormularioService, Catalogo, CatalogoSelectComponent, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { FormBuilder, ReactiveFormsModule, FormGroup } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 
 describe('DestinatarioComponent', () => {
   let component: DestinatarioComponent;
   let fixture: ComponentFixture<DestinatarioComponent>;
-  let registroService: RegistroService;
-  let tramiteStore: Tramite110201Store;
-  let tramiteQuery: Tramite110201Query;
-  let validacionesService: ValidacionesFormularioService;
+  let registroServiceMock: any;
+  let tramiteStoreMock: any;
+  let tramiteQueryMock: any;
+  let validacionesServiceMock: any;
+  let consultaioQueryMock: any;
 
   beforeEach(async () => {
+    registroServiceMock = {
+      getPaisDestino: jest.fn().mockReturnValue(of({ code: 200, data: [{ id: 1, nombre: 'México' }] })),
+      getTransporte: jest.fn().mockReturnValue(of({ code: 200, data: [{ id: 1, nombre: 'Aéreo' }] })),
+      getRegistroTomaMuestrasMercanciasData: jest.fn().mockReturnValue(of({})),
+      actualizarEstadoFormulario: jest.fn(),
+    };
+    tramiteStoreMock = {};
+    tramiteQueryMock = {
+      selectSolicitud$: of({}),
+    };
+    validacionesServiceMock = {
+      isValid: jest.fn().mockReturnValue(true),
+    };
+    consultaioQueryMock = {
+      selectConsultaioState$: of({ readonly: false }),
+    };
+
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, FormsModule, DestinatarioComponent],
-      declarations: [],
+      imports: [ReactiveFormsModule, CatalogoSelectComponent, DestinatarioComponent],
       providers: [
         FormBuilder,
-        {
-          provide: RegistroService,
-          useValue: {
-            getPaisDestino: jest
-              .fn()
-              .mockReturnValue(of({ code: 200, data: [] })),
-            getTransporte: jest
-              .fn()
-              .mockReturnValue(of({ code: 200, data: [] })),
-          },
-        },
-        {
-          provide: Tramite110201Store,
-          useValue: {
-            setNacion: jest.fn(),
-            setTransporte: jest.fn(),
-          },
-        },
-        {
-          provide: Tramite110201Query,
-          useValue: {
-            selectSolicitud$: of({}),
-            selectNacion$: of([]),
-            selectTransporte$: of([]),
-          },
-        },
-        {
-          provide: ValidacionesFormularioService,
-          useValue: {
-            isValid: jest.fn().mockReturnValue(true),
-          },
-        },
-      ],
+        { provide: RegistroService, useValue: registroServiceMock },
+        { provide: Tramite110201Store, useValue: tramiteStoreMock },
+        { provide: Tramite110201Query, useValue: tramiteQueryMock },
+        { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DestinatarioComponent);
     component = fixture.componentInstance;
-    registroService = TestBed.inject(RegistroService);
-    tramiteStore = TestBed.inject(Tramite110201Store);
-    tramiteQuery = TestBed.inject(Tramite110201Query);
-    validacionesService = TestBed.inject(ValidacionesFormularioService);
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize component and call necessary methods on ngOnInit', () => {
-    const getPaisDestinoSpy = jest.spyOn(component, 'getPaisDestino');
-    const getTransporteSpy = jest.spyOn(component, 'getTransporte');
-    const donanteDomicilioSpy = jest.spyOn(component, 'donanteDomicilio');
-
-    component.ngOnInit();
-
-    expect(getPaisDestinoSpy).toHaveBeenCalled();
-    expect(getTransporteSpy).toHaveBeenCalled();
-    expect(donanteDomicilioSpy).toHaveBeenCalled();
-  });
-
-  it('should validate destinatario formulario', () => {
-    component.registroForm = component.fb.group({
-      validacionForm: component.fb.group({
-        nacion: [''],
-      }),
-    });
-    component.validarDestinatarioFormulario();
-    expect(component.registroForm.touched).toBe(true);
-  });
-
-  it('should call getPaisDestino and set nacion in store', () => {
-    const spy = jest.spyOn(registroService, 'getPaisDestino');
+  it('should call getPaisDestino and set options', () => {
     component.getPaisDestino();
-    expect(spy).toHaveBeenCalled();
-    expect(tramiteStore.setNacion).toHaveBeenCalled();
+    expect(registroServiceMock.getPaisDestino).toHaveBeenCalled();
+    expect(component.options).toBeDefined();
   });
 
-  it('should call getTransporte and set transporte in store', () => {
-    const spy = jest.spyOn(registroService, 'getTransporte');
+  it('should call getTransporte and set option', () => {
     component.getTransporte();
-    expect(spy).toHaveBeenCalled();
-    expect(tramiteStore.setTransporte).toHaveBeenCalled();
+    expect(registroServiceMock.getTransporte).toHaveBeenCalled();
+    expect(component.option).toBeDefined();
   });
 
-  it('should validate form field', () => {
-    const form = component.fb.group({
-      field: [''],
+  it('should mark all as touched if registroForm is invalid in validarDestinatarioFormulario', () => {
+    component.registroForm = new FormBuilder().group({
+      validacionForm: new FormBuilder().group({
+        nombre: ['']
+      })
     });
-    const isValid = component.isValid(form, 'field');
-    expect(isValid).toBe(true);
+    jest.spyOn(component.registroForm, 'markAllAsTouched');
+    component.registroForm.setErrors({ invalid: true });
+    component.validarDestinatarioFormulario();
+    expect(component.registroForm.markAllAsTouched).toHaveBeenCalled();
   });
 
-  it('should set valores in store', () => {
-    const form = component.fb.group({
-      nacion: ['test'],
+  it('should set isDisabled to true on onClick', () => {
+    component.isDisabled = false;
+    component.onClick();
+    expect(component.isDisabled).toBe(true);
+  });
+
+  it('should call guardarDatosFormulario if soloLectura in inicializarEstadoFormulario', () => {
+    component.soloLectura = true;
+    jest.spyOn(component, 'guardarDatosFormulario');
+    component.inicializarEstadoFormulario();
+    expect(component.guardarDatosFormulario).toHaveBeenCalled();
+  });
+
+  it('should call donanteDomicilio if not soloLectura in inicializarEstadoFormulario', () => {
+    component.soloLectura = false;
+    jest.spyOn(component, 'donanteDomicilio');
+    component.inicializarEstadoFormulario();
+    expect(component.donanteDomicilio).toHaveBeenCalled();
+  });
+
+  it('should call donanteDomicilio and enable/disable form in guardarDatosFormulario', () => {
+    component.soloLectura = true;
+    component.registroForm = new FormBuilder().group({
+      validacionForm: new FormBuilder().group({})
     });
-    component.setValoresStore(form, 'nacion', 'setNacion');
-    expect(tramiteStore.setNacion).toHaveBeenCalledWith('test');
+    jest.spyOn(component.registroForm, 'disable');
+    jest.spyOn(component, 'donanteDomicilio');
+    component.guardarDatosFormulario();
+    expect(component.donanteDomicilio).toHaveBeenCalled();
+    expect(component.registroForm.disable).toHaveBeenCalled();
+
+    component.soloLectura = false;
+    jest.spyOn(component.registroForm, 'enable');
+    component.guardarDatosFormulario();
+    expect(component.registroForm.enable).toHaveBeenCalled();
   });
 
-  it('should unsubscribe from all subscriptions on ngOnDestroy', () => {
-    const destroyNotifierSpy = jest.spyOn(component.destroyNotifier$, 'next');
-    const paisDestinoUnsubscribeSpy = jest.spyOn(
-      component.getPaisDestinoSubscription,
-      'unsubscribe'
-    );
-    const transporteUnsubscribeSpy = jest.spyOn(
-      component.getTransporteSubscription,
-      'unsubscribe'
-    );
+  it('should call validacionesService.isValid in isValid', () => {
+    const form = new FormBuilder().group({ campo: [''] });
+    expect(component.isValid(form, 'campo')).toBe(true);
+    expect(validacionesServiceMock.isValid).toHaveBeenCalled();
+  });
 
+  it('should call store method in setValoresStore', () => {
+    const storeMethod = jest.fn();
+    component.store = { setTest: storeMethod } as any;
+    const form = new FormBuilder().group({ campo: ['valor'] });
+    component.setValoresStore(form, 'campo', 'setNombre');
+    expect(storeMethod).toHaveBeenCalledWith('valor');
+  });
+
+  it('should return validacionForm', () => {
+    component.registroForm = new FormBuilder().group({
+      validacionForm: new FormBuilder().group({})
+    });
+    expect(component.validacionForm).toBeTruthy();
+  });
+
+  it('should set up forms in donanteDomicilio', () => {
+    component.solicitudState = {} as any;
+    component.donanteDomicilio();
+    expect(component.registroForm).toBeTruthy();
+  });
+
+  it('should complete destroyNotifier$ and destroyed$ on ngOnDestroy', () => {
+    const destroyNotifierNext = jest.spyOn(component.destroyNotifier$, 'next');
+    const destroyNotifierComplete = jest.spyOn(component.destroyNotifier$, 'complete');
     component.ngOnDestroy();
-
-    expect(destroyNotifierSpy).toHaveBeenCalled();
-    expect(paisDestinoUnsubscribeSpy).toHaveBeenCalled();
-    expect(transporteUnsubscribeSpy).toHaveBeenCalled();
+    expect(destroyNotifierNext).toHaveBeenCalled();
+    expect(destroyNotifierComplete).toHaveBeenCalled();
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
+  it('should call actualizarEstadoFormulario and donanteDomicilio on ngOnInit', () => {
+    jest.spyOn(component.registroService, 'actualizarEstadoFormulario');
+    jest.spyOn(component, 'donanteDomicilio');
+    component.ngOnInit();
+    expect(component.registroService.actualizarEstadoFormulario).toHaveBeenCalled();
+    expect(component.donanteDomicilio).toHaveBeenCalled();
+  });
+
+  it('should not throw on onSubmit if form is valid', () => {
+    component.registroForm = new FormBuilder().group({
+      validacionForm: new FormBuilder().group({})
+    });
+    component.registroForm.setErrors(null);
+    expect(() => component.onSubmit()).not.toThrow();
   });
 });
