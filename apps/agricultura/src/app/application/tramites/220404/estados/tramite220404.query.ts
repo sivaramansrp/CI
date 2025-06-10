@@ -30,6 +30,11 @@ export class DesistimientoQuery extends Query<DesistimientoState> {
         return state;
     });
 
+    /**
+     * @propiedad selectDescripcion$
+     * @tipo Observable<string>
+     * @descripción Selector que permite obtener la descripción del desistimiento.
+     */
     selectDescripcion$ = this.select((state) => {
         return state.descripcion;
     });
