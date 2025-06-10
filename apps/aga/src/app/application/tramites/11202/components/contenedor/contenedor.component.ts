@@ -6,7 +6,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { Contenedor11202Query } from '../../../../core/queries/contenedor11202.query';
 import { DatosTramiteService } from '@libs/shared/data-access-user/src/core/services/11202/datos-tramite.service';
-import { TEXTOS_REQUISITOS } from '../../../../constantes/11202/retorno-contenedores.enum';
+import { ENCABEZADO_DE_TABLA, GRID_CONTENEDORES, TEXTOS_REQUISITOS } from '../../../../constantes/11202/retorno-contenedores.enum';
 import preOperativo from '@libs/shared/theme/assets/json/11202/preOperativo.json';
 
 /**
@@ -538,35 +538,10 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
   * Configuración de las columnas de la tabla.
   */
-  public encabezadoDeTabla: ConfiguracionColumna<DatosDelContenedor>[] = [
-    { encabezado: '', clave: (artículo) => artículo.id, orden: 1 },
-    { encabezado: 'Iniciales del equipo', clave: (artículo) => artículo.inicialesEquipo, orden: 1 },
-    { encabezado: 'Número de equipo', clave: (artículo) => artículo.numeroEquipo, orden: 2 },
-    { encabezado: 'Dígito Verificador', clave: (artículo) => artículo.digitoVerificador, orden: 3 },
-    { encabezado: 'Tipo de equipo', clave: (artículo) => artículo.tipoEquipo, orden: 4 },
-    { encabezado: 'Aduana', clave: (artículo) => artículo.aduana, orden: 5 },
-    { encabezado: 'Fecha Ingreso', clave: (artículo) => artículo.fechaIngreso, orden: 6 },
-    { encabezado: 'Vigencia', clave: (artículo) => artículo.vigencia, orden: 7 },
-    { encabezado: 'Estado de constancia', clave: (artículo) => artículo.estadoConstancia, orden: 8 },
-    { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existeEnVUCEM, orden: 9 },
-    { encabezado: 'Id constancia', clave: (artículo) => artículo.idConstancia, orden: 10 },
-    { encabezado: 'Número manifiesto', clave: (artículo) => artículo.numeroManifiesto, orden: 11 },
-    { encabezado: 'Id solicitud', clave: (artículo) => artículo.idSolicitud, orden: 12 },
-    { encabezado: 'Fecha inicio', clave: (artículo) => artículo.fechaInicio, orden: 13 }
-  ];
+  public encabezadoDeTabla: ConfiguracionColumna<DatosDelContenedor>[] = ENCABEZADO_DE_TABLA;
 
   /**
    * Configuración de las columnas de la tabla.
    */
-  public gridContenedores: ConfiguracionColumna<GridContenedores>[] = [
-    { encabezado: '', clave: (artículo) => artículo.id, orden: 1 },
-    { encabezado: 'Iniciales del equipo', clave: (artículo) => artículo.inicialesContenedor, orden: 1 },
-    { encabezado: 'Número de equipo', clave: (artículo) => artículo.numeroContenedor, orden: 2 },
-    { encabezado: 'Dígito Verificador', clave: (artículo) => artículo.digitoVerificador, orden: 3 },
-    { encabezado: 'Tipo de equipo', clave: (artículo) => artículo.tipoContenedor, orden: 4 },
-    { encabezado: 'Aduana', clave: (artículo) => artículo.aduana, orden: 5 },
-    { encabezado: 'Estado de constancia', clave: (artículo) => artículo.estadoConstancia, orden: 8 },
-    { encabezado: 'Existe en VUCEM', clave: (artículo) => artículo.existeEnVUCEM, orden: 9 },
-    { encabezado: 'Id constancia', clave: (artículo) => artículo.idConstancia, orden: 10 },
-  ];
+  public gridContenedores: ConfiguracionColumna<GridContenedores>[] = GRID_CONTENEDORES;
 }
