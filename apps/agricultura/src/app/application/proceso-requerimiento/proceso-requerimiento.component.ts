@@ -316,7 +316,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    * @return {void}
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
+    if (e?.valor && e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (this.indice !== 2) {
           this.consultaioStore.establecerConsultaio(
