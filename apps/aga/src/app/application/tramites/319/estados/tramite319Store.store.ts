@@ -91,4 +91,22 @@ export class Tramite319Store extends Store<FinalDataToSend> {
         }));
       }
 
+      /**
+ * @method actualizarTodo
+ * @description Reemplaza completamente el estado con nuevos datos y una nueva operación.
+ * @param {FinalDataToSend} nuevoEstado - El nuevo estado completo a establecer.
+ * 
+ * @example
+ * tramite319Store.actualizarTodo({
+ *   datos: [...],
+ *   operacion: 'crear'
+ * });
+ */
+public actualizarTodo(nuevoEstado: FinalDataToSend): void {
+  this.update(() => ({
+    ...nuevoEstado
+  }));
+}
+
+
 }

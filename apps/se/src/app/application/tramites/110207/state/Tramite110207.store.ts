@@ -14,9 +14,9 @@ export interface Catalogo {
  */
 export interface Solicitud110207State {
   /** Lista de tratados disponibles. */
-  tratado: Catalogo[] | null;
+  tratado: Catalogo[]
   /** Lista de países disponibles. */
-  pais: Catalogo[] | null;
+  pais: Catalogo[]
   /** Fracción arancelaria seleccionada. */
   fraccionArancelaria: string;
   /** Número de registro del producto. */
@@ -36,11 +36,11 @@ export interface Solicitud110207State {
   /** Valor de presenta. */
   presenta: string;
   /** Lista de idiomas disponibles. */
-  idioma: Catalogo[] | null;
+  idioma: Catalogo[]
   /** Lista de entidades disponibles. */
-  entidad: Catalogo[] | null;
+  entidad: Catalogo[] 
   /** Lista de representaciones disponibles. */
-  representacion: Catalogo[] | null;
+  representacion: Catalogo[] 
   /** Nombre del solicitante. */
   nombre: string;
   /** Primer apellido del solicitante. */
@@ -66,9 +66,9 @@ export interface Solicitud110207State {
   /** Correo electrónico del solicitante. */
   correoElectronico: string;
   /** Lista de naciones disponibles. */
-  nacion: Catalogo[] | null;
+  nacion: Catalogo[]
   /** Lista de transportes disponibles. */
-  transporte: Catalogo[] | null;
+  transporte: Catalogo[] 
   /** Fracción arancelaria de la mercancía. */
   fraccionMercanciaArancelaria: string;
   /** Nombre técnico de la mercancía. */
@@ -82,7 +82,7 @@ export interface Solicitud110207State {
   /** Cantidad de la mercancía. */
   cantidad: string;
   /** Lista de unidades de medida comercial (UMC). */
-  umc: Catalogo[] | null;
+  umc: Catalogo[] 
   /** Valor de la mercancía. */
   valorDelaMercancia: string;
   /** Complemento de la descripción de la mercancía. */
@@ -92,9 +92,9 @@ export interface Solicitud110207State {
   /** Nombre comercial de la mercancía. */
   nombreComercialDelaMercancia: string;
   /** Lista de unidades de medida disponibles. */
-  unidadMedida: Catalogo[] | null;
+  unidadMedida: Catalogo[] 
   /** Lista de tipos de factura disponibles. */
-  tipoFactura: Catalogo[] | null;
+  tipoFactura: Catalogo[] 
   /** Fecha de la factura. */
   fecha: string;
   /** Número de la factura. */
@@ -118,8 +118,8 @@ export interface Solicitud110207State {
  */
 export function createInitialState(): Solicitud110207State {
   return {
-    tratado: null,
-    pais: null,
+    tratado: [],
+    pais: [],
     fraccionArancelaria: '',
     numeroRegistro: '',
     nombreComercial: '',
@@ -129,9 +129,9 @@ export function createInitialState(): Solicitud110207State {
     observaciones: '',
     presica: '',
     presenta: '',
-    idioma: null,
-    entidad: null,
-    representacion: null,
+    idioma: [],
+    entidad: [],
+    representacion: [],
     nombre: '',
     apellidoPrimer: '',
     apellidoSegundo: '',
@@ -144,21 +144,21 @@ export function createInitialState(): Solicitud110207State {
     telefono: '',
     fax: '',
     correoElectronico: '',
-    nacion: null,
-    transporte: null,
+    nacion: [],
+    transporte: [],
     fraccionMercanciaArancelaria: '',
     nombreTecnico: '',
     nombreEnIngles: '',
     criterioParaConferir: '',
     marca: '',
     cantidad: '',
-    umc: null,
+    umc: [],
     valorDelaMercancia: '',
     complementoDelaDescripcion: '',
     masaBruta: '',
     nombreComercialDelaMercancia: '',
-    unidadMedida: null,
-    tipoFactura: null,
+    unidadMedida: [],
+    tipoFactura: [],
     fecha: '',
     numeroFactura: '',
     justificacion: '',
@@ -462,7 +462,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el catálogo de idiomas.
    * @param idioma Lista de objetos de tipo `Catalogo` o `null`.
    */
-  public setIdioma(idioma: Catalogo[] | null) {
+  public setIdioma(idioma: Catalogo[]) {
     this.update((state) => ({
       ...state,
       idioma,
@@ -472,7 +472,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el catálogo de entidades.
    * @param entidad Lista de objetos de tipo `Catalogo` o `null`.
    */
-  public setEntidad(entidad: Catalogo[] | null) {
+  public setEntidad(entidad: Catalogo[]) {
     this.update((state) => ({
       ...state,
       entidad,
@@ -482,7 +482,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el catálogo de representaciones.
    * @param representacion Lista de objetos de tipo `Catalogo` o `null`.
    */
-  public setRepresentacion(representacion: Catalogo[] | null) {
+  public setRepresentacion(representacion: Catalogo[]) {
     this.update((state) => ({
       ...state,
       representacion,
@@ -612,7 +612,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el catálogo de naciones.
    * @param nacion Lista de objetos de tipo `Catalogo` o `null`.
    */
-  public setNacion(nacion: Catalogo[] | null) {
+  public setNacion(nacion: Catalogo[]) {
     this.update((state) => ({
       ...state,
       nacion,
@@ -622,7 +622,7 @@ export class Tramite110207Store extends Store<Solicitud110207State> {
    * Establece el catálogo de transportes.
    * @param transporte Lista de objetos de tipo `Catalogo` o `null`.
    */
-  public setTransporte(transporte: Catalogo[] | null) {
+  public setTransporte(transporte: Catalogo[]) {
     this.update((state) => ({
       ...state,
       transporte,
