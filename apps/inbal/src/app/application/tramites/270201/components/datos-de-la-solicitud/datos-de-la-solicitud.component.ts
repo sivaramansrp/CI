@@ -37,6 +37,7 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TableComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite270201Query } from '../../estados/queries/tramite270201.query';
+import obraDeArteDummy from '@libs/shared/theme/assets/json/270201/obra-de-arte-dummy.json'; // adjust path if needed
 
 /**
  * Constante que contiene el texto del manifiesto de alerta sobre la propiedad y datos técnicos de la obra(s).
@@ -392,7 +393,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
-    } else {
+    } else if(this.solicitudFormGroup && this.obraDeArteFormgroup) {
        this.solicitudFormGroup.enable();
        this.obraDeArteFormgroup.enable();
     }
@@ -414,6 +415,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
     if (this.obraDeArteFormgroup && this.esFormularioSoloLectura) {
       this.obraDeArteFormgroup.disable();
+      if (this.obraDeArteRowData.length === 0) {
+      const OBRA_DE_ARTE_ROW: TablaDatos = {
+      tbodyData: obraDeArteDummy,
+    };
+    this.obraDeArteRowData.push(OBRA_DE_ARTE_ROW);
+  }
     } else if (!this.esFormularioSoloLectura) {
       this.obraDeArteFormgroup.enable();
     }
