@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-fabricante/terceros-fabricante.component';
 import { TABLA_ORDEN } from '../../constantes/permiso-pruebas-nutrientes.enum';
+import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-fabricante/terceros-fabricante.component';
 
 /**
  * Componente que muestra la sección de Terceros Relacionados.
