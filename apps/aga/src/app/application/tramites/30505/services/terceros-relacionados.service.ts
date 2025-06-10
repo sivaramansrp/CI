@@ -2,6 +2,7 @@ import { AvisoAgente, FusionDatos, FusionEscision, TercerosRelacionados } from '
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { Solicitud30505Store } from '../../../core/estados/tramites/tramites30505.store';
 
 /**
  * Servicio para gestionar operaciones relacionadas con terceros en el trámite 30505.
@@ -21,7 +22,7 @@ export class TercerosRelacionadosService {
    * 
    * @param http - Cliente HTTP utilizado para realizar solicitudes a recursos externos.
    */
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,private tramiteStore: Solicitud30505Store) {
      // El constructor se utiliza para la inyección de dependencias.
   }
 
@@ -97,4 +98,13 @@ export class TercerosRelacionadosService {
     this.agenteSource.next(data);
   }
 
+   getAvisoDatos(): Observable<any> {
+    return this.http.get<any>('assets/json/280101/PermisoDeExportacion.json');
+  }
+
+  setDatosFormulario(datos: any): void {
+    // Aquí puedes implementar la lógica para establecer los datos del formulario
+    // Por ejemplo, podrías guardar los datos en un servicio o en el estado de la aplicación
+    console.log('Datos del formulario establecidos:', datos);
+  }
 }

@@ -74,22 +74,35 @@
       @switch (indice) { @case (1) {
         <solicitante></solicitante>
       } @case (2) { 
+          @if(esDatosRespuesta){
         <app-tipo-de-aviso (checkboxChange)="toggleDataVisibility($event)"></app-tipo-de-aviso>
+          }
       } @case (3) { 
+        @if(esDatosRespuesta){
+
          <app-terceros-relacionados></app-terceros-relacionados>
+        }
       }
       @case (4){
+          @if(esDatosRespuesta){
     <app-fusion-o-escision></app-fusion-o-escision>
+          }
       }
 
       @case(5){
+          @if(esDatosRespuesta){
       <app-aviso-agente></app-aviso-agente>
+          }
       }
       @case(6){
+          @if(esDatosRespuesta){
       <app-aviso-calculo></app-aviso-calculo>
+          }
       }
       @case(7){
+          @if(esDatosRespuesta){
        <app-cambio-denominacion-razon-social></app-cambio-denominacion-razon-social> 
+          }
       }
     }
     </ng-container>

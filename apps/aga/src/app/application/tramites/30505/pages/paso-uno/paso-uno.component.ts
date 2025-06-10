@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Solicitud30505State, Solicitud30505Store } from '../../../../core/estados/tramites/tramites30505.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Solicitud30505Query } from '../../../../core/queries/tramites30505.query';
+import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
+import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
 
 /**
  * Componente encargado de gestionar el primer paso del trámite 30505.
@@ -52,16 +54,42 @@ export class PasoUnoComponent implements OnDestroy,OnInit{
    */
   public AvisoState!: Solicitud30505State;
   
-/**
- * Constructor de la clase PasoUnoComponent.
- * 
- * @param tramiteStore - Instancia del store para gestionar el estado de la solicitud 30505.
- * @param tramiteQuery - Instancia del query para consultar el estado de la solicitud 30505.
- */
- constructor(public tramiteStore:Solicitud30505Store,public tramiteQuery:Solicitud30505Query
-  ) {
+  /**
+   * Referencia al componente hijo SolicitanteComponent.
+   * Estado actual de la consulta para el componente.
+   * 
+   * Utiliza el decorador `@ViewChild` para obtener acceso al componente hijo
+   * SolicitanteComponent, lo que permite interactuar con él desde este componente.
+   * @type {ConsultaioState}
+   * @public
+   */
+  public consultaState!: ConsultaioState;
+ 
+   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
 
+
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  public esFormularioSoloLectura: boolean = false;
+
+ /**
+   * Constructor de la clase DatosComponent.
+   * 
+   * @param consultaQuery Servicio para realizar consultas relacionadas con el trámite.
+   * @param consultaStore Almacén para gestionar el estado de las consultas de trámite.
+   * @param productoresService Servicio para la expansión y gestión de productores.
+   * @param tramiteStore Almacén específico para el manejo del estado del trámite 120204.
+   * 
+   * Al inicializar el componente, se establece la consulta inicial en el store de consultas
+   * con los parámetros correspondientes al trámite 120204.
+   */
+  constructor(private consultaQuery: ConsultaioQuery, private tercerosService:TercerosRelacionadosService,private tramiteQuery: Solicitud30505Query,private tramiteStore: Solicitud30505Store) {
+    // Inicialización del componente, se pueden agregar más configuraciones si es necesario.
   }
+
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -74,6 +102,23 @@ export class PasoUnoComponent implements OnDestroy,OnInit{
    */
    ngOnInit(): void {
 
+     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
+      this.consultaState = seccionState;
+      this.esFormularioSoloLectura = seccionState.readonly;
+      if (this.consultaState.update) {
+        this.guardarDatosFormulario();
+      } else {
+        this.esDatosRespuesta = true;
+      }
+
+    })).subscribe();
+
+    this.initializerFormulario();
+
+  }
+
+  initializerFormulario(): void {
+
     this.tramiteQuery.selectSolicitud$
             .pipe(
               takeUntil(this.destroyNotifier$),
@@ -85,6 +130,34 @@ export class PasoUnoComponent implements OnDestroy,OnInit{
 
    this.selectedCheckboxes = this.AvisoState?.selectedCheckbox;
   }
+
+   /**
+   * Guarda los datos del formulario obteniendo la información de los productores.
+   * 
+   * Este método realiza una solicitud al servicio `productoresService` para obtener
+   * los datos de expansión de productores. Si la respuesta es válida, actualiza
+   * el estado interno del componente y almacena los datos relevantes en el store
+   * de trámites.
+   * 
+   * @remarks
+   * Utiliza el operador `takeUntil` para cancelar la suscripción cuando el componente
+   * se destruye, evitando fugas de memoria.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
+  guardarDatosFormulario(): void {
+    this.tercerosService
+      .getAvisoDatos().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.tercerosService.setDatosFormulario(resp);
+        }
+      });
+  }
+
   /**
    * Selecciona una pestaña específica.
    * @param i - El índice de la pestaña a seleccionar.
