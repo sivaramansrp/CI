@@ -86,18 +86,18 @@ export class InputFechaComponent implements OnChanges {
     this.generaanios();
     const FECHA_ACTUAL = moment().format('DD/MM/YYYY');
     const FECHA = FECHA_ACTUAL.split('/');
-    const OBJECT_DATE = moment.utc(`${FECHA[2]}-${FECHA[1]}-${FECHA[0]}`);
+    const OBJECT_DATE = moment(`${FECHA[2]}-${FECHA[1]}-${FECHA[0]}`);
     this.generarFormulario(OBJECT_DATE);
   }
 
   ngOnChanges(): void {
     if (this.setFecha !== '' && this.setFecha !== null) {
       const FECHA = this.setFecha.split('/');
-      const OBJECT_DATE = moment.utc(`${FECHA[2]}-${FECHA[1]}-${FECHA[0]}`);
+      const OBJECT_DATE = moment(`${FECHA[2]}-${FECHA[1]}-${FECHA[0]}`);
       this.generarFormulario(OBJECT_DATE);
       this.Formulario.controls['fechaString'].enable();
       this.Formulario.get('fechaString')?.setValue(
-        moment.utc(OBJECT_DATE).format('DD/MM/YYYY')
+        moment(OBJECT_DATE).format('DD/MM/YYYY')
       );
       this.Formulario.controls['fechaString'].disable();
     } else {
@@ -130,7 +130,7 @@ export class InputFechaComponent implements OnChanges {
     this.Formulario.get('anio')?.setValue(
       (event.target as HTMLInputElement).value
     );
-    const OBJECT_DATE = moment.utc(
+    const OBJECT_DATE = moment(
       `${this.Formulario.get('anio')?.value}-${this.Formulario.get('mes')
         ?.value.toString()
         .padStart(2, '0')}-01`
@@ -147,7 +147,7 @@ export class InputFechaComponent implements OnChanges {
     this.Formulario.get('mes')?.setValue(
       (event.target as HTMLInputElement).value
     );
-    const OBJECT_DATE = moment.utc(
+    const OBJECT_DATE = moment(
       `${this.Formulario.get('anio')?.value}-${this.Formulario.get('mes')
         ?.value.toString()
         .padStart(2, '0')}-01`
@@ -172,7 +172,7 @@ export class InputFechaComponent implements OnChanges {
   }
 
   getDayFromDate(mount: number, year: number): void {
-    const START_DATE = moment.utc(
+    const START_DATE = moment(
       `${year}-${mount.toString().padStart(2, '0')}-01`
     );
     const END_DATE = START_DATE.clone().endOf('month');
@@ -201,7 +201,7 @@ export class InputFechaComponent implements OnChanges {
         .subtract(1, 'month');
       this.Formulario.get('mes')?.setValue(PREV_DATE.format('M'));
       this.Formulario.get('anio')?.setValue(PREV_DATE.format('YYYY'));
-      const OBJECT_DATE = moment.utc(
+      const OBJECT_DATE = moment(
         `${this.Formulario.get('anio')?.value}-${this.Formulario.get('mes')
           ?.value.toString()
           .padStart(2, '0')}-01`
@@ -218,7 +218,7 @@ export class InputFechaComponent implements OnChanges {
         .add(1, 'month');
       this.Formulario.get('mes')?.setValue(NEXT_DATE.format('M'));
       this.Formulario.get('anio')?.setValue(NEXT_DATE.format('YYYY'));
-      const OBJECT_DATE = moment.utc(
+      const OBJECT_DATE = moment(
         `${this.Formulario.get('anio')?.value}-${this.Formulario.get('mes')
           ?.value.toString()
           .padStart(2, '0')}-01`
@@ -241,7 +241,7 @@ export class InputFechaComponent implements OnChanges {
     this.Formulario.get('dia')?.setValue(day.value);
     this.Formulario.controls['fechaString'].enable();
     this.Formulario.get('fechaString')?.setValue(
-      moment.utc(OBJECT_DATE).format('DD/MM/YYYY')
+      moment(OBJECT_DATE).format('DD/MM/YYYY')
     );
     this.Formulario.controls['fechaString'].disable();
     this.Formulario.get('fechaSeleccionada')?.setValue(OBJECT_DATE);
