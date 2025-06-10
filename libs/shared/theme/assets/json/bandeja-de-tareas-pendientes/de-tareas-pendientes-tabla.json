@@ -10301,7 +10301,26 @@
     "numeroDeProcedimiento": "260604",
     "origin": "READ_PROCEDURE"
   },
-
+  {
+    "folioTramite": "1987680232109876",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "semarnat",
+    "numeroDeProcedimiento": "230301",
+    "origin": "READ_PROCEDURE"
+  },
+  {
+    "folioTramite": "1987680232109876",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "agricultura",
+    "numeroDeProcedimiento": "420102",
+    "origin": "READ_PROCEDURE"
+  },
   
   {
     "folioTramite": "1209876543210987654321098",
