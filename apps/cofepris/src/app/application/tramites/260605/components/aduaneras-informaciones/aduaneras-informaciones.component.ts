@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup,FormsModule,ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { ConsultaioQuery, CrossListLable } from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260605State, Tramite260605Store } from '../../../../estados/tramites/tramite260605.store';
-import {Subject, Subscription, map, takeUntil } from 'rxjs';
-import { Aduana } from '../../models/aduaneras-informaciones.model';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { CrosslistComponent } from '@libs/shared/data-access-user/src';
 import { ModificatNoticeService } from '../../services/modificat-notice.service';
 import { Tramite260605Query } from '../../../../estados/queries/tramite260605.query';
 /**
@@ -30,7 +31,7 @@ import { Tramite260605Query } from '../../../../estados/queries/tramite260605.qu
   standalone: true,
   templateUrl: './aduaneras-informaciones.component.html',
   styleUrls: ['./aduaneras-informaciones.component.scss'],
-  imports: [CommonModule, FormsModule,ReactiveFormsModule]
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, CrosslistComponent]
 })
 export class AduanerasInformacionesComponent implements OnInit, OnDestroy {
   /**
@@ -40,6 +41,13 @@ export class AduanerasInformacionesComponent implements OnInit, OnDestroy {
    * @memberof AduanerasInformacionesComponent
    */
   aduanerasInformacionesForm!: FormGroup;
+
+
+  /**
+    * Lista de componentes Crosslist disponibles en la vista.
+    * Utilizado para gestionar las listas de países en diferentes secciones.
+    */
+  @ViewChildren(CrosslistComponent) crossList!: QueryList<CrosslistComponent>;
 
   /**
    * Aduanas seleccionadas.
@@ -55,7 +63,55 @@ export class AduanerasInformacionesComponent implements OnInit, OnDestroy {
    * @type {{ id: number; name: string }[]}
    * @memberof AduanerasInformacionesComponent
    */
-  aduanasDisponibles:Aduana[] = [];
+  aduanasDisponibles: string[] = [];
+  /**
+    * Etiquetas para la lista cruzada de países de origen.
+    */
+  public paisDeOriginLabel: CrossListLable = {
+    tituluDeLaIzquierda: 'Aduanas disponibles:',
+    derecha: 'Aduanas seleccionadas*:'
+  };
+
+  /**
+    * Botones para gestionar la lista cruzada de países de procedencia.
+    */
+  paisDeProcedenciaBotons = [
+    {
+      btnNombre: 'Agregar todos',
+      class: 'btn-primary',
+      funcion: (): void => this.crossList.toArray()[0].agregar('t'),
+    },
+    {
+      btnNombre: 'Agregar selección',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[0].agregar(''),
+    },
+    {
+      btnNombre: 'Restar selección',
+      class: 'btn-danger',
+      funcion: (): void => this.crossList.toArray()[0].quitar(''),
+    },
+    {
+      btnNombre: 'Restar todos',
+      class: 'btn-default',
+      funcion: (): void => this.crossList.toArray()[0].quitar('t'),
+    },
+  ];
+
+  /**
+   * Arreglo que contiene los identificadores de las aduanas seleccionadas por el usuario.
+   * 
+   * Cada elemento del arreglo representa una aduana disponible que ha sido seleccionada.
+   */
+  aduanasDisponiblesSeleccionadas: string[] = [];
+
+  /**
+  * Maneja el cambio de selección de países de origen.
+  * @param events Lista de países seleccionados.
+  */
+  paisDeOriginSeleccionadasChange(events: string[]): void {
+    this.aduanasDisponiblesSeleccionadas = events;
+  }
 
   /**
    * Índice seleccionado para agregar o remover aduanas.
@@ -73,14 +129,7 @@ export class AduanerasInformacionesComponent implements OnInit, OnDestroy {
    */
   indiceRemover: number = 0;
 
-  /**
-   * Suscripción a los cambios en el formulario.
-   * 
-   * @private
-   * @type {Subscription}
-   * @memberof AduanerasInformacionesComponent
-   */
-  private subscription: Subscription = new Subscription();
+
 
   /**
    * Sujeto para notificar la destrucción del componente.
@@ -108,6 +157,11 @@ export class AduanerasInformacionesComponent implements OnInit, OnDestroy {
   esFormularioValido: boolean = false;
 
   /**
+    * Indica si el formulario está en modo solo lectura.
+    * Cuando es `true`, los campos del formulario no se pueden editar.
+    */
+  public esFormularioSoloLectura: boolean = false;
+  /**
    * Crea una instancia de AduanerasInformacionesComponent.
    * 
    * @param {FormBuilder} fb - Instancia de FormBuilder.
@@ -119,10 +173,80 @@ export class AduanerasInformacionesComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private tramite260605Store: Tramite260605Store,
     private tramite260605Query: Tramite260605Query,
-    private modificatNoticeService: ModificatNoticeService
+    private modificatNoticeService: ModificatNoticeService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Initialization logic if needed
+    /**
+      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+      *
+      * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+      * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+      * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+      */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
+
+  /**
+   * Inicializa el formulario reactivo `aduanerasInformacionesForm` con los valores actuales del estado de la solicitud.
+   * 
+   * Suscribe al observable `selectSolicitud$` para obtener el estado más reciente de la solicitud y lo asigna a `solicitudState`.
+   * Luego, crea el formulario utilizando los valores de `solicitudState` y aplica las validaciones requeridas.
+   * 
+   * @remarks
+   * - Utiliza el operador `takeUntil` para limpiar la suscripción cuando el componente se destruye.
+   * - Los campos del formulario incluyen `numeroDePermiso` y `cstumbresAtuales`, ambos requeridos.
+   */
+  inicializarFormulario(): void {
+    this.tramite260605Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.aduanerasInformacionesForm = this.fb.group({
+      numeroDePermiso: [this.solicitudState?.numeroDePermiso, Validators.required],
+      cstumbresAtuales: [this.solicitudState?.costumbresActuales, Validators.required],
+    });
+  }
+
+  /**
+    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+    * Luego reinicializa el formulario con los valores actualizados desde el store.
+    */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.esFormularioValido = true;
+      this.aduanerasInformacionesForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.aduanerasInformacionesForm.enable();
+    }
+  }
+
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+
+
 
   /**
    * Inicializa el componente.
@@ -130,21 +254,7 @@ export class AduanerasInformacionesComponent implements OnInit, OnDestroy {
    * @memberof AduanerasInformacionesComponent
    */
   ngOnInit(): void {
-    this.subscription.add(
-      this.tramite260605Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.solicitudState = seccionState;
-          })
-        )
-        .subscribe()
-    );
-
-    this.aduanerasInformacionesForm = this.fb.group({
-      numeroDePermiso: [this.solicitudState?.numeroDePermiso, Validators.required],
-      cstumbresAtuales: [this.solicitudState?.costumbresActuales, Validators.required],
-    });
+    this.inicializarEstadoFormulario();
     this.obteneraduanasDisponiblesdatos();
   }
 
@@ -157,7 +267,7 @@ export class AduanerasInformacionesComponent implements OnInit, OnDestroy {
    */
   public obteneraduanasDisponiblesdatos(): void {
     this.modificatNoticeService.obteneraduanasDisponiblesdatos().subscribe((response) => {
-     this.aduanasDisponibles = response;
+      this.aduanasDisponibles = response;
     });
   }
 
@@ -204,67 +314,7 @@ export class AduanerasInformacionesComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Agrega todas las aduanas disponibles a las aduanas seleccionadas.
-   * 
-   * @memberof AduanerasInformacionesComponent
-   */
-  agregarTodasAduanas(): void {
-    while (this.aduanasDisponibles.length) {
-      const ADUANA = this.aduanasDisponibles.at(0);
-      if (ADUANA) {
-        this.aduanasSeleccionadas.push(ADUANA);
-      }
-      this.aduanasDisponibles.splice(0, 1);
-    }
-  }
 
-  /**
-   * Agrega aduanas seleccionadas a las aduanas seleccionadas.
-   * 
-   * @param {number[]} indicesSeleccionados - Los índices de las aduanas a agregar.
-   * @memberof AduanerasInformacionesComponent
-   */
-  agregarAduanasSeleccionadas(indicesSeleccionados: number[]): void {
-    indicesSeleccionados.sort((a, b) => b - a).forEach(indice => {
-      const ADUANA = this.aduanasDisponibles.at(indice);
-      if (ADUANA) {
-        this.aduanasSeleccionadas.push(ADUANA);
-      }
-      this.aduanasDisponibles.splice(indice, 1);
-    });
-  }
-
-  /**
-   * Remueve aduanas seleccionadas de las aduanas seleccionadas.
-   * 
-   * @param {number[]} indicesSeleccionados - Los índices de las aduanas a remover.
-   * @memberof AduanerasInformacionesComponent
-   */
-  removerAduanasSeleccionadas(indicesSeleccionados: number[]): void {
-    indicesSeleccionados.sort((a, b) => b - a).forEach(indice => {
-      const ADUANA = this.aduanasSeleccionadas.at(indice);
-      if (ADUANA) {
-        this.aduanasDisponibles.push(ADUANA);
-      }
-      this.aduanasSeleccionadas.splice(indice, 1);
-    });
-  }
-
-  /**
-   * Remueve todas las aduanas seleccionadas.
-   * 
-   * @memberof AduanerasInformacionesComponent
-   */
-  removerTodasAduanas(): void {
-    while (this.aduanasSeleccionadas.length) {
-      const ADUANA = this.aduanasSeleccionadas.at(0);
-      if (ADUANA) {
-        this.aduanasDisponibles.push(ADUANA);
-      }
-      this.aduanasSeleccionadas.splice(0, 1);
-    }
-  }
 
   /**
    * Establece las aduanas seleccionadas en el store.
