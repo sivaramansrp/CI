@@ -1,6 +1,6 @@
 import { INSTRUCCION_DOBLE_CLIC, MEDIO_SERVICIO, MercanciaDatosInfo } from '../../constantes/acuicola.enum';
 
-import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, InputFecha, InputFechaComponent,InputRadioComponent, SeccionLibState, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect,InputFecha, InputFechaComponent,InputRadioComponent, SeccionLibState, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DatosDeLaSolicitudInt, InspeccionApiResponse} from '../../modelos/acuicola.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -8,6 +8,7 @@ import { map, takeUntil } from 'rxjs';
 import{CertificadosResponse} from '../../modelos/acuicola.model';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../modelos/configuracion-columna.model';
+import { ConsultaioQuery} from '@ng-mf/data-access-user';
 import { FitosanitarioService } from '../../service/fitosanitario.service';
 import { SeccionLibQuery } from '@libs/shared/data-access-user/src';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
@@ -211,6 +212,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   private seccion!: SeccionLibState;
 
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+   esFormularioSoloLectura: boolean = false; 
+
+   /**
+    * Indica si el campo debe ser deshabilitado.
+    * @property {boolean} campoDeshabilitar
+    */
+   campoDeshabilitar:boolean= false;
+ 
+  
+
   /**
    * Constructor del componente.
    * @constructor
@@ -220,6 +235,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @param {TramiteStore} tramiteStore - Store para gestionar el estado del trámite.
    * @param {SeccionLibQuery} seccionQuery - Query para acceder al estado de la sección.
    * @param {SeccionLibStore} seccionStore - Store para gestionar el estado de la sección.
+   *
    */
   constructor(
     private readonly fb: FormBuilder,
@@ -228,10 +244,32 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
+    private readonly consultaioQuery: ConsultaioQuery
   
   ) {
-    // No se necesita lógica de inicialización adicional
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      ).subscribe();
    }
+
+   /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.iniciarFormulario();
+    }  
+
+  }
+
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -240,8 +278,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
-
-    this.iniciarFormulario();
+    this.inicializarEstadoFormulario();
     this.getHoraDeInspeccion();
     this.cargarDatos();
     this.getAduanaDeIngreso();
@@ -280,6 +317,27 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     .subscribe();
 
   }
+
+  /**
+   * Guarda los datos del formulario y actualiza el estado del componente.
+   * Si el formulario está en modo solo lectura, deshabilita los campos.
+   * Si no, habilita los campos para permitir la edición.
+   *
+   * @method guardarDatosFormulario
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  guardarDatosFormulario(): void {
+    this.iniciarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.campoDeshabilitar=true;
+      this.datosDeLaSolicitudForm.disable();
+    } else {
+      this.campoDeshabilitar=false;
+      this.datosDeLaSolicitudForm.enable();
+    }
+
+
+}
   /**
    * Inicializa el formulario reactivo con los controles necesarios.
    * @method iniciarFormulario
