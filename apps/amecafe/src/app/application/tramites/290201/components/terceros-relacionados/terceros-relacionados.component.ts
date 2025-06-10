@@ -64,7 +64,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   /**
    * Fila seleccionada en la tabla.
    */
-  selectedRow: any = null;
+  selectedRow: FilaData2 | null = null;
 
   /**
    * Bandera para mostrar u ocultar el formulario.
@@ -94,7 +94,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   /**
    * Tipo de persona seleccionada.
    */
-  tipoPersona: any;
+  tipoPersona: string | null = null; // Replace 'string | null' with the appropriate type if known
 
   /**
    * Método para manejar el cambio de selección de tipo de persona.
@@ -112,7 +112,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   /**
    * Lista que almacena los datos de los destinatarios registrados.
    */
-  newDestinatarioData: Array<any> = [];
+  newDestinatarioData: Array<FilaData2> = [];
 
   consultaDatos!: ConsultaioState;
     
@@ -227,7 +227,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   /**
    * Método para crear el formulario reactivo.
    */
-  createForm() {
+  createForm(): void {
     this.destinatarioForm = this.fb.group({
       datosDelTramiteRealizar: this.fb.group({
         tipoPersona: [
@@ -256,7 +256,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   /**
    * Getter para obtener el tipo de persona seleccionado.
    */
-  get selectedTipoPersona() {
+  get selectedTipoPersona(): void {
     return this.destinatarioForm.get('tipoPersona')?.value;
   }
 
@@ -268,7 +268,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   /**
    * Método para obtener los datos del catálogo de países.
    */
-  getPaisData() {
+  getPaisData(): void {
     this.registrarsolicitud
       .getPaisData()
       .pipe(takeUntil(this.destroyed$))
@@ -281,28 +281,28 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   /**
    * Método para manejar el envío del formulario.
    */
-  enEnviar() {
-    const formData = this.destinatarioForm.value;
+  enEnviar(): void {
+    const FORM_DATA = this.destinatarioForm.value;
 
-    if (!formData || Object.keys(formData).length === 0) {
+    if (!FORM_DATA || Object.keys(FORM_DATA).length === 0) {
       console.error('Los datos del formulario son nulos o están vacíos');
       return;
     }
 
-    const paisDataValue = this.paisData.catalogos.find(
+    const PAIS_DATA_VALUE = this.paisData.catalogos.find(
       (item: Catalogo) =>
-        String(item.id) === String(formData.datosDelTramiteRealizar.pais)
+        String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.pais)
     )?.descripcion;
 
-    formData.datosDelTramiteRealizar.pais = paisDataValue;
+    FORM_DATA.datosDelTramiteRealizar.pais = PAIS_DATA_VALUE;
 
     if (this.selectedRow) {
-      const index = this.newDestinatarioData.indexOf(this.selectedRow);
-      if (index !== -1) {
-        this.newDestinatarioData[index] = { ...formData };
+      const INDEX = this.newDestinatarioData.indexOf(this.selectedRow);
+      if (INDEX !== -1) {
+          this.newDestinatarioData[INDEX] = { ...FORM_DATA };
       }
     } else {
-      this.newDestinatarioData.push({ ...formData });
+      this.newDestinatarioData.push({ ...FORM_DATA });
     }
     this.tableData = [...this.newDestinatarioData];
     this.changeDetectorRef.markForCheck();
@@ -314,7 +314,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   /**
    * Método para limpiar el formulario.
    */
-  onLimpiar() {
+  onLimpiar(): void {
     this.destinatarioForm.reset();
     this.destinatarioForm.patchValue({
       datosDelTramiteRealizar: {
@@ -336,7 +336,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   /**
    * Método para modificar los datos de una fila seleccionada.
    */
-  enModificar() {
+  enModificar(): void {
     if (!this.isPaisdatoscargados) {
       console.warn('Los datos del catálogo de países aún no están cargados');
       return;
@@ -349,16 +349,16 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
      */
 
     if (this.selectedRow) {
-      const paisId = this.paisData.catalogos.find(
+      const PAIS_ID = this.paisData.catalogos.find(
         (item: Catalogo) =>
-          item.descripcion === this.selectedRow.datosDelTramiteRealizar.pais
+          item.descripcion === this.selectedRow?.datosDelTramiteRealizar?.pais
       )?.id;
       this.destinatarioForm.patchValue({
         datosDelTramiteRealizar: {
           tipoPersona: this.selectedRow.datosDelTramiteRealizar.tipoPersona,
           denominacion: this.selectedRow.datosDelTramiteRealizar.denominacion,
           domicilio: this.selectedRow.datosDelTramiteRealizar.domicilio,
-          pais: paisId || '', // Use the `paisId` or an empty string if not found
+          pais: PAIS_ID || '', // Use the `PAIS_ID` or an empty string if not found
           codigopostal: this.selectedRow.datosDelTramiteRealizar.codigopostal,
           telefono: this.selectedRow.datosDelTramiteRealizar.telefono,
           correoelectronico:
@@ -387,7 +387,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    * Método para manejar el clic en una fila de la tabla.
    * @param rowData Fila seleccionada.
    */
-  onRowClick(rowData: any) {
+  onRowClick(rowData: FilaData2): void {
     this.destinatarioForm.patchValue({
       datosDelTramiteRealizar: {
         tipoPersona: rowData.datosDelTramiteRealizar.tipoPersona,
@@ -435,7 +435,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
     metodoNombre: keyof Solicitud290201Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.solicitud290201Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.solicitud290201Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**

@@ -151,9 +151,20 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
    */
   selectedRows: Set<number> = new Set();
 
-  consultaDatos!: ConsultaioState;
+ /**
+ * @property {ConsultaioState} consultaDatos
+ * @description Representa el estado de la consulta actual.
+ */
 
-  public esDatosRespuesta: boolean = false;
+consultaDatos!: ConsultaioState;
+
+/**
+ * @property {boolean} esDatosRespuesta
+ * @description Indica si se ha recibido una respuesta de datos.
+ * @default false
+ */
+
+public esDatosRespuesta: boolean = false;
 
   
     /**
@@ -287,12 +298,19 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       orden: 18,
     },
   ];
+  /**
+   * Configuración de las columnas de la tabla `configuracionColumnasoli`.
+   */
   fechaexportacion: InputFecha = {
     labelNombre: 'Fecha de pago*:',
     required: false,
     habilitado: true,
   };
-  
+
+  /**
+   * Método para cambiar la fecha final del formulario.
+   * @param nuevo_valor Nuevo valor de la fecha de exportación.
+   */
   cambioFechaFinal(nuevo_valor: string): void {
     this.datosDelTramiteRealizar.patchValue({
       fechaexportacion: nuevo_valor,
@@ -302,7 +320,7 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
   /**
    * Crea el formulario reactivo con los campos necesarios y sus validaciones.
    */
-  createForm() {
+  createForm(): void {
     this.dataCafeForm = this.fb.group({
       datosDelTramiteRealizar: this.fb.group({
         envasadoen: [this.dataCafeState?.envasadoen, Validators.required],
@@ -354,6 +372,9 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       .subscribe();
       this.inicializarEstadoFormulario();
   }
+  /**
+   * Este método se utiliza para guardar los datos del formulario en el store de la solicitud.
+   */
   guardarDatosFormulario(): void {
     this.registrarsolicitud
       .getConsultaData().pipe(
@@ -369,7 +390,7 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
   /**
    * Obtiene los datos del catálogo "Envasado".
    */
-  getEnvasadoenData() {
+  getEnvasadoenData():void {
     this.registrarsolicitud.getEnvasadoenData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -377,7 +398,10 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       });
   }
 
-  getUtilicoCafeComoData() {
+  /**
+   * Obtiene los datos del catálogo "¿Utilizó café como materia prima importada?".
+   */
+  getUtilicoCafeComoData(): void {
     this.registrarsolicitud.getUtilicoCafeComoData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -385,7 +409,11 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       });
   }
 
-  getPaisDeImportacionData() {
+  /**
+   * Obtiene los datos del catálogo "País de importación".
+   */
+
+  getPaisDeImportacionData(): void {
     this.registrarsolicitud.getPaisDeImportacionData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -393,7 +421,10 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       });
   }
 
-  getFraccionArancelariaData() {
+  /**
+   * Obtiene los datos del catálogo "Fracción arancelaria".
+   */
+  getFraccionArancelariaData(): void {
     this.registrarsolicitud.getFraccionArancelariaData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -401,7 +432,10 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       });
   }
 
-  getUnidadDeMedidaData() {
+  /**
+   * Obtiene los datos del catálogo "Unidad de medida".
+   */
+  getUnidadDeMedidaData(): void {
     this.registrarsolicitud.getUnidadDeMedidaData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -409,7 +443,10 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       });
   }
 
-  getDollarData() {
+  /**
+   * Obtiene los datos del catálogo "Dólar".
+   */
+  getDollarData(): void {
     this.registrarsolicitud.getDollarData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -417,7 +454,10 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       });
   }
 
-  getElcafeData() {
+  /**
+   * Obtiene los datos del catálogo "¿El café tiene características especiales?".
+   */
+  getElcafeData(): void {
     this.registrarsolicitud.getUtilicoCafeComoData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -425,7 +465,10 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       });
   }
 
-  getPaisDeTransbordoData() {
+  /**
+   * Obtiene los datos del catálogo "País de transbordo".
+   */
+  getPaisDeTransbordoData(): void {
     this.registrarsolicitud.getPaisDeImportacionData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -433,7 +476,10 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
       });
   }
 
-  getMediaDeTransporte() {
+  /**
+   * Obtiene los datos del catálogo "Medio de transporte".
+   */
+  getMediaDeTransporte(): void {
     this.registrarsolicitud.getMediaDeTransporte()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data) => {
@@ -444,61 +490,61 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
  * Este método se ejecuta al enviar el formulario. Su propósito es procesar los datos ingresados
  * en el formulario, transformarlos según los catálogos correspondientes y agregarlos a la tabla de datos.
  */
-  onSubmit() {
+  onSubmit(): void {
     this.esFormularioVisible = false;
 
-    const formData = { ...this.dataCafeForm.value };
+    const FORM_DATA = { ...this.dataCafeForm.value };
 
-    formData.datosDelTramiteRealizar.envasadoen = this.envasadoenData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.datosDelTramiteRealizar.envasadoen),
+    FORM_DATA.datosDelTramiteRealizar.envasadoen = this.envasadoenData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.envasadoen),
     )?.descripcion;
 
-    formData.datosDelTramiteRealizar.utilizoCafeComo = this.utilizoCafeComoData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.datosDelTramiteRealizar.utilizoCafeComo),
+    FORM_DATA.datosDelTramiteRealizar.utilizoCafeComo = this.utilizoCafeComoData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.utilizoCafeComo),
     )?.descripcion;
 
-    formData.datosDelTramiteRealizar.paisdeimportacion = this.paisdeimportacionData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.datosDelTramiteRealizar.paisdeimportacion),
+    FORM_DATA.datosDelTramiteRealizar.paisdeimportacion = this.paisdeimportacionData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.paisdeimportacion),
     )?.descripcion;
 
-    formData.datosDelTramiteRealizar.fraccionarancelaria = this.fraccionarancelariaData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.datosDelTramiteRealizar.fraccionarancelaria),
+    FORM_DATA.datosDelTramiteRealizar.fraccionarancelaria = this.fraccionarancelariaData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.fraccionarancelaria),
     )?.descripcion;
 
-    formData.datosDelTramiteRealizar.unidaddemedida = this.unidaddemedidaData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.datosDelTramiteRealizar.unidaddemedida),
+    FORM_DATA.datosDelTramiteRealizar.unidaddemedida = this.unidaddemedidaData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.unidaddemedida),
     )?.descripcion;
 
-    formData.datosDelTramiteRealizar.dolar = this.dolarData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.datosDelTramiteRealizar.dolar),
+    FORM_DATA.datosDelTramiteRealizar.dolar = this.dolarData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.dolar),
     )?.descripcion;
 
-    formData.datosDelTramiteRealizar.elcafe = this.elcafeData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.datosDelTramiteRealizar.elcafe),
+    FORM_DATA.datosDelTramiteRealizar.elcafe = this.elcafeData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.elcafe),
     )?.descripcion;
 
-    formData.datosDelTramiteRealizar.paisdetransbordo = this.paisdetransbordoData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.datosDelTramiteRealizar.paisdetransbordo),
+    FORM_DATA.datosDelTramiteRealizar.paisdetransbordo = this.paisdetransbordoData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.paisdetransbordo),
     )?.descripcion;
 
-    formData.datosDelTramiteRealizar.mediodetransporte = this.mediodetransporteData.catalogos.find(
-      (item: Catalogo) => String(item.id) === String(formData.datosDelTramiteRealizar.mediodetransporte),
+    FORM_DATA.datosDelTramiteRealizar.mediodetransporte = this.mediodetransporteData.catalogos.find(
+      (item: Catalogo) => String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.mediodetransporte),
     )?.descripcion;
 
-    this.tableData.push(formData);
+    this.tableData.push(FORM_DATA);
     
   }
 
 /**
  * Este método se utiliza para mostrar el formulario al usuario.
  */
-  onAgregar() {
+  onAgregar(): void {
     this.esFormularioVisible = true;
   }
   /**
    * Este método se ejecuta cuando el usuario selecciona una fila de la tabla. Su propósito es
  */
-  onRowClick(rowData: any) {
+  onRowClick(rowData: FilaData): void {
     this.dataCafeForm.patchValue({
       envasadoen: this.envasadoenData.catalogos.find(
         (item: Catalogo) => item.descripcion === rowData.datosDelTramiteRealizar.envasadoen,
@@ -555,6 +601,9 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
     return this.dataCafeForm.get('datosDelTramiteRealizar') as FormGroup;
   }
 
+  /**
+   * Este método se utiliza para inicializar el estado del formulario según si es de solo lectura o no.
+   */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.dataCafeForm?.disable();
@@ -571,7 +620,7 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud290201Store): void {
     const VALOR = form.get(campo)?.value;
-    (this.solicitud290201Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.solicitud290201Store[metodoNombre] as (value: string | number | boolean | null) => void)(VALOR);
   }
 /**
  * Este método forma parte del ciclo de vida de los componentes en Angular y se ejecuta

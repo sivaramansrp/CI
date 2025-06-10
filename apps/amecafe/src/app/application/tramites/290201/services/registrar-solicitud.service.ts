@@ -184,14 +184,26 @@ export class RegistrarSolicitudService {
     return this.http.get<Solicitud[]>('./assets/json/290201/solicitud.json');
   }
 
+  /**
+ * Obtiene los datos del país de destino.
+ * @returns Observable con los datos del catálogo de país de destino.
+ */
   getPaisDestinoData(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('./assets/json/290201/paisdeimportacion.json');
   }
 
+  /**
+ * Obtiene los datos de certificación.
+ * @returns Observable con los datos del catálogo de certificación.
+ */
   getCertificacionData(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('./assets/json/290201/certificacions.json');
   }
 
+  /**
+ * Obtiene los datos de consulta.
+ * @returns Observable con los datos de la consulta.
+ */
  getConsultaData(): Observable<Solicitud290201State> {
   return this.http.get<Solicitud290201State>('assets/json/290201/consulta.json');
 }

@@ -1,8 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject,map, takeUntil } from 'rxjs';
+
 import { Solicitud290201State, Solicitud290201Store } from '../../../../estados/tramites/tramites290201.store';
 import { Solicitud290201Query } from '../../../../estados/queries/tramites290201.query';
+
 import { RegistrarSolicitudService } from '../../services/registrar-solicitud.service';
 
 /**
@@ -19,6 +21,9 @@ export class PasoUnoComponent implements OnInit,OnDestroy{
    */
   indice: number = 1;
 
+  /**
+ * Indica si los datos de la respuesta están disponibles.
+ */
   public esDatosRespuesta: boolean = false;
 
   /** Subject para notificar la destrucción del componente. */
@@ -45,6 +50,11 @@ export class PasoUnoComponent implements OnInit,OnDestroy{
       this.esDatosRespuesta = true;
     }
   }
+
+/**
+ * Método para guardar los datos del formulario.
+ * Realiza una consulta de datos utilizando el servicio `registrarsolicitud` y actualiza el estado del formulario si se obtiene una respuesta válida.
+ */
   guardarDatosFormulario(): void {
     this.registrarsolicitud
       .getConsultaData().pipe(
@@ -67,7 +77,10 @@ export class PasoUnoComponent implements OnInit,OnDestroy{
     this.indice = i;
   }
 
-
+/**
+ * Método que se ejecuta al destruir el componente.
+ * Notifica a los observables que deben finalizar suscripciones y libera recursos asociados.
+ */
 ngOnDestroy(): void {
   this.destroyNotifier$.next(); 
   this.destroyNotifier$.complete(); 

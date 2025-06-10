@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
-import { from } from 'rxjs';
-import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
+
+import { ReplaySubject,map, takeUntil } from 'rxjs';
 
 import { Catalogo, CatalogosSelect, ConsultaioQuery, ConsultaioState, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
@@ -13,6 +14,7 @@ import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud/datos-de-la
 import { DatosDelCafeComponent } from './datos-del-cafe/datos-del-cafe.component';
 import { RegistrarSolicitudService } from '../services/registrar-solicitud.service';
 import { Solicitud290201Query } from '../../../estados/queries/tramites290201.query';
+
 import { Solicitud290201State, Solicitud290201Store } from '../../../estados/tramites/tramites290201.store';
 
 @Component({
@@ -129,6 +131,11 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
     catalogos: [],
   };
 
+  /**
+ * @property {CatalogosSelect} certificacionsData
+ * @description Configuración de datos para el campo "Certificación".
+ * @default Un objeto vacío con las propiedades inicializadas.
+ */
   public certificacionsData: CatalogosSelect = {
     labelNombre: 'Certificacion',
     required: true,
@@ -153,7 +160,6 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
     private consultaioQuery: ConsultaioQuery,
   ) {}
 
-  
 
   /** Crea el formulario para la información del café */
   createForm(): void{
@@ -206,6 +212,12 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
       .subscribe();
       this.inicializarEstadoFormulario();
   }
+
+
+/**
+ * @method guardarDatosFormulario
+ * @description Guarda los datos del formulario en el estado de la solicitud.
+ */
   guardarDatosFormulario(): void {
     this.registrarsolicitud
       .getConsultaData().pipe(
@@ -289,6 +301,10 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
       });
   }
 
+  /**
+ * @method getPaisDestinoData
+ * @description Obtiene los datos del catálogo "País destino" y los asigna al campo correspondiente.
+ */
   getPaisDestinoData(): void{
     this.registrarsolicitud
       .getPaisDestinoData()
@@ -297,6 +313,11 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
         this.paisdestinoData.catalogos = data as Catalogo[];
       });
   }
+
+  /**
+ * @method getCertificacionData
+ * @description Obtiene los datos del catálogo "Certificación" y los asigna al campo correspondiente.
+ */
   getCertificacionData(): void{
     this.registrarsolicitud
       .getCertificacionData()
@@ -312,6 +333,10 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
     return this.informationCafeForm.get('datosDelTramiteRealizar') as FormGroup;
   }
 
+  /**
+ * @method inicializarEstadoFormulario
+ * @description Inicializa el estado del formulario, habilitándolo o deshabilitándolo según el modo de solo lectura.
+ */
  inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.informationCafeForm?.disable();
@@ -328,7 +353,7 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud290201Store): void {
     const VALOR = form.get(campo)?.value;
-    (this.solicitud290201Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.solicitud290201Store[metodoNombre] as (value: string | number | boolean) => void)(VALOR);
   }
 
   /** Limpia los recursos al destruir el componente */
