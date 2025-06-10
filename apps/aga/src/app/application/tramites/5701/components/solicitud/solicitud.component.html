@@ -86,6 +86,15 @@
             libUppercase
             (change)="validaRfc()"
           />
+          <div
+            *ngIf="isRequired(datosImportadorExportador, 'RFCImpExp')"
+            class="mensaje-error"
+          >
+            Este campo es requerido.
+          </div>
+          <div *ngIf="isErrorPattern('RFCImpExp')" class="mensaje-error">
+            RFC no es válido.
+          </div>
         </div>
       </div>
       <div class="col-md-8">
@@ -118,6 +127,7 @@
               placeholder=""
               type="text"
               formControlName="desNumeroRegistro"
+              maxlength="30"
               [ngClass]="
                 isValid(datosImportadorExportador, 'desNumeroRegistro')
                   ? 'required'
@@ -253,8 +263,26 @@
               formControlName="idSocioComercial"
               placeholder=""
               type="text"
+              maxlength="30"
+              [ngClass]="
+                isValid(datosImportadorExportador, 'idSocioComercial')
+                  ? 'required'
+                  : ''
+              "
               (change)="onIdSocioComercialChange()"
             />
+            <div
+              *ngIf="isRequired(datosImportadorExportador, 'idSocioComercial')"
+              class="mensaje-error"
+            >
+              Este campo es requerido.
+            </div>
+            <div
+              *ngIf="isErrorPattern('idSocioComercial')"
+              class="mensaje-error"
+            >
+              Por favor, ingresa caracteres alfanuméricos.
+            </div>
           </div>
         </div>
       </div>
@@ -362,7 +390,7 @@
             class="form-check-input"
             type="checkbox"
             id="lda"
-            (click)="showConfirmDialogLDA_DD('lda')"
+            (click)="showConfirmDialogLDA_DD($event, 'lda')"
             formControlName="lda"
           />
           <label class="form-check-label" for="lda">Despacho LDA</label>
@@ -375,7 +403,7 @@
             class="form-check-input"
             type="checkbox"
             id="dd"
-            (click)="showConfirmDialogLDA_DD('dd')"
+            (click)="showConfirmDialogLDA_DD($event, 'dd')"
             formControlName="dd"
           />
           <label class="form-check-label" for="dd">Despacho DD</label>
