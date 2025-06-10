@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConfiguracionColumna, ConsultaioQuery, ConsultaioState, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { Solicitud80302State, Tramite80302Store } from '../../../../estados/tramites/tramite80302.store';
@@ -27,7 +27,8 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private solicitudService: SolicitudService,
     private tramite80302Store: Tramite80302Store,
-    private tramite80302Query: Tramite80302Query
+    private tramite80302Query: Tramite80302Query,
+    private consultaioQuery: ConsultaioQuery,
   ) {}
 
   /**
@@ -67,6 +68,18 @@ export class ModificacionComponent implements OnInit, OnDestroy {
   datosTabla: DatosDelModificacion[] = [];
 
   /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
+
+  /**
    * Método que se ejecuta al inicializar el componente.
    * Configura el formulario, carga los datos de modificación y los datos de la tabla.
    */
@@ -78,6 +91,15 @@ export class ModificacionComponent implements OnInit, OnDestroy {
             ...seccionState,
           };
         })).subscribe();
+        this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.consultaDatos = seccionState;
+        this.soloLectura = this.consultaDatos.readonly;
+      })
+    )
+    .subscribe();
     this.inicializarFormulario();
     this.loadDatosModificacion();
     this.loadDatosTablaData();
@@ -172,8 +194,9 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * // Ahora, registro.desEstatus será 'Activada'.
    * ```
    */
-  valorDeAlternancia(row: any){
-    const INDEX = this.datosTabla.findIndex((x) => x.id === row.id);
+  valorDeAlternancia(event: any){ 
+    const ROW = event.row;
+    const INDEX = this.datosTabla.findIndex((x) => x.id === ROW.id);
     this.datosTabla[INDEX].desEstatus = this.datosTabla[INDEX].desEstatus === 'Baja' ? 'Activada' : 'Baja';
   }
 }

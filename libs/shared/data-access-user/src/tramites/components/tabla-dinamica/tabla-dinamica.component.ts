@@ -176,6 +176,9 @@ export class TablaDinamicaComponent<T> {
    * Este valor se utiliza para determinar el estado del registro y el texto del botón.
    */
   public batonValor: string = ESTADO_REGISTRO.BAJA;
+
+  @Input() desactivarButton: boolean = false;
+
   /**
    * Método para obtener la configuración de las columnas ordenada según el campo "orden".
    *
