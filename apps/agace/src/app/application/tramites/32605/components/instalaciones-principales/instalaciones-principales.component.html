@@ -34,6 +34,7 @@
 
       <div class="col-md-4 mt-3">
         <app-catalogo-select
+          [isDisabled]="esFormularioSoloLectura"
           formControlName="tipoDeInstalacion"
           [catalogo]="tipoDeInstalacion.catalogos"
           [label]="tipoDeInstalacion.labelNombre"
@@ -162,6 +163,7 @@
           <button
             type="button"
             id="aceptar"
+            [disabled]="esFormularioSoloLectura"
             class="btn btn-primary"
             data-bs-dismiss="modal"
             #closeModal
@@ -172,6 +174,7 @@
 
           <button
             type="button"
+            [disabled]="esFormularioSoloLectura"
             id="cancelar"
             class="btn btn-danger ms-3"
             data-bs-dismiss="modal"
