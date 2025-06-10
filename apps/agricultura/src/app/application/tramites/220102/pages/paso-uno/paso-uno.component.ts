@@ -1,4 +1,8 @@
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { DatosMercanciaComponent } from '../../components/datos-mercancia/datos-mercancia.component';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente que representa la primera sección de un formulario paso a paso.
@@ -7,7 +11,9 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
-  styleUrls: ['./paso-uno.component.scss']
+  styleUrls: ['./paso-uno.component.scss'],
+  standalone:true,
+  imports:[FormsModule, ReactiveFormsModule,SolicitanteComponent,DatosMercanciaComponent,CommonModule]
 })
 export class PasoUnoComponent {
   /**

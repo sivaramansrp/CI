@@ -1,3 +1,4 @@
+import { AlertComponent, AnexarDocumentosComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component } from '@angular/core';
 import { TEXTOS_REQUISITOS } from '../../constantes/fitosanitario.enum';
 
@@ -12,7 +13,9 @@ import { TEXTOS_REQUISITOS } from '../../constantes/fitosanitario.enum';
 @Component({
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
-  styleUrls: ['./paso-dos.component.scss']
+  styleUrls: ['./paso-dos.component.scss'],
+  standalone:true,
+  imports: [AnexarDocumentosComponent,AlertComponent,TituloComponent]
 })
 export class PasoDosComponent {
 

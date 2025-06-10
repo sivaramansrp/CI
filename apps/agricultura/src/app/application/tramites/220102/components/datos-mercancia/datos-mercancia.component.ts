@@ -1,15 +1,16 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
 import { Subject, takeUntil } from 'rxjs';
 
-import { Catalogo, ConfiguracionColumna, TablaSeleccion } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
 
 import { AGREGAR, EDITAR, IMPORTANTE } from '../../constantes/fitosanitario.enum';
 
 import { MercanciaForm } from '../../models/fitosanitario.model';
 
+import { CommonModule } from '@angular/common';
 import { DatosMercanciaService } from '../../services/datos-mercancia/datos-mercancia.service';
 
 /**
@@ -26,6 +27,8 @@ import { DatosMercanciaService } from '../../services/datos-mercancia/datos-merc
   selector: 'app-datos-mercancia',
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.scss',
+  standalone:true,
+  imports:[ReactiveFormsModule, FormsModule, TituloComponent, CatalogoSelectComponent, TablaDinamicaComponent, AlertComponent,CommonModule]
 })
 export class DatosMercanciaComponent implements OnInit, OnDestroy {
   /**

@@ -58,33 +58,29 @@ import {
 
 @NgModule({
   declarations: [
-    PasoDosComponent,
-    PasoUnoComponent,
-    PasoTresComponent,
-    DatosMercanciaComponent,
+
+
     SolicitudPageComponent
   ],
   imports: [
-    SharedModule,
-    CommonModule,
     WizardComponent,
-    TituloComponent,
+
     BtnContinuarComponent,
     ReactiveFormsModule,
     CrosslistComponent,
     InputCheckComponent,
-    AlertComponent,
     InputFechaComponent,
-    AnexarDocumentosComponent,
-    FirmaElectronicaComponent,
-    SolicitanteComponent,
     InputRadioComponent,
     TableComponent,
     CatalogoSelectComponent,
     TercerosComponent,
     ToastrModule.forRoot(),
     FitosanitarioRoutingModule,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    DatosMercanciaComponent,
+    PasoUnoComponent,
+    PasoTresComponent,
+    PasoDosComponent,
   ]
   ,
   providers: [

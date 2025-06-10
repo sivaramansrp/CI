@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 /**
  * Componente para mostrar el subtítulo del asistente.
  * @component PasoTresComponent
@@ -9,7 +10,9 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-paso-tres',
   templateUrl: './paso-tres.component.html',
-  styleUrls: ['./paso-tres.component.scss']
+  styleUrls: ['./paso-tres.component.scss'],
+  standalone: true,
+  imports:[FirmaElectronicaComponent]
 })
 export class PasoTresComponent {
 
