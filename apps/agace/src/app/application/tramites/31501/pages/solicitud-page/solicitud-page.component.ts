@@ -1,6 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, DatosPasos } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Component, ViewChild } from '@angular/core';
+import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
@@ -53,7 +52,7 @@ interface AccionBoton {
 /**
  * Componente que representa la página de solicitud.
  */
-export class SolicitudPageComponent implements OnInit {
+export class SolicitudPageComponent {
   /**
    * Lista de pasos del asistente.
    */
@@ -78,32 +77,6 @@ export class SolicitudPageComponent implements OnInit {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
-
-    /**
-   * @property {ConsultaioState} consultaDatos
-   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
-   */
-  consultaDatos!: ConsultaioState;
-
-    /**
-   * Sujeto para notificar la destrucción del componente.
-   */
-  public destroyNotifier$: Subject<void> = new Subject();
-
-  constructor(
-    private consultaioQuery: ConsultaioQuery
-  ) {}
-
-  ngOnInit(): void {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.consultaDatos = seccionState;
-        })
-      )
-      .subscribe();
-  }
 
   /**
    * Selecciona una pestaña del asistente.
