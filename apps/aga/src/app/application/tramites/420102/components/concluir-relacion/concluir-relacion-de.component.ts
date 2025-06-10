@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DOMICILIO_TABLA_COLUMNAS, FECHA_INGRESO } from '../../constantes/concluir-relacion.enum';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, } from '@angular/forms';
 import { InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite420102State, Tramite420102Store } from '../../estados/tramite420102.store';
 import { CommonModule } from '@angular/common';
 import { ConcluirRelacionService } from '../../services/concluir-relacion.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDelContenedorTabla } from '../../models/tramite420102.enum';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Tramite420102Query } from '../../estados/tramite420102.query';
@@ -16,7 +17,7 @@ import { Tramite420102Query } from '../../estados/tramite420102.query';
  * Este componente incluye un formulario reactivo para capturar datos, manejar fechas y mostrar una tabla dinámica.
  */
 @Component({
-  selector: 'app-concluir-relacion',
+  selector: 'app-concluir-relacion-de',
   standalone: true,
   imports: [
     CommonModule,
@@ -25,8 +26,8 @@ import { Tramite420102Query } from '../../estados/tramite420102.query';
     TablaDinamicaComponent,
     InputFechaComponent,
   ],
-  templateUrl: './concluir-relacion.component.html',
-  styleUrl: './concluir-relacion.component.scss',
+  templateUrl: './concluir-relacion-de.component.html',
+  styleUrl: './concluir-relacion-de.component.scss',
 })
 export class ConcluirRelacionComponent implements OnInit, OnDestroy {
   /**
@@ -78,6 +79,12 @@ export class ConcluirRelacionComponent implements OnInit, OnDestroy {
   datosTabla: DatosDelContenedorTabla[] = [];
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * @constructor
    * @description Constructor que inicializa los servicios y configuraciones necesarias para el componente.
    *
@@ -85,13 +92,25 @@ export class ConcluirRelacionComponent implements OnInit, OnDestroy {
    * @param {ConcluirRelacionService} concluirrelacionService - Servicio para manejar la lógica de negocio del trámite.
    * @param {Tramite420102Store} tramite420102Store - Store para manejar el estado del trámite 420102.
    * @param {Tramite420102Query} tramite420102Query - Query para consultar el estado del trámite 420102.
+   * @param {ConsultaioQuery} consultaioQuery - Query para consultar el estado de la aplicación.
    */
   constructor(
     private fb: FormBuilder,
     private concluirrelacionService: ConcluirRelacionService,
     private tramite420102Store: Tramite420102Store,
-    private tramite420102Query: Tramite420102Query
-  ) {}
+    private tramite420102Query: Tramite420102Query,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
 
   /**
    * @method ngOnInit
@@ -103,10 +122,41 @@ export class ConcluirRelacionComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          this.datosTabla = this.solicitudState.tableDatos || [];
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
     this.crearDesistimientoForm();
+  }
+
+  /**
+   * @method inicializarEstadoFormulario
+   * @description Inicializa el estado del formulario dependiendo si está en modo solo lectura o editable.
+   * Si el formulario es solo lectura, guarda y deshabilita los datos del formulario.
+   * Si no, crea el formulario para permitir edición.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearDesistimientoForm();
+    }
+  }
+
+  /**
+   * @method guardarDatosFormulario
+   * @description Guarda los datos actuales del formulario y ajusta su estado según el modo de solo lectura.
+   * Si el formulario está en modo solo lectura, lo deshabilita para evitar modificaciones.
+   * Si no, lo habilita para permitir la edición de los campos.
+   */
+  guardarDatosFormulario(): void {
+    this.crearDesistimientoForm();
+    if (this.esFormularioSoloLectura) {
+      this.concluirFormulario.disable();
+    } else {
+      this.concluirFormulario.enable();
+    }
   }
 
   /**
@@ -115,9 +165,11 @@ export class ConcluirRelacionComponent implements OnInit, OnDestroy {
    */
   crearDesistimientoForm(): void {
     this.concluirFormulario = this.fb.group({
-      rfc: [this.solicitudState?.rfc || '', Validators.required],
-      fechaInicial: [{ value: '', disabled: true }],
-      fechaFinal: [{ value: '', disabled: true }],
+      rfc: [this.solicitudState?.rfc || ''],
+      fechaInicial: [
+        { value: this.solicitudState?.fechaInicial, disabled: true },
+      ],
+      fechaFinal: [{ value: this.solicitudState?.fechaFinal, disabled: true }],
     });
   }
 
@@ -141,7 +193,9 @@ export class ConcluirRelacionComponent implements OnInit, OnDestroy {
    * @description Método para buscar el RFC ingresado en el formulario y actualizar el estado del trámite.
    */
   buscarRFC(): void {
-    this.tramite420102Store.establecerRfc(this.concluirFormulario.get('rfc')?.value);
+    this.tramite420102Store.establecerRfc(
+      this.concluirFormulario.get('rfc')?.value
+    );
     if (this.concluirFormulario.valid) {
       this.concluirrelacionService
         .obtenerTablerList('concluir-relacion-Tablea.json')

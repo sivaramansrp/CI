@@ -4389,7 +4389,7 @@
     "numeroDeProcedimiento": "250103",
     "origin": "READ_PROCEDURE"
   },
-   {
+  {
     "folioTramite": "099226136147361192499352",
     "tipoDeTramite": "Registro de solicitud de servicio",
     "nombreDeLaTarea": "Revisión de presupuesto",
@@ -4592,6 +4592,41 @@
     "origin": "READ_PROCEDURE"
   },
   {
+    "folioTramite": "0594662081554576341102081",
+    "numeroDeProcedimiento": "80205",
+    "origin": "FLUJO_FUNCIONARIO_EVALUAR"
+  },
+  {
+    "folioTramite": "0201157325726982921102082",
+    "numeroDeProcedimiento": "80205",
+    "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION"
+  },
+  {
+    "folioTramite": "07440025780842380381102083",
+    "numeroDeProcedimiento": "80205",
+    "origin": "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO"
+  },
+  {
+    "folioTramite": "0264261175179109611102084",
+    "numeroDeProcedimiento": "80205",
+    "origin": "FLUJO_FUNCIONARIO_AUTORIZACION"
+  },
+  {
+    "folioTramite": "0552097381203692541102085",
+    "numeroDeProcedimiento": "80205",
+    "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-RESOLUCION"
+  },
+  {
+    "folioTramite": "0453067309596292181102086",
+    "numeroDeProcedimiento": "80205",
+    "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
+  },
+  {
+    "folioTramite": "099226136147361191102087",
+    "numeroDeProcedimiento": "80205",
+    "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
+  },
+  {
     "folioTramite": "0215523965732296454156770",
     "tipoDeTramite": "Solicitud de Proceso Interno",
     "nombreDeLaTarea": "Evaluar solicitud",
@@ -4658,7 +4693,27 @@
     "fechaDeAsignacion": "2023-10-09",
     "estadoDeTramite": "Completado",
     "departamento": "se",
+    "numeroDeProcedimiento": "110208",
+    "origin": "READ_PROCEDURE"
+  },
+  {
+    "folioTramite": "099226136147361192499352",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "se",
     "numeroDeProcedimiento": "130118",
+    "origin": "READ_PROCEDURE"
+  },
+  {
+    "folioTramite": "099226136147361192499352",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "numeroDeProcedimiento": "80205",
+    "departamento": "se",
     "origin": "READ_PROCEDURE"
   },
   {
@@ -9172,6 +9227,16 @@
     "origin": "READ_PROCEDURE"
   },
   {
+    "folioTramite": "099226136147361192499352",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "cofepris",
+    "numeroDeProcedimiento": "260605",
+    "origin": "READ_PROCEDURE"
+  },
+  {
     "folioTramite": "0215523965732296454156770",
     "tipoDeTramite": "Solicitud de Proceso Interno",
     "nombreDeLaTarea": "Evaluar solicitud",
@@ -9281,7 +9346,6 @@
     "numeroDeProcedimiento": "260514",
     "origin": "FLUJO_FUNCIONARIO_AUTORIZACION"
   },
-  
   {
     "folioTramite": "0264261175179109616400775",
     "tipoDeTramite": "Registro de solicitud de servicio",
@@ -9561,7 +9625,88 @@
     "departamento": "cofepris",
     "numeroDeProcedimiento": "260210",
     "origin": "READ_PROCEDURE"
-  },  {
+  },
+  {
+    "folioTramite": "0215523965732296454156770",
+    "tipoDeTramite": "Solicitud de Proceso Interno",
+    "nombreDeLaTarea": "Evaluar solicitud",
+    "fechaDeAsignacion": "2023-10-01",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "se",
+    "numeroDeProcedimiento": "130301",
+    "origin": "FLUJO_FUNCIONARIO_EVALUAR"
+  },
+  {
+    "folioTramite": "0594662081554576343756766",
+    "tipoDeTramite": "Consulta de Proceso",
+    "nombreDeLaTarea": "confirmar notificación",
+    "fechaDeAsignacion": "2023-10-02",
+    "estadoDeTramite": "Pendiente",
+    "departamento": "se",
+    "numeroDeProcedimiento": "130301",
+    "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION"
+  },
+  {
+    "folioTramite": "0201157325726982922695523",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Atender requerimiento",
+    "fechaDeAsignacion": "2023-10-03",
+    "estadoDeTramite": "Completado",
+    "departamento": "se",
+    "numeroDeProcedimiento": "130301",
+    "origin": "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO"
+  },
+  {
+    "folioTramite": "07440025780842380388259713",
+    "tipoDeTramite": "Solicitud de Proceso Interno",
+    "nombreDeLaTarea": "Authorizar solicitud",
+    "fechaDeAsignacion": "2023-10-04",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "se",
+    "numeroDeProcedimiento": "130301",
+    "origin": "FLUJO_FUNCIONARIO_AUTORIZACION"
+  },
+  {
+    "folioTramite": "0264261175179109616400775",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "confirmar notificación de resolución",
+    "fechaDeAsignacion": "2023-10-05",
+    "estadoDeTramite": "Pendiente",
+    "departamento": "se",
+    "numeroDeProcedimiento": "130301",
+    "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-RESOLUCION"
+  },
+  {
+    "folioTramite": "0552097381203692547975670",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Functionario verificar requerimiento",
+    "fechaDeAsignacion": "2023-10-06",
+    "estadoDeTramite": "Completado",
+    "departamento": "se",
+    "numeroDeProcedimiento": "130301",
+    "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
+  },
+  {
+    "folioTramite": "0453067309596292181625870",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Generar opinión",
+    "fechaDeAsignacion": "2023-10-07",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "se",
+    "numeroDeProcedimiento": "130301",
+    "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
+  },
+  {
+    "folioTramite": "099226136147361192499352",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "se",
+    "numeroDeProcedimiento": "130301",
+    "origin": "READ_PROCEDURE"
+  },
+  {
     "folioTramite": "0215523965732296454156770",
     "tipoDeTramite": "Solicitud de Proceso Interno",
     "nombreDeLaTarea": "Evaluar solicitud",
@@ -10070,7 +10215,8 @@
     "departamento": "cofepris",
     "numeroDeProcedimiento": "260202",
     "origin": "READ_PROCEDURE"
-  },  {
+  },
+  {
     "folioTramite": "0215523965732296454156770",
     "tipoDeTramite": "Solicitud de Proceso Interno",
     "nombreDeLaTarea": "Evaluar solicitud",
@@ -10220,8 +10366,7 @@
     "numeroDeProcedimiento": "260603",
     "origin": "READ_PROCEDURE"
   },
-  
-{
+  {
     "folioTramite": "0215523965732296454156770",
     "tipoDeTramite": "Solicitud de Proceso Interno",
     "nombreDeLaTarea": "Evaluar solicitud",
@@ -10289,6 +10434,236 @@
     "estadoDeTramite": "Completado",
     "departamento": "cofepris",
     "numeroDeProcedimiento": "260604",
+    "origin": "READ_PROCEDURE"
+  },
+  {
+    "folioTramite": "0215523965732296454156770",
+    "tipoDeTramite": "Solicitud de Proceso Interno",
+    "nombreDeLaTarea": "Evaluar solicitud",
+    "fechaDeAsignacion": "2023-10-01",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "cofepris",
+    "numeroDeProcedimiento": "261702",
+    "origin": "FLUJO_FUNCIONARIO_EVALUAR"
+  },
+  {
+    "folioTramite": "0594662081554576343756766",
+    "tipoDeTramite": "Consulta de Proceso",
+    "nombreDeLaTarea": "confirmar notificación",
+    "fechaDeAsignacion": "2023-10-02",
+    "estadoDeTramite": "Pendiente",
+    "departamento": "cofepris",
+    "numeroDeProcedimiento": "261702",
+    "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION"
+  },
+  {
+    "folioTramite": "0201157325726982922695523",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Atender requerimiento",
+    "fechaDeAsignacion": "2023-10-03",
+    "estadoDeTramite": "Completado",
+    "departamento": "cofepris",
+    "numeroDeProcedimiento": "261702",
+    "origin": "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO"
+  },
+  {
+    "folioTramite": "07440025780842380388259713",
+    "tipoDeTramite": "Solicitud de Proceso Interno",
+    "nombreDeLaTarea": "Authorizar solicitud",
+    "fechaDeAsignacion": "2023-10-04",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "cofepris",
+    "numeroDeProcedimiento": "261702",
+    "origin": "FLUJO_FUNCIONARIO_AUTORIZACION"
+  },
+  {
+    "folioTramite": "0264261175179109616400775",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "confirmar notificación de resolución",
+    "fechaDeAsignacion": "2023-10-05",
+    "estadoDeTramite": "Pendiente",
+    "departamento": "cofepris",
+    "numeroDeProcedimiento": "261702",
+    "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-RESOLUCION"
+  },
+  {
+    "folioTramite": "0552097381203692547975670",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Functionario verificar requerimiento",
+    "fechaDeAsignacion": "2023-10-06",
+    "estadoDeTramite": "Completado",
+    "departamento": "cofepris",
+    "numeroDeProcedimiento": "261702",
+    "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
+  },
+  {
+    "folioTramite": "099226136147361192499352",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "cofepris",
+    "numeroDeProcedimiento": "261702",
+    "origin": "READ_PROCEDURE"
+  },
+  {
+    "folioTramite": "198765432109876",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "se",
+    "numeroDeProcedimiento": "90302",
+    "origin": "READ_PROCEDURE"
+  },
+  {
+    "folioTramite": "1987680232109876",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "semarnat",
+    "numeroDeProcedimiento": "230301",
+    "origin": "READ_PROCEDURE"
+  },
+  {
+    "folioTramite": "1987680232109876",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "agricultura",
+    "numeroDeProcedimiento": "420102",
+    "origin": "READ_PROCEDURE"
+  },
+  {
+    "folioTramite": "099226136147361192499352",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32514",
+    "origin": "READ_PROCEDURE"
+  },
+  {
+    "folioTramite": "099226136147361192499352",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "agricultura",
+    "numeroDeProcedimiento": "220404",
+    "origin": "READ_PROCEDURE"
+  },
+  {
+    "folioTramite": "099226136147361192499319",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "aga",
+    "numeroDeProcedimiento": "319",
+    "origin": "READ_PROCEDURE"
+  },
+  {
+    "folioTramite": "0215523965732296454110211",
+    "tipoDeTramite": "Solicitud de Proceso Interno",
+    "nombreDeLaTarea": "Evaluar solicitud",
+    "fechaDeAsignacion": "2023-10-01",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "se",
+    "numeroDeProcedimiento": "110211",
+    "origin": "READ_PROCEDURE"
+  },
+  {
+    "folioTramite": "198765432109655",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "agace",
+    "numeroDeProcedimiento": "32515",
+    "origin": "READ_PROCEDURE"
+  },
+  {
+    "folioTramite": "7123456789220403",
+    "tipoDeTramite": "Solicitud de Proceso Interno",
+    "nombreDeLaTarea": "Evaluar solicitud",
+    "fechaDeAsignacion": "2023-10-01",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "agricultura",
+    "numeroDeProcedimiento": "220403",
+    "origin": "FLUJO_FUNCIONARIO_EVALUAR"
+  },
+  {
+    "folioTramite": "856789012220403",
+    "tipoDeTramite": "Consulta de Proceso",
+    "nombreDeLaTarea": "confirmar notificación",
+    "fechaDeAsignacion": "2023-10-02",
+    "estadoDeTramite": "Pendiente",
+    "departamento": "agricultura",
+    "numeroDeProcedimiento": "220403",
+    "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION"
+  },
+  {
+    "folioTramite": "903456789220403",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Atender requerimiento",
+    "fechaDeAsignacion": "2023-10-03",
+    "estadoDeTramite": "Completado",
+    "departamento": "agricultura",
+    "numeroDeProcedimiento": "220403",
+    "origin": "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO"
+  },
+  {
+    "folioTramite": "672345678220403",
+    "tipoDeTramite": "Solicitud de Proceso Interno",
+    "nombreDeLaTarea": "Authorizar solicitud",
+    "fechaDeAsignacion": "2023-10-04",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "agricultura",
+    "numeroDeProcedimiento": "220403",
+    "origin": "FLUJO_FUNCIONARIO_AUTORIZACION"
+  },
+  {
+    "folioTramite": "589012345220403",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "confirmar notificación de resolución",
+    "fechaDeAsignacion": "2023-10-05",
+    "estadoDeTramite": "Pendiente",
+    "departamento": "agricultura",
+    "numeroDeProcedimiento": "220403",
+    "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-RESOLUCION"
+  },
+  {
+    "folioTramite": "745678901220403",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Functionario verificar requerimiento",
+    "fechaDeAsignacion": "2023-10-06",
+    "estadoDeTramite": "Completado",
+    "departamento": "agricultura",
+    "numeroDeProcedimiento": "220403",
+    "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
+  },
+  {
+    "folioTramite": "234567890220403",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Generar opinión",
+    "fechaDeAsignacion": "2023-10-07",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "agricultura",
+    "numeroDeProcedimiento": "220403",
+    "origin": "FLUJO_FUNCIONARIO_GENERAR_OPINION"
+  },
+  {
+    "folioTramite": "1987654321220403",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "agricultura",
+    "numeroDeProcedimiento": "220403",
     "origin": "READ_PROCEDURE"
   }
 ]
