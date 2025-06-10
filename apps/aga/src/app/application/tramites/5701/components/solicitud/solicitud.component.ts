@@ -648,9 +648,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * Error pattern
    * @returns {boolean} - Retorna `true` si el campo tiene un error de patrón, de lo contrario `false`.
    */
-  isErrorPattern(): boolean {
+  isErrorPattern(field: string): boolean {
     const CONTROL = this.datosImportadorExportador.get(
-      'RFCImpExp'
+      field
     ) as FormControl;
 
     if (CONTROL) {

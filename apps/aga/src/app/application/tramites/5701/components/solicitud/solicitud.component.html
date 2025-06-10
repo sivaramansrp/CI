@@ -92,7 +92,7 @@
           >
             Este campo es requerido.
           </div>
-          <div *ngIf="isErrorPattern()" class="mensaje-error">
+          <div *ngIf="isErrorPattern('RFCImpExp')" class="mensaje-error">
             RFC no es válido.
           </div>
         </div>
@@ -265,7 +265,9 @@
               type="text"
               maxlength="30"
               [ngClass]="
-                isValid(datosImportadorExportador, 'idSocioComercial') ? 'required' : ''
+                isValid(datosImportadorExportador, 'idSocioComercial')
+                  ? 'required'
+                  : ''
               "
               (change)="onIdSocioComercialChange()"
             />
@@ -274,6 +276,12 @@
               class="mensaje-error"
             >
               Este campo es requerido.
+            </div>
+            <div
+              *ngIf="isErrorPattern('idSocioComercial')"
+              class="mensaje-error"
+            >
+              Por favor, ingresa caracteres alfanuméricos.
             </div>
           </div>
         </div>
