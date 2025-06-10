@@ -126,7 +126,7 @@ import { UsuarioState } from '@libs/shared/data-access-user/src/core/estados/usu
 import { ValidaLineaCapturaService } from '../../../../core/services/5701/pago/valida-linea-captura.service';
 import { ValidaLineaPagoService } from '../../../../core/services/5701/pago/valida-linea-pago.service';
 
-//TODO: Estas importaciones deben eliminarse una vez que se obtengan las patentes y los rfcs de la consulta del api.
+//Estas importaciones deben eliminarse una vez que se obtengan las patentes y los rfcs de la consulta del api.
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 // eslint-disable-next-line @nx/enforce-module-boundaries
@@ -377,7 +377,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   lineaCapturaSeleccionados: LineaCaptura[] = [];
 
-  //TODO: Estas variables se van a eliminar
+  //Estas variables se van a eliminar
   /**
    * Arrelgo de patentes de la empresa
    */
@@ -467,7 +467,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   private validaTipoPersona(): void {
-    // TODO: Esta validación debería cambiar y validar contra el valor almacenado
+    // Esta validación debería cambiar y validar contra el valor almacenado
     // en el store.
     if (this.tipoPersona === TipoPersona.FISICA) {
       this.obtenerPatente();
