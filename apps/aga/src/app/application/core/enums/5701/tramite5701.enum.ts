@@ -297,3 +297,9 @@ export const TEXTO_ACEPTAR = 'Aceptar';
  * @description Texto 'Cancelar' para el botón de cancelación en el modal de aviso
  */
 export const TEXTO_CANCELAR = 'Cancelar';
+
+/**
+ * @description Mensaje de error cuando no se ha encontrado el rfc.
+ */
+export const MSG_ERROR_RFC_NO_ENCONTRADO =
+  'No se encontró el RFC, favor de verificar los datos ingresados.';
