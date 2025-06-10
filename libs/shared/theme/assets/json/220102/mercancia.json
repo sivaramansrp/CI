@@ -1,0 +1,36 @@
+{
+  "datos": [
+    {
+      "id": 1,
+      "nombreComun": "Maíz",
+      "nombreCientifico": "Zea mays",
+      "uso": "Alimentario",
+      "paisOrigen": "México",
+      "paisProcedencia": "Estados Unidos",
+      "tipoProducto": "Grano",
+      "fraccionArancelaria": "1005.90.99",
+      "descripcionFraccionArancelaria": "Los demás maíces",
+      "cantidadUMT": "1000",
+      "umt": "kg",
+      "cantidadUMC": "10",
+      "umc": "ton",
+      "descripcion": "Maíz blanco para consumo humano"
+    },
+    {
+      "id": 2,
+      "nombreComun": "Café",
+      "nombreCientifico": "Coffea arabica",
+      "uso": "Industrial",
+      "paisOrigen": "Colombia",
+      "paisProcedencia": "Brasil",
+      "tipoProducto": "Bebida",
+      "fraccionArancelaria": "0901.11.00",
+      "descripcionFraccionArancelaria": "Café sin tostar, sin descafeinar",
+      "cantidadUMT": "500",
+      "umt": "kg",
+      "cantidadUMC": "5",
+      "umc": "ton",
+      "descripcion": "Café verde de alta calidad"
+    }
+  ]
+}
