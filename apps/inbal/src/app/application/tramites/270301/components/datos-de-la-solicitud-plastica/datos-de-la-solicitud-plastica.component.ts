@@ -44,7 +44,10 @@ import { Agregar270301Store, Solicitud270301State } from '../../estados/tramites
 
 import { AgregarQuery } from '../../estados/queries/agregar.query';
 
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 export interface ObraTablaDatos {
+  
   columns: string[];
 }
 
@@ -91,6 +94,15 @@ const OBRA_DE_ARTE_ALERT =
   styleUrl: './datos-de-la-solicitud-plastica.component.scss',
 })
 export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
+
+  /**
+ * @desc Indica si el formulario debe mostrarse solo en modo de lectura.
+ * @type {boolean}
+ * @public
+ * 
+ * Cuando es verdadero, el usuario no puede editar los campos del formulario.
+ */
+   public esFormularioSoloLectura: boolean = true;
   /**
    * @property {Subject<void>} destroy$
    * @description
@@ -245,7 +257,8 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private Agregar270301Store: Agregar270301Store,
     private agregarQuery: AgregarQuery,
-    private solicitudService: SolicitudService
+    private solicitudService: SolicitudService,
+     private consultaioQuery: ConsultaioQuery
   ) {
     // La lógica del constructor se puede añadir aquí si es necesario
   }
@@ -271,7 +284,52 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
       )
       .subscribe();
       this.getObraDeArte()
+
+       this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroy$),
+          map((seccionState)=>{
+            this.esFormularioSoloLectura = seccionState.readonly;
+            
+          })
+        )
+        .subscribe();
+        this.inicializarEstadoFormulario(); // Inicializa el estado del formulario según el modo de solo lectura.
     }
+
+     /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   * Si está en modo solo lectura, deshabilita el formulario; si no, lo habilita y actualiza los valores.
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (!this.solicitudFormGroup) {
+      return;
+    }
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.getObraDeArte();
+    }  
+  }
+
+
+   /**
+   * Aplica el modo solo lectura o edición al formulario según corresponda.
+   * También actualiza los valores del formulario desde el store.
+   * @returns {void}
+   */
+  guardarDatosFormulario(): void {
+    if (!this.solicitudFormGroup) {
+     return;
+    }
+    this.getObraDeArte();
+    if (this.esFormularioSoloLectura) {
+      this.solicitudFormGroup.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.solicitudFormGroup.enable();
+    }
+  }
 
   /**
    * @method getObraDeArte
