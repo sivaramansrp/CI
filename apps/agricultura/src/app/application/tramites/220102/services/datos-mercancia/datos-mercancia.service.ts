@@ -69,15 +69,15 @@ export class DatosMercanciaService {
     this.seccionStore.establecerSeccion([true]);
     this.seccionStore.establecerFormaValida([status]);
   }
-  
+
   /**
  * @descripcion
  * Obtiene los datos de mercancía desde el archivo JSON ubicado en la URL especificada.
  * 
  * @retorna Un observable que emite un arreglo de objetos de tipo FinalDataToSend.
  */
-  obtenerDatosMercancia(): Observable<FinalDataToSend[]> {
-    return this.http.get<FinalDataToSend[]>(this.url + 'mercancia.json');
+  obtenerDatosMercancia(): Observable<FinalDataToSend> {
+    return this.http.get<FinalDataToSend>(this.url + 'mercancia.json');
   }
 
 
