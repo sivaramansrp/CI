@@ -46,12 +46,38 @@ export class DatosMercanciaService {
   public eliminarDatoPorId(id: number): void {
     this.fitosanitarioStore.eliminarDatoPorId(id);
   }
+  /**
+   * @description
+   * Obtiene el estado completo del store fitosanitario como un observable.
+   *
+   * @returns Observable<FinalDataToSend> - Un observable que emite el estado completo del store fitosanitario.
+   */
   public obtenerDatos(): Observable<FinalDataToSend> {
     return this.fitosanitarioStore._select(state => state); // Devuelve el estado completo
   }
+
+  /**
+   * @method
+   * @description
+   * Desactiva o activa los campos de la sección actual según el estado proporcionado.
+   * 
+   * @param status Indica si los campos deben estar activos (`true`) o desactivados (`false`).
+   * 
+   * @returns void
+   */
   public botonDesactivarCampos(status: boolean): void {
     this.seccionStore.establecerSeccion([true]);
     this.seccionStore.establecerFormaValida([status]);
+  }
+  
+  /**
+ * @descripcion
+ * Obtiene los datos de mercancía desde el archivo JSON ubicado en la URL especificada.
+ * 
+ * @retorna Un observable que emite un arreglo de objetos de tipo FinalDataToSend.
+ */
+  obtenerDatosMercancia(): Observable<FinalDataToSend[]> {
+    return this.http.get<FinalDataToSend[]>(this.url + 'mercancia.json');
   }
 
 
