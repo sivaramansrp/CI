@@ -5,12 +5,14 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import {Subject, map , takeUntil } from 'rxjs';
 
 import { AGREGAR, EDITAR, IMPORTANTE } from '../../constantes/fitosanitario.enum';
-import { AlertComponent, Catalogo,CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo,CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { MercanciaForm } from '../../models/fitosanitario.model';
 
 import { CommonModule } from '@angular/common';
 import { DatosMercanciaService } from '../../services/datos-mercancia/datos-mercancia.service';
+
+import {ConsultaioQuery} from '@ng-mf/data-access-user'
 
 /**
  * @component

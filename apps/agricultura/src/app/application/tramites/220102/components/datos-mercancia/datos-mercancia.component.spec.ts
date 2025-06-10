@@ -10,8 +10,8 @@ describe('DatosMercanciaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DatosMercanciaComponent],
-      imports: [ReactiveFormsModule, FormsModule, HttpClientTestingModule, TituloComponent, CatalogoSelectComponent, TablaDinamicaComponent, AlertComponent],
+      declarations: [],
+      imports: [ReactiveFormsModule, FormsModule, HttpClientTestingModule, TituloComponent, CatalogoSelectComponent, TablaDinamicaComponent, AlertComponent,DatosMercanciaComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosMercanciaComponent);

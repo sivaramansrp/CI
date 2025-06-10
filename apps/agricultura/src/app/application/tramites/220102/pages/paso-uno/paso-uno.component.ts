@@ -1,10 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import {ConsultaioQuery} from '@ng-mf/data-access-user'
 import { DatosMercanciaComponent } from '../../components/datos-mercancia/datos-mercancia.component';
 import { DatosMercanciaService } from '../../services/datos-mercancia/datos-mercancia.service';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+
+
 
 /**
  * Componente que representa la primera sección de un formulario paso a paso.
