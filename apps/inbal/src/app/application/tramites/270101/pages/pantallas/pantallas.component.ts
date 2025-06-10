@@ -240,11 +240,11 @@ export class PantallasComponent implements OnInit, OnDestroy {
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
         this.consultaState = seccionState;
+        if (this.consultaState.readonly) {
+        this.desactivarPagoDerechos = true;
+    }
       })
     ).subscribe();
-    if (this.consultaState.readonly) {
-      this.desactivarPagoDerechos = true;
-    }
   }
 
   /**

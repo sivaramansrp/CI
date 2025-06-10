@@ -331,6 +331,13 @@ export class ExportarIlustracionesService {
     return this.http.get<Catalogo[]>('assets/json/270101/bancos.json');
   }
 
+  
+  /**
+   * @method getExportarIlustracionesData
+   * @description
+   * Obtiene los datos necesarios para exportar ilustraciones desde un archivo JSON.
+   * @returns {Observable<ExportarIlustraciones270101State>} Un observable que emite el estado de exportación de ilustraciones.
+   */
   getExportarIlustracionesData(): Observable<ExportarIlustraciones270101State> {
     return this.http.get<ExportarIlustraciones270101State>('assets/json/270101/exportar-ilustraciones.json');
   }
