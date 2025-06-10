@@ -996,18 +996,22 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     const INTERVALO_DIAS = SolicitudComponent.getIntervaloDias(
       this.tipoSolicitudSeleccionada
     );
-    if (
-      FECHA_INICIO &&
-      FECHA_FINAL &&
-      HORA_INICIO &&
-      HORA_FINAL &&
-      INTERVALO_DIAS !== null
-    ) {
-      FECHA_INICIO.setHours(
+
+    const PRIMER_DIA_MES = FECHA_INICIO.getDate() === 1 ? true : false;
+
+    const CAMPOS_NO_NULOS =
+      [FECHA_INICIO, FECHA_FINAL, HORA_INICIO, HORA_FINAL].every(Boolean) &&
+      INTERVALO_DIAS !== null;
+
+    if (CAMPOS_NO_NULOS) {
+      const FECHA_INICIO_HORA = new Date(FECHA_INICIO);
+      const FECHA_FINAL_HORA = new Date(FECHA_FINAL);
+
+      FECHA_INICIO_HORA.setHours(
         parseInt(HORA_INICIO.split(':')[0], 10),
         parseInt(HORA_INICIO.split(':')[1], 10)
       );
-      FECHA_FINAL.setHours(
+      FECHA_FINAL_HORA.setHours(
         parseInt(HORA_FINAL.split(':')[0], 10),
         parseInt(HORA_FINAL.split(':')[1], 10)
       );
@@ -1015,11 +1019,23 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       const DIFERENCIA_EN_TIEMPO =
         FECHA_FINAL.getTime() - FECHA_INICIO.getTime();
 
-      const DIFERENCIA_EN_HORAS = DIFERENCIA_EN_TIEMPO / (1000 * 3600);
+      const DIFERENCIA_EN_HORAS =
+        (FECHA_FINAL_HORA.getTime() - FECHA_INICIO_HORA.getTime()) /
+        (1000 * 3600);
 
-      if (DIFERENCIA_EN_TIEMPO <= 0) {
+      if (DIFERENCIA_EN_HORAS <= 0) {
         this.datosServicio.setErrors({ endDateBeforeStartDate: true });
         return;
+      }
+
+      if (PRIMER_DIA_MES) {
+        const VALIDACION_MES =
+          FECHA_INICIO.getMonth() === FECHA_FINAL.getMonth() &&
+          FECHA_INICIO.getFullYear() === FECHA_FINAL.getFullYear();
+        if (!VALIDACION_MES) {
+          this.datosServicio.setErrors({ invalidIntervalo: true });
+          return;
+        }
       }
 
       if (
@@ -1030,13 +1046,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         return;
       }
 
-      const DIFERENCIA_EN_DIAS = DIFERENCIA_EN_TIEMPO / (1000 * 3600 * 24);
+      const DIFERENCIA_EN_DIAS = DIFERENCIA_EN_TIEMPO / (1000 * 3600 * 24) + 1;
 
       if (
         (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.SEMANAL &&
           DIFERENCIA_EN_DIAS > 7) ||
         (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.MENSUAL &&
-          DIFERENCIA_EN_DIAS > 30)
+          DIFERENCIA_EN_DIAS > 31)
       ) {
         this.datosServicio.setErrors({ invalidIntervalo: true });
       }
@@ -1390,6 +1406,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   changeHoraFinal(): void {
     this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
+
     this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
 
     if (this.fechaInicioPasadaFechaFinalError()) {
@@ -2116,8 +2133,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             };
             return;
           }
-
-      
 
           const DIAS_SERVICIO =
             this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL
