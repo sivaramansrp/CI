@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { Subject, takeUntil } from 'rxjs';
+import {Subject, map , takeUntil } from 'rxjs';
 
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from 'libs/shared/data-access-user/src';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from 'libs/shared/data-access-user/src';
 
 import { AGREGAR, EDITAR, IMPORTANTE } from '../../constantes/fitosanitario.enum';
 
@@ -30,7 +30,7 @@ import { DatosMercanciaService } from '../../services/datos-mercancia/datos-merc
   standalone:true,
   imports:[ReactiveFormsModule, FormsModule, TituloComponent, CatalogoSelectComponent, TablaDinamicaComponent, AlertComponent,CommonModule]
 })
-export class DatosMercanciaComponent implements OnInit, OnDestroy {
+export class DatosMercanciaComponent implements OnInit, OnDestroy,AfterViewInit {
   /**
     * @property {TablaSeleccion} tipoSeleccionarParaTabla
     * @description Tipo de selección para la tabla de solicitudes.
@@ -135,12 +135,26 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   * @description es una propiedad de tipo array que almacena una lista de objetos de tipo.
   */
   listaDeTablasSeleccionadas: MercanciaForm[] = [];
+    /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * @constructor
    * @param {FormBuilder} fb Servicio para la construcción de formularios reactivos.
    * @param {DatosMercanciaService} datosMercanciaService Servicio para obtener datos de la mercancía.
    */
-  constructor(private readonly fb: FormBuilder, private readonly datosMercanciaService: DatosMercanciaService, private readonly cdr: ChangeDetectorRef) {
+  constructor(private readonly fb: FormBuilder, private readonly datosMercanciaService: DatosMercanciaService, private readonly cdr: ChangeDetectorRef, private readonly consultaioQuery: ConsultaioQuery
+  ) {
+     this.consultaioQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.esFormularioSoloLectura = seccionState.readonly;
+            })
+          )
+          .subscribe();
     this.obtenerNombreComun();
     this.obtenerNombreCientifico();
     this.obtenerUso();
@@ -171,6 +185,21 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
       });
 
 
+  }
+/**
+ * @descripcion
+ * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
+ * 
+ * Habilita o deshabilita el formulario `formMercancia` según el valor de `esFormularioSoloLectura`.
+ * Si el formulario está en modo solo lectura, se desactiva para evitar modificaciones.
+ */
+  ngAfterViewInit(): void {
+    if(this.esFormularioSoloLectura){
+      this.formMercancia.disable();
+    }
+    else{
+      this.formMercancia.enable();
+    }
   }
 
   /**
