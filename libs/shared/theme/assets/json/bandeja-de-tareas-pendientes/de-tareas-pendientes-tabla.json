@@ -10385,5 +10385,15 @@
     "departamento": "agricultura",
     "numeroDeProcedimiento": "420102",
     "origin": "READ_PROCEDURE"
+  },
+  {
+    "folioTramite": "099226136147361192499352",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32514",
+    "origin": "READ_PROCEDURE"
   }
 ]
