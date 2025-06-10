@@ -3,7 +3,6 @@
  */
 import {
   AlertComponent,
-  CatalogoSelectComponent,
   CatalogosService,
   ConfiguracionColumna,
   FormularioDinamico,
@@ -33,6 +32,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ExportaccionAcuicolaService } from '../../services/exportaccion-acuicola.service';
 import { MENSAJE_DOBLE_CLIC } from '../../constants/acuicola.module';
@@ -394,7 +394,7 @@ private seccionState!: SeccionLibState
       this.seccionStore.establecerFormaValida([false]);
     }
         })
-
+        
     if(this.formularioDeshabilitado){
       this.esFormularioSoloLectura = true;
       this.inicializarEstadoFormulario();

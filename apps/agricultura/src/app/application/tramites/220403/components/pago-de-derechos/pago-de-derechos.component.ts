@@ -1,6 +1,5 @@
 import {
   AlertComponent,
-  CatalogoSelectComponent,
   CatalogosService,
   FormularioDinamico,
   InputConfig,
@@ -26,6 +25,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { DATOS_PAGO_DERECHOS } from '../../constants/input-datos-config';
 import { ExportaccionAcuicolaService } from '../../services/exportaccion-acuicola.service';
