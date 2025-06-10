@@ -10,12 +10,12 @@
     <div class="mt-5">
       <h5>Informacion de procedencia*</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData"></ng-table>
+        <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
       </div>
 
       <div class="d-flex justify-content-end mt-3">
 
-        <button type="button" class="btn btn-primary" (click)="abrirProcedencia()">
+        <button type="button" class="btn btn-primary" (click)="abrirProcedencia()" [disabled]="esFormularioSoloLectura">
           Agregar
         </button>
       </div>

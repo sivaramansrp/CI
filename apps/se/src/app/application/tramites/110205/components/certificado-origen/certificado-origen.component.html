@@ -14,10 +14,11 @@
     [datosForm]="formCertificadoValues"
     [cargoDeMercancias]="cargoDeMercancias"
     [mercanciasDisponibles]="mercanciasDisponibles"
+    [esFormularioSoloLectura]="esFormularioSoloLectura"
     (formCertificadoEvent)="setValoresStore($event)" >
 </app-certificado-de-origen>
 
 <div class="modal fade" #modifyModal tabindex="-1" aria-labelledby="modifyModalLabel" aria-hidden="true">
-    <app-mercancia [datosSeleccionados]="datosSeleccionados" (guardarClicado)="abrirModificarModal($event)"
+    <app-mercancia [esFormularioSoloLectura]="esFormularioSoloLectura" [datosSeleccionados]="datosSeleccionados" (guardarClicado)="abrirModificarModal($event)"
         (cerrarClicado)="cerrarModificarModal()"></app-mercancia>
 </div>

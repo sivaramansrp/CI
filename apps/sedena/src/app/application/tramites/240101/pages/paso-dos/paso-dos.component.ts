@@ -1,11 +1,10 @@
+import { AnexarDocumentosComponent, CATALOGOS_ID, ConsultaioState, TituloComponent } from '@ng-mf/data-access-user';
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { CatalogosService } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogosService } from '@ng-mf/data-access-user';
-
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
@@ -18,8 +17,10 @@ import { TEXTOS_REQUISITOS } from '../../constants/importacion-armas-municiones.
  */
 @Component({
   selector: 'app-paso-dos',
+  standalone: true,
   templateUrl: './paso-dos.component.html',
-  styleUrl: './paso-dos.component.css',
+  styleUrl: './paso-dos.component.scss',
+  imports: [AnexarDocumentosComponent, AlertComponent, TituloComponent],
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
   /**
@@ -64,6 +65,16 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * @type {Subject<void>}
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+    /**
+   * Indica si los datos de respuesta están disponibles.
+   */
+  public esDatosRespuesta: boolean = false;
+
+  /**
+   * Estado de la consulta actual.
+   */
+  public consultaState!: ConsultaioState;
 
   /**
    * @constructor

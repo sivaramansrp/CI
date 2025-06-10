@@ -50,6 +50,7 @@
             formControlName="banco"
             [label]="'Banco'"
             [required]="false"
+            [isDisabled]="formularioDeshabilitado"
           ></app-catalogo-select>
         </div>
       } @else {
@@ -60,6 +61,7 @@
           formControlName="estado"
           [label]="'Estado/localidad'"
           [required]="true"
+          [isDisabled]="formularioDeshabilitado"
         ></app-catalogo-select>
       </div>
       }
@@ -94,10 +96,11 @@
         name="fechaPago"
         (valorCambiado)="onFechaCambiada($event)"
         [setFecha]="pagoDerechosForm.get('fechaPago')?.value"
+        [isDisabled]="formularioDeshabilitado"
         ></input-fecha>
 
         <div *ngIf="esInvalido('fechaPago')" class="text-danger">
-          <small *ngIf="pagoDerechosForm.controls['fechaPago'].errors?.['esFechaPasada']">
+          <small *ngIf="pagoDerechosForm.controls['fechaPago'].errors?.['esFechaPasada'] && pagoDerechosForm.controls['fechaPago'].touched">
             La fecha de pago debe ser menor o igual a la fecha actual
           </small>
           </div>
