@@ -1285,5 +1285,14 @@
     "diasTranscurridos": "4",
     "departamento": "AGACE",
     "numeroDeProcedimiento": "32516"
+  },
+  {
+    "id": 30505,
+    "tipoDeTramite": "Modificación / Aviso de Despacho de mercancía",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "30505"
   }
 ]
