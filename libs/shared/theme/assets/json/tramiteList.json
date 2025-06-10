@@ -1914,7 +1914,7 @@
     "id": 274,
     "tramite": 230301,
     "linkDashboard": "/semarnat/desistimiento/solicitud",
-    "linkDepartment": "/semarnat/desistimiento/solicitud",
+    "linkDepartment": "/pago/desistimiento/solicitud",
     "department": "semarnat"
   },
   {
