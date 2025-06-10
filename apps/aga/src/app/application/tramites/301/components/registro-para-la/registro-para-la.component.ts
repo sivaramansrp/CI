@@ -6,7 +6,7 @@ import {
   ConsultaioQuery,
   IMPORTANTE,
 } from '@ng-mf/data-access-user';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -54,6 +54,8 @@ import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 })
 export class RegistroParaLaComponent implements OnInit, OnDestroy {
 
+  /** Emite el valor de la sección seleccionada al componente padre. */
+  @Output() emitirElValorSeleccionado: EventEmitter<string> = new EventEmitter<string>();
 
   /**
    * Formulario principal del componente.
@@ -72,13 +74,8 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
    */
   public TEXTOS = IMPORTANTE;
 
-  /**
-   * Constantes importadas desde el archivo de enumeración para los mensajes de advertencia.
-   *
-   * @type {AVISO}
-   * @memberof RegistroParaLaComponent
-   */
-  public ADVERTENCIA = AVISO;
+  /** Controla la visibilidad de un campo específico en la interfaz. */
+  public mostrarCampo: boolean = false;
 
   /**
    * Índice del paso actual en el formulario.
@@ -212,7 +209,7 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
      * El campo es requerido.
      */
     this.registroParaLaForm = this.fb.group({
-      registro: [{value: this.solicitudState?.registro, disable: false}, Validators.required],
+      registro: [this.solicitudState?.registro, Validators.required],
     });
 
     /**
@@ -258,6 +255,18 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite301Store[metodoNombre] as (value: any) => void)(VALOR);
+    this.emitirElValorSeleccionado.emit(VALOR);
+  }
+
+  /**
+ * Activa la visualización del campo si aún no está visible.
+ * @returns {void}
+ * @memberof RegistroParaLaComponent
+ */
+  iniciar(): void {
+    if (!this.mostrarCampo) {
+      this.mostrarCampo = !this.mostrarCampo;
+    }
   }
 
   /**

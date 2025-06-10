@@ -5,6 +5,7 @@ import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/components/wizard/wizard.component';
+import { AVISO } from '@ng-mf/data-access-user';
 
 /**
  * Este componente se utiliza para mostrar los pasos del asistente - 220401
@@ -17,6 +18,15 @@ import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/comp
   templateUrl: './pantallas.component.html',
 })
 export class PantallasComponent {
+
+   /**
+   * Constantes importadas desde el archivo de enumeración para los mensajes de advertencia.
+   *
+   * @type {AVISO}
+   * @memberof RegistroParaLaComponent
+   */
+  public ADVERTENCIA = AVISO;
+
   /**
    * Esta variable se utiliza para almacenar la lista de pasos.
    */

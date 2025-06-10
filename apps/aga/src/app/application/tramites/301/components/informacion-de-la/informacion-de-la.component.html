@@ -22,20 +22,21 @@
       </div>
 
       <div class="col-md-8">
-        <label for="descripcionFraccion" class="form-label">Descripción:</label>
-        <input
-          id="descripcionFraccion"
-          type="text"
-          class="form-control"
-          formControlName="descripcionFraccion"
-          (change)="
-            setValoresStore(
-              informacionDeLaform,
-              'descripcionFraccion',
-              'setDescripcionFraccion'
-            )
-          "
-        />
+        @if (mostrarDescripcionFraccion) {
+          <label for="descripcionFraccion" class="form-label">Descripción:</label>
+          <textarea
+            id="descripcionFraccion"
+            class="form-control"
+            formControlName="descripcionFraccion"
+            (change)="
+              setValoresStore(
+                informacionDeLaform,
+                'descripcionFraccion',
+                'setDescripcionFraccion'
+              )
+            "
+          ></textarea>
+        }
       </div>
     </div>
 
@@ -56,29 +57,29 @@
       </div>
 
       <div class="col-md-8">
-        <label for="descripcionNico" class="form-label">Descripción:</label>
-        <input
-          id="descripcionNico"
-          type="text"
-          class="form-control"
-          formControlName="descripcionNico"
-          (change)="
-            setValoresStore(
-              informacionDeLaform,
-              'descripcionNico',
-              'setDescripcionNico'
-            )
-          "
-        />
+        @if (mostrarDescripcionNico) {
+          <label for="descripcionNico" class="form-label">Descripción:</label>
+          <textarea
+            id="descripcionNico"
+            class="form-control"
+            formControlName="descripcionNico"
+            (change)="
+              setValoresStore(
+                informacionDeLaform,
+                'descripcionNico',
+                'setDescripcionNico'
+              )
+            "
+          ></textarea>
+        }
       </div>
     </div>
 
     <div class="row mt-3">
       <div class="col-md-4">
         <label for="nombreQuimico" class="form-label">Nombre químico *:</label>
-        <input
+        <textarea
           id="nombreQuimico"
-          type="text"
           class="form-control"
           formControlName="nombreQuimico"
           (change)="
@@ -88,16 +89,15 @@
               'setNombreQuimico'
             )
           "
-        />
+        ></textarea>
       </div>
 
       <div class="col-md-8">
         <label for="nombreComercial" class="form-label"
           >Nombre comercial *:</label
         >
-        <input
+        <textarea
           id="nombreComercial"
-          type="text"
           class="form-control"
           formControlName="nombreComercial"
           (change)="
@@ -107,7 +107,7 @@
               'setNombreComercial'
             )
           "
-        />
+        ></textarea>
       </div>
     </div>
 
@@ -116,15 +116,14 @@
         <label for="numeroCAS" class="form-label"
           >Número de Chemical Abstracts Substance (CAS) *:</label
         >
-        <input
+        <textarea
           id="numeroCAS"
-          type="text"
           class="form-control"
           formControlName="numeroCAS"
           (change)="
             setValoresStore(informacionDeLaform, 'numeroCAS', 'setNumeroCAS')
           "
-        />
+        ></textarea>
       </div>
 
       <div class="col-md-4">

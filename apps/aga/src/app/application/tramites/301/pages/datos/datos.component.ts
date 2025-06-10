@@ -25,19 +25,25 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
 
+ /** Identificador de la sección seleccionada para mostrar el componente correspondiente. */
+  public seccionSeleccionada!: string;
+
   /** Subject para notificar la destrucción del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /** Estado actual de la consulta obtenido desde el store. */
   public consultaState!:ConsultaioState;
   /**
    * Esta variable se utiliza para almacenar el índice del subtítulo.
    */
-  indice: number = 1;
+  public indice: number = 1;
   /**
    * Este método se utiliza para establecer el índice del subtítulo.
    */
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+  
   constructor(
     public pantallasSvc: Pantallas301Service,
     private solocitud301Service: Solocitud301Service,
@@ -72,6 +78,17 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
         this.solocitud301Service.actualizarEstadoFormulario(resp);
         }
       });
+  }
+
+  /**
+   * Actualiza la sección actualmente seleccionada en función del valor emitido por el componente hijo.
+   * Este método se ejecuta cuando el componente `app-registro-para-la` emite un evento con la sección seleccionada,
+   * y asigna dicho valor a la propiedad `seccionSeleccionada` para controlar la visualización condicional en la vista.
+   *
+   * @param event - Identificador de la sección seleccionada emitido por el componente hijo.
+   */
+  actualizarPagina(event: string): void {
+    this.seccionSeleccionada = event;
   }
 
   /**

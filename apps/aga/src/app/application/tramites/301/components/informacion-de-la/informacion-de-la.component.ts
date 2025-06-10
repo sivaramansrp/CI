@@ -98,6 +98,12 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+  /** Controla la visualización del campo de descripción de la fracción. */
+  public mostrarDescripcionFraccion: boolean = false;
+
+  /** Controla la visualización del campo de descripción del NICO. */
+  public mostrarDescripcionNico: boolean = false;
+
   /**
    * @constructor
    * @param {FormBuilder} formbuilt - Instancia de FormBuilder para crear formularios.
@@ -170,13 +176,9 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
         this.solicitudState?.fraccionArancelaria,
         Validators.required,
       ],
-      descripcionFraccion: [
-        { value: this.solicitudState?.descripcionFraccion, disabled: true },
-      ],
+      descripcionFraccion: [this.solicitudState?.descripcionFraccion],
       nico: [this.solicitudState?.nico, Validators.required],
-      descripcionNico: [
-        { value: this.solicitudState?.descripcionNico, disabled: true },
-      ],
+      descripcionNico: [this.solicitudState?.descripcionNico],
       nombreQuimico: [this.solicitudState?.nombreQuimico, Validators.required],
       nombreComercial: [
         this.solicitudState?.nombreComercial,
@@ -216,9 +218,9 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
    */
   valorSeleccionadoFraccion(): void {
     if (this.informacionDeLaform.get('fraccionArancelaria')?.value) {
-      this.informacionDeLaform.get('descripcionFraccion')?.enable();
+      this.mostrarDescripcionFraccion = true;
     } else {
-      this.informacionDeLaform.get('descripcionFraccion')?.disable();
+      this.mostrarDescripcionFraccion = false;
     }
   }
 
@@ -230,9 +232,9 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
    */
   valorSeleccionadoNico(): void {
     if (this.informacionDeLaform.get('nico')?.value) {
-      this.informacionDeLaform.get('descripcionNico')?.enable();
+      this.mostrarDescripcionNico = true;
     } else {
-      this.informacionDeLaform.get('descripcionNico')?.disable();
+      this.mostrarDescripcionNico = false;
     }
   }
 
