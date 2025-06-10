@@ -424,5 +424,76 @@ export class DatosDelSolicituteSeccionStateStore extends Store<DatosDelSolicitut
   setAduanaDeSalida(aduanaDeSalida: string): void {
     this.update({ aduanaDeSalida });
   }
-
+  setIdeGenerica1(ideGenerica1: string): void {
+    this.update({ ideGenerica1 });
+  }
+  setEstablecimientoRazonSocial(establecimientoRazonSocial: string): void {
+    this.update({ establecimientoRazonSocial });
+  }
+  setEstablecimientoRFCResponsableSanitario(establecimientoRFCResponsableSanitario: string): void {
+    this.update({ establecimientoRFCResponsableSanitario });
+  }
+  setEstablecimientoEstados(establecimientoEstados:string):void {
+    this.update({establecimientoEstados})
+  }
+  setDescripcionMunicipio(descripcionMunicipio: string): void {
+    this.update({ descripcionMunicipio });
+  }
+  /**
+   * Establece el valor de la localidad en el estado de la tienda.
+   *
+   * @param localidad - El nombre de la localidad a establecer.
+   */
+  setLocalidad(localidad: string): void {
+    this.update({ localidad });
+  }
+  /**
+   * Actualiza las colonias del establecimiento.
+   * @param establishomentoColonias Nuevas colonias del establecimiento.
+   */
+  setEstablishomentoColonias(establishomentoColonias: string): void {
+    this.update({ establishomentoColonias });
+  }
+  /**
+   * Actualiza la calle del establecimiento.
+   * @param calle Nueva calle del establecimiento.
+   */
+  setCalle(calle: string): void {
+    this.update({ calle });
+  }
+  /**
+   * Actualiza la lada del establecimiento.
+   * @param lada Nueva lada del establecimiento.
+   */
+  setLada(lada: string): void {
+    this.update({ lada });
+  }
+  /**
+   * Actualiza el teléfono del establecimiento.
+   * @param telefono Nuevo teléfono del establecimiento.
+   */
+  setTelefono(telefono: string): void {
+    this.update({ telefono });
+  }
+  /**
+   * Actualiza el régimen del establecimiento.
+   * @param regimen Nuevo régimen del establecimiento.
+   */
+  setRegimen(regimen: string): void {
+    this.update({ regimen });
+  }
+  /**
+   * Actualiza las aduanas de entrada.
+   * @param aduanasEntradas Nuevas aduanas de entrada.
+   */
+  setAduanasEntradas(aduanasEntradas: string): void {
+    this.update({ aduanasEntradas });
+  }
+  /**
+   * Actualiza el número de licencia sanitaria.
+   * @param noLicenciaSanitaria Nuevo número de licencia sanitaria.
+   */
+  setNoLicenciaSanitaria(noLicenciaSanitaria: string): void {
+    this.update({ noLicenciaSanitaria });
+  }
 }

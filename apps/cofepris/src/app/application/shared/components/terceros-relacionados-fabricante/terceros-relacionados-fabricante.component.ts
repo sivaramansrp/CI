@@ -126,24 +126,6 @@ export class TercerosRelacionadosFabricanteComponent {
   public configuracionOtrosTabla: ConfiguracionColumna<Otros>[] =
     this.generateConfiguracionTabla(this.configuracionOtros);
 
-      /**
-   * Indica si el formulario está en modo solo lectura.
-   */
-  esFormularioSoloLectura: boolean = false;
-
-      /** Subject para destruir el componente */
-      private destroy$ = new Subject<void>();
-
-    constructor( private consultaioQuery: ConsultaioQuery,) {
-      this.consultaioQuery.selectConsultaioState$
-              .pipe(
-                takeUntil(this.destroy$),
-                map((seccionState)=>{
-                  this.esFormularioSoloLectura = seccionState.readonly; 
-                })
-              )
-              .subscribe()
-    }
 
   /* eslint-disable @typescript-eslint/no-explicit-any */
   /* eslint-disable class-methods-use-this */

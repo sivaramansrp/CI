@@ -67,10 +67,10 @@ import {
   PropietarioTipoPersona,
   ScianModel,
 } from '../../models/datos-de-la-solicitud.model';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 import { ScianData } from '../../../shared/models/datos-modificacion.model';
 
-import { SCIAN_DATA } from '../../constantes/datos-scian.enum';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { EstablecimientoService } from '../../services/establecimiento.service';
 import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-representante-seccion/manifiestos-representante-seccion.component';
@@ -143,7 +143,7 @@ export class DatosDelSolicitudModificacionComponent
    * Esta propiedad almacena los datos de la notificación que se mostrará al usuario.
    * Se utiliza para configurar el tipo, categoría, mensaje y otros detalles de la notificación.
    */
-  public nuevaNotificacion: Notificacion = NUEVA_NOTIFICACION;
+  public nuevaNotificacion!: Notificacion ;
 
   /**
    * Índice del elemento que se desea eliminar.
@@ -170,6 +170,17 @@ export class DatosDelSolicitudModificacionComponent
    * @param i - Índice del pedimento que se desea eliminar. Por defecto, es 0.
    */
   abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
+    cerrar: false,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: 'Cancelar',
+  };
     this.elementoParaEliminar = i;
   }
 
@@ -493,6 +504,12 @@ export class DatosDelSolicitudModificacionComponent
    * Datos de la tabla de mercancías.
    */
   mercanciasTablaDatos: MercanciasInfo[] = [];
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los formularios estarán deshabilitados y no se podrán editar.
+   * Cuando es `false`, los formularios estarán habilitados para edición.
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -505,9 +522,17 @@ export class DatosDelSolicitudModificacionComponent
     private fb: FormBuilder,
     private establecimientoService: EstablecimientoService,
     private domicilioEstablecimientoStore: DatosDelSolicituteSeccionStateStore,
-    private domicilioEstablecimientoQuery: DatosDelSolicituteSeccionQuery
+    private domicilioEstablecimientoQuery: DatosDelSolicituteSeccionQuery,
+     private consultaioQuery: ConsultaioQuery
   ) {
-    // Constructor
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -525,6 +550,10 @@ export class DatosDelSolicitudModificacionComponent
       this.eliminarNumeroYFechaControls();
     }
     this.obtenerScianTablaDatos();
+    if (this.esFormularioSoloLectura) {
+      this.domicilioEstablecimiento.disable();
+      this.solicitudEstablecimientoForm.disable();
+    }
   }
 
   /**
@@ -607,9 +636,8 @@ export class DatosDelSolicitudModificacionComponent
       establishomentoColonias: [''],
       calle: ['', Validators.required],
       lada: ['', [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)]],
-      telefono: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],Validators.maxLength(30)],
-      establecimientoDomicilioCodigoPostal :['', [Validators.required,Validators.maxLength(12)]],
-      scian: this.fb.array([]),
+      telefono: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS),Validators.maxLength(30)]],
+      establecimientoDomicilioCodigoPostal :['', [Validators.required,Validators.maxLength(12)]]
     });
     this.scianForm = this.fb.group({
       scian: ['', Validators.required],
@@ -641,6 +669,7 @@ export class DatosDelSolicitudModificacionComponent
       UMC: ['', Validators.required],
       presentacion: ['', Validators.required],
     });
+
   }
   /**
    * Deshabilita el campo "observaciones" del formulario de domicilio
