@@ -8,6 +8,7 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { PasoUnoComponent } from './paso-uno.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -35,7 +36,7 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule,PasoUnoComponent],
+      imports: [FormsModule, ReactiveFormsModule,PasoUnoComponent,HttpClientTestingModule],
       declarations: [
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective

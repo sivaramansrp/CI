@@ -180,7 +180,6 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy,AfterViewInit 
         if (Array.isArray(data?.datos)) {
           this.cuerpoTabla = data.datos as MercanciaForm[];
         } else {
-          console.error("Expected an array but received:", data?.datos);
           this.cuerpoTabla = [];
         }
       });
