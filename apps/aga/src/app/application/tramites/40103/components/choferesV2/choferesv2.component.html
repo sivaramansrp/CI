@@ -1,0 +1,91 @@
+<div class="container">
+  <div class="tabs w-100">
+    <ul class="nav nav-tabs mt-5" role="tablist">
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          [class.active]="activeTab === 'nacional'"
+          (click)="setActiveTab('nacional')"
+          data-bs-toggle="tab"
+          href="#subtabs-1"
+          role="tab"
+        >
+          Registro de Chofer Nacional
+        </a>
+      </li>
+      <li class="nav-item">
+        <a
+          class="nav-link"
+          [class.active]="activeTab === 'extranjero'"
+          (click)="setActiveTab('extranjero')"
+          data-bs-toggle="tab"
+          href="#subtabs-2"
+          role="tab"
+        >
+          Registro de Chofer Extranjero
+        </a>
+      </li>
+    </ul>
+  </div>
+  <div class="row mt-5">
+    <div class="col-md-12">
+      <!-- <h3 *ngIf="activeTab === 'nacional'">Choferes nacionales</h3> -->
+    @if(activeTab ==='extranjero') {
+      <h3 *ngIf="activeTab === 'extranjero'">{{ CHOFERES_PAGE.CHOFERES_EXTRANJEROS }}</h3>
+      <hr class="red" />
+    }
+    </div>
+
+    <div class="tab-content">
+    @if(activeTab ==='nacional') {
+      <app-chofere-nacional></app-chofere-nacional>
+    }
+
+      <div id="subtabs-2" class="tab-pane fade">
+        <div class="row table-responsive">
+          <div class="col-md-12">
+            <h4 class="extranjeros">Alta de choferes extranjeros:</h4>
+            <!-- <app-tabla-dinamica
+              [tipoSeleccionTabla]="tipoSeleccionTabla"
+              [configuracionTabla]="ConfiguracionColumna"
+              [datos]="DatosDelChoferNacional"
+            >
+            </app-tabla-dinamica> -->
+          </div>
+        </div>
+
+        <div class="row mt-3">
+          <div class="col-md-12 text-end">
+            <div class="btn-group">
+              <button
+                class="btn btn-default"
+                type="button"
+                (click)="editarFilaSeleccionada()"
+                [disabled]="datosConsulta.readonly"
+              >
+                Modificar
+              </button>
+              <button 
+                class="btn btn-default" 
+                type="button"
+                [disabled]="datosConsulta.readonly"
+                >
+                Eliminar
+              </button>
+              <button
+                type="submit"
+                class="btn btn-primary ms-2"
+                data-bs-toggle="modal"
+                data-bs-target="#modalMiembros2"
+                (click)="abrirModal()"
+                [disabled]="datosConsulta.readonly"
+              >
+                Agregar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

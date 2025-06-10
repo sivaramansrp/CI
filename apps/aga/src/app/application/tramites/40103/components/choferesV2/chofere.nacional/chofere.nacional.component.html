@@ -1,0 +1,43 @@
+<div id="subtabs-1" class="tab-pane active">
+  <div class="row table-responsive">
+    <div class="col-md-12">
+      <ng-titulo titulo="Choferes nacionales"></ng-titulo>
+      <h5>Alta de choferes:</h5>
+
+      <!-- <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="ConfiguracionColumna"
+        [datos]="DatosDelChoferNacional">
+      </app-tabla-dinamica> -->
+
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-md-12 text-end">
+      <div class="btn-group">
+        <button class="btn btn-default" type="button" (click)="editSelectedRow(datosDeChoferesModal)"
+          [disabled]="datosConsulta?.readonly">
+          Modificar
+        </button>
+
+        <button class="btn btn-default" type="button" [disabled]="datosConsulta?.readonly" 
+          (click)="deleteSelectedRow()">
+          Eliminar
+        </button>
+        <button class="btn btn-primary ms-2" 
+          (click)="addNewRow(datosDeChoferesModal)" [disabled]="datosConsulta?.readonly">
+          Agregar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #datosDeChoferesModal>
+  <app-choferes-datos 
+  [datosDeChofere]="datosChofere"
+  #datosDeChoferesModal 
+  (closeModalEvent)="closeModal()" 
+></app-choferes-datos> 
+</ng-template>
+
+

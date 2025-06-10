@@ -16,7 +16,7 @@ import { Chofer40103Store } from '../../estados/chofer40103.store';
 import { DatosDelVehículoPaisEmisor } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
 import { Modal } from 'bootstrap';
 import { Observable } from 'rxjs/internal/Observable';
-import { map, ReplaySubject } from 'rxjs';
+import { ReplaySubject } from 'rxjs';
 import { Subject } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
@@ -326,7 +326,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
   ParqueVehicular = [
     {
       encabezado: 'Número de identificación vehicular',
-      clave: (item: PagoDerechosLista): string | undefined => item.número,
+      clave: (item: PagoDerechosLista): string | undefined => item.numero,
       orden: 1,
     },
     {
@@ -430,7 +430,7 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
   unidadesDeArrastre = [
     {
       encabezado: 'VIN del vehículo',
-      clave: (item: PagoDerechosLista): string | undefined => item.número,
+      clave: (item: PagoDerechosLista): string | undefined => item.numero,
       orden: 1,
     },
     {
@@ -827,6 +827,11 @@ export class VehiculosComponent implements AfterViewInit, OnInit, OnDestroy {
   closeModal(): void {
     if (this.modalInstance) {
       this.modalInstance.hide();
+    }
+    // Remove the backdrop
+    const BACK_DROP = document.querySelector('.modal-backdrop');
+    if (BACK_DROP) {
+      BACK_DROP.remove();
     }
   }
 
