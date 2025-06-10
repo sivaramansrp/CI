@@ -12,6 +12,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { FECHA_DE_PAGO } from '../../constantes/acuicola.enum';
 import { FitosanitarioService } from '../../service/fitosanitario.service';
+import { Input } from '@angular/core';
 import { TramiteState } from '../../estados/tramite220702.store';
 import { TramiteStore } from '../../estados/tramite220702.store';
 import { TramiteStoreQuery } from '../../estados/tramite220702.query';
@@ -91,6 +92,12 @@ cambioFechaPagoDeDerechos(nuevo_valor: string): void {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * @description Constructor del componente.
+   * Inicializa el componente y establece el índice de la pestaña seleccionada.
+   */
+   @Input() formularioDeshabilitado: boolean = false;
+
+  /**
  * @method cambioFechaPagoDeDerechosRevision
  * @description
  * Maneja los cambios en el campo de fecha de inicio para la revisión de pago de derechos.
@@ -126,6 +133,9 @@ cambioFechaPagoDeDerechosRevision(nuevo_valor: string): void {
    */
   ngOnInit(): void {
     this.iniciarFormulario();
+    if (this.formularioDeshabilitado) {
+      this.pagosDeDerechosForm.disable();
+    }
     this.getBancoDatos();
     this.pagoDeCargarDatos();
     this.pagoDerechosRevision();
