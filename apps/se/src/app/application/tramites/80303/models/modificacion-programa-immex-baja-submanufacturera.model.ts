@@ -128,3 +128,10 @@ export const BITACORA_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Bitacora>[] = [
     orden: 4,
   },
 ];
+
+export interface ModificacionDatos {
+  rfc: string;
+  representacionFederal: string;
+  tipoModificacion: string;
+  modificacionPrograma: string;
+}
