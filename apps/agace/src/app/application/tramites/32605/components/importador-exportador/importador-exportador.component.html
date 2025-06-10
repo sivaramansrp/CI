@@ -25,6 +25,7 @@
       <div class="col-md-6 mt-4">
         <input-fecha
           [datos]="fechaDeFinDeVigencia"
+          [isDisabled]="esFormularioSoloLectura"
           [setFecha]="
             importadorExportadorForm.get('fechaInicioComercio')?.value
           "
@@ -44,6 +45,7 @@
       <div class="col-md-4 mt-4">
         <input-fecha
           [datos]="fechaDePago"
+          [isDisabled]="esFormularioSoloLectura"
           [setFecha]="importadorExportadorForm.get('fechaPago')?.value"
           (valorCambiado)="actualizarFechaPago($event)"
         >
@@ -72,7 +74,9 @@
         />
       </div>
       <div class="col-md-4 mt-4">
-        <label class="form-label text-start" for="llaveOEA">Llave de pago :</label>
+        <label class="form-label text-start" for="llaveOEA"
+          >Llave de pago :</label
+        >
         <input
           class="form-control"
           formControlName="llavePago"
@@ -103,6 +107,7 @@
         <div class="form-group mt-5 pull-right">
           <button
             type="button"
+            [disabled]="esFormularioSoloLectura"
             id="agregarTransportista"
             class="btn btn-primary me-2"
             data-bs-toggle="modal"
@@ -113,6 +118,7 @@
           </button>
           <button
             type="button"
+            [disabled]="esFormularioSoloLectura"
             id="modificarTransportista"
             class="btn btn-secondary me-2"
           >
@@ -120,6 +126,7 @@
           </button>
           <button
             type="button"
+            [disabled]="esFormularioSoloLectura"
             id="eliminarTransportista"
             class="btn btn-danger"
           >
@@ -201,8 +208,7 @@
 >
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-        <app-agregar-transportistas></app-agregar-transportistas>
+      <app-agregar-transportistas></app-agregar-transportistas>
     </div>
   </div>
 </div>
-
