@@ -10415,5 +10415,15 @@
     "departamento": "aga",
     "numeroDeProcedimiento": "319",
     "origin": "READ_PROCEDURE"
+  }, 
+   {
+    "folioTramite": "0215523965732296454110211",
+    "tipoDeTramite": "Solicitud de Proceso Interno",
+    "nombreDeLaTarea": "Evaluar solicitud",
+    "fechaDeAsignacion": "2023-10-01",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "se",
+    "numeroDeProcedimiento": "110211",
+    "origin": "READ_PROCEDURE"
   }
 ]
