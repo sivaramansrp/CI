@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { DatosDelChoferNacional } from '../../../models/registro-muestras-mercancias.model';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
@@ -6,6 +6,10 @@ import { TituloComponent } from "../../../../../../../../../../libs/shared/data-
 import { DatosDeChoferesComponent } from '../data.de.choferes.dialog/data.de.choferes.component';
 import { Modal } from 'bootstrap';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { CHOFERES_NACIONALES_ALTA } from '../../../enum/choferes-enum';
+import { Chofer40103Service } from '../../../estados/chofer40103.service';
+import { Chofer40103Query } from '../../../estados/chofer40103.query';
+import { map, Observable, takeUntil } from 'rxjs';
 
 @Component({
     selector: 'app-chofere-nacional',
@@ -19,7 +23,8 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
     ], 
     providers: [BsModalService]
 })
-export class ChofereNacionalComponent {
+export class ChofereNacionalComponent implements OnInit{
+
     // Add your component logic here
     tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
@@ -28,95 +33,89 @@ export class ChofereNacionalComponent {
      * Configuración de las columnas de la tabla.
      * Define el encabezado, la clave de acceso a los datos y el orden de las columnas.
      */
-    ConfiguracionColumna: ConfiguracionColumna<DatosDelChoferNacional>[] = [
-        {
-            encabezado: 'CURP',
-            clave: (item: DatosDelChoferNacional) => item.curp,
-            orden: 1,
-        },
-        {
-            encabezado: 'Número',
-            clave: (item: DatosDelChoferNacional) => item.nombre,
-            orden: 2,
-        },
-        {
-            encabezado: 'calle',
-            clave: (item: DatosDelChoferNacional) => item.calle,
-            orden: 3,
-        },
-        {
-            encabezado: 'Numero exterior',
-            clave: (item: DatosDelChoferNacional) => item.numeroExterior,
-            orden: 4,
-        },
-        {
-            encabezado: 'Numero interior',
-            clave: (item: DatosDelChoferNacional) => item.numeroInterior,
-            orden: 5,
-        },
-        {
-            encabezado: 'País',
-            clave: (item: DatosDelChoferNacional) => item.pais,
-            orden: 6,
-        },
-        {
-            encabezado: 'Estado',
-            clave: (item: DatosDelChoferNacional) => item.estado,
-            orden: 7,
-        },
-        {
-            encabezado: 'Municipio o Alcaldía',
-            clave: (item: DatosDelChoferNacional) => item.municipioAlcaldia,
-            orden: 8,
-        },
-        {
-            encabezado: 'Colonia',
-            clave: (item: DatosDelChoferNacional) => item.colonia,
-            orden: 9,
-        },
-        {
-            encabezado: 'Localidad',
-            clave: (item: DatosDelChoferNacional) => item.localidad,
-            orden: 10,
-        },
-        {
-            encabezado: 'Codigo Postal',
-            clave: (item: DatosDelChoferNacional) => item.codigoPostal,
-            orden: 11,
-        },
-        {
-            encabezado: 'País de Residencia',
-            clave: (item: DatosDelChoferNacional) => item.paisDeResidencia,
-            orden: 12,
-        }
-    ];
-    DatosDelChoferNacional: DatosDelChoferNacional[] = []
+    ConfiguracionColumna: ConfiguracionColumna<DatosDelChoferNacional>[] = CHOFERES_NACIONALES_ALTA;
+
+    datosDelChoferNacionalAlta: DatosDelChoferNacional[] = []
+
+    datosDelChoferNacionalAltaSelected: DatosDelChoferNacional[] = [];
 
     datosConsulta: any;
 
     modalRef!: BsModalRef | null;
-      /**
+
+  /**
    * Referencia al elemento del modal de Bootstrap para agregar mercancías.
    * @property {TemplateRef} agregarModal
    */
   @ViewChild('datosDeChoferesModal', { static: false }) agregarModalDialog!: TemplateRef<Element>;
 
+  destroyed$: Observable<any> = new Observable();
 
-    /**
-     *
-     */
-    constructor(private bsModalService: BsModalService) {
+  constructor(private bsModalService: BsModalService,
+        private chofer40103Service: Chofer40103Service,
+        private chofer40103Query: Chofer40103Query,
+        // private consultaioQuery: ConsultaioQuery
+    ) {
+    }
+
+    ngOnInit(): void {
+        this.datosDelChoferNacionalAlta = [
+            {
+                curp: 'CURP123',
+                rfc: 'RFC123',
+                nombre: 'Juan Pérez',
+                calle: 'Calle Falsa',
+                numeroExterior: '123',
+                numeroInterior: 'A',
+                pais: 'México',
+                estado: 'CDMX',
+                municipioAlcaldia: 'Benito Juárez',
+                colonia: 'Colonia del Valle',
+                localidad: 'Localidad 1',
+                codigoPostal: '12345',
+                paisDeResidencia: 'México',
+                id: 1,
+                telefono: '312343124',
+                correoElectronico: '12342314@sadf.com'
+            }
+        ];
+
+        this.chofer40103Query.selectSolicitud$.pipe(
+           takeUntil(this.destroyed$),
+           map( data => {
+                this.datosConsulta = data.datosDelChoferNacionalAlta ?? [];
+            })
+        ).subscribe();
+    }
+
+    onChofereNationalSelected($event: DatosDelChoferNacional[]) {
+        this.datosDelChoferNacionalAltaSelected = $event;
+        //throw new Error('Method not implemented.');
     }
 
     addNewRow(template: TemplateRef<unknown>) {
+        this.datosChofere = {} as DatosDelChoferNacional;
         this.openModal(template);
     }
     
     editSelectedRow(template: TemplateRef<unknown>) {
+        if (this.datosDelChoferNacionalAltaSelected.length === 0) {
+            console.warn('No rows selected for editing.');
+            return;
+        }
+        this.datosChofere = this.datosDelChoferNacionalAltaSelected[0];
         this.openModal(template);
     }
+
     deleteSelectedRow() {
-        throw new Error('Method not implemented.');
+        if (this.datosDelChoferNacionalAltaSelected.length > 0) {
+            this.datosDelChoferNacionalAlta = this.datosDelChoferNacionalAlta.filter(
+                item => !this.datosDelChoferNacionalAltaSelected.includes(item)
+            );
+            this.datosDelChoferNacionalAltaSelected = [];
+        } else {
+            console.warn('No rows selected for deletion.');
+        }
     }
 
     @ViewChild(DatosDeChoferesComponent) modalComponent!: DatosDeChoferesComponent;
@@ -125,15 +124,25 @@ export class ChofereNacionalComponent {
     openModal(template: TemplateRef<unknown>) {
         
         console.log(`Opening modal with template:`, template);
-        this.modalRef = this.bsModalService.show(this.agregarModalDialog, { class: 'modal-fullscreen' });
+        this.modalRef = this.bsModalService.show(template, { class: 'modal-fullscreen' });
     }
 
-    closeModal() {
+    cancelModal() {
         this.modalRef?.hide();
         this.modalRef = null;
 
         console.log(`Received the closeModalEvent from the child component.`);
         // do something after closing the modal if needed
+    }
+
+    addModal(datosChofere: DatosDelChoferNacional) {
+        if (this.modalComponent) {
+            this.datosDelChoferNacionalAlta.push(datosChofere);
+            this.datosDelChoferNacionalAltaSelected = [];
+        } else {
+            console.error('Modal component is not initialized.');
+        }
+        this.cancelModal();
     }
 
 }
