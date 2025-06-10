@@ -25,7 +25,7 @@ import { DatosMercanciaService } from '../../services/datos-mercancia/datos-merc
 @Component({
   selector: 'app-datos-mercancia',
   templateUrl: './datos-mercancia.component.html',
-  styleUrl: './datos-mercancia.component.css',
+  styleUrl: './datos-mercancia.component.scss',
 })
 export class DatosMercanciaComponent implements OnInit, OnDestroy {
   /**
@@ -176,7 +176,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * Define los controles del formulario y sus validadores.
    * @returns {void}
    */
-  crearFormulario() {
+  crearFormulario():void {
     this.formMercancia = this.fb.group({
       id: [null],
       nombreComun: ['', Validators.required],
@@ -201,7 +201,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * Suscribe al observable para actualizar el catálogo de nombres comunes.
    * @returns {void}
    */
-  obtenerNombreComun() {
+  obtenerNombreComun():void {
     this.datosMercanciaService.obtenerSelectorList('nombrecomun.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.catalogoNombreComun = data;
     })
@@ -213,7 +213,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   * Suscribe al observable para actualizar el catálogo de nombres científicos.
   * @returns {void}
   */
-  obtenerNombreCientifico() {
+  obtenerNombreCientifico():void {
     this.datosMercanciaService.obtenerSelectorList('nombrecientifico.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.catalogoNombreCientifico = data;
     })
@@ -225,7 +225,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   * Suscribe al observable para actualizar el catálogo de usos.
   * @returns {void}
   */
-  obtenerUso() {
+  obtenerUso():void {
     this.datosMercanciaService.obtenerSelectorList('uso.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.catalogoUso = data;
     })
@@ -237,7 +237,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   * Suscribe al observable para actualizar el catálogo de países de origen.
   * @returns {void}
   */
-  obtenerPaisOrigen() {
+  obtenerPaisOrigen():void {
     this.datosMercanciaService.obtenerSelectorList('paisorigen.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.catalogoPaisOrigen = data;
     })
@@ -249,7 +249,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   * Suscribe al observable para actualizar el catálogo de países de procedencia.
   * @returns {void}
   */
-  obtenerPaisProcedencia() {
+  obtenerPaisProcedencia():void {
     this.datosMercanciaService.obtenerSelectorList('paisprocedencia.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.catalogoPaisProcedencia = data;
     })
@@ -261,7 +261,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   * Suscribe al observable para actualizar el catálogo de tipos de producto.
   * @returns {void}
   */
-  obtenerTipoProducto() {
+  obtenerTipoProducto():void {
     this.datosMercanciaService.obtenerSelectorList('tipoproducto.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.catalogoTipoProducto = data;
     })
@@ -273,7 +273,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   * Suscribe al observable para actualizar el catálogo de UMCs.
   * @returns {void} 
   */
-  obtenerUmc() {
+  obtenerUmc():void {
     this.datosMercanciaService.obtenerSelectorList('umc.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.catalogoUmc = data;
     })
@@ -307,7 +307,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * Luego, limpia los datos del formulario.
    * @returns {void}
    */
-  almacenarDatoEnTabla(nombre: string) {
+  almacenarDatoEnTabla(nombre: string):void {
     this.estadoChecker = !this.estadoChecker;
     if (nombre === AGREGAR) {
       this.formMercancia.patchValue({
@@ -334,7 +334,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * @description Método para resetear los valores del formulario de la mercancía.
    * @returns {void}
    */
-  limpiarDatosFormulario() {
+  limpiarDatosFormulario():void {
     this.cdr.detectChanges();
     this.formMercancia.reset();
   }
