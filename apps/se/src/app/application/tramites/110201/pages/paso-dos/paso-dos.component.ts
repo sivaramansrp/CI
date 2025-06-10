@@ -17,13 +17,6 @@ import { Subscription } from 'rxjs';
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
-  standalone: true,
-  imports: [
-    CommonModule,
-    TituloComponent,
-    AlertComponent,
-    AnexarDocumentosComponent,
-  ],
 })
 export class PasoDosComponent implements OnInit,OnDestroy {
   /**
