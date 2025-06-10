@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite260104Store } from '../../estados/stores/tramite260104.store';
+import { map, Subject, takeUntil } from 'rxjs';
 
 
 /**
@@ -31,8 +33,18 @@ import { Tramite260104Store } from '../../estados/stores/tramite260104.store';
 
 
 
-export class PagoDeDerechosContenedoraComponent {
+export class PagoDeDerechosContenedoraComponent implements OnDestroy {
  public pagoDerechos: PagoDerechosFormState;
+
+ /**
+   * Determina si el formulario debe estar en modo solo lectura.
+   */
+ public esFormularioSoloLectura: boolean = false;
+
+ /**
+    * Sujeto utilizado para manejar la destrucción de observables.
+    */
+   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Constructor de la clase PagoDeDerechosContenedoraComponent.
@@ -43,8 +55,18 @@ export class PagoDeDerechosContenedoraComponent {
    * Este constructor inicializa la propiedad `pagoDerechos` con el valor actual del estado 
    * almacenado en `Tramite260104Store`.
    */
-  constructor(public tramiteStore: Tramite260104Store){
+  constructor(public tramiteStore: Tramite260104Store,
+    private consultaioQuery: ConsultaioQuery,
+  ){
    this.pagoDerechos = this.tramiteStore.getValue().pagoDerechos;
+   this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
   
  /**
@@ -60,6 +82,15 @@ export class PagoDeDerechosContenedoraComponent {
  */
   updatePagoDerechos(event: PagoDerechosFormState): void{
     this.tramiteStore.updatePagoDerechos(event);
+  }
+
+  /**
+ * Método que se ejecuta al destruir el componente.
+ * Libera los recursos y completa los observables.
+ */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
 }
