@@ -82,7 +82,7 @@ export class Solocitud260104Service {
   }
 
   actualizarEstadoFormulario(DATOS: Tramite260104State): void {
-    
+    this.tramite260104Store.updatePagoDerechos(DATOS.pagoDerechos);
   }
 
   /**
@@ -92,7 +92,7 @@ export class Solocitud260104Service {
    * @returns Observable con la estructura del estado de la solicitud.
    */
   getRegistroTomaMuestrasMercanciasData(): Observable<Tramite260104State> {
-    return this.http.get<Tramite260104State>('assets/json/260104/registro_toma_muestras_mercancias.json');
+    return this.http.get<Tramite260104State>('assets/json/260104/registro_toma_muestras_mercancias_Pago.json');
   }
 
 }

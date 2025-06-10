@@ -1,0 +1,12 @@
+{
+    "pagoDerechos":{
+        "claveReferencia": "claveReferencia",
+        "cadenaDependencia": "cadenaDependencia",
+        "estado": "1",
+        "llavePago": "llavePago",
+        "fechaPago": "01/01/2023",
+        "importePago": "importePago",
+        "banco": "banco"
+    }
+}
+
