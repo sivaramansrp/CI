@@ -48,7 +48,7 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
   /**
    * Grupo de formularios para gestionar los controles del formulario en el componente.
    */
-  public ProgramaForm!: FormGroup;
+  public programaForm!: FormGroup;
   
   /**
    * Notificador utilizado para destruir suscripciones activas en el componente.
@@ -71,7 +71,7 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
   /**
    * Estado de la sección Programa A Cancelar.
    */
-  public ProgramaState!: Programa140101State;
+  public programaState!: Programa140101State;
   
   /**
    * Identificador único asociado a la tabla.
@@ -113,7 +113,7 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
   /**
    * Enumeración para la selección de la tabla.
    */
-  public TablaSeleccion = TablaSeleccion;
+  public tablaSeleccion = TablaSeleccion;
 
   /**
    * ID del botón de radio seleccionado en la tabla.
@@ -173,26 +173,26 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
         .pipe(
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {
-            this.ProgramaState = seccionState;
+            this.programaState = seccionState;
           })
         )
         .subscribe();
 
-      this.ProgramaForm = this.fb.group({
-      folioPrograma: [{ value: this.ProgramaState?.programaACancelar?.folioPrograma, disabled: true }],
-      idProgramaSeleccionado: [this.ProgramaState?.programaACancelar?.idProgramaSeleccionado],
-      modalidad: [{ value: this.ProgramaState?.programaACancelar?.modalidad, disabled: true }],
-      representacionFederal: [{ value: this.ProgramaState?.programaACancelar?.representacionFederal, disabled: true }],
-      tipoPrograma: [{ value: this.ProgramaState?.programaACancelar?.tipoPrograma, disabled: true }],
-      estatus: [{ value: this.ProgramaState?.programaACancelar?.estatus, disabled: true }],
-      solicitudObservaciones: [this.ProgramaState?.solicitudObservaciones, Validators.required],
-      confirmar: [this.ProgramaState?.confirmar, Validators.requiredTrue],
+      this.programaForm = this.fb.group({
+      folioPrograma: [{ value: this.programaState?.programaACancelar?.folioPrograma, disabled: true }],
+      idProgramaSeleccionado: [this.programaState?.programaACancelar?.idProgramaSeleccionado],
+      modalidad: [{ value: this.programaState?.programaACancelar?.modalidad, disabled: true }],
+      representacionFederal: [{ value: this.programaState?.programaACancelar?.representacionFederal, disabled: true }],
+      tipoPrograma: [{ value: this.programaState?.programaACancelar?.tipoPrograma, disabled: true }],
+      estatus: [{ value: this.programaState?.programaACancelar?.estatus, disabled: true }],
+      solicitudObservaciones: [this.programaState?.solicitudObservaciones, Validators.required],
+      confirmar: [this.programaState?.confirmar, Validators.requiredTrue],
     });
 
-    this.radioId = this.ProgramaState?.radio;
-    this.datosTabla = this.ProgramaState?.datos;
+    this.radioId = this.programaState?.radio;
+    this.datosTabla = this.programaState?.datos;
     if(this.soloLectura) {
-      this.ProgramaForm.disable();
+      this.programaForm.disable();
     }
   }
 
@@ -239,7 +239,7 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
    * @returns `true` si el campo es válido, `false` si no lo es, o `null` si no se puede determinar.
    */
   isValid(field: string): boolean | null {
-    return this.formValidator.isValid(this.ProgramaForm, field);
+    return this.formValidator.isValid(this.programaForm, field);
   }
 
   /**
@@ -253,7 +253,7 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
     const INDEX = this.datosTabla.findIndex((x) => x.idProgramaSeleccionado === row.idProgramaSeleccionado);
     this.radioId = INDEX;
     this.tramite140101Store.setRadioSelection(INDEX);
-    this.ProgramaForm.patchValue({
+    this.programaForm.patchValue({
       folioPrograma: row.folioPrograma,
       idProgramaSeleccionado: row.idProgramaSeleccionado,
       modalidad: row.modalidad,

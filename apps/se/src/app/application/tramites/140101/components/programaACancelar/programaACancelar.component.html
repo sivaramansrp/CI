@@ -6,7 +6,7 @@
       <!-- Título para indicar al usuario que seleccione un programa -->
       <ng-titulo titulo="Elija el programa del que desea realizar el tramite" />
       <!-- Componente de tabla dinámica con opciones de selección y datos -->
-      <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.RADIO" [configuracionTabla]="encabezadoDeTabla" [tableId] = "Id" [inputSelection] = "radioId" [datos]="datosTabla" (filaSeleccionada)="valorDeAlternancia($event)" [disableSeleccionTablaRadio]="soloLectura"></app-tabla-dinamica>
+      <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.RADIO" [configuracionTabla]="encabezadoDeTabla" [tableId] = "Id" [inputSelection] = "radioId" [datos]="datosTabla" (filaSeleccionada)="valorDeAlternancia($event)" [disableSeleccionTablaRadio]="soloLectura"></app-tabla-dinamica>
     </div>
     <div class="col-md-12">
       <!-- Navegación para la paginación -->
@@ -27,7 +27,7 @@
 </h3>
 <hr class="red">
 <!-- Formulario para mostrar y capturar información del programa -->
-<form [formGroup]="ProgramaForm">
+<form [formGroup]="programaForm">
   <div class="row">
     <div class="col-md-4">
       <!-- Campo para mostrar el folio del programa -->

@@ -77,7 +77,7 @@ describe('ProgramaACancelarComponent', () => {
     component.ngOnInit();
   
     // Verify that the form is initialized
-    expect(component.ProgramaForm).toBeTruthy();
+    expect(component.programaForm).toBeTruthy();
   
     // Verify that datosTabla is populated with the mock data
     expect(component.datosTabla).toEqual(ProgramaACancelar);
@@ -102,13 +102,13 @@ describe('ProgramaACancelarComponent', () => {
     expect(tramite140101StoreMock.setRadioSelection).toHaveBeenCalledWith(-1);
     // expect(tramite140101StoreMock.setSolicitudObservaciones).toHaveBeenCalledWith('Observaciones');
     // expect(tramite140101StoreMock.setConfirmar).toHaveBeenCalledWith('false');
-    expect(component.ProgramaForm.value).toEqual(mockRow);
+    expect(component.programaForm.value).toEqual(mockRow);
   });
 
   it('should call setValoresStore with the correct parameters', () => {
     const spy = jest.spyOn(tramite140101StoreMock, 'setPrograma');
-    component.setValoresStore(component.ProgramaForm, 'folioPrograma', 'setPrograma');
-    expect(spy).toHaveBeenCalledWith(component.ProgramaForm.get('folioPrograma')?.value);
+    component.setValoresStore(component.programaForm, 'folioPrograma', 'setPrograma');
+    expect(spy).toHaveBeenCalledWith(component.programaForm.get('folioPrograma')?.value);
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
@@ -137,30 +137,30 @@ describe('ProgramaACancelarComponent', () => {
       radio: 5,
       datos: [{ folioPrograma: 'FOLIO123', idProgramaSeleccionado: 'ID123' }]
     };
-    component.ProgramaState = mockState;
+    component.programaState = mockState;
     component.soloLectura = false;
 
     // Act
     component.inicializarFormulario();
 
     // Assert
-    expect(component.ProgramaForm).toBeTruthy();
-    expect(component.ProgramaForm.get('folioPrograma')?.value).toBe('FOLIO123');
-    expect(component.ProgramaForm.get('folioPrograma')?.disabled).toBe(true);
-    expect(component.ProgramaForm.get('idProgramaSeleccionado')?.value).toBe('ID123');
-    expect(component.ProgramaForm.get('modalidad')?.value).toBe('MODALIDAD');
-    expect(component.ProgramaForm.get('modalidad')?.disabled).toBe(true);
-    expect(component.ProgramaForm.get('representacionFederal')?.value).toBe('FEDERAL');
-    expect(component.ProgramaForm.get('tipoPrograma')?.value).toBe('TIPO');
-    expect(component.ProgramaForm.get('estatus')?.value).toBe('ESTATUS');
-    expect(component.ProgramaForm.get('solicitudObservaciones')?.value).toBe('Observaciones');
-    expect(component.ProgramaForm.get('confirmar')?.value).toBe(true);
+    expect(component.programaForm).toBeTruthy();
+    expect(component.programaForm.get('folioPrograma')?.value).toBe('FOLIO123');
+    expect(component.programaForm.get('folioPrograma')?.disabled).toBe(true);
+    expect(component.programaForm.get('idProgramaSeleccionado')?.value).toBe('ID123');
+    expect(component.programaForm.get('modalidad')?.value).toBe('MODALIDAD');
+    expect(component.programaForm.get('modalidad')?.disabled).toBe(true);
+    expect(component.programaForm.get('representacionFederal')?.value).toBe('FEDERAL');
+    expect(component.programaForm.get('tipoPrograma')?.value).toBe('TIPO');
+    expect(component.programaForm.get('estatus')?.value).toBe('ESTATUS');
+    expect(component.programaForm.get('solicitudObservaciones')?.value).toBe('Observaciones');
+    expect(component.programaForm.get('confirmar')?.value).toBe(true);
     expect(component.radioId).toBe(5);
     expect(component.datosTabla).toEqual([{ folioPrograma: 'FOLIO123', idProgramaSeleccionado: 'ID123' }]);
-    expect(component.ProgramaForm.enabled).toBe(true);
+    expect(component.programaForm.enabled).toBe(true);
   });
 
-  it('should disable ProgramaForm if soloLectura is true', () => {
+  it('should disable programaForm if soloLectura is true', () => {
     // Arrange
     const mockState = {
       programaACancelar: {
@@ -176,13 +176,13 @@ describe('ProgramaACancelarComponent', () => {
       radio: 5,
       datos: [{ folioPrograma: 'FOLIO123', idProgramaSeleccionado: 'ID123' }]
     };
-    component.ProgramaState = mockState;
+    component.programaState = mockState;
     component.soloLectura = true;
 
     // Act
     component.inicializarFormulario();
 
     // Assert
-    expect(component.ProgramaForm.disabled).toBe(true);
+    expect(component.programaForm.disabled).toBe(true);
   });
 });

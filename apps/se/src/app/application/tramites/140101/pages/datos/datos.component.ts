@@ -42,7 +42,6 @@ export class DatosComponent implements OnInit, OnDestroy {
    */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
-
   /**
    * Notificador utilizado para gestionar la destrucción de suscripciones en el componente.
    * 
@@ -53,10 +52,8 @@ export class DatosComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
-
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
-
 
   /**
  * Indica si el formulario está en modo solo lectura.
@@ -64,17 +61,11 @@ export class DatosComponent implements OnInit, OnDestroy {
  */
   public esFormularioSoloLectura: boolean = false;
 
-
   /**
-   * Constructor de la clase DatosComponent.
+   * Constructor de la clase.
    * 
-   * @param consultaQuery Servicio para realizar consultas relacionadas con el trámite.
-   * @param consultaStore Almacén para gestionar el estado de las consultas de trámite.
-   * @param productoresService Servicio para la expansión y gestión de productores.
-   * @param tramiteStore Almacén específico para el manejo del estado del trámite 120204.
-   * 
-   * Al inicializar el componente, se establece la consulta inicial en el store de consultas
-   * con los parámetros correspondientes al trámite 120204.
+   * @param consultaQuery Servicio para realizar consultas relacionadas.
+   * @param programaService Servicio para manejar la lógica de programas a cancelar.
    */
   constructor(private consultaQuery: ConsultaioQuery, private programaService: ProgramaACancelarService) {
   }
