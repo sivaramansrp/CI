@@ -59,6 +59,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Constructor del componente.
    * @constructor
    * @param {AmpliacionServiciosService} ampliacionServiciosService - Servicio para gestionar la visibilidad de elementos.
+   * @param {ConsultaioQuery} consultaQuery - Consulta para obtener el estado actual de la consulta.
    */
   constructor(private ampliacionServiciosService: AmpliacionServiciosService,private consultaQuery: ConsultaioQuery) {
     // No se necesita lógica de inicialización adicional.
@@ -76,7 +77,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Se suscribe al estado de consulta y actualiza el estado del componente según sea necesario.
    */
-
    ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$.subscribe((seccionState) => {
       this.consultaState = seccionState;

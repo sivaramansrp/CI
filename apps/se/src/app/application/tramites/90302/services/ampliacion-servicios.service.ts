@@ -138,7 +138,6 @@ export class AmpliacionServiciosService {
    * @method actualizarEstadoFormulario
    * @param {AmpliacionServiciosState} DATOS - Datos de ampliación de servicios.
    */
-
   actualizarEstadoFormulario(DATOS:AmpliacionServiciosState): void {
     this.tramiteStore.setInfoRegistro(DATOS.infoRegistro);
   }

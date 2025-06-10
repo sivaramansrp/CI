@@ -75,6 +75,11 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    */
   datosTabla: DatosDelModificacion[] = [];
 
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   * @property {boolean} esFormularioSoloLectura
+   */
   @Input() esFormularioSoloLectura: boolean = false;
 
   /**
