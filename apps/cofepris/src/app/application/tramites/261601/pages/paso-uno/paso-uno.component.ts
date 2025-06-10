@@ -1,7 +1,15 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
+
+import { ConsultaioQuery, ConsultaioState, FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+
+import { Subject,map,takeUntil } from 'rxjs';
+
+import { Solicitud261601State, Solicitud261601Store } from '../../estados/tramites261601.store';
+import { Solicitud261601Query } from '../../estados/tramites261601.query';
+
+import { CorreccionInternaDeLaCofeprisService } from '../../services/correccion-interna-de-la-cofepris.service';
 
 
 /**
@@ -17,16 +25,7 @@ import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
   styles: ``,
   
 })
-export class PasoUnoComponent implements AfterViewInit {
-
-  /**
-   * Constructor del componente.
-   *
-   * Se utiliza para la inyección de dependencias.
-   */
-  constructor() {
-    // Constructor vacío, no requiere inicialización adicional.
-  }
+export class PasoUnoComponent implements AfterViewInit,OnInit,OnDestroy {
 
   /**
    * Referencia al componente de Solicitante.
@@ -64,6 +63,23 @@ export class PasoUnoComponent implements AfterViewInit {
    */
   indice: number = 1;
 
+  public esDatosRespuesta: boolean = false;
+
+  /** Subject para notificar la destrucción del componente. */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /** Estado de la consulta que se obtiene del store. */
+  public consultaState!:ConsultaioState;
+
+  constructor(
+    public solicitud261601Store: Solicitud261601Store,
+    public solicitud261601Query: Solicitud261601Query,
+    private correccionService: CorreccionInternaDeLaCofeprisService,
+    public consultaQuery: ConsultaioQuery,
+  ) {
+     
+  }
+
   /**
    * Método del ciclo de vida que se ejecuta después de la inicialización de la vista.
    *
@@ -78,6 +94,30 @@ export class PasoUnoComponent implements AfterViewInit {
     this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
   }
 
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+          this.consultaState = seccionState;
+      })).subscribe();
+    if(this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+  guardarDatosFormulario(): void {
+    this.correccionService
+      .getConsultaData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp: Solicitud261601State) => {
+        if(resp){    
+        this.esDatosRespuesta = true;
+        this.correccionService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
+
+
   /**
    * Selecciona una pestaña del asistente.
    *
@@ -86,4 +126,9 @@ export class PasoUnoComponent implements AfterViewInit {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+
+ngOnDestroy(): void {
+  this.destroyNotifier$.next(); 
+  this.destroyNotifier$.complete(); 
+}
 }

@@ -10,6 +10,8 @@ export interface Solicitud261601State {
   /** Representa una descripción o información adicional sobre la solicitud.*/
   detalledelaSolicitud: string;
 
+  cumplocon: boolean;
+
   /** Registro Federal de Contribuyentes (RFC) */
   rfc: string;
 
@@ -35,6 +37,8 @@ export function createInitialSolicitudState(): Solicitud261601State {
   return {
     /** Representa una descripción o información adicional sobre la solicitud.*/
     detalledelaSolicitud: '',
+
+    cumplocon: true,
 
     /** Registro Federal de Contribuyentes (RFC) */
     rfc: '',
@@ -71,7 +75,12 @@ export class Solicitud261601Store extends Store<Solicitud261601State> {
       rfc,
     }));
   }
-
+  public setCumplocon(cumplocon: boolean): void {
+    this.update((state) => ({
+      ...state,
+      cumplocon,
+    }));
+  }
   /**
    * Método para actualizar la razón social legal en el estado.
    * @param legalRazonSocial Razón social legal a establecer.
