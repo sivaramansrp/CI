@@ -1,3 +1,4 @@
+import {DatosDeLaSolicitudInt} from '../modelos/acuicola.model';
 export const PASOS = [
   {
     indice: 1,
@@ -344,3 +345,99 @@ export const SECCIONES_TRAMITE_220702 = {
     requiereValidacion: true,
   },
 };
+/**
+ * Representa el estado de un trámite.
+ *
+ * @property {string} justificacion - Justificación del trámite.
+ * @property {string} certificadosAutorizados - Certificados autorizados relacionados con el trámite.
+ * @property {string} horaDeInspeccion - Hora de inspección del trámite.
+ * @property {number} aduanaDeIngreso - Identificador de la aduana de ingreso.
+ * @property {string} oficinaDeInspeccion - Nombre de la oficina de inspección.
+ * @property {string} puntoDeInspeccion - Punto de inspección asociado al trámite.
+ * @property {string} nombreInspector - Nombre del inspector asignado.
+ * @property {string} primerApellido - Primer apellido del inspector.
+ * @property {string} segundoApellido - Segundo apellido del inspector.
+ * @property {number} cantidadContenedores - Cantidad de contenedores involucrados.
+ * @property {number} tipoContenedor - Tipo de contenedor utilizado.
+ * @property {string} medioDeTransporte - Medio de transporte utilizado.
+ * @property {string} identificacionTransporte - Identificación del transporte.
+ * @property {string} esSolicitudFerros - Indica si la solicitud está relacionada con transporte ferroviario.
+ * @property {MercanciaDatosInfo[]} mercanciaDatos - Información de la mercancía involucrada.
+ * @property {string} folioDelTramite - Folio del trámite.
+ * @property {string} numeroDeGuia - Número de guía del trámite.
+ * @property {string} numeroFerrocaril - Número de ferrocarril asociado.
+ * @property {string} regimenAlQueDestina - Régimen al que se destina la mercancía.
+ * @property {string} datosParaMovilizacion - Datos para la movilización de la mercancía.
+ * @property {string} puntoDeVerificacion - Punto de verificación asociado.
+ * @property {string} identificacionDelTransporte - Identificación del transporte.
+ * @property {string} nombreDeLaEmpresaTransportista - Nombre de la empresa transportista.
+ * @property {string} claveDeReferencia - Clave de referencia del trámite.
+ * @property {string} cadenaDependencia - Cadena de dependencia asociada.
+ * @property {number} banco - Identificador del banco asociado.
+ * @property {string} llaveDePago - Llave de pago del trámite.
+ * @property {string} fechaPagoDeDerechos - Fecha de pago de derechos.
+ * @property {string} importeDePago - Importe del pago de derechos.
+ * @property {string} claveDeReferenciaRevision - Clave de referencia para la revisión.
+ * @property {string} cadenaDependenciaRevision - Cadena de dependencia para la revisión.
+ * @property {string} bancoRevision - Banco asociado a la revisión.
+ * @property {string} llaveDePagoRevision - Llave de pago para la revisión.
+ * @property {string} fechaPagoDeDerechosRevision - Fecha de pago de derechos para la revisión.
+ * @property {string} importeDePagoRevision - Importe del pago de derechos para la revisión.
+ * @property {string} claveDeReferenciaDerechos - Clave de referencia para los derechos.
+ * @property {string} cadenaDependenciaDerechos - Cadena de dependencia para los derechos.
+ * @property {string} bancoDerechos - Banco asociado a los derechos.
+ * @property {string} llaveDePagoDerechos - Llave de pago para los derechos.
+ * @property {string} fechaDePago - Fecha de pago.
+ * @property {number} importeDePagoDerechos - Importe del pago de derechos.
+ * @property {string} exentoDePago - Indica si el trámite está exento de pago.
+ * @property {ExportadorInfo[]} exportadorTableDatos - Información de los exportadores.
+ * @property {DestinoInfo[]} destinoTableDatos - Información de los destinos.
+ * @property {DatosDeLaSolicitudInt} DatosDeLaSolicitudInt - Información general de la solicitud.
+ */
+export interface TramiteState {
+  justificacion: string;
+  certificadosAutorizados: string;
+  horaDeInspeccion: string;
+  aduanaDeIngreso: number;
+  oficinaDeInspeccion: string;
+  puntoDeInspeccion: string;
+  nombreInspector: string;
+  primerApellido: string;
+  segundoApellido: string;
+  cantidadContenedores: number;
+  tipoContenedor: number;
+  medioDeTransporte: string;
+  identificacionTransporte: string;
+  esSolicitudFerros: string;
+  mercanciaDatos: MercanciaDatosInfo[];
+  folioDelTramite: string;
+  numeroDeGuia: string;
+  numeroFerrocaril: string;
+  regimenAlQueDestina: string;
+  datosParaMovilizacion: string;
+  puntoDeVerificacion: string;
+  identificacionDelTransporte: string;
+  nombreDeLaEmpresaTransportista: string;
+  claveDeReferencia: string;
+  cadenaDependencia: string;
+  banco: number;
+  llaveDePago: string;
+  fechaPagoDeDerechos: string;
+  importeDePago: string;
+  claveDeReferenciaRevision: string;
+  cadenaDependenciaRevision: string;
+  bancoRevision: string;
+  llaveDePagoRevision: string;
+  fechaPagoDeDerechosRevision: string;
+  importeDePagoRevision: string;
+  claveDeReferenciaDerechos: string;
+  cadenaDependenciaDerechos: string;
+  bancoDerechos: string;
+  llaveDePagoDerechos: string;
+  fechaDePago: string;
+  importeDePagoDerechos: number;
+  exentoDePago: string;
+  exportadorTableDatos: ExportadorInfo[];
+  destinoTableDatos: DestinoInfo[];
+  DatosDeLaSolicitudInt: DatosDeLaSolicitudInt;
+}

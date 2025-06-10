@@ -24,6 +24,7 @@
         [catalogo]="estadoJson"
         [label]="'Estado*'"
         [placeholder]="'Seleccione una valor'"
+         [isDisabled]="formularioDeshabilitado"
         formControlName="establecimientoDomicilioEstado"
         (change)="onControlChange('establecimientoDomicilioEstado')"
       ></app-catalogo-select>
@@ -133,6 +134,7 @@
       [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
       [configuracionTabla]="configuracionTabla"
       [datos]="personaparas"
+      [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
     >
     </app-tabla-dinamica>
     <div class="col-md-12 mt-5 d-flex justify-content-end">
@@ -141,6 +143,7 @@
         type="button"
         class="btn btn-primary ms-3"
         (click)="openScianModal()"
+        [disabled]="formularioDeshabilitado ? true : false"
       >
         Agregar
       </button>
@@ -207,18 +210,20 @@
         />
 
         <div class="mt-4">
-          <button type="button" [disabled]="isCheckboxChecked()" class="btn btn-primary mt-2">Agregar</button>
+          <button type="button" [disabled]="isCheckboxChecked()" class="btn btn-primary mt-2" [disabled]="formularioDeshabilitado ? true : false">Agregar</button>
         </div>
         <div class="col-md-12 row mt-4">
           <textarea
             id="message"
             class="form-control mb-5"
             placeholder=""
+            formControlName="noDeLicenciaSanitariaObservaciones"
+            (change)="onControlChange('noDeLicenciaSanitariaObservaciones')"
             rows="15"
           ></textarea>
         </div>
         <div>
-          <button type="button" class="btn btn-primary" [disabled]="isCheckboxChecked()" >Eliminar</button>
+          <button type="button" class="btn btn-primary" [disabled]="isCheckboxChecked()" [disabled]="formularioDeshabilitado ? true : false">Eliminar</button>
         </div>
       </div>
     </div>
@@ -230,6 +235,7 @@
       <app-catalogo-select
         [catalogo]="regimenQueDestinara"
         [label]="'Régimen al que se destinará la mercancía*'"
+        [isDisabled]="formularioDeshabilitado"
         [placeholder]="'Seleccione un valor'"
         formControlName="regimenAlQueSeDestinaraLaMercancía"
         (change)="onControlChange('regimenAlQueSeDestinaraLaMercancía')"
@@ -239,6 +245,7 @@
       <app-catalogo-select
         [catalogo]="aduanaDeSalida"
         [label]="'Aduana de salida*'"
+        [isDisabled]="formularioDeshabilitado"
         [placeholder]="'Seleccione una valor'"
         formControlName="aduanaDeSalida"
         (change)="onControlChange('aduanaDeSalida')"
