@@ -2,14 +2,17 @@
  * Interfaz que representa los datos de una fila.
  */
 export interface FilaData {
+  /** Identificador único de la fila. */
+  id: number;
+
   /** Objeto que contiene la clave y descripción del SCIAN. */
-  
+  claveScianG: {
     /** Clave del SCIAN. */
     claveScian: string;
 
     /** Descripción del SCIAN. */
     descripcionDelScian: string;
-  
+  };
 }
 
 /**
@@ -184,6 +187,8 @@ export interface FilaData3 {
 }
 
 export interface FilaTablaData{
+  
+  id: number;
   /**
  * Nombre del tercero relacionado.
  */
@@ -263,5 +268,36 @@ codigo: string,
  * Colonia o equivalente del domicilio del tercero relacionado.
  */
 coloniaoEquivalente: string
+
+
+
+/** Tipo de persona (física o moral). */
+tipoPersona: string;
+
+
+
+/** Estado del domicilio del destinatario. */
+estado: string;
+
+/** Estado alternativo del domicilio del destinatario. */
+estado2: string;
+
+/** Código postal del domicilio del destinatario. */
+codigopostal: string;
+
+/** Domicilio completo del destinatario. */
+domicilio: string;
+
+/** Lada telefónica del destinatario. */
+lada: string;
+
+/** Primer apellido del destinatario. */
+primerApellido: string;
+
+/** Segundo apellido del destinatario. */
+segundoApellido: string;
+
+/** Denominación del destinatario (en caso de persona moral). */
+denominacion: string;
 }
 
