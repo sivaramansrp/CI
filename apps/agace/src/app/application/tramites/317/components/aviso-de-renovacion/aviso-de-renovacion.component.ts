@@ -126,6 +126,17 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
       } 
   }
 
+  /**
+   * @method actualizarEstado
+   * @description
+   * Inicializa y actualiza el estado del formulario de aviso de renovación.
+   * Obtiene el estado actual de la solicitud, configura el formulario reactivo con los valores correspondientes,
+   * y realiza peticiones para obtener datos adicionales como el solicitante, la localidad y las opciones de tipo de persona.
+   * Además, determina si el formulario debe estar en modo solo lectura según el estado de consulta.
+   *
+   * @memberof AvisoDeRenovacionComponent
+   * @returns {void}
+   */
   actualizarEstado(): void {
     this.unicoQuery.selectSolicitud$
       .pipe(
