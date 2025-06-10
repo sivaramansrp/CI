@@ -304,7 +304,12 @@
           (change)="changeFechaInicio()"
           (keydown)="$event.preventDefault()"
         />
-        
+        <div
+          *ngIf="isRequired(datosServicio, 'fechaInicio')"
+          class="mensaje-error"
+        >
+          Este campo es requerido.
+        </div>
       </div>
 
       <div class="col-md-4">
@@ -333,6 +338,12 @@
           (change)="changeFechaFinal()"
           (keydown)="$event.preventDefault()"
         />
+        <div
+          *ngIf="isRequired(datosServicio, 'fechaFinal')"
+          class="mensaje-error"
+        >
+          Este campo es requerido.
+        </div>
       </div>
 
       <div class="col-md-4">
