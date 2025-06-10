@@ -52,15 +52,15 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {
             this.consultaState = seccionState;
+            if (this.consultaState.update) {
+              this.guardarDatosFormularioDos();
+            } else {
+              this.esDatosRespuesta = true;
+            }
           })
         )
         .subscribe();
   
-      if (this.consultaState.update) {
-        this.guardarDatosFormularioDos();
-      } else {
-        this.esDatosRespuesta = true;
-      }
     }
 
    /**

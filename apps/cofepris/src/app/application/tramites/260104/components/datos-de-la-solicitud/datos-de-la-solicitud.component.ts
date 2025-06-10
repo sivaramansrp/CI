@@ -11,6 +11,7 @@ import {
 import { Solicitud260104State, Tramite260104StoreDos } from '../../../../estados/tramites/tramite260104.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { PermisoSanitarioProductosService } from '../../services/permiso-sanitario-productos.service';
 import { Tramite260104Query } from '../../../../estados/queries/tramite260104.query';
 
@@ -56,6 +57,11 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy{
    * Formulario para la gestión de datos de mercancías.
    */
   formMercancias!: FormGroup;
+
+  /**
+   * Determina si el formulario debe estar en modo solo lectura.
+   */
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Estado del catálogo de selección.
@@ -178,14 +184,38 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy{
     public fb: FormBuilder,
     public permisoSanitarioProductosService: PermisoSanitarioProductosService,
     private tramite260104Store: Tramite260104StoreDos,
-    private tramite260104Query: Tramite260104Query
-  ) {}
+    private tramite260104Query: Tramite260104Query,
+    private consultaioQuery: ConsultaioQuery,
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
    * Configura los formularios y suscriptores necesarios.
    */
   ngOnInit(): void {
+    this.crearFormulario();
+    this.obtenerEstadoCatalogo();
+    this.obtenerTablaDatos();
+    this.obtenerEstadoList();
+    this.obtenerMercanciasDatos();
+  }
+
+  /**
+   * Inicializa el formulario con datos del store y aplica validaciones.
+   * También aplica configuración de solo lectura si es necesario.
+   * @method inicializarEstadoFormulario
+   */
+  inicializarEstadoFormulario(): void {
     this.tramite260104Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -195,10 +225,27 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy{
       )
       .subscribe();
     this.crearFormulario();
-    this.obtenerEstadoCatalogo();
-    this.obtenerTablaDatos();
-    this.obtenerEstadoList();
-    this.obtenerMercanciasDatos();
+    if (this.esFormularioSoloLectura) {
+      Object.keys(this.solicitudForm.controls).forEach((key) => {
+        this.solicitudForm.get(key)?.disable();
+      });
+      Object.keys(this.solicitudForm.controls).forEach((key) => {
+        this.solicitudForm.get(key)?.disable();
+      });
+      Object.keys(this.formMercancias.controls).forEach((key) => {
+        this.formMercancias.get(key)?.disable();
+      });
+    } else {
+      Object.keys(this.solicitudForm.controls).forEach((key) => {
+        this.solicitudForm.get(key)?.enable();
+      });
+      Object.keys(this.solicitudForm.controls).forEach((key) => {
+        this.solicitudForm.get(key)?.enable();
+      });
+      Object.keys(this.formMercancias.controls).forEach((key) => {
+        this.formMercancias.get(key)?.enable();
+      });
+    }
   }
 
   /**

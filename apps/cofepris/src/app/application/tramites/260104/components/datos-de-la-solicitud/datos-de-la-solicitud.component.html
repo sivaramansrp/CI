@@ -89,6 +89,7 @@
               [placeholder]="estadoCatalogo.primerOpcion"
               [required]="estadoCatalogo.required"
               formControlName="estado"
+              [isDisabled]="esFormularioSoloLectura ? true : false"
               (change)="setValoresStore(solicitudForm,'estado', 'setEstado')"
             >
             </app-catalogo-select>
@@ -232,6 +233,7 @@
                 [label]="'Régimen al que se destinará la mercancía'"
                 [required]="true"
                 name="regimen"
+                [isDisabled]="esFormularioSoloLectura ? true : false"
                 (change)="setValoresStore(solicitudForm,'regimen', 'setRegimen')"
             ></app-catalogo-select>
         </div>
@@ -242,6 +244,7 @@
                 [label]="'Aduana'"
                 [required]="true"
                 name="aduana"
+                [isDisabled]="esFormularioSoloLectura ? true : false"
                 (change)="setValoresStore(solicitudForm,'aduana', 'setAduana')"
             ></app-catalogo-select>
         </div>
@@ -312,6 +315,7 @@
                             [label]="'Clave S.C.I.A.N.'"
                             [required]="true"
                             name="claveScianModal"
+                            [isDisabled]="esFormularioSoloLectura ? true : false"
                             (change)="setValoresStore(formAgente,'claveScianModal', 'setClaveScianModal')"
                         ></app-catalogo-select>
                     </div>
@@ -322,6 +326,7 @@
                             [label]="'Descripción del S.C.I.A.N.'"
                             [required]="false"
                             name="claveDescripcionModal"
+                            [isDisabled]="esFormularioSoloLectura ? true : false"
                             (change)="setValoresStore(formAgente,'claveDescripcionModal', 'setClaveDescripcionModal')"
                         ></app-catalogo-select>
                     </div>
@@ -352,6 +357,7 @@
                                 [label]="'Clasificación del producto'"
                                 [required]="true"
                                 name="clasificacion"
+                                [isDisabled]="esFormularioSoloLectura ? true : false"
                                 (change)="setValoresStore(formMercancias,'clasificacion', 'setClasificacion')"
                             ></app-catalogo-select>
                         </div>
@@ -364,6 +370,7 @@
                                 [label]="'Especificar clasificación del producto'"
                                 [required]="true"
                                 name="especificarClasificacionProducto"
+                                [isDisabled]="esFormularioSoloLectura ? true : false"
                                 (change)="habilitarEspecifique(formMercancias,'especificarClasificacionProducto', 'setEspecificarClasificacionProducto')"
                             ></app-catalogo-select>
                         </div>
@@ -419,6 +426,7 @@
                                 [label]="'Tipo de producto'"
                                 [required]="true"
                                 name="tipoDeProducto"
+                                [isDisabled]="esFormularioSoloLectura ? true : false"
                                 (change)="habilitarEspecifiqueTipo(formMercancias,'tipoDeProducto', 'setTipoDeProducto')"
                             ></app-catalogo-select>
                         </div>
@@ -508,6 +516,7 @@
                                 [label]="'UMC'"
                                 [required]="true"
                                 name="UMC"
+                                [isDisabled]="esFormularioSoloLectura ? true : false"
                                 (change)="setValoresStore(formMercancias,'UMC', 'setUMC')"
                             ></app-catalogo-select>
                         </div>
