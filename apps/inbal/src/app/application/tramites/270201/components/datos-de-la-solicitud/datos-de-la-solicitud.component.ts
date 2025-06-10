@@ -268,6 +268,27 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * ```
    */
   ngOnInit(): void {
+
+      // Suscribe al estado del trámite y restaura las filas de la tabla si existen
+  this.tramite270201Query.selectDatosSolicitud$
+    .pipe(
+      takeUntil(this.destroy$),
+      map((solicitudState) => {
+        this.solicitudState = solicitudState as Tramite270201State;
+
+        // Restaurar las filas de la tabla de obras de arte si existen en el store
+        if (
+          this.solicitudState &&
+          typeof this.solicitudState === 'object' &&
+          this.solicitudState.ObraDeArte &&
+          Array.isArray(this.solicitudState.ObraDeArte)
+        ) {
+          // Evita duplicados si navegas varias veces
+          this.obraDeArteRowData = [...this.solicitudState.ObraDeArte];
+        }
+      })
+    )
+    .subscribe();
     /**
      * @description
      * Obtiene los datos de las columnas para la tabla de obras de arte desde el servicio de solicitud.
