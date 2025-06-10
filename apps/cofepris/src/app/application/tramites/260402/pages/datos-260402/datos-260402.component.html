@@ -26,15 +26,21 @@
           <app-solicitante></app-solicitante>
         }
         @case (2) {
+           @if(esDatosRespuesta){
           <app-propietario></app-propietario>
+           }
         }
         @case (3) {
+          @if(esDatosRespuesta){
          <app-terceros-relacionados-procedencia></app-terceros-relacionados-procedencia>
+          }
         }
         @case (4) {
+          @if(esDatosRespuesta){
           <app-pago-de-derechos-entrada></app-pago-de-derechos-entrada>
         }
         }
+      }
       </ng-container>
     </div>
   </div>

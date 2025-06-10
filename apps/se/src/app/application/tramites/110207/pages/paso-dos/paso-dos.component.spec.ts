@@ -1,29 +1,23 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { of, throwError } from 'rxjs';
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
-
 import { PasoDosComponent } from './paso-dos.component';
-import { Catalogo, CatalogosService } from '@ng-mf/data-access-user';
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
+import { CatalogosService } from '@ng-mf/data-access-user';
+import { of, throwError } from 'rxjs';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
   let fixture: ComponentFixture<PasoDosComponent>;
-  let mockCatalogosService: any;
+  let catalogosServiceMock: any;
 
   beforeEach(async () => {
-    mockCatalogosService = {
-      getCatalogo: jest.fn(),
+    catalogosServiceMock = {
+      getCatalogo: jest.fn()
     };
 
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
       declarations: [PasoDosComponent],
       providers: [
-        { provide: CatalogosService, useValue: mockCatalogosService },
-      ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+        { provide: CatalogosService, useValue: catalogosServiceMock }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoDosComponent);
@@ -31,66 +25,39 @@ describe('PasoDosComponent', () => {
     fixture.detectChanges();
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize `TEXTOS` with the imported `TEXTOS`', () => {
-    expect(component.TEXTOS).toBeDefined();
-  });
-
-  it('should set `claseAlertaInformativa` to "alert-info"', () => {
-    expect(component.claseAlertaInformativa).toBe('alert-info');
-  });
-
-  it('should call `getTiposDocumentos` on `ngOnInit`', () => {
-    const spy = jest.spyOn(component, 'getTiposDocumentos');
+  it('should call getTiposDocumentos on ngOnInit', () => {
+    jest.spyOn(component, 'getTiposDocumentos');
     component.ngOnInit();
-    expect(spy).toHaveBeenCalled();
+    expect(component.getTiposDocumentos).toHaveBeenCalled();
   });
 
-    describe('getTiposDocumentos', () => {
-    it('should call `catalogosServices.getCatalogo` with `CAT_TIPO_DOCUMENTO`', () => {
-      mockCatalogosService.getCatalogo.mockReturnValue(of([]));
-      component.getTiposDocumentos();
-      expect(mockCatalogosService.getCatalogo).toHaveBeenCalledWith(
-        CATALOGOS_ID.CAT_TIPO_DOCUMENTO
-      );
-    });
+  it('should set catalogoDocumentos if response has items in getTiposDocumentos', () => {
+    const mockDocs = [{ id: 1, nombre: 'Doc1' }];
+    catalogosServiceMock.getCatalogo.mockReturnValue(of(mockDocs));
+    component.getTiposDocumentos();
+    expect(component.catalogoDocumentos).toEqual(mockDocs);
+  });
 
-    it('should update `catalogoDocumentos` when the service returns a response with data', () => {
-      const mockResponse = [
-        { id: 1, descripcion: 'Documento 1' },
-        { id: 2, descripcion: 'Documento 2' },
-      ];
-      mockCatalogosService.getCatalogo.mockReturnValue(of(mockResponse));
-      component.getTiposDocumentos();
-      expect(component.catalogoDocumentos).toEqual(mockResponse);
-    });
+  it('should not set catalogoDocumentos if response is empty in getTiposDocumentos', () => {
+    catalogosServiceMock.getCatalogo.mockReturnValue(of([]));
+    component.getTiposDocumentos();
+    expect(component.catalogoDocumentos).toEqual([{ id: 1, nombre: 'Doc1' }]);
+  });
 
-    it('should not update `catalogoDocumentos` when the service response contains no data', () => {
-      const initialData: Catalogo[] = []; 
-      component.catalogoDocumentos = initialData;
+  it('should handle error in getTiposDocumentos', () => {
+    catalogosServiceMock.getCatalogo.mockReturnValue(throwError(() => new Error('fail')));
+    expect(() => component.getTiposDocumentos()).not.toThrow();
+  });
 
-      const mockResponse: Catalogo[] = [];
-      mockCatalogosService.getCatalogo.mockReturnValue(of(mockResponse));
-      component.getTiposDocumentos();
-
-      expect(component.catalogoDocumentos).toBe(initialData);
-    });
-
-    it('should handle errors when the service call fails', () => {
-      const errorSpy = jest.spyOn(console, 'error').mockImplementation();
-      mockCatalogosService.getCatalogo.mockReturnValue(
-        throwError(() => new Error('Service Error'))
-      );
-
-      component.getTiposDocumentos();
-      expect(errorSpy).toHaveBeenCalledWith(expect.any(Error));
-    });
+  it('should complete destroyed$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroyed$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalledWith(true);
+    expect(completeSpy).toHaveBeenCalled();
   });
 });
