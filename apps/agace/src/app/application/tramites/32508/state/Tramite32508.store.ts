@@ -104,7 +104,7 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
    * Actualiza la clave del fiscalizado.
    * @param claveFiscalizado Nueva clave del fiscalizado.
    */
-  public setClaveFiscalizador(claveFiscalizado: string) {
+  public setClaveFiscalizador(claveFiscalizado: string): void {
     this.update((state) => ({ ...state, claveFiscalizado }));
   }
 
@@ -112,7 +112,7 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
    * Actualiza el tipo de dictamen.
    * @param tipoDictamen Nuevo tipo de dictamen.
    */
-  public setTipoDictamen(tipoDictamen: string) {
+  public setTipoDictamen(tipoDictamen: string): void {
     this.update((state) => ({ ...state, tipoDictamen }));
   }
 
@@ -120,7 +120,7 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
    * Actualiza el RFC del fiscalizado.
    * @param rfc Nuevo RFC.
    */
-  public setRfc(rfc: string) {
+  public setRfc(rfc: string): void {
     this.update((state) => ({ ...state, rfc }));
   }
 
@@ -128,7 +128,7 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
    * Actualiza el número de inscripción.
    * @param numeroInscripcion Nuevo número de inscripción.
    */
-  public setNumeroInscripcion(numeroInscripcion: string) {
+  public setNumeroInscripcion(numeroInscripcion: string): void {
     this.update((state) => ({ ...state, numeroInscripcion }));
   }
 
@@ -136,7 +136,7 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
    * Actualiza el catálogo de años.
    * @param ano Nuevo catálogo de años.
    */
-  public setAno(ano: Catalogo[] | null) {
+  public setAno(ano: Catalogo[] | null): void {
     this.update((state) => ({ ...state, ano }));
   }
 
@@ -144,7 +144,7 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
    * Actualiza el catálogo de meses.
    * @param mes Nuevo catálogo de meses.
    */
-  public setMes(mes: Catalogo[] | null) {
+  public setMes(mes: Catalogo[] | null): void {
     this.update((state) => ({ ...state, mes }));
   }
 
@@ -152,7 +152,7 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
    * Actualiza la opción seleccionada en el radio parcial.
    * @param radioPartial Nueva opción seleccionada.
    */
-  public setRadioPartial(radioParcial: string) {
+  public setRadioPartial(radioParcial: string): void {
     this.update((state) => ({ ...state, radioParcial }));
   }
 
@@ -160,7 +160,7 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
    * Actualiza la opción seleccionada en el radio total.
    * @param radioTotal Nueva opción seleccionada.
    */
-  public setRadioTotal(radioTotal: string) {
+  public setRadioTotal(radioTotal: string): void {
     this.update((state) => ({ ...state, radioTotal }));
   }
 
@@ -168,7 +168,7 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
    * Actualiza el saldo pendiente del dictamen anterior.
    * @param saldoPendiente Nuevo saldo pendiente.
    */
-  public setSaldoPendiente(saldoPendiente: string) {
+  public setSaldoPendiente(saldoPendiente: string): void {
     this.update((state) => ({ ...state, saldoPendiente }));
   }
 
@@ -176,7 +176,7 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
    * Actualiza el aprovechamiento total a cargo.
    * @param aprovechamiento Nuevo aprovechamiento.
    */
-  public setAprovechamiento(aprovechamiento: string) {
+  public setAprovechamiento(aprovechamiento: string): void {
     this.update((state) => ({ ...state, aprovechamiento }));
   }
 
@@ -184,21 +184,21 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
    * Actualiza la disminución aplicada.
    * @param disminucionAplicada Nueva disminución aplicada.
    */
-  public setDisminucionAplicada(disminucionAplicada: string) {
+  public setDisminucionAplicada(disminucionAplicada: string): void {
     this.update((state) => ({ ...state, disminucionAplicada }));
   }
   /**
    * Actualiza la compensación aplicada.
    * @param compensacionAplicada Nueva compensación aplicada.
    */
-  public setCompensacionAplicada(compensacionAplicada: string) {
+  public setCompensacionAplicada(compensacionAplicada: string): void {
     this.update((state) => ({ ...state, compensacionAplicada }));
   }
   /**
    * Actualiza el saldo pendiente por compensar.
    * @param saldoPendienteCompensar Nuevo saldo pendiente por compensar.
    */
-  public setSaldoPendienteCompensar(saldoPendienteCompensar: string) {
+  public setSaldoPendienteCompensar(saldoPendienteCompensar: string): void {
     this.update((state) => ({ ...state, saldoPendienteCompensar }));
   }
 
@@ -206,7 +206,7 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
    * Actualiza el saldo pendiente por disminuir.
    * @param saldoPendienteDisminuir Nuevo saldo pendiente por disminuir.
    */
-  public setSaldoPendienteDisminuir(saldoPendienteDisminuir: string) {
+  public setSaldoPendienteDisminuir(saldoPendienteDisminuir: string): void {
     this.update((state) => ({ ...state, saldoPendienteDisminuir }));
   }
 
@@ -214,7 +214,7 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
    * Actualiza la cantidad pagada.
    * @param cantidad Nueva cantidad pagada.
    */
-  public setCantidad(cantidad: string) {
+  public setCantidad(cantidad: string): void {
     this.update((state) => ({ ...state, cantidad }));
   }
 
@@ -222,7 +222,7 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
    * Actualiza la llave de pago.
    * @param llaveDePago Nueva llave de pago.
    */
-  public setLlaveDePago(llaveDePago: string) {
+  public setLlaveDePago(llaveDePago: string): void {
     this.update((state) => ({ ...state, llaveDePago }));
   }
 
@@ -230,7 +230,7 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
    * Actualiza los archivos adjuntos.
    * @param archivo Nuevos archivos adjuntos.
    */
-  public setArchivo(archivo: File[]) {
+  public setArchivo(archivo: File[]): void {
     this.update((state) => ({ ...state, archivo }));
   }
 
@@ -238,7 +238,7 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
    * Actualiza la fecha de pago.
    * @param fechaPago Nueva fecha de pago.
    */
-  public setFechaPago(fechaPago: string) {
+  public setFechaPago(fechaPago: string): void {
     this.update((state) => ({ ...state, fechaPago }));
   }
 
@@ -246,14 +246,14 @@ export class Tramite32508Store extends Store<Solicitud32508State> {
    * Actualiza la fecha de elaboración.
    * @param fechaElaboracion Nueva fecha de elaboración.
    */
-  public setFechaElaboracion(fechaElaboracion: string) {
+  public setFechaElaboracion(fechaElaboracion: string): void {
     this.update((state) => ({ ...state, fechaElaboracion }));
   }
 
   /**
    * Restaura el estado al valor inicial.
    */
-  public limpiarSolicitud() {
+  public limpiarSolicitud(): void {
     this.reset();
   }
 }
