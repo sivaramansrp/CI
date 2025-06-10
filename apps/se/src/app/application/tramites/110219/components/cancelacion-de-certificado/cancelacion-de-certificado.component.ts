@@ -14,7 +14,7 @@ import {
   TituloComponent,
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
-import {ColumnasTabla,FECHA_FINAL, FECHAI_NICIAL } from '../../models/certificado.model';
+import {ColumnasTabla,FECHAI_NICIAL, FECHA_FINAL } from '../../models/certificado.model';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject,map, takeUntil } from 'rxjs';

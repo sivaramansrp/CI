@@ -1,11 +1,11 @@
 import { AfterViewInit, ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { CancelacionDeCertificadoComponent } from '../../components/cancelacion-de-certificado/cancelacion-de-certificado.component';
 import { CertificadoDeOrigenComponent } from '../../components/certificado-de origen/certificado-de-origen.component';
-import { CommonModule } from '@angular/common';
 import { CertificadoService } from '../../services/certificado.service';
-import { map, ReplaySubject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 /**
  * Componente para gestionar el paso uno del trámite.

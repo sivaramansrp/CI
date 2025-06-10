@@ -1,9 +1,9 @@
 import { ColumnasTabla, MercanciaCertificado} from '../models/certificado.model';
 import { Observable, catchError, throwError } from 'rxjs';
+import { Solicitud110219State, Tramite110219Store } from '../estados/Tramite110219.store';
 import { Catalogo} from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Solicitud110219State, Tramite110219Store } from '../estados/Tramite110219.store';
 /**
  * Servicio para gestionar las operaciones relacionadas con los certificados.
  */

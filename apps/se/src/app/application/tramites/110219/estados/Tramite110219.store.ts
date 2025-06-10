@@ -109,20 +109,33 @@ export interface Solicitud110219State {
 
   /** Fecha de vencimiento del certificado. */
   fechaVencimiento: string;
-
+  /** Bloque asociado al trámite. */
   bloque:string;
+  /** Acuerdo asociado al trámite. */
   acuerdo:string;
+  /** Observaciones adicionales del trámite. */
   observaciones: string;
+  /** Nombre del solicitante. */
   nombre: string;
+  /** Primer apellido del solicitante. */
   primerApellido: string;
+  /** Segundo apellido del solicitante. */
   segundoApellido: string;
+  /** Registro fiscal del solicitante. */
   registroFiscal: string;
+  /** Razón social del solicitante. */
   razonSocial: string;
+  /** Calle del domicilio fiscal del solicitante. */
   calle: string;
+  /** Número y letra del domicilio fiscal del solicitante. */
   numeroLetra: string;
+  /** Teléfono de contacto del solicitante. */
   telefono: number;
+  /** Ciudad del domicilio fiscal del solicitante. */
   ciudad: number;
+  /** Fax de contacto del solicitante. */
   fax: number;
+  /** Correo electrónico de contacto del solicitante. */
   correoElectronico: string;
 }
 
