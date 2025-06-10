@@ -1,8 +1,9 @@
 import { NgModule } from '@angular/core';
+
 import { RouterModule, Routes } from '@angular/router';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 
-const routes: Routes = [
+const ROUTES: Routes = [
   {
     path: 'pantallas',
     component: PantallasComponent,
@@ -15,7 +16,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
 export class AvisoExportacionRoutingModule { 

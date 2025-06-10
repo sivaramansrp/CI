@@ -42,7 +42,7 @@ describe('DetalleDelPermisoComponent', () => {
           periodoDeVigencia: '2023',
           unidad: 'Unidad 1',
           cantidadAutorizada: '100',
-          valorAutorizada: '200',
+          valorAutorizado: '200',
           saldo: '50',
           fraccionArancelaria: '1234',
           nico: 'Nico 1',

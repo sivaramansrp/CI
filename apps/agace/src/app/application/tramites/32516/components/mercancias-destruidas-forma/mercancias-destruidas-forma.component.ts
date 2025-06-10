@@ -3,9 +3,11 @@ import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CatalogosService } from '../../servicios/catalogo.service';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Inject } from '@angular/core';
+import { Input } from '@angular/core';
 import { MercanciaForm } from '../../modelos/acta-de-hechos.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -30,13 +32,23 @@ import { Validators } from '@angular/forms';
 /**
  * Componente para manejar el formulario de mercancías destruidas.
  * Proporciona funcionalidad para gestionar formularios y datos relacionados.
+ *
+ * @export
+ * @class MercanciasDestruidasFormaComponent
+ * @implements {OnInit}
+ * @implements {OnDestroy}
  */
 @Component({
   selector: 'app-mercancias-destruidas-forma',
   standalone: true,
-  imports: [TituloComponent, CatalogoSelectComponent, CommonModule, ReactiveFormsModule],
+  imports: [
+    TituloComponent,
+    CatalogoSelectComponent,
+    CommonModule,
+    ReactiveFormsModule,
+  ],
   templateUrl: './mercancias-destruidas-forma.component.html',
-  styleUrl: './mercancias-destruidas-forma.component.scss'
+  styleUrl: './mercancias-destruidas-forma.component.scss',
 })
 export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
   /**
@@ -50,7 +62,13 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
    * Contiene la información manejada dentro del componente.
    * @type {MercanciaForm}
    */
-      mercanciaState!: MercanciaForm;
+  mercanciaState!: MercanciaForm;
+
+  /**
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   * @type {boolean}
+   */
+  @Input() esFormularioSoloLectura!: boolean;
 
   /**
    * Configuración para el select de unidad de medida.
@@ -65,56 +83,162 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
    * @type {Subject<void>}
    * @private
    */
-    private unsubscribe$: Subject<void> = new Subject();
-    
+  private destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * Estado de la sección actual.
    * Contiene información sobre el estado de la sección.
    * @type {SeccionLibState}
    * @private
    */
-    private seccion!: SeccionLibState;
+  private seccion!: SeccionLibState;
 
   /**
    * Constructor del componente.
    * Inicializa servicios y el formulario reactivo.
+   *
    * @param {FormBuilder} fb - Constructor para formularios reactivos.
    * @param {Router} router - Servicio para navegación.
    * @param {CatalogosService} catalogosService - Servicio para obtener catálogos.
    * @param {TramiteStoreQuery} tramiteStoreQuery - Query para el estado del trámite.
    * @param {TramiteStore} tramiteStore - Store para manejar el estado del trámite.
    * @param {SeccionLibQuery} seccionQuery - Query para el estado de la sección.
-   */ 
-    constructor(
-      @Inject(FormBuilder) private fb: FormBuilder,
-      private router: Router,
-      private readonly catalogosService: CatalogosService,
-      private tramiteStoreQuery: TramiteStoreQuery,
-      private tramiteStore: TramiteStore,
-      private seccionQuery: SeccionLibQuery,
-    ) {
-      // Se puede agregar aquí la lógica del constructor si es necesario
+   * @param {ConsultaioQuery} consultaioQuery - Consulta Akita para manejar y actualizar el estado de una sección.
+   */
+  constructor(
+    @Inject(FormBuilder) private fb: FormBuilder,
+    private router: Router,
+    private readonly catalogosService: CatalogosService,
+    private tramiteStoreQuery: TramiteStoreQuery,
+    private tramiteStore: TramiteStore,
+    private seccionQuery: SeccionLibQuery,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+    /**
+     * Suscripción al estado de solo lectura del formulario.
+     * Cuando cambia el estado, se inicializa el formulario en modo lectura o edición.
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Si el formulario está en modo solo lectura, lo deshabilita.
+   * Si no, lo inicializa en modo edición.
+   *
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
     }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   *
+   * @returns {void}
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.mercanciaForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.mercanciaForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  /**
+   * Inicializa el formulario reactivo con los campos requeridos y sus validaciones.
+   * También obtiene el estado de la mercancía desde el store.
+   *
+   * @returns {void}
+   */
+  inicializarFormulario(): void {
+    this.tramiteStoreQuery.selectSolicitudTramite$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.mercanciaState = seccionState.MercanciaState;
+        })
+      )
+      .subscribe();
 
     /**
-   * Método que se ejecuta al inicializar el componente.
-   * Configura el formulario y carga los datos necesarios.
-   */
-  ngOnInit(): void {
-    this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
-      takeUntil(this.unsubscribe$),
-      map((seccionState) => {
-        this.mercanciaState = seccionState.MercanciaState;
-      })
-    ).subscribe();
+     * Inicializa el formulario reactivo con los campos requeridos.
+     * Configura validaciones y deshabilita ciertos campos según sea necesario.
+     *
+     * @method iniciarFormulario
+     * @returns {void}
+     */
 
     this.mercanciaForm = this.fb.group({
-      consecutivo: ['', [Validators.required, Validators.maxLength(3), Validators.pattern(REGEX_SOLO_DIGITOS)]],
-      descripcion: ['', [Validators.required, Validators.maxLength(250), Validators.pattern(REGEX_IMPORTE_PAGO)]],
-      cantidad: ['', [Validators.required, Validators.maxLength(16), Validators.pattern(REGEX_SOLO_DIGITOS)]],
+      consecutivo: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(3),
+          Validators.pattern(REGEX_SOLO_DIGITOS),
+        ],
+      ],
+      descripcion: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(250),
+          Validators.pattern(REGEX_IMPORTE_PAGO),
+        ],
+      ],
+      cantidad: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(16),
+          Validators.pattern(REGEX_SOLO_DIGITOS),
+        ],
+      ],
       unidadMedida: ['', Validators.required],
-      peso: ['', [Validators.required, Validators.maxLength(16), Validators.pattern(REGEX_SOLO_DIGITOS)]]
+      peso: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(16),
+          Validators.pattern(REGEX_SOLO_DIGITOS),
+        ],
+      ],
     });
+  }
+
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Configura el formulario, carga los datos necesarios y suscribe a los cambios de estado.
+   *
+   * @returns {void}
+   */
+  ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+    this.tramiteStoreQuery.selectSolicitudTramite$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.mercanciaState = seccionState.MercanciaState;
+        })
+      )
+      .subscribe();
+
     this.obtenerUnidadDesplegable();
 
     /**
@@ -122,15 +246,16 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
      * Actualiza el formulario con los datos obtenidos del estado.
      */
     this.tramiteStoreQuery.selectSolicitudTramite$
-    .pipe(
-      takeUntil(this.unsubscribe$),
-      map((seccionState: TramiteState) => {
-        if (seccionState) {
-          this.mercanciaState = seccionState?.MercanciaState;
-          this.mercanciaForm.patchValue(this.mercanciaState);
-        }
-      })
-    ).subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState: TramiteState) => {
+          if (seccionState) {
+            this.mercanciaState = seccionState?.MercanciaState;
+            this.mercanciaForm.patchValue(this.mercanciaState);
+          }
+        })
+      )
+      .subscribe();
 
     /**
      * Se suscribe a los cambios en el estado del formulario.
@@ -138,7 +263,7 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
      */
     this.mercanciaForm.statusChanges
       .pipe(
-        takeUntil(this.unsubscribe$),
+        takeUntil(this.destroyNotifier$),
         delay(10),
         tap(() => {
           const ACTIVE_STATE = { ...this.mercanciaForm.value };
@@ -151,20 +276,21 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
      * Se suscribe a los cambios en el estado de la sección.
      * Almacena la información de la sección en la propiedad `seccion`.
      */
-
     this.seccionQuery.selectSeccionState$
-    .pipe(
-      takeUntil(this.unsubscribe$),
-      map((seccionState) => {
-        this.seccion = seccionState;
-      })
-    )
-    .subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.seccion = seccionState;
+        })
+      )
+      .subscribe();
   }
 
   /**
-   * Obtiene las listas desplegables.
+   * Obtiene las listas desplegables necesarias para el formulario.
    * Llama al método para cargar las opciones de unidad de medida.
+   *
+   * @returns {void}
    */
   obtenerUnidadDesplegable(): void {
     this.obtenerUnidadMedidaSelectList();
@@ -173,40 +299,44 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
   /**
    * Obtiene la lista para el select de unidad de medida.
    * Realiza una llamada al servicio para cargar las opciones.
+   *
+   * @returns {void}
    */
   obtenerUnidadMedidaSelectList(): void {
     this.catalogosService
-    .obtenerUnidadDesplegable('unidad-de-medida.json')
-    .subscribe({
-      next: (data: Catalogo[]) => {
-        this.unidadMedida = data;
-      },
-      error: (error) => {
-        console.error('Error al obtener la unidad de medida:', error);
-      },
-    });
+      .obtenerUnidadDesplegable('unidad-de-medida.json')
+      .subscribe({
+        next: (data: Catalogo[]) => {
+          this.unidadMedida = data;
+        },
+      });
   }
 
   /**
    * Cambia la pestaña activa en la interfaz.
+   * Navega a la pestaña seleccionada según el índice proporcionado.
+   *
    * @param {number} index - Índice de la pestaña a seleccionar.
+   * @returns {void}
    */
   seleccionaTab(index: number): void {
     const CURRENT_URL = this.router.url;
     if (CURRENT_URL.includes('pago')) {
-      this.router.navigate([
-        '/pago/acta-de-hechos/solicitud',
-      ], { queryParams: { tab: index } });
-    }else{
-      this.router.navigate([
-        '/agace/acta-de-hechos/solicitud',
-      ], { queryParams: { tab: index } });
+      this.router.navigate(['/pago/acta-de-hechos/solicitud'], {
+        queryParams: { tab: index },
+      });
+    } else {
+      this.router.navigate(['/agace/acta-de-hechos/solicitud'], {
+        queryParams: { tab: index },
+      });
     }
   }
 
   /**
    * Resetea el formulario de mercancías destruidas.
    * Limpia todos los campos del formulario.
+   *
+   * @returns {void}
    */
   cancelarMercancia(): void {
     this.mercanciaForm.reset();
@@ -215,9 +345,11 @@ export class MercanciasDestruidasFormaComponent implements OnInit, OnDestroy {
   /**
    * Método de limpieza al destruir el componente.
    * Libera los recursos y cancela las suscripciones.
+   *
+   * @returns {void}
    */
-    ngOnDestroy(): void {
-      this.unsubscribe$.next();
-      this.unsubscribe$.complete();
-    }
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

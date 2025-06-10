@@ -1,13 +1,13 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Catalogo } from '@libs/shared/data-access-user/src';
-import { CatalogoSelectComponent } from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { FormGroup } from '@angular/forms';
-import type { FormularioDinamico } from '../../../../../../../../../libs/shared/data-access-user/src/core/models/shared/forms-model';
+import type { FormularioDinamico } from '@libs/shared/data-access-user/src/core/models/shared/forms-model';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TituloComponent} from '../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component'
-import { ValidacionesFormularioService } from '../../../../../../../../../libs/shared/data-access-user/src/core/services/shared/validaciones-formulario/validaciones-formulario.service';
+import { TituloComponent} from '@libs/shared/data-access-user/src/tramites/components/titulo/titulo.component'
+import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src/core/services/shared/validaciones-formulario/validaciones-formulario.service';
 /**
 * AddFormComponent se utiliza para crear formularios dinámicos*
 * Este componente utiliza varios subcomponentes como TitleComponent, CommonModule,
@@ -87,6 +87,14 @@ export class FormulariosDeCertiRegistroComponent {
    */
   @Output() public emitirValorCambiado = new EventEmitter<{forma: FormGroup; campo: string;}>();
 
+  
+  /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no serán editables.
+   * 
+   * @default false El formulario es editable por defecto.
+   */
+  @Input() public soloLectura: boolean = false;
   /**
    * compo doc
    * @constructor
