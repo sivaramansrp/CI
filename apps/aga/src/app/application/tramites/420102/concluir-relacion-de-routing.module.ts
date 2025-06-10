@@ -31,4 +31,4 @@ const ROUTES: Routes = [
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]
 })
-export class ConcluirRelacionRoutingModule { }
+export class ConcluirRelacionDeRoutingModule { }
