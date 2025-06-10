@@ -6,9 +6,15 @@ import { Observable, of as observableOf, Subject } from 'rxjs';
 
 import { MercanciasDestruidasFormaComponent } from './mercancias-destruidas-forma.component';
 import { FormBuilder } from '@angular/forms';
+import { HttpClient } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { Router } from '@angular/router';
 import { CatalogosService } from '../../servicios/catalogo.service';
 
+@Injectable()
+class MockHttpClient {
+  post() {}
+}
 @Injectable()
 class MockRouter {
   navigate() {}
@@ -24,26 +30,6 @@ class MockCatalogosService {
   );
 }
 
-@Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'phoneNumber' })
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
-
-@Pipe({ name: 'safeHtml' })
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) {
-    return value;
-  }
-}
 
 describe('MercanciasDestruidasFormaComponent', () => {
   let component: MercanciasDestruidasFormaComponent;
@@ -62,8 +48,8 @@ describe('MercanciasDestruidasFormaComponent', () => {
     };
 
     TestBed.configureTestingModule({
-      declarations: [TranslatePipe, PhoneNumberPipe, SafeHtmlPipe],
-      imports: [MercanciasDestruidasFormaComponent, FormsModule, ReactiveFormsModule],
+      declarations: [],
+      imports: [MercanciasDestruidasFormaComponent, FormsModule, ReactiveFormsModule, HttpClientTestingModule ],
       providers: [
         { provide: CatalogosService, useValue: mockCatalogosService }, // Proveer el servicio mock
         { provide: Router, useClass: MockRouter },
@@ -95,13 +81,11 @@ describe('MercanciasDestruidasFormaComponent', () => {
 
   it('debería manejar la limpieza en ngOnDestroy', () => {
     // Acceder a la propiedad privada unsubscribe$ usando notación de corchetes
-    (component as any).unsubscribe$ = new Subject<void>();
-    jest.spyOn((component as any).unsubscribe$, 'next');
-    jest.spyOn((component as any).unsubscribe$, 'complete');
-
-    component.ngOnDestroy();
-
-    expect((component as any).unsubscribe$.next).toHaveBeenCalled();
-    expect((component as any).unsubscribe$.complete).toHaveBeenCalled();
+  (component as any).destroyNotifier$ = new Subject<void>();
+  jest.spyOn((component as any).destroyNotifier$, 'next');
+  jest.spyOn((component as any).destroyNotifier$, 'complete');
+  component.ngOnDestroy();
+  expect((component as any).destroyNotifier$.next).toHaveBeenCalled();
+  expect((component as any).destroyNotifier$.complete).toHaveBeenCalled();
   });
 });

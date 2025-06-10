@@ -1,25 +1,31 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ReplaySubject,map,takeUntil } from 'rxjs';
+
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FilaData2 } from '../../models/fila-model';
+
+import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
 
 import {
   Catalogo,
   CatalogosSelect,
   ConfiguracionColumna,
+  ConsultaioQuery,
+  ConsultaioState,
   TablaSeleccion,
   TableComponent,
 } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { RegistrarSolicitudService } from '../../services/registrar-solicitud.service';
 import { Solicitud290201Query } from '../../../../estados/queries/tramites290201.query';
+
 import {
   Solicitud290201State,
   Solicitud290201Store,
 } from '../../../../estados/tramites/tramites290201.store';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { FilaData, FilaData2 } from '../../models/fila-model';
+
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 /**
  * Componente: TercerosRelacionadosComponent
@@ -39,16 +45,11 @@ import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.css',
 })
-export class TercerosRelacionadosComponent implements OnInit {
+export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   /**
    * Observable para manejar la destrucción del componente.
    */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-
-  /**
-   * Notificador para limpiar suscripciones.
-   */
-  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Formulario reactivo para capturar los datos del destinatario.
@@ -58,7 +59,7 @@ export class TercerosRelacionadosComponent implements OnInit {
   /**
    * Fila seleccionada en la tabla.
    */
-  selectedRow: any = null;
+  selectedRow: FilaData2 | null = null;
 
   /**
    * Bandera para mostrar u ocultar el formulario.
@@ -88,12 +89,18 @@ export class TercerosRelacionadosComponent implements OnInit {
   /**
    * Tipo de persona seleccionada.
    */
-  tipoPersona: any;
+  tipoPersona: string | null = null; // Replace 'string | null' with the appropriate type if known
 
   /**
    * Método para manejar el cambio de selección de tipo de persona.
    */
   selectedRows: Set<number> = new Set();
+
+  /**
+   * Estado para verificar si los datos de respuesta están disponibles.
+   */
+  public esDatosRespuesta: boolean = false;
+
 
   /**
    * Método para manejar el cambio de selección de tipo de persona.
@@ -103,7 +110,19 @@ export class TercerosRelacionadosComponent implements OnInit {
   /**
    * Lista que almacena los datos de los destinatarios registrados.
    */
-  newDestinatarioData: Array<any> = [];
+  newDestinatarioData: Array<FilaData2> = [];
+
+  /**
+   * Estado de consulta de datos.
+   */
+   consultaDatos!: ConsultaioState;
+    
+      /**
+       * @property {boolean} soloLectura
+       * @description Indica si el formulario o los campos están en modo de solo lectura.
+       * @default false
+       */
+      esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -118,7 +137,9 @@ export class TercerosRelacionadosComponent implements OnInit {
     private fb: FormBuilder,
     private changeDetectorRef: ChangeDetectorRef,
     private solicitud290201Store: Solicitud290201Store,
-    private solicitud290201Query: Solicitud290201Query
+    private solicitud290201Query: Solicitud290201Query,
+    private consultaioQuery: ConsultaioQuery,
+    
   ) {
     this.getPaisData();
   }
@@ -170,20 +191,33 @@ export class TercerosRelacionadosComponent implements OnInit {
   ngOnInit(): void {
     this.solicitud290201Query.selectSolicitud$
       .pipe(
-        takeUntil(this.destroyNotifier$),
+        takeUntil(this.destroyed$),
         map((seccionState) => {
           this.destinatarioState = seccionState;
         })
       )
       .subscribe();
+     
 
     this.createForm();
-  }
 
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+        this.consultaDatos = seccionState;
+        this.esFormularioSoloLectura = this.consultaDatos.readonly;
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe();
+    this.inicializarEstadoFormulario();
+  }
+ 
   /**
    * Método para crear el formulario reactivo.
    */
-  createForm() {
+  createForm(): void {
     this.destinatarioForm = this.fb.group({
       datosDelTramiteRealizar: this.fb.group({
         tipoPersona: [
@@ -212,7 +246,7 @@ export class TercerosRelacionadosComponent implements OnInit {
   /**
    * Getter para obtener el tipo de persona seleccionado.
    */
-  get selectedTipoPersona() {
+  get selectedTipoPersona(): void {
     return this.destinatarioForm.get('tipoPersona')?.value;
   }
 
@@ -224,7 +258,7 @@ export class TercerosRelacionadosComponent implements OnInit {
   /**
    * Método para obtener los datos del catálogo de países.
    */
-  getPaisData() {
+  getPaisData(): void {
     this.registrarsolicitud
       .getPaisData()
       .pipe(takeUntil(this.destroyed$))
@@ -237,28 +271,28 @@ export class TercerosRelacionadosComponent implements OnInit {
   /**
    * Método para manejar el envío del formulario.
    */
-  enEnviar() {
-    const formData = this.destinatarioForm.value;
+  enEnviar(): void {
+    const FORM_DATA = this.destinatarioForm.value;
 
-    if (!formData || Object.keys(formData).length === 0) {
+    if (!FORM_DATA || Object.keys(FORM_DATA).length === 0) {
       console.error('Los datos del formulario son nulos o están vacíos');
       return;
     }
 
-    const paisDataValue = this.paisData.catalogos.find(
+    const PAIS_DATA_VALUE = this.paisData.catalogos.find(
       (item: Catalogo) =>
-        String(item.id) === String(formData.datosDelTramiteRealizar.pais)
+        String(item.id) === String(FORM_DATA.datosDelTramiteRealizar.pais)
     )?.descripcion;
 
-    formData.datosDelTramiteRealizar.pais = paisDataValue;
+    FORM_DATA.datosDelTramiteRealizar.pais = PAIS_DATA_VALUE;
 
     if (this.selectedRow) {
-      const index = this.newDestinatarioData.indexOf(this.selectedRow);
-      if (index !== -1) {
-        this.newDestinatarioData[index] = { ...formData };
+      const INDEX = this.newDestinatarioData.indexOf(this.selectedRow);
+      if (INDEX !== -1) {
+          this.newDestinatarioData[INDEX] = { ...FORM_DATA };
       }
     } else {
-      this.newDestinatarioData.push({ ...formData });
+      this.newDestinatarioData.push({ ...FORM_DATA });
     }
     this.tableData = [...this.newDestinatarioData];
     this.changeDetectorRef.markForCheck();
@@ -270,7 +304,7 @@ export class TercerosRelacionadosComponent implements OnInit {
   /**
    * Método para limpiar el formulario.
    */
-  onLimpiar() {
+  onLimpiar(): void {
     this.destinatarioForm.reset();
     this.destinatarioForm.patchValue({
       datosDelTramiteRealizar: {
@@ -292,7 +326,7 @@ export class TercerosRelacionadosComponent implements OnInit {
   /**
    * Método para modificar los datos de una fila seleccionada.
    */
-  enModificar() {
+  enModificar(): void {
     if (!this.isPaisdatoscargados) {
       console.warn('Los datos del catálogo de países aún no están cargados');
       return;
@@ -305,16 +339,16 @@ export class TercerosRelacionadosComponent implements OnInit {
      */
 
     if (this.selectedRow) {
-      const paisId = this.paisData.catalogos.find(
+      const PAIS_ID = this.paisData.catalogos.find(
         (item: Catalogo) =>
-          item.descripcion === this.selectedRow.datosDelTramiteRealizar.pais
+          item.descripcion === this.selectedRow?.datosDelTramiteRealizar?.pais
       )?.id;
       this.destinatarioForm.patchValue({
         datosDelTramiteRealizar: {
           tipoPersona: this.selectedRow.datosDelTramiteRealizar.tipoPersona,
           denominacion: this.selectedRow.datosDelTramiteRealizar.denominacion,
           domicilio: this.selectedRow.datosDelTramiteRealizar.domicilio,
-          pais: paisId || '', // Use the `paisId` or an empty string if not found
+          pais: PAIS_ID || '', // Use the `PAIS_ID` or an empty string if not found
           codigopostal: this.selectedRow.datosDelTramiteRealizar.codigopostal,
           telefono: this.selectedRow.datosDelTramiteRealizar.telefono,
           correoelectronico:
@@ -343,7 +377,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    * Método para manejar el clic en una fila de la tabla.
    * @param rowData Fila seleccionada.
    */
-  onRowClick(rowData: any) {
+  onRowClick(rowData: FilaData2): void {
     this.destinatarioForm.patchValue({
       datosDelTramiteRealizar: {
         tipoPersona: rowData.datosDelTramiteRealizar.tipoPersona,
@@ -371,6 +405,18 @@ export class TercerosRelacionadosComponent implements OnInit {
   }
 
   /**
+   * Método para inicializar el estado del formulario según si es de solo lectura o no.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.destinatarioForm?.disable();
+    }
+    else {
+      this.destinatarioForm?.enable();
+    }
+}
+
+  /**
    * Método para establecer valores en el store.
    * @param form Formulario reactivo.
    * @param campo Campo del formulario.
@@ -382,7 +428,7 @@ export class TercerosRelacionadosComponent implements OnInit {
     metodoNombre: keyof Solicitud290201Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.solicitud290201Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.solicitud290201Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**
