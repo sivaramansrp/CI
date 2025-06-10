@@ -1,5 +1,6 @@
 import {
   CatalogoSelectComponent,
+  ConsultaioState,
   InputFecha,
   InputFechaComponent,
   TituloComponent,
@@ -13,13 +14,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ReplaySubject, Subject, map, of, takeUntil } from 'rxjs';
+import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import {
   Solicitud31802State,
   Tramite31802Store,
 } from '../state/Tramite31802.store';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { RegistroSolicitudService } from './../services/registro-solicitud-service.service';
 import { Solicitud31802Enum } from '../constants/solicitud31802.enum';
 import { Tramite31802Query } from '../state/Tramite31802.query';
@@ -84,6 +85,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
 
   private destroyNotifier$: Subject<void> = new Subject();
+ /**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
   /**
    * Notificador para cancelar suscripciones activas.
    * Se utiliza para evitar fugas de memoria al destruir el componente.
@@ -110,13 +115,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-          // Inicializa el formulario con los valores actuales del estado.
-          this.datosDeAvisoForm()
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe()
+
+    this.inicializarEstadoFormulario();
+
   }
+
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -139,7 +148,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosDelFormulario();
     } else {
-          this.datosDeAvisoForm()
+      this.datosDeAvisoForm()
     }
   }
   /**
@@ -161,7 +170,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   enviarFormulario(): void {
     if (this.registroForm.valid) {
       // Aquí se implementará la lógica para manejar el envío del formulario.
-    }else {
+    } else {
       this.validarDestinatarioFormulario();
     }
   }
@@ -214,22 +223,22 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   /**
    * Inicializa el formulario con los valores actuales del estado.
    */
-donanteDomicilio(): void {
-  this.registroForm = this.fb.group({
-    llave: [this.solicitudState?.llave, [Validators.required]],
-    manifiesto1: [this.solicitudState?.manifiesto1, [Validators.required]],
-    manifiesto2: [this.solicitudState?.manifiesto2, [Validators.required]],
-    manifiesto3: [this.solicitudState?.manifiesto3, [Validators.required]],
-    numeroOperacion: [this.solicitudState?.numeroOperacion, [Validators.required]],
-    fechaPago: [this.solicitudState?.fechaPago, [Validators.required]],
-    monedaNacional: [this.solicitudState?.monedaNacional, [Validators.required]],
-  });
+  donanteDomicilio(): void {
+    this.registroForm = this.fb.group({
+      llave: [this.solicitudState?.llave, [Validators.required]],
+      manifiesto1: [this.solicitudState?.manifiesto1, [Validators.required]],
+      manifiesto2: [this.solicitudState?.manifiesto2, [Validators.required]],
+      manifiesto3: [this.solicitudState?.manifiesto3, [Validators.required]],
+      numeroOperacion: [this.solicitudState?.numeroOperacion, [Validators.required]],
+      fechaPago: [this.solicitudState?.fechaPago, [Validators.required]],
+      monedaNacional: [this.solicitudState?.monedaNacional, [Validators.required]],
+    });
 
-  // Solo deshabilita el formulario si es de solo lectura
-  if (this.esFormularioSoloLectura) {
-    this.registroForm.disable();
+    // Solo deshabilita el formulario si es de solo lectura
+    if (this.esFormularioSoloLectura) {
+      this.registroForm.disable();
+    }
   }
-}
 
   /**
  * datosDeltrimiteForm los campos del formulario si es de solo lectura.
@@ -239,9 +248,6 @@ donanteDomicilio(): void {
   datosDeAvisoForm(): void {
     if (this.esFormularioSoloLectura) {
       this.registroForm.get('llave')?.disable();
-      this.registroForm.get('manifiesto1')?.disable();
-      this.registroForm.get('manifiesto2')?.disable();
-      this.registroForm.get('manifiesto3')?.disable();
       this.registroForm.get('numeroOperacion')?.disable();
       this.registroForm.get('fechaPago')?.disable();
       this.registroForm.get('monedaNacional')?.disable();

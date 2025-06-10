@@ -85,15 +85,20 @@ export class PasoUnoComponent implements AfterViewInit,OnInit, OnDestroy {
     * Configura el formulario, obtiene datos iniciales y suscribe al estado global.
     */
   ngOnInit(): void {
-    this.query.selectSolicitud$
+    this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
+        map((consultaState) => {
+          this.consultaState = consultaState;
         })
       )
       .subscribe();
-    this.donanteDomicilio();
+    // Inicializa el formulario con los valores actuales del estado
+    if (this.consultaState?.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
   }
 
     guardarDatosFormulario(): void {
