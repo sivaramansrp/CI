@@ -16,7 +16,6 @@ import {
   MSG_MONTO_PAGADO_CUBIERTO,
   MSJ_ERROR_FECHA,
   MSJ_ERROR_LINEA_CAPTURA,
-  MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
   MSJ_LINEA_CAPTURA_NO_PAGADA,
   MSJ_LINEA_CAPTURA_USADA,
   PATENTES_ID,
@@ -467,7 +466,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private validaTipoPersona() {
+  private validaTipoPersona(): void {
     // TODO: Esta validación debería cambiar y validar contra el valor almacenado
     // en el store.
     if (this.tipoPersona === TipoPersona.FISICA) {
