@@ -1,7 +1,7 @@
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Notificacion, REGEX_CONRASENIA } from '@libs/shared/data-access-user/src';
-import { Subject, catchError, map, of, takeUntil } from 'rxjs';
+import { Notificacion, NotificacionesComponent, REGEX_CONRASENIA } from '@libs/shared/data-access-user/src';
+import { Observable, Subject, catchError, map, of, takeUntil } from 'rxjs';
 import { CambioContrasena } from '../../core/models/cambio-contrasena.model';
 import { CommonModule } from '@angular/common';
 import { PasswordService } from '../../core/service/password.service';
@@ -15,21 +15,23 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-cambio-contrasena',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, NotificacionesComponent],
   templateUrl: './cambio-contrasena.component.html',
   styleUrl: './cambio-contrasena.component.scss',
 })
 export class CambioContrasenaComponent implements OnInit, OnDestroy {
   /** Formulario reactivo para el cambio de contraseña */
   public FormCambioContrasena!: FormGroup;
-  /** Notificación para mostrar mensajes al usuario */
-  public nuevaNotificacion: Notificacion | null = null;
-  /** Notificador para destruir las suscripciones.*/
+  /** Notificación a mostrar al usuario */
+  public nuevaNotificacion!: Notificacion;
+  /** Subject para controlar la destrucción de suscripciones */
   private destroyNotifier$: Subject<void> = new Subject();
+
   /**
-   * Constructor que inyecta dependencias necesarias.
+   * Constructor del componente.
    * @param fb FormBuilder para crear el formulario reactivo.
    * @param passwordService Servicio para operaciones relacionadas con contraseñas.
+   * @param router Router de Angular para navegación.
    */
   constructor(
     private fb: FormBuilder,
@@ -45,11 +47,17 @@ export class CambioContrasenaComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Configura el formulario de cambio de contraseña con validadores personalizados.
+   * Inicializa el formulario de cambio de contraseña con sus validadores.
    */
   inicializaFormCambioContrasena(): void {
     this.FormCambioContrasena = this.fb.group({
-      contrasenaAnterior: ['', [Validators.required]],
+      contrasenaAnterior: ['',
+        {
+          validators: [Validators.required],
+          asyncValidators: [this.validadorContrasenaAnterior()],
+          updateOn: 'blur'
+        }
+      ],
       contrasenaNueva: ['', [Validators.required, CambioContrasenaComponent.validadorContrasenaSegura]],
       confirmacionContrasena: ['', [Validators.required]],
     }, {
@@ -58,7 +66,8 @@ export class CambioContrasenaComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Envía el formulario si es válido y realiza el cambio de contraseña.
+   * Envía el formulario para cambiar la contraseña.
+   * Si el formulario es válido, llama al servicio para realizar el cambio y muestra la notificación correspondiente.
    */
   onSubmit(): void {
     if (this.FormCambioContrasena.invalid) {
@@ -74,11 +83,29 @@ export class CambioContrasenaComponent implements OnInit, OnDestroy {
       .pipe(
         map((data) => {
           if (data) {
-            this.router.navigate(['login/']);
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'success',
+              modo: 'action',
+              titulo: 'Avisos',
+              mensaje: 'Contraseña cambiada correctamente.',
+              cerrar: true,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
           }
         }),
         catchError((_error) => {
-          console.error('Error al cambiar la contraseña', _error);
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: 'error',
+            modo: 'action',
+            titulo: 'Error',
+            mensaje: 'No se pudo cambiar la contraseña. Por favor, inténtelo de nuevo más tarde.',
+            cerrar: true,
+            txtBtnAceptar: 'Aceptar',
+            txtBtnCancelar: '',
+          };
           return of(null);
         }),
         takeUntil(this.destroyNotifier$)
@@ -87,17 +114,18 @@ export class CambioContrasenaComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * Método para destruir el componente
-  * Se utiliza para limpiar las suscripciones y evitar fugas de memoria.
-  */
+   * Libera recursos y cancela suscripciones al destruir el componente.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
 
   /**
- * Validador para verificar que la contraseña cumple con los requisitos de seguridad.
- */
+   * Validador estático para comprobar que la contraseña cumple con el patrón de seguridad.
+   * @param control Control de formulario a validar.
+   * @returns ValidationErrors si la contraseña no es válida, null en caso contrario.
+   */
   static validadorContrasenaSegura(control: AbstractControl): ValidationErrors | null {
     const VALUE = control.value;
     if (!VALUE) {
@@ -108,11 +136,29 @@ export class CambioContrasenaComponent implements OnInit, OnDestroy {
   }
 
   /**
- * Validador para verificar que la confirmación coincida con la nueva contraseña.
- */
+   * Validador estático para comprobar que la nueva contraseña y su confirmación coinciden.
+   * @param group Grupo de controles del formulario.
+   * @returns ValidationErrors si no coinciden, null en caso contrario.
+   */
   static validadorCoincidenciaContrasenas(group: AbstractControl): ValidationErrors | null {
     const NUEVA = group.get('contrasenaNueva')?.value;
     const CONFIRMACION = group.get('confirmacionContrasena')?.value;
     return NUEVA === CONFIRMACION ? null : { noCoinciden: true };
+  }
+
+  /**
+   * Validador asíncrono para comprobar que la contraseña anterior es correcta.
+   * @returns Función que recibe un control y retorna un Observable con ValidationErrors o null.
+   */
+  validadorContrasenaAnterior(): (control: AbstractControl) => Observable<ValidationErrors | null> {
+    return (control: AbstractControl): Observable<ValidationErrors | null> => {
+      const PASSWORD = control.value;
+      if (!PASSWORD) {
+        return of(null); // No valida si está vacío (se valida con required)
+      }
+      return this.passwordService.verificarContrasenaAnterior(PASSWORD).pipe(
+        map(esValida => (esValida ? null : { contrasenaAnteriorInvalida: true }))
+      );
+    };
   }
 }
