@@ -1,5 +1,14 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { map } from 'rxjs';
+import { takeUntil} from 'rxjs';
+
+import { RegistrarDeProveedoresComponent } from '../../components/registrar-de-proveedores/registrar-de-proveedores.component';
+import { RegistrarProveedoresService } from '../../service/registrar-proveedores.service';
+import { Subject} from 'rxjs';
 import { Tramite420101Query } from '../../estados/tramite420101Query.query';
 import { Tramite420101Store } from '../../estados/tramite420101Store.store';
 
@@ -13,6 +22,8 @@ import { Tramite420101Store } from '../../estados/tramite420101Store.store';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
+  standalone: true,
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, SolicitanteComponent, RegistrarDeProveedoresComponent ]
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
 
@@ -31,16 +42,30 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * Esta variable se utiliza para almacenar el índice del subtítulo.
+   */
+  public consultaState!: ConsultaioState;
+  
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+  /**
    * Constructor del componente que inicializa las dependencias necesarias para el manejo del trámite 420101.
    * @param tramite420101Query - Servicio de consulta para datos relacionados con el trámite 420101.
    * @param tramite420101Store - Servicio de almacenamiento para datos relacionados con el trámite 420101.
    */
   constructor(
     private tramite420101Query: Tramite420101Query,
-    private tramite420101Store: Tramite420101Store
+    private tramite420101Store: Tramite420101Store,
+    private consultaQuery: ConsultaioQuery,
+    private RegistrarProveedoresService: RegistrarProveedoresService
+
   ) {
-    // Constructor necesario para inyectar el store del trámite
-  }
+      this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })).subscribe();
+    }
 
   /**
    * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -50,11 +75,31 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @returns {void}
    */
   ngOnInit(): void {
+     if (this.consultaState && this.consultaState.procedureId === '420101' &&
+      this.consultaState.update || 1<2) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
     this.tramite420101Query.getTabSeleccionado$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((tab) => {
         this.indice = tab;
       });
+  }
+
+  /**
+ * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+ * Luego reinicializa el formulario con los valores actualizados desde el store.
+ */
+  guardarDatosFormulario(): void {
+    this.RegistrarProveedoresService.getRegistroTomaMuestrasMercanciasData().pipe(
+        takeUntil(this.destroyNotifier$)).subscribe((resp) => {
+          if (resp) {
+            this.esDatosRespuesta = true;
+            this.tramite420101Store.actualizarEstadoFormulario(resp);
+          }
+        });
   }
 
   /**
