@@ -149,6 +149,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * Aquí se pueden realizar tareas de limpieza, pero en este caso lanza un error indicando que no está implementado.
    */
   ngOnDestroy(): void {
-    throw new Error('Method not implemented.');
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
   }
 }

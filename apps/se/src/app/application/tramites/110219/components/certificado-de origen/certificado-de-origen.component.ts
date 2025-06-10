@@ -109,7 +109,16 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     private query: Tramite110219Query,
      private consultaioQuery: ConsultaioQuery
   ) {
-    // El constructor se utiliza para la inyección de dependencias.
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
 
   /** Inicializa el componente. */
@@ -117,6 +126,23 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     
     this.cancelacionForm = new FormGroup({
       motivoCancelacion: new FormControl('', Validators.required),
+      fechaExpedicion: new FormControl(this.solicitudState?.fechaExpedicion, Validators.required),
+      fechaVencimiento: new FormControl(this.solicitudState?.fechaVencimiento, Validators.required),
+      certificadoDeOrigen: new FormControl(this.solicitudState?.certificadoDeOrigen, Validators.required),
+      bloque: new FormControl(this.solicitudState?.bloque, Validators.required),
+      acuerdo: new FormControl(this.solicitudState?.acuerdo, Validators.required),
+      observaciones: new FormControl(this.solicitudState?.observaciones, Validators.required),
+      nombre: new FormControl(this.solicitudState?.nombre, Validators.required),
+      primerApellido: new FormControl(this.solicitudState?.primerApellido, Validators.required),
+      segundoApellido: new FormControl(this.solicitudState?.segundoApellido, Validators.required),
+      registroFiscal: new FormControl(this.solicitudState?.registroFiscal, Validators.required),
+      razonSocial: new FormControl(this.solicitudState?.razonSocial, Validators.required),
+      calle: new FormControl(this.solicitudState?.calle, Validators.required),
+      numeroLetra: new FormControl(this.solicitudState?.numeroLetra, Validators.required),
+      telefono: new FormControl({ value: this.solicitudState?.telefono, disabled: true }, [Validators.required, Validators.pattern(/^[0-9]{10}$/)]),
+      ciudad: new FormControl(this.solicitudState?.ciudad, Validators.required),
+      fax: new FormControl(this.solicitudState?.fax, [Validators.required, Validators.pattern(/^[0-9]{10}$/)]),
+      correoElectronico: new FormControl(this.solicitudState?.correoElectronico, [Validators.required, Validators.email]),
     });
     this.getMercanciaCertificadoTabla();
 
@@ -207,6 +233,21 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         motivoCancelacion: [this.solicitudState?.motivoCancelacion, [Validators.required]],
         fechaExpedicion: [this.solicitudState?.fechaExpedicion, [Validators.required]],
         fechaVencimiento: [this.solicitudState?.fechaVencimiento, [Validators.required]],
+        certificadoDeOrigen: [this.solicitudState?.certificadoDeOrigen, [Validators.required]],
+        bloque: [this.solicitudState?.bloque, [Validators.required]],
+        acuerdo: [this.solicitudState?.acuerdo, [Validators.required]],
+        observaciones: [this.solicitudState?.observaciones, [Validators.required]],
+        nombre: [this.solicitudState?.nombre, [Validators.required]],
+        primerApellido: [this.solicitudState?.primerApellido, [Validators.required]],
+        segundoApellido: [this.solicitudState?.segundoApellido, [Validators.required]],
+        registroFiscal: [this.solicitudState?.registroFiscal, [Validators.required]],
+        razonSocial: [this.solicitudState?.razonSocial, [Validators.required]],
+        calle: [this.solicitudState?.calle, [Validators.required]],
+        numeroLetra: [this.solicitudState?.numeroLetra, [Validators.required]],
+        telefono: [this.solicitudState?.telefono, [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+        ciudad: [this.solicitudState?.ciudad, [Validators.required]],
+        fax: [this.solicitudState?.fax, [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+        correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email]]
       }),
     });
 

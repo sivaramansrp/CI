@@ -16,7 +16,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 import {ColumnasTabla,FECHA_FINAL, FECHAI_NICIAL } from '../../models/certificado.model';
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject,map, takeUntil } from 'rxjs';
 import { Solicitud110219State, Tramite110219Store } from '../../estados/Tramite110219.store';
 import { AlertComponent } from '@libs/shared/data-access-user/src/tramites/components/alert/alert.component';
@@ -142,11 +142,28 @@ export class CancelacionDeCertificadoComponent implements OnInit, OnDestroy {
     private query: Tramite110219Query,
      private consultaioQuery: ConsultaioQuery
   ) {
-    // El constructor se utiliza para la inyección de dependencias.
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
 
   /** Inicializa el componente. */
   ngOnInit(): void {
+this.cancelacionForm = new FormGroup({
+   numeroCertificado:new FormControl(this.solicitudState?.numeroCertificado, [Validators.required]),
+        tratado: new FormControl(this.solicitudState?.tratado, [Validators.required]),
+        pais: new FormControl(this.solicitudState?.pais, [Validators.required]),
+        fechaInicial: new FormControl(this.solicitudState?.fechaInicial, [Validators.required]),
+        fechaFinal: new FormControl(this.solicitudState?.fechaFinal, [Validators.required]),
+});
+
     this.getTratadoData();
     this.getPaisdata();
     this.getSolicitudesTabla();

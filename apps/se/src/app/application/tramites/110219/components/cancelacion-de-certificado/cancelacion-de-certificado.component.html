@@ -8,7 +8,7 @@
           (change)=" setValoresStore(validacionForm,'numeroCertificado','setNumeroCertificado' )" />
       </div>
       <div class="col-md-3 mt-5 d-flex justify-content-end buscar">
-        <button type="button" class="btn btn-primary ms-3" (click)="alBuscarClic()"> Buscar Certificado </button>
+        <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura" (click)="alBuscarClic()"> Buscar Certificado </button>
       </div>
     </div>
     <ng-titulo titulo="" />
@@ -49,4 +49,4 @@
     </ng-container>
   </ng-container>
 </form>
-<btn-continuar [datos]="datosPasos" (click)="emitirEventoClick()" [disabled]="soloLectura"></btn-continuar>
+<btn-continuar [datos]="datosPasos" (click)="emitirEventoClick()"></btn-continuar>

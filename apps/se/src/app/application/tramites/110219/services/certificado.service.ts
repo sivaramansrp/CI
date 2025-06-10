@@ -28,9 +28,23 @@ export class CertificadoService {
     this.tramite110219Store.setFechaInicial(DATOS.fechaInicial);
     this.tramite110219Store.setFechaFinal(DATOS.fechaFinal);
     this.tramite110219Store.setMotivoCancelacion(DATOS.motivoCancelacion);
+    this.tramite110219Store.setCertificadoDeorigen(DATOS.certificadoDeOrigen);
     this.tramite110219Store.setFechaExpedicion(DATOS.fechaExpedicion);
     this.tramite110219Store.setFechaVencimiento(DATOS.fechaVencimiento);
-      
+    this.tramite110219Store.setBloque(DATOS.bloque);
+    this.tramite110219Store.setAcuerdo(DATOS.acuerdo);
+    this.tramite110219Store.setObservaciones(DATOS.observaciones);
+    this.tramite110219Store.setNombre(DATOS.nombre);
+    this.tramite110219Store.setPrimerApellido(DATOS.primerApellido);
+    this.tramite110219Store.setSegundoApellido(DATOS.segundoApellido);
+    this.tramite110219Store.setRegistroFiscal(DATOS.registroFiscal);
+    this.tramite110219Store.setRazonSocial(DATOS.razonSocial);
+    this.tramite110219Store.setCalle(DATOS.calle);
+    this.tramite110219Store.setNumeroLetra(DATOS.numeroLetra);
+    this.tramite110219Store.setTelefono(DATOS.telefono);
+    this.tramite110219Store.setCiudad(DATOS.ciudad);
+    this.tramite110219Store.setFax(DATOS.fax);
+    this.tramite110219Store.setCorreoElectronico(DATOS.correoElectronico);
   }
   /**
      * Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.
