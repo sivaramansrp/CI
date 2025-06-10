@@ -16,7 +16,9 @@
            @case (1) {
             <solicitante></solicitante>
             } @case (2) {
-            <app-concluir-relacion></app-concluir-relacion>
+              @if(esDatosRespuesta) {
+            <app-concluir-relacion-de></app-concluir-relacion-de>
+              }
             } 
         }
       </ng-container>

@@ -381,10 +381,10 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'concluir-relacion',
+    path: 'concluir-relacion-de',
     loadChildren: () =>
-      import('./tramites/420102/concluir-relacion.module').then(
-        (m) => m.ConcluirRelacionModule
+      import('./tramites/420102/concluir-relacion-de.module').then(
+        (m) => m.ConcluirRelacionDeModule
       ),
   },
   {
@@ -455,7 +455,17 @@ const ROUTES: Routes = [
       import('./tramites/630303/retorno-importacion-temporal.module').then(
         (m) => m.RetornoImportacionTemporalModule
       ),
-  }
+  },
+  {
+    path: 'verificar-dictamen',
+    loadComponent: () =>
+      import('./verificar-dictamen/verificar-dictamen.component').then((m) => m.VerificarDictamenComponent),
+  },
+  {
+    path: 'detalle-v-dictamen',
+    loadComponent: () =>
+      import('./detalle-v-dictamen/detalle-v-dictamen.component').then((m) => m.DetalleVDictamenComponent),
+  },
 ];
 
 @NgModule({

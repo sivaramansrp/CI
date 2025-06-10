@@ -12,13 +12,12 @@
       [configuracionTabla]="destinoFinalTablaConfiguracion.configuracionTabla"
       [datos]="destinatarioFinalTablaDatos"
       (listaDeFilaSeleccionada)="destinarioTablaSeleccionada = $event"
-      
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
   </div>
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-        <!-- @if((!ocultarBotones&&!ocultarBotonModificar)||(ocultarBotonModificar&& destinarioTablaSeleccionada.length!==0)){ -->
          @if(destinarioTablaSeleccionada.length > 0 && destinatarioFinalTablaDatos.length > 0) {
           <button
             type="button"
@@ -39,7 +38,6 @@
             Eliminar
           </button>
       }
-        <!-- } -->
         <button
           type="button"
           name="agregarMercancias"
@@ -60,12 +58,12 @@
       [configuracionTabla]="dproveedorTablaConfiguracion.configuracionTabla"
       [datos]="proveedorTablaDatos"
       (listaDeFilaSeleccionada)="proveedorTablaSeleccionada = $event"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
   </div>
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-       <!-- @if((!ocultarBotones&&!ocultarBotonModificar)||(ocultarBotonModificar&& proveedorTablaSeleccionada.length!==0)){ -->
          @if(proveedorTablaSeleccionada.length > 0 && proveedorTablaDatos.length > 0) {
 
         <button
@@ -87,7 +85,6 @@
           Eliminar
         </button>
       }
-    <!-- } -->
       @if(!tercerosNacionalidad){
         <button
           type="button"

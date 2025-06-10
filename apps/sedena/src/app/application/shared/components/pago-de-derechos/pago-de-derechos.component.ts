@@ -1,6 +1,6 @@
 import { CAMPO_OBLIGATORIO_DERECHOS } from '../../constants/datos-solicitud.enum';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
@@ -16,6 +16,7 @@ import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { PagoDerechosFormState } from '../../models/pago-de-derechos.model';
 import { REGEX_IMPORTE_PAGO } from '@ng-mf/data-access-user';
+import { REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -68,6 +69,15 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @type {number}
    */
   @Input() idProcedimiento!: number;
+
+
+  /**
+   * Indica si el formulario se encuentra en modo solo lectura.
+   * Cuando es verdadero, los campos del formulario no pueden ser editados.
+   * @property {boolean} esFormularioSoloLectura
+   * @default false
+   */
+  @Input() esFormularioSoloLectura: boolean = false;
 
   /**
    * @property {Subject<void>} unsubscribe$
@@ -126,6 +136,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.crearFormaulario();
     this.cargarDatos();
     this.campoObligatorio = CAMPO_OBLIGATORIO_DERECHOS.includes(this.idProcedimiento)
+
+    if (this.esFormularioSoloLectura) {
+      this.pagoDerechosForm.disable();
+    }
   }
 
   /**
@@ -162,7 +176,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       this.updatePagoDerechos.emit(valores);
     });
 
-    this.cargarDatos();
   }
 
   /**
@@ -184,7 +197,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @description Limpia todos los campos del formulario de pago de derechos.
    */
   onReset(): void {
-    this.pagoDerechosForm.reset();
+    if (this.pagoDerechosForm.invalid) {
+      this.pagoDerechosForm.markAllAsTouched();
+      return;
+    }
   }
 
   /**
@@ -219,7 +235,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
  */
   onImportePagoInput(event: Event): void {
     const INPUT = event.target as HTMLInputElement;
-    INPUT.value = INPUT.value.replace(/[^0-9]/g, '').slice(0, 22);
+    INPUT.value = INPUT.value.replace(REGEX_NUMEROS, '').slice(0, 22);
     this.pagoDerechosForm.get('importePago')?.setValue(INPUT.value, { emitEvent: false });
   }
   ngOnDestroy(): void {

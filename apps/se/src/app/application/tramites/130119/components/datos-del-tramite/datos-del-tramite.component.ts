@@ -5,10 +5,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 
-import { Catalogo, CatalogoSelectComponent } from "@ng-mf/data-access-user";
+import { Catalogo, ConsultaioQuery ,ConsultaioState} from "@ng-mf/data-access-user";
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { DatosDeLaSolicitudService } from '../../services/datos-de-la-solicitud/datos-de-la-solicitud.service';
 import { TituloComponent } from "@ng-mf/data-access-user";
 import { Tramite130119Query } from '../../estados/queries/tramite130119.query';
@@ -28,6 +29,12 @@ import { Tramite130119Store } from '../../estados/store/tramite130119.store';
  */
 export class DatosDelTramiteComponent implements OnInit, OnDestroy {
 
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * @type {boolean}
+   */
+  esSoloLectura!: boolean;
   /**
    * Opciones de régimen.
    * @type {Catalogo[]}
@@ -56,11 +63,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   /**
    * Constructor del componente DatosDelTramiteComponent.
    */
-  constructor(private fb: FormBuilder, private service: DatosDeLaSolicitudService, private tramite130119Store: Tramite130119Store, private tramite130119Query: Tramite130119Query) {
-    this.datosDelTramiteForm = this.fb.group({
-      regimen: [''],
-      clasificacionDeRegimen: ['']
-    });
+  constructor(private fb: FormBuilder, private service: DatosDeLaSolicitudService, private tramite130119Store: Tramite130119Store, private tramite130119Query: Tramite130119Query,private consultaQuery: ConsultaioQuery) {
+    
   }
 
   /**
@@ -68,11 +72,27 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Obtiene las opciones de régimen y clasificación de régimen, y los valores del store.
    */
   ngOnInit(): void {
+    this.inicializarFormulario();
+      this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((estadoConsulta: ConsultaioState) => {
+        this.esSoloLectura = estadoConsulta.readonly;
+      });
+  }
+
+  /**
+   * Inicializa el formulario con los controles necesarios.
+   */
+  inicializarFormulario(): void {
+    this.datosDelTramiteForm = this.fb.group({
+      regimen: [''],
+      clasificacionDeRegimen: ['']
+    });
+
     this.getRegimenOptions();
     this.getClasificacionDeRegimen();
     this.getValoresStore();
   }
-
   /**
    * Obtiene las opciones de régimen desde el servicio.
    */
