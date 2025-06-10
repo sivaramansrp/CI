@@ -1,4 +1,7 @@
-import { Solicitud220503State, Solicitud220503Store } from '../estados/tramites220503.store';
+import {
+  Solicitud220503State,
+  Solicitud220503Store,
+} from '../estados/tramites220503.store';
 import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -14,12 +17,35 @@ export class Solocitud220503Service {
   urlServer = ENVIRONMENT.URL_SERVER;
   urlServerCatalogos = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
-  constructor(private http: HttpClient, private solicitud220503Store: Solicitud220503Store,) {
+  /**
+   * Constructor de la clase.
+   *
+   * Inyecta los servicios necesarios para realizar peticiones HTTP y
+   * para gestionar el estado de la solicitud mediante el store.
+   *
+   * @param http Cliente HTTP de Angular para realizar solicitudes al backend.
+   * @param solicitud220503Store Store encargado de manejar el estado de la solicitud 220503.
+   */
+  constructor(
+    private http: HttpClient,
+    private solicitud220503Store: Solicitud220503Store
+  ) {
     // Lógica de inicialización si es necesario
   }
 
+  /**
+   * Actualiza el estado del formulario en el store `solicitud220503Store`
+   * utilizando los datos proporcionados en el objeto `DATOS`.
+   *
+   * Este método asigna cada propiedad del estado recibido a su correspondiente
+   * método setter en el store, asegurando que el estado de la solicitud esté sincronizado.
+   *
+   * @param DATOS Objeto de tipo `Solicitud220503State` que contiene toda la información del formulario.
+   */
   actualizarEstadoFormulario(DATOS: Solicitud220503State): void {
-    this.solicitud220503Store.setCertificadosAutorizados(DATOS.certificadosAutorizados);
+    this.solicitud220503Store.setCertificadosAutorizados(
+      DATOS.certificadosAutorizados
+    );
     this.solicitud220503Store.setMercancia(DATOS.mercancia);
     this.solicitud220503Store.setHoraDeInspeccion(DATOS.horaDeInspeccion);
     this.solicitud220503Store.setAduanaDeIngreso(DATOS.aduanaDeIngreso);
@@ -31,9 +57,13 @@ export class Solocitud220503Service {
     this.solicitud220503Store.setSegundoapellido(DATOS.segundoapellido);
     this.solicitud220503Store.setTipocontenedor(DATOS.tipocontenedor);
     this.solicitud220503Store.setTransporteIdMedio(DATOS.transporteIdMedio);
-    this.solicitud220503Store.setIdentificacionTransporte(DATOS.identificacionTransporte);
+    this.solicitud220503Store.setIdentificacionTransporte(
+      DATOS.identificacionTransporte
+    );
     this.solicitud220503Store.setEsSolicitudFerros(DATOS.esSolicitudFerros);
-    this.solicitud220503Store.setTotalDeGuiasAmparadas(DATOS.totalDeGuiasAmparadas);
+    this.solicitud220503Store.setTotalDeGuiasAmparadas(
+      DATOS.totalDeGuiasAmparadas
+    );
     this.solicitud220503Store.setFoliodel(DATOS.foliodel);
     this.solicitud220503Store.setAduanaIngreso(DATOS.aduanaIngreso);
     this.solicitud220503Store.setOficinaInspeccion(DATOS.oficinaInspeccion);
@@ -42,7 +72,9 @@ export class Solocitud220503Service {
     this.solicitud220503Store.setEstablecimientoTIF(DATOS.establecimientoTIF);
     this.solicitud220503Store.setNumeroguia(DATOS.numeroguia);
     this.solicitud220503Store.setRegimen(DATOS.regimen);
-    this.solicitud220503Store.setCapturaDatosMercancia(DATOS.capturaDatosMercancia);
+    this.solicitud220503Store.setCapturaDatosMercancia(
+      DATOS.capturaDatosMercancia
+    );
     this.solicitud220503Store.setCoordenadas(DATOS.coordenadas);
     this.solicitud220503Store.setMovilizacion(DATOS.movilizacion);
     this.solicitud220503Store.setTransporte(DATOS.transporte);
@@ -57,8 +89,17 @@ export class Solocitud220503Service {
     this.solicitud220503Store.setImportePago(DATOS.importePago);
   }
 
+  /**
+   * Obtiene los datos del registro de toma de muestras de mercancías.
+   *
+   * Realiza una solicitud HTTP GET para recuperar un archivo JSON local
+   * que contiene la estructura del estado `Solicitud220503State`.
+   *
+   * @returns Un observable que emite los datos del tipo `Solicitud220503State`.
+   */
   getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud220503State> {
-    return this.http.get<Solicitud220503State>('assets/json/220503/registro_toma_muestras_mercancias.json');
+    return this.http.get<Solicitud220503State>(
+      'assets/json/220503/registro_toma_muestras_mercancias.json'
+    );
   }
-
 }
