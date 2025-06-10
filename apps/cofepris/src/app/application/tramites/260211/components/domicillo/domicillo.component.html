@@ -21,6 +21,7 @@
                 [label]="'Estado'"
                 [required]="true"
                 name="estado"
+                 [isDisabled]="esFormularioSoloLectura ? true : false"
                 (change)="setValoresStore(domicilio,'estado', 'setEstado')"
             ></app-catalogo-select>
         </div>
@@ -118,11 +119,11 @@
         </div>
     </div>
     <div class="row">
-        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
-        [datos]="nicoTablaDatos"></app-tabla-dinamica>
+        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"   [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
+        [datos]="nicoTablaDatos"  (listaDeFilaSeleccionada)="onSeleccionChange($event)"></app-tabla-dinamica>
         <div class="container text-end mt-5">
-            <button class="btn btn-default me-2">Eliminar</button>
-            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent">Agregar</button>
+            <button class="btn btn-default me-2"  (click)="eliminarSeleccionados()" [disabled]="selectedRows.length === 0">Eliminar</button>
+            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent"  [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
     </div>
     <div class="row align-item-center">
@@ -157,6 +158,7 @@
                 [label]="'Régimen'"
                 [required]="true"
                 name="regimen"
+                 [isDisabled]="esFormularioSoloLectura ? true : false"
                 (change)="setValoresStore(domicilio,'regimen', 'setRegimen')"
             ></app-catalogo-select>
         </div>
@@ -167,6 +169,7 @@
                 [label]="'Aduanas de entradas'"
                 [required]="true"
                 name="aduanasEntradas"
+                 [isDisabled]="esFormularioSoloLectura ? true : false"
                 (change)="setValoresStore(domicilio,'aduanasEntradas', 'setAduanasEntradas')"
             ></app-catalogo-select>
         </div>
@@ -194,12 +197,17 @@
         </div>
     </div>
     <div class="row mt-5">
-        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla"
-        [datos]="mercanciasTablaDatos"></app-tabla-dinamica>
+        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla" (listaDeFilaSeleccionada)="onSeleccionChangeEvent($event)"
+        [datos]="mercanciasTablaDatos"   [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"></app-tabla-dinamica>
         <div class="container text-end mt-5">
-            <button class="btn btn-default me-2">Modificar</button>
-            <button class="btn btn-default me-2">Eliminar</button>
-            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias">Agregar</button>
+            <button class="btn btn-default me-2"  
+      
+        (click)="modificarMercancia()"
+        data-bs-toggle="modal"
+        data-bs-target="#modalAddAgentMercancias"
+        [disabled]="esFormularioSoloLectura">Modificar</button>
+            <button class="btn btn-default me-2" (click)="eliminarMercanciaSeleccionados()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias"  [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
     </div>
 
@@ -221,6 +229,7 @@
                             [required]="true"
                             name="claveScianModal"
                             (change)="setValoresStore(formAgente,'claveScianModal', 'setClaveScianModal')"
+                             [isDisabled]="esFormularioSoloLectura ? true : false"
                         ></app-catalogo-select>
                     </div>
                     <div class="form-group">
@@ -230,15 +239,16 @@
                             [label]="'Descripción del S.C.I.A.N.'"
                             [required]="false"
                             name="claveDescripcionModal"
+                             [isDisabled]="esFormularioSoloLectura ? true : false"
                             (change)="setValoresStore(formAgente,'claveDescripcionModal', 'setClaveDescripcionModal')"
                         ></app-catalogo-select>
                     </div>
                 </form>
             </div>
             <div class="modal-footer custom-footer">
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Limpiar</button>
+                <button type="button" class="btn btn-default"  (click)="limpiarFormAgente()">Limpiar</button>
                 <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Agregar</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="agregarFilaScian()" >Agregar</button>
             </div>
         </div>
     </div>
@@ -259,6 +269,7 @@
                             [label]="'Clasificación del producto'"
                             [required]="true"
                             name="clasificacion"
+                             [isDisabled]="esFormularioSoloLectura ? true : false"
                             (change)="setValoresStore(formMercancias,'clasificacion', 'setClasificacion')"
                         ></app-catalogo-select>
                     </div>
@@ -269,6 +280,7 @@
                             [label]="'Especificar clasificación del producto'"
                             [required]="true"
                             name="especificarClasificacionProducto"
+                             [isDisabled]="esFormularioSoloLectura ? true : false"
                             (change)="setValoresStore(formMercancias,'especificarClasificacionProducto', 'setEspecificarClasificacionProducto')"
                         ></app-catalogo-select>
                     </div>
@@ -291,6 +303,7 @@
                             [label]="'Tipo de producto'"
                             [required]="true"
                             name="tipoDeProducto"
+                             [isDisabled]="esFormularioSoloLectura ? true : false"
                             (change)="setValoresStore(formMercancias,'tipoDeProducto', 'setTipoDeProducto')"
                         ></app-catalogo-select>
                     </div>
@@ -301,6 +314,7 @@
                             [label]="'Estado físico'"
                             [required]="true"
                             name="estadoFisico"
+                             [isDisabled]="esFormularioSoloLectura ? true : false"
                             (change)="setValoresStore(formMercancias,'estadoFisico', 'setEstadoFisico')"
                         ></app-catalogo-select>
                     </div>
@@ -331,6 +345,7 @@
                             [label]="'UMC'"
                             [required]="true"
                             name="UMC"
+                             [isDisabled]="esFormularioSoloLectura ? true : false"
                             (change)="setValoresStore(formMercancias,'UMC', 'setUMC')"
                         ></app-catalogo-select>
                     </div>
@@ -427,9 +442,9 @@
                 </form>
             </div>
             <div class="modal-footer custom-footer">
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Limpiar</button>
+                <button type="button" class="btn btn-default"(click)="limpiarForm()" >Limpiar</button>
                 <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Agregar</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" (click)="agregarFilaMercancia()">Agregar</button>
             </div>
         </div>
     </div>
