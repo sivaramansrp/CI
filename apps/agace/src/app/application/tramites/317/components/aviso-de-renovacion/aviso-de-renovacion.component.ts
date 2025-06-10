@@ -28,7 +28,7 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-aviso-de-renovacion',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputFechaComponent, CatalogoSelectComponent, InputRadioComponent,InputCheckComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputFechaComponent, CatalogoSelectComponent, InputRadioComponent, InputCheckComponent],
   templateUrl: './aviso-de-renovacion.component.html',
   styleUrls: ['./aviso-de-renovacion.component.scss'],
 })
@@ -37,12 +37,12 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
    * {string} defaultSelect - Valor predeterminado seleccionado en el menú desplegable.
    *  Esta propiedad almacena la opción seleccionada por defecto, que en este caso es 'Rubro A'.
    */
-   defaultSelect: string = 'Rubro A';
-   /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
-  esFormularioSoloLectura: boolean = true; 
+  defaultSelect: string = 'Rubro A';
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  esFormularioSoloLectura: boolean = true;
   /**
    * Fecha inicial para el campo de fecha.
    */
@@ -95,48 +95,29 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
    * Configura el formulario, carga datos iniciales y suscribe al estado de la aplicación.
    */
   ngOnInit(): void {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
 
-  this.inicializarEstadoFormulario();
     this.actualizarEstado();
   }
 
-   /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.  
-   * Además, obtiene la información del catálogo de mercancía.
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
-    } else {
-      this.actualizarEstado();
-    }  
-   
-  }
-
-   /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
-  guardarDatosFormulario(): void {
-      this.actualizarEstado();
-      if (this.esFormularioSoloLectura) {
-        this.avisoForm.disable();
-      } else {
-        this.avisoForm.enable();
-      } 
-  }
-
   /**
-   * @method actualizarEstado
-   * @description
-   * Inicializa y actualiza el estado del formulario de aviso de renovación.
-   * Obtiene el estado actual de la solicitud, configura el formulario reactivo con los valores correspondientes,
-   * y realiza peticiones para obtener datos adicionales como el solicitante, la localidad y las opciones de tipo de persona.
-   * Además, determina si el formulario debe estar en modo solo lectura según el estado de consulta.
-   *
-   * @memberof AvisoDeRenovacionComponent
-   * @returns {void}
-   */
+  * @method actualizarEstado
+  * @description
+  * Inicializa y actualiza el estado del formulario de aviso de renovación.
+  * Obtiene el estado actual de la solicitud, configura el formulario reactivo con los valores correspondientes,
+  * y realiza peticiones para obtener datos adicionales como el solicitante, la localidad y las opciones de tipo de persona.
+  * Además, determina si el formulario debe estar en modo solo lectura según el estado de consulta.
+  *
+  * @memberof AvisoDeRenovacionComponent
+  * @returns {void}
+  */
   actualizarEstado(): void {
     this.unicoQuery.selectSolicitud$
       .pipe(
@@ -146,8 +127,8 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    
-     this.avisoForm = this.fb.group({
+
+    this.avisoForm = this.fb.group({
       mapTipoTramite: [this.solicitudState?.mapTipoTramite],
       mapDeclaracionSolicitud: [this.solicitudState?.mapDeclaracionSolicitud],
       envioAviso: [this.solicitudState?.envioAviso],
@@ -160,44 +141,41 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
       fechaPago: [this.solicitudState?.fechaPago],
       importePago: [{ value: '', disabled: true }],
     });
-     this.service.getSolicitante()
+    this.service.getSolicitante()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data: AvisoValor) => {
         this.avisoForm.patchValue({
-            claveReferencia: data.claveReferencia,
-            cadenaDependencia: data.cadenaDependencia,
-            importePago: data.importePago,
-          });
-        
+          claveReferencia: data.claveReferencia,
+          cadenaDependencia: data.cadenaDependencia,
+          importePago: data.importePago,
+        });
+
       });
 
-      this.service.obtenerDatosLocalidad()
+    this.service.obtenerDatosLocalidad()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data): void => {
         this.localidadList = data as Catalogo[];
       });
 
-        this.service.obtenerRadio()
+    this.service.obtenerRadio()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
         this.tipoPersonaOptions = resp;
       });
-       this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyed$),
-      map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly;
-         this.inicializarEstadoFormulario();
-      })
 
-    )
-    .subscribe();
+    if (this.esFormularioSoloLectura) {
+      this.avisoForm.disable();
+    } else {
+      this.avisoForm.enable();
+    }
+
   }
 
- /**
-   * Maneja el cambio de valor en el campo de fecha.
-   * @param nuevo_valor Nuevo valor de la fecha.
-   */
+  /**
+    * Maneja el cambio de valor en el campo de fecha.
+    * @param nuevo_valor Nuevo valor de la fecha.
+    */
   public onFechaCambiada(nuevo_valor: string): void {
     this.avisoForm.get('fechaPago')?.setValue(nuevo_valor);
     this.avisoForm.get('fechaPago')?.markAsUntouched();
@@ -226,7 +204,7 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.unicoStore[metodoNombre] as (value: string) => void)(VALOR);
   }
- 
+
   /**
    * Método que se ejecuta al destruir el componente.
    * Libera recursos y cancela suscripciones.
