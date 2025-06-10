@@ -5,7 +5,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 /**
- * Servicio encargado de manejar la lógica y comunicación relacionada con el trámite 260212.
+ * Servicio encargado de manejar la lógica y comunicación relacionada con el trámite 317.
  * Proporciona métodos para actualizar el estado del formulario y obtener datos de consulta.
  */
 @Injectable({
@@ -24,7 +24,7 @@ export class Service317Service {
   /**
    * Constructor del servicio.
    * @param http Cliente HTTP para realizar peticiones.
-   * @param tramite260212Store Almacén de estado para el trámite 260212.
+   * @param tramite317Store Almacén de estado para el trámite 317.
    */
   constructor(private http: HttpClient, private unicoStore: UnicoStore,) {
     // Lógica de inicialización si es necesario
@@ -32,7 +32,7 @@ export class Service317Service {
 
   /**
    * Actualiza el estado del formulario en el store a partir de los datos proporcionados.
-   * @param DATOS Estado actual del formulario de trámite 260212.
+   * @param DATOS Estado actual del formulario de trámite 317.
    */
   actualizarEstadoFormulario(DATOS: UnicoState): void {
     if (DATOS.numeroOperacion) {
@@ -54,7 +54,7 @@ export class Service317Service {
 
   /**
    * Obtiene los datos de consulta para el registro de toma de muestras de mercancías.
-   * @returns Observable con el estado del trámite 260212.
+   * @returns Observable con el estado del trámite 317.
    */
   getRegistroTomaMuestrasMercanciasData(): Observable<UnicoState> {
     return this.http.get<UnicoState>('assets/json/317/consulta.json');

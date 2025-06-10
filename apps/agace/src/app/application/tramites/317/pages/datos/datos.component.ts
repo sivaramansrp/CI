@@ -22,17 +22,17 @@ export class DatosComponent implements OnInit, OnDestroy, AfterViewInit {
   private destroyNotifier$: Subject<void> = new Subject();
   /**
    * @property
-   * @description Estado actual de la consulta para el trámite 260212.
+   * @description Estado actual de la consulta para el trámite 317.
    * @type {ConsultaioState}
-   * @memberof Datos260212Component
+   * @memberof Datos317Component
    */
   public consultaState!: ConsultaioState;
 
   /**
    * @constructor
    * @param consultaQuery - Servicio para realizar consultas relacionadas con la aplicación.
-   * @param service260212Service - Servicio específico para manejar la lógica del trámite 260212.
-   * @description Inyecta los servicios necesarios para la gestión de datos en el componente de datos del trámite 260212.
+   * @param service317Service - Servicio específico para manejar la lógica del trámite 317.
+   * @description Inyecta los servicios necesarios para la gestión de datos en el componente de datos del trámite 317.
    */
   constructor(private consultaQuery: ConsultaioQuery,
     private service317Service: Service317Service) { }
@@ -92,7 +92,7 @@ export class DatosPageComponent {
    * 
    * @returns {void}
    * 
-   * @memberof Datos260212Component
+   * @memberof Datos317Component
    */
   guardarDatosFormulario(): void {
     this.service317Service
