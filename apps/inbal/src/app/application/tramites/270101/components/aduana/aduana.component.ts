@@ -419,14 +419,56 @@ export class AduanaComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.obtenerAduanaDeSalida();
-    this.obtrenerTipoDeTraslado();
-    if (this.consultaState.readonly) {
-      this.forma.get('extentoPago')?.disable();
-    }
-    if (this.consultaState.update) {
-      this.forma.get('extentoPago')?.setValue(true);
-    }
+    let terminado = 0;
+    const COMPROBAR_TODO_CARGADO = (): void => {
+      terminado++;
+      if (terminado === 2 && this.consultaState.readonly) {
+        this.forma.get('extentoPago')?.disable();
+        this.agregarTablaDatos();
+      }
+      if (this.consultaState.update) {
+        this.forma.get('extentoPago')?.setValue(true);
+      }
+    };
+    this.obtenerAduanaDeSalida(COMPROBAR_TODO_CARGADO);
+    this.obtrenerTipoDeTraslado(COMPROBAR_TODO_CARGADO);
+  }
+
+  /**
+ * @method agregarTablaDatos
+ * Construye y devuelve un objeto con los datos completos de la ilustración a partir del estado actual del formulario.
+ */
+agregarTablaDatos(): void {
+  this.configuracionTablaDatos?.push(this.tablaDatos());
+}
+
+/**
+ * @method tablaDatos
+ * Genera un objeto con los datos de la solicitud a partir del estado actual del formulario de exportación de ilustraciones
+ */
+  tablaDatos(): AduanaDeSalida {
+    const DETALLES = {
+      tipo: AduanaComponent.obtenerDescripcion(this.aduanaData, this.exportarIlustracionesState['tipoDeTraslado']),
+      ciudad: this.exportarIlustracionesState['ciudad'],
+      sede: this.exportarIlustracionesState['ciudad'],
+      tipoDeTraslado: AduanaComponent.obtenerDescripcion(this.transporteData, this.exportarIlustracionesState['tipoDeTraslado']),
+      fechaExhibicion: this.exportarIlustracionesState['fechaDeExhibicion'],
+      observaciones: this.exportarIlustracionesState['observaciones'],
+      fechoInicio: this.exportarIlustracionesState['fechaInicio'],
+      fechaFin: this.exportarIlustracionesState['fechaFin'],
+    };
+    return DETALLES;
+  }
+
+/**
+ * @method obtenerDescripcion
+ * @description
+ * Obtiene la descripción de la fracción arancelaria seleccionada en el formulario dinámico.
+ * @returns {string} Descripción de la fracción arancelaria seleccionada o una cadena vacía si no existe.
+ */
+  public static obtenerDescripcion(array: Catalogo[], id: string): string {
+    const DESCRIPCION = array.find((ele: Catalogo) => Number(ele.id) === Number(id))?.descripcion;
+    return DESCRIPCION ?? '';
   }
 
   /**
@@ -444,7 +486,7 @@ export class AduanaComponent implements OnInit, OnDestroy {
    * this.obtenerAduanaDeSalida();
    * // Obtiene los datos de las aduanas de salida y los asigna a `aduanaData`.
    */
-  public obtenerAduanaDeSalida(): void {
+  public obtenerAduanaDeSalida(callback: () => void): void {
     this.exportarIlustracionesService
       .getAduanaDeSalidaData()
       .pipe(takeUntil(this.destroy$))
@@ -455,6 +497,7 @@ export class AduanaComponent implements OnInit, OnDestroy {
           } else {
             this.aduanaData = [];
           }
+          callback();
         },
         error: () => {
           this.aduanaData = [];
@@ -465,7 +508,7 @@ export class AduanaComponent implements OnInit, OnDestroy {
   /**
    * Obtiene los datos de transporte desde el servicio y los asigna a `transporteData`.
    */
-  public obtrenerTipoDeTraslado(): void {
+  public obtrenerTipoDeTraslado(callback: () => void): void {
     this.exportarIlustracionesService
       .getTransporteData()
       .pipe(takeUntil(this.destroy$))
@@ -484,6 +527,7 @@ export class AduanaComponent implements OnInit, OnDestroy {
             );
           }
         }
+         callback();
       });
   }
 
