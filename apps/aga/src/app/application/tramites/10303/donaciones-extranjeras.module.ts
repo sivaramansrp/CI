@@ -8,7 +8,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { DatosDelFabricanteComponent } from './components/datos-del-fabricante/datos-del-fabricante.component';
 import { DatosDonanteExtranjeroComponent } from './components/datos-donante-extranjero/datos-donante-extranjero.component';
