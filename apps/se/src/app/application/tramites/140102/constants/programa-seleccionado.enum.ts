@@ -95,7 +95,7 @@ export const PROGRAMA_SELECCIONADO = [
   {
     id: 'Confirmo',
     labelNombre: 'Confirmo estar de acuerdo con la cancelación del Programa IMMEX/PROSEC *',
-    campo: 'Confirmo',
+    campo: 'confirmo',
     clase: 'col-md-12',
     tipoInput: 'checkbox',
     desactivado: false,

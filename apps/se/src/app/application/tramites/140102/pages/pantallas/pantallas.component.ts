@@ -1,6 +1,8 @@
 import { ALERTA_DE_APLICACION_REGISTRADA, ERROR_FORMA_ALERT } from '../../constants/programa-seleccionado.enum';
-import { Component, ViewChild, inject } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AVISO } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '@ng-mf/data-access-user';
 import { PANTA_PASOS } from '@ng-mf/data-access-user';
@@ -16,20 +18,20 @@ import { WizardService } from '@ng-mf/data-access-user';
   selector: 'app-pantallas',
   templateUrl: './pantallas.component.html',
 })
-export class PantallasComponent {
+export class PantallasComponent implements OnInit, OnDestroy {
   /**
    * @description
    * Lista de pasos del wizard cargados desde una constante.
    * Cada paso contiene información relevante para el flujo del wizard.
    */
-  pantallasPasos: ListaPasosWizard[] = PANTA_PASOS;
+  public pantallasPasos: ListaPasosWizard[] = PANTA_PASOS;
 
   /**
    * @description
    * Índice actual del paso seleccionado en el wizard.
    * Por defecto, el índice inicial es `1`.
    */
-  indice: number = 1;
+  public indice: number = 1;
 
   /**
    * @description
@@ -46,7 +48,7 @@ export class PantallasComponent {
    * @property {string} txtBtnAnt - Texto del botón para retroceder.
    * @property {string} txtBtnSig - Texto del botón para avanzar.
    */
-  datosPasos: DatosPasos = {
+  public datosPasos: DatosPasos = {
     nroPasos: this.pantallasPasos.length,
     indice: this.indice,
     txtBtnAnt: 'Anterior',
@@ -63,7 +65,7 @@ export class PantallasComponent {
    * @description
    * Texto de aviso cargado desde una constante.
    */
-  TEXTOS = AVISO.Aviso;
+  public TEXTOS = AVISO.Aviso;
 
   /**
    * @description
@@ -97,30 +99,38 @@ export class PantallasComponent {
 
   /**
    * @description
-   * Indica si el formulario de la pestaña dos es válido.
-   */
-  public pestanaDosFormularioValido: boolean = false;
-
-  /**
-   * @description
    * Servicio del wizard para manejar cambios de índice.
    */
   wizardService = inject(WizardService);
 
-     /**
-  * compo doc
-  * Mensaje relacionado con el aviso de privacidad simplificado.
-  * 
-  * @type {string}
-  * @memberof PantallasComponent
-  */
+  /**
+* compo doc
+* Mensaje relacionado con el aviso de privacidad simplificado.
+* 
+* @type {string}
+* @memberof PantallasComponent
+*/
   public avisoPrivacidadAlert: string = AVISO.Aviso;
- /**
-  * compo doc
-  * variable para contener el índice de la pestaña seleccionada
-  * @type {number}
-  */
+  /**
+   * compo doc
+   * variable para contener el índice de la pestaña seleccionada
+   * @type {number}
+   */
   public indiceDePestanaSeleccionada: number = 1;
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+  /** Subject para notificar la destrucción del componente. */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  public consultaState!: ConsultaioState;
+
   /**
    * @description
    * Constructor del componente.
@@ -128,20 +138,37 @@ export class PantallasComponent {
    * @param validacionDeFormularioService Servicio para manejar la validación de formularios.
    */
   constructor(
-    public validacionDeFormularioService: ValidacionDeFormularioService
+    public validacionDeFormularioService: ValidacionDeFormularioService,
+    private consultaQuery: ConsultaioQuery
   ) {
     //
   }
 
   /**
-   * @description
-   * Método que verifica la validez del formulario.
-   * @returns {boolean} Retorna `true` si el formulario es válido, de lo contrario `false`.
-   */
-  verificarLaValidezDelFormulario(): boolean {
-    return (
-      this.validacionDeFormularioService.isFormValid('programaSeleccionadoForm') ?? false
-    );
+     * compo doc
+     * @method ngOnInit
+     * @description
+     * Método de inicialización del componente `DatosComponent`.
+     * 
+     * Detalles:
+     * - Se suscribe al observable `selectConsultaioState$` del store `ConsultaioQuery` para obtener el estado actual de la consulta.
+     * - Utiliza `takeUntil` para cancelar la suscripción cuando el componente se destruye, evitando fugas de memoria.
+     * - Actualiza la propiedad `consultaState` con el estado recibido.
+     * - Si la propiedad `update` del estado es verdadera, llama al método `guardarDatosFormulario()`.
+     * - Si no, establece la bandera `esDatosRespuesta` en `true` para indicar que se deben mostrar los datos de respuesta.
+     * 
+     * @example
+     * this.ngOnInit();
+     * // Inicializa el componente y gestiona el flujo de datos según el estado de la consulta.
+     */
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => { 
+          this.consultaState = seccionState;
+        })
+      ).subscribe();
   }
 
   /**
@@ -159,8 +186,10 @@ export class PantallasComponent {
    * @param {number} event Índice de la subpestaña seleccionada.
    */
   public pestanaCambiado(event: number): void {
-    if (event) {
-      this.subpestanaSeleccionada = event;
+    if (event !== undefined && event !== null && !isNaN(event)) {
+      this.indiceDePestanaSeleccionada = event;
+    } else {
+      this.indiceDePestanaSeleccionada = 1;
     }
   }
 
@@ -171,7 +200,7 @@ export class PantallasComponent {
    * @param {AccionBoton} e Objeto que contiene la acción (`cont` o `ant`) y el valor del paso.
    */
   getValorIndice(e: AccionBoton): void {
-     if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
+    if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
       this.indice = e.valor;
       this.datosPasos.indice = e.valor;
 
@@ -180,30 +209,24 @@ export class PantallasComponent {
       } else {
         this.wizardComponent.atras();
       }
-      if (e.valor!==1) {
-        this.indiceDePestanaSeleccionada=1;
+      if (e.valor !== 1) {
+        this.indiceDePestanaSeleccionada = 1;
       }
     }
   }
-
   /**
-   * @description
-   * Método que controla la acción de continuar en el wizard.
-   * Actualiza el índice y muestra alertas según la validez del formulario.
-   * @param {AccionBoton} e Objeto que contiene la acción y el valor del paso.
-   */
-  public continuar(e: AccionBoton): void {
-    if (this.subpestanaSeleccionada === 2 && this.programaSeleccionadoFormValid && !this.esFormaValido) {
-      this.mostrarAplicacionRegistradaAlerta = true;
-      this.pestanaDosFormularioValido = true;
-    } else if (this.esFormaValido) {
-      this.pestanaDosFormularioValido = true;
-      this.indice = e.valor + 1;
-      this.datosPasos.indice = e.valor + 1;
-      this.wizardService.cambio_indice(this.datosPasos.indice);
-      this.wizardComponent.siguiente();
-    } else {
-      this.mostrarAplicacionRegistradaAlerta = false;
-    }
+* @method ngOnDestroy
+* @description
+* Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+* 
+* Detalles:
+* - Emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores que el componente está siendo destruido.
+* - Completa el observable para liberar recursos y evitar fugas de memoria.
+* 
+* @returns {void} No retorna ningún valor.
+*/
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

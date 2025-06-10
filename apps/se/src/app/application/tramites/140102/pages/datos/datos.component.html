@@ -15,7 +15,9 @@
             <solicitante [tabindex]="1"></solicitante>
             }
             @case (2) {
-            <app-cancelacion-de-autorizaciones></app-cancelacion-de-autorizaciones>
+            @if (esDatosRespuesta) {
+            <app-cancelacion-de-autorizaciones [consultaState]="consultaState"></app-cancelacion-de-autorizaciones>
+            }
             }
             }
         </ng-container>
