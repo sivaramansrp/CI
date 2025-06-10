@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -11,7 +11,7 @@ import { ContenedorDeDatosSolicitudComponent } from './contenedor-de-datos-solic
 import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
 import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
-import { SeccionLibStore, SeccionLibQuery } from '@libs/shared/data-access-user/src';
+import { SeccionLibStore, SeccionLibQuery, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -38,7 +38,6 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
       imports: [ FormsModule, ReactiveFormsModule ],
-      declarations: [],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: Tramite230501Query, useClass: MockTramite230501Query },
@@ -58,7 +57,8 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
             fragment: observableOf('fragment'),
             data: observableOf({})
           }
-        }
+        },
+        ConsultaioQuery
       ]
     }).overrideComponent(ContenedorDeDatosSolicitudComponent, {
 
@@ -75,9 +75,18 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
   it('should run #ngOnInit()', async () => {
     component.tramite230501Query = component.tramite230501Query || {};
     component.tramite230501Query.selectTramiteState$ = observableOf({});
-    component.crearDatosSolicitudForm = jest.fn();
+    component.consultaQuery = component.consultaQuery || {};
+    component.consultaQuery.selectConsultaioState$ = observableOf({});
+    component.inicializarEstadoFormulario = jest.fn();
     component.pestanaValidar = jest.fn();
     component.ngOnInit();
+  });
+
+  it('should run #inicializarEstadoFormulario()', async () => {
+    component.datosSolicitudForm = component.datosSolicitudForm || {};
+    component.datosSolicitudForm.disable = jest.fn();
+    component.crearDatosSolicitudForm = jest.fn();
+    component.inicializarEstadoFormulario();
   });
 
   it('should run #setFormValida()', async () => {
@@ -88,21 +97,27 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
 
   it('should run #crearDatosSolicitudForm()', async () => {
     component.fb = component.fb || {};
-    component.fb.group = jest.fn().mockReturnValue({
-      valueChanges: observableOf({}),
-      get: function() {}
-    });
+    component.fb.group = jest.fn();
     component.tramiteState = component.tramiteState || {};
     component.tramiteState.datosSolicitudFormType = {
-      tratadoRotterdam: {},
       nombreComun: {}
     };
-    component.tramiteState.setValue = jest.fn();
+    component.crearDatosSolicitudForm();
+    expect(component.fb.group).toHaveBeenCalled();
+  });
+
+  it('should run #onCambioDeTiempo()', async () => {
     component.materialesPeligrososService = component.materialesPeligrososService || {};
     component.materialesPeligrososService.convertirNumeroALetras = jest.fn();
+    component.datosSolicitudForm = component.datosSolicitudForm || {};
+    component.datosSolicitudForm.get = jest.fn().mockReturnValue({
+      setValue: function() {}
+    });
     component.actualizarElValorDeLaTienda = jest.fn();
-    component.pestanaValidar = jest.fn();
-    component.crearDatosSolicitudForm();
+    component.onCambioDeTiempo({});
+    expect(component.materialesPeligrososService.convertirNumeroALetras).toHaveBeenCalled();
+    expect(component.datosSolicitudForm.get).toHaveBeenCalled();
+    expect(component.actualizarElValorDeLaTienda).toHaveBeenCalled();
   });
 
   it('should run #pestanaValidar()', async () => {
@@ -116,7 +131,8 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
     };
     component.setFormValida = jest.fn();
     component.pestanaValidar();
-
+    expect(component.isDatosEspecificosValid).toHaveBeenCalled();
+    expect(component.setFormValida).toHaveBeenCalled();
   });
 
   it('should run #areSpecificControlsValid()', async () => {
@@ -125,12 +141,14 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
       valid: {}
     });
     component.areSpecificControlsValid();
+    expect(component.datosSolicitudForm.get).toHaveBeenCalled();
   });
 
   it('should run #isDatosEspecificosValid()', async () => {
     component.datosSolicitudForm = component.datosSolicitudForm || {};
     component.datosSolicitudForm.get = jest.fn();
     component.isDatosEspecificosValid();
+    expect(component.datosSolicitudForm.get).toHaveBeenCalled();
   });
 
   it('should run #actualizarElValorDeLaTienda()', async () => {
@@ -221,7 +239,6 @@ describe('ContenedorDeDatosSolicitudComponent', () => {
 
   it('should run #datasolicituActualizar()', async () => {
     component.seccion = component.seccion || {};
-    component.seccion.formaValida = [];
     component.esFormValido = jest.fn();
     component.seccionStore = component.seccionStore || {};
     component.seccionStore.establecerFormaValida = jest.fn();

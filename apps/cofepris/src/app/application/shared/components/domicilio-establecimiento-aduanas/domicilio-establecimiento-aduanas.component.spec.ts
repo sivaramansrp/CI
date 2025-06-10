@@ -11,6 +11,16 @@ import {
   TablaDinamicaComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
+
+const mockConsultaioQuery = {
+    selectConsultaioState$: of({ readonly: true }),
+  };
+
+  const mockAvisocalidadQuery = {
+    selectSolicitud$: of({ solicitudId: 123 }),
+  };
 
 describe('DomicilioEstablecimientoAduanasComponent', () => {
   let component: DomicilioEstablecimientoAduanasComponent;
@@ -70,6 +80,8 @@ describe('DomicilioEstablecimientoAduanasComponent', () => {
         { provide: DatosDomicilioLegalQuery, useValue: mockQuery },
         { provide: DatosDomicilioLegalStore, useValue: mockStore },
         { provide: DatosDomicilioLegalService, useValue: mockService },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
+
       ],
     }).compileComponents();
 
@@ -148,4 +160,43 @@ describe('DomicilioEstablecimientoAduanasComponent', () => {
     // Ensure `complete` is only called once
     expect(component['destroyNotifier$'].complete).toHaveBeenCalledTimes(1);
   });
+  
+ it('should set esFormularioSoloLectura from query and call setup methods', () => {
+    component.ngOnInit();
+
+    expect(component.esFormularioSoloLectura).toBe(true);
+    expect(component.obtenerEstadoList).toHaveBeenCalled();
+    expect(component.obtenerTablaDatos).toHaveBeenCalled();
+    expect(component.obtenerMercanciasDatos).toHaveBeenCalled();
+    expect(component.configurarGrupoForm).toHaveBeenCalled();
+  });
+
+  it('should disable all forms when esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+
+    const domicilioDisable = jest.spyOn(component.domicilio, 'disable');
+    const agenteDisable = jest.spyOn(component.formAgente, 'disable');
+    const mercanciasDisable = jest.spyOn(component.formMercancias, 'disable');
+
+    component.configurarGrupoForm();
+
+    expect(domicilioDisable).toHaveBeenCalled();
+    expect(agenteDisable).toHaveBeenCalled();
+    expect(mercanciasDisable).toHaveBeenCalled();
+  });
+
+  it('should enable domicilio and disable others when esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+
+    const domicilioEnable = jest.spyOn(component.domicilio, 'enable');
+    const agenteDisable = jest.spyOn(component.formAgente, 'disable');
+    const mercanciasDisable = jest.spyOn(component.formMercancias, 'disable');
+
+    component.configurarGrupoForm();
+
+    expect(domicilioEnable).toHaveBeenCalled();
+    expect(agenteDisable).toHaveBeenCalled();
+    expect(mercanciasDisable).toHaveBeenCalled();
+  });
+  
 });

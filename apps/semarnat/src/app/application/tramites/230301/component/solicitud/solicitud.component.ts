@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DesistimientoSolicitudService } from '../../services/desistimiento-solicitud.service';
 
@@ -22,6 +22,12 @@ import { SeccionLibQuery} from '@libs/shared/data-access-user/src';
   styleUrl: './solicitud.component.scss',
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
+  
+  /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
+
   /**
    * Formulario reactivo para el desistimiento.
    * @type {FormGroup}
@@ -93,6 +99,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .subscribe();
     this.crearDesistimientoForm();
     this.getFromdata();
+    if(this.formularioDeshabilitado) {
+      this.formDesistimiento.disable();
+    }
   }
 
     /**

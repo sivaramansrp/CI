@@ -1,6 +1,7 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { COMPOSICION_TABLA, DATOS_ESPECIFICOS_VALIDO_CONTROL, FECHA_FACTURA, INFO_GENERAL_VALIDO_CONTROL, NUMERO_CAS_TABLA, OPCIONES_DE_BOTON_DE_RADIO_CONTENEDOR } from '../../constantes/materiales-peligrosos.enum';
-import { Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFechaComponent, InputRadioComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Catalogo, ConsultaioQuery, InputFechaComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent,InputCheckComponent,InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ComposicionMaterial, InputFecha, TablaNumeroCasType } from '../../models/materiales-peligrosos.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -9,11 +10,10 @@ import { Tramite230501State, Tramite230501Store } from '../../estados/stores/tra
 import { CommonModule } from '@angular/common';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
 import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
-
 @Component({
   selector: 'app-contenedor-de-datos-solicitud',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent, TablaDinamicaComponent, InputFechaComponent,InputCheckComponent,InputRadioComponent],
+  imports: [CommonModule, ReactiveFormsModule, CatalogoSelectComponent, TablaDinamicaComponent, InputFechaComponent, InputCheckComponent, InputRadioComponent],
   templateUrl: './contenedor-de-datos-solicitud.component.html',
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
   providers: [MaterialesPeligrososService],
@@ -147,45 +147,54 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * Estas opciones son definidas por la constante `OPCIONES_DE_BOTON_DE_RADIO_CONTENEDOR`.
    */
   radioOpcions = OPCIONES_DE_BOTON_DE_RADIO_CONTENEDOR;
-
   /**
-   * Constructor de la clase ContenedorDeDatosSolicitudComponent.
+* Indica si el formulario está en modo solo lectura.
+* Cuando es `true`, los campos del formulario no se pueden editar.
+*/
+  esFormularioSoloLectura: boolean = false;
+  /**
+   * Constructor del componente `ContenedorDeDatosSolicitudComponent`.
    * 
-   * @param tramite230501Query - Servicio para realizar consultas relacionadas con el trámite 230501.
-   * @param tramite230501Store - Almacén para gestionar el estado del trámite 230501.
-   * @param materialesPeligrososService - Servicio para manejar datos relacionados con materiales peligrosos.
-   * @param seccionStore - Almacén para gestionar el estado de las secciones.
-   * @param seccionQuery - Servicio para realizar consultas relacionadas con las secciones.
-   * @param fb - Constructor de formularios reactivos.
-   * @param router - Servicio para la navegación entre rutas.
-   * @param activatedRoute - Servicio para acceder a información sobre la ruta activa.
+   * @param tramite230501Query Consulta de estado para el trámite 230501.
+   * @param tramite230501Store Almacén de estado para el trámite 230501.
+   * @param materialesPeligrososService Servicio para la gestión de materiales peligrosos.
+   * @param seccionStore Almacén de estado para las secciones.
+   * @param seccionQuery Consulta de estado para las secciones.
+   * @param fb Constructor de formularios reactivos.
+   * @param router Servicio de enrutamiento de Angular.
+   * @param activatedRoute Información sobre la ruta activa.
+   * @param consultaQuery Consulta de estado para la consulta de información.
    * 
-   * Este constructor inicializa el componente y realiza llamadas al servicio 
-   * `materialesPeligrososService` para obtener datos iniciales como la lista de fracciones 
-   * arancelarias, números CAS, estados físicos y unidades de medida.
+   * Inicializa el componente y realiza la carga de catálogos necesarios para el formulario,
+   * utilizando el servicio de materiales peligrosos para obtener listas de fracciones arancelarias,
+   * números CAS, estados físicos y unidades de medida.
    */
   constructor(private tramite230501Query: Tramite230501Query,
     private tramite230501Store: Tramite230501Store, public materialesPeligrososService: MaterialesPeligrososService,
     private seccionStore: SeccionLibStore, private seccionQuery: SeccionLibQuery,
-    public fb: FormBuilder, public router: Router, public activatedRoute: ActivatedRoute
+    public fb: FormBuilder, public router: Router, public activatedRoute: ActivatedRoute, private consultaQuery: ConsultaioQuery
   ) {
     this.materialesPeligrososService.obtenerRespuestaPorUrl(this, 'listaDeFraccionesArancelarias', '/230501/fraccionArancelaria.json');
     this.materialesPeligrososService.obtenerRespuestaPorUrl(this, 'listaDeNumeroCas', '/230501/numeroCas.json');
     this.materialesPeligrososService.obtenerRespuestaPorUrl(this, 'listaDeEstadoFisico', '/230501/estadoFisico.json');
-    this.materialesPeligrososService.obtenerRespuestaPorUrl(this, 'listaDeUnidadMedida', '/230501/unidadDeMedida.json');
+    this.materialesPeligrososService.obtenerRespuestaPorUrl(this, 'listaDeUnidadMedida', '/230501/unidadDeMedida.json'); 
+     
   }
 
+
   /**
-   * @override
+   * @method
+   * @description
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe a los estados de los queries para actualizar el estado del trámite y del formulario,
+   * inicializa el estado del formulario y valida la pestaña actual.
    * 
-   * - Suscribe al estado del trámite (`tramite230501Query.selectTramiteState$`) y actualiza la propiedad `tramiteState`.
-   * - Inicializa el formulario de datos de solicitud llamando a `crearDatosSolicitudForm`.
-   * - Suscribe al estado de la sección (`seccionQuery.selectSeccionState$`) y actualiza la propiedad `seccion`.
-   * - Llama al método `datasolicituActualizar` para realizar actualizaciones adicionales.
+   * @remarks
+   * - Suscribe a `tramite230501Query.selectTramiteState$` para mantener actualizado el estado del trámite.
+   * - Suscribe a `consultaQuery.selectConsultaioState$` para inicializar el formulario y establecer si es solo lectura.
+   * - Llama a `pestanaValidar()` para validar la pestaña activa.
    * 
-   * Se asegura de limpiar las suscripciones utilizando `takeUntil` con el observable `destroyNotifier$` 
-   * para evitar fugas de memoria.
+   * @see https://angular.io/guide/lifecycle-hooks
    */
   ngOnInit(): void {
     this.tramite230501Query.selectTramiteState$
@@ -195,9 +204,29 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
           this.tramiteState = seccionState;
         })
       ).subscribe();
+         this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.inicializarEstadoFormulario();
+          this.esFormularioSoloLectura = seccionState.readonly;
+       
+        })
+      )
+      .subscribe();
     this.pestanaValidar();
-    this.crearDatosSolicitudForm();
 
+  }
+  /**
+* Evalúa si se debe inicializar o cargar datos en el formulario.
+*/
+  inicializarEstadoFormulario(): void {
+    if (!this.datosSolicitudForm) {
+      this.crearDatosSolicitudForm();
+    }
+    if (this.esFormularioSoloLectura) {
+      this.datosSolicitudForm.disable();
+    }
   }
   /**
 * Establece el estado de validación del formulario de destinatario.
@@ -224,26 +253,27 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
  * `RxJS` para manejar los cambios en los valores del formulario.
  */
   crearDatosSolicitudForm(): void {
-    this.datosSolicitudForm = this.fb.group({
-      tratadoRotterdam: [this.tramiteState?.datosSolicitudFormType?.tratadoRotterdam || false],
-      listadoNacional: [this.tramiteState?.datosSolicitudFormType?.listadoNacional || false],
-      fraccionArancelaria: [this.tramiteState?.datosSolicitudFormType?.fraccionArancelaria || '', [Validators.required]],
-      descripcionFraccion: [{ value: this.tramiteState?.datosSolicitudFormType?.descripcionFraccion || '', disabled: true }],
-      convenioMinamata: [this.tramiteState?.datosSolicitudFormType?.convenioMinamata || false],
-      numeroCas: [this.tramiteState?.datosSolicitudFormType?.numeroCas || '', [Validators.required]],
-      descripcionNoArancelaria: [{ value: this.tramiteState?.datosSolicitudFormType?.descripcionNoArancelaria || '', disabled: true }],
-      nombreQuimico: [{ value: this.tramiteState?.datosSolicitudFormType?.nombreQuimico || '', disabled: true }],
-      nombreComun: [this.tramiteState.datosSolicitudFormType?.nombreComun || '', [Validators.required]],
-      nombreComercial: [this.tramiteState?.datosSolicitudFormType?.nombreComercial || '', [Validators.required]],
-      estadoFisico: [this.tramiteState?.datosSolicitudFormType?.estadoFisico || '', [Validators.required]],
-      cantidad: [this.tramiteState?.datosSolicitudFormType?.cantidad || null, [Validators.required]],
-      cantidadLetra: [{ value: this.tramiteState?.datosSolicitudFormType?.cantidadLetra || '', disabled: true }],
-      unidadMedida: [this.tramiteState?.datosSolicitudFormType?.unidadMedida || '', [Validators.required]],
-      licenciaSanitaria: [this.tramiteState?.datosSolicitudFormType?.licenciaSanitaria || ''],
-      usoEspecifico: [this.tramiteState?.datosSolicitudFormType?.usoEspecifico || '', [Validators.required]],
-      fechaExportacion: [this.tramiteState?.datosSolicitudFormType?.fechaExportacion || ''],
-      modoCantidad: [this.tramiteState?.datosSolicitudFormType?.modoCantidad || false]
-    });
+ this.datosSolicitudForm = this.fb.group({
+  tratadoRotterdam: [{ value: this.tramiteState?.datosSolicitudFormType?.tratadoRotterdam || false, disabled: false }],
+  listadoNacional: [{ value: this.tramiteState?.datosSolicitudFormType?.listadoNacional || false, disabled: false }],
+  fraccionArancelaria: [{ value: this.tramiteState?.datosSolicitudFormType?.fraccionArancelaria || '', disabled: false }, [Validators.required]],
+  descripcionFraccion: [{ value: this.tramiteState?.datosSolicitudFormType?.descripcionFraccion || '', disabled: true }],
+  convenioMinamata: [{ value: this.tramiteState?.datosSolicitudFormType?.convenioMinamata || false, disabled: false }],
+  numeroCas: [{ value: this.tramiteState?.datosSolicitudFormType?.numeroCas || '', disabled: false }, [Validators.required]],
+  descripcionNoArancelaria: [{ value: this.tramiteState?.datosSolicitudFormType?.descripcionNoArancelaria || '', disabled: true }],
+  nombreQuimico: [{ value: this.tramiteState?.datosSolicitudFormType?.nombreQuimico || '', disabled: true }],
+  nombreComun: [{ value: this.tramiteState?.datosSolicitudFormType?.nombreComun || '', disabled: false }, [Validators.required]],
+  nombreComercial: [{ value: this.tramiteState?.datosSolicitudFormType?.nombreComercial || '', disabled: false }, [Validators.required]],
+  estadoFisico: [{ value: this.tramiteState?.datosSolicitudFormType?.estadoFisico || '', disabled: false }, [Validators.required]],
+  cantidad: [{ value: this.tramiteState?.datosSolicitudFormType?.cantidad || null, disabled: false }, [Validators.required]],
+  cantidadLetra: [{ value: this.tramiteState?.datosSolicitudFormType?.cantidadLetra || '', disabled: true }],
+  unidadMedida: [{ value: this.tramiteState?.datosSolicitudFormType?.unidadMedida || '', disabled: false }, [Validators.required]],
+  licenciaSanitaria: [{ value: this.tramiteState?.datosSolicitudFormType?.licenciaSanitaria || '', disabled: false }],
+  usoEspecifico: [{ value: this.tramiteState?.datosSolicitudFormType?.usoEspecifico || '', disabled: false }, [Validators.required]],
+  fechaExportacion: [{ value: this.tramiteState?.datosSolicitudFormType?.fechaExportacion || '', disabled: false }],
+  modoCantidad: [{ value: this.tramiteState?.datosSolicitudFormType?.modoCantidad || false, disabled: false }]
+});
+
   }
 
   /**
@@ -259,7 +289,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * - Convierte el número a letras si el valor es válido.
    * - Actualiza el formulario y la tienda con el valor convertido.
    */
-  onCambioDeTiempo(value: string | number): void {    
+  onCambioDeTiempo(value: string | number): void {
     const VALOR_SELECCIONADO = value as string;
     if (VALOR_SELECCIONADO) {
       const CANTIDAD_LETRA = this.materialesPeligrososService.convertirNumeroALetras(typeof VALOR_SELECCIONADO === 'number' ? VALOR_SELECCIONADO : parseFloat(VALOR_SELECCIONADO));

@@ -154,31 +154,6 @@ export const REPRESENTANTE_LEGAL = [
 ];
 
 /**
- * MANIFIESTOS_ALERT:
- * Contiene un mensaje de alerta que se muestra al usuario.
- *
- * - message: Mensaje en formato HTML que indica al usuario que debe capturar
- *   la descripción de la mercancía en los mismos términos de la carta de donación.
- */
-export const MANIFIESTOS_ALERT = {
-  message: `
-    <div class="row">
-      <div class="col-md-2 d-flex justify-content-center align-items-center">
-        <form>
-          <label>
-            <input type="checkbox" id="manifiestos" name="manifiestos" required>
-            <span class="ml-5" style="color: #31708f;">*</span>
-          </label>
-        </form>
-      </div>
-      <div class="col-md-10">
-        <p>Cumplo con los requisitos y la normatividad aplicable, sin que ello me exima de que la autoridad sanitaria verifique su cumplimiento, esto sin perjuicio de las sanciones en las que pueda incurrir por falsedad de declaraciones dadas a una autoridad. Asimismo, acepto que la notificación de este trámite sea a través de la Ventanilla Única de Comercio Exterior por los mecanismos de la misma.</p>
-      </div>
-    </div>
-    `,
-};
-
-/**
    * Configuración para las columnas de la tabla.
    * Define cómo se mostrarán los datos de los trámites asociados.
    */

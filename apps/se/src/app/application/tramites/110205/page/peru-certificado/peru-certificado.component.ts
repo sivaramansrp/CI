@@ -10,9 +10,11 @@
  */
 
 import { AccionBoton, ListaPasoWizard } from '../../models/peru-certificado.module';
-import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, PAGO_DE_DERECHOS } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { DatosPasos, PAGO_DE_DERECHOS, SeccionLibStore } from '@ng-mf/data-access-user';
+import { Subject, takeUntil } from 'rxjs';
 import { PASOS } from '../../constantes/peru-certificado.module';
+import { Tramite110205Query } from '../../estados/tramite110205.query';
 import { WizardComponent } from '@ng-mf/data-access-user';
 
 @Component({
@@ -20,7 +22,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
   templateUrl: './peru-certificado.component.html',
   styleUrl: './peru-certificado.component.scss',
 })
-export class PeruCertificadoComponent {
+export class PeruCertificadoComponent implements OnDestroy {
 
   /**
    * @property {Array<LISTAPASOWIZARD>} pasos - Array de pasos del wizard.
@@ -55,6 +57,29 @@ export class PeruCertificadoComponent {
   };
 
   /**
+   * @property {Subject<void>} destroyNotifier$
+   * @description Subject utilizado como notificador para destruir las suscripciones activas
+   * Se utiliza junto con el operador takeUntil en las suscripciones de RxJS.
+   */
+  destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @constructor
+   * @param {SeccionLibStore} seccionStore - Servicio para gestionar el estado de la sección.
+   * @param {Tramite110205Query} tramiteQuery - Servicio para consultar el estado del trámite.
+   * Suscribe al observable FormaValida$ para actualizar el estado de la sección y la validez del formulario.
+   */
+  constructor(private seccionStore: SeccionLibStore, private tramiteQuery: Tramite110205Query,
+  ) {
+    this.tramiteQuery.FormaValida$.pipe(
+      takeUntil(this.destroyNotifier$)
+    ).subscribe((res) => {
+      this.seccionStore.establecerSeccion([true]);
+      this.seccionStore.establecerFormaValida([res]);
+    });
+  }
+
+  /**
    * @method getValorIndice
    * @description Maneja la acción del botón y determina la navegación (siguiente o anterior).
    * @param {ACCIONBOTON} e - Objeto de acción que contiene la acción y el valor a manejar.
@@ -68,5 +93,16 @@ export class PeruCertificadoComponent {
         this.wizardComponent.atras();
       }
     }
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Utiliza el Subject `destroyNotifier$` para notificar la destrucción y completar las suscripciones,
+   * evitando fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
