@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ConcluirRelacionComponent } from './concluir-relacion.component';
+import { ConcluirRelacionComponent } from './concluir-relacion-de.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { CommonModule } from '@angular/common';
 import { InputFechaComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';

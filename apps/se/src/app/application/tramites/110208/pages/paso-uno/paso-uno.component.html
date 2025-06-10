@@ -22,13 +22,19 @@
           <solicitante #Solicitante></solicitante>
         }
         @case (2) {
-          <app-certificado-origen></app-certificado-origen>
+          @if(esDatosRespuesta){
+            <app-certificado-origen></app-certificado-origen>
+          }
         } 
         @case (3) {
-          <app-destinatario></app-destinatario>
+          @if(esDatosRespuesta){
+            <app-destinatario></app-destinatario>
+          }
         } 
         @case (4) {
-          <app-datos-certificado></app-datos-certificado>
+          @if(esDatosRespuesta){
+            <app-datos-certificado></app-datos-certificado>
+          }
         } 
         }
       </ng-container>
