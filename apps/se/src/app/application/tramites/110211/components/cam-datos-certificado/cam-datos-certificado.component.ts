@@ -1,7 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import {Subject,map, takeUntil } from 'rxjs';
 import { CamCertificadoService } from '../../services/cam-certificado.service';
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DatosCertificadoDeComponent } from '../../../../shared/components/datos-certificado-de/datos-certificado-de.component';
 import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { camCertificadoQuery } from '../../estados/cam-certificado.query';
@@ -15,7 +18,9 @@ import { camCertificadoStore } from '../../estados/cam-certificado.store';
 @Component({
   selector: 'app-cam-datos-certificado',
   templateUrl: './cam-datos-certificado.component.html',
-  styleUrl: './cam-datos-certificado.component.css',
+  styleUrl: './cam-datos-certificado.component.scss',
+  standalone: true,
+  imports:[DatosCertificadoDeComponent,CommonModule]
 })
 export class CamDatosCertificadoComponent implements OnInit, OnDestroy {
   /**
@@ -50,6 +55,16 @@ export class CamDatosCertificadoComponent implements OnInit, OnDestroy {
    */
   formDatosCertificadoValues!: { [key: string]: unknown};
 
+
+  /**
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   *
+   * @type {boolean}
+   * @memberof CamDatosCertificadoComponent
+   * @see https://compodoc.app/
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * @descripcion
    * Inicializa el componente con los servicios y dependencias requeridos.
@@ -62,12 +77,22 @@ export class CamDatosCertificadoComponent implements OnInit, OnDestroy {
     private camCertificadoService: CamCertificadoService,
     private store: camCertificadoStore,
     private query: camCertificadoQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
     this.query.formDatosCertificado$.pipe(
       takeUntil(this.destroyNotifier$)
     ).subscribe(estado => {
         this.formDatosCertificadoValues = estado;
     });
+      this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+      })
+    )
+    .subscribe()
+    
   }
 
   /**
@@ -105,7 +130,6 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
         this.idiomaDatos = data as Catalogo[];
       },
       error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
         this.idiomaDatos = [];
       },
     });
@@ -125,7 +149,6 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
         this.entidadFederativas = data as Catalogo[];
       },
       error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
         this.entidadFederativas = [];
       },
     });
@@ -145,7 +168,6 @@ setValoresStore(event: { formGroupName: string, campo: string, valor: undefined,
         this.representacionFederal = data as Catalogo[];
       },
       error: (error: HttpErrorResponse) => {
-        console.error('Error al obtener los datos:', error);
         this.representacionFederal = [];
       },
     });
