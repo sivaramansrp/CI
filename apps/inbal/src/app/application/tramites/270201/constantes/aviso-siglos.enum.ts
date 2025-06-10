@@ -144,3 +144,11 @@ export const OPCIONES_DE_BOTON_DE_RADIO = [
     value: '0',
   },
 ];
+
+/**
+ * Declaración de manifiestos para cumplir con normatividad.
+ */
+export const MANIFIESTOS_DECLARACION = {
+  MANIFIESTOS:
+    'Manifiesto que la información sobre la propiedád de la obra(s) y los datos técnicos de la obra(s) son ciertos y verdaderos.*',
+};
