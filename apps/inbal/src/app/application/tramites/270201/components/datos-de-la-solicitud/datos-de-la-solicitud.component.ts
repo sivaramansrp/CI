@@ -28,6 +28,7 @@ import { Tramite270201State, Tramite270201Store } from '../../estados/tramites/t
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { MANIFIESTOS_DECLARACION } from '../../constantes/aviso-siglos.enum';
 import { ModalComponent } from '../modal/modal.component';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/aviso-siglos.enum';
 import { ObraTablaDatos } from '../../models/aviso-siglos.models';
@@ -220,6 +221,11 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    public solicitudState!: Tramite270201State;
 
   /**
+   * Texto de los manifiestos.
+   */
+  manifiestosText: string = '';
+
+  /**
    * @constructor
    * @description
    * Inicializa el componente con las dependencias necesarias para gestionar el formulario,
@@ -268,6 +274,8 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * ```
    */
   ngOnInit(): void {
+   /** Texto que contiene los manifiestos declarados. */
+    this.manifiestosText = MANIFIESTOS_DECLARACION.MANIFIESTOS;
 
       // Suscribe al estado del trámite y restaura las filas de la tabla si existen
   this.tramite270201Query.selectDatosSolicitud$
@@ -393,18 +401,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
     /** Llama al método que configura el formulario según el estado de solo lectura. */
     this.inicializarEstadoFormulario();
-
-    /**
-     * Configura el texto HTML para el mensaje del manifiesto de alerta.
-     */
-    this.TEXTO_MANIFIESTO_ALERT = `
-    <div>
-      <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="manifiestoCheckbox">
-        <p>Manifiesto que la información sobre la propiedád de la obra(s) y los datos técnicos de la obra(s) son ciertos y verdaderos.*</p>
-      </div>
-    </div>
-  `;
   }
 
  /**
@@ -543,6 +539,15 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
        * @default ''
        */
       aduanaEntrada: new FormControl('', [Validators.required]),
+
+        /**
+       * @control manifiesto
+       * @description
+       * Control de formulario para el campo 'manifiesto'
+       * Es obligatorio y debe ser completado.
+       * @default true
+       */
+      manifiesto: new FormControl(true, [Validators.required]),
     });
 
       /** Suscribe al estado de solicitud 270201 y lo asigna a `solicitudState`.  

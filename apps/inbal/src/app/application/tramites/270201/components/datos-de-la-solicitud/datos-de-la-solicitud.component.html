@@ -88,7 +88,10 @@
 
             <div class="manifiesto-container mt-4">
                 <ng-titulo titulo="Manifiesto" />
-                <ng-alert [CONTENIDO]="TEXTO_MANIFIESTO_ALERT"></ng-alert>
+                <div class="alert alert-info content-with-checkbox py-6">
+                  <input formControlName="manifiesto" type="checkbox" id="manifiesto" [disabled]="esFormularioSoloLectura"/>
+                  <div>{{manifiestosText}}</div>
+                </div>
             </div>
         </form>
     </div>
