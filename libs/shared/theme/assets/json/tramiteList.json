@@ -1759,8 +1759,8 @@
   {
     "id": 252,
     "tramite": 240101,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/sedena/permiso-ordinario-importacion-armas-municiones/contenedor-de-pasos",
+    "linkDepartment": "/pago/permiso-ordinario-importacion-armas-municiones/contenedor-de-pasos",
     "department": "sedena"
   },
   {
@@ -1914,7 +1914,7 @@
     "id": 274,
     "tramite": 230301,
     "linkDashboard": "/semarnat/desistimiento/solicitud",
-    "linkDepartment": "/semarnat/desistimiento/solicitud",
+    "linkDepartment": "/pago/desistimiento/solicitud",
     "department": "semarnat"
   },
   {
@@ -2186,8 +2186,8 @@
   {
     "id": 313,
     "tramite": 420102,
-    "linkDashboard": "/aga/concluir-relacion/solicitud",
-    "linkDepartment": "/pago/concluir-relacion/solicitud",
+    "linkDashboard": "/aga/concluir-relacion-de/solicitud",
+    "linkDepartment": "/pago/concluir-relacion-de/solicitud",
     "department": "aga"
   },
   {

@@ -9,6 +9,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { TramiteState } from '../constantes/acuicola.enum';
+import { TramiteStore } from '../estados/tramite220702.store';
 import { map } from 'rxjs';
 
 /**
@@ -34,6 +36,7 @@ export class FitosanitarioService {
    */
   constructor(
     private http: HttpClient,
+    private tramiteStore: TramiteStore
   ) {
     // No se necesita lógica de inicialización adicional.
   }
@@ -254,5 +257,54 @@ export class FitosanitarioService {
       map((response) => response)
     );
   }
+  /**
+   * Actualiza el estado del formulario con los datos proporcionados.
+   * @param DATOS - Objeto que contiene los datos a actualizar en el estado del formulario.
+   */
+
+  actualizarEstadoFormulario(DATOS:TramiteState): void {
+    this.tramiteStore.setCertificadosAutorizados(DATOS.certificadosAutorizados);
+    this.tramiteStore.setJustificacion(DATOS.justificacion);
+    this.tramiteStore.setAduanaDeIngreso(DATOS.aduanaDeIngreso);
+    this.tramiteStore.setOficinaDeInspeccion(DATOS.oficinaDeInspeccion);
+    this.tramiteStore.setPuntoDeInspeccion(DATOS.puntoDeInspeccion);  
+    this.tramiteStore.setNombreInspector(DATOS.nombreInspector);
+    this.tramiteStore.setHoraDeInspeccion(DATOS.horaDeInspeccion);
+    this.tramiteStore.setPrimerApellido(DATOS.primerApellido);
+    this.tramiteStore.setSegundoApellido(DATOS.segundoApellido);
+    this.tramiteStore.setCantidadContenedores(DATOS.cantidadContenedores);
+    this.tramiteStore.setTipoContenedor(DATOS.tipoContenedor);
+    this.tramiteStore.setMedioDeTransporte(DATOS.medioDeTransporte);
+    this.tramiteStore.setIdentificacionTransporte(DATOS.identificacionTransporte);
+    this.tramiteStore.setEsSolicitudFerros(DATOS.esSolicitudFerros);
+    this.tramiteStore.setBanco(DATOS.banco);
+    this.tramiteStore.setLlaveDePago(DATOS.llaveDePago);
+    this.tramiteStore.setFechaPagoDeDerechos(DATOS.fechaPagoDeDerechos);
+    this.tramiteStore.setImporteDePago(DATOS.importeDePago);
+    this.tramiteStore.setClaveDeReferencia(DATOS.claveDeReferencia);
+    this.tramiteStore.setCadenaDependenciaRevision(DATOS.cadenaDependenciaRevision);
+    this.tramiteStore.setBancoRevision(DATOS.bancoRevision);
+    this.tramiteStore.setLlaveDePagoRevision(DATOS.llaveDePagoRevision);
+    this.tramiteStore.setFechaPagoDeDerechosRevision(DATOS.fechaPagoDeDerechosRevision);
+    this.tramiteStore.setImporteDePagoRevision(DATOS.importeDePagoRevision);
+    this.tramiteStore.setExentoDePago(DATOS.exentoDePago);
+    this.tramiteStore.setFechaDePago(DATOS.fechaDePago);
+    this.tramiteStore.setTipoContenedor(DATOS.tipoContenedor);
+    this.tramiteStore.setMedioDeTransporte(DATOS.medioDeTransporte);
+    this.tramiteStore.setIdentificacionTransporte(DATOS.identificacionTransporte);
+    this.tramiteStore.setOficinaDeInspeccion(DATOS.oficinaDeInspeccion);
+    this.tramiteStore.setSolicitudTramite(DATOS.DatosDeLaSolicitudInt);
+  
+     }
+
+  /**
+   * Obtiene los datos de ampliación de servicios desde un archivo JSON.
+   * @returns {Observable<AmpliacionServiciosState>} - Observable con el estado de ampliación de servicios.
+   */
+
+  getServiciosData(): Observable<TramiteState> {
+    return this.http.get<TramiteState>('assets/json/220702/datos-prefill.json');
+  }
+
 
 }
