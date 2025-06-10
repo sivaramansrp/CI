@@ -47,7 +47,9 @@ export class Service317Service {
     if (DATOS.fechaPago) {
       this.unicoStore.setfechaPago(DATOS.fechaPago);
     }
-   
+    if (DATOS.mapTipoTramite) {
+      this.unicoStore.setmapTipoTramite(DATOS.mapTipoTramite);
+    }
   }
 
   /**

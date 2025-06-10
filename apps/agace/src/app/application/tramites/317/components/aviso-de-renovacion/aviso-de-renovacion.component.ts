@@ -19,8 +19,6 @@ import { UnicoStore } from '../../estados/renovacion.store';
 
 import { UnicoQuery } from '../../estados/queries/unico.query';
 
-// import { ConsultaioQuery } from '@ng-mf/data-access-user';
-
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 /**
@@ -35,7 +33,11 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
   styleUrls: ['./aviso-de-renovacion.component.scss'],
 })
 export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
-
+  /**
+   * {string} defaultSelect - Valor predeterminado seleccionado en el menú desplegable.
+   *  Esta propiedad almacena la opción seleccionada por defecto, que en este caso es 'Rubro A'.
+   */
+   defaultSelect: string = 'Rubro A';
    /**
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
