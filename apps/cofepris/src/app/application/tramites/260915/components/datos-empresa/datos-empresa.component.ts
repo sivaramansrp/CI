@@ -5,9 +5,9 @@ import { CommonModule } from '@angular/common';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 
-import { Solicitud260915State, Solicitud260915Store } from '../../estados/tramites260915.store';
+import { Solicitud260915State } from '../../estados/tramites260915.store';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 

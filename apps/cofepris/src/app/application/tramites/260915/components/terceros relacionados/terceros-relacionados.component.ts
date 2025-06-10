@@ -122,7 +122,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private permisosanitariodisposivos: PermisoSanitarioDispositivosMedicosService,
+    private permisosanitariodispositivosmedicosservice: PermisoSanitarioDispositivosMedicosService,
     private solicitud260915Store: Solicitud260915Store,
     private solicitud260915Query: Solicitud260915Query,
     public consultaioQuery: ConsultaioQuery,
@@ -289,7 +289,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
    * Obtiene los datos del catálogo de países.
    */
   getPaisData(): void {
-    this.permisosanitariodisposivos
+    this.permisosanitariodispositivosmedicosservice
       .getPaisData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data: Catalogo[]) => {

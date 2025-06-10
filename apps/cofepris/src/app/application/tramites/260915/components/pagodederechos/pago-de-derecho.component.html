@@ -36,10 +36,9 @@
               <div class="col-md-4 mb-3">
                 <input-fecha
                 [datos]="fechaPago"
-                formControlName="fechadepago"
-                [setFecha]="pagoDeDerechosForm.get('fechadepago')?.value"
-                (valorCambiado)="seleccionarFechaInicio($event)"
+                [setFecha]="pagoDeDerechos.get('fechadepago')?.value"
                 [isDisabled]="esFormularioSoloLectura"
+                (valorCambiado)="seleccionarFechaInicio($event)"
               ></input-fecha>
               </div>
               <div class="col-md-4 mb-3">

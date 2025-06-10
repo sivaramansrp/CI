@@ -9,7 +9,7 @@ import { HACERLOS_RADIO_OPTIONS, OPCION_DE_BOTON_DE_RADIO, TEXTOS } from '../../
 
 import { CrossList,MercanciaCrossList,MercanciasInfo } from '../../models/mercancia.model';
 import { FilaData, FilaData2, ListaClave } from '../../models/fila-modal';
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud260915State, Solicitud260915Store } from '../../estados/tramites260915.store';
 import { CommonModule } from '@angular/common';
 
