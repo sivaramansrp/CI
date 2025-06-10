@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 
-import { CommonModule } from '@angular/common';
-
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { FitosanitarioRoutingModule } from './fitosanitario-routing.module';
@@ -21,17 +19,11 @@ import { ToastrModule } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
 
 import {
-  AlertComponent,
-
-  AnexarDocumentosComponent,
-
   BtnContinuarComponent,
 
   CatalogoSelectComponent,
 
   CrosslistComponent,
-
-  FirmaElectronicaComponent,
 
   InputCheckComponent,
 
@@ -39,32 +31,26 @@ import {
 
   InputRadioComponent,
 
-  SharedModule,
-
-  SolicitanteComponent,
-
   TablaDinamicaComponent,
 
   TableComponent,
 
   TercerosComponent,
 
-  TituloComponent,
 
   WizardComponent
 } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 
 
 
 @NgModule({
   declarations: [
-
-
     SolicitudPageComponent
   ],
   imports: [
+    CommonModule,
     WizardComponent,
-
     BtnContinuarComponent,
     ReactiveFormsModule,
     CrosslistComponent,
