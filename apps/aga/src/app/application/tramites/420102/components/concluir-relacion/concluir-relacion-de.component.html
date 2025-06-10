@@ -22,23 +22,25 @@
       <div class="row pt4-custom">
           <div class="row">
               <div class="col-md-4">
-                  <div class="form-group datepicker-group disabled-input-fecha">
+                  <div class="form-group datepicker-group input-fecha">
                       <input-fecha
                       [datos]="fechaInicioInput"
-                        (valorCambiado)="cambiarFechaInicio($event)"
-                      name="fechaPago"
-                      [setFecha]="fechaPagoDate"
+                      (valorCambiado)="cambiarFechaInicio($event)"
+                      name="fechaInicial"
+                      [setFecha]="concluirFormulario.get('fechaInicial')?.value"
+                      [isDisabled]="esFormularioSoloLectura"
                     ></input-fecha>
-                    
                   </div>
               </div>
               <div class="col-md-4">
-                  <div class="form-group datepicker-group disabled-input-fecha">
+                  <div class="form-group datepicker-group input-fecha">
                     <input-fecha
-                    [datos]="fechaInicioInput"
-                    (valorCambiado)="cambiarFechaFinal($event)"
-                    name="fechaPago"
                     [setFecha]="fechaPagoDate"
+                    [datos]="fechaInicioInput"
+                    (valorCambiado)="cambiarFechaInicio($event)"
+                    name="fechaFinal"
+                    [setFecha]="concluirFormulario.get('fechaFinal')?.value"
+                    [isDisabled]="esFormularioSoloLectura"
                     ></input-fecha>
                   </div>
               </div>
