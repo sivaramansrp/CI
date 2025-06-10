@@ -10,9 +10,9 @@ import {
   LABEL_DESPACHO_LDA,
   MSG_ADUANA_PEDIMENTO,
   MSG_ALERTA_ELIMINAR_ELEMENTO,
-  MSG_CAMBIO_TIPO_SOLICITUD,
   MSG_ELIMINA_ELEMENTO,
   MSG_ERROR_NO_INFORMACION,
+  MSG_ERROR_RFC_NO_ENCONTRADO,
   MSJ_ERROR_FECHA,
   MSJ_ERROR_LINEA_CAPTURA,
   MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
@@ -59,6 +59,7 @@ import {
   TipoPersona,
   TipoSolicitudService,
   TipoTransporteService,
+  TransporteDespacho,
   ValidaRfcService,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
@@ -90,7 +91,6 @@ import {
   Observable,
   Subject,
   catchError,
-  defaultIfEmpty,
   delay,
   first,
   map,
@@ -1086,8 +1086,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               return this.idcService
                 .getInformacionContribuyente(RFC_IMP_EXP)
                 .pipe(tap());
-            } else {
-              // TODO: Implementar mensaje de error para RFC no encontrado.
             }
             return EMPTY;
           }),
@@ -1098,6 +1096,17 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             if (NOMBRE) {
               this.datosImportadorExportador.get('nombre')?.setValue(NOMBRE);
               this.getCertificaciones(RFC_IMP_EXP);
+            } else {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'alert',
+                categoria: 'danger',
+                modo: 'action',
+                titulo: 'Avisos',
+                mensaje: MSG_ERROR_RFC_NO_ENCONTRADO,
+                cerrar: false,
+                txtBtnAceptar: 'Aceptar',
+                txtBtnCancelar: '',
+              };
             }
           })
         )
@@ -1702,7 +1711,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @param tipo - Tipo de datos a actualizar ('vehiculo' o 'transporte').
    * @returns void
    */
-  changeAgregarVehiculo(vehiculos: any[], tipo: string): void {
+  changeAgregarVehiculo(vehiculos: TransporteDespacho[], tipo: string): void {
     if (tipo === 'vehiculo') {
       this.tramite5701Store.setTransporte(vehiculos);
     } else if (tipo === 'transporte') {
