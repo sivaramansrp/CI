@@ -5,6 +5,7 @@ import { Solicitud130301State, Tramite130301Store } from '../../../../estados/tr
 import { Subject, map, takeUntil } from 'rxjs';
 import { CertificadoKimberleyForma } from '@libs/shared/data-access-user/src/core/models/130301/solicitud-prorroga.model';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { SolicitudProrrogaService } from '../../services/solicitudProrroga/solicitud-prorroga.service';
 import { Tramite130301Query } from '../../../../estados/queries/tramite130301.query';
 
@@ -30,6 +31,11 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
   certificadoKimberley!: FormGroup;
 
   /**
+   * Determina si el formulario debe estar en modo solo lectura.
+   */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
    * Notificador para manejar la destrucción de suscripciones.
    */
   private destroyNotifier$: Subject<void> = new Subject();
@@ -37,12 +43,12 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
   /**
    * Datos del formulario del Certificado Kimberley.
    */
-  certificadoKimberleyDatos: CertificadoKimberleyForma[] = [];
+  public certificadoKimberleyDatos: CertificadoKimberleyForma[] = [];
 
   /**
    * Lista de estados obtenidos del servicio.
    */
-  estado: Catalogo[] = [];
+  public estado: Catalogo[] = [];
 
   /**
    * Estado actual de la solicitud.
@@ -60,13 +66,35 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private service: SolicitudProrrogaService,
     public tramite130301Store: Tramite130301Store,
-    private tramite130301Query: Tramite130301Query
-  ) {}
+    private tramite130301Query: Tramite130301Query,
+    private consultaioQuery: ConsultaioQuery,
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
 
   /**
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+    this.obtenerEstadoList();
+    this.obtenerFormDatos();
+  }
+
+  /**
+   * Inicializa el formulario con datos del store y aplica validaciones.
+   * También aplica configuración de solo lectura si es necesario.
+   * @method inicializarEstadoFormulario
+   */
+  inicializarEstadoFormulario(): void {
     this.tramite130301Query
       .selectSolicitud$
       .pipe(
@@ -77,9 +105,17 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.crearFormulario();
-    this.obtenerEstadoList();
-    this.obtenerFormDatos();
+    if (this.esFormularioSoloLectura) {
+      Object.keys(this.certificadoKimberley.controls).forEach((key) => {
+        this.certificadoKimberley.get(key)?.disable();
+      });
+    } else {
+      Object.keys(this.certificadoKimberley.controls).forEach((key) => {
+        this.certificadoKimberley.get(key)?.enable();
+      });
+    }
   }
+
  /**
    * Crea y configura un formulario reactivo para gestionar los datos del Certificado Kimberley con campos deshabilitados y validaciones requeridas.
   */

@@ -64,6 +64,7 @@ export class DatosDelSeguroComponent implements OnInit, OnDestroy {
    * Constructor: inyecta el store y el query del trámite 32515
    * @param tramiteStore32515 Store para actualizar datos del formulario
    * @param tramiteQuery32515 Query para suscribirse a los datos del estado
+   * @param consultaQuery Query para obtener el estado de la consulta
    */
   constructor(
     public tramiteStore32515: Tramite32515Store,
