@@ -3,398 +3,289 @@ import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
 /**
- * Interfaz que define el estado de la solicitud 260702.
+ * Interfaz que define el estado de la solicitud 260915.
  * Contiene todas las propiedades necesarias para gestionar los datos del trámite.
  */
 export interface Solicitud260915State {
   /** Clave de referencia del trámite */
   clavedereferencia: string;
-
   /** Cadena de la dependencia asociada al trámite */
   cadenadeladependencia: string;
-
   /** Banco relacionado con el pago */
   banco: string;
-
   /** Llave de pago del trámite */
   llavedepago: string;
-
   /** Fecha en la que se realizó el pago */
   fechadepago: string;
-
   /** Importe del pago realizado */
   importedepago: string;
-
   /** Tipo de persona (física o moral) */
   tipoPersona: string;
-
   /** Nombre de la persona o entidad */
   nombre: string;
-
   /** Primer apellido de la persona */
   primerApellido: string;
-
   /** Segundo apellido de la persona */
   segundoApellido: string;
-
-  /** País de residencia */
-  pais: string;
-
-  /** Domicilio de la persona o entidad */
-  domicilio: string;
-
-  /** Número exterior del domicilio */
-  numeroExterior: string;
-
-  /** Número interior del domicilio */
-  numeroInterior: string;
-
-  /** Correo electrónico de contacto */
-  correoElectronico: string;
-
-  /** Justificación del trámite */
-  justification: string;
-
   /** Denominación o razón social */
   denominacion: string;
-
-  /** Código postal del domicilio */
-  codigopostal: string;
-
+  /** País de residencia */
+  pais: string;
+  /** Domicilio de la persona o entidad */
+  domicilio: string;
   /** Estado de residencia */
   estado: string;
-
-  /** Municipio o alcaldía de residencia */
-  municipoyalcaldia: string;
-
-  /** Localidad de residencia */
-  localidad: string;
-
-  /** Colonia de residencia */
-  colonia: string;
-
+  /** Código postal del domicilio */
+  codigopostal: string;
   /** Calle del domicilio */
   calle: string;
-
+  /** Número exterior del domicilio */
+  numeroExterior: string;
+  /** Número interior del domicilio */
+  numeroInterior: string;
   /** Lada telefónica */
   lada: number;
-
   /** Teléfono de contacto */
   telefono: string;
-
+  /** Correo electrónico de contacto */
+  correoElectronico: string;
+  /** Justificación del trámite */
+  justification: string;
+  /** Municipio o alcaldía de residencia */
+  municipoyalcaldia: string;
+  /** Localidad de residencia */
+  localidad: string;
+  /** Colonia de residencia */
+  colonia: string;
   /** Indica si se cuenta con aviso de funcionamiento */
   avisoDeFuncionamiento: boolean;
-
   /** Licencia sanitaria asociada */
   licenciaSanitaria: string;
-
   /** Régimen al que se destinarán las mercancías */
   regimenalque: string;
-
   /** Aduana relacionada con el trámite */
   aduana: string;
-
   /** Registro Federal de Contribuyentes (RFC) */
   rfc: string;
-
   /** Razón social legal */
   legalRazonSocial: string;
-
   /** Apellido paterno de la persona */
   apellidoPaterno: string;
-
   /** Apellido materno de la persona */
   apellidoMaterno: string;
-
   /** Datos de las mercancías */
   mercanciasDatos: FilaData2[];
-
   /** Configuración de las columnas de la tabla */
   configuracionColumnasoli: FilaData[];
-
   /** Lista de claves asociadas */
   listaClave: ListaClave[];
-
   /** Clave de los lotes */
   claveDeLosLotes: string;
-
   /** Fecha de fabricación de las mercancías */
   fechaDeFabricacion: string;
-
   /** Fecha de caducidad de las mercancías */
   fechaDeCaducidad: string;
-
   /** Descripción de la fracción arancelaria */
   descripcionFraccionArancelaria: string;
-
   /** Cantidad en la unidad de medida de tarifa (UMT) */
   cantidadUMT: string;
-
   /** Unidad de medida de tarifa (UMT) */
   umt: string;
-
   /** Cantidad en la unidad de medida de comercialización (UMC) */
   cantidadUMC: string;
-
   /** Unidad de medida de comercialización (UMC) */
   umc: string;
-
   /** Tipo de producto */
   tipoProducto: string;
-
   /** Clasificación de los productos */
   clasificaionProductos: string;
-
   /** Producto especificado */
   especificarProducto: string;
-
   /** Nombre específico del producto */
   nombreProductoEspecifico: string;
-
   /** Marca del producto */
   denominacionDistintiva: string;
-
   /** Fracción arancelaria del producto */
   fraccionArancelaria: string;
-
-/** Denominación del nombre del producto. */
- denominacionNombre: string;
-
-/** Estado físico del producto. */
-estadoFisico: string;
-
-/** Presentación farmacéutica del producto. */
-presentacionFarmaceutica: string;
-
-/** Tipo Operacion del producto. */
-tipoOperacion: string;
+  /** Denominación del nombre del producto. */
+  denominacionNombre: string;
+  /** Estado físico del producto. */
+  estadoFisico: string;
+  /** Presentación farmacéutica del producto. */
+  presentacionFarmaceutica: string;
+  /** Tipo Operacion del producto. */
+  tipoOperacion: string;
   /** Notificador de los datos */
-LosDatosNotifier: string;
-
-maniFestos: boolean;
+  LosDatosNotifier: string;
+  /** Indica si existen manifiestos */
+  maniFestos: boolean;
 }
 
 /**
- * Función para crear el estado inicial de la solicitud 260702.
+ * Función para crear el estado inicial de la solicitud 260915.
  * Retorna un objeto con valores predeterminados para todas las propiedades.
- */
-/**
- * Función para crear el estado inicial de la solicitud 260702.
- * Retorna un objeto con valores predeterminados para todas las propiedades.
+ *
+ * @returns {Solicitud260915State} Estado inicial del trámite 260915.
  */
 export function createInitialSolicitudState(): Solicitud260915State {
   return {
     /** Clave de referencia del trámite */
     clavedereferencia: '',
-
     /** Cadena de la dependencia asociada al trámite */
     cadenadeladependencia: '',
-
     /** Banco relacionado con el pago */
     banco: '',
-
     /** Llave de pago del trámite */
     llavedepago: '',
-
     /** Fecha en la que se realizó el pago */
     fechadepago: '',
-
     /** Importe del pago realizado */
     importedepago: '',
-
     /** Tipo de persona (física o moral) */
     tipoPersona: '',
-
     /** Nombre de la persona o entidad */
     nombre: '',
-
     /** Primer apellido de la persona */
     primerApellido: '',
-
     /** Segundo apellido de la persona */
     segundoApellido: '',
-
     /** Denominación o razón social */
     denominacion: '',
-
     /** País de residencia */
     pais: '',
-
     /** Domicilio de la persona o entidad */
     domicilio: '',
-
     /** Estado de residencia */
     estado: '',
-
     /** Código postal del domicilio */
     codigopostal: '',
-
     /** Calle del domicilio */
     calle: '',
-
     /** Número exterior del domicilio */
     numeroExterior: '',
-
     /** Número interior del domicilio */
     numeroInterior: '',
-
     /** Lada telefónica */
     lada: 0,
-
     /** Teléfono de contacto */
     telefono: '',
-
     /** Correo electrónico de contacto */
     correoElectronico: '',
-
     /** Justificación del trámite */
     justification: '',
-
     /** Municipio o alcaldía de residencia */
     municipoyalcaldia: '',
-
     /** Localidad de residencia */
     localidad: '',
-
     /** Colonia de residencia */
     colonia: '',
-
     /** Indica si se cuenta con aviso de funcionamiento */
     avisoDeFuncionamiento: false,
-
     /** Licencia sanitaria asociada */
     licenciaSanitaria: '',
-
     /** Régimen al que se destinarán las mercancías */
     regimenalque: '',
-
     /** Aduana relacionada con el trámite */
     aduana: '',
-
     /** Registro Federal de Contribuyentes (RFC) */
     rfc: '',
-
     /** Razón social legal */
     legalRazonSocial: '',
-
     /** Apellido paterno de la persona */
     apellidoPaterno: '',
-
     /** Apellido materno de la persona */
     apellidoMaterno: '',
-
     /** Datos de las mercancías */
     mercanciasDatos: [],
-
     /** Configuración de las columnas de la tabla */
     configuracionColumnasoli: [],
-
     /** Lista de claves asociadas */
     listaClave: [],
-
     /** Clave de los lotes */
     claveDeLosLotes: '',
-
     /** Fecha de fabricación de las mercancías */
     fechaDeFabricacion: '',
-
     /** Fecha de caducidad de las mercancías */
     fechaDeCaducidad: '',
-
     /** Descripción de la fracción arancelaria */
     descripcionFraccionArancelaria: '',
-
     /** Cantidad en la unidad de medida de tarifa (UMT) */
     cantidadUMT: '',
-
     /** Unidad de medida de tarifa (UMT) */
     umt: '',
-
     /** Cantidad en la unidad de medida de comercialización (UMC) */
     cantidadUMC: '',
-
     /** Unidad de medida de comercialización (UMC) */
     umc: '',
-
     /** Tipo de producto */
     tipoProducto: '',
-
     /** Clasificación de los productos */
     clasificaionProductos: '',
-
     /** Producto especificado */
     especificarProducto: '',
-
     /** Nombre específico del producto */
     nombreProductoEspecifico: '',
-
     /** Marca del producto */
     denominacionDistintiva: '',
-
     /** Fracción arancelaria del producto */
     fraccionArancelaria: '',
-
-   /** Denominación del nombre del producto. */
-   denominacionNombre: '',
-
-   /** Estado físico del producto. */
-   estadoFisico: '',
-
-  /** Presentación farmacéutica del producto. */
-   presentacionFarmaceutica: '',
-
-     /** Tipo Operacion del producto. */
-   tipoOperacion: '',
+    /** Denominación del nombre del producto. */
+    denominacionNombre: '',
+    /** Estado físico del producto. */
+    estadoFisico: '',
+    /** Presentación farmacéutica del producto. */
+    presentacionFarmaceutica: '',
+    /** Tipo Operacion del producto. */
+    tipoOperacion: '',
     /** Notificador de los datos */
     LosDatosNotifier: '',
-    
+    /** Indica si existen manifiestos */
     maniFestos: false,
-
   };
 }
+
 /**
- * Servicio que gestiona el estado de la solicitud 260702.
+ * Servicio que gestiona el estado de la solicitud 260915.
  * Utiliza Akita para manejar el estado de manera reactiva.
+ * Permite actualizar, consultar y resetear el estado del trámite.
  */
 @Injectable({
   providedIn: 'root',
 })
 @StoreConfig({ name: 'Solicitud260915State', resettable: true })
 export class Solicitud260915Store extends Store<Solicitud260915State> {
-  
   /**
    * Constructor del store.
    * Inicializa el store padre con el estado inicial creado
-   * por la función createInitialState().
+   * por la función createInitialSolicitudState().
    */
   constructor() {
     super(createInitialSolicitudState());
   }
 
   /**
-   * Método que actualiza parcialmente el estado del trámite 260912.
-   * 
+   * Método que actualiza parcialmente el estado del trámite 260915.
    * Permite actualizar uno o varios campos del estado sin afectar
    * los campos no especificados. Utiliza el patrón de spread operator
    * para mantener la inmutabilidad del estado.
-   * 
-   * @param {Partial<Tramites260915State>} valores - Objeto con los campos
+   *
+   * @param {Partial<Solicitud260915State>} valores - Objeto con los campos
    *        a actualizar. Puede contener cualquier combinación de propiedades
    *        del estado, no es necesario proporcionar todos los campos.
-   * 
+   *
    * @example
    * // Actualizar solo el nombre y correo
    * store.setTramite260915State({
    *   nombre: 'Juan',
-   *   correo: 'juan@email.com'
+   *   correoElectronico: 'juan@email.com'
    * });
-   * 
+   *
    * @example
    * // Actualizar información de pago
    * store.setTramite260915State({
-   *   fecPago: '2024-01-15',
-   *   impPago: '1500.00',
-   *   llaveDePago: 'LP123456'
+   *   fechadepago: '2024-01-15',
+   *   importedepago: '1500.00',
+   *   llavedepago: 'LP123456'
    * });
    */
   setTramite260915State(valores: Partial<Solicitud260915State>): void {
@@ -403,5 +294,4 @@ export class Solicitud260915Store extends Store<Solicitud260915State> {
       ...valores,
     })));
   }
-
 }

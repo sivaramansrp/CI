@@ -8,6 +8,7 @@ import { AnexarDocumentosComponent } from '@libs/shared/data-access-user/src';
 import { ToastrModule } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
 import { of } from 'rxjs';
+import { NO_ERRORS_SCHEMA, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -27,7 +28,8 @@ describe('PasoDosComponent', () => {
       provideHttpClient(),
       { provide: CatalogosService, useValue: catalogosServiceMock },
       ToastrService
-    ]
+    ],
+      schemas: [NO_ERRORS_SCHEMA]
   }).compileComponents();
 });
 
