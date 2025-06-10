@@ -171,15 +171,16 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
     }
 
   }
-
-  /**
-    * Maneja el cambio de valor en el campo de fecha.
-    * @param nuevo_valor Nuevo valor de la fecha.
-    */
-  public onFechaCambiada(nuevo_valor: string): void {
-    this.avisoForm.get('fechaPago')?.setValue(nuevo_valor);
-    this.avisoForm.get('fechaPago')?.markAsUntouched();
-    this.unicoStore.setfechaPago(nuevo_valor);
+/**
+   * Actualiza el campo de fecha de pago en el formulario y en el estado global.
+   *
+   * @param nuevo_fechaPago Nueva fecha de pago seleccionada.
+   */
+  cambioFechaPago(nuevo_fechaPago: string): void {
+    this.avisoForm.patchValue({
+      fechaPago: nuevo_fechaPago,
+    });
+    this.setValoresStore(this.avisoForm, 'fechaPago', 'setfechaPago');
   }
 
   /**

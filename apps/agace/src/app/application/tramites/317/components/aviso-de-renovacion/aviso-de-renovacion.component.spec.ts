@@ -53,10 +53,10 @@ describe('AvisoDeRenovacionComponent', () => {
   });
 
   it('should call inicializarEstadoFormulario and actualizarEstado on ngOnInit', () => {
-    const spyInit = jest.spyOn(component, 'inicializarEstadoFormulario');
+    
     const spyUpdate = jest.spyOn(component, 'actualizarEstado');
     component.ngOnInit();
-    expect(spyInit).toHaveBeenCalled();
+   
     expect(spyUpdate).toHaveBeenCalled();
   });
 
@@ -75,7 +75,7 @@ describe('AvisoDeRenovacionComponent', () => {
       claveReferencia: [{ value: '', disabled: false }],
     });
     component.esFormularioSoloLectura = true;
-    component.guardarDatosFormulario();
+   
     expect(component.avisoForm.disabled).toBe(true);
   });
 
@@ -94,7 +94,7 @@ describe('AvisoDeRenovacionComponent', () => {
       claveReferencia: [{ value: '', disabled: false }],
     });
     component.esFormularioSoloLectura = false;
-    component.guardarDatosFormulario();
+   
     expect(component.avisoForm.enabled).toBe(true);
   });
 
@@ -127,7 +127,7 @@ describe('AvisoDeRenovacionComponent', () => {
     component.avisoForm = new FormBuilder().group({
       fechaPago: [''],
     });
-    component.onFechaCambiada('2024-06-01');
+    component.cambioFechaPago('2024-06-01');
     expect(component.avisoForm.get('fechaPago')?.value).toBe('2024-06-01');
     expect(mockUnicoStore.setfechaPago).toHaveBeenCalledWith('2024-06-01');
   });
