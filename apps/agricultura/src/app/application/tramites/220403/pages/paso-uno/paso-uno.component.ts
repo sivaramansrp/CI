@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, SolicitanteComponent, TercerosComponent } from '@libs/shared/data-access-user/src';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -17,7 +17,7 @@ import { TransporteComponent } from '../../components/transporte/transporte.comp
   standalone: true,
   imports: [SolicitanteComponent, DatosDeLaSolicitudComponent, PagoDeDerechosComponent, TransporteComponent, TercerosComponent, ReactiveFormsModule, CommonModule],
 })
-export class PasoUnoComponent implements OnInit {
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
      * @property {number} indice - El índice de la pestaña seleccionada.
      */
@@ -91,6 +91,16 @@ export class PasoUnoComponent implements OnInit {
           this.exportaccionAcuicolaService.actualizarEstadoFormulario(resp);
         }
       });
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Cancela suscripciones activas mediante `destroyNotifier$`.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
 

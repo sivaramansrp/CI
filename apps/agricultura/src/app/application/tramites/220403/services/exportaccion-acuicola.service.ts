@@ -145,7 +145,7 @@ export class ExportaccionAcuicolaService {
    * @returns {Observable<TramiteState>} Observable con el estado del trámite.
    */
   public getAcuiculturaData(): Observable<FormularioGrupo> {
-    return this.httpClient.get<FormularioGrupo>('assets/json/220403/certificadosOrigenForm.json');
+    return this.httpClient.get<FormularioGrupo>('assets/json/220403/exportaccion-acuicola.json');
   }
 
   /**
