@@ -1,3 +1,5 @@
+import { PersonaTerceros } from "@libs/shared/data-access-user/src";
+
 /**
  * @interface ListsPasoWizard
  * @description
@@ -56,6 +58,7 @@ export interface FormularioGrupo {
   combinacionRequeridaValidada: boolean,
   transporteValidada: boolean,
   pagoDerechosValidada: boolean,
+  tercerosRelacionados: PersonaTerceros[];
 }
 
 /**
@@ -93,7 +96,7 @@ export interface Transporte {
   medioTransporte: string,
   identificacionMedioTransporte: string,
   numeroDeContenedor: string,
-  denodenominacionRazonSocial: string,
+  denominacionRazonSocial: string,
   numeroFlejes: string,
 }
 
