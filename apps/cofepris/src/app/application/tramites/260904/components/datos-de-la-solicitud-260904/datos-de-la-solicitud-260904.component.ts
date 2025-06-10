@@ -146,11 +146,11 @@ export class DatosDeLaSolicitud260904Component implements OnInit, OnDestroy {
       this.datosDelEstablecimiento.get('denominacion')?.disable();
       this.datosDelEstablecimiento.get('correo')?.disable();
     } else {
-      this.form.get('btonDeRadio')?.disable();
-      this.form.get('justificacion')?.disable();
-      this.datosDelEstablecimiento.get('rfcDel')?.disable();
-      this.datosDelEstablecimiento.get('denominacion')?.disable();
-      this.datosDelEstablecimiento.get('correo')?.disable();
+      this.form.get('btonDeRadio')?.enable();
+      this.form.get('justificacion')?.enable();
+      this.datosDelEstablecimiento.get('rfcDel')?.enable();
+      this.datosDelEstablecimiento.get('denominacion')?.enable();
+      this.datosDelEstablecimiento.get('correo')?.enable();
   }
 }
  

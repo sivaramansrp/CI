@@ -71,6 +71,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   esFormularioSoloLectura: boolean = false;
 
+  /**
+   * Indica si el campo de banco está deshabilitado.
+   * Cuando es `true`, el campo de selección de banco no se puede modificar.
+   */
   disableBanco: boolean = false;
 
   /**
@@ -164,7 +168,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       this.pagoDeDerechosForm.get('fecPago')?.disable();
       this.pagoDeDerechosForm.get('impPago')?.disable();
     } else {
-      this.disableBanco = true;
+      this.disableBanco = false;
       this.pagoDeDerechosForm.get('claveDeReferencia')?.enable();
       this.pagoDeDerechosForm.get('cadenaPagoDependencia')?.enable();
       this.pagoDeDerechosForm.get('clave')?.enable();
