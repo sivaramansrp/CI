@@ -111,7 +111,7 @@
           rows="5"
           class="form-control"
           (change)="setValoresStore(
-            ProgramaForm,
+            programaForm,
               'solicitudObservaciones',
               'setSolicitudObservaciones'
             )"
@@ -136,7 +136,7 @@
             [isDisabled]="soloLectura"
             [ngClass]="isValid('confirmar') ? 'required' : ''"
             (change)="setValoresStore(
-              ProgramaForm,
+              programaForm,
               'confirmar',
               'setConfirmar'
             )"></lib-input-check>
