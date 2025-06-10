@@ -36,7 +36,6 @@ export class CambioContrasenaComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private passwordService: PasswordService,
-    private router: Router,
   ) { }
 
   /**

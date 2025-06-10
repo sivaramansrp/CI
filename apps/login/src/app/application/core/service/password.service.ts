@@ -17,7 +17,6 @@ export class PasswordService {
      */
     constructor(private http: HttpClient) {
     }
-
     /**
      * Realiza el cambio de contraseña del usuario.
      * Simula la validación de la contraseña anterior y el "guardado" de la nueva contraseña.
