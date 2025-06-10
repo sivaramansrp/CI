@@ -57,6 +57,7 @@ export class PasoUnoComponent implements OnInit {
     // Si el estado indica actualización, carga los datos del formulario.
     if (this.consultaState.update) {
       this.guardarDatosFormulario();
+      this.guardarDatosFormularioPagoDerechos();
     } 
   }
  
@@ -72,5 +73,17 @@ export class PasoUnoComponent implements OnInit {
         }
       });
   }
+
+  guardarDatosFormularioPagoDerechos(): void {
+    this.modificacionPermisoLabService
+      .obtenerValoresFormularioPagoDerechos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        if (resp) {
+          this.modificacionPermisoLabService.actualizarValoresFormularioPagoDerechos(resp);
+        }
+      });
+  }
+
  
 }
