@@ -303,3 +303,10 @@ export const TEXTO_CANCELAR = 'Cancelar';
  */
 export const MSG_ERROR_RFC_NO_ENCONTRADO =
   'No se encontró el RFC, favor de verificar los datos ingresados.';
+
+/**
+ * @description Mensaje monto pagado cubierto
+ */
+
+export const MSG_MONTO_PAGADO_CUBIERTO =
+  'EL monto a pagar ya ha sido cubierto, no es necesario agregar otra línea de captura.';

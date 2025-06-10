@@ -13,6 +13,7 @@ import {
   MSG_ELIMINA_ELEMENTO,
   MSG_ERROR_NO_INFORMACION,
   MSG_ERROR_RFC_NO_ENCONTRADO,
+  MSG_MONTO_PAGADO_CUBIERTO,
   MSJ_ERROR_FECHA,
   MSJ_ERROR_LINEA_CAPTURA,
   MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
@@ -2114,16 +2115,32 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
           const MONTO_A_CUBRIR = DIAS_SERVICIO * MONTO_A_PAGAR;
 
-          //TODO: Aqui se hace la validación del monto a pagar y el monto a cubrir
-
           const PAGO = {
             lineaCaptura: LINEA_PAGO,
             monto: responseLineaCapturaPagada.datos.pago_model.importe,
           };
 
-          this.montoPagadoLineas +=
-            responseLineaCapturaPagada.datos.pago_model.importe;
-          this.datosTablaPagos.push(PAGO);
+          if (this.montoPagadoLineas < MONTO_A_CUBRIR) {
+            this.montoPagadoLineas +=
+              responseLineaCapturaPagada.datos.pago_model.importe;
+            this.datosTablaPagos.push(PAGO);
+          } else {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: TITULO_MODAL_ERROR,
+              mensaje: MSG_MONTO_PAGADO_CUBIERTO,
+              cerrar: false,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+            this.pagoCaptura.get('lineaCaptura')?.reset();
+            this.pagoCaptura.get('monto')?.reset();
+            return;
+          }
+
+          // Actualizar el estado una vez, en lugar de en cada iteración
           this.tramite5701Store.setLineasCaptura(this.datosTablaPagos);
 
           //Limpia los campos de la línea de captura y monto
