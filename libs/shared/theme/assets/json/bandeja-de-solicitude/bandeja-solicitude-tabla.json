@@ -1350,12 +1350,21 @@
     "numeroDeProcedimiento": "420102"
 },
 {
-    "id": 220404,
+  "id": 32514,
+  "tipoDeTramite": "Solicitud de Permiso",
+  "fecha": "2023-11-03",
+  "fechaActualizacion": "2023-03-20",
+  "diasTranscurridos": "4",
+  "departamento": "AGACE",
+  "numeroDeProcedimiento": "32514"
+},
+{
+   "id": 220404,
     "tipoDeTramite": "Solicitud de cs Permiso",
     "fecha": "2023-10-01",
     "fechaActualizacion": "2023-10-05",
     "diasTranscurridos": "4",
     "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "220404"
-  }
+}
 ]
