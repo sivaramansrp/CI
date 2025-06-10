@@ -31,11 +31,9 @@ export class SolicitudService {
 
   /**
    * Obtiene los datos de modificación desde un archivo JSON local.
-   * 
-   * @returns {Observable<RespuestaCatalogos[]>} Un observable que emite un arreglo de datos de modificación.
    */
-  getDatosModificacion(): Observable<RespuestaCatalogos[]> {
-    return this.http.get<RespuestaCatalogos[]>(`assets/json/80316/modificacion.json`);
+  getDatosModificacion() {
+    return this.http.get(`assets/json/80316/modificacion.json`);
   }
 
   /**

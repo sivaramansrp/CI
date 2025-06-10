@@ -41,13 +41,13 @@ export class DatosCertificacionComponent {
        * Campo `fechaInicio`:
        * Representa la fecha de inicio de la certificación. Por defecto, está vacío y deshabilitado.
        */
-      fechaInicio: [{ value: '', disabled: true }],
+      fechaInicio: [{ value: '10/01/2022', disabled: true }],
 
       /**
        * Campo `fechaVigencia`:
        * Representa la fecha de vigencia de la certificación. Por defecto, está vacío y deshabilitado.
        */
-      fechaVigencia: [{ value: '', disabled: true }]
+      fechaVigencia: [{ value: '04/03/2025', disabled: true }]
     });
   }
 }

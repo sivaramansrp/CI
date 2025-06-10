@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Solicitud80316State, Tramite80316Store } from '../../estados/tramite80316.store';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { DatosDelModificacion } from '../../models/datos-tramite.model';
+import { DatosDelModificacion, DatosModificacion } from '../../models/datos-tramite.model';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Tramite80316Query } from '../../estados/tramite80316.query';
 
@@ -120,10 +120,20 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * Actualiza el estado del trámite y los valores del formulario.
    */
   loadDatosModificacion(): void {
-    this.solicitudService.getDatosModificacion().pipe(
+    (this.solicitudService.getDatosModificacion() as import('rxjs').Observable<DatosModificacion>).pipe(
       takeUntil(this.destroyNotifier$)
-    ).subscribe((datos) => {
+    ).subscribe((datos: DatosModificacion) => {
       (this.tramite80316Store.setDatosModificacion as (valor: unknown) => void)(datos);
+      if (datos) {
+        this.modificacionForm.patchValue({
+          rfc: datos.rfc,
+          federal: datos.federal,
+          tipo: datos.tipo,
+          programa: datos.programa,
+          actividadActual: datos.actividadActual,
+          actividadProductiva: datos.actividadProductiva,
+        });
+      }
     });
   }
 
