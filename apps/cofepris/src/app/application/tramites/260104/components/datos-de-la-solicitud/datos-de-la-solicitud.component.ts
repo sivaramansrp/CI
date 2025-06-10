@@ -8,7 +8,7 @@ import {
   NICO_TABLA,
   NicoInfo,
 } from '@libs/shared/data-access-user/src/core/models/260104/domicilo.model';
-import { Solicitud260104State, Tramite260104Store } from '../../../../estados/tramites/tramite260104.store';
+import { Solicitud260104State, Tramite260104StoreDos } from '../../../../estados/tramites/tramite260104.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { PermisoSanitarioProductosService } from '../../services/permiso-sanitario-productos.service';
@@ -177,7 +177,7 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy{
   constructor(
     public fb: FormBuilder,
     public permisoSanitarioProductosService: PermisoSanitarioProductosService,
-    private tramite260104Store: Tramite260104Store,
+    private tramite260104Store: Tramite260104StoreDos,
     private tramite260104Query: Tramite260104Query
   ) {}
 
@@ -273,7 +273,7 @@ obtenerEstadoCatalogo(): void {
 habilitarEspecifique(
   form: FormGroup,
   campo: string,
-  metodoNombre: keyof Tramite260104Store
+  metodoNombre: keyof Tramite260104StoreDos
 ): void {
   this.isHabilitarEspecifique = true;
   const VALOR = form.get(campo)?.value;
@@ -289,7 +289,7 @@ habilitarEspecifique(
 habilitarEspecifiqueTipo(
   form: FormGroup,
   campo: string,
-  metodoNombre: keyof Tramite260104Store
+  metodoNombre: keyof Tramite260104StoreDos
 ): void {
   this.isHabilitarEspecifiqueTipo = true;
   const VALOR = form.get(campo)?.value;
@@ -424,7 +424,7 @@ public cambioFechaFabricacion(nuevo_valor: string): void {
 setValoresStore(
   form: FormGroup,
   campo: string,
-  metodoNombre: keyof Tramite260104Store
+  metodoNombre: keyof Tramite260104StoreDos
 ): void {
   const VALOR = form.get(campo)?.value;
   (this.tramite260104Store[metodoNombre] as (value: unknown) => void)(VALOR);

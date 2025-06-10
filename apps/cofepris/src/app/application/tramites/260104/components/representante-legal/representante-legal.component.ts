@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Solicitud260104State, Tramite260104Store } from '../../../../estados/tramites/tramite260104.store';
+import { Solicitud260104State, Tramite260104StoreDos } from '../../../../estados/tramites/tramite260104.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
@@ -49,7 +49,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
    */
   constructor(
     private readonly fb: FormBuilder,
-    private tramite260104Store: Tramite260104Store,
+    private tramite260104Store: Tramite260104StoreDos,
     private tramite260104Query: Tramite260104Query
   ) {}
 
@@ -103,7 +103,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   setValoresStore(
     form: FormGroup,
     campo: string,
-    metodoNombre: keyof Tramite260104Store
+    metodoNombre: keyof Tramite260104StoreDos
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite260104Store[metodoNombre] as (value: unknown) => void)(VALOR);

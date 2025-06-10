@@ -27,7 +27,7 @@
     "numeroDeProcedimiento": "110101"
   },
   {
-    "id": 16,
+    "id": 31601,
     "tipoDeTramite": "Antecesor",
     "fecha": "2023-10-01",
     "fechaActualizacion": "2023-10-05",
@@ -1177,5 +1177,14 @@
    "diasTranscurridos": "4",
    "departamento": "AGA",
    "numeroDeProcedimiento": "302"
+},
+{
+  "id": 260104,
+  "tipoDeTramite": "Antecesor",
+  "fecha": "2023-10-01",
+  "fechaActualizacion": "2023-10-05",
+  "diasTranscurridos": "4",
+  "departamento": "COFEPRIS",
+  "numeroDeProcedimiento": "260104"
 }
 ]

@@ -11,6 +11,7 @@ import { PermisoSanitarioProductosRoutingModule } from './permiso-sanitario-prod
 import { RepresentanteLegalComponent } from './components/representante-legal/representante-legal.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 import { TercerosRelacionadosDestinoComponent } from './components/terceros-relacionados-destino/terceros-relacionados-destino.component';
+import { Solocitud260104Service } from './services/service260104.service';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,6 @@ import { TercerosRelacionadosDestinoComponent } from './components/terceros-rela
     TituloComponent, 
     ToastrModule.forRoot(),
   ],
-  providers: [ToastrService],
+  providers: [ToastrService,Solocitud260104Service],
 })
 export class PermisoSanitarioProductosModule {}
