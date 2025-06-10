@@ -2,6 +2,7 @@ import { AgregarTransportistasComponent } from '../agregar-transportistas/agrega
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ElementRef } from '@angular/core';
 import { FECHA_DE_INICIO } from '../../constants/solicitud.enum';
 import { FECHA_DE_PAGO } from '../../constants/solicitud.enum';
@@ -99,6 +100,12 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    */
   transportistasLista: TransportistasTable[] = [];
 
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /** Referencia a la vista del modal de transportistas */
   @ViewChild('transportistas', { static: false })
   transportistaElement!: ElementRef;
@@ -114,8 +121,25 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     public solicitudService: SolicitudService,
     public solicitud32605Store: Solicitud32605Store,
-    public solicitud32605Query: Solicitud32605Query
+    public solicitud32605Query: Solicitud32605Query,
+    public consultaioQuery: ConsultaioQuery
   ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     this.conseguirOpcionDeRadio();
     this.conseguirTransportistasLista();
   }
@@ -124,6 +148,51 @@ export class ImportadorExportadorComponent implements OnInit, OnDestroy {
    * Método llamado al inicializar el componente, configura el formulario con los valores del estado de solicitud
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.importadorExportadorForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.importadorExportadorForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  /**
+   * Inicializa el formulario `importadorExportadorForm` con los valores del estado actual `solicitud32605State`.
+   *
+   * Este formulario recopila información relacionada con operaciones de importación y exportación,
+   * como identificadores de campos (`2042`, `2043`, `2044`), fechas clave, montos y detalles bancarios.
+   *
+   * Detalles del formulario:
+   * - Algunos campos como `fechaInicioComercio` se inician deshabilitados y con validaciones (`Validators.required`).
+   * - Otros campos tienen validaciones específicas como `Validators.maxLength`.
+   *
+   * El método también se suscribe al observable `selectSolicitud$` para actualizar el formulario cuando
+   * cambie el estado global de la solicitud.
+   *
+   * La suscripción se gestiona con `takeUntil` para evitar fugas de memoria.
+   */
+  inicializarFormulario(): void {
     this.importadorExportadorForm = this.fb.group({
       '2042': [this.solicitud32605State[2042]],
       '2043': [this.solicitud32605State[2043]],
