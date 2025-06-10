@@ -1,11 +1,16 @@
 import { ActivatedRoute } from '@angular/router';
 import { Component } from '@angular/core';
+import { ConsultaDatosService } from '../../servicios/consulta-datos.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { EventEmitter } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit} from '@angular/core';
 import { Output } from '@angular/core';
+import { PersonaTerceros } from '@ng-mf/data-access-user';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
+import { map } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 /**
@@ -22,6 +27,27 @@ import { takeUntil } from 'rxjs/operators';
   styleUrl: './paso-uno.component.scss'
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
+  /**
+   * Indica si existen datos de respuesta para mostrar en el formulario.
+   * @type {boolean}
+   */
+  public esDatosRespuesta: boolean = false;
+
+    /**
+   * Esta variable se utiliza para almacenar el índice del subtítulo.
+   */
+  public consultaState!: ConsultaioState;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+    /**
+   * Lista de personas relacionadas con el trámite.
+   * @type {PersonaTerceros[]}
+   */
+  public personas: PersonaTerceros[] = [];
   /**
   * Subject utilizado para gestionar la desuscripción de observables.
   * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
@@ -44,19 +70,55 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * @param tramite260214Store Store to update procedure state.
    */
   constructor(
-    private route: ActivatedRoute, private seccionStore: SeccionLibStore,
+    private route: ActivatedRoute, private seccionStore: SeccionLibStore, private consultaDatosService: ConsultaDatosService, private consultaQuery: ConsultaioQuery
   ) {
 // Se puede agregar aquí la lógica del constructor si es necesario
   }
-
+  /**
+   * Método de ciclo de vida que se ejecuta al inicializar el componente.
+   * Se suscribe a los cambios en el estado de la consulta y a los parámetros de la ruta.
+   * @method ngOnInit
+   */
   ngOnInit(): void {
+        this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+          this.esFormularioSoloLectura = seccionState.readonly;
+          if (this.consultaState.update) {
+            this.guardarDatosFormulario();
+          } else {
+            this.esDatosRespuesta = true;
+          }
+        })
+      )
+      .subscribe();
     this.route.queryParams
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((tab) => {
         this.indice = Number(tab['indice'] || 1);
       });
   }
-
+    /**
+     * Guarda los datos del formulario obtenidos del servicio.
+     * Este método se suscribe al servicio para obtener los datos de la solicitud
+     * y actualiza el estado del formulario con la información recibida.
+     * @method guardarDatosFormulario
+     */
+    guardarDatosFormulario(): void {
+      this.consultaDatosService
+        .getDatosDeLaSolicitudData()
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((resp) => {
+          if (resp) {
+            this.esDatosRespuesta = true;
+            this.personas =
+              (resp as { personas?: PersonaTerceros[] }).personas || [];
+            this.consultaDatosService.actualizarEstadoFormulario(resp);
+          }
+        });
+    }
   /**
    * Evento emitido al cambiar de pestaña.
    * @event tabChanged

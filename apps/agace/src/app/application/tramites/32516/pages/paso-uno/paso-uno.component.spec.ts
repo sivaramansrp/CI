@@ -16,31 +16,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute } from '@angular/router';
 import { Observable, of as observableOf, throwError } from 'rxjs';
+import { HttpClientModule } from '@angular/common/http';
 
 import { SeccionLibStore } from '@libs/shared/data-access-user/src';
 
 import { PasoUnoComponent } from './paso-uno.component';
 
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
 
 describe('PasoUnoComponent', () => {
   let fixture;
@@ -48,11 +29,9 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [ FormsModule, ReactiveFormsModule, HttpClientModule],
       declarations: [
-        PasoUnoComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
+        PasoUnoComponent
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
@@ -67,7 +46,11 @@ describe('PasoUnoComponent', () => {
             data: observableOf({})
           }
         },
-        SeccionLibStore
+        SeccionLibStore,
+        {
+          provide: '_HttpClient',
+          useValue: {} // Mock implementation of _HttpClient
+        }
       ]
     }).overrideComponent(PasoUnoComponent, {
 
@@ -77,8 +60,12 @@ describe('PasoUnoComponent', () => {
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
+    if (component) {
+      component.ngOnDestroy = () => {}; 
+    }
+    if (fixture) {
+      fixture.destroy();
+    }
   });
 
   it('should run #constructor()', async () => {
