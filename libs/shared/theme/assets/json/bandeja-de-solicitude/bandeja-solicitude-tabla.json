@@ -1503,10 +1503,19 @@
     "numeroDeProcedimiento": "110223"
   },
   {
+    "id": 110221,
+    "tipoDeTramite": "Solicitudddd certificado CAM",
+    "fecha": "2022-10-05",
+    "fechaActualizacion": "2022-10-25",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "110221"
+  },
+  {
     "id": 110214,
-    "tipoDeTramite": "Solicitud de Permiso",
-    "fecha": "2023-10-01",
-    "fechaActualizacion": "2023-10-05",
+    "tipoDeTramite": "Solicitudddd certificado CAM",
+    "fecha": "2022-10-05",
+    "fechaActualizacion": "2022-10-25",
     "diasTranscurridos": "4",
     "departamento": "SE",
     "numeroDeProcedimiento": "110214"
