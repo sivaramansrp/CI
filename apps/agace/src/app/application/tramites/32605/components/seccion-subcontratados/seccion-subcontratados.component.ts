@@ -102,6 +102,7 @@ export class SeccionSubcontratadosComponent implements OnInit, OnDestroy {
     this.conseguirSolicitudCatologoSelectLista();
   }
 
+  /** Inicializa el formulario para gestionar datos del miembro de la empresa */
   ngOnInit(): void {
     this.inicializarEstadoFormulario();
   }
