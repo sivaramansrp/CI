@@ -20,12 +20,14 @@
             <div class="col-md-6">
                 <app-catalogo-select [catalogo]="(estados$ | async) || []" [label]="'Tratado / Acuerdo'"
                     [required]="true" name="estado" formControlName="entidadFederativa"
+                    [isDisabled]="esFormularioSoloLectura"
                     (selectionChange)="tipoEstadoSeleccion($event)"></app-catalogo-select>
             </div>
 
             <div class="col-md-6">
                 <app-catalogo-select [catalogo]="(pais$ | async) || []" [label]="'País / Bloque'" [required]="true"
                     name="estado" formControlName="bloque"
+                    [isDisabled]="esFormularioSoloLectura"
                     (selectionChange)="tipoSeleccion($event)"></app-catalogo-select>
             </div>
         </div>
