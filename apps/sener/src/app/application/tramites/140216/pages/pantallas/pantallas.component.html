@@ -4,11 +4,14 @@
             <h3>Suspensión de permiso de importación o exportación de petrolíferos o hidrocarburos por facultad</h3>
         </div>
         <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
+        @if(!esValido) {
+        <ng-alert [CONTENIDO]="ALERTA" [CUSTOMECLASS]="infoError"></ng-alert>
+        }
     </div>
     <div class="row">
         @switch (indice) {
         @case (1) {
-        <app-datos></app-datos>
+        <app-datos #datos></app-datos>
         } @case (2) {
         <app-paso-dos></app-paso-dos>
         } @case (3) {

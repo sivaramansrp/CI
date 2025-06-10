@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
@@ -8,6 +9,7 @@ import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Tramite240101Query } from '../../estados/tramite240101Query.query';
 import { Tramite240101Store } from '../../estados/tramite240101Store.store';
+import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -21,7 +23,7 @@ import { takeUntil } from 'rxjs';
   standalone: true,
   imports: [CommonModule, DatosDelTramiteComponent],
   templateUrl: './datos-del-tramite-contenedora.component.html',
-  styleUrl: './datos-del-tramite-contenedora.component.css',
+  styleUrl: './datos-del-tramite-contenedora.component.scss',
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   /**
@@ -42,6 +44,16 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   public datosDelTramiteFormState!: DatosDelTramiteFormState;
 
+
+  /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   *
+   * @type {boolean}
+   * @memberof DatosDelTramiteContenedoraComponent
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    *
@@ -52,7 +64,9 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite240101Query,
-    private tramiteStore: Tramite240101Store // eslint-disable-next-line no-empty-function
+    private tramiteStore: Tramite240101Store,
+    private consultaQuery: ConsultaioQuery,
+ // eslint-disable-next-line no-empty-function
   ) {}
 
   /**
@@ -74,6 +88,15 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.datosDelTramiteFormState = data;
       });
+
+    this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.unsubscribe$),
+      map((seccionState) => {
+        this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe();
   }
 
   /**

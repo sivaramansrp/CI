@@ -16,9 +16,8 @@ import { ToastrModule } from 'ngx-toastr';
 @NgModule({
   declarations: [
     PasoDosComponent,
-    PasoUnoComponent,
     SolicitudPageComponent,
-    OperacionesDeComercioExteriorComponent
+    
   ],
   imports: [
     CommonModule,
@@ -39,7 +38,8 @@ import { ToastrModule } from 'ngx-toastr';
     CatalogoSelectComponent,
     ToastrModule.forRoot(),
     TablaDinamicaComponent,
-    NotificacionesComponent
+    OperacionesDeComercioExteriorComponent,
+     PasoUnoComponent,
     
     
   ]

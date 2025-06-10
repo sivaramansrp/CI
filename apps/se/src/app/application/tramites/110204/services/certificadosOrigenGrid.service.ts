@@ -1,4 +1,5 @@
 import { Observable, map } from 'rxjs';
+import { Tramite110204Store, TramiteState } from '../estados/tramite110204.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -9,7 +10,7 @@ import { Mercancia } from '../models/plantas-consulta.model';
 })
 export class CertificadosOrigenGridService {
   // eslint-disable-next-line no-empty-function
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private store: Tramite110204Store) { }
 
   /**
    * Obtiene la lista de estados desde un archivo JSON local.
@@ -97,6 +98,31 @@ export class CertificadosOrigenGridService {
     return this.http
       .get<{ data: Catalogo[] }>('assets/json/110204/umc.json') // Solicita los datos del archivo JSON
       .pipe(map((res) => res.data)); // Mapea los datos para extraer la propiedad 'data'
+  }
+
+  /**
+   * @description Obtiene los datos del formulario de certificados de origen desde un archivo JSON local.
+   * @returns {Observable<TramiteState>} Observable con el estado del trámite.
+   */
+  public getAcuiculturaData(): Observable<TramiteState> {
+    return this.http.get<TramiteState>('assets/json/110204/certificadosOrigenForm.json');
+  }
+
+  /**
+   * @description Actualiza el estado completo del formulario en el store de acuicultura.
+   * @param DATOS Objeto de tipo Acuicultura con los datos a actualizar.
+   */
+  public actualizarEstadoFormulario(DATOS: TramiteState): void {
+    this.store.setEstado(DATOS.estado)
+    this.store.setFactura(DATOS.factura)
+    this.store.setUmc(DATOS.umcs)
+    this.store.setBloque(DATOS.paisBloques)
+    this.store.setaltaPlanta(DATOS.altaPlanta)
+    this.store.setFormDatosCertificado(DATOS.formDatosCertificado);
+    this.store.setFormCertificado(DATOS.formCertificado);
+    this.store.setFormMercancia(DATOS.mercanciaForm);
+    this.store.setbuscarMercancia(DATOS.buscarMercancia);
+
   }
 
 }
