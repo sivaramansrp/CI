@@ -291,16 +291,25 @@ export class MedioTransporteComponent implements OnInit, OnDestroy, OnChanges {
     this.solicitud220503Store.setTotalDeGuiasAmparadas(VALUE);
   }
 
-  /**
-   * Gancho de ciclo de vida que limpia el componente.
-   * Elimina el control de formulario dinámico del formulario principal.
-   */
-  ngOnDestroy(): void {
-    if (
-      this.claveDeControl &&
-      this.grupoFormularioPadre.contains(this.claveDeControl)
-    ) {
-      this.grupoFormularioPadre.removeControl(this.claveDeControl);
-    }
+ /**
+ * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+ * 
+ * Si existe una clave de control y el grupo de formulario padre contiene ese control,
+ * se elimina del formulario para evitar referencias innecesarias.
+ * 
+ * Además, se emite y completa el observable `destroyed$` para cancelar suscripciones activas
+ * y liberar recursos.
+ */
+ngOnDestroy(): void {
+  if (
+    this.claveDeControl &&
+    this.grupoFormularioPadre.contains(this.claveDeControl)
+  ) {
+    this.grupoFormularioPadre.removeControl(this.claveDeControl);
   }
+
+  this.destroyed$.next();
+  this.destroyed$.complete();
+}
+
 }
