@@ -1431,10 +1431,19 @@
    "numeroDeProcedimiento": "110201"
 },
 {
+    "id": 32605,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2024-10-01",
+    "fechaActualizacion": "2024-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32605"
+  },
+  {
     "id": 110207,
-    "tipoDeTramite": "Solicitud de Permiso",
-    "fecha": "2023-11-03",
-    "fechaActualizacion": "2023-03-20",
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2024-10-01",
+    "fechaActualizacion": "2024-10-05",
     "diasTranscurridos": "4",
     "departamento": "SE",
     "numeroDeProcedimiento": "110207"
