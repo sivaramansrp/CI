@@ -14,8 +14,8 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
-
+import { map, Subject, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { Destinatario } from '../../models/terceros-relacionados-destino.model';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -72,7 +72,11 @@ export class AgregarDestinatarioFinalComponent
    */
   public agregarDestinatarioFinal!: FormGroup;
 
-  
+    /**
+   * Determina si el formulario debe estar en modo solo lectura.
+   */
+    public esFormularioSoloLectura: boolean = false;
+
   /**
    * Arreglo que contiene los datos del catálogo de países.
    * Cada elemento del arreglo es de tipo `Catalogo`.
@@ -155,9 +159,18 @@ export class AgregarDestinatarioFinalComponent
     private fb: FormBuilder,
     private ubicaccion: Location,
     private datosSolicitudService: DatosSolicitudService,
-    private tramiteStore: Tramite260104Store
+    private tramiteStore: Tramite260104Store,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    //constructor necesario para el servicio
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.crearAgregarFormularioAgregarDestinatarioFinal();
+        })
+      )
+      .subscribe();
   }
 
  
@@ -235,7 +248,6 @@ export class AgregarDestinatarioFinalComponent
    */
   ngOnInit(): void {
     this.cargarDatos();
-    this.crearAgregarFormularioAgregarDestinatarioFinal();
   }
 
  
@@ -387,6 +399,15 @@ export class AgregarDestinatarioFinalComponent
       descCodigoPostal: [''],
       descColonia: ['']
     });
+    if (this.esFormularioSoloLectura) {
+      Object.keys(this.agregarDestinatarioFinal.controls).forEach((key) => {
+        this.agregarDestinatarioFinal.get(key)?.disable();
+      });
+    } else {
+      Object.keys(this.agregarDestinatarioFinal.controls).forEach((key) => {
+        this.agregarDestinatarioFinal.get(key)?.enable();
+      });
+    }
   }
 
 

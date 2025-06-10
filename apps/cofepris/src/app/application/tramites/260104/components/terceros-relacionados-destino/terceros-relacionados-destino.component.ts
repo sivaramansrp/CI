@@ -3,12 +3,13 @@ import { Component, OnDestroy,OnInit} from '@angular/core';
 
 import { ActivatedRoute,Router} from '@angular/router';
 
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 import { AlertComponent,ConfiguracionColumna,TablaDinamicaComponent,TablaSeleccion,TituloComponent } from '@ng-mf/data-access-user';
 
 import { DESTINATARIO_ENCABEZADO_DE_TABLA,Destinatario,FABRICANTE_ENCABEZADO_DE_TABLA,Fabricante,MENSAJE_TABLA_OBLIGATORIA } from '../../models/terceros-relacionados-destino.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosDestinoService } from '../../services/tereceros-relacionados-destino.service';
 import { Tramite260104Query } from '../../estados/queries/tramite260104.query';
 import { Tramite260104Store } from '../../estados/stores/tramite260104.store';
@@ -59,6 +60,11 @@ export class TercerosRelacionadosDestinoComponent implements OnInit,OnDestroy{
    * cuando la tabla requiere datos obligatorios.
    */
   public MENSAJE_TABLA_OBLIGATORIA = MENSAJE_TABLA_OBLIGATORIA;
+
+    /**
+   * Determina si el formulario debe estar en modo solo lectura.
+   */
+    public esFormularioSoloLectura: boolean = false;
 
  
   /**
@@ -183,8 +189,18 @@ export class TercerosRelacionadosDestinoComponent implements OnInit,OnDestroy{
   constructor(
     private tercerosDataService: TercerosRelacionadosDestinoService,
     private router: Router,
-    public activatedRoute: ActivatedRoute,private tramiteQuery:Tramite260104Query, private tramiteStore:Tramite260104Store)
-     {}
+    public activatedRoute: ActivatedRoute,private tramiteQuery:Tramite260104Query, private tramiteStore:Tramite260104Store,
+    private consultaioQuery: ConsultaioQuery,)
+     {
+      this.consultaioQuery.selectConsultaioState$
+            .pipe(
+              takeUntil(this.destroy$),
+              map((seccionState) => {
+                this.esFormularioSoloLectura = seccionState.readonly;
+              })
+            )
+            .subscribe();
+     }
 
   
     /**
@@ -215,21 +231,19 @@ export class TercerosRelacionadosDestinoComponent implements OnInit,OnDestroy{
    */
   ngOnInit(): void {
     this.validarElementos();
-        this.tramiteQuery.getFabricanteTablaDatos$
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((data) => {
-            this.fabricanteTablaDatos = data;
-          });
+    this.tramiteQuery.getFabricanteTablaDatos$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.fabricanteTablaDatos = data;
+      });
+
+    this.tramiteQuery.getDestinatarioFinalTablaDatos$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((data) => {
+        this.destinatarioFinalTablaDatos = data as Destinatario[];
+      });
     
-        this.tramiteQuery.getDestinatarioFinalTablaDatos$
-          .pipe(takeUntil(this.destroy$))
-          .subscribe((data) => {
-            this.destinatarioFinalTablaDatos = data as Destinatario[];
-          });
-    
-      
-    
-        }
+  }
 
   
      /**

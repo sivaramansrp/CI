@@ -7,7 +7,7 @@
     <div class="row">
         <div class="col-md-12 mt-4 d-flex justify-content-end align-items-end">
             <div class="btn-group">
-              <button class="btn btn-primary ms-2" type="button" (click)="habilitarCampos()">
+              <button class="btn btn-primary ms-2" type="button" (click)="habilitarCampos()" [disabled]="esFormularioSoloLectura ? true : false">
                 Seleccionar establecimiento
               </button>
             </div>
@@ -196,10 +196,10 @@
     </div>
     <div class="row">
         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
-        [datos]="nicoTablaDatos"></app-tabla-dinamica>
+        [datos]="nicoTablaDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false" [desactivarEmitirEvento]="esFormularioSoloLectura ? true : false"></app-tabla-dinamica>
         <div class="container text-end mt-5">
-            <button class="btn btn-default me-2">Eliminar</button>
-            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent">Agregar</button>
+            <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
+            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent" [disabled]="esFormularioSoloLectura ? true : false">Agregar</button>
         </div>
     </div>
     <div class="row align-item-center">
@@ -256,11 +256,11 @@
     </div>
     <div class="row mt-5">
         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla"
-        [datos]="mercanciasTablaDatos"></app-tabla-dinamica>
+        [datos]="mercanciasTablaDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false" [desactivarEmitirEvento]="esFormularioSoloLectura ? true : false"></app-tabla-dinamica>
         <div class="container text-end mt-5">
-            <button class="btn btn-default me-2">Modificar</button>
-            <button class="btn btn-default me-2">Eliminar</button>
-            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias">Agregar</button>
+            <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
+            <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
+            <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias" [disabled]="esFormularioSoloLectura ? true : false">Agregar</button>
         </div>
     </div>
     <div class="row">
@@ -333,9 +333,9 @@
                 </form>
             </div>
             <div class="modal-footer custom-footer">
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Limpiar</button>
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Agregar</button>
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura ? true : false">Limpiar</button>
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura ? true : false">Cancelar</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura ? true : false">Agregar</button>
             </div>
         </div>
     </div>
@@ -540,6 +540,7 @@
                                     [fechas]="seleccionarOrigenDelPais"
                                     [label]="paisDeProcedenciaLabel"
                                     [botones]="paisDeProcedenciaBotons"
+                                    [isDisabled]="esFormularioSoloLectura ? true : false"
                                 ></crosslist>
                               </div>
                             </div>
@@ -566,6 +567,7 @@
                                     [fechas]="seleccionarOrigenDelPaisDos"
                                     [label]="paisDeProcedenciaLabel"
                                     [botones]="paisDeProcedenciaBotonsDos"
+                                    [isDisabled]="esFormularioSoloLectura ? true : false"
                                 ></crosslist>
                               </div>
                             </div>
@@ -588,10 +590,10 @@
                     </div>
                     <div class="row">
                         <div class="col-md-4">
-                            <input-fecha [datos]="fechaCaducidadInput" [setFecha]="formMercancias.get('fechaFabricacion')?.value" (valorCambiado)="cambioFechaFabricacion($event)" (change)="setValoresStore(formMercancias,'fechaFabricacion', 'setFechaFabricacion')"></input-fecha>
+                            <input-fecha [datos]="fechaCaducidadInput" [setFecha]="formMercancias.get('fechaFabricacion')?.value" (valorCambiado)="cambioFechaFabricacion($event)" (change)="setValoresStore(formMercancias,'fechaFabricacion', 'setFechaFabricacion')" [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
                         </div>
                         <div class="col-md-4">
-                            <input-fecha [datos]="fechaCaducidadInput" [setFecha]="formMercancias.get('fechaCaducidad')?.value" (valorCambiado)="cambioFechaFinal($event)" (change)="setValoresStore(formMercancias,'fechaCaducidad', 'setFechaCaducidad')"></input-fecha>
+                            <input-fecha [datos]="fechaCaducidadInput" [setFecha]="formMercancias.get('fechaCaducidad')?.value" (valorCambiado)="cambioFechaFinal($event)" (change)="setValoresStore(formMercancias,'fechaCaducidad', 'setFechaCaducidad')" [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
                         </div>
                     </div>
                     <div class="row mt-5">
@@ -603,11 +605,11 @@
                         <div class="col-md-12 d-flex justify-content-center">
 
                             <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla"
-                            [datos]="nicoTablaDatos"></app-tabla-dinamica>
+                            [datos]="nicoTablaDatos" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false" [desactivarEmitirEvento]="esFormularioSoloLectura ? true : false"></app-tabla-dinamica>
                         </div>
                         <div class="container text-end mt-5">
-                            <button class="btn btn-default me-2">Eliminar</button>
-                            <button class="btn btn-primary me-2">Agregar</button>
+                            <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
+                            <button class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura ? true : false">Agregar</button>
                         </div>
                     </div>
 
@@ -629,6 +631,7 @@
                                     [fechas]="seleccionarOrigenDelPaisTres"
                                     [label]="paisDeProcedenciaLabel"
                                     [botones]="paisDeProcedenciaBotonsTres"
+                                    [isDisabled]="esFormularioSoloLectura ? true : false"
                                 ></crosslist>
                               </div>
                             </div>
@@ -640,9 +643,9 @@
                 </form>
             </div>
             <div class="modal-footer custom-footer">
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Limpiar</button>
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Agregar</button>
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura ? true : false">Limpiar</button>
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura ? true : false">Cancelar</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura ? true : false">Agregar</button>
             </div>
         </div>
     </div>

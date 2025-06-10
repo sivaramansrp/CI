@@ -203,7 +203,6 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy{
    * Configura los formularios y suscriptores necesarios.
    */
   ngOnInit(): void {
-    this.crearFormulario();
     this.obtenerEstadoCatalogo();
     this.obtenerTablaDatos();
     this.obtenerEstadoList();

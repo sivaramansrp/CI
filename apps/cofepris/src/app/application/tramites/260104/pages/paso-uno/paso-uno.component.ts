@@ -54,6 +54,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
             this.consultaState = seccionState;
             if (this.consultaState.update) {
               this.guardarDatosFormularioDos();
+              this.guardarDatosFormulario();
             } else {
               this.esDatosRespuesta = true;
             }
@@ -84,6 +85,22 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         if (resp) {
           this.esDatosRespuesta = true;
           this.solocitud260104Service.actualizarEstadoFormularioDos(resp);
+        }
+      });
+  }
+
+  /**
+   * Carga los datos del formulario desde un archivo JSON externo y los actualiza en el store.
+   * También establece la bandera de datos cargados en verdadero.
+   */
+  guardarDatosFormulario(): void {
+    this.solocitud260104Service
+      .getRegistroTomaMuestrasMercanciasData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.solocitud260104Service.actualizarEstadoFormulario(resp);
         }
       });
   }
