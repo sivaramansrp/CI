@@ -557,6 +557,12 @@ export interface SeccionSubcontratados {
   subcontrataBimestre?: string;
 }
 
+/**
+ * Interfaz que representa los datos necesarios para guardar un formulario completo de solicitud.
+ * Incluye datos del solicitante, terceros, subcontrataciones, instalaciones, transportistas y más.
+ *
+ * @interface GuardarDatosFormulario
+ */
 export interface GuardarDatosFormulario {
   /**
    * Identificador único de la persona que realiza la solicitud.
