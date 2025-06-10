@@ -17,7 +17,7 @@
         "medioTransporte": "1",
         "identificacionMedioTransporte": "illenar",
         "numeroDeContenedor": "illenar",
-        "denodenominacionRazonSocial": "illenar",
+        "denominacionRazonSocial": "illenar",
         "numeroFlejes": "illenar"
     },
     "pagoDerechos": {

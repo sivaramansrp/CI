@@ -7,6 +7,7 @@ import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solici
 import { ExportaccionAcuicolaService } from '../../services/exportaccion-acuicola.service';
 import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { TercerospageComponent } from '../../components/tercerospage/tercerospage.component';
 import { TransporteComponent } from '../../components/transporte/transporte.component';
 
 
@@ -16,7 +17,7 @@ import { TransporteComponent } from '../../components/transporte/transporte.comp
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.css',
   standalone: true,
-  imports: [SolicitanteComponent, DatosDeLaSolicitudComponent, PagoDeDerechosComponent, TransporteComponent, TercerosComponent, ReactiveFormsModule, CommonModule],
+  imports: [SolicitanteComponent, DatosDeLaSolicitudComponent, PagoDeDerechosComponent, TransporteComponent, TercerospageComponent, ReactiveFormsModule, CommonModule],
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   /**

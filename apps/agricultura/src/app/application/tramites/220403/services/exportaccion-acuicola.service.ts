@@ -8,7 +8,7 @@
  * @author Equipo VUCEM
  * @since 2025
  */
-import { Catalogo, LabelValueDatos, RespuestaCatalogos, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
+import { Catalogo, LabelValueDatos, PersonaTerceros, RespuestaCatalogos, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
 import { Observable, Subject, map, of, takeUntil } from 'rxjs';
 import { FormularioGrupo } from '../models/acuicola.module';
 import { HttpClient } from '@angular/common/http';
@@ -157,5 +157,15 @@ export class ExportaccionAcuicolaService {
     this.store.setCombinacionRequerida(DATOS.combinacionRequerida);
     this.store.setTransporte(DATOS.transporte);
     this.store.setPagoDerechos(DATOS.pagoDerechos);
+  }
+
+  /**
+   * Actualiza la lista de terceros relacionados con la solicitud.
+   *
+   * @param {PersonaTerceros[]} tercerosRelacionados Lista de terceros.
+   * @memberof CertificadoZoosanitarioServiceService
+   */
+  updateTercerosRelacionados(tercerosRelacionados: PersonaTerceros[]): void {
+    this.store.actualizarTercerosRelacionados(tercerosRelacionados);
   }
 }
