@@ -1,7 +1,7 @@
 <ng-titulo titulo="Carga de mercancías por archivo" />
 <div class="row w-100">
     <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-        <button class="btn btn-primary">Carga por archivo</button>
+        <button class="btn btn-primary" [disabled]="esFormularioSoloLectura ? true : false">Carga por archivo</button>
     </div>
 </div>
 <div class="row mt-5">
@@ -15,9 +15,9 @@
 </ul>
 <div class="row w-100">
     <div class="col-12 d-flex justify-content-end mt-3 mb-4">
-        <button class="btn btn-default me-2">Eliminar</button>
+        <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
         <button class="btn btn-primary" data-bs-toggle="modal"
-        data-bs-target="#modalAgregarMercancias" (click)="abrirDialogoMercancias()">Modificar</button>
+        data-bs-target="#modalAgregarMercancias" (click)="abrirDialogoMercancias()" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
     </div>
 </div>
 
@@ -84,7 +84,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <app-catalogo-select [catalogo]="estado" [label]="'UMC'"
-                                [required]="true" name="umc" formControlName="umc" (change)="setValoresStore(formMercancia,'umc', 'setUmc')"
+                                [required]="true" name="umc" formControlName="umc" [isDisabled]="esFormularioSoloLectura ? true : false" (change)="setValoresStore(formMercancia,'umc', 'setUmc')"
                                 ></app-catalogo-select>
                             </div>
                         </div>
@@ -113,7 +113,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <app-catalogo-select [catalogo]="estado" [label]="'Tipo de factura'"
-                                [required]="true" name="tipoDeFactura" formControlName="tipoDeFactura" (change)="setValoresStore(formMercancia,'tipoDeFactura', 'setTipoDeFactura')"
+                                [required]="true" name="tipoDeFactura" formControlName="tipoDeFactura" (change)="setValoresStore(formMercancia,'tipoDeFactura', 'setTipoDeFactura')" [isDisabled]="esFormularioSoloLectura ? true : false"
                                 ></app-catalogo-select>
                             </div>
                         </div>
@@ -122,7 +122,7 @@
                         <div class="col-md-4">
                             <div class="form-group">
                                 <input-fecha [datos]="fechaFacturaInput" [setFecha]="formMercancia.get('fechaFactura')?.value"
-                                (valorCambiado)="cambioFechaFactura($event,formMercancia,'fechaFactura', 'setFechaFactura')"></input-fecha>
+                                (valorCambiado)="cambioFechaFactura($event,formMercancia,'fechaFactura', 'setFechaFactura')" [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
                             </div>
                         </div>
                     </div>
@@ -130,8 +130,8 @@
                 
             </div>
             <div class="modal-footer custom-footer">
-                <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>Cerrar</button>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal>Agregar</button>
+                <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal [disabled]="esFormularioSoloLectura ? true : false">Cerrar</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" #closeModal [disabled]="esFormularioSoloLectura ? true : false">Agregar</button>
             </div>
         </div>
     </div>
