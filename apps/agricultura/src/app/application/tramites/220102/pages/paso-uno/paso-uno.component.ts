@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosMercanciaComponent } from '../../components/datos-mercancia/datos-mercancia.component';
 import { DatosMercanciaService } from '../../services/datos-mercancia/datos-mercancia.service';
-import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente que representa la primera sección de un formulario paso a paso.
@@ -24,6 +24,10 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    * @description Subject para notificar la destrucción del componente y desuscribir observables.
    */
   private destroyNotifier$ = new Subject<void>();
+
+  
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
 
   /**
    * Índice de la pestaña seleccionada.
@@ -55,7 +59,9 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
  * 
  * @param datosMercanciaService Servicio encargado de obtener los datos de mercancía desde una fuente externa.
  */
-constructor(private readonly datosMercanciaService: DatosMercanciaService) {
+constructor(private readonly datosMercanciaService: DatosMercanciaService,
+     private readonly consultaQuery: ConsultaioQuery
+) {
 }
 
 /**
@@ -64,15 +70,40 @@ constructor(private readonly datosMercanciaService: DatosMercanciaService) {
  * Llama al servicio para obtener los datos de mercancía y los muestra por consola.
  */
 ngOnInit(): void {
-  this.datosMercanciaService.obtenerDatosMercancia()
+   this.consultaQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((seccionState) => {
+if(seccionState.update){
+        this.guardarDatosFormulario();
+}
+else {
+      this.esDatosRespuesta = true;
+    }
+     
+    });
+  
+}
+
+/**
+ * @description
+ * Guarda los datos del formulario de mercancia obteniéndolos del servicio correspondiente.
+ * 
+ * Este método suscribe al observable que retorna los datos de mercancia, y si la respuesta es válida,
+ * actualiza el formulario de movilización con los datos obtenidos. Además, controla la suscripción
+ * utilizando el observable `destroyNotifier$` para evitar fugas de memoria.
+ * 
+ * @returns {void}
+ */
+guardarDatosFormulario():void{
+this.datosMercanciaService.obtenerDatosMercancia()
     .pipe(takeUntil(this.destroyNotifier$))
     .subscribe(data => {
       if(data){
+      this.esDatosRespuesta = true;
       this.datosMercanciaService.actualizarFormularioMovilizacion(data?.datos)
       }
     });
 }
-
 
   /**
    * Método que cambia el índice de la pestaña seleccionada en función del valor recibido.
