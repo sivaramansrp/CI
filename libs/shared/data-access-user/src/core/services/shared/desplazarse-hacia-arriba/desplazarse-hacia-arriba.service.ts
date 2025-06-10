@@ -17,14 +17,7 @@ export class DesplazarseHaciaArribaService {
    * Define el comportamiento del desplazamiento (por defecto: 'smooth').
    */
   private comportamientoDesplazamiento: ScrollBehavior = 'smooth';
-  /**
-   * Constructor del servicio.
-   * Se utiliza para la inyección de dependencias si es necesario.
-   */
-  constructor() {
-    // El constructor se utiliza para la inyección de dependencias.
-   }
-
+ 
   /**
    * Realiza un scroll suave hacia la parte superior de la página.
    */
