@@ -1359,13 +1359,30 @@
   "numeroDeProcedimiento": "32514"
 },
 {
-  "id": 317,
+   "id": 220404,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGRICULTURA",
+    "numeroDeProcedimiento": "220404"
+},
+{
+  "id": 130301,
   "tipoDeTramite": "Solicitud de Permiso",
-  "fecha": "2023-11-03",
-  "fechaActualizacion": "2023-03-20",
+  "fecha": "2023-10-01",
+  "fechaActualizacion": "2023-10-05",
   "diasTranscurridos": "4",
-  "departamento": "AGACE",
-  "numeroDeProcedimiento": "317"
+  "departamento": "SE",
+  "numeroDeProcedimiento": "130301"
+},{
+     "id": 319,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "319"
 }
 
 ]
