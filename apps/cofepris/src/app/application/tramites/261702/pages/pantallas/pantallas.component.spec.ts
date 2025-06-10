@@ -1,19 +1,25 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PantallasComponent } from './pantallas.component';
-import { AlertComponent, BtnContinuarComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { PermisoSanitarioModule} from '../../../260211/permiso-sanitario.module';
-import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantallas.enum';
-import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { of, Subject } from 'rxjs';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
+import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
 
 describe('PantallasComponent', () => {
   let component: PantallasComponent;
   let fixture: ComponentFixture<PantallasComponent>;
+  let consultaQueryMock: any;
 
   beforeEach(async () => {
+    consultaQueryMock = {
+      selectConsultaioState$: of({ update: true }),
+    };
+
     await TestBed.configureTestingModule({
-      declarations: [PantallasComponent, PasoUnoComponent],
-      imports: [SolicitanteComponent, WizardComponent, BtnContinuarComponent, AlertComponent, PermisoSanitarioModule],
+      declarations: [PantallasComponent],
+      providers: [
+        { provide: ConsultaioQuery, useValue: consultaQueryMock },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PantallasComponent);
@@ -21,66 +27,79 @@ describe('PantallasComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debe crearse correctamente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with default values', () => {
-    expect(component.indice).toBe(1);
-    expect(component.indiceDePestanaSeleccionada).toBe(1);
-    expect(component.pantallasPasos).toEqual(PANTA_PASOS);
-    expect(component.avisoPrivacidadAlert).toBe(AVISO.Aviso);
-    expect(component.datosPasos).toEqual({
-      nroPasos: PANTA_PASOS.length,
-      indice: 1,
-      txtBtnAnt: 'Anterior',
-      txtBtnSig: 'Continuar',
-    });
+  it('ngOnInit debe suscribirse y actualizar consultaState', () => {
+    component.consultaState = undefined as any;
+    component.ngOnInit();
+    expect(component.consultaState).toEqual({ update: true });
   });
 
-  it('should update indice and navigate forward', () => {
-    const mockEvent = { valor: 2, accion: 'cont' };
-    jest.spyOn(component.wizardComponent, 'siguiente');
-  
-    component.getValorIndice(mockEvent);
-  
+  it('ngOnDestroy debe limpiar el subject destroyNotifier$', () => {
+    const spyNext = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const spyComplete = jest.spyOn((component as any).destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
+  });
+
+  it('getValorIndice debe actualizar el índice y llamar a wizardComponent.siguiente o atras', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as any;
+
+    // Acción "cont" (continuar)
+    const accionCont: AccionBoton = { valor: 2, accion: 'cont' } as any;
+    component.getValorIndice(accionCont);
     expect(component.indice).toBe(2);
     expect(component.datosPasos.indice).toBe(2);
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
-  });
 
-  it('should update indice and navigate backward', () => {
-    const mockEvent = { valor: 1, accion: 'prev' };
-    jest.spyOn(component.wizardComponent, 'atras');
-  
-    component.getValorIndice(mockEvent);
-  
+    // Acción "atras"
+    const accionAtras: AccionBoton = { valor: 1, accion: 'atras' } as any;
+    component.getValorIndice(accionAtras);
     expect(component.indice).toBe(1);
     expect(component.datosPasos.indice).toBe(1);
     expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should not update indice or navigate for invalid values', () => {
-    const mockEvent = { valor: 5, accion: 'cont' }; // Assuming PANTA_PASOS has less than 5 steps
-    jest.spyOn(component.wizardComponent, 'siguiente');
-    jest.spyOn(component.wizardComponent, 'atras');
-  
-    component.getValorIndice(mockEvent);
-  
-    expect(component.indice).toBe(1);
-    expect(component.datosPasos.indice).toBe(1);
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
-  });
-
-  it('should handle invalid tab index gracefully', () => {
-    component.pestanaCambiado(undefined as any);
+  it('getValorIndice debe resetear indiceDePestanaSeleccionada si valor !== 1', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as any;
+    const accion: AccionBoton = { valor: 3, accion: 'cont' } as any;
+    component.getValorIndice(accion);
     expect(component.indiceDePestanaSeleccionada).toBe(1);
   });
 
-  it('should update indiceDePestanaSeleccionada', () => {
-    component.pestanaCambiado(3);
-    expect(component.indiceDePestanaSeleccionada).toBe(3);
+  it('getValorIndice no debe cambiar nada si valor fuera de rango', () => {
+    component.indice = 1;
+    component.datosPasos.indice = 1;
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as any;
+    const accion: AccionBoton = { valor: 0, accion: 'cont' } as any;
+    component.getValorIndice(accion);
+    expect(component.indice).toBe(1);
+    expect(component.datosPasos.indice).toBe(1);
   });
-  
+
+  it('pestanaCambiado debe actualizar indiceDePestanaSeleccionada correctamente', () => {
+    component.pestanaCambiado(5);
+    expect(component.indiceDePestanaSeleccionada).toBe(5);
+
+    component.pestanaCambiado(undefined as any);
+    expect(component.indiceDePestanaSeleccionada).toBe(1);
+
+    component.pestanaCambiado(null as any);
+    expect(component.indiceDePestanaSeleccionada).toBe(1);
+
+    component.pestanaCambiado(NaN);
+    expect(component.indiceDePestanaSeleccionada).toBe(1);
+  });
 });

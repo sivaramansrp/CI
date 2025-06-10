@@ -133,10 +133,17 @@ export class LibBandejaComponent<T> implements OnInit {
    * Envía los datos del formulario. Marca el formulario como válido si no hay errores
    */
   public enviarDatos(): void {
-    this.hasValidForm = true;
-    this.tieneConfiguracionTablaDatos = true;
-    if (this.dinamicasBandejaForma.valid) {
+    const BANDEJA_SOLICITUDE_FORM_GROUP: null | any = this.dinamicasBandejaForma.get('bandejaSolicitudeFormGroup');
+    if(BANDEJA_SOLICITUDE_FORM_GROUP.get('solicitudId').valid) {
+      this.configuracionTablaDatos = this.duplicarDatos;
+      const SELECTED_PROCEDURE = this.configuracionTablaDatos.filter((item) => Number(item.numeroDeProcedimiento) === Number(this.seleccionadoDepartamento.numeroDeProcedimiento));
+      this.configuracionTablaDatos = SELECTED_PROCEDURE;
       this.hasValidForm = true;
+      this.tieneConfiguracionTablaDatos = SELECTED_PROCEDURE.length > 0 ? true : false;
+    } else {
+      this.configuracionTablaDatos = this.duplicarDatos;
+      this.hasValidForm = false;
+      this.tieneConfiguracionTablaDatos = false;
     }
   }
  /*
@@ -231,6 +238,10 @@ export class LibBandejaComponent<T> implements OnInit {
     if(this.seleccionadoDepartamento.tieneDepartamento) {
       this.bandejaSolicitudeFormGroup.get('procedimiento')?.setValue('');
     }
+  }
+
+  public obtenerProcedure(event: { campo: string; valor: any }): void {
+    this.obtenerNombreDelDepartamento.emit({ campo: event.campo, valor: event.valor });
   }
 
   /**
