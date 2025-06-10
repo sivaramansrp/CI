@@ -274,6 +274,7 @@
           formControlName="fechaInicio"
           [ngClass]="isValid(datosServicio, 'fechaInicio') ? 'required' : ''"
           (change)="changeFechaInicio()"
+          (keydown)="$event.preventDefault()"
         />
       </div>
 
@@ -301,6 +302,7 @@
           formControlName="fechaFinal"
           [ngClass]="isValid(datosServicio, 'fechaFinal') ? 'required' : ''"
           (change)="changeFechaFinal()"
+          (keydown)="$event.preventDefault()"
         />
       </div>
 
@@ -733,7 +735,13 @@
           >
             Consultar
           </button>
-          <button class="btn btn-danger" type="button" (click)="eliminarLineaCaptura()">Eliminar</button>
+          <button
+            class="btn btn-danger"
+            type="button"
+            (click)="eliminarLineaCaptura()"
+          >
+            Eliminar
+          </button>
         </div>
       </div>
     </div>
