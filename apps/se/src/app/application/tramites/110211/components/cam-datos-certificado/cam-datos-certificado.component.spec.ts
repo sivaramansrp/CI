@@ -31,9 +31,8 @@ describe('CamDatosCertificadoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [ FormsModule, ReactiveFormsModule,CamDatosCertificadoComponent ],
       declarations: [
-        CamDatosCertificadoComponent,
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [

@@ -15,8 +15,10 @@
         @switch (indice) { @case (1) {
         <solicitante></solicitante>
         } @case (2) {
-          <app-solicitud></app-solicitud>
-          <ng-alert [CONTENIDO]="TEXTOS" ></ng-alert>
+          @if(esDatosRespuesta){
+            <app-solicitud [formularioDeshabilitado]="formularioDeshabilitado"></app-solicitud>
+            <ng-alert [CONTENIDO]="TEXTOS" ></ng-alert>
+          }
           } 
         }
       </ng-container>
