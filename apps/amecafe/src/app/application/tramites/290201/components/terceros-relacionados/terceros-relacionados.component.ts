@@ -1,4 +1,4 @@
-import { ReplaySubject,Subject,map,takeUntil } from 'rxjs';
+import { ReplaySubject,map,takeUntil } from 'rxjs';
 
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -52,11 +52,6 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
-   * Notificador para limpiar suscripciones.
-   */
-  private destroyNotifier$: Subject<void> = new Subject();
-
-  /**
    * Formulario reactivo para capturar los datos del destinatario.
    */
   destinatarioForm!: FormGroup;
@@ -101,6 +96,9 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    */
   selectedRows: Set<number> = new Set();
 
+  /**
+   * Estado para verificar si los datos de respuesta están disponibles.
+   */
   public esDatosRespuesta: boolean = false;
 
 
@@ -114,7 +112,10 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    */
   newDestinatarioData: Array<FilaData2> = [];
 
-  consultaDatos!: ConsultaioState;
+  /**
+   * Estado de consulta de datos.
+   */
+   consultaDatos!: ConsultaioState;
     
       /**
        * @property {boolean} soloLectura
@@ -212,18 +213,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
     .subscribe();
     this.inicializarEstadoFormulario();
   }
-  guardarDatosFormulario(): void {
-    this.registrarsolicitud
-      .getConsultaData().pipe(
-        takeUntil(this.destroyed$)
-      )
-      .subscribe((resp: Solicitud290201State) => {
-        if(resp){    
-        this.esDatosRespuesta = true;
-        this.registrarsolicitud.actualizarEstadoFormulario(resp);
-        }
-      });
-  }
+ 
   /**
    * Método para crear el formulario reactivo.
    */
@@ -414,6 +404,9 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
     return this.destinatarioForm.get('datosDelTramiteRealizar') as FormGroup;
   }
 
+  /**
+   * Método para inicializar el estado del formulario según si es de solo lectura o no.
+   */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.destinatarioForm?.disable();

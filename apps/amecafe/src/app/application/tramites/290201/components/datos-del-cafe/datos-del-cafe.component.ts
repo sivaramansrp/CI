@@ -35,7 +35,6 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
    */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-
   /**
    * Datos que se muestran en la tabla.
    */
@@ -157,16 +156,6 @@ export class DatosDelCafeComponent implements OnDestroy, OnInit {
  */
 
 consultaDatos!: ConsultaioState;
-
-/**
- * @property {boolean} esDatosRespuesta
- * @description Indica si se ha recibido una respuesta de datos.
- * @default false
- */
-
-public esDatosRespuesta: boolean = false;
-
-  
     /**
      * @property {boolean} soloLectura
      * @description Indica si el formulario o los campos están en modo de solo lectura.
@@ -200,6 +189,10 @@ public esDatosRespuesta: boolean = false;
     this.getPaisDeTransbordoData();
     this.getMediaDeTransporte();
   }
+  /**
+   * Tipo de selección para la tabla de mercancías.
+   * Utiliza `TablaSeleccion.CHECKBOX` para permitir la selección múltiple.
+   */
   tipoSeleccionsoliMercancias: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
@@ -372,21 +365,7 @@ public esDatosRespuesta: boolean = false;
       .subscribe();
       this.inicializarEstadoFormulario();
   }
-  /**
-   * Este método se utiliza para guardar los datos del formulario en el store de la solicitud.
-   */
-  guardarDatosFormulario(): void {
-    this.registrarsolicitud
-      .getConsultaData().pipe(
-        takeUntil(this.destroyed$)
-      )
-      .subscribe((resp: Solicitud290201State) => {
-        if(resp){    
-        this.esDatosRespuesta = true;
-        this.registrarsolicitud.actualizarEstadoFormulario(resp);
-        }
-      });
-  }
+ 
   /**
    * Obtiene los datos del catálogo "Envasado".
    */

@@ -33,6 +33,7 @@ import { Solicitud290201State, Solicitud290201Store } from '../../../estados/tra
   styleUrl: './datosTramite.component.css',
 })
 export class DatosTramiteComponent implements OnDestroy, OnInit {
+
   /** Formulario para la información del café */
   informationCafeForm!: FormGroup;
 
@@ -45,6 +46,7 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
     tableHeader: [],
   };
   
+  /** Consulta de estado para la solicitud */
   consultaDatos!: ConsultaioState;
 
   /**
@@ -53,11 +55,9 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
    * @default false
    */
   esFormularioSoloLectura: boolean = false;
+  
   /** Sujeto para manejar la destrucción del componente */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-
-  public esDatosRespuesta: boolean = false;
-
 
   /** Configuración de datos para el campo "Tipos" */
   public tiposData: CatalogosSelect = {
@@ -211,24 +211,6 @@ export class DatosTramiteComponent implements OnDestroy, OnInit {
       )
       .subscribe();
       this.inicializarEstadoFormulario();
-  }
-
-
-/**
- * @method guardarDatosFormulario
- * @description Guarda los datos del formulario en el estado de la solicitud.
- */
-  guardarDatosFormulario(): void {
-    this.registrarsolicitud
-      .getConsultaData().pipe(
-        takeUntil(this.destroyed$)
-      )
-      .subscribe((resp: Solicitud290201State) => {
-        if(resp){    
-        this.esDatosRespuesta = true;
-        this.registrarsolicitud.actualizarEstadoFormulario(resp);
-        }
-      });
   }
 
   /** Obtiene los datos para el campo "Tipos" */
