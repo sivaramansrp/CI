@@ -1,11 +1,12 @@
 import { BsModalRef,BsModalService } from 'ngx-bootstrap/modal';
-import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { ConfiguracionColumna, EMPRESAS_TABLA, EmpresasDelGrupo, InputCheckComponent, InputRadioComponent, REGEX_RFC, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud31602IvaeiepsState, Tramite31602IvaeiepsStore } from '../../estados/stores/tramite31602ivaeieps.store';
 import { Subject,map, takeUntil } from 'rxjs';
 import { ComercioExteriorService } from '../../services/comercio-exterior.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { IvaeiepsDosComponent } from '../ivaeieps-dos/ivaeieps-dos.component';
 import { PERMISO_A_DESISTIR } from '../../constantes/ivaeieps.enum';
@@ -36,6 +37,12 @@ import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
 })
 export class IvaeiepsComponent implements OnInit,OnDestroy {
 
+  /**
+    * @property consultaState
+    * @description
+    * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+    */
+  @Input() consultaState!: ConsultaioState;
   /**
    * Una instancia de FormGroup utilizada para gestionar los controles del formulario
    * y la lógica de validación para la sección de IVA e IEPS del componente.

@@ -1,7 +1,7 @@
 import { AGREGAR_MIEMBRO_TABLA, DATOS_COMUNES_TEXTOS, DATOS_COMUNES_TEXTOS_DOS, Miembro } from '../../models/datos-comunes.model';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputCheckComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosComunesState, DatosComunesStore } from '../../estados/stores/datos-comunes.store';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -23,6 +23,7 @@ import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
 @Component({
   selector: 'shared-datos-comunes',
   standalone: true,
+  providers: [BsModalService],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -156,6 +157,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   public solicitudState!: DatosComunesState;
   public consultaState!: ConsultaioState;
+  public esFormularioSoloLectura: boolean = false;
 
 
   /**
@@ -169,6 +171,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   constructor(
     private datosComunesSvc: DatosComunesService,
+    @Inject(BsModalService)
     private modalService: BsModalService,
     private fb: FormBuilder,
     private datosComunesStore: DatosComunesStore,
@@ -176,10 +179,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     private consultaQuery: ConsultaioQuery
   ) {
         this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
-          this.consultaState = seccionState;
-          if(this.consultaState.update) {
-            this.guardarDatosFormulario();
-          }
+          this.esFormularioSoloLectura = seccionState.readonly;
         })).subscribe();
   }
 
@@ -204,7 +204,21 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     this.crearComunesForm();
     this.crearAgregarMiembroForm();
     this.obtenerAgregarMiembroDatos();
+    this.inicializarEstadoFormulario();
   }
+
+
+  /**
+   * Inicializa el formulario reactivo para capturar el estado seleccionado.
+   */
+    public inicializarFormulario(): void {
+      this.datosComunesQuery.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+        this.solicitudState = seccionState;
+      })).subscribe();
+
+        this.crearComunesForm();
+        this.crearAgregarMiembroForm();
+    }
 
   /**
    * Inicializa el FormGroup `comunesForm` con un conjunto de controles de formulario y sus valores
@@ -395,10 +409,29 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     (this.datosComunesStore[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
-  public guardarDatosFormulario(): void {
-    this.datosComunesSvc.getConsultaDatosComunes().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      this.datosComunesSvc.actualizarEstadoFormulario(response);
-    })
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de estados.
+   */
+  public inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+    this.cambioObj.empleadosPropios = this.comunesForm.get('senale')?.value === 'Si' ? true : false;
+    this.cambioObj.deTrabajao = this.comunesForm.get('senaleSi')?.value === 'Si' ? true : false;
+  }
+
+  public guardarFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.comunesForm.disable();
+      this.agregarMiembroDeLaEmpresaFrom.disable();
+    } else {
+      this.comunesForm.enable();
+      this.agregarMiembroDeLaEmpresaFrom.enable();
+    }
   }
 
   /**

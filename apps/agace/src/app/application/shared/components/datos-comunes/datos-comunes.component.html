@@ -40,6 +40,7 @@
               formControlName="regimenUno"
               [label]="'Importación temporal para la elaboración, transformación o reparación en programas de maquila o de exportación (IMMEX)'" 
               [required]="false"
+              [isDisabled]="esFormularioSoloLectura"
               (change)="setValoresStore(comunesForm,'regimenUno', 'setRegimenUno')">
           </lib-input-check>
 
@@ -48,6 +49,7 @@
               formControlName="regimenDos"
               [label]="'Depósito fiscal para someterse al proceso de ensamble y fabricación de vehículo a empresas de la industria automotriz terminal'" 
               [required]="false"
+              [isDisabled]="esFormularioSoloLectura"
               (change)="setValoresStore(comunesForm,'regimenDos', 'setRegimenDos')">
           </lib-input-check>
 
@@ -56,12 +58,14 @@
               formControlName="regimenTres"
               [label]="'Elaboración, transformación o reparación en recinto fiscalizado'" 
               [required]="false"
+              [isDisabled]="esFormularioSoloLectura"
               (change)="setValoresStore(comunesForm,'regimenTres', 'setRegimenTres')">
           </lib-input-check>
 
           <lib-input-check 
               [id]="'regimen_3'" 
               [label]="'Recinto Fiscalizado Estratégico'" 
+              [isDisabled]="esFormularioSoloLectura"
               [required]="false">
           </lib-input-check>
           </fieldset>
@@ -80,6 +84,7 @@
             [placeholder]="'Seleccione un valor'"
             [catalogo]="sectorProductivoAgace"
             formControlName="sectorProductivo"
+            [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(comunesForm,'sectorProductivo', 'setSectorProductivo')"
           >
           </app-catalogo-select>
@@ -90,6 +95,7 @@
             [placeholder]="'Seleccione un valor'"
             [catalogo]="serviciosAgace"
             formControlName="servicio"
+            [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(comunesForm,'servicio', 'setServicio')"
           >
           </app-catalogo-select>
@@ -191,6 +197,7 @@
               [label]="'Bimestre'"
               [placeholder]="'Seleccione un valor'"
               formControlName="bimestre"
+              [isDisabled]="esFormularioSoloLectura"
               [catalogo]="comboBimestresIDC"
               (change)="setValoresStore(comunesForm,'bimestre', 'setBimestre')"
             >
@@ -328,13 +335,13 @@
       </app-tabla-dinamica>
     </div>
     <div class="d-flex justify-content-end mb-4">
-      <button type="button" class="btn btn-primary me-2" (click)="abrirModal(agregar)">
+      <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="abrirModal(agregar)">
         Agregar
       </button>
-      <button class="btn btn-danger me-2" type="button">
+      <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura">
         Modificar
       </button>
-      <button class="btn btn-default" type="button">Eliminar</button>
+      <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura">Eliminar</button>
     </div>
   </div>
   <div class="row mt-3">

@@ -1,5 +1,5 @@
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { ENLACE_TABLA, EnlaceOperativo, PERSONAS_PARA,Personas } from '../../models/terceros-relacionados.model';
@@ -21,12 +21,19 @@ import { TituloComponent } from '@libs/shared/data-access-user/src/tramites/comp
 @Component({
   selector: 'shared-terceros-relacionados',
   standalone: true,
+  providers: [BsModalService],
   imports: [CommonModule, ReactiveFormsModule, FormasDinamicasComponent, TablaDinamicaComponent, TituloComponent],
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.scss',
 })
 export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
 
+/**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
   /**
    * Una instancia de FormGroup que representa la estructura del formulario para "representante legal".
    * Contiene un FormGroup anidado llamado `represtantanteLegalFormGroup` para gestionar
@@ -94,7 +101,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    * Esta propiedad se utiliza para gestionar y rastrear el estado de los datos relacionados con terceros.
    */
   public importacionstate!: TercerosRelacionadosState;
-  public consultaState!: ConsultaioState;
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente TercerosRelacionadosComponent.
@@ -107,6 +114,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
+    @Inject(BsModalService)
     private modalService: BsModalService,
     private tercerosRelacionadosSvc: TercerosRelacionadosService,
     private tercerosRelacionadosStore: TercerosRelacionadosStore,
@@ -114,10 +122,7 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
     private consultaQuery: ConsultaioQuery
   ) {
       this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
-        this.consultaState = seccionState;
-        if(this.consultaState.update) {
-          this.guardarDatosFormulario();
-        }
+        this.esFormularioSoloLectura = seccionState.readonly;
     })).subscribe();
   }
 
@@ -138,7 +143,17 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
     this.getEnlaceOperativo();
     this.crearEnlaceOperativoForm();
     this.getPersonas();
+    this.inicializarEstadoFormulario();
   }
+
+
+    public inicializarFormulario(): void {
+      this.tercerosRelacionadosQuery.selectImportacion$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+        this.importacionstate = seccionState;
+      })).subscribe();
+
+      this.crearEnlaceOperativoForm();
+    }
 
   /**
    * Getter para la propiedad 'represtantanteLegalFormGroup'.
@@ -178,6 +193,23 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
         correo: ['', Validators.required],
         suplente: ['', Validators.required],
     });
+  }
+
+  public inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  public guardarFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.enlaceOperativoForm.disable();
+    } else {
+      this.enlaceOperativoForm.enable();
+    }
   }
 
   /**
@@ -257,14 +289,6 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
       const DATO = { campo: campo, valor: VALOR };
       this.establecerCambioDeValor(DATO);
     }
-  }
-
-  public guardarDatosFormulario(): void {
-    this.tercerosRelacionadosSvc.getConsultaDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
-      Object.entries(response).forEach(([key, value]) => {
-          this.tercerosRelacionadosSvc.actualizarEstadoFormulario(key, value);
-      });
-    })
   }
 
   /**

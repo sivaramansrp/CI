@@ -27,13 +27,13 @@
                     <shared-datos-comunes></shared-datos-comunes>
                 }
                 @case(3) {
-                    <shared-terceros-relacionados></shared-terceros-relacionados>
+                    <shared-terceros-relacionados [consultaState]="consultaState"></shared-terceros-relacionados>
                 }
                 @case(4) {
-                    <app-datos-por-regimen></app-datos-por-regimen>
+                    <app-datos-por-regimen [consultaState]="consultaState"></app-datos-por-regimen>
                 }
                 @case (5) {
-                    <app-ivaeieps></app-ivaeieps>
+                    <app-ivaeieps [consultaState]="consultaState"></app-ivaeieps>
                 }
 
             }

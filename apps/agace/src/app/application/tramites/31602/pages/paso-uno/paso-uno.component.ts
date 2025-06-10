@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject,map, takeUntil } from 'rxjs';
 import { ComercioExteriorService } from '../../services/comercio-exterior.service';
+import { DatosComunesService } from '../../../../shared/services/datos-comunes.service';
+import { TercerosRelacionadosService } from '../../../../shared/services/terceros-relacionados.service';
 
 @Component({
   selector: 'app-paso-uno',
@@ -31,6 +33,8 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
    */
   constructor(
     private comercioExteriorSvc: ComercioExteriorService,
+    private datosComunesSvc: DatosComunesService,
+    private tercerosRelacionadosSvc: TercerosRelacionadosService,
     private consultaQuery: ConsultaioQuery
    ) {
 
@@ -48,6 +52,8 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
         if(this.consultaState.update) {
           this.guardarDatosFormulario();
           this.guardarDatosFormularioDos();
+          this.guardarDatosComunesFormulario();
+          this.guardarTercerosFormulario();
         }
     })).subscribe();
    }
@@ -76,6 +82,20 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
   public guardarDatosFormularioDos(): void {
     this.comercioExteriorSvc.getConsultaDatosDos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
       this.comercioExteriorSvc.estadoFormulario(response)
+    })
+  }
+
+  public guardarDatosComunesFormulario(): void {
+    this.datosComunesSvc.getConsultaDatosComunes().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
+      this.datosComunesSvc.actualizarEstadoFormulario(response);
+    })
+  }
+
+  public guardarTercerosFormulario(): void {
+    this.tercerosRelacionadosSvc.getConsultaDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
+      Object.entries(response).forEach(([key, value]) => {
+          this.tercerosRelacionadosSvc.actualizarEstadoFormulario(key, value);
+      });
     })
   }
 

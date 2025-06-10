@@ -1,9 +1,10 @@
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, REGEX_RFC, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MENCIONE_TABLA,Mencione } from '../../models/datos-comunes.model';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject,map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosComunesService } from '../../services/datos-comunes.service';
 
@@ -15,6 +16,7 @@ import { DatosComunesService } from '../../services/datos-comunes.service';
 @Component({
   selector: 'app-federal-de-trabajao',
   standalone: true,
+  providers: [BsModalService],
   imports: [CommonModule, TablaDinamicaComponent, CatalogoSelectComponent, ReactiveFormsModule],
   templateUrl: './federal-de-trabajao.component.html',
   styleUrl: './federal-de-trabajao.component.scss',
@@ -55,6 +57,7 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
    * Datos del catálogo para el tercer bimestre.
    */
   public bimestreTresCatalogo: Catalogo[] = [];
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -66,8 +69,14 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
   constructor(
     private datosComunesSvc: DatosComunesService,
     private fb: FormBuilder,
+    @Inject(BsModalService)
     private modalService: BsModalService,
-  ) {}
+    private consultaQuery: ConsultaioQuery
+  ) {
+      this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+      })).subscribe();
+  }
 
   /**
    * Hook del ciclo de vida que se llama después de inicializar el componente.
@@ -77,7 +86,12 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
     this.getMencioneDatos();
     this.getBancoCatalogDatos();
     this.cerearFormulario();
+    this.inicializarEstadoFormulario();
   }
+
+    public inicializarFormulario(): void {
+        this.cerearFormulario();
+    }
 
   /**
    * Inicializa el formulario reactivo con reglas de validación.
@@ -91,6 +105,14 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
       archivoNacionales: ['', [Validators.required]],
       comboBimestresTres: [''],
     });
+  }
+
+    public inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
   }
 
   /**
@@ -120,6 +142,15 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
       const API_DATOS = JSON.parse(JSON.stringify(response));
       this.bimestreTresCatalogo = API_DATOS.data;
     });
+  }
+
+  public guardarFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.numeroDeEmpleadosForm.disable();
+    } else {
+      this.numeroDeEmpleadosForm.enable();
+    }
   }
 
   /**
