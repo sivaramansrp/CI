@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { SECCIONES_TRAMITE_80101 } from '../../constantes/nuevo-programa.enum';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
@@ -8,7 +8,7 @@ import { NuevoProgramaIndustrialService } from '../../services/nuevo-programa-in
   selector: 'app-paso-uno-cs',
   templateUrl: './paso-uno-cs.component.html',
 })
-export class PasoUnoCsComponent implements OnInit {
+export class PasoUnoCsComponent implements OnInit, OnDestroy {
   /**
    * @description Constructor del componente.
    * Inicializa el componente y establece el índice de la pestaña seleccionada.
@@ -107,5 +107,15 @@ export class PasoUnoCsComponent implements OnInit {
     }
     this.seccionStore.establecerSeccion(SECCIONES);
     this.seccionStore.establecerFormaValida(FORMA_VALIDA);
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Cancela suscripciones activas mediante `destroyNotifier$`.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

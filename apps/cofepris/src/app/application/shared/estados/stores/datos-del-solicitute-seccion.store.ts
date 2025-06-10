@@ -208,6 +208,11 @@ export interface DatosDelSolicituteSeccionState {
  * * Descripción del SCIAN.
  */
   descripcionScian: string;
+  noDeLicenciaSanitaria:string;
+  noDeLicenciaSanitariaObservaciones:string;
+  regimenAlQueSeDestinaraLaMercancía:string;
+  aduanaDeSalida:string
+  
 }
 
 /**
@@ -257,6 +262,10 @@ export function createInitialState(): DatosDelSolicituteSeccionState {
           regimen:'',
           aduanasEntradas: '',
           aifaCheckbox: '',
+          noDeLicenciaSanitaria:'',
+          noDeLicenciaSanitariaObservaciones:'',
+          regimenAlQueSeDestinaraLaMercancía:'',
+          aduanaDeSalida:''
   };
 }
 
@@ -310,4 +319,110 @@ export class DatosDelSolicituteSeccionStateStore extends Store<DatosDelSolicitut
   setInformacionConfidencial(informacionConfidencial: string): void {
     this.update({ informacionConfidencialRadio: informacionConfidencial });
   }
+
+  /**
+   * Actualiza la denominación o razón social del establecimiento.
+   * @param establecimientoDenominacionRazonSocial Nueva denominación o razón social del establecimiento.
+   */
+  setEstablecimientoDenominacionRazonSocial(establecimientoDenominacionRazonSocial: string): void {
+    this.update({ establecimientoDenominacionRazonSocial });
+  }
+
+  /**
+   * Actualiza el correo electrónico del establecimiento.
+   * @param establecimientoCorreoElectronico Nuevo correo electrónico del establecimiento.
+   */
+  setEstablecimientoCorreoElectronico(establecimientoCorreoElectronico: string): void {
+    this.update({ establecimientoCorreoElectronico });
+  }
+
+  /**
+   * Actualiza el código postal del domicilio del establecimiento.
+   * @param establecimientoDomicilioCodigoPostal Nuevo código postal del domicilio del establecimiento.
+   */
+  setEstablecimientoDomicilioCodigoPostal(establecimientoDomicilioCodigoPostal: string): void {
+    this.update({ establecimientoDomicilioCodigoPostal });    
+  }
+
+  /**
+   * Actualiza el estado del domicilio del establecimiento.
+   * @param establecimientoDomicilioEstado Nuevo estado del domicilio del establecimiento.
+   */
+  setEstablecimientoDomicilioEstado(establecimientoDomicilioEstado: string): void {
+    this.update({ establecimientoDomicilioEstado });
+  }
+
+  /**
+   * Actualiza el municipio o alcaldía del domicilio del establecimiento.
+   * @param establecimientoMunicipioYAlcaldia Nuevo municipio o alcaldía del domicilio del establecimiento.
+   */
+  setEstablecimientoMunicipioYAlcaldia(establecimientoMunicipioYAlcaldia: string): void {
+    this.update({ establecimientoMunicipioYAlcaldia });
+  }
+  /**
+   * Actualiza la localidad del domicilio del establecimiento.
+   * @param establecimientoDomicilioLocalidad Nueva localidad del domicilio del establecimiento.
+   */
+  setEstablecimientoDomicilioLocalidad(establecimientoDomicilioLocalidad: string): void {
+    this.update({ establecimientoDomicilioLocalidad });
+  }
+
+  /**
+   * Actualiza la colonia del domicilio del establecimiento.
+   * @param establecimientoDomicilioColonia Nueva colonia del domicilio del establecimiento.
+   */
+  setEstablecimientoDomicilioColonia(establecimientoDomicilioColonia: string): void {
+    this.update({ establecimientoDomicilioColonia });
+  }
+
+  /**
+   * Actualiza la calle del domicilio del establecimiento.
+   * @param establecimientoDomicilioCalle Nueva calle del domicilio del establecimiento.
+   */
+  setEstablecimientoDomicilioCalle(establecimientoDomicilioCalle: string): void {
+    this.update({ establecimientoDomicilioCalle });
+  }
+
+  /**
+   * Actualiza la lada del domicilio del establecimiento.
+   * @param establecimientoDomicilioLada Nueva lada del domicilio del establecimiento.
+   */
+  setEstablecimientoDomicilioLada(establecimientoDomicilioLada: string): void {
+    this.update({ establecimientoDomicilioLada });
+  }
+
+  /**
+   * Actualiza el teléfono del domicilio del establecimiento.
+   * @param establecimientoDomicilioTelefono Nuevo teléfono del domicilio del establecimiento.
+   */
+  setEstablecimientoDomicilioTelefono(establecimientoDomicilioTelefono: string): void {
+    this.update({ establecimientoDomicilioTelefono });
+  }
+  /**
+   * Actualiza el RFC del profesional responsable.
+   * @param rfcDelProfesionalResponsable Nuevo RFC del profesional responsable.
+   */
+  setRfcDelProfesionalResponsable(rfcDelProfesionalResponsable: string): void {
+    this.update({ rfcDelProfesionalResponsable });
+  }
+  /**
+   * Actualiza el nombre del profesional responsable.
+   * @param nombreDelProfesionalResponsable Nuevo nombre del profesional responsable.
+   */
+  setNombreDelProfesionalResponsable(nombreDelProfesionalResponsable: string): void {
+    this.update({ nombreDelProfesionalResponsable });
+  }
+  setNoDeLicenciaSanitaria(noDeLicenciaSanitaria: string): void {
+    this.update({ noDeLicenciaSanitaria });
+  }
+  setNoDeLicenciaSanitariaObservaciones(noDeLicenciaSanitariaObservaciones: string): void {
+    this.update({ noDeLicenciaSanitariaObservaciones });
+  }
+  setRegimenAlQueSeDestinaraLaMercancía(regimenAlQueSeDestinaraLaMercancía: string): void {
+    this.update({ regimenAlQueSeDestinaraLaMercancía });
+  }
+  setAduanaDeSalida(aduanaDeSalida: string): void {
+    this.update({ aduanaDeSalida });
+  }
+
 }
