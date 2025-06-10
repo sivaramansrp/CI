@@ -1264,8 +1264,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   validaCampoPedimento(): void {
-    const ADUANA_VALIDACION = this.solicitudState?.idAduanaDespacho;
-    if (!ADUANA_VALIDACION) {
+    const ADUANA_VALIDACION = parseInt(this.solicitudState?.idAduanaDespacho, 10);
+    
+    if (ADUANA_VALIDACION < 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
