@@ -38,10 +38,11 @@ export class FirmaElectronicaService {
    * @param cadenaOriginal Cadena original a firmar
    * @returns Promesa con los datos de la firma
    */
-  async firmarCadena(
+async firmarCadena(
   cerInput: HTMLInputElement,
   keyInput: HTMLInputElement,
-  passwordInput: HTMLInputElement 
+  passwordInput: HTMLInputElement,
+  cadenaOriginal?: string
 ): Promise<{ firma: string; certificado: any; serialNumber: string; rfc: string }> {
   try {
     const PKI = window['PKI' as WindowKey];
@@ -50,17 +51,14 @@ export class FirmaElectronicaService {
       throw new Error('La librería FielUtil no está disponible');
     }
 
-    // Verificar que los inputs tengan archivos
     if (!cerInput.files?.length || !keyInput.files?.length) {
       throw new Error('No se seleccionaron archivos válidos');
     }
 
-    // Validar que el password input tenga valor
     if (!passwordInput.value) {
       throw new Error('La contraseña no puede estar vacía');
     }
 
-    // Validar compatibilidad del navegador
     const compatibilidad = PKI.SAT.FielUtil.validaNavegador(cerInput);
     if (compatibilidad !== true) {
       throw new Error(PKI.SAT.FielUtil.obtenMensajeError(compatibilidad));
@@ -75,9 +73,9 @@ export class FirmaElectronicaService {
           try {
             const cert = new PKI.SAT.Certificado(certificado);
             this.validarVigenciaCertificado(cert);
-            
+
             resolve({
-              firma: '',
+              firma: '', // No se firma si no hay cadenaOriginal
               certificado,
               serialNumber: cert.getNumeroSerie().replace(/ /g, ''),
               rfc: cert.getRFC().replace(/ /g, '')
@@ -91,9 +89,9 @@ export class FirmaElectronicaService {
             try {
               const cert = new PKI.SAT.Certificado(certificado);
               this.validarVigenciaCertificado(cert);
-              
+
               resolve({
-                firma,
+                firma: firma || '', // Firma generada si hay cadena
                 certificado,
                 serialNumber: cert.getNumeroSerie().replace(/ /g, ''),
                 rfc: cert.getRFC().replace(/ /g, '')
@@ -104,7 +102,8 @@ export class FirmaElectronicaService {
           } else {
             reject(new Error(PKI.SAT.FielUtil.obtenMensajeError(error_code)));
           }
-        }
+        },
+        cadenaOriginal || ''
       );
     });
   } catch (error) {
@@ -112,6 +111,7 @@ export class FirmaElectronicaService {
     throw error;
   }
 }
+
 
   private validarVigenciaCertificado(cert: any): void {
     const hoy = new Date();

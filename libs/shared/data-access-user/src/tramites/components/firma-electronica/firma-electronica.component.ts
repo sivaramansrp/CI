@@ -15,6 +15,7 @@ import { LOGIN } from '../../constantes/constantes';
 })
 export class FirmaElectronicaComponent {
   @Input({ required: true }) tipo: string = '';
+  @Input() cadenaOriginal?: string;
   @Output() valido = new EventEmitter<boolean>();
   @Output() firma = new EventEmitter<string>();
   @Output() datosFirma = new EventEmitter<{
@@ -103,7 +104,8 @@ export class FirmaElectronicaComponent {
       const resultado = await this.firmaService.firmarCadena(
         this.cerInputElement,
         this.keyInputElement,
-        this.passwordInputElement
+        this.passwordInputElement,
+        this.cadenaOriginal
       );
 
       // 2. Emitir eventos
