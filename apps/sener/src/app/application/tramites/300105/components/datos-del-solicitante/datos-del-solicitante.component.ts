@@ -158,6 +158,8 @@ export class DatosDelSolicitanteComponent implements OnInit, OnDestroy {
 
     if(this.esFormularioSoloLectura){
       this.formSolicitud.disable();
+    } else {
+      this.formSolicitud.enable();
     }
   }
 
