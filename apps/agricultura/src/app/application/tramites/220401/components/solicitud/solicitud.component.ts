@@ -48,6 +48,13 @@ export class SolicitudPantallasComponent implements OnInit, OnDestroy {
   solicitudes: Solicitude[] = [];
   displayedColumns: string[] = ['fechaCreacion', 'mercancia', 'cantidad', 'proovedor'];
   showContent = false;
+
+/**
+   * @property {boolean} formFormaceuticaColapsable
+   * Controla la visibilidad del listado de forma farmacéutica.
+   */
+  public formFormaceuticaColapsable = false;
+
   /**
  * Carga los datos de las solicitudes desde un archivo JSON ubicado en la carpeta de assets.
  * 
@@ -56,6 +63,8 @@ export class SolicitudPantallasComponent implements OnInit, OnDestroy {
  * Si ocurre un error durante la solicitud, registra un mensaje de error en la consola.
  */
 
+
+  
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   loadSolicitudesData() {
    
@@ -94,6 +103,21 @@ export class SolicitudPantallasComponent implements OnInit, OnDestroy {
       this.serviciosPantallasService.setPantallasFormDataSubject(this.pantallasFormData);
     this.loadSolicitudesData();
   }
+
+  /**
+   * Alterna el estado colapsable de una sección específica basada en el orden proporcionado.
+   *
+   * @param orden - Número que indica la sección a modificar:
+   *   - 1: Alterna el estado de `paisDeOriginColapsable`.
+   *   - 2: Alterna el estado de `paisDeProcedenciaColapsable`.
+   *   - 3: Alterna el estado de `usoEspesificoColapsable`.
+   */
+  mostrarColapsable(orden: number): void {
+    if (orden === 1) {
+      this.formFormaceuticaColapsable = !this.formFormaceuticaColapsable;
+    }
+  }
+
    /**
    * Este método se utiliza para destruir la suscripción. - 220401
    */
