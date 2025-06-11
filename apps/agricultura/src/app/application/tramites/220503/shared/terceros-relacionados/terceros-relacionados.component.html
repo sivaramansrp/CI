@@ -6,8 +6,8 @@
       <div class="col-md-12">
         <label for="exportador">Exportador*</label>
       </div>
-      <div class="col-md-12">
-        <table class="table table-responsive" [ngClass]="{'enable-scrollbar': enableScrollbar}">
+      <div class="col-md-12 table-responsive">
+        <table class="table " [ngClass]="{'enable-scrollbar': enableScrollbar}">
           <thead>
             <tr>
               <th scope="col">
@@ -41,8 +41,8 @@
       <div class="col-md-12">
         <label for="destinatario">Destinatario (destino final)*</label>
       </div>
-      <div class="col-md-12">
-        <table class="table table-responsive" [ngClass]="{'enable-scrollbar': enableScrollbar}">
+      <div class="col-md-12 table-responsive">
+        <table class="table " [ngClass]="{'enable-scrollbar': enableScrollbar}">
           <thead>
             <tr>
               <th scope="col">
@@ -55,6 +55,10 @@
               <th>Número exterior</th>
               <th>Número interior</th>
               <th>País</th>
+              <th>Colonia</th>
+              <th>Municipio o alcaldía</th>
+              <th>Entidad federativa</th>
+              <th>Código postal</th>
             </tr>
           </thead>
           <tbody>
@@ -70,6 +74,10 @@
               <td>{{ item.exterior}}</td>
               <td>{{ item.interior}}</td>
               <td>{{ item.pais }}</td>
+              <td>{{ item.colonia }}</td>
+              <td>{{ item.municipio }}</td>
+              <td>{{ item.entidadFederativa }}</td>
+              <td>{{ item.codigoPostal }}</td>
               }
             </tr>
           </tbody>

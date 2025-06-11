@@ -4,7 +4,7 @@ import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AuthRoutingModule } from './auth-routing.module';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-
+import { provideHttpClient } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -19,7 +19,8 @@ import { HttpClientModule } from '@angular/common/http';
     TituloComponent,
   ],
   providers: [
-    ToastrService
+    ToastrService,
+    provideHttpClient()
   ]
 })
 export class AppLoginModule { }
