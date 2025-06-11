@@ -5,6 +5,7 @@ import { PRORROGAS_TABLA, ProrrogasForma, ProrrogasInfo } from '@libs/shared/dat
 import { Solicitud130301State, Tramite130301Store } from '../../../../estados/tramites/tramite130301.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { SolicitudProrrogaService } from '../../services/solicitudProrroga/solicitud-prorroga.service';
 import { Tramite130301Query } from '../../../../estados/queries/tramite130301.query';
 
@@ -28,6 +29,11 @@ export class ProrrogasComponent implements OnInit, OnDestroy {
    * Formulario reactivo para las prorrogas.
    */
   prorrogasForm!: FormGroup;
+
+    /**
+   * Determina si el formulario debe estar en modo solo lectura.
+   */
+    esFormularioSoloLectura: boolean = false;
 
   /**
    * Configuración de las columnas de la tabla de prorrogas.
@@ -65,14 +71,35 @@ export class ProrrogasComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private service: SolicitudProrrogaService,
     public tramite130301Store: Tramite130301Store,
-    private tramite130301Query: Tramite130301Query
-  ) {}
+    private tramite130301Query: Tramite130301Query,
+    private consultaioQuery: ConsultaioQuery,
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
 
   /**
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
-    this.tramite130301Query
+    
+    this.obtenerFormDatos();
+  }
+
+    /**
+   * Inicializa el formulario con datos del store y aplica validaciones.
+   * También aplica configuración de solo lectura si es necesario.
+   * @method inicializarEstadoFormulario
+   */
+    inicializarEstadoFormulario(): void {
+      this.tramite130301Query
       .selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -81,9 +108,17 @@ export class ProrrogasComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.crearFormulario();
-    this.obtenerFormDatos();
-  }
+      this.crearFormulario();
+      if (this.esFormularioSoloLectura) {
+        Object.keys(this.prorrogasForm.controls).forEach((key) => {
+          this.prorrogasForm.get(key)?.disable();
+        });
+      } else {
+        Object.keys(this.prorrogasForm.controls).forEach((key) => {
+          this.prorrogasForm.get(key)?.enable();
+        });
+      }
+    }
   /**
    * Crea y configura un formulario reactivo para gestionar las prorrogas del trámite con campos deshabilitados y validaciones requeridas.
    */

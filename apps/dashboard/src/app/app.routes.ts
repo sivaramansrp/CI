@@ -1,7 +1,6 @@
 import { BandejaDeSolicitudesComponent } from './bandeja-de-solicitudes/bandeja-de-solicitudes.component';
 import { BandejaDeTareasPendientesComponent } from './bandeja-de-tareas-pendientes/bandeja-de-tareas-pendientes.component';
 import { ConfirmarNotificacionComponent } from './confirmar-notificacion/confirmar-notificacion.component';
-import { DatosGeneralesTramiteComponent } from '@libs/shared/data-access-user/src';
 import { ENVIRONMENT } from './environments/environment';
 import { MenuConsultaTramiteComponent } from './consulta-tramite/menu-consulta-tramite.component';
 import { Route } from '@angular/router';
@@ -187,9 +186,5 @@ export const appRoutes: Route[] = [
   {
     path: 'consulta-tramite',
     component: MenuConsultaTramiteComponent,
-  },
-  {
-    path: 'datos-generales-tramite',
-    component: DatosGeneralesTramiteComponent,
-  },
+  },  
 ];
