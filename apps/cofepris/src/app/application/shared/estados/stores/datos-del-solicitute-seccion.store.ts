@@ -113,7 +113,7 @@ export interface DatosDelSolicituteSeccionState {
   /**
    * Identificador genérico.
    */
-  ideGenerica1: string;
+  ideGenerica: string;
 
   /**
    * Observaciones adicionales.
@@ -211,7 +211,8 @@ export interface DatosDelSolicituteSeccionState {
   noDeLicenciaSanitaria:string;
   noDeLicenciaSanitariaObservaciones:string;
   regimenAlQueSeDestinaraLaMercancía:string;
-  aduanaDeSalida:string
+  aduanaDeSalida:string;
+  manifests:string
   
 }
 
@@ -243,7 +244,7 @@ export function createInitialState(): DatosDelSolicituteSeccionState {
     establecimientoData: [],
      scian: '',
           descripcionScian: '',
-     ideGenerica1: '',
+     ideGenerica: '',
           observaciones: '',
           establecimientoRFCResponsableSanitario: '',
           establecimientoRazonSocial:'',
@@ -265,7 +266,8 @@ export function createInitialState(): DatosDelSolicituteSeccionState {
           noDeLicenciaSanitaria:'',
           noDeLicenciaSanitariaObservaciones:'',
           regimenAlQueSeDestinaraLaMercancía:'',
-          aduanaDeSalida:''
+          aduanaDeSalida:'',
+          manifests:''
   };
 }
 
@@ -426,10 +428,10 @@ export class DatosDelSolicituteSeccionStateStore extends Store<DatosDelSolicitut
   }
   /**
    * Actualiza el identificador genérico.
-   * @param ideGenerica1 Nuevo identificador genérico.
+   * @param ideGenerica Nuevo identificador genérico.
    */
-  setIdeGenerica1(ideGenerica1: string): void {
-    this.update({ ideGenerica1 });
+  setIdeGenerica(ideGenerica: string): void {
+    this.update({ ideGenerica });
   }
   /**
    * Actualiza el valor de la razón social del establecimiento en el estado.
@@ -519,5 +521,9 @@ export class DatosDelSolicituteSeccionStateStore extends Store<DatosDelSolicitut
    */
   setNoLicenciaSanitaria(noLicenciaSanitaria: string): void {
     this.update({ noLicenciaSanitaria });
+  }
+
+  setManifests(manifests: string): void {
+    this.update({ manifests });
   }
 }

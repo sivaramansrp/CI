@@ -37,7 +37,7 @@ export class Solocitud260905Service {
    * @param DATOS Estado con la información del solicitante y establecimiento.
    */
   actualizarEstadoFormulario(DATOS: DatosDelSolicituteSeccionState): void {
-    this.tramite260402Store.setIdeGenerica1(DATOS.ideGenerica1);
+    this.tramite260402Store.setIdeGenerica(DATOS.ideGenerica);
     this.tramite260402Store.setEstablecimientoRFCResponsableSanitario(DATOS.establecimientoRFCResponsableSanitario)
     this.tramite260402Store.setEstablecimientoRazonSocial(DATOS.establecimientoRazonSocial);
     this.tramite260402Store.setEstablecimientoCorreoElectronico(DATOS.establecimientoCorreoElectronico);
@@ -59,6 +59,7 @@ export class Solocitud260905Service {
     this.tramite260402Store.setRegimen(DATOS.regimen);
     this.tramite260402Store.setNoDeLicenciaSanitariaObservaciones(DATOS.noDeLicenciaSanitariaObservaciones);
     this.tramite260402Store.setNoLicenciaSanitaria(DATOS.noLicenciaSanitaria);
+    this.tramite260402Store.setManifests(DATOS.manifests);
   }
 
 
