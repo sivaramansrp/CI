@@ -1,9 +1,16 @@
-import { CAMPO_OBLIGATORIO_DESTINATARIO, PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE, TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE } from '../../constants/datos-solicitud.enum';
+import {
+  CAMPO_OBLIGATORIO_DESTINATARIO,
+  PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE,
+  TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE,
+} from '../../constants/datos-solicitud.enum';
 import { STR_NACIONAL } from '../../constants/datos-solicitud.enum';
 import { TERCEROS_NACIONALIDAD_OPCIONES } from '../../constants/datos-solicitud.enum';
 import { TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
 
-import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
+import {
+  DestinoFinal,
+  Proveedor,
+} from '../../models/terceros-relacionados.model';
 
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 
@@ -25,6 +32,7 @@ import { Validators } from '@angular/forms';
 
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { TipoPersona } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -32,6 +40,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
 import { ES_CURP } from '../../constants/datos-del-tramilte.enum';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 /**
  * Componente para agregar un destinatario final (Destinatario) al formulario y almacenarlo.
@@ -53,14 +62,15 @@ import { takeUntil } from 'rxjs';
   styleUrl: './agregar-destinatario-final.component.scss',
 })
 export class AgregarDestinatarioFinalComponent
-  implements OnDestroy, OnInit, OnChanges {
+  implements OnDestroy, OnInit, OnChanges
+{
   /**
    * Subject utilizado para gestionar la desuscripción de observables.
    * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
-   * @property {Subject<void>} unsubscribe$
+   * @property {Subject<void>} destroyNotifier$
    * @private
    */
-  private unsubscribe$ = new Subject<void>();
+  private destroyNotifier$ = new Subject<void>();
 
   /**
    * Grupo de formulario reactivo para recopilar los datos del destinatario final.
@@ -125,6 +135,14 @@ export class AgregarDestinatarioFinalComponent
   @Input() idProcedimiento!: number;
 
   /**
+   * Indica si el formulario se encuentra en modo solo lectura.
+   * Cuando es verdadero, los campos del formulario no pueden ser editados.
+   * @property {boolean} esFormularioSoloLectura
+   * @default false
+   */
+  @Input() esFormularioSoloLectura: boolean = false;
+
+  /**
    * @property mostrarCamposNoContribuyente
    * @description Controla la visibilidad de los campos específicos para no contribuyentes.
    * @type {boolean}
@@ -133,11 +151,11 @@ export class AgregarDestinatarioFinalComponent
   public mostrarCamposNoContribuyente: boolean = false;
 
   /**
- * @property esCURP
- * @description Controla la visibilidad de los campos específicoS C.U.R.P.
- * @type {boolean}
- * @default false
- */
+   * @property esCURP
+   * @description Controla la visibilidad de los campos específicoS C.U.R.P.
+   * @type {boolean}
+   * @default false
+   */
   public esCURP = false;
 
   /**
@@ -172,8 +190,8 @@ export class AgregarDestinatarioFinalComponent
    * @description Opciones de tipo de persona para radio buttons, específicas para no contribuyentes.
    * @command Opciones utilizadas para determinar el tipo de persona en el formulario de proveedor.
    */
-  tipoPersonaRadioOpcionesNoContribuyente = TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE;
-
+  tipoPersonaRadioOpcionesNoContribuyente =
+    TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE;
 
   /**
    * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
@@ -195,26 +213,61 @@ export class AgregarDestinatarioFinalComponent
    * Crea el componente e inicializa el grupo de formulario.
    *
    * @param {FormBuilder} fb - Inyector de FormBuilder para crear formularios reactivos.
-   * @param {Tramite260204Store} tramiteStore - Servicio que maneja las actualizaciones de estado para "Tramite260204".
-   * @param {Tramite260204Query} tramiteQuery - Servicio para consultar el estado de "Tramite260204".
    * @param {Location} ubicaccion - Servicio de Angular para navegar hacia atrás en el historial.
    * @param {DatosSolicitudService} datosSolicitudService - Servicio para obtener diferentes listas de datos.
+   * @param consultaioQuery - Servicio para consultar el estado del trámite.
    */
   constructor(
     private fb: FormBuilder,
     private ubicaccion: Location,
-    private datosSolicitudService: DatosSolicitudService
+    private datosSolicitudService: DatosSolicitudService,
+    private consultaioQuery: ConsultaioQuery
   ) {
     this.mostrarCamposNoContribuyente =
       PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState: { readonly: boolean }) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearFormaulario();
+    }
   }
 
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.crearFormaulario();
+    if (this.esFormularioSoloLectura) {
+      this.agregarDestinatarioFinal.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.agregarDestinatarioFinal.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
   /**
    * Hook de ciclo de vida de Angular que se llama cuando se detectan cambios en las propiedades de entrada.
    * Llama al método `mostrarCamposNoContribuyente()`.
    */
   ngOnChanges(): void {
-    this.mostrarCamposNoContribuyente = PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
+    this.mostrarCamposNoContribuyente =
+      PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
   }
 
   /**
@@ -226,10 +279,11 @@ export class AgregarDestinatarioFinalComponent
     if (this.agregarDestinatarioFinal.invalid) {
       this.agregarDestinatarioFinal.markAllAsTouched();
       return;
-    }  
+    }
     const NUEVO_DESTINATARIO: DestinoFinal = {
-      nombreRazonSocial: `${this.agregarDestinatarioFinal.value.nombres} ${this.agregarDestinatarioFinal.value.primerApellido
-        } ${this.agregarDestinatarioFinal.value.segundoApellido || ''}`.trim(),
+      nombreRazonSocial: `${this.agregarDestinatarioFinal.value.nombres} ${
+        this.agregarDestinatarioFinal.value.primerApellido
+      } ${this.agregarDestinatarioFinal.value.segundoApellido || ''}`.trim(),
       rfc: this.agregarDestinatarioFinal.value.rfc,
       curp: this.agregarDestinatarioFinal.value.curp,
       telefono:
@@ -245,6 +299,8 @@ export class AgregarDestinatarioFinalComponent
       entidadFederativa: '',
       estadoLocalidad: this.agregarDestinatarioFinal.value.estado,
       codigoPostal: this.agregarDestinatarioFinal.value.codigoPostal,
+      tipoPersona: this.agregarDestinatarioFinal.value.tipoPersona,
+      estado: this.agregarDestinatarioFinal.value.estado,
     };
 
     this.destinatarios.push(NUEVO_DESTINATARIO);
@@ -259,7 +315,9 @@ export class AgregarDestinatarioFinalComponent
    */
   ngOnInit(): void {
     this.crearFormaulario();
-    this.campoObligatorio = CAMPO_OBLIGATORIO_DESTINATARIO.includes(this.idProcedimiento)
+    this.campoObligatorio = CAMPO_OBLIGATORIO_DESTINATARIO.includes(
+      this.idProcedimiento
+    );
     this.campoObligatorioChange();
     this.cargarDatos();
     this.esCURP = ES_CURP.includes(this.idProcedimiento);
@@ -325,15 +383,14 @@ export class AgregarDestinatarioFinalComponent
    * @returns {void} Este método no retorna ningún valor.
    */
   campoObligatorioChange(): void {
-    const COLONIA = this.agregarDestinatarioFinal.get('colonia')
-    const CALLE = this.agregarDestinatarioFinal.get('calle')
-    const NUMEROEXTERIOR = this.agregarDestinatarioFinal.get('numeroExterior')
+    const COLONIA = this.agregarDestinatarioFinal.get('colonia');
+    const CALLE = this.agregarDestinatarioFinal.get('calle');
+    const NUMEROEXTERIOR = this.agregarDestinatarioFinal.get('numeroExterior');
     if (this.campoObligatorio) {
       COLONIA?.clearValidators();
       CALLE?.setValidators([Validators.required]);
       NUMEROEXTERIOR?.setValidators([Validators.required]);
-    }
-    else {
+    } else {
       COLONIA?.setValidators([Validators.required]);
       CALLE?.clearValidators();
       NUMEROEXTERIOR?.clearValidators();
@@ -346,47 +403,47 @@ export class AgregarDestinatarioFinalComponent
   /**
    * Recupera varias listas de datos del servicio `DatosSolicitudService` y
    * las asigna a propiedades locales. Se desuscribe automáticamente en el hook de
-   * destrucción usando `takeUntil(this.unsubscribe$)`.
+   * destrucción usando `takeUntil(this.destroyNotifier$)`.
    */
   cargarDatos(): void {
     this.datosSolicitudService
       .obtenerListaCodigosPostales()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.codigosPostalesDatos = data;
       });
 
     this.datosSolicitudService
       .obtenerListaPaises()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.paisesDatos = data;
       });
 
     this.datosSolicitudService
       .obtenerListaEstados()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.estadosDatos = data;
       });
 
     this.datosSolicitudService
       .obtenerListaMunicipios()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.municipiosDatos = data;
       });
 
     this.datosSolicitudService
       .obtenerListaLocalidades()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.localidadesDatos = data;
       });
 
     this.datosSolicitudService
       .obtenerListaColonias()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.coloniasDatos = data;
       });
@@ -448,7 +505,7 @@ export class AgregarDestinatarioFinalComponent
    * @returns {void} No retorna ningún valor.
    */
   ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

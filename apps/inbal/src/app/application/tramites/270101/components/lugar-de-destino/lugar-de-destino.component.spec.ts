@@ -33,6 +33,9 @@ describe('LugarDeDestinoComponent', () => {
     component = fixture.componentInstance;
     exportarIlustracionesService = TestBed.inject(ExportarIlustracionesService);
     tramite270101Store = TestBed.inject(Tramite270101Store);
+    component.consultaState = {
+      readonly: false,
+    } as any;
     fixture.detectChanges();
   });
 
