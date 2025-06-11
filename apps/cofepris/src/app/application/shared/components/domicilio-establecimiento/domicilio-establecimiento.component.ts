@@ -153,6 +153,14 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   public esFormularioSoloLectura: boolean = false;
 
   /**
+   * Bandera para indicar si se está actualizando el estado de la consulta.
+   * Inicialmente establecido en `false`.
+   *
+   * @description Esta bandera se utiliza para determinar si se debe actualizar el estado de la consulta.
+   */
+  private consultaStateUpdate: boolean = false;
+
+  /**
    * Datos completos de los establecimientos.
    */
   public fullEstablecimientoBodyData = [];
@@ -175,7 +183,8 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.esFormularioSoloLectura = seccionState.readonly;
+        this.consultaStateUpdate = seccionState.update;
       })
     )
     .subscribe()
@@ -191,7 +200,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       } else {
         this.inicializarFormulario();
       }
-      if(this.esFormularioSoloLectura) {
+      if(this.esFormularioSoloLectura || this.consultaStateUpdate) {
         this.obtenerScianTablaDatos();
         this.obtenerDataMercanciasDatos();
       }
