@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Subject, forkJoin, map, takeUntil } from 'rxjs';
+import { Subject,forkJoin,takeUntil } from 'rxjs';
 import { Solocitud260905Service } from '../../services/service260905.service';
 
 /**
@@ -12,7 +12,7 @@ import { Solocitud260905Service } from '../../services/service260905.service';
   selector: 'app-datos-260905',
   templateUrl: './datos-260905.component.html',
 })
-export class Datos260905Component {
+export class Datos260905Component implements OnInit{
 
    /**
      * showPreFillingOptions

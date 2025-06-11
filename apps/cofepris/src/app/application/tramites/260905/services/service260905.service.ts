@@ -5,7 +5,9 @@ import { Observable } from 'rxjs';
 
 import { DatosDelSolicituteSeccionState } from '../../../shared/estados/stores/datos-del-solicitute-seccion.store';
 import { DatosDelSolicituteSeccionStateStore } from '../../../shared/estados/stores/datos-del-solicitute-seccion.store';
-import { PermisoImportacionBiologicaState, PermisoImportacionBiologicaStore } from '../../../shared/estados/permiso-importacion-biologica.store';
+import { PermisoImportacionBiologicaState } from '../../../shared/estados/permiso-importacion-biologica.store';
+import { PermisoImportacionBiologicaStore } from '../../../shared/estados/permiso-importacion-biologica.store';
+
 
 @Injectable({
   providedIn: 'root',
