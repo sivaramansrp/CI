@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, CatalogosSelect, InputRadioComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConsultaioQuery, InputRadioComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -92,7 +92,11 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy{
    * Enumeración u objeto que contiene las opciones disponibles para el botón de radio.
    */
   opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
-
+/**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente.
    *
@@ -103,9 +107,26 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy{
     private readonly fb: FormBuilder,
     revisionService: RevisionService,
     public Solicitud220503Store : Solicitud220503Store,
-    public Solicitud220503Query : Solicitud220503Query
+    public Solicitud220503Query : Solicitud220503Query,
+    public consultaioQuery: ConsultaioQuery
   ) {
     this.revisionService = revisionService;
+     /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
   }
 
   /**
@@ -113,7 +134,45 @@ export class PagoDeDerechosComponent implements OnInit , OnDestroy{
    * @returns {void}
    */
   ngOnInit(): void {
-     this.pagoForm = this.fb.group({
+      this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+  }
+
+   /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.pagoForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.pagoForm.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+
+   /**
+   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+   * con el valor inicial obtenido del store.
+   */
+
+  inicializarFormulario(): void {
+this.pagoForm = this.fb.group({
       exentoPagoNo: [{ value: this.Solicitud220503State.exentoPagoNo}],
       justificacion: [{ value: this.Solicitud220503State.justificacion, disabled: true }],
       claveReferencia: [{ value: this.Solicitud220503State.claveReferencia, disabled: true }],

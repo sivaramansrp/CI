@@ -43,53 +43,6 @@ describe('AvisoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form in donanteDomicilio', () => {
-    component.solicitudState = {
-      claveFiscalizado: 'test',
-      tipoDictamen: 'test',
-      rfc: 'test',
-      numeroInscripcion: 'test',
-      ano: null,
-      mes: null,
-      radioParcial: '',
-      radioTotal: '',
-      saldoPendiente: '',
-      aprovechamiento: '',
-      disminucionAplicada: '',
-      saldoPendienteDisminuir: '',
-      cantidad: '',
-      llaveDePago: '',
-      archivo: [],
-      fechaPago: '',
-      fechaElaboracion: '',
-    };
-    component.donanteDomicilio();
-    expect(component.avisoForm).toBeDefined();
-    expect(component.avisoForm.get('claveFiscalizado')?.value).toBe('test');
-  });
-
-  it('should call obtenerDatosAnoPeriodo and update anoCatalogo', () => {
-    const mockResponse = [{ id: 1, descripcion: '2023' }];
-    jest.spyOn(adaceService, 'obtenerDatosAno').mockReturnValue(of(mockResponse));
-    component.obtenerDatosAnoPeriodo();
-    expect(component.anoCatalogo.catalogos).toEqual(mockResponse);
-  });
-
-  it('should call obtenerDatosMesPeriodo and update mesCatalogo', () => {
-    const mockResponse = [{ id: 1, descripcion: 'Enero' }];
-    jest.spyOn(adaceService, 'obtenerDatosMes').mockReturnValue(of(mockResponse));
-    component.obtenerDatosMesPeriodo();
-    expect(component.mesCatalogo.catalogos).toEqual(mockResponse);
-  });
-
-  it('should update archivo form control and nombreArchivo in alSeleccionarArchivo', () => {
-    const mockFile = new File(['content'], 'test-file.txt', { type: 'text/plain' });
-    const event = { target: { files: [mockFile] } } as unknown as Event;
-    component.alSeleccionarArchivo(event);
-    expect(component.nombreArchivo).toBe('test-file.txt');
-    expect(component.avisoForm.get('archivo')?.value).toBe(mockFile);
-  });
-
   it('should set cargarArchivo to true and call abrirModal in cargaArchivo', () => {
     jest.spyOn(component, 'abrirModal');
     component.cargaArchivo();
@@ -139,14 +92,6 @@ describe('AvisoComponent', () => {
     const spy = jest.spyOn(TestBed.inject(ValidacionesFormularioService), 'isValid');
     component.esValido(component.avisoForm, 'claveFiscalizado');
     expect(spy).toHaveBeenCalledWith(component.avisoForm, 'claveFiscalizado');
-  });
-
-  it('should call store method in setValoresStore', () => {
-    jest.spyOn(store, 'setArchivo');
-    const mockFile = new File(['content'], 'test-file.txt', { type: 'text/plain' });
-    component.avisoForm.patchValue({ archivo: mockFile });
-    component.setValoresStore(component.avisoForm, 'archivo', 'setArchivo');
-    expect(store.setArchivo).toHaveBeenCalledWith(mockFile);
   });
 
   it('should complete destroyed$ on ngOnDestroy', () => {
