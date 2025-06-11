@@ -67,8 +67,9 @@
         <div class="col-md-4">
           <input-fecha
             [datos]="fechaInspeccionInput"
-            (valorCambiado)="cambioFechaInicio($event)"
-            [setFecha]="this.tramiteState.fechaDeInspeccion"
+            (valorCambiado)="cambiarFechaInicio($event)"
+            name="fechaInspeccionInput"
+            [setFecha]="datosDeLaSolicitudForm.get('fechaInspeccionInput')?.value"
             [isDisabled]="esFormularioSoloLectura"
           ></input-fecha>
         </div>

@@ -429,6 +429,20 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Cambia la fecha de inicio de la inspección en el formulario.
+   * @method cambiarFechaInicio
+   * @param {string} nuevo_valor - Nueva fecha de inicio a establecer.
+   * @returns {void}
+   */
+  public cambiarFechaInicio(nuevo_valor: string): void {
+    this.datosDeLaSolicitudForm.patchValue({
+      fechaInspeccionInput: nuevo_valor,
+    });
+    this.datosDeLaSolicitudForm.get('fechaInspeccionInput')?.setValue(nuevo_valor);
+    this.datosDeLaSolicitudForm.get('fechaInspeccionInput')?.markAsUntouched();
+  }
+
+  /**
    * Obtiene las horas de inspección desde el servicio.
    * @method getHoraDeInspeccion
    * @returns {void}
