@@ -58,7 +58,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
     private tramite420101Query: Tramite420101Query,
     private tramite420101Store: Tramite420101Store,
     private consultaQuery: ConsultaioQuery,
-    private RegistrarProveedoresService: RegistrarProveedoresService
+    private registrarProveedoresService: RegistrarProveedoresService
 
   ) {
       this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),
@@ -93,7 +93,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
  * Luego reinicializa el formulario con los valores actualizados desde el store.
  */
   guardarDatosFormulario(): void {
-    this.RegistrarProveedoresService.getRegistroTomaMuestrasMercanciasData().pipe(
+    this.registrarProveedoresService.getRegistroTomaMuestrasMercanciasData().pipe(
         takeUntil(this.destroyNotifier$)).subscribe((resp) => {
           if (resp) {
             this.esDatosRespuesta = true;
