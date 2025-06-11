@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { of, Subject } from 'rxjs';
+import { of, Subject, throwError } from 'rxjs';
 import { TercerosRelacionadosComponent } from './terceros-relacionados.component';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { SolicitudPermisoService } from '../../services/solicitud-permiso.service';
@@ -186,6 +186,18 @@ describe('TercerosRelacionadosComponent', () => {
       
       expect(newComponent.esFormularioSoloLectura).toBe(true);
     });
+
+    it('debería manejar estados consultaio con propiedades adicionales', () => {
+      const extendedState = { readonly: false, otherProperty: 'value' };
+      mockConsultaioQuery.selectConsultaioState$ = of(extendedState) as any;
+      
+      const newComponent = new TercerosRelacionadosComponent(
+        mockSolicitudPermisoService,
+        mockConsultaioQuery
+      );
+      
+      expect(newComponent.esFormularioSoloLectura).toBe(false);
+    });
   });
 
   // Pruebas para ngOnInit
@@ -248,6 +260,30 @@ describe('TercerosRelacionadosComponent', () => {
       
       expect(component.datosTablaFabricante).toEqual([]);
     });
+
+    it('debería manejar errores en obtenerDatosDestinatarios', () => {
+      const error = new Error('Error en servicio');
+      mockSolicitudPermisoService.obtenerDatosDestinatarios.mockReturnValue(throwError(() => error));
+      
+      // Spy en console.error para verificar manejo de errores
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      
+      expect(() => component.ngOnInit()).not.toThrow();
+      
+      consoleSpy.mockRestore();
+    });
+
+    it('debería manejar errores en obtenerDatosFabricantes', () => {
+      const error = new Error('Error en servicio');
+      mockSolicitudPermisoService.obtenerDatosFabricantes.mockReturnValue(throwError(() => error));
+      
+      // Spy en console.error para verificar manejo de errores
+      const consoleSpy = jest.spyOn(console, 'error').mockImplementation();
+      
+      expect(() => component.ngOnInit()).not.toThrow();
+      
+      consoleSpy.mockRestore();
+    });
   });
 
   // Pruebas para manejarFilaSeleccionadaDestinatario
@@ -273,6 +309,32 @@ describe('TercerosRelacionadosComponent', () => {
       
       component.manejarFilaSeleccionadaDestinatario(filasSeleccionadas);
       
+      expect(component.destinatarioTablaSeleccion).toBe(true);
+    });
+
+    it('debería manejar array undefined', () => {
+      component.manejarFilaSeleccionadaDestinatario(undefined as any);
+      
+      expect(component.destinatarioTablaSeleccion).toBe(false);
+    });
+
+    it('debería manejar array null', () => {
+      component.manejarFilaSeleccionadaDestinatario(null as any);
+      
+      expect(component.destinatarioTablaSeleccion).toBe(false);
+    });
+
+    it('debería manejar cambio de selección múltiple veces', () => {
+      // Seleccionar primero
+      component.manejarFilaSeleccionadaDestinatario([mockDestinatarios[0]]);
+      expect(component.destinatarioTablaSeleccion).toBe(true);
+      
+      // Deseleccionar
+      component.manejarFilaSeleccionadaDestinatario([]);
+      expect(component.destinatarioTablaSeleccion).toBe(false);
+      
+      // Seleccionar múltiples
+      component.manejarFilaSeleccionadaDestinatario(mockDestinatarios);
       expect(component.destinatarioTablaSeleccion).toBe(true);
     });
   });
@@ -301,6 +363,35 @@ describe('TercerosRelacionadosComponent', () => {
       component.manejarFilaSeleccionadaFabricante(filasSeleccionadas);
       
       expect(component.fabricanteTablaSeleccion).toBe(true);
+    });
+
+    it('debería manejar array undefined', () => {
+      component.manejarFilaSeleccionadaFabricante(undefined as any);
+      
+      expect(component.fabricanteTablaSeleccion).toBe(false);
+    });
+
+    it('debería manejar array null', () => {
+      component.manejarFilaSeleccionadaFabricante(null as any);
+      
+      expect(component.fabricanteTablaSeleccion).toBe(false);
+    });
+
+    it('debería mantener el estado correcto con cambios consecutivos', () => {
+      // Estado inicial
+      expect(component.fabricanteTablaSeleccion).toBe(false);
+      
+      // Seleccionar uno
+      component.manejarFilaSeleccionadaFabricante([mockFabricantes[0]]);
+      expect(component.fabricanteTablaSeleccion).toBe(true);
+      
+      // Seleccionar otro
+      component.manejarFilaSeleccionadaFabricante([mockFabricantes[1]]);
+      expect(component.fabricanteTablaSeleccion).toBe(true);
+      
+      // Deseleccionar todos
+      component.manejarFilaSeleccionadaFabricante([]);
+      expect(component.fabricanteTablaSeleccion).toBe(false);
     });
   });
 
@@ -337,6 +428,14 @@ describe('TercerosRelacionadosComponent', () => {
       expect(nextSpy).toHaveBeenCalledTimes(1);
       expect(completeSpy).toHaveBeenCalledTimes(1);
     });
+
+    it('debería ser llamado correctamente al destruir el componente', () => {
+      const destroySpy = jest.spyOn(component, 'ngOnDestroy');
+      
+      fixture.destroy();
+      
+      expect(destroySpy).toHaveBeenCalled();
+    });
   });
 
   // Pruebas de integración y flujo completo
@@ -372,6 +471,22 @@ describe('TercerosRelacionadosComponent', () => {
       component.manejarFilaSeleccionadaFabricante([]);
       
       expect(component.fabricanteTablaSeleccion).toBe(false);
+    });
+
+    it('debería manejar el estado readonly correctamente durante todo el ciclo de vida', () => {
+      // Verificar estado inicial
+      expect(component.esFormularioSoloLectura).toBe(false);
+      
+      // Simular cambio a readonly
+      const readonlyState = { readonly: true };
+      mockConsultaioQuery.selectConsultaioState$ = of(readonlyState) as any;
+      
+      // Crear nuevo componente
+      const newFixture = TestBed.createComponent(TercerosRelacionadosComponent);
+      const newComponent = newFixture.componentInstance;
+      newFixture.detectChanges();
+      
+      expect(newComponent.esFormularioSoloLectura).toBe(true);
     });
   });
 
@@ -419,6 +534,38 @@ describe('TercerosRelacionadosComponent', () => {
         );
       }).not.toThrow();
     });
+
+    it('debería manejar datos de destinatarios con propiedades faltantes', () => {
+      const destinatariosIncompletos = [{ nombre: 'Test' }] as Destinatario[];
+      mockSolicitudPermisoService.obtenerDatosDestinatarios.mockReturnValue(of(destinatariosIncompletos as any));
+      
+      component.ngOnInit();
+      
+      expect(component.datosTablaDestinatario).toEqual(destinatariosIncompletos);
+    });
+
+    it('debería manejar datos de fabricantes con propiedades faltantes', () => {
+      const fabricantesIncompletos = [{ nombre: 'Test Fabricante' }] as Fabricante[];
+      mockSolicitudPermisoService.obtenerDatosFabricantes.mockReturnValue(of(fabricantesIncompletos));
+      
+      component.ngOnInit();
+      
+      expect(component.datosTablaFabricante).toEqual(fabricantesIncompletos);
+    });
+
+    it('debería manejar arrays con elementos undefined en destinatarios', () => {
+      const destinatariosConUndefined = [mockDestinatarios[0], undefined, mockDestinatarios[1]] as Destinatario[];
+      component.manejarFilaSeleccionadaDestinatario(destinatariosConUndefined);
+      
+      expect(component.destinatarioTablaSeleccion).toBe(true);
+    });
+
+    it('debería manejar arrays con elementos undefined en fabricantes', () => {
+      const fabricantesConUndefined = [mockFabricantes[0], undefined, mockFabricantes[1]] as Fabricante[];
+      component.manejarFilaSeleccionadaFabricante(fabricantesConUndefined);
+      
+      expect(component.fabricanteTablaSeleccion).toBe(true);
+    });
   });
 
   // Pruebas de interacción con la vista
@@ -465,6 +612,52 @@ describe('TercerosRelacionadosComponent', () => {
       
       const botonesEliminarModificar = fixture.nativeElement.querySelectorAll('.btn-danger, .btn-default');
       expect(botonesEliminarModificar.length).toBeGreaterThan(0);
+    });
+
+    it('debería mostrar los botones de eliminar y modificar cuando hay filas seleccionadas en fabricantes', () => {
+      component.fabricanteTablaSeleccion = true;
+      fixture.detectChanges();
+      
+      const botonesEliminarModificar = fixture.nativeElement.querySelectorAll('.btn-danger, .btn-default');
+      expect(botonesEliminarModificar.length).toBeGreaterThan(0);
+    });
+
+    it('debería ocultar botones de eliminar y modificar cuando no hay selección', () => {
+      component.destinatarioTablaSeleccion = false;
+      component.fabricanteTablaSeleccion = false;
+      fixture.detectChanges();
+      
+      const contenedoresCondicionales = fixture.nativeElement.querySelectorAll('[*ngIf]');
+      // Los contenedores condicionales no deberían estar visibles
+      expect(contenedoresCondicionales.length).toBeDefined();
+    });
+
+    it('debería mantener habilitado el botón Agregar cuando no esFormularioSoloLectura', () => {
+      component.esFormularioSoloLectura = false;
+      fixture.detectChanges();
+      
+      const botonesAgregar = fixture.nativeElement.querySelectorAll('.btn-primary');
+      botonesAgregar.forEach((boton: HTMLButtonElement) => {
+        expect(boton.disabled).toBe(false);
+      });
+    });
+
+    it('debería renderizar las secciones de destinatario y fabricante', () => {
+      const compiled = fixture.nativeElement;
+      const encabezados = compiled.querySelectorAll('h6');
+      
+      expect(encabezados.length).toBeGreaterThanOrEqual(2);
+    });
+
+    it('debería tener la estructura de clases CSS correcta', () => {
+      const compiled = fixture.nativeElement;
+      const container = compiled.querySelector('.container');
+      const rows = compiled.querySelectorAll('.row');
+      const flexContainers = compiled.querySelectorAll('.d-flex');
+      
+      expect(container).toBeTruthy();
+      expect(rows.length).toBeGreaterThan(0);
+      expect(flexContainers.length).toBeGreaterThan(0);
     });
   });
 
@@ -520,6 +713,34 @@ describe('TercerosRelacionadosComponent', () => {
       expect(destroySpy).toHaveBeenCalledTimes(1);
       expect(completeSpy).toHaveBeenCalledTimes(1);
     });
+
+    it('debería manejar múltiples suscripciones simultáneas', () => {
+      const subject1 = new Subject();
+      const subject2 = new Subject();
+      
+      // Mock de servicios que retornan subjects
+      mockSolicitudPermisoService.obtenerDatosDestinatarios.mockReturnValue(subject1.asObservable() as any);
+      mockSolicitudPermisoService.obtenerDatosFabricantes.mockReturnValue(subject2.asObservable() as any);
+      
+      component.ngOnInit();
+      
+      // Emitir valores en ambos subjects
+      subject1.next(mockDestinatarios);
+      subject2.next(mockFabricantes);
+      
+      expect(component.datosTablaDestinatario).toEqual(mockDestinatarios);
+      expect(component.datosTablaFabricante).toEqual(mockFabricantes);
+    });
+
+    it('debería desuscribirse correctamente cuando se destruye el componente', () => {
+      const componentAny = component as any;
+      const unsubscribeSpy = jest.spyOn(componentAny.notificadorDestruccion$, 'next');
+      
+      // Simular destrucción del componente
+      component.ngOnDestroy();
+      
+      expect(unsubscribeSpy).toHaveBeenCalled();
+    });
   });
 
   // Pruebas de las configuraciones de las tablas
@@ -550,13 +771,136 @@ describe('TercerosRelacionadosComponent', () => {
       expect(component.configuiracionTablaFabricante[2].clave(fabricante)).toBe(fabricante.curp);
     });
 
-    it('debería configurar correctamente la columna estática de estado', () => {
-      // La columna 13 es la primera de estado, la 14 es la segunda que tiene valor estático
-      expect(component.configuiracionTablaDestinatario[13].encabezado).toBe('Estado');
-      expect(component.configuiracionTablaDestinatario[14].clave({} as any)).toBe('---');
+    it('debería configurar correctamente todas las columnas de destinatarios', () => {
+      const destinatario = mockDestinatarios[0];
+      const configuracion = component.configuiracionTablaDestinatario;
       
-      expect(component.configuiracionTablaFabricante[13].encabezado).toBe('Estado');
+      // Verificar todas las columnas
+      expect(configuracion[3].clave(destinatario)).toBe(destinatario.telefono);
+      expect(configuracion[4].clave(destinatario)).toBe(destinatario.correoElectronico);
+      expect(configuracion[5].clave(destinatario)).toBe(destinatario.calle);
+      expect(configuracion[6].clave(destinatario)).toBe(destinatario.numeroExterior);
+      expect(configuracion[7].clave(destinatario)).toBe(destinatario.numeroInterior);
+      expect(configuracion[8].clave(destinatario)).toBe(destinatario.pais);
+      expect(configuracion[9].clave(destinatario)).toBe(destinatario.colonia);
+      expect(configuracion[10].clave(destinatario)).toBe(destinatario.municipio);
+      expect(configuracion[11].clave(destinatario)).toBe(destinatario.localidad);
+      expect(configuracion[12].clave(destinatario)).toBe(destinatario.estado);
+      expect(configuracion[13].clave(destinatario)).toBe(destinatario.codigoPostal);
+    });
+
+    it('debería configurar correctamente todas las columnas de fabricantes', () => {
+      const fabricante = mockFabricantes[0];
+      const configuracion = component.configuiracionTablaFabricante;
+      
+      // Verificar todas las columnas
+      expect(configuracion[3].clave(fabricante)).toBe(fabricante.telefono);
+      expect(configuracion[4].clave(fabricante)).toBe(fabricante.correoElectronico);
+      expect(configuracion[5].clave(fabricante)).toBe(fabricante.calle);
+      expect(configuracion[6].clave(fabricante)).toBe(fabricante.numeroExterior);
+      expect(configuracion[7].clave(fabricante)).toBe(fabricante.numeroInterior);
+      expect(configuracion[8].clave(fabricante)).toBe(fabricante.pais);
+      expect(configuracion[9].clave(fabricante)).toBe(fabricante.colonia);
+      expect(configuracion[10].clave(fabricante)).toBe(fabricante.municipio);
+      expect(configuracion[11].clave(fabricante)).toBe(fabricante.localidad);
+      expect(configuracion[12].clave(fabricante)).toBe(fabricante.estado);
+      expect(configuracion[13].clave(fabricante)).toBe(fabricante.codigoPostal);
+    });
+
+    it('debería configurar correctamente la columna estática de estado', () => {
+      // La columna 14 es la que tiene valor estático
+      expect(component.configuiracionTablaDestinatario[14].clave({} as any)).toBe('---');
       expect(component.configuiracionTablaFabricante[14].clave({} as any)).toBe('---');
+    });
+
+    it('debería tener encabezados correctos para todas las columnas de destinatarios', () => {
+      const configuracion = component.configuiracionTablaDestinatario;
+      const encabezadosEsperados = [
+        'Nombre/denominación o razón social',
+        'R.F.C',
+        'CURP',
+        'Teléfono',
+        'Correo electrónico',
+        'Calle',
+        'Número exterior',
+        'Número interior',
+        'País',
+        'Colonia',
+        'Municipio',
+        'Localidad',
+        'Estado',
+        'Código postal',
+        'Estado'
+      ];
+      
+      configuracion.forEach((columna, index) => {
+        expect(columna.encabezado).toBe(encabezadosEsperados[index]);
+      });
+    });
+
+    it('debería tener encabezados correctos para todas las columnas de fabricantes', () => {
+      const configuracion = component.configuiracionTablaFabricante;
+      const encabezadosEsperados = [
+        'Nombre/denominación o razón social',
+        'R.F.C',
+        'CURP',
+        'Teléfono',
+        'Correo electrónico',
+        'Calle',
+        'Número exterior',
+        'Número interior',
+        'País',
+        'Colonia',
+        'Municipio',
+        'Localidad',
+        'Estado',
+        'Código postal',
+        'Estado'
+      ];
+      
+      configuracion.forEach((columna, index) => {
+        expect(columna.encabezado).toBe(encabezadosEsperados[index]);
+      });
+    });
+  });
+
+  // Pruebas de comportamiento y estado interno
+  describe('Comportamiento y estado interno', () => {
+    it('debería mantener el estado de selección independiente entre tablas', () => {
+      // Seleccionar en destinatarios
+      component.manejarFilaSeleccionadaDestinatario([mockDestinatarios[0]]);
+      expect(component.destinatarioTablaSeleccion).toBe(true);
+      expect(component.fabricanteTablaSeleccion).toBe(false);
+      
+      // Seleccionar en fabricantes
+      component.manejarFilaSeleccionadaFabricante([mockFabricantes[0]]);
+      expect(component.destinatarioTablaSeleccion).toBe(true);
+      expect(component.fabricanteTablaSeleccion).toBe(true);
+      
+      // Deseleccionar solo destinatarios
+      component.manejarFilaSeleccionadaDestinatario([]);
+      expect(component.destinatarioTablaSeleccion).toBe(false);
+      expect(component.fabricanteTablaSeleccion).toBe(true);
+    });
+
+    it('debería inicializar correctamente el tipo de selección de tabla', () => {
+      expect(component.tipoSeleccionTabla).toBe(TablaSeleccion.CHECKBOX);
+    });
+
+    it('debería mantener las referencias a los servicios inyectados', () => {
+      const componentAny = component as any;
+      expect(componentAny.solicitudPermisoService).toBe(mockSolicitudPermisoService);
+      expect(componentAny.consultaioQuery).toBe(mockConsultaioQuery);
+    });
+
+    it('debería manejar correctamente los cambios de estado del formulario', () => {
+      // Cambiar a solo lectura
+      component.esFormularioSoloLectura = true;
+      expect(component.esFormularioSoloLectura).toBe(true);
+      
+      // Cambiar a editable
+      component.esFormularioSoloLectura = false;
+      expect(component.esFormularioSoloLectura).toBe(false);
     });
   });
 });

@@ -6,6 +6,11 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { SolicitudPermisoService } from '../../services/solicitud-permiso.service';
 import { Tramite260703Query } from '../../estados/query/tramite260703.query';
 
+/**
+ * Componente para gestionar los datos del representante legal en el trámite 260703.
+ * Permite la visualización y edición de los datos del representante legal, 
+ * incluyendo RFC, nombre o razón social, apellido paterno y apellido materno.
+ */
 @Component({
   selector: 'app-representante-legal',
   templateUrl: './representante-legal.component.html',

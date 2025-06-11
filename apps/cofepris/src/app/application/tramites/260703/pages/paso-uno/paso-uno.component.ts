@@ -21,6 +21,8 @@ import { TramiteAsociados } from '../../../../shared/models/tramite-asociados.mo
 
 /**
  * Componente que representa el primer paso en un proceso de múltiples pasos.
+ * Este componente se encarga de gestionar la información del pago de derechos
+ * y de mostrar los trámites asociados a la solicitud de permiso.
  */
 @Component({
   selector: 'app-paso-uno',
@@ -91,19 +93,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.notificadorDestruccion$),
         map((seccionState) => {
-          // this.consultaState = seccionState;
-          this.consultaState = {
-            procedureId: '260703',
-            parameter: '',
-            department: 'cofepris',
-            folioTramite: '',
-            tipoDeTramite: '',
-            estadoDeTramite: '',
-            readonly: true,
-            create: true,
-            update: true,
-            consultaioSolicitante: null,
-          };
+          this.consultaState = seccionState;
         })
       )
       .subscribe();

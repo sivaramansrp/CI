@@ -70,9 +70,11 @@
       [formularioPagoDerechos]="formularioPagoDerechos"
       [banco]="this.solicitudPermisoService.banco"
       (setValoresStoreEvent)="setValoresStore($event)"
+      [isdisabled]="esFormularioSoloLectura"
       ></app-pago-de-derechos>
       } @case (5){ 
         <app-tramite-asociados
+        [isdisabled]="esFormularioSoloLectura"
         [configuracionTabla]="configuracionTabla" [tramiteAsociados]="tramiteAsociados"></app-tramite-asociados>
       } }
     </ng-container>
