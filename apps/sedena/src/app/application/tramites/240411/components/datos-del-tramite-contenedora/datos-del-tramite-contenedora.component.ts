@@ -1,6 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { CrosslistComponent } from '@libs/shared/data-access-user/src';
+
+import { ConsultaioQuery, CrosslistComponent } from '@libs/shared/data-access-user/src';
+import { Subject, map } from 'rxjs';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { JustificacionTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
@@ -8,7 +10,7 @@ import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.mo
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
+
 import { Tramite240411Query } from '../../estados/tramite240411Query.query';
 import { Tramite240411Store } from '../../estados/tramite240411Store.store';
 import { takeUntil } from 'rxjs';
@@ -62,6 +64,12 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * Referencia al componente Crosslist para manejar la selección de aduanas.
    */
   @ViewChild(CrosslistComponent) crossList!: CrosslistComponent;
+  
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -73,9 +81,17 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite240411Query,
-    private tramiteStore: Tramite240411Store
+    private tramiteStore: Tramite240411Store,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    //
+   this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState)=>{
+          this.esFormularioSoloLectura = seccionState.readonly; 
+        })
+      )
+      .subscribe()
   }
 
   /**
