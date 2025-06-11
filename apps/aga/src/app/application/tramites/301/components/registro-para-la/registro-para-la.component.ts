@@ -11,6 +11,7 @@ import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramit
 import { CommonModule } from '@angular/common';
 import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { Pantallas301Service } from '../../services/pantallas301.service';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 
@@ -132,6 +133,7 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
     private tramite301Store: Tramite301Store,
     private tramite301Query: Tramite301Query,
     private consultaioQuery: ConsultaioQuery,
+    private pantallas301Service: Pantallas301Service
   ) {
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -159,6 +161,7 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.inicializarFormulario();
+    this.mostrarCampo = this.pantallas301Service.obtenerRegistroCampoVisibilidad();
   }
 
  /**
@@ -239,9 +242,8 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
  * @memberof RegistroParaLaComponent
  */
   iniciar(): void {
-    if (!this.mostrarCampo) {
-      this.mostrarCampo = !this.mostrarCampo;
-    }
+    this.pantallas301Service.actualizarRegistroCampo();
+    this.mostrarCampo = this.pantallas301Service.obtenerRegistroCampoVisibilidad();
   }
 
   /**
