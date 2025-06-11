@@ -11,7 +11,7 @@
           [required]="mediodetransporte.required"
           formControlName="transporteIdMedio"
           (selectionChange)="setTransporteIdMedio($event)"
-          [isDisabled]="false"
+          [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
       </div>
     </div>
@@ -27,6 +27,7 @@
           formControlName="identificacionTransporte"
           id="puntos"
           (change)="setIdentificacionTransporte($event)"
+          [disabled]="esFormularioSoloLectura"
         />
         <div
           *ngIf="grupoFormularioPadre.get(claveDeControl)?.get('identificacionTransporte')?.errors?.['maxlength'] &&
@@ -51,6 +52,11 @@
         (valueChange)="enCambioDeValor($event)"
       ></app-input-radio>
     </div>
+    @if(enCambioValor === '1') {
+    <div class="col-md-12 mt-2">
+         <ng-alert [CONTENIDO]="ES_SOLICITUD_FERROS_VALOR"></ng-alert>
+    </div>
+     }
     <div class="col-md-12">
       <div class="form-field">
         <label for="Datosdelamercancía" class="form-label"

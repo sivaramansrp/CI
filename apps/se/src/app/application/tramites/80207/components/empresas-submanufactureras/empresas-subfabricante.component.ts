@@ -1,8 +1,9 @@
-import { BehaviorSubject, Subject, takeUntil } from 'rxjs';
+import { BehaviorSubject, Subject,map, takeUntil } from 'rxjs';
 import {
   Catalogo,
   CatalogoSelectComponent,
   ConfiguracionColumna,
+  ConsultaioQuery,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -131,6 +132,18 @@ export class EmpresasSubFabricanteComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+
+  /**
+   * Indica si el campo debe ser deshabilitado.
+   * @property {boolean} campoDeshabilitar
+   */
+  campoDeshabilitar:boolean= false;
+
+  /**
    * Constructor del componente que inyecta los servicios necesarios para la creación del formulario
    * y la inicialización de datos.
    *
@@ -143,10 +156,18 @@ export class EmpresasSubFabricanteComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private subfabricanteDatosService: SubfabricanteService,
     public query: Tramites80207Queries,
-    private store: Tramites80207Store
+    private store: Tramites80207Store,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    this.inicializarFormularioInfoRegistro();
-    this.inicializarFormularioDatosSubcontratista();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      ).subscribe();
+    
   }
 
   /**
@@ -154,6 +175,7 @@ export class EmpresasSubFabricanteComponent implements OnInit, OnDestroy {
    * @method ngOnInit
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
     this.obtenerDatosDeRegistro();
     this.obtenerDatosDelAlmacen();
     this.obtenerListaEstado();
@@ -270,6 +292,37 @@ export class EmpresasSubFabricanteComponent implements OnInit, OnDestroy {
       folio: [{ value: '', disabled: true }],
       ano: [{ value: '', disabled: true }],
     });
+  }
+  /**
+   * Guarda los datos del formulario y actualiza el estado del componente.
+   * Si el formulario está en modo solo lectura, deshabilita los campos.
+   * Si no, habilita los campos para permitir la edición.
+   *
+   * @method guardarDatosFormulario
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormularioInfoRegistro();
+    this.inicializarFormularioDatosSubcontratista(); 
+    if (this.esFormularioSoloLectura) {
+      this.campoDeshabilitar=true;
+      this.formularioDatosSubcontratista.disable();
+    } else{
+      this.campoDeshabilitar=false;
+      this.formularioDatosSubcontratista.enable();
+    } }
+   /**  
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+   inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormularioInfoRegistro();
+    this.inicializarFormularioDatosSubcontratista(); 
+    }  
+
   }
 
   /**

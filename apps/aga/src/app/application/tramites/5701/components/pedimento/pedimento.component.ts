@@ -1,14 +1,14 @@
 import {
   Component,
   EventEmitter,
-  forwardRef,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
   Output,
-  output,
   SimpleChanges,
+  forwardRef,
+  output,
 } from '@angular/core';
 import {
   DatosComponentePedimento,
@@ -162,7 +162,6 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['tablaPedimento'] && changes['tablaPedimento'].currentValue) {
       this.pedimentos = [...changes['tablaPedimento'].currentValue];
-      this.datosTablaPedimento.emit(this.pedimentos);
     }
 
     if (changes['validacion']) {

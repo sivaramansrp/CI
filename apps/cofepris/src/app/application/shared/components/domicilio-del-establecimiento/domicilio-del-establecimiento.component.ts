@@ -24,11 +24,13 @@ import { ScianData } from '../../../shared/models/datos-modificacion.model';
 
 import { DomicilioState } from '../../estados/stores/domicilio.store';
 
-import { DomicilioStore } from '../../estados/stores/domicilio.store'; 
+import { DomicilioStore } from '../../estados/stores/domicilio.store';
 
 import { DomicilioQuery } from '../../../shared/estados/queries/domicilio.query';
 
 import { DatosService } from '../../../shared/services/datos.service';
+
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 /**
  * Componente que gestiona el formulario y las interacciones relacionadas con el domicilio del establecimiento.
@@ -49,6 +51,12 @@ import { DatosService } from '../../../shared/services/datos.service';
   styleUrls: ['./domicilio-del-establecimiento.component.scss'],
 })
 export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
+ defaultSelect: string = 'Si';
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Referencia a los componentes Crosslist.
    */
@@ -187,7 +195,8 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private datosService: DatosService,
     private domicilioStore: DomicilioStore,
-    private domicilioquery: DomicilioQuery
+    private domicilioquery: DomicilioQuery,
+    private consultaioQuery: ConsultaioQuery,
   ) {
     // Constructor
   }
@@ -204,7 +213,69 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    /**
+      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+      *
+      * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+      * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+      * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+      */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
 
+    this.cargarEstadoData();
+    this.cargarDatosTabla();
+    this.cargarDatosProductoTabla();
+    this.obtenerDatosClave();
+    this.obtenerDatosDescripcion();
+    this.obtenerDatosPreOperativo();
+    this.obtenerclassificacionProductos();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.domicilioForm.disable();
+      this.claveScianForm.disable();
+      this.DatosMercanciaForm.disable();
+    } else {
+      this.domicilioForm.enable();
+      this.claveScianForm.enable();
+      this.DatosMercanciaForm.enable();
+    } 
+  }
+
+  /**
+  * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+  * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+  * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+  * con el valor inicial obtenido del store.
+  */
+
+  inicializarFormulario(): void {
     this.domicilioForm = this.fb.group({
       codigoPostal: [this.solicitudState?.codigoPostal, [Validators.maxLength(12)]],
       estado: [this.solicitudState?.estado, Validators.required],
@@ -246,22 +317,14 @@ export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
       paisDestino: [this.solicitudState?.paisDestino, Validators.required],
       paisProcedencia: [this.solicitudState?.paisProcedencia, Validators.required],
     });
-
-    this.cargarEstadoData();
-    this.cargarDatosTabla();
-    this.cargarDatosProductoTabla();
-    this.obtenerDatosClave();
-    this.obtenerDatosDescripcion();
-    this.obtenerDatosPreOperativo();
-    this.obtenerclassificacionProductos();
   }
 
   /**
-   * Actualiza el estado del store con los valores del formulario.
-   * @param form Formulario reactivo.
-   * @param campo Campo del formulario.
-   * @param metodoNombre Método del store a invocar.
-   */
+    * Actualiza el estado del store con los valores del formulario.
+    * @param form Formulario reactivo.
+    * @param campo Campo del formulario.
+    * @param metodoNombre Método del store a invocar.
+    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof DomicilioStore): void {
     const VALOR = form.get(campo)?.value;
     (this.domicilioStore[metodoNombre] as (value: string | number) => void)(VALOR);

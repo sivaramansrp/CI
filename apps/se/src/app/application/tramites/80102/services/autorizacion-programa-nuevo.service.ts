@@ -1,6 +1,7 @@
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { InfoServicios, Servicio } from '../models/autorizacion-programa-nuevo.model';
 import { Observable, map } from 'rxjs';
+import { Tramite80102State, Tramite80102Store } from '../estados/tramite80102.store';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -10,7 +11,7 @@ import { PlantasSubfabricante } from '../../../shared/models/empresas-subfabrica
   providedIn: 'root',
 })
 export class AutorizacionProgrmaNuevoService {
- constructor(private readonly http: HttpClient) {
+ constructor(private readonly http: HttpClient, public tramite80102Store: Tramite80102Store) {
    // No se necesita lógica de inicialización adicional.
   }
 
@@ -69,5 +70,29 @@ export class AutorizacionProgrmaNuevoService {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     .pipe(map((res: any) => res));
   }
+
+  /**
+ * Actualiza el estado del formulario con los datos proporcionados.
+ * 
+ * @param DATOS - Estado de la solicitud `Solicitud230401State` con la información 
+ *                del tipo de solicitud a actualizar en el store.
+ */
+actualizarEstadoFormulario(DATOS: Tramite80102State): void {
+  this.tramite80102Store.update((state) => ({
+    ...state,
+    ...DATOS
+  }))
+
+}
+
+/**
+* Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.
+* 
+* @returns Observable con los datos del estado de la solicitud `Solicitud230401State`,
+*          cargados desde el archivo JSON especificado en la ruta de `assets`.
+*/
+getRegistroTomaMuestrasMercanciasData(): Observable<Tramite80102State> {
+  return this.http.get<Tramite80102State>('assets/json/80102/respuestaDeActualizacionDe.json');
+}
 
 }

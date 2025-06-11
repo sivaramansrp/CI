@@ -2,12 +2,21 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { Observable } from 'rxjs';
-import { AvisoTablaDatos, CatalogoLista} from '../models/avios-model';
+import { AvisoTablaDatos, CatalogoLista, DatosSolicitante} from '../models/avios-model';
 
 @Injectable({
   providedIn: 'any'
 })
 export class AvisoService {
+
+   /**
+     * Obtiene los datos del solicitante.
+     * 
+     * @returns {Observable<DatosSolicitante>} Un observable con los datos del solicitante.
+     */
+    obtenerDatosSolicitante(): Observable<DatosSolicitante> {
+      return this.http.get<DatosSolicitante>(`assets/json/32505/datosSolicitante.json`);
+    }
 
    /**
    * Obtiene los datos de la tabla de aviso.

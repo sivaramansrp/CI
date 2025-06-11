@@ -24,13 +24,15 @@
       @switch (indice) { @case(1) {
       <solicitante></solicitante>
       } @case (2) {
-      <app-datos-del-tramite-realizer></app-datos-del-tramite-realizer>
-      <app-datos-de-la-mercancia></app-datos-de-la-mercancia>
-      <app-partidas-de-la-mercancia></app-partidas-de-la-mercancia>
-      <app-uso-especifico-de-la-mercancia></app-uso-especifico-de-la-mercancia>
-      <app-criterio-de-dictamen></app-criterio-de-dictamen>
-      <app-pais-procedencia></app-pais-procedencia>
-      <app-representacion-federal></app-representacion-federal>
+        @if (esDatosRespuesta) {
+          <app-datos-del-tramite-realizer [consultaState]="consultaState"></app-datos-del-tramite-realizer>
+          <app-datos-de-la-mercancia [consultaState]="consultaState"></app-datos-de-la-mercancia>
+          <app-partidas-de-la-mercancia [consultaState]="consultaState"></app-partidas-de-la-mercancia>
+          <app-uso-especifico-de-la-mercancia [consultaState]="consultaState"></app-uso-especifico-de-la-mercancia>
+          <app-criterio-de-dictamen [consultaState]="consultaState"></app-criterio-de-dictamen>
+          <app-pais-procedencia [consultaState]="consultaState"></app-pais-procedencia>
+          <app-representacion-federal [consultaState]="consultaState"></app-representacion-federal>
+        }
       } }
     </ng-container>
   </div>

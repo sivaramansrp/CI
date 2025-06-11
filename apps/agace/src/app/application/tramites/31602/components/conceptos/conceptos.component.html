@@ -159,6 +159,7 @@
                     formControlName="comboBimestresUno"
                     [label]="'Bimestre'"
                     [required]="true"
+                    [isDisabled]="esFormularioSoloLectura"
                     (change)="setValoresStore(conceptosForm,'comboBimestresUno', 'setComboBimestresUno')"
                   >
                   </app-catalogo-select>
@@ -167,6 +168,7 @@
                     formControlName="comboBimestresDos"
                     [label]="'Bimestre'"
                     [required]="true"
+                    [isDisabled]="esFormularioSoloLectura"
                     (change)="setValoresStore(conceptosForm,'comboBimestresDos', 'setComboBimestresDos')"
                   >
                   </app-catalogo-select>
@@ -175,6 +177,7 @@
                     formControlName="comboBimestresTres"
                     [label]="'Bimestre'"
                     [required]="true"
+                    [isDisabled]="esFormularioSoloLectura"
                     (change)="setValoresStore(conceptosForm,'comboBimestresTres', 'setComboBimestresTres')"
                   >
                   </app-catalogo-select>
@@ -197,23 +200,8 @@
                 </app-input-radio>
           </div>
           @if(conEmpleadosSeleccionado === 'Si') {
-            <numero-de-empleados></numero-de-empleados>
+            <numero-de-empleados [esFormularioSoloLectura]="esFormularioSoloLectura"></numero-de-empleados>
           }
-          <div class="col-md-12 mt-3">
-            <p class="fw-bold">
-                ¿Cuenta con empleados subcontratados?
-              </p>
-              <app-input-radio
-                    [radioOptions]="radioOpcions"
-                    [selectedValue]="valorSeleccionado"
-                    (valueChange)="onConEmpleados($event)"
-                    id="conEmpleados-si"
-                    [isRequired]="true"
-                    formControlName="conEmpleados"
-                    (change)="setValoresStore(conceptosForm,'conEmpleados', 'setConEmpleados')"
-                    [layout]="'horizontal'">
-                </app-input-radio>
-          </div>
           <div class="col-md-12 mt-3">
             <p class="fw-bold">
                 Indique si los socios y accionistas, representante legal, administrador único o miembros del consejo de administración de la empresa declararon ingresos acumulables en la declaración anual de los dos ejercicios previos ante la autoridad fiscal para los fines del ISR

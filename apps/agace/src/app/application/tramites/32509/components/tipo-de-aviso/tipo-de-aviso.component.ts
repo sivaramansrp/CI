@@ -1,9 +1,10 @@
 import { AVISO_OPCIONES, CASO_FORTUITO, DESTRUCCION_FECHA, ETIQUETA_DE_ARCHIVO, MENSAJE, TEXTO } from '../../constantes/destruccion-o-donacion';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AlertComponent, InputFechaComponent, InputRadioComponent, SeccionLibQuery, SeccionLibState, SeccionLibStore, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { DestruccionState, DestruccionStore } from '../../estados/Tramite32509.store';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/data-access-user/src';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { DestruccionQuery } from '../../estados/Tramite32509.query';
 
 /**
@@ -13,6 +14,8 @@ import { DestruccionQuery } from '../../estados/Tramite32509.query';
   selector: 'app-tipo-de-aviso',
   templateUrl: './tipo-de-aviso.component.html',
   styleUrl: './tipo-de-aviso.component.scss',
+  standalone: true,
+  imports: [ReactiveFormsModule, AlertComponent, InputFechaComponent, TituloComponent, InputRadioComponent, CommonModule]
 })
 export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   /**
@@ -86,6 +89,21 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
   DestruccionFecha: string = '15/03/2025';
 
   /**
+   * @input
+   * @description
+   * Indica si el formulario debe estar deshabilitado. Cuando es `true`, los controles del formulario estarán inactivos y no permitirán la edición por parte del usuario.
+   * @type {boolean}
+   */
+   @Input() formularioDeshabilitado: boolean = false;
+
+   /**
+   * @descripcion
+   * Indica si el formulario se encuentra en modo solo lectura.
+   * Cuando es verdadero, los controles del formulario estarán deshabilitados.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * @constructor
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos.
    * @param {DestruccionStore} store - Almacén para gestionar el estado del formulario.
@@ -137,7 +155,31 @@ export class TipoDeAvisoComponent implements OnInit, OnDestroy {
         }
       }
       );
+
+    if(this.formularioDeshabilitado){
+      this.esFormularioSoloLectura = true;
+      this.inicializarEstadoFormulario();
+    }
   }
+
+  /**
+   * Inicializa el estado del formulario según si está en modo solo lectura o editable.
+   * Si el formulario está en modo solo lectura, deshabilita todos los controles.
+   * Si no, habilita los controles para permitir la edición.
+   *
+   * @method
+   * @memberof CertificadoOrigenComponent
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.avisoForm.disable();
+    }
+    else {
+      this.avisoForm.enable();
+    } 
+  }
+
+  
 
   /**
    * @description Configura el formulario reactivo con los valores iniciales.

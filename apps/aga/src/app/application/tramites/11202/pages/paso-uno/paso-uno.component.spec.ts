@@ -1,12 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
-
-import { By } from '@angular/platform-browser';
-import {
-
-DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,
-PERSONA_MORAL_NACIONAL,
-} from 'libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 
 describe('PasoUnoComponent', () => {
 let component: PasoUnoComponent;
