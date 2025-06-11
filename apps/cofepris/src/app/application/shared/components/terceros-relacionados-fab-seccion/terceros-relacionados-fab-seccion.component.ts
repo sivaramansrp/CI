@@ -37,6 +37,22 @@ import { TramiteRelacionadaseStore } from '../../estados/stores/terceros-relacio
   styleUrl: './terceros-relacionados-fab-seccion.component.scss',
 }) 
 export class TercerosRelacionadosFabSeccionComponent implements OnInit, OnDestroy {
+  /**
+   * @description Almacena los datos de las filas de la tabla de fabricantes.
+   */
+  editFabricanteIndex: number | null = null;
+  /**
+   * @description Almacena los datos de las filas de la tabla de destinatarios.
+   */
+  editDestinatarioIndex: number | null = null;
+  /**
+   * @description Almacena los datos de las filas de la tabla de proveedores.   
+   */
+  editProveedorIndex: number | null = null;
+  /**
+   * @description Almacena los datos de las filas de la tabla de facturadores.  
+   */
+  editFacturadorIndex: number | null = null;
 /**
  * @description Este componente maneja la sección de terceros relacionados en el formulario de trámites.
  */
@@ -884,9 +900,6 @@ public extranjero = false;
     }
   
   
-   
-    
-  
     /**
      * Texto de alerta para los terceros relacionados.
      * Indica que las tablas con asterisco son obligatorias.
@@ -917,14 +930,96 @@ public extranjero = false;
  */
 submitFabricanteForm() {
   if (this.agregarFabricanteFormGroup) {
- 
     const NEW_FABRICANTE = this.agregarFabricanteFormGroup.value;
 
-    this.fabricanteRowData = [...this.fabricanteRowData, NEW_FABRICANTE];
+    if (this.editFabricanteIndex !== null) {
+      this.fabricanteRowData[this.editFabricanteIndex] = NEW_FABRICANTE;
+      this.editFabricanteIndex = null;
+    } else {
+      this.fabricanteRowData = [...this.fabricanteRowData, NEW_FABRICANTE];
+    }
 
- 
     this.toggleDivFabricante();
     this.agregarFabricanteFormGroup.reset();
+    this.selectedFabricanteRows = [];
+  }
+}
+/**
+ * Envía el formulario de facturador y actualiza los datos en el store.
+ */
+submitFacturadorForm(): void {
+  if (this.agregarFacturadorFormGroup) {
+    const NEW_FACTURADOR = this.agregarFacturadorFormGroup.value;
+
+    if (this.editFacturadorIndex !== null) {
+      this.facturadorRowData[this.editFacturadorIndex] = NEW_FACTURADOR;
+      this.editFacturadorIndex = null;
+    } else {
+      this.facturadorRowData = [...this.facturadorRowData, NEW_FACTURADOR];
+    }
+
+    this.toggleDivFacturador();
+    this.agregarFacturadorFormGroup.reset();
+    this.selectedFacturadorRows = [];
+  }
+}
+/**
+ * Envía el formulario de proveedor y actualiza los datos en el store.
+ */
+onModificarProveedor(){
+  if (this.selectedProveedorRows.length === 1) {
+    const SELECTED = this.selectedProveedorRows[0];
+    this.editProveedorIndex = this.proveedorRowData.findIndex(
+      row => row === SELECTED
+    );
+    this.agregarProveedorFormGroup.patchValue(SELECTED);
+    this.showProveedor = true;
+    this.showTableDiv = false;
+  }
+}
+/**
+ * Maneja la modificación de un fabricante seleccionado.
+ * Si hay una fila seleccionada, actualiza el formulario con los datos del fabricante seleccionado.
+ */
+onModificarFabricante() {
+  if (this.selectedFabricanteRows.length === 1) {
+    const SELECTED = this.selectedFabricanteRows[0];
+    this.editFabricanteIndex = this.fabricanteRowData.findIndex(
+      row => row === SELECTED
+    );
+    this.agregarFabricanteFormGroup.patchValue(SELECTED);
+    this.showFabricante = true;
+    this.showTableDiv = false;
+  }
+}
+/**
+ * Maneja la modificación de un destinatario seleccionado.
+ * Si hay una fila seleccionada, actualiza el formulario con los datos del destinatario seleccionado.
+ */
+onModificarDestinatario(){
+if(this.selectedDestinatarioRows.length === 1){
+  const SELECTED = this.selectedDestinatarioRows[0];
+  this.editDestinatarioIndex = this.destinatarioRowData.findIndex(
+    row => row === SELECTED
+  );
+  this.agregarDestinatarioFormGroup.patchValue(SELECTED);
+  this.showDestinatario = true;
+  this.showTableDiv = false;
+}
+}
+/**
+ * Maneja la modificación de un facturador seleccionado.
+ * Si hay una fila seleccionada, actualiza el formulario con los datos del facturador seleccionado.
+ */ 
+onModificarFacturador(){
+  if (this.selectedFacturadorRows.length === 1) {
+    const SELECTED = this.selectedFacturadorRows[0];
+    this.editFacturadorIndex = this.facturadorRowData.findIndex(
+      row => row === SELECTED
+    );
+    this.agregarFacturadorFormGroup.patchValue(SELECTED);
+    this.showFacturador = true;
+    this.showTableDiv = false;
   }
 }
 /**
@@ -951,18 +1046,20 @@ eliminarSeleccionadosFabricante() :void {
   /**
    * Envía el formulario de destinatario y actualiza los datos en el store.
    */
-submitDestinatarioForm(): void{
-
+submitDestinatarioForm(): void {
   if (this.agregarDestinatarioFormGroup) {
-    // Get the form data
     const NEW_DESTINATARIO = this.agregarDestinatarioFormGroup.value;
 
-    // Add to the table data array (spread to trigger change detection)
-    this.destinatarioRowData = [...this.destinatarioRowData, NEW_DESTINATARIO];
+    if (this.editDestinatarioIndex !== null) {
+      this.destinatarioRowData[this.editDestinatarioIndex] = NEW_DESTINATARIO;
+      this.editDestinatarioIndex = null;
+    } else {
+      this.destinatarioRowData = [...this.destinatarioRowData, NEW_DESTINATARIO];
+    }
 
-    // Optionally, close the modal and reset the form
     this.toggleDivDestinatario();
     this.agregarDestinatarioFormGroup.reset();
+    this.selectedDestinatarioRows = [];
   }
 }
 /**
@@ -1020,14 +1117,22 @@ onProveedorSeleccionados(selected: ProveedorModel[]) {
      *
      * @description Este método es llamado al enviar el formulario de agregar un proveedor.
      */
-    submitProveedorForm(): void {
-  if (this.agregarProveedorFormGroup.valid) {
+   submitProveedorForm(): void {
+  if (this.agregarProveedorFormGroup) {
     const NEW_PROVEEDOR = this.agregarProveedorFormGroup.value;
-    this.proveedorRowData = [...this.proveedorRowData, NEW_PROVEEDOR];
+
+    if (this.editProveedorIndex !== null) {
+      this.proveedorRowData[this.editProveedorIndex] = NEW_PROVEEDOR;
+      this.editProveedorIndex = null;
+    } else {
+      this.proveedorRowData = [...this.proveedorRowData, NEW_PROVEEDOR];
+    }
+
     this.toggleDivProveedor();
     this.agregarProveedorFormGroup.reset();
+    this.selectedProveedorRows = [];
   }
-    }
+}
     /**
      * 
      * @param selected Filas seleccionadas de la tabla de facturadores.
@@ -1046,26 +1151,7 @@ onProveedorSeleccionados(selected: ProveedorModel[]) {
   );
   this.selectedFacturadorRows = [];
   }
-    /**
-     * Envía el formulario de Facturador y actualiza los datos en el store.
-     * Crea una nueva fila para la tabla con los datos del formulario.
-     *
-     * @description Este método es llamado al enviar el formulario de agregar un facturador.
-     */
-    submitFacturadorForm(): void {
-
-      if (this.agregarFacturadorFormGroup) {
-        // Obtiene los datos del formulario
-        const NEW_FACTURADOR = this.agregarFacturadorFormGroup.value;
-
-        // Agrega los datos a la tabla de facturadores
-        this.facturadorRowData = [...this.facturadorRowData, NEW_FACTURADOR];
-
-        // Opcionalmente, cierra el modal y resetea el formulario
-        this.toggleDivFacturador();
-        this.agregarFacturadorFormGroup.reset();
-      }
-    }
+   
   
     /**
      * Validador personalizado para verificar que el país seleccionado no esté vacío ni sea '-1'.

@@ -6,10 +6,14 @@
 import {
   AfterViewInit,
   Component,
+  OnDestroy,
+  OnInit,
   QueryList,
   ViewChild,
   ViewChildren,
 } from '@angular/core';
+
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {
   SolicitanteComponent,
   TIPO_PERSONA,
@@ -20,6 +24,7 @@ import { TercerosRelacionadosFabSeccionComponent } from '../../../../shared/comp
 import { TramitesAsociadosSeccionComponent } from '../../../../shared/components/tramites-asociados-seccion/tramites-asociados-seccion.component';
 
 import { CompleteForm, Destinatario, DomicilioEstablecimiento, Fabricante, Facturador, FormMercancias, PagoDeDerechos, Proveedor, ScianForm, SolicitanteData, SolicitudEstablecimientoForm, SolicitudForm, TercerosRelacionados, Tramite } from '../../models/mod-permiso.model';
+import { Subject ,map, takeUntil } from 'rxjs';
 /*
   * @description
 */
@@ -49,7 +54,29 @@ import { CompleteForm, Destinatario, DomicilioEstablecimiento, Fabricante, Factu
  * - Implementa el hook `AfterViewInit` para inicializar referencias a los componentes hijos después de que
  *   la vista haya sido renderizada.
  */
-export class PasoUnoPagesComponent {
+export class PasoUnoPagesComponent implements OnInit,OnDestroy{
+/** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+  /** Subject para notificar la destrucción del componente. */
+  private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * 
+   */
+  public consultaState!:ConsultaioState;
+  constructor( private consultaQuery: ConsultaioQuery){
+
+  }
+   ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+          this.consultaState = seccionState;
+      })).subscribe();
+    if(this.consultaState.update) {
+    //  this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
   /**
    * Referencia al componente `SolicitanteComponent` para acceder a sus métodos y propiedades.
    */
@@ -192,5 +219,12 @@ export class PasoUnoPagesComponent {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+/**
+ * Método del ciclo de vida que se ejecuta al destruir el componente.
+ */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
