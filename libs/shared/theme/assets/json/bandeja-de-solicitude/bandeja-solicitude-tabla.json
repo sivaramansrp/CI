@@ -1654,5 +1654,14 @@
     "diasTranscurridos": "4",
     "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "221602"
+  },
+  {
+    "id": 260905,
+    "tipoDeTramite": "Solicitudddd",
+    "fecha": "2022-10-05",
+    "fechaActualizacion": "2022-10-25",
+    "diasTranscurridos": "3",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260905"
   }
 ]
