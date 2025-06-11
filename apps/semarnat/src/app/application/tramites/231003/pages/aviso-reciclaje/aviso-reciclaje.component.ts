@@ -1,5 +1,8 @@
-import { AccionBoton, DatosPasos, ListaPasosWizard, PAGO_DE_DERECHOS, WizardComponent } from '@libs/shared/data-access-user/src';
-import { Component, ViewChild } from '@angular/core';
+import { AccionBoton, ConsultaioState, DatosPasos, ListaPasosWizard, PAGO_DE_DERECHOS, WizardComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Subject,map, takeUntil } from 'rxjs';
+import { AvisoDeReciclajeServiceService } from '../../Services/aviso-de-reciclaje-service.service';
+import { ConsultaioQuery} from '@ng-mf/data-access-user'
 import { PASOS } from '../../constantes/aviso-de-reciclaje.enum';
 /**
  * Componente que representa la sección de aviso de reciclaje.
@@ -10,7 +13,7 @@ import { PASOS } from '../../constantes/aviso-de-reciclaje.enum';
   selector: 'app-aviso-reciclaje',
   templateUrl: './aviso-reciclaje.component.html',
 })
-export class AvisoReciclajeComponent {
+export class AvisoReciclajeComponent implements OnInit {
 
   /**
      * @property pasos
@@ -49,6 +52,46 @@ export class AvisoReciclajeComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+  private destroy$ = new Subject<void>();
+
+  /** Subject para notificar la destrucción del componente. */
+  public consultaState!: ConsultaioState;
+
+  constructor(private consultaQuery: ConsultaioQuery,private avisoDeReciclajeServiceService:AvisoDeReciclajeServiceService){
+
+  }
+
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
+
+    // Si el estado indica actualización, carga los datos del formulario.
+    if (this.consultaState.update) {
+      this.guardarDatosFormulario();
+    }
+
+    this.guardarDatosFormulario();
+
+  }
+
+  guardarDatosFormulario(): void {
+    this.avisoDeReciclajeServiceService
+      .obtenerDatosSolicitudInicial().pipe(
+        takeUntil(this.destroy$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.avisoDeReciclajeServiceService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
 
   /**
  * Updates the index value based on the action button event.
