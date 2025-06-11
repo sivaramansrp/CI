@@ -17,19 +17,18 @@ import { Chofer40103Query } from '../../../estados/chofer40103.query';
 import { map, Observable, takeUntil } from 'rxjs';
 
 @Component({
-  selector: 'app-chofere-nacional',
-  templateUrl: './chofere.nacional.component.html',
-  styleUrls: ['./chofere.nacional.component.scss'],
+  selector: 'app-chofere-nacional-modificacion',
+  templateUrl: './chofere.nacional.modificacion.component.html',
+  styleUrls: ['./chofere.nacional.modificacion.component.scss'],
   standalone: true,
   imports: [
     TablaDinamicaComponent, 
     TituloComponent, 
-    DatosDeChoferesComponent,
-    NotificacionesComponent
+    DatosDeChoferesComponent
   ],
   providers: [BsModalService],
 })
-export class ChofereNacionalComponent implements OnInit {
+export class ChofereNacionalModificacionComponent implements OnInit {
   // Add your component logic here
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
@@ -65,26 +64,6 @@ export class ChofereNacionalComponent implements OnInit {
   {}
 
   ngOnInit(): void {
-    this.datosDelChoferNacionalAlta = [
-      {
-        curp: 'ABCD123456HJKLMN11',
-        rfc: 'RFC123',
-        nombre: 'Juan Pérez',
-        calle: 'Calle Falsa',
-        numeroExterior: '123',
-        numeroInterior: 'A',
-        pais: 'México',
-        estado: 'CDMX',
-        municipioAlcaldia: 'Benito Juárez',
-        colonia: 'Colonia del Valle',
-        localidad: 'Localidad 1',
-        codigoPostal: '12345',
-        paisDeResidencia: 'México',
-        id: 1,
-        telefono: '312343124',
-        correoElectronico: '12342314@sadf.com',
-      },
-    ];
 
     this.chofer40103Query.selectSolicitud$
       .pipe(

@@ -1,5 +1,5 @@
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, RequiredValidator, Validators } from "@angular/forms";
-import { Catalogo, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Catalogo, CategoriaMensaje, ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent, SharedModule, TablaDinamicaComponent, TituloComponent } from "@libs/shared/data-access-user/src";
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from "@angular/core";
 import { CommonModule } from "@angular/common";
@@ -7,7 +7,7 @@ import { DatosDelChoferNacional } from "../../../models/registro-muestras-mercan
 import { read } from "fs";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { Chofer40103Service } from "../../../estados/chofer40103.service";
-import { map, Observable, takeUntil } from "rxjs";
+import { map, Observable, Subject, takeUntil, firstValueFrom } from "rxjs";
 
 
 @Component({
@@ -22,8 +22,9 @@ import { map, Observable, takeUntil } from "rxjs";
     FormsModule,
     CatalogoSelectComponent,
     TablaDinamicaComponent,
-    TituloComponent
-],
+    TituloComponent,
+    NotificacionesComponent
+  ],
 })
 export class DatosDeChoferesComponent implements OnInit, OnDestroy {
 
@@ -33,7 +34,8 @@ export class DatosDeChoferesComponent implements OnInit, OnDestroy {
   // Aquí puedes definir las propiedades y métodos necesarios para tu componente
   // datosConsulta: unknown;
   formChoferes!: FormGroup;
-  destroyed$: Observable<any> = new Observable();
+  destroyed$: Subject<unknown> = new Subject<unknown>();
+  showNotification: boolean = true;
 
   constructor(private fb: FormBuilder,
     private modalService: BsModalService,
@@ -42,22 +44,21 @@ export class DatosDeChoferesComponent implements OnInit, OnDestroy {
     // Inicialización del componente
   }
 
-  ngOnInit(): void {
-    this.paisListData();
-    // this.onPaisChange(this.datosDeChofere?.pais);
+  async ngOnInit(): Promise<void> {
+
 
     this.formChoferes = this.fb.group({
 
-      curp: [{ value: this.datosDeChofere?.curp, disabled: this.readonly }, 
-        [
-          Validators.required,
-          Validators.maxLength(10),
-          Validators.pattern(/^[A-Z]{4}\d{6}[HM]{1}[A-Z]{5}[0-9A-Z]{2}$/), // CURP regex
-        ]],
+      curp: [{ value: this.datosDeChofere?.curp, disabled: false },
+      [
+        Validators.required,
+        Validators.maxLength(18),
+        Validators.pattern(/^[A-Z]{4}\d{6}[HM]{1}[A-Z]{5}[0-9A-Z]{2}$/), // CURP regex
+      ]],
 
-      rfc: [{ value: this.datosDeChofere?.rfc, disabled: this.readonly }, Validators.required],
+      rfc: [{ value: this.datosDeChofere?.rfc, disabled: false }, Validators.required],
       nombre: [{ value: this.datosDeChofere?.nombre, disabled: true }],
-      apellidoPrimer: [{ value: this.datosDeChofere?.primerApellido, disabled: true }],
+      primerApellido: [{ value: this.datosDeChofere?.primerApellido, disabled: true }],
       segundoApellido: [{ value: this.datosDeChofere?.segundoApellido, disabled: true }],
       numeroDeGafete: [{ value: this.datosDeChofere?.numeroDeGafete, disabled: true }],
       vigenciaGafete: [{ value: this.datosDeChofere?.vigenciaGafete, disabled: true }],
@@ -65,9 +66,9 @@ export class DatosDeChoferesComponent implements OnInit, OnDestroy {
       calle: [{ value: this.datosDeChofere?.calle, disabled: this.readonly }],
       numeroExterior: [{ value: this.datosDeChofere?.numeroExterior, disabled: this.readonly }],
       numeroInterior: [{ value: this.datosDeChofere?.numeroInterior, disabled: this.readonly }],
-      pais: [{ value: this.datosDeChofere?.pais, disabled: this.readonly }],
+      pais: [{ value: 1, disabled: true }],
       estado: [{ value: this.datosDeChofere?.estado, disabled: this.readonly }],
-      municipio: [{ value: this.datosDeChofere?.municipioAlcaldia, disabled: this.readonly }],
+      municipioAlcaldia: [{ value: this.datosDeChofere?.municipioAlcaldia, disabled: this.readonly }],
       colonia: [{ value: this.datosDeChofere?.colonia, disabled: this.readonly }],
       paisDeResidencia: [{ value: this.datosDeChofere?.paisDeResidencia, disabled: this.readonly }],
       ciudad: [{ value: this.datosDeChofere?.ciudad, disabled: this.readonly }],
@@ -76,7 +77,10 @@ export class DatosDeChoferesComponent implements OnInit, OnDestroy {
       correoElectronico: [{ value: this.datosDeChofere?.correoElectronico, disabled: this.readonly }],
       telefono: [{ value: this.datosDeChofere?.telefono, disabled: this.readonly }],
     });
-    // Lógica que se ejecuta al inicializar el componente
+
+    await this.paisListData();
+    await this.updateListsData(this.datosDeChofere);
+
   }
 
 
@@ -97,62 +101,87 @@ export class DatosDeChoferesComponent implements OnInit, OnDestroy {
    *
    * @returns {void}
    */
-  paisListData(): void {
-    this.chofer40103Service
-      .getPaisEmisor()
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((data) => {
-          this.paisList = data;
-        })
-      )
-      .subscribe();
+  async paisListData(): Promise<void> {
+    try {
+      const DATA = await firstValueFrom(
+        this.chofer40103Service
+          .getPaisEmisor()
+          .pipe(takeUntil(this.destroyed$))
+      );
+      this.paisList = DATA || [];
+      if (this.paisList.length > 0) {
+        this.onPaisChange(this.paisList[0]); // Inicializa el primer país
+      }
+    } catch (error) {
+      // Manejo de errores si es necesario
+      //console.error('Error al obtener la lista de países:', error);
+    }
   }
 
-  onPaisChange($event: Catalogo) {
-    this.chofer40103Service
-      .getEstadosPorPais($event.id)
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((data) => {
-          this.estadoList = data;
-        })
-      )
-      .subscribe();
-      this.formChoferes.setValue({'estado': null});
-      this.formChoferes.setValue({'municipio': null});
-      this.formChoferes.setValue({'colonia': null});
+  onPaisChange(value: Catalogo) {
+    this.fetchEstadosByPais(value);
+    this.formChoferes.controls['estado'].reset();
+    this.formChoferes.controls['municipioAlcaldia'].reset();
+    this.formChoferes.controls['colonia'].reset();
   }
 
-  onEstadoChange($event: Catalogo) {
-    this.chofer40103Service
-      .getMunicipiosPorEstado($event.id)
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((data) => {
-          this.municipioList = data;
-        })
-      )
-      .subscribe();
-      
-      this.formChoferes.setValue({'municipio': null});
-      this.formChoferes.setValue({'colonia': null});
+  private async fetchEstadosByPais(value: Catalogo): Promise<Catalogo[]> {
+    try {
+      const DATA = await firstValueFrom(
+        this.chofer40103Service
+          .getEstadosPorPais(value.id)
+          .pipe(takeUntil(this.destroyed$))
+      );
+      this.estadoList = DATA || [];
+    } catch (error) {
+      console.error('Error al obtener estados por país:', error);
+    }
+    return this.estadoList;
   }
 
-  onMunicipioChange($event: Catalogo) {
-    this.chofer40103Service
-      .getColoniasPorMunicipio($event.id)
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((data) => {
-          this.coloniaList = data;
-        })
-      )
-      .subscribe();
-      
-      this.formChoferes.setValue({'colonia': null});
+  onEstadoChange(value: Catalogo) {
+
+    this.fetchMunicipiosByEstado(value);
+
+    this.formChoferes.controls['municipioAlcaldia'].reset();
+    this.formChoferes.controls['colonia'].reset();
   }
 
+  private async fetchMunicipiosByEstado(value: Catalogo): Promise<Catalogo[]> {
+    try {
+      const data = await firstValueFrom(
+        this.chofer40103Service
+          .getMunicipiosPorEstado(value.id)
+          .pipe(takeUntil(this.destroyed$))
+      );
+      this.municipioList = data || [];
+    } catch (error) {
+      console.error('Error al obtener municipios por estado:', error);
+    }
+    return this.municipioList;
+
+  }
+
+  onMunicipioChange(value: Catalogo) {
+    this.fetchColoniasByMunicipio(value);
+
+    this.formChoferes.controls['colonia'].reset();
+  }
+
+
+  private async fetchColoniasByMunicipio(value: Catalogo): Promise<Catalogo[]> {
+    try {
+      const data = await firstValueFrom(
+        this.chofer40103Service
+          .getColoniasPorMunicipio(value.id)
+          .pipe(takeUntil(this.destroyed$))
+      );
+      this.coloniaList = data || [];
+    } catch (error) {
+      console.error('Error al obtener colonias por municipio:', error);
+    }
+    return this.coloniaList;
+  }
 
   /**
    * Obtiene los controles de formulario del formulario choferes.
@@ -181,7 +210,7 @@ export class DatosDeChoferesComponent implements OnInit, OnDestroy {
       this.buscarChoferNacional(CURP_VALUE);
     }
   }
-  
+
   /**
    * Busca información de un chofer nacional utilizando su CURP.
    *
@@ -192,33 +221,85 @@ export class DatosDeChoferesComponent implements OnInit, OnDestroy {
    * Esta función actualiza el formulario de choferes con los datos obtenidos.
    * Actualmente, los datos están representados por un objeto vacío.
    */
-  buscarChoferNacional(curp: string) {
+  async buscarChoferNacional(curp: string) {
     if (!curp) {
+      this.showNotification = true;
       return;
     }
 
-    const CHOFER_DATA = {};
+    const CHOFER_DATA: DatosDelChoferNacional = {
+      curp: 'ABCD123456HJKLMN12',
+      rfc: 'RFC124',
+      nombre: 'Juan Pérez',
+      primerApellido: 'Pérez',
+      segundoApellido: 'Gómez',
+      numeroDeGafete: 'GAFETE124',
+      vigenciaGafete: '2024-12-31',
+      calle: 'Calle Falsa',
+      numeroExterior: '124',
+      numeroInterior: 'A',
+      pais: 'México',
+      estado: 'Aprobado',
+      municipioAlcaldia: 'Alcaldía de Bogotá',
+      colonia: 'Dior Sauvage by Christian Dior',
+      ciudad: 'Ciudad 1',
+      localidad: 'Localidad 1',
+      codigoPostal: '12445',
+      paisDeResidencia: '1',
+      id: 1,
+      telefono: '312443124',
+      correoElectronico: 'abc@xyz.com'
+    };
+
+    await this.updateListsData(CHOFER_DATA);
 
     // Rellenar el formulario
     this.formChoferes.patchValue(CHOFER_DATA);
   }
 
+  private async updateListsData(data: DatosDelChoferNacional) {
+    const ESTADOS = await this.fetchEstadosByPais(this.paisList[0]);
+    data.pais = this.paisList[0].id.toString();
+
+    const ESTADOS_SELECCIONADO = ESTADOS?.find(Item => Item.descripcion === data.estado);
+    if (ESTADOS_SELECCIONADO) {
+      data.estado = ESTADOS_SELECCIONADO.id.toString();
+      const MUNICIPIOS = await this.fetchMunicipiosByEstado(ESTADOS_SELECCIONADO);
+
+      const MUNICIPIO_SELECCIONADO = MUNICIPIOS?.find(item => item.descripcion === data.municipioAlcaldia);
+      if (MUNICIPIO_SELECCIONADO) {
+        data.municipioAlcaldia = MUNICIPIO_SELECCIONADO.id.toString();
+        await this.fetchColoniasByMunicipio(MUNICIPIO_SELECCIONADO);
+        const COLONIA_SELECCIONADA = this.coloniaList.find(c => c.descripcion === data.colonia);
+        if (COLONIA_SELECCIONADA) {
+          data.colonia = COLONIA_SELECCIONADA.id.toString();
+        }
+      }
+    }
+  }
+
   limpiarFormulario() {
     this.formChoferes.reset();
-    this.closeModal();
-    //throw new Error('Method not implemented.');
   }
   guardarFilaEditada() {
+      this.formChoferes.markAllAsTouched();
+      this.formChoferes.updateValueAndValidity();
+
     if (this.formChoferes.valid) {
-      const datosChofer = this.formChoferes.value as DatosDelChoferNacional;
+      const DATA = this.formChoferes.getRawValue() as DatosDelChoferNacional;
+      DATA.pais = this.paisList.find(p => p.id === Number(DATA.pais))?.descripcion || '';
+      DATA.estado = this.estadoList.find(e => e.id === Number(DATA.estado))?.descripcion || '';
+      DATA.municipioAlcaldia = this.municipioList.find(m => m.id === Number(this.formChoferes.get('municipioAlcaldia')?.value))?.descripcion || '';
+      DATA.colonia = this.coloniaList.find(c => c.id === Number(DATA.colonia))?.descripcion || '';
+      DATA.paisDeResidencia = this.paisList.find(p => p.id === Number(DATA.paisDeResidencia))?.descripcion || '';
+
       // Aquí puedes realizar la lógica para guardar los datos del chofer
-      console.log('Datos del chofer guardados:', datosChofer);
-      this.addModalEvent.emit(datosChofer);
+      this.addModalEvent.emit(DATA);
       this.closeModal();
     } else {
-      console.warn('Formulario inválido, no se pueden guardar los datos.');
+      this.showNotification = true;
+      this.alertaNotificacion.mensaje = 'Formulario inválido, por favor verifica los campos.';
     }
-    //throw new Error('Method not implemented.');
   }
 
   /**
@@ -232,6 +313,23 @@ export class DatosDeChoferesComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    // Lógica que se ejecuta al destruir el componente
+    this.destroyed$.next(1);
+    this.destroyed$.complete();
   }
+
+  /**
+   * Inicializa la variable de alertaNotificación con un objeto de tipo Notificacion.
+   * @type {Notificacion}
+   */
+  public alertaNotificacion: Notificacion = {
+    tipoNotificacion: TipoNotificacionEnum.ALERTA,
+    categoria: CategoriaMensaje.INFORMACION,
+    modo: '',
+    titulo: 'Error',
+    mensaje: 'Favor de ingresar CURP o RFC',
+    cerrar: true,
+    txtBtnAceptar: '',
+    txtBtnCancelar: '',
+  }
+
 }

@@ -18,10 +18,11 @@ export interface Choferesnacionales40103State {
   nombre: string;
   primerApellido: string;
   segundoApellido: string;
-  datosDelChoferNacionalAlta: DatosDelChoferNacional[]; // Se reemplazó `any[]` con `unknown[]`
-  
-  //TODO: below need to be removed 
-  datosDelChoferNacional: DatosDelChoferNacional[]; 
+  datosDelChoferNacionalAlta: DatosDelChoferNacional[]; 
+  datosDelChoferNacionalRetirada: DatosDelChoferNacional[]; 
+
+  //TODO: below need to be removed
+  datosDelChoferNacional: DatosDelChoferNacional[];
   // datosDelChoferNacional: DatosDelChoferNacional[];
   
   PagoDerechosLista: unknown[]; // Se reemplazó `any[]` con `unknown[]`
@@ -77,7 +78,8 @@ export function createChoferState(): Choferesnacionales40103State {
     segundoApellido: '',
     datosDelChoferNacional: [],
     datosDelChoferNacionalAlta: [],
-    PagoDerechosLista:[],
+    datosDelChoferNacionalRetirada: [],
+    PagoDerechosLista: [],
     curp: '',
     rfc: '',
     apellidoPaterno: '',

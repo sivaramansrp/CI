@@ -63,3 +63,7 @@ export const CHOFERES_NACIONALES_ALTA: ConfiguracionColumna<DatosDelChoferNacion
             orden: 12,
         }
     ];
+
+export const TEXTOS = {
+  INSTRUCCIONES:`<p>Para modificar o dar de baja un chófer nacional existente en su CAAT, primero debe realizar su búsqueda.</p>`,
+};

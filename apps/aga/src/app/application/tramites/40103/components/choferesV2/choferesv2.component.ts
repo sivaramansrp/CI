@@ -6,7 +6,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Catalogo, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, ConsultaioState, TituloComponent } from '@ng-mf/data-access-user';
 import {
   Chofer40103Store,
   Choferesnacionales40103State,
@@ -42,6 +42,9 @@ import { map } from 'rxjs/operators';
 import mockData from '@libs/shared/theme/assets/json/40103/director-general-mockdata.json';
 import { takeUntil } from 'rxjs';
 import { ChofereNacionalComponent } from './chofere.nacional/chofere.nacional.component';
+import { ChofereNacionalNotificationComponent } from './chofere.nacional.nofitication/chofere.nacional.notification.component';
+import { ChofereNacionalModificacionComponent } from './chofere.nacional.modificacion/chofere.nacional.modificacion.component';
+import { ChofereNacionalRetiradaComponent } from './chofere.nacional.retirada/chofere.nacional.retirada.component';
 
 @Component({
   selector: 'app-choferes-v2',
@@ -55,7 +58,11 @@ import { ChofereNacionalComponent } from './chofere.nacional/chofere.nacional.co
     FormsModule,
     CatalogoSelectComponent,
     TablaDinamicaComponent,
-    ChofereNacionalComponent
+    TituloComponent,
+    ChofereNacionalComponent,
+    ChofereNacionalNotificationComponent,
+    ChofereNacionalModificacionComponent,
+    ChofereNacionalRetiradaComponent
   ],
 })
 export class ChoferesV2Component implements OnInit, OnDestroy {

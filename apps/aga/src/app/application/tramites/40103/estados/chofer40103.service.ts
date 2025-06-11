@@ -216,24 +216,13 @@ export class Chofer40103Service {
    * @returns {Observable<Catalogo[]>} Un observable que emite la lista de estados.
    */
   getEstadosPorPais(id: number): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('/assets/json/40103/estado.json')
-    .pipe(
-      map((estados: Catalogo[]) => {
-        return estados.filter((estado) => estado.id === id);
-      })
-    );
+    return this.http.get<Catalogo[]>('/assets/json/40103/estado.json');
   }
 
   getMunicipiosPorEstado(
     claveEstado: number
   ): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>(
-      `/assets/json/40103/municipio.json`
-    ).pipe(
-      map((municipios: Catalogo[]) => {
-        return municipios.filter((municipio) => municipio.id === claveEstado);
-      })
-    );
+    return this.http.get<Catalogo[]>(`/assets/json/40103/municipio.json`);
   }
   /**
    * Obtiene la lista de colonias de un municipio específico.
@@ -246,10 +235,6 @@ export class Chofer40103Service {
   ): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>(
       `/assets/json/40103/colonia.json`
-    ).pipe(
-      map((municipios: Catalogo[]) => {
-        return municipios.filter((municipio) => municipio.id === municipiosId);
-      })
     );
   }
 
@@ -325,6 +310,13 @@ export class Chofer40103Service {
     this.chofer40103Store.update((state) => ({
       ...state,
       datosDelChoferNacionalAlta: data
+    }));
+  }
+
+  updateDatosDelChoferNacionalRetirada(data: DatosDelChoferNacional[]): void {
+    this.chofer40103Store.update((state) => ({
+      ...state,
+      datosDelChoferNacionalRetirada: data
     }));
   }
 }

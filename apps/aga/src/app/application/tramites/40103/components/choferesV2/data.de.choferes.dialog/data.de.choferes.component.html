@@ -75,15 +75,15 @@
 
             <div class="col-md-4">
               <div>
-                <label for="apellidoPrimer">Primer apellido:</label>
+                <label for="primerApellido">Primer apellido:</label>
                 <span class="require">*</span>
               </div>
               <div>
-                <input type="text" class="form-control" formControlName="apellidoPrimer" />
+                <input type="text" class="form-control" formControlName="primerApellido" />
               </div>
-              <div *ngIf="isInvalid('apellidoPrimer')" class="text-danger">
-                <small *ngIf="getFormValues['apellidoPrimer'].errors?.['required']">El nombre es obligatorio.</small>
-                <small *ngIf="getFormValues['apellidoPrimer'].errors?.['maxLength']">El nombre no puede tener más de
+              <div *ngIf="isInvalid('primerApellido')" class="text-danger">
+                <small *ngIf="getFormValues['primerApellido'].errors?.['required']">El nombre es obligatorio.</small>
+                <small *ngIf="getFormValues['primerApellido'].errors?.['maxLength']">El nombre no puede tener más de
                   20 caracteres.</small>
               </div>
             </div>
@@ -182,20 +182,31 @@
           <div class="row">
             <div class="col-md-4">
               <div>
-                <app-catalogo-select class="paisChn" [catalogo]="paisList" formControlName="pais" [required]="true"
-                  name="pais" label="País" (ngModelChange)="onPaisChange($event)"></app-catalogo-select>
-              </div>
-            </div>
+                <app-catalogo-select 
+                  class="paisChn" 
+                  [catalogo]="paisList" 
+                  placeholder="Seleccione un país"
+                  formControlName="pais" 
+                  [required]="true"
+                  [isDisabled]="true"
+                  name="pais" 
+                  label="País" 
+                  (selectionChange)="onPaisChange($event)"
+                ></app-catalogo-select>
+                </div>
+            </div> 
 
             <div class="col-md-4">
               <div>
                 <app-catalogo-select class="estado" 
                   [catalogo]="estadoList" 
                   formControlName="estado" 
+                  placeholder="Seleccione un valor"
                   [required]="true"
+                  [isDisabled]="readonly"
                   name="estado" 
                   label="Estado"
-                  (ngModelChange)="onEstadoChange($event)" 
+                  (selectionChange)="onEstadoChange($event)" 
                 ></app-catalogo-select>
               </div>
             </div>
@@ -203,13 +214,15 @@
             <div class="col-md-4">
               <div>
                 <app-catalogo-select 
-                  class="municipio" 
+                  class="municipioAlcaldia" 
                   [catalogo]="municipioList" 
-                  formControlName="municipio"
+                  formControlName="municipioAlcaldia"
+                  placeholder="Seleccione un valor"
                   [required]="true" 
-                  name="municipio" 
+                  [isDisabled]="readonly"
+                  name="municipioAlcaldia" 
                   label="Municipio o alcaldía"
-                  (ngModelChange)="onMunicipioChange($event)"
+                  (selectionChange)="onMunicipioChange($event)"
                 ></app-catalogo-select>
               </div>
             </div>
@@ -218,14 +231,28 @@
           <div class="row">
             <div class="col-md-4 mb-3">
               <div>
-                <app-catalogo-select class="coloniaCHN" [catalogo]="coloniaList" formControlName="colonia"
-                  [required]="true" name="colonia" label="Colonia"></app-catalogo-select>
+                <app-catalogo-select 
+                  class="colonia" 
+                  [catalogo]="coloniaList" 
+                  formControlName="colonia"
+                  placeholder="Seleccione un valor"
+                  [required]="true" 
+                  [isDisabled]="readonly"
+                  name="colonia" 
+                  label="Colonia"></app-catalogo-select>
               </div>
             </div>
             <div class="col-md-4 mb-3">
               <div>
-                <app-catalogo-select class="paisDeResidencia" [catalogo]="paisList" formControlName="paisDeResidencia"
-                  [required]="true" name="paisDeResidencia" label="País de residencia"></app-catalogo-select>
+                <app-catalogo-select 
+                  class="paisDeResidencia" 
+                  [catalogo]="paisList" 
+                  formControlName="paisDeResidencia"
+                  placeholder="Seleccione un valor"
+                  [required]="true" 
+                  [isDisabled]="readonly"
+                  name="paisDeResidencia" 
+                  label="País de residencia"></app-catalogo-select>
               </div>
             </div>
 
@@ -276,11 +303,8 @@
               <div>
                 <input type="text" class="form-control" formControlName="codigoPostal" />
               </div>
-              <div *ngIf="
-                    getFormValues['codigoPostal'].invalid &&
-                    (getFormValues['codigoPostal'].dirty ||
-                      getFormValues['codigoPostal'].touched)
-                  " class="text-danger">
+              <div *ngIf="isInvalid('codigoPostal')"
+                   class="text-danger">
                 <small *ngIf="getFormValues['codigoPostal'].errors?.['required']">codigoPostal es obligatorio.</small>
                 <small *ngIf="getFormValues['codigoPostal'].errors?.['maxLength']">codigoPostal no puede tener más de
                   10 caracteres.</small>
@@ -322,3 +346,8 @@
     </div>
   </div>
 </div>
+@if(showNotification === true) {
+  <lib-notificaciones 
+    [notificacionInput]="alertaNotificacion"
+  ></lib-notificaciones>
+}

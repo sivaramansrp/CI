@@ -38,7 +38,11 @@
 
     <div class="tab-content">
     @if(activeTab ==='nacional') {
+      <ng-titulo titulo="Choferes nacionales"></ng-titulo>
       <app-chofere-nacional></app-chofere-nacional>
+      <app-chofere-nacional-notification></app-chofere-nacional-notification>
+      <app-chofere-nacional-modificacion></app-chofere-nacional-modificacion>
+      <app-chofere-nacional-retirada></app-chofere-nacional-retirada>
     }
     @if(activeTab ==='extranjero') {
       <div id="subtabs-2" class="tab-pane fade">
