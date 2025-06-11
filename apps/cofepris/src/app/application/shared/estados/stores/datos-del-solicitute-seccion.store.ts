@@ -424,18 +424,42 @@ export class DatosDelSolicituteSeccionStateStore extends Store<DatosDelSolicitut
   setAduanaDeSalida(aduanaDeSalida: string): void {
     this.update({ aduanaDeSalida });
   }
+  /**
+   * Actualiza el identificador genérico.
+   * @param ideGenerica1 Nuevo identificador genérico.
+   */
   setIdeGenerica1(ideGenerica1: string): void {
     this.update({ ideGenerica1 });
   }
+  /**
+   * Actualiza el valor de la razón social del establecimiento en el estado.
+   *
+   * @param establecimientoRazonSocial - La nueva razón social del establecimiento a establecer.
+   */
   setEstablecimientoRazonSocial(establecimientoRazonSocial: string): void {
     this.update({ establecimientoRazonSocial });
   }
+  /**
+   * Establece el valor del RFC del responsable sanitario del establecimiento.
+   *
+   * @param establecimientoRFCResponsableSanitario - El RFC del responsable sanitario que se asignará al establecimiento.
+   */
   setEstablecimientoRFCResponsableSanitario(establecimientoRFCResponsableSanitario: string): void {
     this.update({ establecimientoRFCResponsableSanitario });
   }
+  /**
+   * Establece el valor de los estados del establecimiento en el store.
+   *
+   * @param establecimientoEstados - Una cadena que representa los estados del establecimiento a actualizar.
+   */
   setEstablecimientoEstados(establecimientoEstados:string):void {
     this.update({establecimientoEstados})
   }
+  /**
+   * Establece la descripción del municipio en el estado de la tienda.
+   *
+   * @param descripcionMunicipio - La nueva descripción del municipio a asignar.
+   */
   setDescripcionMunicipio(descripcionMunicipio: string): void {
     this.update({ descripcionMunicipio });
   }

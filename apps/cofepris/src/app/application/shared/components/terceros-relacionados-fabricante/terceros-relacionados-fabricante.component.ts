@@ -123,17 +123,13 @@ export class TercerosRelacionadosFabricanteComponent implements OnInit, OnDestro
     this.tercerosService.getFabricanteTabla()
       .pipe(takeUntil(this.destroy$))
       .subscribe((response: Fabricante[]) => {
-       
-          this.fabricanteTablaDatos= response
-      
+        this.fabricanteTablaDatos= response;
      });
 
     this.tercerosService.getOtrosTabla()
       .pipe(takeUntil(this.destroy$))
       .subscribe((response: Otros[]) => {
-        
-          this.otrosTablaDatos=response
-      
+        this.otrosTablaDatos=response;
      });
   }
 
