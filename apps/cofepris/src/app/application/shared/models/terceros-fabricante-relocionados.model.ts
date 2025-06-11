@@ -39,14 +39,87 @@ export interface FabricanteRowData {
   telefono: string;
   correoElectronico: string;
 }
-
+/**
+ * Interfaz que representa la estructura de datos de un tercero relacionado.
+ * Contiene información detallada sobre el tercero, incluyendo su nacionalidad,
+ */
 export interface FraccionArancelariaProsec {
     fraccionArancelariaProsec: number,
     descripción: string
 }
-
+/**
+ * Interfaz que representa la estructura de datos de un tercero relacionado.
+ * Contiene información detallada sobre el tercero, incluyendo su nacionalidad,
+ */
 export interface FacricanteModel {
   denominacionRazonSocial: string;
+  rfc: string;
+  curp: string;
+  telefono: string;
+  CorreoElectronico: string;
+  calle:string;
+  numeroExterior:string;
+  numeroInterior:string;
+  pais:string;
+  colonia:string;
+  municipioOAlcaldia:string;
+  localidad:string;
+  entidadFederativa:string;
+  estadoLocalidad:string;
+  codigoPostal:string;
+  coloniaoEquivalente: string; 
+}
+/**
+ * Interfaz que representa la estructura de datos de un destinatario.
+ * Contiene información detallada sobre el destinatario, incluyendo su nacionalidad,
+ */
+export interface DestinatarioModel{
+  denominacionRazonSocial: string;
+  rfc: string;
+  curp: string;
+  telefono: string;
+  CorreoElectronico: string;
+  calle:string;
+  numeroExterior:string;
+  numeroInterior:string;
+  pais:string;
+  colonia:string;
+  municipioOAlcaldia:string;
+  localidad:string;
+  entidadFederativa:string;
+  estadoLocalidad:string;
+  codigoPostal:string;
+  coloniaoEquivalente: string; 
+}
+
+/**
+ * Interfaz que representa la estructura de datos de un proveedor.
+ * Contiene información detallada sobre el proveedor, incluyendo su nacionalidad,
+ */
+export interface ProveedorModel{
+  denominacionRazonSocial: string;
+  rfc: string;
+  curp: string;
+  telefono: string;
+  CorreoElectronico: string;
+  calle:string;
+  numeroExterior:string;
+  numeroInterior:string;
+  pais:string;
+  colonia:string;
+  municipioOAlcaldia:string;
+  localidad:string;
+  entidadFederativa:string;
+  estadoLocalidad:string;
+  codigoPostal:string;
+  coloniaoEquivalente: string; 
+}
+/**
+ * Interfaz que representa la estructura de datos de un facturador.
+ * Contiene información detallada sobre el facturador, incluyendo su nacionalidad,
+ */
+export interface FacturadorModel{
+ denominacionRazonSocial: string;
   rfc: string;
   curp: string;
   telefono: string;

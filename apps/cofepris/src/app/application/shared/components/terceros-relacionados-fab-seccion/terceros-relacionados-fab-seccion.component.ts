@@ -1,21 +1,20 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
 import { ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 
 import { AlertComponent, Catalogo, CatalogoSelectComponent, InputRadioComponent, REGEX_CURP, REGEX_RFC_FISICA, REGEX_RFC_MORAL, REGEX_TELEFONO, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { DatosSeleccionados, FacricanteModel } from '../../models/terceros-fabricante-relocionados.model';
+import { DestinatarioModel, FacricanteModel, FacturadorModel, ProveedorModel } from '../../models/terceros-fabricante-relocionados.model';
 
-import { FABRICANTE_TABLE_CONFIG, NACIONALIDAD_OPCIONES_DE_BOTON_DE_RADIO, PERSONA_OPCIONES_DE_BOTON_DE_RADIO, TERCEROS_TEXTO_DE_ALERTA } from '../../constantes/tereceros-relacionados-fab-seccion.enum';
+import { DESTINATARIO_TABLE_CONFIG, FABRICANTE_TABLE_CONFIG, FACTURADOR_TABLE_CONFIG, NACIONALIDAD_OPCIONES_DE_BOTON_DE_RADIO, PERSONA_OPCIONES_DE_BOTON_DE_RADIO, PROVEEDOR_TABLE_CONFIG, TERCEROS_TEXTO_DE_ALERTA } from '../../constantes/tereceros-relacionados-fab-seccion.enum';
 import { ModalComponent } from '../modal/modal.component';
 
 import {Subject ,map, takeUntil } from 'rxjs';
 
 import { TercerosRelacionadosFebService } from '../../services/tereceros-relacionados-feb.service';
 
-
-import { TablaDatos } from '../../models/terceros-fabricante.model';
 import { TramiteRelacionadaseStore } from '../../estados/stores/terceros-relacionados.stores';
 
 
@@ -38,11 +37,27 @@ import { TramiteRelacionadaseStore } from '../../estados/stores/terceros-relacio
   styleUrl: './terceros-relacionados-fab-seccion.component.scss',
 }) 
 export class TercerosRelacionadosFabSeccionComponent implements OnInit, OnDestroy {
-
+/**
+ * @description Este componente maneja la sección de terceros relacionados en el formulario de trámites.
+ */
   tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  /**
+   * Almacena los datos de las filas de la tabla de fabricantes.
+   * Inicialmente vacío, se llenará con datos obtenidos del servicio.
+   */
   configuracionTabla: ConfiguracionColumna<FacricanteModel>[] =FABRICANTE_TABLE_CONFIG;
-
-
+  /**
+   * Almacena los datos de las filas de la tabla de fabricantes.
+   */
+  configuracionTablaDestinatario : ConfiguracionColumna<DestinatarioModel>[] = DESTINATARIO_TABLE_CONFIG;
+  /**
+   * Almacena los datos de las filas de la tabla de proveedores.
+   */
+  configuracionTablaProveedor : ConfiguracionColumna<ProveedorModel>[] = PROVEEDOR_TABLE_CONFIG;
+  /**
+   * Almacena los datos de las filas de la tabla de facturadores.
+   */
+  configuracionTablaFacturador: ConfiguracionColumna<FacturadorModel>[] = FACTURADOR_TABLE_CONFIG;
 
 
    /**
@@ -92,38 +107,6 @@ public extranjero = false;
      * @description Este indicador se utiliza para controlar la lógica relacionada con personas morales.
      */
     public moral = false;
-  
-    /**
-     * Datos de las filas para la tabla de fabricantes.
-     * Inicialmente vacío, se llenará con los datos agregados por el usuario.
-     *
-     * @description Este arreglo almacena las filas que se mostrarán en la tabla de fabricantes.
-     */
-    fabricanteRowData: TablaDatos[] = [];
-  
-    /**
-     * Datos de las filas para la tabla de destinatarios.
-     * Inicialmente vacío, se llenará con los datos agregados por el usuario.
-     *
-     * @description Este arreglo almacena las filas que se mostrarán en la tabla de destinatarios.
-     */
-    destinatarioRowData: TablaDatos[] = [];
-  
-    /**
-     * Datos de las filas para la tabla de proveedores.
-     * Inicialmente vacío, se llenará con los datos agregados por el usuario.
-     *
-     * @description Este arreglo almacena las filas que se mostrarán en la tabla de proveedores.
-     */
-    proveedorRowData: TablaDatos[] = [];
-  
-    /**
-     * Datos de las filas para la tabla de facturadores.
-     * Inicialmente vacío, se llenará con los datos agregados por el usuario.
-     *
-     * @description Este arreglo almacena las filas que se mostrarán en la tabla de facturadores.
-     */
-    facturadorRowData: TablaDatos[] = [];
 
    /**
      * Indicador de visibilidad para la sección de la tabla.
@@ -323,7 +306,7 @@ public extranjero = false;
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-        //  this.inicializarEstadoFormulario();
+      
         })
       )
       .subscribe();
@@ -334,7 +317,20 @@ public extranjero = false;
      * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
      */
     ngOnInit(): void {
-         //this.inicializarEstadoFormulario();
+      this.tercerosService.getFabricanteForm().subscribe(data => {
+      this.fabricanteRowData = [data];
+      });
+        
+      this.tercerosService.getDestinatarioForm().subscribe(data => {
+  this.destinatarioRowData = [data];
+      });
+      this.tercerosService.getProveedorForm().subscribe(data => {
+       this.proveedorRowData = [data];
+      });
+      this.tercerosService.getFacturadorForm().subscribe(data => {
+      this.facturadorRowData = [data];
+       }
+       );
       this.tercerosService.getEncabezadoDeTabla()
         .pipe(takeUntil(this.destroy$)).subscribe((data:{ columns: string[] }) => {
         this.tablaEncabezadoData = data.columns;
@@ -887,378 +883,137 @@ public extranjero = false;
       this.showFacturador = !this.showFacturador;
     }
   
-    /**
-     * Maneja la selección de filas en la tabla de Fabricante.
-     * Actualiza la visibilidad de los botones según el estado de selección.
-     *
-     * @param data Datos de la fila seleccionada.
-     */
-    selectedFabricanteRows(data: DatosSeleccionados): void {
-      this.showFabricanteButtons = data.checked;
-    }
   
-    /**
-     * Maneja la selección de filas en la tabla de Destinatario.
-     * Actualiza la visibilidad de los botones según el estado de selección.
-     *
-     * @param data Datos de la fila seleccionada.
-     */
-    selectedDestinatarioRows(data: DatosSeleccionados): void {
-      this.showDestinatarioButtons = data.checked;
-    }
-  
-    /**
-     * Maneja la selección de filas en la tabla de Proveedor.
-     * Actualiza la visibilidad de los botones según el estado de selección.
-     *
-     * @param data Datos de la fila seleccionada.
-     */
-    selectedProveedorRows(data: DatosSeleccionados): void {
-      this.showProveedorButtons = data.checked;
-    }
-  
-    /**
-     * Maneja la selección de filas en la tabla de Facturador.
-     * Actualiza la visibilidad de los botones según el estado de selección.
-     *
-     * @param data Datos de la fila seleccionada.
-     */
-    selectedFacturadorRows(data: DatosSeleccionados): void {
-      this.showFacturadorButtons = data.checked;
-    }
+   
+    
   
     /**
      * Texto de alerta para los terceros relacionados.
      * Indica que las tablas con asterisco son obligatorias.
      */
     TEXTO_DE_ALERTA: string = TERCEROS_TEXTO_DE_ALERTA;
-  
-    /**
-     * Envía el formulario de Fabricante y actualiza los datos en el store.
-     * Obtiene los valores seleccionados de los dropdowns y crea una nueva fila para la tabla.
-     *
-     * @description Este método es llamado al enviar el formulario de agregar un fabricante.
-     */
-    submitFabricanteForm(): void {
-      /**
-       * Obtiene el valor de la localidad seleccionada en el formulario.
-       */
-      const LOCALIDAD_VALUE = this.localidadDropdownData.find(
-        (item: Catalogo) =>
-          item.id === Number(this.agregarFabricanteFormGroup.value.localidad)
-      )?.descripcion;
-  
-      /**
-       * Obtiene el valor de la pais seleccionada en el formulario.
-       */
-      const PAIS_VALUE = this.paisDropdownData.find(
-        (item: Catalogo) =>
-          item.id === Number(this.agregarFabricanteFormGroup.value.pais)
-      )?.descripcion;
-  
-      /**
-       * Obtiene el valor del municipio seleccionado en el formulario.
-       */
-      const MUNICIPIO_VALUE = this.municipioDropdownData.find(
-        (item: Catalogo) =>
-          item.id ===
-          Number(this.agregarFabricanteFormGroup.value.municipioAlcaldia)
-      )?.descripcion;
-  
-      /**
-       * Obtiene el valor del código postal seleccionado en el formulario.
-       */
-      const CODIGO_POSTAL_VALUE = this.codigoPostalDropdownData.find(
-        (item: Catalogo) =>
-          item.id ===
-          Number(this.agregarFabricanteFormGroup.value.codigoPostaloEquivalente)
-      )?.descripcion;
-  
-      /**
-       * Obtiene el valor de la colonia seleccionada en el formulario.
-       */
-      const COLONIA_VALUE = this.coloniaDropdownData.find(
-        (item: Catalogo) =>
-          item.id === Number(this.agregarFabricanteFormGroup.value.colonia)
-      )?.descripcion;
-  
-      /**
-       * Crea una nueva fila para la tabla de fabricantes.
-       * Esta fila contiene los datos del formulario de agregar un fabricante.
-       *
-       * @description Esta fila se agrega a la lista de filas del fabricante.
-       */
-      const FABRICANTE_ROW = {
-        /**
-         * Datos de la fila que se mostrarán en la tabla.
-         * Cada elemento del arreglo corresponde a una columna de la tabla.
-         */
-        tbodyData: [
-          /**
-           * Denominación o razón social del fabricante.
-           */
-          this.agregarFabricanteFormGroup.value.denominacionRazonSocial,
-  
-          /**
-           * RFC del fabricante.
-           */
-          this.agregarFabricanteFormGroup.value.rfc,
-  
-          /**
-           * CURP del fabricante.
-           */
-          this.agregarFabricanteFormGroup.value.curp,
-  
-          /**
-           * Teléfono del fabricante, incluyendo lada.
-           */
-          this.agregarFabricanteFormGroup.value.lada +
-            '-' +
-            this.agregarFabricanteFormGroup.value.telefono,
-  
-          /**
-           * Correo electrónico del fabricante.
-           */
-          this.agregarFabricanteFormGroup.value.correoElectronico,
-  
-          /**
-           * Calle del fabricante.
-           */
-          this.agregarFabricanteFormGroup.value.calle,
-  
-          /**
-           * Número exterior del fabricante.
-           */
-          this.agregarFabricanteFormGroup.value.numeroExterior,
-  
-          /**
-           * Número interior del fabricante.
-           */
-          this.agregarFabricanteFormGroup.value.numeroInterior,
-  
-          /**
-           * País del fabricante.
-           */
-          PAIS_VALUE,
-  
-          /**
-           * Colonia del fabricante.
-           */
-          COLONIA_VALUE,
-  
-          /**
-           * Municipio del fabricante.
-           */
-          MUNICIPIO_VALUE,
-  
-          /**
-           * Localidad del fabricante.
-           */
-          LOCALIDAD_VALUE,
-  
-          /**
-           * Entidad federativa del fabricante.
-           */
-          this.agregarFabricanteFormGroup.value.entidadFederativa,
-  
-          /**
-           * Estado o localidad del fabricante.
-           */
-          this.agregarFabricanteFormGroup.value.estadoLocalidad,
-  
-          /**
-           * Código postal del fabricante.
-           */
-          CODIGO_POSTAL_VALUE,
-  
-          /**
-           * Colonia equivalente del fabricante.
-           */
-          this.agregarFabricanteFormGroup.value.coloniaoEquivalente,
-        ],
-      };
-  
-      /**
-       * Agrega la nueva fila a la lista de filas del fabricante.
-       */
-      this.fabricanteRowData.push(FABRICANTE_ROW);
-  
-      /**
-       * Actualiza el estado del store con los nuevos datos del fabricante.
-       */
-      this.tramiteStore.setFabricante(this.fabricanteRowData);
-  
-      /**
-       * Cambia la visibilidad de las secciones del componente.
-       */
-      this.showTableDiv = !this.showTableDiv;
-      this.showFabricante = !this.showFabricante;
-    }
-  
-    /**
-     * Envía el formulario de Destinatario y actualiza los datos en el store.
-     * Obtiene los valores seleccionados de los dropdowns y crea una nueva fila para la tabla.
-     *
-     * @description Este método es llamado al enviar el formulario de agregar un destinatario.
-     */
-    submitDestinatarioForm(): void {
-      /**
-       * Obtiene el valor de la localidad seleccionada en el formulario.
-       */
-      const LOCALIDAD_VALUE = this.localidadDropdownData.find(
-        (item: Catalogo) =>
-          item.id === Number(this.agregarDestinatarioFormGroup.value.localidad)
-      )?.descripcion;
-  
-      /**
-       * Obtiene el valor de la pais seleccionada en el formulario.
-       */
-      const PAIS_VALUE = this.paisDropdownData.find(
-        (item: Catalogo) =>
-          item.id === Number(this.agregarDestinatarioFormGroup.value.pais)
-      )?.descripcion;
-  
-      /**
-       * Obtiene el valor del municipio seleccionado en el formulario.
-       */
-      const MUNICIPIO_VALUE = this.municipioDropdownData.find(
-        (item: Catalogo) =>
-          item.id ===
-          Number(this.agregarDestinatarioFormGroup.value.municipioAlcaldia)
-      )?.descripcion;
-  
-      /**
-       * Obtiene el valor del código postal seleccionado en el formulario.
-       */
-      const CODIGO_POSTAL_VALUE = this.codigoPostalDropdownData.find(
-        (item: Catalogo) =>
-          item.id ===
-          Number(this.agregarDestinatarioFormGroup.value.codigoPostaloEquivalente)
-      )?.descripcion;
-  
-      /**
-       * Obtiene el valor de la colonia seleccionada en el formulario.
-       */
-      const COLONIA_VALUE = this.coloniaDropdownData.find(
-        (item: Catalogo) =>
-          item.id === Number(this.agregarDestinatarioFormGroup.value.colonia)
-      )?.descripcion;
-  
-      /**
-       * Crea una nueva fila para la tabla de destinatarios.
-       * Esta fila contiene los datos del formulario de agregar un destinatario.
-       *
-       * @description Esta fila se agrega a la lista de filas del destinatario.
-       */
-      const DESTINATARIO_ROW = {
-        /**
-         * Datos de la fila que se mostrarán en la tabla.
-         * Cada elemento del arreglo corresponde a una columna de la tabla.
-         */
-        tbodyData: [
-          /**
-           * Denominación o razón social del destinatario.
-           */
-          this.agregarDestinatarioFormGroup.value.denominacionRazonSocial,
-  
-          /**
-           * RFC del destinatario.
-           */
-          this.agregarDestinatarioFormGroup.value.rfc,
-  
-          /**
-           * CURP del destinatario.
-           */
-          this.agregarDestinatarioFormGroup.value.curp,
-  
-          /**
-           * Teléfono del destinatario, incluyendo lada.
-           */
-          this.agregarDestinatarioFormGroup.value.lada +
-            '-' +
-            this.agregarDestinatarioFormGroup.value.telefono,
-  
-          /**
-           * Correo electrónico del destinatario.
-           */
-          this.agregarDestinatarioFormGroup.value.correoElectronico,
-  
-          /**
-           * Calle del destinatario.
-           */
-          this.agregarDestinatarioFormGroup.value.calle,
-  
-          /**
-           * Número exterior del destinatario.
-           */
-          this.agregarDestinatarioFormGroup.value.numeroExterior,
-  
-          /**
-           * Número interior del destinatario.
-           */
-          this.agregarDestinatarioFormGroup.value.numeroInterior,
-  
-          /**
-           * País del destinatario.
-           */
-          PAIS_VALUE,
-  
-          /**
-           * Colonia del destinatario.
-           */
-          COLONIA_VALUE,
-  
-          /**
-           * Municipio del destinatario.
-           */
-  
-          MUNICIPIO_VALUE,
-  
-          /**
-           * Localidad del destinatario.
-           */
-          LOCALIDAD_VALUE,
-  
-          /**
-           * Entidad federativa del destinatario.
-           */
-          this.agregarDestinatarioFormGroup.value.entidadFederativa,
-  
-          /**
-           * Estado o localidad del destinatario.
-           */
-          this.agregarDestinatarioFormGroup.value.estadoLocalidad,
-  
-          /**
-           * Código postal del destinatario.
-           */
-          CODIGO_POSTAL_VALUE,
-  
-          /**
-           * Colonia equivalente del destinatario.
-           */
-          this.agregarDestinatarioFormGroup.value.coloniaoEquivalente,
-        ],
-      };
-  
-      /**
-       * Agrega la nueva fila a la lista de filas del destinatario.
-       */
-      this.destinatarioRowData.push(DESTINATARIO_ROW);
-  
-      /**
-       * Actualiza el estado del store con los nuevos datos del destinatario.
-       */
-      this.tramiteStore.setDestinatario(this.destinatarioRowData);
-  
-      /**
-       * Cambia la visibilidad de las secciones del componente.
-       */
-      this.showTableDiv = !this.showTableDiv;
-      this.showDestinatario = !this.showDestinatario;
-    }
+  /**
+   * Almacena los datos de los fabricantes, destinatarios, facturadores y proveedores.
+   * Estos datos se utilizan para mostrar en las tablas correspondientes.
+   */
+   fabricanteRowData: FacricanteModel[] = [];
+   /**
+    * Almacena los datos de los destinatarios.
+    * Estos datos se utilizan para mostrar en la tabla de destinatarios.
+    */
+   destinatarioRowData: DestinatarioModel[] = [];
+   /**
+    * Almacena los datos de los proveedores.
+    * Estos datos se utilizan para mostrar en la tabla de proveedores.
+    */
+   facturadorRowData: FacturadorModel[] = [];
+   /**
+    * Almacena los datos de los proveedores.
+    * Estos datos se utilizan para mostrar en la tabla de proveedores.
+    */
+   proveedorRowData: ProveedorModel[] = [];
+/**
+ * Envía el formulario de fabricante y actualiza los datos en el store.
+ */
+submitFabricanteForm() {
+  if (this.agregarFabricanteFormGroup) {
  
-  
+    const NEW_FABRICANTE = this.agregarFabricanteFormGroup.value;
+
+    this.fabricanteRowData = [...this.fabricanteRowData, NEW_FABRICANTE];
+
+ 
+    this.toggleDivFabricante();
+    this.agregarFabricanteFormGroup.reset();
+  }
+}
+/**
+ * Almacena las filas seleccionadas de la tabla de fabricantes.
+ * Esta propiedad se utiliza para realizar operaciones en las filas seleccionadas, como eliminarlas.
+ */
+selectedFabricanteRows: FacricanteModel[] = [];
+/**
+ * Almacena las filas seleccionadas de la tabla de fabricantes.
+ * Esta propiedad se utiliza para realizar operaciones en las filas seleccionadas, como eliminarlas.
+ */
+onFabricanteSeleccionados(selected: FacricanteModel[]):void {
+  this.selectedFabricanteRows = selected;
+}
+/**
+ * Elimina las filas seleccionadas de la tabla de fabricantes.
+ */
+eliminarSeleccionadosFabricante() :void {
+  this.fabricanteRowData = this.fabricanteRowData.filter(
+    row => !this.selectedFabricanteRows.includes(row)
+  );
+  this.selectedFabricanteRows = [];
+}
+  /**
+   * Envía el formulario de destinatario y actualiza los datos en el store.
+   */
+submitDestinatarioForm(): void{
+
+  if (this.agregarDestinatarioFormGroup) {
+    // Get the form data
+    const NEW_DESTINATARIO = this.agregarDestinatarioFormGroup.value;
+
+    // Add to the table data array (spread to trigger change detection)
+    this.destinatarioRowData = [...this.destinatarioRowData, NEW_DESTINATARIO];
+
+    // Optionally, close the modal and reset the form
+    this.toggleDivDestinatario();
+    this.agregarDestinatarioFormGroup.reset();
+  }
+}
+/**
+ * Almacena las filas seleccionadas de la tabla de destinatarios.
+ */
+selectedDestinatarioRows: DestinatarioModel[] = [];
+/**
+ * Maneja la selección de filas en la tabla de destinatarios.
+ * Actualiza la propiedad `selectedDestinatarioRows` con las filas seleccionadas.
+ */
+selectedProveedorRows: ProveedorModel[] = [];
+/**
+ * Maneja la selección de filas en la tabla de proveedores.
+ * Actualiza la propiedad `selectedProveedorRows` con las filas seleccionadas.
+ */
+selectedFacturadorRows: FacturadorModel[] = [];
+/**
+ * Maneja la selección de filas en la tabla de facturadores.
+ * Actualiza la propiedad `selectedFacturadorRows` con las filas seleccionadas.
+ * @param selected Filas seleccionadas de la tabla de facturadores.
+ */
+onDestinatarioSeleccionados(selected: DestinatarioModel[]) {
+  this.selectedDestinatarioRows = selected;
+}
+/**
+ * Elimina las filas seleccionadas de la tabla de destinatarios.
+ * @description Este método filtra las filas de la tabla para eliminar aquellas que están en `selectedDestinatarioRows`.
+ */
+eliminarSeleccionadosDestinatario() {
+  this.destinatarioRowData = this.destinatarioRowData.filter(
+    row => !this.selectedDestinatarioRows.includes(row)
+  );
+  this.selectedDestinatarioRows = [];
+}
+/**
+ * 
+ * @param selected Filas seleccionadas de la tabla de proveedores.
+ */
+onProveedorSeleccionados(selected: ProveedorModel[]) {
+  this.selectedProveedorRows = selected;
+}
+/**
+ * Elimina las filas seleccionadas de la tabla de proveedores.  
+ */
+  eliminarSeleccionadosProveedor(){
+    this.proveedorRowData = this.proveedorRowData.filter(
+    row => !this.selectedProveedorRows.includes(row)
+  );
+  this.selectedProveedorRows = [];
+  }
+
     /**
      * Envía el formulario de Proveedor y actualiza los datos en el store.
      * Crea una nueva fila para la tabla con los datos del formulario.
@@ -1266,57 +1021,31 @@ public extranjero = false;
      * @description Este método es llamado al enviar el formulario de agregar un proveedor.
      */
     submitProveedorForm(): void {
-      /**
-       * Obtiene el valor de la pais seleccionada en el formulario.
-       */
-      const PAIS_VALUE = this.paisDropdownData.find(
-        (item: Catalogo) =>
-          item.id === Number(this.agregarProveedorFormGroup.value.pais)
-      )?.descripcion;
-  
-      /**
-       * Crea una nueva fila para la tabla con los datos del formulario.
-       */
-      const PROVEEDOR_ROW = {
-        tbodyData: [
-          this.agregarProveedorFormGroup.value.denominacionRazonSocial,
-          this.agregarProveedorFormGroup.value.rfc,
-          this.agregarProveedorFormGroup.value.curp,
-          this.agregarProveedorFormGroup.value.lada +
-            '-' +
-            this.agregarProveedorFormGroup.value.telefono,
-          this.agregarProveedorFormGroup.value.correoElectronico,
-          this.agregarProveedorFormGroup.value.calle,
-          this.agregarProveedorFormGroup.value.numeroExterior,
-          this.agregarProveedorFormGroup.value.numeroInterior,
-          PAIS_VALUE,
-          this.agregarProveedorFormGroup.value.colonia,
-          this.agregarProveedorFormGroup.value.municipioAlcaldia,
-          this.agregarProveedorFormGroup.value.localidad,
-          this.agregarProveedorFormGroup.value.entidadFederativa,
-          this.agregarProveedorFormGroup.value.estadoLocalidad,
-          this.agregarProveedorFormGroup.value.codigoPostaloEquivalente,
-          this.agregarProveedorFormGroup.value.coloniaoEquivalente,
-        ],
-      };
-  
-      /**
-       * Agrega la nueva fila a la lista de filas del proveedor.
-       */
-      this.proveedorRowData.push(PROVEEDOR_ROW);
-  
-      /**
-       * Actualiza el estado del store con los nuevos datos del proveedor.
-       */
-      this.tramiteStore.setProveedor(this.proveedorRowData);
-  
-      /**
-       * Cambia la visibilidad de las secciones del componente.
-       */
-      this.showTableDiv = !this.showTableDiv;
-      this.showProveedor = !this.showProveedor;
+  if (this.agregarProveedorFormGroup.valid) {
+    const NEW_PROVEEDOR = this.agregarProveedorFormGroup.value;
+    this.proveedorRowData = [...this.proveedorRowData, NEW_PROVEEDOR];
+    this.toggleDivProveedor();
+    this.agregarProveedorFormGroup.reset();
+  }
     }
-  
+    /**
+     * 
+     * @param selected Filas seleccionadas de la tabla de facturadores.
+     * @description Este método actualiza la propiedad `selectedFacturadorRows` con las filas seleccionadas.
+     */
+  onFacturadorSeleccionados(selected: FacturadorModel[]) {
+  this.selectedFacturadorRows = selected;
+}
+/**
+ * Elimina las filas seleccionadas de la tabla de facturadores.
+ * @description Este método filtra las filas de la tabla para eliminar aquellas que están en `selectedFacturadorRows`.
+ */
+  eliminarSeleccionadosFacturador(){
+    this.facturadorRowData = this.facturadorRowData.filter(
+    row => !this.selectedFacturadorRows.includes(row)
+  );
+  this.selectedFacturadorRows = [];
+  }
     /**
      * Envía el formulario de Facturador y actualiza los datos en el store.
      * Crea una nueva fila para la tabla con los datos del formulario.
@@ -1324,55 +1053,18 @@ public extranjero = false;
      * @description Este método es llamado al enviar el formulario de agregar un facturador.
      */
     submitFacturadorForm(): void {
-      /**
-       * Obtiene el valor de la pais seleccionada en el formulario.
-       */
-      const PAIS_VALUE = this.paisDropdownData.find(
-        (item: Catalogo) =>
-          item.id === Number(this.agregarFacturadorFormGroup.value.pais)
-      )?.descripcion;
-  
-      /**
-       * Crea una nueva fila para la tabla con los datos del formulario.
-       */
-      const FACTURADOR_ROW = {
-        tbodyData: [
-          this.agregarFacturadorFormGroup.value.denominacionRazonSocial,
-          this.agregarFacturadorFormGroup.value.rfc,
-          this.agregarFacturadorFormGroup.value.curp,
-          this.agregarFacturadorFormGroup.value.lada +
-            '-' +
-            this.agregarFacturadorFormGroup.value.telefono,
-          this.agregarFacturadorFormGroup.value.correoElectronico,
-          this.agregarFacturadorFormGroup.value.calle,
-          this.agregarFacturadorFormGroup.value.numeroExterior,
-          this.agregarFacturadorFormGroup.value.numeroInterior,
-          PAIS_VALUE,
-          this.agregarFacturadorFormGroup.value.colonia,
-          this.agregarFacturadorFormGroup.value.municipioAlcaldia,
-          this.agregarFacturadorFormGroup.value.localidad,
-          this.agregarFacturadorFormGroup.value.entidadFederativa,
-          this.agregarFacturadorFormGroup.value.estado,
-          this.agregarFacturadorFormGroup.value.codigoPostaloEquivalente,
-          this.agregarFacturadorFormGroup.value.coloniaoEquivalente,
-        ],
-      };
-  
-      /**
-       * Agrega la nueva fila a la lista de filas del facturador.
-       */
-      this.facturadorRowData.push(FACTURADOR_ROW);
-  
-      /**
-       * Actualiza el estado del store con los nuevos datos del facturador.
-       */
-      this.tramiteStore.setFacturador(this.facturadorRowData);
-  
-      /**
-       * Cambia la visibilidad de las secciones del componente.
-       */
-      this.showTableDiv = !this.showTableDiv;
-      this.showFacturador = !this.showFacturador;
+
+      if (this.agregarFacturadorFormGroup) {
+        // Obtiene los datos del formulario
+        const NEW_FACTURADOR = this.agregarFacturadorFormGroup.value;
+
+        // Agrega los datos a la tabla de facturadores
+        this.facturadorRowData = [...this.facturadorRowData, NEW_FACTURADOR];
+
+        // Opcionalmente, cierra el modal y resetea el formulario
+        this.toggleDivFacturador();
+        this.agregarFacturadorFormGroup.reset();
+      }
     }
   
     /**
