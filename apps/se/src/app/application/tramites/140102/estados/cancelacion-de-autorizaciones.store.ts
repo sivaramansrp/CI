@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
@@ -12,7 +11,7 @@ import { Injectable } from '@angular/core';
  */
 
 export interface CancelacionState {
-    [key: string]: any;
+    [key: string]: unknown;
 }
 
 /**
@@ -60,7 +59,7 @@ export class CancelacionStore extends Store<CancelacionState> {
      * @param fieldName El nombre del campo a actualizar.
      * @param value El valor a establecer.
      */
-  public setDynamicFieldValue(fieldName: string, value: any): void {
+  public setDynamicFieldValue(fieldName: string, value: unknown): void {
     this.update((state) => ({
       ...state,
       [fieldName]: value,

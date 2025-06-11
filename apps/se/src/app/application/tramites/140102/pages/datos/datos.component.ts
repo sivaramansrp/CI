@@ -19,11 +19,11 @@ import { RegistroDeSolicitudService } from '../../services/registro-de-solicitud
   templateUrl: './datos.component.html',
 })
 export class DatosComponent implements OnInit, OnDestroy {
-   /**
-  * @property consultaState
-  * @description
-  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
-  */
+  /**
+ * @property consultaState
+ * @description
+ * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+ */
   @Input() consultaState!: ConsultaioState;
   /**
    * @property indice
@@ -38,7 +38,7 @@ export class DatosComponent implements OnInit, OnDestroy {
    * // Acceder al índice actual
    * console.log(this.indice); // 1
    */
- public indice: number = 1;
+  public indice: number = 1;
 
   /**
    * @property pestanaDosFormularioValido
@@ -83,59 +83,67 @@ export class DatosComponent implements OnInit, OnDestroy {
    */
   public elementoDeTablaSeleccionado!: InstrumentoCupoTPLForm;
 
-   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
+
+  /** Subject para notificar la destrucción del componente. */
+  private destroyNotifier$: Subject<void> = new Subject();
   
-    /** Subject para notificar la destrucción del componente. */
-    private destroyNotifier$: Subject<void> = new Subject();
-  
-     constructor(
-        private registroDeSolicitudService: RegistroDeSolicitudService,
-      ) {
-        // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
-      }
-   /**
-   * @method ngOnInit
+  /**
+   * @constructor 
    * @description
-   * Método de inicialización del componente `DatosComponent`.
-   * 
-   * Detalles:
-   * - Se suscribe al observable `selectConsultaioState$` del store `ConsultaioQuery` para obtener el estado actual de la consulta.
-   * - Utiliza `takeUntil` para cancelar la suscripción cuando el componente se destruye, evitando fugas de memoria.
-   * - Actualiza la propiedad `consultaState` con el estado recibido.
-   * - Si la propiedad `update` del estado es verdadera, llama al método `guardarDatosFormulario()`.
-   * - Si no, establece la bandera `esDatosRespuesta` en `true` para indicar que se deben mostrar los datos de respuesta.
-   * 
-   * @example
-   * this.ngOnInit();
-   * // Inicializa el componente y gestiona el flujo de datos según el estado de la consulta.
-   */
-  ngOnInit(): void { 
-    if(this.consultaState?.update) {
+   * Constructor del componente `DatosComponent`.
+   * Inyecta el servicio `RegistroDeSolicitudService` para manejar la lógica de registro de solicitudes.
+   * Este servicio se utiliza para obtener y actualizar los datos del formulario
+   * y gestionar la importación de datos definitivos desde un archivo JSON.
+ */
+  constructor(
+    private registroDeSolicitudService: RegistroDeSolicitudService,
+  ) {
+    // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
+  }
+  /**
+  * @method ngOnInit
+  * @description
+  * Método de inicialización del componente `DatosComponent`.
+  * 
+  * Detalles:
+  * - Se suscribe al observable `selectConsultaioState$` del store `ConsultaioQuery` para obtener el estado actual de la consulta.
+  * - Utiliza `takeUntil` para cancelar la suscripción cuando el componente se destruye, evitando fugas de memoria.
+  * - Actualiza la propiedad `consultaState` con el estado recibido.
+  * - Si la propiedad `update` del estado es verdadera, llama al método `guardarDatosFormulario()`.
+  * - Si no, establece la bandera `esDatosRespuesta` en `true` para indicar que se deben mostrar los datos de respuesta.
+  * 
+  * @example
+  * this.ngOnInit();
+  * // Inicializa el componente y gestiona el flujo de datos según el estado de la consulta.
+  */
+  ngOnInit(): void {
+    if (this.consultaState?.update) {
       this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;
     }
   }
 
-    /**
-     * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-     * Luego reinicializa el formulario con los valores actualizados desde el store.
-     */
-    guardarDatosFormulario(): void {
-      this.registroDeSolicitudService
-        .getImportacionDefinitivaData().pipe(
-          takeUntil(this.destroyNotifier$)
-        )
-        .subscribe((resp) => {
-          if (resp) {
-            this.esDatosRespuesta = true;
-            Object.entries(resp).forEach(([key, value]) => {
-              this.registroDeSolicitudService.actualizarEstadoFormulario(key, value);
-            });
-          }
-        });
-    }
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.registroDeSolicitudService
+      .getImportacionDefinitivaData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          Object.entries(resp).forEach(([key, value]) => {
+            this.registroDeSolicitudService.actualizarEstadoFormulario(key, value);
+          });
+        }
+      });
+  }
 
   /**
    * @method seleccionaTab
