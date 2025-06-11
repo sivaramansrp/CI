@@ -14,11 +14,18 @@
                 <input type="text" name="numFolioAsignacionAux" class="form-control"
                     formControlName="numFolioAsignacionAux"
                     (change)="setValoresStore(asignacionOficioNumeroForm,'numFolioAsignacionAux', 'setNumFolioAsignacionAux')">
+                @if (asignacionOficioNumeroForm.get('numFolioAsignacionAux')?.errors?.['required'] &&
+                (asignacionOficioNumeroForm.get('numFolioAsignacionAux')?.touched ||
+                asignacionOficioNumeroForm.get('numFolioAsignacionAux')?.dirty))
+                {
+                <small class="mensaje-error">Este campo es obligatorio.</small>
+                }
             </div>
         </div>
         <div class="row mt-3">
             <div class="col-md-8 text-end">
-                <button type="button" class="btn btn-primary" name="buscar" (click)="buscar()">Buscar</button>
+                <button type="button" class="btn btn-primary" name="buscar"
+                    (click)="buscar(asignacionOficioNumeroForm.get('cveAniosAutorizacion')?.getRawValue(), asignacionOficioNumeroForm.get('numFolioAsignacionAux')?.getRawValue())">Buscar</button>
             </div>
         </div>
     </div>
@@ -88,18 +95,13 @@
 
         <div class="row">
             <div class="col-md-4">
-                <label for="fechaInicio" class="form-label">Fecha inicio: <span class="bi bi-question-circle-fill"
-                        title="" data-bs-toggle="tooltip"></span></label>
-                <input type="text" name="fechaInicio" id="fechaInicioVigenciaAsignacion" class="form-control"
-                    formControlName="fechaInicio"
-                    (change)="setValoresStore(asignacionDatosForm,'fechaInicio', 'setFechaInicio')">
+                <input-fecha [setFecha]="asignacionDatosForm.get('fechaInicio')?.value" [datos]="fechaInicioInput"
+                    [tooltipQuestionCircle]="true" (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
             </div>
             <div class="col-md-4">
-                <label for="fechaFinVigenciaAprobada" class="form-label">Fecha fin: <span
-                        class="bi bi-question-circle-fill" title="" data-bs-toggle="tooltip"></span></label>
-                <input type="text" name="fechaFinVigenciaAprobada" id="fechaFinVigenciaAsignacion" class="form-control"
-                    formControlName="fechaFinVigenciaAprobada"
-                    (change)="setValoresStore(asignacionDatosForm,'fechaFinVigenciaAprobada', 'setFechaFinVigenciaAprobada')">
+                <input-fecha [setFecha]="asignacionDatosForm.get('fechaFinVigenciaAprobada')?.value"
+                    [datos]="fechaFinVigenciaAprobadaInput" [tooltipQuestionCircle]="true"
+                    (valorCambiado)="cambioFechaFinVigenciaAprobada($event)"></input-fecha>
             </div>
         </div>
     </div>
@@ -139,17 +141,13 @@
                     readonly>
             </div>
             <div class="col-md-4">
-                <label for="fechaInicioDelCupo" class="form-label">Fecha inicio vigencia del cupo:</label>
-                <input type="text" name="fechaInicioVigencia" id="fechaInicioVigencia" class="form-control"
-                    formControlName="fechaInicioVigencia"
-                    (change)="setValoresStore(cupoDescripcionForm,'fechaInicioVigencia', 'setFechaInicioVigencia')"
-                    readonly>
+                <input-fecha [setFecha]="cupoDescripcionForm.get('fechaInicioVigencia')?.value"
+                    [datos]="fechaInicioVigenciaInput"
+                    (valorCambiado)="cambioFechaInicioVigencia($event)"></input-fecha>
             </div>
             <div class="col-md-4">
-                <label for="fechaFinDelCupo" class="form-label">Fecha fin vigencia del cupo:</label>
-                <input type="text" name="fechaFinVigencia" id="fechaFinVigencia" class="form-control"
-                    formControlName="fechaFinVigencia"
-                    (change)="setValoresStore(cupoDescripcionForm,'fechaFinVigencia', 'setFechaFinVigencia')" readonly>
+                <input-fecha [setFecha]="cupoDescripcionForm.get('fechaFinVigencia')?.value"
+                    [datos]="fechaFinVigenciaInput" (valorCambiado)="cambioFechaFinVigencia($event)"></input-fecha>
             </div>
         </div>
         <div class="row mt-3">
@@ -220,7 +218,7 @@
                     (change)="setValoresStore(distribucionSaldoForm,'montoDisponibleAsignacion', 'setMontoDisponibleAsignacion')">
             </div>
             <div class="col-md-4">
-                <label for="montoAExpedir" class="form-label">Monto a expedir *:</label>
+                <label for="montoAExpedir" class="form-label">Monto a expedir*:</label>
                 <input type="text" name="montoExpedir" id="montoExpedir" class="form-control"
                     formControlName="montoExpedir" size="30"
                     (change)="setValoresStore(distribucionSaldoForm,'montoExpedir', 'setMontoExpedir')">
@@ -238,12 +236,13 @@
         <div class="row mt-5">
             <div class="col-md-12">
                 <app-tabla-dinamica [configuracionTabla]="configuracionParaEncabezadoDeTabla" [datos]="cuerpoTabla"
-                    [tipoSeleccionTabla]="tipoSeleccionTabla"></app-tabla-dinamica>
+                    [tipoSeleccionTabla]="tipoSeleccionTabla" (listaDeFilaSeleccionada)="valorDeAlternancia($event)"></app-tabla-dinamica>
             </div>
         </div>
         <div class="row mt-2">
             <div class="col-md-12 text-end">
-                <button type="button" class="btn btn-danger" name="guardarCertificado">Eliminar seleccionado</button>
+                <button type="button" class="btn btn-danger" name="guardarCertificado" (click)="eliminar()">Eliminar
+                    seleccionado</button>
             </div>
         </div>
         <div class="row">
