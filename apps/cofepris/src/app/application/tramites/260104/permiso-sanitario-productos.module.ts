@@ -10,8 +10,8 @@ import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PermisoSanitarioProductosRoutingModule } from './permiso-sanitario-productos-routing.module';
 import { RepresentanteLegalComponent } from './components/representante-legal/representante-legal.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-import { TercerosRelacionadosDestinoComponent } from './components/terceros-relacionados-destino/terceros-relacionados-destino.component';
 import { Solocitud260104Service } from './services/service260104.service';
+import { TercerosRelacionadosDestinoComponent } from './components/terceros-relacionados-destino/terceros-relacionados-destino.component';
 
 @NgModule({
   declarations: [

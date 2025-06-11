@@ -3,7 +3,7 @@ import { Component, OnDestroy,OnInit} from '@angular/core';
 
 import { ActivatedRoute,Router} from '@angular/router';
 
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 import { AlertComponent,ConfiguracionColumna,TablaDinamicaComponent,TablaSeleccion,TituloComponent } from '@ng-mf/data-access-user';

@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnDestroy } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite260104Store } from '../../estados/stores/tramite260104.store';
-import { map, Subject, takeUntil } from 'rxjs';
 
 
 /**

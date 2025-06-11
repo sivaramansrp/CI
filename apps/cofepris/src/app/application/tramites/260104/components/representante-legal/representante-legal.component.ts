@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260104State, Tramite260104StoreDos } from '../../../../estados/tramites/tramite260104.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -23,7 +23,7 @@ import { VALOR_FORMULARIO } from '@libs/shared/data-access-user/src/core/enums/2
   templateUrl: './representante-legal.component.html',
   styleUrl: './representante-legal.component.scss',
 })
-export class RepresentanteLegalComponent implements OnInit, OnDestroy {
+export class RepresentanteLegalComponent implements OnDestroy {
   /**
    * Estado de la solicitud obtenido desde el store.
    * Contiene la información actual del trámite.
@@ -68,14 +68,6 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-  }
-
-  /**
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Obtiene el estado de la solicitud y crea el formulario del representante legal.
-   */
-  ngOnInit(): void {
-    
   }
 
   /**
