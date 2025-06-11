@@ -21,7 +21,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <app-catalogo-select [catalogo]="estado" [label]="'País emisor del certificado Kimberley'"
-                [required]="false" name="paisEmisorCertificado" formControlName="paisEmisorCertificado"
+                [required]="false" name="paisEmisorCertificado" [isDisabled]="esFormularioSoloLectura ? true : false" formControlName="paisEmisorCertificado"
                 (change)="setValoresStore(certificadoKimberley,'paisEmisorCertificado', 'setPaisEmisorCertificado')"></app-catalogo-select>
             </div>
         </div>
@@ -41,8 +41,8 @@
         </div>
         <div class="col-md-6">
             <div class="form-group">
-                <app-catalogo-select [catalogo]="estado" [label]="'País de origen:'"
-                [required]="false" name="paisDeOrigen" formControlName="paisDeOrigen" (change)="setValoresStore(certificadoKimberley,'paisDeOrigen', 'setPaisDeOrigen')"
+                <app-catalogo-select [catalogo]="estado" [label]="'País de origen'"
+                [required]="false" name="paisDeOrigen" formControlName="paisDeOrigen" [isDisabled]="esFormularioSoloLectura ? true : false" (change)="setValoresStore(certificadoKimberley,'paisDeOrigen', 'setPaisDeOrigen')"
                 ></app-catalogo-select>
             </div>
         </div>

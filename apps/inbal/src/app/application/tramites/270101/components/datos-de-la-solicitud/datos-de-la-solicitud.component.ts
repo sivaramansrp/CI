@@ -1,10 +1,11 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ModeloDeFormaDinamica, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService, Validadores } from '@libs/shared/data-access-user/src';
 import { CONFIGURACION_DATOS_SOLICITUD_DE_TABLA, DATOS_DE_LA_SOLICICTUD, INFORMACION_DE_LA_OBRA_ARTE, OBRA_DE_ARTE_ALERT } from '../../constantes/exportar-ilustraciones.enum';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ExportarIlustraciones270101State, Tramite270101Store } from '../../../../estados/tramites/270101/tramite270101.store';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosDelSolicitud } from '../../models/exportar-ilustraciones.model';
 import { ExportarIlustracionesService } from '../../services/exportar-ilustraciones.service';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
@@ -55,6 +56,14 @@ import { ValidadoresDeFormulariosComponent } from '@libs/shared/data-access-user
 })
 
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+
+  /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
+  
   /**
    * Referencia al elemento del modal para agregar mercancías.
    */
@@ -314,9 +323,63 @@ ngOnInit(): void {
     )
     .subscribe();
 
-  this.obtenerAutor();
-  this.obtenerMonedaDatos();
-  this.obtenerArancelariaDatos();
+  
+  // Este código espera a que se carguen todos los archivos JSON y luego ejecuta la función agregarTablaDatos
+
+  let terminado = 0;
+  const COMPROBAR_TODO_CARGADO = (): void => {
+    terminado++;
+    if (terminado === 3 && this.consultaState.readonly) {
+      this.agregarTablaDatos();
+    }
+  };
+  this.obtenerAutor(COMPROBAR_TODO_CARGADO);
+  this.obtenerMonedaDatos(COMPROBAR_TODO_CARGADO);
+  this.obtenerArancelariaDatos(COMPROBAR_TODO_CARGADO);
+}
+
+/**
+ * @method tablaDatos
+ * Genera un objeto con los datos de la solicitud a partir del estado actual del formulario de exportación de ilustraciones
+ */
+tablaDatos(): DatosDelSolicitud {
+  const DETALLES = {
+    autor: DatosDeLaSolicitudComponent.obtenerDescripcion(this.autorData, this.exportarIlustracionesState['autor']),
+    titulo: this.exportarIlustracionesState['titulo'],
+    tecnicaDeRealizacion: this.exportarIlustracionesState['technicaDeRealizacion'],
+    conMarco: this.exportarIlustracionesState['medidas'],
+    ancho: this.exportarIlustracionesState['ancho'],
+    alto: this.exportarIlustracionesState['alto'],
+    profundidad: this.exportarIlustracionesState['profundidad'],
+    diametro: this.exportarIlustracionesState['diametro'],
+    variables: this.exportarIlustracionesState['variables'],
+    anoDeCreacion: this.exportarIlustracionesState['anoDeCreacion'],
+    avaluo: this.exportarIlustracionesState['avaluo'],
+    moneda: DatosDeLaSolicitudComponent.obtenerDescripcion(this.monedaData, this.exportarIlustracionesState['moneda']),
+    propietario: this.exportarIlustracionesState['propietario'],
+    fraccionArancelaria: DatosDeLaSolicitudComponent.obtenerDescripcion(this.arancelariaData, this.exportarIlustracionesState['fraccionArancelaria']),
+    descripcion: this.exportarIlustracionesState['descripcion']
+  };
+  return DETALLES;
+}
+
+/**
+ * @method obtenerDescripcion
+ * @description
+ * Obtiene la descripción de la fracción arancelaria seleccionada en el formulario dinámico.
+ * @returns {string} Descripción de la fracción arancelaria seleccionada o una cadena vacía si no existe.
+ */
+  public static obtenerDescripcion(array: Catalogo[], id: string): string {
+    const DESCRIPCION = array.find((ele: Catalogo) => Number(ele.id) === Number(id))?.descripcion;
+    return DESCRIPCION ?? '';
+  }
+
+  /**
+ * @method agregarTablaDatos
+ * Construye y devuelve un objeto con los datos completos de la ilustración a partir del estado actual del formulario.
+ */
+agregarTablaDatos(): void {
+  this.configuracionTablaDatos?.push(this.tablaDatos());
 }
 
   /**
@@ -335,7 +398,7 @@ ngOnInit(): void {
   * this.obtenerAutor();
   * // Obtiene los datos de los autores y los asigna al formulario dinámico.
   */
-  public obtenerAutor(): void {
+  public obtenerAutor(callback: () => void): void {
     this.exportarIlustracionesService.getAutorData()
       .pipe(
         takeUntil(this.destroy$)
@@ -351,6 +414,7 @@ ngOnInit(): void {
             }));
           }
         }
+        callback();
       });
   }
 
@@ -369,7 +433,7 @@ ngOnInit(): void {
   * this.obtenerMonedaDatos();
   * // Obtiene los datos de las monedas y los asigna a `monedaData`.
   */
-  public obtenerMonedaDatos(): void {
+  public obtenerMonedaDatos(callback: () => void): void {
     this.exportarIlustracionesService.getMonedaData()
     .pipe(
       takeUntil(this.destroy$)
@@ -381,6 +445,7 @@ ngOnInit(): void {
         } else {
           this.monedaData = [];
         }
+        callback(); 
       },
       error: () => {
         this.monedaData = [];
@@ -403,7 +468,7 @@ ngOnInit(): void {
   * this.obtenerArancelariaDatos();
   * // Obtiene los datos de las fracciones arancelarias y los asigna a `arancelariaData`.
   */
-  public obtenerArancelariaDatos(): void {
+  public obtenerArancelariaDatos(callback: () => void): void {
     this.exportarIlustracionesService.getArancelariaData()
     .pipe(
       takeUntil(this.destroy$)
@@ -415,6 +480,7 @@ ngOnInit(): void {
         } else {
           this.arancelariaData = [];
         }
+        callback(); 
       },
       error: () => {
         this.arancelariaData = [];
@@ -501,7 +567,7 @@ ngOnInit(): void {
       };
       this.configuracionTablaDatos?.push(DETALLES);
       this.exportarIlustracionesService.setDatosDeSolicitudArray(DETALLES);
-      this.cambioEnValoresStore('configuracionTablaDatos', DETALLES)
+      this.cambioEnValoresStore('configuracionTablaDatos', this.configuracionTablaDatos)
       this.ninoFormGroup.reset();
       this.forma.reset();
       this.cerrarModal();

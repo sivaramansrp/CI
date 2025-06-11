@@ -61,6 +61,12 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @decorador @Input
    */
   @Input() public idProcedimiento!: number;
+
+  /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
+
   /**
    * @property {string} infoAlert
    * Tipo de alerta visual mostrada en la interfaz.

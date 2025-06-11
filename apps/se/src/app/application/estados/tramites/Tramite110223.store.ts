@@ -19,8 +19,8 @@ export interface Catalogo {
  */
 export interface Solicitud110223State {
   tercerOperador: boolean;
-  tratado: Catalogo[] | null;
-  pais: Catalogo[] | null;
+  tratado: string | null;
+  pais: string | null;
   fraccionArancelaria: string;
   numeroRegistro: string;
   nombreComercial: string;
@@ -30,9 +30,9 @@ export interface Solicitud110223State {
   observaciones: string;
   presica: string;
   presenta: string;
-  idioma: Catalogo[] | null;
-  entidad: Catalogo[] | null;
-  representacion: Catalogo[] | null;
+  idioma: string | null;
+  entidad: string | null;
+  representacion: string | null;
   nombre: string;
   apellidoPrimer: string;
   apellidoSegundo: string;
@@ -46,8 +46,8 @@ export interface Solicitud110223State {
   telefono: string;
   fax: string;
   correoElectronico: string;
-  nacion: Catalogo[] | null;
-  transporte: Catalogo[] | null;
+  nacion: string | null;
+  transporte: string | null;
   fraccionMercanciaArancelaria: string;
   nombreTecnico: string;
   valorContenidoRegional: string;
@@ -55,17 +55,17 @@ export interface Solicitud110223State {
   criterioParaPreferencial: string;
   marca: string;
   cantidad: string;
-  umc: Catalogo[] | null;
+  umc: string | null;
   valorDelaMercancia: string;
   complementoDelaDescripcion: string;
   masaBruta: string;
   nombreComercialDelaMercancia: string;
-  unidadMedida: Catalogo[] | null;
-  tipoFactura: Catalogo[] | null;
+  unidadMedida: string | null;
+  tipoFactura: string | null;
   fecha: string;
   numeroFactura: string;
   justificacion: string;
-  casillaVerificacion: string;
+  casillaVerificacion: boolean;
   numeroSerie: string;
   datosConfidencialesProductor: boolean;
   productorMismoExportador: boolean;
@@ -125,7 +125,7 @@ export function createInitialState(): Solicitud110223State {
     fecha: VALOR_POR_DEFECTO,
     numeroFactura: VALOR_POR_DEFECTO,
     justificacion: VALOR_POR_DEFECTO,
-    casillaVerificacion: VALOR_POR_DEFECTO,
+    casillaVerificacion: true,
     numeroSerie: VALOR_POR_DEFECTO,
     datosConfidencialesProductor: false,
     productorMismoExportador: false,
@@ -160,7 +160,7 @@ export class Tramite110223Store extends Store<Solicitud110223State> {
    * Establece el catálogo de tratados.
    * @param tratado Lista de objetos de tipo `Catalogo`.
    */
-  public setTratado(tratado: Catalogo[]): void {
+  public setTratado(tratado: string | null): void {
     this.update(state => ({
       ...state,
       tratado
@@ -171,7 +171,7 @@ export class Tramite110223Store extends Store<Solicitud110223State> {
    * Establece el catálogo de países.
    * @param pais Lista de objetos de tipo `Catalogo`.
    */
-  public setPais(pais: Catalogo[]): void {
+  public setPais(pais: string | null): void {
     this.update(state => ({
       ...state,
       pais
@@ -270,7 +270,7 @@ export class Tramite110223Store extends Store<Solicitud110223State> {
    * Establece el catálogo de unidades de medida comercial (UMC).
    * @param umc Lista de objetos de tipo `Catalogo`.
    */
-  public setUMC(umc: Catalogo[]): void {
+  public setUMC(umc: string | null): void {
     this.update(state => ({
       ...state,
       umc
@@ -281,7 +281,7 @@ export class Tramite110223Store extends Store<Solicitud110223State> {
    * Establece el catálogo de unidades de medida.
    * @param unidadMedida Lista de objetos de tipo `Catalogo`.
    */
-  public setUnidadMedida(unidadMedida: Catalogo[]): void {
+  public setUnidadMedida(unidadMedida: string | null): void {
     this.update(state => ({
       ...state,
       unidadMedida
@@ -292,7 +292,7 @@ export class Tramite110223Store extends Store<Solicitud110223State> {
    * Establece el catálogo de tipos de factura.
    * @param tipoFactura Lista de objetos de tipo `Catalogo`.
    */
-  public setTipoFactura(tipoFactura: Catalogo[]): void {
+  public setTipoFactura(tipoFactura: string | null): void {
     this.update(state => ({
       ...state,
       tipoFactura
@@ -479,7 +479,7 @@ export class Tramite110223Store extends Store<Solicitud110223State> {
    * Establece el catálogo de idiomas.
    * @param idioma Lista de objetos de tipo `Catalogo` o `null`.
    */
-  public setIdioma(idioma: Catalogo[] | null): void {
+  public setIdioma(idioma: string | null): void {
     this.update(state => ({
       ...state,
       idioma
@@ -490,7 +490,7 @@ export class Tramite110223Store extends Store<Solicitud110223State> {
    * Establece el catálogo de entidades.
    * @param entidad Lista de objetos de tipo `Catalogo` o `null`.
    */
-  public setEntidad(entidad: Catalogo[] | null): void {
+  public setEntidad(entidad: string | null): void {
     this.update(state => ({
       ...state,
       entidad
@@ -501,7 +501,7 @@ export class Tramite110223Store extends Store<Solicitud110223State> {
    * Establece el catálogo de representaciones.
    * @param representacion Lista de objetos de tipo `Catalogo` o `null`.
    */
-  public setRepresentacion(representacion: Catalogo[] | null): void {
+  public setRepresentacion(representacion: string | null): void {
     this.update(state => ({
       ...state,
       representacion
@@ -655,7 +655,7 @@ export class Tramite110223Store extends Store<Solicitud110223State> {
    * Establece el catálogo de naciones.
    * @param nacion Lista de objetos de tipo `Catalogo` o `null`.
    */
-  public setNacion(nacion: Catalogo[] | null): void {
+  public setNacion(nacion: string | null): void {
     this.update(state => ({
       ...state,
       nacion
@@ -666,7 +666,7 @@ export class Tramite110223Store extends Store<Solicitud110223State> {
    * Establece el catálogo de transportes.
    * @param transporte Lista de objetos de tipo `Catalogo` o `null`.
    */
-  public setTransporte(transporte: Catalogo[] | null): void {
+  public setTransporte(transporte: string | null): void {
     this.update(state => ({
       ...state,
       transporte
@@ -677,7 +677,7 @@ export class Tramite110223Store extends Store<Solicitud110223State> {
    * Establece el valor de la casilla de verificación.
    * @param casillaVerificacion Cadena que representa el valor de la casilla.
    */
-  public setCheckbox(casillaVerificacion: string): void {
+  public setCheckbox(casillaVerificacion: boolean): void {
     this.update(state => ({
       ...state,
       casillaVerificacion

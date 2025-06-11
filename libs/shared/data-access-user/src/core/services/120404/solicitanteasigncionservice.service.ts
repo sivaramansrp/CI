@@ -7,6 +7,7 @@
 import { Observable,catchError, throwError } from 'rxjs';
 import { HttpCoreService } from '../shared/http/http.service';
 import { Injectable } from '@angular/core';
+import { Catalogo } from '../../models/shared/catalogos.model';
 
 /**
  * Servicio para la gestión de asignaciones de solicitantes.
@@ -29,11 +30,8 @@ export class SolicitanteasigncionserviceService {
    * Obtiene los datos de asignación.
    * @returns Observable con los datos de asignación.
    */
-  getAsigncion(): Observable<unknown> {
-    return this.http.get('assets/json/120404/asignacionsolicitante.json').pipe(
-      catchError((error: unknown) => {
-        return throwError(() => error);
-      })
+  getAsigncion(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/120404/asignacionsolicitante.json').pipe(
     );
   }
 

@@ -1,31 +1,33 @@
-<app-datos-del-establecimiento-seccion></app-datos-del-establecimiento-seccion>
+<app-datos-del-establecimiento-seccion [formularioDeshabilitado]="esFormularioSoloLectura"></app-datos-del-establecimiento-seccion>
 
-<app-domicillio-del-establecimiento-seccion></app-domicillio-del-establecimiento-seccion>
+<app-domicillio-del-establecimiento-seccion [formularioDeshabilitado]="esFormularioSoloLectura"></app-domicillio-del-establecimiento-seccion>
 
   <label class="mt-5"> Datos del producto*: </label>
   <app-tabla-dinamica
     [configuracionTabla]="configuracionTablaDatosProducto"
     [datos]="establecimientoData"
     [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
   ></app-tabla-dinamica>
 
   <div class="row">
     <div class="col-md-12 d-flex justify-content-end mt-5">
       <div class="btn-group">
-        <button class="btn btn-default" type="button">Modificar</button>
-        <button class="btn btn-default" type="button">Eliminar</button>
+        <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
+        <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
         <button
           type="button"
           class="btn btn-primary ms-2"
          
           (click)="openDatosMercanciaModal()"
+          [disabled]="esFormularioSoloLectura ? true : false"
         >
           Agregar
         </button>
       </div>
     </div>
   </div>
-<app-manifiestos-representante-seccion></app-manifiestos-representante-seccion>
+<app-manifiestos-representante-seccion [formularioDeshabilitado]="esFormularioSoloLectura"></app-manifiestos-representante-seccion>
 
 <div
   class="modal fade"

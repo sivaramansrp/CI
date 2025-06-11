@@ -1,10 +1,13 @@
 import { CommonModule } from '@angular/common';
+
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
+
+import { ReplaySubject, takeUntil } from 'rxjs';
 
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { RegistrarSolicitudService } from '../../services/registrar-solicitud.service';
 import { Solicitud } from '../../models/tabla-model';
+
 import { SOLICITUD_HEADER, TEXTOS_SOLICITUD } from '../../constants/tabla-enum';
 
 /**
@@ -55,7 +58,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Llama al método `getSolicitudData()` para obtener los datos de la solicitud.
    */
-  ngOnInit() {
+  ngOnInit(): void {
     this.getSolicitudData();
   }
 
@@ -70,7 +73,7 @@ export class DatosDeLaSolicitudComponent implements OnDestroy, OnInit {
    * Obtiene los datos de la solicitud desde el servicio `RegistrarSolicitudService`
    * y los asigna a la propiedad `tablaFilaDatos`.
    */
-  getSolicitudData() {
+  getSolicitudData(): void {
     this.registrarsolicitud
       .getSolicitudData()
       .pipe(takeUntil(this.destroyed$))
