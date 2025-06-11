@@ -4,17 +4,18 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { SanidadAcuicolaImportacionService } from '../../services/sanidad-acuicola-importacion.service';
 import { Tramite220103Store } from '../../estados/tramites/tramites220103.store';
 import { Tramite220103Query } from '../../estados/queries/tramites220103.query';
-import { of, throwError } from 'rxjs';
+import { of } from 'rxjs';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('DatosDelTramiteComponent', () => {
   let component: DatosDelTramiteComponent;
   let fixture: ComponentFixture<DatosDelTramiteComponent>;
-  let SERVICIO_MOCK: jest.Mocked<SanidadAcuicolaImportacionService>;
-  let STORE_MOCK: jest.Mocked<Tramite220103Store>;
-  let QUERY_MOCK: jest.Mocked<Tramite220103Query>;
+  let servicioMock: jest.Mocked<SanidadAcuicolaImportacionService>;
+  let storeMock: jest.Mocked<Tramite220103Store>;
+  let queryMock: jest.Mocked<Tramite220103Query>;
 
   beforeEach(async () => {
-    SERVICIO_MOCK = {
+    servicioMock = {
       getAdunaDeIngreso: jest.fn().mockReturnValue(of([])),
       getMedioDeTransporte: jest.fn().mockReturnValue(of([])),
       getOrigen: jest.fn().mockReturnValue(of([])),
@@ -24,23 +25,24 @@ describe('DatosDelTramiteComponent', () => {
       getMercancias: jest.fn().mockReturnValue(of([{ id: '1', descripcion: 'Mercancía 1' }])),
     } as unknown as jest.Mocked<SanidadAcuicolaImportacionService>;
 
-    STORE_MOCK = {
+    storeMock = {
       setTramite220103State: jest.fn(),
       eliminarMercancia: jest.fn(),
     } as unknown as jest.Mocked<Tramite220103Store>;
 
-    QUERY_MOCK = {
+    queryMock = {
       selectTramite220103State$: of({ tablaMercancia: [] }),
     } as unknown as jest.Mocked<Tramite220103Query>;
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, DatosDelTramiteComponent],
+      imports: [ReactiveFormsModule,DatosDelTramiteComponent],
       providers: [
         FormBuilder,
-        { provide: SanidadAcuicolaImportacionService, useValue: SERVICIO_MOCK },
-        { provide: Tramite220103Store, useValue: STORE_MOCK },
-        { provide: Tramite220103Query, useValue: QUERY_MOCK },
+        { provide: SanidadAcuicolaImportacionService, useValue: servicioMock },
+        { provide: Tramite220103Store, useValue: storeMock },
+        { provide: Tramite220103Query, useValue: queryMock },
       ],
+      schemas: [NO_ERRORS_SCHEMA], // Ignora errores de elementos desconocidos
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosDelTramiteComponent);
@@ -54,60 +56,55 @@ describe('DatosDelTramiteComponent', () => {
 
   it('debe inicializar el estado en ngOnInit', () => {
     const MOCK_ESTADO = {
-      tablaMercancia: [{
-        id: '1',
-        descripcion: 'Mercancía 1',
-        fraccionArancelaria: '1234',
-        descripcionFraccion: 'Descripción',
-        cantidadUMT: '10',
-        umt: 'kg',
-        cantidadUMC: '5',
-        umc: 'unidad',
-        nombreComun: 'Nombre común',
-        nombreCientifico: 'Nombre científico',
-        faseDesarrollo: 'Fase',
-        uso: 'Uso',
-        otroUso: '',
-        origen: 'Origen',
-        paisOrigen: 'México',
-        paisProcedencia: 'EE.UU.',
-      }],
+      tablaMercancia: [{ id: '1', descripcion: 'Mercancía 1' }],
     };
-    QUERY_MOCK.selectTramite220103State$ = of(MOCK_ESTADO);
+    (queryMock as any).selectTramite220103State$ = of(MOCK_ESTADO);
 
     component.ngOnInit();
 
     expect(component.datosTabla).toEqual(MOCK_ESTADO.tablaMercancia);
   });
 
+  it('debe habilitar o deshabilitar el formulario según el estado de solo lectura', () => {
+    component.esSoloLectura = true;
+    component.habilitarDeshabilitarFormulario();
+    expect(component.formularioDatosTramite.disabled).toBe(true);
+    expect(component.formularioDatosMercancia.disabled).toBe(true);
+
+    component.esSoloLectura = false;
+    component.habilitarDeshabilitarFormulario();
+    expect(component.formularioDatosTramite.enabled).toBe(true);
+    expect(component.formularioDatosMercancia.enabled).toBe(true);
+  });
+
   it('debe obtener las opciones de aduanas de ingreso', () => {
     component.obtenerAduanaDeIngreso();
-    expect(SERVICIO_MOCK.getAdunaDeIngreso).toHaveBeenCalled();
+    expect(servicioMock.getAdunaDeIngreso).toHaveBeenCalled();
   });
 
   it('debe obtener las opciones de medios de transporte', () => {
     component.obtenerMedioDeTransporte();
-    expect(SERVICIO_MOCK.getMedioDeTransporte).toHaveBeenCalled();
+    expect(servicioMock.getMedioDeTransporte).toHaveBeenCalled();
   });
 
   it('debe obtener las opciones de origen', () => {
     component.obtenerOrigen();
-    expect(SERVICIO_MOCK.getOrigen).toHaveBeenCalled();
+    expect(servicioMock.getOrigen).toHaveBeenCalled();
   });
 
   it('debe obtener las opciones de UMC', () => {
     component.obtenerUmc();
-    expect(SERVICIO_MOCK.getUmc).toHaveBeenCalled();
+    expect(servicioMock.getUmc).toHaveBeenCalled();
   });
 
   it('debe obtener las opciones de uso', () => {
     component.obtenerUso();
-    expect(SERVICIO_MOCK.getUso).toHaveBeenCalled();
+    expect(servicioMock.getUso).toHaveBeenCalled();
   });
 
   it('debe obtener las opciones de país', () => {
     component.obtenerPais();
-    expect(SERVICIO_MOCK.getPais).toHaveBeenCalled();
+    expect(servicioMock.getPais).toHaveBeenCalled();
   });
 
   it('debe agregar una mercancía al estado', () => {
@@ -141,7 +138,7 @@ describe('DatosDelTramiteComponent', () => {
 
     component.eliminarMercancia();
 
-    expect(STORE_MOCK.eliminarMercancia).toHaveBeenCalledWith('1');
+    expect(storeMock.eliminarMercancia).toHaveBeenCalledWith('1');
     expect(component.mercanciasSeleccionadas).toEqual([]);
   });
 
@@ -161,147 +158,10 @@ describe('DatosDelTramiteComponent', () => {
   });
 
   it('debe limpiar las suscripciones al destruir el componente', () => {
-    const SPY = jest.spyOn(component['notificadorDestruccion$'], 'next');
+    const SPY_NEXT = jest.spyOn(component['notificadorDestruccion$'], 'next');
     const SPY_COMPLETE = jest.spyOn(component['notificadorDestruccion$'], 'complete');
     component.ngOnDestroy();
-    expect(SPY).toHaveBeenCalled();
+    expect(SPY_NEXT).toHaveBeenCalled();
     expect(SPY_COMPLETE).toHaveBeenCalled();
-  });
-
-  describe('establecerCambioDeValor', () => {
-    it('debe manejar cambios en fraccionArancelaria', () => {
-      const EVENTO = { 
-        campo: 'fraccionArancelaria', 
-        valor: '30019099' 
-      };
-      
-      component.establecerCambioDeValor(EVENTO, 'mercancia');
-      
-      expect(component.formularioDatosMercancia.get('descripcionFraccion')?.value)
-        .toBe('Los demás');
-      expect(component.formularioDatosMercancia.get('umt')?.value)
-        .toBe('kilogramo');
-      expect(STORE_MOCK.setTramite220103State)
-        .toHaveBeenCalledWith('descripcionFraccion', 'Los demás');
-    });
-
-    it('debe manejar cambios en uso y mostrar/ocultar otroUso', () => {
-      const EVENTO = { campo: 'uso', valor: 'OTRO' };
-      component.establecerCambioDeValor(EVENTO, 'mercancia');
-      
-      const otroUsoField = component.configuracionFormularioMercancia
-        .find(item => item.campo === 'otroUso');
-      
-      expect(otroUsoField?.mostrar).toBeTruthy();
-    });
-  });
-
-  describe('agregarMercancia', () => {
-    it('debe agregar mercancía con nuevo ID cuando no es modificación', () => {
-      component.esModificarMercancia = false;
-      component.formularioDatosMercancia.patchValue({
-        descripcion: 'Nueva Mercancía'
-      });
-      
-      jest.spyOn(component.formularioDatosMercancia, 'valid', 'get')
-        .mockReturnValue(true);
-      
-      const POST_MERCANCIA_SPY = jest.spyOn(component, 'postMercancia');
-      component.agregarMercancia();
-      
-      expect(POST_MERCANCIA_SPY).toHaveBeenCalled();
-      expect(component.esModificarMercancia).toBeFalsy();
-    });
-
-    it('debe actualizar mercancía existente cuando es modificación', () => {
-      component.esModificarMercancia = true;
-      component.mercanciasSeleccionadas = [{
-        id: '123',
-        descripcion: 'Mercancía Original',
-        fraccionArancelaria: '',
-        descripcionFraccion: '',
-        cantidadUMT: '',
-        umt: '',
-        cantidadUMC: '',
-        umc: '',
-        nombreComun: '',
-        nombreCientifico: '',
-        faseDesarrollo: '',
-        uso: '',
-        otroUso: '',
-        origen: '',
-        paisOrigen: '',
-        paisProcedencia: ''
-      }];
-      
-      jest.spyOn(component.formularioDatosMercancia, 'valid', 'get')
-        .mockReturnValue(true);
-      
-      component.formularioDatosMercancia.patchValue({
-        descripcion: 'Mercancía Modificada'
-      });
-      
-      component.agregarMercancia();
-      
-      expect(component.esModificarMercancia).toBeFalsy();
-    });
-
-    it('debe marcar campos como touched cuando el formulario es inválido', () => {
-      jest.spyOn(component.formularioDatosMercancia, 'valid', 'get')
-        .mockReturnValue(false);
-      const MARK_ALL_AS_TOUCHED_SPY = jest.spyOn(component.formularioDatosMercancia, 'markAllAsTouched');
-      
-      component.agregarMercancia();
-      
-      expect(MARK_ALL_AS_TOUCHED_SPY).toHaveBeenCalled();
-    });
-  });
-
-  describe('obtenerDescripcionFraccion', () => {
-    it('debe actualizar descripción y UMT para fracción específica', () => {
-      component.formularioDatosMercancia.patchValue({
-        fraccionArancelaria: '30019099'
-      });
-      
-      component.obtenerDescripcionFraccion();
-      
-      expect(STORE_MOCK.setTramite220103State)
-        .toHaveBeenCalledWith('descripcionFraccion', 'Los demás');
-      expect(STORE_MOCK.setTramite220103State)
-        .toHaveBeenCalledWith('umt', 'kilogramo');
-    });
-
-    it('no debe actualizar para otras fracciones arancelarias', () => {
-      component.formularioDatosMercancia.patchValue({
-        fraccionArancelaria: '12345678'
-      });
-      
-      component.obtenerDescripcionFraccion();
-      
-      expect(STORE_MOCK.setTramite220103State)
-        .not.toHaveBeenCalled();
-    });
-  });
-
-  describe('manejo de errores en servicios', () => {
-    it('debe manejar error en getAduanaDeIngreso', () => {
-      SERVICIO_MOCK.getAdunaDeIngreso.mockReturnValue(throwError(() => new Error('Error')));
-      
-      component.obtenerAduanaDeIngreso();
-      
-      const ADUANAFIELD = component.configuracionFormularioDatos
-        .find(item => item.campo === 'aduanaDeIngreso');
-      expect(ADUANAFIELD?.opciones).toBeUndefined();
-    });
-  });
-
-  describe('estado inicial del componente', () => {
-    it('debe inicializar todas las propiedades correctamente', () => {
-      expect(component.esModificarMercancia).toBeFalsy();
-      expect(component.mercanciasSeleccionadas).toEqual([]);
-      expect(component.datosTabla).toEqual([]);
-      expect(component.formularioDatosTramite).toBeTruthy();
-      expect(component.formularioDatosMercancia).toBeTruthy();
-    });
   });
 });

@@ -28,7 +28,7 @@
         <input type="text" class="form-control" id="denominacion" formControlName="ciudad" (change)="setValoresStore(validacionForm, 'ciudad', 'setCiudad')" />
       </div>
       <div class="col-md-4 mb-3">
-        <app-catalogo-select [catalogo]="options" [label]="'País destino'" [required]="true" formControlName="nacion" (change)="setValoresStore(validacionForm, 'nacion', 'setNacion')"></app-catalogo-select>
+        <app-catalogo-select [catalogo]="options" [label]="'País destino'" [required]="true" formControlName="nacion" (change)="setValoresStore(validacionForm, 'nacion', 'setNacion')" [isDisabled]="soloLectura"></app-catalogo-select>
       </div>
     </div>
     <div class="row">
