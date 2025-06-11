@@ -91,7 +91,6 @@ describe('AgregarDestinatarioComponent', () => {
 
   it('should handle inputChecked correctly', () => {
     component.inputChecked('Fisica');
-    console.log(component.fisica);
     expect(component.fisica).toBe(true);
     expect(component.moral).toBe(false);
 
