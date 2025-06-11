@@ -694,5 +694,12 @@
     "fechInicioTramite": "2025-3-09 0035:05:00",
     "departamento": "SEDENA",
     "numeroDeProcedimiento": "240107"
+  },{
+    "folioTramite": "01000010003202510050220102",
+    "tipoDeTramite": "Autorización para la importación de plaguicidas, nutrientes vegetales, sustancias y materiales tóxicos o peligrosos",
+    "dependencia": "AGRICULTURA ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "AGRICULTURA",
+    "numeroDeProcedimiento": "220102"
   }
 ]
