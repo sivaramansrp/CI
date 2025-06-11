@@ -255,7 +255,7 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private Agregar270301Store: Agregar270301Store,
+    public Agregar270301Store: Agregar270301Store,
     private agregarQuery: AgregarQuery,
     private solicitudService: SolicitudService,
      private consultaioQuery: ConsultaioQuery
@@ -312,9 +312,7 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
       this.getObraDeArte();
     }  
   }
-
-
-   /**
+/**
    * Aplica el modo solo lectura o edición al formulario según corresponda.
    * También actualiza los valores del formulario desde el store.
    * @returns {void}

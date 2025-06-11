@@ -26,12 +26,12 @@
                     <label class="form-label" for="obraDeArteInformacion">Informacion obra de arte*:</label>
                     <div class="table-responsive">
                         <ng-table [commonTableHeader]="tablaObraDeArteData"
-                            [commonTableBody]="obraDeArteRowData"></ng-table>
+                            [commonTableBody]="obraDeArteRowData" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></ng-table>
                     </div>
                 </div>
 
                 <div class="col-md-12 mt-5 d-flex justify-content-end">
-                    <button type="button" class="btn btn-danger">Eliminar</button>
+                    <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura">Eliminar</button>
                     <button type="button" class="btn btn-primary ms-3" (click)="toggleObraDeArte()" [disabled]="esFormularioSoloLectura">Agregar</button>
                 </div>
             </div>
