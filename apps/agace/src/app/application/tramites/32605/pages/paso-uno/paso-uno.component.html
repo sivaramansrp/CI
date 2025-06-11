@@ -62,15 +62,15 @@
     <ng-container>
       @switch (indice) { @case (1) {
       <solicitante #Solicitante></solicitante>
-      } @case (2) {
+      } @case (2) { @if(esDatosRespuesta){
       <app-datos-comunes></app-datos-comunes>
-      } @case (3) {
+      } } @case (3) { @if(esDatosRespuesta){
       <app-terceros-relacionados></app-terceros-relacionados>
-      } @case (4) {
+      } } @case (4) { @if(esDatosRespuesta){
       <app-importador-exportador></app-importador-exportador>
-      } @case (5) {
+      } } @case (5) { @if(esDatosRespuesta){
       <app-c-tpat></app-c-tpat>
-      } }
+      } } }
     </ng-container>
   </div>
 </div>
