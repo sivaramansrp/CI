@@ -15,6 +15,7 @@ import {
   ConsultaioState,
   ConsultaioStore,
   DatosPasos,
+  DesplazarseHaciaArribaService,
   EncabezadoRequerimientoComponent,
   FirmaElectronicaComponent,
   ListaPasosWizard,
@@ -189,6 +190,7 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
     private catalogosServices: CatalogosService,
     private requerimientoService: AtenderRequerimientoService,
     private tramiteQueries: TramiteFolioQueries,
+    private desplazarseHaciaArribaService: DesplazarseHaciaArribaService
   ) {
     /**
      * Suscripción al estado de consulta.
@@ -263,6 +265,13 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    * Genera el texto de alerta de acuse con el folio del trámite.
    */
     this.txtAlerta = TXT_ALERTA_ACUSE(this.folio);
+
+    /**
+     * Realiza un desplazamiento suave hacia la parte superior de la página usando el servicio.
+     *
+     * Se utiliza para mejorar la experiencia de usuario al cambiar de paso o al inicializar el componente.
+     */
+    this.desplazarseHaciaArribaService.desplazarArriba();
   }
 
   /**
@@ -307,9 +316,9 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    * @return {void}
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
+    if (e?.valor && e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
-      if (this.indice === 1) {
+      if (this.indice !== 2) {
           this.consultaioStore.establecerConsultaio(
           this.guardarDatos?.procedureId,
           this.guardarDatos?.parameter,
@@ -333,6 +342,8 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
       } else {
         this.wizardComponent.atras();
       }
+
+      this.desplazarseHaciaArribaService.desplazarArriba();
     }
   }
 

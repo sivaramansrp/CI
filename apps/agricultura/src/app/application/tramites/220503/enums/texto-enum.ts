@@ -40,3 +40,9 @@ export const FECHA_INSPECCION_INPUT = {
  * Representa una clase CSS utilizada para mostrar alertas de información en la interfaz de usuario.
  */
 export const INFO_ALERT = 'alert-info';
+
+/**
+ * Definición de la constante `ES_SOLICITUD_FERROS_VALOR`.
+ * Representa el texto utilizado para la solicitud de ferros valor.
+ */
+export const ES_SOLICITUD_FERROS_VALOR = 'Debes declarar la cantidad que ingresa en esta parcialidad por cada fracción arancelaria. La columna "Saldo pendiente" mostrará el saldo disponible para las siguientes parcialidades.';

@@ -6,16 +6,19 @@
             [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
             [configuracionTabla]="configuracionTabla"
             [datos]="configuracionTablaDatos"
+            [disableSeleccionTablaCheckBox]="consultaState.readonly"
+            [desactivarEmitirEvento]="!consultaState.readonly"
             (listaDeFilaSeleccionada)="listaDeFilaSeleccionada($event)"
         ></app-tabla-dinamica>
     </div>
     <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" class="btn btn-default ms-3" (click)="eliminar()">Eliminar</button>
+        <button type="button" class="btn btn-default ms-3" [disabled]="consultaState.readonly" (click)="eliminar()">Eliminar</button>
         <button
           type="button"
           class="btn btn-primary ms-3"
           data-bs-toggle="modal"
           data-bs-target="#modalSolicitud"
+          [disabled]="consultaState.readonly"
           (click)="abrirDialogo()"
         >
           Agregar

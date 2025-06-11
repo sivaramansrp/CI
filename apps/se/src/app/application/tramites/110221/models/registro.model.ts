@@ -1,45 +1,214 @@
+import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
+
+/**
+ * Interfaz que define la estructura de las columnas de la tabla de mercancías disponibles.
+ */
 export interface ColumnasTabla {
-    fraccionArancelaria: string;
-    nombreTecnico: string;
-    nombreComercial: string;
-    numeroRegistroProductos: string;
-    fechaExpedicion: string;
-    fechaVencimiento: string;
-  }
+  fraccionArancelaria: string;
+  nombreTecnico: string;
+  nombreComercial: string;
+  numeroRegistroProductos: string;
+  fechaExpedicion: string;
+  fechaVencimiento: string;
+}
+
+/**
+ * Interfaz que define la estructura de las columnas de la tabla de mercancías seleccionadas.
+ */
+export interface SeleccionadasTabla {
+  fraccionArancelaria: string;
+  cantidad: string;
+  unidadMedida: string;
+  valorMercancia: string;
+  tipoFactura: string;
+  numFactura: string;
+  complementoDescripcion: string;
+  fechaFactura: string;
+}
+
+/**
+ * Configuración para el campo de fecha inicial.
+ */
+export const FECHA_INICIAL = {
+  labelNombre: 'Fecha inicio',
+  required: false,
+  habilitado: true,
+};
+
+/**
+ * Configuración para el campo de fecha final.
+ */
+export const FECHA_FINAL = {
+  labelNombre: 'Fecha fin',
+  required: false,
+  habilitado: true,
+};
+
+/**
+ * Configuración para el campo de fecha de factura.
+ */
+export const FECHA_FACTURA = {
+  labelNombre: 'Fecha fin',
+  required: true,
+  habilitado: true,
+};
+
+/**
+ * Configuración para el campo de despacho LDA.
+ */
+export const DESPACHO_LDA = {
+  labelNombre: 'Sí',
+  maxlength: 10,
+  minlenght: 0,
+  required: false,
+  alfanumerico: true,
+};
+
+/**
+ * Representa la respuesta de una consulta realizada en el trámite.
+ */
+export interface RespuestaConsulta {
+  /**
+   * Indica si la consulta fue exitosa.
+   */
+  success: boolean;
   
-  export interface SeleccionadasTabla {
-    fraccionArancelaria: string;
-    cantidad: string;
-    unidadMedida: string;
-    valorMercancia: string;
-    tipoFactura: string;
-    numFactura: string;
-    complementoDescripcion: string;
-    fechaFactura: string;
-  }
+  /**
+   * Contiene los datos obtenidos de la consulta.
+   */
+  datos: ConsultaDatos;
   
-  export const FECHA_INICIAL = {
-    labelNombre: 'Fecha inicio',
-    required: false,
-    habilitado: true,
-  };
-  
-  export const FECHA_FINAL = {
-    labelNombre: 'Fecha fin',
-    required: false,
-    habilitado: true,
-  };
-  
-  export const FECHA_FACTURA = {
-    labelNombre: 'Fecha fin',
-    required: true,
-    habilitado: true,
-  };
-  
-  export const DESPACHO_LDA = {
-      labelNombre: 'Sí',
-      maxlength: 10,
-      minlenght: 0,
-      required: false,
-      alfanumerico: true,
-    };
+  /**
+   * Mensaje asociado a la respuesta de la consulta.
+   */
+  message: string;
+}
+
+/**
+ * Contiene los datos obtenidos de una consulta.
+ */
+export interface ConsultaDatos {
+  tercerOperador: boolean;
+  tratado: string;
+  pais: string;
+  fraccionArancelaria: string;
+  numeroRegistro: string;
+  nombreComercial: string;
+  fechaInicial: string;
+  fechaFinal: string;
+  archivo: string;
+  fraccionMercanciaArancelaria: string;
+  nombreTecnico: string;
+  nombreComercialDelaMercancia: string;
+  criterioParaConferir: string;
+  nombreEnIngles: string;
+  cantidad: string;
+  umc: string;
+  valorDelaMercancia: string;
+  complementoDelaDescripcion: string;
+  tipoFactura: string;
+  fecha: string;
+  numeroFactura: string;
+  observaciones: string;
+  idioma: string;
+  entidad: string;
+  representacion: string;
+  casillaVerificacion: string;
+  justificacion: string;
+  nombre: string;
+  apellidoPrimer: string;
+  apellidoSegundo: string;
+  numeroFiscal: string;
+  razonSocial: string;
+  ciudad: string;
+  calle: string;
+  numeroLetra: string;
+  lada: string;
+  telefono: string;
+  fax: string;
+  correoElectronico: string;
+  nacion: string;
+  transporte: string;
+}
+
+/**
+ * Configuración de las columnas de la tabla de mercancías disponibles.
+ */
+export const HEADERS: ConfiguracionColumna<ColumnasTabla>[] = [
+  {
+    encabezado: 'Fracción arancelaria',
+    clave: (ele: ColumnasTabla) => ele.fraccionArancelaria,
+    orden: 1,
+  },
+  {
+    encabezado: 'Nombre técnico',
+    clave: (ele: ColumnasTabla) => ele.nombreTecnico,
+    orden: 2,
+  },
+  {
+    encabezado: 'Nombre comercial',
+    clave: (ele: ColumnasTabla) => ele.nombreComercial,
+    orden: 3,
+  },
+  {
+    encabezado: 'Número de registro de productos',
+    clave: (ele: ColumnasTabla) => ele.numeroRegistroProductos,
+    orden: 4,
+  },
+  {
+    encabezado: 'Fecha expedición',
+    clave: (ele: ColumnasTabla) => ele.fechaExpedicion,
+    orden: 5,
+  },
+  {
+    encabezado: 'Fecha vencimíento',
+    clave: (ele: ColumnasTabla) => ele.fechaVencimiento,
+    orden: 6,
+  },
+];
+
+/**
+ * Configuración de las columnas de la tabla de mercancías seleccionadas.
+ */
+export const HEADERS_DATA: ConfiguracionColumna<SeleccionadasTabla>[] = [
+  {
+    encabezado: 'Fracción arancelaria',
+    clave: (ele: SeleccionadasTabla) => ele.fraccionArancelaria,
+    orden: 1,
+  },
+  {
+    encabezado: 'Cantidad',
+    clave: (ele: SeleccionadasTabla) => ele.cantidad,
+    orden: 2,
+  },
+  {
+    encabezado: 'Unidad de medida',
+    clave: (ele: SeleccionadasTabla) => ele.unidadMedida,
+    orden: 3,
+  },
+  {
+    encabezado: 'Valor mercancía',
+    clave: (ele: SeleccionadasTabla) => ele.valorMercancia,
+    orden: 4,
+  },
+  {
+    encabezado: 'Tipo de factura',
+    clave: (ele: SeleccionadasTabla) => ele.tipoFactura,
+    orden: 5,
+  },
+  {
+    encabezado: 'Número factura',
+    clave: (ele: SeleccionadasTabla) => ele.numFactura,
+    orden: 6,
+  },
+  {
+    encabezado: 'Complemento descripción',
+    clave: (ele: SeleccionadasTabla) => ele.complementoDescripcion,
+    orden: 7,
+  },
+  {
+    encabezado: 'Fecha factura',
+    clave: (ele: SeleccionadasTabla) => ele.fechaFactura,
+    orden: 8,
+  },
+];

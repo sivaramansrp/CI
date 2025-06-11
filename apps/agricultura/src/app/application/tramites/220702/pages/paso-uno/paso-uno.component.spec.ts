@@ -8,6 +8,7 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { PasoUnoComponent } from './paso-uno.component';
+import { HttpClientModule } from '@angular/common/http';
 
 
 describe('PasoUnoComponent', () => {
@@ -16,7 +17,7 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, PasoUnoComponent],
+      imports: [FormsModule, ReactiveFormsModule, PasoUnoComponent,HttpClientModule],
       declarations: [
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
