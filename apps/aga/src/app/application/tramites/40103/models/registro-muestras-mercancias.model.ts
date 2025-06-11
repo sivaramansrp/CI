@@ -2,7 +2,7 @@
  * Interfaz que representa un catálogo importante de selección.
  *
  */
-import { CatalogosSelect } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogosSelect } from '@ng-mf/data-access-user';
 import { TableData } from '@ng-mf/data-access-user';
 
 /**
@@ -203,11 +203,10 @@ export interface MuestrasMercanciasStore {
  */
 export interface DatosDelChoferNacional {
   id: unknown;
-  /** Línea de captura del pago. */
   curp?: string;
   rfc?: string;
   número?: string;
-  nombre?:string;
+  nombre?: string;
   calle?: string;
   númeroExterior?: string;
   númeroInterior?: string;
@@ -233,7 +232,7 @@ export interface DatosDelChoferNacional {
 export interface choferesExtranjeros {
   /** Línea de captura del pago. */
   númeroDelSeguroSocial?: string;
-  número?:string;
+  número?: string;
   calle?: string;
   estado?: string;
   pais?: string;
@@ -347,9 +346,159 @@ export interface Chofer {
  * @property apellidoMaternoCHN - El apellido materno del Director General en formato CHN.
  */
 export interface DirectorGeneralData {
-  nombre : string;
-  primerApellido : string;
-  segundoApellido : string;
-  apellidoPaterno : string;
-  apellidoMaternoCHN : string;
+  nombre: string;
+  primerApellido: string;
+  segundoApellido: string;
+  apellidoPaterno: string;
+  apellidoMaternoCHN: string;
+}
+
+
+/**
+ * Interfaz que representa la estructura de la tabla de vehículos.
+ *
+ * @property datos - Lista de vehículos.
+ * @property numero - Número del vehículo.
+ * @property tipoDeVehiculo - Tipo de vehículo.
+ * @property idDeVehiculo - Identificador del vehículo.
+ * @property numeroPlaca - Número de placa.
+ * @property paisEmisor - País emisor.
+ * @property estado - Estado.
+ * @property marca - Marca.
+ * @property modelo - Modelo.
+ * @property ano - Año.
+ * @property transponder - Transponder.
+ * @property colorVehiculo - Color del vehículo.
+ * @property numuroEconomico - Número económico.
+ * @property numero2daPlaca - Número de segunda placa.
+ * @property estado2daPlaca - Estado de la segunda placa.
+ * @property paisEmisor2daPlaca - País emisor de la segunda placa.
+ * @property descripcion - Descripción.
+ */
+export interface VehiculoTabla {
+  datos: VehiculoTabla[];
+  numero: string;
+  tipoDeVehiculo: string;
+  idDeVehiculo: string;
+  numeroPlaca: string;
+  paisEmisor: string;
+  estado: string;
+  marca: string;
+  modelo: string;
+  ano: string;
+  transponder: string;
+  colorVehiculo: string;
+  numuroEconomico: string;
+  numero2daPlaca: string;
+  estado2daPlaca: string;
+  paisEmisor2daPlaca: string;
+  descripcion: string;
+}
+/**
+ * Interfaz que representa los datos de un vehículo.
+ *
+ * @property numero - Número del vehículo.
+ * @property tipoDeVehiculo - Tipo de vehículo.
+ * @property idDeVehiculo - Identificador del vehículo.
+ * @property numeroPlaca - Número de placa.
+ * @property paisEmisor - País emisor.
+ * @property estado - Estado.
+ * @property marca - Marca.
+ * @property modelo - Modelo.
+ * @property ano - Año.
+ * @property transponder - Transponder.
+ * @property colorVehiculo - Color del vehículo.
+ * @property numuroEconomico - Número económico.
+ * @property numero2daPlaca - Número de segunda placa.
+ * @property estado2daPlaca - Estado de la segunda placa.
+ * @property paisEmisor2daPlaca - País emisor de la segunda placa.
+ * @property descripcion - Descripción.
+ */
+export interface DatosVehiculo {
+  numero: string;
+  tipoDeVehiculo: string;
+  idDeVehiculo: string;
+  numeroPlaca: string;
+  paisEmisor: string;
+  estado: string;
+  marca: string;
+  modelo: string;
+  ano: string;
+  transponder: string;
+  colorVehiculo: string;
+  numuroEconomico: string;
+  numero2daPlaca: string;
+  estado2daPlaca: string;
+  paisEmisor2daPlaca: string;
+  descripcion: string;
+}
+/**
+ * Interfaz que representa los datos de una unidad de arrastre.
+ *
+ * @property vinVehiculo - VIN del vehículo.
+ * @property tipoDeUnidadArrastre - Tipo de unidad de arrastre.
+ * @property idDeVehiculo - Identificador del vehículo.
+ * @property numeroEconomico - Número económico.
+ * @property numeroPlaca - Número de placa.
+ * @property paisEmisor - País emisor.
+ * @property estado - Estado.
+ * @property colorVehiculo - Color del vehículo.
+ * @property numero2daPlaca - Número de segunda placa.
+ * @property estado2daPlaca - Estado de la segunda placa.
+ * @property paisEmisor2daPlaca - País emisor de la segunda placa.
+ * @property descripcion - Descripción.
+ */
+export interface DatosUnidad{
+  vinVehiculo: string;
+  tipoDeUnidadArrastre: string;
+  idDeVehiculo: string;
+  numeroEconomico: string;
+  numeroPlaca: string;
+  paisEmisor: string;
+  estado: string;
+  colorVehiculo: string;  
+  numero2daPlaca: string;
+  estado2daPlaca: string;
+  paisEmisor2daPlaca: string;
+  descripcion: string;
+}
+
+/**
+ * Interfaz que representa una lista de catálogos.
+ *
+ * @property datos - Lista de catálogos.
+ */
+export interface CatalogoLista {
+  datos: Catalogo[];
+}
+
+/**
+ * Interfaz que representa los datos de la tabla de vehículos.
+ *
+ * @property datos - Lista de vehículos en la tabla.
+ */
+export interface VehiculoTablaDatos {
+  /**
+   * Lista de mercancías en la tabla.
+   */
+  datos: VehiculoTabla[];
+}
+/**
+ * Interfaz que representa una unidad de arrastre en la tabla.
+ *
+ * @property vinVehiculo - VIN del vehículo.
+ * @property tipoDeUnidadArrastre - Tipo de unidad de arrastre.
+ * @property numeroEconomico - Número económico.
+ * @property numeroPlaca - Número de placa.
+ * @property paisEmisor - País emisor.
+ * @property estado - Estado.
+ */
+export interface UnidadTabla {
+  vinVehiculo: string;
+  tipoDeUnidadArrastre: string;
+  numeroEconomico: string;
+  numeroPlaca: string;
+  paisEmisor: string;
+  estado: string;
+  
 }
