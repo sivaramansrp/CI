@@ -171,4 +171,26 @@ describe('EstablecimientoComponent', () => {
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+  it('should disable the form if esFormularioSoloLectura is true', () => {
+  component.esFormularioSoloLectura = true;
+
+  component.ngOnInit();
+
+  component.inicializarEstadoFormulario();
+
+  expect(component.datosMercanciaForm.disabled).toBeTruthy();
+});
+
+it('should enable the form if esFormularioSoloLectura is false', () => {
+  component.esFormularioSoloLectura = false;
+
+
+  component.ngOnInit();
+
+  component.inicializarEstadoFormulario();
+
+  expect(component.datosMercanciaForm.enabled).toBeTruthy();
+});
+
 });

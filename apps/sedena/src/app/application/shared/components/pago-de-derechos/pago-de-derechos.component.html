@@ -15,6 +15,7 @@
           class="form-control"
           formControlName="claveReferencia"
           maxlength="50"
+          [disabled]="esFormularioSoloLectura"
         />
         <div class="error-message">
           <small *ngIf="pagoDerechosForm.get('claveReferencia')?.touched && pagoDerechosForm.get('claveReferencia')?.hasError('required')" class="text-danger">
@@ -35,6 +36,7 @@
           class="form-control"
           formControlName="cadenaDependencia"
           maxlength="50"
+          [disabled]="esFormularioSoloLectura"
         />
         <div class="error-message">
           <small *ngIf="pagoDerechosForm.get('cadenaDependencia')?.touched && pagoDerechosForm.get('cadenaDependencia')?.hasError('required')" class="text-danger">
@@ -53,6 +55,7 @@
           formControlName="banco"
           [label]="'Banco'"
           [required]="true"
+          [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
         <div class="error-message">
           <small *ngIf="pagoDerechosForm.get('banco')?.touched && pagoDerechosForm.get('banco')?.hasError('required')" class="text-danger">
@@ -72,6 +75,7 @@
           class="form-control"
           formControlName="llavePago"
           maxlength="30"
+          [disabled]="esFormularioSoloLectura"
         />
         <div class="error-message">
           <small *ngIf="pagoDerechosForm.get('llavePago')?.touched && pagoDerechosForm.get('llavePago')?.hasError('required')" class="text-danger">
@@ -90,6 +94,7 @@
           name="fechaPago"
           (valorCambiado)="onFechaCambiada($event)"
           [setFecha]="pagoDerechosForm.get('fechaPago')?.value"
+          [isDisabled]="esFormularioSoloLectura"
         ></input-fecha>
         <div class="error-message">
           <small *ngIf="pagoDerechosForm.get('fechaPago')?.touched && pagoDerechosForm.get('fechaPago')?.hasError('required')" class="text-danger">
@@ -111,6 +116,7 @@
           formControlName="importePago"
           maxlength="16"
           (input)="onImportePagoInput($event)"
+          [disabled]="esFormularioSoloLectura"
         />
         <div class="error-message">
           <small *ngIf="pagoDerechosForm.get('importePago')?.touched && pagoDerechosForm.get('importePago')?.hasError('required')" class="text-danger">

@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { CatalogosService } from '@libs/shared/data-access-user/src';
 import { CATALOGOS_ID } from '@libs/shared/data-access-user/src';
 import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogosService } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
 import { TEXTOS } from '@ng-mf/data-access-user';
 import { TableData } from '@ng-mf/data-access-user';

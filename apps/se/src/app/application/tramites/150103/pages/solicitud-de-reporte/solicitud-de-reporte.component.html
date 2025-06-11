@@ -1,7 +1,7 @@
 <div class="page">
   <div class="container">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-12">
         <h1>Registro de solicitud de Reporte Anual</h1>
       </div>
       <app-wizard [listaPasos]="pantallasPasos"></app-wizard>
@@ -15,8 +15,9 @@
         <app-paso-tres></app-paso-tres>
       }
       }
-
-      <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+    
+        <btn-continuar [datos]="datosPasos" (continuarEvento)="getValorIndice($event)"></btn-continuar>
+      
     </div>
   </div>
 </div>

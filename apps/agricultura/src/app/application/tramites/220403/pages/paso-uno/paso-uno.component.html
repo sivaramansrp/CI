@@ -23,16 +23,16 @@
             <solicitante></solicitante>
             }
             @case (2) {
-                <app-datos-de-la-solicitud></app-datos-de-la-solicitud>
+                <app-datos-de-la-solicitud [formularioDeshabilitado]="formularioDeshabilitado"></app-datos-de-la-solicitud>
             }
             @case (3){
-                <app-transporte></app-transporte>
+                <app-transporte [formularioDeshabilitado]="formularioDeshabilitado"></app-transporte>
             }
             @case (4){
-                <app-pago-de-derechos></app-pago-de-derechos>
+                <app-pago-de-derechos [formularioDeshabilitado]="formularioDeshabilitado"></app-pago-de-derechos>
             }
             @case (5){
-                <lib-terceros [tabindex]="5"></lib-terceros>
+                <app-tercerospage></app-tercerospage>
             }
         }
         </ng-container>

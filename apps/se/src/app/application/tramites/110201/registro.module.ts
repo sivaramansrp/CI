@@ -1,8 +1,10 @@
 import {
   AlertComponent,
   AnexarDocumentosComponent,
+  BtnContinuarComponent,
   CatalogoSelectComponent,
   FirmaElectronicaComponent,
+  SharedModule,
   SolicitanteComponent,
   TercerosComponent,
   TituloComponent,
@@ -18,9 +20,15 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { RegistroRoutingModule } from './registro-routing.module';
 import { ToastrService } from 'ngx-toastr';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
 
 @NgModule({
-  declarations: [],
+  declarations: [PasoDosComponent,
+    PasoTresComponent,
+    PasoUnoComponent,
+    SolicitudPageComponent
+  ],
   imports: [
     CommonModule,
     RegistroRoutingModule,
@@ -32,14 +40,14 @@ import { ToastrService } from 'ngx-toastr';
     SolicitanteComponent,
     TercerosComponent,
     WizardComponent,
-    PasoDosComponent,
-    PasoTresComponent,
-    PasoUnoComponent,
     CertificadoDeOrigenComponent,
     DatosCertificadoComponent,
     DestinatarioComponent,
-    TituloComponent,
+    BtnContinuarComponent,
+    FormsModule,
+    ReactiveFormsModule,
+    SharedModule,
   ],
-  providers:[ToastrService]
+  providers: [ToastrService]
 })
-export class RegistroModule {}
+export class RegistroModule { }
