@@ -56,7 +56,7 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy{
     .pipe(
       takeUntil(this.destruirNotificador$),
       map((seccionState) => {
-       this.esFormularioSoloLectura = true;//seccionState.readonly;
+       this.esFormularioSoloLectura = seccionState.readonly;
        
       })
     )

@@ -63,7 +63,7 @@ export class DatosSolitudeComponent implements OnInit, OnDestroy {
     .pipe(
       takeUntil(this.destruirNotificacion$),
       map((seccionState) => {
-       this.esFormularioSoloLectura = true;//seccionState.readonly;
+       this.esFormularioSoloLectura = seccionState.readonly;
        
       })
     )

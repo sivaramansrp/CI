@@ -44,7 +44,6 @@
           [required]="true"
           name="estado"
           [isDisabled]="esFormularioSoloLectura"
-          (change)="estadoSeleccion()"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
@@ -201,15 +200,17 @@
           [configuracionTabla]="configuracionTabla"
           [datos]="scianDatos"
           [tipoSeleccionTabla]="tipoSeleccionTabla"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
         >
         </app-tabla-dinamica>
       </div>
       <div class="row" style="padding-bottom: 20px; text-align: right">
         <div>
-          <button type="button" class="btn me-2" >Eliminar</button>
+          <button type="button" class="btn me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
           <button
             type="button"
             class="btn btn-primary me-2"
+            [disabled]="esFormularioSoloLectura"
           >
             Agregar
           </button>
@@ -282,11 +283,12 @@
           [configuracionTabla]="configuracionTablaMercancia"
           [datos]="mercanciaDatos"
           [tipoSeleccionTabla]="tipoSeleccionTabla"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
         >
         </app-tabla-dinamica>
         <div class="row" style="padding-bottom: 20px; text-align: right">
           <div>
-            <button type="button" class="btn btn-default me-2">
+            <button type="button" class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">
               Modificar
             </button>
           </div>
