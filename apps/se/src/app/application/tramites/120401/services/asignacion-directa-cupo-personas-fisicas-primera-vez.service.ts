@@ -155,4 +155,30 @@ export class AsignacionDirectaCupoPersonasFisicasPrimeraVezService {
       'assets/json/120401/tratdos-dropdown.json'
     );
   }
+
+  /**
+ * Actualiza el estado del formulario de desistimiento en el store.
+ * 
+ * @param {Partial<DesistimientoForm>} DATOS - Datos parciales del formulario para actualizar el estado.
+ */
+actualizarEstadoFormulario(DATOS: Partial<Catalogo[]>): void {
+  this.tramite120401Store.update((state) => ({
+    ...state,
+    ...DATOS
+  }));
+}
+
+
+
+/**
+ * Obtiene los datos del formulario de desistimiento para la toma de muestras de mercancías.
+ *
+ * Realiza una petición HTTP GET para recuperar el objeto `DesistimientoForm` desde un archivo JSON local.
+ *
+ * @returns Un observable que emite los datos del formulario de desistimiento.
+ */
+getRegistroTomaMuestrasMercanciasData(): Observable<Catalogo[]> {
+  return this.httpServicios.get<Catalogo[]>(`assets/json/120401/datos-prefill.json`);
+}
+
 }

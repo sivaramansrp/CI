@@ -2,7 +2,10 @@
  * Componente que representa la interfaz de una cortina a la italiana.
  * Permite la navegación entre diferentes pestañas mediante un índice.
  */
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Subject, takeUntil } from 'rxjs';
+import { AsignacionDirectaCupoPersonasFisicasPrimeraVezService } from '../../services/asignacion-directa-cupo-personas-fisicas-primera-vez.service';
 /**
  * Componente que representa la interfaz de una cortina a la italiana.
  * Permite la navegación entre diferentes pestañas mediante un índice.
@@ -11,7 +14,7 @@ import { Component } from '@angular/core';
   selector: 'app-datos',
   templateUrl: './datos.component.html',
 })
-export class DatosComponent {  
+export class DatosComponent implements OnInit, OnDestroy{  
   /**
   * Índice actual de la pestaña seleccionada.
   */
@@ -21,6 +24,69 @@ export class DatosComponent {
   * Número total de pestañas disponibles.
   */
  totalPestanas: number = 5;
+
+ /**Add commentMore actions
+   * Esta variable se utiliza para almacenar el índice del subtítulo.
+   */
+  public consultaState!: ConsultaioState;
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+  /** Subject para notificar la destrucción del componente. */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @description Constructor del componente.
+   * Inicializa el componente y establece el índice de la pestaña seleccionada.
+   */
+  formularioDeshabilitado: boolean = false;
+
+  /**
+   * Constructor del componente PasoUnoComponent.
+   *
+   * Inicializa los servicios necesarios y suscribe al estado de consulta.
+   * Si el estado indica que hay una actualización, carga los datos del formulario.
+   *
+   * @param consultaQuery Servicio para consultar el estado de la solicitud.
+   * @param CancelarSolicitudService Servicio para gestionar la cancelación de la solicitud.
+   */
+  constructor(
+    private consultaQuery: ConsultaioQuery,
+    private AsignacionDirectaCupoPersonasFisicasPrimeraVezService: AsignacionDirectaCupoPersonasFisicasPrimeraVezService
+  ) {}
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Se suscribe al estado de consulta y actualiza el estado del componente según sea necesario.
+   */
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$.subscribe((seccionState) => {
+      this.consultaState = seccionState;
+      if (this.consultaState.update) {
+        this.guardarDatosFormulario();
+      } else {
+        this.esDatosRespuesta = true;
+      }
+    });
+  }
+
+  /**
+   * Guarda los datos del formulario utilizando el servicio de ampliación de servicios.
+   */
+  guardarDatosFormulario(): void {
+    this.AsignacionDirectaCupoPersonasFisicasPrimeraVezService
+      .getRegistroTomaMuestrasMercanciasData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.AsignacionDirectaCupoPersonasFisicasPrimeraVezService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
+
 
  /**
   * Indica si la pestaña seleccionada es la primera.
@@ -70,4 +136,14 @@ export class DatosComponent {
  resetTabs(): void {
    this.indice = 1;
  }
+
+   /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia las suscripciones para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+ 
 }

@@ -1286,7 +1286,7 @@
     "departamento": "AGACE",
     "numeroDeProcedimiento": "32516"
   },
-    {
+   {
     "id": 120401,
     "tipoDeTramite": "Solicitud de cs Permiso",
     "fecha": "2023-10-01",
@@ -1295,4 +1295,5 @@
     "departamento": "SE",
     "numeroDeProcedimiento": "120401"
   }
+
 ]
