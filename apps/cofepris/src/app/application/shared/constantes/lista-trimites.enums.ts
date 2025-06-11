@@ -29,7 +29,7 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
             componentName: 'DatosComponent',
         }]
     },
-{
+ {
         tramite: 260512,
         listaComponentes: [{
             id: 'solicitud',
@@ -405,6 +405,23 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
 
         }]
     },
+    {
+        tramite: 260402,
+        listaComponentes: [{
+            id: 'solicitud',
+            componentPath: () => import('../../tramites/260402/pages/datos-260402/datos-260402.component').then(m => m.Datos260402Component),
+            componentName: 'Datos260402Component',
+        }]
+    },
+    {
+        tramite: 260401,
+        listaComponentes: [{
+            id: 'solicitud',
+            componentPath: () => import('../../tramites/260401/pages/datos-territorio.component/datos-territorio.component').then(m => m.DatosTerritorioComponent),
+            componentName: 'DatosComponent',
+
+        }]
+    },
    {
     tramite: 260505,
     listaComponentes: [
@@ -456,5 +473,13 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
         componentName: 'PasoUnoComponent',
       },
     ],
-  }
+  },
+   {
+        tramite: 260905,
+        listaComponentes: [{
+        id: 'solicitud',
+        componentPath: () => import('../../tramites/260905/pages/datos-260905/datos-260905.component').then(m => m.Datos260905Component),
+        componentName: 'Datos260905Component',
+        }]
+    }
 ];
