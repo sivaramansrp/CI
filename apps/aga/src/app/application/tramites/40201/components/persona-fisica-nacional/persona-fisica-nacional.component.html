@@ -6,7 +6,9 @@
 <div class="row mt-5">
     <div class="col-md-12">
         <app-tabla-dinamica [configuracionTabla]="configuracionParaEncabezadoDeTabla"
-            [datos]="personaFisicaNacionalTabla">
+            [datos]="personaFisicaNacionalTabla"
+             [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+              [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
         </app-tabla-dinamica>
     </div>
 </div>
@@ -14,14 +16,14 @@
 <div class="row">
     <div class="col-md-12">
         <div class="pull-right">
-            <button type="button" name="ModificarPFN" class="btn btn-default">
+            <button type="button" name="ModificarPFN" class="btn btn-default"  [disabled]="esFormularioSoloLectura">
                 Modificar
             </button>
-            <button type="button" name="EliminarPFN" class="btn btn-danger ms-2">
+            <button type="button" name="EliminarPFN" class="btn btn-danger ms-2"  [disabled]="esFormularioSoloLectura">
                 Eliminar
             </button>
             <button type="button" name="AgregarPFN" class="btn btn-primary ms-2" data-bs-toggle="modal"
-                data-bs-target="#modalAgregarPFN">
+                data-bs-target="#modalAgregarPFN"  [disabled]="esFormularioSoloLectura">
                 Agregar
             </button>
         </div>
@@ -46,7 +48,7 @@
                                         data-bs-toggle="tooltip"></span></label>
                                 <input type="text" class="form-control" size="30" id="buscarRfcPFN" maxlength="15"
                                     formControlName="buscarRfcPFN"
-                                    (change)="setValoresStore(personaFisicaForm,'buscarRfcPFN', 'setBuscarRfcPFN')">
+                                    (change)="setValoresStore(personaFisicaForm,'buscarRfcPFN')">
                             </div>
                             <div class="col-md-1 btn-mt">
                                 <button class="btn btn-primary" type="button" name="buscarPFN" id="buscarPFN"
@@ -59,19 +61,19 @@
                                 <label class="form-label" for="rfcPFN">RFC:</label>
                                 <input type="text" class="form-control" name="rfcPFN" formControlName="rfcPFN"
                                     id="rfcPFN" maxlength="13"
-                                    (change)="setValoresStore(personaFisicaForm,'rfcPFN', 'setRfcPFN')">
+                                    (change)="setValoresStore(personaFisicaForm,'rfcPFN')">
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label" for="nombrePFN">Nombre(s):</label>
                                 <input type="text" class="form-control" name="nombrePFN" formControlName="nombrePFN"
                                     maxlength="200" id="nombrePFN"
-                                    (change)="setValoresStore(personaFisicaForm,'nombrePFN', 'setNombrePFN')">
+                                    (change)="setValoresStore(personaFisicaForm,'nombrePFN')">
                             </div>
                             <div class="col-md-4">
                                 <label for="apellidoPaternoPFN" class="form-label">Primer Apellido:</label>
                                 <input type="text" name="apellidoPaternoPFN" id="apellidoPaternoPFN"
                                     class="form-control" maxlength="200" formControlName="apellidoPaternoPFN"
-                                    (change)="setValoresStore(personaFisicaForm,'apellidoPaternoPFN', 'setApellidoPaternoPFN')">
+                                    (change)="setValoresStore(personaFisicaForm,'apellidoPaternoPFN')">
                             </div>
                         </div>
 
@@ -80,7 +82,7 @@
                                 <label for="apellidoMaternoPFN" class="form-label">Segundo Apellido:</label>
                                 <input type="text" name="apellidoMaternoPFN" id="apellidoMaternoPFN"
                                     class="form-control" maxlength="200" formControlName="apellidoMaternoPFN"
-                                    (change)="setValoresStore(personaFisicaForm,'apellidoMaternoPFN', 'setApellidoMaternoPFN')">
+                                    (change)="setValoresStore(personaFisicaForm,'apellidoMaternoPFN')">
                             </div>
                         </div>
 
@@ -96,29 +98,29 @@
                                 <label for="codigoPostal">Código postal:</label>
                                 <input type="text" class="form-control" name="codigoPostalPFN" id="codigoPostalPFN"
                                     formControlName="codigoPostalPFN" maxlength="12"
-                                    (change)="setValoresStore(personaFisicaForm,'codigoPostalPFN', 'setCodigoPostalPFN')">
+                                    (change)="setValoresStore(personaFisicaForm,'codigoPostalPFN')">
                             </div>
                             <div class="col-md-4">
                                 <app-catalogo-select [catalogo]="estado" formControlName="estadoPFN" [label]="'Estado'"
-                                    name="cveEstado" (change)="estadoSeleccion()"></app-catalogo-select>
+                                    name="cveEstado" (change)="estadoSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-md-4">
                                 <app-catalogo-select [catalogo]="municipio" formControlName="municipioPFN"
                                     [label]="'Municipio o alcaldía'" name="cveMunicipio"
-                                    (change)="municipioSeleccion()"></app-catalogo-select>
+                                    (change)="municipioSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                             </div>
                             <div class="col-md-4 pt-7">
                                 <label for="localidad">Localidad:</label>
                                 <input type="text" class="form-control" name="localidadPFN" id="localidadPFN"
                                     formControlName="localidadPFN" maxlength="120"
-                                    (change)="setValoresStore(personaFisicaForm,'localidadPFN', 'setLocalidadPFN')">
+                                    (change)="setValoresStore(personaFisicaForm,'localidadPFN')">
                             </div>
                             <div class="col-md-4">
                                 <app-catalogo-select [catalogo]="colonia" formControlName="coloniaPFN"
                                     [label]="'Colonia'" name="cveColonia"
-                                    (change)="coloniaSeleccion()"></app-catalogo-select>
+                                    (change)="coloniaSeleccion()" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                             </div>
                         </div>
                         <div class="row pt-7">
@@ -126,13 +128,13 @@
                                 <label for="calle">Calle:</label>
                                 <input type="text" class="form-control" name="callePFN" id="callePFN"
                                     formControlName="callePFN" maxlength="100"
-                                    (change)="setValoresStore(personaFisicaForm,'callePFN', 'setCallePFN')">
+                                    (change)="setValoresStore(personaFisicaForm,'callePFN')">
                             </div>
                             <div class="col-md-4">
                                 <label for="numeroExterior">Número exterior:</label>
                                 <input type="text" class="form-control" name="numeroExteriorPFN" id="numeroExteriorPFN"
                                     formControlName="numeroExteriorPFN" maxlength="55"
-                                    (change)="setValoresStore(personaFisicaForm,'numeroExteriorPFN', 'setNumeroExteriorPFN')">
+                                    (change)="setValoresStore(personaFisicaForm,'numeroExteriorPFN')">
                             </div>
                         </div>
                         <div class="row pt-7">
@@ -140,7 +142,7 @@
                                 <label for="numeroInterior">Número interior:</label>
                                 <input type="text" class="form-control" name="numeroInteriorPFN" id="numeroInteriorPFN"
                                     formControlName="numeroInteriorPFN" maxlength="55"
-                                    (change)="setValoresStore(personaFisicaForm,'numeroInteriorPFN', 'setNumeroInteriorPFN')">
+                                    (change)="setValoresStore(personaFisicaForm,'numeroInteriorPFN')">
                             </div>
                         </div>
                     </form>

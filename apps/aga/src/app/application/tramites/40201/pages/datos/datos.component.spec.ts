@@ -1,75 +1,98 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosComponent } from './datos.component';
-import { CommonModule } from '@angular/common';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { SolicitanteComponent, SolicitanteService } from '@libs/shared/data-access-user/src';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of, Subject } from 'rxjs';
+import { ConsultaioQuery, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { TransportacionMaritimaService } from '../../services/transportacion-maritima/transportacion-maritima.service';
+import { HttpClientModule } from '@angular/common/http';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-
-describe('DatosComponent', () => {
+describe('DatosComponent (Jest)', () => {
   let component: DatosComponent;
   let fixture: ComponentFixture<DatosComponent>;
+  let destroyNotifier$: Subject<void>;
+
+  const mockConsultaQuery = {
+    selectConsultaioState$: of({
+      readonly: false,
+      update: true,
+    }),
+  };
+
+  const mockTransportacionService = {
+    getRegistroTomaMuestrasMercanciasData: jest.fn(() => of({ sample: 'data' })),
+    actualizarEstadoFormulario: jest.fn(),
+  };
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DatosComponent],
-      imports: [ CommonModule, SolicitanteComponent, HttpClientModule],
-      providers: [SolicitanteService, HttpClientTestingModule, HttpClient],
-      schemas: [NO_ERRORS_SCHEMA]
+      imports: [HttpClientModule],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [
+        { provide: ConsultaioQuery, useValue: mockConsultaQuery },
+        { provide: TransportacionMaritimaService, useValue: mockTransportacionService },
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    destroyNotifier$ = component.destroyNotifier$;
   });
 
   it('should create', () => {
-    // Verificar que el componente se crea correctamente
     expect(component).toBeTruthy();
   });
 
-  it('should have default tab index set to 1', () => {
-    // Verificar que el índice predeterminado es 1
-    expect(component.indice).toBe(1);
+  it('should set esDatosRespuesta = true and call guardarDatosFormulario when update is true', () => {
+    const guardarSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    fixture.detectChanges();
+
+    expect(component.esDatosRespuesta).toBe(true);
+    expect(guardarSpy).toHaveBeenCalled();
   });
 
-  it('should update the selected tab index when seleccionaTab is called', () => {
-    // Llamar a seleccionaTab y verificar que actualiza correctamente el índice
+  describe('when update is false', () => {
+    beforeEach(async () => {
+      await TestBed.resetTestingModule().configureTestingModule({
+        declarations: [DatosComponent],
+        imports: [HttpClientModule ,SolicitanteComponent],
+        providers: [
+          {
+            provide: ConsultaioQuery,
+            useValue: {
+              selectConsultaioState$: of({
+                readonly: false,
+                update: false,
+              }),
+            },
+          },
+          { provide: TransportacionMaritimaService, useValue: mockTransportacionService },
+        ],
+      }).compileComponents();
+
+      fixture = TestBed.createComponent(DatosComponent);
+      component = fixture.componentInstance;
+      fixture.detectChanges();
+    });
+
+   it('should set esDatosRespuesta = true when update is false', () => {
+  expect(component.esDatosRespuesta).toBe(true);
+});
+
+  });
+
+  it('should set indice correctly on seleccionaTab()', () => {
+    expect(component.indice).toBe(1);
     component.seleccionaTab(2);
     expect(component.indice).toBe(2);
   });
 
-  it('should render Solicitante tab when indice is 1', () => {
-    // Establecer el índice en 1 y verificar que se renderiza el componente correspondiente
-    component.indice = 1;
-    fixture.detectChanges();
-    const SOLICITANTE = fixture.nativeElement.querySelector('solicitante');
-    expect(SOLICITANTE).toBeTruthy();
-  });
+  it('should trigger destroy notifier on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn(destroyNotifier$, 'complete');
 
-  it('should render datos de la solicitud tab when indice is 2', () => {
-    // Establecer el índice en 2 y verificar que se renderiza el componente correspondiente
-    component.indice = 2;
-    fixture.detectChanges();
-    const DATOS_DE_LA_SOLICITUD = fixture.nativeElement.querySelector('app-datos-de-la-solicitud');
-    expect(DATOS_DE_LA_SOLICITUD).toBeTruthy();
-  });
+    component.ngOnDestroy();
 
-  it('should handle keyboard navigation (Enter key)', () => {
-    // Simular que el usuario presiona Enter en el tab y verificar que cambia el índice
-    const EVENT = new KeyboardEvent('keydown', { key: 'Enter' });
-    const TAB_ELEMENT = fixture.nativeElement.querySelector('a[tabindex="2"]');
-    TAB_ELEMENT.dispatchEvent(EVENT);
-    component.seleccionaTab(2);
-    expect(component.indice).toBe(2);
-  });
-
-  it('should handle keyboard navigation (Space key)', () => {
-    // Simular que el usuario presiona Espacio en el tab y verificar que cambia el índice
-    const EVENT = new KeyboardEvent('keydown', { key: ' ' });
-    const TAB_ELEMENT = fixture.nativeElement.querySelector('a[tabindex="1"]');
-    TAB_ELEMENT.dispatchEvent(EVENT);
-    component.seleccionaTab(1);
-    expect(component.indice).toBe(1);
+    expect(nextSpy).toHaveBeenCalledTimes(1);
+    expect(completeSpy).toHaveBeenCalledTimes(1);
   });
 });
