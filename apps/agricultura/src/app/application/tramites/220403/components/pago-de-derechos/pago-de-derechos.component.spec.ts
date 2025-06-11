@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
+import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
@@ -8,11 +8,12 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
 import { FormBuilder } from '@angular/forms';
-import { CatalogosService, SeccionLibQuery, SeccionLibStore } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, CatalogosService, InputFechaComponent, InputRadioComponent, SeccionLibQuery, SeccionLibStore, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { ExportaccionAcuicolaService } from '../../services/exportaccion-acuicola.service';
 import { Tramite220403Query } from '../../estados/tramite220403.query';
 import { Tramite220403Store } from '../../estados/tramite220403.store';
 import { HttpClientModule } from '@angular/common/http';
+import { AlertComponent } from 'ngx-bootstrap/alert';
 
 @Injectable()
 class MockExportaccionAcuicolaService {}
@@ -31,10 +32,7 @@ describe('PagoDeDerechosComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule , HttpClientModule],
-      declarations: [
-        PagoDeDerechosComponent,
-      ],
+      imports: [PagoDeDerechosComponent, TituloComponent, AlertComponent, TablaDinamicaComponent, InputRadioComponent, InputFechaComponent, CatalogoSelectComponent, FormsModule, ReactiveFormsModule, CommonModule, HttpClientModule],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         FormBuilder,

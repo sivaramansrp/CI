@@ -9,7 +9,7 @@
         <form [formGroup]="miformulario" >
           <div class="col-md-4">
             <app-catalogo-select [catalogo]="optionsPaisList" [label]="'Operación'" [required]="true" id="operacion"
-            formControlName="operacion"  (change)="actualizarOperacionDesdeSeleccion()" 
+            formControlName="operacion"  (change)="actualizarOperacionDesdeSeleccion()" [isDisabled]="esFormularioSoloLectura"
           ></app-catalogo-select>
         </div>
           </form>
@@ -24,6 +24,7 @@
             [configuracionTabla]="configuracionSolicitarColumnas"
             [datos]="cuerpoSolicitarTablaFila"
             (listaDeFilaSeleccionada)="onListaDeFilaSeleccionada($event)"
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           >
           </app-tabla-dinamica>
           <div class="col-md-12 mt-5 d-flex justify-content-end">

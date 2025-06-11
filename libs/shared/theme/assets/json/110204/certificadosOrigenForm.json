@@ -1,0 +1,58 @@
+{
+    "altaPlanta": [],
+  "paisBloques": [],
+  "estado": {
+    "id": -1,
+    "descripcion": "illenar"
+  },
+  "umc":{"id":-1,"descripcion":"illenar"},
+  "umcs":[],
+  "factura":[],
+  "formaValida": {},
+  "formCertificado": {
+    "entidadFederativa": "illenar",
+    "tercerOperador": true,
+    "bloque": "illenar",
+    "nombreComercialForm": "illenar",
+    "registroProductoForm": "illenar",
+    "fracciónArancelariaForm": "illenar",
+    "fechaInicioInput":"illenar",
+    "fechaFinalInput":"illenar"
+  },
+  "formDatosCertificado": {
+    "observacionesDates": "illenar",
+    "idiomaDates": "illenar",
+    "EntidadFederativaDates": "illenar",
+    "representacionFederalDates": "illenar"
+  },
+  "mercanciaForm":{
+    "fraccionNaladi":"illenar",
+    "fraccionNaladiSa93": "illenar",
+    "fraccionNaladiSa96": "illenar",
+    "fraccionNaladiSa02": "illenar",
+    "nombreTecnico": "illenar",
+    "nombreComercial":"illenar",
+    "normaOrigen":"illenar",
+    "id":"illenar",
+    "cantidad":"illenar",
+    "umc":"illenar",
+    "tipoFactura":"illenar",
+    "valorMercancia":"illenar",
+    "fechaFinalInput":"illenar",
+    "numeroFactura":"illenar",
+    "nalad":"illenar",
+    "complementoClasificacion":"illenar"
+  },
+  "facturas":{
+    "id": -1,
+    "descripcion": "illenar"
+  },
+  "buscarMercancia": [],
+  "paisBloque": {
+    "id": -1,
+    "descripcion": "illenar"
+  },
+  "idiomaDatos": [],
+  "entidadFederativaDatos": [],
+  "representacionFederalDatos": []
+}

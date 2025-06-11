@@ -18,13 +18,15 @@
             @case (1) {
             <solicitante #Solicitante></solicitante>
             }
-            @case (2) {
+            @case (2) { @if(esDatosRespuesta){
             <app-datos-del-establecimiento></app-datos-del-establecimiento>
             <app-domicilio-del-establecimiento></app-domicilio-del-establecimiento>
             <app-representante-legal></app-representante-legal>
             }
-            @case (3) {
+            }
+            @case (3) { @if(esDatosRespuesta) {
             <app-terceros-relacionado></app-terceros-relacionado>
+            }
             }
             }
         </ng-container>

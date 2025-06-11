@@ -11,8 +11,8 @@ export interface Catalogo {
  * Estado inicial para la interfaz del trámite 110201.
  */
 export interface Solicitud110201State {
-  tratado: Catalogo[] | null;
-  pais: Catalogo[] | null;
+  tratado: Catalogo[];
+  pais: Catalogo[];
   fraccionArancelaria: string;
   numeroRegistro: string;
   nombreComercial: string;
@@ -45,13 +45,13 @@ export interface Solicitud110201State {
   criterioParaConferir: string;
   marca: string;
   cantidad: string;
-  umc: Catalogo[] | null;
+  umc: Catalogo[];
   valorDelaMercancia: string;
   complementoDelaDescripcion: string;
   masaBruta: string;
   nombreComercialDelaMercancia: string;
-  unidadMedida: Catalogo[] | null;
-  tipoFactura: Catalogo[] | null;
+  unidadMedida: Catalogo[];
+  tipoFactura: Catalogo[];
   fecha: string;
   numeroFactura: string;
   justificacion: string;
@@ -63,8 +63,8 @@ export interface Solicitud110201State {
  */
 export function createInitialState(): Solicitud110201State {
   return {
-    tratado: null,
-    pais: null,
+    tratado: [],
+    pais: [],
     fraccionArancelaria: '',
     numeroRegistro: '',
     nombreComercial: '',
@@ -74,9 +74,9 @@ export function createInitialState(): Solicitud110201State {
     observaciones: '',
     presica: '',
     presenta: '',
-    idioma: null,
-    entidad: null,
-    representacion: null,
+    idioma: [],
+    entidad: [],
+    representacion: [],
     nombre: '',
     apellidoPrimer: '',
     apellidoSegundo: '',
@@ -89,21 +89,21 @@ export function createInitialState(): Solicitud110201State {
     telefono: '',
     fax: '',
     correoElectronico: '',
-    nacion: null,
-    transporte: null,
+    nacion: [],
+    transporte: [],
     fraccionMercanciaArancelaria: '',
     nombreTecnico: '',
     nombreEnIngles: '',
     criterioParaConferir: '',
     marca: '',
     cantidad: '',
-    umc: null,
+    umc: [],
     valorDelaMercancia: '',
     complementoDelaDescripcion: '',
     masaBruta: '',
     nombreComercialDelaMercancia: '',
-    unidadMedida: null,
-    tipoFactura: null,
+    unidadMedida: [],
+    tipoFactura: [],
     fecha: '',
     numeroFactura: '',
     justificacion: '',

@@ -18,10 +18,14 @@
         <solicitante></solicitante>
         }
         @case (2) {
+           @if(esDatosRespuesta){
        <app-solicitud-datos></app-solicitud-datos>
+           }
         }
         @case (3) {
+           @if(esDatosRespuesta){
           <app-revision-documental></app-revision-documental>
+           }
         }
         }
       </ng-container>
