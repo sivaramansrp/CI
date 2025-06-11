@@ -2,6 +2,7 @@ import { Observable, map } from 'rxjs';
 import { DatosDelProveedoresManual } from '../models/proveedores.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Tramite420101State } from '../estados/tramite420101Store.store';
 
 @Injectable({
   providedIn: 'root',
@@ -31,4 +32,15 @@ export class RegistrarProveedoresService {
       map((res) => res)
     );
   }
+
+/**
+* Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.
+* 
+* @returns Observable con los datos del estado de la solicitud `Solicitud230401State`,
+*          cargados desde el archivo JSON especificado en la ruta de `assets`.
+*/
+getRegistroTomaMuestrasMercanciasData(): Observable<Tramite420101State> {
+  return this.http.get<Tramite420101State>('assets/json/420101/respuestaDeActualizacionDe.json');
+}
+
 }
