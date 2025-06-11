@@ -11,8 +11,8 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SolicitanteComponent, TipoDeAvisoComponent, CommonModule, PasoUnoComponent, HttpClientModule], // Use imports instead of declarations
-      declarations: [], // Use declarations instead of imports
+      imports: [SolicitanteComponent, TipoDeAvisoComponent, CommonModule, PasoUnoComponent, HttpClientModule], 
+      declarations: [], 
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);

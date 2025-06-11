@@ -36,13 +36,14 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   formularioDeshabilitado: boolean = false;
 
+  
   /**
    * @constructor
-   * @param exportaccionAcuicolaService Servicio para gestionar operaciones relacionadas con la exportación acuícola.
-   * @param consultaQuery Servicio para realizar consultas relacionadas con el trámite actual.
+   * @param {AvisoDeMercanciaService} avisoDeMercanciaService - Servicio para gestionar avisos de mercancía.
+   * @param {ConsultaioQuery} consultaQuery - Servicio para realizar consultas relacionadas.
    * 
    * @description
-   * Constructor de la clase. Inicializa los servicios necesarios para el componente, pero no realiza ninguna acción adicional en este caso.
+   * Constructor de la clase. Inyecta los servicios necesarios para la gestión de avisos de mercancía y consultas.
    */
   constructor(private avisoDeMercanciaService: AvisoDeMercanciaService, private consultaQuery: ConsultaioQuery) {
   }
