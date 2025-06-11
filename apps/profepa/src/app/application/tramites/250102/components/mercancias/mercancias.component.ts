@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite250102State, Tramite250102Store } from '../../estados/tramite250102.store';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ModalComponent } from '../modal/modal.component';
 import { Tramite250102Query } from '../../estados/tramite250102.query';
 
@@ -38,6 +39,10 @@ import catalogoDatos from '@libs/shared/theme/assets/json/250102/banco.json';
   styleUrls: ['./mercancias.component.scss']
 })
 export class MercanciasComponent implements OnInit, OnDestroy {
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /** Formulario reactivo que gestiona la entrada de datos de mercancías */
   formMercancias!: FormGroup;
@@ -105,8 +110,18 @@ export class MercanciasComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite250102Store: Tramite250102Store,
-    private tramite250102Query: Tramite250102Query
-  ) { }
+    private tramite250102Query: Tramite250102Query,
+    public consultaioQuery: ConsultaioQuery,
+  ) { 
+    this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.notificadorDestruccion$),
+          map((seccionState) => {
+            this.esFormularioSoloLectura = seccionState.readonly;
+          })
+        )
+        .subscribe();
+  }
 
   /**
    * Inicializa el componente, configura el formulario y obtiene el estado

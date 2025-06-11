@@ -22,13 +22,16 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
+
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DESTINATARIO_OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/flora-fauna.enum';
 import { DistinatarioService } from '../../../250102/services/distinatario.service';
 import { ModalComponent } from '../modal/modal.component';
 import { Tramite250102Query } from '../../estados/tramite250102.query';
 import { Tramite250102Store } from '../../estados/tramite250102.store';
+
 
 
 @Component({
@@ -47,6 +50,13 @@ import { Tramite250102Store } from '../../estados/tramite250102.store';
   styleUrl: './destinatario-agente-aduanal.component.scss',
 })
 export class DestinatarioAgenteAduanalComponent implements OnInit ,OnDestroy {
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+
   /** Sujeto para limpieza de suscripciones. */
   public destroy$ = new Subject<void>();
   /** Configuración de la tabla de destinatarios. */
@@ -102,14 +112,23 @@ export class DestinatarioAgenteAduanalComponent implements OnInit ,OnDestroy {
    * @param tramite250102Store Almacén de estado del trámite.
    * @param tramite250102Query Consulta el estado del trámite.
    * @param destinatarioService Obtiene datos de países y entidades.
+   * @param consultaioQuery Consulta el estado del usuario.
    */
   constructor(
     private fb: FormBuilder,
     private tramite250102Store: Tramite250102Store,
     private tramite250102Query: Tramite250102Query,
-    private destinatarioService: DistinatarioService
+    private destinatarioService: DistinatarioService,
+    public consultaioQuery: ConsultaioQuery,
   ) {
-    //
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
    /**
    * Inicializa el componente, carga datos y configura formularios.

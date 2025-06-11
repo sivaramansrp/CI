@@ -4,10 +4,12 @@ import { Component,OnDestroy,OnInit } from '@angular/core';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { Subject,map,takeUntil } from 'rxjs';
 import { Tramite250102State, Tramite250102Store } from '../../estados/tramite250102.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { INPUT_FECHA } from '../../constantes/flora-fauna.enum';
 import { ModalComponent } from '../modal/modal.component';
 import { Tramite250102Query } from '../../estados/tramite250102.query';
 import catalogoDatos from '@libs/shared/theme/assets/json/250102/banco.json';
+
 
 /**
  * Componente encargado de gestionar los requisitos y el transporte del trámite 250102.
@@ -28,6 +30,9 @@ import catalogoDatos from '@libs/shared/theme/assets/json/250102/banco.json';
   styleUrl: './requisitos.component.scss',
 })
 export class RequisitosComponent implements OnInit, OnDestroy {
+ 
+  /** Indica si el formulario está en modo solo lectura */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Catálogo de medios de transporte.
@@ -110,9 +115,47 @@ export class RequisitosComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite250102Store: Tramite250102Store,
-    private tramite250102Query: Tramite250102Query
+    private tramite250102Query: Tramite250102Query,
+    public consultaioQuery: ConsultaioQuery,
   ) {
-    // Constructor que inyecta las dependencias necesarias
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
+
+  
+    /**
+   * Inicializa el formulario dependiendo del modo (solo lectura o editable).
+   * Si está en solo lectura, carga y bloquea el formulario.
+   * Si no, crea un formulario editable.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Crea el formulario y, si está en modo solo lectura, lo deshabilita.
+   * De lo contrario, lo habilita para edición.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.transporteForm.disable();
+     
+    } else {
+      this.transporteForm.enable();
+    
+    }
   }
 
   /**
@@ -120,6 +163,17 @@ export class RequisitosComponent implements OnInit, OnDestroy {
    * y creando el formulario reactivo.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  
+  /**
+   * Inicializa el formulario reactivo con los valores actuales de la solicitud.
+   * 
+   * Configura el formulario para gestionar los campos relacionados con el pago de derechos, como clave, 
+   * dependencia, banco, llave, fecha e importe. También asigna valores predeterminados a algunos campos.
+   */
+  private inicializarFormulario(): void {
     this.tramite250102Query.selectTramiteState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -130,13 +184,13 @@ export class RequisitosComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.transporteForm = this.fb.group({
-      medio: [this.solicitudState.medio, Validators.required],
-      identificacion: [this.solicitudState.identificacion,[Validators.required,Validators.maxLength(16)]],
-      economico: [this.solicitudState.economico,[Validators.required,Validators.maxLength(50)]],
-      placa: [this.solicitudState.placa,[Validators.required,Validators.maxLength(25)]],
-      numero: [this.solicitudState.numero,[Validators.required,Validators.maxLength(50)]],
-      fechas: [this.solicitudState.fechas,Validators.required],
-      requisito: [this.solicitudState.requisito, Validators.required],
+      medio: [this.solicitudState?.medio, Validators.required],
+      identificacion: [this.solicitudState?.identificacion,[Validators.required,Validators.maxLength(16)]],
+      economico: [this.solicitudState?.economico,[Validators.required,Validators.maxLength(50)]],
+      placa: [this.solicitudState?.placa,[Validators.required,Validators.maxLength(25)]],
+      numero: [this.solicitudState?.numero,[Validators.required,Validators.maxLength(50)]],
+      fechas: [this.solicitudState?.fechas,Validators.required],
+      requisito: [this.solicitudState?.requisito, Validators.required],
     });
   }
 
