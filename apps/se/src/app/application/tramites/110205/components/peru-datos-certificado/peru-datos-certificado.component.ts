@@ -1,6 +1,6 @@
+import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
 import { HttpErrorResponse } from '@angular/common/http';
 import { PeruCertificadoService } from '../../services/peru-certificado.service';
@@ -61,6 +61,12 @@ export class PeruDatosCertificadoComponent implements OnInit, OnDestroy {
 
   /**
    * @descripcion
+   * Indica si el formulario de mercancía se encuentra en modo solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * @descripcion
    * Inicializa el componente con los servicios y dependencias requeridos.
    * @param fb - Instancia de FormBuilder para gestionar formularios.
    * @param peruCertificadoService - Servicio para obtener datos relacionados con el certificado.
@@ -71,6 +77,7 @@ export class PeruDatosCertificadoComponent implements OnInit, OnDestroy {
     private peruCertificadoService: PeruCertificadoService,
     private store: Tramite110205Store,
     private query: Tramite110205Query,
+    private consultaQuery: ConsultaioQuery
   ) {
     this.query.formDatosCertificado$.pipe(
       takeUntil(this.destroyNotifier$)
@@ -88,6 +95,14 @@ export class PeruDatosCertificadoComponent implements OnInit, OnDestroy {
     this.idiomOpcion();
     this.entidadFederativasOpcion();
     this.representacionFederalOpcion();
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**

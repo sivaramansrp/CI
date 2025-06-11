@@ -1,13 +1,11 @@
-import {
-  Catalogo,
-  CatalogoSelectComponent,
-  ConfiguracionAporteColumna,
-  TablaConEntradaComponent,
-} from '@libs/shared/data-access-user/src';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConfiguracionAporteColumna } from '@libs/shared/data-access-user/src';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DOMICILIOS_CONFIGURACION_COLUMNAS } from '../../constants/solicitud.enum';
 import { Domicilios } from '../../models/solicitud.model';
 import { ElementRef } from '@angular/core';
@@ -38,6 +36,7 @@ import { SolicitudCatologoSelectLista } from '../../models/solicitud.model';
 import { SolicitudRadioLista } from '../../models/solicitud.model';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Subject } from 'rxjs';
+import { TablaConEntradaComponent } from '@libs/shared/data-access-user/src';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
@@ -183,14 +182,38 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   pedimentos: Array<Pedimento> = [];
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente donde se inicializan servicios y se cargan catálogos necesarios.
    */
   constructor(
     public fb: FormBuilder,
     public solicitudService: SolicitudService,
     public solicitud32605Store: Solicitud32605Store,
-    public solicitud32605Query: Solicitud32605Query
+    public solicitud32605Query: Solicitud32605Query,
+    public consultaioQuery: ConsultaioQuery
   ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+    this.conseguirOpcionDeRadio();
     this.conseguirOpcionDeRadio();
     this.conseguirSolicitudCatologoSelectLista();
     this.conseguirInventarios();
@@ -202,6 +225,44 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * y suscribe a los cambios del store para mantener los datos sincronizados.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.datosComunesForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.datosComunesForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  /**
+   * Inicializa el formulario `datosComunesForm` con los valores actuales del estado `solicitud32605State`.
+   *
+   * Este formulario contiene una amplia variedad de campos que representan diferentes datos
+   * requeridos por la solicitud 32605. Los valores iniciales de cada control se obtienen
+   * directamente del estado actual gestionado por el store.
+   *
+   */
+  inicializarFormulario(): void {
     this.datosComunesForm = this.fb.group({
       catseleccionados: [this.solicitud32605State.catseleccionados],
       servicio: [this.solicitud32605State.servicio],

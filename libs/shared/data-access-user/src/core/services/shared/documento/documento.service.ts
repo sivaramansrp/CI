@@ -1,10 +1,9 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable, catchError, map, throwError } from 'rxjs';
-
-import { BaseResponse } from 'apps/aga/src/app/application/core/models/5701/base-response.model';
-import { ENVIRONMENT } from '../../../../enviroments/enviroment';
 import { DocumentoResponse, DocumentosRequest } from '../../../models/shared/documentos-request.model';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { Observable, catchError, map, throwError } from 'rxjs';
+import { BaseResponse } from '../../../models/5701/base-response.model';
+import { ENVIRONMENT } from '../../../../enviroments/enviroment';
+import { Injectable } from '@angular/core';
 
 @Injectable({
   providedIn: 'root',

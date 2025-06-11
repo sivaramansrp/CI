@@ -86,6 +86,15 @@ export class Tramite110205Query extends Query<Tramite110205State> {
 
   /**
    * @descripcion
+   * Observable que indica si todos los campos del formulario son válidos.
+   * Retorna `true` solo si todos los valores en `formaValida` son verdaderos.
+   */
+  FormaValida$ = this.select((state) => {
+    return Object.values(state.formaValida).every(value => value === true);
+  });
+
+  /**
+   * @descripcion
    * Constructor que inyecta el almacén `camCertificadoStore`.
    * @param store - Instancia de `camCertificadoStore`.
    */
