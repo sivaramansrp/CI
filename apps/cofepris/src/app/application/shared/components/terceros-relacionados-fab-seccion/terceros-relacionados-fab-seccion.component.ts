@@ -37,6 +37,13 @@ import { TramiteRelacionadaseStore } from '../../estados/stores/terceros-relacio
   styleUrl: './terceros-relacionados-fab-seccion.component.scss',
 }) 
 export class TercerosRelacionadosFabSeccionComponent implements OnInit, OnDestroy {
+
+ public isFormGroupEmpty(formGroup: FormGroup): boolean {
+  return Object.values(formGroup.value).every(
+    value => value === null || value === undefined || value === ''
+  );
+}
+
   /**
    * @description Almacena los datos de las filas de la tabla de fabricantes.
    */
@@ -930,6 +937,10 @@ public extranjero = false;
  */
 submitFabricanteForm() {
   if (this.agregarFabricanteFormGroup) {
+     if (this.isFormGroupEmpty(this.agregarFabricanteFormGroup)) {
+    
+      return;
+    }
     const NEW_FABRICANTE = this.agregarFabricanteFormGroup.value;
 
     if (this.editFabricanteIndex !== null) {
@@ -949,6 +960,10 @@ submitFabricanteForm() {
  */
 submitFacturadorForm(): void {
   if (this.agregarFacturadorFormGroup) {
+     if (this.isFormGroupEmpty(this.agregarFacturadorFormGroup)) {
+      
+      return;
+    }
     const NEW_FACTURADOR = this.agregarFacturadorFormGroup.value;
 
     if (this.editFacturadorIndex !== null) {
@@ -1048,6 +1063,9 @@ eliminarSeleccionadosFabricante() :void {
    */
 submitDestinatarioForm(): void {
   if (this.agregarDestinatarioFormGroup) {
+    if (this.isFormGroupEmpty(this.agregarDestinatarioFormGroup)) {
+      return;
+    }
     const NEW_DESTINATARIO = this.agregarDestinatarioFormGroup.value;
 
     if (this.editDestinatarioIndex !== null) {
@@ -1119,6 +1137,9 @@ onProveedorSeleccionados(selected: ProveedorModel[]) {
      */
    submitProveedorForm(): void {
   if (this.agregarProveedorFormGroup) {
+ if (this.isFormGroupEmpty(this.agregarProveedorFormGroup)) {
+      return;
+    }
     const NEW_PROVEEDOR = this.agregarProveedorFormGroup.value;
 
     if (this.editProveedorIndex !== null) {
