@@ -1,8 +1,8 @@
+import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { CapturistaStore, CapturistaStoreService } from '../../../estados/capturista.store';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Notificacion, NotificacionesComponent, REGEX_CURP, REGEX_RFC_FISICA, REGEX_RFC_MORAL, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Subject, catchError, map, of, takeUntil } from 'rxjs';
-import { TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { BusquedaRFCCURPQuery } from '../../../queries/capturista.query';
 import { CONFIGURACION_ENCABEZADO_CAPTURISTAS } from '../../core/constantes/capturista.enum';
 import { Capturista } from '../../core/models/capturista.model';
@@ -13,12 +13,12 @@ import { UsuariosService } from '../../core/service/usuarios.service';
 @Component({
   selector: 'app-registro-capturista-privado',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TablaDinamicaComponent],
+  imports: [CommonModule, ReactiveFormsModule, TablaDinamicaComponent, NotificacionesComponent],
   templateUrl: './registro-capturista-privado.component.html',
   styleUrl: './registro-capturista-privado.component.scss',
 })
 export class RegistroCapturistaPrivadoComponent implements OnInit, OnDestroy {
-   /** Formulario reactivo para la consulta de capturista */
+  /** Formulario reactivo para la consulta de capturista */
   FormRegistroCapturistaPrivado!: FormGroup;
   /** Notificador para cancelar suscripciones al destruir el componente */
   private destroyNotifier$: Subject<void> = new Subject();
@@ -36,6 +36,8 @@ export class RegistroCapturistaPrivadoComponent implements OnInit, OnDestroy {
   capturistasSeleccionados: Capturista[] = [];
   /** Enum para la selección en la tabla */
   tablaSeleccion = TablaSeleccion;
+  /** Notificación para mostrar mensajes al usuario */
+  public nuevaNotificacion!: Notificacion;
 
   /**
    * Constructor que inyecta los servicios y dependencias necesarias.
@@ -76,9 +78,18 @@ export class RegistroCapturistaPrivadoComponent implements OnInit, OnDestroy {
    */
   crearFormulario() {
     this.FormRegistroCapturistaPrivado = this.fb.group({
-      rfc: [''],
-      curp: ['']
+      rfc: ['', [RegistroCapturistaPrivadoComponent.validadorRFC]],
+      curp: ['', [Validators.required, Validators.pattern(REGEX_CURP)]],
     });
+  }
+
+  static validadorRFC(control: AbstractControl): ValidationErrors | null {
+    const VALUE = control.value;
+    if (!VALUE) {
+      return null;
+    }
+    const ES_VALIDO = REGEX_RFC_FISICA.test(VALUE) || REGEX_RFC_MORAL.test(VALUE);
+    return ES_VALIDO ? null : { rfcInvalido: true };
   }
 
   /**
@@ -99,6 +110,20 @@ export class RegistroCapturistaPrivadoComponent implements OnInit, OnDestroy {
   consultaCapturista() {
     const RFC = this.FormRegistroCapturistaPrivado.get('rfc')?.value;
     const CURP = this.FormRegistroCapturistaPrivado.get('curp')?.value;
+    if (!RFC && !CURP) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Alerta',
+        mensaje: 'Ingresa al menos RFC o CURP para realizar la consulta..',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
     this.usuariosService.consultaCapturista(RFC, CURP)
       .pipe(
         map((data) => {
@@ -108,6 +133,16 @@ export class RegistroCapturistaPrivadoComponent implements OnInit, OnDestroy {
             this.router.navigate(['login/consulta-capturista']);
           } else {
             this.capturistaConsultado = undefined;
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'error',
+              modo: 'action',
+              titulo: 'Error',
+              mensaje: 'Este usuario no se encuentra registrado.',
+              cerrar: true,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
           }
         }),
         catchError((error) => {
@@ -119,10 +154,10 @@ export class RegistroCapturistaPrivadoComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-   /**
-   * Confirma y agrega el capturista consultado a la lista si corresponde.
-   * Actualiza el estado de visualización de la tabla y la lista de capturistas.
-   */
+  /**
+  * Confirma y agrega el capturista consultado a la lista si corresponde.
+  * Actualiza el estado de visualización de la tabla y la lista de capturistas.
+  */
   confirmarCapturista() {
     if (this.capturistaState.registrarDatos) {
       this.capturistaStore.setVisualizarTabla(this.visualizarTabla = true);
@@ -155,6 +190,21 @@ export class RegistroCapturistaPrivadoComponent implements OnInit, OnDestroy {
    * Navega a la pantalla de firma electrónica.
    */
   enviarFirma() {
-    this.router.navigate(['login/firma-electronica']);
+    if (this.listadoCapturistas.length > 0) {
+      this.router.navigate(['login/firma-electronica']);
+    }
+    else {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Alerta',
+        mensaje: 'No hay capturistas registrados para enviar a firma.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
   }
 }
