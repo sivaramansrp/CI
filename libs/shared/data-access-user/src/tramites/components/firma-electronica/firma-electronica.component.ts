@@ -1,10 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { LOGIN, PADDING } from '../../constantes/constantes';
-import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
-import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 import { FirmaElectronicaService } from '../../../core/services/shared/firma-electronica/firma-electronica.service';
+import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
+import { LOGIN } from '../../constantes/constantes';
 
 @Component({
   selector: 'firma-electronica',
@@ -26,6 +26,10 @@ export class FirmaElectronicaComponent {
   certFileObj?: File;
   keyFileObj?: File;
   isLoading = false;
+  cerInputElement?: HTMLInputElement;
+  keyInputElement?: HTMLInputElement;
+  passwordInputElement?: HTMLInputElement;
+  
 
   FormCertificado = this.fb.group({
     password: ['', [Validators.required]],
@@ -55,40 +59,51 @@ export class FirmaElectronicaComponent {
     return this.formValidator.isValid(this.FormCertificado, field);
   }
 
-  handleFile(type: string, event: Event): void {
+ handleFile(type: string, event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files?.length) {
       const file = input.files[0];
       
+      // Validar extensión y tipo MIME
       if (type === 'cer') {
+        if (!file.name.endsWith('.cer') && !file.type.includes('application/x-x509-ca-cert')) {
+          this.toastrService.error('El archivo debe ser un certificado (.cer)');
+          return;
+        }
         this.certFileObj = file;
+        this.cerInputElement = input;
       } else if (type === 'key') {
+        if (!file.name.endsWith('.key') && !file.type.includes('application/x-pem-file')) {
+          this.toastrService.error('El archivo debe ser una llave privada (.key)');
+          return;
+        }
         this.keyFileObj = file;
+        this.keyInputElement = input; 
       }
     }
   }
 
-  async onSubmit(): Promise<void> {
-    if (this.FormCertificado.invalid || !this.certFileObj || !this.keyFileObj) {
+ async onSubmit(): Promise<void> {
+   this.passwordInputElement = document.getElementById('password') as HTMLInputElement;
+    if (this.FormCertificado.invalid) {
       this.FormCertificado.markAllAsTouched();
-      this.toastrService.error('Por favor complete todos los campos y seleccione los archivos');
+      this.toastrService.error('Por favor complete todos los campos');
+      return;
+    }
+
+    if (!this.cerInputElement || !this.keyInputElement || !this.passwordInputElement) {
+      this.toastrService.error('Por favor complete todos los campos');
       return;
     }
 
     this.isLoading = true;
-    const password = this.FormCertificado.get('password')?.value || '';
 
     try {
-      // Verificar que los archivos sean válidos
-      if (!(this.certFileObj instanceof File) || !(this.keyFileObj instanceof File)) {
-        throw new Error('Los archivos seleccionados no son válidos');
-      }
-      
-      // 1. Validar y firmar
+      // 1. Validar y firmar - Pasamos los elementos input
       const resultado = await this.firmaService.firmarCadena(
-        this.certFileObj,
-        this.keyFileObj,
-        password
+        this.cerInputElement,
+        this.keyInputElement,
+        this.passwordInputElement
       );
 
       // 2. Emitir eventos
@@ -112,3 +127,4 @@ export class FirmaElectronicaComponent {
     }
   }
 }
+
