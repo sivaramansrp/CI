@@ -1,11 +1,25 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Subject,map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { OperacionService } from '../../services/operacion.service';
+import { OperacionesDeComercioExteriorComponent } from '../../components/operaciones-de-comercio-exterior/operaciones-de-comercio-exterior.component';
 
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
+  standalone:true,
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    OperacionesDeComercioExteriorComponent,
+    SolicitanteComponent
+  ]
 })
-export class PasoUnoComponent {
+export class PasoUnoComponent implements OnInit,OnDestroy{
     /**
    * Índice de la pestaña seleccionada.
    * Este índice indica cuál pestaña está actualmente seleccionada en el formulario.
@@ -14,6 +28,39 @@ export class PasoUnoComponent {
    * @default 1
    */
     indice: number = 1;
+/**
+ * @property destroyNotifier$
+ * @private
+ * @description
+ * Sujeto utilizado para cancelar suscripciones activas y prevenir fugas de memoria.
+ * Generalmente se utiliza con el operador `takeUntil` en observables dentro del ciclo de vida del componente.
+ * 
+ * @example
+ * this.observable$.pipe(takeUntil(this.destroyNotifier$)).subscribe(...);
+ */
+private destroyNotifier$: Subject<void> = new Subject();
+
+/**
+ * @property consultaState
+ * @public
+ * @description
+ * Representa el estado actual de la consulta. 
+ * Este estado puede incluir información obtenida de una API o de algún servicio.
+ * Debe ser inicializado antes de usarse.
+ */
+public consultaState!: ConsultaioState;
+
+/**
+ * @property esDatosRespuesta
+ * @public
+ * @description
+ * Bandera booleana que indica si existen datos disponibles como respuesta de una consulta.
+ * Se puede usar para mostrar u ocultar secciones del template dependiendo del resultado.
+ * 
+ * @example
+ * *ngIf="esDatosRespuesta"
+ */
+public esDatosRespuesta: boolean = false;
 
     /**
      * Lista de las secciones del formulario, cada sección tiene su índice, título y componente asociado.
@@ -30,7 +77,64 @@ export class PasoUnoComponent {
       { index: 1, title: 'Solicitante', component: 'solicitante' },
       { index: 2, title: 'Operaciones de Comercio Exterior', component: 'app-operaciones-de-comercio-exterior' }
     ];
+      /**
+   * @constructor
+   * @param consultaQuery - Servicio para consultar información relacionada con el trámite.
+   * @param operacionService - Servicio encargado de gestionar las operaciones del trámite.
+   *
+   * @description
+   * Constructor de la clase. Inicializa los servicios necesarios para la gestión y consulta de información en el paso uno del trámite.
+   */
+  constructor(private consultaQuery: ConsultaioQuery, private readonly operacionService: OperacionService){
+
+  }
+  /**
+   * @inheritdoc
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe al observable del estado de consulta y actualiza la propiedad local `consultaState`.
+   * Si el estado indica que se debe actualizar, guarda los datos del formulario;
+   * de lo contrario, establece la bandera `esDatosRespuesta` en verdadero.
+   *
+   * @memberof PasoUnoComponent
+   */
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+          this.consultaState = seccionState;
+      })).subscribe();
+    if(this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+
+  }
+
   
+/**
+ * @description
+ * Guarda los datos del formulario obteniendo la información desde un archivo JSON
+ * y actualiza el estado del formulario en el servicio correspondiente.
+ *
+ * @remarks
+ * Utiliza el servicio `operacionService` para obtener los datos de muestra de mercancías
+ * y actualiza el estado del formulario si la respuesta es válida.
+ * 
+ * @returns {void}
+ */
+guardarDatosFormulario(): void {
+    this.operacionService
+      .getRegistroTomaMuestrasMercanciasData('finalDataToSend.json').pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.operacionService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
+
     /**
      * Método que cambia el índice de la pestaña seleccionada en función del valor recibido.
      * Este método se utiliza para navegar entre las diferentes pestañas del formulario.
@@ -43,4 +147,24 @@ export class PasoUnoComponent {
     seleccionaTab(i: number): void {
       this.indice = i;
     }
+
+/**
+ * @method ngOnDestroy
+ * @description
+ * Método del ciclo de vida de Angular que se ejecuta cuando el componente o servicio es destruido.
+ * 
+ * Se utiliza para limpiar suscripciones y liberar recursos, evitando fugas de memoria.
+ * Emite un valor en `destroyNotifier$` y luego completa el observable, lo cual se usa comúnmente
+ * con el operador `takeUntil` para cancelar suscripciones activas.
+ * 
+ * @example
+ * this.miObservable$
+ *   .pipe(takeUntil(this.destroyNotifier$))
+ *   .subscribe(...);
+ */
+ngOnDestroy(): void {
+  this.destroyNotifier$.next();
+  this.destroyNotifier$.complete();
+}
+
 }

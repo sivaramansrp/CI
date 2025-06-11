@@ -1,6 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { AlertComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
+
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   Solicitud260211State,
@@ -10,6 +13,9 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { MENSAJE_DE_ALERTA } from '@libs/shared/data-access-user/src/core/enums/260211/manifiestos.enum';
 import { Tramite260211Query } from '../../../../estados/queries/tramite260211.query';
+
+import { ProductoOption } from '../../models/permiso-sanitario.enum';
+import { SanitarioService } from '../../services/sanitario.service';
  
 /**
  * Componente principal para gestionar el formulario de manifiestos.
@@ -22,15 +28,28 @@ import { Tramite260211Query } from '../../../../estados/queries/tramite260211.qu
     TituloComponent,
     AlertComponent,
     ReactiveFormsModule,
+    InputRadioComponent
   ],
   templateUrl: './manifiestos.component.html',
-  styleUrl: './manifiestos.component.css',
+  styleUrl: './manifiestos.component.scss',
 })
  
 /**
  * Componente para gestionar los manifiestos de la solicitud.
  */
 export class ManifiestosComponent implements OnInit, OnDestroy {
+   producto: ProductoOption[] = [];
+ 
+  /**
+   * Valor por defecto para el campo de selección.
+   * Se utiliza para establecer un valor inicial en el formulario.
+   */
+  defaultSelect: string = 'Si';
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  public esFormularioSoloLectura: boolean = false; 
   /**
    * Mensaje de alerta para el usuario.
    */
@@ -59,10 +78,28 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
+     private service: SanitarioService,
     private tramite260211Store: Tramite260211Store,
-    private tramite260211Query: Tramite260211Query
+    private tramite260211Query: Tramite260211Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Dependencia inyectada para uso posterior
+     /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+       
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe();
   }
  
   /**
@@ -70,7 +107,48 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    * Obtiene el estado de la solicitud y crea el formulario de manifiestos.
    */
   ngOnInit(): void {
-    this.tramite260211Query.selectSolicitud$
+  this.service
+      .getPermisoData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data: ProductoOption[]) => {
+        this.producto = data; // Bind the fetched data
+       
+      });
+    
+  this.inicializarEstadoFormulario();
+   
+
+  }
+   /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+    
+  }
+     /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.manifiestos.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.manifiestos.enable();
+      } 
+  }
+  /**
+   * Inicializa el formulario de manifiestos con los valores del estado de la solicitud.
+   * Se suscribe al estado de la solicitud para obtener los valores iniciales.
+   */
+inicializarFormulario(): void {
+  this.tramite260211Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -78,15 +156,17 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
- 
-    /**
+         /**
      * Inicialización del formulario de manifiestos.
      */
     this.manifiestos = this.fb.group({
       cumplimiento: [this.solicitudState?.cumplimiento, Validators.required],
     });
+
+   if (this.esFormularioSoloLectura) {
+    this.manifiestos.disable();
   }
- 
+}
   /**
    * Establece el valor de un campo en el store de Tramite260211.
    * @param form - El grupo de formularios que contiene el campo.

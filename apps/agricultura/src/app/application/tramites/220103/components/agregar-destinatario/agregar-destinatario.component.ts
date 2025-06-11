@@ -172,18 +172,18 @@ export class AgregarDestinatarioComponent implements OnInit, OnDestroy {
       .getColonia()
       .pipe(takeUntil(this.notificadorDestruccion$))
       .subscribe((opciones: Catalogo[]) => {
-        const CAMPO_COLONIA_DEST = this.configuracionFormularioDestinatario.find(
-          (campo) => campo.campo === 'colonia'
-        );
-        if (CAMPO_COLONIA_DEST) {
-          CAMPO_COLONIA_DEST.opciones = opciones;
-        }
-        const CAMPO_COLONIA_INST = this.configuracionFormularioInstalacion.find(
-          (campo) => campo.campo === 'colonia'
-        );
-        if (CAMPO_COLONIA_INST) {
-          CAMPO_COLONIA_INST.opciones = opciones;
-        }
+        this.configuracionFormularioDestinatario = this.configuracionFormularioDestinatario.map(campo => {
+          if (campo.campo === 'colonia') {
+            return { ...campo, opciones: [...opciones] };
+          }
+          return campo;
+        });
+        this.configuracionFormularioInstalacion = this.configuracionFormularioInstalacion.map(campo => {
+          if (campo.campo === 'colonia') {
+            return { ...campo, opciones: [...opciones] };
+          }
+          return campo;
+        });
       });
   }
 

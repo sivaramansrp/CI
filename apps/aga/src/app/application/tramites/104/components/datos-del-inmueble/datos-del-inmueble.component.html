@@ -5,12 +5,12 @@
         <div class="col-md-10">
             <app-catalogo-select [catalogo]="configuracionesDropdown[0].catalogos" formControlName="tipoPrograma"
                 [label]="'Tipo de programa/Autorización'" [required]="true"
-                name="Tipo de programa/Autorización"></app-catalogo-select>
+                name="Tipo de programa/Autorización" [isDisabled]="consultaState.readonly"></app-catalogo-select>
         </div>
         <div class="col-md-6">
             <app-catalogo-select [catalogo]="catalogoFolioAutorizacion" formControlName="folioAutorizacion"
                 [label]="'Folio del programa/Autorización'" [required]="true"
-                name="Folio del programa/Autorización"></app-catalogo-select>
+                name="Folio del programa/Autorización" [isDisabled]="consultaState.readonly"></app-catalogo-select>
         </div>
     </div>
 </form>
@@ -26,7 +26,7 @@
             </div>
             @if(colapsable){
             <div class="panel-collapse collapse in" id="panel-01">
-                <ng-table [commonTableHeader]="establecimientoHeaderData" [commonTableBody]="establecimientoBodyData"></ng-table>
+                <ng-table [commonTableHeader]="establecimientoHeaderData" [commonTableBody]="establecimientoBodyData" [disableSeleccionTablaCheckBox]="consultaState.readonly"></ng-table>
                 <div class="d-flex justify-content-center">
                     <app-table-pagination [totalItems]="totalItems" [itemsPerPage]="itemsPerPage" [currentPage]="currentPage"
                         (pageChange)="onPageChange($event)" (itemsPerPageChange)="onItemsPerPageChange($event)">
@@ -39,9 +39,9 @@
 </div>
 
 <div class=" text-end mt-5">
-    <button class="btn btn-primary  me-2" data-bs-toggle="modal" data-bs-target="#modalAgregar">Agregar</button>
-    <button class="btn btn-default me-2">Modificar</button>
-    <button class="btn btn-primary">Eliminar</button>
+    <button class="btn btn-primary  me-2" data-bs-toggle="modal" data-bs-target="#modalAgregar"  [disabled]="consultaState.readonly">Agregar</button>
+    <button class="btn btn-default me-2"  [disabled]="consultaState.readonly">Modificar</button>
+    <button class="btn btn-primary"  [disabled]="consultaState.readonly">Eliminar</button>
 </div>
 
 <div class="modal" tabindex="-1" [ngClass]="{'show': mostrarAlerta}"
@@ -99,7 +99,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <app-catalogo-select [catalogo]="configuracionesFormularioDropdown[0].catalogos"
-                                        formControlName="pais" [label]="'País'" [required]="true">
+                                        formControlName="pais" [label]="'País'" [required]="true"  [isDisabled]="consultaState.readonly">
                                     </app-catalogo-select>
                                 </div>
                             </div>
@@ -107,7 +107,7 @@
                                 <div class="form-group">
                                     <app-catalogo-select [catalogo]="configuracionesFormularioDropdown[1].catalogos"
                                         formControlName="entidadFederativa" [label]="'Entidad Federativa'"
-                                        [required]="true">
+                                        [required]="true"  [isDisabled]="consultaState.readonly">
                                     </app-catalogo-select>
                                 </div>
                             </div>
@@ -118,14 +118,14 @@
                                 <div class="form-group">
                                     <app-catalogo-select [catalogo]="configuracionesFormularioDropdown[2].catalogos"
                                         formControlName="municipioDelegacion" [label]="'Municipio o Delegación'"
-                                        [required]="true">
+                                        [required]="true"  [isDisabled]="consultaState.readonly">
                                     </app-catalogo-select>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <app-catalogo-select [catalogo]="configuracionesFormularioDropdown[3].catalogos"
-                                        formControlName="colonia" [label]="'Colonia'" [required]="true">
+                                        formControlName="colonia" [label]="'Colonia'" [required]="true"  [isDisabled]="consultaState.readonly">
                                     </app-catalogo-select>
                                 </div>
                             </div>
@@ -134,7 +134,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <app-catalogo-select [catalogo]="configuracionesFormularioDropdown[4].catalogos"
-                                        formControlName="localidad" [label]="'Localidad'" [required]="true">
+                                        formControlName="localidad" [label]="'Localidad'" [required]="true"  [isDisabled]="consultaState.readonly">
                                     </app-catalogo-select>
                                 </div>
                             </div>
@@ -149,9 +149,9 @@
                     </form>
                 </div>
                 <div class="modal-footer custom-footer justify-content-end">
-                    <button type="button" class="btn btn-primary">Agregar</button>
-                    <button type="button" class="btn btn-default btn-space">Limpiar</button>
-                    <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>
+                    <button type="button" class="btn btn-primary"  [disabled]="consultaState.readonly">Agregar</button>
+                    <button type="button" class="btn btn-default btn-space"  [disabled]="consultaState.readonly">Limpiar</button>
+                    <button type="button" class="btn btn-default" data-bs-dismiss="modal"  [disabled]="consultaState.readonly" #closeModal>
                         Cerrar
                     </button>
                 </div>
