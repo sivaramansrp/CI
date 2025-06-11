@@ -1,4 +1,4 @@
-import { Anexo, Bitacora, Complimentaria, DatosDeLaTabla, Empresas, Federetarios, FraccionSensible, Operacions, Plantas, RespuestaConsulta, Servicios } from '../models/datos-tramite.model';
+import { Anexo, Bitacora, Complimentaria, DatosDeLaTabla, DatosModificacion, Empresas, Federetarios, FraccionSensible, Operacions, Plantas, RespuestaConsulta, Servicios } from '../models/datos-tramite.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';

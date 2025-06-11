@@ -1,11 +1,11 @@
 import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { DatosDelModificacion, DatosModificacion } from '../../models/datos-tramite.model';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud80316State, Tramite80316Store } from '../../estados/tramite80316.store';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { DatosDelModificacion, DatosModificacion } from '../../models/datos-tramite.model';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Tramite80316Query } from '../../estados/tramite80316.query';
 

@@ -1,6 +1,6 @@
-import { AfterViewInit, EventEmitter, Output } from '@angular/core';
+import { AfterViewInit, EventEmitter, OnInit, Output } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico, SolicitanteComponent } from '@ng-mf/data-access-user';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AltaPlantaComponent } from '../../components/alta-planta/alta-planta.component';
 import { BitacoraComponent } from '../../components/bitacora/bitacora.component';
 import { CommonModule } from '@angular/common';
@@ -11,8 +11,8 @@ import { Input } from '@angular/core';
 import { ModificacionComponent } from '../../components/modificacion/modificacion.component';
 import { PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { SolicitudService } from '../../services/solicitud.service';
-import { ViewChild } from '@angular/core';
 import { Tramite80316Store } from '../../estados/tramite80316.store';
+import { ViewChild } from '@angular/core';
 
 /**
  * Componente que representa la página de solicitud.
@@ -25,7 +25,7 @@ import { Tramite80316Store } from '../../estados/tramite80316.store';
   imports: [SolicitanteComponent, CommonModule, ModificacionComponent, AltaPlantaComponent, BitacoraComponent, ComplementariaImmexComponent]
 })
 
-export class PasoUnoComponent implements AfterViewInit {
+export class PasoUnoComponent implements AfterViewInit, OnInit {
   /**
     * Referencia al componente `SolicitanteComponent`.
     * 
