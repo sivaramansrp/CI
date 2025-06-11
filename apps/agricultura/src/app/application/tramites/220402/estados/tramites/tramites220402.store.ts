@@ -1,4 +1,5 @@
 import { Store, StoreConfig } from '@datorama/akita';
+import { DatosGenerales } from '../../models/pantallas-captura.model';
 import { Injectable } from '@angular/core';
 
 /**
@@ -23,7 +24,7 @@ export interface Solicitud220402State {
   paisdeOrigen: string;
   entidadFederativadeOrigen: string;
   municipiodeOrigen: [];
-  datosGeneralesArr1: [];
+  datosGeneralesArr: DatosGenerales[];
   marcasDistintivas: string;
   USO: string;
   numero: string;
@@ -74,7 +75,7 @@ export function createInitialSolicitudState(): Solicitud220402State {
     paisdeOrigen: '',
     entidadFederativadeOrigen: '',
     municipiodeOrigen: [],
-    datosGeneralesArr1: [],
+    datosGeneralesArr: [],
     marcasDistintivas: '',
     USO: '',
     numero: '',
@@ -104,7 +105,7 @@ export function createInitialSolicitudState(): Solicitud220402State {
     llaveDePago: '',
     fechaPago: '',
     importePago: ''
-}
+  }
 }
 
 @Injectable({
@@ -116,156 +117,156 @@ export class Solicitud220402Store extends Store<Solicitud220402State> {
     super(createInitialSolicitudState());
   }
 
-  public setTipoDeCertificado(tipoDeCertificado: string) {
+  public setTipoDeCertificado(tipoDeCertificado: string): void {
     this.update((state) => ({
       ...state,
       tipoDeCertificado
     }));
   }
 
-  public setPuntoDestino(puntoDestino: string) {
+  public setPuntoDestino(puntoDestino: string): void {
     this.update((state) => ({
       ...state,
       puntoDestino
     }));
   }
 
-  public setSeccionAduanera(seccionAduanera: string) {
+  public setSeccionAduanera(seccionAduanera: string): void {
     this.update((state) => ({
       ...state,
       seccionAduanera
     }));
   }
 
-  public setPaisDeDestino(paisDeDestino: string) {
+  public setPaisDeDestino(paisDeDestino: string): void {
     this.update((state) => ({
       ...state,
       paisDeDestino
     }));
   }
 
-  public setPaisDeProcedencia(paisDeProcedencia: string) {
+  public setPaisDeProcedencia(paisDeProcedencia: string): void {
     this.update((state) => ({
       ...state,
       paisDeProcedencia
     }));
   }
 
-  public setRangoDeFechas(rangoDeFechas: string) {
+  public setRangoDeFechas(rangoDeFechas: string): void {
     this.update((state) => ({
       ...state,
       rangoDeFechas
     }));
   }
 
-  public setFechaInicio(fechaInicio: string) {
+  public setFechaInicio(fechaInicio: string): void {
     this.update((state) => ({
       ...state,
       fechaInicio
     }));
   }
 
-  public setFechaFinal(fechaFinal: string) {
+  public setFechaFinal(fechaFinal: string): void {
     this.update((state) => ({
       ...state,
       fechaFinal
     }));
   }
 
-  public setFraccionArancelaria(fraccionArancelaria: string) {
+  public setFraccionArancelaria(fraccionArancelaria: string): void {
     this.update((state) => ({
       ...state,
       fraccionArancelaria
     }));
   }
 
-  
-  public setDescdelaFraccion(descdelaFraccion: string) {
+
+  public setDescdelaFraccion(descdelaFraccion: string): void {
     this.update((state) => ({
       ...state,
       descdelaFraccion
     }));
   }
-  
-  public setCantidadUMT(cantidadUMT: string) {
+
+  public setCantidadUMT(cantidadUMT: string): void {
     this.update((state) => ({
       ...state,
       cantidadUMT
     }));
   }
 
-  public setUMT(UMT: string) {
+  public setUMT(UMT: string): void {
     this.update((state) => ({
       ...state,
       UMT
     }));
   }
 
-  
-  public setCantidadUMC(cantidadUMC: string) {
+
+  public setCantidadUMC(cantidadUMC: string): void {
     this.update((state) => ({
       ...state,
       cantidadUMC
     }));
   }
-  
-  public setUMC(UMC: string) {
+
+  public setUMC(UMC: string): void {
     this.update((state) => ({
       ...state,
       UMC
     }));
   }
 
-  public setPaisdeOrigen(paisdeOrigen: string) {
+  public setPaisdeOrigen(paisdeOrigen: string): void {
     this.update((state) => ({
       ...state,
       paisdeOrigen
     }));
   }
 
-  public setEntidadFederativadeOrigen(entidadFederativadeOrigen: string) {
+  public setEntidadFederativadeOrigen(entidadFederativadeOrigen: string): void {
     this.update((state) => ({
       ...state,
       entidadFederativadeOrigen
     }));
   }
-  
-  public setMunicipiodeOrigen(municipiodeOrigen: []) {
+
+  public setMunicipiodeOrigen(municipiodeOrigen: []): void {
     this.update((state) => ({
       ...state,
       municipiodeOrigen
     }));
   }
 
-  public setMarcasDistintivas(marcasDistintivas: string) {
+  public setMarcasDistintivas(marcasDistintivas: string): void {
     this.update((state) => ({
       ...state,
       marcasDistintivas
     }));
   }
 
-  public setUSO(USO: string) {
+  public setUSO(USO: string): void {
     this.update((state) => ({
       ...state,
       USO
     }));
   }
 
-  public setDatosMercancia(datosMercancia: string) {
+  public setDatosMercancia(datosMercancia: string): void {
     this.update((state) => ({
       ...state,
       datosMercancia
     }));
   }
 
-  public setNumero(numero: string) {
+  public setNumero(numero: string): void {
     this.update((state) => ({
       ...state,
       numero
     }));
   }
 
-  public setEmpaques(empaques: string) {
+  public setEmpaques(empaques: string): void {
     this.update((state) => ({
       ...state,
       empaques
@@ -273,175 +274,175 @@ export class Solicitud220402Store extends Store<Solicitud220402State> {
   }
 
 
-  public setUnidadDeVerificar(unidadDeVerificar: string) {
+  public setUnidadDeVerificar(unidadDeVerificar: string): void {
     this.update((state) => ({
       ...state,
       unidadDeVerificar
     }));
   }
 
-  public setTerceroEspecialista(terceroEspecialista: string) {
+  public setTerceroEspecialista(terceroEspecialista: string): void {
     this.update((state) => ({
       ...state,
       terceroEspecialista
     }));
   }
 
-  public setEntidadFederative(entidadFederative: string) {
+  public setEntidadFederative(entidadFederative: string): void {
     this.update((state) => ({
       ...state,
       entidadFederative
     }));
   }
 
-  public setFitosanitario(fitosanitario: string) {
+  public setFitosanitario(fitosanitario: string): void {
     this.update((state) => ({
       ...state,
       fitosanitario
     }));
   }
 
-  public setDatosGeneralesArr(datosGeneralesArr1: []) {
+  public setDatosGeneralesArr(datosGeneralesArr: DatosGenerales[]): void {
     this.update((state) => ({
       ...state,
-      datosGeneralesArr1
+      datosGeneralesArr
     }));
   }
 
-  public setMediodeTransporte(mediodeTransporte: string) {
+  public setMediodeTransporte(mediodeTransporte: string): void {
     this.update((state) => ({
       ...state,
       mediodeTransporte
     }));
   }
 
-  public setIdentificacionDelTransporte(identificacionDelTransporte: string) {
+  public setIdentificacionDelTransporte(identificacionDelTransporte: string): void {
     this.update((state) => ({
       ...state,
       identificacionDelTransporte
     }));
   }
 
-  public setTipoPersona(tipoPersona: string) {
+  public setTipoPersona(tipoPersona: string): void {
     this.update((state) => ({
       ...state,
       tipoPersona,
     }));
   }
 
-  public setNombre(nombre: string) {
+  public setNombre(nombre: string): void {
     this.update((state) => ({
       ...state,
       nombre
     }));
   }
 
-  public setPrimerApellido(primerApellido: string) {
+  public setPrimerApellido(primerApellido: string): void {
     this.update((state) => ({
       ...state,
       primerApellido
     }));
   }
 
-  public setSegundoApellido(segundoApellido: string) {
+  public setSegundoApellido(segundoApellido: string): void {
     this.update((state) => ({
       ...state,
       segundoApellido
     }));
   }
 
-  public setDenominacion(denominacion: string) {
+  public setDenominacion(denominacion: string): void {
     this.update((state) => ({
       ...state,
       denominacion
     }));
   }
 
-  public setPais(pais: string) {
+  public setPais(pais: string): void {
     this.update((state) => ({
       ...state,
       pais
     }));
   }
 
-  public setDomicilio(domicilio: string) {
+  public setDomicilio(domicilio: string): void {
     this.update((state) => ({
       ...state,
       domicilio
     }));
   }
 
-  public setLada(lada: string) {
+  public setLada(lada: string): void {
     this.update((state) => ({
       ...state,
       lada
     }));
   }
 
-  public setTelefono(telefono: string) {
+  public setTelefono(telefono: string): void {
     this.update((state) => ({
       ...state,
       telefono
     }));
   }
 
-  public setCorreoElectronico(correoElectronico: string) {
+  public setCorreoElectronico(correoElectronico: string): void {
     this.update((state) => ({
       ...state,
       correoElectronico
     }));
   }
 
-  public setExentoDePago(exentoDePago: string) {
+  public setExentoDePago(exentoDePago: string): void {
     this.update((state) => ({
       ...state,
       exentoDePago
     }));
   }
 
-  public setCadenaDependencia(cadenaDependencia: string) {
+  public setCadenaDependencia(cadenaDependencia: string): void {
     this.update((state) => ({
       ...state,
       cadenaDependencia
     }));
   }
 
-  public setBanco(banco: string) {
+  public setBanco(banco: string): void {
     this.update((state) => ({
       ...state,
       banco
     }));
   }
 
-  public setllaveDePago(llaveDePago: string) {
+  public setllaveDePago(llaveDePago: string): void {
     this.update((state) => ({
       ...state,
       llaveDePago
     }));
   }
 
-  public setFechaPago(fechaPago: string) {
+  public setFechaPago(fechaPago: string): void {
     this.update((state) => ({
       ...state,
       fechaPago
     }));
   }
 
-  public setJustificacion(justificacion: string) {
+  public setJustificacion(justificacion: string): void {
     this.update((state) => ({
       ...state,
       justificacion
     }));
   }
 
-  public setClaveDeReferencia(claveDeReferencia: string) {
+  public setClaveDeReferencia(claveDeReferencia: string): void {
     this.update((state) => ({
       ...state,
       claveDeReferencia
     }));
   }
 
-  public setImportePago(importePago: string) {
+  public setImportePago(importePago: string): void {
     this.update((state) => ({
       ...state,
       importePago

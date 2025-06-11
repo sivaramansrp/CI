@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { TEXTOS } from '@ng-mf/data-access-user';
+import { Router } from '@angular/router';
 
 /**
  * Componente para mostrar el subtítulo del asistente.
@@ -14,11 +14,23 @@ import { TEXTOS } from '@ng-mf/data-access-user';
   styleUrls: ['./paso-tres.component.scss']
 })
 export class PasoTresComponent {
-
   /**
-   * Objeto con las instrucciones.
-   * @property {string} TEXTOS - Instrucciones para el usuario. --220201
+   * @constructor
+   * @description
+   * Constructor que inyecta `Router` para la navegación.
+   *
+   * @param {Router} router - Servicio de Angular para manejar la navegación.
+   * @access public
    */
-  TEXTOS: string = TEXTOS?.INSTRUCCIONES;
+  constructor(private router: Router) {
+    // Constructor
+  }
+
+  obtieneFirma(ev: string): void {
+    const FIRMA = ev;
+    if (FIRMA) {
+      this.router.navigate(['servicios-extraordinarios/acuse']);
+    }
+  }
 
 }
