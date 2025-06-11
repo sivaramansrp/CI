@@ -268,7 +268,7 @@ export class ConsultaTramiteComponent<T> implements OnInit {
       ROW_OBJETO.numeroDeProcedimiento
     );
     const ORIGIN: string = ROW_OBJETO.origin; // Inicializar ORIGEN con un valor predeterminado
-
+    const DEPARTMENTO: string = ROW_OBJETO.departamento.toLowerCase();
     
     this.consultaioStore.establecerConsultaio(
       String(PROCEDURE),
@@ -282,6 +282,6 @@ export class ConsultaTramiteComponent<T> implements OnInit {
       true
     );
     
-    this.router.navigate(['aga/datos-generales-tramite']);
+    this.router.navigate([`${DEPARTMENTO}/datos-generales-tramite`]);
   }
 }
