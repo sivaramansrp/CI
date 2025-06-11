@@ -1565,13 +1565,13 @@
     "departamento": "SEDENA",
     "numeroDeProcedimiento": "240170"
 },
- {
-    "id": 317,
-    "tipoDeTramite": "Solicitud de Permiso",
-    "fecha": "2023-10-01",
-    "fechaActualizacion": "2023-10-05",
+{
+    "id": 110214,
+    "tipoDeTramite": "Solicitudddd certificado CAM",
+    "fecha": "2022-10-05",
+    "fechaActualizacion": "2022-10-25",
     "diasTranscurridos": "4",
-    "departamento": "AGACE",
-    "numeroDeProcedimiento": "317"
-}
+    "departamento": "SE",
+    "numeroDeProcedimiento": "110214"
+  }
 ]
