@@ -5,13 +5,16 @@
                 <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(1)">Solicitante</a>
             </li>
             <li [ngClass]="indice === 2 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(2)" (click)="seleccionaTab(2)">Datos de la solicitud</a>
+                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(2)" (click)="seleccionaTab(2)">Datos de la
+                    solicitud</a>
             </li>
             <li [ngClass]="indice === 3 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(3)" (click)="seleccionaTab(3)">Terceros relacionados</a>
+                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(3)" (click)="seleccionaTab(3)">Terceros
+                    relacionados</a>
             </li>
             <li [ngClass]="indice === 4 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(4)" (click)="seleccionaTab(4)">Pago de derechos</a>
+                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(4)" (click)="seleccionaTab(4)">Pago de
+                    derechos</a>
             </li>
         </ul>
         <ng-container>
@@ -20,16 +23,22 @@
             <solicitante #Solicitante></solicitante>
             }
             @case (2) {
-       <app-datos-del-establecimiento-rfc></app-datos-del-establecimiento-rfc>
-       <app-domicillo-establecimiento-aduanas></app-domicillo-establecimiento-aduanas>
-       <app-manifiestos></app-manifiestos>
-       <app-representante-legal-rfc></app-representante-legal-rfc>
+            @if(esDatosRespuesta){
+            <app-datos-del-establecimiento-rfc></app-datos-del-establecimiento-rfc>
+            <app-domicillo-establecimiento-aduanas></app-domicillo-establecimiento-aduanas>
+            <app-manifiestos></app-manifiestos>
+            <app-representante-legal-rfc></app-representante-legal-rfc>
+            }
             }
             @case (3) {
-                <app-aviso-terceros-relacionados></app-aviso-terceros-relacionados>
+            @if(esDatosRespuesta){
+            <app-aviso-terceros-relacionados></app-aviso-terceros-relacionados>
+            }
             }
             @case (4) {
-                <app-pago-derechos></app-pago-derechos>
+            @if(esDatosRespuesta){
+            <app-pago-derechos></app-pago-derechos>
+            }
             }
             }
         </ng-container>

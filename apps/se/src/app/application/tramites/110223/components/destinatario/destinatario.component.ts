@@ -1,4 +1,4 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, PAGO_DE_DERECHOS, REGEX_SOLO_DIGITOS, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, PAGO_DE_DERECHOS, REGEX_SOLO_DIGITOS, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -64,7 +64,16 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Opciones del catálogo.
    */
   public options!: Catalogo[];
+  /**
+   * Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
 
+  /**
+   * Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
   /**
    * Constructor del componente.
    * @param registroService Servicio para obtener datos de catálogos.
@@ -72,13 +81,15 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * @param store Tienda para gestionar el estado del trámite.
    * @param query Consultas para obtener datos del estado del trámite.
    * @param validacionesService Servicio para validar formularios.
+   * @param consultaioQuery Consulta para obtener datos del estado de consulta.
    */
   constructor(
     private registroService: RegistroService,
     public fb: FormBuilder,
     private store: Tramite110223Store,
     private query: Tramite110223Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -116,6 +127,16 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.donanteDomicilio();
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.consultaDatos = seccionState;
+        this.soloLectura = this.consultaDatos.readonly;
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe();
   }
 
   /**
@@ -217,6 +238,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
         nacion: [this.solicitudState?.nacion]
       }),
     });
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -227,4 +249,15 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+    /**
+   * Inicializa el estado del formulario (habilitado/deshabilitado) basado en el modo de solo lectura.
+   */
+    inicializarEstadoFormulario(): void {
+      if (this.soloLectura) {
+        this.registroForm?.disable();
+      } else {
+        this.registroForm?.enable();
+      }
+    }
 }

@@ -1,8 +1,4 @@
 import {
-  CVE_UNIDAD_ADMIN,
-  TIPO_TRAMITE,
-} from '../../../../core/enums/5701/tramite5701.enum';
-import {
   Component,
   EventEmitter,
   OnInit,
@@ -21,7 +17,6 @@ import {
   TercerosQuery,
   TercerosState,
   TransporteDespacho,
-  WizardComponent,
 } from '@ng-mf/data-access-user';
 import {
   ListFechasSevex,
@@ -30,10 +25,15 @@ import {
   PersonaResponsableDespacho,
   SolicitudPayload,
 } from '../../../../core/models/5701/solicitud-payload.model';
-import { Subject, map, takeUntil } from 'rxjs';
+import {
+  MSG_REGISTRO_EXITOSO,
+  TIPO_TRAMITE,
+} from '../../../../core/enums/5701/tramite5701.enum';
+import { Observable, Subject, catchError, map, of, takeUntil, tap } from 'rxjs';
 import { GuardaSolicitudService } from '../../../../core/services/5701/guardar/guarda-solicitud.service';
 import { Solicitud5701State } from '../../../../core/estados/tramites/tramite5701.store';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 interface AccionBoton {
   accion: string;
@@ -97,6 +97,12 @@ export class SolicitudPageComponent implements OnInit {
   @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>();
 
   /**
+   * Inicializa la variable de alertaNotificación con un objeto de tipo Notificacion.
+   * @type {Notificacion}
+   */
+  public alertaNotificacion!: Notificacion;
+
+  /**
    * Representa los datos de configuración para los pasos de un proceso.
    * @property nroPasos - Número total de pasos.
    * @property indice - Índice actual del paso.
@@ -125,6 +131,11 @@ export class SolicitudPageComponent implements OnInit {
    * @descripcion Notificación para mostrar mensajes al usuario.
    */
   public nuevaNotificacion!: Notificacion;
+
+  /**
+   * Estado del tramite Folio
+   */
+  public folioTemporal: number = 0;
 
   constructor(
     private seccionQuery: SeccionLibQuery,
@@ -193,14 +204,52 @@ export class SolicitudPageComponent implements OnInit {
   getValorIndice(e: AccionBoton): void {
     // Nos encontramos en el paso 1, se guarda parcialmente la información.
     if (this.indice === 1) {
-      this.enviaSolicitudRequest();
-    }
-    if (e.valor > 0 && e.valor < 5) {
-      this.indice = e.valor;
-      if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
-      } else {
-        this.wizardComponent.atras();
+      this.enviaSolicitudRequest()
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          tap((respuesta) => {
+            if (!respuesta) {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'toastr',
+                categoria: 'error',
+                modo: 'action',
+                titulo: '',
+                mensaje: 'Error al guardar la solicitud. Intente nuevamente.',
+                cerrar: false,
+                txtBtnAceptar: '',
+                txtBtnCancelar: '',
+              };
+            } else {
+              if (e.valor > 0 && e.valor < 5) {
+                this.alertaNotificacion = {
+                  tipoNotificacion: 'banner',
+                  categoria: 'success',
+                  modo: 'action',
+                  titulo: '',
+                  mensaje: MSG_REGISTRO_EXITOSO(this.folioTemporal.toString()),
+                  cerrar: true,
+                  txtBtnAceptar: '',
+                  txtBtnCancelar: '',
+                };
+                this.indice = e.valor;
+                if (e.accion === 'cont') {
+                  this.wizardComponent.siguiente();
+                } else {
+                  this.wizardComponent.atras();
+                }
+              }
+            }
+          })
+        )
+        .subscribe();
+    } else {
+      if (e.valor > 0 && e.valor < 5) {
+        this.indice = e.valor;
+        if (e.accion === 'cont') {
+          this.wizardComponent.siguiente();
+        } else {
+          this.wizardComponent.atras();
+        }
       }
     }
   }
@@ -300,6 +349,7 @@ export class SolicitudPageComponent implements OnInit {
           }
         );
       case '4':
+        //Marítimo
         return this.solicitudState.transporteArriboDatos.map(
           (transporte: Partial<TransporteDespacho>) => {
             const RESULTADO: Partial<TransporteDespacho> = {
@@ -313,17 +363,18 @@ export class SolicitudPageComponent implements OnInit {
             return RESULTADO as TransporteDespacho;
           }
         );
-      case '5':
+      case '3':
+        //Aereo
         return this.solicitudState.transporteArriboDatos.map(
           (transporte: Partial<TransporteDespacho>) => {
             const RESULTADO: Partial<TransporteDespacho> = {
               tipo_transporte: TIPO_TRANSPORTE_ARRIBO_SALIDA,
-              arribo_pendiente_aereo: transporte.arribo_pendiente_aereo,
+              arribo_pendiente_aereo: transporte.arribo_pendiente_aereo === 'Sí' ? true : false,
               guia_master_aereo: transporte.guia_master_aereo || '',
               guia_house_aereo: transporte.guia_house_aereo || '',
               fecha_arribo_aereo: transporte.fecha_arribo_aereo || '',
               hora_arribo_aereo: transporte.hora_arribo_aereo || '',
-              guia_valida: transporte.guia_valida,
+              guia_valida: transporte.guia_valida === 'Sí' ? true : false,
               observaciones: transporte.observaciones,
             };
             return RESULTADO as TransporteDespacho;
@@ -388,7 +439,7 @@ export class SolicitudPageComponent implements OnInit {
             return RESULTADO as TransporteDespacho;
           }
         );
-      case '3':
+      case '5':
         return this.solicitudState.transporte.map(
           (transporte: Partial<TransporteDespacho>) => {
             const RESULTADO: Partial<TransporteDespacho> = {
@@ -439,13 +490,11 @@ export class SolicitudPageComponent implements OnInit {
   }
 
   /**
-   * @description Este método construye un objeto `SolicitudPayload` con los datos necesarios para enviar una solicitud
-   * del tramite 5701.
-   * @returns {void} No retorna ningún valor.   *
+   * @description Construye el payload de la solicitud para el trámite 5701
+   * @returns {SolicitudPayload} Un objeto que representa la solicitud con todos los datos necesarios.
    */
-
-  private enviaSolicitudRequest(): void {
-    const CONSTRUYE_SOLICITUD_PAYLOAD: SolicitudPayload = {
+  construyeSolicitudPayload(): SolicitudPayload {
+    return {
       id_solicitud:
         this.solicitudState.idSolicitud === 0
           ? null
@@ -514,7 +563,7 @@ export class SolicitudPageComponent implements OnInit {
           cve_tipo_servicio: this.solicitudState.tipoSolicitud,
           desc_tipo_servicio: this.solicitudState.descripcionTipoSolicitud,
           numero_svex: '',
-          rni: 0,
+          rni: true,
           fecha_inicio_servicio: this.solicitudState.fechaInicio,
           fecha_fin_servicio: this.solicitudState.fechaFinal,
           hora_inicio_servicio: this.solicitudState.horaInicio,
@@ -544,27 +593,35 @@ export class SolicitudPageComponent implements OnInit {
         list_fechas_sevex: this.obtenerFechasSevex(),
       },
     };
+  }
 
-    this.guardarSolicitudService
+  /**
+   * @description Este método construye un objeto `SolicitudPayload` con los datos necesarios para enviar una solicitud
+   * del tramite 5701.
+   * @returns {void} No retorna ningún valor.   *
+   */
+
+  private enviaSolicitudRequest(): Observable<boolean> {
+    const CONSTRUYE_SOLICITUD_PAYLOAD: SolicitudPayload =
+      this.construyeSolicitudPayload();
+
+    return this.guardarSolicitudService
       .postSolicitud(CONSTRUYE_SOLICITUD_PAYLOAD)
       .pipe(
         map((response) => {
-          this.solicitudState.idSolicitud = response.datos.id_solicitud;
-          this.nuevaNotificacion = {
-            tipoNotificacion: 'toastr',
-            categoria: 'success',
-            modo: 'action',
-            titulo: '',
-            mensaje: `Solicitud guardada correctamente con ID: ${response.datos.id_solicitud}`,
-            cerrar: false,
-            txtBtnAceptar: '',
-            txtBtnCancelar: '',
-          };
-          return response;
+          if (response.datos.id_solicitud) {
+            this.solicitudState.idSolicitud = response.datos.id_solicitud;
+            this.folioTemporal = response.datos.id_solicitud;
+            localStorage.setItem('id_solicitud', response.datos.id_solicitud.toString());
+            return true;
+          }
+
+          return false;
         }),
+        catchError(() => of(false)),
+
         takeUntil(this.destroyNotifier$)
-      )
-      .subscribe();
+      );
   }
 
   /**

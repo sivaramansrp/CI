@@ -18,7 +18,7 @@ class MockTramite240120Store {}
 
 @Injectable()
 class MockTramite240120Query {
-  obtenerTercerosDatos$ = {};
+  obtenerTercerosDatos$ = observableOf({});
 }
 
 describe('AgregarDestinatarioFinalContenedoraComponent', () => {
@@ -52,4 +52,21 @@ describe('AgregarDestinatarioFinalContenedoraComponent', () => {
     expect(component.tramiteStore.updateDestinatarioFinalTablaDatos).toHaveBeenCalled();
   });
 
+  it('should clean up subscriptions on ngOnDestroy', () => {
+    const spyNext = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const spyComplete = jest.spyOn((component as any).destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
+  });
+
+  it('should allow multiple ngOnDestroy calls without error', () => {
+    expect(() => {
+      component.ngOnDestroy();
+      component.ngOnDestroy();
+    }).not.toThrow();
+  });
+
+
+  
 });

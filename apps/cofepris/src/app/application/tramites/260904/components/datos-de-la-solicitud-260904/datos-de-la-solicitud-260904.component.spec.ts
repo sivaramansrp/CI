@@ -115,4 +115,57 @@ describe('DatosDeLaSolicitud260904Component', () => {
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+  it('should create form and datosDelEstablecimiento with initial values from estadoSeleccionado', () => {
+  component.estadoSeleccionado = {
+    btonDeRadio: 'radio1',
+    justificacion: 'justificacion test',
+    rfcDel: 'RFCX',
+    denominacion: 'Empresa X',
+    correo: 'correo@x.com'
+  } as any;
+  component.crearFormulario();
+  expect(component.form.get('btonDeRadio')?.value).toBe('radio1');
+  expect(component.form.get('justificacion')?.value).toBe('justificacion test');
+  expect(component.datosDelEstablecimiento.get('rfcDel')?.value).toBe('RFCX');
+  expect(component.datosDelEstablecimiento.get('denominacion')?.value).toBe('Empresa X');
+  expect(component.datosDelEstablecimiento.get('correo')?.value).toBe('correo@x.com');
+});
+
+it('should update estadoSeleccionado when getValorStore is called', () => {
+  const testState = {
+    btonDeRadio: 'radio2',
+    justificacion: 'justificacion2',
+    rfcDel: 'RFCY',
+    denominacion: 'Empresa Y',
+    correo: 'correo@y.com'
+  } as any;
+
+  const query = TestBed.inject(Tramite260904Query);
+  jest.spyOn(query, 'selectTramite260904$', 'get').mockReturnValue(of(testState));
+
+  component['tramite260904Query'] = query;
+  component.getValorStore();
+
+  expect(component.estadoSeleccionado).toEqual(testState);
+});
+
+  it('should disable controls when esFormularioSoloLectura is true', () => {
+  component.form = component['fb'].group({
+    btonDeRadio: ['radio1'],
+    justificacion: ['test']
+  });
+  component.datosDelEstablecimiento = component['fb'].group({
+    rfcDel: ['RFCX'],
+    denominacion: ['Empresa X'],
+    correo: ['correo@x.com']
+  });
+  component.esFormularioSoloLectura = true;
+  component.inicializarEstadoFormulario();
+  expect(component.form.get('btonDeRadio')?.disabled).toBe(true);
+  expect(component.form.get('justificacion')?.disabled).toBe(true);
+  expect(component.datosDelEstablecimiento.get('rfcDel')?.disabled).toBe(true);
+  expect(component.datosDelEstablecimiento.get('denominacion')?.disabled).toBe(true);
+  expect(component.datosDelEstablecimiento.get('correo')?.disabled).toBe(true);
+});
 });

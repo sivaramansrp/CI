@@ -10,6 +10,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  Input,
   OnDestroy,
   OnInit,
   ViewChild,
@@ -67,6 +68,9 @@ export class DomicillioDelEstablecimientoSeccionComponent
   /**
    * Referencia al modal del establecimiento.
    */
+  /**
+   * Referencia al elemento del modal del establecimiento.
+   */
   @ViewChild('establecimientoModal', { static: false })
   establecimientoModal!: ElementRef;
 
@@ -80,6 +84,10 @@ export class DomicillioDelEstablecimientoSeccionComponent
    */
   TablaSeleccion = TablaSeleccion;
 
+  /**
+   * Indica si el formulario debe estar deshabilitado.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
   /**
    * Constructor del componente.
    * @param fb FormBuilder para inicializar formularios reactivos.
@@ -174,6 +182,7 @@ export class DomicillioDelEstablecimientoSeccionComponent
       regimenAlQueSeDestinaraLaMercancía: [''],
       aduanaDeSalida: [''],
       avisoDeFuncionamiento: [false],
+      noDeLicenciaSanitariaObservaciones: [''],
     });
 
     this.scianForm = this.fb.group({
@@ -189,7 +198,16 @@ export class DomicillioDelEstablecimientoSeccionComponent
         this.domicilioEstablecimiento.patchValue(state, { emitEvent: false });
       });
 
+        // Si el formulario debe estar deshabilitado, deshabilítalo
+        if (this.formularioDeshabilitado) {
+          this.domicilioEstablecimiento.disable();
+        }
+
   }
+  /**
+   * Maneja el cambio de valor en un control del formulario.
+   * @param controlName Nombre del control que cambió.
+   */
   onControlChange(controlName: string): void {
     const UPDATED_VALUE = { [controlName]: this.domicilioEstablecimiento.get(controlName)?.value };
     this.domicilioEstablecimientoStore.update(UPDATED_VALUE);

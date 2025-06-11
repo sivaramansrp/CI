@@ -1,4 +1,4 @@
-import { Catalogo, InputFecha, Notificacion, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
+import { Catalogo, ConsultaioQuery, InputFecha, Notificacion, SeccionLibQuery, SeccionLibState } from '@libs/shared/data-access-user/src';
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, delay, map, of, takeUntil } from 'rxjs';
@@ -108,6 +108,12 @@ export class MercanciaComponent implements OnInit, OnDestroy {
 
   /**
    * @descripcion
+   * Indica si el formulario de mercancía se encuentra en modo solo lectura.
+   */
+   @Input() esFormularioSoloLectura!: boolean;
+
+  /**
+   * @descripcion
    * Constructor que inicializa los servicios y dependencias requeridas.
    * @param fb - Instancia de FormBuilder para gestionar formularios.
    * @param peruCertificadoService - Servicio para obtener datos relacionados con el certificado.
@@ -121,7 +127,8 @@ export class MercanciaComponent implements OnInit, OnDestroy {
     private peruCertificadoService: PeruCertificadoService,
     private store: Tramite110205Store,
     private query: Tramite110205Query,
-    private seccionQuery: SeccionLibQuery
+    private seccionQuery: SeccionLibQuery,
+    private consultaQuery: ConsultaioQuery
   ) {}
 
   /**

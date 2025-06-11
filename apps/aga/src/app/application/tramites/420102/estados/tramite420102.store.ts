@@ -1,3 +1,4 @@
+import { DatosDelContenedorTabla } from '../models/tramite420102.enum';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
@@ -14,6 +15,7 @@ export interface Tramite420102State {
   rfc: string;
   fechaInicial: string;
   fechaFinal: string;
+  tableDatos?: DatosDelContenedorTabla[];
 }
 
 /**
@@ -27,6 +29,7 @@ export function createTramiteState(): Tramite420102State {
     rfc: '',
     fechaInicial: '',
     fechaFinal: '',
+    tableDatos: []
   };
 }
 
@@ -96,4 +99,19 @@ export class Tramite420102Store extends Store<Tramite420102State> {
       fechaFinal,
     }));
   }
+
+ /**
+  * @method establecerTablaDatos
+  * @description Método para actualizar los datos de la tabla en el estado del trámite.
+  *
+  * @param {DatosDelContenedorTabla[]} tableDatos - Nuevos datos de la tabla a establecer en el estado.
+  * @returns {void}
+  */
+  public establecerTablaDatos(tableDatos: DatosDelContenedorTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      tableDatos,
+    }));
+  }
+
 }

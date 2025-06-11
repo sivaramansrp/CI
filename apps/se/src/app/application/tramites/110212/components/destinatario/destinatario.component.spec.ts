@@ -159,7 +159,7 @@ describe('DestinatarioComponent', () => {
 
   it('should mark grupoReceptor.nombre as invalid if empty', () => {
     component.grupoReceptor.get('nombre')?.setValue('');
-    expect(component.grupoReceptor.get('nombre')?.valid).toBe(true);
+    expect(component.grupoReceptor.get('nombre')?.valid).toBe(false);
   });
 
   it('should mark grupoDeDirecciones.ciudad as invalid if empty', () => {

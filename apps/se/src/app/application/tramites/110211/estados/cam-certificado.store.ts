@@ -79,6 +79,7 @@ export interface CamState {
   correo: string;
   formaValida: { [key: string]: boolean };
   formDestinatario: { [key: string]: unknown};
+  calle:string;
 }
 
 /**
@@ -87,6 +88,7 @@ export interface CamState {
  */
 export function createInitialState(): CamState {
   return {
+    calle:'',
     formCertificado: {
       si: false,
       entidadFederativa: '',
@@ -169,7 +171,7 @@ export function createInitialState(): CamState {
     formDestinatario: {
       paisDestin: '',
       ciudad: '',
-      celle: '',
+      calle: '',
       numeroLetra: '',
       lada: '',
       telefono: '',
@@ -594,5 +596,15 @@ export class camCertificadoStore extends Store<CamState> {
           },
         }));
       }
-      // Additional methods follow the same pattern with appropriate comments...
+   /**
+ * @descripcion
+ * Actualiza completamente el estado con los valores proporcionados.
+ * @param values - Objeto que contiene uno o más campos del estado a actualizar.
+ */
+setEstadoCompleto(values:CamState): void {
+  this.update((state) => ({
+    ...state,
+    ...values,
+  }));
+}
 }

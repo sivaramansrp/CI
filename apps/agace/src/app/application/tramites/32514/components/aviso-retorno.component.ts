@@ -1,5 +1,5 @@
 import { ANO_CATALOGO, FECHA_FRANJO, FECHA_INICIAL, FECHA_PAGO, RADIO_PARCIAL, RADIO_RESIDENTE, RADIO_TIPO_SOLICITUDE, RADIO_VEHICULO } from '../constantes/aviso32514.enum';
-import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, NotificacionesComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, InputFecha, InputFechaComponent, InputRadioComponent, NotificacionesComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
@@ -85,21 +85,30 @@ export class AvisoRetornoComponent implements OnInit, OnDestroy {
    */
   public solicitudState!: Solicitud32514State;
 
-
+  /**
+   * Observable que indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.
+   *
+   * @type {boolean}
+   */
+  esFormularioSoloLectura!: boolean;
 
   /**
-   * Constructor del componente.
-   * @param adace Servicio para gestionar datos relacionados con los catálogos.
-   * @param fb Constructor de formularios reactivos.
-   * @param store Almacén global para gestionar el estado del trámite.
-   * @param query Consulta para obtener el estado actual del trámite.
-   * @param validacionesService Servicio para validar campos del formulario.
+   * Constructor del componente que inyecta los servicios necesarios para la gestión del formulario
+   * del trámite 32514, incluyendo creación de formularios, acceso al estado del trámite y consulta general.
+   *
+   * @param {AdaceService} adace - Servicio para operaciones relacionadas con ADACE.
+   * @param {FormBuilder} fb - Utilidad de Angular para construir formularios reactivos.
+   * @param {Tramite32514Store} store - Store que gestiona el estado del trámite 32514.
+   * @param {Tramite32514Query} query - Servicio para consultar el estado del trámite 32514.
+   * @param {ConsultaioQuery} consultaQuery - Servicio para consultar el estado general de la solicitud.
    */
   constructor(
     private adace: AdaceService,
     public fb: FormBuilder,
     private store: Tramite32514Store,
     private query: Tramite32514Query,
+    private consultaQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -117,6 +126,30 @@ export class AvisoRetornoComponent implements OnInit, OnDestroy {
       .subscribe();
     this.donanteDomicilio();
     this.obtenerDatosAnoPeriodo();
+
+    this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+        if(!seccionState.create && seccionState.procedureId === '32514') {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        } else {
+          this.esFormularioSoloLectura = false;
+        }
+        this.inicializarEstadoFormulario();
+      })
+    ).subscribe();
+  }
+
+   /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+   inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+        this.avisoForm.disable();
+    } else {
+      this.avisoForm.enable();
+    }
   }
 
   /**
