@@ -1,14 +1,14 @@
 import {
   Component,
   EventEmitter,
-  forwardRef,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
   Output,
-  output,
   SimpleChanges,
+  forwardRef,
+  output,
 } from '@angular/core';
 import {
   DatosComponentePedimento,
