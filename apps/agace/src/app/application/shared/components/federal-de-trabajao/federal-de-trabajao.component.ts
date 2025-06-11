@@ -159,6 +159,12 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Inicializa el formulario y establece su estado habilitado o deshabilitado según la bandera de solo lectura.
+   * - Llama a `inicializarFormulario()` para restablecer o inicializar el formulario.
+   * - Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es true), deshabilita `numeroDeEmpleadosForm`.
+   * - De lo contrario, habilita `numeroDeEmpleadosForm`.
+   */
   public guardarFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {

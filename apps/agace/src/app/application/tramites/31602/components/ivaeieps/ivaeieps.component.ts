@@ -216,6 +216,13 @@ export class IvaeiepsComponent implements OnInit,OnDestroy {
     this.predeterminadoSeleccionar = value;
   }
 
+  /**
+   * Inicializa el formulario para el componente de IVA/IEPS.
+   *
+   * Este método se suscribe al observable `selectSolicitud$` del servicio `tramite31602Query`,
+   * actualizando la propiedad local `solicitudState` con el estado más reciente de la sección hasta que el componente sea destruido.
+   * También crea e inicializa los formularios de IVA/IEPS y de IVA llamando a sus respectivos métodos.
+   */
   public inicializarFormulario(): void {
     this.tramite31602Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
         this.solicitudState = seccionState;
