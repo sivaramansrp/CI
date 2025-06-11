@@ -94,8 +94,14 @@ export class PasoUnoComponent implements AfterViewInit,OnInit,OnDestroy {
     this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
   }
 
-  ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+  
+   /**
+   * Método del ciclo de vida que se ejecuta al inicializar el componente.
+   * Suscribe al estado de consulta y verifica si se deben guardar los datos del formulario
+   * o si los datos de respuesta están disponibles.
+   */
+   ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
           this.consultaState = seccionState;
       })).subscribe();
     if(this.consultaState.update) {
@@ -104,6 +110,11 @@ export class PasoUnoComponent implements AfterViewInit,OnInit,OnDestroy {
       this.esDatosRespuesta = true;
     }
   }
+
+  /**
+   * Método para guardar los datos del formulario.
+   * Obtiene los datos de consulta desde el servicio y actualiza el estado del formulario.
+   */
   guardarDatosFormulario(): void {
     this.correccionService
       .getConsultaData().pipe(
@@ -116,7 +127,6 @@ export class PasoUnoComponent implements AfterViewInit,OnInit,OnDestroy {
         }
       });
   }
-
 
   /**
    * Selecciona una pestaña del asistente.

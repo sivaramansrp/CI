@@ -83,11 +83,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
     /**
-   * Indica si los datos de respuesta están disponibles.
-   */
-    public esDatosRespuesta: boolean = false;
-
-    /**
      * Indica si el formulario es de solo lectura.
      */
     esFormularioSoloLectura: boolean = false;

@@ -13,9 +13,14 @@ export class CorreccionInternaDeLaCofeprisService {
 
   /**
    * Constructor del servicio.
-   * @param http Cliente HTTP para realizar solicitudes al servidor.
+   * @param http Cliente HTTP para realizar solicitudes.
+   * @param solicitud261601Store Store para gestionar el estado de la solicitud 261601.
    */
   constructor(private http: HttpClient, private solicitud261601Store: Solicitud261601Store) {}
+  /**
+   * Método para actualizar el estado del formulario con los datos proporcionados.
+   * @param DATOS Objeto que contiene los datos de la solicitud 261601.
+   */
   actualizarEstadoFormulario(DATOS: Solicitud261601State): void {
      this.solicitud261601Store.setRfc(DATOS.rfc);
      this.solicitud261601Store.setCumplocon(DATOS.cumplocon);
