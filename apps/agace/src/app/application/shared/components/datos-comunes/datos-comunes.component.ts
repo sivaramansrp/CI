@@ -1,7 +1,8 @@
 import { AGREGAR_MIEMBRO_TABLA, DATOS_COMUNES_TEXTOS, DATOS_COMUNES_TEXTOS_DOS, Miembro } from '../../models/datos-comunes.model';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputCheckComponent, InputRadioComponent, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosComunesState, DatosComunesStore } from '../../estados/stores/datos-comunes.store';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject,map, takeUntil } from 'rxjs';
@@ -22,6 +23,7 @@ import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
 @Component({
   selector: 'shared-datos-comunes',
   standalone: true,
+  providers: [BsModalService],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -46,6 +48,12 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * usuario y la lógica de validación para datos compartidos/comunes.
    */
   public comunesForm!: FormGroup;
+  /**
+   * Instancia de FormGroup reactivo para gestionar y validar los campos del formulario "manifestado".
+   * Inicializado en el ciclo de vida del componente, este FormGroup contiene controles y lógica de validación
+   * para la entrada del usuario relacionada con la sección "manifestado".
+   */
+  public manifestadoForm!: FormGroup;
   /**
    * Grupo de formulario utilizado para gestionar y validar los datos para agregar un miembro a la empresa.
    */
@@ -154,6 +162,15 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * de los datos compartidos dentro del componente.
    */
   public solicitudState!: DatosComunesState;
+  /**
+   * Representa el estado actual del proceso de consulta.
+   */
+  public consultaState!: ConsultaioState;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando se establece en `true`, los campos del formulario no son editables por el usuario.
+   */
+  public esFormularioSoloLectura: boolean = false;
 
 
   /**
@@ -167,12 +184,16 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   constructor(
     private datosComunesSvc: DatosComunesService,
+    @Inject(BsModalService)
     private modalService: BsModalService,
     private fb: FormBuilder,
     private datosComunesStore: DatosComunesStore,
-    private datosComunesQuery: DatosComunesQuery
+    private datosComunesQuery: DatosComunesQuery,
+    private consultaQuery: ConsultaioQuery
   ) {
-    // Constructor de la clase DatosComunesComponent
+        this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })).subscribe();
   }
 
   /**
@@ -196,7 +217,23 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     this.crearComunesForm();
     this.crearAgregarMiembroForm();
     this.obtenerAgregarMiembroDatos();
+    this.crearManifestadoForm();
+    this.inicializarEstadoFormulario();
   }
+
+
+  /**
+   * Inicializa el formulario reactivo para capturar el estado seleccionado.
+   */
+    public inicializarFormulario(): void {
+      this.datosComunesQuery.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+        this.solicitudState = seccionState;
+      })).subscribe();
+
+        this.crearComunesForm();
+        this.crearAgregarMiembroForm();
+        this.crearManifestadoForm();
+    }
 
   /**
    * Inicializa el FormGroup `comunesForm` con un conjunto de controles de formulario y sus valores
@@ -244,6 +281,17 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       delMismo: [this.solicitudState?.delMismo, Validators.required],
       senaleMomento: [this.solicitudState?.senaleMomento, Validators.required],
       enCaso: [this.solicitudState?.enCaso, Validators.required]
+    });
+  }
+
+  /**
+   * Inicializa el FormGroup `manifestadoForm` con controles para `manifestado` y `protesta`.
+   * Los valores iniciales de estos controles se toman del `solicitudState` actual.
+   */
+  public crearManifestadoForm(): void {
+    this.manifestadoForm = this.fb.group({
+      manifestado: [this.solicitudState?.manifestado],
+      protesta: [this.solicitudState?.protesta],
     });
   }
 
@@ -385,6 +433,34 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
   public setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof DatosComunesStore): void {
     const VALOR = form.get(campo)?.value;
     (this.datosComunesStore[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de estados.
+   */
+  public inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+    this.cambioObj.empleadosPropios = this.comunesForm.get('senale')?.value === 'Si' ? true : false;
+    this.cambioObj.deTrabajao = this.comunesForm.get('senaleSi')?.value === 'Si' ? true : false;
+  }
+
+  /**
+   * Inicializa el formulario y alterna su estado habilitado/deshabilitado según la bandera de solo lectura.
+   */
+  public guardarFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.comunesForm.disable();
+      this.agregarMiembroDeLaEmpresaFrom.disable();
+    } else {
+      this.comunesForm.enable();
+      this.agregarMiembroDeLaEmpresaFrom.enable();
+    }
   }
 
   /**
