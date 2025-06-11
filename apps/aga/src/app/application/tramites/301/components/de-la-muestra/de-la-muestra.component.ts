@@ -1,7 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-/* eslint-disable no-empty-function */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
@@ -116,15 +112,6 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método placeholder para la validación del formulario.
-   * Este método no tiene implementación actual, pero puede ser extendido
-   * para realizar validaciones adicionales en el futuro.
-   *
-   * @returns {void} No retorna nada, ya que es un método sin lógica por el momento.
-   */
-  validarFormulario(): void {}
-
-  /**
    * Método del ciclo de vida que se ejecuta al iniciar el componente.  
    * Llama a la función para inicializar el estado del formulario.
    */
@@ -230,7 +217,7 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite301Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite301Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite301Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**

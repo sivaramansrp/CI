@@ -1,4 +1,3 @@
-/* eslint-disable no-empty-function */
 /* eslint-disable @nx/enforce-module-boundaries */
 /**
  * @module InformacionDeLaComponent

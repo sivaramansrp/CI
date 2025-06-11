@@ -1,20 +1,8 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import {
-  ConsultaioQuery,
-  IMPORTANTE,
-} from '@ng-mf/data-access-user';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-
-import {
-  Solicitud301State,
-  Tramite301Store,
-} from '../../../../core/estados/tramites/tramite301.store';
+import { ConsultaioQuery, IMPORTANTE} from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { Solicitud301State, Tramite301Store } from '../../../../core/estados/tramites/tramite301.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { BtnContinuarComponent } from 'libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
