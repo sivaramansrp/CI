@@ -89,20 +89,14 @@ export class DatosGeneralesTramiteComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.guardarDatos = seccionState;
+          this.consultaState = seccionState;
+          this.tramite = Number(seccionState.procedureId);
+          if (this.tramite) {
+              this.selectTramite(this.tramite);
+          }
         })
       )
-      .subscribe()
-    this.consultaQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destruirSuscripcion$),
-      map((seccionState) => {
-        this.consultaState = seccionState;
-        this.tramite = Number (seccionState.procedureId)
-        if (this.tramite) {
-            this.selectTramite(this.tramite);
-        }
-      })
-    ).subscribe()
+      .subscribe();
     }
 
   /**
