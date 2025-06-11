@@ -358,6 +358,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   public datosTablaPagos: LineaCaptura[] = [];
 
   /**
+   * @description Almacena el monto total a pagar en la solicitud.
+   */
+  montoACubrir: number = 0;
+
+  /**
+   * @description Almacena el monto por dia.
+   */
+  montoPorDia: number = 0;
+
+  /**
    * @description Almacena los montos a pagar en la solicitud.
    */
   montoPagadoLineas: number = 0;
@@ -649,9 +659,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {boolean} - Retorna `true` si el campo tiene un error de patrón, de lo contrario `false`.
    */
   isErrorPattern(field: string): boolean {
-    const CONTROL = this.datosImportadorExportador.get(
-      field
-    ) as FormControl;
+    const CONTROL = this.datosImportadorExportador.get(field) as FormControl;
 
     if (CONTROL) {
       const ERROR_PATTERN = CONTROL.hasError('pattern');
@@ -988,18 +996,22 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     const INTERVALO_DIAS = SolicitudComponent.getIntervaloDias(
       this.tipoSolicitudSeleccionada
     );
-    if (
-      FECHA_INICIO &&
-      FECHA_FINAL &&
-      HORA_INICIO &&
-      HORA_FINAL &&
-      INTERVALO_DIAS !== null
-    ) {
-      FECHA_INICIO.setHours(
+
+    const PRIMER_DIA_MES = FECHA_INICIO.getDate() === 1 ? true : false;
+
+    const CAMPOS_NO_NULOS =
+      [FECHA_INICIO, FECHA_FINAL, HORA_INICIO, HORA_FINAL].every(Boolean) &&
+      INTERVALO_DIAS !== null;
+
+    if (CAMPOS_NO_NULOS) {
+      const FECHA_INICIO_HORA = new Date(FECHA_INICIO);
+      const FECHA_FINAL_HORA = new Date(FECHA_FINAL);
+
+      FECHA_INICIO_HORA.setHours(
         parseInt(HORA_INICIO.split(':')[0], 10),
         parseInt(HORA_INICIO.split(':')[1], 10)
       );
-      FECHA_FINAL.setHours(
+      FECHA_FINAL_HORA.setHours(
         parseInt(HORA_FINAL.split(':')[0], 10),
         parseInt(HORA_FINAL.split(':')[1], 10)
       );
@@ -1007,11 +1019,23 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       const DIFERENCIA_EN_TIEMPO =
         FECHA_FINAL.getTime() - FECHA_INICIO.getTime();
 
-      const DIFERENCIA_EN_HORAS = DIFERENCIA_EN_TIEMPO / (1000 * 3600);
+      const DIFERENCIA_EN_HORAS =
+        (FECHA_FINAL_HORA.getTime() - FECHA_INICIO_HORA.getTime()) /
+        (1000 * 3600);
 
-      if (DIFERENCIA_EN_TIEMPO <= 0) {
+      if (DIFERENCIA_EN_HORAS <= 0) {
         this.datosServicio.setErrors({ endDateBeforeStartDate: true });
         return;
+      }
+
+      if (PRIMER_DIA_MES) {
+        const VALIDACION_MES =
+          FECHA_INICIO.getMonth() === FECHA_FINAL.getMonth() &&
+          FECHA_INICIO.getFullYear() === FECHA_FINAL.getFullYear();
+        if (!VALIDACION_MES) {
+          this.datosServicio.setErrors({ invalidIntervalo: true });
+          return;
+        }
       }
 
       if (
@@ -1022,13 +1046,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         return;
       }
 
-      const DIFERENCIA_EN_DIAS = DIFERENCIA_EN_TIEMPO / (1000 * 3600 * 24);
+      const DIFERENCIA_EN_DIAS = DIFERENCIA_EN_TIEMPO / (1000 * 3600 * 24) + 1;
 
       if (
         (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.SEMANAL &&
           DIFERENCIA_EN_DIAS > 7) ||
         (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.MENSUAL &&
-          DIFERENCIA_EN_DIAS > 30)
+          DIFERENCIA_EN_DIAS > 31)
       ) {
         this.datosServicio.setErrors({ invalidIntervalo: true });
       }
@@ -1240,8 +1264,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   validaCampoPedimento(): void {
-    const ADUANA_VALIDACION = this.solicitudState?.idAduanaDespacho;
-    if (!ADUANA_VALIDACION) {
+    const ADUANA_VALIDACION = parseInt(this.solicitudState?.idAduanaDespacho, 10);
+    
+    if (ADUANA_VALIDACION < 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
@@ -1382,6 +1407,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   changeHoraFinal(): void {
     this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
+
     this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
 
     if (this.fechaInicioPasadaFechaFinalError()) {
@@ -1444,7 +1470,14 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       HORA_INICIO,
       HORA_FINAL
     );
+
+    this.montoACubrir = this.selectRangoDias.length * this.montoPorDia; // Ejemplo de cálculo, ajustar según lógica real
+    this.pagoCaptura.get('montoAPagar')?.enable();
+    this.pagoCaptura.get('montoAPagar')?.setValue(this.montoACubrir);
+    this.pagoCaptura.get('montoAPagar')?.disable();
     this.colapsable = true;
+
+    this.setValoresStore(this.pagoCaptura, 'montoAPagar', 'setMontoPagar');
   }
 
   /**
@@ -2102,17 +2135,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             return;
           }
 
-          //Obtenemos el monto a pagar desde el servicio de parámetros
-          const MONTO_A_PAGAR = this.pagoCaptura
-            .get('montoAPagar')
-            ?.getRawValue();
-
           const DIAS_SERVICIO =
             this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL
               ? UN_DIA
               : this.fechasSeleccionadas.length;
 
-          const MONTO_A_CUBRIR = DIAS_SERVICIO * MONTO_A_PAGAR;
+          const MONTO_A_CUBRIR = DIAS_SERVICIO * this.montoPorDia;
 
           const PAGO = {
             lineaCaptura: LINEA_PAGO,
@@ -2171,6 +2199,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         tap((montoResponse) => {
+          this.montoPorDia = montoResponse.datos;
           this.pagoCaptura.get('montoAPagar')?.enable();
           this.pagoCaptura.get('montoAPagar')?.setValue(montoResponse.datos);
           this.pagoCaptura.get('montoAPagar')?.disable();
