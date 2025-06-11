@@ -53,20 +53,35 @@ export class AvisoReciclajeComponent implements OnInit {
     txtBtnSig: 'Continuar',
   };
 
+  /**
+   * Subject utilizado para notificar y limpiar las suscripciones al destruir el componente.
+   */
   private destroy$ = new Subject<void>();
 
   /** Subject para notificar la destrucción del componente. */
   public consultaState!: ConsultaioState;
 
-  constructor(private consultaQuery: ConsultaioQuery,private avisoDeReciclajeServiceService:AvisoDeReciclajeServiceService){
+  /**
+   * Constructor del componente.
+   * @param consultaQuery Servicio para consultar el estado de la consulta.
+   * @param avisoDeReciclajeServiceService Servicio para manejar los datos del aviso de reciclaje.
+   */
+  constructor(
+    private consultaQuery: ConsultaioQuery,
+    private avisoDeReciclajeServiceService: AvisoDeReciclajeServiceService
+  ) { }
 
-  }
-
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Se suscribe al estado de la consulta y actualiza la propiedad consultaState.
+   * Si el estado indica actualización, carga los datos del formulario.
+   */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroy$),
         map((seccionState) => {
+          // Actualiza el estado de la consulta
           this.consultaState = seccionState;
         })
       )
@@ -76,17 +91,19 @@ export class AvisoReciclajeComponent implements OnInit {
     if (this.consultaState.update) {
       this.guardarDatosFormulario();
     }
-
-    this.guardarDatosFormulario();
-
   }
 
+  /**
+   * Método para guardar los datos del formulario.
+   * Obtiene los datos iniciales de la solicitud y actualiza el estado del formulario si la respuesta es válida.
+   */
   guardarDatosFormulario(): void {
     this.avisoDeReciclajeServiceService
       .obtenerDatosSolicitudInicial().pipe(
         takeUntil(this.destroy$)
       )
       .subscribe((resp) => {
+        // Si la respuesta existe, actualiza el estado del formulario
         if (resp) {
           this.avisoDeReciclajeServiceService.actualizarEstadoFormulario(resp);
         }

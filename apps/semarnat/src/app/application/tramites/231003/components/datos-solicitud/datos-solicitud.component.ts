@@ -73,8 +73,14 @@ export class DatosSolicitudComponent implements OnInit {
    */
   public etiquetasForm = RADIO_OPCIONES;
 
+  /**
+   * Estado de la consulta actual, utilizado para controlar el modo de solo lectura y otros estados.
+   */
   public consultaState!: ConsultaioState;
 
+  /**
+   * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
+   */
   private destroy$ = new Subject<void>();
 
 
@@ -377,21 +383,26 @@ export class DatosSolicitudComponent implements OnInit {
     }
   }
 
+    /**
+     * Habilita o deshabilita todos los formularios según el estado de solo lectura.
+     * Si el estado es de solo lectura, deshabilita todos los formularios para evitar edición.
+     * Si el estado permite edición, habilita todos los formularios.
+     */
     deshabilitarFormularios(): void {
-    if (this.consultaState?.readonly) {
-      // Deshabilita los formularios si el estado es solo lectura
-      this.formularioEmpresaReciclaje.disable();
-      this.formularioEmpresaReciclaje.disable();
-      this.formularioLugarReciclaje.disable();
-      this.formularioEmpresaTransportista.disable();
-      this.formularioPrecaucionesManejo.disable();
-    } else {
-      // Habilita los formularios si el estado permite edición
-       this.formularioEmpresaReciclaje.enable();
-      this.formularioEmpresaReciclaje.enable();
-      this.formularioLugarReciclaje.enable();
-      this.formularioEmpresaTransportista.enable();
-      this.formularioPrecaucionesManejo.enable();
+      if (this.consultaState?.readonly) {
+        // Deshabilita los formularios si el estado es solo lectura
+        this.solicitudForm.disable();
+        this.formularioEmpresaReciclaje.disable();
+        this.formularioLugarReciclaje.disable();
+        this.formularioEmpresaTransportista.disable();
+        this.formularioPrecaucionesManejo.disable();
+      } else {
+        // Habilita los formularios si el estado permite edición
+        this.solicitudForm.enable();
+        this.formularioEmpresaReciclaje.enable();
+        this.formularioLugarReciclaje.enable();
+        this.formularioEmpresaTransportista.enable();
+        this.formularioPrecaucionesManejo.enable();
+      }
     }
-  }
 }
