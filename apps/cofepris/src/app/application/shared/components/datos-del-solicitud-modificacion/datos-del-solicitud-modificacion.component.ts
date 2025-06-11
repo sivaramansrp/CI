@@ -550,10 +550,26 @@ export class DatosDelSolicitudModificacionComponent
       this.eliminarNumeroYFechaControls();
     }
     this.obtenerScianTablaDatos();
+    this.cargarDatosDesdeApi()
     if (this.esFormularioSoloLectura) {
       this.domicilioEstablecimiento.disable();
       this.solicitudEstablecimientoForm.disable();
     }
+  }
+
+  /**
+   * @method cargarDatosDesdeApi
+   * @description
+   * Este método obtiene los datos de mercancías desde el servicio `EstablecimientoService`
+   * y los agrega al arreglo `mercanciasTablaDatos`.
+   */
+  cargarDatosDesdeApi() {
+    this.establecimientoService.getMercancias().pipe(takeUntil(this.destroy$))
+      .subscribe((response: MercanciasInfo[]) => {
+        response?.forEach((resp: MercanciasInfo) => {
+          this.mercanciasTablaDatos.push(resp)
+        })
+      });
   }
 
   /**

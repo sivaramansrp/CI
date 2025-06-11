@@ -22,7 +22,13 @@ export class Solocitud260905Service {
    */
   urlServerCatalogos = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
-  constructor(private http: HttpClient, private tramite260402Store: DatosDelSolicituteSeccionStateStore,private tramite260402:PermisoImportacionBiologicaStore) {
+  /**
+   * Constructor del servicio.
+   * @param http Cliente HTTP para realizar solicitudes.
+   * @param tramite260402Store Store para el estado de la sección de datos del solicitante.
+   * @param tramite260402 Store para el estado del permiso de importación biológica.
+   */
+  constructor(private http: HttpClient, private tramite260402Store: DatosDelSolicituteSeccionStateStore, private tramite260402: PermisoImportacionBiologicaStore) {
     // Lógica de inicialización si es necesario
   }
 

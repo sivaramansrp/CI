@@ -52,7 +52,11 @@ export class PasoDosComponent {
       constructor(private catalogosServices: CatalogosService) {
         // Necesito inyectar los servicios a través del constructor, de modo que el constructor esté vacío.
       }
-    
+
+      /**
+       * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+       * Llama a la función para obtener los tipos de documentos.
+       */
       ngOnInit(): void {
         this.getTiposDocumentos();
       }
