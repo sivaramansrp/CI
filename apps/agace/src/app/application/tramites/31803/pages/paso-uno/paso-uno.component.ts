@@ -1,10 +1,12 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core'; 
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL, } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum'; 
-import { FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
- import { SharedModule, SolicitanteComponent, } from '@libs/shared/data-access-user/src'; 
- import { CommonModule } from '@angular/common'; 
- import { SolicitudComponent } from "../../components/Solicitud.component";
-import { Router } from '@angular/router';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL, } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { SharedModule, SolicitanteComponent, } from '@libs/shared/data-access-user/src';
+import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { RegistroSolicitudService } from '../../services/registro-solicitud-service.service';
+import { Solicitud31803State } from '../../state/Tramite31803.store';
+import { SolicitudComponent } from "../../components/Solicitud.component";
 
 /**
  * Componente que representa el primer paso del trámite.
@@ -16,14 +18,70 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [SharedModule, CommonModule, SolicitanteComponent, SolicitudComponent],
 })
-export class PasoUnoComponent implements AfterViewInit{
-  constructor(private router: Router) {
+export class PasoUnoComponent implements AfterViewInit, OnInit {
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false; // Indica si hay datos de respuesta del servidor
+
+  private destroyNotifier$: Subject<void> = new Subject(); // Subject para manejar la destrucción de suscripciones
+  public consultaState!: ConsultaioState; // Estado de la consulta
+  public datosRespuesta: unknown; // Datos de respuesta del servidor
+  /**
+   * Constructor del componente PasoUnoComponent.
+   * @param router Inyecta el servicio Router para la navegación.
+   */
+  constructor(
+    // private router: Router,
+    private consultaQuery: ConsultaioQuery,
+    // private validacionesService: ValidacionesFormularioService,
+    private solicitud31803Service: RegistroSolicitudService, // Servicio para manejar el estado de la solicitud 31802
+  ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
-  
-    /**
-   * Referencia al componente de solicitante.
-   */
+
+
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((consultaState) => {
+          this.consultaState = consultaState;
+        })
+      )
+      .subscribe();
+    // Inicializa el formulario con los valores actuales del estado
+    if (this.consultaState?.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+
+guardarDatosFormulario(): void {
+  this.solicitud31803Service
+    .getSolicitudDatos()
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+    )
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    .subscribe((resp: any) => {
+      if (resp) {
+        this.esDatosRespuesta = true;
+        const SOLICITUD_STATE: Solicitud31803State = {
+          numeroOperacion: resp.numeroOperacion,
+          banco: resp.banco.descripcion,
+          llave: resp.llave,
+          manifiesto1: resp.manifiesto1,
+          manifiesto2: resp.manifiesto2,
+          fechaPago: resp.fechaPago,
+        };
+        this.solicitud31803Service.actualizarEstadoFormulario(SOLICITUD_STATE);
+      }
+    });
+}
+  /**
+ * Referencia al componente de solicitante.
+ */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
   /**

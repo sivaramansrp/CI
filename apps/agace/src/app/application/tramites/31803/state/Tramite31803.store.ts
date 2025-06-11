@@ -36,7 +36,7 @@ export interface Solicitud31803State {
 export function createInitialState(): Solicitud31803State {
   return {
     numeroOperacion: '',
-    banco: null,
+    banco:[],
     llave: '',
     manifiesto1: '',
     manifiesto2: '',
@@ -65,7 +65,7 @@ export class Tramite31803Store extends Store<Solicitud31803State> {
    * Actualiza la lista de bancos en el estado.
    * @param banco Lista de bancos de tipo `Catalogo[]`.
    */
-  public setBanco(banco: Catalogo[]) {
+  public setBanco(banco: Catalogo[]): void {
     this.update((state) => ({ ...state, banco }));
   }
 
@@ -73,7 +73,7 @@ export class Tramite31803Store extends Store<Solicitud31803State> {
    * Actualiza el número de operación en el estado.
    * @param numeroOperacion Número de operación de tipo `string`.
    */
-  public setNumeroOperacion(numeroOperacion: string) {
+  public setNumeroOperacion(numeroOperacion: string): void {
     this.update((state) => ({ ...state, numeroOperacion }));
   }
 
@@ -81,7 +81,7 @@ export class Tramite31803Store extends Store<Solicitud31803State> {
    * Actualiza la llave en el estado.
    * @param llave Llave única de tipo `string`.
    */
-  public setLlave(llave: string) {
+  public setLlave(llave: string): void {
     this.update((state) => ({ ...state, llave }));
   }
 
@@ -89,7 +89,7 @@ export class Tramite31803Store extends Store<Solicitud31803State> {
    * Actualiza el primer manifiesto en el estado.
    * @param manifiesto1 Primer manifiesto de tipo `string`.
    */
-  public setManifiesto1(manifiesto1: string) {
+  public setManifiesto1(manifiesto1: string): void {
     this.update((state) => ({ ...state, manifiesto1 }));
   }
 
@@ -97,7 +97,7 @@ export class Tramite31803Store extends Store<Solicitud31803State> {
    * Actualiza el segundo manifiesto en el estado.
    * @param manifiesto2 Segundo manifiesto de tipo `string`.
    */
-  public setManifiesto2(manifiesto2: string) {
+  public setManifiesto2(manifiesto2: string): void {
     this.update((state) => ({ ...state, manifiesto2 }));
   }
 
@@ -105,14 +105,14 @@ export class Tramite31803Store extends Store<Solicitud31803State> {
    * Actualiza la fecha de pago en el estado.
    * @param fechaPago Fecha de pago de tipo `string`.
    */
-  public setFechaPago(fechaPago: string) {
+  public setFechaPago(fechaPago: string): void {
     this.update((state) => ({ ...state, fechaPago }));
   }
 
   /**
    * Restaura el estado al valor inicial.
    */
-  public limpiarSolicitud() {
+  public limpiarSolicitud(): void {
     this.reset();
   }
 }

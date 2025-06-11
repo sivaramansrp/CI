@@ -1,4 +1,5 @@
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Catalogo, ENVIRONMENT } from '@libs/shared/data-access-user/src';
+import { Solicitud31803State, Tramite31803Store } from '../state/Tramite31803.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -11,14 +12,38 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class RegistroSolicitudService {
+
+  /**
+    * AppConfig es una inyección de dependencias que proporciona la configuración de la aplicación.
+    */
+  urlServer = ENVIRONMENT.URL_SERVER;
+  urlServerCatalogos = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
+
   /**
    * Constructor del servicio.
    * Se utiliza para la inyección de dependencias.
    *
    * @param http Cliente HTTP para realizar solicitudes a servicios externos.
    */
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private tramite31803Store: Tramite31803Store, // Asumiendo que este es un servicio relacionado con el trámite 31803
+  ) {
     // El constructor se utiliza para la inyección de dependencias.
+  }
+
+/**
+   * Actualiza el estado del formulario en el store con los datos proporcionados.
+   * @param DATOS Objeto con los datos del formulario de tipo Solicitud10301State.
+   */
+
+  public actualizarEstadoFormulario(DATOS: Solicitud31803State): void {
+    this.tramite31803Store.setBanco(DATOS.banco ?? []);
+    this.tramite31803Store.setNumeroOperacion(DATOS.numeroOperacion);
+    this.tramite31803Store.setLlave(DATOS.llave);
+    this.tramite31803Store.setManifiesto1(DATOS.manifiesto1);
+    this.tramite31803Store.setManifiesto2(DATOS.manifiesto2);
+    this.tramite31803Store.setFechaPago(DATOS.fechaPago);
   }
 
   /**
@@ -29,5 +54,9 @@ export class RegistroSolicitudService {
    */
   obtenerDatosBanco(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/31803/banco.json');
+  }
+
+  getSolicitudDatos(): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('assets/json/31803/solicitud-banco.json');
   }
 }

@@ -2,6 +2,7 @@ import {
   Catalogo,
   CatalogoSelectComponent,
   CatalogosSelect,
+  ConsultaioState,
   InputFecha,
   InputFechaComponent,
   TituloComponent,
@@ -15,12 +16,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import {
   Solicitud31803State,
   Tramite31803Store,
 } from '../state/Tramite31803.store';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { RegistroSolicitudService } from '../services/registro-solicitud-service.service';
 import { Solicitud31803Enum } from '../constantes/solicitud31803.enum';
 import { Tramite31803Query } from '../state/Tramite31803.query';
@@ -44,11 +46,6 @@ import { Tramite31803Query } from '../state/Tramite31803.query';
   styleUrl: './Solicitud.component.css',
 })
 export class SolicitudComponent implements OnInit, OnDestroy {
-  /**
-   * Observable para manejar la destrucción del componente.
-   * Se utiliza para cancelar suscripciones activas.
-   */
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
    * Estado actual de la solicitud.
@@ -80,7 +77,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   registroForm!: FormGroup;
 
-  /**
+ 
+ /**
+   * Subject para destruir notificador.
+   */
+consultaDatos!: ConsultaioState;
+
+  esFormularioSoloLectura: boolean = false;
+  // public consultaDatos!: Solicitud31803State;
+  public destroyNotifier$: ReplaySubject<boolean> = new ReplaySubject(1);
+  
+   /**
    * Configuración para el catálogo de bancos.
    */
   public bancoCatalogo: CatalogosSelect = {
@@ -101,13 +108,25 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @param validacionesService Servicio para validar campos del formulario.
    */
   constructor(
+    private consultaioQuery: ConsultaioQuery,
     private registroSolicitud: RegistroSolicitudService,
     public fb: FormBuilder,
     private store: Tramite31803Store,
     private query: Tramite31803Query,
     private validacionesService: ValidacionesFormularioService
   ) {
-    // El constructor se utiliza para la inyección de dependencias.
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          console.log("this.esFormularioSoloLectura......", this.esFormularioSoloLectura);
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -118,14 +137,25 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.obtenerDatosBanco();
     this.query.selectSolicitud$
       .pipe(
-        takeUntil(this.destroyed$),
+        takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          this.donanteDomicilio()
         })
       )
       .subscribe();
     this.donanteDomicilio();
   }
+
+
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosDelFormulario();
+    } else {
+      this.datosDeAvisoForm()
+    }
+  }
+
 
   /**
    * Actualiza el campo de fecha de pago en el formulario y en el estado global.
@@ -145,7 +175,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   obtenerDatosBanco(): void {
     this.registroSolicitud
       .obtenerDatosBanco()
-      .pipe(takeUntil(this.destroyed$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp): void => {
         this.bancoCatalogo.catalogos = resp as Catalogo[];
       });
@@ -197,6 +227,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
+  guardarDatosDelFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.registroForm.disable();
+    } else {
+      this.registroForm.enable();
+    }
+  }
+
   /**
    * Inicializa el formulario con los valores actuales del estado.
    */
@@ -209,14 +247,37 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       numeroOperacion: [this.solicitudState?.numeroOperacion, [Validators.required],],
       fechaPago: [this.solicitudState?.fechaPago, [Validators.required]],
     });
+        if (this.esFormularioSoloLectura) {
+      this.registroForm.disable();
+    }
   }
+
+
+
+/**
+ * datosDeltrimiteForm los campos del formulario si es de solo lectura.
+ * Si el formulario es de solo lectura, deshabilita los campos del formulario de importador/exportador.
+ */
+
+  datosDeAvisoForm(): void {
+    if (this.esFormularioSoloLectura) {
+      this.registroForm.get('banco')?.disable();
+      this.registroForm.get('manifiesto1')?.disable();
+      this.registroForm.get('manifiesto2')?.disable(); 
+      this.registroForm.get('llave')?.disable();
+      this.registroForm.get('numeroOperacion')?.disable();
+      this.registroForm.get('fechaPago')?.disable();
+      this.registroForm.get('monedaNacional')?.disable();
+    }
+  }
+
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Cancela todas las suscripciones activas.
    */
   ngOnDestroy(): void {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
+    this.destroyNotifier$.next(true);
+    this.destroyNotifier$.complete();
   }
 }
