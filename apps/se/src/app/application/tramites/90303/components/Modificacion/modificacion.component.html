@@ -1,14 +1,16 @@
+<form [formGroup]="modificacionForm" (ngSubmit)="validarDestinatarioFormulario()">
+  <ng-container formGroupName="validacionForm">
 <div class="row mt-5">
     <div class="col-md-6">
       <div class="form-group">
         <label class="form-label" for="registroFederalContribuyentes">Registro Federal de Contribuyentes:</label>
-        <input class="form-control gris-color" type="text" id="registroFederalContribuyentes" formControlName="registroFederalContribuyentes">
+        <input class="form-control gris-color" type="text" id="registroFederalContribuyentes" formControlName="registroFederalContribuyentes" [disabled]="soloLectura" readonly>
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
         <label class="form-label" for="representacionFederal">Representación federal:</label>
-        <input class="form-control gris-color" type="text" id="representacionFederal" formControlName="representacionFederal">
+        <input class="form-control gris-color" type="text" id="representacionFederal" formControlName="representacionFederal" [disabled]="soloLectura" readonly >
       </div>
     </div>
   </div>
@@ -16,13 +18,13 @@
     <div class="col-md-6">
       <div class="form-group">
         <label class="form-label" for="tipoModificacion">Tipo de modificación:</label>
-        <input class="form-control gris-color" type="text" id="tipoModificacion" formControlName="tipoModificacion">
+        <input class="form-control gris-color" type="text" id="tipoModificacion" formControlName="tipoModificacion" [disabled]="soloLectura" readonly>
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
         <label class="form-label" for="modificacionPrograma">Modificación de programa:</label>
-        <input class="form-control gris-color" type="text" id="modificacionPrograma" formControlName="modificacionPrograma">
+        <input class="form-control gris-color" type="text" id="modificacionPrograma" formControlName="modificacionPrograma" [disabled]="soloLectura" readonly>
       </div>
     </div>
   </div>
@@ -42,3 +44,5 @@
   <app-producir-mercancias [mercanciasProducir]="listaTablaMercancia"></app-producir-mercancias>
   <!-- Productor indirecto -->
   <app-productor-indirecto [productoIndirectoDatos]="listaTablaProductor"></app-productor-indirecto>
+  </ng-container>
+  </form>

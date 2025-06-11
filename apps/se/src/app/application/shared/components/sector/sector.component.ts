@@ -1,9 +1,10 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
-import { TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { SECTOR } from '../../constantes/complementaria.enum';
 import { SectorTabla } from '../../models/complementaria.model';
+import { map, ReplaySubject, takeUntil } from 'rxjs';
 
 /**
  * Componente que representa la sección de "Sector".
@@ -34,4 +35,37 @@ export class SectorComponent {
    * Este arreglo se utiliza para mostrar la información dinámica en la tabla.
    */
  @Input() sectorTablaDatos: SectorTabla[] = [];
+ /**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
+  
+/** Sujeto para manejar la destrucción del componente. */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+   /**
+   * Constructor del componente.
+   * @param certificadoService Servicio para gestionar certificados.
+   * @param fb Constructor de formularios.
+   * @param validacionesService Servicio para validar formularios.
+   * @param store Almacén de datos del trámite.
+   * @param query Consulta de datos del trámite.
+   */
+  constructor(private consultaioQuery: ConsultaioQuery) {
+    // El constructor se utiliza para la inyección de dependencias.
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+        })
+      )
+      .subscribe()
+  }
+ 
 }
