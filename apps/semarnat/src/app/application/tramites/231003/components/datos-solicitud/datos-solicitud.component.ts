@@ -301,7 +301,11 @@ export class DatosSolicitudComponent implements OnInit {
       CAMPOS.forEach((campoExtra): void => {
         const CONTROL = this.formularioEmpresaReciclaje.get(campoExtra);
         if (CONTROL) {
-          DEBE_HABILITAR ? CONTROL.enable() : CONTROL.disable();
+          if (DEBE_HABILITAR) {
+            CONTROL.enable();
+          } else {
+            CONTROL.disable();
+          }
         }
       });
     }
@@ -331,7 +335,11 @@ export class DatosSolicitudComponent implements OnInit {
       CAMPOS_A_CONTROLAR.forEach((campoExtra: string): void => {
         const CONTROL = this.formularioLugarReciclaje.get(campoExtra);
         if (CONTROL) {
-          DEBE_HABILITAR ? CONTROL.enable() : CONTROL.disable();
+          if (DEBE_HABILITAR) {
+            CONTROL.enable();
+          } else {
+            CONTROL.disable();
+          }
         }
       });
     }
