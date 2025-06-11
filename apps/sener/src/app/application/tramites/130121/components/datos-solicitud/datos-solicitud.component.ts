@@ -547,6 +547,18 @@ tituloParte = TITULO_ORIGEN;
     });
   }
 
+  /**
+ * @method
+ * @name guardarDatosFormulario
+ * @description
+ * Inicializa los formularios y obtiene los datos de la tabla. 
+ * Dependiendo del modo de solo lectura (`esFormularioSoloLectura`), 
+ * deshabilita o habilita todos los formularios del componente.
+ * Si el formulario está en modo solo lectura, todos los formularios se deshabilitan para evitar modificaciones.
+ * Si no está en modo solo lectura, todos los formularios se habilitan para permitir la edición.
+ * 
+ * @returns {void}
+ */
   guardarDatosFormulario(): void {
       this.inicializarFormularios();
       this.obtenerTablaDatos();
