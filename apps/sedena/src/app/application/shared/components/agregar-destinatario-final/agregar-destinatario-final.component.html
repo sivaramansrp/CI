@@ -13,6 +13,7 @@
           formControlName="nacionalidad"
           (valueChange)="terecerosNacionalidadCambioDeValor($event)"
           [showTooltip]="true"
+          [disabled]="esFormularioSoloLectura"
         ></app-input-radio>
       </div>
       <div class="col-md-6">
@@ -23,6 +24,7 @@
           [layout]="'vertical'"
           formControlName="tipoPersona"
           (valueChange)="tipoPersonaCambioDeValor($event)"
+          [disabled]="esFormularioSoloLectura"
         ></app-input-radio>
 
         @if(mostrarCamposNoContribuyente){
@@ -32,6 +34,7 @@
           [layout]="'vertical'"
           formControlName="tipoPersona"
           (valueChange)="tipoPersonaCambioDeValor($event)"
+          [disabled]="esFormularioSoloLectura"
         ></app-input-radio>
         }
       </div>
@@ -40,7 +43,7 @@
     <div class="row mt-5">
       <div class="col-md-6">
         <label class="form-label">R.F.C.<span *ngIf="campoObligatorio"> *</span> :</label>
-        <input type="text" class="form-control" formControlName="rfc" maxlength="15"/>
+        <input type="text" class="form-control" formControlName="rfc" maxlength="15" [disabled]="esFormularioSoloLectura"/>
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('rfc')?.touched && agregarDestinatarioFinal.get('rfc')?.hasError('required')" class="text-danger">
             Este campo es obligatorio.
@@ -53,7 +56,7 @@
       @if(esCURP){
         <div class="col-md-6" *ngIf="agregarDestinatarioFinal.get('tipoPersona')?.value !== tipoPersona.MORAL && agregarDestinatarioFinal.get('tipoPersona')?.value !== tipoPersona.FISICA">
           <label class="form-label">C.U.R.P:</label>
-          <input type="text" class="form-control" formControlName="curp" maxlength="18"/>
+          <input type="text" class="form-control" formControlName="curp" maxlength="18" [disabled]="esFormularioSoloLectura"/>
           <div class="error-message">
             <small *ngIf="agregarDestinatarioFinal.get('curp')?.touched && agregarDestinatarioFinal.get('curp')?.hasError('maxlength')" class="text-danger">
               Máximo 18 caracteres permitidos.
@@ -78,6 +81,7 @@
           type="text"
           formControlName="denominacionRazon"
           maxlength="254"
+          [disabled]="esFormularioSoloLectura"
         />
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('denominacionRazon')?.touched && agregarDestinatarioFinal.get('denominacionRazon')?.hasError('required')" class="text-danger">
@@ -99,7 +103,7 @@
       <h4 class="mt-5">Datos personales</h4>
       <div class="col-md-4">
         <label class="form-label">Nombre(s)<span *ngIf="campoObligatorio"> *</span> :</label>
-        <input type="text" class="form-control" formControlName="nombres" maxlength="200"/>
+        <input type="text" class="form-control" formControlName="nombres" maxlength="200" [disabled]="esFormularioSoloLectura"/>
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('nombres')?.touched && agregarDestinatarioFinal.get('nombres')?.hasError('required')" class="text-danger">
             Este campo es obligatorio.
@@ -116,6 +120,7 @@
           class="form-control"
           formControlName="primerApellido"
           maxlength="200"
+          [disabled]="esFormularioSoloLectura"
         />
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('primerApellido')?.touched && agregarDestinatarioFinal.get('primerApellido')?.hasError('required')" class="text-danger">
@@ -133,6 +138,7 @@
           class="form-control"
           formControlName="segundoApellido"
           maxlength="200"
+          [disabled]="esFormularioSoloLectura"
         />
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('segundoApellido')?.touched && agregarDestinatarioFinal.get('segundoApellido')?.hasError('maxlength')" class="text-danger">
@@ -151,6 +157,7 @@
           [label]="'País'"
           [required]="true"
           maxlength="120"
+          [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('pais')?.touched && agregarDestinatarioFinal.get('pais')?.hasError('required')" class="text-danger">
@@ -178,6 +185,7 @@
           class="form-control"
           formControlName="codigoPostal"
           maxlength="12"
+          [disabled]="esFormularioSoloLectura"
         />
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('codigoPostal')?.touched && agregarDestinatarioFinal.get('codigoPostal')?.hasError('required')" class="text-danger">
@@ -202,6 +210,7 @@
           [label]="'País'"
           [required]="true"
           [isDisabled]="agregarDestinatarioFinal.get('pais')?.disabled ?? false"
+          [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('pais')?.touched && agregarDestinatarioFinal.get('pais')?.hasError('required')" class="text-danger">
@@ -216,6 +225,7 @@
           [label]="'Estado/localidad'"
           [required]="true"
           [isDisabled]="agregarDestinatarioFinal.get('estado')?.disabled ?? false"
+          [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('estado')?.touched && agregarDestinatarioFinal.get('estado')?.hasError('required')" class="text-danger">
@@ -230,6 +240,7 @@
           [label]="'Municipio/alcaldía'"
           [required]="true"
           [isDisabled]="agregarDestinatarioFinal.get('municipio')?.disabled ?? false"
+          [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('municipio')?.touched && agregarDestinatarioFinal.get('municipio')?.hasError('required')" class="text-danger">
@@ -247,6 +258,7 @@
           [label]="'Localidad'"
           [required]="true"
           [isDisabled]="agregarDestinatarioFinal.get('localidad')?.disabled ?? false"
+          [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('localidad')?.touched && agregarDestinatarioFinal.get('localidad')?.hasError('required')" class="text-danger">
@@ -261,6 +273,7 @@
           [label]="'Código postal o equivalente'"
           [required]="true"
           [isDisabled]="agregarDestinatarioFinal.get('codigoPostal')?.disabled ?? false"
+          [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('codigoPostal')?.touched && agregarDestinatarioFinal.get('codigoPostal')?.hasError('required')" class="text-danger">
@@ -276,6 +289,7 @@
           [required]="!campoObligatorio"
           [isDisabled]="agregarDestinatarioFinal.get('colonia')?.disabled ?? false"
           maxlength="120"
+          [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('colonia')?.touched && agregarDestinatarioFinal.get('colonia')?.hasError('required')" class="text-danger">
@@ -289,7 +303,7 @@
     <div class="row mt-3">
       <div class="col-md-9">
         <label class="form-label">Calle<span *ngIf="campoObligatorio"> *</span> :</label>
-        <input type="text" class="form-control" formControlName="calle" maxlength="300"/>
+        <input type="text" class="form-control" formControlName="calle" maxlength="300" [disabled]="esFormularioSoloLectura"/>
       </div>
       <div class="col-md-3">
         <label class="form-label">Número exterior<span *ngIf="campoObligatorio"> *</span> :</label>
@@ -298,6 +312,7 @@
           class="form-control"
           formControlName="numeroExterior"
           maxlength="55"
+          [disabled]="esFormularioSoloLectura"
         />
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('calle')?.touched && agregarDestinatarioFinal.get('calle')?.hasError('required')" class="text-danger">
@@ -318,6 +333,7 @@
           class="form-control"
           formControlName="numeroInterior"
           maxlength="55"
+          [disabled]="esFormularioSoloLectura"
         />
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('numeroInterior')?.touched && agregarDestinatarioFinal.get('numeroInterior')?.hasError('maxlength')" class="text-danger">
@@ -327,7 +343,7 @@
       </div>
       <div class="col-md-1">
         <label class="form-label">Lada :</label>
-        <input type="text" class="form-control" formControlName="lada" maxlength="5"/>
+        <input type="text" class="form-control" formControlName="lada" maxlength="5" [disabled]="esFormularioSoloLectura"/>
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('lada')?.touched && agregarDestinatarioFinal.get('lada')?.hasError('maxlength')" class="text-danger">
             Máximo 5 caracteres permitidos.
@@ -336,7 +352,7 @@
       </div>
       <div class="col-md-3">
         <label class="form-label">Teléfono:</label>
-        <input type="text" class="form-control" formControlName="telefono" maxlength="24"/>
+        <input type="text" class="form-control" formControlName="telefono" maxlength="24" [disabled]="esFormularioSoloLectura"/>
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('telefono')?.touched && agregarDestinatarioFinal.get('telefono')?.hasError('maxlength')" class="text-danger">
             Máximo 24 caracteres permitidos.
@@ -350,6 +366,7 @@
           class="form-control"
           formControlName="correoElectronico"
           maxlength="320"
+          [disabled]="esFormularioSoloLectura"
         />
         <div class="error-message">
           <small *ngIf="agregarDestinatarioFinal.get('correoElectronico')?.touched && agregarDestinatarioFinal.get('correoElectronico')?.hasError('email')" class="text-danger">
