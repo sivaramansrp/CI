@@ -253,7 +253,7 @@ export class DatosDeLaSolicitudComponent implements OnInit,OnDestroy{
   crearFormulario(): void {
     this.solicitudForm = this.fb.group({
       razonSocial: [{ value: this.solicitudState?.razonSocial, disabled: true }, Validators.required],
-      correoElectronico: [{ value: this.solicitudState?.correoElectronico, disabled: true }, Validators.required, Validators.email],
+      correoElectronico: [{ value: this.solicitudState?.correoElectronico, disabled: true }, [Validators.required, Validators.email]],
       codigoPostal: [this.solicitudState?.codigoPostal, Validators.required],
       estado: [this.solicitudState?.estado, Validators.required],
       municipio: [this.solicitudState?.municipio, Validators.required],

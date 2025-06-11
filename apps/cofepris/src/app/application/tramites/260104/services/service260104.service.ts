@@ -83,6 +83,8 @@ export class Solocitud260104Service {
 
   actualizarEstadoFormulario(DATOS: Tramite260104State): void {
     this.tramite260104Store.updatePagoDerechos(DATOS.pagoDerechos);
+    this.tramite260104Store.updateDestinatarioFinalTablaDatos(DATOS.destinatarioFinalTablaDatos);
+    this.tramite260104Store.updateFabricanteTablaDatos(DATOS.fabricanteTablaDatos);
   }
 
   /**
