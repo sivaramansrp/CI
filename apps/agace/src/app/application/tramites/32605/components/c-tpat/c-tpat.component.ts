@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { InputRadio } from '../../models/solicitud.model';
@@ -45,6 +46,12 @@ export class CTPATComponent implements OnInit, OnDestroy {
   solicitud32605State: Solicitud32605State = {} as Solicitud32605State;
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente. Inyecta dependencias necesarias y carga las opciones del radio button.
    * @param fb - FormBuilder para crear el formulario reactivo.
    * @param solicitudService - Servicio que realiza operaciones sobre la solicitud.
@@ -55,8 +62,25 @@ export class CTPATComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     public solicitudService: SolicitudService,
     public solicitud32605Store: Solicitud32605Store,
-    public solicitud32605Query: Solicitud32605Query
+    public solicitud32605Query: Solicitud32605Query,
+    public consultaioQuery: ConsultaioQuery
   ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     this.conseguirOpcionDeRadio();
   }
 
@@ -64,6 +88,46 @@ export class CTPATComponent implements OnInit, OnDestroy {
    * Inicializa el componente, crea el formulario y suscribe a los cambios en el estado de la solicitud.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.ctpatForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.ctpatForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  /**
+   * Inicializa el formulario `ctpatForm` con los valores actuales del estado `solicitud32605State`.
+   *
+   * Este método crea un formulario reactivo usando `FormBuilder`, asignando los valores
+   * de los campos `'2089'`, `'2090'` y `'2091'`. Además, se suscribe al observable
+   * `selectSolicitud$` para escuchar actualizaciones del estado y aplicar los valores
+   * actualizados al formulario.
+   *
+   * También gestiona la destrucción de la suscripción usando `takeUntil` con `destroy$`.
+   */
+  inicializarFormulario(): void {
     this.ctpatForm = this.fb.group({
       '2089': [this.solicitud32605State[2089]],
       '2090': [this.solicitud32605State[2090]],

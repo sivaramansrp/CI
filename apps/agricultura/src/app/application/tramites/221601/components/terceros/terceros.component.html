@@ -6,6 +6,7 @@
     [configuracionTabla]="configuracionTabla"
     [datos]="exportador"
     [tipoSeleccionTabla]="checkbox"
+    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
   ></app-tabla-dinamica>  
   <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
@@ -19,6 +20,7 @@
     [configuracionTabla]="configuracionTablaDatos"
     [datos]="destinatario"
     [tipoSeleccionTabla]="checkbox"
+    [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
   ></app-tabla-dinamica>
   <nav aria-label="Page navigation example">
     <ul class="pagination justify-content-center">
@@ -27,8 +29,8 @@
   </nav>
 </div>
 <div class="col-md-12 mt-5 d-flex justify-content-end">
-  <button type="button" class="btn btn-primary ms-3" (click)="tercerosAgregar()">Agregar</button>
-  <button type="button" class="btn btn-default ms-3">Buscar</button>
+  <button type="button" class="btn btn-primary ms-3" (click)="tercerosAgregar()" [disabled]="esFormularioSoloLectura">Agregar</button>
+  <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura" [disabled]="esFormularioSoloLectura">Buscar</button>
 </div>
 <app-modal [active]="showtercerosModal">
 <div>
@@ -132,7 +134,7 @@
     <div class="row">
     <div class="col-md-4">
       <div class="form-group"> 
-        <app-catalogo-select [catalogo]="paisCatalogo" formControlName="pais" [label]="'País'" [isDisabled]="true"
+        <app-catalogo-select [catalogo]="paisCatalogo" formControlName="pais" [label]="'País'" [isDisabled]="true" [isDisabled]="esFormularioSoloLectura"
         [required]="true" name="pais" (change)="setValoresStore(datosPersonales, 'pais', 'setPais')">
       </app-catalogo-select>
       </div>
@@ -146,7 +148,7 @@
          </div>
     <div class="col-md-4">
       <div class="form-group"> 
-        <app-catalogo-select [catalogo]="estadoCatalogo" formControlName="estado" [label]="'Estado'" [isDisabled]="showPlantaRow"
+        <app-catalogo-select [catalogo]="estadoCatalogo" formControlName="estado" [label]="'Estado'" [isDisabled]="showPlantaRow" [isDisabled]="esFormularioSoloLectura"
         [required]="true" name="estado" (change)="setValoresStore(datosPersonales, 'estado', 'setEstado')">
       </app-catalogo-select>
       </div>
@@ -155,14 +157,14 @@
   <div class="row">
     <div class="col-md-4">
       <div class="form-group">
-        <app-catalogo-select [catalogo]="municipioCatalogo" formControlName="municipio" [label]="'Municipio o Alcaldía'" [isDisabled]="showPlantaRow"
+        <app-catalogo-select [catalogo]="municipioCatalogo" formControlName="municipio" [label]="'Municipio o Alcaldía'" [isDisabled]="showPlantaRow" [isDisabled]="esFormularioSoloLectura"
         [required]="true" name="municipio" (change)="setValoresStore(datosPersonales, 'municipio', 'setMunicipio')">
       </app-catalogo-select>
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-group">
-        <app-catalogo-select [catalogo]="coloniaCatalogo" formControlName="colonia" [label]="'Colonia'" [isDisabled]="showPlantaRow"
+        <app-catalogo-select [catalogo]="coloniaCatalogo" formControlName="colonia" [label]="'Colonia'" [isDisabled]="showPlantaRow" [isDisabled]="esFormularioSoloLectura"
         [required]="true" name="colonia" (change)="setValoresStore(datosPersonales, 'colonia', 'setColonia')">
       </app-catalogo-select>
       </div>
@@ -241,8 +243,8 @@
   </form>
   <div class="col-md-12 mt-5 d-flex justify-content-end">
     <button type="button" class="btn btn-default">Limpiar</button>
-    <button type="button" class="btn btn-danger ms-3"  (click)="cancelarDestinatario()">Cancelar</button>
-    <button type="button" class="btn btn-primary ms-3" (click)="guardarDestinatario()" >Guardar</button>
+    <button type="button" class="btn btn-danger ms-3"  (click)="cancelarDestinatario()" [disabled]="esFormularioSoloLectura">Cancelar</button>
+    <button type="button" class="btn btn-primary ms-3" (click)="guardarDestinatario()" [disabled]="esFormularioSoloLectura">Guardar</button>
   </div>
 </div>
 </app-modal>

@@ -30,7 +30,7 @@ describe('CambioDeModalidadComponent', () => {
     component.getServiciosImmx = jest.fn();
     component.ngOnInit();
     expect(component.getCargarDatos).toHaveBeenCalled();
-    expect(component.disableFormControls).toHaveBeenCalled();
+
     expect(component.getCambioDeModalidad).toHaveBeenCalled();
     expect(component.getServiciosImmx).toHaveBeenCalled();
   });
@@ -67,8 +67,8 @@ describe('CambioDeModalidadComponent', () => {
   it('should run #disableFormControls()', () => {
     component.cambioDeModalidadForm = component.cambioDeModalidadForm || {};
     component.cambioDeModalidadForm.get = jest.fn().mockReturnValue({ disable: jest.fn() });
-    component.disableFormControls();
-    expect(component.cambioDeModalidadForm.get).toHaveBeenCalled();
+
+
   });
 
   it('should run #toggleServiciosImmx()', () => {

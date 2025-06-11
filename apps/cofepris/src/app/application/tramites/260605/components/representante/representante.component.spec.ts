@@ -1,135 +1,138 @@
-import { TestBed } from '@angular/core/testing';
-import { FormBuilder } from '@angular/forms';
-import { of, Subject } from 'rxjs';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RepresentanteComponent } from './representante.component';
+import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Tramite260605Store } from '../../../../estados/tramites/tramite260605.store';
 import { Tramite260605Query } from '../../../../estados/queries/tramite260605.query';
 import { ModificatNoticeService } from '../../services/modificat-notice.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { of, Subject } from 'rxjs';
 
 describe('RepresentanteComponent', () => {
-  let componente: RepresentanteComponent;
+  let component: RepresentanteComponent;
+  let fixture: ComponentFixture<RepresentanteComponent>;
+  let tramite260605StoreMock: jest.Mocked<Tramite260605Store>;
   let tramite260605QueryMock: any;
-  let tramite260605StoreMock: any;
   let modificatNoticeServiceMock: any;
+  let consultaioQueryMock: any;
 
-  beforeEach(() => {
-    tramite260605QueryMock = {
-      selectSolicitud$: of({
-        rfc: 'ABC123456789',
-        nombre: 'Juan',
-        apellidoPaterno: 'Pérez',
-        apellidoMaterno: 'Gómez',
-        numeroDPmiso: '',
-        cstumbresAtuales: [],
-        aduanasDisponibles: [],
-        aduanasSeleccionadas: [],
-        cantidadSolicitada: 0,
-      }),
-    };
-
+  beforeEach(async () => {
     tramite260605StoreMock = {
       setRfc: jest.fn(),
       setNombre: jest.fn(),
       setApellidoPaterno: jest.fn(),
       setApellidoMaterno: jest.fn(),
+    } as any;
+
+    tramite260605QueryMock = {
+      selectSolicitud$: of({
+        rfc: 'RFC123',
+        nombre: 'Juan',
+        apellidoPaterno: 'Pérez',
+        apellidoMaterno: 'Gómez',
+      }),
     };
 
     modificatNoticeServiceMock = {
-      ObtenerReprestantanteData: jest.fn().mockReturnValue(
-        of({
-          nombre: 'Juan',
-          apellidoPaterno: 'Pérez',
-          apellidoMaterno: 'Gómez',
-        })
-      ),
+      ObtenerReprestantanteData: jest.fn().mockReturnValue(of({
+        nombre: 'Juan',
+        apellidoPaterno: 'Pérez',
+        apellidoMaterno: 'Gómez',
+      })),
     };
 
-    TestBed.configureTestingModule({
+    consultaioQueryMock = {
+      selectConsultaioState$: of({ readonly: false }),
+    };
+
+    await TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule, FormsModule],
+      declarations: [RepresentanteComponent],
       providers: [
         FormBuilder,
         { provide: Tramite260605Store, useValue: tramite260605StoreMock },
         { provide: Tramite260605Query, useValue: tramite260605QueryMock },
         { provide: ModificatNoticeService, useValue: modificatNoticeServiceMock },
+        { provide: ConsultaioQuery, useValue: consultaioQueryMock },
       ],
-    });
+    }).compileComponents();
 
-    const fb = TestBed.inject(FormBuilder);
-    const tramite260605Store = TestBed.inject(Tramite260605Store);
-    const tramite260605Query = TestBed.inject(Tramite260605Query);
-    const modificatNoticeService = TestBed.inject(ModificatNoticeService);
-
-    componente = new RepresentanteComponent(
-      fb,
-      tramite260605Store,
-      tramite260605Query,
-      modificatNoticeService
-    );
+    fixture = TestBed.createComponent(RepresentanteComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
+  it('debe crearse correctamente', () => {
+    expect(component).toBeTruthy();
   });
 
-  it('debería crear el componente', () => {
-    expect(componente).toBeTruthy();
-  });
-
-  it('debería inicializar el formulario y suscribirse a tramite260605Query', () => {
-    componente.ngOnInit();
-
-    expect(componente.solicitudState).toEqual({
-      rfc: 'ABC123456789',
-      nombre: 'Juan',
-      apellidoPaterno: 'Pérez',
-      apellidoMaterno: 'Gómez',
-      numeroDPmiso: '',
-      cstumbresAtuales: [],
-      aduanasDisponibles: [],
-      aduanasSeleccionadas: [],
-      cantidadSolicitada: 0,
-    });
-
-    expect(componente.representante.value).toEqual({
-      rfc: 'ABC123456789',
+  it('debe inicializar el formulario con los valores del store', () => {
+    component.inicializarFormulario();
+    expect(component.representante.value).toEqual({
+      rfc: 'RFC123',
       nombre: 'Juan',
       apellidoPaterno: 'Pérez',
       apellidoMaterno: 'Gómez',
     });
-
-    expect(componente.representante.get('nombre')?.disabled).toBe(true);
-    expect(componente.representante.get('apellidoPaterno')?.disabled).toBe(true);
-    expect(componente.representante.get('apellidoMaterno')?.disabled).toBe(true);
+    expect(component.representante.get('nombre')?.disabled).toBe(true);
+    expect(component.representante.get('apellidoPaterno')?.disabled).toBe(true);
+    expect(component.representante.get('apellidoMaterno')?.disabled).toBe(true);
   });
 
-  it('debería llamar a ObtenerReprestantanteData y actualizar los valores del formulario', () => {
-    componente.ngOnInit();
-    componente.obtenerAduanasDisponiblesDatos();
+  it('guardarDatosFormulario debe deshabilitar el formulario si es solo lectura', () => {
+    component.esFormularioSoloLectura = true;
+    component.inicializarFormulario();
+    component.guardarDatosFormulario();
+    expect(component.representante.disabled).toBe(true);
+  });
 
+  it('guardarDatosFormulario debe habilitar el formulario si no es solo lectura', () => {
+    component.esFormularioSoloLectura = false;
+    component.inicializarFormulario();
+    component.guardarDatosFormulario();
+    expect(component.representante.enabled).toBe(true);
+  });
+
+  it('inicializarEstadoFormulario debe llamar a guardarDatosFormulario si es solo lectura', () => {
+    const spy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('inicializarEstadoFormulario debe llamar a inicializarFormulario si no es solo lectura', () => {
+    const spy = jest.spyOn(component, 'inicializarFormulario');
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('ngOnInit debe llamar a inicializarEstadoFormulario', () => {
+    const spy = jest.spyOn(component, 'inicializarEstadoFormulario');
+    component.ngOnInit();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('obtenerAduanasDisponiblesDatos debe actualizar los campos del formulario', () => {
+    component.inicializarFormulario();
+    component.obtenerAduanasDisponiblesDatos();
     expect(modificatNoticeServiceMock.ObtenerReprestantanteData).toHaveBeenCalled();
-    expect(componente.representante.value).toEqual({
-      rfc: 'ABC123456789',
-      nombre: 'Juan',
-      apellidoPaterno: 'Pérez',
-      apellidoMaterno: 'Gómez',
-    });
+    expect(component.representante.get('nombre')?.value).toBe('Juan');
+    expect(component.representante.get('apellidoPaterno')?.value).toBe('Pérez');
+    expect(component.representante.get('apellidoMaterno')?.value).toBe('Gómez');
   });
 
-  it('debería llamar al método correcto en Tramite260605Store cuando se llama a setValoresStore', () => {
-    componente.ngOnInit();
-    componente.setValoresStore(componente.representante, 'rfc', 'setRfc');
-    expect(tramite260605StoreMock.setRfc).toHaveBeenCalledWith('ABC123456789');
+  it('setValoresStore debe llamar al método correspondiente del store', () => {
+    component.inicializarFormulario();
+    component.representante.get('rfc')?.setValue('RFC999');
+    component.setValoresStore(component.representante, 'rfc', 'setRfc');
+    expect(tramite260605StoreMock.setRfc).toHaveBeenCalledWith('RFC999');
   });
 
-  it('debería limpiar las suscripciones en ngOnDestroy', () => {
-    const destroyNotifierSpy = jest.spyOn(componente['destroyNotifier$'], 'next');
-    const destroyNotifierCompleteSpy = jest.spyOn(
-      componente['destroyNotifier$'],
-      'complete'
-    );
-
-    componente.ngOnDestroy();
-
-    expect(destroyNotifierSpy).toHaveBeenCalled();
-    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
+  it('ngOnDestroy debe limpiar el subject destroyNotifier$', () => {
+    const spyNext = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const spyComplete = jest.spyOn((component as any).destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
   });
 });

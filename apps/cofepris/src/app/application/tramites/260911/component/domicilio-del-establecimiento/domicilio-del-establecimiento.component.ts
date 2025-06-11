@@ -1,13 +1,14 @@
 import { AlertComponent, InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite260911State, Tramite260911Store } from '../../estados/tramite260911.store';
 import { ALERT } from '../../enums/domicilio-del-establecimiento.enum';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
-import {DomicilioDelEstablecimientoService} from '../../services/domicilio-del-establecimiento/domicilio-del-establecimiento.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { DomicilioDelEstablecimientoService } from '../../services/domicilio-del-establecimiento/domicilio-del-establecimiento.service';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -30,7 +31,9 @@ import { Validators } from '@angular/forms';
 
 /**
  * Componente para gestionar el domicilio del establecimiento.
- * 
+ * Permite la visualización y edición de los datos del domicilio, así como la gestión de tablas y catálogos asociados.
+ * Incluye lógica para modo solo lectura y edición, integración con el store y servicios para obtener datos.
+ *
  * @selector app-domicilio-del-establecimiento
  * @standalone true
  * @imports [
@@ -40,7 +43,8 @@ import { Validators } from '@angular/forms';
  *   CatalogoSelectComponent,
  *   AlertComponent,
  *   TablaDinamicaComponent,
- *   InputRadioComponent
+ *   InputRadioComponent,
+ *   InputCheckComponent
  * ]
  * @templateUrl ./domicilio-del-establecimiento.component.html
  * @styleUrl ./domicilio-del-establecimiento.component.scss
@@ -61,151 +65,213 @@ import { Validators } from '@angular/forms';
   templateUrl: './domicilio-del-establecimiento.component.html',
   styleUrl: './domicilio-del-establecimiento.component.scss',
 })
-export class DomicilioDelEstablecimientoComponent implements OnInit , OnDestroy {
+export class DomicilioDelEstablecimientoComponent implements OnInit, OnDestroy {
+
+  /** Estado actual de la solicitud proveniente del store */
+  public solicitudState!: Tramite260911State;
+
+  /** Indica si el formulario está en modo solo lectura */
+  esFormularioSoloLectura: boolean = false;
+
   /**
-   * Formulario principal.
+   * Formulario principal reactivo para los datos del domicilio.
    */
   form!: FormGroup;
 
   /**
-   * Lista de estados.
+   * Lista de estados obtenida del catálogo.
    */
   estado: Catalogo[] = [];
 
   /**
-   * Textos de alerta.
+   * Textos de alerta utilizados en el componente.
    */
   TEXTOS = ALERT;
 
   /**
-   * Clase de alerta.
+   * Clase CSS para el tipo de alerta.
    */
   class = 'alert-warning';
 
   /**
-   * Configuración de selección de tabla.
+   * Configuración para la selección de filas en la tabla (checkbox).
    */
   tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
-   * Configuración de columnas de la tabla NICO.
+   * Configuración de columnas para la tabla NICO.
    */
   nicoTabla: ConfiguracionColumna<NicoInfo>[] = NICO_TABLA;
 
   /**
-   * Datos de la tabla NICO.
+   * Datos cargados para la tabla NICO.
    */
   nicoTablaDatos: NicoInfo[] = [];
 
   /**
-   * Formulario de domicilio.
+   * Formulario reactivo para los datos del domicilio.
    */
   domicilio!: FormGroup;
 
   /**
-   * Configuración de columnas de la tabla de mercancías.
+   * Configuración de columnas para la tabla de mercancías.
    */
   mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIAS_DATA;
 
   /**
-   * Datos de la tabla de mercancías.
+   * Datos cargados para la tabla de mercancías.
    */
   mercanciasTablaDatos: MercanciasInfo[] = [];
 
   /**
-   * Manifiestos de alerta.
+   * Manifiestos de alerta utilizados en el componente.
    */
   manifests = ALERT.MANIFESTS;
 
   /**
-   * Opciones de botón de radio.
+   * Opciones para el botón de radio.
    */
   opcionDeBotonDeRadio = OPCIONES_DE_BOTON_DE_RADIO;
 
   /**
-   * Formulario de representante legal.
+   * Formulario reactivo para los datos del representante legal.
    */
   representanteLegal!: FormGroup;
 
+  /**
+   * Subject para controlar la destrucción de suscripciones y evitar fugas de memoria.
+   * @private
+   */
   private destroy$ = new Subject<void>();
 
-  
-    /**
-     * Estado seleccionado del trámite 260911.
-     */
-    estadoSeleccionado!: Tramite260911State;
-
+  /**
+   * Estado seleccionado del trámite 260911.
+   */
+  estadoSeleccionado!: Tramite260911State;
 
   /**
    * Constructor del componente.
-   * 
-   * @param fb FormBuilder para crear formularios.
+   *
+   * @param fb FormBuilder para crear formularios reactivos.
    * @param httpServicios Servicio HTTP para realizar peticiones.
    * @param tramite260911Query Consulta de datos del trámite.
    * @param tramite260911Store Almacenamiento de datos del trámite.
+   * @param domicilioDelEstablecimientoService Servicio para obtener datos relacionados con el domicilio.
+   * @param consultaioQuery Consulta de estado de solo lectura.
    */
   constructor(
     private fb: FormBuilder,
     private httpServicios: HttpClient,
     private tramite260911Query: Tramite260911Query,
     private tramite260911Store: Tramite260911Store,
-    private domicilioDelEstablecimientoService:DomicilioDelEstablecimientoService
+    private domicilioDelEstablecimientoService: DomicilioDelEstablecimientoService,
+    public consultaioQuery: ConsultaioQuery,
   ) {
-    // Constructor
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
-   * Método de inicialización del componente.
+   * Inicializa el formulario dependiendo del modo (solo lectura o editable).
+   * Si está en solo lectura, carga y bloquea el formulario.
+   * Si no, crea un formulario editable.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearFormulario();
+    }
+  }
+
+  /**
+   * Crea el formulario y, si está en modo solo lectura, lo deshabilita.
+   * De lo contrario, lo habilita para edición.
+   */
+  guardarDatosFormulario(): void {
+    this.crearFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.form.disable();
+      this.domicilio.disable();
+      this.representanteLegal.disable();
+    } else {
+      this.form.enable();
+      this.domicilio.enable();
+      this.representanteLegal.enable();
+    }
+  }
+
+  /**
+   * Método de inicialización del ciclo de vida del componente.
+   * Inicializa el formulario y carga los datos necesarios para las tablas y catálogos.
    */
   ngOnInit(): void {
-    this.getValorStore();
-    this.crearFormulario();
+    this.inicializarEstadoFormulario();
     this.obtenerTablaDatos();
     this.obtenerEstadoList();
     this.obtenerMercanciasDatos();
- 
-}
+  }
 
+  /**
+   * Método de destrucción del ciclo de vida del componente.
+   * Libera recursos y cancela suscripciones.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }
 
   /**
-   * Método para crear el formulario.
+   * Crea los formularios reactivos principales del componente usando los datos del store.
+   * Incluye el formulario principal, el de domicilio y el de representante legal.
    */
   crearFormulario(): void {
+    this.tramite260911Query.selectTramite260911$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.form = this.fb.group({
-      codigoPostal: ['', [Validators.required]],
-      estado: [],
-      municipioOAlcaldia: ['', [Validators.required]],
-      localidad: [''],
-      colonias: [''],
-      calle: ['', [Validators.required]],
-      lada: [''],
-      telefono: ['', [Validators.required]],
+      codigoPostal: [this.solicitudState?.codigoPostal, [Validators.required]],
+      estado: [this.solicitudState?.estado],
+      municipioOAlcaldia: [this.solicitudState?.municipioOAlcaldia, [Validators.required]],
+      localidad: [this.solicitudState?.localidad],
+      colonias: [this.solicitudState?.colonias],
+      calle: [this.solicitudState?.calle, [Validators.required]],
+      lada: [this.solicitudState?.lada],
+      telefono: [this.solicitudState.telefono, [Validators.required]],
     });
 
     this.domicilio = this.fb.group({
       avisoCheckbox: [true],
-      licenciaSanitaria: [{ value: '', disabled: true }],
-      regimen: [],
-      aduanasEntradas: [],
+      licenciaSanitaria: [{ value: this.solicitudState?.licenciaSanitaria, disabled: true }],
+      regimen: [this.solicitudState?.regimen],
+      aduanasEntradas: [this.solicitudState?.aduanasEntradas],
       aifaCheckbox: [true],
       manifests: [true],
     });
 
     this.representanteLegal = this.fb.group({
-      acuerdoPublico: [],
-      rfc: ['', [Validators.required]],
-      nombre: [{ value: 'LUIS AMBROSIO', disabled: true }, [Validators.required]],
-      apellidoPaterno: [{ value: 'MARTINEZ', disabled: true }, [Validators.required]],
-      apellidoMaterno: [{ value: 'VALENZUELA', disabled: true }, [Validators.required]],
+      acuerdoPublico: [this.solicitudState?.acuerdoPublico],
+      rfc: [this.solicitudState?.rfc, [Validators.required]],
+      nombre: [{ value: this.solicitudState?.nombre, disabled: true }, [Validators.required]],
+      apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno, disabled: true }, [Validators.required]],
+      apellidoMaterno: [{ value: this.solicitudState?.apellidoMaterno, disabled: true }, [Validators.required]],
     });
   }
 
   /**
-   * Método para obtener los datos de la tabla.
+   * Obtiene los datos de la tabla NICO desde el servicio y los asigna a la propiedad correspondiente.
    */
   obtenerTablaDatos(): void {
     this.domicilioDelEstablecimientoService
@@ -216,10 +282,10 @@ export class DomicilioDelEstablecimientoComponent implements OnInit , OnDestroy 
       });
   }
 
-   /**
-   * Método para obtener la lista de estados.
+  /**
+   * Obtiene la lista de estados desde el servicio y la asigna a la propiedad correspondiente.
    */
-   obtenerEstadoList(): void {
+  obtenerEstadoList(): void {
     this.domicilioDelEstablecimientoService
       .obtenerEstadoList()
       .pipe(takeUntil(this.destroy$))
@@ -227,10 +293,9 @@ export class DomicilioDelEstablecimientoComponent implements OnInit , OnDestroy 
         this.estado = data?.data || [];
       });
   }
- 
 
   /**
-   * Método para obtener los datos de mercancías.
+   * Obtiene los datos de mercancías desde el servicio y los asigna a la propiedad correspondiente.
    */
   obtenerMercanciasDatos(): void {
     this.domicilioDelEstablecimientoService
@@ -243,9 +308,9 @@ export class DomicilioDelEstablecimientoComponent implements OnInit , OnDestroy 
 
   /**
    * Actualiza un valor específico en el store del trámite.
-   * 
-   * @param FormGroup - Formulario reactivo.
-   * @param control - Nombre del control cuyo valor se actualizará en el store.
+   *
+   * @param FormGroup Formulario reactivo del cual se obtiene el valor.
+   * @param control Nombre del control cuyo valor se actualizará en el store.
    */
   setValorStore(FormGroup: FormGroup, control: string): void {
     const VALOR = FormGroup.get(control)?.value;
@@ -253,17 +318,4 @@ export class DomicilioDelEstablecimientoComponent implements OnInit , OnDestroy 
       [control]: VALOR
     });
   }
-
-  /**
-   * Obtiene el estado actual del trámite desde el store.
-   */
-  getValorStore(): void {
-    this.tramite260911Query.selectTramite260911$.pipe(
-      takeUntil(this.destroy$)
-    ).subscribe(
-      (data) => {
-        this.estadoSeleccionado = data;
-      }
-    );
-  }
-  }
+}

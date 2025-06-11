@@ -8,7 +8,6 @@ import { NgModule } from '@angular/core';
 import { PagoDeDerechosComponent } from './components/pago-de-derechos/pago-de-derechos.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
-import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { TercerosRelacionadosComponent } from './components/terceros-relacionados/terceros-relacionados.component';
@@ -17,13 +16,14 @@ import { TramitesAsociadoComponent } from './components/tramites-asociado/tramit
 import { WizardComponent } from '@libs/shared/data-access-user/src';
 
 import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
+import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
 
 
 @NgModule({
   declarations: [
-    PasoUnoComponent,
     ModPermisoSanitarioImportacion260904Component,
+    PasoUnoComponent
   ],
   imports: [
     CommonModule,

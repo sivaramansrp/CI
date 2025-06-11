@@ -599,7 +599,8 @@
                 <p>Adjuntar archivo:</p>
                 <div class="col-md-8">
                     <button type="button" for="archivoMedicamentos" class="file-upload"
-                        (click)="activarSeleccionArchivo()">
+                        (click)="activarSeleccionArchivo()"
+                        disabled="esFormularioSoloLectura">
                         Seleccionar archivo
                     </button>
                     <span class="ml-2">{{ etiquetaDeArchivo }}</span>
@@ -608,7 +609,7 @@
                 </div>
 
                 <div class="col-md-4 text-end">
-                    <button class="btn btn-primary mr-5px">Cargar
+                    <button class="btn btn-primary mr-5px" disabled="esFormularioSoloLectura">Cargar
                         archivo</button>
                 </div>
             </div>

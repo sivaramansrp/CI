@@ -11,8 +11,8 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { map, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
-import { CatalogoSelectComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo,ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { DatosDeLaSolicitudService } from '../../services/datos-de-la-solicitud/datos-de-la-solicitud.service';
 import { Tramite130119Query } from '../../estados/queries/tramite130119.query';
 import { Tramite130119Store } from '../../estados/store/tramite130119.store';
@@ -29,10 +29,15 @@ import { Tramite130119Store } from '../../estados/store/tramite130119.store';
 export class RepresentacionFederalComponent implements OnInit, OnDestroy {
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Se obtiene del estado de la consulta.
+   */
+  esSoloLectura!: boolean;
+  /**
    * FormGroup que define la estructura del formulario de representación federal.
    * Incluye campos para el estado y la representación federal, ambos requeridos.
    */
-  formularioRepresentacionFederalForm: FormGroup;
+  formularioRepresentacionFederalForm!: FormGroup;
 
   /**
    * Arreglo de catálogos que contiene las opciones para el estado.
@@ -58,11 +63,8 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    * @param tramite130119Store Store que gestiona el estado del trámite 130119.
    * @param tramite130119Query Query para consultar el estado del trámite 130119.
    */
-  constructor(private fb: FormBuilder, private service: DatosDeLaSolicitudService, private tramite130119Store: Tramite130119Store, private tramite130119Query: Tramite130119Query) {
-    this.formularioRepresentacionFederalForm = this.fb.group({
-      estado: ['', Validators.required],
-      representacionFederal: ['', Validators.required],
-    });
+  constructor(private fb: FormBuilder, private service: DatosDeLaSolicitudService, private tramite130119Store: Tramite130119Store, private tramite130119Query: Tramite130119Query,private consultaQuery: ConsultaioQuery) {
+   
   }
 
   /**
@@ -70,11 +72,29 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    * Carga las opciones de estado y representación federal, y obtiene los valores del store.
    */
   ngOnInit(): void {
+    this.inicializarFormulario();
+      this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((estadoConsulta) => {
+        this.esSoloLectura = estadoConsulta.readonly;
+      });
+  }
+
+
+  /**
+   * Inicializa el formulario de representación federal con validaciones.
+   * El campo 'estado' es requerido y el campo 'representacionFederal' es requerido.
+   */
+
+  inicializarFormulario(): void {
+     this.formularioRepresentacionFederalForm = this.fb.group({
+      estado: ['', Validators.required],
+      representacionFederal: ['', Validators.required],
+    });
     this.cargarEstado();
     this.cargarRepresentacionFederal();
     this.getValoresStore();
   }
-
   /**
    * Carga las opciones de estado desde el servicio y las asigna a estadoOptions.
    */
