@@ -82,11 +82,20 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-  public esDatosRespuesta: boolean = false;
-  
-  esFormularioSoloLectura: boolean = false;
+    /**
+   * Indica si los datos de respuesta están disponibles.
+   */
+    public esDatosRespuesta: boolean = false;
 
-  consultaDatos!: ConsultaioState;
+    /**
+     * Indica si el formulario es de solo lectura.
+     */
+    esFormularioSoloLectura: boolean = false;
+  
+    /**
+     * Estado de los datos de consulta.
+     */
+    consultaDatos!: ConsultaioState;
 
   /** Estado de la consulta que se obtiene del store. */
   public consultaState!: ConsultaioState;
@@ -179,6 +188,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  /**
+   * Inicializa el estado del formulario.
+   * Si el formulario es de solo lectura, lo deshabilita.
+   * De lo contrario, lo habilita.
+   */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.solicitudForm?.disable();

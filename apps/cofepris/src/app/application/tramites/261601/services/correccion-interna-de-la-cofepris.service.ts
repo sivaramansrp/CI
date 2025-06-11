@@ -40,6 +40,10 @@ export class CorreccionInternaDeLaCofeprisService {
   getSolicitudData(): Observable<TramitesAsociados[]> {
     return this.http.get<TramitesAsociados[]>('./assets/json/261601/solicitud.json');
   }
+  /**
+   * Método para obtener los datos de consulta desde un archivo JSON.
+   * @returns Un observable que emite el estado de la solicitud 261601.
+   */
   getConsultaData(): Observable<Solicitud261601State> {
     return this.http.get<Solicitud261601State>('assets/json/261601/consulta.json');
   }
