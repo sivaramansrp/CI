@@ -1,4 +1,5 @@
 import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud6102State, Solicitud6102Store } from '../../estados/solicitud6102.store';
@@ -61,12 +62,31 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     labelNombre: string;
     primerOpcion: string;
   };
+
+   /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
+
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esDatosRespuesta: boolean = false;
   
   constructor(
     private fb: FormBuilder,
     private store: Solicitud6102Store,
     private query: Solicitud6102Query,
     private juntaTecnicaRegistroService: JuntaTecnicaRegistroService,
+    private consultaioQuery: ConsultaioQuery
   ) {
       this.contenedores = {
         catalogos: [],
@@ -91,13 +111,29 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     this.query.seleccionarSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      )
-      .subscribe();
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.solicitudState = seccionState;
+      })
+    )
+    .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.consultaDatos = seccionState;
+        this.soloLectura = this.consultaDatos.readonly;
+        console.log(this.soloLectura);
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe();
+    if (this.consultaDatos.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
     this.inicializarFormulario();
     this.cargarContenedoresOpciones();
     this.cargarAduanaOpciones();
@@ -129,8 +165,33 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.tecnicaForm = this.fb.group({
       contenedores: [this.solicitudState?.contenedores, [Validators.required]],
       aduana: [this.solicitudState?.aduana, [Validators.required]],
-      observaciones: [this.solicitudState?.observaciones],
+      observaciones: {value:this.solicitudState?.observaciones, disabled: this.soloLectura},
     });
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+    /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.soloLectura) {
+      this.tecnicaForm.disable();
+    } else {
+      this.tecnicaForm.enable();
+    }
   }
 
   /**
