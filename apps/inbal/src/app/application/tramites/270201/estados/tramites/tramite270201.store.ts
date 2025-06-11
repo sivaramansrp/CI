@@ -17,7 +17,7 @@ export interface Tramite270201State {
    * 
    * @property {CatalogoResponse | null} operacion
    */
-  operacion: CatalogoResponse | null;
+  tipoDeOperacion: CatalogoResponse | null;
 
   /**
    * Representa el movimiento seleccionado del catálogo.
@@ -25,7 +25,7 @@ export interface Tramite270201State {
    * 
    * @property {CatalogoResponse | null} movimiento
    */
-  movimiento: CatalogoResponse | null;
+  tipoDeMovimiento: CatalogoResponse | null;
 
   /**
    * Representa el motivo seleccionado del catálogo.
@@ -56,7 +56,7 @@ export interface Tramite270201State {
    * 
    * @property {CatalogoResponse | null} transporte
    */
-  transporte: CatalogoResponse | null;
+  medioTransporte: CatalogoResponse | null;
 
   /**
    * Representa la aduana seleccionada del catálogo.
@@ -64,7 +64,7 @@ export interface Tramite270201State {
    * 
    * @property {CatalogoResponse | null} aduana
    */
-  aduana: CatalogoResponse | null;
+  aduanaEntrada: CatalogoResponse | null;
 
   /**
    * Representa el autor de la obra de arte.
@@ -85,7 +85,7 @@ export interface Tramite270201State {
    * 
    * @property {string} tecnica
    */
-  tecnica: string;
+  tecnicaDeRealizacion: string;
 
   /**
    * Representa el alto de la obra de arte.
@@ -186,12 +186,12 @@ export function createInitialState(): Tramite270201State {
     /**
      * Operación seleccionada del catálogo. Inicialmente es nulo.
      */
-    operacion: null,
+    tipoDeOperacion: null,
 
     /**
      * Movimiento seleccionado del catálogo. Inicialmente es nulo.
      */
-    movimiento: null,
+    tipoDeMovimiento: null,
 
     /**
      * Motivo seleccionado del catálogo. Inicialmente es nulo.
@@ -211,12 +211,12 @@ export function createInitialState(): Tramite270201State {
     /**
      * Medio de transporte seleccionado del catálogo. Inicialmente es nulo.
      */
-    transporte: null,
+    medioTransporte: null,
 
     /**
      * Aduana seleccionada del catálogo. Inicialmente es nula.
      */
-    aduana: null,
+    aduanaEntrada: null,
 
     /**
      * Autor de la obra de arte. Inicialmente está vacío.
@@ -231,7 +231,7 @@ export function createInitialState(): Tramite270201State {
     /**
      * Técnica utilizada en la obra de arte. Inicialmente está vacío.
      */
-    tecnica: '',
+    tecnicaDeRealizacion: '',
 
     /**
      * Alto de la obra de arte. Inicialmente está vacío.
@@ -295,6 +295,8 @@ export function createInitialState(): Tramite270201State {
   };
 }
 
+/** Store para manejar el estado del trámite 270201.  
+ * Administra el estado `avisoSiglosState` con capacidad de reinicio. */
 @Injectable({
   providedIn: 'root',
 })
@@ -308,12 +310,12 @@ export class Tramite270201Store extends Store<Tramite270201State> {
  * @method setOperacion
  * @description
  * Actualiza el estado con la operación seleccionada.
- * @param {CatalogoResponse} selectedOperacion - La operación seleccionada.
+ * @param {CatalogoResponse} tipoDeOperacion - La operación seleccionada.
  */
-public setOperacion(selectedOperacion: CatalogoResponse): void {
+public setOperacion(tipoDeOperacion: CatalogoResponse): void {
   this.update((state) => ({
     ...state,
-    selectedOperacion,
+    tipoDeOperacion,
   }));
 }
 
@@ -321,12 +323,12 @@ public setOperacion(selectedOperacion: CatalogoResponse): void {
  * @method setMovimiento
  * @description
  * Actualiza el estado con el movimiento seleccionado.
- * @param {CatalogoResponse} selectedMovimiento - El movimiento seleccionado.
+ * @param {CatalogoResponse} tipoDeMovimiento - El movimiento seleccionado.
  */
-public setMovimiento(selectedMovimiento: CatalogoResponse): void {
+public setMovimiento(tipoDeMovimiento: CatalogoResponse): void {
   this.update((state) => ({
     ...state,
-    selectedMovimiento,
+    tipoDeMovimiento,
   }));
 }
 
@@ -334,12 +336,12 @@ public setMovimiento(selectedMovimiento: CatalogoResponse): void {
  * @method setMotivo
  * @description
  * Actualiza el estado con el motivo seleccionado.
- * @param {CatalogoResponse} selectedMotivo - El motivo seleccionado.
+ * @param {CatalogoResponse} motivo - El motivo seleccionado.
  */
-public setMotivo(selectedMotivo: CatalogoResponse): void {
+public setMotivo(motivo: CatalogoResponse): void {
   this.update((state) => ({
     ...state,
-    selectedMotivo,
+    motivo,
   }));
 }
 
@@ -347,12 +349,12 @@ public setMotivo(selectedMotivo: CatalogoResponse): void {
  * @method setPais
  * @description
  * Actualiza el estado con el país seleccionado.
- * @param {CatalogoResponse} selectedPais - El país seleccionado.
+ * @param {CatalogoResponse} pais - El país seleccionado.
  */
-public setPais(selectedPais: CatalogoResponse): void {
+public setPais(pais: CatalogoResponse): void {
   this.update((state) => ({
     ...state,
-    selectedPais,
+    pais,
   }));
 }
 
@@ -360,12 +362,12 @@ public setPais(selectedPais: CatalogoResponse): void {
  * @method setCiudad
  * @description
  * Actualiza el estado con la ciudad seleccionada.
- * @param {string} selectedCiudad - La ciudad seleccionada.
+ * @param {string} ciudad - La ciudad seleccionada.
  */
-public setCiudad(selectedCiudad: string): void {
+public setCiudad(ciudad: string): void {
   this.update((state) => ({
     ...state,
-    selectedCiudad,
+    ciudad,
   }));
 }
 
@@ -373,12 +375,12 @@ public setCiudad(selectedCiudad: string): void {
  * @method setTransporte
  * @description
  * Actualiza el estado con el medio de transporte seleccionado.
- * @param {CatalogoResponse} selectedTransporte - El transporte seleccionado.
+ * @param {CatalogoResponse} medioTransporte - El transporte seleccionado.
  */
-public setTransporte(selectedTransporte: CatalogoResponse): void {
+public setTransporte(medioTransporte: CatalogoResponse): void {
   this.update((state) => ({
     ...state,
-    selectedTransporte,
+    medioTransporte,
   }));
 }
 
@@ -386,12 +388,12 @@ public setTransporte(selectedTransporte: CatalogoResponse): void {
  * @method setAduana
  * @description
  * Actualiza el estado con la aduana seleccionada.
- * @param {CatalogoResponse} selectedAduana - La aduana seleccionada.
+ * @param {CatalogoResponse} aduanaEntrada - La aduana seleccionada.
  */
-public setAduana(selectedAduana: CatalogoResponse): void {
+public setAduana(aduanaEntrada: CatalogoResponse): void {
   this.update((state) => ({
     ...state,
-    selectedAduana,
+    aduanaEntrada,
   }));
 }
 
@@ -399,12 +401,12 @@ public setAduana(selectedAduana: CatalogoResponse): void {
  * @method setAutor
  * @description
  * Actualiza el estado con el autor de la obra de arte seleccionado.
- * @param {string} selectedAutor - El nombre del autor seleccionado.
+ * @param {string} autor - El nombre del autor seleccionado.
  */
-public setAutor(selectedAutor: string): void {
+public setAutor(autor: string): void {
   this.update((state) => ({
     ...state,
-    selectedAutor,
+    autor,
   }));
 }
 
@@ -412,12 +414,12 @@ public setAutor(selectedAutor: string): void {
  * @method setTitulo
  * @description
  * Actualiza el estado con el título de la obra de arte seleccionado.
- * @param {string} selectedTitulo - El título seleccionado.
+ * @param {string} titulo - El título seleccionado.
  */
-public setTitulo(selectedTitulo: string): void {
+public setTitulo(titulo: string): void {
   this.update((state) => ({
     ...state,
-    selectedTitulo,
+    titulo,
   }));
 }
 
@@ -425,12 +427,12 @@ public setTitulo(selectedTitulo: string): void {
  * @method setTecnica
  * @description
  * Actualiza el estado con la técnica utilizada en la obra de arte seleccionada.
- * @param {string} selectedTecnica - La técnica seleccionada.
+ * @param {string} tecnicaDeRealizacion - La técnica seleccionada.
  */
-public setTecnica(selectedTecnica: string): void {
+public setTecnica(tecnicaDeRealizacion: string): void {
   this.update((state) => ({
     ...state,
-    selectedTecnica,
+    tecnicaDeRealizacion,
   }));
 }
 
@@ -438,12 +440,12 @@ public setTecnica(selectedTecnica: string): void {
  * @method setAlto
  * @description
  * Actualiza el estado con el alto de la obra de arte seleccionada.
- * @param {string} selectedAlto - El alto en centímetros.
+ * @param {string} alto - El alto en centímetros.
  */
-public setAlto(selectedAlto: string): void {
+public setAlto(alto: string): void {
   this.update((state) => ({
     ...state,
-    selectedAlto,
+    alto,
   }));
 }
 
@@ -451,12 +453,12 @@ public setAlto(selectedAlto: string): void {
  * @method setAncho
  * @description
  * Actualiza el estado con el ancho de la obra de arte seleccionada.
- * @param {string} selectedAncho - El ancho en centímetros.
+ * @param {string} ancho - El ancho en centímetros.
  */
-public setAncho(selectedAncho: string): void {
+public setAncho(ancho: string): void {
   this.update((state) => ({
     ...state,
-    selectedAncho,
+    ancho,
   }));
 }
 
@@ -464,12 +466,12 @@ public setAncho(selectedAncho: string): void {
  * @method setProfundidad
  * @description
  * Actualiza el estado con la profundidad de la obra de arte seleccionada.
- * @param {string} selectedProfundidad - La profundidad en centímetros.
+ * @param {string} profundidad - La profundidad en centímetros.
  */
-public setProfundidad(selectedProfundidad: string): void {
+public setProfundidad(profundidad: string): void {
   this.update((state) => ({
     ...state,
-    selectedProfundidad,
+    profundidad,
   }));
 }
 
@@ -477,12 +479,12 @@ public setProfundidad(selectedProfundidad: string): void {
  * @method setDiametro
  * @description
  * Actualiza el estado con el diámetro de la obra de arte seleccionada.
- * @param {string} selectedDiametro - El diámetro en centímetros.
+ * @param {string} diametro - El diámetro en centímetros.
  */
-public setDiametro(selectedDiametro: string): void {
+public setDiametro(diametro: string): void {
   this.update((state) => ({
     ...state,
-    selectedDiametro,
+    diametro,
   }));
 }
 
@@ -490,12 +492,12 @@ public setDiametro(selectedDiametro: string): void {
  * @method setVariables
  * @description
  * Actualiza el estado con las variables adicionales de la obra de arte seleccionada.
- * @param {string} selectedVariables - Las variables adicionales.
+ * @param {string} variables - Las variables adicionales.
  */
-public setVariables(selectedVariables: string): void {
+public setVariables(variables: string): void {
   this.update((state) => ({
     ...state,
-    selectedVariables,
+    variables,
   }));
 }
 
@@ -503,12 +505,12 @@ public setVariables(selectedVariables: string): void {
  * @method setAnoDeCreacion
  * @description
  * Actualiza el estado con el año de creación de la obra de arte seleccionada.
- * @param {string} selectedAnoDeCreacion - El año de creación de la obra.
+ * @param {string} anoDeCreacion - El año de creación de la obra.
  */
-public setAnoDeCreacion(selectedAnoDeCreacion: string): void {
+public setAnoDeCreacion(anoDeCreacion: string): void {
   this.update((state) => ({
     ...state,
-    selectedAnoDeCreacion,
+    anoDeCreacion,
   }));
 }
 
@@ -516,12 +518,12 @@ public setAnoDeCreacion(selectedAnoDeCreacion: string): void {
  * @method setAvaluo
  * @description
  * Actualiza el estado con el avalúo de la obra de arte seleccionada.
- * @param {string} selectedAvaluo - El valor estimado de la obra.
+ * @param {string} avaluo - El valor estimado de la obra.
  */
-public setAvaluo(selectedAvaluo: string): void {
+public setAvaluo(avaluo: string): void {
   this.update((state) => ({
     ...state,
-    selectedAvaluo,
+    avaluo,
   }));
 }
 
@@ -529,12 +531,12 @@ public setAvaluo(selectedAvaluo: string): void {
  * @method setMoneda
  * @description
  * Actualiza el estado con la moneda asociada al avalúo de la obra de arte seleccionada.
- * @param {CatalogoResponse} selectedMoneda - La moneda seleccionada.
+ * @param {CatalogoResponse} moneda - La moneda seleccionada.
  */
-public setMoneda(selectedMoneda: CatalogoResponse): void {
+public setMoneda(moneda: CatalogoResponse): void {
   this.update((state) => ({
     ...state,
-    selectedMoneda,
+    moneda,
   }));
 }
 
@@ -542,12 +544,12 @@ public setMoneda(selectedMoneda: CatalogoResponse): void {
  * @method setPropietario
  * @description
  * Actualiza el estado con el propietario de la obra de arte seleccionada.
- * @param {string} selectedPropietario - El nombre del propietario.
+ * @param {string} propietario - El nombre del propietario.
  */
-public setPropietario(selectedPropietario: string): void {
+public setPropietario(propietario: string): void {
   this.update((state) => ({
     ...state,
-    selectedPropietario,
+    propietario,
   }));
 }
 
@@ -555,14 +557,14 @@ public setPropietario(selectedPropietario: string): void {
  * @method setFraccionArancelaria
  * @description
  * Actualiza el estado con la fracción arancelaria asociada.
- * @param {CatalogoResponse} selectedFraccionArancelaria - La fracción arancelaria seleccionada.
+ * @param {CatalogoResponse} fraccionArancelaria - La fracción arancelaria seleccionada.
  */
 public setFraccionArancelaria(
-  selectedFraccionArancelaria: CatalogoResponse
+  fraccionArancelaria: CatalogoResponse
 ): void {
   this.update((state) => ({
     ...state,
-    selectedFraccionArancelaria,
+    fraccionArancelaria,
   }));
 }
 
@@ -570,14 +572,14 @@ public setFraccionArancelaria(
  * @method setDescripcionArancelaria
  * @description
  * Actualiza el estado con la descripción arancelaria de los bienes relacionados.
- * @param {string} selectedDescripcionArancelaria - La descripción arancelaria.
+ * @param {string} descripcionArancelaria - La descripción arancelaria.
  */
 public setDescripcionArancelaria(
-  selectedDescripcionArancelaria: string
+  descripcionArancelaria: string
 ): void {
   this.update((state) => ({
     ...state,
-    selectedDescripcionArancelaria,
+    descripcionArancelaria,
   }));
 }
 

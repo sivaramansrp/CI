@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { EnlaceOperativo } from '../../models/solicitud.model';
 import { EventEmitter } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
@@ -48,6 +49,12 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
   @Output() agregarEnlaceOperativo = new EventEmitter<EnlaceOperativo>();
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor de la clase que inicializa las dependencias necesarias.
    *
    * @param fb - Constructor de formularios reactivos.
@@ -59,11 +66,71 @@ export class AgregarEnlaceOperativoComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     public solicitudService: SolicitudService,
     public solicitud32605Store: Solicitud32605Store,
-    public solicitud32605Query: Solicitud32605Query
-  ) {}
+    public solicitud32605Query: Solicitud32605Query,
+    public consultaioQuery: ConsultaioQuery
+  ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
 
   /** Inicializa el formulario y suscribe al estado de la solicitud */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.agregarEnlaceOperativoForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.agregarEnlaceOperativoForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  /**
+   * Inicializa el formulario `agregarEnlaceOperativoForm` con los valores actuales
+   * del estado `solicitud32605State`.
+   *
+   * Algunos campos están deshabilitados porque no deben ser editables por el usuario.
+   * Aplica validaciones como `required`, `email`, y un patrón para el teléfono.
+   *
+   * Además, se suscribe a los cambios del estado de la solicitud (`selectSolicitud$`)
+   * y actualiza los valores del formulario mediante `patchValue`.
+   *
+   * @returns {void}
+   */
+  inicializarFormulario(): void {
     this.agregarEnlaceOperativoForm = this.fb.group({
       agregarEnlaceRfcTercero: [
         this.solicitud32605State.rfcTercero,

@@ -30,12 +30,13 @@ describe('BusquedaPermisosComponent', () => {
     expect(component.busquedaPermisosForm.controls['fechaSuspension']).toBeDefined();
   });
 
-  it('should call relanzarGrid and update permisosVigentesTabla', () => {
+  it('should call relanzarGrid and update permisosVigentesTabla when folio matches', () => {
     const permisosMock = {
       code: 200,
       data: [
         {
           numeroResolucion: '123',
+          folioTramite: 'test-value',
           tipoSolicitud: 'Solicitud 1',
           regimen: 'Regimen 1',
           clasificacionRegimen: 'Clasificacion 1',
@@ -46,7 +47,7 @@ describe('BusquedaPermisosComponent', () => {
           nicoDescripcion: 'Descripcion Nico',
           acotacion: 'Acotacion 1',
           cantidadAutorizada: '100',
-          valorAutorizada: '200',
+          valorAutorizado: '200',
           fechaInicioVigencia: '2023-01-01',
           fechaFinVigencia: '2023-12-31',
         },
@@ -56,36 +57,114 @@ describe('BusquedaPermisosComponent', () => {
 
     jest.spyOn(component['suspensionPermisoService'], 'obtenerPermisosVigentes').mockReturnValue(of(permisosMock));
 
-    component.relanzarGrid();
+    component.relanzarGrid('test-value');
 
     expect(component.permisosVigentesTabla.length).toBe(1);
     expect(component.permisosVigentesTabla[0].numeroResolucion).toBe('123');
   });
 
-  it('should reset the form and clear permisosVigentesTabla on limpiarGrid', () => {
-    component.permisosVigentesTabla = [{ numeroResolucion: '123' } as any];
-    component.busquedaPermisosForm.patchValue({ folioTramiteBusqueda: 'test' });
+  it('should call relanzarGrid and clear permisosVigentesTabla when folio does not match', () => {
+    const permisosMock = {
+      code: 200,
+      data: [
+        {
+          numeroResolucion: '123',
+          folioTramite: 'other-folio',
+          tipoSolicitud: 'Solicitud 1',
+          regimen: 'Regimen 1',
+          clasificacionRegimen: 'Clasificacion 1',
+          periodoDeVigencia: '2023',
+          fraccionArancelaria: '1234',
+          unidad: 'Unidad 1',
+          nico: 'Nico 1',
+          nicoDescripcion: 'Descripcion Nico',
+          acotacion: 'Acotacion 1',
+          cantidadAutorizada: '100',
+          valorAutorizado: '200',
+          fechaInicioVigencia: '2023-01-01',
+          fechaFinVigencia: '2023-12-31',
+        },
+      ],
+      message: 'Success'
+    };
 
-    component.limpiarGrid();
+    const setPermisosVigentesTablaSpy = jest.spyOn(component['tramite140216Store'], 'setPermisosVigentesTabla');
+    const abrirModalAlertaFolioIncorrectoSpy = jest.spyOn(component, 'abrirModalAlertaFolioIncorrecto');
+
+    jest.spyOn(component['suspensionPermisoService'], 'obtenerPermisosVigentes').mockReturnValue(of(permisosMock));
+
+    component.relanzarGrid('test-value');
 
     expect(component.permisosVigentesTabla.length).toBe(0);
-    expect(component.busquedaPermisosForm.value.folioTramiteBusqueda).toBeNull();
+    expect(setPermisosVigentesTablaSpy).toHaveBeenCalledWith([]);
+    expect(abrirModalAlertaFolioIncorrectoSpy).toHaveBeenCalled();
+  });
+
+  it('should call abrirAlertaFolioModal if folioTramiteBusqueda is empty', () => {
+    const abrirAlertaFolioModalSpy = jest.spyOn(component, 'abrirAlertaFolioModal');
+    component.relanzarGrid('');
+    expect(abrirAlertaFolioModalSpy).toHaveBeenCalled();
+    component.relanzarGrid(null as any);
+    expect(abrirAlertaFolioModalSpy).toHaveBeenCalledTimes(2);
+  });
+
+  it('should mark form as touched and return false if invalid on validarFormulario', () => {
+    component.busquedaPermisosForm.patchValue({ folioTramiteBusqueda: null });
+    const markAllAsTouchedSpy = jest.spyOn(component.busquedaPermisosForm, 'markAllAsTouched');
+    const valid = component.validarFormulario();
+    expect(markAllAsTouchedSpy).toHaveBeenCalled();
+    expect(valid).toBe(false);
+  });
+
+  it('should return true if form is valid on validarFormulario', () => {
+    component.busquedaPermisosForm.patchValue({
+      folioTramiteBusqueda: 'folio',
+      motivoSuspension: 'motivo',
+      numAutorizacion: '123',
+      fechaSuspension: '2023-01-01'
+    });
+    const valid = component.validarFormulario();
+    expect(valid).toBe(true);
+  });
+
+  it('should set correct notification on abrirAlertaModal', () => {
+    component.abrirAlertaModal();
+    expect(component.nuevaAlertaNotificacion).toBeDefined();
+    expect(component.nuevaAlertaNotificacion.titulo).toBe('Alerta');
+    expect(component.nuevaAlertaNotificacion.mensaje).toContain('Debe seleccionar un elemento');
+  });
+
+  it('should set correct notification on abrirAlertaFolioModal', () => {
+    component.abrirAlertaFolioModal();
+    expect(component.alertaFolioNotificacion).toBeDefined();
+    expect(component.alertaFolioNotificacion.titulo).toBe('Alerta');
+    expect(component.alertaFolioNotificacion.mensaje).toContain('Folio trámites es un campo obligatorio');
+  });
+
+  it('should set correct notification on abrirModalAlertaFolioIncorrecto', () => {
+    component.abrirModalAlertaFolioIncorrecto();
+    expect(component.alertaFolioIncorrectoNotificacion).toBeDefined();
+    expect(component.alertaFolioIncorrectoNotificacion.titulo).toBe('Alerta');
+    expect(component.alertaFolioIncorrectoNotificacion.mensaje).toContain('El Folio del trámite ingresado no puede ser suspendido');
   });
 
   it('should call mostrarModal with correct id for obtenerDetallePermiso', () => {
     const mostrarModalSpy = jest.spyOn(component, 'mostrarModal');
+    component.esSeleccionado = true;
     component.obtenerDetallePermiso();
     expect(mostrarModalSpy).toHaveBeenCalledWith('detalle-del-permiso');
   });
 
   it('should call mostrarModal with correct id for obtenerDetalleTitular', () => {
     const mostrarModalSpy = jest.spyOn(component, 'mostrarModal');
+    component.esSeleccionado = true;
     component.obtenerDetalleTitular();
     expect(mostrarModalSpy).toHaveBeenCalledWith('detalle-rfc-facultad');
   });
 
   it('should call mostrarModal with correct id for obtenerPersonasNotificacion', () => {
     const mostrarModalSpy = jest.spyOn(component, 'mostrarModal');
+    component.esSeleccionado = true;
     component.obtenerPersonasNotificacion();
     expect(mostrarModalSpy).toHaveBeenCalledWith('personas-notificar');
   });

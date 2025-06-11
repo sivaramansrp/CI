@@ -1,6 +1,9 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@libs/shared/data-access-user/src';
 import { Component, ViewChild } from '@angular/core';
 
+import { ALERTA } from '@libs/shared/data-access-user/src/tramites/constantes/mensajes-error-formularios';
+import { DatosComponent } from '../datos/datos.component';
+
 /**
  * Componente principal para la gestión de pantallas en el wizard de cupos.
  */
@@ -31,6 +34,27 @@ export class PantallasComponent {
   public wizardComponent!: WizardComponent;
 
   /**
+   * Referencia al componente de datos para validar el formulario.
+   * @type {DatosComponent}
+   */
+  @ViewChild('datos') datos!: DatosComponent;
+
+  /**
+   * Mensaje de error a mostrar.
+   */
+  esValido = true;
+
+  /**
+   * Una cadena que representa la clase CSS para una alerta de error.
+   */
+  infoError = 'alert-danger';
+
+  /**
+   * Asigna el mensaje de error a mostrar al atributo `ALERTA`.
+   */
+  ALERTA = ALERTA;
+
+  /**
    * Datos utilizados para el control del wizard.
    * @type {DatosPasos}
    */
@@ -49,6 +73,16 @@ export class PantallasComponent {
    */
   public getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor <= this.pantallasPasos.length) {
+      if (this.indice === 1) {
+        const BUSQUEDA_PERMISOS = this.datos?.busquedaPermisosComponent;
+        this.esValido = BUSQUEDA_PERMISOS?.validarFormulario() ?? false;
+      }
+
+      if (!this.esValido) {
+        this.datosPasos.indice = 1;
+        return;
+      }
+
       this.indice = e.valor;
       this.datosPasos.indice = e.valor;
 

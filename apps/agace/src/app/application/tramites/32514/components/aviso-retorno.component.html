@@ -56,12 +56,14 @@
         <input-fecha
           [datos]="fechaInitialInput"
           [setFecha]="avisoForm.get('fechaEmision')?.value"
+          [isDisabled]="esFormularioSoloLectura"
         ></input-fecha>
       </div>
       <div class="col-md-6">
         <input-fecha
           [datos]="fechaPagoInput"
           [setFecha]="avisoForm.get('fechaVencimiento')?.value"
+          [isDisabled]="esFormularioSoloLectura"
         ></input-fecha>
       </div>
     </div>
@@ -85,6 +87,7 @@
         <input-fecha
           [datos]="fechaFranjo"
           [setFecha]="avisoForm.get('fechaFranja')?.value"
+          [isDisabled]="esFormularioSoloLectura"
         ></input-fecha>
       </div>
     </div>
@@ -94,6 +97,7 @@
         [label]="anoCatalogo.labelNombre"
         formControlName="numeroPedimento"
         (change)="setValoresStore('numeroPedimento')"
+        [isDisabled]="esFormularioSoloLectura"
       ></app-catalogo-select>
     </div>
   </div>
@@ -118,6 +122,7 @@
         [label]="'Fecha de acuse de recibo:*'"
         (change)="setValoresStore('fechaAcuse')"
         formControlName="fechaAcuse"
+        [isDisabled]="esFormularioSoloLectura"
       ></app-catalogo-select>
     </div>
     <div class="row mt-3" *ngIf="avisoForm.get('avisoNacExt')?.value === 'si'">
@@ -226,6 +231,7 @@
         [label]="'Indique, en su caso, en medio en que sera transportado dicho vehículos:*'"
         (change)="setValoresStore('tipoVehiculo')"
         formControlName="tipoVehiculo"
+        [isDisabled]="esFormularioSoloLectura"
       ></app-catalogo-select>
     </div>
     <div class="col-md-8 mt-3" *ngIf="avisoForm.get('tipoVehiculo')?.value === '1'">

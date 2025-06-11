@@ -15,6 +15,9 @@ describe('PeriodoEnElExtranjeroComponent', () => {
 
     fixture = TestBed.createComponent(PeriodoEnElExtranjeroComponent);
     component = fixture.componentInstance;
+    component.consultaState = {
+      readonly: false,
+    } as any;
     fixture.detectChanges();
   });
 
