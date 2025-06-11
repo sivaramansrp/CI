@@ -1,12 +1,9 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable no-empty-function */
-/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import {
-  AVISO,
   ConsultaioQuery,
   IMPORTANTE,
 } from '@ng-mf/data-access-user';
-import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -18,7 +15,7 @@ import {
   Solicitud301State,
   Tramite301Store,
 } from '../../../../core/estados/tramites/tramite301.store';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { BtnContinuarComponent } from 'libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
@@ -120,14 +117,6 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
   };
 
   /**
-   * Suscripción a los cambios en el formulario reactivo.
-   *
-   * @type {Subscription}
-   * @memberof RegistroParaLaComponent
-   */
-  private subscription: Subscription = new Subscription();
-
-  /**
    * Estado de la solicitud de la sección 301.
    */
   public solicitudState!: Solicitud301State;
@@ -191,16 +180,14 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
   * con el valor inicial obtenido del store.
   */
   inicializarFormulario(): void {
-    this.subscription.add(
-      this.tramite301Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.solicitudState = seccionState;
-          })
-        )
-        .subscribe()
-    );
+    this.tramite301Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.getRegistro(); // Llama al método para obtener los datos de registro
 
     /**
@@ -254,7 +241,7 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite301Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite301Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite301Store[metodoNombre] as (value: unknown) => void)(VALOR);
     this.emitirElValorSeleccionado.emit(VALOR);
   }
 
@@ -276,7 +263,6 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
    * @memberof RegistroParaLaComponent
    */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

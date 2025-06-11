@@ -11,7 +11,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { Solicitud301State, Tramite301Store } from '../../../../core/estados/tramites/tramite301.store';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
@@ -41,8 +41,16 @@ import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 })
 export class DeLaMuestraComponent implements OnInit, OnDestroy {
 
-  
-@ViewChild('modalConfirmacionRef') modalConfirmacionRef!: ElementRef;
+  /**
+   * Referencia al elemento del modal de confirmación en la plantilla.
+   * Se utiliza para controlar la visualización del modal mediante código.
+   *
+   * @type {ElementRef}
+   * @memberof DeLaMuestraComponent
+   * @example
+   * this.modalConfirmacionRef.nativeElement.show();
+   */
+  @ViewChild('modalConfirmacionRef') modalConfirmacionRef!: ElementRef;
 
 
   /**
@@ -59,11 +67,6 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
    * @type {FormGroup}
    */
   Informaciondela!: FormGroup;
-
-  /**
-   * Suscripción a los cambios en el formulario react
-   */
-  private subscription: Subscription = new Subscription();
 
   /**
    * Estado de la solicitud de la sección 301.
@@ -150,16 +153,15 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
    */
 
   inicializarFormulario(): void {
-    this.subscription.add(
-      this.tramite301Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.solicitudState = seccionState;
-          })
-        )
-        .subscribe()
-    );
+    this.tramite301Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+
     this.Informaciondela = this.fb.group({
       datosImportadorExportador: this.fb.group({
         folio: [this.solicitudState?.folio, [Validators.required, Validators.maxLength(25)]],
@@ -221,7 +223,6 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
    * Método del ciclo de vida `ngOnDestroy()` de Angular.
    *
    * Este método se ejecuta cuando el componente es destruido y realiza las siguientes acciones:
-   * - Desuscribe la suscripción al observable `subscription`.
    */
   setValoresStore(
     form: FormGroup,
@@ -232,6 +233,21 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
     (this.tramite301Store[metodoNombre] as (value: any) => void)(VALOR);
   }
 
+  /**
+   * @method sobreElCambioFolio
+   * @description
+   * Valida la longitud del campo `folio` dentro del formulario.
+   * Si el valor del folio supera los 25 caracteres, muestra un modal de confirmación
+   * utilizando la referencia al elemento del modal en la plantilla.
+   *
+   * Funcionalidad:
+   * - Obtiene el valor del campo `folio` del formulario reactivo.
+   * - Si la longitud del folio es mayor a 25 caracteres, muestra el modal de confirmación.
+   *
+   * @example
+   * this.sobreElCambioFolio();
+   * // Si el folio es demasiado largo, se muestra el modal de advertencia.
+   */
   sobreElCambioFolio(): void {
     const FOLIO = this.Informaciondela.get('datosImportadorExportador.folio');
     if (FOLIO && FOLIO.value?.length > 25) {
@@ -243,12 +259,10 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
   /**
    * Método del ciclo de vida `ngOnDestroy()`.
    * Este método se ejecuta cuando el componente es destruido y realiza las siguientes acciones:
-   * - Desuscribe la suscripción al observable `subscription`.
    *
    * @memberof PagoDeDerechosComponent
    */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

@@ -12,7 +12,15 @@ import { CommonModule } from '@angular/common';
     ]
 })
 export class TablePaginationComponent {
+  /**
+   * @input showCurrentPage
+   * @type {boolean}
+   * @description
+   * Indica si se debe mostrar el número de la página actual en la paginación de la tabla.
+   * Si es `true`, se muestra el número de página actual; si es `false`, no se muestra.
+   */
   @Input() showCurrentPage: boolean = false;
+  
   @Input() totalItems: number = 0; // Total number of items
   @Input() itemsPerPage: number = 5; // Items per page
   @Input() currentPage: number = 1; // Current page

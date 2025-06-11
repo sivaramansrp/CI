@@ -83,7 +83,7 @@
           class="form-control"
           formControlName="nombreQuimico"
           maxlength="256"
-          [ngClass]="{ 'required': isInvalid('nombreQuimico') }"
+          [ngClass]="{ 'required': esInvalido('nombreQuimico') }"
           (change)="
             setValoresStore(
               informacionDeLaform,
@@ -106,7 +106,7 @@
           class="form-control"
           formControlName="nombreComercial"
           maxlength="256"
-          [ngClass]="{ 'required': isInvalid('nombreComercial') }"
+          [ngClass]="{ 'required': esInvalido('nombreComercial') }"
           (change)="
             setValoresStore(
               informacionDeLaform,
@@ -131,7 +131,7 @@
           class="form-control"
           formControlName="numeroCAS"
           maxlength="120"
-          [ngClass]="{ 'required': isInvalid('numeroCAS') }"
+          [ngClass]="{ 'required': esInvalido('numeroCAS') }"
           (change)="
             setValoresStore(informacionDeLaform, 'numeroCAS', 'setNumeroCAS')
           "
@@ -172,7 +172,7 @@
           class="form-control"
           style="height: 50%; resize: none"
           formControlName="acondicionamiento"
-          [ngClass]="{ 'required': isInvalid('acondicionamiento') }"
+          [ngClass]="{ 'required': esInvalido('acondicionamiento') }"
           (change)="
             setValoresStore(
               informacionDeLaform,

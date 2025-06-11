@@ -1,6 +1,4 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable no-empty-function */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConfiguracionColumna, ConsultaioQuery, GENERAR_LINEA_CAPTURA_URL, REGEX_LINEA_CAPTURA, TablaDinamicaComponent, TablaSeleccion, TablePaginationComponent } from '@ng-mf/data-access-user';
 import {
@@ -13,7 +11,7 @@ import {
   Solicitud301State,
   Tramite301Store,
 } from '../../../../core/estados/tramites/tramite301.store';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { PAGO_DE_DERECHOS_TABLA } from '../../constantes/301.enum';
 import { PagoDeDerechosTabla } from '../../models/301.models';
@@ -57,8 +55,24 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   public datosTabla: PagoDeDerechosTabla[] = [];
 
+   /**
+   * @property listaSeleccionadas
+   * @type {PagoDeDerechosTabla[]}
+   * @private
+   * @description
+   * Arreglo privado que almacena las filas seleccionadas en la tabla de pago de derechos.
+   * Se utiliza para realizar operaciones como la eliminación de registros seleccionados por el usuario.
+   */
   private listaSeleccionadas: PagoDeDerechosTabla[] = [];
 
+  /**
+   * Referencia al elemento del modal de confirmación en la plantilla.
+   * Se utiliza para mostrar mensajes de advertencia o confirmación al usuario,
+   * por ejemplo, cuando se intenta agregar una línea de captura duplicada.
+   *
+   * @type {ElementRef}
+   * @memberof PagoDeDerechosComponent
+   */
   @ViewChild('modalConfirmacionRef') modalConfirmacionRef!: ElementRef;
 
   /**
@@ -68,11 +82,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @type {FormGroup}
    */
   FormSolicitud!: FormGroup;
-
-  /**
-   * Suscripción a los cambios en el formulario reactivo.
-   */
-  private subscription: Subscription = new Subscription();
 
   /**
    * Estado de la solicitud de la sección 301.
@@ -156,41 +165,38 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
   inicializarFormulario(): void {
     // Inicializa el formulario con validaciones requeridas
-    this.subscription.add(
-      this.tramite301Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.solicitudState = seccionState;
-            if (
-            this.solicitudState &&
-            typeof this.solicitudState === 'object' &&
-            this.solicitudState !== null &&
-            'pagoDerechosTabla' in this.solicitudState
-          ) {
-            const PAGO_DERECHOS = this.solicitudState['pagoDerechosTabla'] as Array<{ lineaDeCaptura: string; monto?: number }>;
-            PAGO_DERECHOS.forEach((productoItem: { lineaDeCaptura: string; monto?: number }) => {
-              const IS_ALREADY_ADDED = this.datosTabla.some(
-              (item: { lineaDeCaptura: string }) => item.lineaDeCaptura === productoItem.lineaDeCaptura
-            );
+    this.tramite301Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+          if (
+          this.solicitudState &&
+          typeof this.solicitudState === 'object' &&
+          this.solicitudState !== null &&
+          'pagoDerechosTabla' in this.solicitudState
+        ) {
+          const PAGO_DERECHOS = this.solicitudState['pagoDerechosTabla'] as Array<{ lineaDeCaptura: string; monto?: number }>;
+          PAGO_DERECHOS.forEach((productoItem: { lineaDeCaptura: string; monto?: number }) => {
+            const IS_ALREADY_ADDED = this.datosTabla.some(
+            (item: { lineaDeCaptura: string }) => item.lineaDeCaptura === productoItem.lineaDeCaptura
+          );
 
-            if (!IS_ALREADY_ADDED) {
-              this.datosTabla.push({
-                lineaDeCaptura: productoItem.lineaDeCaptura,
-                monto: 4845
-              });
-            }
+          if (!IS_ALREADY_ADDED) {
+            this.datosTabla.push({
+              lineaDeCaptura: productoItem.lineaDeCaptura,
+              monto: 4845
             });
           }
-          })
-        )
-        .subscribe()
-    );
+          });
+        }
+        })
+      )
+      .subscribe();
 
     this.FormSolicitud = this.fb.group({
       pagodederechos: this.fb.group({
-        linea: [this.solicitudState?.linea, [Validators.required, Validators.maxLength(20),
-                  Validators.pattern(REGEX_LINEA_CAPTURA)]],
+        linea: [this.solicitudState?.linea, [Validators.required, Validators.maxLength(20), Validators.pattern(REGEX_LINEA_CAPTURA)]],
         monto: ['', Validators.required]
       }),
     });
@@ -246,7 +252,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite301Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite301Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite301Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /**
@@ -258,10 +264,27 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     return CONTROL ? CONTROL.invalid && CONTROL.touched : null;
   }
 
+  /**
+   * Getter para el control del campo 'linea' dentro del formulario reactivo.
+   *
+   * @returns {AbstractControl | null} Retorna el control del campo 'linea' si existe, de lo contrario retorna null.
+   */
   get lineaControl(): import('@angular/forms').AbstractControl | null {
     return this.FormSolicitud.get('pagodederechos.linea');
   }
 
+  /**
+   * @method agregar
+   * @description
+   * Agrega una nueva línea de captura a la tabla de pago de derechos.
+   * Primero valida que la línea de captura no exista previamente en la tabla.
+   * Si ya existe, muestra un modal de advertencia. Si el formulario es válido,
+   * agrega la nueva línea y el monto a la tabla, actualiza el store y limpia el campo.
+   * Si el formulario no es válido, marca los campos como tocados y actualiza la vista.
+   * @example
+   * this.agregar();
+   * // Agrega una nueva línea de captura si no existe y el formulario es válido.
+   */
   agregar(): void {
     const LINEA = this.lineaControl?.value ?? '';
     const YA_EXISTE = this.datosTabla.some(d => d.lineaDeCaptura === LINEA);
@@ -285,10 +308,23 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @method limpiar
+   * @description
+   * Limpia el campo 'linea' del formulario reactivo, restableciendo su valor.
+   * Este método se utiliza después de agregar una nueva línea de captura para dejar el campo listo para una nueva entrada.
+   */
   limpiar(): void {
     this.lineaControl?.reset();
   }
 
+  /**
+   * @method eliminar
+   * @description
+   * Elimina las filas seleccionadas de la tabla de pago de derechos (`datosTabla`).
+   * Recorre el arreglo de filas seleccionadas y elimina cada una de ellas de la tabla,
+   * actualizando el estado dinámico del trámite en el store después de cada eliminación.
+   */
   eliminar(): void {
     if (this.listaSeleccionadas.length) {
       this.listaSeleccionadas.forEach((ele: PagoDeDerechosTabla) => {
@@ -301,6 +337,15 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @method listaDeFilaSeleccionada
+   * @description
+   * Actualiza el arreglo de filas seleccionadas en la tabla de pago de derechos.
+   * Este método se utiliza para almacenar las filas seleccionadas por el usuario,
+   * permitiendo realizar operaciones como la eliminación de registros.
+   *
+   * @param {PagoDeDerechosTabla[]} event - Arreglo de filas seleccionadas.
+   */
   listaDeFilaSeleccionada(event: PagoDeDerechosTabla[]): void {
     this.listaSeleccionadas = [];
     this.listaSeleccionadas = event;
@@ -314,7 +359,6 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @memberof PagoDeDerechosComponent
    */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
