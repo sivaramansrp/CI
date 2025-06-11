@@ -29,36 +29,26 @@ import { ValidacionDeFormularioService } from '../../services/forma-servicio/val
 })
 export class ProgramaSeleccionadoComponent implements OnInit, OnDestroy {
   /**
-   * @property consultaState
-   * @description
    * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
    */
   @Input() consultaState!: ConsultaioState;
   
   /**
-   * @property destroy$
-   * @description
-   * Sujeto utilizado para destruir las suscripciones y evitar fugas de memoria.
+   * Subject usado para gestionar la destrucción de subscripciones y prevenir fugas de memoria.
    */
   private destroy$ = new Subject<void>();
 
   /**
-   * @property programaSeleccionado
-   * @description
    * Datos del formulario dinámico para el programa seleccionado.
    */
   public programaSeleccionado: ModeloDeFormaDinamica[] = PROGRAMA_SELECCIONADO;
 
   /**
-   * @property solicitudState
-   * @description
    * Estado actual de la solicitud de registro.
    */
   public solicitudState!: CancelacionState;
 
   /**
-   * @property forma
-   * @description
    * Formulario principal del componente.
    * Incluye un grupo de formularios para manejar los datos del programa seleccionado.
    */
@@ -67,36 +57,27 @@ export class ProgramaSeleccionadoComponent implements OnInit, OnDestroy {
   });
 
   /**
-   * @property ninoFormGroup
-   * @description
    * Getter para acceder al grupo de formularios del programa seleccionado.
-   * Retorna el grupo de formularios correspondiente.
-   * @returns {FormGroup}
+   * @returns {FormGroup} El grupo de formularios 'ninoFormGroup'.
    */
   get ninoFormGroup(): FormGroup {
     return this.forma.get('ninoFormGroup') as FormGroup;
   }
 
   /**
-   * @constructor
-   * @description
    * Constructor del componente.
-   * Inyecta los servicios necesarios para manejar los datos y formularios.
-   * @param cancelacionStore Store para manejar el estado de la cancelación.
-   * @param cancelacionQuery Query para obtener datos del estado de la cancelación.
-   * @param validacionDeFormularioService Servicio para manejar la validación de formularios.
+   * 
+   * @param cancelacionStore Servicio para manejar el estado de cancelación.
+   * @param cancelacionQuery Servicio para obtener datos del estado de cancelación.
+   * @param validacionDeFormularioService Servicio de validación de formularios dinámicos.
    */
   constructor(
     private cancelacionStore: CancelacionStore,
     private cancelacionQuery: CancelacionQuery,
     public validacionDeFormularioService: ValidacionDeFormularioService
-  ) {
-    // Constructor vacío
-  }
+  ) {}
 
   /**
-   * @method ngOnInit
-   * @description
    * Método que se ejecuta al inicializar el componente.
    * Configura las suscripciones y registra el formulario dinámico.
    */
@@ -114,10 +95,9 @@ export class ProgramaSeleccionadoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @method establecerCambioDeValor
-   * @description
    * Método que establece un cambio de valor en el formulario dinámico.
    * Actualiza el valor en el store y en el servicio de formularios.
+   * 
    * @param event Objeto que contiene el campo y el valor a actualizar.
    */
   establecerCambioDeValor(event: { campo: string; valor: object | string }): void {
@@ -127,8 +107,6 @@ export class ProgramaSeleccionadoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @method ngOnDestroy
-   * @description
    * Método que destruye las suscripciones para evitar fugas de memoria.
    * Llama a `next` y `complete` sobre el subject `destroy$`.
    */
