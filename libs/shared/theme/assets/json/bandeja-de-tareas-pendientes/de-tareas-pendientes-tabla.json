@@ -11224,5 +11224,16 @@
     "departamento": "sedena",
     "numeroDeProcedimiento": "240107",
     "origin": "READ_PROCEDURE"
-  }
+  },
+  {
+  "folioTramite": "5678909876543210123456789",
+  "tipoDeTramite": "Registro de solicitud de servicio",
+  "nombreDeLaTarea": "Revisión de presupuesto",
+  "fechaDeAsignacion": "2023-10-01",
+  "estadoDeTramite": "En Proceso",
+  "departamento": "semarnat",
+  "numeroDeProcedimiento": "231003",
+  "origin": "READ_PROCEDURE"
+}
+
 ]
