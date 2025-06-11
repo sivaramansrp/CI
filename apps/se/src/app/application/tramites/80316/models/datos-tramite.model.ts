@@ -1,3 +1,5 @@
+import { Catalogo } from "@libs/shared/data-access-user/src";
+
 /**
  * Representa los datos del solicitante.
  */
@@ -236,4 +238,14 @@ export interface DatosDeLaTabla {
   id: number;
   folioDePrograma: string;
   tipoDePrograma: string;
+}
+
+export interface RespuestaConsulta {
+  success: boolean;
+  datos: ConsultaDatos;
+  message: string;
+}
+
+export interface ConsultaDatos {
+  actividadProductiva: Catalogo[] | null;
 }

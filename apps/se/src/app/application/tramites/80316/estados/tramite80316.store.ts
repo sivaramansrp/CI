@@ -123,7 +123,7 @@ export class Tramite80316Store extends Store<Solicitud80316State> {
    *
    * @param {Catalogo[]} actividadProductiva - Lista de actividades productivas.
    */
-  public setActividadProductiva(actividadProductiva: Catalogo[]): void {
+  public setActividadProductiva(actividadProductiva: Catalogo[] | null): void {
     this.update((state) => ({
       ...state,
       actividadProductiva,

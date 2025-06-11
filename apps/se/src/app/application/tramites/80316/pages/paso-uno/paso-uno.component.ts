@@ -1,5 +1,6 @@
 import { AfterViewInit, EventEmitter, Output } from '@angular/core';
-import { FormularioDinamico, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, FormularioDinamico, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { map, Subject, takeUntil } from 'rxjs';
 import { AltaPlantaComponent } from '../../components/alta-planta/alta-planta.component';
 import { BitacoraComponent } from '../../components/bitacora/bitacora.component';
 import { CommonModule } from '@angular/common';
@@ -9,7 +10,9 @@ import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL } from '@libs/shared/d
 import { Input } from '@angular/core';
 import { ModificacionComponent } from '../../components/modificacion/modificacion.component';
 import { PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { SolicitudService } from '../../services/solicitud.service';
 import { ViewChild } from '@angular/core';
+import { Tramite80316Store } from '../../estados/tramite80316.store';
 
 /**
  * Componente que representa la página de solicitud.
@@ -78,6 +81,39 @@ export class PasoUnoComponent implements AfterViewInit {
    * Esta propiedad utiliza `@Input` para recibir datos del número de pedimento de tipo desconocido.
    */
   @Input() datosNroPedimento!: unknown;
+
+  /**
+   * @property {Subject<void>} destroyNotifier$
+   * @description Subject utilizado para notificar y completar las suscripciones activas al destruir el componente, evitando fugas de memoria.
+   */
+  public destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  constructor(private consultaioQuery: ConsultaioQuery, private solicitudService: SolicitudService,
+    public tramite80316Store: Tramite80316Store,
+  ) {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
+  
+  ngOnInit(): void {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+        })
+      )
+      .subscribe();
+    if (this.consultaDatos.update) {
+      this.fetchGetDatosConsulta();
+    }
+  }
+
   /**
 * Gancho de ciclo de vida angular que se llama después de que la vista del componente se haya inicializado por completo.
 */
@@ -85,6 +121,26 @@ export class PasoUnoComponent implements AfterViewInit {
     this.persona = PERSONA_MORAL_NACIONAL;
     this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
   }
+
+   /**
+ * @method fetchGetDatosConsulta
+ * @description Método para obtener los datos de consulta desde el servicio `DatosTramiteService` y actualizar el estado del store `tramite11204Store`.
+ * 
+ * Este método realiza una solicitud HTTP para obtener los datos de consulta y, si la respuesta es exitosa, actualiza múltiples propiedades del store con los datos recibidos.
+ * Utiliza el operador `takeUntil` para cancelar la suscripción cuando el componente se destruye, evitando fugas de memoria.
+ * 
+ * @returns {void}
+ */
+  public fetchGetDatosConsulta(): void {
+    this.solicitudService
+      .getDatosConsulta()
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
+        if (respuesta.success) {
+          this.tramite80316Store.setActividadProductiva(respuesta.datos.actividadProductiva);
+        }
+      });
+  }
+
   /**
    * Selecciona una pestaña.
    * @param i El índice de la pestaña a seleccionar.
