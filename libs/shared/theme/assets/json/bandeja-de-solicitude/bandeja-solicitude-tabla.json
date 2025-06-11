@@ -1556,6 +1556,15 @@
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260510"
 },
+  {
+    "id": 240170,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SEDENA",
+    "numeroDeProcedimiento": "240170"
+},
 {
     "id": 32509,
     "tipoDeTramite": "Solicitud de Permiso",
