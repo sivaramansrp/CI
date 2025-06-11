@@ -3,19 +3,16 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  Solicitud301State,
-  Tramite301Store,
-} from '../../../../core/estados/tramites/tramite301.store';
+import { Solicitud301State, Tramite301Store } from '../../../../core/estados/tramites/tramite301.store';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
@@ -43,6 +40,10 @@ import { Tramite301Query } from '../../../../core/queries/tramite301.query';
   standalone: true,
 })
 export class DeLaMuestraComponent implements OnInit, OnDestroy {
+
+  
+@ViewChild('modalConfirmacionRef') modalConfirmacionRef!: ElementRef;
+
 
   /**
    * Datos del catálogo relacionados con la mercancía.
@@ -161,7 +162,7 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
     );
     this.Informaciondela = this.fb.group({
       datosImportadorExportador: this.fb.group({
-        folio: [this.solicitudState?.folio, Validators.required],
+        folio: [this.solicitudState?.folio, [Validators.required, Validators.maxLength(25)]],
         mercancia: [this.solicitudState?.mercancia, Validators.required],
       }),
     });
@@ -229,6 +230,14 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite301Store[metodoNombre] as (value: any) => void)(VALOR);
+  }
+
+  sobreElCambioFolio(): void {
+    const FOLIO = this.Informaciondela.get('datosImportadorExportador.folio');
+    if (FOLIO && FOLIO.value?.length > 25) {
+      const MODAL = new bootstrap.Modal(this.modalConfirmacionRef.nativeElement);
+      MODAL.show();
+    }
   }
 
   /**

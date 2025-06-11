@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
     ]
 })
 export class TablePaginationComponent {
+  @Input() showCurrentPage: boolean = false;
   @Input() totalItems: number = 0; // Total number of items
   @Input() itemsPerPage: number = 5; // Items per page
   @Input() currentPage: number = 1; // Current page

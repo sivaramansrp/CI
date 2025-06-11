@@ -1,5 +1,5 @@
 <div class="container">
-  <ng-titulo titulo="Importante" />
+  <ng-titulo titulo="Ingresar pago de derechos:" />
   <form *ngIf="FormSolicitud" [formGroup]="FormSolicitud">
     <div formGroupName="pagodederechos">
       <div class="row" style="padding-bottom: 20px">
@@ -11,6 +11,8 @@
               id="linea"
               formControlName="linea"
               type="text"
+              maxlength="20"
+              [ngClass]="{ 'required': isInvalid() }"
               (change)="
                 setValoresStore(
                   FormSolicitud,
@@ -19,11 +21,18 @@
                 )
               "
             />
+            @if (lineaControl?.touched) {
+              @if (lineaControl?.hasError('required')) {
+                <div class="mensaje-error">Este campo es obligatorio.</div>
+              } @else if (lineaControl?.hasError('pattern')) {
+                <div class="mensaje-error">El formato de linea de captura no es correcto.</div>
+              }
+            }
           </div>
         </div>
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="monto">monto*:</label>
+            <label class="form-label" for="monto">Monto*:</label>
             <input
               class="form-control"
               id="monto"
@@ -35,37 +44,31 @@
       </div>
       <div class="row" style="padding-bottom: 20px; text-align: right">
         <div>
-          <button type="button" class="btn btn-default btn-space">
+          <button type="button" class="btn btn-default btn-space" (click)="limpiar()">
             Limpiar
           </button>
-          <button type="button" class="btn btn-primary btn-space">
+          <button type="button" class="btn btn-primary btn-space" (click)="agregar()">
             Agregar
           </button>
         </div>
       </div>
       <div class="row justify-content-center">
         <div class="col-md-4">
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="checkbox"
-              id="lineaCheckbox"
-              formControlName="lineaCheckbox"
-              (change)="
-                setValoresStore(
-                  FormSolicitud,
-                  'pagodederechos.lineaCheckbox',
-                  'setLineaCheckbox'
-                )
-              "
-            />
-            <label class="form-check-label" for="lineaCheckbox">
-              <span>linea de captura</span>
-              <span style="margin-left: 60px">Monto</span>
-            </label>
-          </div>
+          <div class="row">
+            <app-tabla-dinamica
+              [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
+              [configuracionTabla]="encabezadoDeTabla"
+              [datos]="datosTabla"
+              [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+              (listaDeFilaSeleccionada)="listaDeFilaSeleccionada($event)">
+            </app-tabla-dinamica>
+        </div>
+        <div class="row"> 
+          <app-table-pagination [showCurrentPage]="true"></app-table-pagination>
+        </div>
         </div>
       </div>
+
 
       <nav aria-label="Page navigation example">
         <ul class="pagination d-flex justify-content-center">
@@ -82,17 +85,33 @@
       </nav>
       <div class="row" style="text-align: right">
         <div>
-          <button class="btn btn-danger" type="button">Eliminar</button>
+          <button class="btn btn-danger" type="button" (click)="eliminar()">Eliminar</button>
         </div>
       </div>
-
-      <p>
+      <div class="row mt-5">
+        <p>
         <strong>
           A través del siguiente vinculo puedes ingresar a la página para
           generar la línea de captura de la constancia que se solicita:
         </strong>
       </p>
-      <p>Generar línea de captura</p>
+      <a [href]="generarLineaCapturaURL" target="_blank">Generar línea de captura</a>
+      </div>
     </div>
   </form>
 </div>
+
+<div class="modal fade" #modalConfirmacionRef id="modalConfirmacion" tabindex="-1" aria-labelledby="modalConfirmacionLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+        </div>
+        <div class="modal-body">
+          <p>No se puede agregar línea de captura, porque ya se encuentra agregada.</p>
+          <div class="modal-footer custom-footer">
+            <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>Acceptar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

@@ -1,7 +1,8 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable no-empty-function */
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConfiguracionColumna, ConsultaioQuery, GENERAR_LINEA_CAPTURA_URL, REGEX_LINEA_CAPTURA, TablaDinamicaComponent, TablaSeleccion, TablePaginationComponent } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
@@ -14,7 +15,8 @@ import {
 } from '../../../../core/estados/tramites/tramite301.store';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { PAGO_DE_DERECHOS_TABLA } from '../../constantes/301.enum';
+import { PagoDeDerechosTabla } from '../../models/301.models';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 
@@ -34,9 +36,30 @@ import { Tramite301Query } from '../../../../core/queries/tramite301.query';
   templateUrl: './pago-de-derechos.component.html',
   styleUrls: ['./pago-de-derechos.component.scss'],
   standalone: true,
-  imports: [CommonModule, TituloComponent, ReactiveFormsModule],
+  imports: [CommonModule, TituloComponent, ReactiveFormsModule, TablaDinamicaComponent, TablePaginationComponent],
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
+  /**
+   * Referencia a la clase o enumeración `TablaSeleccion`.
+   *
+   * Esta propiedad se utiliza para acceder a las funcionalidades
+   * o valores definidos en `TablaSeleccion` dentro del componente.
+   */
+  public TablaSeleccion = TablaSeleccion;
+
+  /**
+   * Configuración de las columnas de la tabla.
+   */
+  public encabezadoDeTabla: ConfiguracionColumna<PagoDeDerechosTabla>[]= PAGO_DE_DERECHOS_TABLA;
+
+  /**
+   * Define los datos que se mostrarán en la tabla dinámica.
+   */
+  public datosTabla: PagoDeDerechosTabla[] = [];
+
+  private listaSeleccionadas: PagoDeDerechosTabla[] = [];
+
+  @ViewChild('modalConfirmacionRef') modalConfirmacionRef!: ElementRef;
 
   /**
    * Formulario reactivo que contiene los campos de datos del importador/exportador.
@@ -68,6 +91,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   esFormularioSoloLectura: boolean = false;
 
   /**
+   * URL utilizada para generar la línea de captura.
+   * Esta constante apunta al endpoint definido por GENERAR_LINEA_CAPTURA_URL.
+   */
+  public generarLineaCapturaURL: string = GENERAR_LINEA_CAPTURA_URL;
+
+  /**
    * Constructor del componente `PagoDeDerechosComponent`.
    *
    * Inicializa la instancia de `FormBuilder` para crear formularios reactivos.
@@ -79,6 +108,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private tramite301Store: Tramite301Store,
     private tramite301Query: Tramite301Query,
     private consultaioQuery: ConsultaioQuery,
+    private changeDetectorRef: ChangeDetectorRef
   ) {
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
@@ -132,6 +162,26 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {
             this.solicitudState = seccionState;
+            if (
+            this.solicitudState &&
+            typeof this.solicitudState === 'object' &&
+            this.solicitudState !== null &&
+            'pagoDerechosTabla' in this.solicitudState
+          ) {
+            const PAGO_DERECHOS = this.solicitudState['pagoDerechosTabla'] as Array<{ lineaDeCaptura: string; monto?: number }>;
+            PAGO_DERECHOS.forEach((productoItem: { lineaDeCaptura: string; monto?: number }) => {
+              const IS_ALREADY_ADDED = this.datosTabla.some(
+              (item: { lineaDeCaptura: string }) => item.lineaDeCaptura === productoItem.lineaDeCaptura
+            );
+
+            if (!IS_ALREADY_ADDED) {
+              this.datosTabla.push({
+                lineaDeCaptura: productoItem.lineaDeCaptura,
+                monto: 4845
+              });
+            }
+            });
+          }
           })
         )
         .subscribe()
@@ -139,9 +189,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
     this.FormSolicitud = this.fb.group({
       pagodederechos: this.fb.group({
-        linea: [this.solicitudState?.linea, Validators.required],
-        monto: ['', Validators.required],
-        lineaCheckbox: [this.solicitudState?.lineaCheckbox],
+        linea: [this.solicitudState?.linea, [Validators.required, Validators.maxLength(20),
+                  Validators.pattern(REGEX_LINEA_CAPTURA)]],
+        monto: ['', Validators.required]
       }),
     });
     // Llama al método para actualizar el campo 'monto'
@@ -197,6 +247,63 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite301Store[metodoNombre] as (value: any) => void)(VALOR);
+  }
+
+  /**
+   * Verifica si el control del formulario es inválido y ha sido tocado.
+   * @returns {boolean | null} `true` si el control es inválido y tocado, `null` si no existe el control.
+   */
+  isInvalid(): boolean | null {
+    const CONTROL = this.lineaControl;
+    return CONTROL ? CONTROL.invalid && CONTROL.touched : null;
+  }
+
+  get lineaControl(): import('@angular/forms').AbstractControl | null {
+    return this.FormSolicitud.get('pagodederechos.linea');
+  }
+
+  agregar(): void {
+    const LINEA = this.lineaControl?.value ?? '';
+    const YA_EXISTE = this.datosTabla.some(d => d.lineaDeCaptura === LINEA);
+    if (YA_EXISTE) {
+      const MODAL = new bootstrap.Modal(this.modalConfirmacionRef.nativeElement);
+      MODAL.show();
+      return;
+    }
+
+    if (this.FormSolicitud.get('pagodederechos')?.valid) {
+      const DATOS = {
+        lineaDeCaptura: this.lineaControl?.value ?? '',
+        monto: this.FormSolicitud.get('pagodederechos.monto')?.value ?? ''
+      };
+      this.datosTabla.push(DATOS);
+      this.tramite301Store.setPagoDerechosTabla('pagoDerechosTabla', this.datosTabla);
+      this.limpiar();
+    } else {
+      this.FormSolicitud.get('pagodederechos')?.markAllAsTouched();
+      this.changeDetectorRef.detectChanges();
+    }
+  }
+
+  limpiar(): void {
+    this.lineaControl?.reset();
+  }
+
+  eliminar(): void {
+    if (this.listaSeleccionadas.length) {
+      this.listaSeleccionadas.forEach((ele: PagoDeDerechosTabla) => {
+        const INDICE = this.datosTabla.findIndex((item) => item.lineaDeCaptura === ele.lineaDeCaptura);
+        if (INDICE !== -1) {
+          this.datosTabla.splice(INDICE, 1);
+          this.tramite301Store.setPagoDerechosTabla('pagoDerechosTabla', this.datosTabla);
+        }
+      });
+    }
+  }
+
+  listaDeFilaSeleccionada(event: PagoDeDerechosTabla[]): void {
+    this.listaSeleccionadas = [];
+    this.listaSeleccionadas = event;
   }
 
   /**

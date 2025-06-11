@@ -5,8 +5,7 @@
  * @module InformacionDeLaComponent
  * @description Este módulo define el componente `InformacionDeLaComponent` que maneja la información de la mercancía.
 */
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -23,6 +22,7 @@ import { BtnContinuarComponent } from 'libs/shared/data-access-user/src/tramites
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 import estadofisico from 'libs/shared/theme/assets/json/130102/entidad_federativa.json';
@@ -179,12 +179,12 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
       descripcionFraccion: [this.solicitudState?.descripcionFraccion],
       nico: [this.solicitudState?.nico, Validators.required],
       descripcionNico: [this.solicitudState?.descripcionNico],
-      nombreQuimico: [this.solicitudState?.nombreQuimico, Validators.required],
+      nombreQuimico: [this.solicitudState?.nombreQuimico, [Validators.required, Validators.maxLength(256)]],
       nombreComercial: [
         this.solicitudState?.nombreComercial,
-        Validators.required,
+        [Validators.required, Validators.maxLength(256)]
       ],
-      numeroCAS: [this.solicitudState?.numeroCAS, Validators.required],
+      numeroCAS: [this.solicitudState?.numeroCAS, [Validators.required, Validators.maxLength(120)]],
       estadoFisico: [this.solicitudState?.estadoFisico, Validators.required],
       acondicionamiento: [
         this.solicitudState?.acondicionamiento,
@@ -250,6 +250,15 @@ export class InformacionDeLaComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite301Store[metodoNombre] as (value: any) => void)(VALOR);
+  }
+
+  /**
+   * Verifica si el control del formulario es inválido y ha sido tocado.
+   * @returns {boolean | null} `true` si el control es inválido y tocado, `null` si no existe el control.
+   */
+  isInvalid(campo: string): boolean | null {
+    const CONTROL = this.informacionDeLaform.get(campo);
+    return CONTROL ? CONTROL.invalid && CONTROL.touched : null;
   }
 
   /**

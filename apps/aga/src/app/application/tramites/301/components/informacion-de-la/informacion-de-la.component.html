@@ -82,6 +82,8 @@
           id="nombreQuimico"
           class="form-control"
           formControlName="nombreQuimico"
+          maxlength="256"
+          [ngClass]="{ 'required': isInvalid('nombreQuimico') }"
           (change)="
             setValoresStore(
               informacionDeLaform,
@@ -90,6 +92,9 @@
             )
           "
         ></textarea>
+        @if (informacionDeLaform.get('nombreQuimico')?.hasError('required') && informacionDeLaform.get('nombreQuimico')?.touched) {
+          <div class="mensaje-error">Este campo es obligatorio.</div>
+        }
       </div>
 
       <div class="col-md-8">
@@ -100,6 +105,8 @@
           id="nombreComercial"
           class="form-control"
           formControlName="nombreComercial"
+          maxlength="256"
+          [ngClass]="{ 'required': isInvalid('nombreComercial') }"
           (change)="
             setValoresStore(
               informacionDeLaform,
@@ -108,6 +115,9 @@
             )
           "
         ></textarea>
+        @if (informacionDeLaform.get('nombreComercial')?.hasError('required') && informacionDeLaform.get('nombreComercial')?.touched) {
+          <div class="mensaje-error">Este campo es obligatorio.</div>
+        }
       </div>
     </div>
 
@@ -120,10 +130,15 @@
           id="numeroCAS"
           class="form-control"
           formControlName="numeroCAS"
+          maxlength="120"
+          [ngClass]="{ 'required': isInvalid('numeroCAS') }"
           (change)="
             setValoresStore(informacionDeLaform, 'numeroCAS', 'setNumeroCAS')
           "
         ></textarea>
+        @if (informacionDeLaform.get('numeroCAS')?.hasError('required') && informacionDeLaform.get('numeroCAS')?.touched) {
+          <div class="mensaje-error">Este campo es obligatorio.</div>
+        }
       </div>
 
       <div class="col-md-4">
@@ -157,6 +172,7 @@
           class="form-control"
           style="height: 50%; resize: none"
           formControlName="acondicionamiento"
+          [ngClass]="{ 'required': isInvalid('acondicionamiento') }"
           (change)="
             setValoresStore(
               informacionDeLaform,
@@ -165,6 +181,9 @@
             )
           "
         ></textarea>
+        @if (informacionDeLaform.get('acondicionamiento')?.hasError('required') && informacionDeLaform.get('acondicionamiento')?.touched) {
+          <div class="mensaje-error">Este campo es obligatorio.</div>
+        }
       </div>
     </div>
   </form>
