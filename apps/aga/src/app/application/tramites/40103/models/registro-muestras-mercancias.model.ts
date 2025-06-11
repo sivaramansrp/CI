@@ -205,34 +205,44 @@ export interface DatosDelChoferNacional {
   id: unknown;
   curp?: string;
   rfc?: string;
-  número?: string;
-  nombre?: string;
-  calle?: string;
-  númeroExterior?: string;
-  númeroInterior?: string;
-  pais?: string;
-  estado?: string;
+
+  nombre?:string;
   primerApellido?: string;
   segundoApellido?: string;
-  númeroDeGafete?: string;
+  numeroDeGafete?: string;
   vigenciaGafete?: string;
-  municipio?: string;
+  
+
+  calle?: string;
+  numeroExterior?: string;
+  numeroInterior?: string;
+  pais?: string;
+  estado?: string;
+  municipioAlcaldia?: string;
   colonia?: string;
-  paisOrigen?: string;
+  paisDeResidencia?: string;
   ciudad?: string;
-  apellidoPaterno?: string;
-  apellidoMaterno?: string;
-  gafete?: string;
-  país?: string;
-  fechaFindDeVigencia?: string;
-  municipioAlcaldía?: string;
-  PaísDeResidencia?: string;
+  localidad?: string;
+  codigoPostal?: string; 
+
+
+  telefono: string;
+  correoElectronico: string;
+
+  //TODO:  below items to be identifed if they really needed.
+  // municipio?: string;
+  // paisOrigen?: string;
+  // apellidoPaterno?: string;
+  // apellidoMaterno?: string;
+  // gafete?: string;
+  // fechaFindDeVigencia?: string;
 }
+
 // eslint-disable-next-line @typescript-eslint/naming-convention
 export interface choferesExtranjeros {
   /** Línea de captura del pago. */
-  númeroDelSeguroSocial?: string;
-  número?: string;
+  numeroDelSeguroSocial?: string;
+  numero?:string;
   calle?: string;
   estado?: string;
   pais?: string;
@@ -246,19 +256,18 @@ export interface choferesExtranjeros {
   paisOrigen?: string;
   ciudad?: string;
   curp?: string;
-  númeroExterior?: string;
-  númeroInterior?: string;
-  país?: string;
+  numeroExterior?: string;
+  numeroInterior?: string;
   primerApellido?: string;
   segundoApellido?: string;
-  númeroDeGafete?: string;
+  numeroDeGafete?: string;
   fechaFindDeVigencia?: string;
-  municipioAlcaldía?: string;
-  PaísDeResidencia?: string;
+  municipioAlcaldia?: string;
+  paisDeResidencia?: string;
 }
 export interface PagoDerechosLista {
   /** Línea de captura del pago. */
-  número?: string;
+  numero?: string;
   calle?: string;
   estado?: string;
   pais?: string;

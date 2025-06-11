@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable } from 'rxjs'; 
+import { BehaviorSubject, map, Observable, takeUntil } from 'rxjs'; 
 import { Chofer, DatosDelChoferNacional, DirectorGeneralData } from '../models/registro-muestras-mercancias.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Chofer40103Store } from './chofer40103.store';
@@ -211,6 +211,50 @@ export class Chofer40103Service {
   }
 
   /**
+   * Obtiene la lista de estados desde un archivo JSON local.
+   *
+   * @returns {Observable<Catalogo[]>} Un observable que emite la lista de estados.
+   */
+  getEstadosPorPais(id: number): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>('/assets/json/40103/estado.json')
+    .pipe(
+      map((estados: Catalogo[]) => {
+        return estados.filter((estado) => estado.id === id);
+      })
+    );
+  }
+
+  getMunicipiosPorEstado(
+    claveEstado: number
+  ): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>(
+      `/assets/json/40103/municipio.json`
+    ).pipe(
+      map((municipios: Catalogo[]) => {
+        return municipios.filter((municipio) => municipio.id === claveEstado);
+      })
+    );
+  }
+  /**
+   * Obtiene la lista de colonias de un municipio específico.
+   * 
+   * @param claveMunicipio La clave del municipio.
+   * @returns Un observable con la lista de colonias.
+   */
+  getColoniasPorMunicipio(
+        municipiosId: number
+  ): Observable<Catalogo[]> {
+    return this.http.get<Catalogo[]>(
+      `/assets/json/40103/colonia.json`
+    ).pipe(
+      map((municipios: Catalogo[]) => {
+        return municipios.filter((municipio) => municipio.id === municipiosId);
+      })
+    );
+  }
+
+
+  /**
    * Obtiene el catálogo de colonias.
    * 
    * @returns Un observable con el catálogo de colonias.
@@ -280,7 +324,7 @@ export class Chofer40103Service {
   updateDatosDelChoferNacional(data: DatosDelChoferNacional[]): void {
     this.chofer40103Store.update((state) => ({
       ...state,
-      datosDelChoferNacional: data
+      datosDelChoferNacionalAlta: data
     }));
   }
 }

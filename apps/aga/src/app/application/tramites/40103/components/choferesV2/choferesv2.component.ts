@@ -41,11 +41,12 @@ import { choferesExtranjeros } from '../../../40103/models/registro-muestras-mer
 import { map } from 'rxjs/operators';
 import mockData from '@libs/shared/theme/assets/json/40103/director-general-mockdata.json';
 import { takeUntil } from 'rxjs';
+import { ChofereNacionalComponent } from './chofere.nacional/chofere.nacional.component';
 
 @Component({
-  selector: 'app-choferes',
-  templateUrl: './choferes.component.html',
-  styleUrls: ['./choferes.component.scss'],
+  selector: 'app-choferes-v2',
+  templateUrl: './choferesv2.component.html',
+  styleUrls: ['./choferesv2.component.scss'],
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -54,9 +55,10 @@ import { takeUntil } from 'rxjs';
     FormsModule,
     CatalogoSelectComponent,
     TablaDinamicaComponent,
+    ChofereNacionalComponent
   ],
 })
-export class ChoferesComponent implements OnInit, OnDestroy {
+export class ChoferesV2Component implements OnInit, OnDestroy {
   CHOFERES_PAGE = CHOFERES_PAGE;
   modal: string = this.CHOFERES_PAGE.MODAL;
   nacional: Array<Nacional> = [];
@@ -134,77 +136,6 @@ export class ChoferesComponent implements OnInit, OnDestroy {
   selectedRow: unknown;
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
-  /**
-   * Configuración de las columnas de la tabla.
-   * Define el encabezado, la clave de acceso a los datos y el orden de las columnas.
-   */
-  tableColumns: ConfiguracionColumna<DatosDelChoferNacional>[] = [
-    {
-      encabezado: 'CURP',
-      clave: (item: DatosDelChoferNacional) => item.curp,
-      orden: 1,
-    },
-    {
-      encabezado: 'RFC',
-      clave: (item: DatosDelChoferNacional) => item.rfc,
-      orden: 2,
-    },
-    {
-      encabezado: 'Número',
-      clave: (item: DatosDelChoferNacional) => item.nombre,
-      orden: 3,
-    },
-    {
-      encabezado: 'País',
-      clave: (item: DatosDelChoferNacional) => item.pais,
-      orden: 4,
-    },
-    // {
-    //   encabezado: 'Apellido Paterno',
-    //   clave: (item: DatosDelChoferNacional) => item.apellidoPaterno,
-    //   orden: 5,
-    // },
-    // {
-    //   encabezado: 'Apellido Materno',
-    //   clave: (item: DatosDelChoferNacional) => item.apellidoMaterno,
-    //   orden: 6,
-    // },
-    {
-      encabezado: 'RFC',
-      clave: (item: DatosDelChoferNacional) => item.rfc,
-      orden: 7,
-    },
-    // {
-    //   encabezado: 'Gafete',
-    //   clave: (item: DatosDelChoferNacional) => item.gafete,
-    //   orden: 8,
-    // },
-    {
-      encabezado: 'Vigencia Gafete',
-      clave: (item: DatosDelChoferNacional) => item.vigenciaGafete,
-      orden: 9,
-    },
-    // {
-    //   encabezado: 'Municipio o Alcaldía',
-    //   clave: (item: DatosDelChoferNacional) => item.municipio,
-    //   orden: 10,
-    // },
-    {
-      encabezado: 'Colonia',
-      clave: (item: DatosDelChoferNacional) => item.colonia,
-      orden: 11,
-    },
-    // {
-    //   encabezado: 'País de Origen',
-    //   clave: (item: DatosDelChoferNacional) => item.paisOrigen,
-    //   orden: 12,
-    // },
-    {
-      encabezado: 'Ciudad',
-      clave: (item: DatosDelChoferNacional) => item.ciudad,
-      orden: 13,
-    },
-  ];
 
   /**
    * Configuración de las columnas para la visualización de datos de choferes extranjeros.
@@ -317,11 +248,11 @@ export class ChoferesComponent implements OnInit, OnDestroy {
       orden: 16,
     },
   ];
-  
   /**
    * Lista de pagos de derechos asociados a la solicitud.
    * Se inicializa como un array vacío con la estructura de `DatosDelChoferNacional`.
    */
+
   @ViewChild('modalRef', { static: false }) modalRef!: ElementRef;
   /**
    * Catálogo de datos que se recibe como entrada desde el componente padre.
@@ -335,7 +266,7 @@ export class ChoferesComponent implements OnInit, OnDestroy {
    *
    * @type {Catalogo[]}
    */
-  public paisOrigenCHN!: Catalogo[];
+  // public paisOrigenCHN!: Catalogo[];
 
   /**
    * Lista de delegaciones para choferes nacionales.
@@ -448,7 +379,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     this.fetchChoferes();
     this.estado$ = this.chofer40103Store._select((state) => state.estado);
 
-    ChoferesComponent.loadEstados();
+    ChoferesV2Component.loadEstados();
     this.estadoSeleccion();
     this.setFormValues();
     this.paisEmisorData();
@@ -457,7 +388,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
     this.nacionaliDadChe();
     this.estadoData();
     this.paisChnData();
-    this.ConfiguracionColumna = this.tableColumns;
+    // this.ConfiguracionColumna = this.tableColumns;
 
     this.consultaioQuery.selectConsultaioState$
       .pipe(takeUntil(this.destroyNotifier$))
@@ -581,6 +512,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
       ],
       nombres: [this.solicitud40103State?.nombres, [Validators.required]],
     });
+    console.log('Form choferes initialized:', this.formChoferes);
   }
 
   /**
@@ -695,15 +627,15 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
    * Obtiene la lista de choferes nacionales desde el servicio.
    */
   fetchChoferes(): void {
-    this.chofer40103Service
-      .getChoferNacionalData()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((response) => {
-        this.choferes = response;
-        this.municipios = response;
-        this.colonias = response;
-        this.paises = response;
-      });
+    // this.chofer40103Service
+    //   .getChoferNacionalData()
+    //   .pipe(takeUntil(this.destroyed$))
+    //   .subscribe((response) => {
+    //     this.choferes = response;
+    //     this.municipios = response;
+    //     this.colonias = response;
+    //     this.paises = response;
+    //   });
   }
   /**
    * Gancho de ciclo de vida angular que se llama después de que la vista del componente se haya inicializado por completo.
@@ -823,7 +755,7 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
   static onPaisChange(event: Event): void {
     const PAIS = (event.target as HTMLSelectElement).value;
     if (PAIS) {
-      ChoferesComponent.loadEstados();
+      ChoferesV2Component.loadEstados();
     }
   }
 
@@ -957,12 +889,15 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
    * @returns {void}
    */
   paisEmisorData(): void {
-    this.chofer40103Service
-      .getPaisOrigenChn()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.paisOrigenCHN = data;
-      });
+    // this.chofer40103Service
+    //   .getPaisOrigenChn()
+    //   .pipe(
+    //     takeUntil(this.destroyed$),
+    //     map<Catalogo[], void>((data, i) => {
+    //       this.paisOrigenCHN = data;
+    //     })
+    //   )
+    //   .subscribe();
   }
 
   /**
@@ -985,12 +920,12 @@ Gancho del ciclo de vida angular que se llama después de que se inicializan las
    * @returns {void}
    */
   estadoData(): void {
-    this.chofer40103Service
-      .getEstado()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data) => {
-        this.estado = data;
-      });
+    // this.chofer40103Service
+    //   .getEstado()
+    //   .pipe(takeUntil(this.destroyed$))
+    //   .subscribe((data) => {
+    //     this.estado = data;
+    //   });
   }
 
   /**
