@@ -257,6 +257,14 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   public esFormularioSoloLectura: boolean = false;
 
   /**
+   * Bandera para indicar si se está actualizando el estado de la consulta.
+   * Inicialmente establecido en `false`.
+   *
+   * @description Esta bandera se utiliza para determinar si se debe actualizar el estado de la consulta.
+   */
+  private consultaStateUpdate: boolean = false;
+
+  /**
      * Estado de la solicitud de la sección PagoBanco.
      */
     public solicitudState!: TercerosFabricanteState;
@@ -283,6 +291,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
           takeUntil(this.destroyNotifier$),
           map((seccionState)=>{
             this.esFormularioSoloLectura = seccionState.readonly; 
+            this.consultaStateUpdate = seccionState.update;
           })
         )
         .subscribe()
@@ -310,7 +319,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     } else {
       this.inicializarFormulario();
     }
-    if(this.esFormularioSoloLectura) {
+    if(this.esFormularioSoloLectura && this.consultaStateUpdate) {
       this.fetchTableDummyJson();
     }
   }
@@ -327,8 +336,6 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
           })
         )
         .subscribe();
-
-        // this.configurarFormularioPagoBanco();
     }
 
   /**
