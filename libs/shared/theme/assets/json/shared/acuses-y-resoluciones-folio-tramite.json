@@ -278,6 +278,15 @@
     "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "220202"
   },
+
+   {
+    "folioTramite": "0100001000320251005220203",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "INBAL ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "INBAL",
+    "numeroDeProcedimiento": "270201"
+   },
   {
     "folioTramite": "0100001000320251005220203",
     "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
@@ -615,6 +624,14 @@
     "numeroDeProcedimiento": "260402"
   },
   {
+    "folioTramite": "0100001000320251005000043",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "COFEPRIS ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "110207"
+  },
+  {
     "folioTramite": "0100001000320251005000003",
     "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
     "dependencia": "SEDENA ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
@@ -661,5 +678,13 @@
     "fechInicioTramite": "2025-3-09 0035:05:00",
     "departamento": "SE",
     "numeroDeProcedimiento": "110201"
+  },
+   {
+   "folioTramite": "0100001000320251005000503",
+    "tipoDeTramite": "Autorización para la importación de plaguicidas, nutrientes vegetales, sustancias y materiales tóxicos o peligrosos",
+    "dependencia": "SE ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "AGRICULTURA",
+    "numeroDeProcedimiento": "220503"
   }
 ]

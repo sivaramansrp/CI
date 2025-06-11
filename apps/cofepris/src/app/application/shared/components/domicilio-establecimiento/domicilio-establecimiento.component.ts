@@ -268,7 +268,6 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       numeroPermiso: [this.solicitudState?.numeroPermiso],
       paisDeOriginDatos: [this.solicitudState?.aduanasDeEntrada || []],
       garantiasOfrecidas: [this.solicitudState?.garantiasOfrecidas],
-      scian: [''],
     });
       }
 
