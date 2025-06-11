@@ -14,7 +14,11 @@
     [ngClass]="isValid ? 'required' : ''"
     (change)="handleChange($event)"
   />
-  <div *ngIf="isValid" class="mensaje-error">
+  <div *ngIf="getTipoError('pattern')" class="mensaje-error">
     La hora indicada no es válida.
+  </div>
+
+  <div *ngIf="getTipoError('required')" class="mensaje-error">
+    Este campo es obligatorio.
   </div>
 </div>
