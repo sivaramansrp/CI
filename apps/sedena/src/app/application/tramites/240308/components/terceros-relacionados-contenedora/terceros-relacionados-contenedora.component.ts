@@ -10,6 +10,8 @@ import { Tramite240308Query } from '../../estados/tramite240308Query.query';
 import { Tramite240308Store } from '../../estados/tramite240308Store.store';
 import { takeUntil } from 'rxjs';
 
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 /**
  * @title Terceros Relacionados Contenedora
  * @description Componente contenedor encargado de suscribirse a los datos de destinatarios finales y proveedores del trámite.
@@ -44,6 +46,8 @@ export class TercerosRelacionadosContenedoraComponent
    */
   proveedorTablaDatos: Proveedor[] = [];
 
+    esSoloLectura!: boolean;
+
   /**
    * Constructor del componente.
    *
@@ -54,7 +58,8 @@ export class TercerosRelacionadosContenedoraComponent
    */
   constructor(
     private tramiteStore: Tramite240308Store,
-    private tramiteQuery: Tramite240308Query 
+    private tramiteQuery: Tramite240308Query,
+    private consultaQuery: ConsultaioQuery
   ) {
     // 
   }
@@ -67,6 +72,11 @@ export class TercerosRelacionadosContenedoraComponent
    * @returns {void}
    */
   ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((estadoConsulta) => {
+        this.esSoloLectura = estadoConsulta.readonly;
+      });
     this.tramiteQuery.getDestinatarioFinalTablaDatos$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
