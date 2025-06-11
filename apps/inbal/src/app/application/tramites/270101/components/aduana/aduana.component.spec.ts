@@ -100,7 +100,9 @@ describe('AduanaComponent', () => {
     exportarIlustracionesService = TestBed.inject(
       ExportarIlustracionesService
     ) as any;
-
+    component.consultaState = {
+          readonly: false,
+        } as any;
     fixture.detectChanges();
   });
 
