@@ -1,5 +1,4 @@
 <form [formGroup]="modificacionForm" (ngSubmit)="validarDestinatarioFormulario()">
-  <ng-container formGroupName="validacionForm">
 <div class="row mt-5">
     <div class="col-md-6">
       <div class="form-group">
@@ -44,5 +43,4 @@
   <app-producir-mercancias [mercanciasProducir]="listaTablaMercancia"></app-producir-mercancias>
   <!-- Productor indirecto -->
   <app-productor-indirecto [productoIndirectoDatos]="listaTablaProductor"></app-productor-indirecto>
-  </ng-container>
   </form>

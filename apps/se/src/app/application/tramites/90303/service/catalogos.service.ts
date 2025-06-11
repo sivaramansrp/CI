@@ -1,10 +1,10 @@
 import { ListaTabla, ListaTablaBaja } from '../models/registro.model';
 import { Mercancias, PlantasTabla, ProductorIndirecto, SectorTabla } from '../../../shared/models/complementaria.model';
 import { Observable, catchError, throwError } from 'rxjs';
+import { Solicitud90303State, Tramite90303Store } from '../state/Tramite90303.store';
 import { Bitacora } from '../../../shared/models/bitacora.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Solicitud90303State, Tramite90303Store } from '../state/Tramite90303.store';
 
 /**
  * Servicio para gestionar la obtención de datos de catálogos.

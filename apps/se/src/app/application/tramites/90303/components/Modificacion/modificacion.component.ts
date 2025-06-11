@@ -1,17 +1,17 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LISTA_DE_SECTORS, LISTA_DE_SECTORS_BAJA } from '../../constantes/constantes90303.enum';
 import { ListaTabla, ListaTablaBaja } from '../../models/registro.model';
 import { Mercancias, PlantasTabla, ProductorIndirecto, SectorTabla } from '../../../../shared/models/complementaria.model';
-import { map, ReplaySubject, takeUntil } from 'rxjs';
-import { ConsultaioQuery, ConsultaioState, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
+import { Solicitud90303State, Tramite90303Store } from '../../state/Tramite90303.store';
 import { CatalogosService } from '../../service/catalogos.service';
 import { CommonModule } from '@angular/common';
 import { PlantasComponent } from "../../../../shared/components/plantas/plantas.component";
 import { ProducirMercanciasComponent } from '../../../../shared/components/producir-mercancias/producir-mercancias.component';
 import { ProductorIndirectoComponent } from '../../../../shared/components/productor-indirecto/productor-indirecto.component';
 import { SectorComponent } from "../../../../shared/components/sector/sector.component";
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Solicitud90303State, Tramite90303Store } from '../../state/Tramite90303.store';
 import { Tramite90303Query } from '../../state/Tramite90303.query';
 
 /**
@@ -154,7 +154,7 @@ export class ModificacionComponent implements OnInit, OnDestroy, AfterViewInit {
    * Llama a los métodos para obtener los datos de las tablas.
    */
   ngOnInit(): void {
-    this.obtenerTablaLista();
+     this.obtenerTablaLista();
     this.obtenerTablaPlantas();
     this.obtenerTablaSector();
     this.obtenerTablaMercancia();
@@ -313,24 +313,17 @@ export class ModificacionComponent implements OnInit, OnDestroy, AfterViewInit {
       const VALOR = form.get(campo)?.value;
       (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
     }
-   /**
-   * Obtiene el formulario de validación.
-   */
-  get validacionForm(): FormGroup {
-    return this.modificacionForm.get('validacionForm') as FormGroup;
-  }
+   
   /**
    * Configura el formulario de modificación con los datos del donante y lo deshabilita.
    * Utiliza los valores del estado de la solicitud para inicializar el formulario.
    */
 donanteDomicilio(): void {
     this.modificacionForm = this.fb.group({
-       validacionForm : this.fb.group({
-      registroFederalContribuyentes: [this.solicitudState?.registroFederalContribuyentes, [Validators.required], {disabled: true}],
-      representacionFederal: [this.solicitudState?.representacionFederal, [Validators.required], {disabled: true}],
-      tipoModificacion: [this.solicitudState?.tipoModificacion, [Validators.required], {disabled: true}],
-      modificacionPrograma: [this.solicitudState?.modificacionPrograma, [Validators.required], {disabled: true}],
-    }),
+       registroFederalContribuyentes: [{ value: this.solicitudState?.registroFederalContribuyentes, disabled: true }, [Validators.required]],
+  representacionFederal: [{ value: this.solicitudState?.representacionFederal, disabled: true }, [Validators.required]],
+  tipoModificacion: [{ value: this.solicitudState?.tipoModificacion, disabled: true }, [Validators.required]],
+  modificacionPrograma: [{ value: this.solicitudState?.modificacionPrograma, disabled: true }, [Validators.required]],
   });
   }
   /**

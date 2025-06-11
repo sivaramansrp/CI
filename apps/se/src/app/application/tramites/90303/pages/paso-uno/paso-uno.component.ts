@@ -1,8 +1,8 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico, TIPO_PERSONA, TablaSeleccion } from '@ng-mf/data-access-user';
+import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { Mercancias, PlantasTabla, ProductorIndirecto, SectorTabla } from '../../../../shared/models/complementaria.model';
-import { map, ReplaySubject, takeUntil } from 'rxjs';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Bitacora } from '../../../../shared/models/bitacora.model';
 import { CatalogosService } from '../../service/catalogos.service';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';

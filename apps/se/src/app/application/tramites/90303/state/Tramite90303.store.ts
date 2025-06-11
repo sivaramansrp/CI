@@ -44,7 +44,7 @@ export class Tramite90303Store extends Store<Solicitud90303State> {
    * @param updateFunc Función que recibe el estado actual y retorna el nuevo estado.
    */   
   public setEstatus(estatus: string) {
-   this.update((state) => ({...state,  estatus, }));
+   this.update((state) => ({...state, estatus, }));
   }
   /**
    * Actualiza el estado del store con los nuevos valores.
