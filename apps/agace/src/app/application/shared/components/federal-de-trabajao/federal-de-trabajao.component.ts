@@ -1,11 +1,11 @@
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, REGEX_RFC, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Component, Inject, OnDestroy, OnInit, TemplateRef } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MENCIONE_TABLA,Mencione } from '../../models/datos-comunes.model';
 import { Subject,map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosComunesService } from '../../services/datos-comunes.service';
 
 /**
@@ -57,6 +57,10 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
    * Datos del catálogo para el tercer bimestre.
    */
   public bimestreTresCatalogo: Catalogo[] = [];
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando se establece en `true`, los campos del formulario no son editables por el usuario.
+   */
   public esFormularioSoloLectura: boolean = false;
 
   /**
@@ -89,6 +93,10 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
     this.inicializarEstadoFormulario();
   }
 
+    /**
+     * Inicializa el formulario llamando al método para restablecer o crear la estructura del formulario.
+     * Este método debe ser invocado para asegurar que el formulario esté en su estado inicial.
+     */
     public inicializarFormulario(): void {
         this.cerearFormulario();
     }
@@ -107,13 +115,20 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
     });
   }
 
+    /**
+     * Inicializa el estado del formulario según el modo de solo lectura.
+     *
+     * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es true),
+     * ejecuta el método `guardarFormulario` para guardar el formulario.
+     * De lo contrario, inicializa el formulario llamando a `inicializarFormulario`.
+     */
     public inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarFormulario();
     } else {
       this.inicializarFormulario();
     }
-  }
+    }
 
   /**
    * Obtiene datos para la tabla dinámica y los asigna al estado del componente.

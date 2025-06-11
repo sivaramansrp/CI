@@ -137,6 +137,10 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
    * @type {DatosComunesState}
    */
   public solicitudState!: DatosComunesState;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando se establece en `true`, los campos del formulario no son editables por el usuario.
+   */
   public esFormularioSoloLectura: boolean = false;
 
 
@@ -194,6 +198,17 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
     this.inicializarEstadoFormulario();
   }
 
+    /**
+     * Inicializa el formulario suscribiéndose al observable del estado de solicitud,
+     * actualizando el estado local en consecuencia y creando los grupos de formularios requeridos.
+     * 
+     * Este método realiza las siguientes acciones:
+     * - Se suscribe a `datosComunesQuery.selectSolicitud$` para mantener actualizado `solicitudState`,
+     *   anulando la suscripción automáticamente cuando `destroyNotifier$` emite.
+     * - Llama a `crearComunesDosFormulario()` para configurar los controles del formulario común.
+     * - Llama a `crearInstalacionesPrincipalesFormulario()` para configurar el formulario de instalaciones principales.
+     * - Llama a `crearModificarForm()` para configurar el formulario de modificación.
+     */
     public inicializarFormulario(): void {
       this.datosComunesQuery.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
         this.solicitudState = seccionState;
@@ -401,6 +416,12 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
     this.modalRef = this.modalService.show(template, { class: 'modal-lg',});
   }
 
+  /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   * 
+   * - Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es true), guarda el estado actual del formulario llamando a `guardarFormulario()`.
+   * - De lo contrario, inicializa el formulario llamando a `inicializarFormulario()`.
+   */
   public inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarFormulario();
@@ -409,6 +430,12 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
     }
   }
 
+  /**
+   * Inicializa el formulario y alterna su estado habilitado/deshabilitado según la bandera de solo lectura.
+   *
+   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), todos los formularios relacionados se deshabilitan.
+   * De lo contrario, todos los formularios relacionados se habilitan para su edición.
+   */
   public guardarFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {

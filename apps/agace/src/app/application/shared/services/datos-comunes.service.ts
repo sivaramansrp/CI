@@ -134,6 +134,12 @@ export class DatosComunesService {
     );
   }
 
+    /**
+     * Recupera los datos comunes para consulta desde un archivo JSON local.
+     *
+     * @returns Un `Observable` que emite el `DatosComunesState` cargado desde el archivo JSON.
+     * @throws Emite un observable de error si la solicitud HTTP falla.
+     */
     getConsultaDatosComunes(): Observable<DatosComunesState> {
     return this.http.get<DatosComunesState>('./assets/json/31602/datos-commune-consulta.json').pipe(
       catchError((error) => {
@@ -142,6 +148,12 @@ export class DatosComunesService {
     );
   }
 
+  /**
+   * Actualiza el estado del formulario estableciendo varias propiedades en el servicio `datosComunes`
+   * basándose en el objeto proporcionado `DatosComunesState`.
+   *
+   * @param DATOS - Un objeto que contiene los nuevos valores de estado para los campos del formulario.
+   */
    actualizarEstadoFormulario(DATOS: DatosComunesState): void {
       this.datosComunes.setAutorizacionIVAIEPS(DATOS.autorizacionIVAIEPS);
       this.datosComunes.setRegimenUno(DATOS.regimenUno);

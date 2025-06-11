@@ -1,11 +1,11 @@
 import { Observable,catchError, throwError } from 'rxjs';
+import { Solicitud31602IvaeiepsState, Tramite31602IvaeiepsStore } from '../estados/stores/tramite31602ivaeieps.store';
 import { Solicitud31602State, Tramite31602Store } from '../estados/stores/tramite31602.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src/enviroments/enviroment';
 import { JSONResponse } from '@libs/shared/data-access-user/src';
-import { Solicitud31602IvaeiepsState, Tramite31602IvaeiepsStore } from '../estados/stores/tramite31602ivaeieps.store';
 
 @Injectable({
   providedIn: 'root'
@@ -95,10 +95,22 @@ export class ComercioExteriorService {
       );
     }
 
+    /**
+     * Actualiza el estado de un campo del formulario estableciendo su valor dinámicamente en el store.
+     *
+     * @param campo - El nombre del campo del formulario a actualizar.
+     * @param valor - El nuevo valor que se asignará al campo del formulario. Puede ser un string, número o booleano.
+     */
     actualizarEstadoFormulario(campo: string, valor: string | number | boolean): void {
       this.tramaite31602Store.setDynamicFieldValue(campo, valor);
     }
 
+    /**
+     * Recupera los datos para "consulta datos por régimen" desde un archivo JSON local.
+     *
+     * @returns Un Observable que emite el objeto `Solicitud31602IvaeiepsState` con los datos solicitados.
+     * @throws Propaga un error si la solicitud HTTP falla.
+     */
     getConsultaDatosDos(): Observable<Solicitud31602IvaeiepsState> {
       return this.http.get<Solicitud31602IvaeiepsState>('assets/json/31602/consulta-datos-por-regimen.json').pipe(
         catchError((error) => {
@@ -107,6 +119,15 @@ export class ComercioExteriorService {
       );
     }
 
+    /**
+     * Actualiza el estado del formulario en el `tramaite31602IvaeiepsStore` utilizando los datos proporcionados en `Solicitud31602IvaeiepsState`.
+     *
+     * Itera a través de cada propiedad del objeto `DATOS` y establece el valor correspondiente en el store
+     * llamando al método setter adecuado. Esto asegura que todos los campos del formulario estén sincronizados con el
+     * estado actual.
+     *
+     * @param DATOS - Un objeto de tipo `Solicitud31602IvaeiepsState` que contiene los valores actuales de todos los campos del formulario.
+     */
     estadoFormulario(DATOS: Solicitud31602IvaeiepsState): void {
       this.tramaite31602IvaeiepsStore.setIndiqueCheck(DATOS.indiqueCheck);
       this.tramaite31602IvaeiepsStore.setResigtro(DATOS.resigtro);

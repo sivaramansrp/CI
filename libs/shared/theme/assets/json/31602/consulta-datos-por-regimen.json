@@ -4,7 +4,7 @@
     "irfc": "RFC123456789",
     "telefono": "555-123-4567",
     "correo": "usuario@ejemplo.com",
-    "manifieste": "Declaración de ejemplo",
+    "manifieste": "Si",
     "indiqueIva": "Si",
     "empleados": "Si",
     "infraestructura": "Si",
@@ -42,5 +42,6 @@
     "total": "300000",
     "totalDos": "150000",
     "conEmpleados": "Si",
-    "indiqueSiLosSocios": "Si"
+    "indiqueSiLosSocios": "Si",
+    "comboBimestresIDCSeleccione": "3"
 }

@@ -79,18 +79,40 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
     })
   }
 
+  /**
+   * Recupera los datos para el segundo formulario desde el servicio comercioExteriorSvc y actualiza el estado del formulario.
+   * 
+   * Se suscribe al observable retornado por `getConsultaDatosDos()` y, al recibir una respuesta,
+   * llama a `estadoFormulario` con los datos recibidos para actualizar el estado del formulario.
+   * La suscripción se cancela automáticamente cuando se emite `destroyNotifier$`.
+   */
   public guardarDatosFormularioDos(): void {
     this.comercioExteriorSvc.getConsultaDatosDos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
       this.comercioExteriorSvc.estadoFormulario(response)
     })
   }
 
+  /**
+   * Recupera los datos comunes del formulario desde el servicio y actualiza el estado del formulario.
+   * 
+   * Se suscribe al observable `getConsultaDatosComunes` de `datosComunesSvc` y,
+   * al recibir una respuesta, actualiza el estado del formulario llamando a
+   * `actualizarEstadoFormulario` con los datos recibidos.
+   */
   public guardarDatosComunesFormulario(): void {
     this.datosComunesSvc.getConsultaDatosComunes().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
       this.datosComunesSvc.actualizarEstadoFormulario(response);
     })
   }
 
+  /**
+   * Guarda el estado actual del formulario de "Terceros" recuperando los datos desde el servicio,
+   * luego itera sobre cada entrada en el objeto de respuesta para actualizar el estado del formulario
+   * para cada par clave-valor utilizando el método `actualizarEstadoFormulario`.
+   * 
+   * La suscripción al observable se cancela automáticamente cuando el componente es destruido,
+   * utilizando el subject `destroyNotifier$` para prevenir fugas de memoria.
+   */
   public guardarTercerosFormulario(): void {
     this.tercerosRelacionadosSvc.getConsultaDatos().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
       Object.entries(response).forEach(([key, value]) => {

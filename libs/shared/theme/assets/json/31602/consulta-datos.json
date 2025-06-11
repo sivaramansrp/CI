@@ -8,7 +8,7 @@
     "cumplimientoLineamientos": "Si",
     "indique": "Si",
     "empresaSolicitante": "Si",
-    "captureElValorTotal": "Si",
+    "captureElValorTotal": "vsacvgsa savcusavcusvc acbsahuc",
     "manifiesteSi": "Si",
     "manifiesteCorrespondiente": "Si",
     "contado": "Si",
@@ -23,6 +23,7 @@
     "cadenaDependencia": "cfxtrss",
     "llaveDePago": "LLAVE456",
     "fechaPago": "100000",
-    "importePago": "50000"
+    "importePago": "50000",
+    "comboBimestresIDCSeleccione": "3"
 
 }

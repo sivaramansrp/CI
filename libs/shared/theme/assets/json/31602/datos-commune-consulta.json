@@ -16,7 +16,7 @@
     "delMismo": "Si",
     "senaleMomento": "Si",
     "enCaso": "Si",
-    "comboBimestresIDCSeleccione": "1",
+    "comboBimestresIDCSeleccione": "3",
     "ingresar": "Si",
     "encuentraSus": "No",
     "registrosQue": "hxvhsahsav",
@@ -31,5 +31,7 @@
     "vinculacionRegistroCancelado": "Si",
     "proveedoresListadoSAT": "Si",
     "numeroAutorizacionCITES": "RFC123456789",
-    "archivoNacionales": "archivo"
+    "archivoNacionales": "archivo",
+    "manifestado": true,
+    "protesta": true
 }

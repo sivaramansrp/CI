@@ -101,6 +101,10 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
    * Esta propiedad se utiliza para gestionar y rastrear el estado de los datos relacionados con terceros.
    */
   public importacionstate!: TercerosRelacionadosState;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando se establece en `true`, los campos del formulario no son editables por el usuario.
+   */
   public esFormularioSoloLectura: boolean = false;
 
   /**
@@ -147,6 +151,14 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
   }
 
 
+    /**
+     * Inicializa el formulario para el componente "Terceros Relacionados".
+     * 
+     * Este método se suscribe al observable `selectImportacion$` de `tercerosRelacionadosQuery`
+     * para actualizar la propiedad `importacionstate` cada vez que cambie el estado de la sección de importación.
+     * La suscripción se cancela automáticamente cuando el `destroyNotifier$` emite un valor.
+     * Después de configurar la suscripción, llama a `crearEnlaceOperativoForm()` para crear el formulario de enlace operativo.
+     */
     public inicializarFormulario(): void {
       this.tercerosRelacionadosQuery.selectImportacion$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
         this.importacionstate = seccionState;
@@ -195,6 +207,12 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
     });
   }
 
+  /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   * 
+   * - Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es `true`), guarda el formulario llamando a `guardarFormulario()`.
+   * - De lo contrario, inicializa el formulario llamando a `inicializarFormulario()`.
+   */
   public inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarFormulario();
@@ -203,6 +221,13 @@ export class TercerosRelacionadosComponent implements OnInit,OnDestroy {
     }
   }
 
+  /**
+   * Inicializa el formulario y establece su estado habilitado o deshabilitado según la bandera de solo lectura.
+   * 
+   * - Llama a `inicializarFormulario()` para reiniciar o inicializar el formulario.
+   * - Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es true), deshabilita los controles del formulario.
+   * - De lo contrario, habilita los controles del formulario para la interacción del usuario.
+   */
   public guardarFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {

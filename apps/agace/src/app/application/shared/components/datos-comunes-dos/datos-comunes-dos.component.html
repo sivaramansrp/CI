@@ -4,6 +4,7 @@
         <app-catalogo-select
             [placeholder]="'Seleccione un valor'"
             formControlName="comboBimestresIDCSeleccione"
+            [isDisabled]="esFormularioSoloLectura"
             [catalogo]="comboBimestresIDC"
             (change)="setValoresStore(comunesDosForm,'comboBimestresIDCSeleccione','setComboBimestresIDCSeleccione')"
             >

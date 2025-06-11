@@ -49,6 +49,12 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    */
   public comunesForm!: FormGroup;
   /**
+   * Instancia de FormGroup reactivo para gestionar y validar los campos del formulario "manifestado".
+   * Inicializado en el ciclo de vida del componente, este FormGroup contiene controles y lógica de validación
+   * para la entrada del usuario relacionada con la sección "manifestado".
+   */
+  public manifestadoForm!: FormGroup;
+  /**
    * Grupo de formulario utilizado para gestionar y validar los datos para agregar un miembro a la empresa.
    */
   public agregarMiembroDeLaEmpresaFrom!: FormGroup;
@@ -156,7 +162,14 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
    * de los datos compartidos dentro del componente.
    */
   public solicitudState!: DatosComunesState;
+  /**
+   * Representa el estado actual del proceso de consulta.
+   */
   public consultaState!: ConsultaioState;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando se establece en `true`, los campos del formulario no son editables por el usuario.
+   */
   public esFormularioSoloLectura: boolean = false;
 
 
@@ -204,6 +217,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     this.crearComunesForm();
     this.crearAgregarMiembroForm();
     this.obtenerAgregarMiembroDatos();
+    this.crearManifestadoForm();
     this.inicializarEstadoFormulario();
   }
 
@@ -218,6 +232,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
 
         this.crearComunesForm();
         this.crearAgregarMiembroForm();
+        this.crearManifestadoForm();
     }
 
   /**
@@ -266,6 +281,17 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
       delMismo: [this.solicitudState?.delMismo, Validators.required],
       senaleMomento: [this.solicitudState?.senaleMomento, Validators.required],
       enCaso: [this.solicitudState?.enCaso, Validators.required]
+    });
+  }
+
+  /**
+   * Inicializa el FormGroup `manifestadoForm` con controles para `manifestado` y `protesta`.
+   * Los valores iniciales de estos controles se toman del `solicitudState` actual.
+   */
+  public crearManifestadoForm(): void {
+    this.manifestadoForm = this.fb.group({
+      manifestado: [this.solicitudState?.manifestado],
+      protesta: [this.solicitudState?.protesta],
     });
   }
 
@@ -423,6 +449,9 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     this.cambioObj.deTrabajao = this.comunesForm.get('senaleSi')?.value === 'Si' ? true : false;
   }
 
+  /**
+   * Inicializa el formulario y alterna su estado habilitado/deshabilitado según la bandera de solo lectura.
+   */
   public guardarFormulario(): void {
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {

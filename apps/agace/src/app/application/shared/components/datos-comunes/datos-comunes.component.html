@@ -346,18 +346,26 @@
   </div>
   <div class="row mt-3">
     <div class="col-md-12">
-      <lib-input-check 
-          [id]="'manifestado'" 
-          [label]="'Una vez manifestado lo anterior, se solicita al SAT, a través de AGACE, que realice las inspecciones a que hace referencia la fracción IX de la regla 7.1.1, a las instalaciones señaladas en las que se realizan las operaciones de comercio exterior con el propósito de verificar la información plasmada en la presente solicitud del Registro en el Esquema Integral de Certificación.'" 
-          [required]="false">
-      </lib-input-check>
+      <form [formGroup]="manifestadoForm">
+          <lib-input-check 
+            [id]="'manifestado'" 
+            formControlName="manifestado"
+            [isDisabled]="esFormularioSoloLectura"
+            [label]="'Una vez manifestado lo anterior, se solicita al SAT, a través de AGACE, que realice las inspecciones a que hace referencia la fracción IX de la regla 7.1.1, a las instalaciones señaladas en las que se realizan las operaciones de comercio exterior con el propósito de verificar la información plasmada en la presente solicitud del Registro en el Esquema Integral de Certificación.'" 
+            [required]="false"
+            (change)="setValoresStore(manifestadoForm,'manifestado', 'setManifestado')">
+          </lib-input-check>
       <div class="mt-4">
-        <lib-input-check 
-          [id]="'protesta'" 
-          [label]="'Bajo protesta de decir verdad,manifiesto que los datos asentados en el presente documento son ciertos y que las facultades que me fueron otorgadas para representar al solicitante no me han sido modificadas y/o revocadas.'" 
-          [required]="false">
-        </lib-input-check>
-      </div>
+          <lib-input-check 
+            [id]="'protesta'" 
+            formControlName="protesta"
+            [isDisabled]="esFormularioSoloLectura"
+            [label]="'Bajo protesta de decir verdad,manifiesto que los datos asentados en el presente documento son ciertos y que las facultades que me fueron otorgadas para representar al solicitante no me han sido modificadas y/o revocadas.'" 
+            [required]="false"
+            (change)="setValoresStore(manifestadoForm,'protesta', 'setProtesta')">
+          </lib-input-check>
+        </div>
+      </form>
     </div>
   </div>
 
