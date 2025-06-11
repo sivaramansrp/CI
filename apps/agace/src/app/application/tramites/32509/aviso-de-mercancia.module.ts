@@ -17,9 +17,7 @@ import { TipoDeAvisoComponent } from './components/tipo-de-aviso/tipo-de-aviso.c
 @NgModule({
   declarations: [
     DestructionODonacionComponent,
-    PasoUnoComponent,
     PasoDosComponent,
-    TipoDeAvisoComponent,
     PasoTresComponent,
   ],
   imports: [
@@ -36,7 +34,9 @@ import { TipoDeAvisoComponent } from './components/tipo-de-aviso/tipo-de-aviso.c
     AlertComponent,
     InputFechaComponent,
     FirmaElectronicaComponent,
-    AnexarDocumentosComponent
+    AnexarDocumentosComponent,
+    PasoUnoComponent,
+    TipoDeAvisoComponent,
   ]
 })
 export class AvisoDeMercanciaModule { }
