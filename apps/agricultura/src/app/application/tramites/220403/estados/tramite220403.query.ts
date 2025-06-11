@@ -32,7 +32,10 @@ export class Tramite220403Query extends Query<FormularioGrupo> {
         return state;
       });
 
+  seleccionarTercerosRelacionados$ = this.select(estado => estado.tercerosRelacionados);
+  
   constructor(protected override store: Tramite220403Store) {
     super(store);
   }
+  
 }
