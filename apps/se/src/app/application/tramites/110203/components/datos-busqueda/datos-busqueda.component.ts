@@ -2,9 +2,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputRadioComponent, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { Subject, Subscription, distinctUntilChanged, take, takeUntil } from 'rxjs';
+import { Subject, Subscription, distinctUntilChanged,takeUntil } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionDropdown } from '@libs/shared/data-access-user/src/core/models/110203/datos-busqueda.model';
 import { RadioOpcion } from '@libs/shared/data-access-user/src/core/models/110203/datos-busqueda.model';
@@ -16,9 +16,6 @@ import { Tramite110203Store } from '../../../../estados/tramites/tramite110203.s
 import datosBusquedaDropdown from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
 import destinatarioTable from '@libs/shared/theme/assets/json/110203/datos-busqueda-table.json'
 import radioOpciones from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
-
-
-
 /**
  * Standalone component for managing search data.
  * 
@@ -49,7 +46,10 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
    * @property {boolean} verTabla - Estado de visibilidad de la tabla.
    */
   verTabla = false;
-
+  /**
+   * Arreglo que almacena las configuraciones disponibles para los menús desplegables (dropdowns).
+   * Cada elemento define las propiedades necesarias para construir un dropdown dinámico.
+   */
   configuracionesDropdown: ConfiguracionDropdown[] = [];
 
   /**
@@ -116,7 +116,10 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
    */
   public establecimientoBodyData: TableBodyData[] = [];
 
-
+  /**
+   * Estructura que contiene los datos de la tabla de destinatarios.
+   * Incluye encabezados de columna y el cuerpo con las filas correspondientes.
+   */
   destinatarioTableData: TableData = { encabezadoDeTabla: [], cuerpoTabla: [] };
 
   /** 
