@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { AlertComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { RetirosCofepris261702State, Tramite261702Store } from '../../../../estados/tramites/tramite261702.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { MANIFIESTOS_ALERT } from '../../constantes/retiros-cofepris.enum';
 import { Tramite261702Query } from '../../../../estados/queries/tramite261702.query';
-
 /**
  * ManifiestosDeclaracionesComponent es un componente que permite gestionar los manifiestos
  * y declaraciones, mostrando alertas y títulos relacionados con el proceso en el contexto de trámites.
@@ -32,6 +32,13 @@ export class ManifiestosDeclaracionesComponent implements OnInit, AfterViewInit,
  */
   public manifiestosAlert: string = MANIFIESTOS_ALERT.message;
   
+/**
+    * @property consultaState
+    * @description
+    * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+    */
+    @Input() consultaState!: ConsultaioState;
+
   /**
    * compo doc
    * Subject para notificar la destrucción del componente.

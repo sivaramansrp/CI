@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { HistoricoColumnas, MercanciaTabla } from '../../models/peru-certificado.module';
 import { Subject, map, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormBuilder } from '@angular/forms';
 import { PeruCertificadoService } from '../../services/peru-certificado.service';
 import { Tramite110205Query } from '../../estados/tramite110205.query';
@@ -44,6 +45,12 @@ export class PeruHistoricoProductoresComponent implements OnInit, OnDestroy {
   public agregarDatosProductor!: {[key: string]: unknown};
 
   /**
+   * @descripcion
+   * Indica si el formulario se encuentra en modo solo lectura.
+   */
+   esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    * 
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos.
@@ -56,6 +63,7 @@ export class PeruHistoricoProductoresComponent implements OnInit, OnDestroy {
     private peruCertificadoService: PeruCertificadoService,
     public store: Tramite110205Store,
     public tramiteQuery: Tramite110205Query,
+    private consultaQuery: ConsultaioQuery
   ) { }
 
   /**
@@ -79,6 +87,15 @@ export class PeruHistoricoProductoresComponent implements OnInit, OnDestroy {
         this.agregarDatosProductor = seccionState;
       })
     ).subscribe();
+
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**

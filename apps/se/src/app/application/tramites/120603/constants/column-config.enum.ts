@@ -48,12 +48,12 @@ export const SELECCION_DE_SUCURSAL_DATA: ConfiguracionColumna<SeleccionDeSucursa
       orden: 8
     },
     {
-      encabezado: 'Localidada',
+      encabezado: 'Localidad',
       clave: (fila) => fila.localidad,
       orden: 9
     },
     {
-      encabezado: 'Telefono',
+      encabezado: 'Teléfono',
       clave: (fila) => fila.telefono,
       orden: 9
     }
@@ -157,8 +157,8 @@ export const RADIO_OPCION = [
  * Contiene las opciones "Persona Física" y "Persona Moral".
  */
 export const TIPO_DE_PERSONA = [
-   { "label": "Persona Física", "value": "Persona Física" },
-   { "label": "Persona Moral", "value": "Persona Moral" }
+   { "label": "Persona física", "value": "Persona Física" },
+   { "label": "Persona moral", "value": "Persona Moral" }
 ];
 
 /** Configuración de datos del estado */

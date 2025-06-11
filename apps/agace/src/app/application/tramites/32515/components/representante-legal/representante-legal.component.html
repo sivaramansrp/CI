@@ -1,4 +1,4 @@
 <form [formGroup]="forma">
   <formas-dinamicas formularioTitulo="Datos del representante legal" [forma]="ninoFormGroup" [formularioDatos]="datosDelSolicitanteolFormData" [estado]="informationGeneralState"
-  (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+  (emitirCambioDeValor)="establecerCambioDeValor($event)" [soloLectura]="esFormularioSoloLectura"></formas-dinamicas>
 </form>

@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
 import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/31601/servicios-pantallas.model';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantallas.enum';
 /**
  * @component
@@ -14,7 +15,7 @@ import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/services/316
   templateUrl: './pantallas.component.html',
 })
 
-export class PantallasComponent {
+export class PantallasComponent {  
   
   /**
   * compo doc
@@ -46,6 +47,23 @@ export class PantallasComponent {
   * @type {WizardComponent}
   */
   @ViewChild(WizardComponent) public wizardComponent!: WizardComponent;
+
+
+
+  /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  public consultaState!: ConsultaioState;
+
+  /**
+  * @constructor
+  * @description Inicializa una instancia del `DatosComponent`.
+  */
+constructor() {
+    // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
+  }
 
   /**
   * compo doc
@@ -102,4 +120,7 @@ export class PantallasComponent {
       this.indiceDePestanaSeleccionada = 1;
     }
   }
+
+  
+  
 }

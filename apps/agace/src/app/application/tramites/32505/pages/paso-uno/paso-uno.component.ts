@@ -19,7 +19,7 @@ import { SolicitanteComponent } from '../../components/solicitante/solicitante.c
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
-  imports: [CommonModule, SolicitanteComponent,AvisoComponent],
+  imports: [CommonModule, SolicitanteComponent, AvisoComponent],
   standalone: true,
 })
 export class PasoUnoComponent {

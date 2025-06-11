@@ -1,4 +1,4 @@
-import { AlertComponent, Catalogo, CatalogoSelectComponent, PAGO_DE_DERECHOS, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { AlertComponent, Catalogo, CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, PAGO_DE_DERECHOS, REGEX_SOLO_DIGITOS, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -26,17 +26,16 @@ import { Tramite110221Store } from '../../../../estados/tramites/Tramite110221.s
 })
 export class DestinatarioComponent implements OnInit, OnDestroy {
   /**
- * 
- * Una cadena que representa la clase CSS para una alerta de información.
- * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
- */
-  public infoAlert = 'alert-info';
-  /**
-   * Una constante que contiene el valor del objeto 'PROTESTA'.
-   * Se utiliza para almacenar datos adicionales relacionados con el componente.
+   * Una cadena que representa la clase CSS para una alerta de información.
+   * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
    */
+  public infoAlert = 'alert-info';
 
+  /**
+   * Constante que contiene los textos para el pago de derechos.
+   */
   TEXTOS = PAGO_DE_DERECHOS;
+
   /**
    * Formulario reactivo para el destinatario.
    */
@@ -61,12 +60,24 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Indica si el formulario está vacío.
    */
   estaVacio: boolean = false;
-/**
- * Opciones del catálogo.
- * Contiene una lista de objetos del catálogo obtenidos desde el servicio.
- * Estas opciones se utilizan para poblar los selectores en el formulario.
- */
-options!: Catalogo[];
+
+  /**
+   * Opciones del catálogo.
+   * Contiene una lista de objetos del catálogo obtenidos desde el servicio.
+   * Estas opciones se utilizan para poblar los selectores en el formulario.
+   */
+  options!: Catalogo[];
+
+  /**
+   * Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -75,13 +86,15 @@ options!: Catalogo[];
    * @param store Tienda para gestionar el estado del trámite.
    * @param query Consultas para obtener datos del estado del trámite.
    * @param validacionesService Servicio para validar formularios.
+   * @param consultaioQuery Consulta para obtener datos del estado de consulta.
    */
   constructor(
     private registroService: RegistroService,
     public fb: FormBuilder,
     private store: Tramite110221Store,
     private query: Tramite110221Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -118,7 +131,16 @@ options!: Catalogo[];
       )
       .subscribe();
     this.donanteDomicilio();
-
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -214,15 +236,30 @@ options!: Catalogo[];
         lada: [this.solicitudState?.lada, [Validators.required]],
         telefono: [
           this.solicitudState?.telefono,
-          [Validators.required, Validators.pattern(/^\d+$/)],
+          [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],
         ],
-        fax: [this.solicitudState?.fax, [Validators.pattern(/^\d+$/)]],
+        fax: [
+          this.solicitudState?.fax,
+          [Validators.pattern(REGEX_SOLO_DIGITOS)],
+        ],
         correoElectronico: [
           this.solicitudState?.correoElectronico,
           [Validators.required, Validators.email],
         ],
       }),
     });
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Inicializa el estado del formulario (habilitado/deshabilitado) basado en el modo de solo lectura.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.registroForm?.disable();
+    } else {
+      this.registroForm?.enable();
+    }
   }
 
   /**
@@ -230,7 +267,6 @@ options!: Catalogo[];
    * Cancela todas las suscripciones activas.
    */
   ngOnDestroy(): void {
-   
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }

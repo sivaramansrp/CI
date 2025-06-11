@@ -1,6 +1,3 @@
 [
-  {
-      "claveScian": "614031",
-      "descripcionDelScian": "Comercio al por mayor de huevo"
-  }
+  { "id": 1, "descripcion": "614031"}
 ]
