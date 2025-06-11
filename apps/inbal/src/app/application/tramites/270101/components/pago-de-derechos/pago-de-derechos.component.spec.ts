@@ -48,6 +48,9 @@ import { ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
       tramiteStore = TestBed.inject(Tramite270101Store) as jest.Mocked<Tramite270101Store>;
       tramiteQuery = TestBed.inject(Tramite270101Query) as jest.Mocked<Tramite270101Query>;
       component = fixture.componentInstance;
+      component.consultaState = {
+      readonly: false,
+    } as any;
       fixture.detectChanges();
     });
     
