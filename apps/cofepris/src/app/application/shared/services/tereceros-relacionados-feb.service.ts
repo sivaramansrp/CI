@@ -1,8 +1,9 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 
-import { Catalogo } from "@libs/shared/data-access-user/src";
+import { Catalogo, Fabricante, Otros } from "@libs/shared/data-access-user/src";
 import { Observable } from "rxjs";
+;
 
 import { DestinatarioModel, FacricanteModel, FacturadorModel, ProveedorModel } from "../models/terceros-fabricante-relocionados.model";
 
@@ -122,4 +123,24 @@ export class TercerosRelacionadosFebService {
  getFacturadorForm(): Observable<FacturadorModel> {
   return this.http.get<FacturadorModel>('assets/json/cofepris/facturador-form.json');
 }
+
+  /**
+   * Obtiene los datos de fabricantes desde un archivo JSON local.
+   *
+   * @returns {Observable<Fabricante[]>} Observable que emite un arreglo de objetos `Fabricante`.
+   * @description Este método realiza una petición HTTP para obtener los datos de fabricantes.
+   */
+  getFabricanteTabla(): Observable<Fabricante[]> {
+    return this.http.get<Fabricante[]>('assets/json/260905/fabricante.json');
+  }
+
+  /**
+   * Obtiene los datos de "otros" desde un archivo JSON local.
+   *
+   * @returns {Observable<Otros[]>} Observable que emite un arreglo de objetos `Otros`.
+   * @description Este método realiza una petición HTTP para obtener los datos de "otros".
+   */
+  getOtrosTabla(): Observable<Otros[]> {
+    return this.http.get<Otros[]>('assets/json/260905/otros.json');
+  }
 }

@@ -12,6 +12,7 @@
           [layout]="'vertical'"
           formControlName="tipoPersona"
           (valueChange)="tipoPersonaCambioDeValor($event)"
+          [disabled]="esFormularioSoloLectura"
         ></app-input-radio>
       </div>
     </div>
@@ -30,6 +31,7 @@
           type="text"
           formControlName="denominacionRazon"
           maxlength="254"
+          [disabled]="esFormularioSoloLectura"
         />
         <div class="error-message col-md-12">
           <small *ngIf="agregarProveedorForm.get('denominacionRazon')?.touched && agregarProveedorForm.get('denominacionRazon')?.hasError('required')" class="text-danger">
@@ -50,7 +52,7 @@
     <div class="row">
       <div class="col-md-4">
         <label class="form-label">Nombre(s)<span *ngIf="campoObligatorio"> *</span> :</label>
-        <input type="text" class="form-control" formControlName="nombres" maxlength="200"/>
+        <input type="text" class="form-control" formControlName="nombres" maxlength="200" [disabled]="esFormularioSoloLectura"/>
         <div class="error-message">
           <small *ngIf="agregarProveedorForm.get('nombres')?.touched && agregarProveedorForm.get('nombres')?.hasError('required')" class="text-danger">
             Este campo es obligatorio.
@@ -67,6 +69,7 @@
           class="form-control"
           formControlName="primerApellido"
           maxlength="200"
+          [disabled]="esFormularioSoloLectura"
         />
         <div class="error-message">
           <small *ngIf="agregarProveedorForm.get('primerApellido')?.touched && agregarProveedorForm.get('primerApellido')?.hasError('required')" class="text-danger">
@@ -84,6 +87,7 @@
           class="form-control"
           formControlName="segundoApellido"
           maxlength="200"
+          [disabled]="esFormularioSoloLectura"
         />
         <div class="error-message">
           <small *ngIf="agregarProveedorForm.get('segundoApellido')?.touched && agregarProveedorForm.get('segundoApellido')?.hasError('maxlength')" class="text-danger">
@@ -103,6 +107,7 @@
           [label]="'País'"
           [required]="true"
           [isDisabled]="agregarProveedorForm.get('pais')?.disabled ?? false"
+          [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
         <div class="error-message">
         <small *ngIf="agregarProveedorForm.get('pais')?.touched && agregarProveedorForm.get('pais')?.hasError('required')" class="text-danger">
@@ -112,7 +117,7 @@
       </div>
       <div class="col-md-4">
         <label class="form-label">Estado<span *ngIf="campoObligatorio">*</span>:</label>
-        <input type="text" class="form-control" formControlName="estado"  maxlength="120"/>
+        <input type="text" class="form-control" formControlName="estado"  maxlength="120" [disabled]="esFormularioSoloLectura"/>
         <div class="error-message">
           <small *ngIf="agregarProveedorForm.get('estado')?.touched && agregarProveedorForm.get('estado')?.hasError('required')" class="text-danger">
             Este campo es obligatorio.
@@ -129,6 +134,7 @@
           class="form-control"
           formControlName="codigoPostal"
           maxlength="12"
+          [disabled]="esFormularioSoloLectura"
         />
         <div class="error-message">
           <small *ngIf="agregarProveedorForm.get('codigoPostal')?.touched && agregarProveedorForm.get('codigoPostal')?.hasError('required')" class="text-danger">
@@ -145,7 +151,7 @@
       <div class="row mt-3">
         <div class="col-md-8">
           <label class="form-label">Calle<span *ngIf="campoObligatorio">*</span>:</label>
-          <input type="text" class="form-control" formControlName="calle" maxlength="300"/>
+          <input type="text" class="form-control" formControlName="calle" maxlength="300" [disabled]="esFormularioSoloLectura"/>
           <i class="fas fa-info-circle"></i>
         </div>
         <div class="col-md-4">
@@ -170,7 +176,7 @@
       <div class="row mt-3">
         <div class="col-md-4">
           <label class="form-label">Colonia o equivalente:</label>
-          <input type="text" class="form-control" formControlName="colonia" maxlength="100"/>
+          <input type="text" class="form-control" formControlName="colonia" maxlength="100" [disabled]="esFormularioSoloLectura"/>
         <div class="error-message">
           <small *ngIf="agregarProveedorForm.get('colonia')?.touched && agregarProveedorForm.get('colonia')?.hasError('maxlength')" class="text-danger">
             Máximo 300 caracteres permitidos.
@@ -179,7 +185,7 @@
         </div>
         <div class="col-md-4">
           <label class="form-label">Calle<span *ngIf="campoObligatorio">*</span>:</label>
-          <input type="text" class="form-control" formControlName="calle"  maxlength="300"/>
+          <input type="text" class="form-control" formControlName="calle"  maxlength="300" [disabled]="esFormularioSoloLectura"/>
           <i class="fas fa-info-circle"></i>
           <div class="error-message">
           <small *ngIf="agregarProveedorForm.get('calle')?.touched && agregarProveedorForm.get('calle')?.hasError('required')" class="text-danger">
@@ -197,6 +203,7 @@
             class="form-control"
             formControlName="numeroExterior"
             maxlength="55"
+            [disabled]="esFormularioSoloLectura"
           />
         <div class="error-message">
           <small *ngIf="agregarProveedorForm.get('numeroExterior')?.touched && agregarProveedorForm.get('numeroExterior')?.hasError('required')" class="text-danger">
@@ -218,6 +225,7 @@
           class="form-control"
           formControlName="numeroInterior"
           maxlength="55"
+          [disabled]="esFormularioSoloLectura"
         />
         <div class="error-message">
           <small *ngIf="agregarProveedorForm.get('numeroInterior')?.touched && agregarProveedorForm.get('numeroInterior')?.hasError('maxlength')" class="text-danger">
@@ -227,7 +235,7 @@
       </div>
       <div class="col-md-1">
         <label class="form-label">Lada:</label>
-        <input type="text" class="form-control" formControlName="lada" maxlength="5"/>
+        <input type="text" class="form-control" formControlName="lada" maxlength="5" [disabled]="esFormularioSoloLectura"/>
         <div class="error-message">
           <small *ngIf="agregarProveedorForm.get('lada')?.touched && agregarProveedorForm.get('lada')?.hasError('maxlength')" class="text-danger">
             Máximo 5 caracteres permitidos.
@@ -245,6 +253,7 @@
           class="form-control"
           formControlName="correoElectronico"
           maxlength="320"
+          [disabled]="esFormularioSoloLectura"
         />
         <div class="error-message">
           <small *ngIf="agregarProveedorForm.get('correoElectronico')?.touched && agregarProveedorForm.get('correoElectronico')?.hasError('email')" class="text-danger">

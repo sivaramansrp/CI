@@ -19,6 +19,8 @@ import { UnicoStore } from '../../estados/renovacion.store';
 
 import { UnicoQuery } from '../../estados/queries/unico.query';
 
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 /**
  * Componente que representa el aviso de renovación.
  * Este componente es responsable de inicializar el formulario, cargar datos desde servicios y manejar el estado de la aplicación.
@@ -26,11 +28,21 @@ import { UnicoQuery } from '../../estados/queries/unico.query';
 @Component({
   selector: 'app-aviso-de-renovacion',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputFechaComponent, CatalogoSelectComponent, InputRadioComponent,InputCheckComponent],
+  imports: [CommonModule, ReactiveFormsModule, TituloComponent, InputFechaComponent, CatalogoSelectComponent, InputRadioComponent, InputCheckComponent],
   templateUrl: './aviso-de-renovacion.component.html',
   styleUrls: ['./aviso-de-renovacion.component.scss'],
 })
 export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
+  /**
+   * {string} defaultSelect - Valor predeterminado seleccionado en el menú desplegable.
+   *  Esta propiedad almacena la opción seleccionada por defecto, que en este caso es 'Rubro A'.
+   */
+  defaultSelect: string = 'Rubro A';
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  esFormularioSoloLectura: boolean = true;
   /**
    * Fecha inicial para el campo de fecha.
    */
@@ -72,7 +84,8 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private service: AvisoUnicoService,
     private unicoStore: UnicoStore,
-    private unicoQuery: UnicoQuery
+    private unicoQuery: UnicoQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // Inicializa el formulario reactivo y el estado de la solicitud.
   }
@@ -82,6 +95,30 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
    * Configura el formulario, carga datos iniciales y suscribe al estado de la aplicación.
    */
   ngOnInit(): void {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
+
+    this.actualizarEstado();
+  }
+
+  /**
+  * @method actualizarEstado
+  * @description
+  * Inicializa y actualiza el estado del formulario de aviso de renovación.
+  * Obtiene el estado actual de la solicitud, configura el formulario reactivo con los valores correspondientes,
+  * y realiza peticiones para obtener datos adicionales como el solicitante, la localidad y las opciones de tipo de persona.
+  * Además, determina si el formulario debe estar en modo solo lectura según el estado de consulta.
+  *
+  * @memberof AvisoDeRenovacionComponent
+  * @returns {void}
+  */
+  actualizarEstado(): void {
     this.unicoQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -91,16 +128,6 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.initializeForm();
-    this.loadLocalidad();
-    this.loadAsignacionData();
-    this.cargarRadio();
-  }
-
-  /**
-   * Inicializa el formulario reactivo con valores predeterminados.
-   */
-  private initializeForm(): void {
     this.avisoForm = this.fb.group({
       mapTipoTramite: [this.solicitudState?.mapTipoTramite],
       mapDeclaracionSolicitud: [this.solicitudState?.mapDeclaracionSolicitud],
@@ -114,54 +141,46 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
       fechaPago: [this.solicitudState?.fechaPago],
       importePago: [{ value: '', disabled: true }],
     });
-  }
-
-  /**
-   * Carga datos de asignación desde el servicio y actualiza el formulario.
-   */
-  loadAsignacionData(): void {
     this.service.getSolicitante()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data: AvisoValor) => {
         this.avisoForm.patchValue({
-            claveReferencia: data.claveReferencia,
-            cadenaDependencia: data.cadenaDependencia,
-            importePago: data.importePago,
-          });
-        
-      });
-  }
+          claveReferencia: data.claveReferencia,
+          cadenaDependencia: data.cadenaDependencia,
+          importePago: data.importePago,
+        });
 
-  /**
-   * Carga la lista de localidades desde el servicio.
-   */
-  loadLocalidad(): void {
+      });
+
     this.service.obtenerDatosLocalidad()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data): void => {
         this.localidadList = data as Catalogo[];
       });
-  }
 
-  /**
-   * Carga las opciones de tipo de persona desde el servicio.
-   */
-  cargarRadio(): void {
     this.service.obtenerRadio()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((resp) => {
         this.tipoPersonaOptions = resp;
       });
-  }
 
-  /**
-   * Maneja el cambio de valor en el campo de fecha.
-   * @param nuevo_valor Nuevo valor de la fecha.
+    if (this.esFormularioSoloLectura) {
+      this.avisoForm.disable();
+    } else {
+      this.avisoForm.enable();
+    }
+
+  }
+/**
+   * Actualiza el campo de fecha de pago en el formulario y en el estado global.
+   *
+   * @param nuevo_fechaPago Nueva fecha de pago seleccionada.
    */
-  public onFechaCambiada(nuevo_valor: string): void {
-    this.avisoForm.get('fechaPago')?.setValue(nuevo_valor);
-    this.avisoForm.get('fechaPago')?.markAsUntouched();
-    this.unicoStore.setfechaPago(nuevo_valor);
+  cambioFechaPago(nuevo_fechaPago: string): void {
+    this.avisoForm.patchValue({
+      fechaPago: nuevo_fechaPago,
+    });
+    this.setValoresStore(this.avisoForm, 'fechaPago', 'setfechaPago');
   }
 
   /**
@@ -186,7 +205,7 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
     const VALOR = form.get(campo)?.value;
     (this.unicoStore[metodoNombre] as (value: string) => void)(VALOR);
   }
- 
+
   /**
    * Método que se ejecuta al destruir el componente.
    * Libera recursos y cancela suscripciones.

@@ -5,30 +5,30 @@
                 <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(1)">Solicitante</a>
             </li>
             <li [ngClass]="indice === 2 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(2)">Datos de la solicitud</a>
+                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(2)">Datos de la
+                    solicitud</a>
             </li>
             <li [ngClass]="indice === 3 ? 'active' : ''">
-                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(3)">Terceros Relacionados</a>
+                <a data-toggle="tab" tabindex="0" (keyup)="seleccionaTab(1)" (click)="seleccionaTab(3)">Terceros
+                    Relacionados</a>
             </li>
-            </ul>
+        </ul>
         <ng-container>
             @switch (indice) {
-                @case(1) {
-                    <solicitante [tabindex]="1"></solicitante>
-                }              
-                @case (2) {
-                   <app-datos-del-establecimiento></app-datos-del-establecimiento>
-                    <app-domicilio-del-establecimiento></app-domicilio-del-establecimiento>
-                    <app-representante-legal></app-representante-legal>
-                }
-                @case(3) {
+            @case(1) {
+            <solicitante [tabindex]="1"></solicitante>
+            }
+            @case (2) { @if(esDatosRespuesta) {
+            <app-datos-del-establecimiento></app-datos-del-establecimiento>
+            <app-domicilio-del-establecimiento></app-domicilio-del-establecimiento>
+            <app-representante-legal></app-representante-legal>
+            }
+            }
+            @case(3) { @if(esDatosRespuesta) {
 
-                    <app-terceros-relacionado></app-terceros-relacionado>
-                }
-               
-                
-                
-
+            <app-terceros-relacionado></app-terceros-relacionado>
+            }
+            }
             }
         </ng-container>
     </div>

@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { CambioContrasenaComponent } from './cambio-contrasena.component';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('CambioContrasenaComponent', () => {
   let component: CambioContrasenaComponent;
@@ -8,6 +9,7 @@ describe('CambioContrasenaComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [CambioContrasenaComponent],
+      providers: [provideHttpClient()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(CambioContrasenaComponent);

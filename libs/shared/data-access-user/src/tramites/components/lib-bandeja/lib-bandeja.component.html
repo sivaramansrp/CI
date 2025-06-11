@@ -65,11 +65,12 @@
                 <formas-dinamicas 
                     [forma]="bandejaSolicitudeFormGroup" 
                     [formularioDatos]="bandejaSolicitudeDatos"
+                    (emitirCambioDeValor)="obtenerProcedure($event)"
                     >
                 </formas-dinamicas>
             </div>
         </form>
-        <div class="d-flex justify-content-end mt-2">
+        <div class="d-flex justify-content-end mt-2 mb-3">
             <button type="button" class="btn btn-primary" (click)="enviarDatos()">Buscar</button>
         </div>
     </div>

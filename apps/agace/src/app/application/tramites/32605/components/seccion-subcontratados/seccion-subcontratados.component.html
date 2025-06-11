@@ -20,6 +20,7 @@
             type="button"
             name="Buscar"
             id="Buscar"
+            [disabled]="esFormularioSoloLectura"
             class="btn btn-primary me-5"
             (click)="buscarRFC()"
           >
@@ -66,6 +67,7 @@
           formControlName="subcontrataBimestre"
           [catalogo]="bimestre.catalogos"
           [label]="bimestre.labelNombre"
+          [isDisabled]="esFormularioSoloLectura"
           [placeholder]="bimestre.primerOpcion"
           [required]="bimestre.required"
           name="bimestre"
@@ -79,6 +81,7 @@
           <button
             type="button"
             id="aceptar"
+            [disabled]="esFormularioSoloLectura"
             class="btn btn-primary"
             (click)="cerrarModal()"
             data-bs-dismiss="modal"
@@ -90,6 +93,7 @@
           <button
             type="button"
             id="cancelar"
+            [disabled]="esFormularioSoloLectura"
             class="btn btn-danger ms-3"
             data-bs-dismiss="modal"
             #closeModal
