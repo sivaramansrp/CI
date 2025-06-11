@@ -46,9 +46,6 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    */
   catalogoDocumentos: Catalogo[] = [];
 
-  /** Lista de documentos preseleccionados, cargados desde un archivo JSON */
-  documentosSeleccionados = documentList.documentosSeleccionados;
-
   /** Observable para manejar la destrucción de suscripciones */
   private destroy$: Subject<void> = new Subject<void>();
 
