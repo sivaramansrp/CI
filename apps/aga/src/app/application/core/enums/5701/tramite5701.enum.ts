@@ -1,4 +1,7 @@
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import {
+  ConfiguracionColumna,
+  CrossListLable,
+} from '@libs/shared/data-access-user/src';
 import { LineaCaptura } from '../../models/5701/linea-captura.model';
 
 /**
@@ -106,15 +109,28 @@ export const MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA =
   'Línea de captura no es válida, favor de verificar.';
 
 /**
+ * @decription Mensaje de advertencia cuando la línea de captura ya ha sido usada
+ */
+export const MSJ_LINEA_CAPTURA_USADA =
+  'La línea de captura ya ha sido utilizada, favor de verificar.';
+
+/**
+ * @description Mensaje de error cuando la línea de captura no ha sido pagada.
+ */
+export const MSJ_LINEA_CAPTURA_NO_PAGADA =
+  'La línea de captura no ha sido pagada, favor de verificar.';
+
+/**
  * @description Mensaje de error cuando ya existe un responsable del despacho con el mismo gafete que se quiere registrar.
  */
 export const MSJ_ERROR_GAFETE_EXISTE =
   'El número de gafete ya se encuentra registrado, intenta de nuevo';
 
-  /**
-   * @description Mensaje de avertencia cuando se va a cambiar de tipo de solicitud y el formulario tiene datos capturados.
-   */
-  export const MSG_CAMBIO_TIPO_SOLICITUD = 'Los datos capturados serán borrados, ¿estás de acuerdo (SI/NO)?';
+/**
+ * @description Mensaje de avertencia cuando se va a cambiar de tipo de solicitud y el formulario tiene datos capturados.
+ */
+export const MSG_CAMBIO_TIPO_SOLICITUD =
+  'Los datos capturados serán borrados, ¿estás de acuerdo (SI/NO)?';
 
 /**
  * @description Constantes para el manejo de las etiquetas de los inputs de la autorización LDA y DDEX
@@ -228,3 +244,69 @@ export const CONFIGURACION_ENCABEZADO_TABLA_PAGOS: ConfiguracionColumna<LineaCap
      */
     { encabezado: 'monto', clave: (fila) => fila.monto, orden: 2 },
   ];
+
+/**
+ * @description Constante estauts pagado
+ */
+export const ESTATUS_PAGADO = 'Pagado';
+
+/**
+ * @description Mensaje del registro exitoso de la solicitud
+ *@param {string} numeroSolicitud - El número de la solicitud registrada.
+ */
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const MSG_REGISTRO_EXITOSO = (numeroSolicitud: string) =>
+  `<p>La solicitud ha quedado resgitrada con el número temporal ${numeroSolicitud}. Este no tiene válidez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado al momento en que ésta sea firmada.</p>`;
+
+/**
+ * @description Almacena el valor de un dia = 1
+ */
+export const UN_DIA = 1;
+
+/**
+ * @description Etiquetas para el crosslist de fechas
+ */
+export const LABEL_CROSSLIST: CrossListLable = {
+  tituluDeLaIzquierda: 'Fechas dentro del período',
+  derecha: 'Fechas seleccionadas para el servicio extraordinario',
+};
+
+/**
+ * @description Mensaje error, no se encontró información
+ */
+export const MSG_ERROR_NO_INFORMACION = 'No se encontró información';
+
+/**
+ *@description Titulo del modal aviso
+ */
+export const TITULO_MODAL_AVISO = 'Aviso';
+
+/**
+ * @description Mensaje de alerta al intentar eliminar un elemento de la tabla
+ */
+export const MSG_ALERTA_ELIMINAR_ELEMENTO =
+  '¿Seguro que desea eliminar el registro seleccionado?';
+
+/**
+ * @description Texto 'Aceptar' para el botón de confirmación en el modal de aviso
+ */
+export const TEXTO_ACEPTAR = 'Aceptar';
+
+/**
+ * @description Texto 'Cancelar' para el botón de cancelación en el modal de aviso
+ */
+export const TEXTO_CANCELAR = 'Cancelar';
+
+/**
+ * @description Mensaje de error cuando no se ha encontrado el rfc.
+ */
+export const MSG_ERROR_RFC_NO_ENCONTRADO =
+  'No se encontró el RFC, favor de verificar los datos ingresados.';
+
+/**
+ * @description Mensaje monto pagado cubierto
+ */
+
+export const MSG_MONTO_PAGADO_CUBIERTO =
+  'EL monto a pagar ya ha sido cubierto, no es necesario agregar otra línea de captura.';

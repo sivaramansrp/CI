@@ -88,7 +88,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
           this.esFormularioSoloLectura = seccionState.readonly;
         })
       )
-      .subscribe()
+      .subscribe();
   }
 
 

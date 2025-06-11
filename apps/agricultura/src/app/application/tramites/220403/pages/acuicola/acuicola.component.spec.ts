@@ -11,8 +11,8 @@ describe('AcuicolaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [WizardComponent, BtnContinuarComponent, SolicitanteComponent, HttpClientModule],
-      declarations: [AcuicolaComponent, PasoUnoComponent],
+      imports: [WizardComponent, BtnContinuarComponent, SolicitanteComponent,PasoUnoComponent, HttpClientModule],
+      declarations: [AcuicolaComponent ],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();
 

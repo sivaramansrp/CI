@@ -1,7 +1,6 @@
+import { CatalogoSelectComponent, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Catalogo } from '../../models/validacion-posteriori.model';
 import { CatalogoLista } from '../../models/validacion-posteriori.model';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
-import { ValidacionPosterioriService } from '../../service/validacion-posteriori.service';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
@@ -14,6 +13,7 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite110212Query } from '../../../../estados/queries/tramite110212.query';
 import { Tramite110212State } from '../../../../estados/tramites/tramite110212.store';
 import { Tramite110212Store } from '../../../../estados/tramites/tramite110212.store';
+import { ValidacionPosterioriService } from '../../service/validacion-posteriori.service';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
@@ -63,7 +63,17 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
    * Estado actual del trámite.
    */
   public tramiteState!: Tramite110212State;
-
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
   /**
    * Constructor del componente.
    * 
@@ -77,7 +87,8 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     private validacionPosterioriService: ValidacionPosterioriService,
     public store: Tramite110212Store,
     public tramiteQuery: Tramite110212Query,
-      ) { }
+    private consultaioQuery: ConsultaioQuery,
+  ) { }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -93,6 +104,16 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.tramiteState = seccionState;
+        })
+      )
+      .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
@@ -120,8 +141,24 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
       representacionFederal: [this.tramiteState?.representacionFederal, [Validators.required, Validators.min(0)]],
     });
     this.formDatosCertificado.markAllAsTouched();
+    this.inicializarEstadoFormulario()
   }
-
+  /**
+   * @method inicializarEstadoFormulario
+   * @description Inicializa el estado del formulario según el modo de solo lectura.
+   * 
+   * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
+   * En caso contrario, habilita los controles del formulario.
+   * 
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.formDatosCertificado?.disable();
+    } else {
+      this.formDatosCertificado?.enable();
+    }
+  }
   /**
    * Carga la lista de idiomas disponibles desde el servicio.
    */

@@ -1,40 +1,28 @@
 // @ts-nocheck
-import { ComponentFixture, TestBed, async } from '@angular/core/testing';
-import { CUSTOM_ELEMENTS_SCHEMA, Injectable, Input, NO_ERRORS_SCHEMA, Output } from '@angular/core';
+import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
+
 import { Component } from '@angular/core';
 import { RepresentanteLegalComponent } from './representante-legal.component';
 import { FormBuilder } from '@angular/forms';
-import { Location } from '@angular/common';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
+import { Location } from '@angular/common';
 import { Tramite230501Store } from '../../estados/stores/tramite230501Store.store';
 import { Tramite230501Query } from '../../estados/queries/tramite230501Query.query';
-import { SeccionLibQuery, SeccionLibStore } from '@libs/shared/data-access-user/src';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 @Injectable()
-class MockMaterialesPeligrososService {
-  obtenerRespuestaPorUrl = function () { };
-  obtenerListaCodigosPostales = jest.fn().mockReturnValue(observableOf({}));
-  obtenerListaPaises = jest.fn().mockReturnValue(observableOf({}));
-  obtenerListaEstados = jest.fn().mockReturnValue(observableOf({}));
-  obtenerListaMunicipios = jest.fn().mockReturnValue(observableOf({}));
-  obtenerListaLocalidades = jest.fn().mockReturnValue(observableOf({}));
-  obtenerListaColonias = jest.fn().mockReturnValue(observableOf({}));
-}
+class MockMaterialesPeligrososService {}
 
 @Injectable()
-class MockTramite230501Store { }
+class MockTramite230501Store {}
 
 @Injectable()
-class MockTramite230501Query { }
-@Injectable()
-class MockRouter {
-  navigate() { }
-}
+class MockTramite230501Query {}
 
 describe('RepresentanteLegalComponent', () => {
   let fixture;
@@ -42,32 +30,19 @@ describe('RepresentanteLegalComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule],
-      declarations: [],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      imports: [ FormsModule, ReactiveFormsModule ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        { provide: Tramite230501Query, useClass: MockTramite230501Query },
-        { provide: Tramite230501Store, useClass: MockTramite230501Store },
-        { provide: MaterialesPeligrososService, useClass: MockMaterialesPeligrososService },
-        SeccionLibStore,
-        SeccionLibQuery,
         FormBuilder,
-        { provide: Router, useClass: MockRouter },
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: { url: 'url', params: {}, queryParams: {}, data: {} },
-            url: observableOf('url'),
-            params: observableOf({}),
-            queryParams: observableOf({}),
-            fragment: observableOf('fragment'),
-            data: observableOf({})
-          }
-        }
+        { provide: MaterialesPeligrososService, useClass: MockMaterialesPeligrososService },
+        Location,
+        { provide: Tramite230501Store, useClass: MockTramite230501Store },
+        { provide: Tramite230501Query, useClass: MockTramite230501Query },
+        ConsultaioQuery
       ]
     }).overrideComponent(RepresentanteLegalComponent, {
 
-      set: { providers: [{ provide: MaterialesPeligrososService, useClass: MockMaterialesPeligrososService }] }
+      set: { providers: [{ provide: MaterialesPeligrososService, useClass: MockMaterialesPeligrososService }] }    
     }).compileComponents();
     fixture = TestBed.createComponent(RepresentanteLegalComponent);
     component = fixture.debugElement.componentInstance;
@@ -77,9 +52,21 @@ describe('RepresentanteLegalComponent', () => {
     expect(component).toBeTruthy();
   });
 
-
+  it('should run #onTipoPersonaChange()', async () => {
+    component.tipoPersona = component.tipoPersona || {};
+    component.tipoPersona.FISICA = 'FISICA';
+    component.representanteLegalForm = component.representanteLegalForm || {};
+    component.representanteLegalForm.get = jest.fn().mockReturnValue({
+      updateValueAndValidity: function() {},
+      setValidators: function() {},
+      clearValidators: function() {}
+    });
+    component.onTipoPersonaChange({});
+    expect(component.representanteLegalForm.get).toHaveBeenCalled();
+  });
 
   it('should run #ngOnInit()', async () => {
+    component.createRepresentForm = jest.fn();
     component.onTipoPersonaChange = jest.fn();
     component.tipoPersona = component.tipoPersona || {};
     component.tipoPersona.FISICA = 'FISICA';
@@ -90,6 +77,9 @@ describe('RepresentanteLegalComponent', () => {
     component.representanteLegalForm.patchValue = jest.fn();
     component.tramiteQuery = component.tramiteQuery || {};
     component.tramiteQuery.esRepresentanteLegalElModoDeEdicion$ = observableOf({});
+    component.consultaQuery = component.consultaQuery || {};
+    component.consultaQuery.selectConsultaioState$ = observableOf({});
+    component.inicializarEstadoFormulario = jest.fn();
     component.ngOnInit();
   });
 
@@ -102,9 +92,9 @@ describe('RepresentanteLegalComponent', () => {
   it('should run #guardarRepresentante()', async () => {
     component.representanteLegalForm = component.representanteLegalForm || {};
     component.representanteLegalForm.value = {
-      nombres: {},
-      primerApellido: {},
       segundoApellido: {},
+      primerApellido: {},
+      nombres: {},
       rfc: {},
       lada: {},
       telefono: {},
@@ -116,9 +106,12 @@ describe('RepresentanteLegalComponent', () => {
       colonia: {},
       municipio: {},
       localidad: {},
-      estado: {},
-      codigoPostal: {}
+      estadoLocalidad: {},
+      codigoPostal: {},
+      codie: {},
+      tipoPersona: {}
     };
+    component.representanteLegalForm.valid = 'valid';
     component.representanteLegalForm.reset = jest.fn();
     component.setFormValida = jest.fn();
     component.representantes = component.representantes || {};
@@ -158,6 +151,19 @@ describe('RepresentanteLegalComponent', () => {
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.updateRepresentanteLegalTablaDatos = jest.fn();
     component.updateRepresentanteLegal({});
+  });
+
+  it('should run #createRepresentForm()', async () => {
+    component.fb = component.fb || {};
+    component.fb.group = jest.fn();
+    component.createRepresentForm();
+  });
+
+  it('should run #inicializarEstadoFormulario()', async () => {
+    component.representanteLegalForm = component.representanteLegalForm || {};
+    component.representanteLegalForm.disable = jest.fn();
+    component.createRepresentForm = jest.fn();
+    component.inicializarEstadoFormulario();
   });
 
   it('should run #ngOnDestroy()', async () => {

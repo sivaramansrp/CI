@@ -5,7 +5,7 @@
                 <div class="col-md-6">
                     <h1>Cuentas bancarias</h1>
                 </div>
-            } @else if(indice === 2) {
+            } @else if(indice === 3) {
                 <div class="col-md-12 mt-5">
                     <div class="mb-3">
                         <h1>Firmar</h1>
@@ -21,6 +21,9 @@
                     <app-paso-uno></app-paso-uno>
                 }
             @case (2) {
+                    <app-paso-tres></app-paso-tres>
+                }
+            @case (3) {
                     <app-paso-dos></app-paso-dos>
                 }
             }

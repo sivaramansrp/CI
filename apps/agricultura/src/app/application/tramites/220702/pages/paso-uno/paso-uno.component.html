@@ -22,18 +22,23 @@
         <ng-container>
             @switch (indice) {
             @case (1) {
+            @if(esDatosRespuesta) {
             <solicitante></solicitante>
-            }
+            }}
             @case (2) {
+            @if(esDatosRespuesta) {
             <app-datos-de-la-solicitud></app-datos-de-la-solicitud>
-            }
+            }}
             @case (3) {
+            @if(esDatosRespuesta) {
             <app-revision-documental></app-revision-documental>
-            }
+            }}
             @case (4) {
-            <app-pago-de-derechos></app-pago-de-derechos>
+            @if(esDatosRespuesta) {
+            <app-pago-de-derechos [formularioDeshabilitado]="formularioDeshabilitado"></app-pago-de-derechos>
+            }}
             }
-            }
+
         </ng-container>
     </div>
 </div>

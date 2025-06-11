@@ -1,4 +1,4 @@
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Catalogo, ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -84,6 +84,12 @@ export class InstalacionesPrincipalesComponent implements OnInit, OnDestroy {
   @Output() instalacionesPrincipales = new EventEmitter<Domicilios>();
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    * Se inicializan los servicios necesarios para obtener las opciones del formulario.
    */
@@ -91,8 +97,25 @@ export class InstalacionesPrincipalesComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     public solicitudService: SolicitudService,
     public solicitud32605Store: Solicitud32605Store,
-    public solicitud32605Query: Solicitud32605Query
+    public solicitud32605Query: Solicitud32605Query,
+    public consultaioQuery: ConsultaioQuery
   ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     this.conseguirOpcionDeRadio();
     this.conseguirSolicitudCatologoSelectLista();
   }
@@ -102,6 +125,50 @@ export class InstalacionesPrincipalesComponent implements OnInit, OnDestroy {
    * Inicializa el formulario con los valores actuales del estado de la solicitud.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.instalacionesPrincipalesForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.instalacionesPrincipalesForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  /**
+   * Inicializa el formulario `instalacionesPrincipalesForm` con los datos del estado actual `solicitud32605State`.
+   *
+   * Este formulario recopila información sobre las instalaciones principales de la empresa, incluyendo:
+   * - Ubicación geográfica (municipio, entidad federativa, código postal).
+   * - Detalles del inmueble y su uso (proceso productivo, tipo de instalación, goce del inmueble).
+   * - Datos comerciales y fiscales (registro SESAT, comercio exterior, empresa, mutuo).
+   *
+   * Algunos campos son obligatorios y tienen la validación `Validators.required`.
+   *
+   * El método también se suscribe al observable `selectSolicitud$` para mantener los valores del formulario
+   * actualizados con el estado global. La suscripción se cancela automáticamente mediante `takeUntil`
+   * para evitar fugas de memoria.
+   */
+  inicializarFormulario(): void {
     this.instalacionesPrincipalesForm = this.fb.group({
       principales: [
         this.solicitud32605State.principales,
