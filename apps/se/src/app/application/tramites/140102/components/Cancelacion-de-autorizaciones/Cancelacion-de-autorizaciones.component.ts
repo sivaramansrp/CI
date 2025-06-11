@@ -10,8 +10,6 @@ import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tram
 import { ProgramaSeleccionadoComponent } from '../programa-seleccionado/programa-seleccionado.component';
 
 /**
- * @component CancelacionDeAutorizacionesComponent
- * @description
  * Componente que gestiona la funcionalidad de cancelación de autorizaciones.
  * Este componente incluye la lógica para manejar tablas dinámicas y datos relacionados con la cancelación de autorizaciones.
  * 
@@ -25,44 +23,33 @@ import { ProgramaSeleccionadoComponent } from '../programa-seleccionado/programa
 })
 export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
   /**
-   * @property consultaState
-   * @description
+   *
    * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
    */
   @Input() consultaState!: ConsultaioState;
       
   /**
-   * @property destroy$
-   * @description
    * Sujeto utilizado para destruir las suscripciones y evitar fugas de memoria.
    */
   private destroy$ = new Subject<void>();
 
   /**
-   * @property CancelacionTabladatos
-   * @description
    * Lista de datos que se mostrarán en la tabla de cancelación de autorizaciones.
    */
   CancelacionTabladatos: CancelacionTabla[] = [];
 
   /**
-   * @property tipoSeleccionTabla
-   * @description
    * Tipo de selección para la tabla de cancelación de autorizaciones.
    * Por defecto, se utiliza la selección por radio.
    */
   public tipoSeleccionTabla: TablaSeleccion = TablaSeleccion.RADIO;
 
   /**
-   * @property tableHeaderExtranjeros
-   * @description
    * Configuración de las columnas para la tabla de cancelación de autorizaciones.
    */
   public tableHeaderExtranjeros: ConfiguracionColumna<CancelacionTabla>[] = CANCELACION_TABLA;
 
   /**
-   * @constructor
-   * @description
    * Constructor del componente.
    * Inyecta el servicio necesario para manejar los datos de cancelación de autorizaciones.
    */
@@ -73,7 +60,6 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description
    * Método que se ejecuta al inicializar el componente.
    * Configura las suscripciones y carga los datos iniciales.
    */
@@ -82,7 +68,6 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
   }
 
   /**
- * @description
  * Método que obtiene los datos de la tabla de cancelación de autorizaciones desde el servicio.
  * Realiza una suscripción al servicio y asigna la respuesta a la propiedad `CancelacionTabladatos`.
  * Utiliza `takeUntil` para cancelar la suscripción cuando el componente se destruye.
@@ -97,7 +82,6 @@ export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
   }
 
 /**
- * @description
  * Método que destruye las suscripciones para evitar fugas de memoria.
  * Llama a `next` y `complete` sobre el subject `destroy$`.
  */

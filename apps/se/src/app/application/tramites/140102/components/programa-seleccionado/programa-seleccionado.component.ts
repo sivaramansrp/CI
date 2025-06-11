@@ -71,6 +71,7 @@ export class ProgramaSeleccionadoComponent implements OnInit, OnDestroy {
    * @description
    * Getter para acceder al grupo de formularios del programa seleccionado.
    * Retorna el grupo de formularios correspondiente.
+   * @returns {FormGroup}
    */
   get ninoFormGroup(): FormGroup {
     return this.forma.get('ninoFormGroup') as FormGroup;
@@ -126,11 +127,11 @@ export class ProgramaSeleccionadoComponent implements OnInit, OnDestroy {
   }
 
   /**
- * @method ngOnDestroy
- * @description
- * Método que destruye las suscripciones para evitar fugas de memoria.
- * Llama a `next` y `complete` sobre el subject `destroy$`.
- */
+   * @method ngOnDestroy
+   * @description
+   * Método que destruye las suscripciones para evitar fugas de memoria.
+   * Llama a `next` y `complete` sobre el subject `destroy$`.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
