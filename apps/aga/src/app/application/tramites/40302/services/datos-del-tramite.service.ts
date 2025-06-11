@@ -92,7 +92,7 @@ actualizarEstadoFormulario(DATOS: Solicitud40302State): void {
    this.solicitudStore.setSegundoApellido(DATOS.segundoApellido);
 }
 
-    getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud40302State> {
-    return this.http.get<Solicitud40302State>('assets/json/270201/aviso-de-importacion.json');
+  getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud40302State> {
+    return this.http.get<Solicitud40302State>('assets/json/40302/registro-transportista.json');
   }
 }
