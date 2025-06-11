@@ -420,6 +420,7 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
         txtBtnAceptar: 'Cerrar',
         txtBtnCancelar: '',
       };
+      return;
     }
 
     this.personas = this.personas.filter(
