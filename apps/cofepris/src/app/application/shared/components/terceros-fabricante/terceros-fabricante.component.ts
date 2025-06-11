@@ -319,7 +319,7 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     } else {
       this.inicializarFormulario();
     }
-    if(this.esFormularioSoloLectura && this.consultaStateUpdate) {
+    if(this.esFormularioSoloLectura || this.consultaStateUpdate) {
       this.fetchTableDummyJson();
     }
   }
