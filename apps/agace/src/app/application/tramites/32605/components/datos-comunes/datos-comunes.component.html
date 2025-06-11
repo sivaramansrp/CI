@@ -11,6 +11,7 @@
           formControlName="catseleccionados"
           [catalogo]="sectorProductivo.catalogos"
           [label]="sectorProductivo.labelNombre"
+          [isDisabled]="esFormularioSoloLectura"
           [required]="sectorProductivo.required"
           (selectionChange)="actualizarCatseleccionados($event)"
         ></app-catalogo-select>
@@ -20,6 +21,7 @@
           formControlName="servicio"
           [catalogo]="servicio.catalogos"
           [label]="servicio.labelNombre"
+          [isDisabled]="esFormularioSoloLectura"
           [required]="servicio.required"
           (selectionChange)="actualizarServicio($event)"
         ></app-catalogo-select>
@@ -103,6 +105,7 @@
           formControlName="bimestre"
           [catalogo]="bimestre.catalogos"
           [label]="bimestre.labelNombre"
+          [isDisabled]="esFormularioSoloLectura"
           [required]="bimestre.required"
           (selectionChange)="actualizarBimestre($event)"
         ></app-catalogo-select>
@@ -179,6 +182,7 @@
           <button
             type="button"
             id="agregar"
+            [disabled]="esFormularioSoloLectura"
             class="btn btn-primary"
             data-bs-toggle="modal"
             data-bs-target="#modalSeccionSubcontratados"
@@ -191,6 +195,7 @@
             id="modificar"
             class="btn btn-secondary ms-3"
             data-bs-toggle="modal"
+            [disabled]="esFormularioSoloLectura"
             data-bs-target="#modalSeccionSubcontratados"
             (click)="agregarSubcontratados()"
           >
@@ -199,6 +204,7 @@
           <button
             type="button"
             id="eliminar"
+            [disabled]="esFormularioSoloLectura"
             class="btn btn-danger ms-3"
             (click)="eliminarNumeroDeEmpleadosDato()"
           >
@@ -288,6 +294,7 @@
         <app-catalogo-select
           formControlName="indiqueTodos"
           [catalogo]="indiqueTodos.catalogos"
+          [isDisabled]="esFormularioSoloLectura"
           [label]="indiqueTodos.labelNombre"
           [required]="indiqueTodos.required"
           (selectionChange)="actualizarIndiqueTodos($event)"
@@ -327,6 +334,7 @@
             <button
               type="button"
               id="modificar"
+              [disabled]="esFormularioSoloLectura"
               class="btn btn-secondary"
               data-bs-toggle="modal"
               data-bs-target="#modalInstalacionesPrincipales"
@@ -336,6 +344,7 @@
             </button>
             <button
               type="button"
+              [disabled]="esFormularioSoloLectura"
               id="eliminar"
               class="btn btn-danger ms-3"
               (click)="eliminarDomiciliosDatos()"
@@ -345,6 +354,7 @@
             <button
               type="button"
               id="agregar"
+              [disabled]="esFormularioSoloLectura"
               class="btn btn-primary ms-3"
               data-bs-toggle="modal"
               data-bs-target="#modalInstalacionesPrincipales"
@@ -423,6 +433,7 @@
               <button
                 type="button"
                 name="cargaArchivoProcesos"
+                [disabled]="esFormularioSoloLectura"
                 id="cargaArchivoProcesos"
                 class="btn btn-primary me-md-3"
               >
@@ -482,6 +493,7 @@
             <div class="col-md-4 d-flex justify-content-end">
               <button
                 type="button"
+                [disabled]="esFormularioSoloLectura"
                 name="cargaArchivoProcesos"
                 id="cargaArchivoProcesos"
                 class="btn btn-primary me-md-3"
@@ -600,7 +612,7 @@
         </div>
 
         <div class="col-md-12 d-flex justify-content-end">
-          <button type="button" name="" id="" class="btn btn-primary me-md-3">
+          <button type="button" name="" id="" class="btn btn-primary me-md-3" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
         </div>
@@ -620,12 +632,13 @@
 
         <div class="col-md-12 mt-5">
           <div class="d-flex justify-content-end mt-4">
-            <button type="button" id="modificar" class="btn btn-secondary ms-3">
+            <button type="button" id="modificar" class="btn btn-secondary ms-3" [disabled]="esFormularioSoloLectura">
               Modificar
             </button>
             <button
               type="button"
               id="eliminar"
+              [disabled]="esFormularioSoloLectura"
               class="btn btn-danger ms-3"
               (click)="eliminarInventariosDatos()"
             >
@@ -695,6 +708,7 @@
             <button
               type="button"
               id="agregar"
+              [disabled]="esFormularioSoloLectura"
               class="btn btn-primary"
               data-bs-toggle="modal"
               data-bs-target="#modalAgregarMiembrosEmpresa"
@@ -705,6 +719,7 @@
             <button
               type="button"
               id="modificar"
+              [disabled]="esFormularioSoloLectura"
               class="btn btn-secondary ms-3"
               data-bs-toggle="modal"
               data-bs-target="#modalAgregarMiembrosEmpresa"
@@ -715,6 +730,7 @@
             <button
               type="button"
               id="eliminar"
+              [disabled]="esFormularioSoloLectura"
               class="btn btn-danger ms-3"
               (click)="eliminarlistaSeccionSociosIC()"
             >

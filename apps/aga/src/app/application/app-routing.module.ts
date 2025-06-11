@@ -381,10 +381,10 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'concluir-relacion',
+    path: 'concluir-relacion-de',
     loadChildren: () =>
-      import('./tramites/420102/concluir-relacion.module').then(
-        (m) => m.ConcluirRelacionModule
+      import('./tramites/420102/concluir-relacion-de.module').then(
+        (m) => m.ConcluirRelacionDeModule
       ),
   },
   {

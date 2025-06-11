@@ -7,7 +7,7 @@
         <input
           type="text"
           class="form-control"
-          formControlName="nombre"
+          formControlName="nombre" [disabled]="soloLectura"
           (change)="setValoresStore(validacionForm, 'nombre', 'setNombre')"
         />
       </div>
@@ -17,16 +17,9 @@
           type="text"
           class="form-control"
           id="primerApellido"
-          formControlName="apellidoPrimer"
+          formControlName="apellidoPrimer" [disabled]="soloLectura"
           (click)="onClick()"
-          (change)="
-            setValoresStore(
-              validacionForm,
-              'apellidoPrimer',
-              'setApellidoPrimer'
-            )
-          "
-        />
+          (change)=" setValoresStore(validacionForm,'apellidoPrimer','setApellidoPrimer')"/>
       </div>
       <div class="col-md-4 mb-3">
         <label>Segundo apellido:</label>
@@ -34,15 +27,8 @@
           type="text"
           class="form-control"
           id="segundoApellido"
-          formControlName="apellidoSegundo"
-          (change)="
-            setValoresStore(
-              validacionForm,
-              'apellidoSegundo',
-              'setApellidoSegundo'
-            )
-          "
-        />
+          formControlName="apellidoSegundo" [disabled]="soloLectura"
+          (change)="setValoresStore( validacionForm, 'apellidoSegundo','setApellidoSegundo')"/>
       </div>
     </div>
     <div class="row">
@@ -52,7 +38,7 @@
           type="text"
           class="form-control"
           id="denominacion"
-          formControlName="numeroFiscal"
+          formControlName="numeroFiscal" [disabled]="soloLectura"
           (change)="
             setValoresStore(validacionForm, 'numeroFiscal', 'setNumeroFiscal')
           "
@@ -63,19 +49,11 @@
         <input
           type="text"
           class="form-control"
-          [ngClass]="{
-            'gray-class':
-              registroForm.get('validacionForm.apellidoPrimer')?.value !== ''
-          }"
+          [ngClass]="{'gray-class': registroForm.get('validacionForm.apellidoPrimer')?.value !== ''}"
           id="denominacion"
-          [readonly]="
-            registroForm.get('validacionForm.apellidoPrimer')?.value !== ''
-          "
-          formControlName="razonSocial"
-          (change)="
-            setValoresStore(validacionForm, 'razonSocial', 'setRazonSocial')
-          "
-        />
+          [readonly]="registroForm.get('validacionForm.apellidoPrimer')?.value !== ''"
+          formControlName="razonSocial" [disabled]="soloLectura"
+          (change)="setValoresStore(validacionForm, 'razonSocial', 'setRazonSocial')"/>
       </div>
     </div>
     <ng-titulo titulo="Domicilio del destinatario" />
@@ -86,7 +64,7 @@
           type="text"
           class="form-control"
           id="denominacion"
-          formControlName="ciudad"
+          formControlName="ciudad" [disabled]="soloLectura"
           (change)="setValoresStore(validacionForm, 'ciudad', 'setCiudad')"
         />
       </div>
@@ -98,7 +76,7 @@
           type="text"
           class="form-control"
           id="nombre"
-          formControlName="calle"
+          formControlName="calle" [disabled]="soloLectura"
           (change)="setValoresStore(validacionForm, 'calle', 'setCalle')"
         />
       </div>
@@ -108,7 +86,7 @@
           type="text"
           class="form-control"
           id="primerApellido"
-          formControlName="numeroLetra"
+          formControlName="numeroLetra" [disabled]="soloLectura"
           (change)="
             setValoresStore(validacionForm, 'numeroLetra', 'setNumeroLetra')
           "
@@ -120,7 +98,7 @@
           type="text"
           class="form-control"
           id="segundoApellido"
-          formControlName="lada"
+          formControlName="lada" [disabled]="soloLectura"
           (change)="setValoresStore(validacionForm, 'lada', 'setLada')"
         />
       </div>
@@ -130,7 +108,7 @@
           type="text"
           class="form-control"
           id="segundoApellido"
-          formControlName="telefono"
+          formControlName="telefono" [disabled]="soloLectura"
           (change)="setValoresStore(validacionForm, 'telefono', 'setTelefono')"
         />
       </div>
@@ -142,7 +120,7 @@
           type="text"
           class="form-control"
           id="nombre"
-          formControlName="fax"
+          formControlName="fax" [disabled]="soloLectura"
           (change)="setValoresStore(validacionForm, 'fax', 'setFax')"
         />
       </div>
@@ -157,7 +135,7 @@
           type="text"
           class="form-control"
           id="primerApellido"
-          formControlName="correoElectronico"
+          formControlName="correoElectronico" [disabled]="soloLectura"
           (change)="
             setValoresStore(
               validacionForm,
@@ -173,21 +151,22 @@
         <app-catalogo-select
           [catalogo]="options"
           [label]="'País destino'"
-          [required]="true"
+          [id]="'nacion'"
           formControlName="nacion"
+          [required]="true" [isDisabled]="soloLectura"
           (change)="setValoresStore(validacionForm, 'nacion', 'setNacion')"
         ></app-catalogo-select>
       </div>
     </div>
     <ng-titulo titulo="Detalles del transporte" />
     <div class="col-md-8 mb-3">
+      <input type="hidden" formControlName="transporte">
       <app-catalogo-select
-        [catalogo]="options"
-        [label]="'Medio de transporte'"
-        [required]="true"
+        [catalogo]="option" [id]="'transporte'"
+        [label]="'Medio de transporte'" 
         formControlName="transporte"
-        (change)="
-          setValoresStore(validacionForm, 'transporte', 'setTransporte')
+        [required]="true" [isDisabled]="soloLectura"
+        (change)="setValoresStore(validacionForm, 'transporte', 'setTransporte')
         "
       ></app-catalogo-select>
     </div>

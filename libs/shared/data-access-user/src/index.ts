@@ -200,6 +200,7 @@ export * from './tramites/components/transporte/transporte.component';
 export * from './tramites/components/agregar-transporte/agregar-transporte.component';
 export * from './core/models/shared/tramite-folio.model';
 export * from './core/enums/crosslist.enums';
+export * from './core/services/shared/desplazarse-hacia-arriba/desplazarse-hacia-arriba.service';
 
 
 

@@ -1,12 +1,14 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';  
-import { SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent,TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { Subject,map,takeUntil } from 'rxjs';
+import { InformationGeneralSolicitanteService } from '../../services/information-general-solicitante.service';
 
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
 })
-export class PasoUnoComponent implements AfterViewInit {
+export class PasoUnoComponent implements AfterViewInit, OnDestroy {
 
   /**
    * @property solicitante - Referencia al componente `SolicitanteComponent` que se utiliza para manejar
@@ -23,11 +25,52 @@ export class PasoUnoComponent implements AfterViewInit {
    * @command Este índice puede ser modificado dinámicamente según las necesidades del flujo.
    */
   indice: number = 1;
+  /**
+  * Esta variable se utiliza para almacenar el índice del subtítulo.
+  */
+  public consultaState!: ConsultaioState;
+  /** Subject para notificar la destrucción del componente. */
+  private destroyNotifier$: Subject<void> = new Subject();
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
 
-  constructor(private cdr: ChangeDetectorRef) {
-    // Constructor no realiza ninguna acción en este caso
+  /**
+   * Constructor de la clase PasoUnoComponent.
+   * 
+   * Inicializa las dependencias necesarias para el componente, suscribe al estado de consulta
+   * y determina si se deben guardar los datos del formulario o mostrar los datos de respuesta.
+   * 
+   * @param cdr Referencia para la detección de cambios en Angular.
+   * @param consultaQuery Servicio para consultar el estado de la solicitud.
+   * @param informationGeneralService Servicio para obtener información general del solicitante.
+   */
+  constructor(private cdr: ChangeDetectorRef, public consultaQuery: ConsultaioQuery,public informationGeneralService:InformationGeneralSolicitanteService) {
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
+      this.consultaState = seccionState;
+    })).subscribe();
+    if (this.consultaState && this.consultaState.procedureId === '32515' &&
+      this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
   }
-
+  /**
+* Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+* Luego reinicializa el formulario con los valores actualizados desde el store.
+*/
+  guardarDatosFormulario(): void {
+    this.informationGeneralService
+      .getRegistroTomaMuestrasMercanciasData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.informationGeneralService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
 
   /**
    * @method ngAfterViewInit
@@ -38,7 +81,7 @@ export class PasoUnoComponent implements AfterViewInit {
    * y luego fuerza la detección de cambios en el componente.
    */
   ngAfterViewInit(): void {
-    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+    this.solicitante?.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
     this.cdr.detectChanges();
   }
 
@@ -55,5 +98,13 @@ export class PasoUnoComponent implements AfterViewInit {
     // Establece el índice de la pestaña seleccionada
     this.indice = indice;
   }
-
+ /**
+   * @method ngOnDestroy
+   * @description Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Utiliza el Subject `destroyNotifier$` para notificar la destrucción y completar las suscripciones.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }
