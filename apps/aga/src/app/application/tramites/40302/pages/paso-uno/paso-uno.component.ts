@@ -53,7 +53,11 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
-
+  
+/**
+ * Constructor del componente.
+ * Inyecta los servicios necesarios para obtener datos del trámite y realizar consultas.
+ */
   constructor(private datosDelTramiteService: DatosDelTramiteService,private consultaQuery: ConsultaioQuery) 
   {
   // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.

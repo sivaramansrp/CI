@@ -92,6 +92,12 @@ actualizarEstadoFormulario(DATOS: Solicitud40302State): void {
    this.solicitudStore.setSegundoApellido(DATOS.segundoApellido);
 }
 
+
+/**
+ * Obtiene los datos de registro del transportista para la solicitud 40302.
+ * 
+ * @returns Observable con el estado de la solicitud 40302.
+ */
   getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud40302State> {
     return this.http.get<Solicitud40302State>('assets/json/40302/registro-transportista.json');
   }

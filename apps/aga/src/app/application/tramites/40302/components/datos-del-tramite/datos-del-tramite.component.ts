@@ -57,6 +57,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   */
   esFormularioSoloLectura: boolean = false;
 
+  /** Estado de la solicitud tipo 40302. 
+ *  Contiene información y progreso de la solicitud. */
   public solicitudState!: Solicitud40302State;
 
   /**
