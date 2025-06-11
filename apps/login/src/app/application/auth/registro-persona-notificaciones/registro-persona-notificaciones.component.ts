@@ -104,7 +104,7 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
   /**
   * Se ejecuta al destruir el componente, limpiando las suscripciones.
   */
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
@@ -113,7 +113,7 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
    * Confirma y actualiza los datos de las personas notificadoras en el estado.
    * Si no existen personas, inicializa la lista y actualiza la visualización de la tabla.
    */
-  confirmarDatos() {
+  confirmarDatos(): void {
     if (this.registroState.registrarDatos) {
       this.registroStore.setValorVisualizarTabla(this.visualizarTabla = true);
       this.visualizarTabla = this.registroState.visualizarTabla;
@@ -130,7 +130,7 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
   /**
    * Crea el formulario reactivo para capturar el RFC.
    */
-  crearFormConsulta() {
+  crearFormConsulta(): void {
     this.FormNotificaciones = this.fb.group({
       rfc: ['', [Validators.required, RegistroPersonaNotificacionesComponent.validadorRFC]]
     });
@@ -154,7 +154,7 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
   /**
    * Navega a la pantalla para agregar una persona para oír/recibir notificaciones.
    */
-  agregarPersonas() {
+  agregarPersonas(): void {
     const RFC = this.FormNotificaciones.get('rfc')?.value;
     this.usuariosService.consultaNotificadores(RFC)
       .pipe(
@@ -201,7 +201,7 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
   /**
    * Elimina las personas seleccionadas de la lista de notificaciones y actualiza el store.
    */
-  eliminarSeleccionados() {
+  eliminarSeleccionados(): void {
     this.personasNotificaciones = this.personasNotificaciones.filter(
       (notificador) =>
         !this.notificadoresSeleccionados.some(
@@ -214,7 +214,7 @@ export class RegistroPersonaNotificacionesComponent implements OnInit, OnDestroy
   /**
    * Navega a la pantalla de firma electrónica.
    */
-  enviarFirma() {
+  enviarFirma(): void {
     if (this.personasNotificaciones.length > 0) {
       this.router.navigate(['login/firma-electronica']);
     } else {

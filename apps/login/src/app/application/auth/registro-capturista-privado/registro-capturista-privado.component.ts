@@ -76,7 +76,7 @@ export class RegistroCapturistaPrivadoComponent implements OnInit, OnDestroy {
    * Crea el formulario reactivo para la consulta de capturista.
    * Inicializa los campos 'rfc' y 'curp' como vacíos.
    */
-  crearFormulario() {
+  crearFormulario(): void {
     this.FormRegistroCapturistaPrivado = this.fb.group({
       rfc: ['', [RegistroCapturistaPrivadoComponent.validadorRFC]],
       curp: ['', [Validators.required, Validators.pattern(REGEX_CURP)]],
@@ -96,7 +96,7 @@ export class RegistroCapturistaPrivadoComponent implements OnInit, OnDestroy {
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
    * Cancela todas las suscripciones activas para evitar fugas de memoria.
    */
-  ngOnDestroy() {
+  ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
@@ -107,7 +107,7 @@ export class RegistroCapturistaPrivadoComponent implements OnInit, OnDestroy {
    * Si no encuentra, limpia la variable capturistaConsultado.
    * Maneja errores de la petición mostrando un mensaje en consola.
    */
-  consultaCapturista() {
+  consultaCapturista(): void {
     const RFC = this.FormRegistroCapturistaPrivado.get('rfc')?.value;
     const CURP = this.FormRegistroCapturistaPrivado.get('curp')?.value;
     if (!RFC && !CURP) {
@@ -158,7 +158,7 @@ export class RegistroCapturistaPrivadoComponent implements OnInit, OnDestroy {
   * Confirma y agrega el capturista consultado a la lista si corresponde.
   * Actualiza el estado de visualización de la tabla y la lista de capturistas.
   */
-  confirmarCapturista() {
+  confirmarCapturista(): void {
     if (this.capturistaState.registrarDatos) {
       this.capturistaStore.setVisualizarTabla(this.visualizarTabla = true);
       this.visualizarTabla = this.capturistaState.visualizarTabla;
@@ -175,7 +175,7 @@ export class RegistroCapturistaPrivadoComponent implements OnInit, OnDestroy {
   /**
    * Elimina los capturistas seleccionados de la lista y actualiza el estado.
    */
-  eliminarSeleccionados() {
+  eliminarSeleccionados(): void {
     this.capturistasSeleccionados.forEach((capturista) => {
       const INDEX = this.listadoCapturistas.indexOf(capturista);
       if (INDEX > -1) {
@@ -189,7 +189,7 @@ export class RegistroCapturistaPrivadoComponent implements OnInit, OnDestroy {
   /**
    * Navega a la pantalla de firma electrónica.
    */
-  enviarFirma() {
+  enviarFirma(): void {
     if (this.listadoCapturistas.length > 0) {
       this.router.navigate(['login/firma-electronica']);
     }
