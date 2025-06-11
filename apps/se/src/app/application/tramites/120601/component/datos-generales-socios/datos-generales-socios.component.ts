@@ -2,9 +2,9 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject,map, takeUntil } from 'rxjs';
 
-import { TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
 
@@ -80,15 +80,73 @@ export class DatosGeneralesSociosComponent implements OnInit, OnDestroy {
   /** Array de datos para socios extranjeros */
   datosExtranjeros = [];
 
+  /** 
+   * Subject para manejar la destrucción del componente y evitar fugas de memoria.
+   */
   private destroyed$ = new Subject<void>();
+
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+   esFormularioSoloLectura: boolean = false; 
+
 
   /**
    * Constructor - inicializa el form builder.
    * @param fb - Instancia de FormBuilder
    */
-  constructor(private fb: FormBuilder, private store: Tramite120601Store, private query: Tramite120601Query, private empresaService: DatosEmpresaService) {
+  constructor(private fb: FormBuilder, private store: Tramite120601Store, private query: Tramite120601Query, private empresaService: DatosEmpresaService, private consultaioQuery: ConsultaioQuery,) {
     // Si es necesario, se puede agregar aquí la lógica del constructor.
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+       this.inicializarEstadoFormulario()
+      })
+    )
+    .subscribe()
   }
+
+  /**
+   * Guarda los datos del formulario de importador/exportador.
+   * Deshabilita los campos si el formulario está en modo solo lectura.
+   */
+
+  guardarDatosFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+    this.FormSolicitud.get('datosImportadorExportador.nacionalidad')?.disable();
+    this.FormSolicitud.get('datosImportadorExportador.persona')?.disable();
+    this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.disable();
+  }else if (!this.esFormularioSoloLectura){
+    this.FormSolicitud.get('datosImportadorExportador.nacionalidad')?.enable();
+    this.FormSolicitud.get('datosImportadorExportador.persona')?.enable();
+    this.FormSolicitud.get('datosImportadorExportador.cadenaDependencia')?.enable();
+  }
+}
+
+/**
+ * Inicializa el estado del formulario. 
+ * Guarda los datos del formulario y actualiza su estado.
+ */
+
+  inicializarEstadoFormulario(): void {
+  this.guardarDatosFormulario();
+  this.actualizarEstadoFormulario();
+}
+
+/**
+ * Ajusta el estado de solo lectura del formulario.
+ * Deshabilita o habilita los campos según corresponda.
+ */
+actualizarEstadoFormulario(): void {
+  if (this.esFormularioSoloLectura) {
+    this.FormSolicitud.disable();
+  } else {
+    this.FormSolicitud.enable();
+  }
+}
 
   /**
    * Hook del ciclo de vida - inicializa el componente y los formularios.
@@ -140,26 +198,51 @@ export class DatosGeneralesSociosComponent implements OnInit, OnDestroy {
         }
       })
     });
-
+   this.inicializarEstadoFormulario();
   }
 
-  obtenerDatosTablaDeSocios() {
+  /**
+   * Obtiene los datos de la tabla de socios desde el servicio.
+   * Suscribe a los datos y los asigna a la variable `datosSocios`.
+   */
+
+  obtenerDatosTablaDeSocios(): void {
     this.empresaService.obtenerDatosTablaDeSocios().subscribe((data)=>{
       this.datosSocios = data;
     })
   }
 
-  enCambioNacionalidad() {
+  /**
+   * Maneja el evento de cambio en la selección de una fila de la tabla.
+   * Actualiza el índice de la fila seleccionada y el estado del formulario.
+   */
+  enCambioNacionalidad(): void {
     this.store.setNacionalidad(this.FormSolicitud.get(['datosImportadorExportador', 'nacionalidad'])?.value);
   }
 
-  enCambioPersona() {
+
+  /**
+   * Maneja el evento de cambio en la selección de una fila de la tabla.
+   */
+
+  enCambioPersona(): void {
     this.store.setPersona(this.FormSolicitud.get(['datosImportadorExportador','persona'])?.value);
   }
 
-  enCambioCadenaDependencia() {
+  /**
+   * Maneja el evento de cambio en la cadena de dependencia.
+   * Actualiza el estado del store con el nuevo valor de la cadena de dependencia.
+   */
+
+  enCambioCadenaDependencia(): void {
     this.store.setCadenaDependencia(this.FormSolicitud.get(['datosImportadorExportador','cadenaDependencia'])?.value);
   }
+
+  /**
+   * Hook del ciclo de vida - se ejecuta cuando el componente se destruye.
+   * Libera los recursos y completa el Subject `destroyed$`.
+   * @param {void}
+   */
 
   ngOnDestroy(): void {
     this.destroyed$.next();

@@ -113,7 +113,7 @@ export interface DatosDelSolicituteSeccionState {
   /**
    * Identificador genérico.
    */
-  ideGenerica1: string;
+  ideGenerica: string;
 
   /**
    * Observaciones adicionales.
@@ -211,7 +211,8 @@ export interface DatosDelSolicituteSeccionState {
   noDeLicenciaSanitaria:string;
   noDeLicenciaSanitariaObservaciones:string;
   regimenAlQueSeDestinaraLaMercancía:string;
-  aduanaDeSalida:string
+  aduanaDeSalida:string;
+  manifests:string
   
 }
 
@@ -243,7 +244,7 @@ export function createInitialState(): DatosDelSolicituteSeccionState {
     establecimientoData: [],
      scian: '',
           descripcionScian: '',
-     ideGenerica1: '',
+     ideGenerica: '',
           observaciones: '',
           establecimientoRFCResponsableSanitario: '',
           establecimientoRazonSocial:'',
@@ -265,7 +266,8 @@ export function createInitialState(): DatosDelSolicituteSeccionState {
           noDeLicenciaSanitaria:'',
           noDeLicenciaSanitariaObservaciones:'',
           regimenAlQueSeDestinaraLaMercancía:'',
-          aduanaDeSalida:''
+          aduanaDeSalida:'',
+          manifests:''
   };
 }
 
@@ -412,17 +414,137 @@ export class DatosDelSolicituteSeccionStateStore extends Store<DatosDelSolicitut
   setNombreDelProfesionalResponsable(nombreDelProfesionalResponsable: string): void {
     this.update({ nombreDelProfesionalResponsable });
   }
+  /**
+   * Actualiza el número de licencia sanitaria.
+   * @param noDeLicenciaSanitaria Nuevo número de licencia sanitaria.
+   */
   setNoDeLicenciaSanitaria(noDeLicenciaSanitaria: string): void {
     this.update({ noDeLicenciaSanitaria });
   }
+  /**
+   * Actualiza las observaciones del número de licencia sanitaria.
+   * @param noDeLicenciaSanitariaObservaciones Nuevas observaciones del número de licencia sanitaria.
+   */
   setNoDeLicenciaSanitariaObservaciones(noDeLicenciaSanitariaObservaciones: string): void {
     this.update({ noDeLicenciaSanitariaObservaciones });
   }
+  /**
+   * Actualiza el régimen al que se destinará la mercancía.
+   * @param regimenAlQueSeDestinaraLaMercancía Nuevo régimen al que se destinará la mercancía.
+   */
   setRegimenAlQueSeDestinaraLaMercancía(regimenAlQueSeDestinaraLaMercancía: string): void {
     this.update({ regimenAlQueSeDestinaraLaMercancía });
   }
+  /**
+   * Establece el valor de la aduana de salida en el estado de la tienda.
+   *
+   * @param aduanaDeSalida - El nombre o identificador de la aduana de salida a establecer.
+   */
   setAduanaDeSalida(aduanaDeSalida: string): void {
     this.update({ aduanaDeSalida });
   }
+  /**
+   * Actualiza el identificador genérico.
+   * @param ideGenerica Nuevo identificador genérico.
+   */
+  setIdeGenerica(ideGenerica: string): void {
+    this.update({ ideGenerica });
+  }
+  /**
+   * Actualiza el valor de la razón social del establecimiento en el estado.
+   *
+   * @param establecimientoRazonSocial - La nueva razón social del establecimiento a establecer.
+   */
+  setEstablecimientoRazonSocial(establecimientoRazonSocial: string): void {
+    this.update({ establecimientoRazonSocial });
+  }
+  /**
+   * Establece el valor del RFC del responsable sanitario del establecimiento.
+   *
+   * @param establecimientoRFCResponsableSanitario - El RFC del responsable sanitario que se asignará al establecimiento.
+   */
+  setEstablecimientoRFCResponsableSanitario(establecimientoRFCResponsableSanitario: string): void {
+    this.update({ establecimientoRFCResponsableSanitario });
+  }
+  /**
+   * Establece el valor de los estados del establecimiento en el store.
+   *
+   * @param establecimientoEstados - Una cadena que representa los estados del establecimiento a actualizar.
+   */
+  setEstablecimientoEstados(establecimientoEstados:string):void {
+    this.update({establecimientoEstados})
+  }
+  /**
+   * Establece la descripción del municipio en el estado de la tienda.
+   *
+   * @param descripcionMunicipio - La nueva descripción del municipio a asignar.
+   */
+  setDescripcionMunicipio(descripcionMunicipio: string): void {
+    this.update({ descripcionMunicipio });
+  }
+  /**
+   * Establece el valor de la localidad en el estado de la tienda.
+   *
+   * @param localidad - El nombre de la localidad a establecer.
+   */
+  setLocalidad(localidad: string): void {
+    this.update({ localidad });
+  }
+  /**
+   * Actualiza las colonias del establecimiento.
+   * @param establishomentoColonias Nuevas colonias del establecimiento.
+   */
+  setEstablishomentoColonias(establishomentoColonias: string): void {
+    this.update({ establishomentoColonias });
+  }
+  /**
+   * Actualiza la calle del establecimiento.
+   * @param calle Nueva calle del establecimiento.
+   */
+  setCalle(calle: string): void {
+    this.update({ calle });
+  }
+  /**
+   * Actualiza la lada del establecimiento.
+   * @param lada Nueva lada del establecimiento.
+   */
+  setLada(lada: string): void {
+    this.update({ lada });
+  }
+  /**
+   * Actualiza el teléfono del establecimiento.
+   * @param telefono Nuevo teléfono del establecimiento.
+   */
+  setTelefono(telefono: string): void {
+    this.update({ telefono });
+  }
+  /**
+   * Actualiza el régimen del establecimiento.
+   * @param regimen Nuevo régimen del establecimiento.
+   */
+  setRegimen(regimen: string): void {
+    this.update({ regimen });
+  }
+  /**
+   * Actualiza las aduanas de entrada.
+   * @param aduanasEntradas Nuevas aduanas de entrada.
+   */
+  setAduanasEntradas(aduanasEntradas: string): void {
+    this.update({ aduanasEntradas });
+  }
+  /**
+   * Actualiza el número de licencia sanitaria.
+   * @param noLicenciaSanitaria Nuevo número de licencia sanitaria.
+   */
+  setNoLicenciaSanitaria(noLicenciaSanitaria: string): void {
+    this.update({ noLicenciaSanitaria });
+  }
 
+  /**
+   * Actualiza el valor de 'manifests' en el estado.
+   * @param manifests Nuevo valor para 'manifests'.
+   */
+  setManifests(manifests: string): void {
+    this.update({ manifests });
+  }
 }
