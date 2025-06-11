@@ -79,5 +79,21 @@ export const DESTINATARIO_ITEM = [
          * Nota: Hay un posible error en la escritura del nombre del país ("MEXICO(ESTAD UNIDOS MEXICANOS").
          */
         pais: 'MEXICO(ESTADOS UNIDOS MEXICANOS)',
+        /**
+         * Código de país del destinatario.
+         */
+        colonia:'CENTRO',
+        /**
+         * Municipio o alcaldía del destinatario.
+         */
+        municipio:'ALVARADO',
+        /**
+         * Entidad federativa del destinatario.
+         */
+        entidadFederativa: 'VERACRUZ',
+        /**
+         * Código postal del destinatario.
+         */
+        codigoPostal:'95270',
     },
 ];
