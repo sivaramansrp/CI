@@ -14,6 +14,8 @@ import { Tramite240308Store } from '../../estados/tramite240308Store.store';
 import { construirAduanasBotones } from '../../constants/solicitude-de-artificios-pirotecnicos.enum';
 import { takeUntil } from 'rxjs';
 
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 /**
  * @title Datos del Trámite Contenedora
  * @description Componente contenedor que se encarga de enlazar el estado del trámite con el componente de datos del trámite.
@@ -28,6 +30,8 @@ import { takeUntil } from 'rxjs';
   styleUrl: './datos-del-tramite-contenedora.component.scss',
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
+
+  esSoloLectura!: boolean;
   /**
    * Observable para limpiar suscripciones activas al destruir el componente.
    * @property {Subject<void>} unsubscribe$
@@ -81,7 +85,8 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite240308Query,
-    private tramiteStore: Tramite240308Store
+    private tramiteStore: Tramite240308Store,
+    private consultaQuery: ConsultaioQuery
   ) {
     //
   }
@@ -94,6 +99,12 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((estadoConsulta) => {
+        this.esSoloLectura = estadoConsulta.readonly;
+      })
+
     this.aduanasBotones = construirAduanasBotones(this);
     this.tramiteQuery.getMercanciaTablaDatos$
       .pipe(takeUntil(this.unsubscribe$))

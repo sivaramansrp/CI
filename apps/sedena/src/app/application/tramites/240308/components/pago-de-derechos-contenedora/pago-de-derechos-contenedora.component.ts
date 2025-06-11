@@ -8,6 +8,8 @@ import { Subject } from 'rxjs';
 import { Tramite240308Query } from '../../estados/tramite240308Query.query';
 import { Tramite240308Store } from '../../estados/tramite240308Store.store';
 import { takeUntil } from 'rxjs';
+
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * @title Pago de Derechos Contenedora
  * @description Componente contenedor que se encarga de enlazar el estado de pago de derechos con el formulario correspondiente.
@@ -22,6 +24,7 @@ import { takeUntil } from 'rxjs';
   styleUrl: './pago-de-derechos-contenedora.component.scss',
 })
 export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
+  esSoloLectura!: boolean;
   /**
    * Observable para liberar suscripciones al destruir el componente.
    * @property {Subject<void>} unsubscribe$
@@ -44,7 +47,8 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite240308Query,
-    private tramiteStore: Tramite240308Store 
+    private tramiteStore: Tramite240308Store,
+    private consultaQuery: ConsultaioQuery
   ) {
     // 
   }
@@ -57,6 +61,12 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+        this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((estadoConsulta) => {
+        this.esSoloLectura = estadoConsulta.readonly;
+      })
+
     this.tramiteQuery.getPagoDerechos$
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
