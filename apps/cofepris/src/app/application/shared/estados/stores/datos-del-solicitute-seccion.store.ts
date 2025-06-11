@@ -414,15 +414,32 @@ export class DatosDelSolicituteSeccionStateStore extends Store<DatosDelSolicitut
   setNombreDelProfesionalResponsable(nombreDelProfesionalResponsable: string): void {
     this.update({ nombreDelProfesionalResponsable });
   }
+  /**
+   * Actualiza el número de licencia sanitaria.
+   * @param noDeLicenciaSanitaria Nuevo número de licencia sanitaria.
+   */
   setNoDeLicenciaSanitaria(noDeLicenciaSanitaria: string): void {
     this.update({ noDeLicenciaSanitaria });
   }
+  /**
+   * Actualiza las observaciones del número de licencia sanitaria.
+   * @param noDeLicenciaSanitariaObservaciones Nuevas observaciones del número de licencia sanitaria.
+   */
   setNoDeLicenciaSanitariaObservaciones(noDeLicenciaSanitariaObservaciones: string): void {
     this.update({ noDeLicenciaSanitariaObservaciones });
   }
+  /**
+   * Actualiza el régimen al que se destinará la mercancía.
+   * @param regimenAlQueSeDestinaraLaMercancía Nuevo régimen al que se destinará la mercancía.
+   */
   setRegimenAlQueSeDestinaraLaMercancía(regimenAlQueSeDestinaraLaMercancía: string): void {
     this.update({ regimenAlQueSeDestinaraLaMercancía });
   }
+  /**
+   * Establece el valor de la aduana de salida en el estado de la tienda.
+   *
+   * @param aduanaDeSalida - El nombre o identificador de la aduana de salida a establecer.
+   */
   setAduanaDeSalida(aduanaDeSalida: string): void {
     this.update({ aduanaDeSalida });
   }
@@ -523,6 +540,10 @@ export class DatosDelSolicituteSeccionStateStore extends Store<DatosDelSolicitut
     this.update({ noLicenciaSanitaria });
   }
 
+  /**
+   * Actualiza el valor de 'manifests' en el estado.
+   * @param manifests Nuevo valor para 'manifests'.
+   */
   setManifests(manifests: string): void {
     this.update({ manifests });
   }

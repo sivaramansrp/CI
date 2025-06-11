@@ -641,7 +641,7 @@ export class DatosDelSolicitudModificacionComponent
    */
   crearAgregarFormulario(): void {
     this.domicilioEstablecimiento = this.fb.group({
-      ideGenerica1: ['', Validators.required],
+      ideGenerica: ['', Validators.required],
       observaciones: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(2000)]],
       establecimientoRFCResponsableSanitario: ['', [Validators.required,Validators.pattern(REGEX_RFC_FISICA)]],
       establecimientoRazonSocial:['', Validators.required],
@@ -692,7 +692,7 @@ export class DatosDelSolicitudModificacionComponent
    */
   establecerDeshabilitado(): void {
     this.domicilioEstablecimiento
-      .get('ideGenerica1')
+      .get('ideGenerica')
       ?.valueChanges.subscribe((value) => {
         if (value === 'modificacion') {
           this.domicilioEstablecimiento.get('observaciones')?.enable();

@@ -39,11 +39,11 @@
         </label>
 
         <app-input-radio [radioOptions]="genericOptions" [isRequired]="true" [layout]="'horizontal'"
-          formControlName="ideGenerica1" (change)="
-            enCambioDeControl('domicilioEstablecimiento', 'ideGenerica1')
+          formControlName="ideGenerica" (change)="
+            enCambioDeControl('domicilioEstablecimiento', 'ideGenerica')
           "></app-input-radio>
         <div
-          *ngIf="domicilioEstablecimiento.get('ideGenerica1')?.touched && domicilioEstablecimiento.get('ideGenerica1')?.errors?.['required']"
+          *ngIf="domicilioEstablecimiento.get('ideGenerica')?.touched && domicilioEstablecimiento.get('ideGenerica')?.errors?.['required']"
           class="text-danger">
           Seleccione el tipo de operación.
         </div>
