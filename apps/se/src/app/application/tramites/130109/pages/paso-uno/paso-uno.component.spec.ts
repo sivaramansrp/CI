@@ -1,34 +1,64 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
-import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { of, Subject } from 'rxjs';
+import { VehiculosUsadosAdaptadosService } from '../../services/vehiculos-usados-adaptados.service';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
+  let mockImportacionService: any;
+  let mockConsultaQuery: any;
 
   beforeEach(async () => {
+    mockImportacionService = {
+      getDatosDeLaSolicitud: jest.fn(),
+      actualizarEstadoFormulario: jest.fn()
+    };
+
+    mockConsultaQuery = {
+      selectConsultaioState$: of({ update: false })
+    };
+
     await TestBed.configureTestingModule({
       declarations: [PasoUnoComponent],
-      schemas: [NO_ERRORS_SCHEMA]
+      providers: [
+        { provide: VehiculosUsadosAdaptadosService, useValue: mockImportacionService },
+        { provide: ConsultaioQuery, useValue: mockConsultaQuery }
+      ]
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(PasoUnoComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have initial indice value as 1', () => {
-    expect(component.indice).toBe(1);
+  it('debe marcar esDatosRespuesta en true si update es false', () => {
+    component.ngOnInit();
+    expect(component.esDatosRespuesta).toBe(true);
   });
 
-  it('should update indice when seleccionaTab is called', () => {
-    component.seleccionaTab(2);
-    expect(component.indice).toBe(2);
+  it('guardarDatosFormulario debe actualizar esDatosRespuesta y llamar actualizarEstadoFormulario', () => {
+    const resp = { campo: 'valor' };
+    mockImportacionService.getDatosDeLaSolicitud.mockReturnValue(of(resp));
+    component.guardarDatosFormulario();
+    expect(component.esDatosRespuesta).toBe(true);
+    expect(mockImportacionService.actualizarEstadoFormulario).toHaveBeenCalledWith(resp);
+  });
+
+  it('seleccionaTab debe actualizar el índice', () => {
+    component.seleccionaTab(3);
+    expect(component.indice).toBe(3);
+  });
+
+  it('ngOnDestroy debe completar destroyNotifier$', () => {
+    const destroyNotifier$ = new Subject<void>();
+    (component as any).destroyNotifier$ = destroyNotifier$;
+    const completeSpy = jest.spyOn(destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

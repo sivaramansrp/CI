@@ -26,13 +26,15 @@
               <div class="col-md-12">
                 <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona"
                   id="fisica" value="fisica"
-                  (change)="setValoresStore(datosDelTramiteRealizar,'tipoPersona', 'setTipoPersona')"/>
+                  (change)="setValoresStore(datosDelTramiteRealizar,'tipoPersona', 'setTipoPersona')"
+                  [disabled]="esFormularioSoloLectura"/>
                 <label for="fisica">Física</label>
               </div>
               <div class="col-md-12">
                 <input class="form-check-input me-2" type="radio" name="tipoPersona" formControlName="tipoPersona" 
                id="moral" value="moral"
-                (change)="setValoresStore(datosDelTramiteRealizar,'tipoPersona', 'setTipoPersona')"/>
+                (change)="setValoresStore(datosDelTramiteRealizar,'tipoPersona', 'setTipoPersona')"
+                [disabled]="esFormularioSoloLectura"/>
                 <label for="moral">Moral</label>
               </div>
             </div>
@@ -40,7 +42,8 @@
               <div class="col-md-8 mb-3">
                 <label class="form-label" for="denominación">Denominación/razón social*:</label>
                 <input class="form-control" id="denominacion" type="text" formControlName="denominacion"
-                (change)="setValoresStore(datosDelTramiteRealizar,'denominacion', 'setDenominacion')"/>
+                (change)="setValoresStore(datosDelTramiteRealizar,'denominacion', 'setDenominacion')"
+                [disabled]="esFormularioSoloLectura"/>
               </div>
             </div>
             <div class="row">
@@ -49,7 +52,8 @@
                 <label class="form-label" for="domicilio">Domicilio</label>
                 <textarea class="form-control" id="domicilio" rows="2" height="50"
                 placeholder="tenayuca 107" style="height: 100px" formControlName="domicilio"
-                (change)="setValoresStore(datosDelTramiteRealizar,'domicilio', 'setDomicilio')" ></textarea>
+                (change)="setValoresStore(datosDelTramiteRealizar,'domicilio', 'setDomicilio')" 
+                [disabled]="esFormularioSoloLectura"></textarea>
               </div>
             </div>
             </div>
@@ -64,6 +68,7 @@
                 [placeholder]="paisData.primerOpcion"
                 [required]="true"
                 (change)="setValoresStore(datosDelTramiteRealizar,'pais', 'setPais')"
+                [disabled]="esFormularioSoloLectura"
               ></app-catalogo-select>
              </div>
            </div>
@@ -72,19 +77,22 @@
               <div class="col-md-4 mb-3">
                 <label class="form-label" for="codigopostal">Codigo postal:</label>
                 <input class="form-control" id="codigopostal" type="text" formControlName="codigopostal"
-                (change)="setValoresStore(datosDelTramiteRealizar,'codigopostal', 'setCodigopostal')"/>
+                (change)="setValoresStore(datosDelTramiteRealizar,'codigopostal', 'setCodigopostal')"
+                [disabled]="esFormularioSoloLectura"/>
               </div>
             </div>
             <div class="row">
               <div class="col-md-4 mb-3">
                 <label class="form-label" for="telefono">Telefono:</label>
                 <input class="form-control" id="telefono" type="text" formControlName="telefono"
-                (change)="setValoresStore(datosDelTramiteRealizar,'telefono','setTelefono')"/>
+                (change)="setValoresStore(datosDelTramiteRealizar,'telefono','setTelefono')"
+                [disabled]="esFormularioSoloLectura"/>
               </div>
                 <div class="col-md-4 mb-3">
                   <label class="form-label" for="correoelectronico">Correo electronico:</label>
                   <input class="form-control" id="correoelectronico" type="text" formControlName="correoelectronico"
-                  (change)="setValoresStore(datosDelTramiteRealizar,'correoelectronico','setCorreoelectronico')"/>
+                  (change)="setValoresStore(datosDelTramiteRealizar,'correoelectronico','setCorreoelectronico')"
+                  [disabled]="esFormularioSoloLectura"/>
                 </div>
             </div>
 
