@@ -1,6 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, DatosPasos, PASOS } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Component, ViewChild } from '@angular/core';
+import { DatosPasos, PASOS } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
 interface AccionBoton {
@@ -12,10 +11,7 @@ interface AccionBoton {
   templateUrl: './solicitante-page.component.html',
   styleUrl: './solicitante-page.component.scss',
 })
-export class SolicitantePageComponent implements OnInit {
-   constructor(
-      private consultaioQuery: ConsultaioQuery,
-    ) {}
+export class SolicitantePageComponent {
   /**
    * Lista de pasos del wizard.
    * 
@@ -50,39 +46,6 @@ export class SolicitantePageComponent implements OnInit {
     txtBtnSig: 'Continuar',
   };
 
-  /**
-   * @property {ConsultaioState} consultaDatos
-   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
-   */
-  consultaDatos!: ConsultaioState;
-
-  /**
-   * Observable para notificar la destrucción del componente.
-   * Se utiliza para cancelar suscripciones activas y evitar fugas de memoria.
-   */
-  public destroyNotifier$: Subject<void> = new Subject();
-
-  /**
- * Indica si el formulario está en modo solo lectura.
- * Cuando es `true`, los campos del formulario no se pueden editar.
- */
-  soloLectura: boolean = false;
-
-  /**
-   * Método que se ejecuta al inicializar el componente.
-   * Configura el formulario, carga los datos de modificación y los datos de la tabla.
-   */
-  ngOnInit(): void {
-    this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.consultaDatos = seccionState;
-        this.soloLectura = this.consultaDatos.readonly;
-      })
-    )
-    .subscribe();
-  }
 
   /**
   * Método para seleccionar una pestaña específica en el wizard.
