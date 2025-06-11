@@ -1,17 +1,19 @@
 import { Component, OnDestroy, OnInit, Type } from '@angular/core';
+import { DatosGeneralesDelTramite, TareasActivas } from '@libs/shared/data-access-user/src/core/models/datos-generales-del-tramite.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, catchError, map, of, takeUntil } from 'rxjs';
 
-import { DatosGeneralesDelTramite, TareasActivas } from '../../../core/models/datos-generales-del-tramite.model';
-
 import { CommonModule } from '@angular/common';
-import { TramiteQuery } from '../../../core/queries/tramite.query';
-import { TramiteService } from '../../../core/services/tramite.service';
-import { TramiteState } from '../../../core/estados/tramite.store';
+import { TramiteQuery } from '@libs/shared/data-access-user/src/core/queries/tramite.query';
+import { TramiteService } from '@libs/shared/data-access-user/src/core/services/tramite.service';
+import { TramiteState } from '@libs/shared/data-access-user/src/core/estados/tramite.store';
 
-import { ReviewersTabsComponent } from '../reviewers-tabs/reviewers-tabs.component';
+import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramites/components/reviewers-tabs/reviewers-tabs.component';
 
-import { AccuseComponentes, ListaComponentes, Tabulaciones } from '../../../core/models/lista-trimites.model';
+import { AccuseComponentes, ListaComponentes, Tabulaciones } from '@libs/shared/data-access-user/src/core/models/lista-trimites.model';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { LISTA_TRIMITES } from '../core/enums/lista-trimites.enums';
+
 
 @Component({
   selector: 'app-datos-generales-tramite',
@@ -63,11 +65,39 @@ export class DatosGeneralesTramiteComponent implements OnInit, OnDestroy {
    * @description Identificador del trámite seleccionado.
    */
   tramite: number = 0;
+
+  /**
+   * @property {ConsultaioState} guardarDatos
+   * @description Estado actual del trámite consultado.
+   */
+  guardarDatos!: ConsultaioState;
+
+  /**
+   * Esta variable se utiliza para almacenar el estado de la consulta.
+   */
+  public consultaState!:ConsultaioState;
+
   constructor(
     private tramiteService: TramiteService,
     private fb: FormBuilder,
     private solicitudtramiteQuery: TramiteQuery,
-  ) { }
+    private consultaioQuery: ConsultaioQuery,
+    private consultaQuery: ConsultaioQuery,
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.guardarDatos = seccionState;
+          this.consultaState = seccionState;
+          this.tramite = Number(seccionState.procedureId);
+          if (this.tramite) {
+              this.selectTramite(this.tramite);
+          }
+        })
+      )
+      .subscribe();
+    }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -84,6 +114,7 @@ export class DatosGeneralesTramiteComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+      
     this.consultarDatosGeneralesTramite();
   }
 
@@ -158,5 +189,16 @@ export class DatosGeneralesTramiteComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destruirSuscripcion$.next();
     this.destruirSuscripcion$.complete();
+  }
+
+/**
+   * @method selectTramite
+   * @description Selecciona el trámite a evaluar y actualiza la referencia del trámite seleccionado.
+   * @param {number} i - Identificador del trámite.
+   * @returns {void}
+   */
+  selectTramite(i: number): void {
+    this.tramite = i;
+    this.slectTramite = LISTA_TRIMITES.find((v) => v.tramite === i);
   }
 }
