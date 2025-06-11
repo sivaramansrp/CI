@@ -1,14 +1,15 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
 import { CommonModule } from '@angular/common';
 import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
 import { DestinatarioComponent } from '../../components/destinatario/destinatario.component';
 import { HistoricoProductoresComponent } from '../../components/historico-productores/historico-productores.component';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { Tramite110214Query } from '../../../../estados/queries/tramite110214.query';
 import { Tramite110214State } from '../../../../estados/tramites/tramite110214.store';
 import { Tramite110214Store } from '../../../../estados/tramites/tramite110214.store';
+import { ValidarInicialmenteCertificadoService } from '../../services/validar-inicialmente-certificado.service';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
@@ -59,7 +60,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * el componente se destruye.
    */
   destroyNotifier$: Subject<void> = new Subject();
-
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
   /**
    * Constructor del componente.
    * 
@@ -68,7 +75,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   constructor(
     public store: Tramite110214Store,
-    public tramiteQuery: Tramite110214Query
+    public tramiteQuery: Tramite110214Query,
+    private consultaioQuery: ConsultaioQuery,
+    private validarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService,
   ) { }
 
   /**
@@ -87,6 +96,19 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.indice = this.tramiteState.pestanaActiva;
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+        })
+      )
+      .subscribe();
+    if (this.consultaDatos.update) {
+      this.fetchGetDatosConsulta();
+    } else {
+      this.esDatosRespuesta = true;
+    }
   }
 
   /**
@@ -101,7 +123,41 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.indice = i;
     this.store.setPestanaActiva(this.indice);
   }
-
+  /**
+   * @method fetchGetDatosConsulta
+   * @description Obtiene los datos de consulta desde el servicio `ValidarInicialmenteCertificadoService` y actualiza el estado del trámite.
+   * 
+   * Este método realiza una solicitud HTTP para obtener los datos de consulta y, si la respuesta es exitosa, actualiza múltiples propiedades del store con los datos recibidos.
+   * 
+   * Utiliza el operador `takeUntil` para cancelar las suscripciones cuando el componente se destruye, evitando fugas de memoria.
+   * 
+   * @returns {void}
+   */
+  public fetchGetDatosConsulta(): void {
+    this.validarInicialmenteCertificadoService
+      .getDatosConsulta()
+      .pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
+        if (respuesta.success) {
+          this.esDatosRespuesta = true;
+          this.store.setObservaciones(respuesta.datos.observaciones);
+          this.store.setIdioma(respuesta.datos.idioma);
+          this.store.setEntidadFederativa(respuesta.datos.entidadFederativa);
+          this.store.setRepresentacionFederal(respuesta.datos.representacionFederal);
+          this.store.setGrupoReceptor(respuesta.datos.grupoReceptor);
+          this.store.setGrupoDeDirecciones(respuesta.datos.grupoDeDirecciones);
+          this.store.setGrupoRepresentativo(respuesta.datos.grupoRepresentativo);
+          this.store.setTercerOperador(respuesta.datos.tercerOperador);
+          this.store.setPeriodo(respuesta.datos.blnPeriodo);
+          this.store.setGrupoTratado(respuesta.datos.grupoTratado);
+          this.store.setMercanciaTablaDatos(respuesta.datos.mercanciaSeleccionadasTablaDatos);
+          this.store.setMercanciaDisponsiblesTablaDatos(respuesta.datos.mercanciaDisponsiblesTablaDatos);
+          this.store.setDatosConfidencialesProductor(respuesta.datos.datosConfidencialesProductor);
+          this.store.setProductorMismoExportador(respuesta.datos.productorMismoExportador);
+          this.store.setProductoresExportador(respuesta.datos.productoresExportador);
+          this.store.setHistoricoMercanciaSeleccionadasTablaDatos(respuesta.datos.historicoMercanciaSeleccionadasTablaDatos);
+        }
+      });
+  }
   /**
    * Método que se ejecuta al destruir el componente.
    * 

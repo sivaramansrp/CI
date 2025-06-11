@@ -1,8 +1,12 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, REGISTRAR_PROVEEDORES_DE_TABLA, REGISTRAR_PROVEEDORES_MANUAL_DE_TABLA } from '../../constants/proveedores.enum';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+
 import { DatosDelRegistrar, DatosDelRegistrarManual } from '../../models/proveedores.model';
-import { Subject, takeUntil } from 'rxjs';
+import { map, takeUntil} from 'rxjs';
+import { Subject} from 'rxjs';
+
 import { TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Tramite420101Query } from '../../estados/tramite420101Query.query';
@@ -59,6 +63,13 @@ export class RegistrarDeProveedoresComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  public esFormularioSoloLectura: boolean = false; 
+
+
+  /**
    * Constructor del componente que inicializa las dependencias necesarias.
    * @param router - Servicio para la navegación entre rutas.
    * @param activatedRoute - Servicio para acceder a la ruta activa actual.
@@ -70,7 +81,17 @@ export class RegistrarDeProveedoresComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private tramite420101Query: Tramite420101Query,
     private tramite420101Store: Tramite420101Store,
-  ) { }
+    private consultaQuery: ConsultaioQuery
+  ) { 
+     this.consultaQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.esFormularioSoloLectura = seccionState.readonly;
+            })
+          )
+          .subscribe();
+  }
 
   /**
    * Método del ciclo de vida que se ejecuta al inicializar el componente.
@@ -82,6 +103,21 @@ export class RegistrarDeProveedoresComponent implements OnInit, OnDestroy {
       .subscribe((datos: DatosDelRegistrarManual[]) => {
         this.datosProveedoresManual = datos;
       });
+      this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.tramite420101Query.selectTramiteState$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((state: any) => {
+        this.datosTabla = state.datosTabla;
+      });
+    }
   }
 
   /**

@@ -10,12 +10,12 @@ import {
   LABEL_DESPACHO_LDA,
   MSG_ADUANA_PEDIMENTO,
   MSG_ALERTA_ELIMINAR_ELEMENTO,
-  MSG_CAMBIO_TIPO_SOLICITUD,
   MSG_ELIMINA_ELEMENTO,
   MSG_ERROR_NO_INFORMACION,
+  MSG_ERROR_RFC_NO_ENCONTRADO,
+  MSG_MONTO_PAGADO_CUBIERTO,
   MSJ_ERROR_FECHA,
   MSJ_ERROR_LINEA_CAPTURA,
-  MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
   MSJ_LINEA_CAPTURA_NO_PAGADA,
   MSJ_LINEA_CAPTURA_USADA,
   PATENTES_ID,
@@ -59,6 +59,7 @@ import {
   TipoPersona,
   TipoSolicitudService,
   TipoTransporteService,
+  TransporteDespacho,
   ValidaRfcService,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
@@ -90,7 +91,6 @@ import {
   Observable,
   Subject,
   catchError,
-  defaultIfEmpty,
   delay,
   first,
   map,
@@ -126,7 +126,7 @@ import { UsuarioState } from '@libs/shared/data-access-user/src/core/estados/usu
 import { ValidaLineaCapturaService } from '../../../../core/services/5701/pago/valida-linea-captura.service';
 import { ValidaLineaPagoService } from '../../../../core/services/5701/pago/valida-linea-pago.service';
 
-//TODO: Estas importaciones deben eliminarse una vez que se obtengan las patentes y los rfcs de la consulta del api.
+//Estas importaciones deben eliminarse una vez que se obtengan las patentes y los rfcs de la consulta del api.
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 // eslint-disable-next-line @nx/enforce-module-boundaries
@@ -377,7 +377,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   lineaCapturaSeleccionados: LineaCaptura[] = [];
 
-  //TODO: Estas variables se van a eliminar
+  //Estas variables se van a eliminar
   /**
    * Arrelgo de patentes de la empresa
    */
@@ -466,8 +466,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private validaTipoPersona() {
-    // TODO: Esta validación debería cambiar y validar contra el valor almacenado
+  private validaTipoPersona(): void {
+    // Esta validación debería cambiar y validar contra el valor almacenado
     // en el store.
     if (this.tipoPersona === TipoPersona.FISICA) {
       this.obtenerPatente();
@@ -645,21 +645,29 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
+   * Error pattern
+   * @returns {boolean} - Retorna `true` si el campo tiene un error de patrón, de lo contrario `false`.
+   */
+  isErrorPattern(field: string): boolean {
+    const CONTROL = this.datosImportadorExportador.get(
+      field
+    ) as FormControl;
+
+    if (CONTROL) {
+      const ERROR_PATTERN = CONTROL.hasError('pattern');
+      return ERROR_PATTERN;
+    }
+
+    return false;
+  }
+
+  /**
    * Verifica si el control 'idSocioComercial' tiene el validador 'Validators.required'.
    *
    * @returns {boolean} `true` si el control es requerido, de lo contrario `false`.
    */
-  isRequired(): boolean {
-    const CONTROL = this.datosImportadorExportador.get(
-      'idSocioComercial'
-    ) as FormControl;
-
-    if (CONTROL) {
-      const REQUERIDO = CONTROL.hasValidator(Validators.required);
-      return REQUERIDO;
-    }
-
-    return false;
+  isRequired(form: FormGroup, field: string): boolean | null {
+    return this.validacionesService.errorCampoRequerido(form, field);
   }
 
   /**
@@ -853,7 +861,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         nombre: [{ value: this.solicitudState?.nombre, disabled: true }],
         desNumeroRegistro: [
           this.solicitudState?.descripcionNumeroRegistro,
-          [Validators.maxLength(25)],
+          [Validators.maxLength(30)],
         ],
 
         programa: [this.solicitudState?.programa],
@@ -888,10 +896,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
       datosServicio: this.fb.group({
         fechaInicio: [this.solicitudState?.fechaInicio, [Validators.required]],
-        fechaFinal: [
-          this.solicitudState?.fechaFinal,
-          [Validators.required, ValidacionesFormularioService.validaFechaNoHoy],
-        ],
+        fechaFinal: [this.solicitudState?.fechaFinal, [Validators.required]],
         horaInicio: [this.solicitudState?.horaInicio, Validators.required],
         horaFinal: [this.solicitudState?.horaFinal, Validators.required],
         fechasSeleccionadas: this.fb.array([], Validators.required),
@@ -904,10 +909,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         folioDDEX: [this.solicitudState?.autorizacionDDEX],
         idAduanaDespacho: [
           this.solicitudState?.idAduanaDespacho,
-          [Validators.required],
+          [Validators.required, ValidacionesFormularioService.noMenosUnoValor],
         ],
         aduanaDespacho: [this.solicitudState?.aduanaDespacho],
-        idSeccionDespacho: [this.solicitudState?.idSeccionDespacho],
+        idSeccionDespacho: [
+          this.solicitudState?.idSeccionDespacho,
+          [ValidacionesFormularioService.noMenosUnoValor],
+        ],
         seccionAduanera: [this.solicitudState?.seccionAduanera],
         idRecinto: [],
         nombreRecinto: [this.solicitudState?.nombreRecinto],
@@ -1078,8 +1086,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               return this.idcService
                 .getInformacionContribuyente(RFC_IMP_EXP)
                 .pipe(tap());
-            } else {
-              // TODO: Implementar mensaje de error para RFC no encontrado.
             }
             return EMPTY;
           }),
@@ -1090,6 +1096,17 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             if (NOMBRE) {
               this.datosImportadorExportador.get('nombre')?.setValue(NOMBRE);
               this.getCertificaciones(RFC_IMP_EXP);
+            } else {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'alert',
+                categoria: 'danger',
+                modo: 'action',
+                titulo: 'Avisos',
+                mensaje: MSG_ERROR_RFC_NO_ENCONTRADO,
+                cerrar: false,
+                txtBtnAceptar: 'Aceptar',
+                txtBtnCancelar: '',
+              };
             }
           })
         )
@@ -1324,16 +1341,35 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   changeFechaFinal(): void {
     this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
-    if (
-      this.datosServicio.get('fechaFinal')?.dirty &&
-      this.datosServicio.get('fechaFinal')?.touched
-    ) {
-      // eslint-disable-next-line no-unused-expressions
-      this.datosServicio.hasError('endDateBeforeStartDate') &&
-        this.limpiarFechasHoras();
-      this.rangoFechas();
+
+    const FECHA_FINAL = this.datosServicio.get('fechaFinal');
+
+    if (!FECHA_FINAL?.dirty || !FECHA_FINAL?.touched) {
+      this.setValoresStore(this.datosServicio, 'fechaFinal', 'setFechaFinal');
+      return;
     }
 
+    if (this.datosServicio.hasError('endDateBeforeStartDate')) {
+      this.limpiarFechasHoras();
+      return;
+    }
+
+    if (this.datosServicio.hasError('invalidIntervalo')) {
+      this.limpiarFechasHoras();
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Avisos',
+        mensaje: MSJ_ERROR_FECHA,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    this.rangoFechas();
     this.setValoresStore(this.datosServicio, 'fechaFinal', 'setFechaFinal');
   }
 
@@ -1439,15 +1475,37 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   changeFechaInicio(): void {
     this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
-    if (
-      this.datosServicio.get('fechaInicio')?.dirty &&
-      this.datosServicio.get('fechaInicio')?.touched
-    ) {
-      this.rangoFechas();
+
+    const FECHA_INICIO = this.datosServicio.get('fechaInicio');
+
+    if (!FECHA_INICIO?.dirty || !FECHA_INICIO?.touched) {
+      this.setValoresStore(this.datosServicio, 'fechaInicio', 'setFechaInicio');
+      return;
     }
+
+    if (this.datosServicio.hasError('endDateBeforeStartDate')) {
+      this.limpiarFechasHoras();
+      return;
+    }
+
+    if (this.datosServicio.hasError('invalidIntervalo')) {
+      this.limpiarFechasHoras();
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Avisos',
+        mensaje: MSJ_ERROR_FECHA,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    this.rangoFechas();
     this.setValoresStore(this.datosServicio, 'fechaInicio', 'setFechaInicio');
   }
-
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
    *
@@ -1653,7 +1711,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @param tipo - Tipo de datos a actualizar ('vehiculo' o 'transporte').
    * @returns void
    */
-  changeAgregarVehiculo(vehiculos: any[], tipo: string): void {
+  changeAgregarVehiculo(vehiculos: TransporteDespacho[], tipo: string): void {
     if (tipo === 'vehiculo') {
       this.tramite5701Store.setTransporte(vehiculos);
     } else if (tipo === 'transporte') {
@@ -2056,16 +2114,32 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
           const MONTO_A_CUBRIR = DIAS_SERVICIO * MONTO_A_PAGAR;
 
-          //TODO: Aqui se hace la validación del monto a pagar y el monto a cubrir
-
           const PAGO = {
             lineaCaptura: LINEA_PAGO,
             monto: responseLineaCapturaPagada.datos.pago_model.importe,
           };
 
-          this.montoPagadoLineas +=
-            responseLineaCapturaPagada.datos.pago_model.importe;
-          this.datosTablaPagos.push(PAGO);
+          if (this.montoPagadoLineas < MONTO_A_CUBRIR) {
+            this.montoPagadoLineas +=
+              responseLineaCapturaPagada.datos.pago_model.importe;
+            this.datosTablaPagos.push(PAGO);
+          } else {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: TITULO_MODAL_ERROR,
+              mensaje: MSG_MONTO_PAGADO_CUBIERTO,
+              cerrar: false,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+            this.pagoCaptura.get('lineaCaptura')?.reset();
+            this.pagoCaptura.get('monto')?.reset();
+            return;
+          }
+
+          // Actualizar el estado una vez, en lugar de en cada iteración
           this.tramite5701Store.setLineasCaptura(this.datosTablaPagos);
 
           //Limpia los campos de la línea de captura y monto
@@ -2139,6 +2213,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               this.despachoSeleccionado = false;
             }
           }
+
+          this.despacho.get('rfcDespachoLDA')?.clearValidators();
+          this.despacho.get('rfcDespachoLDA')?.updateValueAndValidity();
+          this.despacho.get('folioDDEX')?.clearValidators();
+          this.despacho.get('folioDDEX')?.updateValueAndValidity();
         }
         break;
 
@@ -2182,13 +2261,27 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @param tipo - Tipo de despacho seleccionado ('lda' o 'dd').
    * @returns {void} No retorna ningún valor.
    */
-  showConfirmDialogLDA_DD(tipo: string): void {
+  showConfirmDialogLDA_DD(event: Event, tipo: string): void {
+    const CHECKED = event.target as HTMLInputElement;
+
+    this.despacho.get(tipo)?.setValue(CHECKED.checked);
+
     this.tipoDespacho = tipo;
     const ADUANA = this.despacho.get('idAduanaDespacho')?.value;
     const DESPACHO = this.despacho.get('idSeccionDespacho')?.value;
     const RECINTO = this.despacho.get('nombreRecinto')?.value;
 
-    if ((ADUANA || DESPACHO || RECINTO) && this.despacho.touched) {
+    const FORMA_MODIFICADA = Object.keys(this.despacho.controls).some((key) => {
+      if (key !== 'lda' && key !== 'dd') {
+        return (
+          this.despacho.controls[key].dirty ||
+          this.despacho.controls[key].touched
+        );
+      }
+      return false;
+    });
+
+    if ((ADUANA || DESPACHO || RECINTO) > 0 && FORMA_MODIFICADA) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: '',
@@ -2200,6 +2293,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         txtBtnCancelar: 'No',
       };
       this.procesoModal = 'lda_dd';
+    } else if (!this.despacho.get(tipo)?.value) {
+      this.despacho.get('rfcDespachoLDA')?.clearValidators();
+      this.despacho.get('rfcDespachoLDA')?.updateValueAndValidity();
+      this.despacho.get('folioDDEX')?.clearValidators();
+      this.despacho.get('folioDDEX')?.updateValueAndValidity();
     } else {
       this.activaDesactivaCheckLDA_DDEX(tipo);
     }
