@@ -5,6 +5,10 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+/**
+ * Servicio encargado de manejar la lógica relacionada con la solicitud del trámite 31601.
+ * Se encarga de actualizar el estado de la solicitud en el store y de obtener datos precargados desde archivos JSON.
+ */
 @Injectable({
   providedIn: 'root',
 })
@@ -21,7 +25,7 @@ export class Solocitud260104Service {
   /**
    * Constructor del servicio.
    * @param http Cliente HTTP para realizar solicitudes a servicios o archivos locales.
-   * @param tramite31601Store Store personalizado para el manejo del estado del trámite 31601.
+   * @param tramite260104Store Store personalizado para el manejo del estado del trámite 260104.
    */
   constructor(private http: HttpClient, private tramite260104StoreDos: Tramite260104StoreDos,private tramite260104Store: Tramite260104Store) {
     // Lógica de inicialización si es necesario
@@ -31,7 +35,7 @@ export class Solocitud260104Service {
    * Actualiza el estado del formulario de la solicitud en el store con la información proporcionada.
    * Cada propiedad del objeto recibido es asignada al store correspondiente.
    * 
-   * @param DATOS Objeto con la estructura completa del estado del formulario del trámite 31601.
+   * @param DATOS Objeto con la estructura completa del estado del formulario del trámite 260104.
    */
 
   actualizarEstadoFormularioDos(DATOS: Solicitud260104State): void {
@@ -81,6 +85,12 @@ export class Solocitud260104Service {
     return this.http.get<Solicitud260104State>('assets/json/260104/registro_toma_muestras_mercancias.json');
   }
 
+  /**
+   * Actualiza el estado del formulario de la solicitud en el store con la información proporcionada.
+   * Cada propiedad del objeto recibido es asignada al store correspondiente.
+   * 
+   * @param DATOS Objeto con la estructura completa del estado del formulario del trámite 260104.
+   */
   actualizarEstadoFormulario(DATOS: Tramite260104State): void {
     this.tramite260104Store.updatePagoDerechos(DATOS.pagoDerechos);
     this.tramite260104Store.updateDestinatarioFinalTablaDatos(DATOS.destinatarioFinalTablaDatos);

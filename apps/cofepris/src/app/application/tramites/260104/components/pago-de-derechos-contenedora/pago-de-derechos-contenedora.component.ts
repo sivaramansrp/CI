@@ -34,7 +34,10 @@ import { Tramite260104Store } from '../../estados/stores/tramite260104.store';
 
 
 export class PagoDeDerechosContenedoraComponent implements OnDestroy {
- public pagoDerechos: PagoDerechosFormState;
+ /**
+   * Representa el estado del formulario de pago de derechos, que incluye información como clave de referencia, estado del pago, importe, entre otros.
+   */
+  public pagoDerechos: PagoDerechosFormState;
 
  /**
    * Determina si el formulario debe estar en modo solo lectura.
