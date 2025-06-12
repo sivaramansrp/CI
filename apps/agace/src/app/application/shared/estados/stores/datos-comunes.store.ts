@@ -169,6 +169,15 @@ export interface DatosComunesState {
    * El valor de indiqueCheck.
    */
   indiqueCheck: string;
+    /**
+     * El valor de manifestado.
+     */
+  manifestado: boolean;
+    /**
+     * El valor de protesta.
+     */
+    protesta: boolean;
+
 
 }
 
@@ -337,6 +346,14 @@ export function createInitialState(): DatosComunesState {
       * El valor de indiqueCheck.
       */
         indiqueCheck: '',
+        /**
+         * El valor de manifestado.
+         */
+        manifestado: false,
+        /**
+         * El valor de protesta.
+         */
+        protesta: false,
       };
 }
 
@@ -723,6 +740,27 @@ public setVinculacionRegistroCancelado(vinculacionRegistroCancelado: boolean) {
         this.update((state) => ({
             ...state,
             indiqueCheck,
+        }));
+    }
+
+    /**
+     * Establece el estado de manifestado.
+     * @param manifestado - El valor de manifestado.
+     */
+    public setManifestado(manifestado: boolean) {
+        this.update((state) => ({
+            ...state,
+            manifestado,
+        }));
+    }
+    /**
+     * Establece el estado de protesta.
+     * @param protesta - El valor de protesta.
+     */
+    public setProtesta(protesta: boolean) {
+        this.update((state) => ({
+            ...state,
+            protesta,
         }));
     }
 }
