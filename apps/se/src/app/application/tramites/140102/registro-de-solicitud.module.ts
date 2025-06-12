@@ -1,7 +1,7 @@
 import { BtnContinuarComponent, InicioSesionService, SubirDocumentoService } from '@libs/shared/data-access-user/src';
 import { AlertComponent } from '@libs/shared/data-access-user/src';
 import { AnexarDocumentosComponent } from '@libs/shared/data-access-user/src';
-import { CancelacionDeAutorizacionesComponent } from './components/Cancelacion-de-autorizaciones/Cancelacion-de-autorizaciones.component';
+import { CancelacionDeAutorizacionesComponent } from './components/cancelacion-autorizaciones/cancelacion-autorizaciones.component';
 import { CancelacionDeAutorizacionesService } from './services/cancelacion-de-autorizaciones.service';
 import { CommonModule } from '@angular/common';
 import { DatosComponent } from './pages/datos/datos.component';

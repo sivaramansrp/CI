@@ -186,7 +186,7 @@ export class PantallasComponent implements OnInit, OnDestroy {
    * @param {number} event Índice de la subpestaña seleccionada.
    */
   public pestanaCambiado(event: number): void {
-    if (event !== undefined && event !== null && !isNaN(event)) {
+    if (event && !isNaN(event)) {
       this.indiceDePestanaSeleccionada = event;
     } else {
       this.indiceDePestanaSeleccionada = 1;

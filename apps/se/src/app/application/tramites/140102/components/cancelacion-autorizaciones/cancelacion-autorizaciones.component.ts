@@ -15,11 +15,11 @@ import { ProgramaSeleccionadoComponent } from '../programa-seleccionado/programa
  * 
  */
 @Component({
-  selector: 'app-cancelacion-de-autorizaciones',
+  selector: 'app-cancelacion-autorizaciones',
   standalone: true,
   imports: [CommonModule, FormasDinamicasComponent, TablaDinamicaComponent, ProgramaSeleccionadoComponent],
-  templateUrl: './Cancelacion-de-autorizaciones.component.html',
-  styleUrl: './Cancelacion-de-autorizaciones.component.scss',
+  templateUrl: './cancelacion-autorizaciones.component.html',
+  styleUrl: './cancelacion-autorizaciones.component.scss',
 })
 export class CancelacionDeAutorizacionesComponent implements OnInit, OnDestroy {
   /**
