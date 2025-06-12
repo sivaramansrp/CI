@@ -1492,14 +1492,14 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.mostrarRangoFechas = true;
     } else {
       this.mostrarRangoFechas = false;
-      this.fechasSeleccionadas?.clear();
 
+      this.fechasSeleccionadas?.clear();
       this.fechasSeleccionadas.push(new FormControl(this.selectRangoDias[0]));
     }
   }
 
   /**
-   * Calcula el rango de días entre dos fechas y horas,
+   * Calcula el rango de días    entre dos fechas y horas,
    * y actualiza el estado del componente.
    */
   rangoFechas(): void {
@@ -1519,11 +1519,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.pagoCaptura.get('montoAPagar')?.enable();
     this.pagoCaptura.get('montoAPagar')?.setValue(this.montoACubrir);
     this.pagoCaptura.get('montoAPagar')?.disable();
+
     this.colapsable =
       this.tipoSolicitudSeleccionada !== TIPO_SOLICITUD.INDIVIDUAL
-        ? false
-        : true;
-
+        ? true
+        : false;
+    
     this.setValoresStore(this.pagoCaptura, 'montoAPagar', 'setMontoPagar');
   }
 
