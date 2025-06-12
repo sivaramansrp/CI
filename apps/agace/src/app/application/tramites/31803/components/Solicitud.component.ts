@@ -77,19 +77,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   registroForm!: FormGroup;
 
- 
- /**
-   * Subject para destruir notificador.
-   */
-consultaDatos!: ConsultaioState;
+
+  /**
+    * Subject para destruir notificador.
+    */
+  consultaDatos!: ConsultaioState;
 
   esFormularioSoloLectura: boolean = false;
   // public consultaDatos!: Solicitud31803State;
   public destroyNotifier$: ReplaySubject<boolean> = new ReplaySubject(1);
-  
-   /**
-   * Configuración para el catálogo de bancos.
-   */
+
+  /**
+  * Configuración para el catálogo de bancos.
+  */
   public bancoCatalogo: CatalogosSelect = {
     labelNombre: 'Banco',
     required: false,
@@ -121,8 +121,6 @@ consultaDatos!: ConsultaioState;
         map((seccionState) => {
           this.consultaDatos = seccionState;
           this.esFormularioSoloLectura = this.consultaDatos.readonly;
-          console.log("this.esFormularioSoloLectura......", this.esFormularioSoloLectura);
-          this.inicializarEstadoFormulario();
         })
       )
       .subscribe()
@@ -139,22 +137,26 @@ consultaDatos!: ConsultaioState;
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.solicitudState = seccionState;
-          this.donanteDomicilio()
+          this.solicitudState = seccionState;       
         })
       )
       .subscribe();
-    this.donanteDomicilio();
+     this.donanteDomicilio()
   }
 
-
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosDelFormulario();
-    } else {
-      this.datosDeAvisoForm()
-    }
+/**
+ * Determina el estado inicial del formulario según el modo de solo lectura.
+ * 
+ * Si el formulario está en modo solo lectura, llama a `guardarDatosDelFormulario()` para deshabilitar los campos.
+ * Si no está en modo solo lectura, llama a `datosDeAvisoForm()` para aplicar la configuración correspondiente.
+ */
+inicializarEstadoFormulario(): void {
+  if (this.esFormularioSoloLectura) {
+    this.guardarDatosDelFormulario();
+  } else {
+    this.datosDeAvisoForm();
   }
+}
 
 
   /**
@@ -227,6 +229,13 @@ consultaDatos!: ConsultaioState;
     (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
+  /**
+ * Habilita o deshabilita el formulario de acuerdo al modo de solo lectura.
+ * 
+ * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es `true`), 
+ * deshabilita todos los campos del formulario para evitar modificaciones.
+ * En caso contrario, habilita los campos para permitir la edición.
+ */
   guardarDatosDelFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.registroForm.disable();
@@ -235,9 +244,12 @@ consultaDatos!: ConsultaioState;
     }
   }
 
-  /**
-   * Inicializa el formulario con los valores actuales del estado.
-   */
+/**
+ * Inicializa el formulario reactivo `registroForm` con los valores actuales del estado de la solicitud.
+ * 
+ * Crea el formulario con los campos requeridos y sus validaciones, utilizando los valores actuales de `solicitudState`.
+ * Al finalizar, llama a `inicializarEstadoFormulario()` para aplicar la configuración de solo lectura si corresponde.
+ */
   donanteDomicilio(): void {
     this.registroForm = this.fb.group({
       banco: [this.solicitudState?.banco, [Validators.required]],
@@ -247,23 +259,19 @@ consultaDatos!: ConsultaioState;
       numeroOperacion: [this.solicitudState?.numeroOperacion, [Validators.required],],
       fechaPago: [this.solicitudState?.fechaPago, [Validators.required]],
     });
-        if (this.esFormularioSoloLectura) {
-      this.registroForm.disable();
-    }
+    this.inicializarEstadoFormulario();
   }
 
-
-
-/**
- * datosDeltrimiteForm los campos del formulario si es de solo lectura.
- * Si el formulario es de solo lectura, deshabilita los campos del formulario de importador/exportador.
- */
+  /**
+   * datosDeltrimiteForm los campos del formulario si es de solo lectura.
+   * Si el formulario es de solo lectura, deshabilita los campos del formulario de importador/exportador.
+   */
 
   datosDeAvisoForm(): void {
     if (this.esFormularioSoloLectura) {
       this.registroForm.get('banco')?.disable();
       this.registroForm.get('manifiesto1')?.disable();
-      this.registroForm.get('manifiesto2')?.disable(); 
+      this.registroForm.get('manifiesto2')?.disable();
       this.registroForm.get('llave')?.disable();
       this.registroForm.get('numeroOperacion')?.disable();
       this.registroForm.get('fechaPago')?.disable();

@@ -39,7 +39,14 @@ export class PasoUnoComponent implements AfterViewInit, OnInit {
     // El constructor se utiliza para la inyección de dependencias.
   }
 
-
+  /**
+     * Inicializa el componente y suscripciones al estado de consulta.
+     * 
+     * Se suscribe al observable `selectConsultaioState$` para obtener el estado actual de la consulta.
+     * Si el estado indica que se debe actualizar (`update` es true), llama a `guardarDatosFormulario()` para cargar los datos
+     * y actualizar el estado global. Si no, marca que existen datos de respuesta.
+     * La suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
+     */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
       .pipe(
@@ -57,28 +64,39 @@ export class PasoUnoComponent implements AfterViewInit, OnInit {
     }
   }
 
-guardarDatosFormulario(): void {
-  this.solicitud31803Service
-    .getSolicitudDatos()
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-    )
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    .subscribe((resp: any) => {
-      if (resp) {
-        this.esDatosRespuesta = true;
-        const SOLICITUD_STATE: Solicitud31803State = {
-          numeroOperacion: resp.numeroOperacion,
-          banco: resp.banco.descripcion,
-          llave: resp.llave,
-          manifiesto1: resp.manifiesto1,
-          manifiesto2: resp.manifiesto2,
-          fechaPago: resp.fechaPago,
-        };
-        this.solicitud31803Service.actualizarEstadoFormulario(SOLICITUD_STATE);
-      }
-    });
-}
+
+  /**
+   * Obtiene los datos de la solicitud desde el servicio y actualiza el estado global.
+   * 
+   * Realiza una petición al servicio para obtener los datos de la solicitud.
+   * Al recibir la respuesta, marca que existen datos de respuesta y construye un objeto `Solicitud31803State`
+   * con los datos recibidos. Luego, actualiza el estado global del formulario utilizando el método
+   * `actualizarEstadoFormulario` del servicio.
+   * La suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
+   */
+  guardarDatosFormulario(): void {
+    this.solicitud31803Service
+      .getSolicitudDatos()
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+      )
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .subscribe((resp: any) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          const SOLICITUD_STATE: Solicitud31803State = {
+            numeroOperacion: resp.numeroOperacion,
+            banco: resp.banco.descripcion,
+            llave: resp.llave,
+            manifiesto1: resp.manifiesto1,
+            manifiesto2: resp.manifiesto2,
+            fechaPago: resp.fechaPago,
+          };
+          this.solicitud31803Service.actualizarEstadoFormulario(SOLICITUD_STATE);
+        }
+      });
+  }
+
   /**
  * Referencia al componente de solicitante.
  */
