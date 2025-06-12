@@ -98,7 +98,7 @@ export class ManifiestosRepresentanteSeccionComponent
 
     this.manifiestosRepresentanteForm = this.fb.group({
       representanteRfc: ['', Validators.required],
-      manifests: ['', Validators.required],
+      manifests: [true, Validators.required],
       informacionConfidencialRadio: ['', Validators.required],
       representanteNombre: ['', Validators.required],
       apellidoPaterno: ['', Validators.required],
