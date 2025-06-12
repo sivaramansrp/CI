@@ -39,6 +39,11 @@ export class RegistroSolicitudService {
     this.tramite31802Store.setMonedaNacional(DATOS.monedaNacional);
   }
 
+    /**
+   * Obtiene los datos del aviso de renovación desde un archivo JSON local.
+   * @returns Un observable con los datos del estado de la solicitud (Solicitud31802State).
+   */
+  
   public getDatosDeAvisoRenovacionDoc(): Observable<Solicitud31802State> {
     return this.http.get<Solicitud31802State>('assets/json/31802/aviso-de-renovacion.json');
   }

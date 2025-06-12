@@ -101,6 +101,15 @@ export class PasoUnoComponent implements AfterViewInit,OnInit, OnDestroy {
     }
   }
 
+  /**
+ * Obtiene los datos del aviso de renovación desde el servicio y actualiza el estado global del formulario.
+ * 
+ * Este método realiza una petición al servicio para obtener los datos del aviso de renovación desde un archivo JSON local.
+ * Al recibir la respuesta, marca que existen datos de respuesta y actualiza el estado del formulario en el store
+ * utilizando el método `actualizarEstadoFormulario` del servicio.
+ * La suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
+ */
+
     guardarDatosFormulario(): void {
     // Método para guardar los datos del formulario
     this.solicitud31802Service
