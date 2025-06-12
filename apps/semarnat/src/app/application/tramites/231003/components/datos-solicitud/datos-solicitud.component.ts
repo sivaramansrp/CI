@@ -1,7 +1,9 @@
 import { CatalogoSelectComponent, InputRadioComponent, TableComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery,ConsultaioState} from '@ng-mf/data-access-user'
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231003/solicitud.model';
+import {Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatoSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
 import { DatoSolicitudStore } from '../../estados/tramites/dato-solicitud.store';
@@ -72,12 +74,24 @@ export class DatosSolicitudComponent implements OnInit {
   public etiquetasForm = RADIO_OPCIONES;
 
   /**
+   * Estado de la consulta actual, utilizado para controlar el modo de solo lectura y otros estados.
+   */
+  public consultaState!: ConsultaioState;
+
+  /**
+   * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
+   */
+  private destroy$ = new Subject<void>();
+
+
+  /**
    * Constructor del componente. Inyecta el FormBuilder, el store y el query de Akita.
    */
   constructor(
     public fb: FormBuilder,
     private datoSolicitudStore: DatoSolicitudStore,
-    private datoSolicitudQuery: DatoSolicitudQuery
+    private datoSolicitudQuery: DatoSolicitudQuery,
+    private consultaQuery: ConsultaioQuery
   ) {
     // Lógica del constructor si se necesita
   }
@@ -113,6 +127,20 @@ export class DatosSolicitudComponent implements OnInit {
      * Recupera valores almacenados en el store para rellenar los formularios.
      */
     this.recuperarValoresDesdeStore();
+
+     this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
+
+    // Si el estado indica actualización, carga los datos del formulario.
+    if (this.consultaState.readonly) {
+      this.deshabilitarFormularios();
+    }
   }
 
   /** 
@@ -273,7 +301,11 @@ export class DatosSolicitudComponent implements OnInit {
       CAMPOS.forEach((campoExtra): void => {
         const CONTROL = this.formularioEmpresaReciclaje.get(campoExtra);
         if (CONTROL) {
-          DEBE_HABILITAR ? CONTROL.enable() : CONTROL.disable();
+          if (DEBE_HABILITAR) {
+            CONTROL.enable();
+          } else {
+            CONTROL.disable();
+          }
         }
       });
     }
@@ -303,7 +335,11 @@ export class DatosSolicitudComponent implements OnInit {
       CAMPOS_A_CONTROLAR.forEach((campoExtra: string): void => {
         const CONTROL = this.formularioLugarReciclaje.get(campoExtra);
         if (CONTROL) {
-          DEBE_HABILITAR ? CONTROL.enable() : CONTROL.disable();
+          if (DEBE_HABILITAR) {
+            CONTROL.enable();
+          } else {
+            CONTROL.disable();
+          }
         }
       });
     }
@@ -354,4 +390,27 @@ export class DatosSolicitudComponent implements OnInit {
       MODAL_INSTANCE.show();
     }
   }
+
+    /**
+     * Habilita o deshabilita todos los formularios según el estado de solo lectura.
+     * Si el estado es de solo lectura, deshabilita todos los formularios para evitar edición.
+     * Si el estado permite edición, habilita todos los formularios.
+     */
+    deshabilitarFormularios(): void {
+      if (this.consultaState?.readonly) {
+        // Deshabilita los formularios si el estado es solo lectura
+        this.solicitudForm.disable();
+        this.formularioEmpresaReciclaje.disable();
+        this.formularioLugarReciclaje.disable();
+        this.formularioEmpresaTransportista.disable();
+        this.formularioPrecaucionesManejo.disable();
+      } else {
+        // Habilita los formularios si el estado permite edición
+        this.solicitudForm.enable();
+        this.formularioEmpresaReciclaje.enable();
+        this.formularioLugarReciclaje.enable();
+        this.formularioEmpresaTransportista.enable();
+        this.formularioPrecaucionesManejo.enable();
+      }
+    }
 }

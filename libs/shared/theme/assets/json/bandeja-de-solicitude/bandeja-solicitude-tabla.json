@@ -1764,8 +1764,26 @@
     "numeroDeProcedimiento": "240119"
   },
   {
-    "id": 80303,
+    "id": 140101,
+    "tipoDeTramite": "Cancelación de Programa de la SE IMMEX",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "140101"
+  },
+  {
+    "id": 231003,
     "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SEMARNAT",
+    "numeroDeProcedimiento": "231003"
+  },
+  {
+    "id": 80303,
+    "tipoDeTramite": "Cancelación de Programa de la SE IMMEX",
     "fecha": "2023-10-01",
     "fechaActualizacion": "2023-10-05",
     "diasTranscurridos": "4",
