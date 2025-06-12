@@ -74,12 +74,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los campos del formulario no se pueden editar.
    */
   soloLectura: boolean = false;
-
-   /**
-   * Indica si el formulario está en modo solo lectura.
-   * Cuando es `true`, los campos del formulario no se pueden editar.
-   */
-  esDatosRespuesta: boolean = false;
   
   constructor(
     private fb: FormBuilder,
@@ -124,15 +118,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       map((seccionState) => {
         this.consultaDatos = seccionState;
         this.soloLectura = this.consultaDatos.readonly;
-        this.inicializarEstadoFormulario();
+        this.guardarDatosFormulario();
       })
     )
     .subscribe();
-    if (this.consultaDatos.update) {
-      this.guardarDatosFormulario();
-    } else {
-      this.esDatosRespuesta = true;
-    }
     this.inicializarFormulario();
     this.cargarContenedoresOpciones();
     this.cargarAduanaOpciones();
@@ -166,26 +155,14 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       aduana: [this.solicitudState?.aduana, [Validators.required]],
       observaciones: {value:this.solicitudState?.observaciones, disabled: this.soloLectura},
     });
-  }
-
-  /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.
-   * Además, obtiene la información del catálogo de mercancía.
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.soloLectura) {
-      this.guardarDatosFormulario();
-    } else {
-      this.inicializarFormulario();
+    this.guardarDatosFormulario();
     }
-  }
 
     /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
-    this.inicializarFormulario();
     if (this.soloLectura) {
       this.tecnicaForm.disable();
     } else {
