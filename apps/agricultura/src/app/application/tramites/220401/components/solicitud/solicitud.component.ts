@@ -1,16 +1,10 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-
-import { PantallasFormData } from '../../../../../../../../../libs/shared/data-access-user/src/core/models/220401/servicios-pantallas.model';
-
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { ServiciosPantallasService } from '../../../../../../../../../libs/shared/data-access-user/src/core/services/220471/servicios-pantallas.service';
+import { HttpClient } from '@angular/common/http';
+import { PantallasFormData } from 'libs/shared/data-access-user/src/core/models/220401/servicios-pantallas.model';
+import { ServiciosPantallasService } from 'libs/shared/data-access-user/src/core/services/220471/servicios-pantallas.service';
 
 interface Solicitude {
   fechaCreacion: string;
@@ -65,8 +59,7 @@ export class SolicitudPantallasComponent implements OnInit, OnDestroy {
 
 
   
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  loadSolicitudesData() {
+  loadSolicitudesData():void {
    
     this.http.get<Solicitude[]>('assets/json/220401/solicitude.json').subscribe(
       (data) => {
@@ -78,12 +71,13 @@ export class SolicitudPantallasComponent implements OnInit, OnDestroy {
       }
     );
   }
-  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-  toggleContent() {
+  toggleContent():void {
     this.showContent = !this.showContent;
   }
-  // eslint-disable-next-line no-empty-function
-  constructor(private serviciosPantallasService: ServiciosPantallasService, private http: HttpClient) { }
+ 
+  constructor(private serviciosPantallasService: ServiciosPantallasService, private http: HttpClient) {
+    //
+   }
     /**
    * Este método se utiliza para inicializar los datos del formulario de las pantallas.
    * Suscríbete/escucha los datos del formulario
@@ -98,7 +92,6 @@ export class SolicitudPantallasComponent implements OnInit, OnDestroy {
         this.pantallasFormData = formData;
       });
       // Set the form data
-      // eslint-disable-next-line dot-notation
       this.pantallasFormData['solict'] = [];
       this.serviciosPantallasService.setPantallasFormDataSubject(this.pantallasFormData);
     this.loadSolicitudesData();

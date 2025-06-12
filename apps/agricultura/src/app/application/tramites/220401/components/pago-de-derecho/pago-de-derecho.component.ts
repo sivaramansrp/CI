@@ -91,7 +91,6 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    * @uso Se utiliza para controlar la habilitación o deshabilitación de los campos del formulario según el estado de solo lectura.
    */
   esFormularioSoloLectura: boolean = false; 
-   // eslint-disable-next-line no-empty-function
   /**
    * Constructor del componente PagoDeDerecho.
    * 
@@ -148,7 +147,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
      * @remarks
      * Este método debe ser llamado durante la inicialización del componente para asegurar que el formulario y sus dependencias estén correctamente configurados.
      */
-    inicializarFormulario(){
+    inicializarFormulario():void{
     this.agregarQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),

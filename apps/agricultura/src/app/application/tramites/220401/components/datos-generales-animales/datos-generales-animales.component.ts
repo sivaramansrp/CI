@@ -160,7 +160,7 @@ this.inicializarGeneralesFormulario();
    * @remarks
    * Este método debe ser llamado durante la inicialización del componente para asegurar que el formulario esté correctamente configurado y validado según los requisitos del dominio.
    */
-  inicializarFormulario(){
+  inicializarFormulario():void{
      this.agregarQuery.selectSolicitud$
           .pipe(
             takeUntil(this.destroyNotifier$),

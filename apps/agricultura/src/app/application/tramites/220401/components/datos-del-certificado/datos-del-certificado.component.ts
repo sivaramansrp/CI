@@ -93,7 +93,6 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    * Constructor del componente, inyecta los servicios necesarios.
    */
 
-  // eslint-disable-next-line no-empty-function
   constructor(private fb: FormBuilder,
     private agregar220401Store: Agregar220401Store,
     private agregarQuery: AgregarQuery, 
@@ -321,13 +320,7 @@ this.inicializarCertificadoFormulario();
     this.destroyNotifier$.complete();
   
   }
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, no-empty-function, @typescript-eslint/no-unused-vars, @typescript-eslint/no-empty-function, class-methods-use-this, @typescript-eslint/explicit-function-return-type
-    seleccionar(e:any){}
-    
-    // eslint-disable-next-line @typescript-eslint/no-empty-function, class-methods-use-this, no-empty-function, @typescript-eslint/explicit-function-return-type
-    cargarArchivo() {}
-    // eslint-disable-next-line @typescript-eslint/no-empty-function, class-methods-use-this, @typescript-eslint/explicit-function-return-type, no-empty-function
-    agregar() {}
+
   
    
     
