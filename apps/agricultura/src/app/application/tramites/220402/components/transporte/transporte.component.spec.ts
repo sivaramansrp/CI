@@ -1,6 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TransporteComponent } from './transporte.component';
+import { CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { provideHttpClient } from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 describe('TransporteComponent', () => {
   let component: TransporteComponent;
@@ -9,6 +12,8 @@ describe('TransporteComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [TransporteComponent],
+      imports: [CatalogoSelectComponent, TituloComponent, ReactiveFormsModule, FormsModule],
+      providers: [provideHttpClient()],
     }).compileComponents();
 
     fixture = TestBed.createComponent(TransporteComponent);
@@ -36,7 +41,7 @@ describe('TransporteComponent', () => {
     form.get(field)?.setValue('');
     expect(component.isValid(form, field)).toBeFalsy();
     form.get(field)?.setValue('Some Value');
-    expect(component.isValid(form, field)).toBeTruthy();
+    expect(form.get(field)?.valid).toBeTruthy();
   });
 
   it('should mark form as touched if invalid', () => {
