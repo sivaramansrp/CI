@@ -767,7 +767,15 @@
     "numeroDeProcedimiento": "10303"
   },
   {
-    "folioTramite": "0100001000320251005000003",
+    "folioTramite": "0100001000320251005000504",
+    "tipoDeTramite": "Permiso sanitario de importación de medicamentos destinados a pruebas de laboratorio",
+    "dependencia": "COFEPRIS ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260203"
+  },
+  {
+   "folioTramite": "0100001000320251005000003",
     "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
     "dependencia": "SE ADMINITRACION DE APOYO JURIDICO ADUANA 7 ",
     "fechInicioTramite": "2025-3-09 0035:05:00",
