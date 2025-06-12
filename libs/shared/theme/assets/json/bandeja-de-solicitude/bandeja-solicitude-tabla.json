@@ -1285,5 +1285,14 @@
     "diasTranscurridos": "4",
     "departamento": "AGACE",
     "numeroDeProcedimiento": "32516"
+  },
+  {
+    "id": 261601,
+    "tipoDeTramite": "Corrección interna al Dictamen de la COFEPRIS",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "261601"
   }
 ]
