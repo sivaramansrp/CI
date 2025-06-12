@@ -134,11 +134,11 @@ export class PartidasDeLaMercanciaComponent implements OnChanges{
       if (changes['esFormularioSoloLectura']) {
         if (this.esFormularioSoloLectura) {
         this.partidasDelaMercanciaForm.disable();
-    }else if (!this.esFormularioSoloLectura) {
+    }else {
        this.partidasDelaMercanciaForm.enable();
      }
-      }
   }
+}
 
   /**
    * Verifica si un control del formulario es inválido.
