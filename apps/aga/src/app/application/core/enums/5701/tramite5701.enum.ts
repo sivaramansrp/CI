@@ -100,7 +100,7 @@ export const TIPO_TRAMITE: number = 5701;
  */
 export const SIN_VALOR = -1;
 
-/**
+/**s
  * @description Constante para el manejo del valor del select cuando no hay valores.
  */
 export const SIN_ITEMS = '-2';
@@ -164,3 +164,13 @@ export const CAMPOS_OBLIGATORIOS = 'Este campo es obligatorio';
  *  @description RFC no válido
  */
 export const ERR_RFC_NO_VALIDO = 'El RFC no es válido';
+
+/**
+ * @description Constante para la sección aduanera
+ */
+export const SECCION_ADUANERA = 'seccionAduanera';
+
+/**
+ * @description Constante para el recinto fiscalizado
+ */
+export const RECINTO_FISCALIZADO = 'recintoFiscalizado';

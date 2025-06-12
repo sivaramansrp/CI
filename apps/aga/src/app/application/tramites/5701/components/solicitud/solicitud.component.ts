@@ -60,6 +60,7 @@ import {
   LABEL_DESPACHO_DD,
   LABEL_DESPACHO_LDA,
   PATENTES_ID,
+  SECCION_ADUANERA,
   SIN_ITEMS,
   SIN_VALOR,
   TRANSPORTE,
@@ -1620,15 +1621,18 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   changeSeccionAduanera(): void {
+    const RECINTO = this.despacho.get('nombreRecinto')?.value;
     const SECCION_ADUANERA = this.despacho.get('idSeccionDespacho')?.value;
 
-    if (SECCION_ADUANERA !== SIN_VALOR.toString()) {
-      this.desactivarSelectRecinto = true;
-      this.despacho.get('nombreRecinto')?.disable();
-    } else {
-      this.desactivarSelectRecinto = false;
-      this.despacho.get('nombreRecinto')?.enable();
-      this.despacho.get('nombreRecinto')?.setValue(SIN_VALOR);
+    const NOMBRE_RECINTO = this.despacho.get('nombreRecinto');
+  
+    this.desactivarSelectRecinto = SECCION_ADUANERA !== SIN_VALOR.toString() && SECCION_ADUANERA !== SIN_ITEMS;
+
+    NOMBRE_RECINTO?.[this.desactivarSelectRecinto || RECINTO === SIN_ITEMS ? 'disable' : 'enable']();
+   
+
+    if (!this.desactivarSelectRecinto && RECINTO !== SIN_ITEMS) {
+      NOMBRE_RECINTO?.setValue(SIN_VALOR);
     }
 
     this.setValoresStore(
@@ -1645,14 +1649,24 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   changeRecinto(): void {
     const RECINTO = this.despacho.get('nombreRecinto')?.value;
+    const SECCION_ADUANERA = this.despacho.get('idSeccionDespacho')?.value;
 
-    if (RECINTO !== SIN_VALOR.toString()) {
-      this.desactivarSelectSeccionAduanera = true;
-      this.despacho.get('idSeccionDespacho')?.disable();
-    } else {
-      this.desactivarSelectSeccionAduanera = false;
-      this.despacho.get('idSeccionDespacho')?.enable();
-      this.despacho.get('idSeccionDespacho')?.setValue(SIN_VALOR);
+    const ID_SECCION_DESPACHO = this.despacho.get('idSeccionDespacho');
+
+    this.desactivarSelectSeccionAduanera =
+      RECINTO !== SIN_VALOR.toString() && RECINTO !== SIN_ITEMS;
+
+    ID_SECCION_DESPACHO?.[
+      this.desactivarSelectSeccionAduanera || SECCION_ADUANERA === SIN_ITEMS
+        ? 'disable'
+        : 'enable'
+    ]();
+
+    if (
+      !this.desactivarSelectSeccionAduanera &&
+      SECCION_ADUANERA !== SIN_ITEMS
+    ) {
+      ID_SECCION_DESPACHO?.setValue(SIN_VALOR);
     }
 
     this.setValoresStore(this.despacho, 'nombreRecinto', 'setNombreRecinto');
@@ -2340,6 +2354,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   showConfirmDialogLDA_DD(tipo: string): void {
     const CHECKED = this.despacho.get(tipo)?.value;
+    this.setValoresStore(
+      this.despacho,
+      tipo,
+      `set${tipo.toUpperCase()}` as keyof Tramite5701Store
+    );
     if (CHECKED) {
       // Valida si hay fechas seleccionadas
       console.log(this.fechasSeleccionadas.length);
