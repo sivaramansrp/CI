@@ -34,7 +34,7 @@ export class DatosDelSolicituteSeccionQuery extends Query<DatosDelSolicituteSecc
   informacionConfidencialRadio$ = this.select('informacionConfidencialRadio');
    propietarioData$ = this.select('propietarioData');
   establecimientoData$ = this.select('establecimientoData');
-  ideGenerica1$ = this.select('ideGenerica1');
+  ideGenerica$ = this.select('ideGenerica');
   observaciones$ = this.select('observaciones');
   establecimientoRFCResponsableSanitario$ = this.select('establecimientoRFCResponsableSanitario');
   establecimientoRazonSocial$ = this.select('establecimientoRazonSocial');

@@ -8,12 +8,12 @@
           <div class="radio-container">
             <div class="radio-option">
               <input type="radio" id="no" formControlName="exentoDePago" value="No"
-                (change)="setValoresStore(datosImportadorExportador,'exentoDePago', 'setExentoDePago')" />
+                (change)="setValoresStore(datosImportadorExportador,'exentoDePago', 'setExentoDePago');exentoDePagoChange($event)" />
               <label for="no">No</label>
             </div>
             <div class="radio-option">
               <input type="radio" id="yes" formControlName="exentoDePago" value="Yes"
-                (change)="setValoresStore(datosImportadorExportador,'exentoDePago', 'setExentoDePago')" />
+                (change)="setValoresStore(datosImportadorExportador,'exentoDePago', 'setExentoDePago');exentoDePagoChange($event)" />
               <label for="yes">Sí</label>
             </div>
           </div>
@@ -51,8 +51,8 @@
             <div class="form-group">
               <div class="form-group">
                 <app-catalogo-select [catalogo]="bancoCatalogo.catalogos" formControlName="banco" [label]="'Banco'"
-                  [required]="true"
-                  (change)="setValoresStore(datosImportadorExportador,'banco', 'setBanco');"></app-catalogo-select>
+                  [required]="true" (change)="setValoresStore(datosImportadorExportador,'banco', 'setBanco');"
+                  [isDisabled]="soloLectura"></app-catalogo-select>
               </div>
             </div>
           </div>

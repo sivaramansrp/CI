@@ -1,13 +1,28 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ViewChild } from '@angular/core';  
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';  
+import { ConsultaioQuery, FormularioDinamico, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { FormularioDinamico, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { Subject, takeUntil } from 'rxjs';
+import { CertificadoOrigenComponent } from '../../components/certificado-origen/certificado-origen.component';
+import { CertificadosOrigenGridService } from '../../services/certificadosOrigenGrid.service';
+import { CommonModule } from '@angular/common';
+import { DatosCertificadoComponent } from '../../components/datos-certificado/datos-certificado.component';
+import { ReactiveFormsModule } from '@angular/forms';
+
 
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
-  styleUrl: './paso-uno.component.scss'
+  styleUrl: './paso-uno.component.scss',
+  standalone: true,
+  imports: [
+    SolicitanteComponent,
+    CertificadoOrigenComponent,
+    DatosCertificadoComponent,
+    ReactiveFormsModule,
+    CommonModule
+  ]
 })
-export class PasoUnoComponent implements AfterViewInit {
+export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // Decorador ViewChild para acceder a la instancia del componente SolicitanteComponent
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
@@ -24,8 +39,65 @@ export class PasoUnoComponent implements AfterViewInit {
   // Índice para manejar la pestaña seleccionada
   indice: number = 1;
 
-  constructor(private cdr: ChangeDetectorRef) {
+  /**
+   * @descripcion
+   * Subject utilizado para notificar y completar las suscripciones activas al destruir el componente,
+   * evitando fugas de memoria.
+   * Se utiliza junto con el operador `takeUntil`.
+   * @private
+   */
+  private destroyNotifier$ = new Subject<void>();
+
+  /**
+   * @descripcion
+   * Indica si el formulario debe estar deshabilitado (solo lectura).
+   * Cuando es verdadero, los controles del formulario estarán deshabilitados y no se podrán editar.
+   */
+  formularioDeshabilitado: boolean = false;
+
+  constructor(private cdr: ChangeDetectorRef,private certificadosOrigenGridService: CertificadosOrigenGridService, private consultaQuery: ConsultaioQuery) {
     // Constructor no realiza ninguna acción en este caso
+  }
+
+  /**
+   * @method ngOnInit
+   * @description Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Realiza la suscripción al estado de consulta para habilitar o deshabilitar el formulario según corresponda.
+   */
+  ngOnInit(): void {
+
+    this.consultaQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((seccionState) => {
+      if(seccionState.update){
+        this.formularioDeshabilitado = false;
+              this.guardarDatosFormulario();
+      }
+      if (seccionState.readonly) {
+        this.formularioDeshabilitado = true;
+      }
+    });
+  }
+
+  /**
+   * @descripcion
+   * Obtiene los datos de acuicultura y actualiza el estado del formulario.
+   * 
+   * @remarks
+   * Realiza una suscripción al observable que retorna los datos de acuicultura.
+   * Utiliza `takeUntil` para evitar fugas de memoria al destruir el componente.
+   * Si la respuesta es válida, actualiza el estado del formulario con los datos recibidos.
+   */
+  guardarDatosFormulario(): void {
+    this.certificadosOrigenGridService
+      .getAcuiculturaData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.certificadosOrigenGridService.actualizarEstadoFormulario(resp);
+        }
+      });
   }
 
   /**
@@ -53,6 +125,16 @@ export class PasoUnoComponent implements AfterViewInit {
   seleccionaTab(indice: number): void {
     // Establece el índice de la pestaña seleccionada
     this.indice = indice;
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Cancela suscripciones activas mediante `destroyNotifier$`.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
 }

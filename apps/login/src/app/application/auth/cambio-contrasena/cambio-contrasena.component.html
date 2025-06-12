@@ -9,14 +9,18 @@
         <form [formGroup]="FormCambioContrasena">
             <div class="row">
                 <!-- Contraseña Anterior -->
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <label for="contrasenaAnterior" class="form-label text-title">Contraseña anterior*:</label>
                     <input type="password" id="contrasenaAnterior" formControlName="contrasenaAnterior"
                         class="form-control font-weight-titulo text-title" placeholder="Contraseña anterior" />
+                    <div *ngIf="FormCambioContrasena.get('contrasenaAnterior')?.hasError('contrasenaAnteriorInvalida') && FormCambioContrasena.get('contrasenaAnterior')?.touched"
+                        class="text-danger">
+                        Contraseña no válida.
+                    </div>
                 </div>
 
                 <!-- Contraseña Nueva -->
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <label for="contrasenaNueva" class="form-label text-title">Contraseña nueva*:</label>
                     <input type="password" id="contrasenaNueva" formControlName="contrasenaNueva"
                         class="form-control font-weight-titulo text-title" placeholder="Contraseña nueva" />
@@ -24,11 +28,13 @@
                         class="text-danger">
                         La contraseña debe tener entre 8 y 64 caracteres, incluir mayúsculas, minúsculas, número o
                         símbolo, y no contener espacios.
+                        <p>Los símbolos permitidos son:</p> &#64; # $ % | &deg; ! &amp; / ( ) = ? &iquest; + * &quot; '
+                        &#96;
                     </div>
                 </div>
 
                 <!-- Confirmación -->
-                <div class="col-md-6">
+                <div class="col-md-12">
                     <label for="confirmacionContrasena" class="form-label text-title">Confirmación contraseña
                         nueva*:</label>
                     <input type="password" id="confirmacionContrasena" formControlName="confirmacionContrasena"
@@ -41,7 +47,16 @@
             </div>
         </form>
         <div class="d-flex justify-content-lg-end h1">
-            <button class="btn btn-primary ms-2" type="button" (click)="onSubmit()">Modificar</button>
+            <button class="btn btn-primary ms-2" type="button" [disabled]="FormCambioContrasena.invalid"
+                (click)="onSubmit()">
+                Modificar
+            </button>
         </div>
     </div>
 </div>
+@if (nuevaNotificacion) {
+<section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+    </lib-notificaciones>
+</section>
+}

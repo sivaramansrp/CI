@@ -2,7 +2,6 @@ import { CancelacionState, CancelacionStore } from './cancelacion-de-autorizacio
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
-
 /**
  * Decorador que marca esta clase como inyectable y especifica que su proveedor
  * estará disponible en el nivel raíz del inyector.
