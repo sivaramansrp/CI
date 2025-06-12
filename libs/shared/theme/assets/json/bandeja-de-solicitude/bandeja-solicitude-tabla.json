@@ -1275,7 +1275,7 @@
     "fechaActualizacion": "2022-10-25",
     "diasTranscurridos": "3",
     "departamento": "SE",
-    "numeroDeProcedimiento": "140105"
+    "numeroDeProcedimiento": "110205"
   },
   {
     "id": 130106,
@@ -1618,7 +1618,8 @@
     "diasTranscurridos": "4",
     "departamento": "SE",
     "numeroDeProcedimiento": "110214"
-  }, {
+  },
+   {
     "id": 220102,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -1689,6 +1690,15 @@
     "diasTranscurridos": "4",
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260513"
+},
+{
+  "id": 260104,
+  "tipoDeTramite": "Antecesor",
+  "fecha": "2023-10-01",
+  "fechaActualizacion": "2023-10-05",
+  "diasTranscurridos": "4",
+  "departamento": "COFEPRIS",
+  "numeroDeProcedimiento": "260104"
    },
    {
 
@@ -1699,5 +1709,23 @@
   "diasTranscurridos": "4",
   "departamento": "AGA",
   "numeroDeProcedimiento": "10302"
+},
+{
+  "id": 220703,
+  "tipoDeTramite": "Solicitud de Permiso",
+  "fecha": "2023-10-01",
+  "fechaActualizacion": "2023-10-05",
+  "diasTranscurridos": "4",
+  "departamento": "AGRICULTURA",
+  "numeroDeProcedimiento": "220703"
+},
+{
+  "id": 110219,
+  "tipoDeTramite": "Solicitudddd certificado CAM",
+  "fecha": "2022-10-05",
+  "fechaActualizacion": "2022-10-25",
+  "diasTranscurridos": "4",
+  "departamento": "SE",
+  "numeroDeProcedimiento": "110219"
 }
 ]
