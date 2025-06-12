@@ -1,9 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Anexo, Complimentaria, Federetarios, Operacions } from '../estados/models/plantas-consulta.model';
 import { Observable, map } from 'rxjs';
 import { DatosDelModificacion } from '../estados/models/datos-tramite.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { Solicitud80302State } from '../../../estados/tramites/tramite80302.store';
 
 @Injectable({
   providedIn: 'root',
@@ -90,4 +92,14 @@ export class SolicitudService {
     return this.http
       .get<Operacions[]>('assets/json/80302/operacion.json').pipe(map((res: any) => res.data));
   }
+
+    /**
+     * Obtiene los datos del trámite desde un archivo JSON local.
+     * @returns Observable con objeto parcial de TramiteState.
+     */
+    obtenerTramiteDatos(): Observable<Partial<Solicitud80302State>> {
+      return this.http
+        .get<Partial<Solicitud80302State>>('assets/json/80302/tramite_datos.json')
+        .pipe(map((res: any) => res.data));
+    }
 }

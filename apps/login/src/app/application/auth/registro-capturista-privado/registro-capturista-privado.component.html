@@ -12,12 +12,20 @@
                     <label for="rfc" class="form-label text-title">Registro Federal de Contribuyentes</label>
                     <input type="text" id="rfc" formControlName="rfc" class="form-control font-weight-titulo text-title"
                         placeholder="Registro Federal de Contribuyentes" />
+                    <div *ngIf="FormRegistroCapturistaPrivado.get('rfc')?.hasError('rfcInvalido') && FormRegistroCapturistaPrivado.get('rfc')?.touched"
+                        class="text-danger">
+                        El RFC debe tener entre 12 y 13 caracteres, y no debe contener espacios.
+                    </div>
                 </div>
                 <div class="col-md-6">
                     <label for="curp" class="form-label text-title">Clave Única de Registro de Población</label>
                     <input type="text" id="curp" formControlName="curp"
                         class="form-control font-weight-titulo text-title"
                         placeholder="Clave Única de Registro de Población" />
+                    <div *ngIf="FormRegistroCapturistaPrivado.get('curp')?.hasError('curpInvalido') && FormRegistroCapturistaPrivado.get('curp')?.touched"
+                        class="text-danger">
+                        La CURP debe tener 18 caracteres, y no debe contener espacios.
+                    </div>
                 </div>
             </div>
         </form>
@@ -42,3 +50,9 @@
         </div>
     </div>
 </div>
+@if (nuevaNotificacion) {
+<section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+    </lib-notificaciones>
+</section>
+}

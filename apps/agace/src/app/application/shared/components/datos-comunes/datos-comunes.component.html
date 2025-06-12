@@ -40,6 +40,7 @@
               formControlName="regimenUno"
               [label]="'Importación temporal para la elaboración, transformación o reparación en programas de maquila o de exportación (IMMEX)'" 
               [required]="false"
+              [isDisabled]="esFormularioSoloLectura"
               (change)="setValoresStore(comunesForm,'regimenUno', 'setRegimenUno')">
           </lib-input-check>
 
@@ -48,6 +49,7 @@
               formControlName="regimenDos"
               [label]="'Depósito fiscal para someterse al proceso de ensamble y fabricación de vehículo a empresas de la industria automotriz terminal'" 
               [required]="false"
+              [isDisabled]="esFormularioSoloLectura"
               (change)="setValoresStore(comunesForm,'regimenDos', 'setRegimenDos')">
           </lib-input-check>
 
@@ -56,12 +58,14 @@
               formControlName="regimenTres"
               [label]="'Elaboración, transformación o reparación en recinto fiscalizado'" 
               [required]="false"
+              [isDisabled]="esFormularioSoloLectura"
               (change)="setValoresStore(comunesForm,'regimenTres', 'setRegimenTres')">
           </lib-input-check>
 
           <lib-input-check 
               [id]="'regimen_3'" 
               [label]="'Recinto Fiscalizado Estratégico'" 
+              [isDisabled]="esFormularioSoloLectura"
               [required]="false">
           </lib-input-check>
           </fieldset>
@@ -80,6 +84,7 @@
             [placeholder]="'Seleccione un valor'"
             [catalogo]="sectorProductivoAgace"
             formControlName="sectorProductivo"
+            [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(comunesForm,'sectorProductivo', 'setSectorProductivo')"
           >
           </app-catalogo-select>
@@ -90,6 +95,7 @@
             [placeholder]="'Seleccione un valor'"
             [catalogo]="serviciosAgace"
             formControlName="servicio"
+            [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore(comunesForm,'servicio', 'setServicio')"
           >
           </app-catalogo-select>
@@ -191,6 +197,7 @@
               [label]="'Bimestre'"
               [placeholder]="'Seleccione un valor'"
               formControlName="bimestre"
+              [isDisabled]="esFormularioSoloLectura"
               [catalogo]="comboBimestresIDC"
               (change)="setValoresStore(comunesForm,'bimestre', 'setBimestre')"
             >
@@ -328,29 +335,37 @@
       </app-tabla-dinamica>
     </div>
     <div class="d-flex justify-content-end mb-4">
-      <button type="button" class="btn btn-primary me-2" (click)="abrirModal(agregar)">
+      <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="abrirModal(agregar)">
         Agregar
       </button>
-      <button class="btn btn-danger me-2" type="button">
+      <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura">
         Modificar
       </button>
-      <button class="btn btn-default" type="button">Eliminar</button>
+      <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura">Eliminar</button>
     </div>
   </div>
   <div class="row mt-3">
     <div class="col-md-12">
-      <lib-input-check 
-          [id]="'manifestado'" 
-          [label]="'Una vez manifestado lo anterior, se solicita al SAT, a través de AGACE, que realice las inspecciones a que hace referencia la fracción IX de la regla 7.1.1, a las instalaciones señaladas en las que se realizan las operaciones de comercio exterior con el propósito de verificar la información plasmada en la presente solicitud del Registro en el Esquema Integral de Certificación.'" 
-          [required]="false">
-      </lib-input-check>
+      <form [formGroup]="manifestadoForm">
+          <lib-input-check 
+            [id]="'manifestado'" 
+            formControlName="manifestado"
+            [isDisabled]="esFormularioSoloLectura"
+            [label]="'Una vez manifestado lo anterior, se solicita al SAT, a través de AGACE, que realice las inspecciones a que hace referencia la fracción IX de la regla 7.1.1, a las instalaciones señaladas en las que se realizan las operaciones de comercio exterior con el propósito de verificar la información plasmada en la presente solicitud del Registro en el Esquema Integral de Certificación.'" 
+            [required]="false"
+            (change)="setValoresStore(manifestadoForm,'manifestado', 'setManifestado')">
+          </lib-input-check>
       <div class="mt-4">
-        <lib-input-check 
-          [id]="'protesta'" 
-          [label]="'Bajo protesta de decir verdad,manifiesto que los datos asentados en el presente documento son ciertos y que las facultades que me fueron otorgadas para representar al solicitante no me han sido modificadas y/o revocadas.'" 
-          [required]="false">
-        </lib-input-check>
-      </div>
+          <lib-input-check 
+            [id]="'protesta'" 
+            formControlName="protesta"
+            [isDisabled]="esFormularioSoloLectura"
+            [label]="'Bajo protesta de decir verdad,manifiesto que los datos asentados en el presente documento son ciertos y que las facultades que me fueron otorgadas para representar al solicitante no me han sido modificadas y/o revocadas.'" 
+            [required]="false"
+            (change)="setValoresStore(manifestadoForm,'protesta', 'setProtesta')">
+          </lib-input-check>
+        </div>
+      </form>
     </div>
   </div>
 
