@@ -5,12 +5,25 @@
     "pagoDerechos": {
       "claveReferencia": "illenar",
       "cadenaDependencia": "illenar",
-      "banco": "illenar",
+      "banco": "1",
       "llavePago": "illenar",
       "fechaPago": "illenar",
       "importePago": "illenar"
     },
-    "merccancialTablaDatos": [],
+    "merccancialTablaDatos": [
+      {
+      "fraccionArancelaria": "0101.21.01",
+      "descripcionFraccion": "Caballos de raza pura",
+      "unidadMedidaTarifa": "Cabezas",
+      "umc": "Pieza",
+      "cantidadUMT": 10,
+      "valorComercial": 500000,
+      "tipoMoneda": "USD",
+      "descripcion": "10 caballos de raza pura para competencia",
+      "paisOrigen": "España",
+      "tableIndex": 0
+    }
+    ],
     "datosDelTramite": {
       "permisoGeneral": "illenar",
       "usoFinal": "illenar",

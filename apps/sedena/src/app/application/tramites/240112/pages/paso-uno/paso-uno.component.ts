@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { AgregarDestinatarioService } from '../../service/agregar-destinatario.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user'
 import { DatosDelTramiteContenedoraComponent } from '../../components/datos-del-tramite-contenedora/datos-del-tramite-contenedora.component';
 import { PagoDeDerechocComponent } from '../../components/pago-de-derechoc/pago-de-derechoc.component';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { TercerosRelacionadosContenedoraComponent } from '../../components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
 import { Tramite240112Query } from '../../estados/tramite240112Query.query';
 import { Tramite240112Store } from '../../estados/tramite240112Store.store';
@@ -82,8 +83,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       this.consultaQuery.selectConsultaioState$
     .pipe(takeUntil(this.destroyNotifier$))
     .subscribe((seccionState) => {
-      this.formularioDeshabilitado = true;
-          this.guardarDatosFormulario();
       if(seccionState.update){
         this.formularioDeshabilitado = false;
           this.guardarDatosFormulario();
