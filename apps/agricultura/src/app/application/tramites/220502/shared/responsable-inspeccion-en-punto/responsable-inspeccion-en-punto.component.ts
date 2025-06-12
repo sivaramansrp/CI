@@ -9,6 +9,7 @@ import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { REG_X } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { Solicitud220502Query } from '../../estados/tramites220502.query';
@@ -103,7 +104,7 @@ solicitud220502State: Solicitud220502State = {} as Solicitud220502State;
           ]),
           primerapellido: new FormControl(this.solicitud220502State.primerapellido, [Validators.maxLength(80)]),
           segundoapellido: new FormControl(this.solicitud220502State.segundoapellido, [Validators.maxLength(80)]),
-          mercancia: new FormControl(this.solicitud220502State.mercancia, [Validators.required]),
+          mercancia: new FormControl(this.solicitud220502State.mercancia, [Validators.required, Validators.maxLength(3), Validators.pattern(REG_X.SOLO_NUMEROS)]),
           tipocontenedor: new FormControl(this.solicitud220502State.tipocontenedor, []),
         })
       );
