@@ -5,6 +5,7 @@ import { MercanciaDetalle } from '../../../shared/models/datos-del-tramite.model
 import { Proveedor } from '../../../shared/models/terceros-relacionados.model';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
+import { state } from '@angular/animations';
 
 /**
  * Interfaz que representa el estado completo del trámite 240122.
@@ -170,5 +171,11 @@ export class Tramite240122Store extends Store<Tramite240122State> {
       modificarProveedorDatos: datos,
       modificarDestinarioDatos: null,
     }));
+  }
+  public actualizarTrimateState(datos: Tramite240122State): void {
+    this.update((state)=>({
+      ...state,
+      ...datos
+    }))
   }
 }
