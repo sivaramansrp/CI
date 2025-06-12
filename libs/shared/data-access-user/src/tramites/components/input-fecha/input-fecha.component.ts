@@ -89,7 +89,7 @@ export class InputFechaComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.setFecha !== '' && this.setFecha !== null && this.setFecha !== undefined) {
+    if (this.setFecha) {
       const FECHA = this.setFecha.split('/');
       const OBJECT_DATE = moment(`${FECHA[2]}-${FECHA[1]}-${FECHA[0]}`);
       this.generarFormulario(OBJECT_DATE);
