@@ -1727,6 +1727,15 @@
   "diasTranscurridos": "4",
   "departamento": "SE",
   "numeroDeProcedimiento": "110219"
+},
+{
+  "id": 270301,
+  "tipoDeTramite": "Solicitudddd certificado CAM",
+  "fecha": "2022-10-05",
+  "fechaActualizacion": "2022-10-25",
+  "diasTranscurridos": "4",
+  "departamento": "INBAL",
+  "numeroDeProcedimiento": "270301"
 }
 
 ]
