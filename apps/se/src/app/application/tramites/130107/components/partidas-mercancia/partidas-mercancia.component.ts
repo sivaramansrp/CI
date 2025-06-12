@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { FormGroup, ReactiveFormsModule, } from '@angular/forms';
 import { ImportacionesAgropecuariasState, ImportacionesAgropecuariasStore } from '../../estados/importaciones-agropecuarias.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { ImportacionesAgropecuariasQuery } from '../../estados/importaciones-agropecuarias.query';
 import { PARTIDAS } from '../../constantes/datos-de-la-solicitud.enum';
@@ -32,6 +33,11 @@ import { ServicioDeFormularioService } from '../../services/formulario-validacio
 })
 
 export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
+  /**
+  *
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
   /**
    * @property destroy$
    * @description
@@ -132,7 +138,7 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
     private importacionesAgropecuariasStore: ImportacionesAgropecuariasStore,
     private importacionesAgropecuariasQuery: ImportacionesAgropecuariasQuery,
     private servicioDeFormularioService: ServicioDeFormularioService
-  ) {}
+  ) { }
 
   /**
    * @method ngOnInit
@@ -159,7 +165,7 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
    * 
    * @param event Objeto que contiene el campo y el valor a actualizar.
    */
-  
+
   establecerCambioDeValor(event: { campo: string; valor: object | string }): void {
     if (event) {
       const VALID_VALUE = typeof event.valor === 'object' ? JSON.stringify(event.valor) : event.valor;
@@ -191,6 +197,37 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * @method eliminarPartida
+   * @description
+   * Método que elimina la última partida de la lista de partidas.
+   * Si no hay partidas, no realiza ninguna acción.
+   */
+  eliminarPartida(): void {
+    if (this.datospartidas.length > 0) {
+      this.datospartidas.pop();
+    }
+  }
+  /**
+   * @method modificarPartida
+   * @description
+   * Método que modifica una partida existente en la lista de partidas.
+   * Actualiza el formulario con los datos de la partida seleccionada y la elimina de la lista.
+   * 
+   * @param index Índice de la partida a modificar.
+   */
+  //modificarPartida(index: number): void {
+    
+    //if (index >= 0 && index < this.datospartidas.length) {
+    //   const PARTIDA = this.datospartidas[index];
+    //   this.ninoFormGroup.patchValue({
+    //     cantidad: PARTIDA.cantidad,
+    //     descripcion: PARTIDA.descripcion,
+    //     valorPartidaUsd: PARTIDA.totalUsd,
+    //   });
+    //   this.datospartidas.splice(index, 1);
+    // }
+ // }
   /**
    * @method ngOnDestroy
    * @description
