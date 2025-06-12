@@ -192,7 +192,6 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
    * @param evento Fecha seleccionada en formato de cadena.
    */
   seleccionarFechaInicio(evento: string): void {
-    //this.solicitud260915Store.setFechadePago(evento);
     this.solicitud260915Store.getValue().fechadepago = evento;
   }
 

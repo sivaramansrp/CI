@@ -65,8 +65,6 @@ describe('TercerosrelacionadosComponent', () => {
         cadenadeladependencia: '',
         banco: '',
         llavedepago: '',
-        // ... add all other required properties with mock values
-        // For brevity, fill with empty strings, zeros, or appropriate mock values
       } as any;
       component.crearFormTransporte();
       expect(component.destinatarioForm.contains('agregarDestinatario')).toBe(true);
