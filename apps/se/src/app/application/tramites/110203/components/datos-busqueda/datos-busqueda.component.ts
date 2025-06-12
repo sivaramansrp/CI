@@ -1,4 +1,3 @@
-/* eslint-disable @nx/enforce-module-boundaries */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputRadioComponent, TableBodyData, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
@@ -11,6 +10,8 @@ import { RadioOpcion } from '@libs/shared/data-access-user/src/core/models/11020
 import { TableData } from '@libs/shared/data-access-user/src/core/models/110203/datos-busqueda.model';
 
 import { ActivatedRoute, Router } from '@angular/router';
+import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
+import { Solocitud110203Service } from '../../service/service110203.service';
 import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query'
 import { Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
 import datosBusquedaDropdown from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
@@ -115,7 +116,15 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
    * @property {TableBodyData} establecimientoBodyData - Datos del cuerpo de la tabla.
    */
   public establecimientoBodyData: TableBodyData[] = [];
-
+  /** Bandera que indica si los datos de respuesta están disponibles o han sido cargados.  
+ *  Se utiliza para controlar la lógica de visualización o validación en el componente. */
+   public esDatosRespuesta: boolean = false;
+   /** Almacena el estado actual de la consulta relacionada con el trámite.  
+ *  Contiene información necesaria para mostrar o procesar datos en el componente. */
+   public consultaState!:ConsultaioState;
+   /** Notificador utilizado para cancelar suscripciones al destruir el componente.  
+ *  Ayuda a prevenir fugas de memoria en flujos observables. */
+   private destroyNotifier$: Subject<void> = new Subject();
   /**
    * Estructura que contiene los datos de la tabla de destinatarios.
    * Incluye encabezados de columna y el cuerpo con las filas correspondientes.
@@ -136,7 +145,8 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
     private router: Router, // Servicio para la navegación entre rutas
     private tramite110203Query: Tramite110203Query, // Consulta para manejar datos del trámite 110203
     private tramite110203Store: Tramite110203Store, // Almacenamiento para manejar el estado del trámite 110203
-    // eslint-disable-next-line no-empty-function
+     private Solocitud110203Service: Solocitud110203Service,
+       private consultaQuery: ConsultaioQuery,
     private route: ActivatedRoute
   ) {
     /** 
@@ -148,12 +158,36 @@ export class DatosBusquedaComponent implements OnInit, OnDestroy {
       { catalogos: datosBusquedaDropdown?.pais ?? [] }
     ];
   }
-
+ /** Obtiene los datos del formulario desde un JSON simulado y actualiza el store.  
+ *  Marca la bandera de respuesta si la información es válida. */
+     guardarDatosFormulario(): void {
+    this.Solocitud110203Service
+      .getRegistroTomaMuestrasMercanciasData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.Solocitud110203Service.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
   /** 
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Aquí se configuran los datos iniciales y las suscripciones necesarias.
    */
   ngOnInit(): void {
+      this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$))
+        .subscribe((seccionState) => {
+          this.consultaState = seccionState
+          if (this.consultaState.update) {
+             this.guardarDatosFormulario();
+             } else {
+              this.esDatosRespuesta = true;
+            }
+        })
     /** 
      * Crea el formulario para la búsqueda de datos.
      */
