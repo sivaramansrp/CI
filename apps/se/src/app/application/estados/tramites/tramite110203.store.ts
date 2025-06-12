@@ -102,9 +102,14 @@ export interface Solicitud110203State {
  */
 export function createInitialState(): Solicitud110203State {
     return {
+          /** Unidad de medida utilizada para cuantificar la mercancía (ej. kilogramos, litros). */
         medida: '',
-comercializacion: '',
-tipo: '',
+
+        /** Tipo de comercialización de la mercancía (ej. venta, muestra, donación). */
+        comercializacion: '',
+
+        /** Tipo de producto o clasificación según su naturaleza o uso. */
+        tipo: '',
         /** **Tratado o acuerdo comercial seleccionado** */
         tratado: '',
 
