@@ -381,10 +381,10 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'concluir-relacion',
+    path: 'concluir-relacion-de',
     loadChildren: () =>
-      import('./tramites/420102/concluir-relacion.module').then(
-        (m) => m.ConcluirRelacionModule
+      import('./tramites/420102/concluir-relacion-de.module').then(
+        (m) => m.ConcluirRelacionDeModule
       ),
   },
   {
@@ -465,6 +465,11 @@ const ROUTES: Routes = [
     path: 'detalle-v-dictamen',
     loadComponent: () =>
       import('./detalle-v-dictamen/detalle-v-dictamen.component').then((m) => m.DetalleVDictamenComponent),
+  },
+  {
+    path: 'datos-generales-tramite',
+    loadComponent: () =>
+      import('./datos-generales-tramite/datos-generales-tramite.component').then((m) => m.DatosGeneralesTramiteComponent),
   },
 ];
 

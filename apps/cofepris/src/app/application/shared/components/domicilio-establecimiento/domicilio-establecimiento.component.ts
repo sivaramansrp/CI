@@ -6,14 +6,12 @@ import {
 } from '../../constantes/datos-domicilio-legal.enum';
 import {
   Catalogo,
-  CatalogoSelectComponent,
   ConfiguracionColumna,
   CrossListLable,
   CrosslistComponent,
+  REGEX_CODIGO_POSTAL,
   REGEX_NUMERO_15_ENTEROS_3_DECIMALES,
   REGEX_SOLO_DIGITOS,
-  REGEX_CODIGO_POSTAL,
-  REGEX_POSTAL,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -45,11 +43,13 @@ import {
   Validators,
 } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { DatosDomicilioLegalService } from '../../services/datos-domicilio-legal.service';
-import { TablePaginationComponent } from '@ng-mf/data-access-user';import { Modal } from 'bootstrap';
-
+import { Modal } from 'bootstrap';
+import { TablePaginationComponent } from '@ng-mf/data-access-user';
 
 export interface RespuestaTabla {
   code: number;
@@ -149,6 +149,14 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   public establecimientoBodyData = [];
 
+     /** Bandera de solo lectura (puedes adaptarla si tienes lógica para esto) */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Indica si el formulario es de actualización.
+   */
+  private esFormularioActualizacion: boolean = false;
+
   /**
    * Datos completos de los establecimientos.
    */
@@ -162,12 +170,113 @@ export class DomicilioComponent implements OnInit, OnDestroy {
    */
   constructor(
     public readonly fb: FormBuilder,
-    private DatosDomicilioLegalStore: DatosDomicilioLegalStore,
-    private DatosDomicilioLegalQuery: DatosDomicilioLegalQuery,
-    private service: DatosDomicilioLegalService
+    private datosDomicilioLegalStore: DatosDomicilioLegalStore,
+    private datosDomicilioLegalQuery: DatosDomicilioLegalQuery,
+    private service: DatosDomicilioLegalService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // constructor
+   // Inicializa el formulario.
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly;
+        this.esFormularioActualizacion = seccionState.update;
+      })
+    )
+    .subscribe()
   }
+
+   /**
+     * Evalúa si se debe inicializar o cargar datos en el formulario.
+     * Además, obtiene la información del catálogo de estados.
+     */
+    inicializarEstadoFormulario(): void {
+      if (this.esFormularioSoloLectura) {
+        this.guardarDatosFormulario();
+      } else {
+        this.inicializarFormulario();
+      }
+      if(this.esFormularioSoloLectura || this.esFormularioActualizacion) {
+        this.obtenerScianTablaDatos();
+        this.obtenerDataMercanciasDatos();
+      }
+    }
+
+    /**
+   * Método para obtener el valor de la fecha seleccionada.
+   */
+  obtenerScianTablaDatos(): void {
+    this.service
+      .getObtenerScianTablaDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.nicoTablaDatos = data?.data;
+      });
+  }
+
+  /**
+   * Método para obtener el valor de la fecha seleccionada.
+   */
+  obtenerDataMercanciasDatos(): void {
+    this.service
+      .getObtenerDataMercanciasDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data): void => {
+        this.mercanciasTablaDatos = data?.data;
+      });
+  }
+
+      /**
+     * Carga datos y deshabilita el formulario si es solo lectura.
+     */
+    guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      
+      if (this.esFormularioSoloLectura) {
+      this.domicilio.disable();
+    } else {
+      this.domicilio.enable();
+    }
+    }
+  
+    /**
+     * Inicializa el formulario reactivo para capturar el estado seleccionado.
+     */
+      inicializarFormulario(): void {
+        this.datosDomicilioLegalQuery.selectSolicitud$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.solicitudState = seccionState;
+            })
+          )
+          .subscribe();
+          this.configurarFormularioDomicillio();
+      }
+
+      configurarFormularioDomicillio(): void{
+      this.domicilio = this.fb.group({
+      codigoPostal: [this.solicitudState?.codigoPostal,[Validators.required, Validators.maxLength(12),Validators.pattern(REGEX_CODIGO_POSTAL)]],
+      estado: [this.solicitudState?.estado, Validators.required],
+      muncipio: [this.solicitudState?.muncipio, Validators.required],
+      localidad: [this.solicitudState?.localidad],
+      colonia: [this.solicitudState?.colonia],
+      calle: [this.solicitudState?.calle,Validators.required],
+      lada: [this.solicitudState?.lada],
+      telefono: [this.solicitudState?.telefono, Validators.required],
+      avisoCheckbox: [this.solicitudState?.avisoCheckbox,Validators.required],
+      licenciaSanitaria: [
+        { value: this.solicitudState?.licenciaSanitaria, disabled: false },Validators.required
+      ],
+      regimen: [this.solicitudState?.regimen],
+      aduanasEntradas: [this.solicitudState?.aduanasEntradas],
+      numeroPermiso: [this.solicitudState?.numeroPermiso],
+      paisDeOriginDatos: [this.solicitudState?.aduanasDeEntrada || []],
+      garantiasOfrecidas: [this.solicitudState?.garantiasOfrecidas],
+    });
+      }
+
 
   /**
    * Grupo de formularios principal.
@@ -421,7 +530,7 @@ modalInstance!: Modal; /**
    * Etiqueta de la lista de fechas.
    * */
   ngOnInit(): void {
-    this.DatosDomicilioLegalQuery.selectSolicitud$
+    this.datosDomicilioLegalQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -431,25 +540,7 @@ modalInstance!: Modal; /**
       .subscribe();
     this.obtenerEstadoList();
   this.obtenerMercanciasDatos();
-    this.domicilio = this.fb.group({
-      codigoPostal: [this.solicitudState?.codigoPostal,[Validators.required, Validators.maxLength(12),Validators.pattern(REGEX_CODIGO_POSTAL)]],
-      estado: [this.solicitudState?.estado, Validators.required],
-      muncipio: [this.solicitudState?.muncipio, Validators.required],
-      localidad: [this.solicitudState?.localidad],
-      colonia: [this.solicitudState?.colonia],
-      calle: [this.solicitudState?.calle,Validators.required],
-      lada: [this.solicitudState?.lada],
-      telefono: [this.solicitudState?.telefono, Validators.required],
-      avisoCheckbox: [this.solicitudState?.avisoCheckbox,Validators.required],
-      licenciaSanitaria: [
-        { value: this.solicitudState?.licenciaSanitaria, disabled: false },Validators.required
-      ],
-      regimen: [this.solicitudState?.regimen],
-      aduanasEntradas: [this.solicitudState?.aduanasEntradas],
-      numeroPermiso: [this.solicitudState?.numeroPermiso],
-      paisDeOriginDatos: [this.solicitudState?.aduanasDeEntrada || []],
-      garantiasOfrecidas: [this.solicitudState?.garantiasOfrecidas],
-    });
+  this.configurarFormularioDomicillio()
 
     this.formAgente = this.fb.group({
       claveScianModal: [this.solicitudState?.claveScianModal, Validators.required],
@@ -506,7 +597,9 @@ modalInstance!: Modal; /**
       objetoImportacion: ['', Validators.required],
     });
     this.seleccionadasAduanasEntradaDatos=this.solicitudState?.aduanasDeEntrada;
-    
+        
+  this.inicializarEstadoFormulario();
+  
   }
 
   /**
@@ -767,7 +860,7 @@ this.formMercancias.get('fraccionArancelaria')?.valueChanges.subscribe((valor: s
   ): void {
     const VALOR = form.get(campo)?.value;
     (
-      this.DatosDomicilioLegalStore[metodoNombre] as (
+      this.datosDomicilioLegalStore[metodoNombre] as (
         value: string | number | boolean
       ) => void
     )(VALOR);

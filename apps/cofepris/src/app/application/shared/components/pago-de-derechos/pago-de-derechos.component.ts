@@ -11,7 +11,7 @@ import {
   PagoDerechosFormState,
 } from '../../models/terceros-relacionados.model';
 import { BANCO } from '../../constantes/datos-solicitud.enum';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { FormBuilder } from '@angular/forms';
@@ -59,6 +59,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @type {number}
    */
   @Input() public idProcedimiento!: number;
+
+  /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
 
   /**
    * @property {EventEmitter<PagoDerechosFormState>} updatePagoDerechos
@@ -179,6 +184,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
     this.cargarDatos();
     this.getBancoDatos();
+    if(this.formularioDeshabilitado){
+      this.pagoDerechosForm.disable();
+    }
   }
 
   /**

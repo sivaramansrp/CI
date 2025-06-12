@@ -9,7 +9,7 @@
         <h5>Fabricante:</h5>
         <div class="table-responsive mt-5">
           <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData"
-            ></ng-table>
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"  ></ng-table>
         </div>
         <br />
   
@@ -18,7 +18,7 @@
             <button class="btn btn-danger" type="button">Eliminar</button>
             <button class="btn btn-default" type="button">Modificar</button>
           </div>
-          <button type="button" class="btn btn-primary" (click)="toggleDivFabricante()">
+          <button type="button" class="btn btn-primary" (click)="toggleDivFabricante()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
         </div>
@@ -29,7 +29,7 @@
         <h5>Destinatario (destino final)*:</h5>
         <div class="table-responsive mt-5">
           <ng-table [commonTableHeader]="destinatarioHeaderData" [commonTableBody]="destinatarioRowData"
-          >
+           [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"   >
           </ng-table>
         </div>
         <br />
@@ -39,7 +39,7 @@
             <button class="btn btn-danger" type="button">Eliminar</button>
             <button class="btn btn-default" type="button">Modificar</button>
           </div>
-          <button type="button" class="btn btn-primary" (click)="toggleDivDestinatario()">
+          <button type="button" class="btn btn-primary" (click)="toggleDivDestinatario()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
         </div>
@@ -50,7 +50,7 @@
         <h5>Proveedor:</h5>
         <div class="table-responsive mt-5">
           <ng-table [commonTableHeader]="proveedorHeaderData" [commonTableBody]="proveedorRowData"
-            ></ng-table>
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"    ></ng-table>
         </div>
         <br />
   
@@ -59,7 +59,7 @@
             <button class="btn btn-danger" type="button">Eliminar</button>
             <button class="btn btn-default" type="button">Modificar</button>
           </div>
-          <button type="button" class="btn btn-primary" (click)="toggleDivProveedor()">
+          <button type="button" class="btn btn-primary" (click)="toggleDivProveedor()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
         </div>
@@ -70,7 +70,7 @@
         <h5>Facturador:</h5>
         <div class="table-responsive mt-5">
           <ng-table [commonTableHeader]="facturadorHeaderData" [commonTableBody]="facturadorRowData"
-            ></ng-table>
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"    ></ng-table>
         </div>
         <br />
   
@@ -79,7 +79,7 @@
             <button class="btn btn-danger" type="button">Eliminar</button>
             <button class="btn btn-default" type="button">Modificar</button>
           </div>
-          <button type="button" class="btn btn-primary" (click)="toggleDivFacturador()">
+          <button type="button" class="btn btn-primary" (click)="toggleDivFacturador()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
         </div>
@@ -252,14 +252,16 @@
                 <div class="form-group">
                   <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true"
                     for="pais" id="pais"
-                    formControlName="pais"></app-catalogo-select>
+                    formControlName="pais"
+                     [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                 </div>
               </div>
   
               <div class="col-md-4 mt-2">
                 <div class="form-group">
                   <app-catalogo-select [catalogo]="dropdownData" [label]="'Estado/localidad'" [required]="true"
-                    for="estadoLocalidad" id="estadoLocalidad" formControlName="estadoLocalidad"></app-catalogo-select>
+                    for="estadoLocalidad" id="estadoLocalidad" formControlName="estadoLocalidad"
+                     [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                 </div>
               </div>
   
@@ -267,7 +269,8 @@
                 <div class="form-group">
                   <app-catalogo-select [catalogo]="municipioDropdownData" [label]="'Municipio/Alcaldía'" [required]="true"
                     for="municipioAlcaldia" id="municipioAlcaldia"
-                    formControlName="municipioAlcaldia"></app-catalogo-select>
+                    formControlName="municipioAlcaldia"
+                    [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                 </div>
               </div>
               <hr />
@@ -275,7 +278,8 @@
               <div class="col-md-4 mt-2">
                 <div class="form-group">
                   <app-catalogo-select [catalogo]="localidadDropdownData" [label]="'Localidad'" [required]="false"
-                    for="localidad" id="localidad" formControlName="localidad"></app-catalogo-select>
+                    for="localidad" id="localidad" formControlName="localidad"
+                    [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                 </div>
               </div>
   
@@ -283,14 +287,16 @@
                 <div class="form-group">
                   <app-catalogo-select [catalogo]="codigoPostalDropdownData" [label]="'Código postal o equivalente'"
                     [required]="true" for="codigoPostaloEquivalente" id="codigoPostaloEquivalente"
-                    formControlName="codigoPostaloEquivalente"></app-catalogo-select>
+                    formControlName="codigoPostaloEquivalente"
+                    [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                 </div>
               </div>
   
               <div class="col-md-4 mt-2">
                 <div class="form-group">
                   <app-catalogo-select [catalogo]="coloniaDropdownData" [label]="'Colonia'" for="colonia" id="colonia"
-                    formControlName="colonia"></app-catalogo-select>
+                    formControlName="colonia"
+                    [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                 </div>
               </div>
             </div>
@@ -302,7 +308,8 @@
                 <div class="form-group">
                   <app-catalogo-select [catalogo]="paisDropdownData" [label]="'País'" [required]="true"
                     for="pais" id="pais"
-                    formControlName="pais"></app-catalogo-select>
+                    formControlName="pais"
+                     [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                 </div>
               </div>
   
@@ -483,14 +490,16 @@
               <div class="form-group">
                 <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true"
                     for="pais" id="pais"
-                    formControlName="pais"></app-catalogo-select>
+                    formControlName="pais"
+                     [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
               </div>
             </div>
   
             <div class="col-md-4 mt-5">
               <div class="form-group">
                 <app-catalogo-select [catalogo]="dropdownData" [label]="'Estado/localidad*'" [required]="true"
-                  for="estadoLocalidad" id="estadoLocalidad" formControlName="estadoLocalidad"></app-catalogo-select>
+                  for="estadoLocalidad" id="estadoLocalidad" formControlName="estadoLocalidad"
+                  [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
               </div>
             </div>
   
@@ -498,14 +507,16 @@
               <div class="form-group">
                 <app-catalogo-select [catalogo]="municipioDropdownData" [label]="'Municipio/alcaldia:'" [required]="true"
                   for="municipioAlcaldia" id="municipioAlcaldia"
-                  formControlName="municipioAlcaldia"></app-catalogo-select>
+                  formControlName="municipioAlcaldia"
+                  [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
               </div>
             </div>
   
             <div class="col-md-4 mt-5">
               <div class="form-group">
                 <app-catalogo-select [catalogo]="localidadDropdownData" [label]="'Localidad'" [required]="false"
-                  for="localidad" id="localidad" formControlName="localidad"></app-catalogo-select>
+                  for="localidad" id="localidad" formControlName="localidad"
+                  [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
               </div>
             </div>
   
@@ -513,14 +524,16 @@
               <div class="form-group">
                 <app-catalogo-select [catalogo]="codigoPostalDropdownData" [label]="'Código postal o equivalente*:'"
                   for="codigoPostaloEquivalente" id="codigoPostaloEquivalente"
-                  formControlName="codigoPostaloEquivalente"></app-catalogo-select>
+                  formControlName="codigoPostaloEquivalente"
+                  [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
               </div>
             </div>
   
             <div class="col-md-4 mt-5">
               <div class="form-group">
                 <app-catalogo-select [catalogo]="coloniaDropdownData" [label]="'Colonia:'" for="colonia" id="colonia"
-                  formControlName="colonia"></app-catalogo-select>
+                  formControlName="colonia"
+                  [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
               </div>
             </div>
   
@@ -675,7 +688,8 @@
             <div class="form-group">
               <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true"
                     for="pais" id="pais"
-                    formControlName="pais"></app-catalogo-select>
+                    formControlName="pais"
+                     [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
             </div>
           </div>
   
@@ -849,7 +863,8 @@
               <div class="form-group">
                 <app-catalogo-select [catalogo]="paisDropdownData" [label]="'Pais'" [required]="true"
                     for="pais" id="pais"
-                    formControlName="pais"></app-catalogo-select>
+                    formControlName="pais"
+                     [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
               </div>
             </div>
   

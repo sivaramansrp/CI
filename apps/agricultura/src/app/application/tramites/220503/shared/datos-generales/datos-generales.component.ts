@@ -5,8 +5,10 @@ import {
 import {
   CatalogoSelectComponent,
   CatalogosSelect,
+  ConsultaioQuery,
   InputRadioComponent,
   TituloComponent,
+  
 } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
@@ -200,18 +202,51 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    */
   opcionDeBotonDeRadio = CAPTURA_OPCIONES_DE_BOTON_DE_RADIO;
 
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false;
+
   constructor(
     private readonly fb: FormBuilder,
     private revisionService: RevisionService,
     private validacionesService: ValidacionesFormularioService,
     public Solicitud220503Store: Solicitud220503Store,
-    public Solicitud220503Query: Solicitud220503Query
+    public Solicitud220503Query: Solicitud220503Query,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    //
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
   }
 
   ngOnInit(): void {
-    this.forma = this.fb.group({
+   this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+   * con el valor inicial obtenido del store.
+   */
+
+  inicializarFormulario(): void {
+ this.forma = this.fb.group({
       foliodel: [
         { value: this.Solicitud220503State.fetchapago, disabled: true },
       ],
@@ -294,6 +329,33 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
     this.getPuntoVerificacion();
     this.getEmpresaTransportista();
     this.actualizarDatosDelaSolicitud();
+  }
+
+   /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+  }
+
+   /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.forma.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.forma.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
   }
 
   /**
@@ -477,7 +539,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
 
   /**
    * Obtiene la movilización nacional.
-   * Este método llama al servicio de revisión para obtener la movilización nacional.
+   * Este método llama al servicio de revisión para obtener la Datos para movilización nacional:.
    * @returns {void}
    */
   getMovilizacionNacional(): void {
@@ -489,7 +551,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
           const RESPONSE = resp.data;
 
           this.movilizacionNacional = {
-            labelNombre: 'Movilización Nacional',
+            labelNombre: 'Datos para movilización nacional',
             required: false,
             primerOpcion: 'Selecciona un valor',
             catalogos: RESPONSE,

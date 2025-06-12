@@ -1,9 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AsignciondirectaPageComponent } from './asignciondirecta-page.component';
-import { CommonModule } from '@angular/common';
-import { WizardComponent } from '@ng-mf/data-access-user';
-
-import { ASIGNACION } from '@ng-mf/data-access-user';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
+import { ASIGNACION } from '../../constants/asignacion.enum';
 
 describe('AsignciondirectaPageComponent', () => {
   let component: AsignciondirectaPageComponent;
@@ -11,8 +9,8 @@ describe('AsignciondirectaPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CommonModule],
-      declarations: [AsignciondirectaPageComponent, WizardComponent]
+      declarations: [AsignciondirectaPageComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA], 
     }).compileComponents();
 
     fixture = TestBed.createComponent(AsignciondirectaPageComponent);
@@ -20,19 +18,54 @@ describe('AsignciondirectaPageComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have the correct initial steps', () => {
-    expect(component.pantallasPasos).toEqual(ASIGNACION);
+  it('should initialize with correct steps', () => {
+    expect(component.pasos).toEqual(ASIGNACION);
   });
 
-  it('should have the correct initial step index', () => {
+  it('should initialize with the correct step index', () => {
     expect(component.indice).toBe(1);
   });
 
-  it('should have a reference to the WizardComponent', () => {
-    expect(component.wizardComponent).toBeDefined();
+  it('should initialize DatosPasos correctly', () => {
+    expect(component.datosPasos).toEqual({
+      nroPasos: ASIGNACION.length,
+      indice: 1,
+      txtBtnAnt: 'Anterior',
+      txtBtnSig: 'Continuar',
+    });
+  });
+
+  it('should update indice and navigate forward', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as any; 
+
+    component.getValorIndice({ accion: 'cont', valor: 2 });
+
+    expect(component.indice).toBe(2);
+    expect(component.wizardComponent.siguiente).toHaveBeenCalled();
+  });
+
+  it('should update indice and navigate backward', () => {
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as any;
+
+    component.getValorIndice({ accion: 'back', valor: 1 });
+
+    expect(component.indice).toBe(1);
+    expect(component.wizardComponent.atras).toHaveBeenCalled();
+  });
+
+  it('should ignore invalid indice values', () => {
+    component.getValorIndice({ accion: 'cont', valor: 6 });
+
+    expect(component.indice).toBe(1); 
   });
 });

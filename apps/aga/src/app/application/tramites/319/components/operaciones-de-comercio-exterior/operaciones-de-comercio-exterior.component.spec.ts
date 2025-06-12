@@ -12,8 +12,8 @@ describe('OperacionesDeComercioExteriorComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CommonModule, SharedModule,HttpClientTestingModule,TablaDinamicaComponent,CatalogoSelectComponent,AlertComponent,TituloComponent,ReactiveFormsModule],  // Import necessary modules here
-      declarations: [OperacionesDeComercioExteriorComponent],  // Declare the component in the declarations array
+      imports: [CommonModule, SharedModule,HttpClientTestingModule,TablaDinamicaComponent,CatalogoSelectComponent,AlertComponent,TituloComponent,ReactiveFormsModule,OperacionesDeComercioExteriorComponent],  // Import necessary modules here
+      declarations: [],  // Declare the component in the declarations array
     }).compileComponents();
 
     fixture = TestBed.createComponent(OperacionesDeComercioExteriorComponent);
