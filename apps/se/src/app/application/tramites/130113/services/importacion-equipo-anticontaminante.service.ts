@@ -1,3 +1,4 @@
+import { Tramite130113State, Tramite130113Store } from '../estados/tramites/tramites130113.store';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -23,7 +24,7 @@ export class ImportacionEquipoAnticontaminanteService {
    * Constructor del servicio. Inyecta el cliente HTTP para realizar solicitudes.
    * {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,private tramite130113Store: Tramite130113Store) {
   /**
    * Constructor vacío.
    */
@@ -110,4 +111,19 @@ export class ImportacionEquipoAnticontaminanteService {
             'assets/json/130113/partidas-de-la.json'
           );
     }
+
+          /**
+   * Actualiza el estado del formulario en el store.
+   * @param DATOS Estado actualizado del trámite.
+   */
+  actualizarEstadoFormulario(DATOS: Tramite130113State): void {
+      this.tramite130113Store.actualizarEstado(DATOS);
+  }
+  /**
+ * Obtiene los datos de la solicitud.
+ * @returns Observable con los datos de la solicitud.
+ */
+getDatosDeLaSolicitud(): Observable<Tramite130113State> {
+    return this.http.get<Tramite130113State>('assets/json/130113/datos-de-la-solicitud.json');
+}
 }
