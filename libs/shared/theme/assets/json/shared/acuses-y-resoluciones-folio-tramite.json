@@ -209,9 +209,9 @@
   {
     "folioTramite": "0100001000320251005000003",
     "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
-    "dependencia": "SEDENA ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "dependencia": "SENER ADMINITRACION DE APOYO JURIDICO ADUANA 5",
     "fechInicioTramite": "2025-3-09 0035:05:00",
-    "departamento": "SEDENA",
+    "departamento": "SENER",
     "numeroDeProcedimiento": "130204"
   },
   {
@@ -766,6 +766,14 @@
     "departamento": "AGA",
     "numeroDeProcedimiento": "10303"
   },
+   {
+   "folioTramite": "0100001000320251005000503",
+    "tipoDeTramite": "Autorización para la importación de plaguicidas, nutrientes vegetales, sustancias y materiales tóxicos o peligrosos",
+    "dependencia": "SE ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "SEDENA",
+    "numeroDeProcedimiento": "240108"
+   },
   {
     "folioTramite": "0100001000320251005000504",
     "tipoDeTramite": "Permiso sanitario de importación de medicamentos destinados a pruebas de laboratorio",
@@ -781,5 +789,13 @@
     "fechInicioTramite": "2025-3-09 0035:05:00",
     "departamento": "SE",
     "numeroDeProcedimiento": "120401"
+  },
+  {
+    "folioTramite": "0100001000320251005000594",
+    "tipoDeTramite": "Permiso sanitario de importación de medicamentos destinados a pruebas de laboratorio",
+    "dependencia": "COFEPRIS ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260205"
   }
 ]
