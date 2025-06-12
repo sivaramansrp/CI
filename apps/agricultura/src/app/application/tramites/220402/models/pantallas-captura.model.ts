@@ -22,3 +22,32 @@ export interface ListaPasosWizard {
  */
   completado: boolean;
 }
+/**
+ * @interface DatosGenerales
+ * @description Representa los datos generales relacionados con el trámite.
+ * 
+ * @property {string} fraccionArancelaria - Fracción arancelaria asociada al trámite.
+ * @property {string} descdelaFraccion - Descripción de la fracción arancelaria.
+ * @property {number} cantidadUMT - Cantidad en la unidad de medida de transporte (UMT).
+ * @property {string} UMT - Unidad de medida de transporte.
+ * @property {number} cantidadUMC - Cantidad en la unidad de medida comercial (UMC).
+ * @property {string} UMC - Unidad de medida comercial.
+ * @property {string} paisdeOrigen - País de origen de la mercancía.
+ * @property {string} entidadFederativadeOrigen - Entidad federativa de origen de la mercancía.
+ * @property {string[]} municipiodeOrigen - Lista de municipios de origen de la mercancía.
+ * @property {string} marcasDistintivas - Marcas distintivas de la mercancía.
+ * @property {string} USO - Uso de la mercancía.
+ */
+export interface DatosGenerales {
+  fraccionArancelaria: string;
+  descdelaFraccion: string;
+  cantidadUMT: string;
+  UMT: string;
+  cantidadUMC: string;
+  UMC: string;
+  paisdeOrigen: string;
+  entidadFederativadeOrigen: string;
+  municipiodeOrigen: string[];
+  marcasDistintivas: string;
+  USO: string;
+}

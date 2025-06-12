@@ -18,10 +18,10 @@ import {
 } from '../../estados/stores/tramite260205.store';
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { Subject } from 'rxjs';
 import { Tramite260205Query } from '../../estados/queries/tramite260205.query';
-
 @Component({
   selector: 'app-contenedor-de-datos-solicitud',
   standalone: true,
@@ -92,10 +92,35 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
   public seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[] = [];
 
+  /**
+   * que indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.
+   *
+   * @type {boolean}
+   */
+  esFormularioSoloLectura!: boolean;
+
+  /**
+   * Constructor de la clase que inicializa el estado del trámite y determina si el formulario es de solo lectura.
+   * 
+   * @param {Tramite260205Store} tramiteStore - Store que contiene el estado del trámite 260204.
+   * @param {ConsultaioQuery} consultaQuery - Query para obtener el estado de la sección de consulta.
+   */
   constructor(
     private Tramite260205Query: Tramite260205Query,
-    private Tramite260205Store: Tramite260205Store
-  ) {}
+    private Tramite260205Store: Tramite260205Store,
+    private consultaQuery: ConsultaioQuery
+  ) {
+    this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+    )
+    .subscribe((seccionState) => {
+      if(!seccionState.create && seccionState.procedureId === '260205') {
+        this.esFormularioSoloLectura = seccionState.readonly;
+      } 
+    });
+  }
 
   ngOnInit(): void {
     this.Tramite260205Query.selectTramiteState$
