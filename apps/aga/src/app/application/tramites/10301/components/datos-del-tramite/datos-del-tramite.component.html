@@ -38,6 +38,7 @@
               (change)="
                 setValoresStore(importadorExportador, 'aduana', 'setAduana')
               "
+               [isDisabled] ="isAdunaMarcancia"
             >
             </app-catalogo-select>
           </div>
@@ -384,6 +385,7 @@
               (change)="
                 setValoresStore(importadorExportador, 'pais', 'setPais')
               "
+              [isDisabled]="isPais"
             ></app-catalogo-select>
           </div>
           <div class="col-md-4">
