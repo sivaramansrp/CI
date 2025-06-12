@@ -12334,5 +12334,14 @@
     "departamento": "semarnat",
     "numeroDeProcedimiento": "231003",
     "origin": "READ_PROCEDURE"
+  },
+  {
+    "id": 240108,
+    "tipoDeTramite": "Solicitudddd certificado CAM",
+    "fecha": "2022-10-05",
+    "fechaActualizacion": "2022-10-25",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "240108"
   }
 ]
