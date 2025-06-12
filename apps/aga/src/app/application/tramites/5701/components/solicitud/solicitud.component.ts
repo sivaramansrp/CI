@@ -731,8 +731,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
     const CATALOGO_PAISES$ = this.paisesService.getListaPaises().pipe(
       map((resp) => {
-        this.paisesOrigen = resp.datos.sort((a, b) => a.descripcion.localeCompare(b.descripcion, 'es', { sensitivity: 'base' }));
-        this.paisesProcedencia = resp.datos.sort((a, b) => a.descripcion.localeCompare(b.descripcion, 'es', { sensitivity: 'base' }));
+        this.paisesOrigen = resp.datos.sort((a, b) =>
+          a.descripcion.localeCompare(b.descripcion, 'es', {
+            sensitivity: 'base',
+          })
+        );
+        this.paisesProcedencia = resp.datos.sort((a, b) =>
+          a.descripcion.localeCompare(b.descripcion, 'es', {
+            sensitivity: 'base',
+          })
+        );
       })
     );
 
@@ -1524,7 +1532,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.tipoSolicitudSeleccionada !== TIPO_SOLICITUD.INDIVIDUAL
         ? true
         : false;
-    
+
     this.setValoresStore(this.pagoCaptura, 'montoAPagar', 'setMontoPagar');
   }
 
@@ -1614,9 +1622,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   changeSeccionAduanera(): void {
     const SECCION_ADUANERA = this.despacho.get('idSeccionDespacho')?.value;
 
-    if (SECCION_ADUANERA) {
+    if (SECCION_ADUANERA !== SIN_VALOR.toString()) {
       this.desactivarSelectRecinto = true;
       this.despacho.get('nombreRecinto')?.disable();
+    } else {
+      this.desactivarSelectRecinto = false;
+      this.despacho.get('nombreRecinto')?.enable();
+      this.despacho.get('nombreRecinto')?.setValue(SIN_VALOR);
     }
 
     this.setValoresStore(
@@ -1634,8 +1646,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   changeRecinto(): void {
     const RECINTO = this.despacho.get('nombreRecinto')?.value;
 
-    if (RECINTO) {
+    if (RECINTO !== SIN_VALOR.toString()) {
       this.desactivarSelectSeccionAduanera = true;
+      this.despacho.get('idSeccionDespacho')?.disable();
+    } else {
+      this.desactivarSelectSeccionAduanera = false;
+      this.despacho.get('idSeccionDespacho')?.enable();
+      this.despacho.get('idSeccionDespacho')?.setValue(SIN_VALOR);
     }
 
     this.setValoresStore(this.despacho, 'nombreRecinto', 'setNombreRecinto');
