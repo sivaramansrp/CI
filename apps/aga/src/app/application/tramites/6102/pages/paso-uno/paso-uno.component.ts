@@ -1,16 +1,16 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
-import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico } from '@ng-mf/data-access-user';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { map, Subject, takeUntil } from 'rxjs';
+import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { Subject, map, takeUntil } from 'rxjs';
 import { JuntaTecnicaRegistroService } from '../../service/junta-tecnica-registro.service';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Solicitud6102Store } from '../../estados/solicitud6102.store';
 @Component({
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss'
 })
-export class PasoUnoComponent implements AfterViewInit {
+export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /**
    * Referencia al componente `SolicitanteComponent` dentro de la vista.

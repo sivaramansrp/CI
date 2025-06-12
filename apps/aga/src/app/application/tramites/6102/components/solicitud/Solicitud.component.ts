@@ -1,6 +1,6 @@
 import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud6102State, Solicitud6102Store } from '../../estados/solicitud6102.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -124,7 +124,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       map((seccionState) => {
         this.consultaDatos = seccionState;
         this.soloLectura = this.consultaDatos.readonly;
-        console.log(this.soloLectura);
         this.inicializarEstadoFormulario();
       })
     )
