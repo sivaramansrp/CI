@@ -50,7 +50,7 @@
           <div [ngClass]="item.class" [ngStyle]="{ visibility: item.visibility }">
             <div class="form-group">
               @switch (item.inputType) { @case(inputTypes.SELECT) {
-              <app-catalogo-select [catalogo]="item.props.catalogos" [label]="item.props.labelNombre" [formControlName]="item.props.campo"
+              <app-catalogo-select [catalogo]="item.props.catalogos" [label]="item.props.labelNombre" [formControlName]="item.props.campo" [isDisabled]="esFormularioSoloLectura"
               [required]="true" name="tipoSolicitud" (change)="seleccionCatalogo(item.props.labelNombre, $event)"></app-catalogo-select>
               } @case(inputTypes.TEXT) {
                 @if((!item.props.availableRadioOptions) || (item.props.availableRadioOptions && configuracion[groupIndex].menu[0].props && configuracion[groupIndex].menu[0].props.radioSelectedValue && item.props.availableRadioOptions.includes(configuracion[groupIndex].menu[0].props.radioSelectedValue))) {
