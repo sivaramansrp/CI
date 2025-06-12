@@ -28,13 +28,13 @@ import {
 
 import { Modal } from 'bootstrap';
 
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
-import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-del-solicitute-seccion.store';
-
+import { DatosDelSolicituteSeccionStateStore, DatosDelSolicituteSeccionState } from '../../estados/stores/datos-del-solicitute-seccion.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * compodoc
  * @description
@@ -81,7 +81,12 @@ export class DatosDelEstablecimientoSeccionComponent
   /**
    * Indica si el formulario debe estar deshabilitado.
    */
-  @Input() formularioDeshabilitado: boolean = false;
+  formularioDeshabilitado: boolean = false;
+
+   /**
+   * Estado de la solicitud de la sección .
+   */
+  public solicitudState!: DatosDelSolicituteSeccionState;
 
   /**
    * Constructor del componente.
@@ -92,29 +97,27 @@ export class DatosDelEstablecimientoSeccionComponent
   constructor(
     private fb: FormBuilder,
     private establecimientoStore: DatosDelSolicituteSeccionStateStore,
-    private establecimientoQuery: DatosDelSolicituteSeccionQuery
-  ) {}
+    private establecimientoQuery: DatosDelSolicituteSeccionQuery,
+    private consultaioQuery: ConsultaioQuery,
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroy$),
+      map((seccionState)=>{
+        this.formularioDeshabilitado = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
+  }
 
   /**
    * Ciclo de vida `OnInit`.
    * Inicializa el formulario y sincroniza los datos con el estado global.
    */
   ngOnInit(): void {
-    this.detosEstablecimiento = this.fb.group({
-      establecimientoDenominacionRazonSocial: ['', Validators.required],
-      establecimientoCorreoElectronico: ['', Validators.required],
-    });
+    this.inicializarEstadoFormulario()
 
-    // Cargar el estado inicial en el formulario
-    this.establecimientoQuery
-      .select()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe((state) => {
-        this.detosEstablecimiento.patchValue(state, { emitEvent: false });
-      });
- if (this.formularioDeshabilitado) {
-      this.detosEstablecimiento.disable();
-    }
   }
   onControlChange(controlName: string): void {
     const UPDATED_VALUE = { [controlName]: this.detosEstablecimiento.get(controlName)?.value };
@@ -133,10 +136,57 @@ export class DatosDelEstablecimientoSeccionComponent
   }
 
   /**
+   * Inicializa el formulario reactivo con los campos requeridos y carga el estado inicial.
+   * Suscribe el formulario a los cambios del estado global para mantenerlo sincronizado.
+   */
+  inicializarFormulario(): void {
+    this.detosEstablecimiento = this.fb.group({
+      establecimientoDenominacionRazonSocial: ['', Validators.required],
+      establecimientoCorreoElectronico: ['', Validators.required],
+    });
+
+    // Cargar el estado inicial en el formulario
+    this.establecimientoQuery
+      .select()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((state) => {
+        this.detosEstablecimiento.patchValue(state, { emitEvent: false });
+      });
+  }
+
+  /**
    * Abre el modal del establecimiento.
    */
   openEstablecimientoModal(): void {
     this.establecimientoModalInstance.show();
+  }
+
+    /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.formularioDeshabilitado) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+  }
+
+  
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.formularioDeshabilitado) {
+        this.detosEstablecimiento.disable();
+      } else if (!this.formularioDeshabilitado) {
+        this.detosEstablecimiento.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
   }
 
   /**
