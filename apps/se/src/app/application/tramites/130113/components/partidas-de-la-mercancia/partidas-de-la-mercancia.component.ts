@@ -11,8 +11,6 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 
 import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { UppercaseDirective } from '@ng-mf/data-access-user';
-
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/partidas-de-la-mercancia.enum';
@@ -29,7 +27,6 @@ import { PARTIDASDELAMERCANCIA_TABLA } from '../../../../shared/constantes/parti
     CommonModule,
     ReactiveFormsModule,
     TituloComponent,
-    UppercaseDirective,
     AlertComponent,
     CatalogoSelectComponent,
     TablaDinamicaComponent,
