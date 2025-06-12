@@ -362,6 +362,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   public datosTablaPagos: LineaCaptura[] = [];
 
   /**
+   * @description Almacena el monto total a pagar en la solicitud.
+   */
+  montoACubrir: number = 0;
+
+  /**
+   * @description Almacena el monto por dia.
+   */
+  montoPorDia: number = 0;
+
+  /**
    * @description Almacena los montos a pagar en la solicitud.
    */
   montoPagadoLineas: number = 0;
@@ -666,10 +676,18 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Verifica si el control 'idSocioComercial' tiene el validador 'Validators.required'.
    *
-   * @returns {boolean} `true` si el control es requerido, de lo contrario `false`.
+   * @returns {boolean} `true` si el control es obligatorio, de lo contrario `false`.
    */
+  // eslint-disable-next-line class-methods-use-this
   isRequired(form: FormGroup, field: string): boolean | null {
-    return this.validacionesService.errorCampoRequerido(form, field);
+    const CONTROL = form.get(field) as FormControl;
+
+    if (CONTROL) {
+      const ERROR_PATTERN = CONTROL.hasError('required');
+      return ERROR_PATTERN && CONTROL.touched;
+    }
+
+    return false;
   }
 
   /**
@@ -990,18 +1008,22 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     const INTERVALO_DIAS = SolicitudComponent.getIntervaloDias(
       this.tipoSolicitudSeleccionada
     );
-    if (
-      FECHA_INICIO &&
-      FECHA_FINAL &&
-      HORA_INICIO &&
-      HORA_FINAL &&
-      INTERVALO_DIAS !== null
-    ) {
-      FECHA_INICIO.setHours(
+
+    const PRIMER_DIA_MES = FECHA_INICIO.getDate() === 1 ? true : false;
+
+    const CAMPOS_NO_NULOS =
+      [FECHA_INICIO, FECHA_FINAL, HORA_INICIO, HORA_FINAL].every(Boolean) &&
+      INTERVALO_DIAS !== null;
+
+    if (CAMPOS_NO_NULOS) {
+      const FECHA_INICIO_HORA = new Date(FECHA_INICIO);
+      const FECHA_FINAL_HORA = new Date(FECHA_FINAL);
+
+      FECHA_INICIO_HORA.setHours(
         parseInt(HORA_INICIO.split(':')[0], 10),
         parseInt(HORA_INICIO.split(':')[1], 10)
       );
-      FECHA_FINAL.setHours(
+      FECHA_FINAL_HORA.setHours(
         parseInt(HORA_FINAL.split(':')[0], 10),
         parseInt(HORA_FINAL.split(':')[1], 10)
       );
@@ -1009,11 +1031,23 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       const DIFERENCIA_EN_TIEMPO =
         FECHA_FINAL.getTime() - FECHA_INICIO.getTime();
 
-      const DIFERENCIA_EN_HORAS = DIFERENCIA_EN_TIEMPO / (1000 * 3600);
+      const DIFERENCIA_EN_HORAS =
+        (FECHA_FINAL_HORA.getTime() - FECHA_INICIO_HORA.getTime()) /
+        (1000 * 3600);
 
-      if (DIFERENCIA_EN_TIEMPO <= 0) {
+      if (DIFERENCIA_EN_HORAS <= 0) {
         this.datosServicio.setErrors({ endDateBeforeStartDate: true });
         return;
+      }
+
+      if (PRIMER_DIA_MES) {
+        const VALIDACION_MES =
+          FECHA_INICIO.getMonth() === FECHA_FINAL.getMonth() &&
+          FECHA_INICIO.getFullYear() === FECHA_FINAL.getFullYear();
+        if (!VALIDACION_MES) {
+          this.datosServicio.setErrors({ invalidIntervalo: true });
+          return;
+        }
       }
 
       if (
@@ -1024,13 +1058,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         return;
       }
 
-      const DIFERENCIA_EN_DIAS = DIFERENCIA_EN_TIEMPO / (1000 * 3600 * 24);
+      const DIFERENCIA_EN_DIAS = DIFERENCIA_EN_TIEMPO / (1000 * 3600 * 24) + 1;
 
       if (
         (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.SEMANAL &&
           DIFERENCIA_EN_DIAS > 7) ||
         (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.MENSUAL &&
-          DIFERENCIA_EN_DIAS > 30)
+          DIFERENCIA_EN_DIAS > 31)
       ) {
         this.datosServicio.setErrors({ invalidIntervalo: true });
       }
@@ -1062,60 +1096,72 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   validaRfc(): void {
-    if (this.datosImportadorExportador.get('RFCImpExp')?.valid) {
-      const RFC_IMP_EXP =
-        this.datosImportadorExportador.get('RFCImpExp')?.value;
-
-      this.validaRfcService
-        .getValidacionRfc(RFC_IMP_EXP)
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          switchMap((validacionResponse) => {
-            if (validacionResponse) {
-              this.muestraCertificaciones = !validacionResponse.datos;
-              this.tramite5701Store.setRfcGenerico(validacionResponse.datos);
-
-              if (validacionResponse.datos) {
-                // Aqui se hará la busqueda del rfc, para obtener el nombre
-                SolicitudComponent.llenarCamposDesactivados(
-                  this.datosImportadorExportador,
-                  'nombre',
-                  RFC_GENERICO
-                );
-                this.tramite5701Store.setNombre(RFC_GENERICO);
-                return EMPTY;
-              }
-              return this.idcService
-                .getInformacionContribuyente(RFC_IMP_EXP)
-                .pipe(tap());
-            }
-            return EMPTY;
-          }),
-          tap((idcResponse) => {
-            const NOMBRE = idcResponse.datos?.nombre
-              ? idcResponse.datos?.nombre
-              : idcResponse.datos?.razon_social;
-            if (NOMBRE) {
-              this.datosImportadorExportador.get('nombre')?.setValue(NOMBRE);
-              this.getCertificaciones(RFC_IMP_EXP);
-            } else {
-              this.nuevaNotificacion = {
-                tipoNotificacion: 'alert',
-                categoria: 'danger',
-                modo: 'action',
-                titulo: 'Avisos',
-                mensaje: MSG_ERROR_RFC_NO_ENCONTRADO,
-                cerrar: false,
-                txtBtnAceptar: 'Aceptar',
-                txtBtnCancelar: '',
-              };
-            }
-          })
-        )
-        .subscribe();
-
-      this.tramite5701Store.setRFCImportadorExportador(RFC_IMP_EXP);
+    const RFC_IMP_EXP = this.datosImportadorExportador.get('RFCImpExp')?.value;
+    if (RFC_IMP_EXP && !this.datosImportadorExportador.get('RFCImpExp')?.valid) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Avisos',
+        mensaje: MSJ_ERROR_RFC_NO_VALIDO,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.datosImportadorExportador.get('RFCImpExp')?.reset();
+      return;
     }
+
+
+    this.validaRfcService
+      .getValidacionRfc(RFC_IMP_EXP)
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        switchMap((validacionResponse) => {
+          if (validacionResponse) {
+            this.muestraCertificaciones = !validacionResponse.datos;
+            this.tramite5701Store.setRfcGenerico(validacionResponse.datos);
+
+            if (validacionResponse.datos) {
+              // Aqui se hará la busqueda del rfc, para obtener el nombre
+              SolicitudComponent.llenarCamposDesactivados(
+                this.datosImportadorExportador,
+                'nombre',
+                RFC_GENERICO
+              );
+              this.tramite5701Store.setNombre(RFC_GENERICO);
+              return EMPTY;
+            }
+            return this.idcService
+              .getInformacionContribuyente(RFC_IMP_EXP)
+              .pipe(tap());
+          }
+          return EMPTY;
+        }),
+        tap((idcResponse) => {
+          const NOMBRE = idcResponse.datos?.nombre
+            ? idcResponse.datos?.nombre
+            : idcResponse.datos?.razon_social;
+          if (NOMBRE) {
+            this.datosImportadorExportador.get('nombre')?.setValue(NOMBRE);
+            this.getCertificaciones(RFC_IMP_EXP);
+          } else {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: 'Avisos',
+              mensaje: MSG_ERROR_RFC_NO_ENCONTRADO,
+              cerrar: false,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+          }
+        })
+      )
+      .subscribe();
+
+    this.tramite5701Store.setRFCImportadorExportador(RFC_IMP_EXP);
   }
 
   /**
@@ -1242,8 +1288,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   validaCampoPedimento(): void {
-    const ADUANA_VALIDACION = this.solicitudState?.idAduanaDespacho;
-    if (!ADUANA_VALIDACION) {
+    const ADUANA_VALIDACION = parseInt(
+      this.solicitudState?.idAduanaDespacho,
+      10
+    );
+
+    if (ADUANA_VALIDACION < 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
@@ -1391,6 +1441,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   changeHoraFinal(): void {
     this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
+
     this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
 
     if (this.fechaInicioPasadaFechaFinalError()) {
@@ -1459,7 +1510,17 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       HORA_INICIO,
       HORA_FINAL
     );
-    this.colapsable = true;
+
+    this.montoACubrir = this.selectRangoDias.length * this.montoPorDia; // Ejemplo de cálculo, ajustar según lógica real
+    this.pagoCaptura.get('montoAPagar')?.enable();
+    this.pagoCaptura.get('montoAPagar')?.setValue(this.montoACubrir);
+    this.pagoCaptura.get('montoAPagar')?.disable();
+    this.colapsable =
+      this.tipoSolicitudSeleccionada !== TIPO_SOLICITUD.INDIVIDUAL
+        ? false
+        : true;
+
+    this.setValoresStore(this.pagoCaptura, 'montoAPagar', 'setMontoPagar');
   }
 
   /**
@@ -1914,30 +1975,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
-   * Cambia el valor del campo idSocioComercial y actualiza el store correspondiente.
-   *
-   * @returns {void} No retorna ningún valor.
-   */
-  public onIdSocioComercialChange(): void {
-    const ID_SOCIO_COMERCIAL: string =
-      this.datosImportadorExportador.get('idSocioComercial')?.value;
-    this.socioComercial
-      .getSocioComercial(ID_SOCIO_COMERCIAL)
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((response) => {
-          this.tramite5701Store.setBlnSocioComercial(response.datos);
-        })
-      )
-      .subscribe();
-    this.setValoresStore(
-      this.datosImportadorExportador,
-      'idSocioComercial',
-      'setIdSocioComercial'
-    );
-  }
-
-  /**
    * Obtiene las certificaciones del RFC proporcionado y actualiza el store correspondiente.
    *
    * @param rfc - RFC del importador/exportador.
@@ -2124,17 +2161,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             return;
           }
 
-          //Obtenemos el monto a pagar desde el servicio de parámetros
-          const MONTO_A_PAGAR = this.pagoCaptura
-            .get('montoAPagar')
-            ?.getRawValue();
-
           const DIAS_SERVICIO =
             this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL
               ? UN_DIA
               : this.fechasSeleccionadas.length;
 
-          const MONTO_A_CUBRIR = DIAS_SERVICIO * MONTO_A_PAGAR;
+          const MONTO_A_CUBRIR = DIAS_SERVICIO * this.montoPorDia;
 
           const PAGO = {
             lineaCaptura: LINEA_PAGO,
@@ -2193,6 +2225,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         tap((montoResponse) => {
+          this.montoPorDia = montoResponse.datos;
           this.pagoCaptura.get('montoAPagar')?.enable();
           this.pagoCaptura.get('montoAPagar')?.setValue(montoResponse.datos);
           this.pagoCaptura.get('montoAPagar')?.disable();
@@ -2700,5 +2733,48 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   limpiarNotificacion(): void {
     this.nuevaNotificacion = null;
     this.procesoModal = '';
+  }
+
+  /**
+   * @description Valida el ID del socio comercial
+   * @returns {void} No retorna ningún valor.
+   */
+  validarIDSocioComercial(): void {
+    const ID_SOCIO_COMERCIAL: string =
+      this.datosImportadorExportador.get('idSocioComercial')?.value;
+
+    if (ID_SOCIO_COMERCIAL && ID_SOCIO_COMERCIAL) {
+      this.socioComercial
+        .getSocioComercial(ID_SOCIO_COMERCIAL)
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          tap((response) => {
+            if (!response.datos) {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'alert',
+                categoria: 'danger',
+                modo: 'action',
+                titulo: TITULO_MODAL_ERROR,
+                mensaje: MSJ_ERROR_ID_SOCIO_COMERCIAL,
+                cerrar: false,
+                txtBtnAceptar: 'Aceptar',
+                txtBtnCancelar: '',
+              };
+              return EMPTY;
+            }
+            this.tramite5701Store.setBlnSocioComercial(response.datos);
+            this.setValoresStore(
+              this.datosImportadorExportador,
+              'idSocioComercial',
+              'setIdSocioComercial'
+            );
+            return response;
+          }),
+          catchError((error) => {
+            return throwError(() => error);
+          })
+        )
+        .subscribe();
+    }
   }
 }
