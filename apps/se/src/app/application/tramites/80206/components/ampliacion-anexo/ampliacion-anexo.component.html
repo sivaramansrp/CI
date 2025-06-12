@@ -44,7 +44,7 @@
             <div class="form-group">
 
                 <label for="fraccionArancelaria">Fracción arancelaria:</label>
-                <input type="text" id="fraccionArancelaria" [(ngModel)]="fraccionArancelaria" name="fraccionArancelaria"
+                <input type="text" id="fraccionArancelaria" [(ngModel)]="fraccionArancelaria" [disabled]="esFormularioSoloLectura"name="fraccionArancelaria"
                     class="form-control" (ngModelChange)="enCambioDeCampo('fraccionArancelaria', $event)" />
 
             </div>
@@ -67,14 +67,14 @@
         <div class="my-4 mb-5">
 
             <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" (filaSeleccionada)="seleccionarDomicilios($event)"
-                [configuracionTabla]="configuracionTablaServicio" [datos]="datosImmex"></app-tabla-dinamica>
+            [disableSeleccionTablaRadio]="esFormularioSoloLectura" [configuracionTabla]="configuracionTablaServicio" [datos]="datosImmex"></app-tabla-dinamica>
         </div>
         <div class="col-md-6 mb-5 mt-5">
 
             <div class="form-group">
 
                 <label for="importacion">fracción arancelaria de la mercancia de importación:</label>
-                <input type="text" id="importacion" [(ngModel)]="importacion" name="importacion" class="form-control"
+                <input type="text" id="importacion" [(ngModel)]="importacion" [disabled]="esFormularioSoloLectura" name="importacion" class="form-control"
                     (ngModelChange)="enCambioDeCampo('importacion', $event)" />
 
             </div>
@@ -96,7 +96,7 @@
         <div class="my-4 mb-5">
 
             <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" (filaSeleccionada)="seleccionarDomicilios($event)"
-                [configuracionTabla]="configuracionTablaImportacion" [datos]="datosImportacion"></app-tabla-dinamica>
+               [disableSeleccionTablaRadio]="esFormularioSoloLectura" [configuracionTabla]="configuracionTablaImportacion" [datos]="datosImportacion"></app-tabla-dinamica>
         </div>
 
 
@@ -123,7 +123,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="fraccion">Fracción:</label>
-                    <input type="text" id="fraccion" [(ngModel)]="fraccion" name="fraccion" class="form-control"
+                    <input type="text" id="fraccion" [(ngModel)]="fraccion" [disabled]="esFormularioSoloLectura" name="fraccion" class="form-control"
                         (ngModelChange)="enCambioDeCampo('fraccion', $event)" disabled />
                 </div>
             </div>
@@ -131,14 +131,14 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label for="cantidad">Cantidad:</label>
-                    <input type="text" id="cantidad" [(ngModel)]="cantidad" name="cantidad" class="form-control"
+                    <input type="text" id="cantidad" [(ngModel)]="cantidad" [disabled]="esFormularioSoloLectura" name="cantidad" class="form-control"
                         (ngModelChange)="enCambioDeCampo('cantidad', $event)" />
                 </div>
             </div>
             <div class="col-md-3">
                 <div class="form-group">
                     <label for="valor">Valor:</label>
-                    <input type="text" id="valor" [(ngModel)]="valor" name="valor" class="form-control"
+                    <input type="text" id="valor" [(ngModel)]="valor" [disabled]="esFormularioSoloLectura" name="valor" class="form-control"
                         (ngModelChange)="enCambioDeCampo('valor', $event)" />
                 </div>
             </div>

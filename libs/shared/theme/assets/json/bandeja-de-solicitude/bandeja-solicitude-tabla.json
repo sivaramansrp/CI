@@ -1880,7 +1880,16 @@
     "departamento": "AGA",
     "numeroDeProcedimiento": "40302"
   },
-  {
+{
+  "id": 80206,
+  "tipoDeTramite": "Solicitud de Permiso",
+  "fecha": "2023-10-01",
+  "fechaActualizacion": "2023-10-05",
+  "diasTranscurridos": "4",
+  "departamento": "SE",
+  "numeroDeProcedimiento": "80206"
+},
+{
     "id": 260515,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -1889,7 +1898,7 @@
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260515"
 },
-  {
+{
     "id": 260516,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -1898,4 +1907,5 @@
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260516"
 }
+
 ]
