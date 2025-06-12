@@ -1808,13 +1808,31 @@
     "departamento": "SE",
     "numeroDeProcedimiento": "80303"
   },
-   {
-    "id": 270301,
-    "tipoDeTramite": "Cancelación de Programa de la SE IMMEX",
+  {
+    "id": 6101,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2025-06-12",
+    "fechaActualizacion": "2025-06-12",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "6101"
+},
+{
+    "id": 120401,
+    "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
     "fechaActualizacion": "2023-10-05",
     "diasTranscurridos": "4",
-    "departamento": "INBAL",
-    "numeroDeProcedimiento": "270301"
-  }
+    "departamento": "SE",
+    "numeroDeProcedimiento": "120401"
+},
+{
+  "id": 260205,
+  "tipoDeTramite": "Solicitud de Permiso",
+  "fecha": "2023-10-01",
+  "fechaActualizacion": "2023-10-05",
+  "diasTranscurridos": "4",
+  "departamento": "COFEPRIS",
+  "numeroDeProcedimiento": "260205"
+}
 ]
