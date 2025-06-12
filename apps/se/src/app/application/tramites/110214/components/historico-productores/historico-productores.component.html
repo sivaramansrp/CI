@@ -32,36 +32,38 @@
             <div class="col-md-12" *ngIf="tramiteState?.productorMismoExportador">
                 <h6>Productores por exportador</h6>
                 <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns"
-                    [datos]="productoresExportador"
-                    (listaDeFilaSeleccionada)="obtenerSeleccionadoProductores($event)"></app-tabla-dinamica>
+                    [datos]="productoresExportador" (listaDeFilaSeleccionada)="obtenerSeleccionadoProductores($event)"
+                    [disableSeleccionTablaCheckBox]="soloLectura"></app-tabla-dinamica>
                 <div class="container text-end mt-5">
                     <button type="button" name="actualizarProductoresSeleccionados" class="btn btn-default me-2"
-                        (click)="productoresSeleccionados()">
+                        (click)="productoresSeleccionados()" [disabled]="soloLectura">
                         Seleccionar
                     </button>
                     <button type="button" name="agregarProductorPorExportador" class="btn btn-primary"
-                        (click)="agregarDatosProductorPorExportador()">
+                        (click)="agregarDatosProductorPorExportador()" [disabled]="soloLectura">
                         Productor nuevo
                     </button>
                 </div>
                 <h6>Productores por exportador</h6>
                 <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="tableColumns"
                     [datos]="agregarProductoresExportador"
-                    (listaDeFilaSeleccionada)="obtenerAnadirProductosSeleccionados($event)"></app-tabla-dinamica>
+                    (listaDeFilaSeleccionada)="obtenerAnadirProductosSeleccionados($event)"
+                    [disableSeleccionTablaCheckBox]="soloLectura"></app-tabla-dinamica>
                 <div class="container text-end mt-5">
                     <button type="button" name="actualizarProductoresSeleccionados" class="btn btn-danger"
-                        (click)="eliminarProductoresSeleccionados()">
+                        (click)="eliminarProductoresSeleccionados()" [disabled]="soloLectura">
                         Eliminar
                     </button>
                 </div>
                 <h6>Mercancías seleccionadas</h6>
                 <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
                     [configuracionTabla]="seleccionadasEncabezados" [datos]="mercanciaSeleccionadasTablaDatos"
-                    (listaDeFilaSeleccionada)="seleccionDeFilas($event)"></app-tabla-dinamica>
+                    (listaDeFilaSeleccionada)="seleccionDeFilas($event)"
+                    [disableSeleccionTablaCheckBox]="soloLectura"></app-tabla-dinamica>
 
                 <div class="container text-end mt-5">
                     <button type="button" name="agregarProductorPorExportador" class="btn btn-primary"
-                        (click)="asignarProductor()">
+                        (click)="asignarProductor()" [disabled]="soloLectura">
                         Asignar productor
                     </button>
                 </div>

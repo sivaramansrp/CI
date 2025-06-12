@@ -12,13 +12,15 @@
                 <div class="col-md-12">
                     <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
                         [configuracionTabla]="fabricanteTableColumns"
-                        [datos]="fabricantedatosTabla"></app-tabla-dinamica>
+                        [datos]="fabricantedatosTabla"
+                        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+                        ></app-tabla-dinamica>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12 mt-5 d-flex justify-content-end">
 
-                    <button type="button" class="btn btn-primary ms-3">
+                    <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura">
                         Agregar
                     </button>
                 </div>
@@ -34,7 +36,9 @@
                 <div class="col-md-12">
                     <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX"
                         [configuracionTabla]="destinatarioTableColumns"
-                        [datos]="destinatarioDatosTabla"></app-tabla-dinamica>
+                        [datos]="destinatarioDatosTabla"
+                        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+                        ></app-tabla-dinamica>
 
                 </div>
             </div>
@@ -42,7 +46,7 @@
             <div class="row">
                 <div class="col-md-12 mt-5 d-flex justify-content-end">
 
-                    <button type="button" class="btn btn-primary ms-3">
+                    <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura">
                         Agregar
                     </button>
                 </div>

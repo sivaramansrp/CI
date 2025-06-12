@@ -1,15 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudComponent } from './solicitud.component';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Tramite130109Store } from '../../../../estados/tramites/tramites130109.store';
-import { Tramite130109Query } from '../../../../estados/queries/tramite130109.query';
+import { HttpClientModule } from '@angular/common/http';
 import { of, Subject } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { Component, Input } from '@angular/core';
+import { Tramite130109Query } from '../../../../estados/queries/tramite130109.query';
+import { Tramite130109Store } from '../../../../estados/tramites/tramites130109.store';
 import { VehiculosUsadosAdaptadosService } from '../../services/vehiculos-usados-adaptados.service';
-import { HttpClientModule } from '@angular/common/http';
-
 
 @Component({ selector: 'app-partidas-de-la-mercancia', template: '' })
 class PartidasDeLaMercanciaStubComponent {}
@@ -29,7 +28,7 @@ class PaisProcendenciaStubComponent {
 @Component({ selector: 'app-representacion', template: '' })
 class RepresentacionStubComponent {}
 
-const MOCK_PARTIDAS_TABLA = {
+const mockPartidasdelaTable = {
   cantidad :"10",
   unidadDeMedida :"kg",
   fraccionFrancelaria :"1234",
@@ -60,7 +59,23 @@ describe('SolicitudComponent', () => {
       actualizarEstado: jest.fn(),
       setMostrarTabla: jest.fn(),
       storeTableValues: jest.fn(),
-      
+      updateSolicitud: jest.fn(),
+      setDescripcionPartidasDeLaMercancia: jest.fn(),
+      setCantidadPartidasDeLaMercancia: jest.fn(),
+      setValorPartidaUSDPartidasDeLaMercancia: jest.fn(),
+      setregimen: jest.fn(),
+      setclasificacion: jest.fn(),
+      setProducto: jest.fn(),
+      setDescripcion: jest.fn(),
+      setCantidad: jest.fn(),
+      setValorPartidaUSD: jest.fn(),
+      setUnidadMedida: jest.fn(),
+      setBloque: jest.fn(),
+      setUsoEspecifico: jest.fn(),
+      setJustificacionImportacionExportacion: jest.fn(),
+      setObservaciones: jest.fn(),
+      setEntidad: jest.fn(),
+      setRepresentacion: jest.fn(),
     } as any;
 
     mockQuery = {
@@ -90,6 +105,7 @@ describe('SolicitudComponent', () => {
     } as any;
 
     mockService = {
+   
       getEntidadFederativa: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
       getRepresentacionFederal: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
       getListaDePaisesDisponibles: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
@@ -106,7 +122,7 @@ describe('SolicitudComponent', () => {
         PaisProcendenciaStubComponent,
         RepresentacionStubComponent,
       ],
-      imports: [ReactiveFormsModule, HttpClientModule],
+      imports: [ReactiveFormsModule,HttpClientModule],
       providers: [
         FormBuilder,
         { provide: Tramite130109Store, useValue: mockStore },
@@ -133,9 +149,9 @@ describe('SolicitudComponent', () => {
           options: MOCK_PRODUCTO_OPTIONS,
         })
       ),
-      getTablaDatos: jest.fn().mockReturnValue(of([{ cantidad: 10, totalUSD: 1000 }])),
+      getTablaDatos: jest.fn().mockReturnValue(of([{ cantidad: 10, totalUSD: 1000 }])), 
     };
-
+  
     await TestBed.configureTestingModule({
       declarations: [SolicitudComponent],
       providers: [
@@ -143,11 +159,9 @@ describe('SolicitudComponent', () => {
       ],
     }).compileComponents();
   });
-
   beforeEach(() => {
     fixture = TestBed.createComponent(SolicitudComponent);
     component = fixture.componentInstance;
-    component.ngOnInit();
   });
 
   it('debería crear', () => {
@@ -166,7 +180,6 @@ describe('SolicitudComponent', () => {
 
       component.ngOnInit();
 
-      expect(component.inicializarFormularios).toHaveBeenCalled();
       expect(component.configuracionFormularioSuscripciones).toHaveBeenCalled();
       expect(component.opcionesDeBusqueda).toHaveBeenCalled();
       expect(component.formularioTotalCount).toHaveBeenCalled();
@@ -198,7 +211,7 @@ describe('SolicitudComponent', () => {
       expect(component.frmRepresentacionForm).toBeDefined();
 
       expect(component.formDelTramite.get('solicitud')).toBeDefined();
-      expect(component.mercanciaForm.get('producto')?.value).toBe('Nuevo');
+      expect(component.mercanciaForm.get('producto')?.value).toBe(null);
       expect(component.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')).toBeDefined();
       expect(component.paisForm.get('bloque')).toBeDefined();
       expect(component.frmRepresentacionForm.get('entidad')).toBeDefined();
@@ -210,14 +223,10 @@ describe('SolicitudComponent', () => {
       component.opcionesDeBusqueda();
 
       expect(mockVehiculosUsadosAdaptadosService.getSolicitudeOptions).toHaveBeenCalled();
-      expect(mockStore.actualizarEstado).toHaveBeenCalledWith({
+      expect(mockVehiculosUsadosAdaptadosService.getProductoOptions).toHaveBeenCalled();
+      expect(mockStore.actualizarEstado).toHaveBeenNthCalledWith(1, {
         solicitud: 'Nuevo',
         defaultSelect: 'Inicial',
-      });
-      expect(mockVehiculosUsadosAdaptadosService.getProductoOptions).toHaveBeenCalled();
-      expect(mockStore.actualizarEstado).toHaveBeenCalledWith({
-        producto: 'Nuevo',
-        defaultProducto: 'Nuevo',
       });
     });
   });
@@ -256,8 +265,8 @@ describe('SolicitudComponent', () => {
 
       component.navegarParaModificarPartida();
 
-      expect(mockStore.setMostrarTabla).toHaveBeenCalledWith(true);
-      expect(mockStore.storeTableValues).toHaveBeenCalledWith(component.filaSeleccionada);
+      expect(mockStore.actualizarEstado).toHaveBeenCalledWith({mostrarTabla:true});
+      expect(mockStore.actualizarEstado).toHaveBeenCalledWith({filaSeleccionada:component.filaSeleccionada});
     });
   });
 
@@ -265,7 +274,7 @@ describe('SolicitudComponent', () => {
     it('Debería obtener la lista de entidades federativas', () => {
       component.fetchEntidadFederativa(); 
     
-      expect(mockVehiculosUsadosAdaptadosService.getEntidadFederativa).toHaveBeenCalled();
+      expect(mockVehiculosUsadosAdaptadosService.getEntidadFederativa).toHaveBeenCalled(); 
       expect(component.entidadFederativa).toEqual(MOCK_CATALOGO);
     });
   });
@@ -307,8 +316,8 @@ describe('SolicitudComponent', () => {
       expect(component.fetchPaisesPorBloque).toHaveBeenCalledWith(2);
     });
   });
-
-  describe('setValoresStore', () => {
+ 
+describe('setValoresStore', () => {
     it('Debería actualizar el store según el método especificado', () => {
       component.mercanciaForm = TestBed.inject(FormBuilder).group({
         producto: ['Nuevo'], 

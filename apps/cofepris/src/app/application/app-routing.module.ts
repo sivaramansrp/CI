@@ -312,7 +312,7 @@ const ROUTES: Routes = [
   },
 
   {
-    path: 'modificacion-permiso-sanitario',
+    path: 'modificacion-permiso-sanitario-importacion-maquila',
     loadChildren: () =>
       import('./tramites/260906/modificacion-permiso-sanitario.module').then(
         (m) => m.ModificacionPermisoSanitarioModule
@@ -695,7 +695,17 @@ const ROUTES: Routes = [
     loadChildren: () =>
       import('./tramites/261701/cancelacion-peticion.module').then(
         (m) => m.CancelacionPeticionModule)
-  }
+  },
+  {
+    path: 'verificar-dictamen',
+    loadComponent: () =>
+      import('./verificar-dictamen/verificar-dictamen.component').then((m) => m.VerificarDictamenComponent),
+  },
+  {
+    path: 'detalle-v-dictamen',
+    loadComponent: () =>
+      import('./detalle-v-dictamen/detalle-v-dictamen.component').then((m) => m.DetalleVDictamenComponent),
+  },
 ];
 
 @NgModule({
