@@ -18,8 +18,10 @@ import {
 } from '@angular/forms';
 import { Subject, map, takeUntil, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '../../../core/queries/consulta.query';
-import { ConsultaioState } from '../../../core/estados/consulta.store';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormularioDinamico } from '../../../core/models/shared/forms-model';
 import { FormulariosService } from '../../../core/services/shared/formularios/formularios.service';
 import { SolicitanteService } from '../../../core/services/shared/solicitante/solicitante.service';
