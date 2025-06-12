@@ -827,4 +827,13 @@ export class Tramite10303Store extends Store<RegistroDeDonacion10303State> {
     public limpiarSolicitud(): void {
         this.reset();
     }
+
+    /**
+     * Actualiza el estado del store con los nuevos datos de donaciones extranjeras.
+     * @param nuevoDatos - Nuevo estado de donaciones extranjeras a establecer.
+     * @return {void}
+     */
+    public setDonacionesExtranjerasState(nuevoDatos: RegistroDeDonacion10303State): void {
+    this.update(nuevoDatos);
+  }
 }

@@ -28,6 +28,7 @@
                     [forma]="importacionTemporalFormGroup" 
                     [formularioDatos]="importacionTemporalDatos"
                     [estado]="solicitudState"
+                    [soloLectura]="consultaState.readonly"
                     (emitirCambioDeValor)="establecerCambioDeValor($event)"
                     >
                 </formas-dinamicas>
@@ -43,6 +44,7 @@
                 [forma]="depositoFiscalFormGroup" 
                 [formularioDatos]="depositoFiscalDatos"
                 [estado]="solicitudState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="establecerCambioDeValor($event)"
                 >
             </formas-dinamicas>
@@ -56,6 +58,7 @@
                 [forma]="elaboracionFormGroup" 
                 [formularioDatos]="elaboracionDatos"
                 [estado]="solicitudState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="establecerCambioDeValor($event)"
                 >
             </formas-dinamicas>
@@ -69,6 +72,7 @@
                 [forma]="recintoFiscalizadoFormGroup" 
                 [formularioDatos]="recintoFiscalizadoDatos"
                 [estado]="solicitudState"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="establecerCambioDeValor($event)"
                 >
             </formas-dinamicas>

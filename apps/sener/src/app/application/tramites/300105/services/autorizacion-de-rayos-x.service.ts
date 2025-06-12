@@ -1,5 +1,6 @@
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Observable, Subject, takeUntil } from 'rxjs';
+import { Tramite300105State, Tramite300105Store } from '../estados/tramite300105.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -58,7 +59,7 @@ export class AutorizacionDeRayosXService {
    * Parámetros:
    *   - http: Cliente HTTP para realizar solicitudes a los catálogos.
    */
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private tramite300105Store: Tramite300105Store) {
     // No se realiza ninguna acción aquí.
   }
 
@@ -123,5 +124,23 @@ export class AutorizacionDeRayosXService {
         (self[variable] as Catalogo[]) = resp?.code === 200 && resp.data ? resp.data : [];
       });
     }
+  }
+
+  /**
+   * Actualiza el estado del formulario estableciendo cada propiedad individualmente en el store
+   */
+  actualizarEstadoFormulario(DATOS: Tramite300105State): void {
+    Object.entries(DATOS).forEach(([campo, VALOR]) => {
+      this.tramite300105Store.establecerDatos({ [campo]: VALOR });
+    });
+  }
+
+  /**
+   * Método getAutorizacionDeRayosXDatos
+   * Descripción: Obtiene los datos del formulario de autorización de rayos X.
+   * Devuelve un observable con el estado del trámite 300105.
+   */
+  getAutorizacionDeRayosXDatos(): Observable<Tramite300105State> {
+    return this.http.get<Tramite300105State>('assets/json/300105/autorizacion-de-rayos-x-datos.json');
   }
 }

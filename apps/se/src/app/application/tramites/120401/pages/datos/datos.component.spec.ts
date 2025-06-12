@@ -15,6 +15,7 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { DatosComponent } from './datos.component';
 import { solicitud } from '@libs/shared/data-access-user/src';
+import { HttpClientModule } from '@angular/common/http';
 
 describe('DatosComponent', () => {
   let fixture;
@@ -22,7 +23,7 @@ describe('DatosComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule , ],
+      imports: [ FormsModule, ReactiveFormsModule , HttpClientModule],
       declarations: [
         DatosComponent,
       ],

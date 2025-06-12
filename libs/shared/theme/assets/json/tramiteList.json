@@ -598,7 +598,7 @@
     "id": 86,
     "tramite": 260203,
     "linkDashboard": "/cofepris/medicamentos-registro-sanitario/solicitud",
-    "linkDepartment": "/cofepris/medicamentos-registro-sanitario/solicitud",
+    "linkDepartment": "/pago/medicamentos-registro-sanitario/solicitud",
     "department": "cofepris"
   },
   {
@@ -1291,7 +1291,7 @@
     "id": 185,
     "tramite": 231003,
     "linkDashboard": "/semarnat/aviso-de-reciclaje/datos",
-    "linkDepartment": "/semarnat/aviso-de-reciclaje/datos",
+    "linkDepartment": "/pago/aviso-de-reciclaje/datos",
     "department": "semarnat"
   },
   {
