@@ -1,3 +1,4 @@
+import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
@@ -74,7 +75,9 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite240122Query,
-    private tramiteStore: Tramite240122Store // eslint-disable-next-line no-empty-function
+    private tramiteStore: Tramite240122Store,
+    private activatedRoute: ActivatedRoute,
+    private router: Router, // eslint-disable-next-line no-empty-function
   ) {}
 
   /**
@@ -120,4 +123,47 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   updateDatosDelTramiteFormulario(event: DatosDelTramiteFormState): void {
     this.tramiteStore.updateDatosDelTramiteFormState(event);
   }
+
+  
+      /**
+     * Actualiza la lista de destinatarios finales en el store del trámite.
+     *
+     * @method modificarMercanciasDatos
+     * @param {MercanciaDetalle[]} event - Lista de destinatarios finales actualizada.
+     * @returns {void}
+     */
+      modificarMercanciasDatos(datos: MercanciaDetalle): void {
+        this.tramiteStore.actualizarMercancias(datos);
+        this.irAAcciones();
+      }
+
+        /**
+     * Navega a una ruta relativa dentro del flujo actual.
+     * @method irAAcciones
+     * @param {string} accionesPath - Ruta relativa a la que se desea navegar.
+     * @returns {void}
+     */
+    irAAcciones(): void {
+      this.router.navigate(['../agregar-datos-mercancia'], {
+        relativeTo: this.activatedRoute,
+      });
+    }
+      
+      /**
+       * Elimina los datos de una mercancía específica del trámite actual.
+       *
+       * @param datos - Objeto de tipo `MercanciaDetalle` que contiene la información de la mercancía a eliminar.
+       *
+       * @remarks
+       * Este método verifica si el objeto `datos` es válido y, en caso afirmativo,
+       * llama al método `eliminarMercancias` del store para eliminar la mercancía correspondiente.
+       *
+       * @see TramiteStore.eliminarMercancias
+       */
+      eliminarMercanciasDatos(datos: MercanciaDetalle): void {
+        if (datos) {
+          this.tramiteStore.eliminarMercancias(datos);
+        }
+      }
+
 }
