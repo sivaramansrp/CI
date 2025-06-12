@@ -15,6 +15,8 @@ import {
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
 
+import { ConsultaioQuery} from "@ng-mf/data-access-user";
+
 import { Tramite260904State, Tramite260904Store } from '../../estados/tramite260904.store';
 
 import { Subject, map, takeUntil } from 'rxjs';
@@ -54,14 +56,34 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   public destroyed$ = new Subject<void>();
 
    /**
-         * Estado seleccionado del trámite 260911.
-         */
-        estadoSeleccionado!: Tramite260904State;
+    * Estado seleccionado del trámite 260911.
+    */
+  estadoSeleccionado!: Tramite260904State;
 
   /**
    * Lista de datos relacionados con bancos obtenidos desde el servicio.
    */
   public bancoList!: BancoList[];
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Indica si el campo de banco está deshabilitado.
+   * Cuando es `true`, el campo de selección de banco no se puede modificar.
+   */
+  disableBanco: boolean = false;
+
+  /**
+   * @desc Sujeto utilizado para notificar la destrucción del componente.
+   * Se emplea comúnmente para cancelar suscripciones y evitar fugas de memoria
+   * cuando el componente se destruye.
+   * @type {Subject<void>}
+   */
+  destroyNotifier$: Subject<void> = new Subject<void>();
 
   /**
    * Constructor para inyectar los servicios y las tiendas necesarias.
@@ -74,19 +96,38 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     private tramite260904Query: Tramite260904Query,
     private tramite260904Store: Tramite260904Store,
-    private Servicio: PagoDeDerechosService
+    private Servicio: PagoDeDerechosService,
+    private consultaQuery: ConsultaioQuery,
   ) {
-    // No se necesita lógica de inicialización adicional.
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
    * Hook de ciclo de vida para inicializar la lógica del componente y cargar datos.
    */
   ngOnInit(): void {
+
+    this.tramite260904Query.selectTramite260904$.pipe(
+      takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        if (data) {
+          this.estadoSeleccionado = data;
+        }
+      });
+
     this.crearForm();
     this.getValorStore();
     this.enPatchStoredFormData();
     this.getBancoList();
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -94,23 +135,48 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    */
   crearForm(): void {
     this.pagoDeDerechosForm = this.fb.group({
-      claveDeReferencia: ['', [Validators.maxLength(50)]],
-      cadenaPagoDependencia: ['', [Validators.maxLength(50)]],
-      clave: ['', Validators.required],
+      claveDeReferencia: [this.estadoSeleccionado.claveDeReferencia, [Validators.maxLength(50)]],
+      cadenaPagoDependencia: [this.estadoSeleccionado.cadenaPagoDependencia, [Validators.maxLength(50)]],
+      clave: [this.estadoSeleccionado.clave, Validators.required],
       llaveDePago: [
-        '',
+        this.estadoSeleccionado.llaveDePago,
         [Validators.required, Validators.pattern('^[A-Z0-9]{10}$')],
       ],
       fecPago: [
-        '',
+        this.estadoSeleccionado.fecPago,
         [Validators.required, PagoDeDerechosComponent.fechaLimValidator()],
       ],
       impPago: [
-        '',
+        this.estadoSeleccionado.impPago,
         [Validators.maxLength(16), PagoDeDerechosComponent.noComaValidator()],
       ],
     });
 }
+
+/**
+   * Inicializa el estado del formulario según si está en modo solo lectura o editable.
+   * Si el formulario es solo lectura, deshabilita los campos correspondientes.
+   * Si es editable, habilita los campos necesarios.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.disableBanco = true;
+      this.pagoDeDerechosForm.get('claveDeReferencia')?.disable();
+      this.pagoDeDerechosForm.get('cadenaPagoDependencia')?.disable();
+      this.pagoDeDerechosForm.get('clave')?.disable();
+      this.pagoDeDerechosForm.get('llaveDePago')?.disable();
+      this.pagoDeDerechosForm.get('fecPago')?.disable();
+      this.pagoDeDerechosForm.get('impPago')?.disable();
+    } else {
+      this.disableBanco = false;
+      this.pagoDeDerechosForm.get('claveDeReferencia')?.enable();
+      this.pagoDeDerechosForm.get('cadenaPagoDependencia')?.enable();
+      this.pagoDeDerechosForm.get('clave')?.enable();
+      this.pagoDeDerechosForm.get('llaveDePago')?.enable();
+      this.pagoDeDerechosForm.get('fecPago')?.enable();
+      this.pagoDeDerechosForm.get('impPago')?.enable();
+    }
+  }
 
 /**
  * Método para validar que el campo de un formulario no contenga comas.

@@ -1,7 +1,7 @@
-import { Catalogo, CatalogoSelectComponent, DATOS_GENERALES_REPRESENTACION, TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, DATOS_GENERALES_REPRESENTACION, TablaDinamicaComponent, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosEmpresaService } from '../../services/datos-empresa.service';
 import { RepresentacionFederal } from '../../modelos/datos-empresa.model';
@@ -70,7 +70,18 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
    */
   public representacion!: Catalogo[];
 
+  /**
+   * Subject que se utiliza para manejar la destrucción del componente.
+   */
+
   private destroyed$ = new Subject<void>();
+
+  /**
+   * Indica si el formulario es de solo lectura.
+   * Por defecto, se inicializa en false.
+   */
+
+  esFormularioSoloLectura: boolean = false; 
 
 
   /**
@@ -89,9 +100,17 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private query: Tramite120601Query,
     private store: Tramite120601Store,
-    private datosEmpresaService: DatosEmpresaService
+    private datosEmpresaService: DatosEmpresaService,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe()
   }
  /**
    * Inicializa el componente.
@@ -141,6 +160,11 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Recupera y establece la información de la representación federal.
+   * @returns {void}
+   */
+
   getRepresentacionFederal():void {
     this.datosEmpresaService.obtenerDatosDeRepresentacionFederal().subscribe((data)=>{
       this.representacion = data;
@@ -180,6 +204,11 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     this.store.setRepresentacion(this.formulario.get('representacion')?.value);
   }
 
+  /**
+   * Método que se ejecuta cuando se destruye el componente.
+   * Se utiliza para limpiar los recursos y evitar fugas de memoria.
+   * @returns {void}
+   */
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
