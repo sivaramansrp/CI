@@ -29,7 +29,7 @@
   </div>
   <!-- Lista de domicilios -->
   <ng-titulo titulo="Lista de domicilios" />
-    <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.BUTTON" [configuracionTabla]="listaTabla" (click)="onFilaClic($event)" [datos]="listaTablaDatos" ></app-tabla-dinamica>
+    <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.BUTTON" [configuracionTabla]="listaTabla" [desactivarButton]="soloLectura" (click)="onFilaClic($event)" [datos]="listaTablaDatos" ></app-tabla-dinamica>
   <!-- Plantas -->
   <ul class="nav nav-tabs">
     <li class="nav-item">
