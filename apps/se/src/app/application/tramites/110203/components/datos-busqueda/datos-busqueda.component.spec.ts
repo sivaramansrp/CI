@@ -43,6 +43,9 @@ describe('DatosBusquedaComponent', () => {
         observaciones: '',
         precisa: '',
         presenta: '',
+        medida: '',
+        comercializacion: '', 
+        tipo: '',
       }),
     };
 
