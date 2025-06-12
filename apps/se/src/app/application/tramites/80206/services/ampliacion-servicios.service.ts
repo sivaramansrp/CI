@@ -9,10 +9,12 @@
  */
 
 import { Observable, Subject, map } from 'rxjs';
+import { AmpliacionServiciosState } from '../estados/tramite80206.store';
 import { DatosResponse } from '../models/datos-info.model';
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { RespuestaCatalogos } from '@ng-mf/data-access-user';
+import { Tramite80206Store } from '../estados/tramite80206.store';
 
 @Injectable({
   providedIn: 'root',
@@ -23,7 +25,7 @@ export class AmpliacionServiciosService {
    * @constructor
    * @param {HttpClient} http - Cliente HTTP de Angular para realizar solicitudes.
    */
-  constructor(private readonly http: HttpClient) {
+  constructor(private readonly http: HttpClient, private tramiteStore: Tramite80206Store) {
     // No se necesita lógica de inicialización adicional.
   }
 
@@ -80,4 +82,33 @@ export class AmpliacionServiciosService {
       .get<RespuestaCatalogos>("assets/json/80206/sector-dropdown.json")
       .pipe(map((res) => res));
   }
+  /**
+   * Actualiza el estado del formulario con los datos proporcionados.
+   * @method actualizarEstadoFormulario
+   * @param {AmpliacionServiciosState} DATOS - Datos de ampliación de servicios.
+   */
+  actualizarEstadoFormulario(DATOS:AmpliacionServiciosState): void {
+    this.tramiteStore.setInfoRegistro(DATOS.infoRegistro);
+    this.tramiteStore.setRfcEmpresa(DATOS.fraccion);
+    this.tramiteStore.setImportacion(DATOS.importacion);
+    this.tramiteStore.setCantidad(DATOS.cantidad);
+    this.tramiteStore.setFraccionArancelaria(DATOS.fraccionArancelaria);
+    this.tramiteStore.setSeleccionaLaModalidad(DATOS.seleccionaLaModalidad);
+    this.tramiteStore.setSeleccionarRegla(DATOS.seleccionarRegla);
+    this.tramiteStore.setSector(DATOS.sector);
+    this.tramiteStore.setDatosSector(DATOS.datosSector);
+    this.tramiteStore.setIsSelectedRegla(DATOS.isSelectedRegla);
+    this.tramiteStore.setValor(DATOS.valor);
+    this.tramiteStore.setDatosImmex(DATOS.datosImmex);
+    this.tramiteStore.setDatosImportacion(DATOS.datosImportacion);
+
+
+  }
+
+  /**
+   * Obtiene los datos de ampliación de servicios desde un archivo JSON.
+   * @returns {Observable<AmpliacionServiciosState>} - Observable con el estado de ampliación de servicios.
+   */
+  getServiciosData(): Observable<AmpliacionServiciosState> {
+    return this.http.get<AmpliacionServiciosState>('assets/json/80206/datos-prefill.json')}
 }
