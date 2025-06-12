@@ -12757,5 +12757,15 @@
     "departamento": "sedena",
     "numeroDeProcedimiento": "240120",
     "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
-  }
+  },
+   {
+    "folioTramite": "099226136147361192499352",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "aga",
+    "numeroDeProcedimiento": "40302",
+    "origin": "READ_PROCEDURE"
+   }
 ]
