@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
@@ -13,7 +13,10 @@ import {
   SCIAN_TABLA,
 } from '../../../../shared/constantes/datos-solicitud.enum';
 
-import { Tramite260202State, Tramite260202Store } from '../../estados/tramite260202Store.store';
+import {
+  Tramite260202State,
+  Tramite260202Store,
+} from '../../estados/tramite260202Store.store';
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
@@ -43,6 +46,15 @@ import { Tramite260202Query } from '../../estados/tramite260202Query.query';
 })
 export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   /**
+   * @property {boolean} formularioDeshabilitado
+   * @description
+   * Indica si el formulario está deshabilitado. Por defecto es `false`.
+   */
+  @Input()
+  formularioDeshabilitado: boolean = false;
+  /**
+   *
+   *
    * @property {Subject<void>} destroyNotifier$
    * @description
    * Observable utilizado para notificar la destrucción del componente y liberar recursos.

@@ -23,6 +23,7 @@
           <button
             type="button"
             name="Buscar"
+            [disabled]="esFormularioSoloLectura"
             id="Buscar"
             class="btn btn-primary me-5"
             (click)="buscarTerceroNacionalIDC()"
@@ -126,6 +127,7 @@
           type="button"
           name="btnAceptarEnlace"
           id="btnAceptarEnlace"
+          [disabled]="esFormularioSoloLectura"
           class="btn btn-primary me-2"
           data-bs-toggle="modal"
           data-bs-target="#agregarEnlaceOperativo"
@@ -137,6 +139,7 @@
           type="button"
           name="btnModificarEnlace"
           id="btnModificarEnlace"
+          [disabled]="esFormularioSoloLectura"
           class="btn btn-secondary me-2"
           data-bs-toggle="modal"
           data-bs-target="#agregarEnlaceOperativo"
@@ -149,6 +152,7 @@
           name="btnCancelarEnlace"
           id="btnCancelar"
           class="btn btn-danger"
+          [disabled]="esFormularioSoloLectura"
           (click)="cerrarDialogoEnlaceOperativo()"
         >
           Eliminar
@@ -181,7 +185,9 @@
 >
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
-      <app-agregar-enlace-operativo (agregarEnlaceOperativo)="agregarEnlaceOperativo($event)"></app-agregar-enlace-operativo>
+      <app-agregar-enlace-operativo
+        (agregarEnlaceOperativo)="agregarEnlaceOperativo($event)"
+      ></app-agregar-enlace-operativo>
     </div>
   </div>
 </div>

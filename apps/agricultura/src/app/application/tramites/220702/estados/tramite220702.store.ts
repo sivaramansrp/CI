@@ -52,7 +52,7 @@ export interface TramiteState {
     exentoDePago:string;
     fechaDeInspeccion:string;
     fechaPagoDeDerechos:string;
-    
+   
 
 }
 
@@ -81,6 +81,12 @@ export function createInitialState(): TramiteState {
             identificacionTransporte: '',
             esSolicitudFerros: '',
             banco: '',
+            regimenAlQueDestina: '',
+            nombreDeLaEmpresaTransportista:'',
+            puntoDeVerificacion:'',
+            identificacionDelTransporte:'',
+            datosParaMovilizacion: '',
+            oficinaDeInspeccion: '',
         },
         InternaDatosGeneralesState: {
             folioDelTramite: 0,

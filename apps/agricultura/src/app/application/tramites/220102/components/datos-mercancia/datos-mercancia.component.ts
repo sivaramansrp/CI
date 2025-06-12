@@ -1,16 +1,18 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { Subject, takeUntil } from 'rxjs';
-
-import { Catalogo, ConfiguracionColumna, TablaSeleccion } from '@ng-mf/data-access-user';
+import {Subject, map , takeUntil } from 'rxjs';
 
 import { AGREGAR, EDITAR, IMPORTANTE } from '../../constantes/fitosanitario.enum';
+import { AlertComponent, Catalogo,CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { MercanciaForm } from '../../models/fitosanitario.model';
 
+import { CommonModule } from '@angular/common';
 import { DatosMercanciaService } from '../../services/datos-mercancia/datos-mercancia.service';
+
+import {ConsultaioQuery} from '@ng-mf/data-access-user'
 
 /**
  * @component
@@ -25,9 +27,11 @@ import { DatosMercanciaService } from '../../services/datos-mercancia/datos-merc
 @Component({
   selector: 'app-datos-mercancia',
   templateUrl: './datos-mercancia.component.html',
-  styleUrl: './datos-mercancia.component.css',
+  styleUrl: './datos-mercancia.component.scss',
+  standalone:true,
+  imports:[ReactiveFormsModule, FormsModule, TituloComponent, CatalogoSelectComponent, TablaDinamicaComponent, AlertComponent,CommonModule]
 })
-export class DatosMercanciaComponent implements OnInit, OnDestroy {
+export class DatosMercanciaComponent implements OnInit, OnDestroy,AfterViewInit {
   /**
     * @property {TablaSeleccion} tipoSeleccionarParaTabla
     * @description Tipo de selección para la tabla de solicitudes.
@@ -132,12 +136,26 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   * @description es una propiedad de tipo array que almacena una lista de objetos de tipo.
   */
   listaDeTablasSeleccionadas: MercanciaForm[] = [];
+    /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * @constructor
    * @param {FormBuilder} fb Servicio para la construcción de formularios reactivos.
    * @param {DatosMercanciaService} datosMercanciaService Servicio para obtener datos de la mercancía.
    */
-  constructor(private readonly fb: FormBuilder, private readonly datosMercanciaService: DatosMercanciaService, private readonly cdr: ChangeDetectorRef) {
+  constructor(private readonly fb: FormBuilder, private readonly datosMercanciaService: DatosMercanciaService, private readonly cdr: ChangeDetectorRef, private readonly consultaioQuery: ConsultaioQuery
+  ) {
+     this.consultaioQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.esFormularioSoloLectura = seccionState.readonly;
+            })
+          )
+          .subscribe();
     this.obtenerNombreComun();
     this.obtenerNombreCientifico();
     this.obtenerUso();
@@ -162,12 +180,26 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
         if (Array.isArray(data?.datos)) {
           this.cuerpoTabla = data.datos as MercanciaForm[];
         } else {
-          console.error("Expected an array but received:", data?.datos);
           this.cuerpoTabla = [];
         }
       });
 
 
+  }
+/**
+ * @descripcion
+ * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
+ * 
+ * Habilita o deshabilita el formulario `formMercancia` según el valor de `esFormularioSoloLectura`.
+ * Si el formulario está en modo solo lectura, se desactiva para evitar modificaciones.
+ */
+  ngAfterViewInit(): void {
+    if(this.esFormularioSoloLectura){
+      this.formMercancia.disable();
+    }
+    else{
+      this.formMercancia.enable();
+    }
   }
 
   /**
@@ -176,7 +208,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * Define los controles del formulario y sus validadores.
    * @returns {void}
    */
-  crearFormulario() {
+  crearFormulario():void {
     this.formMercancia = this.fb.group({
       id: [null],
       nombreComun: ['', Validators.required],
@@ -201,7 +233,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * Suscribe al observable para actualizar el catálogo de nombres comunes.
    * @returns {void}
    */
-  obtenerNombreComun() {
+  obtenerNombreComun():void {
     this.datosMercanciaService.obtenerSelectorList('nombrecomun.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.catalogoNombreComun = data;
     })
@@ -213,7 +245,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   * Suscribe al observable para actualizar el catálogo de nombres científicos.
   * @returns {void}
   */
-  obtenerNombreCientifico() {
+  obtenerNombreCientifico():void {
     this.datosMercanciaService.obtenerSelectorList('nombrecientifico.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.catalogoNombreCientifico = data;
     })
@@ -225,7 +257,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   * Suscribe al observable para actualizar el catálogo de usos.
   * @returns {void}
   */
-  obtenerUso() {
+  obtenerUso():void {
     this.datosMercanciaService.obtenerSelectorList('uso.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.catalogoUso = data;
     })
@@ -237,7 +269,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   * Suscribe al observable para actualizar el catálogo de países de origen.
   * @returns {void}
   */
-  obtenerPaisOrigen() {
+  obtenerPaisOrigen():void {
     this.datosMercanciaService.obtenerSelectorList('paisorigen.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.catalogoPaisOrigen = data;
     })
@@ -249,7 +281,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   * Suscribe al observable para actualizar el catálogo de países de procedencia.
   * @returns {void}
   */
-  obtenerPaisProcedencia() {
+  obtenerPaisProcedencia():void {
     this.datosMercanciaService.obtenerSelectorList('paisprocedencia.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.catalogoPaisProcedencia = data;
     })
@@ -261,7 +293,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   * Suscribe al observable para actualizar el catálogo de tipos de producto.
   * @returns {void}
   */
-  obtenerTipoProducto() {
+  obtenerTipoProducto():void {
     this.datosMercanciaService.obtenerSelectorList('tipoproducto.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.catalogoTipoProducto = data;
     })
@@ -273,7 +305,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
   * Suscribe al observable para actualizar el catálogo de UMCs.
   * @returns {void} 
   */
-  obtenerUmc() {
+  obtenerUmc():void {
     this.datosMercanciaService.obtenerSelectorList('umc.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       this.catalogoUmc = data;
     })
@@ -307,7 +339,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * Luego, limpia los datos del formulario.
    * @returns {void}
    */
-  almacenarDatoEnTabla(nombre: string) {
+  almacenarDatoEnTabla(nombre: string):void {
     this.estadoChecker = !this.estadoChecker;
     if (nombre === AGREGAR) {
       this.formMercancia.patchValue({
@@ -334,7 +366,7 @@ export class DatosMercanciaComponent implements OnInit, OnDestroy {
    * @description Método para resetear los valores del formulario de la mercancía.
    * @returns {void}
    */
-  limpiarDatosFormulario() {
+  limpiarDatosFormulario():void {
     this.cdr.detectChanges();
     this.formMercancia.reset();
   }

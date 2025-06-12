@@ -3,7 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { AvisoComponent } from './aviso.component';
 import { AvisoService } from '../../services/aviso.service';
-import { tramite32505Store } from '../../../../estados/tramites/trimite32505.store';
+import { Tramite32505Store } from '../../../../estados/tramites/trimite32505.store';
 import { Tramite32505Query } from '../../../../estados/queries/tramite32505.query';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { HttpClientModule } from '@angular/common/http';
@@ -46,7 +46,7 @@ describe('AvisoComponent', () => {
       imports: [ReactiveFormsModule,AvisoComponent,HttpClientModule],
       providers: [
         { provide: AvisoService, useValue: avisoServiceMock },
-        { provide: tramite32505Store, useValue: storeMock },
+        { provide: Tramite32505Store, useValue: storeMock },
         { provide: Tramite32505Query, useValue: tramiteQueryMock },
         { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
       ],
