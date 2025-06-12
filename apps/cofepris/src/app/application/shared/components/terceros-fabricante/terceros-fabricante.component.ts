@@ -19,8 +19,8 @@ import {
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   DEFAULT_TABLA_ORDEN,
-  TERCEROS_RELACIONADOS_TABLA_BODY_DATOS,
   TERCEROS_RELACIONADOS_TABLA_HEADER_DATOS,
+  TERCEROS_RELACIONADOS_TABLA_BODY_DATOS,
 } from '../../constantes/terceros-fabricante.enum';
 import {
   REGEX_CURP,
