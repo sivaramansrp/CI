@@ -11934,13 +11934,13 @@
     "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION"
   },
   {
-    "folioTramite": "0201157325726982922260510",
+    "folioTramite": "0201157325726982922260515",
     "tipoDeTramite": "Registro de solicitud de servicio",
     "nombreDeLaTarea": "Atender requerimiento",
     "fechaDeAsignacion": "2023-10-03",
     "estadoDeTramite": "Completado",
     "departamento": "cofepris",
-    "numeroDeProcedimiento": "260510",
+    "numeroDeProcedimiento": "260515",
     "origin": "FLUJO_FUNCIONARIO_ATENDER_REQUERIMIENTO"
   },
   {
