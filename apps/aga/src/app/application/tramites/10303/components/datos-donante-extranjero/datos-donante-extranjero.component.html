@@ -29,7 +29,7 @@
     <div class="row">
         <div class="col-md-4">
             <app-catalogo-select [catalogo]="pais" [label]="'País'" [required]="true" name="pais" formControlName="pais"
-                (change)="paisSeleccion()"></app-catalogo-select>
+                [isDisabled]="formularioDeshabilitado" (change)="paisSeleccion()"></app-catalogo-select>
         </div>
         <div class="col-md-4">
             <label class="form-label" for="codigoPostalDonante">{{ datosDonanteExtranjero.codigoPostalLabel }}*
@@ -70,7 +70,7 @@
         <div class="col-md-8">
             <app-catalogo-select [catalogo]="cveDocumentoResidencia" (change)="documentoResidenciaSeleccion()"
                 [label]="'Documento con el que acredita su residencia en el extranjero'" [required]="true"
-                name="cveDocumentoResidencia" formControlName="cveDocumentoResidencia"></app-catalogo-select>
+                name="cveDocumentoResidencia" [isDisabled]="formularioDeshabilitado" formControlName="cveDocumentoResidencia"></app-catalogo-select>
         </div>
     </div>
 </div>
