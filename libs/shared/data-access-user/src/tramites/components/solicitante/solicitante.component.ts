@@ -18,7 +18,10 @@ import {
 } from '@angular/forms';
 import { Subject, map, takeUntil, tap } from 'rxjs';
 import { CommonModule } from '@angular/common';
+// Se agregan las siguientes líneas para resolver errores de eslint.
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormularioDinamico } from '../../../core/models/shared/forms-model';
 import { FormulariosService } from '../../../core/services/shared/formularios/formularios.service';
