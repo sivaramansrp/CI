@@ -1,4 +1,5 @@
 import { AlertComponent, REGEX_PATRON_DECIMAL_2 } from "@libs/shared/data-access-user/src";
+import { ConsultaioQuery, ConsultaioState } from "@ng-mf/data-access-user";
 import { Catalogo } from "../../models/certificado-origen.model.js";
 import { CatalogoLista, } from "../../models/certificado-origen.model.js";
 import { CatalogoSelectComponent } from "@libs/shared/data-access-user/src";
@@ -303,7 +304,17 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * Contiene una lista de tipos de factura que el usuario puede seleccionar.
    */
   optionsTipoFactura!: Catalogo[];
-
+  /**
+     * @property {ConsultaioState} consultaDatos
+     * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+     */
+  consultaDatos!: ConsultaioState;
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
   /**
    * Constructor del componente CertificadoOrigenComponent.
    * 
@@ -320,8 +331,9 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     private certificadosOrigenService: CertificadosOrigenService,
     public store: Tramite110216Store,
     public tramiteQuery: Tramite110216Query,
-    private validacionesService: ValidacionesFormularioService
-    // eslint-disable-next-line no-empty-function
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery,
+
   ) { }
 
   /**
@@ -338,11 +350,21 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+    this.mercanciaDisponsiblesTablaDatos = this.solicitudState.mercanciaDisponsiblesTablaDatos ?? [];
+    this.mercanciaSeleccionadasTablaDatos = this.solicitudState.mercanciaSeleccionadasTablaDatos ?? [];
     this.inicializarFormularioCertificado();
     this.inicializarFormularioMercancia();
     this.inicializarFormularioArchivo();
-    this.cargarMercanciasDisponibles();
-    this.cargarMercanciasSeleccionadas();
     this.cargarTratado();
     this.cargarPais();
   }
@@ -404,7 +426,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         razonSocial: [this.solicitudState?.grupoOperador?.razonSocial, []],
       }),
       grupoDeDomicilio: this.fb.group({
-        pais: [this.solicitudState?.grupoTratado?.pais, []],
+        pais: [this.solicitudState?.grupoDeDomicilio?.pais, []],
         ciudad: [this.solicitudState?.grupoDeDomicilio?.ciudad, []],
         calle: [this.solicitudState?.grupoDeDomicilio?.calle, []],
         numeroLetra: [this.solicitudState?.grupoDeDomicilio?.numeroLetra, []],
@@ -423,6 +445,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         fechaInicial: [this.solicitudState?.grupoTratado?.fechaInicialInput, []],
       }),
     });
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -446,6 +469,31 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
       numeroFactura: [this.solicitudState?.formularioMercancia?.numeroFactura, []],
       tipoFactura: [this.solicitudState?.formularioMercancia?.tipoFactura, []],
     });
+    this.inicializarEstadoFormulario();
+  }
+  /**
+   * @method inicializarEstadoFormulario
+   * @description Inicializa el estado de los formularios según el modo de solo lectura.
+   * 
+   * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles de los formularios:
+   * - `formularioCertificado`
+   * - `formularioMercancia`
+   * - `formularioArchivo`
+   * 
+   * En caso contrario, habilita todos los controles de los formularios mencionados.
+   * 
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.formularioCertificado?.disable();
+      this.formularioMercancia?.disable();
+      this.formularioArchivo?.disable();
+    } else {
+      this.formularioCertificado?.enable();
+      this.formularioMercancia?.enable();
+      this.formularioArchivo?.enable();
+    }
   }
 
   /**
@@ -548,10 +596,12 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * @param {DisponiblesTabla} evento - La fila seleccionada en la tabla de mercancías disponibles.
    */
   disponiblesSeleccionDeFilas(evento: DisponiblesTabla): void {
-    this.disponiblesSeleccionadasFila = evento;
-    if (this.modalBuscar) {
-      const MODAL_INSTANCE = new Modal(this.modalBuscar.nativeElement);
-      MODAL_INSTANCE.show();
+    if (!this.soloLectura) {
+      this.disponiblesSeleccionadasFila = evento;
+      if (this.modalBuscar) {
+        const MODAL_INSTANCE = new Modal(this.modalBuscar.nativeElement);
+        MODAL_INSTANCE.show();
+      }
     }
   }
   /**
@@ -609,6 +659,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    */
   enviar(): void {
     this.cerrarModal();
+    this.cargarMercanciasSeleccionadas();
   }
 
   /**
