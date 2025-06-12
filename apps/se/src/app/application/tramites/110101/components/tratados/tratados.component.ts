@@ -1,5 +1,5 @@
 
-import { AlertComponent, ConsultaioQuery } from '@ng-mf/data-access-user';
+import { AlertComponent, ConfiguracionColumna, ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitante110101State, Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
@@ -9,6 +9,7 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/trami
 import { CommonModule } from '@angular/common';
 import { MENSAJE_ALERTA_TRATADOS } from '@ng-mf/data-access-user';
 import { PantallasSvcService } from '../../services/pantallas-svc.service';
+import { RegistroDeSolicitudesTabla } from '../../models/panallas110101.model';
 import { Solicitante110101Query } from '../../estados/queries/solicitante110101.query';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -33,7 +34,8 @@ import tratadosTable from '@libs/shared/theme/assets/json/110101/tratados-table.
     TableComponent,
     AlertComponent,
     CatalogoSelectComponent,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    TablaDinamicaComponent
   ]
 })
 export class TratadosComponent implements OnInit, OnDestroy {
@@ -176,18 +178,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
   }
 
 
-  /**
-   * Método para seleccionar un tratado.
-   * 
-   * Este método actualmente no tiene implementación. Puede ser implementado según los requisitos
-   * o eliminado si no es necesario.
-   * 
-   * @method seleccionar
-   */
-  // eslint-disable-next-line class-methods-use-this
-  seleccionar(): void {
-    // Implementar el método o eliminarlo si no es necesario
-  }
+
 
   /**
    * Encabezados comunes de la tabla de tratados.
@@ -196,14 +187,26 @@ export class TratadosComponent implements OnInit, OnDestroy {
    */
   encabezadosComunesTabla = tratadosTable.tableHeader;
 
-  /**
-   * Cuerpo de la tabla de tratados.
-   * 
-   * @property {any[]} cuerpoTabla - Array de datos del cuerpo de la tabla.
-   */
+ 
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  cuerpoTabla: any[] = tratadosTable.tableBody;
+ /**
+     * Un array de objetos `RegistroDeSolicitudesTabla` que representa los datos para la tabla de solicitudes.
+     */
+    public registroDeSolicitudesTablaDatos: RegistroDeSolicitudesTabla[] = [];
+
+/**
+   * Tipo de selección utilizado en la tabla, definido como casillas de verificación (checkbox).
+   * @type {TablaSeleccion}
+   */
+  tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
+
+ /** Configuración de la tabla de sectores */
+    public configuracionTabla: ConfiguracionColumna<RegistroDeSolicitudesTabla>[] = [
+        { encabezado: 'Pais o bloque', clave: (item: RegistroDeSolicitudesTabla) => item.pais, orden: 1 },
+        { encabezado: "Tratado o Acuerdo", clave: (item: RegistroDeSolicitudesTabla) => item.tratado, orden: 2 },
+        { encabezado: "Criterio de origen", clave: (item: RegistroDeSolicitudesTabla) => item.origen, orden: 3 }
+    ];
+
 
     /**
    * Agrega un nuevo tratado a la tabla.
@@ -215,6 +218,7 @@ export class TratadosComponent implements OnInit, OnDestroy {
    */
   agregarTratado(): void {
     if (this.formularioTratados.valid) {
+      this.registroDeSolicitudesTablaDatos.push({ ...this.TalbleData });
       this.formularioTratados.reset();
     }
   }
@@ -231,6 +235,45 @@ export class TratadosComponent implements OnInit, OnDestroy {
       this.formularioTratados.enable();
     }
   }
+
+/**
+ * Objeto que representa los datos de una fila en la tabla de registros de solicitudes.
+ * 
+ * @property {string} pais - Nombre del país asociado al registro.
+ * @property {string} tratado - Nombre del tratado relacionado.
+ * @property {string} origen - Origen del registro.
+ */
+TalbleData: RegistroDeSolicitudesTabla = {
+  pais:'',
+  tratado: '',
+  origen: ''
+}
+  
+/**
+ * Obtiene la descripción correspondiente a un valor seleccionado en un formulario
+ * a partir de un arreglo de catálogo y la asigna a la propiedad correspondiente
+ * en el objeto `TalbleData`.
+ *
+ * @param arr - Arreglo de objetos de tipo `Catalogo` que contiene los datos del catálogo.
+ * @param formControl - Nombre del control del formulario cuyo valor se utilizará para buscar la descripción.
+ *
+ * Asigna la descripción encontrada a la propiedad correspondiente de `TalbleData` según el control:
+ * - Si `formControl` es 'pais', asigna a `TalbleData.pais`.
+ * - Si `formControl` es 'tratado', asigna a `TalbleData.tratado`.
+ * - Si `formControl` es 'origen', asigna a `TalbleData.origen`.
+ */
+ getLabelFromCatalogData(arr:Catalogo[],formControl:string): void {
+  const ID = this.formularioTratados.get(formControl)?.value;
+  const LABLE = arr.find(item => item.id.toString() === ID)?.descripcion;
+  if(formControl === 'pais') {
+    this.TalbleData.pais = LABLE || '';
+  }else if(formControl === 'tratado') {
+    this.TalbleData.tratado = LABLE || '';
+}else if(formControl === 'origen') {
+    this.TalbleData.origen = LABLE || '';
+  }
+}
+
   /**
    * Establece el valor de un campo en el store de Tramite31601.
    * @param form - El grupo de formularios que contiene el campo.
