@@ -116,6 +116,7 @@ export class AvisoDeCambioComponent implements OnDestroy, OnInit, AfterViewInit 
    * Inicialización del componente
    */
   ngOnInit(): void {
+    this.crearFormulario();
     this.cargarEstadoTramite();
     this.obtenerFormaDatos();
     this.obtenerInstalacionesPrincipalesTablaDatos();

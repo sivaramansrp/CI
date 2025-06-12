@@ -11912,5 +11912,15 @@
     "departamento": "cofepris",
     "numeroDeProcedimiento": "260513",
     "origin": "READ_PROCEDURE"
+  },
+  {
+    "folioTramite": "099226136147361192260513",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "aga",
+    "numeroDeProcedimiento": "6502",
+    "origin": "READ_PROCEDURE"
   }
 ]
