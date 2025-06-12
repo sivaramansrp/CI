@@ -1,6 +1,6 @@
 {
     "tabSeleccionado": 1,
-    "destinatarioFinalTablaDatos": {
+    "destinatarioFinalTablaDatos": [{
         "nombreRazonSocial": "Empresa Destinatario SA de CV",
         "rfc": "DEST123456ABC",
         "curp": "DEST800101HDFABC01",
@@ -23,8 +23,8 @@
         "segundoApellido": "",
         "estado": "Activo",
         "tableindex": 0
-    },
-    "proveedorTablaDatos": {
+    }],
+    "proveedorTablaDatos": [{
         "nombreRazonSocial": "Proveedor Internacional SA",
         "rfc": "PROV654321XYZ",
         "curp": "PROV900202MDFXYZ02",
@@ -41,16 +41,16 @@
         "estadoLocalidad": "Texas",
         "codigoPostal": "77001",
         "tableIndex": 0
-    },
+    }],
     "pagoDerechos": {
         "claveReferencia": "REF123456",
         "cadenaDependencia": "SAT-2024-01",
-        "banco": "BBVA",
+        "banco": "1",
         "llavePago": "LLAVE7890",
         "fechaPago": "2024-03-08",
         "importePago": "15000.00"
     },
-    "merccancialTablaDatos": {
+    "merccancialTablaDatos": [{
         "fraccionArancelaria": "0102030405",
         "descripcionFraccion": "Electrodomésticos",
         "unidadMedidaTarifa": "Pieza",
@@ -61,7 +61,7 @@
         "descripcion": "Licuadoras eléctricas",
         "paisOrigen": "China",
         "tableIndex": 0
-    },
+    }],
     "datosDelTramite": {
         "permisoGeneral": "PG-2024-001",
         "usoFinal": "Venta",

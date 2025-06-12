@@ -68,8 +68,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.notificadorDestruccion$))
       .subscribe((datos) => {
         if (datos) {
-          this.datosRespuestaDisponibles = true;
           this.servicio.establecerDatosDeLaSolicitud(datos);
+          this.datosRespuestaDisponibles = true;
         }
       });
   }
