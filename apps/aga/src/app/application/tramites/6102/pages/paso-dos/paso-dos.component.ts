@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
@@ -58,6 +58,26 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * Se emite un valor cuando el componente se destruye, lo que permite completar las suscripciones activas.
    */
   private destroy$: Subject<void> = new Subject<void>();
+
+  /**
+   * Evento de salida que se emite cuando se solicita reenviar la información o acción correspondiente.
+   * 
+   * @event
+   * @remarks
+   * Este evento no emite ningún valor (void) y puede ser utilizado por componentes padres para reaccionar
+   * a la acción de reenvío solicitada desde este componente.
+   */
+  @Output() reenviarEvento = new EventEmitter<void>();
+
+
+  /**
+   * Evento de salida que se emite cuando el usuario desea regresar a la sección de cargar documento.
+   * 
+   * @event
+   * @remarks
+   * Este evento no emite ningún valor (void) y puede ser utilizado por componentes padres para manejar la navegación o lógica asociada al regreso a la sección de carga de documentos.
+   */
+  @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>()
 
 
   /**
