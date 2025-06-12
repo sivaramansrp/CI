@@ -16,12 +16,13 @@
         <div class="form-group pull-right">
           <button
             type="button"
+            [disabled]="consultaState.readonly"
             class="btn btn-danger me-5"
             (click)="cancelar()"
           >
             Cancelar
           </button>
-          <button type="submit" class="btn btn-primary" (click)="continuar()">
+          <button type="submit" class="btn btn-primary" (click)="continuar()" [disabled]="consultaState.readonly">
             Continuar
           </button>
         </div>
