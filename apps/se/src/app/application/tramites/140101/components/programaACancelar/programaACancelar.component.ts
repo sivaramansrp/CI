@@ -1,21 +1,34 @@
-import { Component, OnDestroy,OnInit } from '@angular/core';
+import { Component, Input, OnDestroy,OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
-import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TablePaginationComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { InputCheckComponent, TablaDinamicaComponent, TablaSeleccion, TablePaginationComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Programa140101State, Tramite140101Store } from '../../../../estados/tramites/tramite140101.store';
 import { ProgramaACancelar,TABLE_ID} from '../../../../shared/models/programa-cancelar.model';
+import { PROGRAMA_TABLA } from '../../../../shared/constantes/programa.enum';
 import { ProgramaACancelarService } from '../../services/programACancelar.service';
 import { Tramite140101Query } from '../../../../estados/queries/tramite140101.query';
 import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src/core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
-
 /**
- * Componente que representa la sección de Programa A Cancelar.
- * Este componente es responsable de gestionar el formulario y los datos de la tabla
- * relacionados con la cancelación de un programa.
+ * Componente encargado de gestionar la sección "Programa a Cancelar" dentro del trámite 140101.
+ * Permite visualizar, seleccionar y confirmar la cancelación de un programa, mostrando los datos
+ * en una tabla dinámica y gestionando el formulario asociado.
+ *
+ * - Inicializa y mantiene el estado del formulario reactivo.
+ * - Carga los datos de los programas disponibles para cancelar.
+ * - Permite la selección de un programa y actualiza el estado global.
+ * - Soporta modo solo lectura para escenarios donde la edición no está permitida.
+ * - Gestiona la suscripción y limpieza de recursos para evitar fugas de memoria.
+ *
+ * @example
+ * <app-programa-a-cancelar [soloLectura]="true"></app-programa-a-cancelar>
+ *
+ * @see ProgramaACancelarService
+ * @see Tramite140101Store
+ * @see Tramite140101Query
  */
 @Component({
   selector: 'app-programa-a-cancelar',
@@ -24,6 +37,7 @@ import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src
   standalone: true,
   imports: [
     CommonModule,
+    InputCheckComponent,
     ReactiveFormsModule,
     TablaDinamicaComponent,
     TablePaginationComponent,
@@ -34,7 +48,7 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
   /**
    * Grupo de formularios para gestionar los controles del formulario en el componente.
    */
-  ProgramaForm!: FormGroup;
+  public programaForm!: FormGroup;
   
   /**
    * Notificador utilizado para destruir suscripciones activas en el componente.
@@ -53,72 +67,76 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
    * @see {@link Subject}
    */
   public destroyNotifier$: Subject<void> = new Subject();
-   
-  /**
-   * Suscripción utilizada para gestionar la obtención de datos del programa.
-   */
-  private getProgramaSubscription!: Subscription;
-
+  
   /**
    * Estado de la sección Programa A Cancelar.
    */
-  public ProgramaState!: Programa140101State;
+  public programaState!: Programa140101State;
   
   /**
    * Identificador único asociado a la tabla.
    * Este valor se inicializa con el identificador proporcionado por `TableId`.
    */
-  Id:string = TABLE_ID;
-  /**
-   * Configuración de las columnas de la tabla mostrada en el componente.
-   */
+  public Id:string = TABLE_ID;
+  
 
-  public encabezadoDeTabla: ConfiguracionColumna<ProgramaACancelar>[] = [
-    { encabezado: 'Folio Programa', clave: (item:ProgramaACancelar) => item.folioPrograma, orden: 1 },
-    { encabezado: 'Selección de Modalidad',clave: (item:ProgramaACancelar) => item.modalidad, orden: 2 },
-    { encabezado: 'Representación Federal', clave: (item:ProgramaACancelar) => item.representacionFederal, orden: 3 },
-    { encabezado: 'Tipo Programa', clave: (item:ProgramaACancelar) => item.tipoPrograma, orden: 4 },
-    { encabezado: 'Estatus', clave: (item:ProgramaACancelar) => item.estatus, orden: 5 },
-  ];
+  /**
+   * Encabezado de la tabla utilizado en el componente.
+   * 
+   * Esta propiedad almacena la configuración de los encabezados de la tabla
+   * para el programa a cancelar, utilizando la constante `PROGRAMA_TABLA`.
+   * 
+   * @see PROGRAMA_TABLA
+   */
+  public encabezadoDeTabla = PROGRAMA_TABLA;
 
   /**
    * Datos que se mostrarán en la tabla.
    */
-  datosTabla: ProgramaACancelar[] = [];
+  public datosTabla: ProgramaACancelar[] = [];
 
   /**
    * Número total de elementos en la tabla.
    */
-  totalItems = 0;
+  public totalItems = 0;
 
   /**
    * Número de página actual para la paginación.
    */
-  currentPage = 1;
+  public currentPage = 1;
 
   /**
    * Número de elementos por página para la paginación.
    */
-  itemsPerPage = 5;
+  public itemsPerPage = 5;
 
   /**
    * Enumeración para la selección de la tabla.
    */
-  TablaSeleccion = TablaSeleccion;
+  public tablaSeleccion = TablaSeleccion;
 
   /**
    * ID del botón de radio seleccionado en la tabla.
    */
-  radioId!: number;
+  public radioId!: number;
 
   /**
-   * Constructor del componente.
-   * Inicializa el grupo de formularios e inyecta los servicios requeridos.
+   * Indica si el componente debe estar en modo solo lectura.
+   * Cuando es `true`, los elementos del componente no serán editables.
+   * @default false
+   */
+  @Input() soloLectura: boolean = false;
+
+  /**
+   * Constructor del componente ProgramaACancelar.
    * 
-   * @param fb - FormBuilder para crear formularios reactivos.
-   * @param programaACancelarService - Servicio para gestionar los datos de Programa A Cancelar.
-   * @param tramite140101Store - Store para gestionar el estado de Trámite 140101.
-   * @param tramite140101Query - Servicio de consulta para acceder al estado de Trámite 140101.
+   * @param fb Servicio para la creación y gestión de formularios reactivos.
+   * @param programaACancelarService Servicio encargado de la lógica relacionada con el programa a cancelar.
+   * @param formValidator Servicio para validaciones personalizadas de formularios.
+   * @param tramite140101Store Almacén de estado para el trámite 140101.
+   * @param tramite140101Query Consultas y selectores para el estado del trámite 140101.
+   * 
+   * El constructor se utiliza para la inyección de dependencias necesarias en el componente.
    */
   constructor(
     private fb: FormBuilder,
@@ -138,41 +156,58 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
     this.cargarDatos();
     this.inicializarFormulario();
   }
-
+  
   /**
-   * Inicializa el formulario con datos del estado.
+   * Inicializa el formulario `ProgramaForm` con los valores actuales del estado `ProgramaState`.
+   * 
+   * - Suscribe al observable `selectSolicitud$` para actualizar el estado local `ProgramaState` cuando cambie.
+   * - Crea el formulario reactivo con los valores correspondientes, algunos de ellos deshabilitados según el contexto.
+   * - Asigna valores auxiliares como `radioId` y `datosTabla` desde el estado.
+   * - Si la propiedad `soloLectura` es verdadera, deshabilita todo el formulario para evitar modificaciones.
+   * 
+   * @remarks
+   * Este método debe llamarse durante la inicialización del componente para asegurar que el formulario refleje el estado más reciente.
    */
   inicializarFormulario(): void {
-    this.getProgramaSubscription.add(
       this.tramite140101Query.selectSolicitud$
         .pipe(
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {
-            this.ProgramaState = seccionState;
+            this.programaState = seccionState;
           })
         )
-        .subscribe()
-    );
+        .subscribe();
 
-      this.ProgramaForm = this.fb.group({
-      folioPrograma: [{ value: this.ProgramaState?.programaACancelar?.folioPrograma, disabled: true }],
-      idProgramaSeleccionado: [this.ProgramaState?.programaACancelar?.idProgramaSeleccionado],
-      modalidad: [{ value: this.ProgramaState?.programaACancelar?.modalidad, disabled: true }],
-      representacionFederal: [{ value: this.ProgramaState?.programaACancelar?.representacionFederal, disabled: true }],
-      tipoPrograma: [{ value: this.ProgramaState?.programaACancelar?.tipoPrograma, disabled: true }],
-      estatus: [{ value: this.ProgramaState?.programaACancelar?.estatus, disabled: true }],
-      solicitudObservaciones: [this.ProgramaState?.solicitudObservaciones, Validators.required],
-      confirmar: [this.ProgramaState?.confirmar, Validators.requiredTrue],
+      this.programaForm = this.fb.group({
+      folioPrograma: [{ value: this.programaState?.programaACancelar?.folioPrograma, disabled: true }],
+      idProgramaSeleccionado: [this.programaState?.programaACancelar?.idProgramaSeleccionado],
+      modalidad: [{ value: this.programaState?.programaACancelar?.modalidad, disabled: true }],
+      representacionFederal: [{ value: this.programaState?.programaACancelar?.representacionFederal, disabled: true }],
+      tipoPrograma: [{ value: this.programaState?.programaACancelar?.tipoPrograma, disabled: true }],
+      estatus: [{ value: this.programaState?.programaACancelar?.estatus, disabled: true }],
+      solicitudObservaciones: [this.programaState?.solicitudObservaciones, Validators.required],
+      confirmar: [this.programaState?.confirmar, Validators.requiredTrue],
     });
 
-    this.radioId = this.ProgramaState?.radio;
-    this.datosTabla = this.ProgramaState?.datos;
+    this.radioId = this.programaState?.radio;
+    this.datosTabla = this.programaState?.datos;
+    if(this.soloLectura) {
+      this.programaForm.disable();
+    }
   }
 
-  /**
-   * Carga los datos para el componente utilizando el servicio.
-   */
-  cargarDatos(): void {
+    /**
+     * Carga los datos utilizando el servicio `programaACancelarService` y actualiza la tabla de datos.
+     * 
+     * - Realiza una suscripción al observable devuelto por `obtenerDatos()`.
+     * - Convierte la respuesta en un arreglo si no lo es.
+     * - Actualiza la propiedad `datosTabla` con los datos obtenidos.
+     * - Almacena los datos en el store `tramite140101Store`.
+     * - La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$`.
+     * 
+     * @returns {void} No retorna ningún valor.
+     */
+    cargarDatos(): void {
     this.programaACancelarService.obtenerDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
@@ -197,8 +232,14 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
     (this.tramite140101Store[metodoNombre] as (value: string) => void)(VALOR);
   }
 
+  /**
+   * Verifica si un campo específico del formulario es válido.
+   *
+   * @param field - El nombre del campo del formulario a validar.
+   * @returns `true` si el campo es válido, `false` si no lo es, o `null` si no se puede determinar.
+   */
   isValid(field: string): boolean | null {
-    return this.formValidator.isValid(this.ProgramaForm, field);
+    return this.formValidator.isValid(this.programaForm, field);
   }
 
   /**
@@ -212,7 +253,7 @@ export class ProgramaACancelarComponent implements OnInit, OnDestroy {
     const INDEX = this.datosTabla.findIndex((x) => x.idProgramaSeleccionado === row.idProgramaSeleccionado);
     this.radioId = INDEX;
     this.tramite140101Store.setRadioSelection(INDEX);
-    this.ProgramaForm.patchValue({
+    this.programaForm.patchValue({
       folioPrograma: row.folioPrograma,
       idProgramaSeleccionado: row.idProgramaSeleccionado,
       modalidad: row.modalidad,
