@@ -13,8 +13,8 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { INPUT_FECHA_CONFIG } from '../../constantes/pago-banco.enum';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { PagoBancoService } from '../../services/pago-banco.service';
 import { TramitePagoBancoQuery } from '../../estados/queries/pago-banco.query';
 
@@ -63,7 +63,7 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
     private tramitePagoBancoStore: TramitePagoBancoStore,
     private tramitePagoBancoQuery: TramitePagoBancoQuery,
     @Inject(PagoBancoService)
-    private service: PagoBancoService,
+    private servicio: PagoBancoService,
     private consultaioQuery: ConsultaioQuery
   ) {
     this.obtenerDatosBanco();
@@ -169,7 +169,7 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
    * @param e {Catalogo} Banco seleccionado.
    */
   obtenerDatosBanco(): void {
-    this.service
+    this.servicio
       .consultarDatosBanco()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
