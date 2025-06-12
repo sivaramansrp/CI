@@ -1224,6 +1224,15 @@
     "numeroDeProcedimiento": "260501"
   },
   {
+    "id": 140102,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "140102"
+  },
+  {
     "id": 260504,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -1727,6 +1736,14 @@
   "diasTranscurridos": "4",
   "departamento": "SE",
   "numeroDeProcedimiento": "110219"
+},
+{ "id": 10703,
+        "tipoDeTramite": "Solicitud de Permiso",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "10703"
 },
  {
     "id": 240119,

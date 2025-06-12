@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { MercanciaInstalada } from '../models/exencion-impuestos.model';
 import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { TableDataNgTable } from '../models/exencion-impuestos.model';
 @Injectable({
   providedIn: 'root',
 })
@@ -42,8 +42,8 @@ export class ExencionDeImpuestosService {
    *
    * @returns Observable de `TableDataNgTable` con los datos de la tabla de mercancías.
    */
-  getMercanciaTbl(): Observable<TableDataNgTable> {
-    return this.http.get<TableDataNgTable>(
+  getMercanciaTbl(): Observable<MercanciaInstalada[]> {
+    return this.http.get<MercanciaInstalada[]>(
       'assets/json/10703/mercancia-table.json'
     );
   }
