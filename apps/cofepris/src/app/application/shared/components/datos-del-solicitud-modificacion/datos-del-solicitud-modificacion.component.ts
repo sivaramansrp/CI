@@ -67,13 +67,14 @@ import {
   PropietarioTipoPersona,
   ScianModel,
 } from '../../models/datos-de-la-solicitud.model';
-import { map, Subject, Subscription, takeUntil } from 'rxjs';
+import { Subject ,map, takeUntil } from 'rxjs';
 import { ScianData } from '../../../shared/models/datos-modificacion.model';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { EstablecimientoService } from '../../services/establecimiento.service';
 import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-representante-seccion/manifiestos-representante-seccion.component';
+
 import { NUEVA_NOTIFICACION, PAIS_DE_PROCEDENCIA_LABEL } from '../../constantes/datos-domicilio-legal.enum';
 /*
  ** component
@@ -481,10 +482,7 @@ export class DatosDelSolicitudModificacionComponent
       );
     }
   }
-/**
-   * Suscripción a los cambios en el formulario react
-   */
-  private subscription: Subscription = new Subscription();
+
   /**
    * Texto de los manifiestos.
    */
@@ -533,13 +531,13 @@ export class DatosDelSolicitudModificacionComponent
         takeUntil(this.destroy$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-
-          this.inicializarEstadoFormulario();
         })
       )
+      .subscribe()
   }
 
   /**
+   * Método de inicialización del componente.
    */
   ngOnInit(): void {
     this.loadScian();
@@ -574,46 +572,7 @@ export class DatosDelSolicitudModificacionComponent
         })
       });
   }
- /**
-   * Inicializa el estado del formulario.
-   * @returns void
-   * @description Inicializa el estado del formulario.
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
-    } else {
-      this.inicializarFormulario();
-    }
-   
-  }
 
-    /*
-  **
-    * Guarda los datos del formulario y ajusta su estado según si es de solo lectura o no.
-    * @returns void
-    * @description Guarda los datos del formulario y ajusta su estado según si es de solo lectura o no. 
-    */
-    guardarDatosFormulario(): void {
-      this.inicializarFormulario();
-      if (this.esFormularioSoloLectura) {
-       this.domicilioEstablecimiento.disable();
-      this.solicitudEstablecimientoForm.disable();
-      this.scianForm.disable();
-      this.formMercancias.disable();
-
-      } else if (!this.esFormularioSoloLectura) {
-        this.domicilioEstablecimiento.enable();
-        this.solicitudEstablecimientoForm.enable();
-        this.scianForm.enable();
-        this.formMercancias.enable();
-
-      } 
-  }
-
-  inicializarFormulario(): void {
-    this.crearAgregarFormulario();
-  }
   /**
   * @method obtenerScianTablaDatos
   * @description

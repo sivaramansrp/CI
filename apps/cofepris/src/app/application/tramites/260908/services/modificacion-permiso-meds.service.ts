@@ -14,7 +14,7 @@ import { PermisoImportacionBiologicaStore } from '../../../shared/estados/permis
   providedIn: 'root',
 })
 
-export class ModificacionPermisoSanitario{
+export class ModificacionPermisoMeds{
      /**
    * AppConfig es una inyección de dependencias que proporciona la configuración de la aplicación.
    */

@@ -25,7 +25,6 @@ import { TramiteRelacionadaseStore } from '../../estados/stores/terceros-relacio
   imports: [
     CommonModule,
       TituloComponent,
-      TableComponent,
       AlertComponent,
       FormsModule,
       ReactiveFormsModule,

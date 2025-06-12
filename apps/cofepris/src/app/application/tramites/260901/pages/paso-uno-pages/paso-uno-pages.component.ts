@@ -24,7 +24,9 @@ import { TercerosRelacionadosFabSeccionComponent } from '../../../../shared/comp
 import { TramitesAsociadosSeccionComponent } from '../../../../shared/components/tramites-asociados-seccion/tramites-asociados-seccion.component';
 
 import { CompleteForm, Destinatario, DomicilioEstablecimiento, Fabricante, Facturador, FormMercancias, PagoDeDerechos, Proveedor, ScianForm, SolicitanteData, SolicitudEstablecimientoForm, SolicitudForm, TercerosRelacionados, Tramite } from '../../models/mod-permiso.model';
-import { Subject ,map, takeUntil } from 'rxjs';
+import { Subject ,forkJoin,map, takeUntil } from 'rxjs';
+
+import { ModificacionPermisoSanitario } from '../../services/modificacion-permiso-sanitario.service';
 /*
   * @description
 */
@@ -55,16 +57,29 @@ import { Subject ,map, takeUntil } from 'rxjs';
  *   la vista haya sido renderizada.
  */
 export class PasoUnoPagesComponent implements OnInit,OnDestroy{
-/** Datos de respuesta del servidor utilizados para actualizar el formulario. */
-  public esDatosRespuesta: boolean = false;
+     /**
+     * showPreFillingOptions
+     * Indica si se deben mostrar las opciones de prellenado.
+     */
+ showPreFillingOptions: boolean = false; 
 
-  /** Subject para notificar la destrucción del componente. */
-  private destroyNotifier$: Subject<void> = new Subject();
-  /**
-   * 
+   /**
+   * Indica si se están mostrando los datos de respuesta.
    */
-  public consultaState!:ConsultaioState;
-  constructor( private consultaQuery: ConsultaioQuery){
+  public esDatosRespuesta: boolean = false;
+  /**
+   * Estado actual de la consulta.
+   */
+  public consultaState!: ConsultaioState;
+  /**
+   * Notificador para destruir las suscripciones y evitar fugas de memoria.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  constructor( private consultaQuery: ConsultaioQuery,
+    
+        private solocitudService: ModificacionPermisoSanitario,
+  ){
 
   }
    ngOnInit(): void {
@@ -72,11 +87,28 @@ export class PasoUnoPagesComponent implements OnInit,OnDestroy{
           this.consultaState = seccionState;
       })).subscribe();
     if(this.consultaState.update) {
-    //  this.guardarDatosFormulario();
+    this.guardarDatosFormulario();
     } else {
       this.esDatosRespuesta = true;
     }
   }
+
+   guardarDatosFormulario(): void {
+      forkJoin({
+        registro: this.solocitudService.getRegistroTomaMuestrasMercanciasData(),
+        permiso: this.solocitudService.getPagoDerechos()
+      })
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe(({ registro, permiso }) => {
+          if (registro) {
+            this.esDatosRespuesta = true;
+            this.solocitudService.actualizarEstadoFormulario(registro);
+          }
+          if (permiso) {
+            this.solocitudService.actualizarPagoDerechosFormulario(permiso);
+          }
+        });
+    }
   /**
    * Referencia al componente `SolicitanteComponent` para acceder a sus métodos y propiedades.
    */
