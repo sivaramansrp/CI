@@ -153,6 +153,11 @@ export class DomicilioComponent implements OnInit, OnDestroy {
   public esFormularioSoloLectura: boolean = false;
 
   /**
+   * Indica si el formulario es de actualización.
+   */
+  private esFormularioActualizacion: boolean = false;
+
+  /**
    * Datos completos de los establecimientos.
    */
   public fullEstablecimientoBodyData = [];
@@ -175,7 +180,8 @@ export class DomicilioComponent implements OnInit, OnDestroy {
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState)=>{
-        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.esFormularioSoloLectura = seccionState.readonly;
+        this.esFormularioActualizacion = seccionState.update;
       })
     )
     .subscribe()
@@ -191,7 +197,7 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       } else {
         this.inicializarFormulario();
       }
-      if(this.esFormularioSoloLectura) {
+      if(this.esFormularioSoloLectura || this.esFormularioActualizacion) {
         this.obtenerScianTablaDatos();
         this.obtenerDataMercanciasDatos();
       }
@@ -268,7 +274,6 @@ export class DomicilioComponent implements OnInit, OnDestroy {
       numeroPermiso: [this.solicitudState?.numeroPermiso],
       paisDeOriginDatos: [this.solicitudState?.aduanasDeEntrada || []],
       garantiasOfrecidas: [this.solicitudState?.garantiasOfrecidas],
-      scian: [''],
     });
       }
 

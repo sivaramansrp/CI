@@ -18,6 +18,7 @@
               name="tipoSolicitud"
               [formControlName]="item.props.campo"
               (change)="seleccionCatalogo(item.props.labelNombre, $event)"
+              [isDisabled]="esFormularioSoloLectura"
             ></app-catalogo-select>
             } @case(inputTypes.TEXT) { @if((!item.props.availableRadioOptions)
             || (item.props.availableRadioOptions &&

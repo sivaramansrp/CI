@@ -4,18 +4,13 @@
       <div class="col-md-8">
         <div class="form-group">
           <label class="form-label" for="importPermitNumber">Número de permiso de importación de PLAFEST*</label>
-          <input
-            class="form-control"
-            id="numeroDPmiso"
-            formControlName="numeroDePermiso"
-            type="text"
-            (change)="setValoresStore(aduanerasInformacionesForm,'numeroDePermiso', 'setNumeroDPmiso')"
-          />
+          <input class="form-control" id="numeroDPmiso" formControlName="numeroDePermiso" type="text"
+            (change)="setValoresStore(aduanerasInformacionesForm,'numeroDePermiso', 'setNumeroDPmiso')" />
         </div>
       </div>
       <div class="col-md-4 m-top">
         <div class="btn-group">
-          <button class="btn btn-default" type="button" (click)="enEnviar()" >Cargar Aduanas</button>
+          <button class="btn btn-default" type="button" (click)="enEnviar()">Cargar Aduanas</button>
         </div>
       </div>
     </div>
@@ -29,7 +24,8 @@
           <label>Aduanas actuales*:</label>
           <div class="box-first">
             <ul class="list-first-box">
-              <li *ngFor="let item of aduanasDisponibles; let i = index" class="box-item-frst">{{ item.name }}</li>
+              <li *ngFor="let item of aduanasDisponiblesSeleccionadas; let i = index" class="box-item-frst">{{ item }}
+              </li>
             </ul>
           </div>
         </div>
@@ -38,41 +34,17 @@
 
     <div class="container">
       <div class="row">
-        <!-- Available Items and Buttons -->
-        <div class="col-md-5">
-          <label>Aduanas disponibles:</label>
-          <div class="box" id="availableItems">
-            <ul class="list-box">
-              <li *ngFor="let item of aduanasDisponibles; let i = index" class="box-item" [ngClass]="{'active': i === indiceSeleccionado}" (click)="setIndiceSeleccionado(i, 'add')">{{ item.name }}</li>
-            </ul>
-          </div>
-        </div>
-        <div class="col-md-3 btn-box">
-          <button class="btn" type="button" (click)="agregarTodasAduanas()">Agregar todos</button>
-          <button class="btn" type="button" (click)="agregarAduanasSeleccionadas([indiceSeleccionado])">Agregar selección</button>
-          <button class="btn" type="button" (click)="removerAduanasSeleccionadas([indiceRemover])">Restar selección</button>
-          <button class="btn" type="button" (click)="removerTodasAduanas()">Restar todos</button>
-        </div>
-
-        <!-- Selected Items -->
-        <div class="col-md-4">
-          <label>Aduanas seleccionadas*:</label>
-          <div class="box" id="selectedItems">
-            <ul class="list-box">
-              <li *ngFor="let item of aduanasSeleccionadas; let i = index" class="box-item" [ngClass]="{'active': i === indiceRemover}" (click)="setIndiceSeleccionado(i, 'remove')">{{ item.name }}</li>
-            </ul>
-          </div>
+        <div class="col-md-12">
+          <crosslist [isDisabled]="esFormularioSoloLectura" [fechas]="aduanasDisponibles" [label]="paisDeOriginLabel" [botones]="paisDeProcedenciaBotons"
+            (fechasSeleccionadasChange)="paisDeOriginSeleccionadasChange($event)"></crosslist>
         </div>
         <div class="col-md-8">
           <div class="form-group">
-            <label class="form-label" for="technicalJustification">Justificación técnica para importar o exportar la cantidad solicitada*:</label>
-            <textarea
-              class="form-control cstm-ht"
-              id="cstumbresAtuales"
-             formControlName="cstumbresAtuales"
-            (change)="setValoresStore(aduanerasInformacionesForm,'cstumbresAtuales', 'setCstumbresAtuales')"
-              rows="3"
-            ></textarea>
+            <label class="form-label" for="technicalJustification">Justificación técnica para importar o exportar la
+              cantidad solicitada*:</label>
+            <textarea class="form-control cstm-ht" id="cstumbresAtuales" formControlName="cstumbresAtuales"
+              (change)="setValoresStore(aduanerasInformacionesForm,'cstumbresAtuales', 'setCstumbresAtuales')"
+              rows="3"></textarea>
           </div>
         </div>
       </div>
