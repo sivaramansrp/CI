@@ -11974,13 +11974,13 @@
     "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
   },
   {
-    "folioTramite": "0453067309596292181260510",
+    "folioTramite": "0453067309596292181260515",
     "tipoDeTramite": "Registro de solicitud de servicio",
     "nombreDeLaTarea": "Generar opinión",
     "fechaDeAsignacion": "2023-10-07",
     "estadoDeTramite": "En Proceso",
     "departamento": "cofepris",
-    "numeroDeProcedimiento": "260510",
+    "numeroDeProcedimiento": "260515",
     "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
   },
   {
