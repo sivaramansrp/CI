@@ -27,6 +27,17 @@ import estadofisico from 'libs/shared/theme/assets/json/130102/entidad_federativ
 import franccionArancelaria from 'libs/shared/theme/assets/json/301/fraccion-arancelaria-options.json';
 import nico from 'libs/shared/theme/assets/json/301/nico-options.json';
 
+/**
+ * Componente que gestiona la información de la mercancía para el trámite 301.
+ *
+ * Este componente permite capturar, mostrar y validar los datos relacionados con la fracción arancelaria,
+ * NICO, estado físico y otros campos requeridos para la solicitud. Integra formularios reactivos,
+ * catálogos y controles de visualización para campos dependientes.
+ *
+ * @component
+ * @example
+ * <app-informacion-de-la></app-informacion-de-la>
+ */
 @Component({
   selector: 'app-informacion-de-la',
   templateUrl: './informacion-de-la.component.html',
@@ -40,6 +51,7 @@ import nico from 'libs/shared/theme/assets/json/301/nico-options.json';
   ],
   standalone: true,
 })
+
 export class InformacionDeLaComponent implements OnInit, OnDestroy {
 
   /**

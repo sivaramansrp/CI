@@ -107,10 +107,46 @@ describe('DeLaMuestraComponent', () => {
     expect(mercanciaControl?.hasError('required')).toBeTruthy();
   });
 
-  it('should call validarFormulario()', () => {
-    const spy = jest.spyOn(component, 'validarFormulario');
-    component.validarFormulario();
+  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+    const spy = jest.spyOn(component['destroyNotifier$'], 'next');
+    component.ngOnDestroy();
     expect(spy).toHaveBeenCalled();
   });
+
+  it('should show modal when folio length > 25', () => {
+    component.Informaciondela = component.fb.group({
+      datosImportadorExportador: component.fb.group({
+        folio: ['A'.repeat(26)],
+        mercancia: ['1']
+      })
+    });
+    const modalRef = {
+      nativeElement: {
+        show: jest.fn()
+      }
+    };
+    component.modalConfirmacionRef = modalRef as any;
+    const mockModal = {
+      show: jest.fn()
+    };
+    (window as any).bootstrap = {
+      Modal: jest.fn().mockImplementation(() => mockModal)
+    };
+    component.sobreElCambioFolio();
+    expect(mockModal.show).toHaveBeenCalled();
+  });
+
+  it('should disable form when esFormularioSoloLectura is true in guardarDatosFormulario', () => {
+    component.Informaciondela = component.fb.group({
+      datosImportadorExportador: component.fb.group({
+        folio: ['123'],
+        mercancia: ['1']
+      })
+    });
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.Informaciondela.disabled).toBeTruthy();
+  });
+
   
 });

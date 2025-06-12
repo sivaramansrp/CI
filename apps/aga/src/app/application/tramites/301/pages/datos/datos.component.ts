@@ -44,6 +44,15 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
     this.indice = i;
   }
   
+  /**
+   * Constructor del componente DatosComponent.
+   * Inyecta los servicios necesarios para la gestión de pantallas, obtención y actualización de datos,
+   * así como la consulta del estado desde el store.
+   *
+   * @param {Pantallas301Service} pantallasSvc - Servicio para controlar la visibilidad y datos de las pantallas del trámite 301.
+   * @param {Solocitud301Service} solocitud301Service - Servicio para obtener y actualizar los datos del formulario del trámite 301.
+   * @param {ConsultaioQuery} consultaQuery - Servicio para consultar el estado actual desde el store.
+   */
   constructor(
     public pantallasSvc: Pantallas301Service,
     private solocitud301Service: Solocitud301Service,
@@ -52,6 +61,13 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
 // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
   }
 
+   /**
+   * Método del ciclo de vida `ngOnInit`.
+   * Inicializa el componente y sus dependencias.
+   * Suscribe al observable del estado de consulta para obtener el estado actual desde el store.
+   * Si el estado indica que hay una actualización pendiente (`update`), llama al método para guardar los datos del formulario.
+   * En caso contrario, activa la bandera para mostrar los datos de respuesta.
+   */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
           this.consultaState = seccionState;
@@ -97,9 +113,19 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
    * para establecer el tipo de persona como MORAL_NACIONAL.
    */
   ngAfterViewInit(): void {
-    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+    setTimeout(() => {
+      this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+  });
   }
 
+  /**
+   * Método del ciclo de vida `ngOnDestroy`.
+   * Se ejecuta cuando el componente es destruido.
+   * Notifica a los observables suscritos que deben finalizar y libera los recursos asociados.
+   *
+   * @example
+   * // Angular llama automáticamente a este método al destruir el componente.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

@@ -88,7 +88,7 @@ export class DeLaMuestraComponent implements OnInit, OnDestroy {
    * @param {FormBuilder} fb - Inyecta el servicio `FormBuilder` para la creación del formulario.
    */
   constructor(
-    private fb: FormBuilder,
+    public fb: FormBuilder,
     private tramite301Store: Tramite301Store,
     private tramite301Query: Tramite301Query,
     private consultaioQuery: ConsultaioQuery,

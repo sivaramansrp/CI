@@ -1,7 +1,6 @@
 import { Observable,catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { JSONResponse } from '@libs/shared/data-access-user/src';
 import { Solicitud301State } from '../../../core/estados/tramites/tramite301.store';
 
 /**
