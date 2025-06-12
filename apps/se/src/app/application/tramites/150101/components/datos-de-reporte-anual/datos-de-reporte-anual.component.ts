@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { Solicitud150101Query } from '../../estados/solicitud150101.query';
 import { Solicitud150101State } from '../../estados/solicitud150101.store';
 import { Solicitud150101Store } from '../../estados/solicitud150101.store';
 import { SolicitudService } from '../../services/registro-solicitud-anual.service';
-import { Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs';
 
 /**
  * @component
@@ -23,6 +23,12 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
   formReporteAnnual!: FormGroup;
 
   /**
+   * @property {boolean} formularioDeshabilitado
+   * @description Indica si el formulario está deshabilitado (solo lectura).
+   */
+  formularioDeshabilitado: boolean = false;
+
+  /**
    * @description Estado actual de la solicitud, obtenido desde el store.
    */
   solicitud150101State: Solicitud150101State = {} as Solicitud150101State;
@@ -38,20 +44,72 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
    * @param solicitud150101Store - Store que gestiona el estado del reporte.
    * @param solicitud150101Query - Query para seleccionar datos del estado del reporte.
    * @param solicitudService - Servicio para obtener y enviar datos relacionados con el reporte.
+   * @param consultaioQuery - Query para gestionar el estado de la consulta.
    */
   constructor(
     public fb: FormBuilder,
     public solicitud150101Store: Solicitud150101Store,
     public solicitud150101Query: Solicitud150101Query,
-    public solicitudService: SolicitudService
-  ) {}
+    public solicitudService: SolicitudService,
+    public consultaioQuery: ConsultaioQuery
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.formularioDeshabilitado = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
 
   /**
-   * @lifecycle
-   * @description Método del ciclo de vida de Angular llamado tras la inicialización del componente.
-   * Configura el formulario y sus valores iniciales, además de suscribirse a cambios en el estado.
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * @returns {void}
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Inicializa el estado del formulario basado en si es de solo lectura o no.
+   * Si es de solo lectura, llama a `guardarDatosFormulario` para cargar los datos del formulario.
+   * Si no es de solo lectura, inicializa el formulario con `inicializarFormulario`.
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.formularioDeshabilitado) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * @method guardarDatosFormulario
+   * @description Guarda los datos del formulario y configura el estado de los campos.
+   * Si el formulario es de solo lectura, deshabilita los campos del formulario.
+   * Si no es de solo lectura, habilita los campos del formulario.
+   * @returns {void}
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+
+    if (this.formularioDeshabilitado) {
+      this.formReporteAnnual.disable();
+    } else if (!this.formularioDeshabilitado) {
+      this.formReporteAnnual.enable();
+    }
+  }
+
+  /**
+   * @method inicializarFormulario
+   * @description Inicializa el formulario reactivo con los valores del estado de la solicitud.
+   * Configura los validadores y el estado de los campos según corresponda.
+   * @returns {void}
+   */
+  inicializarFormulario(): void {
     this.formReporteAnnual = this.fb.group({
       ventasTotales: [
         { value: this.solicitud150101State.ventasTotales, disabled: false },

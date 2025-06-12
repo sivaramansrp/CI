@@ -40,3 +40,60 @@ export interface ReporteFechas {
    */
   reporteAnualFechaFin: string;
 }
+
+export interface RegistroSolicitudDatos {
+  /**
+     * Fecha de inicio del reporte anual.
+     */
+  reporteAnualFechaInicio: '',
+
+  /**
+   * Fecha de fin del reporte anual.
+   */
+  reporteAnualFechaFin: '',
+
+  /**
+   * Folio del programa.
+   */
+  folioPrograma: '',
+
+  /**
+   * Modalidad del programa.
+   */
+  modalidad: '',
+
+  /**
+   * Tipo de programa.
+   */
+  tipoPrograma: '',
+
+  /**
+   * Estatus actual.
+   */
+  estatus: '',
+
+  /**
+   * Ventas totales.
+   */
+  ventasTotales: '',
+
+  /**
+   * Total de exportaciones.
+   */
+  totalExportaciones: 0,
+
+  /**
+   * Total de importaciones.
+   */
+  totalImportaciones: 0,
+
+  /**
+   * Saldo actual.
+   */
+  saldo: 0,
+
+  /**
+   * Porcentaje de exportación.
+   */
+  porcentajeExportacion: 0
+}

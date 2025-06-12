@@ -1,7 +1,7 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ConfiguracionColumna, ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ProgramasReporte } from '../../models/programas-reporte.model';
 import { ReporteFechas } from '../../models/programas-reporte.model';
 import { Solicitud150101Query } from '../../estados/solicitud150101.query';
@@ -13,7 +13,6 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * @component
@@ -83,6 +82,12 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
   solicitudDatos: ProgramasReporte[] = [];
 
   /**
+   * @property {boolean} formularioDeshabilitado
+   * @description Indica si el formulario está deshabilitado (solo lectura).
+   */
+  formularioDeshabilitado: boolean = false;
+
+  /**
    * @property {ConfiguracionColumna<ProgramasReporte>[]} solicitudConfiguracionTabla
    * @description Configuración de las columnas de la tabla para mostrar los datos de programas.
    */
@@ -116,23 +121,75 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
    * @param {Solicitud150101Query} solicitud150101Query - Query para seleccionar datos del estado.
    * @param {SolicitudService} solicitudService - Servicio para manejar solicitudes relacionadas.
    * @param {ValidacionesFormularioService} validacionesService - Servicio para validaciones de formularios.
+   * @param {ConsultaioQuery} consultaioQuery - Query para manejar el estado de la consulta.
    */
   constructor(
     public fb: FormBuilder,
     public solicitud150101Store: Solicitud150101Store,
     public solicitud150101Query: Solicitud150101Query,
     public solicitudService: SolicitudService,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.formularioDeshabilitado = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+
     this.obtenerReporteFechas();
     this.obtenerProgramasReporte();
   }
 
   /**
-   * @method ngOnInit
-   * @description Inicializa el componente y configura el formulario reactivo.
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * @returns {void}
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Inicializa el estado del formulario basado en si es de solo lectura o no.
+   * Si es de solo lectura, llama a `guardarDatosFormulario` para cargar los datos del formulario.
+   * Si no es de solo lectura, inicializa el formulario con `inicializarFormulario`.
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.formularioDeshabilitado) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * @method guardarDatosFormulario
+   * @description Guarda los datos del formulario y configura el estado de los campos.
+   * Si el formulario es de solo lectura, deshabilita los campos del formulario.
+   * Si no es de solo lectura, habilita los campos del formulario.
+   * @returns {void}
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.formularioDeshabilitado) {
+      this.periodoReporteAnual.disable();
+    } else if (!this.formularioDeshabilitado) {
+      this.periodoReporteAnual.enable();
+    }
+  }
+
+  /**
+   * @method inicializarFormulario
+   * @description Inicializa el formulario `periodoReporteAnual` con los valores del estado de la solicitud.
+   * Deshabilita los campos del formulario para que no puedan ser editados.
+   * @returns {void}
+   */
+  inicializarFormulario(): void {
     this.periodoReporteAnual = this.fb.group({
       reporteAnualFechaInicio: [{ value: this.solicitud150101State?.reporteAnualFechaInicio, disabled: true }],
       reporteAnualFechaFin: [{ value: this.solicitud150101State?.reporteAnualFechaFin, disabled: true }],
