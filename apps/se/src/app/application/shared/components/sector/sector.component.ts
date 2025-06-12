@@ -1,7 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
-import { ConsultaioQuery, ConsultaioState, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { SECTOR } from '../../constantes/complementaria.enum';
 import { SectorTabla } from '../../models/complementaria.model';
 import { map, ReplaySubject, takeUntil } from 'rxjs';
@@ -17,7 +17,7 @@ import { map, ReplaySubject, takeUntil } from 'rxjs';
   templateUrl: './sector.component.html',
   styleUrl: './sector.component.scss',
 })
-export class SectorComponent {
+export class SectorComponent implements OnDestroy {
   /**
    * Enumeración que define las opciones de selección para la tabla.
    * Se utiliza para configurar el comportamiento de la tabla dinámica.
@@ -68,4 +68,12 @@ export class SectorComponent {
       .subscribe()
   }
  
+    /**
+     * Método que se ejecuta al destruir el componente.
+     * Se utiliza para limpiar los recursos y evitar fugas de memoria.
+     */
+    ngOnDestroy() {
+      this.destroyed$.next(true);
+      this.destroyed$.complete();
+    }
 }

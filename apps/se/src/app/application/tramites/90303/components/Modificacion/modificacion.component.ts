@@ -1,5 +1,6 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, Renderer2 } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { LISTA_DE_SECTORS, LISTA_DE_SECTORS_BAJA } from '../../constantes/constantes90303.enum';
 import { ListaTabla, ListaTablaBaja } from '../../models/registro.model';
@@ -161,7 +162,7 @@ export class ModificacionComponent implements OnInit, OnDestroy, AfterViewInit {
     this.obtenerTablaProductor();
     this.obtenerTablaListaBaja();
     this.inicializarEstadoFormulario();
-
+    
      this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -177,19 +178,7 @@ export class ModificacionComponent implements OnInit, OnDestroy, AfterViewInit {
    * Además, obtiene la información del catálogo de mercancía.
    */
   inicializarEstadoFormulario(): void {
-    if (this.soloLectura) {
-      this.guardarDatosFormulario();
-    } else {
-      this.donanteDomicilio();
-    }
-  }
-   /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
-  guardarDatosFormulario(): void {
-    this.donanteDomicilio();
-    if (this.soloLectura) {
+     if (this.soloLectura) {
       this.modificacionForm.disable();
     } else {
       this.modificacionForm.enable();
