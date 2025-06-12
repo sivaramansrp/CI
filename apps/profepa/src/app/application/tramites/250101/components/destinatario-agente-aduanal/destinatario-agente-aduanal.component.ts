@@ -11,13 +11,15 @@ import { FormGroup } from '@angular/forms';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { ModalComponent } from '../modal/modal.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Subject} from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { TablaDatos } from '../../models/flora-fauna.models';
 import { TableComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Tramite250101Store } from '../../estados/tramite250101.store';
+import { Tramite250101State, Tramite250101Store } from '../../estados/tramite250101.store';
 import { Validators } from '@angular/forms';
-import { takeUntil } from 'rxjs';
+// import { takeUntil } from 'rxjs';
+import { Tramite250101Query } from '../../estados/tramite250101.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * Componente encargado de gestionar la visualización y manipulación de los datos relacionados con el destinatario 
  * y el agente aduanal dentro del trámite 250101.
@@ -190,6 +192,16 @@ export class DestinatarioAgenteAduanalComponent implements OnInit, OnDestroy {
  * @type {TablaDatos[]}
  */
   tablaAgenteAduanaFilaDatos: TablaDatos[] = [];
+ /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+   esFormularioSoloLectura: boolean = false;
+
+   /** Estado actual del trámite 270201 asociado a la solicitud. 
+   * Contiene datos del flujo y validaciones del proceso. */
+   public solicitudState!: Tramite250101State;
+
 /**
  * Constructor del componente que inyecta las dependencias necesarias para su funcionamiento.
  * @param {FormBuilder} fb - Inyecta el servicio `FormBuilder` para crear formularios reactivos.
@@ -199,7 +211,9 @@ export class DestinatarioAgenteAduanalComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private destinatarioService: DestinatarioService,
-    private tramite250101Store: Tramite250101Store
+    private tramite250101Store: Tramite250101Store,
+    private tramite250101Query: Tramite250101Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
     //
   }
@@ -210,6 +224,17 @@ export class DestinatarioAgenteAduanalComponent implements OnInit, OnDestroy {
  * Utiliza `takeUntil(this.destroy$)` para gestionar la suscripción y evitar pérdidas de memoria.
  */
   ngOnInit(): void {
+
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+
     this.destinatarioService
       .getDestinatarioEncabezadoDeTabla()
       .pipe(takeUntil(this.destroy$))
@@ -260,7 +285,44 @@ export class DestinatarioAgenteAduanalComponent implements OnInit, OnDestroy {
      * Este método se encarga de inicializar y configurar el formulario específico para el modal del agente aduanal.
      */
     this.establecerFormAgenteAduanal();
+
+    /** Llama al método que configura el formulario según el estado de solo lectura. */
+    this.inicializarEstadoFormulario();
   }
+
+   /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.  
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else if(this.formDestinatariosModal && this.formAgenteAduanal) {
+       this.formDestinatariosModal.enable();
+       this.formAgenteAduanal.enable();
+    }
+  }
+
+    /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+private guardarDatosFormulario(): void {
+    this.establecerFormDestinatariosModal();
+    this.establecerFormAgenteAduanal();
+    if (this.formDestinatariosModal && this.esFormularioSoloLectura) {
+      this.formDestinatariosModal.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formDestinatariosModal.enable();
+    } 
+
+    if (this.formAgenteAduanal && this.esFormularioSoloLectura) {
+      this.formAgenteAduanal.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formAgenteAduanal.enable();
+    } 
+  }
+
 /**
  * Método que cambia la visibilidad de la tabla y el modal del destinatario.
  * Este método alterna el estado de las variables `showTableDiv` y `showDestinatarioModal`, 
@@ -295,6 +357,18 @@ export class DestinatarioAgenteAduanalComponent implements OnInit, OnDestroy {
  * - `domicilioDestinatario`: Campo de texto para el domicilio del destinatario, con validación de obligatoriedad.
  */
   establecerFormDestinatariosModal(): void {
+
+   /** Suscribe al estado de solicitud 40302 y lo asigna a `solicitudState`.  
+    * Usa `takeUntil` para limpiar la suscripción al destruir el componente. */
+    this.tramite250101Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.solicitudState = seccionState as Tramite250101State;
+        })
+      )
+      .subscribe();
+
     this.formDestinatariosModal = this.fb.group({
       destinatarioRadio: new FormControl({ value: '1', disabled: true }, [
         Validators.required,
@@ -311,6 +385,14 @@ export class DestinatarioAgenteAduanalComponent implements OnInit, OnDestroy {
       ]),
       domicilioDestinatario: new FormControl('', [Validators.required,Validators.maxLength(100),]),
     });
+
+    this.formDestinatariosModal.patchValue({
+      destinatarioRazonSocial: this.solicitudState.destinatarioDenominacion,
+      paisNacionalDestinatario: this.solicitudState.destinatarioPais,
+      estadoNacionalDestinatario: this.solicitudState.destinatarioEstado,
+      codigoPostalDestinatario: this.solicitudState.destinatarioCodigoPostal,
+      domicilioDestinatario: this.solicitudState.destinatarioDomicilio,
+    });
   }
 /**
  * Método que inicializa el formulario reactivo para el modal de agente aduanal.
@@ -326,6 +408,17 @@ export class DestinatarioAgenteAduanalComponent implements OnInit, OnDestroy {
  * - `patenteAgenteAduanal`: Campo de texto para la patente del agente aduanal, con validación de obligatoriedad y longitud máxima.
  */
   establecerFormAgenteAduanal(): void {
+   /** Suscribe al estado de solicitud 40302 y lo asigna a `solicitudState`.  
+    * Usa `takeUntil` para limpiar la suscripción al destruir el componente. */
+    this.tramite250101Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.solicitudState = seccionState as Tramite250101State;
+        })
+      )
+      .subscribe();
+
     this.formAgenteAduanal = this.fb.group({
       nombreAgenteAduanal: new FormControl('', [
         Validators.required,
@@ -343,6 +436,13 @@ export class DestinatarioAgenteAduanalComponent implements OnInit, OnDestroy {
         Validators.required,
         Validators.maxLength(4),
       ]),
+    });
+
+    this.formAgenteAduanal.patchValue({
+      nombreAgenteAduanal: this.solicitudState.agenteAduanalNombre,
+      primerApellidoAgenteAduanal: this.solicitudState.agenteAduanalPrimerApellido,
+      segundoApellidoAgenteAduanal: this.solicitudState.agenteAduanalSegundoApellido,
+      patenteAgenteAduanal: this.solicitudState.agenteAduanalPatente,
     });
   }
 /**
