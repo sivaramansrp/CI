@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { TramiteState, TramiteStore } from '../../../core/estados/tramite.store';
 import { CommonModule } from '@angular/common';
@@ -8,6 +8,7 @@ import { ConsultaioStore } from '../../../core/estados/consulta.store';
 import { Router } from '@angular/router';
 import { TramiteQuery } from '../../../core/queries/tramite.query';
 
+import { REG_X } from '../../constantes/regex.constants';
 import { SeleccionadoDepartamento } from '../../../core/models/shared/bandeja-de-tareas-pendientes.model';
 import { TablaAcciones } from '../../../core/enums/tabla-seleccion.enum';
 import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.component';
@@ -130,29 +131,32 @@ export class ConsultaTramiteComponent<T> implements OnInit {
     this.inicializaFormConsulta();
   }
 
-  /*
-   * Getter que retorna el formGroup interno
-   */
-  get bandejaSolicitudeFormGroup(): FormGroup {
-    return this.dinamicasBandejaForma.get(
-      'bandejaSolicitudeFormGroup'
-    ) as FormGroup;
-  }
-
   /** 
    * Método para inicializar el formulario de búsqueda 
    */
   inicializaFormConsulta(): void {
     this.FormBuscaTramite = this.fb.group({
-      idTramite: [''],
+      idTramite: ['', [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)]],
     });
   }
 
   /**
-   *  Método para buscar el trámite 
+   * Busca el trámite filtrando los datos duplicados por el número de procedimiento ingresado en el formulario.
+   * Si encuentra resultados, actualiza la bandera de configuración de la tabla; si no, marca todos los controles como tocados.
    */
   buscarTramite(): void {
-    this.tieneConfiguracionTablaDatos = true;
+    if (this.FormBuscaTramite.invalid) {
+      this.FormBuscaTramite.markAllAsTouched();
+      this.tieneConfiguracionTablaDatos = false;
+      return;
+    }
+
+    const IDTRAMITE = this.FormBuscaTramite.get('idTramite')?.value?.toString();
+    this.configuracionTablaDatos = this.duplicarDatos.filter(
+      item => item.id?.toString() === IDTRAMITE
+    );
+    this.tieneConfiguracionTablaDatos = this.configuracionTablaDatos.length > 0;
+    this.FormBuscaTramite.reset();
   }
 
   /**
@@ -183,15 +187,6 @@ export class ConsultaTramiteComponent<T> implements OnInit {
      */ 
     this.tramiteStates.update({ [metodoNombre]: VALOR });
   }
-
-/*
-   * Alterna la visibilidad del contenido colapsable basado en el orden
-   */
-  public mostrarColapsable(orden: number): void {
-    if (orden === 1) {
-      this.paisDeOriginColapsable = !this.paisDeOriginColapsable;
-    }
-  }
 /*
    * Cambia la página actual en la tabla
    */
@@ -216,46 +211,6 @@ export class ConsultaTramiteComponent<T> implements OnInit {
     this.itemsPerPage = itemsPerPage;
     this.currentPage = 1;
     this.updatePagination();
-  }
-
-  /**
-   * Maneja la selección de un departamento emitiendo la información del departamento seleccionado
-   * y reseteando el control de formulario 'procedimiento' si ya hay un departamento seleccionado.
-   *
-   * @param event - Un objeto que contiene el campo seleccionado (`campo`) y su valor (`valor`).
-   */
-  public obtenerDepartamento(event: { campo: string; valor: any }): void {
-    this.obtenerNombreDelDepartamento.emit({ campo: event.campo, valor: event.valor });
-    if(this.seleccionadoDepartamento.tieneDepartamento) {
-      this.bandejaSolicitudeFormGroup.get('procedimiento')?.setValue('');
-    }
-  }
-
-  public obtenerProcedure(event: { campo: string; valor: any }): void {
-    this.obtenerNombreDelDepartamento.emit({ campo: event.campo, valor: event.valor });
-  }
-
-  /**
-   * Filtra el arreglo `configuracionTablaDatos` según el número de procedimiento
-   * y el nombre del departamento seleccionados. Actualiza la propiedad `hasValidForm`
-   * de acuerdo con la validez del formulario `bandejaSolicitudeFormGroup`.
-   * Establece la bandera `tieneConfiguracionTablaDatos` en `true` si existen
-   * resultados filtrados, de lo contrario la establece en `false`.
-   */
-  public filterDatos(): void {
-    this.configuracionTablaDatos = this.configuracionTablaDatos.filter((item) => {
-      return (
-        Number(item.numeroDeProcedimiento) === Number(this.seleccionadoDepartamento.numeroDeProcedimiento) &&
-        item.departamento.toLowerCase() === this.seleccionadoDepartamento.nombreDelDepartamento.toLowerCase()
-      );
-    });
-    this.hasValidForm = this.bandejaSolicitudeFormGroup.valid;
-    if (this.configuracionTablaDatos.length > 0) {
-      this.tieneConfiguracionTablaDatos = true;
-    } else {
-      this.configuracionTablaDatos = this.duplicarDatos;
-      this.tieneConfiguracionTablaDatos = false;
-    }
   }
 
 /*
@@ -284,4 +239,18 @@ export class ConsultaTramiteComponent<T> implements OnInit {
     
     this.router.navigate([`${DEPARTMENTO}/datos-generales-tramite`]);
   }
+
+
+/**
+   * Verifica si un control del formulario es inválido, tocado o modificado.
+   * @param nombreControl - Nombre del control a verificar.
+   * @returns True si el control es inválido, de lo contrario false.
+   */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.FormBuscaTramite.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
 }

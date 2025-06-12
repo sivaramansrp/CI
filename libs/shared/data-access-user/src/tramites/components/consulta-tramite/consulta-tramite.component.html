@@ -43,10 +43,20 @@
                                         class="form-control font-weight-titulo text-title"
                                         placeholder="Folio tramite"
                                         (change)="tramiteSeleccionado(FormBuscaTramite,'idTramite', 'setTramiteValue')">
+
+                                        <div *ngIf="esInvalido('idTramite')" class="text-danger">
+                                            <small *ngIf="FormBuscaTramite.controls['idTramite'].hasError('required')">
+                                                Este campo es obligatorio.
+                                            </small>
+                                            <small *ngIf="FormBuscaTramite.controls['idTramite'].hasError('pattern')">
+                                                Solo se permiten números.
+                                            </small>
+                                        </div>
                                 </div>
                                 <div class="col-md-12">
                                     <div class="d-flex justify-content-end m-lg-5">
                                         <button class="btn  btn-primary ms-2 btn-size-1 color-back" type="button"
+                                            [disabled]="FormBuscaTramite.invalid"
                                             (click)="buscarTramite()">Buscar</button>
                                     </div>
                                 </div>
