@@ -128,3 +128,18 @@ export const BITACORA_ENCABEZADO_DE_TABLA: ConfiguracionColumna<Bitacora>[] = [
     orden: 4,
   },
 ];
+
+/**
+ * Representa los datos de modificación de un programa IMMEX para una empresa submanufacturera.
+ *
+ * @property rfc - El Registro Federal de Contribuyentes (RFC) de la empresa.
+ * @property representacionFederal - La representación federal de la empresa.
+ * @property tipoModificacion - El tipo de modificación que se está realizando.
+ * @property modificacionPrograma - Detalles específicos sobre la modificación del programa.
+ */
+export interface ModificacionDatos {
+  rfc: string;
+  representacionFederal: string;
+  tipoModificacion: string;
+  modificacionPrograma: string;
+}

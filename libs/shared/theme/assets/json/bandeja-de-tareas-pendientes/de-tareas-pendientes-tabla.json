@@ -4409,7 +4409,7 @@
     "numeroDeProcedimiento": "80207",
     "origin": "FLUJO_FUNCIONARIO_EVALUAR"
   },
-    {
+  {
     "folioTramite": "0215523965732296454156770",
     "tipoDeTramite": "Solicitud de Proceso Interno",
     "nombreDeLaTarea": "Evaluar solicitud",
@@ -10695,7 +10695,8 @@
     "departamento": "cofepris",
     "numeroDeProcedimiento": "260505",
     "origin": "READ_PROCEDURE"
-  },{
+  },
+  {
     "folioTramite": "0215523965732296454260508",
     "tipoDeTramite": "Solicitud de Proceso Interno",
     "nombreDeLaTarea": "Evaluar solicitud",
@@ -11444,7 +11445,8 @@
     "departamento": "sedena",
     "numeroDeProcedimiento": "240107",
     "origin": "READ_PROCEDURE"
-  },{
+  },
+  {
     "folioTramite": "0215523965732296454156770",
     "tipoDeTramite": "Solicitud de Proceso Interno",
     "nombreDeLaTarea": "Evaluar solicitud",
@@ -11513,7 +11515,8 @@
     "departamento": "agricultura",
     "numeroDeProcedimiento": "220102",
     "origin": "READ_PROCEDURE"
-  },{
+  },
+  {
     "folioTramite": "04530673095962921812220102",
     "tipoDeTramite": "Registro de solicitud de servicio",
     "nombreDeLaTarea": "Generar opinión",
@@ -11753,7 +11756,7 @@
     "numeroDeProcedimiento": "221602",
     "origin": "READ_PROCEDURE"
   },
-     {
+  {
     "folioTramite": "0215523965732296454156770",
     "tipoDeTramite": "Solicitud de Proceso Interno",
     "nombreDeLaTarea": "Evaluar solicitud",
@@ -12413,6 +12416,16 @@
     "estadoDeTramite": "Completado",
     "departamento": "cofepris",
     "numeroDeProcedimiento": "260203",
+    "origin": "READ_PROCEDURE"
+  },
+  {
+    "folioTramite": "099226136147361192499352",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "se",
+    "numeroDeProcedimiento": "80303",
     "origin": "READ_PROCEDURE"
   },
   {
