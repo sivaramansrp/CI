@@ -172,6 +172,12 @@ export class Tramite240122Store extends Store<Tramite240122State> {
       modificarDestinarioDatos: null,
     }));
   }
+  /**
+   * @method actualizarTrimateState
+   * @description Actualiza el estado del trámite con los datos proporcionados.
+   * @param {Tramite240122State} datos - Objeto que contiene las nuevas propiedades del estado a actualizar.
+   * @returns {void}
+   */
   public actualizarTrimateState(datos: Tramite240122State): void {
     this.update((state)=>({
       ...state,

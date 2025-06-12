@@ -77,6 +77,18 @@ export class PasoUnoComponent implements OnDestroy, OnInit,AfterViewInit {
         this.indice = tab;
       });
   }
+  
+  /**
+   * @inheritdoc
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
+   * 
+   * @remarks
+   * Aquí se realiza una suscripción al servicio `solicitudService.getPermisoExtraordinario()` para obtener los datos necesarios
+   * y actualizar el estado del trámite en el store correspondiente. La suscripción se gestiona con `takeUntil` para evitar fugas de memoria.
+   * 
+   * @see https://angular.io/api/core/AfterViewInit
+   */
   ngAfterViewInit(): void {
     this.solicitudService.getPermisoExtraordinario().pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos)=>{
