@@ -100,7 +100,12 @@ export const TIPO_TRAMITE: number = 5701;
  */
 export const SIN_VALOR = -1;
 
-/**s
+/**
+ * @description Constante para el manejo del valor del select cuando no hay valores.
+ */
+export const SIN_VALORES = '-1';
+
+/**
  * @description Constante para el manejo del valor del select cuando no hay valores.
  */
 export const SIN_ITEMS = '-2';

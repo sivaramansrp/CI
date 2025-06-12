@@ -82,7 +82,7 @@ export const MSG_PEDIMENTO_VALIDO =
 export const ERR_VALIDACION_PEDIMENTO =
   'No se pudo validar el pedimento, favor de capturar los datos de pedimento faltante y anexar documento.';
 
-// #Secion Linea ed captura
+// #Secion Linea de captura
 /**
  * @description Mensaje de error cuando no se han llenado los campos obligatorios.
  */
@@ -134,3 +134,24 @@ export const MSG_ERROR_NO_INFORMACION = 'No se encontró información';
  */
 export const MSJ_ERROR_ID_SOCIO_COMERCIAL =
   'No se ha encontrado ningún registro de socio comercial con el identificador proporcionado, por favor verifica.';
+
+  // # Sección despacho
+  /**
+   * @description Mensaje borrar campos "recintos" y "especifique"
+   */
+export const MSG_BORRAR_CAMPOS_RECINTOS = 'Los datos capturados en "nombre del recinto" y "especifique" serán borrados, está de acuerdo (SI/NO)';
+
+/**
+ * @description Mensaje de error cuando no se han seleccionado las fechas inicial y final.
+ */
+export const MSJ_ERROR_FECHAS_NO_SELECCIONADAS = 'Debe registrar la fecha inicial y la fecha final';
+
+/**
+ * @description Mensaje de error cuando no se ha seleccionado la fecha final.
+ */
+export const MSJ_ERROR_FECHA_FINAL_NO_SELECCIONADA = 'Debe registrar la fecha final';
+
+/**
+ * @description Mensaje de error cuando no se ha seleccionado la fecha inicial.
+ */
+export const MSJ_ERROR_FECHA_INICIAL_NO_SELECCIONADA = 'Debe registrar la fecha inicial';
