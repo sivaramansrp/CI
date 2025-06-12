@@ -1,12 +1,15 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '../../models/pantallas-captura.model';
-import { map, Subject, takeUntil } from 'rxjs';
 import { PASOS } from '@ng-mf/data-access-user';
-import { SeccionQuery } from'../../../../estados/queries/seccion.query';
-import { SeccionState, SeccionStore } from '../../../../estados/seccion.store';
 import { SECCIONES_TRAMITE_220402 } from '@ng-mf/data-access-user';
+import { SeccionQuery } from '../../../../estados/queries/seccion.query';
+import { SeccionState } from '../../../../estados/seccion.store';
+import { SeccionStore } from '../../../../estados/seccion.store';
+import { Subject } from 'rxjs';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  *
@@ -35,7 +38,7 @@ interface AccionBoton {
 /**
  * Componente que representa la página de solicitud.
  */
-export class SolicitudPageComponent implements OnInit{
+export class SolicitudPageComponent implements OnInit, OnDestroy {
 
   /**
    * @property {ListaPasosWizard[]} pasos - Lista de pasos del wizard.
@@ -54,8 +57,12 @@ export class SolicitudPageComponent implements OnInit{
     seccion: [],
     formaValida: []
   };
-
-  private destroyNotifier$: Subject<void> = new Subject();
+  /**
+    * @ignore
+    * @private
+    * @property {Subject<void>} destroyNotifier$ - Un `Subject` utilizado para notificar la destrucción del componente.
+    */
+  public destroyNotifier$: Subject<void> = new Subject();
 
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
@@ -73,11 +80,6 @@ export class SolicitudPageComponent implements OnInit{
   };
 
   /**
-   * @ignore
-   * @private
-   * @property {Subject<void>} destroyNotifier$ - Un `Subject` utilizado para notificar la destrucción del componente.
-   */
-  /**
    * @description Constructor del componente. Inyecta las dependencias necesarias.
    * @param {SeccionQuery} seccionQuery - Servicio para consultar el estado de la sección.
    * @param {SeccionStore} seccionStore - Servicio para manejar el estado de la sección.
@@ -85,7 +87,7 @@ export class SolicitudPageComponent implements OnInit{
   constructor(
     private seccionQuery: SeccionQuery,
     private seccionStore: SeccionStore
-  ) {}
+  ) { }
 
   /**
    * @ignore
@@ -136,15 +138,27 @@ export class SolicitudPageComponent implements OnInit{
   /**
    * Método para asignar las secciones existentes al stored
    */
-  private asignarSecciones(): void {
+  asignarSecciones(): void {
     const SECCIONES: boolean[] = Object.values(SECCIONES_TRAMITE_220402.PASO_1);
     const FORM_VALIDA: boolean[] = [];
-    for (const lLAVESECCIONE in SECCIONES_TRAMITE_220402.PASO_1) {
-      if(lLAVESECCIONE) {
+    for (const LLAVESECCIONE in SECCIONES_TRAMITE_220402.PASO_1) {
+      if (LLAVESECCIONE) {
         FORM_VALIDA.push(false);
       }
     }
     this.seccionStore.establecerSeccion(SECCIONES);
     this.seccionStore.establecerFormaValida(FORM_VALIDA);
+  }
+  /**
+   * @method ngOnDestroy
+   * @description Método del ciclo de vida que se ejecuta al destruir el componente.
+   * 
+   * Este método emite un valor al `destroyNotifier$` y lo completa para cancelar todas las suscripciones activas, evitando fugas de memoria.
+   * 
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
