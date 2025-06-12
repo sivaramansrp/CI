@@ -5,15 +5,15 @@ import {
   TablaDinamicaComponent,
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
-import { DatosDelChoferNacional } from '../../../models/registro-muestras-mercancias.model';
+import { DatosDelChoferNacional } from '../../../../models/registro-muestras-mercancias.model';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { TituloComponent } from '../../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { DatosDeChoferesComponent } from '../data.de.choferes.dialog/data.de.choferes.component';
+import { TituloComponent } from '../../../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { DatosDeChoferesComponent } from '../../data.de.choferes.dialog/data.de.choferes.component';
 import { Modal } from 'bootstrap';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { CHOFERES_NACIONALES_ALTA, TEXTOS } from '../../../enum/choferes-enum';
-import { Chofer40103Service } from '../../../estados/chofer40103.service';
-import { Chofer40103Query } from '../../../estados/chofer40103.query';
+import { CHOFERES_NACIONALES_ALTA, TEXTOS } from '../../../../enum/choferes-enum';
+import { Chofer40103Service } from '../../../../estados/chofer40103.service';
+import { Chofer40103Query } from '../../../../estados/chofer40103.query';
 import { map, Observable, pipe, Subject, takeUntil } from 'rxjs';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 
@@ -75,7 +75,7 @@ export class ChofereNacionalRetiradaComponent implements OnInit {
       .pipe(
         takeUntil(this.destroyed$),
         map((data) => {
-          this.datosDelChoferNacional = data.datosDelChoferNacionalRetirada ?? [];
+          this.datosDelChoferNacional = this.datosDelChoferNacional.concat(data.datosDelChoferNacionalRetirada ?? []);
         })
       )
       .subscribe();
@@ -95,7 +95,6 @@ export class ChofereNacionalRetiradaComponent implements OnInit {
 
   onChofereNationalSelected($event: DatosDelChoferNacional[]) {
     this.datosDelChoferNacionalSelected = $event;
-    //throw new Error('Method not implemented.');
   }
 
   addNewRow(template: TemplateRef<unknown>) {
@@ -148,8 +147,6 @@ export class ChofereNacionalRetiradaComponent implements OnInit {
     if (this.modalComponent) {
       this.datosDelChoferNacional.push(data);
       this.datosDelChoferNacionalSelected = [];
-    } else {
-      //console.error('Modal component is not initialized.');
     }
     this.cancelModal();
   }

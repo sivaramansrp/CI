@@ -5,15 +5,15 @@ import {
   TablaDinamicaComponent,
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
-import { DatosDelChoferNacional } from '../../../models/registro-muestras-mercancias.model';
+import { DatosDelChoferNacional } from '../../../../models/registro-muestras-mercancias.model';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { TituloComponent } from '../../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { DatosDeChoferesComponent } from '../data.de.choferes.dialog/data.de.choferes.component';
+import { TituloComponent } from '../../../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
+import { DatosDeChoferesComponent } from '../../data.de.choferes.dialog/data.de.choferes.component';
 import { Modal } from 'bootstrap';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { CHOFERES_NACIONALES_ALTA, TEXTOS } from '../../../enum/choferes-enum';
-import { Chofer40103Service } from '../../../estados/chofer40103.service';
-import { Chofer40103Query } from '../../../estados/chofer40103.query';
+import { CHOFERES_NACIONALES_ALTA, TEXTOS } from '../../../../enum/choferes-enum';
+import { Chofer40103Service } from '../../../../estados/chofer40103.service';
+import { Chofer40103Query } from '../../../../estados/chofer40103.query';
 import { map, Observable, takeUntil } from 'rxjs';
 
 @Component({
@@ -39,9 +39,9 @@ export class ChofereNacionalModificacionComponent implements OnInit {
   ConfiguracionColumna: ConfiguracionColumna<DatosDelChoferNacional>[] =
     CHOFERES_NACIONALES_ALTA;
 
-  datosDelChoferNacionalAlta: DatosDelChoferNacional[] = [];
+  datosDelChoferNacional: DatosDelChoferNacional[] = [];
 
-  datosDelChoferNacionalAltaSelected: DatosDelChoferNacional[] = [];
+  datosDelChoferNacionalSelected: DatosDelChoferNacional[] = [];
 
   datosConsulta: any;
 
@@ -76,31 +76,29 @@ export class ChofereNacionalModificacionComponent implements OnInit {
   }
 
   onChofereNationalSelected($event: DatosDelChoferNacional[]) {
-    this.datosDelChoferNacionalAltaSelected = $event;
-    //throw new Error('Method not implemented.');
+    this.datosDelChoferNacionalSelected = $event;
   }
 
   addNewRow(template: TemplateRef<unknown>) {
     this.datosChofere = {} as DatosDelChoferNacional;
-    //this.datosDelChoferNacionalAlta.push(this.datosChofere);
     this.openModal(template);
   }
 
   editSelectedRow(template: TemplateRef<unknown>) {
-    if (this.datosDelChoferNacionalAltaSelected.length === 0) {
+    if (this.datosDelChoferNacionalSelected.length === 0) {
       console.warn('No rows selected for editing.');
       return;
     }
-    this.datosChofere = this.datosDelChoferNacionalAltaSelected[0];
+    this.datosChofere = this.datosDelChoferNacionalSelected[0];
     this.openModal(template);
   }
 
   deleteSelectedRow() {
-    if (this.datosDelChoferNacionalAltaSelected.length > 0) {
-      this.datosDelChoferNacionalAlta = this.datosDelChoferNacionalAlta.filter(
-        (item) => !this.datosDelChoferNacionalAltaSelected.includes(item)
+    if (this.datosDelChoferNacionalSelected.length > 0) {
+      this.datosDelChoferNacional = this.datosDelChoferNacional.filter(
+        (item) => !this.datosDelChoferNacionalSelected.includes(item)
       );
-      this.datosDelChoferNacionalAltaSelected = [];
+      this.datosDelChoferNacionalSelected = [];
     } else {
       console.warn('No rows selected for deletion.');
     }
@@ -111,7 +109,6 @@ export class ChofereNacionalModificacionComponent implements OnInit {
   datosChofere: DatosDelChoferNacional = {} as DatosDelChoferNacional;
 
   openModal(template: TemplateRef<unknown>) {
-    console.log(`Opening modal with template:`, template);
     this.modalRef = this.bsModalService.show(template, {
       class: 'modal-fullscreen',
     });
@@ -120,17 +117,12 @@ export class ChofereNacionalModificacionComponent implements OnInit {
   cancelModal() {
     this.modalRef?.hide();
     this.modalRef = null;
-
-    console.log(`Received the closeModalEvent from the child component.`);
-    // do something after closing the modal if needed
   }
 
   addModal(data: DatosDelChoferNacional) {
     if (this.modalComponent) {
-      this.datosDelChoferNacionalAlta.push(data);
-      this.datosDelChoferNacionalAltaSelected = [];
-    } else {
-      console.error('Modal component is not initialized.');
+      this.datosDelChoferNacional.push(data);
+      this.datosDelChoferNacionalSelected = [];
     }
     this.cancelModal();
   }

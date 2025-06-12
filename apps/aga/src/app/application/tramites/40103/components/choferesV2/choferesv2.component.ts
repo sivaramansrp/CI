@@ -43,8 +43,8 @@ import mockData from '@libs/shared/theme/assets/json/40103/director-general-mock
 import { takeUntil } from 'rxjs';
 import { ChofereNacionalComponent } from './chofere.nacional/chofere.nacional.component';
 import { ChofereNacionalNotificationComponent } from './chofere.nacional.nofitication/chofere.nacional.notification.component';
-import { ChofereNacionalModificacionComponent } from './chofere.nacional.modificacion/chofere.nacional.modificacion.component';
-import { ChofereNacionalRetiradaComponent } from './chofere.nacional.retirada/chofere.nacional.retirada.component';
+import { ChofereNacionalModificacionComponent } from './chofere.nacional/chofere.nacional.modificacion/chofere.nacional.modificacion.component';
+import { ChofereNacionalRetiradaComponent } from './chofere.nacional/chofere.nacional.retirada/chofere.nacional.retirada.component';
 
 @Component({
   selector: 'app-choferes-v2',

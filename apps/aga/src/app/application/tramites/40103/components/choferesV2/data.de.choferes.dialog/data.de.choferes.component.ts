@@ -35,7 +35,7 @@ export class DatosDeChoferesComponent implements OnInit, OnDestroy {
   // datosConsulta: unknown;
   formChoferes!: FormGroup;
   destroyed$: Subject<unknown> = new Subject<unknown>();
-  showNotification: boolean = true;
+  showNotification: boolean = false;
 
   constructor(private fb: FormBuilder,
     private modalService: BsModalService,
@@ -110,11 +110,10 @@ export class DatosDeChoferesComponent implements OnInit, OnDestroy {
       );
       this.paisList = DATA || [];
       if (this.paisList.length > 0) {
-        this.onPaisChange(this.paisList[0]); // Inicializa el primer país
+        this.onPaisChange(this.paisList[0]);
       }
     } catch (error) {
       // Manejo de errores si es necesario
-      //console.error('Error al obtener la lista de países:', error);
     }
   }
 
@@ -223,7 +222,17 @@ export class DatosDeChoferesComponent implements OnInit, OnDestroy {
    */
   async buscarChoferNacional(curp: string) {
     if (!curp) {
-      this.showNotification = true;
+      //this.showNotification = true;
+      this.alertaNotificacion = {
+        tipoNotificacion: TipoNotificacionEnum.ALERTA,
+        categoria: CategoriaMensaje.INFORMACION,
+        modo: 'action',
+        titulo: 'Alert',
+        mensaje: 'Favor de ingresar CURP o RFC',
+        cerrar: true,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
       return;
     }
 
@@ -297,8 +306,16 @@ export class DatosDeChoferesComponent implements OnInit, OnDestroy {
       this.addModalEvent.emit(DATA);
       this.closeModal();
     } else {
-      this.showNotification = true;
-      this.alertaNotificacion.mensaje = 'Formulario inválido, por favor verifica los campos.';
+        this.alertaNotificacion = {
+          tipoNotificacion: TipoNotificacionEnum.ALERTA,
+          categoria: CategoriaMensaje.INFORMACION,
+          modo: 'action',
+          titulo: 'Alert',
+          mensaje: 'Formulario inválido, por favor verifica los campos.',
+          cerrar: true,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
     }
   }
 
@@ -321,15 +338,6 @@ export class DatosDeChoferesComponent implements OnInit, OnDestroy {
    * Inicializa la variable de alertaNotificación con un objeto de tipo Notificacion.
    * @type {Notificacion}
    */
-  public alertaNotificacion: Notificacion = {
-    tipoNotificacion: TipoNotificacionEnum.ALERTA,
-    categoria: CategoriaMensaje.INFORMACION,
-    modo: '',
-    titulo: 'Error',
-    mensaje: 'Favor de ingresar CURP o RFC',
-    cerrar: true,
-    txtBtnAceptar: '',
-    txtBtnCancelar: '',
-  }
+  public alertaNotificacion!: Notificacion;
 
 }

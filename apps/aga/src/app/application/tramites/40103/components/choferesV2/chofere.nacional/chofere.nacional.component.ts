@@ -1,7 +1,5 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import {
-    Notificacion,
-    NotificacionesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
@@ -15,6 +13,8 @@ import { CHOFERES_NACIONALES_ALTA, TEXTOS } from '../../../enum/choferes-enum';
 import { Chofer40103Service } from '../../../estados/chofer40103.service';
 import { Chofer40103Query } from '../../../estados/chofer40103.query';
 import { map, Observable, takeUntil } from 'rxjs';
+import { ConsultaioQuery, ConsultaioState, NotificacionesComponent,  } from '@ng-mf/data-access-user';
+
 
 @Component({
   selector: 'app-chofere-nacional',
@@ -40,9 +40,9 @@ export class ChofereNacionalComponent implements OnInit {
   ConfiguracionColumna: ConfiguracionColumna<DatosDelChoferNacional>[] =
     CHOFERES_NACIONALES_ALTA;
 
-  datosDelChoferNacionalAlta: DatosDelChoferNacional[] = [];
+  datosDelChoferNacional: DatosDelChoferNacional[] = [];
 
-  datosDelChoferNacionalAltaSelected: DatosDelChoferNacional[] = [];
+  datosDelChoferNacionalSelected: DatosDelChoferNacional[] = [];
 
   datosConsulta: any;
 
@@ -60,68 +60,57 @@ export class ChofereNacionalComponent implements OnInit {
   constructor(
     private bsModalService: BsModalService,
     private chofer40103Service: Chofer40103Service,
-    private chofer40103Query: Chofer40103Query
-  ) // private consultaioQuery: ConsultaioQuery
-  {}
+    private chofer40103Query: Chofer40103Query,
+    private consultaioQuery: ConsultaioQuery
+  ) {}
 
   ngOnInit(): void {
-    this.datosDelChoferNacionalAlta = [
-      {
-        curp: 'ABCD123456HJKLMN11',
-        rfc: 'RFC123',
-        nombre: 'Juan Pérez',
-        calle: 'Calle Falsa',
-        numeroExterior: '123',
-        numeroInterior: 'A',
-        pais: 'México',
-        estado: 'CDMX',
-        municipioAlcaldia: 'Benito Juárez',
-        colonia: 'Colonia del Valle',
-        localidad: 'Localidad 1',
-        codigoPostal: '12345',
-        paisDeResidencia: 'México',
-        id: 1,
-        telefono: '312343124',
-        correoElectronico: '12342314@sadf.com',
-      },
-    ];
 
     this.chofer40103Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
         map((data) => {
-          this.datosConsulta = data.datosDelChoferNacionalAlta ?? [];
+          this.datosDelChoferNacional = this.datosDelChoferNacional.concat(data?.datosDelChoferNacionalAlta ?? []);
         })
       )
       .subscribe();
+
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          if (seccionState.readonly) {
+            this.datosConsulta = seccionState;
+          }
+        })
+      ).subscribe();
+
   }
 
   onChofereNationalSelected($event: DatosDelChoferNacional[]) {
-    this.datosDelChoferNacionalAltaSelected = $event;
-    //throw new Error('Method not implemented.');
+    this.datosDelChoferNacionalSelected = $event;
   }
 
   addNewRow(template: TemplateRef<unknown>) {
     this.datosChofere = {} as DatosDelChoferNacional;
-    //this.datosDelChoferNacionalAlta.push(this.datosChofere);
     this.openModal(template);
   }
 
   editSelectedRow(template: TemplateRef<unknown>) {
-    if (this.datosDelChoferNacionalAltaSelected.length === 0) {
+    if (this.datosDelChoferNacionalSelected.length === 0) {
       console.warn('No rows selected for editing.');
       return;
     }
-    this.datosChofere = this.datosDelChoferNacionalAltaSelected[0];
+    this.datosChofere = this.datosDelChoferNacionalSelected[0];
     this.openModal(template);
   }
 
   deleteSelectedRow() {
-    if (this.datosDelChoferNacionalAltaSelected.length > 0) {
-      this.datosDelChoferNacionalAlta = this.datosDelChoferNacionalAlta.filter(
-        (item) => !this.datosDelChoferNacionalAltaSelected.includes(item)
+    if (this.datosDelChoferNacionalSelected.length > 0) {
+      this.datosDelChoferNacional = this.datosDelChoferNacional.filter(
+        (item) => !this.datosDelChoferNacionalSelected.includes(item)
       );
-      this.datosDelChoferNacionalAltaSelected = [];
+      this.datosDelChoferNacionalSelected = [];
     } else {
       console.warn('No rows selected for deletion.');
     }
@@ -148,8 +137,8 @@ export class ChofereNacionalComponent implements OnInit {
 
   addModal(data: DatosDelChoferNacional) {
     if (this.modalComponent) {
-      this.datosDelChoferNacionalAlta.push(data);
-      this.datosDelChoferNacionalAltaSelected = [];
+      this.datosDelChoferNacional.push(data);
+      this.datosDelChoferNacionalSelected = [];
     } else {
       console.error('Modal component is not initialized.');
     }

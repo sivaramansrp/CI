@@ -346,8 +346,11 @@
     </div>
   </div>
 </div>
-@if(showNotification === true) {
-  <lib-notificaciones 
-    [notificacionInput]="alertaNotificacion"
-  ></lib-notificaciones>
+
+@if(alertaNotificacion) {
+  <section>
+    <lib-notificaciones 
+      [notificacionInput]="alertaNotificacion"
+    ></lib-notificaciones>
+  </section>
 }
