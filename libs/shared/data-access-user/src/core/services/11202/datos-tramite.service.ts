@@ -3,6 +3,7 @@ import { Catalogo } from '../../models/shared/catalogos.model';
 import { FormGroup } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { RespuestaConsulta } from '../../models/11202/datos-tramite.model';
 
 @Injectable({
   providedIn: 'root',
@@ -14,9 +15,9 @@ export class DatosTramiteService {
 
   constructor(private http: HttpClient) {
     this.getAduanas();
-  this.getContenedores();
-  this.submitSolicitud();
-  this.uploadArchivo();
+    this.getContenedores();
+    this.submitSolicitud();
+    this.uploadArchivo();
   }
   /**
    * 
@@ -48,8 +49,26 @@ Obtenga una lista ficticia de Contenedores
   static submitSolicitud(_solicitudData?: FormGroup): Observable<{ success: boolean; message: string }> {
     return of({ success: true, message: 'Solicitud enviada exitosamente' });
   }
-
+  /**
+   * @method getDatosTableData
+   * @description Obtiene los datos de la tabla desde un archivo JSON local.
+   * 
+   * Este método realiza una solicitud HTTP GET para obtener los datos simulados desde el archivo `datosTabla.json`.
+   * 
+   * @returns {Observable<unknown[]>} Un observable que emite un arreglo con los datos de la tabla.
+   */
   getDatosTableData(): Observable<unknown[]> {
     return this.http.get<unknown[]>(`assets/json/11202/datosTabla.json`);
+  }
+  /**
+   * @method getDatosConsulta
+   * @description Obtiene los datos de consulta desde un archivo JSON local.
+   * 
+   * Este método realiza una solicitud HTTP GET para obtener los datos de consulta simulados desde el archivo `consulta_11201.json`.
+   * 
+   * @returns {Observable<RespuestaConsulta>} Un observable que emite la respuesta de los datos de consulta.
+   */
+  getDatosConsulta(): Observable<RespuestaConsulta> {
+    return this.http.get<RespuestaConsulta>(`assets/json/11202/consulta_11202.json`);
   }
 }

@@ -15,7 +15,7 @@ import { Injectable } from '@angular/core';
 export interface TramiteState {
     fechaInspeccionInput: string;
     fechaPagoDeDerechos: string;
-    fechaDePago:string;
+    fechaDePago: string;
     aduanaDeIngreso: number;
     tipoContenedor: number;
     identificacionTransporte: string;
@@ -28,11 +28,27 @@ export interface TramiteState {
     puntoDeVerificacion: number,
     banco: number,
     fechaPagoDeDerechosRevision: string;
-    llaveDePago:string;
-    claveDeReferencia:string;
-    importeDePago:string;
-    cadenaDependencia:string;
-
+    llaveDePago: string;
+    claveDeReferencia: string;
+    importeDePago: string;
+    cadenaDependencia: string;
+    fechaDeInspeccion: string;
+    certificadosAutorizados: string,
+    horaDeInspeccion: string;
+    nombreInspector: string,
+    primerApellido: string,
+    segundoApellido: string,
+    cantidadContenedores: string,
+    medioDeTransporte: string;
+    numeroDeGuia: string;
+    identificacionDelTransporte: string; 
+    nombreDeLaEmpresaTransportista: string;
+    folioDelTramite: string;
+    cadenaDependenciaRevision: string;
+    claveDeReferenciaRevision: string;
+    bancoRevision: string;
+    llaveDePagoRevision: string;
+    importeDePagoRevision: string;
 }
 
 /**
@@ -45,23 +61,40 @@ export function createInitialState(): TramiteState {
     return {
         fechaInspeccionInput: '',
         fechaPagoDeDerechos: '',
-        fechaDePago:'',
-        aduanaDeIngreso: 0,
-        tipoContenedor: 0,
+        fechaDePago: '',
+        aduanaDeIngreso: 1,
+        tipoContenedor: 1,
         identificacionTransporte: '',
         justificacion: '',
         esSolicitudFerros: '',
-        oficinaDeInspeccion: 0,
-        puntoDeInspeccion: 0,
-        regimenAlQueDestina: 0,
-        datosParaMovilizacion: 0,
-        puntoDeVerificacion: 0,
+        oficinaDeInspeccion: 1,
+        puntoDeInspeccion: 1,
+        regimenAlQueDestina: 1,
+        datosParaMovilizacion: 1,
+        puntoDeVerificacion: 1,
         banco: 0,
         fechaPagoDeDerechosRevision: '',
-        llaveDePago:'',
-        claveDeReferencia:'',
-        importeDePago:'',
-        cadenaDependencia:'',
+        llaveDePago: '',
+        claveDeReferencia: '',
+        importeDePago: '',
+        cadenaDependencia: '',
+        fechaDeInspeccion: '',
+        certificadosAutorizados: '',
+        horaDeInspeccion: '1',
+        nombreInspector: '',
+        primerApellido: '',
+        segundoApellido: '',
+        cantidadContenedores: '',
+        medioDeTransporte: "1",
+        numeroDeGuia: '',
+        identificacionDelTransporte:'',
+        nombreDeLaEmpresaTransportista: '',
+        folioDelTramite: '',
+        claveDeReferenciaRevision: '',
+        cadenaDependenciaRevision: '',
+        bancoRevision: '',
+        llaveDePagoRevision: '',
+        importeDePagoRevision: '',
     };
 }
 
@@ -86,6 +119,229 @@ export class TramiteStore extends Store<TramiteState> {
         this.update((state) => ({
             ...state,
             fechaInspeccionInput,
+        }));
+    }
+
+    /**
+     * @method setFechaDeInspeccion
+     * @description
+     * Actualiza el estado de `fechaDeInspeccion` con un nuevo valor.
+     * @param {string} fechaDeInspeccion - Fecha de inspección.
+     */
+    public setFechaDeInspeccion(fechaDeInspeccion: string): void {
+        this.update((state) => ({
+            ...state,
+            fechaDeInspeccion,
+        }));
+    }
+
+    /**
+     * @method setCertificadosAutorizados
+     * @description
+     * Actualiza el estado de `certificadosAutorizados` con un nuevo valor.
+     * @param {string} certificadosAutorizados - Certificados autorizados.
+     */
+    public setCertificadosAutorizados(certificadosAutorizados: string): void {
+        this.update((state) => ({
+            ...state,
+            certificadosAutorizados,
+        }));
+    }
+
+    /**
+     * @method setHoraDeInspeccion
+     * @description
+     * Actualiza el estado de `horaDeInspeccion` con un nuevo valor.
+     * @param {string} horaDeInspeccion - Hora de inspección.
+     */
+    public setHoraDeInspeccion(horaDeInspeccion: string): void {
+        this.update((state) => ({
+            ...state,
+            horaDeInspeccion,
+        }));
+    }
+
+    /**
+     * @method setNombreInspector
+     * @description
+     * Actualiza el estado de `nombreInspector` con un nuevo valor.
+     * @param {string} nombreInspector - Nombre del inspector.
+     */
+    public setNombreInspector(nombreInspector: string): void {
+        this.update((state) => ({
+            ...state,
+            nombreInspector,
+        }));
+    }
+
+
+    /**
+     * @method setPrimerApellido
+     * @description
+     * Actualiza el estado de `primerApellido` con un nuevo valor.
+     * @param {string} primerApellido - Primer apellido.
+     */
+    public setPrimerApellido(primerApellido: string): void {
+        this.update((state) => ({
+            ...state,
+            primerApellido,
+        }));
+    }
+
+
+    /**
+     * @method setSegundoApellido
+     * @description
+     * Actualiza el estado de `segundoApellido` con un nuevo valor.
+     * @param {string} segundoApellido - Segundo apellido.
+     */
+    public setSegundoApellido(segundoApellido: string): void {
+        this.update((state) => ({
+            ...state,
+            segundoApellido,
+        }));
+    }
+
+    /**
+     * @method setCantidadContenedores
+     * @description
+     * Actualiza el estado de `cantidadContenedores` con un nuevo valor.
+     * @param {string} cantidadContenedores - Cantidad de contenedores.
+     */
+    public setCantidadContenedores(cantidadContenedores: string): void {
+        this.update((state) => ({
+            ...state,
+            cantidadContenedores,
+        }));
+    }
+
+    /**
+     * @method setMedioDeTransporte
+     * @description
+     * Actualiza el estado de `medioDeTransporte` con un nuevo valor.
+     * @param {string} medioDeTransporte - Medio de transporte.
+     */
+    public setMedioDeTransporte(medioDeTransporte: string): void {
+        this.update((state) => ({
+            ...state,
+            medioDeTransporte,
+        }));
+    }
+
+    /**
+     * @method setNumeroDeGuia
+     * @description
+     * Actualiza el estado de `numeroDeGuia` con un nuevo valor.
+     * @param {string} numeroDeGuia - Número de guía.
+     */
+    public setNumeroDeGuia(numeroDeGuia: string): void {
+        this.update((state) => ({
+            ...state,
+            numeroDeGuia,
+        }));
+    }
+
+    /**
+     * @method setIdentificacionDelTransporte
+     * @description
+     * Actualiza el estado de `identificacionDelTransporte` con un nuevo valor.
+     * @param {string} identificacionDelTransporte - Identificación del transporte.
+     */
+    public setIdentificacionDelTransporte(identificacionDelTransporte: string): void {
+        this.update((state) => ({
+            ...state,
+            identificacionDelTransporte,
+        }));
+    }
+
+    /**
+     * @method setNombreDeLaEmpresaTransportista
+     * @description
+     * Actualiza el estado de `nombreDeLaEmpresaTransportista` con un nuevo valor.
+     * @param {string} nombreDeLaEmpresaTransportista - Nombre de la empresa transportista.
+     */
+    public setNombreDeLaEmpresaTransportista(nombreDeLaEmpresaTransportista: string): void {
+        this.update((state) => ({
+            ...state,
+            nombreDeLaEmpresaTransportista,
+        }));
+    }
+
+    /**
+     * @method setFolioDelTramite
+     * @description
+     * Actualiza el estado de `folioDelTramite` con un nuevo valor.
+     * @param {string} folioDelTramite - Folio del trámite.
+     */
+    public setFolioDelTramite(folioDelTramite: string): void {
+        this.update((state) => ({
+            ...state,
+            folioDelTramite,
+        }));
+    }
+
+    /**
+     * @method setClaveDeReferenciaRevision
+     * @description
+     * Actualiza el estado de `claveDeReferenciaRevision` con un nuevo valor.
+     * @param {string} claveDeReferenciaRevision - Clave de referencia de revisión.
+     */
+    public setClaveDeReferenciaRevision(claveDeReferenciaRevision: string): void {
+        this.update((state) => ({
+            ...state,
+            claveDeReferenciaRevision,
+        }));
+    }
+
+    /**
+     * @method setCadenaDependenciaRevision
+     * @description
+     * Actualiza el estado de `cadenaDependenciaRevision` con un nuevo valor.
+     * @param {string} cadenaDependenciaRevision - Cadena de dependencia de revisión.
+     */
+    public setCadenaDependenciaRevision(cadenaDependenciaRevision: string): void {
+        this.update((state) => ({
+            ...state,
+            cadenaDependenciaRevision,
+        }));
+    }
+
+    /**
+     * @method setBancoRevision
+     * @description
+     * Actualiza el estado de `bancoRevision` con un nuevo valor.
+     * @param {string} bancoRevision - Banco de revisión.
+     */
+    public setBancoRevision(bancoRevision: string): void {
+        this.update((state) => ({
+            ...state,
+            bancoRevision,
+        }));
+    }
+
+    /**
+     * @method setLlaveDePagoRevision
+     * @description
+     * Actualiza el estado de `llaveDePagoRevision` con un nuevo valor.
+     * @param {string} llaveDePagoRevision - Llave de pago de revisión.
+     */
+    public setLlaveDePagoRevision(llaveDePagoRevision: string): void {
+        this.update((state) => ({
+            ...state,
+            llaveDePagoRevision,
+        }));
+    }
+
+    /**
+     * @method setImporteDePagoRevision
+     * @description
+     * Actualiza el estado de `importeDePagoRevision` con un nuevo valor.
+     * @param {string} importeDePagoRevision - Importe de pago de revisión.
+     */
+    public setImporteDePagoRevision(importeDePagoRevision: string): void {
+        this.update((state) => ({
+            ...state,
+            importeDePagoRevision,
         }));
     }
 

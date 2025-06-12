@@ -2,6 +2,7 @@
     <formas-dinamicas [forma]="formularioDatosTramite" 
     [formularioTitulo]="'Datos del trámite'"
     [formularioDatos]="configuracionFormularioDatos || []"
+        [soloLectura]="esSoloLectura"
         [estado]="estadoSeleccionado" (emitirCambioDeValor)="establecerCambioDeValor($event)">
    </formas-dinamicas>
 
@@ -12,6 +13,7 @@
         <label for="mercancias" class="form-label text-left">Mercancías*:</label>
         <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosTabla"
             [tipoSeleccionTabla]="seleccionTabla"
+            [disableSeleccionTablaCheckBox]="esSoloLectura"
             (listaDeFilaSeleccionada)="obtenerMercanciasSeleccionadas($event)"></app-tabla-dinamica>
         <nav aria-label="Ejemplo de paginación">
             <ul class="pagination d-flex justify-content-center">
@@ -24,14 +26,14 @@
         <div class="col-12 d-flex justify-content-end">
             @if(datosTabla.length > 0) {
             <button name="modificar" class="btn btn-primary me-2" data-bs-toggle="modal"
-                data-bs-target="#modalMercancia" (click)="modificarMercancia()">
+                data-bs-target="#modalMercancia" (click)="modificarMercancia()" [disabled]="esSoloLectura">
                 Modificar
             </button>
-            <button name="eliminar" class="btn btn btn-danger me-2" (click)="eliminarMercancia()">
+            <button name="eliminar" class="btn btn btn-danger me-2" (click)="eliminarMercancia()" [disabled]="esSoloLectura">
                 Eliminar
             </button>
             }
-            <button name="agregar" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalMercancia">
+            <button name="agregar" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalMercancia" [disabled]="esSoloLectura">
                 Agregar
             </button>
         </div>
