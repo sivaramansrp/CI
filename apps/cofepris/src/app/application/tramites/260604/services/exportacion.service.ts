@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { PermisoModel } from '../../../../../../../../libs/shared/data-access-user/src/core/models/260604/aviso-exportacion.model'
-import { catchError, Observable, throwError } from 'rxjs';
+import{ PermisoModel } from '@libs/shared/data-access-user/src/core/models/260604/aviso-exportacion.model';
+
+import { Observable, catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 
 @Injectable({

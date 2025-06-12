@@ -1,4 +1,4 @@
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Catalogo, ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -62,6 +62,12 @@ export class SeccionSubcontratadosComponent implements OnInit, OnDestroy {
   /** Emisor de eventos con los datos de subcontratados */
   @Output() seccionSubcontratados = new EventEmitter<NumeroDeEmpleados>();
 
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   constructor(
     /** Servicio para crear formularios reactivos */
     public fb: FormBuilder,
@@ -73,13 +79,67 @@ export class SeccionSubcontratadosComponent implements OnInit, OnDestroy {
     public solicitud32605Store: Solicitud32605Store,
 
     /** Query para obtener datos del store de solicitud 32605 */
-    public solicitud32605Query: Solicitud32605Query
+    public solicitud32605Query: Solicitud32605Query,
+    public consultaioQuery: ConsultaioQuery
   ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     /** Obtiene la lista de catálogos cuando se inicializa el componente */
     this.conseguirSolicitudCatologoSelectLista();
   }
 
+  /** Inicializa el formulario para gestionar datos del miembro de la empresa */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.subcontratadosForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.subcontratadosForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  /**
+   * Inicializa el formulario `miembroEmpresaForm` con los datos del estado actual `solicitud32605State`.
+   *
+   * Este formulario recopila información detallada sobre un miembro de la empresa, como su nombre,
+   * nacionalidad, RFC, tipo de persona y relación con la empresa.
+   */
+  inicializarFormulario(): void {
     /** Inicializa el formulario reactivo con validadores */
     this.subcontratadosForm = this.fb.group({
       subcontrataRFCBusqueda: [

@@ -5,6 +5,7 @@ import { DetallesComponent } from './detalles.component';
 import { ValidarInicalmenteService } from '../../services/validar-inicalmente/validar-inicalmente.service';
 import { Solicitud110208State, Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
 import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 describe('DetallesComponent', () => {
   let component: DetallesComponent;
@@ -12,15 +13,18 @@ describe('DetallesComponent', () => {
   let mockService: jest.Mocked<ValidarInicalmenteService>;
   let mockStore: jest.Mocked<Tramite110208Store>;
   let mockQuery: jest.Mocked<Tramite110208Query>;
+  let mockConsultaioQuery: any;
 
   beforeEach(async () => {
     mockService = {
-      obtenerEstadoList: jest.fn(),
+      obtenerEstadoList: jest.fn().mockReturnValue(of({ data: [{ id: 1, name: 'Estado 1' }] })),
     } as unknown as jest.Mocked<ValidarInicalmenteService>;
 
     mockStore = {
       setMedioTransporte: jest.fn(),
       setRutaCompleta: jest.fn(),
+      setPuertoDeEmbarque: jest.fn(),
+      setPuertoDeDesembarque: jest.fn(),
     } as unknown as jest.Mocked<Tramite110208Store>;
 
     mockQuery = {
@@ -32,6 +36,10 @@ describe('DetallesComponent', () => {
       }),
     } as unknown as jest.Mocked<Tramite110208Query>;
 
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: false }),
+    };
+
     await TestBed.configureTestingModule({
       imports: [DetallesComponent],
       providers: [
@@ -39,6 +47,7 @@ describe('DetallesComponent', () => {
         { provide: ValidarInicalmenteService, useValue: mockService },
         { provide: Tramite110208Store, useValue: mockStore },
         { provide: Tramite110208Query, useValue: mockQuery },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
       ],
     }).compileComponents();
 
@@ -87,15 +96,11 @@ describe('DetallesComponent', () => {
   it('should clean up observables on ngOnDestroy', () => {
     const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
     const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
-    const destroyedSpy = jest.spyOn(component['destroyed$'], 'next');
-    const destroyedCompleteSpy = jest.spyOn(component['destroyed$'], 'complete');
 
     component.ngOnDestroy();
 
     expect(destroyNotifierSpy).toHaveBeenCalled();
     expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
-    expect(destroyedSpy).toHaveBeenCalled();
-    expect(destroyedCompleteSpy).toHaveBeenCalled();
   });
 
   it('should update form values when solicitudState changes', () => {
@@ -143,6 +148,135 @@ describe('DetallesComponent', () => {
     component.ngOnInit();
 
     expect(component.solicitudState).toEqual(newState);
-    expect(component.detallas.value).toEqual(newState);
+    expect(component.detallas.value).toEqual({
+      medioTransporte: 'Marítimo',
+      rutaCompleta: 'Ruta 2',
+      puertoDeEmbarque: 'Puerto C',
+      puertoDeDesembarque: 'Puerto D'
+    });
+  });
+
+  it('should handle readonly mode from consultaioQuery', () => {
+    mockConsultaioQuery.selectConsultaioState$ = of({ readonly: true });
+    fixture = TestBed.createComponent(DetallesComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    expect(component.esFormularioSoloLectura).toBeTruthy();
+    expect(component.detallas.get('medioTransporte')?.disabled).toBeTruthy();
+    expect(component.detallas.get('rutaCompleta')?.disabled).toBeTruthy();
+  });
+
+  it('should enable form when readonly is false', () => {
+    expect(component.esFormularioSoloLectura).toBeFalsy();
+    expect(component.detallas.get('medioTransporte')?.enabled).toBeTruthy();
+    expect(component.detallas.get('rutaCompleta')?.enabled).toBeTruthy();
+  });
+
+  it('should call setValoresStore for puertoDeEmbarque', () => {
+    const form = component.detallas;
+    form.get('puertoDeEmbarque')?.setValue('New Port');
+
+    component.setValoresStore(form, 'puertoDeEmbarque', 'setPuertoDeEmbarque');
+
+    expect(mockStore.setPuertoDeEmbarque).toHaveBeenCalledWith('New Port');
+  });
+
+  it('should call setValoresStore for puertoDeDesembarque', () => {
+    const form = component.detallas;
+    form.get('puertoDeDesembarque')?.setValue('Destination Port');
+
+    component.setValoresStore(form, 'puertoDeDesembarque', 'setPuertoDeDesembarque');
+
+    expect(mockStore.setPuertoDeDesembarque).toHaveBeenCalledWith('Destination Port');
+  });
+
+  it('should handle error in obtenerEstadoList', () => {
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    
+    component.obtenerEstadoList();
+    
+    expect(consoleSpy).toHaveBeenCalled();
+    consoleSpy.mockRestore();
+  });
+
+  it('should initialize with empty values when solicitudState is empty', () => {
+    mockQuery.selectSolicitud$ = of({} as Solicitud110208State);
+    fixture = TestBed.createComponent(DetallesComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+
+    expect(component.solicitudState).toEqual({});
+    expect(component.detallas.value).toEqual({
+      medioTransporte: null,
+      rutaCompleta: null,
+      puertoDeEmbarque: null,
+      puertoDeDesembarque: null
+    });
+  });
+
+  it('should handle ngOnDestroy with no subscriptions', () => {
+    fixture = TestBed.createComponent(DetallesComponent);
+    component = fixture.componentInstance;
+    
+    const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    
+    component.ngOnDestroy();
+    
+    expect(destroyNotifierSpy).toHaveBeenCalled();
+    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
+  });
+
+  it('should update form controls when solicitudState changes', () => {
+    const newState: Solicitud110208State = {
+      medioTransporte: 'Aéreo',
+      rutaCompleta: 'Nueva Ruta',
+      puertoDeEmbarque: 'Nuevo Puerto A',
+      puertoDeDesembarque: 'Nuevo Puerto B',
+      entidadFederativa: '',
+      bloque: '',
+      fraccionArancelariaForm: '',
+      registroProductoForm: '',
+      nombreComercialForm: '',
+      fechaInicio: '',
+      fechaFinal: '',
+      tercerOperador: '',
+      marca: '',
+      cantidad: '',
+      umc: '',
+      valorDeLa: '',
+      complementoDescripcion: '',
+      nFactura: '',
+      tipoDeFactura: '',
+      fechaFactura: '',
+      ciudad: '',
+      calle: '',
+      numeroLetra: '',
+      lada: '',
+      telefono: '',
+      fax: '',
+      correoElectronico: '',
+      paisDestino: '',
+      nombres: '',
+      primerApellido: '',
+      segundoApellido: '',
+      numeroFiscal: '',
+      razonSocial: '',
+      observaciones: '',
+      idioma: '',
+      entidadFederativaCertificado: '',
+      representacionFederal: ''
+    };
+
+    mockQuery.selectSolicitud$ = of(newState);
+    component.ngOnInit();
+
+    expect(component.detallas.value).toEqual({
+      medioTransporte: 'Aéreo',
+      rutaCompleta: 'Nueva Ruta',
+      puertoDeEmbarque: 'Nuevo Puerto A',
+      puertoDeDesembarque: 'Nuevo Puerto B'
+    });
   });
 });

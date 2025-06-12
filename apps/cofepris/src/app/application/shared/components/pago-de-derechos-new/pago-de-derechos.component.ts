@@ -38,6 +38,8 @@ export class PagoDeDerechosComponent {
    */
   @Input() banco!: Catalogo[];
 
+  @Input() isDisabled: boolean = false;
+
   /**
    * Configuración de la fecha final para el campo "Fecha de Pago".
    */

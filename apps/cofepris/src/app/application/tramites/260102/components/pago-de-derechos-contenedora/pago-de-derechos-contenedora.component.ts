@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite260102Store } from '../../estados/stores/tramite260102Store.store';
@@ -12,11 +12,32 @@ import { Tramite260102Store } from '../../estados/stores/tramite260102Store.stor
   styleUrl: './pago-de-derechos-contenedora.component.scss',
 })
 export class PagoDeDerechosContenedoraComponent {
- public pagoDerechos: PagoDerechosFormState;
-  constructor(public tramiteStore: Tramite260102Store){
-   this.pagoDerechos = this.tramiteStore.getValue().pagoDerechos;
+  /**
+   * @property {boolean} formularioDeshabilitado
+   * @description
+   * Indica si el formulario está deshabilitado. Por defecto es `false`.
+   */
+  @Input()
+  formularioDeshabilitado: boolean = false;
+
+  /**
+   * @property {PagoDerechosFormState} pagoDerechos
+   * @description
+   * Contiene el estado del formulario de pago de derechos.
+   */
+  public pagoDerechos: PagoDerechosFormState;
+
+  /**
+   * @constructor
+   * @param {Tramite260102Store} tramiteStore
+   * @description
+   * Crea una instancia del componente `PagoDeDerechosContenedoraComponent`.
+   * Inicializa el estado de pago de derechos obteniéndolo del store del trámite.
+   */
+  constructor(public tramiteStore: Tramite260102Store) {
+    this.pagoDerechos = this.tramiteStore.getValue().pagoDerechos;
   }
-  
+
   /**
    * Actualiza la información de pago de derechos en el store del trámite.
    *
@@ -35,8 +56,7 @@ export class PagoDeDerechosContenedoraComponent {
    * this.updatePagoDerechos(pagoActualizado);
    * ```
    */
-  updatePagoDerechos(event: PagoDerechosFormState): void{
+  updatePagoDerechos(event: PagoDerechosFormState): void {
     this.tramiteStore.updatePagoDerechos(event);
   }
-
 }

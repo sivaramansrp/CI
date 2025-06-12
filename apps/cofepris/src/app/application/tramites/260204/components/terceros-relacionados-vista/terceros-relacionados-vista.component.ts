@@ -5,8 +5,9 @@ import {
   Facturador,
   Proveedor,
 } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260204Query } from '../../estados/queries/tramite260204Query.query';
 import { Tramite260204Store } from '../../estados/stores/tramite260204Store.store';
@@ -55,6 +56,14 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     * @private
     */
    private destroy$ = new Subject<void>();
+
+   /**
+    * Observable que indica si el formulario está en modo solo lectura.
+    * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.
+    *
+    * @type {Observable<boolean>}
+    */
+   esFormularioSoloLectura!: Observable<boolean>;
  
    /**
     * @constructor
@@ -65,7 +74,8 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     */
    constructor(
      private tramiteStore: Tramite260204Store,
-     private tramiteQuery: Tramite260204Query
+     private tramiteQuery: Tramite260204Query,
+     private consultaQuery: ConsultaioQuery  
    ) { }
  
    /**
@@ -97,6 +107,16 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
        .subscribe((data) => {
          this.facturadorTablaDatos = data;
        });
+       
+    this.esFormularioSoloLectura = this.consultaQuery.selectConsultaioState$
+    .pipe(
+      map((seccionState) => {
+        if(!seccionState.create && seccionState.procedureId === '260204') {
+          return seccionState.readonly;
+        } 
+        return false;
+      })
+    );
    }
 
   /**
