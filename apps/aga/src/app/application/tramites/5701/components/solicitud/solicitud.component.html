@@ -387,7 +387,7 @@
             class="form-check-input"
             type="checkbox"
             id="lda"
-            (click)="showConfirmDialogLDA_DD($event, 'lda')"
+            (change)="showConfirmDialogLDA_DD('lda')"
             formControlName="lda"
           />
           <label class="form-check-label" for="lda">Despacho LDA</label>
@@ -400,7 +400,7 @@
             class="form-check-input"
             type="checkbox"
             id="dd"
-            (click)="showConfirmDialogLDA_DD($event, 'dd')"
+            (change)="showConfirmDialogLDA_DD('dd')"
             formControlName="dd"
           />
           <label class="form-check-label" for="dd">Despacho DD</label>

@@ -1,0 +1,130 @@
+/**
+ * @description Mensaje de error cuando no se ha encontrado el rfc.
+ */
+export const MSG_ERROR_RFC_NO_ENCONTRADO =
+  'No se encontró el RFC, favor de verificar los datos ingresados.';
+/**
+ * @description RFC sin certificaciones
+ */
+export const RFC_SIN_CERTIFICACIONES =
+  'No se encontró información de las certificaciones y/o permisos, si aplica, favor de capturar.';
+
+// #Sección Fechas
+/**
+ *@descrption Mensaje de erros cuando la fecha excede el peiodo mensual.
+ */
+export const MSJ_ERROR_FECHA_MES = 'La fecha excede el periodo mensual.';
+
+/**
+ * @description Mensaje de error cuando la fecha excede el periodo semanal.
+ */
+export const MSJ_ERROR_FECHA_SEMANA =
+  'La fecha no es válida para el periodo semanal.';
+
+/**
+ * @description Mensaje de error cuando la fecha excede el periodo diario.
+ */
+export const MSJ_ERROR_FECHA_DIA =
+  'La fecha no es válida para la solicitud seleccionada.';
+
+// #Mensajes del modal para el componente Persona Responsable del Despacho
+/**
+ * @description Mensaje de error cuando se hace una busqueda con un gafete que no existe.
+ */
+export const ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS =
+  'No se encontraron datos con el número de gafete, intenta de nuevo o agrega los datos restantes.';
+
+/**
+ * @description Mensaje de error cuando ya existe un responsable del despacho con el mismo gafete que se quiere registrar.
+ */
+export const MSJ_ERROR_GAFETE_EXISTE =
+  'El número de gafete ya se encuentra registrado, intenta de nuevo';
+
+/**
+ * @description Mensaje de error cuando se intenta agregar mas de 5 personas respsonsables de despacho.
+ */
+export const ADV_MAXIMO_PERSONAS =
+  'Solo puedes agregar a máximo 5 personas responsables del despacho.';
+
+/**
+ * @description Mensaje de error cuando se hace una busqueda sin datos.
+ */
+export const ERR_INPUT_BUSQUEDA_VACIO =
+  'No has proporcionado información que es requerida.';
+
+// # Sección pedimento
+/**
+ * @description Mensaje de error cuando se intenta agregar un pedimento sin haberlo ingresado al input.
+ */
+export const MSG_NRO_PEDIMENTO_LLENAR_DATOS =
+  'Debes de llenar los datos para agregar otro pedimento. En el caso de que ya hayas capturado todos los datos requeridos, por favor actualiza los datos y al final de capturarlos oprime "Enter".';
+
+/**
+ * @description Mensaje de error cuando se intenta agregar un numero de pedimento sin haberlo ingresado al input.
+ */
+export const MSG_NRO_PEDIMENTO = 'Necesita agregar un número de pedimento';
+
+/**
+ * @description Mensaje de error cuando se intenta agregar un numero de pedimento sin haber seleccionado una aduana de despacho.
+ */
+export const MSG_ADUANA_PEDIMENTO =
+  'Necesita seleccionar una aduana de despacho y agregar un número de pedimento';
+
+/**
+ * @description Mensaje pedimento válido
+ */
+export const MSG_PEDIMENTO_VALIDO =
+  'El pedimento es válido, favor de capturar los datos de pedimento faltantes.';
+
+/**
+ * @description Mensaje de error cuando el pedimento no se puede validar.
+ */
+export const ERR_VALIDACION_PEDIMENTO =
+  'No se pudo validar el pedimento, favor de capturar los datos de pedimento faltante y anexar documento.';
+
+// #Secion Linea ed captura
+/**
+ * @description Mensaje de error cuando no se han llenado los campos obligatorios.
+ */
+export const ERR_CAMPOS_OBLIGATORIOS =
+  'Debes capturar todos los datos marcados como obligatorios.';
+/**
+ * @description Mensaje monto pagado cubierto
+ */
+export const MSG_MONTO_PAGADO_CUBIERTO =
+  'El monto a pagar ya ha sido cubierto, no es necesario agregar otra línea de captura.';
+
+/**
+ * @description Mensaje de error cuando los campos obligatorios no están capturados en la consulta de línea de captura..
+ */
+export const MSJ_ERROR_LINEA_CAPTURA =
+  'Debe capturar todos los datos marcados como obligatorios.';
+
+/**
+ * @description Mensaje de error cuando la línea de captura no es válida.
+ */
+export const MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA =
+  'Línea de captura no es válida, favor de verificar.';
+
+/**
+ * @decription Mensaje de advertencia cuando la línea de captura ya ha sido usada
+ */
+export const MSJ_LINEA_CAPTURA_USADA =
+  'La línea de captura ya ha sido utilizada, favor de verificar.';
+
+/**
+ * @description Mensaje de error cuando la línea de captura no ha sido pagada.
+ */
+export const MSJ_LINEA_CAPTURA_NO_PAGADA =
+  'La línea de captura no ha sido pagada, favor de verificar.';
+
+/**
+ * @description Mensaje de avertencia cuando se va a cambiar de tipo de solicitud y el formulario tiene datos capturados.
+ */
+export const MSG_CAMBIO_TIPO_SOLICITUD =
+  'Los datos capturados serán borrados, ¿estás de acuerdo (SI/NO)?';
+
+/**
+ * @description Mensaje error, no se encontró información
+ */
+export const MSG_ERROR_NO_INFORMACION = 'No se encontró información';

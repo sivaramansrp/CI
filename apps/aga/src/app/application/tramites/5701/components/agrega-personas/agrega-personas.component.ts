@@ -6,12 +6,10 @@ import {
   MSG_DATOS_GUARDADOS,
   MSG_ELIMINA_ELEMENTO,
   MSJ_ERROR_GAFETE_EXISTE,
-  TITULO_MODAL,
 } from '../../../../core/enums/5701/tramite5701.enum';
 import {
   CONFIGURACION_ENCABEZADO_TABLA_RESPONSABLES_DESPACHO,
   MSG_SELECCIONA_REGISTRO,
-  TITULO_MODAL_AVISO,
 } from '../../../../core/enums/5701/responsables-despacho.enum';
 import {
   Component,
@@ -48,6 +46,7 @@ import { CommonModule } from '@angular/common';
 import { ConsultaResponsableService } from '../../../../core/services/5701/consulta-responsable.service';
 import { ResponsablesDespacho } from '../../../../core/models/5701/tramite5701.model';
 import { TIPO_GAFETE } from '../../../../constantes/5701/constantes-tramite';
+import { TITULO_MODAL_AVISO } from '../../../../core/enums/5701/mensajes-modal-5701.enum';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 @Component({
   selector: 'agrega-personas',
@@ -205,7 +204,7 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
         tipoNotificacion: 'alert',
         categoria: '',
         modo: 'action',
-        titulo: TITULO_MODAL,
+        titulo: TITULO_MODAL_AVISO,
         mensaje: ERR_INPUT_BUSQUEDA_VACIO,
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
@@ -244,7 +243,7 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
               tipoNotificacion: 'alert',
               categoria: '',
               modo: 'action',
-              titulo: TITULO_MODAL,
+              titulo: TITULO_MODAL_AVISO,
               mensaje: ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS,
               cerrar: false,
               txtBtnAceptar: 'Cerrar',
@@ -301,7 +300,7 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
         tipoNotificacion: 'alert',
         categoria: '',
         modo: 'action',
-        titulo: TITULO_MODAL,
+        titulo: TITULO_MODAL_AVISO,
         mensaje: ERR_CAMPOS_OBLIGATORIOS,
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
@@ -319,7 +318,7 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
         tipoNotificacion: 'alert',
         categoria: '',
         modo: 'action',
-        titulo: TITULO_MODAL,
+        titulo: TITULO_MODAL_AVISO,
         mensaje: ERR_CAMPOS_OBLIGATORIOS,
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
@@ -333,7 +332,7 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
         tipoNotificacion: 'alert',
         categoria: '',
         modo: 'action',
-        titulo: TITULO_MODAL,
+        titulo: TITULO_MODAL_AVISO,
         mensaje: ADV_MAXIMO_PERSONAS,
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
@@ -362,7 +361,7 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
       tipoNotificacion: 'alert',
       categoria: '',
       modo: 'action',
-      titulo: TITULO_MODAL,
+      titulo: TITULO_MODAL_AVISO_AVISO,
       mensaje: EXISTE_RESPONSABLE
         ? MSJ_ERROR_GAFETE_EXISTE
         : MSG_DATOS_GUARDADOS,
@@ -414,7 +413,7 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
         tipoNotificacion: 'alert',
         categoria: '',
         modo: 'action',
-        titulo: TITULO_MODAL_AVISO,
+        titulo: TITULO_MODAL_AVISO_AVISO,
         mensaje: MSG_SELECCIONA_REGISTRO,
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
@@ -435,7 +434,7 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
       tipoNotificacion: 'alert',
       categoria: '',
       modo: 'action',
-      titulo: TITULO_MODAL,
+      titulo: TITULO_MODAL_AVISO,
       mensaje: MSG_ELIMINA_ELEMENTO,
       cerrar: false,
       txtBtnAceptar: 'Cerrar',

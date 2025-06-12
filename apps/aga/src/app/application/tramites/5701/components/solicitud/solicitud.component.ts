@@ -1,3 +1,4 @@
+import { TITULO_MODAL_AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/terceros.enums';
 import {
   ADV_LIMPIA_CAMPOS,
   CONFIGURACION_ENCABEZADO_TABLA_PAGOS,
@@ -23,7 +24,6 @@ import {
   SIN_VALOR,
   TEXTO_ACEPTAR,
   TEXTO_CANCELAR,
-  TITULO_MODAL_AVISO,
   TRANSPORTE,
   UN_DIA,
   VEHICULO,
@@ -120,7 +120,6 @@ import { PatenteEmpresaService } from '../../../../core/services/5701/patente-em
 import { PatenteService } from '../../../../core/services/5701/patente.service';
 import { ServiciosExtraordinariosService } from '../../../../core/services/5701/servicios-extraordinarios.service';
 import { SocioComercialService } from '../../../../core/services/5701/socio-comercial.service';
-import { TITULO_MODAL_ERROR } from '../../../../core/enums/5701/tramite5701.enum';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 import { UsuarioState } from '@libs/shared/data-access-user/src/core/estados/usuario.store';
 import { ValidaLineaCapturaService } from '../../../../core/services/5701/pago/valida-linea-captura.service';
@@ -2051,7 +2050,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
-        titulo: TITULO_MODAL_ERROR,
+        titulo: TITULO_MODAL_AVISO,
         mensaje: MSJ_ERROR_LINEA_CAPTURA,
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
@@ -2070,7 +2069,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               tipoNotificacion: 'alert',
               categoria: 'danger',
               modo: 'action',
-              titulo: TITULO_MODAL_ERROR,
+              titulo: TITULO_MODAL_AVISO,
               mensaje: MSJ_LINEA_CAPTURA_USADA,
               cerrar: false,
               txtBtnAceptar: 'Aceptar',
@@ -2093,7 +2092,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               tipoNotificacion: 'alert',
               categoria: 'danger',
               modo: 'action',
-              titulo: TITULO_MODAL_ERROR,
+              titulo: TITULO_MODAL_AVISO,
               mensaje: MSJ_LINEA_CAPTURA_NO_PAGADA,
               cerrar: false,
               txtBtnAceptar: 'Aceptar',
@@ -2128,7 +2127,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               tipoNotificacion: 'alert',
               categoria: 'danger',
               modo: 'action',
-              titulo: TITULO_MODAL_ERROR,
+              titulo: TITULO_MODAL_AVISO,
               mensaje: MSG_MONTO_PAGADO_CUBIERTO,
               cerrar: false,
               txtBtnAceptar: 'Aceptar',
@@ -2261,46 +2260,62 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @param tipo - Tipo de despacho seleccionado ('lda' o 'dd').
    * @returns {void} No retorna ningún valor.
    */
-  showConfirmDialogLDA_DD(event: Event, tipo: string): void {
-    const CHECKED = event.target as HTMLInputElement;
+  showConfirmDialogLDA_DD(tipo: string): void {
+    const CHECKED = this.despacho.get(tipo)?.value;
+    if (CHECKED) {
+      // Valida si hay fechas seleccionadas
+      console.log(this.fechasSeleccionadas.length);
+      
+      const VALIDACION_FECHAS = this.fechasSeleccionadas.length > 0 || false;
 
-    this.despacho.get(tipo)?.setValue(CHECKED.checked);
+      console.log('Validación de fechas seleccionadas:', VALIDACION_FECHAS);
 
-    this.tipoDespacho = tipo;
-    const ADUANA = this.despacho.get('idAduanaDespacho')?.value;
-    const DESPACHO = this.despacho.get('idSeccionDespacho')?.value;
-    const RECINTO = this.despacho.get('nombreRecinto')?.value;
+  
+      
+      console.log('El campo ya está seleccionado');
+      
 
-    const FORMA_MODIFICADA = Object.keys(this.despacho.controls).some((key) => {
-      if (key !== 'lda' && key !== 'dd') {
-        return (
-          this.despacho.controls[key].dirty ||
-          this.despacho.controls[key].touched
-        );
-      }
-      return false;
-    });
-
-    if ((ADUANA || DESPACHO || RECINTO) > 0 && FORMA_MODIFICADA) {
-      this.nuevaNotificacion = {
-        tipoNotificacion: 'alert',
-        categoria: '',
-        modo: 'action',
-        titulo: TITULO_MODAL_ERROR,
-        mensaje: ADV_LIMPIA_CAMPOS,
-        cerrar: false,
-        txtBtnAceptar: 'Sí',
-        txtBtnCancelar: 'No',
-      };
-      this.procesoModal = 'lda_dd';
-    } else if (!this.despacho.get(tipo)?.value) {
-      this.despacho.get('rfcDespachoLDA')?.clearValidators();
-      this.despacho.get('rfcDespachoLDA')?.updateValueAndValidity();
-      this.despacho.get('folioDDEX')?.clearValidators();
-      this.despacho.get('folioDDEX')?.updateValueAndValidity();
     } else {
-      this.activaDesactivaCheckLDA_DDEX(tipo);
+      console.log('El campo no está seleccionado, se procede a mostrar el modal de confirmación');
+      
     }
+
+
+    // this.tipoDespacho = tipo;
+    // const ADUANA = this.despacho.get('idAduanaDespacho')?.value;
+    // const DESPACHO = this.despacho.get('idSeccionDespacho')?.value;
+    // const RECINTO = this.despacho.get('nombreRecinto')?.value;
+
+    // const FORMA_MODIFICADA = Object.keys(this.despacho.controls).some((key) => {
+    //   if (key !== 'lda' && key !== 'dd') {
+    //     return (
+    //       this.despacho.controls[key].dirty ||
+    //       this.despacho.controls[key].touched
+    //     );
+    //   }
+    //   return false;
+    // });
+
+    // if ((ADUANA || DESPACHO || RECINTO) > 0 && FORMA_MODIFICADA) {
+    //   this.nuevaNotificacion = {
+    //     tipoNotificacion: 'alert',
+    //     categoria: '',
+    //     modo: 'action',
+    //     titulo: TITULO_MODAL_ERROR,
+    //     mensaje: ADV_LIMPIA_CAMPOS,
+    //     cerrar: false,
+    //     txtBtnAceptar: 'Sí',
+    //     txtBtnCancelar: 'No',
+    //   };
+    //   this.procesoModal = 'lda_dd';
+    // } else if (!this.despacho.get(tipo)?.value) {
+    //   this.despacho.get('rfcDespachoLDA')?.clearValidators();
+    //   this.despacho.get('rfcDespachoLDA')?.updateValueAndValidity();
+    //   this.despacho.get('folioDDEX')?.clearValidators();
+    //   this.despacho.get('folioDDEX')?.updateValueAndValidity();
+    // } else {
+    //   this.activaDesactivaCheckLDA_DDEX(tipo);
+    // }
   }
 
   /**
