@@ -1,6 +1,8 @@
 import { 
   AlertComponent, 
   CatalogoSelectComponent, 
+  ConsultaioQuery, 
+  ConsultaioState, 
   InputRadioComponent, 
   TablaDinamicaComponent, 
   TituloComponent 
@@ -44,7 +46,15 @@ import { Tramite260704Query } from "../../estados/Tramite260704.query";
   styleUrls: ["./terceros-relacinados.component.css"],
 })
 export class TercerosRelacinadosComponent implements OnInit, OnDestroy {
-
+/**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
   /**
    * Constante que almacena el aviso de privacidad.
    */
@@ -142,9 +152,19 @@ export class TercerosRelacinadosComponent implements OnInit, OnDestroy {
     public store: Tramite260704Store,
     private query: Tramite260704Query,
     public fb: FormBuilder,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Constructor vacío, no requiere inicialización adicional.
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -163,8 +183,31 @@ export class TercerosRelacinadosComponent implements OnInit, OnDestroy {
       .subscribe();
     this.donanteDomicilio();
     this.obtenerTablaTerceros();
+    this.inicializarEstadoFormulario();
   }
-
+/**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.donanteDomicilio();
+    }
+  }
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.donanteDomicilio();
+    if (this.soloLectura) {
+      this.tercerosForm.disable();
+    } else {
+      this.tercerosForm.enable();
+    }
+  }
   /**
    * Obtiene la tabla de terceros mediante el servicio de consulta.
    *
