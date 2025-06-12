@@ -250,6 +250,12 @@ const ROUTES: Routes = [
     loadComponent: () =>
       import('./detalle-v-dictamen/detalle-v-dictamen.component').then((m) => m.DetalleVDictamenComponent),
   },
+  {
+     path: 'aviso-de-modificacion',
+    loadChildren: () => 
+      import('./tramites/30505/aviso-de-modificacion.module').then(
+        (m) => m.AvisoDeModificacionModule)
+  }
 ];
 
 @NgModule({
