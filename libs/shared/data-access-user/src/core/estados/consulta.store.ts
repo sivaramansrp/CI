@@ -24,7 +24,7 @@ export interface ConsultaioState {
  */
 export function createConsultaInitialState(): ConsultaioState {
   return {
-    procedureId: '',
+    procedureId: '240120',
     parameter: '',
     department: '',
     folioTramite: '',
@@ -32,7 +32,7 @@ export function createConsultaInitialState(): ConsultaioState {
     estadoDeTramite: '',
     readonly: false,
     create: true,
-    update: false,
+    update: true,
     consultaioSolicitante: null,
   };
 }
