@@ -12314,14 +12314,25 @@
     "numeroDeProcedimiento": "240119",
     "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
   },
-{
-  "folioTramite": "5678909876543210123456789",
-  "tipoDeTramite": "Registro de solicitud de servicio",
-  "nombreDeLaTarea": "Revisión de presupuesto",
-  "fechaDeAsignacion": "2023-10-01",
-  "estadoDeTramite": "En Proceso",
-  "departamento": "semarnat",
-  "numeroDeProcedimiento": "231003",
-  "origin": "READ_PROCEDURE"
-}
+  {
+    "folioTramite": "099226136147361192260510",
+    "tipoDeTramite": "Cancelación de Programa de la SE IMMEX",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "se",
+    "numeroDeProcedimiento": "140101",
+    "origin": "READ_PROCEDURE"
+  },
+
+  {
+    "folioTramite": "5678909876543210123456789",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-01",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "semarnat",
+    "numeroDeProcedimiento": "231003",
+    "origin": "READ_PROCEDURE"
+  }
 ]
