@@ -47,6 +47,9 @@ describe('MotivoDeLaExportacionComponent', () => {
     exportarIlustracionesService = TestBed.inject(ExportarIlustracionesService) as jest.Mocked<ExportarIlustracionesService>;
     tramiteStore = TestBed.inject(Tramite270101Store) as jest.Mocked<Tramite270101Store>;
     tramiteQuery = TestBed.inject(Tramite270101Query) as jest.Mocked<Tramite270101Query>;
+    component.consultaState = {
+      readonly: false,
+    } as any;
     fixture.detectChanges();
   });
 

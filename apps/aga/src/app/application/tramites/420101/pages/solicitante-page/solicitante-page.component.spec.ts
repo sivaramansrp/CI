@@ -17,9 +17,7 @@ describe('SolicitantePageComponent', () => {
       imports: [
         FormsModule,
         ReactiveFormsModule,
-        HttpClientTestingModule 
-      ],
-      declarations: [
+        HttpClientTestingModule,
         SolicitantePageComponent
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],

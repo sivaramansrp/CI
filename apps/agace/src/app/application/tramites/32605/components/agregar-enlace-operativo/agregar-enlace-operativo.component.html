@@ -27,6 +27,7 @@
             type="button"
             name="Buscar"
             id="Buscar"
+            [disabled]="esFormularioSoloLectura"
             class="btn btn-primary me-5"
             (click)="buscarTerceroNacionalIDC()"
           >
@@ -75,7 +76,10 @@
           name="apellidoPaterno"
           formControlName="agregarEnlaceApellidoPaterno"
         />
-        <div *ngIf="noEsValido('agregarEnlaceApellidoPaterno')" class="text-danger">
+        <div
+          *ngIf="noEsValido('agregarEnlaceApellidoPaterno')"
+          class="text-danger"
+        >
           Este campo es obligatorio
         </div>
       </div>
@@ -162,6 +166,7 @@
         type="button"
         name="btnAceptarEnlace"
         id="btnAceptarEnlace"
+        [disabled]="esFormularioSoloLectura"
         class="btn btn-primary me-2"
         data-bs-dismiss="modal"
         #closeModal
@@ -173,6 +178,7 @@
         type="button"
         name="btnCancelarEnlace"
         id="btnCancelar"
+        [disabled]="esFormularioSoloLectura"
         class="btn btn-danger"
         data-bs-dismiss="modal"
         #closeModal
