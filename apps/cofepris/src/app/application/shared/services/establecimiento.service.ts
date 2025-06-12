@@ -10,7 +10,8 @@ import { Observable ,map} from 'rxjs';
 
 import { Catalogo, JSONResponse } from '@libs/shared/data-access-user/src';
 
-import { Asociados, Manifiestistos, PropietarioRadio, PropietarioTipoPersona, Representante, ScianModel,MercanciasInfo } from '../models/datos-de-la-solicitud.model';
+import { Asociados, Manifiestistos, PropietarioRadio, PropietarioTipoPersona, Representante, ScianModel,MercanciasInfo, PropietarioModel, DatosDeLaProductoModel } from '../models/datos-de-la-solicitud.model';
+
 /**
  * @class EstablecimientoService
  * @description
@@ -188,5 +189,32 @@ export class EstablecimientoService {
   getMercancias(): Observable<MercanciasInfo[]> {
     return this.http.get<MercanciasInfo[]>('assets/json/260905/mercancias.json');
   }
+
+  /**
+   * Obtiene los datos del propietario desde un archivo JSON local.
+   * @returns {Observable<PropietarioModel[]>} Un observable con la lista de propietarios.
+   */
+  getPropietario(): Observable<PropietarioModel[]> {
+    return this.http.get<PropietarioModel[]>('assets/json/260402/propietarioDatos.json');
+  }
+
+
+  /**
+   * Obtiene los datos del producto desde un archivo JSON local.
+   * @returns {Observable<DatosDeLaProductoModel[]>} Un observable con la lista de datos del producto.
+   */
+  getDatosDelProducto(): Observable<DatosDeLaProductoModel[]> {
+    return this.http.get<DatosDeLaProductoModel[]>('assets/json/260402/datosDelProducto.json');
+  }
+
+    /**
+     * Recupera los datos de SCIAN desde un archivo JSON local.
+     * @returns {Observable<ScianModel[]>} Un observable con los datos de SCIAN.
+     */
+    getScianDatos(): Observable<ScianModel[]> {
+      return this.http.get<ScianModel[]>('assets/json/260402/scianDatos.json');
+    }
+  
 }
+
 

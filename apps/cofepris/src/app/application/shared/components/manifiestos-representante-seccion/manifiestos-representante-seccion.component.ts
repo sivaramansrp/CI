@@ -114,7 +114,7 @@ export class ManifiestosRepresentanteSeccionComponent
     this.establecimientoService
       .getInformacionConfidencialRadioOptions()
       .pipe(takeUntil(this.destroy$))
-      .subscribe((data: PropietarioTipoPersona[]) => {
+      ?.subscribe((data: PropietarioTipoPersona[]) => {
         this.informacionConfidencialRadioOption = data; // Bind the fetched data
        
       });

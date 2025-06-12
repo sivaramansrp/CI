@@ -183,6 +183,11 @@ export class DomicillioDelEstablecimientoSeccionComponent
     this.loadEstado();
     this.loadScian();
     this.inicializarEstadoFormulario();
+
+    this.establecimientoService.getScianDatos().pipe(takeUntil(this.destroy$))
+      .subscribe((response: ScianModel[]) => {
+        this.personaparas = response;
+      });
   }
   /**
    * Maneja el cambio de valor en un control del formulario.

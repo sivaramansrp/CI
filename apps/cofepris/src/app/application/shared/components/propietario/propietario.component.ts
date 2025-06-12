@@ -204,6 +204,12 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
       tercerosSegundoApellido: [''],
       tercerosPrimerApellido: ['', Validators.required],
     });
+
+     this.establecimientoService.getPropietario()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response: PropietarioModel[]) => {
+        this.propietarioData= response;
+     });
   }
 
   /**

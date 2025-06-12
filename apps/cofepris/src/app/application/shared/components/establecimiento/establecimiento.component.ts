@@ -268,6 +268,11 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
       presentacionaFrmaceutica: ['', Validators.required],
     });
 this.inicializarEstadoFormulario();
+
+this.establecimientoService.getDatosDelProducto().pipe(takeUntil(this.destroy$))
+      .subscribe((response: DatosDeLaProductoModel[]) => {
+        this.establecimientoData= response;
+     });
   }
 
     /**
