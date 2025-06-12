@@ -1,5 +1,5 @@
 import { CONFIGURACION_IVAEIEPS_DOS,PAGO_DE_DERECHOS, PERMISO_A_DESISTIR_DOS, PERMISO_A_DESISTIR_TRES } from '../../constantes/ivaeieps.enum';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud31602State, Tramite31602Store } from '../../estados/stores/tramite31602.store';
 import { Subject,map, takeUntil } from 'rxjs';
@@ -27,6 +27,12 @@ import { Tramite31602Query } from '../../estados/queries/tramite31602.query';
 })
 export class IvaeiepsDosComponent implements OnInit,OnDestroy {
 
+  /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   * Cuando se establece en `true`, todos los campos del formulario son no editables.
+   * Por defecto es `false`, permitiendo que los campos del formulario sean editables.
+   */
+  @Input() esFormularioSoloLectura: boolean = false;
   /**
    * Una instancia de FormGroup que representa la estructura del formulario `delGrupo`.
    * 
