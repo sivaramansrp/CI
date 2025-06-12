@@ -37,22 +37,22 @@ export const PASOS = [
 export const DOMICILIO_TABLA_COLUMNAS = [
   {
     encabezado: 'Registro Federal de Contribuyentes',
-    clave: (ele: DatosDelContenedorTabla) => ele.rfc,
+    clave: (ele: DatosDelContenedorTabla):string => ele.rfc,
     orden: 1,
   },
   {
     encabezado: 'Denominación o razón social',
-    clave: (ele: DatosDelContenedorTabla) => ele.denominacionORazonSocial,
+    clave: (ele: DatosDelContenedorTabla): string => ele.denominacionORazonSocial,
     orden: 2,
   },
   {
     encabezado: 'Norma',
-    clave: (ele: DatosDelContenedorTabla) => ele.norma,
+    clave: (ele: DatosDelContenedorTabla):string => ele.norma,
     orden: 3,
   },
   {
     encabezado: 'Fecha inicio relación',
-    clave: (ele: DatosDelContenedorTabla) => ele.fechainciorelacion,
+    clave: (ele: DatosDelContenedorTabla):string => ele.fechainciorelacion,
     orden: 4,
   },
 ];

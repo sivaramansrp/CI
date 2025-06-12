@@ -1,4 +1,4 @@
-import { Catalogo } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { ChangeDetectorRef } from '@angular/core';
@@ -104,7 +104,11 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
    * @type {Subject<void>}
    */
   private destroyed$ = new Subject<void>();
-
+/**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Estado de la solicitud para gestionar los datos relacionados con la solicitud 220502.
    * Se inicializa como un objeto vacío con la estructura de `Solicitud220503State`.
@@ -116,15 +120,67 @@ export class DatosDelTramiteARealizarComponent implements OnInit, OnDestroy {
     private solicitudService: SolicitudPantallasService,
     private Solicitud220503Store: Solicitud220503Store,
     private Solicitud220503Query: Solicitud220503Query,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+      private consultaioQuery: ConsultaioQuery,
   ) {
-    // Se puede agregar aquí el código de inicialización si es necesario en el futuro.
+     /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
   }
 
   /**
    * Gancho de ciclo de vida que inicializa los controles de formulario cuando se carga el componente.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+  }
+
+   /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+this.datosServicio.disable();
+      } else if (!this.esFormularioSoloLectura) {
+      this.datosServicio.enable();
+      } else {
+        // No se requiere ninguna acción en el formulario
+      }
+  }
+    /**
+   * Inicializa el formulario reactivo para capturar el valor de 'registro'.
+   * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
+   * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
+   * con el valor inicial obtenido del store.
+   */
+
+  inicializarFormulario(): void {
     if (this.claveDeControl) {
       this.grupoFormularioPadre.addControl(
         this.claveDeControl,

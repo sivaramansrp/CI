@@ -1,4 +1,13 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import {ConsultaioQuery} from '@ng-mf/data-access-user'
+import { DatosMercanciaComponent } from '../../components/datos-mercancia/datos-mercancia.component';
+import { DatosMercanciaService } from '../../services/datos-mercancia/datos-mercancia.service';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+
+
 
 /**
  * Componente que representa la primera sección de un formulario paso a paso.
@@ -7,9 +16,22 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
-  styleUrls: ['./paso-uno.component.css']
+  styleUrls: ['./paso-uno.component.scss'],
+  standalone:true,
+  imports:[FormsModule, ReactiveFormsModule,SolicitanteComponent,DatosMercanciaComponent,CommonModule]
 })
-export class PasoUnoComponent {
+export class PasoUnoComponent implements OnInit,OnDestroy {
+  /**
+   * @private
+   * @property {Subject<void>} destroyNotifier$
+   * @description Subject para notificar la destrucción del componente y desuscribir observables.
+   */
+  private destroyNotifier$ = new Subject<void>();
+
+  
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
   /**
    * Índice de la pestaña seleccionada.
    * Este índice indica cuál pestaña está actualmente seleccionada en el formulario.
@@ -34,6 +56,57 @@ export class PasoUnoComponent {
     { index: 1, title: 'Solicitante', component: 'solicitante' },
     { index: 2, title: 'Datos de la solicitud', component: 'datos-de-la-solicitud' }
   ];
+/**
+ * @descripcion
+ * Constructor del componente. Inyecta el servicio DatosMercanciaService para obtener los datos de mercancía.
+ * 
+ * @param datosMercanciaService Servicio encargado de obtener los datos de mercancía desde una fuente externa.
+ */
+constructor(private readonly datosMercanciaService: DatosMercanciaService,
+     private readonly consultaQuery: ConsultaioQuery
+) {
+}
+
+/**
+ * @descripcion
+ * Ciclo de vida de Angular que se ejecuta al inicializar el componente.
+ * Llama al servicio para obtener los datos de mercancía y los muestra por consola.
+ */
+ngOnInit(): void {
+   this.consultaQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((seccionState) => {
+if(seccionState.update){
+        this.guardarDatosFormulario();
+}
+else {
+      this.esDatosRespuesta = true;
+    }
+     
+    });
+  
+}
+
+/**
+ * @description
+ * Guarda los datos del formulario de mercancia obteniéndolos del servicio correspondiente.
+ * 
+ * Este método suscribe al observable que retorna los datos de mercancia, y si la respuesta es válida,
+ * actualiza el formulario de movilización con los datos obtenidos. Además, controla la suscripción
+ * utilizando el observable `destroyNotifier$` para evitar fugas de memoria.
+ * 
+ * @returns {void}
+ */
+guardarDatosFormulario():void{
+this.datosMercanciaService.obtenerDatosMercancia()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe(data => {
+      if(data){
+      this.esDatosRespuesta = true;
+      this.datosMercanciaService.actualizarFormularioMovilizacion(data?.datos)
+      }
+    });
+}
 
   /**
    * Método que cambia el índice de la pestaña seleccionada en función del valor recibido.
@@ -46,5 +119,18 @@ export class PasoUnoComponent {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+  /**
+   * @inheritdoc
+   * 
+   * @description
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   * Se utiliza para emitir una notificación y completar el observable `destroyNotifier$`, 
+   * permitiendo limpiar suscripciones y evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

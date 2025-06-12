@@ -1,6 +1,7 @@
 import { CombinacionRequerida, DatosRealizar, FormularioGrupo, PagoDerechos, Transporte } from '../models/acuicola.module';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { PersonaTerceros } from '@libs/shared/data-access-user/src';
 
 /**
  * Estado inicial del formulario para el trámite 220403.
@@ -28,7 +29,7 @@ export const INITIAL_STATE: FormularioGrupo = {
     medioTransporte: '',
     identificacionMedioTransporte: '',
     numeroDeContenedor: '',
-    denodenominacionRazonSocial: '',
+    denominacionRazonSocial: '',
     numeroFlejes: '',
   },
   pagoDerechos: {
@@ -43,6 +44,7 @@ export const INITIAL_STATE: FormularioGrupo = {
   combinacionRequeridaValidada: false,
   transporteValidada: false,
   pagoDerechosValidada: false,
+  tercerosRelacionados: [],
 };
 
 /**
@@ -171,6 +173,17 @@ export class Tramite220403Store extends Store<FormularioGrupo> {
     this.update((state) => ({
       ...state,
       pagoDerechosValidada,
+    }));
+  }
+
+  /**
+   * @description Updates the store with related third parties.
+   * @param tercerosRelacionados Array of related third-party persons.
+   */
+  public actualizarTercerosRelacionados(tercerosRelacionados: PersonaTerceros[]): void {
+    this.update(state => ({
+      ...state,
+      tercerosRelacionados: tercerosRelacionados,
     }));
   }
 

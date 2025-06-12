@@ -30,6 +30,7 @@
               [required]="true"
               formControlName="estado"
               (change)="setValorStore(form, 'estado')"
+              [isDisabled]="esFormularioSoloLectura"
             >
             </app-catalogo-select>
             <div *ngIf="form.get('estado')?.touched && form.get('estado')?.hasError('required')" class="text-danger">
@@ -178,13 +179,15 @@
       [tipoSeleccionTabla]="tablaSeleccionCheckbox"
       [configuracionTabla]="nicoTabla"
       [datos]="nicoTablaDatos"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
     <div class="container text-end mt-5">
-      <button class="btn btn-default me-2">Eliminar</button>
+      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
       <button
         class="btn btn-primary me-2"
         data-bs-toggle="modal"
         data-bs-target="#modalAddAgent"
+        [disabled]="esFormularioSoloLectura"
       >
         Agregar
       </button>
@@ -199,6 +202,7 @@
           [required]="true"
           formControlName="avisoCheckbox"
           (change)="setValorStore(domicilio, 'avisoCheckbox')"
+          [isDisabled]="esFormularioSoloLectura"
       ></lib-input-check>
 
       </div>
@@ -233,6 +237,7 @@
           name="regimen"
           [tooltipQuestionCircle]="true"
           (change)="setValorStore(domicilio, 'regimen')"
+          [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
         <div *ngIf="domicilio.get('regimen')?.touched && domicilio.get('regimen')?.hasError('required')" class="text-danger">
           Por favor, corrija la estadoLocalidad.
@@ -246,6 +251,7 @@
           [required]="true"
           name="aduanasEntradas"
           (change)="setValorStore(domicilio, 'aduanasEntradas')"
+          [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
         <div *ngIf="domicilio.get('aduanasEntradas')?.touched && domicilio.get('aduanasEntradas')?.hasError('required')" class="text-danger">
           Por favor, corrija la estadoLocalidad.
@@ -263,6 +269,7 @@
           [required]="true"
           formControlName="aifaCheckbox"
           (change)="setValorStore(domicilio, 'aifaCheckbox')"
+          [isDisabled]="esFormularioSoloLectura"
       ></lib-input-check>
       </div>
     </div>
@@ -278,14 +285,16 @@
           [tipoSeleccionTabla]="tablaSeleccionCheckbox"
           [configuracionTabla]="mercanciasTabla"
           [datos]="mercanciasTablaDatos"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
         ></app-tabla-dinamica>
         <div class="container text-end mt-5">
-          <button class="btn btn-default me-2">Modificar</button>
-          <button class="btn btn-default me-2">Eliminar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
           <button
             class="btn btn-primary me-2"
             data-bs-toggle="modal"
             data-bs-target="#modalAddAgentMercancias"
+            [disabled]="esFormularioSoloLectura"
           >
             Agregar
           </button>
@@ -304,6 +313,7 @@
           [required]="true"
           formControlName="manifests"
           (change)="setValorStore(domicilio, 'manifests')"
+          [isDisabled]="esFormularioSoloLectura"
       ></lib-input-check>
             <span class="fw-bold align-middle"> *</span>
             <div>{{ manifests }}</div>
@@ -346,7 +356,7 @@
           </div>
         </div>
         <div class="col-md-3 mt-5">
-          <button class="btn btn-default me-2">Modificar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
         </div>
       </div>
 

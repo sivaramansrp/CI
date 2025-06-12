@@ -19,6 +19,7 @@
         [configuracionTabla]="configuracionParaEncabezadoDeTabla"
         [datos]="cuerpoTabla"
         (listaDeFilaSeleccionada)="onListaDeFilaSeleccionada($event)"
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
       >
       </app-tabla-dinamica>
       </div>
@@ -39,6 +40,7 @@
                       [label]="'Nombre común'"
                       [required]="true"
                       name="nombreComun"
+                      [isDisabled]="esFormularioSoloLectura"
                     ></app-catalogo-select>
                   </div>
                   <div class="col-md-6">
@@ -48,6 +50,7 @@
                       [label]="'Nombre científico'"
                       [required]="true"
                       name="nombreCientifico"
+                      [isDisabled]="esFormularioSoloLectura"
                     ></app-catalogo-select>
                   </div>
      </div>
@@ -59,6 +62,7 @@
             [label]="'Uso'"
             [required]="true"
             name="uso"
+            [isDisabled]="esFormularioSoloLectura"
           ></app-catalogo-select>
         </div>
      </div>
@@ -70,6 +74,7 @@
             [label]="'País de origen'"
             [required]="true"
             name="paisOrigen"
+              [isDisabled]="esFormularioSoloLectura"
           ></app-catalogo-select>
         </div>
         <div class="col-md-6">
@@ -79,6 +84,7 @@
             [label]="'País de procedencia'"
             [required]="true"
             name="paisProcedencia"
+              [isDisabled]="esFormularioSoloLectura"
           ></app-catalogo-select>
         </div>
      </div>
@@ -90,6 +96,7 @@
             [label]="'Tipo de producto'"
             [required]="true"
             name="tipoProducto"
+              [isDisabled]="esFormularioSoloLectura"
           ></app-catalogo-select>
         </div>
      </div>
@@ -125,6 +132,7 @@
             [label]="'UMC'"
             [required]="true"
             name="umc"
+              [isDisabled]="esFormularioSoloLectura"
           ></app-catalogo-select>
         </div>
      </div>
