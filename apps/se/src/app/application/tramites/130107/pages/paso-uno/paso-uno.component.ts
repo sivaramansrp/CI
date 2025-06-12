@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 
 /**
  * @component PasoUnoComponent
@@ -15,6 +16,13 @@ import { Component } from '@angular/core';
   templateUrl: './paso-uno.component.html',
 })
 export class PasoUnoComponent {
+  /**
+   * @property consultaState
+   * @description
+   * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+   */
+    @Input() consultaState!: ConsultaioState;
+    
   /**
    * @property indice
    * @description
