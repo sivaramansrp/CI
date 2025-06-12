@@ -19,6 +19,7 @@
                                 maxlength="3"
                                 class="form-control"
                                 [required]="true"
+                                [disabled]="esFormularioSoloLectura"
                               />
                             </div>
                             <div class="col-md-10">
@@ -32,6 +33,7 @@
                                 maxlength="250"
                                 class="form-control"
                                 [required]="true"
+                                [disabled]="esFormularioSoloLectura"
                               />
                             </div>
                           </div>
@@ -47,12 +49,13 @@
                                 maxlength="16"
                                 class="form-control"
                                 [required]="true"
+                                [disabled]="esFormularioSoloLectura"
                               />
                             </div>
                             <div class="col-md-4">
                                 <div class="form-group text-left">
                                     <app-catalogo-select [label]="'Unidad de medida'" [catalogo]="unidadMedida"
-                                    formControlName="unidadMedida" [required]="true" name="unidadMedida"></app-catalogo-select>
+                                    formControlName="unidadMedida" [required]="true" name="unidadMedida" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                                   </div>
                             </div>
                             <div class="col-md-4">
@@ -66,6 +69,7 @@
                                 maxlength="16"
                                 class="form-control"
                                 [required]="true"
+                                [disabled]="esFormularioSoloLectura"
                               />
                             </div>
                           </div>

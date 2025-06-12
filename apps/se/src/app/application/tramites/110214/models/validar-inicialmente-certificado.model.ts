@@ -218,3 +218,67 @@ export interface AcuseLista {
   documento: string;
   descargar: string;
 }
+/**
+ * Representa los datos del grupo operador.
+ */
+export interface GrupoOperador {
+  nombre: string;
+  apellidoPrimer: string;
+  apellidoSegundo: string;
+  numeroFiscal: string;
+  razonSocial: string;
+}
+/**
+ * @interface RespuestaConsulta
+ * @description Representa la respuesta de una consulta realizada en el trámite.
+ * 
+ * @property {boolean} success - Indica si la consulta fue exitosa.
+ * @property {ConsultaDatos} datos - Contiene los datos obtenidos de la consulta.
+ * @property {string} message - Mensaje asociado a la respuesta de la consulta.
+ */
+export interface RespuestaConsulta {
+  success: boolean;
+  datos: ConsultaDatos;
+  message: string;
+}
+/**
+ * @interface ConsultaDatos
+ * @description Representa los datos obtenidos de una consulta en el trámite.
+ * 
+ * @property {boolean} tercerOperador - Indica si existe un tercer operador involucrado.
+ * @property {string} blnPeriodo - Indica si el trámite está dentro de un periodo específico.
+ * @property {GrupoOperador} grupoOperador - Información del grupo operador.
+ * @property {GrupoTratado} grupoTratado - Información del grupo tratado.
+ * @property {SeleccionadasTabla[]} mercanciaSeleccionadasTablaDatos - Lista de mercancías seleccionadas en la tabla de datos.
+ * @property {DisponiblesTabla[]} mercanciaDisponsiblesTablaDatos - Lista de mercancías disponibles en la tabla de datos.
+ * @property {string} observaciones - Observaciones relacionadas con la consulta.
+ * @property {string} idioma - Idioma utilizado en la consulta.
+ * @property {string} entidadFederativa - Entidad federativa asociada a la consulta.
+ * @property {string} representacionFederal - Representación federal asociada a la consulta.
+ * @property {GrupoReceptor} grupoReceptor - Información del grupo receptor.
+ * @property {GrupoDeDirecciones} grupoDeDirecciones - Información del grupo de direcciones.
+ * @property {GrupoRepresentativo} grupoRepresentativo - Información del grupo representativo.
+ * @property {boolean} datosConfidencialesProductor - Indica si los datos del productor son confidenciales.
+ * @property {boolean} productorMismoExportador - Indica si el productor es el mismo exportador.
+ * @property {HistoricoColumnas[]} productoresExportador - Lista de productores asociados al exportador.
+ * @property {SeleccionadasTabla[]} historicoMercanciaSeleccionadasTablaDatos - Historial de mercancías seleccionadas en la tabla de datos.
+ */
+export interface ConsultaDatos {
+  tercerOperador: boolean;
+  blnPeriodo: string;
+  grupoOperador: GrupoOperador;
+  grupoTratado: GrupoTratado;
+  mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[]
+  mercanciaDisponsiblesTablaDatos: DisponiblesTabla[];
+  observaciones: string;
+  idioma: string;
+  entidadFederativa: string;
+  representacionFederal: string;
+  grupoReceptor: GrupoReceptor;
+  grupoDeDirecciones: GrupoDeDirecciones;
+  grupoRepresentativo: GrupoRepresentativo;
+  datosConfidencialesProductor: boolean;
+  productorMismoExportador: boolean;
+  productoresExportador: HistoricoColumnas[];
+  historicoMercanciaSeleccionadasTablaDatos: SeleccionadasTabla[];
+}

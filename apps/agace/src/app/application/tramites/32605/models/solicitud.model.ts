@@ -556,3 +556,521 @@ export interface SeccionSubcontratados {
    */
   subcontrataBimestre?: string;
 }
+
+/**
+ * Interfaz que representa los datos necesarios para guardar un formulario completo de solicitud.
+ * Incluye datos del solicitante, terceros, subcontrataciones, instalaciones, transportistas y más.
+ *
+ * @interface GuardarDatosFormulario
+ */
+export interface GuardarDatosFormulario {
+  /**
+   * Identificador único de la persona que realiza la solicitud.
+   */
+  idPersonaSolicitud: string;
+
+  /**
+   * RFC del tercero relacionado con la solicitud.
+   */
+  rfcTercero: string;
+
+  /**
+   * RFC del solicitante.
+   */
+  rfc: string;
+
+  /**
+   * Nombre del solicitante.
+   */
+  nombre: string;
+
+  /**
+   * Apellido paterno del solicitante.
+   */
+  apellidoPaterno: string;
+
+  /**
+   * Apellido materno del solicitante.
+   */
+  apellidoMaterno: string;
+
+  /**
+   * Teléfono de contacto del solicitante.
+   */
+  telefono: string;
+
+  /**
+   * Correo electrónico del solicitante.
+   */
+  correoElectronico: string;
+
+  /**
+   * RFC del tercero a agregar en el enlace.
+   */
+  agregarEnlaceRfcTercero: string;
+
+  /**
+   * RFC del solicitante a agregar en el enlace.
+   */
+  agregarEnlaceRfc: string;
+
+  /**
+   * Nombre del solicitante a agregar en el enlace.
+   */
+  agregarEnlaceNombre: string;
+
+  /**
+   * Apellido paterno del solicitante a agregar en el enlace.
+   */
+  agregarEnlaceApellidoPaterno: string;
+
+  /**
+   * Apellido materno del solicitante a agregar en el enlace.
+   */
+  agregarEnlaceApellidoMaterno: string;
+
+  /**
+   * Ciudad o estado del solicitante a agregar en el enlace.
+   */
+  agregarEnlaceCiudadEstado: string;
+
+  /**
+   * Cargo del solicitante a agregar en el enlace.
+   */
+  agregarEnlaceCargo: string;
+
+  /**
+   * Teléfono de contacto del solicitante a agregar en el enlace.
+   */
+  agregarEnlaceTelefono: string;
+
+  /**
+   * Correo electrónico del solicitante a agregar en el enlace.
+   */
+  agregarEnlaceCorreoElectronico: string;
+
+  /**
+   * Indica si el solicitante es suplente.
+   */
+  agregarEnlaceSuplente: boolean;
+
+  /**
+   * Valor asociado al código 2089.
+   */
+  '2089': number | string;
+
+  /**
+   * Valor asociado al código 2090.
+   */
+  '2090': number | string;
+
+  /**
+   * Valor asociado al código 2091.
+   */
+  '2091': number | string;
+
+  /**
+   * Valor asociado al código 2042.
+   */
+  '2042': number | string;
+
+  /**
+   * Valor asociado al código 2043.
+   */
+  '2043': number | string;
+
+  /**
+   * Valor asociado al código 2044.
+   */
+  '2044': number | string;
+
+  /**
+   * Fecha de inicio de operaciones de comercio exterior.
+   */
+  fechaInicioComercio: string;
+
+  /**
+   * Fecha de pago asociada a la solicitud.
+   */
+  fechaPago: string;
+
+  /**
+   * Monto total asociado a la solicitud.
+   */
+  monto: string;
+
+  /**
+   * Detalles de las operaciones bancarias relacionadas con la solicitud.
+   */
+  operacionesBancarias: string;
+
+  /**
+   * Llave única de pago asociada a la solicitud.
+   */
+  llavePago: string;
+
+  /**
+   * RFC del transportista relacionado con la solicitud.
+   */
+  transportistaRFC: string;
+
+  /**
+   * RFC del transportista modificado relacionado con la solicitud.
+   */
+  transportistaRFCModifTrans: string;
+
+  /**
+   * Razón social del transportista relacionado con la solicitud.
+   */
+  transportistaRazonSocial: string;
+
+  /**
+   * Domicilio del transportista relacionado con la solicitud.
+   */
+  transportistaDomicilio: string;
+
+  /**
+   * CAAT del transportista relacionado con la solicitud.
+   */
+  transportistaCaat: string;
+
+  /**
+   * Identificador del domicilio del transportista relacionado con la solicitud.
+   */
+  transportistaIdDomicilio: string;
+
+  /**
+   * Identificador del RFC del transportista relacionado con la solicitud.
+   */
+  transportistaIdRFC: string;
+
+  /**
+   * Identificador de la razón social del transportista relacionado con la solicitud.
+   */
+  transportistaIdRazonSocial: string;
+
+  /**
+   * Identificador del CAAT del transportista relacionado con la solicitud.
+   */
+  transportistaIdCaat: string;
+
+  /**
+   * Carácter del miembro en la solicitud.
+   */
+  miembroCaracterDe: string | number;
+
+  /**
+   * Indica si el miembro tiene obligación de tributar en México.
+   */
+  miembroTributarMexico: number | string;
+
+  /**
+   * Nacionalidad del miembro.
+   */
+  miembroNacionalidad: string | number;
+
+  /**
+   * Registro Federal de Contribuyentes (RFC) del miembro.
+   */
+  miembroRfc: string;
+
+  /**
+   * Registro federal del miembro ante autoridades pertinentes.
+   */
+  miembroRegistroFederal: string;
+
+  /**
+   * Nombre completo del miembro.
+   */
+  miembroNombreCompleto: string;
+
+  /**
+   * Tipo de persona muestra en la solicitud.
+   */
+  miembroTipoPersonaMuestra: string | number;
+
+  /**
+   * Nombre del miembro.
+   */
+  miembroNombre: string;
+
+  /**
+   * Apellido paterno del miembro.
+   */
+  miembroApellidoPaterno: string;
+
+  /**
+   * Apellido materno del miembro.
+   */
+  miembroApellidoMaterno: string;
+
+  /**
+   * Nombre de la empresa del miembro.
+   */
+  miembroNombreEmpresa: string;
+
+  /**
+   * RFC de la subcontrata para la búsqueda.
+   */
+  subcontrataRFCBusqueda: string;
+
+  /**
+   * RFC de la subcontrata.
+   */
+  subcontrataRFC: string;
+
+  /**
+   * Razón social de la subcontrata.
+   */
+  subcontrataRazonSocial: string;
+
+  /**
+   * Número de empleados de la subcontrata.
+   */
+  subcontrataEmpleados: string;
+
+  /**
+   * Bimestre en el que se está realizando la subcontratación.
+   */
+  subcontrataBimestre: number;
+
+  /**
+   * Nombre o identificación de las instalaciones principales.
+   */
+  principales: string | number;
+
+  /**
+   * Nombre del municipio donde se encuentra la instalación.
+   */
+  municipio: string;
+
+  /**
+   * Tipo de instalación en la que se encuentra la empresa.
+   */
+  tipoDeInstalacion: string | number;
+
+  /**
+   * Entidad federativa (estado) donde se encuentra ubicada la instalación.
+   */
+  entidadFederativa: string;
+
+  /**
+   * Registro ante la SE/SAT relacionado con la instalación.
+   */
+  registroSESAT: string;
+
+  /**
+   * Descripción de la instalación o domicilio.
+   */
+  descripcion: string;
+
+  /**
+   * Código postal de la ubicación de la instalación.
+   */
+  codigoPostal: string;
+
+  /**
+   * Proceso productivo realizado en la instalación.
+   */
+  procesoProductivo: string | number;
+
+  /**
+   * Indica si la empresa tiene el derecho de uso y goce del inmueble.
+   */
+  goceDelInmueble: string | number;
+
+  /**
+   * Empresa propietaria de la instalación.
+   */
+  empresa: string | number;
+
+  /**
+   * Indica si la instalación realiza operaciones de comercio exterior.
+   */
+  comercioExterior: string | number;
+
+  /**
+   * Indica si existe un reconocimiento mutuo (como C-TPAT) de la instalación.
+   */
+  mutuo: string | number;
+
+  /**
+   * Número de catálogos seleccionados.
+   */
+  catseleccionados: number;
+
+  /**
+   * Número de servicio asociado a la solicitud.
+   */
+  servicio: number;
+
+  /**
+   * Valor asociado con el código 190 (puede ser un número o una cadena).
+   */
+  '190': string | number;
+
+  /**
+   * Valor asociado con el código 191 (puede ser un número o una cadena).
+   */
+  '191': string | number;
+
+  /**
+   * Valor asociado con el código 199 (puede ser un número o una cadena).
+   */
+  '199': string | number;
+
+  /**
+   * Número de empleados relacionados con la solicitud.
+   */
+  empleados: string;
+
+  /**
+   * El bimestre relacionado con la solicitud.
+   */
+  bimestre: number;
+
+  /**
+   * Valor asociado con el código 2034 (puede ser un número o una cadena).
+   */
+  '2034': string | number;
+
+  /**
+   * Valor asociado con el código 236 (puede ser un número o una cadena).
+   */
+  '236': string | number;
+
+  /**
+   * Valor asociado con el código 237 (puede ser un número o una cadena).
+   */
+  '237': string | number;
+
+  /**
+   * Valor asociado con el código 238 (puede ser un número o una cadena).
+   */
+  '238': string | number;
+
+  /**
+   * Valor asociado con el código 239 (puede ser un número o una cadena).
+   */
+  '239': string | number;
+
+  /**
+   * Valor asociado con el código 240 (puede ser un número o una cadena).
+   */
+  '240': string | number;
+
+  /**
+   * Valor asociado con el código 243 (puede ser un número o una cadena).
+   */
+  '243': string | number;
+
+  /**
+   * Valor asociado con el código 244 (puede ser un número o una cadena).
+   */
+  '244': string | number;
+
+  /**
+   * Valor asociado con el código 245 (puede ser un número o una cadena).
+   */
+  '245': string | number;
+
+  /**
+   * Indica si se seleccionaron todos los elementos (1 o 0).
+   */
+  indiqueTodos: number;
+
+  /**
+   * Valor asociado con el código 246 (puede ser un número o una cadena).
+   */
+  '246': string | number;
+
+  /**
+   * Primer archivo relacionado con la solicitud.
+   */
+  file1: string;
+
+  /**
+   * Segundo archivo relacionado con la solicitud.
+   */
+  file2: string;
+
+  /**
+   * Valor asociado con el código 247 (puede ser un número o una cadena).
+   */
+  '247': string | number;
+
+  /**
+   * Valor asociado con el código 248 (puede ser un número o una cadena).
+   */
+  '248': string | number;
+
+  /**
+   * Identificación relacionada con la solicitud.
+   */
+  identificacion: string;
+
+  /**
+   * Lugar de radicación donde se procesa la solicitud.
+   */
+  lugarDeRadicacion: string;
+
+  /**
+   * Valor asociado con el código 249 (puede ser un número o una cadena).
+   */
+  '249': string | number;
+
+  /**
+   * Valor asociado con el código 250 (puede ser un número o una cadena).
+   */
+  '250': string | number;
+
+  /**
+   * Valor asociado con el código 251 (puede ser un número o una cadena).
+   */
+  '251': string | number;
+
+  /**
+   * Primer valor de tipo booleano, relacionado con algún tipo de validación o configuración.
+   */
+  checkbox1: boolean;
+
+  /**
+   * Segundo valor de tipo booleano, relacionado con algún tipo de validación o configuración.
+   */
+  checkbox2: boolean;
+
+  /**
+   * Tercer valor de tipo booleano, relacionado con algún tipo de validación o configuración.
+   */
+  checkbox3: boolean;
+
+  /**
+   * Estado actual 2, relacionado con la solicitud.
+   */
+  actualmente2: string;
+
+  /**
+   * Estado actual 1, relacionado con la solicitud.
+   */
+  actualmente1: string;
+
+  /**
+   * Lista de objetos que representan los empleados con su número de empleados.
+   */
+  numeroDeEmpleadosLista: NumeroDeEmpleados[];
+
+  /**
+   * Lista de objetos que contienen información sobre los domicilios de la empresa o entidad.
+   */
+  domiciliosDatos: Domicilios[];
+
+  /**
+   * Lista de objetos que representan las secciones de socios del IC (Índice de Contribuyentes).
+   */
+  listaSeccionSociosIC: SeccionSociosIC[];
+
+  /**
+   * Lista de objetos que contienen los datos relacionados con los enlaces operativos.
+   */
+  enlaceOperativosLista: EnlaceOperativo[];
+}
