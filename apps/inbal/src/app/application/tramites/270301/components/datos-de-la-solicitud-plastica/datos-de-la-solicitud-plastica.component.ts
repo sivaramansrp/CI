@@ -45,6 +45,17 @@ import { Agregar270301Store, Solicitud270301State } from '../../estados/tramites
 import { AgregarQuery } from '../../estados/queries/agregar.query';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+/**
+ * @interface ObraTablaDatos
+ * @description
+ * Representa la estructura de datos para las columnas de una tabla de obra.
+ *
+ * @property {string[]} columns - Lista de nombres de las columnas que se mostrarán en la tabla.
+ *
+ * @author
+ * Equipo de desarrollo
+ *
+ */
 
 export interface ObraTablaDatos {
   
@@ -321,6 +332,17 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
     if (!this.solicitudFormGroup) {
      return;
     }
+    /**
+   * @method
+   * @description
+   * Guarda los datos del formulario de solicitud plástica. 
+   * Si el formulario no existe, la función termina sin hacer nada.
+   * Llama al método `getObraDeArte()` para obtener información adicional.
+   * Si el formulario está en modo solo lectura, lo deshabilita; 
+   * de lo contrario, lo habilita.
+   *
+   * @memberof DatosDeLaSolicitudPlasticaComponent
+   */
     this.getObraDeArte();
     if (this.esFormularioSoloLectura) {
       this.solicitudFormGroup.disable();
