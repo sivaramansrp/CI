@@ -12313,5 +12313,15 @@
     "departamento": "sedena",
     "numeroDeProcedimiento": "240119",
     "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
+  },
+  {
+    "folioTramite": "099226136147361192260510",
+    "tipoDeTramite": "Cancelación de Programa de la SE IMMEX",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "se",
+    "numeroDeProcedimiento": "140101",
+    "origin": "READ_PROCEDURE"
   }
 ]
