@@ -10,6 +10,7 @@
           rows="3"
           formControlName="justificacion"
           style="height: 90px"
+          [disabled]="esFormularioSoloLectura"
         ></textarea>
         <div class="error-message">
           <small class="text-danger" *ngIf="formDeJustificacion.get('justificacion')?.touched && formDeJustificacion.get('justificacion')?.hasError('required')">

@@ -1,3 +1,4 @@
+import { Tramite130109State, Tramite130109Store } from '../../../estados/tramites/tramites130109.store';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -18,7 +19,7 @@ export class VehiculosUsadosAdaptadosService {
    * Constructor del servicio.
    * Servicio HttpClient para realizar solicitudes HTTP.
    */
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private tramite130109Store:Tramite130109Store) {
     // 
    }
  /**
@@ -80,9 +81,30 @@ export class VehiculosUsadosAdaptadosService {
     );
   }
 
+  /**
+  * Obtiene los datos de la tabla de partidas de la mercancía.
+  * @returns Observable con los datos de la tabla.
+  */
   getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
     return this.http.get<PartidasDeLaMercanciaModelo[]>(
           'assets/json/130109/partidas-de-la.json'
         );
   }
+
+  /**
+  * Actualiza el estado del formulario en el store.
+  * @param DATOS Estado actualizado del trámite.
+  */
+  actualizarEstadoFormulario(DATOS: Tramite130109State): void {
+    this.tramite130109Store.actualizarEstado(DATOS);
+  }
+
+  /**
+  * Obtiene los datos de la solicitud.
+  * @returns Observable con los datos de la solicitud.
+  */
+  getDatosDeLaSolicitud(): Observable<Tramite130109State> {
+    return this.http.get<Tramite130109State>('assets/json/130109/datos-de-la-solicitud.json');
+  }
+
 }

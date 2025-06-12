@@ -130,5 +130,13 @@ it('should fetch bancoList on obtenerBancoList call', () => {
     expect(spy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+  it('should call setTramite260904State with the correct value when setValoresStore is called', () => {
+  component.pagoDeDerechosForm.get('clave')?.setValue('VALOR_CLAVE');
+  const store = TestBed.inject(Tramite260904Store);
+  const spy = jest.spyOn(store, 'setTramite260904State');
+  component.setValoresStore(component.pagoDeDerechosForm, 'clave');
+  expect(spy).toHaveBeenCalledWith({ clave: 'VALOR_CLAVE' });
+});
 });
  
