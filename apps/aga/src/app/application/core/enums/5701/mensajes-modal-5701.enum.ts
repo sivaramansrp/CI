@@ -128,3 +128,9 @@ export const MSG_CAMBIO_TIPO_SOLICITUD =
  * @description Mensaje error, no se encontró información
  */
 export const MSG_ERROR_NO_INFORMACION = 'No se encontró información';
+
+/**
+ * @description Mensaje de rror cuando no se encuentra el ID del Socio Comercial
+ */
+export const MSJ_ERROR_ID_SOCIO_COMERCIAL =
+  'No se ha encontrado ningún registro de socio comercial con el identificador proporcionado, por favor verifica.';

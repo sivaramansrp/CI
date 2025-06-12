@@ -156,6 +156,11 @@ export const LABEL_CROSSLIST: CrossListLable = {
 };
 
 /**
- * @descrfiption Campos requetridos
+ * @description Campos requetridos
  */
 export const CAMPOS_OBLIGATORIOS = 'Este campo es obligatorio';
+
+/**
+ *  @description RFC no válido
+ */
+export const ERR_RFC_NO_VALIDO = 'El RFC no es válido';

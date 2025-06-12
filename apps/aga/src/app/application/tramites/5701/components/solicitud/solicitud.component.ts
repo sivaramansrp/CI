@@ -52,6 +52,7 @@ import {
 import {
   CONFIGURACION_ENCABEZADO_TABLA_PAGOS,
   EMPRESAS_CERTIFICADAS,
+  ERR_RFC_NO_VALIDO,
   ESTATUS_PAGADO,
   ID_NAME_DD,
   ID_NAME_LDA,
@@ -131,6 +132,7 @@ import {
   MSJ_ERROR_FECHA_DIA,
   MSJ_ERROR_FECHA_MES,
   MSJ_ERROR_FECHA_SEMANA,
+  MSJ_ERROR_ID_SOCIO_COMERCIAL,
   MSJ_ERROR_LINEA_CAPTURA,
   MSJ_LINEA_CAPTURA_NO_PAGADA,
   MSJ_LINEA_CAPTURA_USADA,
@@ -1097,13 +1099,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   validaRfc(): void {
     const RFC_IMP_EXP = this.datosImportadorExportador.get('RFCImpExp')?.value;
-    if (RFC_IMP_EXP && !this.datosImportadorExportador.get('RFCImpExp')?.valid) {
+    if (
+      RFC_IMP_EXP &&
+      !this.datosImportadorExportador.get('RFCImpExp')?.valid
+    ) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
         modo: 'action',
         titulo: 'Avisos',
-        mensaje: MSJ_ERROR_RFC_NO_VALIDO,
+        mensaje: ERR_RFC_NO_VALIDO,
         cerrar: false,
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
@@ -1111,7 +1116,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.datosImportadorExportador.get('RFCImpExp')?.reset();
       return;
     }
-
 
     this.validaRfcService
       .getValidacionRfc(RFC_IMP_EXP)
@@ -2754,7 +2758,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
                 tipoNotificacion: 'alert',
                 categoria: 'danger',
                 modo: 'action',
-                titulo: TITULO_MODAL_ERROR,
+                titulo: TITULO_MODAL_AVISO,
                 mensaje: MSJ_ERROR_ID_SOCIO_COMERCIAL,
                 cerrar: false,
                 txtBtnAceptar: 'Aceptar',
@@ -2770,8 +2774,18 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             );
             return response;
           }),
-          catchError((error) => {
-            return throwError(() => error);
+          catchError((_error) => {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: 'Error',
+              mensaje: 'Ocurrió un error al obtener el socio comercial.',
+              cerrar: false,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+            return EMPTY; // Evita que el error se propague
           })
         )
         .subscribe();
