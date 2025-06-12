@@ -1699,5 +1699,14 @@
   "diasTranscurridos": "4",
   "departamento": "AGA",
   "numeroDeProcedimiento": "10302"
-}
+  },
+  {
+  "id": 6402,
+  "tipoDeTramite": "Solicitud de Permiso",
+  "fecha": "2023-10-01",
+  "fechaActualizacion": "2023-10-05",
+  "diasTranscurridos": "4",
+  "departamento": "AGA",
+  "numeroDeProcedimiento": "6402"
+  }
 ]
