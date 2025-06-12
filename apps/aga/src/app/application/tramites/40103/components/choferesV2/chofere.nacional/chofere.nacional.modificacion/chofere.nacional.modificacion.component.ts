@@ -1,20 +1,17 @@
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import {
-    Notificacion,
-    NotificacionesComponent,
-  TablaDinamicaComponent,
+    TablaDinamicaComponent,
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
 import { DatosDelChoferNacional } from '../../../../models/registro-muestras-mercancias.model';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { TituloComponent } from '../../../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { DatosDeChoferesComponent } from '../../data.de.choferes.dialog/data.de.choferes.component';
-import { Modal } from 'bootstrap';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { DatosDeChoferesNacionalDialogComponent } from '../../data.de.choferes.dialog/data.de.choferes.nacional.dialog.component';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { CHOFERES_NACIONALES_ALTA, TEXTOS } from '../../../../enum/choferes-enum';
+import { CHOFERES_NACIONALES_ALTA } from '../../../../enum/choferes-enum';
 import { Chofer40103Service } from '../../../../estados/chofer40103.service';
 import { Chofer40103Query } from '../../../../estados/chofer40103.query';
-import { map, Observable, takeUntil } from 'rxjs';
+import { Observable, map, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-chofere-nacional-modificacion',
@@ -24,7 +21,7 @@ import { map, Observable, takeUntil } from 'rxjs';
   imports: [
     TablaDinamicaComponent, 
     TituloComponent, 
-    DatosDeChoferesComponent
+    DatosDeChoferesNacionalDialogComponent
   ],
   providers: [BsModalService],
 })
@@ -104,8 +101,8 @@ export class ChofereNacionalModificacionComponent implements OnInit {
     }
   }
 
-  @ViewChild(DatosDeChoferesComponent)
-  modalComponent!: DatosDeChoferesComponent;
+  @ViewChild(DatosDeChoferesNacionalDialogComponent)
+  modalComponent!: DatosDeChoferesNacionalDialogComponent;
   datosChofere: DatosDelChoferNacional = {} as DatosDelChoferNacional;
 
   openModal(template: TemplateRef<unknown>) {

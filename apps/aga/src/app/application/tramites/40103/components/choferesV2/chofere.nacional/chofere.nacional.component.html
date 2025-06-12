@@ -15,23 +15,23 @@
     <div class="col-md-12 text-end">
       <div class="btn-group">
         <button class="btn btn-default" type="button" (click)="editSelectedRow(agregarModalDialog)"
-          [disabled]="datosConsulta?.readonly">
+          [disabled]="isReadonly">
           Modificar
         </button>
 
-        <button class="btn btn-default" type="button" [disabled]="datosConsulta?.readonly"
+        <button class="btn btn-default" type="button" [disabled]="isReadonly"
           (click)="deleteSelectedRow()">
           Eliminar
         </button>
         <button class="btn btn-primary ms-2" (click)="addNewRow(agregarModalDialog)"
-          [disabled]="datosConsulta?.readonly">
+          [disabled]="isReadonly">
           Agregar
         </button>
       </div>
     </div>
     <ng-template #datosDeChoferesModal>
       <div id="datosDeChoferesModal">
-        <app-choferes-datos [datosDeChofere]="datosChofere" #datosDeChoferesModal [readonly]="datosConsulta?.readonly"
+        <app-choferes-datos [datosDeChofere]="datosChofere" #datosDeChoferesModal [readonly]="isReadonly"
           (addModalEvent)="addModal($event)" (cancelEvent)="cancelModal()"></app-choferes-datos>
 
       </div>

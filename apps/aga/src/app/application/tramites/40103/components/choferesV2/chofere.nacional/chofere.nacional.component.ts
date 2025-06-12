@@ -1,19 +1,18 @@
-import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, NotificacionesComponent } from '@ng-mf/data-access-user';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import {
   TablaDinamicaComponent,
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
 import { DatosDelChoferNacional } from '../../../models/registro-muestras-mercancias.model';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { TituloComponent } from '../../../../../../../../../../libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
-import { DatosDeChoferesComponent } from '../data.de.choferes.dialog/data.de.choferes.component';
-import { Modal } from 'bootstrap';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { CHOFERES_NACIONALES_ALTA, TEXTOS } from '../../../enum/choferes-enum';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import { DatosDeChoferesNacionalDialogComponent } from '../data.de.choferes.dialog/data.de.choferes.nacional.dialog.component';
+import { CHOFERES_NACIONALES_ALTA } from '../../../enum/choferes-enum';
 import { Chofer40103Service } from '../../../estados/chofer40103.service';
 import { Chofer40103Query } from '../../../estados/chofer40103.query';
-import { map, Observable, takeUntil } from 'rxjs';
-import { ConsultaioQuery, ConsultaioState, NotificacionesComponent,  } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 
 
 @Component({
@@ -24,12 +23,12 @@ import { ConsultaioQuery, ConsultaioState, NotificacionesComponent,  } from '@ng
   imports: [
     TablaDinamicaComponent, 
     TituloComponent, 
-    DatosDeChoferesComponent,
+    DatosDeChoferesNacionalDialogComponent,
     NotificacionesComponent
   ],
   providers: [BsModalService],
 })
-export class ChofereNacionalComponent implements OnInit {
+export class ChofereNacionalComponent implements OnInit, OnDestroy {
   // Add your component logic here
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
@@ -40,12 +39,36 @@ export class ChofereNacionalComponent implements OnInit {
   ConfiguracionColumna: ConfiguracionColumna<DatosDelChoferNacional>[] =
     CHOFERES_NACIONALES_ALTA;
 
+
+  /**
+   * Datos del chofer nacional.
+   * @property {DatosDelChoferNacional[]} datosDelChoferNacional
+   */
   datosDelChoferNacional: DatosDelChoferNacional[] = [];
 
+  /**
+   * Datos del chofer nacional seleccionados.
+   * @property {DatosDelChoferNacional[]} datosDelChoferNacionalSelected
+   */
   datosDelChoferNacionalSelected: DatosDelChoferNacional[] = [];
 
-  datosConsulta: any;
+  /**
+   * Texto de la sección.
+   * @property {string} textoSeccion
+   */
+  datosConsulta!: ConsultaioState;
 
+  /**
+   * Datos del chofer nacional que se utilizarán para agregar o editar.
+   * @property {DatosDelChoferNacional} datosChofere
+   */
+  datosChofere: DatosDelChoferNacional = {} as DatosDelChoferNacional;
+
+
+  /**
+   * Referencia al modal de Bootstrap para agregar mercancías.
+   * @property {BsModalRef} modalRef
+   */
   modalRef!: BsModalRef | null;
 
   /**
@@ -53,9 +76,11 @@ export class ChofereNacionalComponent implements OnInit {
    * @property {TemplateRef} agregarModal
    */
   @ViewChild('datosDeChoferesModal', { static: false })
-  agregarModalDialog!: TemplateRef<Element>;
+  agregarModalDialog!: TemplateRef<Element>;  
 
-  destroyed$: Observable<any> = new Observable();
+
+  destroy$: Subject<unknown> = new Subject();
+  isReadonly: boolean = false;
 
   constructor(
     private bsModalService: BsModalService,
@@ -64,11 +89,16 @@ export class ChofereNacionalComponent implements OnInit {
     private consultaioQuery: ConsultaioQuery
   ) {}
 
+  ngOnDestroy(): void {
+    this.destroy$.next(true);
+    this.destroy$.complete();
+  }
+
   ngOnInit(): void {
 
     this.chofer40103Query.selectSolicitud$
       .pipe(
-        takeUntil(this.destroyed$),
+        takeUntil(this.destroy$),
         map((data) => {
           this.datosDelChoferNacional = this.datosDelChoferNacional.concat(data?.datosDelChoferNacionalAlta ?? []);
         })
@@ -77,14 +107,14 @@ export class ChofereNacionalComponent implements OnInit {
 
       this.consultaioQuery.selectConsultaioState$
       .pipe(
-        takeUntil(this.destroyed$),
+        takeUntil(this.destroy$),
         map((seccionState) => {
           if (seccionState.readonly) {
             this.datosConsulta = seccionState;
+            this.isReadonly = this.datosConsulta.readonly;
           }
         })
       ).subscribe();
-
   }
 
   onChofereNationalSelected($event: DatosDelChoferNacional[]) {
@@ -116,12 +146,7 @@ export class ChofereNacionalComponent implements OnInit {
     }
   }
 
-  @ViewChild(DatosDeChoferesComponent)
-  modalComponent!: DatosDeChoferesComponent;
-  datosChofere: DatosDelChoferNacional = {} as DatosDelChoferNacional;
-
   openModal(template: TemplateRef<unknown>) {
-    console.log(`Opening modal with template:`, template);
     this.modalRef = this.bsModalService.show(template, {
       class: 'modal-fullscreen',
     });
@@ -130,18 +155,15 @@ export class ChofereNacionalComponent implements OnInit {
   cancelModal() {
     this.modalRef?.hide();
     this.modalRef = null;
-
-    console.log(`Received the closeModalEvent from the child component.`);
-    // do something after closing the modal if needed
   }
 
   addModal(data: DatosDelChoferNacional) {
-    if (this.modalComponent) {
+    // if (this.modalComponent) {
       this.datosDelChoferNacional.push(data);
       this.datosDelChoferNacionalSelected = [];
-    } else {
-      console.error('Modal component is not initialized.');
-    }
+    // } else {
+    //   console.error('Modal component is not initialized.');
+    // }
     this.cancelModal();
   }
 }

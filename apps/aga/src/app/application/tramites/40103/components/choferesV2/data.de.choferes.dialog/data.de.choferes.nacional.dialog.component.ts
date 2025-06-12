@@ -1,19 +1,18 @@
-import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, RequiredValidator, Validators } from "@angular/forms";
-import { Catalogo, CategoriaMensaje, ConsultaioQuery, ConsultaioState, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@ng-mf/data-access-user';
+import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { Catalogo, CategoriaMensaje, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent, SharedModule, TablaDinamicaComponent, TituloComponent } from "@libs/shared/data-access-user/src";
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { DatosDelChoferNacional } from "../../../models/registro-muestras-mercancias.model";
-import { read } from "fs";
 import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { Chofer40103Service } from "../../../estados/chofer40103.service";
-import { map, Observable, Subject, takeUntil, firstValueFrom } from "rxjs";
+import { Subject, firstValueFrom, takeUntil } from "rxjs";
 
 
 @Component({
   selector: 'app-choferes-datos',
-  templateUrl: './data.de.choferes.component.html',
-  styleUrls: ['./data.de.choferes.component.scss'],
+  templateUrl: './data.de.choferes.nacional.dialog.component.html',
+  styleUrls: ['./data.de.choferes.nacional.dialog.component.scss'],
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -26,7 +25,7 @@ import { map, Observable, Subject, takeUntil, firstValueFrom } from "rxjs";
     NotificacionesComponent
   ],
 })
-export class DatosDeChoferesComponent implements OnInit, OnDestroy {
+export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy {
 
   @Input() readonly: boolean = false;
   @Input({ required: true }) datosDeChofere!: DatosDelChoferNacional;
