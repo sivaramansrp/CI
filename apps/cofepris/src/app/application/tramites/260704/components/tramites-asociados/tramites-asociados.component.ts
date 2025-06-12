@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConfiguracionColumna, ConsultaioQuery, ConsultaioState, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { map, ReplaySubject, takeUntil } from 'rxjs';
+import { ConsultaioQuery, ConsultaioState, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Asociados } from '../../models/consulta.model';
 import { CommonModule } from '@angular/common';
 import { ConsultaService } from '../../service/consulta.service';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { DESTINATARIO_TABLA } from '../../constantes/consulta.enum';
-import { FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 
 /**
  * Componente para mostrar y administrar los trámites asociados.

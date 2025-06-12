@@ -1,8 +1,7 @@
+import { AVISO_PRIVACIDAD, CATALOGO_CLAVE, ENCABEZADOS_SCIAN, ESTADO_CATALOGO, LISTA_CLAVE, MERCANCIAS_DATOS, OPCIONES_RADIO_HACERLOS, RADIO_OPCIONS } from '../../constantes/consulta.enum';
 import {
   Catalogo,
   CatalogoSelectComponent,
-  CatalogosSelect,
-  ConfiguracionColumna,
   ConsultaioQuery,
   ConsultaioState,
   InputCheckComponent,
@@ -18,7 +17,6 @@ import { CrosslistComponent, InputFechaComponent, InputRadioComponent, Notificac
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud260704State, Tramite260704Store } from '../../estados/Tramite260704.store';
-import { AVISO_PRIVACIDAD, CATALOGO_CLAVE, ENCABEZADOS_SCIAN, ESTADO_CATALOGO, LISTA_CLAVE, MERCANCIAS_DATOS, OPCIONES_RADIO_HACERLOS, RADIO_OPCIONS } from '../../constantes/consulta.enum';
 import { CommonModule } from '@angular/common';
 import { ConsultaService } from '../../service/consulta.service';
 import { Modal } from 'bootstrap';
@@ -48,6 +46,7 @@ import { Tramite260704Query } from '../../estados/Tramite260704.query';
   styleUrls: ['./datos-de-la-solicitud.component.css'],
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+  setFecha: string = '';
   /**
    * Subject para destruir notificador.
    */
@@ -748,6 +747,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       manfestosYDeclaraciones: [this.solicitudState?.manfestosYDeclaraciones, [Validators.required]],
       hacerlosPublicos: [this.solicitudState?.hacerlosPublicos, [Validators.required]],
       rfc: [this.solicitudState?.rfc, [Validators.required]],
+      nombreRazon: [this.solicitudState?.nombreRazon, [Validators.required]],
+      apellidoPaterno: [this.solicitudState?.apellidoPaterno, [Validators.required]],
+      apellidoMaterno: [this.solicitudState?.apellidoMaterno, [Validators.required]],
     });
   }
 
@@ -758,7 +760,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   
 
-  if(this.tieneFilaSeleccionadaFabricante  && this.esCheckboxSeleccionado === true) {
+  if(this.tieneFilaSeleccionadaFabricante && this.esCheckboxSeleccionado === true) {
     this.certificadoDisponsiblesTablaDatos.pop();
   }
 }

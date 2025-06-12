@@ -1,9 +1,9 @@
 import { Asociados, ColumnasTabla, Destinatario, ListaClave, Mercancia } from '../models/consulta.model';
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Observable, catchError, throwError } from 'rxjs';
+import { Solicitud260704State, Tramite260704Store } from '../estados/Tramite260704.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Solicitud260704State, Tramite260704Store } from '../estados/Tramite260704.store';
 
 /**
  * Servicio de consulta para obtener datos y tablas relacionados con el trámite 260704.

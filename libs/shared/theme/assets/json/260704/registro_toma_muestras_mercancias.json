@@ -1,7 +1,7 @@
 {
   "mercanciasDatos": 1,
   "destinatarioDatos": 1,
-  "tipoOperacion": "prorroga",
+  "tipoOperacion": "Prórroga",
   "justificacion": "ficción",
   "establecimiento": "ficción",
   "razonSocial": "ficción",
@@ -40,7 +40,7 @@
   "claveLote": "ficción",
   "listaClave": "ficción",
   "manfestosYDeclaraciones": false,
-  "hacerlosPublicos": "ficción",
+  "hacerlosPublicos": "No",
   "rfc": "ficción",
   "claveDeReferencia": "ficción",
   "cadenaDependecia": "ficción",

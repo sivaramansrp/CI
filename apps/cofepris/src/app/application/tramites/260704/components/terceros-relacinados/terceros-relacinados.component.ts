@@ -1,3 +1,4 @@
+import { AVISO_PRIVACIDAD, DESTINATARIO_CONFIGURACION_TABLA, FABRICANTE_CONFIGURACION_TABLA } from "../../constantes/consulta.enum";
 import { 
   AlertComponent, 
   CatalogoSelectComponent, 
@@ -9,7 +10,6 @@ import {
 } from "@ng-mf/data-access-user";
 import { 
   CatalogosSelect, 
-  ConfiguracionColumna, 
   TablaSeleccion, 
   ValidacionesFormularioService 
 } from "@libs/shared/data-access-user/src";
@@ -18,7 +18,6 @@ import { Destinatario, Fabricante } from "../../models/consulta.model";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ReplaySubject, map, takeUntil } from "rxjs";
 import { Solicitud260704State, Tramite260704Store } from "../../estados/Tramite260704.store";
-import { AVISO_PRIVACIDAD, DESTINATARIO_CONFIGURACION_TABLA, FABRICANTE_CONFIGURACION_TABLA } from "../../constantes/consulta.enum";
 import { CommonModule } from "@angular/common";
 import { ConsultaService } from "../../service/consulta.service";
 import { Modal } from 'bootstrap';
