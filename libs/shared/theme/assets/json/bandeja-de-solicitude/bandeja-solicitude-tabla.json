@@ -1601,7 +1601,7 @@
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260508"
   },
- {
+  {
     "id": 260509,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -1618,7 +1618,7 @@
     "diasTranscurridos": "4",
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260510"
-},
+  },
   {
     "id": 240170,
     "tipoDeTramite": "Solicitud de Permiso",
@@ -1627,8 +1627,8 @@
     "diasTranscurridos": "4",
     "departamento": "SEDENA",
     "numeroDeProcedimiento": "240170"
-},
-{
+  },
+  {
     "id": 110214,
     "tipoDeTramite": "Solicitudddd certificado CAM",
     "fecha": "2022-10-05",
@@ -1771,6 +1771,15 @@
     "diasTranscurridos": "4",
     "departamento": "SE",
     "numeroDeProcedimiento": "140101"
+  },
+   {
+    "id": 231003,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SEMARNAT",
+    "numeroDeProcedimiento": "231003"
   },
 {
   "id": 32401,
