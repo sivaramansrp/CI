@@ -80,7 +80,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
     private tramite240108Query: Tramite240108Query,
     private tramite240108Store: Tramite240108Store,
   ) {
-    /// Subscribe to the route parameters to get the selected tab index.
+    // Se puede agregar aquí la lógica del constructor si es necesario
   }
 
   /**

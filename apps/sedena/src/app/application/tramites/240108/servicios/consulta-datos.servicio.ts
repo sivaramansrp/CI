@@ -69,11 +69,7 @@ export class ConsultaDatosService {
     this.tramiteStore.updateProveedorTablaDatos(DATOS.proveedorTablaDatos);
     this.tramiteStore.updateMercanciaTablaDatos(DATOS.merccancialTablaDatos);
   }
-
-  /**
-   * Obtiene los datos de la solicitud desde un archivo JSON.
-   * @returns Observable con los datos de la solicitud.
-   */
+  
   /**
    * Obtiene los datos de la solicitud desde un archivo JSON.
    * @returns Observable con los datos de la solicitud.

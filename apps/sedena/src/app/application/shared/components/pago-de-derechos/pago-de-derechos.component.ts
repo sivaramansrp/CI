@@ -161,9 +161,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       this.pagoDerechosForm.disable();
     } else if (!this.esFormularioSoloLectura) {
       this.pagoDerechosForm.enable();
-    } else {
-      // No se requiere ninguna acción en el formulario
-    }
+    } 
   }
 
   /**
