@@ -733,5 +733,13 @@
     "fechInicioTramite": "2025-3-09 0035:05:00",
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260905"
+  },
+    {
+    "folioTramite": "0100001000320251005260516",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca",
+    "dependencia": "COFEPRIS ADMINITRACION DE APOYO JURIDICO ADUANA 8 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260516"
   }
 ]
