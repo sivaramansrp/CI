@@ -194,6 +194,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * // Ahora, registro.desEstatus será 'Activada'.
    * ```
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   valorDeAlternancia(event: any){ 
     const ROW = event.row;
     const INDEX = this.datosTabla.findIndex((x) => x.id === ROW.id);

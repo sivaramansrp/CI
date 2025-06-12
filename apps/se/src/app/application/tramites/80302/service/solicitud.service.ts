@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Anexo, Complimentaria, Federetarios, Operacions } from '../estados/models/plantas-consulta.model';
 import { Observable, map } from 'rxjs';
 import { DatosDelModificacion } from '../estados/models/datos-tramite.model';
