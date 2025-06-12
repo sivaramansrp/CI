@@ -3,8 +3,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { PantallasFormData } from 'libs/shared/data-access-user/src/core/models/220401/servicios-pantallas.model';
-import { ServiciosPantallasService } from 'libs/shared/data-access-user/src/core/services/220471/servicios-pantallas.service';
+import { PantallasFormData } from '@libs/shared/data-access-user/src/core/models/220401/servicios-pantallas.model';
+import { ServiciosPantallasService } from '@libs/shared/data-access-user/src/core/services/220471/servicios-pantallas.service';
 
 interface Solicitude {
   fechaCreacion: string;

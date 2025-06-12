@@ -20,20 +20,16 @@ import {
   ConsultaioQuery,
   InputRadioComponent,
 } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-
-import radioOptionsData from 'libs/shared/theme/assets/json/220401/tipo-de-certifico.json';
-
-import { AgregarArchivoComponent } from '@ng-mf/data-access-user';
-import { TableComponent } from '@ng-mf/data-access-user';
-
-import { Agregar220401Store, solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
-import { AgregarQuery } from '../../../../estados/queries/agregar.query';
-import unidadRadioFields from 'libs/shared/theme/assets/json/220401/unidad.json';
-
 import { Subject, map, takeUntil } from 'rxjs';
-
+import { Agregar220401Store } from '../../../../estados/tramites/agregar220401.store';
+import { AgregarArchivoComponent } from '@ng-mf/data-access-user';
+import { AgregarQuery } from '../../../../estados/queries/agregar.query';
 import { Pantallas220401Service } from '../pantallas220401.service';
+import { TableComponent } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@ng-mf/data-access-user';
+import radioOptionsData from '@libs/shared/theme/assets/json/220401/tipo-de-certifico.json';
+import { solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
+import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json';
 
 /**
  * Componente que gestiona los datos del certificado en la solicitud 220401.
@@ -163,7 +159,7 @@ this.inicializarCertificadoFormulario();
    * - Sincroniza los valores de los controles de `formGroup1` con el estado almacenado en el servicio `_pantallas220401Service`.
    * - Actualiza el formulario `datosdelForm` con los datos actuales de la solicitud.
    */
-  inicializarFormulario(){
+  inicializarFormulario():void{
     this.datosdelForm = this.fb.group({
       tipoCertificado: ['', Validators.required],
       message: [{ value: '', disabled: true }],
@@ -210,7 +206,7 @@ this.inicializarCertificadoFormulario();
    * Maneja los cambios en el valor seleccionado.
    */
   
-   onValueChange(value: string | number) {
+   onValueChange(value: string | number):void {
         this.selectedValue = value.toString();
       }
   
@@ -300,7 +296,7 @@ this.inicializarCertificadoFormulario();
    *
    * @comdoc
    */
-  getDelegaciones() {
+  getDelegaciones():void {
     const SELECTED_DELEGCIONES = this.catalogConfigs.map((config) => ({
       controlName: config.controlName,
       value: this.formGroup1.get(config.controlName)?.value,
@@ -321,7 +317,6 @@ this.inicializarCertificadoFormulario();
   
   }
 
-  
    
     
     /**
