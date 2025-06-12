@@ -1,95 +1,106 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CapturaSolicitudeService } from '../../services/captura-solicitud.service';
-
 import { PagoDeDerechoComponent } from './pago-de-derecho.component';
-import { ReactiveFormsModule } from '@angular/forms';
+import { MediodetransporteService } from '../../services/medio-de-transporte.service';
+import { Solicitud220402Store } from '../../estados/tramites/tramites220402.store';
+import { Solicitud220402Query } from '../../estados/queries/tramites220402.query';
+import { CatalogoSelectComponent, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { of } from 'rxjs';
+import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+
 
 describe('PagoDeDerechoComponent', () => {
   let component: PagoDeDerechoComponent;
   let fixture: ComponentFixture<PagoDeDerechoComponent>;
+  let mockMediodetransporteService: any;
+  let mockSolicitud220402Store: any;
+  let mockSolicitud220402Query: any;
+  let mockValidacionesFormularioService: any;
 
   beforeEach(async () => {
-    const capturaSolicitudeServiceSpy = jasmine.createSpyObj(
-      'CapturaSolicitudeService',
-      ['getBanco']
-    );
+    mockMediodetransporteService = {
+      getMedioDeTransporte: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Banco A' }])),
+    };
+
+    mockSolicitud220402Store = {
+      setExentoDePago: jest.fn(),
+      setJustificacion: jest.fn(),
+      setClaveDeReferencia: jest.fn(),
+      setCadenaDependencia: jest.fn(),
+      setBanco: jest.fn(),
+      setllaveDePago: jest.fn(),
+      setFechaPago: jest.fn(),
+      setImportePago: jest.fn(),
+    };
+
+    mockSolicitud220402Query = {
+      selectSolicitud$: of({
+        exentoDePago: 'No',
+        justificacion: 'Test Justification',
+        claveDeReferencia: '12345',
+        cadenaDependencia: 'Test Dependency',
+        banco: 'Banco A',
+        llaveDePago: 'Key123',
+        fechaPago: '2023-01-01',
+        importePago: '1000',
+      }),
+    };
+
+    mockValidacionesFormularioService = {
+      isValid: jest.fn().mockReturnValue(true),
+    };
 
     await TestBed.configureTestingModule({
       declarations: [PagoDeDerechoComponent],
-      imports: [ReactiveFormsModule],
+      imports: [ReactiveFormsModule, FormsModule, TituloComponent, CatalogoSelectComponent],
       providers: [
-        {
-          provide: CapturaSolicitudeService,
-          useValue: capturaSolicitudeServiceSpy,
-        },
+        { provide: MediodetransporteService, useValue: mockMediodetransporteService },
+        { provide: Solicitud220402Store, useValue: mockSolicitud220402Store },
+        { provide: Solicitud220402Query, useValue: mockSolicitud220402Query },
+        { provide: ValidacionesFormularioService, useValue: mockValidacionesFormularioService },
       ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PagoDeDerechoComponent);
     component = fixture.componentInstance;
-
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize banco data on init', () => {
-    component.fetchBancoData();
-    expect(component.bancoCatalogo.catalogos.length).toBe(1);
-    expect(component.bancoCatalogo.catalogos[0].descripcion).toBe('Banco 1');
+  it('should initialize the form correctly', () => {
+    expect(component.FormSolicitud).toBeDefined();
+    expect(component.FormSolicitud.get('datosImportadorExportador.exentoDePago')?.value).toBe('No');
+    expect(component.FormSolicitud.get('datosImportadorExportador.justificacion')?.value).toBe('Test Justification');
   });
 
-  it('should initialize mercancia on init', () => {
-    component.ngOnInit();
-    expect(component.mercanciaCatalogo.catalogos.length).toBe(2);
-    expect(component.mercanciaCatalogo.catalogos[0].descripcion).toBe('Opción 1');
+  it('should fetch banco data', () => {
+    expect(mockMediodetransporteService.getMedioDeTransporte).toHaveBeenCalled();
+    expect(component.bancoCatalogo.catalogos).toEqual([{ id: 1, descripcion: 'Banco A' }]);
   });
 
-  it('should set form values and disable fields when exentoDePago is No', () => {
-    component.actualizarCamposDeFormularioBasadosEnExentoDePago('No');
-    expect(
-      component.FormSolicitud.get('datosImportadorExportador.claveDeReferencia')
-        ?.value
-    ).toBe('454000554');
-    expect(
-      component.FormSolicitud.get('datosImportadorExportador.importePago')
-        ?.value
-    ).toBe('594.0');
-    expect(
-      component.FormSolicitud.get('datosImportadorExportador.justificacion')
-        ?.disabled
-    ).toBeTruthy();
+  it('should set values in the store', () => {
+    const formGroup = component.FormSolicitud.get('datosImportadorExportador') as FormGroup;
+    component.setValoresStore(formGroup, 'justificacion', 'setJustificacion');
+    expect(mockSolicitud220402Store.setJustificacion).toHaveBeenCalledWith('Test Justification');
   });
 
-  it('should reset and disable fields when exentoDePago is Sí', () => {
-    component.actualizarCamposDeFormularioBasadosEnExentoDePago('Sí');
-    expect(
-      component.FormSolicitud.get('datosImportadorExportador.justificacion')
-        ?.value
-    ).toBeNull();
-    expect(
-      component.FormSolicitud.get('datosImportadorExportador.justificacion')
-        ?.disabled
-    ).toBeTruthy();
+  it('should disable the form in solo lectura mode', () => {
+    component.soloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(component.FormSolicitud.disabled).toBe(true);
   });
 
-  it('should validate form and log values if valid', () => {
-    spyOn(console, 'log');
-    component.FormSolicitud.setValue({
-      datosImportadorExportador: {
-        exentoDePago: 'No',
-        nombreImportExport: 'Test Name',
-        justificacion: 'Test Justification',
-        claveDeReferencia: 'Test Reference',
-        cadenaDependencia: 'Test Chain',
-        llaveDePago: 'Test Key',
-        fechaPago: '2025-02-21',
-        importePago: '1000',
-      },
-    });
-    expect(console.log).toHaveBeenCalledWith(component.FormSolicitud.value);
+  it('should enable the form when not in solo lectura mode', () => {
+    component.soloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(component.FormSolicitud.enabled).toBe(true);
   });
 
+  it('should update banco selection', () => {
+    const mockBanco = { id: 1, descripcion: 'Banco A' };
+    component.actualizarBanco(mockBanco);
+    expect(component.bancoSeleccionado).toEqual(mockBanco);
+  });
 });
