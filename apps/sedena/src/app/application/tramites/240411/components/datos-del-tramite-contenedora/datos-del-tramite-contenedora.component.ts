@@ -2,7 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 import { ConsultaioQuery, CrosslistComponent } from '@libs/shared/data-access-user/src';
-import { Subject, map } from 'rxjs';
+
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { JustificacionTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
@@ -10,7 +10,7 @@ import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.mo
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-
+import { Subject } from 'rxjs';
 import { Tramite240411Query } from '../../estados/tramite240411Query.query';
 import { Tramite240411Store } from '../../estados/tramite240411Store.store';
 import { takeUntil } from 'rxjs';
@@ -46,6 +46,7 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @property {DatosDelTramiteFormState} datosDelTramiteFormState
    */
   public datosDelTramiteFormState!: DatosDelTramiteFormState;
+
   /**
    * @property {JustificacionTramiteFormState} justificacionTramiteFormState
    * Estado actual del formulario de justificación del trámite.
@@ -84,14 +85,7 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
     private tramiteStore: Tramite240411Store,
     private consultaioQuery: ConsultaioQuery,
   ) {
-   this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.unsubscribe$),
-        map((seccionState)=>{
-          this.esFormularioSoloLectura = seccionState.readonly; 
-        })
-      )
-      .subscribe()
+   
   }
 
   /**
@@ -119,8 +113,23 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.justificacionTramiteFormState = data;
       });
+      this.obtenerEstadoValor()
   }
 
+  /**
+   * Se suscribe al observable del estado del trámite (`Tramite220103Query`)
+   * para obtener y almacenar el estado actual en `estadoSeleccionado`.
+   * La suscripción se gestiona con `takeUntil` para limpiarse automáticamente
+   * en `ngOnDestroy`.
+   */
+  obtenerEstadoValor(): void {
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(takeUntil(this.unsubscribe$))
+    .subscribe((seccionState) => {
+      this.esFormularioSoloLectura = seccionState.readonly;
+    });
+  }
+  
   /**
    * Hook del ciclo de vida que se ejecuta al destruir el componente.
    * Libera las suscripciones activas para evitar fugas de memoria.
