@@ -3,6 +3,7 @@ import { Subject, map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DatosDelTramiteContenedoraComponent } from '../../components/datos-del-tramite-contenedora/datos-del-tramite-contenedora.component';
+import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
@@ -81,7 +82,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
       this.consultaState = seccionState;
     })).subscribe();
-    if (this.consultaState && this.consultaState.procedureId === '240120' &&
+    if (this.consultaState && this.consultaState.procedureId === ID_PROCEDIMIENTO.toString() &&
       this.consultaState.update) {
       this.guardarDatosFormulario();
     } else {
