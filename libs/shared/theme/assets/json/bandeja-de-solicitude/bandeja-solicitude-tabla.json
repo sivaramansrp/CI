@@ -1618,7 +1618,8 @@
     "diasTranscurridos": "4",
     "departamento": "SE",
     "numeroDeProcedimiento": "110214"
-  }, {
+  },
+   {
     "id": 220102,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -1708,5 +1709,14 @@
   "diasTranscurridos": "4",
   "departamento": "AGRICULTURA",
   "numeroDeProcedimiento": "220703"
+},
+{
+  "id": 110219,
+  "tipoDeTramite": "Solicitudddd certificado CAM",
+  "fecha": "2022-10-05",
+  "fechaActualizacion": "2022-10-25",
+  "diasTranscurridos": "4",
+  "departamento": "SE",
+  "numeroDeProcedimiento": "110219"
 }
 ]
