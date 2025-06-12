@@ -11924,13 +11924,13 @@
     "origin": "FLUJO_FUNCIONARIO_EVALUAR"
   },
   {
-    "folioTramite": "0594662081554576343260510",
+    "folioTramite": "0594662081554576343260515",
     "tipoDeTramite": "Consulta de Proceso",
     "nombreDeLaTarea": "confirmar notificación",
     "fechaDeAsignacion": "2023-10-02",
     "estadoDeTramite": "Pendiente",
     "departamento": "cofepris",
-    "numeroDeProcedimiento": "260510",
+    "numeroDeProcedimiento": "260515",
     "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION"
   },
   {
