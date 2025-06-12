@@ -82,8 +82,6 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
    */
   soloLectura: boolean = false;
 
-  testVariable: boolean = true;
-
   constructor(
     private autoridadService: AutoridadService,
     private fb: FormBuilder,
@@ -146,6 +144,7 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
         Validators.required,
       ],
     });
+    this.inicializarEstadoFormulario();
   }
 
     /**
