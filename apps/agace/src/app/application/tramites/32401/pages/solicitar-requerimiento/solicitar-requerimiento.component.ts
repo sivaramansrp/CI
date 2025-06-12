@@ -15,6 +15,7 @@ import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Requerimiento } from '../../models/datos-tramite.model';
 import { RequerimientoOpcions } from '../../models/datos-tramite.model';
 import { Router } from '@angular/router';
 import { Solicitud32401State } from '../../estados/tramite32401.store';
@@ -303,12 +304,10 @@ export class SolicitarRequerimientoComponent implements OnInit, OnDestroy {
   /**
    * Maneja la selección de una fila en la tabla y
    */
-  valorDeAlternancia(row: any): void {
-    if (row.folioTramite) {
-      this.router.navigate(['agace/manifiesto-aereo/requiremento'], {
-        state: { data: row },
-      });
-    }
+  valorDeAlternancia(row: Requerimiento): void {
+    this.router.navigate(['agace/manifiesto-aereo/requiremento'], {
+      state: { data: row },
+    });
   }
 
   /**
