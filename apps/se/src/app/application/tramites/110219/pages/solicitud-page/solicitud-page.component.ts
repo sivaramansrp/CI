@@ -108,7 +108,7 @@ nombre!: number;
    * 
    * @param event Número del evento emitido.
    */
-  alEventoHijo(event: number) {
+  alEventoHijo(event: number): void {
     this.nombre = event;
   }
 }

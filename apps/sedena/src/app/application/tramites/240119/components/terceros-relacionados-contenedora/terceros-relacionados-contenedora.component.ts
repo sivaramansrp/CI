@@ -1,8 +1,9 @@
 import { ActivatedRoute, Router } from '@angular/router';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240119Query } from '../../estados/tramite240119Query.query';
 import { Tramite240119Store } from '../../estados/tramite240119Store.store';
@@ -39,20 +40,31 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
    * @property {Proveedor[]} proveedorTablaDatos
    */
   proveedorTablaDatos: Proveedor[] = [];
-
+  /**
+    * Indica si el formulario debe mostrarse en modo solo lectura.
+    *
+    * @type {boolean}
+    * @memberof DatosDelTramiteContenedoraComponent
+    * @default false
+    */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente.
    *
    * @method constructor
    * @param {Tramite240119Store} tramiteStore - Store de Akita que maneja el estado del trámite.
    * @param {Tramite240119Query} tramiteQuery - Query de Akita para obtener datos del trámite.
+   * @param {Router} router - Router de Angular para navegar entre rutas.
+   * @param {ActivatedRoute} activatedRoute - Ruta activa para navegar de forma relativa.
+   * @param {ConsultaioQuery} consultaQuery - Query para obtener el estado de la consulta.
    * @returns {void}
    */
   constructor(
     private tramiteStore: Tramite240119Store,
     private tramiteQuery: Tramite240119Query,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private consultaQuery: ConsultaioQuery
   ) {
     // No hacer nada
   }
@@ -76,6 +88,14 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
       .subscribe((data) => {
         this.proveedorTablaDatos = data;
       });
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
 
@@ -133,15 +153,15 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
     }
   }
 
-    /**
-   * Hook del ciclo de vida que se ejecuta al destruir el componente.
-   * Libera las suscripciones para evitar fugas de memoria.
-   *
-   * @method ngOnDestroy
-   * @returns {void}
-   */
-    ngOnDestroy(): void {
-      this.destroy$.next();
-      this.destroy$.complete();
-    }
+  /**
+ * Hook del ciclo de vida que se ejecuta al destruir el componente.
+ * Libera las suscripciones para evitar fugas de memoria.
+ *
+ * @method ngOnDestroy
+ * @returns {void}
+ */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }

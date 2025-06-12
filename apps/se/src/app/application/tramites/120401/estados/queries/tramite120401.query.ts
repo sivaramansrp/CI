@@ -1,4 +1,3 @@
-import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 import { Tramite120401State } from '../tramites/tramite120401.store';
