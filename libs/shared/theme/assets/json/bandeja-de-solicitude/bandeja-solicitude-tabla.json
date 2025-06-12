@@ -1818,6 +1818,24 @@
     "numeroDeProcedimiento": "6101"
 },
 {
+  "id": 240108,
+  "tipoDeTramite": "Solicitudddd certificado CAM",
+  "fecha": "2022-10-05",
+  "fechaActualizacion": "2022-10-25",
+  "diasTranscurridos": "4",
+  "departamento": "SE",
+  "numeroDeProcedimiento": "240108"
+  },
+  {
+  "id": 260203,
+  "tipoDeTramite": "Solicitud de Permiso",
+  "fecha": "2023-10-01",
+  "fechaActualizacion": "2023-10-05",
+  "diasTranscurridos": "4",
+  "departamento": "COFEPRIS",
+  "numeroDeProcedimiento": "260203"
+  },
+  {
     "id": 120401,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -1834,6 +1852,15 @@
   "diasTranscurridos": "4",
   "departamento": "COFEPRIS",
   "numeroDeProcedimiento": "260205"
+},
+{
+      "id": 110203,
+      "tipoDeTramite": "Solicitud de Permiso",
+      "fecha": "2023-11-03",
+      "fechaActualizacion": "2023-03-20",
+      "diasTranscurridos": "4",
+      "departamento": "SE",
+      "numeroDeProcedimiento": "110203"
 },
 {
   "id": 240120,

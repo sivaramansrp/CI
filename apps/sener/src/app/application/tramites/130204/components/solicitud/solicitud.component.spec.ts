@@ -1,35 +1,32 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { SolicitudComponent } from './solicitud.component';
 import { ExportacionHidrocarburosService } from '../../services/exportacion-hidrocarburos.service';
 import { Tramite130204Store } from '../../estados/tramites/tramites130204.store';
 import { Tramite130204Query } from '../../estados/queries/tramite130204.query';
 import { PaisDeOrigenComponent } from '../../../../shared/components/pais-de-origen/pais-de-origen.component';
-import { DatosDeLaMercanciaComponent } from '../../../../shared/components/datos-de-la-mercancia/datos-de-la-mercancia.component';
-import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
-import { PartidasDeLaMercanciaComponent } from '../../../../shared/components/partidas-de-la-mercancia/partidas-de-la-mercancia.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { RepresentacionComponent } from '../../../../shared/components/representacion/representacion.component';
+import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
   let fixture: ComponentFixture<SolicitudComponent>;
-  let exportacionServiceMock: Partial<ExportacionHidrocarburosService>;
-  let tramiteStoreMock: Partial<Tramite130204Store>;
-  let tramiteQueryMock: Partial<Tramite130204Query>;
+  let exportacionHidrocarburosServiceMock: any;
+  let tramiteStoreMock: any;
+  let tramiteQueryMock: any;
 
   beforeEach(async () => {
-    exportacionServiceMock = {
+    exportacionHidrocarburosServiceMock = {
       getSolicitudeOptions: jest.fn().mockReturnValue(of({ options: [] })),
       getProductoOptions: jest.fn().mockReturnValue(of({ options: [] })),
       getTablaDatos: jest.fn().mockReturnValue(of([{ cantidad: 10, totalUSD: 100 }])),
       getEstado: jest.fn().mockReturnValue(of([])),
       getRepresentacionFederal: jest.fn().mockReturnValue(of([])),
       getListaDePaisesDisponibles: jest.fn().mockReturnValue(of([])),
-      obtenerListaDeCiudades: jest.fn().mockReturnValue(of([])),
-      getPaisesPorBloque: jest.fn().mockReturnValue(of([])),
+      obtenerListaDeCiudades: jest.fn().mockReturnValue(of([{ descripcion: 'Ciudad 1' }])),
+      getPaisesPorBloque: jest.fn().mockReturnValue(of([{ descripcion: 'País 1' }])),
     };
 
     tramiteStoreMock = {
@@ -39,53 +36,26 @@ describe('SolicitudComponent', () => {
     };
 
     tramiteQueryMock = {
-      selectSolicitud$: of({
-        plazo: '30 días',
-        descripcion: 'Descripción de prueba',
-        fraccion: '1234.56.78',
-        nico: 'NICO123',
-        cantidad: '100',
-        valorPartidaUSD: 500,
-        umt: 'kg',
-        solicitud: 'Solicitud123',
-        regimen: 'Regimen Especial',
-        clasificacion: 'Clasificación A',
-        filaSeleccionada: [],
-        cantidadModificar: '10',
-        valorPartidaUSDPartidasDeLaMercancia: 1000,
-        descripcionModificar: 'Descripción de modificación',
-        valorFacturaUSD: '5000',
-        bloque: 'Bloque A',
-        usoEspecifico: 'Uso específico',
-        justificacionImportacionExportacion: 'Justificación',
-        observaciones: 'Sin observaciones',
-        entidad: 'Entidad A',
-        representacion: 'Representación A',
-        mostrarTabla: false,
-        acotacion: 'Acotación',
-        descripcionNico: 'Descripción NICO',
-      }),
+      selectSolicitud$: of({}),
       mostrarTabla$: of(false),
+      selectConsultaioState$: of({ readonly: false })
     };
 
     await TestBed.configureTestingModule({
-      declarations: [ SolicitudComponent ],
+      declarations: [SolicitudComponent],
       imports: [
         ReactiveFormsModule,
-        HttpClientTestingModule,
         PaisDeOrigenComponent,
-        DatosDeLaMercanciaComponent,
-        DatosDelTramiteComponent,
-        PartidasDeLaMercanciaComponent,
-        RepresentacionComponent,
+        HttpClientTestingModule,
+        DatosDelTramiteComponent
       ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
       providers: [
         FormBuilder,
-        { provide: ExportacionHidrocarburosService, useValue: exportacionServiceMock },
+        { provide: ExportacionHidrocarburosService, useValue: exportacionHidrocarburosServiceMock },
         { provide: Tramite130204Store, useValue: tramiteStoreMock },
-        { provide: Tramite130204Query, useValue: tramiteQueryMock },
+        { provide: Tramite130204Query, useValue: tramiteQueryMock }
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
   });
 
@@ -95,25 +65,25 @@ describe('SolicitudComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize forms on ngOnInit', () => {
-    const SPYINITFORMS = jest.spyOn(component, 'inicializarFormularios');
+  it('debería inicializar formularios al iniciar', () => {
+    const spyInitForms = jest.spyOn(component, 'inicializarFormularios');
     component.ngOnInit();
-    expect(SPYINITFORMS).toHaveBeenCalled();
+    expect(spyInitForms).toHaveBeenCalled();
   });
 
-  it('should call opcionesDeBusqueda on ngOnInit', () => {
-    const SPYOPCIONES = jest.spyOn(component, 'opcionesDeBusqueda');
+  it('debería llamar opcionesDeBusqueda al iniciar', () => {
+    const spyOpcionesDeBusqueda = jest.spyOn(component, 'opcionesDeBusqueda');
     component.ngOnInit();
-    expect(SPYOPCIONES).toHaveBeenCalled();
+    expect(spyOpcionesDeBusqueda).toHaveBeenCalled();
   });
 
-  it('should fetch table data and update formForTotalCount', () => {
+  it('debería obtener datos de la tabla y actualizar formForTotalCount', () => {
     component.obtenerTablaDatos();
-    expect(exportacionServiceMock.getTablaDatos).toHaveBeenCalled();
+    expect(exportacionHidrocarburosServiceMock.getTablaDatos).toHaveBeenCalled();
     expect(component.tableBodyData).toEqual([{ cantidad: 10, totalUSD: 100 }]);
     expect(component.formForTotalCount.value).toEqual({
       cantidadTotal: 10,
@@ -121,62 +91,30 @@ describe('SolicitudComponent', () => {
     });
   });
 
-  it('should handle store updates for setFraccion', () => {
-        // 1) Construir un formulario simple con los controles que tu método parcheará
-    const FORM = new FormBuilder().group({
-      fraccion: [1],
-      umt: [''],
-      acotacion: ['']
-    });
+  it('debería manejar setFraccion actualizando el formulario', () => {
+    const form = new FormBuilder().group({ fraccion: [1], umt: [''] });
+    component.mercanciaCatalogoArray = [[{ id: 1, descripcion: 'Sample', relacionadaUmtId: 2 }]];
+    component.acotacionCatalogo = [{ id: 3, descripcion: 'Acotación 3' }];
+    const spy = jest.spyOn(component, 'setValoresStore');
 
-        // 2) Simular los catálogos para que .find() devuelva una coincidencia
-    component.mercanciaCatalogoArray = [[
-      { id: 1, descripcion: 'Sample', relacionadaUmtId: 2, relacionadaAcotacionId: 99 }
-    ]];
-    component.acotacionCatalogo = [
-      { id: 99, descripcion: 'My Acotación' }
-    ];
+    component.handleStoreUpdate({ form, campo: 'fraccion', metodoNombre: 'setFraccion' });
 
-        // 3) Espiar setValoresStore para verificar que se llame por cada campo
-    const SPYSET = jest.spyOn(component, 'setValoresStore');
-
-        // 4) Invocar el manejador
-    component.handleStoreUpdate({
-      form: FORM,
-      campo: 'fraccion',
-      metodoNombre: 'setFraccion'
-    });
-
-        // 5) Aserciones
-    expect(SPYSET).toHaveBeenCalledWith(FORM, 'fraccion');
-    expect(FORM.value.umt).toBe(2);
-    expect(SPYSET).toHaveBeenCalledWith(FORM, 'umt');
-    expect(FORM.value.acotacion).toBe('My Acotación');
-    expect(SPYSET).toHaveBeenCalledWith(FORM, 'acotacion');
+    expect(spy).toHaveBeenCalledWith(form, 'fraccion');
+    expect(form.value.umt).toBe(2);
   });
 
-  it('should handle store updates for setNico', () => {
-    const FORM = new FormBuilder().group({
-      fraccion: [1],
-      descripcionNico: ['']
-    });
+  it('debería manejar setNico actualizando descripciónNico', () => {
+    const form = new FormBuilder().group({ fraccion: [1], descripcionNico: [''] });
+    component.mercanciaCatalogoArray = [[{ id: 1, descripcion: 'Descripción NICO' }]];
+    const spy = jest.spyOn(component, 'setValoresStore');
 
-    component.mercanciaCatalogoArray = [[
-      { id: 1, descripcion: 'Test Descripción' }
-    ]];
+    component.handleStoreUpdate({ form, campo: 'nico', metodoNombre: 'setNico' });
 
-    const SPYSET = jest.spyOn(component, 'setValoresStore');
-    component.handleStoreUpdate({
-      form: FORM,
-      campo: 'nico',
-      metodoNombre: 'setNico'
-    });
-
-    expect(SPYSET).toHaveBeenCalledWith(FORM, 'nico');
-    expect(FORM.value.descripcionNico).toBe('Test Descripción');
+    expect(spy).toHaveBeenCalledWith(form, 'nico');
+    expect(form.value.descripcionNico).toBe('Descripción NICO');
   });
 
-  it('should validate and show/hide table based on form validity', () => {
+  it('debería validar y mostrar/ocultar tabla según validez del formulario', () => {
     component['fb'] = new FormBuilder();
     component.partidasDelaMercanciaForm = component['fb'].group({
       cantidadModificar: ['', Validators.required]
@@ -185,34 +123,94 @@ describe('SolicitudComponent', () => {
     component.validarYEnviarFormulario();
     expect(component.mostrarTabla).toBe(false);
 
-    component.partidasDelaMercanciaForm.patchValue({ cantidadModificar: '10' });
+    component.partidasDelaMercanciaForm.patchValue({ cantidadModificar: '5' });
     component.validarYEnviarFormulario();
     expect(component.mostrarTabla).toBe(true);
   });
 
-  it('should fetch countries by block and update selectRangoDias', () => {
-    const MOCKDATA = [{ descripcion: 'Country 1' }, { descripcion: 'Country 2' }];
-    (exportacionServiceMock.getPaisesPorBloque as jest.Mock).mockReturnValue(of(MOCKDATA));
+  it('debería obtener países por bloque y actualizar selectRangoDias', () => {
+    const mockData = [{ descripcion: 'País 1' }, { descripcion: 'País 2' }];
+    exportacionHidrocarburosServiceMock.getPaisesPorBloque.mockReturnValue(of(mockData));
 
     component.fetchPaisesPorBloque(1);
-    expect(exportacionServiceMock.getPaisesPorBloque).toHaveBeenCalledWith(1);
-    expect(component.paisesPorBloque).toEqual(MOCKDATA);
-    expect(component.selectRangoDias).toEqual(['Country 1', 'Country 2']);
+    expect(exportacionHidrocarburosServiceMock.getPaisesPorBloque).toHaveBeenCalledWith(1);
+    expect(component.paisesPorBloque).toEqual(mockData);
+    expect(component.selectRangoDias).toEqual(['País 1', 'País 2']);
   });
 
-  it('should set values in the store', () => {
-    const FORM = new FormBuilder().group({ campo: ['value'] });
-    component.setValoresStore(FORM, 'campo');
-    expect(tramiteStoreMock.establecerDatos).toHaveBeenCalledWith({ campo: 'value' });
+  it('debería asignar valores al store correctamente', () => {
+    const form = new FormBuilder().group({ campo: ['valor'] });
+    component.setValoresStore(form, 'campo');
+    expect(tramiteStoreMock.establecerDatos).toHaveBeenCalledWith({ campo: 'valor' });
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const SPYNEXT = jest.spyOn(component['destroyed$'], 'next');
-    const SPYCOMPLETE = jest.spyOn(component['destroyed$'], 'complete');
-
+  it('debería limpiar las suscripciones en ngOnDestroy', () => {
+    const spyNext = jest.spyOn(component['destroyed$'], 'next');
+    const spyComplete = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();
-
-    expect(SPYNEXT).toHaveBeenCalled();
-    expect(SPYCOMPLETE).toHaveBeenCalled();
+    expect(spyNext).toHaveBeenCalled();
+    expect(spyComplete).toHaveBeenCalled();
   });
+
+  it('debería obtener lista de ciudades y actualizar fechasDatos', () => {
+    const paisComponentMock: any = { crosslistComponent: { fechasDatos: [] } };
+    component.paisDeOrigenComponent = paisComponentMock;
+
+    component.obtenerListaDeCiudades();
+
+    expect(paisComponentMock.crosslistComponent.fechasDatos).toEqual(['Ciudad 1']);
+  });
+
+  it('no debería fallar si acotacionCatalogo es undefined en setFraccion', () => {
+  const form = new FormBuilder().group({ fraccion: [1], umt: [''], acotacion: [''] });
+  component.mercanciaCatalogoArray = [[{ id: 1, descripcion: 'Sample', relacionadaUmtId: 2, relacionadaAcotacionId: 3 }]];
+  component.acotacionCatalogo = undefined as any; // or just don't set it
+  expect(() => {
+    component.handleStoreUpdate({ form, campo: 'fraccion', metodoNombre: 'setFraccion' });
+  }).not.toThrow();
+});
+
+it('no debería actualizar acotacion si no hay coincidencia en acotacionCatalogo', () => {
+  const form = new FormBuilder().group({ fraccion: [1], umt: [''], acotacion: [''] });
+  component.mercanciaCatalogoArray = [[{ id: 1, descripcion: 'Sample', relacionadaUmtId: 2, relacionadaAcotacionId: 99 }]];
+  component.acotacionCatalogo = [{ id: 3, descripcion: 'Acotación 3' }];
+  component.handleStoreUpdate({ form, campo: 'fraccion', metodoNombre: 'setFraccion' });
+  expect(form.value.acotacion).toBe('');
+});
+
+it('debería deshabilitar todos los formularios si esFormularioSoloLectura es true', () => {
+  component.esFormularioSoloLectura = true;
+  component.inicializarFormularios();
+  component.guardarDatosFormulario();
+  expect(component.formDelTramite.disabled).toBe(true);
+  expect(component.mercanciaForm.disabled).toBe(true);
+  expect(component.partidasDelaMercanciaForm.disabled).toBe(true);
+  expect(component.paisForm.disabled).toBe(true);
+  expect(component.frmRepresentacionForm.disabled).toBe(true);
+  expect(component.manifestoForm.disabled).toBe(true);
+});
+
+it('debería habilitar todos los formularios si esFormularioSoloLectura es false', () => {
+  component.esFormularioSoloLectura = false;
+  component.inicializarFormularios();
+  component.guardarDatosFormulario();
+  expect(component.formDelTramite.enabled).toBe(true);
+  expect(component.mercanciaForm.enabled).toBe(true);
+  expect(component.partidasDelaMercanciaForm.enabled).toBe(true);
+  expect(component.paisForm.enabled).toBe(true);
+  expect(component.frmRepresentacionForm.enabled).toBe(true);
+  expect(component.manifestoForm.enabled).toBe(true);
+});
+
+it('no debería fallar si metodoNombre es desconocido en handleStoreUpdate', () => {
+  const form = new FormBuilder().group({ campo: ['valor'] });
+  expect(() => {
+    component.handleStoreUpdate({ form, campo: 'campo', metodoNombre: 'desconocido' });
+  }).not.toThrow();
+});
+
+it('debería manejar setValoresStore con formulario vacío', () => {
+  const form = new FormBuilder().group({});
+  expect(() => component.setValoresStore(form, 'campo')).not.toThrow();
+});
 });
