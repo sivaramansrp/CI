@@ -2,11 +2,11 @@ import { Catalogo, ConfiguracionColumna, ConsultaioQuery, ConsultaioState } from
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Contenedor11202State, Contenedor11202Store } from '../../../../core/estados/tramites/contenedor11202.store';
 import { DatosDelContenedor, GridContenedores } from '@libs/shared/data-access-user/src/core/models/11202/datos-tramite.model';
+import { ENCABEZADO_DE_TABLA, GRID_CONTENEDORES, TEXTOS_REQUISITOS } from '../../../../constantes/11202/retorno-contenedores.enum';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { Contenedor11202Query } from '../../../../core/queries/contenedor11202.query';
 import { DatosTramiteService } from '@libs/shared/data-access-user/src/core/services/11202/datos-tramite.service';
-import { ENCABEZADO_DE_TABLA, GRID_CONTENEDORES, TEXTOS_REQUISITOS } from '../../../../constantes/11202/retorno-contenedores.enum';
 import preOperativo from '@libs/shared/theme/assets/json/11202/preOperativo.json';
 
 /**
