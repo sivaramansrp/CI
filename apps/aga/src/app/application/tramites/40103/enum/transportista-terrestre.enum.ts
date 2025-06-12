@@ -4,6 +4,7 @@ export const CHOFERES_PAGE = {
   MODAL: 'modal',
   ACTIVETAB: 'nacional',
   CHOFERES_EXTRANJEROS: 'Choferes extranjeros',
+  CHOFERES_NACIONALES: 'Choferes nacionales',
   SOLICITUD_TITULO_CHOFER_EXTRANJERO: 'Datos del chofer extranjero',
   LABEL_SOLICITUD_PERSONA_NOMBRE: 'Nombre',
   LABEL_SOLICITUD_PERSONA_PRIMER_APELLIDO: 'Primer Apellido ',

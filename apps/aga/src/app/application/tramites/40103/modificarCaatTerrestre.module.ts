@@ -4,7 +4,6 @@ import { AlertComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { Chofer40103Service } from './estados/chofer40103.service';
-import { ChoferesComponent } from './components/choferes/choferes.component';
 import { ChoferesV2Component } from './components/choferesV2/choferesv2.component';
 import { CommonModule } from '@angular/common';
 import { CrosslistComponent } from '@ng-mf/data-access-user';
@@ -59,7 +58,6 @@ import { forwardRef } from '@angular/core';
     forwardRef(() => RepresentanteFiscalComponent),
     forwardRef(() => SelectPaisesComponent),
     forwardRef(() => CatalogoSelectComponent),
-    ChoferesComponent,
     ChoferesV2Component,
     TablaDinamicaComponent
 ],

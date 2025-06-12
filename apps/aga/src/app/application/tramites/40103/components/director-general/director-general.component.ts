@@ -7,7 +7,6 @@ import { Chofer40103Query } from '../../estados/chofer40103.query';
 import { Chofer40103Service } from '../../estados/chofer40103.service';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
-import mockData from '@libs/shared/theme/assets/json/40103/director-general-mockdata.json';
 
 @Component({
   selector: 'app-director-general',

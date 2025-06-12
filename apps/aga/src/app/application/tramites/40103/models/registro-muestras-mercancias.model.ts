@@ -228,18 +228,9 @@ export interface DatosDelChoferNacional {
 
   telefono: string;
   correoElectronico: string;
-
-  //TODO:  below items to be identifed if they really needed.
-  // municipio?: string;
-  // paisOrigen?: string;
-  // apellidoPaterno?: string;
-  // apellidoMaterno?: string;
-  // gafete?: string;
-  // fechaFindDeVigencia?: string;
 }
 
-// eslint-disable-next-line @typescript-eslint/naming-convention
-export interface choferesExtranjeros {
+export interface ChoferesExtranjeros {
   /** Línea de captura del pago. */
   numeroDelSeguroSocial?: string;
   numero?:string;

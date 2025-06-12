@@ -1,12 +1,12 @@
 import { AbstractControl, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
+import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
 import { Catalogo, CategoriaMensaje, Notificacion, NotificacionesComponent, TipoNotificacionEnum } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent, SharedModule, TablaDinamicaComponent, TituloComponent } from "@libs/shared/data-access-user/src";
+import { CatalogoSelectComponent, SharedModule, TituloComponent } from "@libs/shared/data-access-user/src";
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output, TemplateRef, ViewChild } from "@angular/core";
+import { Subject, firstValueFrom, takeUntil } from "rxjs";
+import { Chofer40103Service } from "../../../estados/chofer40103.service";
 import { CommonModule } from "@angular/common";
 import { DatosDelChoferNacional } from "../../../models/registro-muestras-mercancias.model";
-import { BsModalRef, BsModalService } from "ngx-bootstrap/modal";
-import { Chofer40103Service } from "../../../estados/chofer40103.service";
-import { Subject, firstValueFrom, takeUntil } from "rxjs";
 
 
 @Component({
@@ -20,29 +20,116 @@ import { Subject, firstValueFrom, takeUntil } from "rxjs";
     SharedModule,
     FormsModule,
     CatalogoSelectComponent,
-    TablaDinamicaComponent,
     TituloComponent,
     NotificacionesComponent
   ],
 })
 export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy {
 
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * @type {boolean}
+   */
   @Input() readonly: boolean = false;
+
+  /**
+   * Datos del chofer nacional que se mostrarán o editarán en el formulario.
+   * @type {DatosDelChoferNacional}
+   */
   @Input({ required: true }) datosDeChofere!: DatosDelChoferNacional;
 
-  // Aquí puedes definir las propiedades y métodos necesarios para tu componente
-  // datosConsulta: unknown;
+  /**
+   * Formulario reactivo para los datos del chofer.
+   * @type {FormGroup}
+   */
   formChoferes!: FormGroup;
+
+  /**
+   * Sujeto utilizado para gestionar la destrucción de suscripciones y evitar fugas de memoria.
+   * @type {Subject<unknown>}
+   */
   destroyed$: Subject<unknown> = new Subject<unknown>();
+
+  /**
+   * Indica si se debe mostrar la notificación.
+   * @type {boolean}
+   */
   showNotification: boolean = false;
 
+  /**
+   * Referencia al template del modal de choferes.
+   * @type {TemplateRef<unknown>}
+   */
+  @ViewChild('datosDeChoferesModal') datosDeChoferesModal!: TemplateRef<unknown>;
+
+  /**
+   * Referencia al modal de Bootstrap.
+   * @type {BsModalRef | undefined}
+   */
+  modalRef?: BsModalRef;
+
+  /**
+   * Lista de países disponibles.
+   * @type {Catalogo[]}
+   */
+  paisList: Catalogo[] = [];
+
+  /**
+   * Lista de estados disponibles.
+   * @type {Catalogo[]}
+   */
+  estadoList: Catalogo[] = [];
+
+  /**
+   * Lista de municipios o alcaldías disponibles.
+   * @type {Catalogo[]}
+   */
+  municipioList: Catalogo[] = [];
+
+  /**
+   * Lista de colonias disponibles.
+   * @type {Catalogo[]}
+   */
+  coloniaList: Catalogo[] = [];
+
+  /**
+   * Evento emitido al cancelar el modal.
+   * @type {EventEmitter<void>}
+   */
+  @Output() cancelEvent = new EventEmitter<void>();
+
+  /**
+   * Evento emitido al agregar o editar un chofer nacional.
+   * @type {EventEmitter<DatosDelChoferNacional>}
+   */
+  @Output() addModalEvent = new EventEmitter<DatosDelChoferNacional>();
+
+  /**
+   * Alerta de notificación para mostrar mensajes al usuario.
+   * @type {Notificacion}
+   */
+  public alertaNotificacion!: Notificacion;
+
+  // ======================= MÉTODOS =======================
+
+  /**
+   * Constructor de la clase.
+   * 
+   * @param fb Instancia de FormBuilder para la creación y gestión de formularios reactivos.
+   * @param modalService Servicio para la gestión de modales (ventanas emergentes) utilizando BsModalService.
+   * @param chofer40103Service Servicio específico para operaciones relacionadas con choferes en el trámite 40103.
+   */
   constructor(private fb: FormBuilder,
     private modalService: BsModalService,
     private chofer40103Service: Chofer40103Service,
   ) {
-    // Inicialización del componente
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Inicializa el formulario y carga las listas de catálogos necesarias.
+   * @returns {Promise<void>}
+   */
   async ngOnInit(): Promise<void> {
 
 
@@ -83,18 +170,6 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
   }
 
 
-  @Output() cancelEvent = new EventEmitter<void>();
-  @Output() addModalEvent = new EventEmitter<DatosDelChoferNacional>();
-
-  @ViewChild('datosDeChoferesModal') datosDeChoferesModal!: TemplateRef<any>;
-  modalRef?: BsModalRef;
-
-  paisList: Catalogo[] = [];
-  estadoList: Catalogo[] = [];
-  municipioList: Catalogo[] = [];
-  coloniaList: Catalogo[] = [];
-
-
   /**
    * Obtiene la lista de países emisores desde el servicio `chofer40103Service` y la asigna a la propiedad `paisList`.
    *
@@ -116,13 +191,23 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
     }
   }
 
-  onPaisChange(value: Catalogo) {
+  /**
+   * Maneja el cambio de país seleccionado, actualizando la lista de estados y reseteando los campos dependientes.
+   * @param value País seleccionado.
+   * @returns {void}
+   */
+  onPaisChange(value: Catalogo): void {
     this.fetchEstadosByPais(value);
     this.formChoferes.controls['estado'].reset();
     this.formChoferes.controls['municipioAlcaldia'].reset();
     this.formChoferes.controls['colonia'].reset();
   }
 
+  /**
+   * Obtiene la lista de estados por país desde el servicio.
+   * @param value País seleccionado.
+   * @returns {Promise<Catalogo[]>}
+   */
   private async fetchEstadosByPais(value: Catalogo): Promise<Catalogo[]> {
     try {
       const DATA = await firstValueFrom(
@@ -137,7 +222,12 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
     return this.estadoList;
   }
 
-  onEstadoChange(value: Catalogo) {
+  /**
+   * Maneja el cambio de estado seleccionado, actualizando la lista de municipios y reseteando los campos dependientes.
+   * @param value Estado seleccionado.
+   * @returns {void}
+   */
+  onEstadoChange(value: Catalogo): void {
 
     this.fetchMunicipiosByEstado(value);
 
@@ -145,14 +235,19 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
     this.formChoferes.controls['colonia'].reset();
   }
 
+  /**
+   * Obtiene la lista de municipios por estado desde el servicio.
+   * @param value Estado seleccionado.
+   * @returns {Promise<Catalogo[]>}
+   */
   private async fetchMunicipiosByEstado(value: Catalogo): Promise<Catalogo[]> {
     try {
-      const data = await firstValueFrom(
+      const DATA = await firstValueFrom(
         this.chofer40103Service
           .getMunicipiosPorEstado(value.id)
           .pipe(takeUntil(this.destroyed$))
       );
-      this.municipioList = data || [];
+      this.municipioList = DATA || [];
     } catch (error) {
       console.error('Error al obtener municipios por estado:', error);
     }
@@ -160,21 +255,30 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
 
   }
 
-  onMunicipioChange(value: Catalogo) {
+  /**
+   * Maneja el cambio de municipio seleccionado, actualizando la lista de colonias y reseteando el campo colonia.
+   * @param value Municipio seleccionado.
+   * @returns {void}
+   */
+  onMunicipioChange(value: Catalogo): void {
     this.fetchColoniasByMunicipio(value);
 
     this.formChoferes.controls['colonia'].reset();
   }
 
-
+  /**
+   * Obtiene la lista de colonias por municipio desde el servicio.
+   * @param value Municipio seleccionado.
+   * @returns {Promise<Catalogo[]>}
+   */
   private async fetchColoniasByMunicipio(value: Catalogo): Promise<Catalogo[]> {
     try {
-      const data = await firstValueFrom(
+      const DATA = await firstValueFrom(
         this.chofer40103Service
           .getColoniasPorMunicipio(value.id)
           .pipe(takeUntil(this.destroyed$))
       );
-      this.coloniaList = data || [];
+      this.coloniaList = DATA || [];
     } catch (error) {
       console.error('Error al obtener colonias por municipio:', error);
     }
@@ -188,21 +292,60 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
     return this.formChoferes.controls;
   }
 
-
-  openModal() {
+  /**
+   * Abre el modal de choferes.
+   * @returns {void}
+   */
+  openModal(): void {
     this.modalRef = this.modalService.show(this.datosDeChoferesModal, { class: 'modal-xl' });
   }
 
-  closeModal() {
+  /**
+   * Cierra el modal de choferes y emite el evento de cancelación.
+   * @returns {void}
+   */
+  closeModal(): void {
     this.modalRef?.hide();
     this.cancelEvent.emit();
   }
 
   /**
-   * Busca un chofer por CURP.
-   * @param curp La CURP a buscar.
+   * Restablece el formulario de choferes a sus valores predeterminados.
+   * 
+   * Este método reinicia todos los campos del formulario `formChoferes` con valores vacíos o por defecto,
+   * permitiendo limpiar el formulario para una nueva entrada de datos.
    */
-  onCurpInput() {
+  resetForm(): void {
+    this.formChoferes.reset({
+      curp: '',
+      rfc: '',
+      nombre: '',
+      primerApellido: '',
+      segundoApellido: '',
+      numeroDeGafete: '',
+      vigenciaGafete: '',
+      calle: '',
+      numeroExterior: '',
+      numeroInterior: '',
+      pais: 1,
+      estado: '',
+      municipioAlcaldia: '',
+      colonia: '',
+      paisDeResidencia: '1',
+      ciudad: '',
+      localidad: '',
+      codigoPostal: '',
+      correoElectronico: '',
+      telefono: ''
+    });
+    
+  }
+
+  /**
+   * Maneja la entrada en el campo CURP y busca automáticamente el chofer si la longitud es suficiente.
+   * @returns {void}
+   */
+  onCurpInput(): void {
     const CURP_VALUE = this.formChoferes.get('curp')?.value;
     if (CURP_VALUE && CURP_VALUE.length >= 18) {
       this.buscarChoferNacional(CURP_VALUE);
@@ -210,16 +353,11 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
   }
 
   /**
-   * Busca información de un chofer nacional utilizando su CURP.
-   *
-   * @param curp - La CURP del chofer nacional que se desea buscar.
-   *               Si no se proporciona un valor, la función no realiza ninguna acción.
-   *
-   * @remarks
-   * Esta función actualiza el formulario de choferes con los datos obtenidos.
-   * Actualmente, los datos están representados por un objeto vacío.
+   * Busca información de un chofer nacional utilizando su CURP y actualiza el formulario.
+   * @param curp CURP del chofer nacional.
+   * @returns {Promise<void>}
    */
-  async buscarChoferNacional(curp: string) {
+  async buscarChoferNacional(curp: string): Promise<void> {
     if (!curp) {
       //this.showNotification = true;
       this.alertaNotificacion = {
@@ -265,7 +403,12 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
     this.formChoferes.patchValue(CHOFER_DATA);
   }
 
-  private async updateListsData(data: DatosDelChoferNacional) {
+  /**
+   * Actualiza las listas de estados, municipios y colonias según los datos del chofer.
+   * @param data Datos del chofer nacional.
+   * @returns {Promise<void>}
+   */
+  private async updateListsData(data: DatosDelChoferNacional): Promise<void> {
     const ESTADOS = await this.fetchEstadosByPais(this.paisList[0]);
     data.pais = this.paisList[0].id.toString();
 
@@ -286,10 +429,20 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
     }
   }
 
-  limpiarFormulario() {
+  /**
+   * Limpia todos los campos del formulario de choferes.
+   * @returns {void}
+   */
+  limpiarFormulario(): void {
     this.formChoferes.reset();
   }
-  guardarFilaEditada() {
+  
+  /**
+   * Guarda los datos editados del chofer nacional si el formulario es válido, emite el evento y cierra el modal.
+   * Si el formulario es inválido, muestra una notificación de alerta.
+   * @returns {void}
+   */
+  guardarFilaEditada(): void {
       this.formChoferes.markAllAsTouched();
       this.formChoferes.updateValueAndValidity();
 
@@ -328,15 +481,14 @@ export class DatosDeChoferesNacionalDialogComponent implements OnInit, OnDestroy
     return CONTROL ? CONTROL.invalid && CONTROL.touched : null;
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Libera recursos y completa el Subject destroyed$.
+   * @returns {void}
+   */
   ngOnDestroy(): void {
     this.destroyed$.next(1);
     this.destroyed$.complete();
   }
-
-  /**
-   * Inicializa la variable de alertaNotificación con un objeto de tipo Notificacion.
-   * @type {Notificacion}
-   */
-  public alertaNotificacion!: Notificacion;
 
 }

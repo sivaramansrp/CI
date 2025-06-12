@@ -82,7 +82,7 @@ export class Chofer40103Query extends Query<Choferesnacionales40103State> {
    /**
    * Observable que selecciona la lista de pago de derechos.
    */
-   getdatosDelChoferNacional$ = this.select((state) => state.datosDelChoferNacional);
+   getdatosDelChoferNacional$ = this.select((state) => state.datosDelChoferNacionalAlta);
 
 
    /**

@@ -28,68 +28,21 @@
     </ul>
   </div>
   <div class="row mt-5">
-    <div class="col-md-12">
-      <!-- <h3 *ngIf="activeTab === 'nacional'">Choferes nacionales</h3> -->
-    @if(activeTab ==='extranjero') {
-      <h3 *ngIf="activeTab === 'extranjero'">{{ CHOFERES_PAGE.CHOFERES_EXTRANJEROS }}</h3>
-      <hr class="red" />
-    }
-    </div>
-
     <div class="tab-content">
+
     @if(activeTab ==='nacional') {
-      <ng-titulo titulo="Choferes nacionales"></ng-titulo>
+      <ng-titulo [titulo]="CHOFERES_PAGE.CHOFERES_NACIONALES"></ng-titulo>
       <app-chofere-nacional></app-chofere-nacional>
-      <app-chofere-nacional-notification></app-chofere-nacional-notification>
+      <app-chofere-nacional-notification [mensaje]="TEXTOS.MENSAJE_NACIONAL"></app-chofere-nacional-notification>
       <app-chofere-nacional-modificacion></app-chofere-nacional-modificacion>
       <app-chofere-nacional-retirada></app-chofere-nacional-retirada>
     }
     @if(activeTab ==='extranjero') {
-      <div id="subtabs-2" class="tab-pane fade">
-        <div class="row table-responsive">
-          <div class="col-md-12">
-            <h4 class="extranjeros">Alta de choferes extranjeros:</h4>
-            <!-- <app-tabla-dinamica
-              [tipoSeleccionTabla]="tipoSeleccionTabla"
-              [configuracionTabla]="ConfiguracionColumna"
-              [datos]="DatosDelChoferNacional"
-            >
-            </app-tabla-dinamica> -->
-          </div>
-        </div>
-
-        <div class="row mt-3">
-          <div class="col-md-12 text-end">
-            <div class="btn-group">
-              <button
-                class="btn btn-default"
-                type="button"
-                (click)="editarFilaSeleccionada()"
-                [disabled]="datosConsulta.readonly"
-              >
-                Modificar
-              </button>
-              <button 
-                class="btn btn-default" 
-                type="button"
-                [disabled]="datosConsulta.readonly"
-                >
-                Eliminar
-              </button>
-              <button
-                type="submit"
-                class="btn btn-primary ms-2"
-                data-bs-toggle="modal"
-                data-bs-target="#modalMiembros2"
-                (click)="abrirModal()"
-                [disabled]="datosConsulta.readonly"
-              >
-                Agregar
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ng-titulo [titulo]="CHOFERES_PAGE.CHOFERES_EXTRANJEROS"></ng-titulo>
+      <app-chofere-alta-de-extranjeros></app-chofere-alta-de-extranjeros>
+      <app-chofere-nacional-notification [mensaje]="TEXTOS.MENSAJE_EXTRANJERO"></app-chofere-nacional-notification>
+      <app-chofere-nacional-modificacion></app-chofere-nacional-modificacion>
+      <app-chofere-nacional-retirada></app-chofere-nacional-retirada>
     }
 
     </div>

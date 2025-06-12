@@ -14,9 +14,9 @@ import { DatosDeChoferesNacionalDialogComponent } from '../data.de.choferes.dial
 import { DatosDelChoferNacional } from '../../../models/registro-muestras-mercancias.model';
 
 @Component({
-  selector: 'app-chofere-nacional',
-  templateUrl: './chofere.nacional.component.html',
-  styleUrls: ['./chofere.nacional.component.scss'],
+  selector: 'app-chofere-alta-de-extranjeros',
+  templateUrl: './chofere.alta.de.extranjeros.component.html',
+  styleUrls: ['./chofere.alta.de.extranjeros.component.scss'],
   standalone: true,
   imports: [
     TablaDinamicaComponent, 
@@ -24,7 +24,7 @@ import { DatosDelChoferNacional } from '../../../models/registro-muestras-mercan
   ],
   providers: [BsModalService],
 })
-export class ChofereNacionalComponent implements OnInit, OnDestroy {
+export class ChofereAltaDeExtranjerosComponent implements OnInit, OnDestroy {
   // Add your component logic here
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 

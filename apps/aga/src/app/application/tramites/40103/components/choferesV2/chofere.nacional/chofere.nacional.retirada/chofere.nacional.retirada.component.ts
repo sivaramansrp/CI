@@ -1,18 +1,18 @@
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Component, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import {
     TablaDinamicaComponent,
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
-import { DatosDelChoferNacional } from '../../../../models/registro-muestras-mercancias.model';
-import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { DatosDeChoferesNacionalDialogComponent } from '../../data.de.choferes.dialog/data.de.choferes.nacional.dialog.component';
-import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CHOFERES_NACIONALES_ALTA } from '../../../../enum/choferes-enum';
-import { Chofer40103Service } from '../../../../estados/chofer40103.service';
 import { Chofer40103Query } from '../../../../estados/chofer40103.query';
-import { Subject, map, takeUntil } from 'rxjs';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Chofer40103Service } from '../../../../estados/chofer40103.service';
+import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
+import { DatosDeChoferesNacionalDialogComponent } from '../../data.de.choferes.dialog/data.de.choferes.nacional.dialog.component';
+import { DatosDelChoferNacional } from '../../../../models/registro-muestras-mercancias.model';
+import { TituloComponent } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-chofere-nacional-retirada',
@@ -28,24 +28,51 @@ import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 })
 export class ChofereNacionalRetiradaComponent implements OnInit {
 
+  // ======================= PROPIEDADES =======================
+
+  /**
+   * Tipo de selección utilizada en la tabla dinámica (por ejemplo, selección por checkbox).
+   * @type {TablaSeleccion}
+   */
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
   /**
    * Configuración de las columnas de la tabla.
    * Define el encabezado, la clave de acceso a los datos y el orden de las columnas.
+   * @type {ConfiguracionColumna<DatosDelChoferNacional>[]}
    */
   ConfiguracionColumna: ConfiguracionColumna<DatosDelChoferNacional>[] =
     CHOFERES_NACIONALES_ALTA;
 
+  /**
+   * Lista de choferes nacionales.
+   * @type {DatosDelChoferNacional[]}
+   */
   datosDelChoferNacional: DatosDelChoferNacional[] = [];
 
+  /**
+   * Lista de choferes nacionales seleccionados en la tabla.
+   * @type {DatosDelChoferNacional[]}
+   */
   datosDelChoferNacionalSelected: DatosDelChoferNacional[] = [];
 
+  /**
+   * Estado de consulta relacionado con los choferes nacionales.
+   * @type {ConsultaioState}
+   */
   datosConsulta!: ConsultaioState;
 
+  /**
+   * Indica si el formulario o componente está en modo solo lectura.
+   * Cuando es `true`, los campos no pueden ser editados por el usuario.
+   * @type {boolean}
+   */
   isReadonly: boolean = false;
 
-
+  /**
+   * Referencia al modal de Bootstrap utilizado en el componente.
+   * @type {BsModalRef | null}
+   */
   modalRef!: BsModalRef | null;
 
   /**
@@ -55,8 +82,30 @@ export class ChofereNacionalRetiradaComponent implements OnInit {
   @ViewChild('datosDeChoferesModal', { static: false })
   agregarModalDialog!: TemplateRef<Element>;
 
+  /**
+   * Sujeto utilizado para gestionar la destrucción de suscripciones y evitar fugas de memoria.
+   * @type {Subject<void>}
+   */
   destroyed$: Subject<void> = new Subject();
 
+  /**
+   * Referencia al componente del diálogo de choferes nacionales.
+   * @type {DatosDeChoferesNacionalDialogComponent}
+   */
+  @ViewChild(DatosDeChoferesNacionalDialogComponent)
+  modalComponent!: DatosDeChoferesNacionalDialogComponent;
+
+  /**
+   * Objeto que representa los datos del chofer nacional a agregar o editar.
+   * @type {DatosDelChoferNacional}
+   */
+  datosChofere: DatosDelChoferNacional = {} as DatosDelChoferNacional;
+
+  // ======================= MÉTODOS =======================
+
+  /**
+   * Constructor del componente. Inyecta los servicios necesarios para la gestión de choferes y el estado de consulta.
+   */
   constructor(
     private bsModalService: BsModalService,
     private chofer40103Service: Chofer40103Service,
@@ -64,6 +113,11 @@ export class ChofereNacionalRetiradaComponent implements OnInit {
     private consultaioQuery: ConsultaioQuery
   ) {}
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe a los observables para obtener y actualizar los datos de choferes nacionales y el estado de consulta.
+   * Establece el modo de solo lectura según el estado recibido.
+   */
   ngOnInit(): void {
     
     this.isReadonly = true;
@@ -90,16 +144,30 @@ export class ChofereNacionalRetiradaComponent implements OnInit {
 
   }
 
-  onChofereNationalSelected($event: DatosDelChoferNacional[]) {
+  /**
+   * Maneja el evento de selección de filas en la tabla de choferes nacionales.
+   * Actualiza la lista de choferes nacionales seleccionados.
+   * @param $event - Arreglo de choferes nacionales seleccionados.
+   */
+  onChofereNationalSelected($event: DatosDelChoferNacional[]): void {
     this.datosDelChoferNacionalSelected = $event;
   }
 
-  addNewRow(template: TemplateRef<unknown>) {
+  /**
+   * Inicializa un nuevo objeto de chofer nacional y abre el modal para agregar un nuevo registro.
+   * @param template - Referencia al template del modal a mostrar.
+   */
+  addNewRow(template: TemplateRef<unknown>): void {
     this.datosChofere = {} as DatosDelChoferNacional;
     this.openModal(template);
   }
 
-  editSelectedRow(template: TemplateRef<unknown>) {
+  /**
+   * Abre el modal para editar el registro seleccionado en la tabla.
+   * Si no hay ningún registro seleccionado, muestra una advertencia en consola.
+   * @param template - Referencia al template del modal a mostrar.
+   */
+  editSelectedRow(template: TemplateRef<unknown>): void {
     if (this.datosDelChoferNacionalSelected.length === 0) {
       console.warn('No rows selected for editing.');
       return;
@@ -108,7 +176,11 @@ export class ChofereNacionalRetiradaComponent implements OnInit {
     this.openModal(template);
   }
 
-  deleteSelectedRow() {
+  /**
+   * Elimina los registros seleccionados de la lista de choferes nacionales.
+   * Si no hay ningún registro seleccionado, muestra una advertencia en consola.
+   */
+  deleteSelectedRow(): void {
     if (this.datosDelChoferNacionalSelected.length > 0) {
       this.datosDelChoferNacional = this.datosDelChoferNacional.filter(
         (item) => !this.datosDelChoferNacionalSelected.includes(item)
@@ -119,17 +191,20 @@ export class ChofereNacionalRetiradaComponent implements OnInit {
     }
   }
 
-  @ViewChild(DatosDeChoferesNacionalDialogComponent)
-  modalComponent!: DatosDeChoferesNacionalDialogComponent;
-  datosChofere: DatosDelChoferNacional = {} as DatosDelChoferNacional;
-
-  openModal(template: TemplateRef<unknown>) {
+  /**
+   * Abre el modal de Bootstrap utilizando el template proporcionado.
+   * @param template - Referencia al template del modal a mostrar.
+   */
+  openModal(template: TemplateRef<unknown>): void {
     this.modalRef = this.bsModalService.show(template, {
       class: 'modal-fullscreen',
     });
   }
 
-  cancelModal() {
+  /**
+   * Cierra el modal de Bootstrap y limpia la referencia.
+   */
+  cancelModal(): void {
     this.modalRef?.hide();
     this.modalRef = null;
   }

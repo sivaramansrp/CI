@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
 import {
   CategoriaMensaje,
-    Notificacion,
-    NotificacionesComponent,
+  Notificacion,
+  NotificacionesComponent,
   TipoNotificacionEnum,
 } from '@libs/shared/data-access-user/src';
+import { Component, Input, OnInit } from '@angular/core';
 import { TEXTOS } from '../../../enum/choferes-enum';
 
 @Component({
@@ -16,22 +16,33 @@ import { TEXTOS } from '../../../enum/choferes-enum';
     NotificacionesComponent
   ],
 })
-export class ChofereNacionalNotificationComponent {
+export class ChofereNacionalNotificationComponent implements OnInit {
+  /**
+   * Texto del mensaje que se mostrará en la notificación.
+   * @type {string}
+   */
+  @Input({ required: true }) mensaje!: string;
 
   /**
-     * Inicializa la variable de alertaNotificación con un objeto de tipo Notificacion.
-     * @type {Notificacion}
-     */
-    public alertaNotificacion: Notificacion = {
-      tipoNotificacion: TipoNotificacionEnum.BANNER,
-      categoria: CategoriaMensaje.INFORMACION,
-      modo: '',
-      titulo: '',
-      mensaje: TEXTOS.INSTRUCCIONES,
-      cerrar: true,
-      txtBtnAceptar: '',
-      txtBtnCancelar: '',
-    }
+   * Inicializa la variable de alertaNotificación con un objeto de tipo Notificacion.
+   * @type {Notificacion}
+   */
+  public alertaNotificacion: Notificacion = {
+    tipoNotificacion: TipoNotificacionEnum.BANNER,
+    categoria: CategoriaMensaje.INFORMACION,
+    modo: '',
+    titulo: '',
+    mensaje: this.mensaje,
+    cerrar: true,
+    txtBtnAceptar: '',
+    txtBtnCancelar: '',
+  }
 
-
+  /**
+   * Texto de la sección que se mostrará en la notificación.
+   * @type {string}
+   */
+  ngOnInit(): void {
+    this.alertaNotificacion.mensaje = this.mensaje;
+  }
 }
