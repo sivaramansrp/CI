@@ -1,11 +1,12 @@
-import { Catalogo } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FECHA_FINAL, FECHA_INICIO } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, FECHA_FINAL, FECHA_INICIO } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { InputFecha } from '@ng-mf/data-access-user';
-import { map, ReplaySubject, Subject, takeUntil } from 'rxjs';
-import { MediodetransporteService } from '../../services/medio-de-transporte.service';
 import { Solicitud220402State, Solicitud220402Store } from '../../estados/tramites/tramites220402.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { Catalogo } from '@ng-mf/data-access-user';
+import { DatosGenerales } from '../../models/pantallas-captura.model';
+import { InputFecha } from '@ng-mf/data-access-user';
+import { MediodetransporteService } from '../../services/medio-de-transporte.service';
 import { Solicitud220402Query } from '../../estados/queries/tramites220402.query';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 
@@ -24,7 +25,7 @@ import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
  * Componente que representa la página de solicitud.
  */
 
-export class SolicitudComponent implements OnInit, OnDestroy{
+export class SolicitudComponent implements OnInit, OnDestroy {
 
   /**
    * Estado de la solicitud.
@@ -32,14 +33,14 @@ export class SolicitudComponent implements OnInit, OnDestroy{
   public solicitudState!: Solicitud220402State;
 
   /**
-     * Fecha inicio de entrada.
-     */
+   * Fecha inicio de entrada.
+   */
   fechaInicioInput: InputFecha = FECHA_INICIO;
-
+  /**
+    * @property {string} diaMinimo
+    * @description Representa el día mínimo permitido para la selección de fechas en el formulario.
+    */
   diaMinimo!: string;
-
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-
   /**
    * Fecha final de entrada.
    */
@@ -63,19 +64,34 @@ export class SolicitudComponent implements OnInit, OnDestroy{
   /**
  * Datos Generales de la Mercancía Exhibición de mesa.
  */
-  datosGeneralesArr: any = [];
+  datosGeneralesArr: DatosGenerales[] = [];
 
   /**
  * Origen Exhibición de mesa.
  */
-  origenArr: any = [];
+  origenArr: string[] = [];
 
   /**
- * federativa Origen Exhibición de mesa.
- */
+   * federativa Origen Exhibición de mesa.
+   */
   federativaOrigen: string = '';
-
+  /**
+   * @property {Subject<void>} destroyNotifier$
+   * @description Subject utilizado para notificar y completar las suscripciones activas al destruir el componente, evitando fugas de memoria.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -88,7 +104,8 @@ export class SolicitudComponent implements OnInit, OnDestroy{
     private validacionesService: ValidacionesFormularioService,
     private mediodetransporteService: MediodetransporteService,
     private solicitud220402Store: Solicitud220402Store,
-    private solicitud220402Query: Solicitud220402Query
+    private solicitud220402Query: Solicitud220402Query,
+    private consultaioQuery: ConsultaioQuery,
   ) { }
 
   /**
@@ -109,7 +126,17 @@ export class SolicitudComponent implements OnInit, OnDestroy{
         })
       )
       .subscribe();
-
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+    this.datosGeneralesArr = this.solicitudState?.datosGeneralesArr || [];
     // Inicializar el formulario principal
     this.crearFormSolicitud();
 
@@ -180,28 +207,23 @@ export class SolicitudComponent implements OnInit, OnDestroy{
     return this.validacionesService.isValid(form, field) || false;
   }
 
-
   /**
      * Inicializa los catálogos necesarios para el formulario.
      */
   private inicializaCatalogos(): void {
-
     this.mediodetransporteService
       .getMedioDeTransporte()
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((data: any): void => {
-        this.options = data as Catalogo[];
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data: Catalogo[]): void => {
+        this.options = data;
       });
   }
-
-
 
   /**
    * Crea el formulario de solicitud.
    * @return {void} No retorna ningún valor.
    */
   crearFormSolicitud(): void {
-    console.log(this.solicitudState);
     this.FormSolicitud = this.fb.group({
       datosDelTramiteRealizar: this.fb.group({
         tipoDeCertificado: [this.solicitudState?.tipoDeCertificado, Validators.required],
@@ -249,9 +271,24 @@ export class SolicitudComponent implements OnInit, OnDestroy{
     });
     this.federativaOrigen = this.datosGenerales.get('entidadFederativadeOrigen')?.value || 'NA';
     this.origenArr = this.datosGenerales.get('municipiodeOrigen')?.value || [];
-
+    this.inicializarEstadoFormulario();
   }
-
+  /**
+   * @method inicializarEstadoFormulario
+   * @description Configura el estado del formulario `FormSolicitud` según el modo de solo lectura.
+   * 
+   * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
+   * En caso contrario, habilita los controles del formulario.
+   * 
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.FormSolicitud?.disable();
+    } else {
+      this.FormSolicitud?.enable();
+    }
+  }
   /**
    * Método para cambiar la fecha incio.
    * @param nuevo_valor Nuevo valor de la fecha incio.
@@ -324,7 +361,7 @@ export class SolicitudComponent implements OnInit, OnDestroy{
    */
   municipioEliminar(): void {
     const MUNICIPIO_ORIGIN = this.datosGenerales.get('municipiodeOrigen')?.value;
-    this.origenArr = this.origenArr.filter((item: any) => item.indexOf(MUNICIPIO_ORIGIN) === -1);
+    this.origenArr = this.origenArr.filter((item: string) => item.indexOf(MUNICIPIO_ORIGIN) === -1);
     this.datosGenerales.get('municipiodeOrigen')?.setValue(this.origenArr);
   }
 
@@ -338,9 +375,12 @@ export class SolicitudComponent implements OnInit, OnDestroy{
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud220402Store): void {
     const VALOR = form.get(campo)?.value;
-    (this.solicitud220402Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.solicitud220402Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
-
+  /**
+   * @method changeFechaFinal
+   * @description Actualiza la validez del formulario y establece la fecha final en el store.
+   */
   changeFechaFinal(): void {
     this.datosMercancia.updateValueAndValidity();
     this.setValoresStore(this.datosMercancia, 'fechaFinal', 'setFechaFinal');
@@ -359,11 +399,11 @@ export class SolicitudComponent implements OnInit, OnDestroy{
 
   /**
    * Este método se utiliza para destruir la suscripción.
-   * @returns destroyed$
+   * @returns destroyNotifier$
    */
   ngOnDestroy(): void {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
 }

@@ -5,12 +5,14 @@ import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.mode
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { InputRadioComponent } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { TipoPersona } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { takeUntil } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 /**
  * @component AgregarProveedorComponent
@@ -39,12 +41,12 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    */
   public tipoPersona = TipoPersona;
   /**
-   * @property {Subject<void>} unsubscribe$
+   * @property {Subject<void>} destroyNotifier$
    * Subject para cancelar suscripciones activas y evitar fugas de memoria.
    * Se completa en el hook `ngOnDestroy`.
    * @private
    */
-  private unsubscribe$ = new Subject<void>();
+  private destroyNotifier$ = new Subject<void>();
 
   /**
    * @property {Proveedor[]} proveedores
@@ -70,7 +72,13 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * @type {number}
    */
   @Input() idProcedimiento!: number;
-
+  /**
+   * Indica si el formulario se encuentra en modo solo lectura.
+   * Cuando es verdadero, los campos del formulario no pueden ser editados.
+   * @property {boolean} esFormularioSoloLectura
+   * @default false
+   */
+  @Input() esFormularioSoloLectura: boolean = false;
   /**
    * @property updateProveedorTablaDatos
    * @description Evento que emite una lista actualizada de objetos `Proveedor` hacia el componente padre.
@@ -106,15 +114,52 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    *
    * @param fb - FormBuilder para construir el formulario reactivo.
    * @param datosSolicitudService - Servicio para obtener datos del backend.
-   * @param tramiteStore - Store que administra el estado del trámite actual.
-   * @param tramiteQuery - Servicio para consultar el estado del trámite.
-   * @param ubicaccion - Servicio de Angular para navegación de retroceso.
+   * @param ubicaccion - Servicio de ubicación para navegar entre vistas.
+   * @param consultaioQuery - Servicio para consultar el estado del trámite.
+   * 
    */
   constructor(
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService,
-    private ubicaccion: Location 
-  ) {}
+    private ubicaccion: Location,
+    private consultaioQuery: ConsultaioQuery 
+  ) {
+        this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState: { readonly: boolean }) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
+    /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearFormaulario();
+    }
+  }
+
+    /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.crearFormaulario();
+    if (this.esFormularioSoloLectura) {
+      this.agregarProveedorForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.agregarProveedorForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
   /**
    * Crea el formulario reactivo `agregarProveedorForm` utilizando `FormBuilder`.
    * Define los campos y sus validaciones.
@@ -213,8 +258,8 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
   cargarDatos(): void {
     this.datosSolicitudService
       .obtenerListaPaises()
-      .pipe(takeUntil(this.unsubscribe$))
-      .subscribe((data) => {
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((data: Catalogo[]) => {
         this.paisesDatos = data;
       });
   }
@@ -292,7 +337,7 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    * @description Hook de destrucción del componente. Libera las suscripciones activas.
    */
   ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
