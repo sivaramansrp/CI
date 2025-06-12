@@ -1,5 +1,6 @@
 import { AlertComponent, REGEX_PATRON_DECIMAL_2 } from "@libs/shared/data-access-user/src";
 import { ConsultaioQuery, ConsultaioState } from "@ng-mf/data-access-user";
+import { DISPONIBLES_ENCABEZADOS, FECHAFACTURA, SELECCIONADAS_ENCABEZADOS } from '../../constants/inicialmente-certificado-origen.enum';
 import { Catalogo } from "../../models/certificado-origen.model.js";
 import { CatalogoLista, } from "../../models/certificado-origen.model.js";
 import { CatalogoSelectComponent } from "@libs/shared/data-access-user/src";
@@ -9,7 +10,6 @@ import { Component } from "@angular/core";
 import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
 import { DisponiblesTabla } from "../../models/certificado-origen.model.js";
 import { ElementRef } from "@angular/core";
-import { FECHAFACTURA } from '../../constants/inicialmente-certificado-origen.enum';
 import { FECHAFINAL } from '../../constants/inicialmente-certificado-origen.enum';
 import { FECHAINICIAL } from '../../constants/inicialmente-certificado-origen.enum';
 import { FormBuilder } from "@angular/forms";
@@ -99,38 +99,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * 
    * Define los encabezados y las claves para mostrar los datos de las mercancías disponibles.
    */
-  public disponiblesEncabezados: ConfiguracionColumna<DisponiblesTabla>[] = [
-    {
-      encabezado: 'Fracción arancelaria',
-      clave: (ele: DisponiblesTabla) => ele.fraccionArancelaria,
-      orden: 1,
-    },
-    {
-      encabezado: 'Nombre técnico',
-      clave: (ele: DisponiblesTabla) => ele.nombreTecnico,
-      orden: 2,
-    },
-    {
-      encabezado: 'Nombre comercial',
-      clave: (ele: DisponiblesTabla) => ele.nombreComercial,
-      orden: 3,
-    },
-    {
-      encabezado: 'Número de registro de productos',
-      clave: (ele: DisponiblesTabla) => ele.numeroRegistroProductos,
-      orden: 4,
-    },
-    {
-      encabezado: 'Fecha expedición',
-      clave: (ele: DisponiblesTabla) => ele.fechaExpedicion,
-      orden: 5,
-    },
-    {
-      encabezado: 'Fecha vencimiento',
-      clave: (ele: DisponiblesTabla) => ele.fechaVencimiento,
-      orden: 6,
-    },
-  ];
+  public disponiblesEncabezados: ConfiguracionColumna<DisponiblesTabla>[] = DISPONIBLES_ENCABEZADOS;
 
   /**
    * Datos de la tabla de mercancías disponibles.
@@ -151,48 +120,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * 
    * Define los encabezados y las claves para mostrar los datos de las mercancías seleccionadas.
    */
-  public seleccionadasEncabezados: ConfiguracionColumna<SeleccionadasTabla>[] = [
-    {
-      encabezado: 'Fracción arancelaria',
-      clave: (ele: SeleccionadasTabla) => ele.fraccionArancelaria,
-      orden: 1,
-    },
-    {
-      encabezado: 'Cantidad',
-      clave: (ele: SeleccionadasTabla) => ele.cantidad,
-      orden: 2,
-    },
-    {
-      encabezado: 'Unidad de medida',
-      clave: (ele: SeleccionadasTabla) => ele.unidadMedida,
-      orden: 3,
-    },
-    {
-      encabezado: 'Valor mercancía',
-      clave: (ele: SeleccionadasTabla) => ele.valorMercancia,
-      orden: 4,
-    },
-    {
-      encabezado: 'Tipo de factura',
-      clave: (ele: SeleccionadasTabla) => ele.tipoFactura,
-      orden: 5,
-    },
-    {
-      encabezado: 'Número factura',
-      clave: (ele: SeleccionadasTabla) => ele.numFactura,
-      orden: 6,
-    },
-    {
-      encabezado: 'Complemento descripción',
-      clave: (ele: SeleccionadasTabla) => ele.complementoDescripcion,
-      orden: 7,
-    },
-    {
-      encabezado: 'Fecha factura',
-      clave: (ele: SeleccionadasTabla) => ele.fechaFactura,
-      orden: 8,
-    },
-  ];
+  public seleccionadasEncabezados: ConfiguracionColumna<SeleccionadasTabla>[] = SELECCIONADAS_ENCABEZADOS;
   /**
  * Datos de la tabla de mercancías seleccionadas.
  * 

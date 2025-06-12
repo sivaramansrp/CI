@@ -11,6 +11,7 @@ import { Modal } from 'bootstrap';
 import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
+import { TABLE_COLUMNS } from '../../constants/inicialmente-certificado-origen.enum';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
@@ -55,38 +56,7 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas de la tabla dinámica.
    */
-  tableColumns: ConfiguracionColumna<HistoricoColumnas>[] = [
-    {
-      encabezado: 'Nombre del productor',
-      clave: (elementos) => elementos.nombreProductor,
-      orden: 1
-    },
-    {
-      encabezado: 'Número de registro fiscal',
-      clave: (elementos) => elementos.numeroRegistroFiscal,
-      orden: 2,
-    },
-    {
-      encabezado: 'Dirección',
-      clave: (elementos) => elementos.direccion,
-      orden: 3,
-    },
-    {
-      encabezado: 'Correo Electrónico',
-      clave: (elementos) => elementos.correoElectronico,
-      orden: 4,
-    },
-    {
-      encabezado: 'Teléfono',
-      clave: (elementos) => elementos.telefono,
-      orden: 5,
-    },
-    {
-      encabezado: 'Fax',
-      clave: (elementos) => elementos.fax,
-      orden: 6,
-    },
-  ];
+  tableColumns: ConfiguracionColumna<HistoricoColumnas>[] = TABLE_COLUMNS;
 
   /**
    * Lista de productores disponibles para el exportador.

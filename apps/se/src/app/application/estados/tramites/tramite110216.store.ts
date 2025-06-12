@@ -132,7 +132,7 @@ export function createInitialState(): Tramite110216State {
   return {
     observaciones: '',
     pasoActivo: 1,
-    pestanaActiva: 2,
+    pestanaActiva: 1,
     idioma: null,
     entidadFederativa: null,
     representacionFederal: null,
