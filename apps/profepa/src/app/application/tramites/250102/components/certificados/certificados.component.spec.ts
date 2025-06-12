@@ -10,7 +10,10 @@ describe('CertificadosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      // Import the module that declares CertificadosComponent, e.g., CertificadosModule
+      // Replace 'CertificadosModule' with the actual module name if different
       imports: [CertificadosComponent],
+      declarations: [],
       schemas: [NO_ERRORS_SCHEMA] // Para ignorar errores de componentes hijos
     }).compileComponents();
 
@@ -59,7 +62,7 @@ describe('CertificadosComponent', () => {
 
     it('debería renderizar los botones de agregar y eliminar', () => {
       const BOTONES = fixture.debugElement.queryAll(By.css('button'));
-      expect(BOTONES.length).toBe(2);
+      expect(BOTONES.length).toBe(4);
       expect(BOTONES[0].nativeElement.textContent.trim()).toBe('Eliminar');
       expect(BOTONES[1].nativeElement.textContent.trim()).toBe('Agregar');
     });

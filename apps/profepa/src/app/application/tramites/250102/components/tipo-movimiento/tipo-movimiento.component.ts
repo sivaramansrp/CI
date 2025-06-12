@@ -24,7 +24,15 @@ import { TipoMovimientoService } from '../../services/tipo-movimiento.service';
 import { Tramite250102Query } from '../../estados/tramite250102.query';
 
 
-
+/**
+ * Componente para la gestión del tipo de movimiento en el trámite 250102.
+ * Permite seleccionar el tipo de movimiento, aduana, inspectoría y municipio,
+ * así como almacenar y recuperar estos valores del estado global del trámite.
+ * 
+ * @component
+ * @example
+ * <app-tipo-movimiento></app-tipo-movimiento>
+ */
 @Component({
   selector: 'app-tipo-movimiento',
   standalone: true,
@@ -39,43 +47,55 @@ import { Tramite250102Query } from '../../estados/tramite250102.query';
   styleUrl: './tipo-movimiento.component.scss',
 })
 export class TipoMovimientoComponent implements OnInit, OnDestroy {
-  /** Estado actual de la solicitud proveniente del store */
+  /**
+   * Estado actual de la solicitud proveniente del store.
+   * @type {Tramite250102State}
+   */
   public solicitudState!: Tramite250102State;
 
-  /** Indica si el formulario está en modo solo lectura */
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * @type {boolean}
+   */
   esFormularioSoloLectura: boolean = false;
 
   /**
    * Sujeto utilizado para gestionar la destrucción de suscripciones y evitar fugas de memoria.
+   * @type {Subject<void>}
    */
   public destroy$ = new Subject<void>();
 
   /**
    * Datos relacionados con las opciones de aduana obtenidas desde el servicio.
+   * @type {Catalogo[]}
    */
   aduanaData: Catalogo[] = [];
 
   /**
    * Datos relacionados con las opciones de inspectoría obtenidas desde el servicio.
+   * @type {Catalogo[]}
    */
   inspectoriaData: Catalogo[] = [];
 
-   /**
+  /**
    * Datos relacionados con las opciones de municipio obtenidas desde el servicio.
+   * @type {Catalogo[]}
    */
   municipioData: Catalogo[] = [];
 
   /**
    * Opciones predefinidas para el tipo de movimiento.
+   * @type {any[]}
    */
   movimientoOpcionDeBotonDeRadio = MOVIMIENTO_OPCIONES_DE_BOTON_DE_RADIO;
 
   /**
    * Formulario reactivo para gestionar los datos del tipo de movimiento.
+   * @type {FormGroup}
    */
   public tipoMovimientoForm!: FormGroup;
 
- /**
+  /**
    * Inicializa los servicios necesarios para el componente.
    * @param fb FormBuilder para la construcción del formulario reactivo.
    * @param tramite250102Store Almacén de estado para gestionar los datos del trámite.
@@ -90,7 +110,6 @@ export class TipoMovimientoComponent implements OnInit, OnDestroy {
     private tipoMovimientoService: TipoMovimientoService,
     public consultaioQuery: ConsultaioQuery,
   ) {
-
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroy$),
@@ -102,8 +121,7 @@ export class TipoMovimientoComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-
-    /**
+  /**
    * Inicializa el formulario dependiendo del modo (solo lectura o editable).
    * Si está en solo lectura, carga y bloquea el formulario.
    * Si no, crea un formulario editable.
@@ -124,16 +142,12 @@ export class TipoMovimientoComponent implements OnInit, OnDestroy {
     this.establecerTipoMovimientoFormGroup();
     if (this.esFormularioSoloLectura) {
       this.tipoMovimientoForm.disable();
-     
     } else {
       this.tipoMovimientoForm.enable();
-    
     }
   }
 
-
-
- /**
+  /**
    * Inicializa el componente, obtiene los datos del servicio y configura el formulario.
    */
   ngOnInit(): void {
@@ -141,8 +155,6 @@ export class TipoMovimientoComponent implements OnInit, OnDestroy {
     this.obtenerAduanaData();
     this.obtenerInspectoriaData();
     this.obtenerAlcaldíaData();
-    // this.establecerTipoMovimientoFormGroup();
-    //this.getValoresStore();
 
     this.tramite250102Query.selectTipoMovimiento$
       .pipe(takeUntil(this.destroy$))
@@ -153,11 +165,11 @@ export class TipoMovimientoComponent implements OnInit, OnDestroy {
       });
   }
 
- /**
+  /**
    * Configura el formulario reactivo con los controles necesarios y sus validaciones.
    */
   establecerTipoMovimientoFormGroup(): void {
-        this.tramite250102Query.selectTramiteState$
+    this.tramite250102Query.selectTramiteState$
       .pipe(
         takeUntil(this.destroy$),
         map((seccionState) => {
@@ -176,6 +188,7 @@ export class TipoMovimientoComponent implements OnInit, OnDestroy {
       tipoMunicipio: new FormControl(this.solicitudState?.tipoMunicipio, [Validators.required]),
     });
   }
+
   /**
    * Obtiene datos de aduana desde el servicio.
    */
@@ -188,10 +201,10 @@ export class TipoMovimientoComponent implements OnInit, OnDestroy {
       });
   }
 
-   /**
+  /**
    * Obtiene datos de inspectoría desde el servicio.
    */
-   obtenerInspectoriaData(): void {
+  obtenerInspectoriaData(): void {
     this.tipoMovimientoService
       .obtenerInspectoriaData()
       .pipe(takeUntil(this.destroy$))
@@ -200,10 +213,10 @@ export class TipoMovimientoComponent implements OnInit, OnDestroy {
       });
   }
 
-    /**
+  /**
    * Obtiene datos de municipio desde el servicio.
    */
-   obtenerAlcaldíaData(): void {
+  obtenerAlcaldíaData(): void {
     this.tipoMovimientoService
       .obtenerAlcaldíaData()
       .pipe(takeUntil(this.destroy$))
@@ -212,7 +225,7 @@ export class TipoMovimientoComponent implements OnInit, OnDestroy {
       });
   }
 
-   /**
+  /**
    * Obtiene el estado del trámite desde el almacén de datos y actualiza el formulario reactivo.
    */
   getValoresStore(): void {
@@ -233,7 +246,7 @@ export class TipoMovimientoComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
-   /**
+  /**
    * Actualiza el estado del trámite con los valores del formulario.
    * @param form Formulario reactivo con los datos del trámite.
    * @param campo Nombre del campo que se actualizará en el estado.
