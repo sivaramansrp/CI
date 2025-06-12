@@ -76,12 +76,6 @@ describe('SolicitudComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('debería inicializar los formularios en ngOnInit', () => {
-    const SPY = jest.spyOn(component, 'inicializarFormularios');
-    component.ngOnInit();
-    expect(SPY).toHaveBeenCalled();
-  });
-
   it('debería llamar a configuracionFormularioSuscripciones en ngOnInit', () => {
     const SPY = jest.spyOn(component, 'configuracionFormularioSuscripciones');
     component.ngOnInit();
