@@ -60,7 +60,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   constructor(
     private tramite80303Query: Tramite80303Query,
-    private tramite80303Store: Tramite80303Store, // eslint-disable-next-line no-empty-function
+    private tramite80303Store: Tramite80303Store,
     private consultaQuery: ConsultaioQuery,
     public modificacionProgramaImmexBajaSubmanufactureraService: ModificacionProgramaImmexBajaSubmanufactureraService
   ) {}

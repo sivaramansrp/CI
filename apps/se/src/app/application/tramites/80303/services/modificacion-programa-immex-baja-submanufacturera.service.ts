@@ -44,6 +44,12 @@ export class ModificacionProgramaImmexBajaSubmanufactureraService {
         });
     }
   }
+  /**
+   * Obtiene los datos de modificación del programa IMMEX baja submanufacturera.
+   * Realiza una solicitud HTTP GET a un archivo JSON y actualiza el estado del trámite con los datos obtenidos.
+   *
+   * @returns {void}
+   */
   obtenerModicicacionDatos(): void {
     this.httpServicios
       .get<ModificacionDatos>(
