@@ -64,6 +64,12 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   consultaDatos!: ConsultaioState;
 
+    /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esDatosRespuesta: boolean = false;
+
   constructor(
     private consultaioQuery: ConsultaioQuery,
     private juntaTecnicaRegistroService: JuntaTecnicaRegistroService,
@@ -85,6 +91,8 @@ export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe();
     if (this.consultaDatos.update) {
       this.fetchGetDatosConsulta();
+    } else {
+      this.esDatosRespuesta = true;
     }
   }
 
