@@ -1871,6 +1871,15 @@
   "departamento": "SEDENA",
   "numeroDeProcedimiento": "240120"
 },
+  {
+    "id": 40302,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "40302"
+  },
 {
   "id": 80206,
   "tipoDeTramite": "Solicitud de Permiso",
