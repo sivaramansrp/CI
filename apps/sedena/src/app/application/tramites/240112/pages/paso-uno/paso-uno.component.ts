@@ -1,12 +1,22 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
+import { AgregarDestinatarioService } from '../../service/agregar-destinatario.service';
+import { CommonModule } from '@angular/common';
+import { DatosDelTramiteContenedoraComponent } from '../../components/datos-del-tramite-contenedora/datos-del-tramite-contenedora.component';
+import { PagoDeDerechocComponent } from '../../components/pago-de-derechoc/pago-de-derechoc.component';
+import { TercerosRelacionadosContenedoraComponent } from '../../components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
 import { Tramite240112Query } from '../../estados/tramite240112Query.query';
 import { Tramite240112Store } from '../../estados/tramite240112Store.store';
+
 
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
+  standalone: true,
+  imports: [SolicitanteComponent, TercerosRelacionadosContenedoraComponent, DatosDelTramiteContenedoraComponent, PagoDeDerechocComponent,ReactiveFormsModule, FormsModule, CommonModule]
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
    /**
@@ -24,6 +34,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       * @type {Subject<void>}
       */
      private destroyNotifier$: Subject<void> = new Subject();
+
+    /**
+     * @descripcion
+     * Indica si el formulario debe estar deshabilitado (solo lectura).
+     * Cuando es verdadero, los controles del formulario estarán deshabilitados y no se podrán editar.
+     */
+    formularioDeshabilitado: boolean = false;
    
 
    /**
@@ -51,7 +68,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       */
      constructor(
        private tramite240112Query: Tramite240112Query,
-       private tramite240112Store: Tramite240112Store // eslint-disable-next-line no-empty-function
+       private tramite240112Store: Tramite240112Store,
+       private consultaQuery: ConsultaioQuery,
+       private agregarDestinatarioService: AgregarDestinatarioService
      ) {}
   ngOnInit(): void {
      this.tramite240112Query.getTabSeleccionado$
@@ -59,7 +78,43 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
        .subscribe((tab) => {
          this.indice = tab ?? 1; 
        });
+      
+      this.consultaQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((seccionState) => {
+      this.formularioDeshabilitado = true;
+          this.guardarDatosFormulario();
+      if(seccionState.update){
+        this.formularioDeshabilitado = false;
+          this.guardarDatosFormulario();
+      }
+      if (seccionState.readonly) {
+        this.formularioDeshabilitado = true;
+      }
+    });
    }
+
+   /**
+   * @descripcion
+   * Obtiene los datos de acuicultura y actualiza el estado del formulario.
+   * 
+   * @remarks
+   * Realiza una suscripción al observable que retorna los datos de acuicultura.
+   * Utiliza `takeUntil` para evitar fugas de memoria al destruir el componente.
+   * Si la respuesta es válida, actualiza el estado del formulario con los datos recibidos.
+   */
+  guardarDatosFormulario(): void {
+    this.agregarDestinatarioService
+      .getAcuiculturaData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.agregarDestinatarioService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
+
    /**
     * Método que cambia el índice de la pestaña seleccionada en función del valor recibido.
     * Este método se utiliza para navegar entre las diferentes pestañas del formulario.

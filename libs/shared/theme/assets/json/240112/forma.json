@@ -1,0 +1,20 @@
+{
+    "tabSeleccionado": 1,
+    "destinatarioFinalTablaDatos": [],
+    "proveedorTablaDatos": [],
+    "pagoDerechos": {
+      "claveReferencia": "illenar",
+      "cadenaDependencia": "illenar",
+      "banco": "illenar",
+      "llavePago": "illenar",
+      "fechaPago": "illenar",
+      "importePago": "illenar"
+    },
+    "merccancialTablaDatos": [],
+    "datosDelTramite": {
+      "permisoGeneral": "illenar",
+      "usoFinal": "illenar",
+      "aduanasSeleccionadas": [],
+      "paisDestino": "illenar"
+    }
+  }
