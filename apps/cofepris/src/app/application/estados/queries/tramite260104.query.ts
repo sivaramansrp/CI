@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { Solicitud260104State, Tramite260104Store } from '../tramites/tramite260104.store';
+import { Solicitud260104State, Tramite260104StoreDos } from '../tramites/tramite260104.store';
 
 
 /**
@@ -28,10 +28,10 @@ export class Tramite260104Query extends Query<Solicitud260104State> {
   /**
    * Crea una nueva instancia de la clase e inicializa el store proporcionado.
    * 
-   * @param store - Instancia de Tramite260104Store utilizada para manejar el estado de la aplicación.
+   * @param store - Instancia de Tramite260104StoreDos utilizada para manejar el estado de la aplicación.
    */
   constructor(
-    protected override store: Tramite260104Store) {
+    protected override store: Tramite260104StoreDos) {
     super(store);
   }
 }

@@ -19,30 +19,30 @@
     <div class="row mt-5">
       <div class="col-md-4">
         <label>Número de certificado de origen:</label>
-        <input type="number" required="true" class="form-control gris-color" readonly />
+        <input type="number" required="true" formControlName="certificadoDeOrigen" class="form-control gris-color" readonly />
       </div>
       <div class="col-md-4">
-        <input-fecha [datos]="fechaInicialInput" class="disabled-input-fecha"></input-fecha>
+        <input-fecha [setFecha]="cancelacionForm.get('validacionForm.fechaExpedicion')?.value" [datos]="fechaInicialInput" class="disabled-input-fecha"></input-fecha>
       </div>
       <div class="col-md-4">
-        <input-fecha [datos]="fechaFinalInput" class="disabled-input-fecha"></input-fecha>
+        <input-fecha [setFecha]="cancelacionForm.get('validacionForm.fechaVencimiento')?.value" [datos]="fechaFinalInput" class="disabled-input-fecha"></input-fecha>
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-md-6">
         <label>País / Bloque:</label>
-        <input type="text" required="true" class="form-control gris-color" readonly />
+        <input type="text" required="true" formControlName="bloque" class="form-control gris-color" readonly />
       </div>
       <div class="col-md-6">
         <label>Tratado/Acuerdo:</label>
-        <input type="text" required="true" class="form-control gris-color" readonly />
+        <input type="text" required="true" formControlName="acuerdo" class="form-control gris-color" readonly />
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-md-6">
         <label>Observaciones:</label>
         <div class="row">
-          <textarea rows="5" class="gris-color" readonly></textarea>
+          <textarea rows="5" formControlName="observaciones" class="gris-color" readonly></textarea>
         </div>
       </div>
     </div>
@@ -50,70 +50,70 @@
     <div class="row">
       <div class="col-md-6 mb-3">
         <label>Nombre(s):</label>
-        <input type="text" class="form-control gris-color" readonly />
+        <input type="text" formControlName="nombre" class="form-control gris-color" readonly />
       </div>
       <div class="col-md-6 mb-3">
         <label>Primer apellido:</label>
-        <input type="text" class="form-control gris-color" readonly />
+        <input type="text" formControlName="primerApellido" class="form-control gris-color" readonly />
       </div>
     </div>
     <div class="row">
       <div class="col-md-6 mb-3">
         <label>Segundo apellido:</label>
-        <input type="text" class="form-control gris-color" readonly />
+        <input type="text"formControlName="segundoApellido"  class="form-control gris-color" readonly />
       </div>
       <div class="col-md-6 mb-3">
         <label>Número de registro fiscal:</label>
-        <input type="text" class="form-control gris-color" readonly />
+        <input type="text"formControlName="registroFiscal"  class="form-control gris-color" readonly />
       </div>
     </div>
     <div class="row">
       <div class="col-md-12 mb-3">
         <label>Razón social:</label>
-        <input type="text" class="form-control gris-color" readonly />
+        <input type="text" formControlName="razonSocial" class="form-control gris-color" readonly />
       </div>
     </div>
     <div class="row">
       <div class="col-md-6 mb-3">
         <label>Calle:</label>
-        <input type="text" class="form-control gris-color" readonly />
+        <input type="text" formControlName="calle" class="form-control gris-color" readonly />
       </div>
       <div class="col-md-3 mb-3">
         <label>Número y/o letra:</label>
-        <input type="text" class="form-control gris-color" readonly />
+        <input type="text" formControlName="numeroLetra" class="form-control gris-color" readonly />
       </div>
       <div class="col-md-3 mb-3">
         <label>Telefono:</label>
-        <input type="text" class="form-control gris-color" readonly />
+        <input type="text" formControlName="telefono" class="form-control gris-color" readonly/>
       </div>
     </div>
     <div class="row">
       <div class="col-md-6 mb-3">
         <label>Ciudad (población, estado o provincia):</label>
-        <input type="text" class="form-control gris-color" readonly />
+        <input type="text" formControlName="ciudad" class="form-control gris-color" readonly />
       </div>
       <div class="col-md-3 mb-3">
         <label>Fax:</label>
-        <input type="text" class="form-control gris-color" readonly />
+        <input type="text" formControlName="fax" class="form-control gris-color" readonly />
       </div>
       <div class="col-md-3 mb-3">
         <label>Correo electrónico:</label>
-        <input type="text" class="form-control gris-color" readonly />
+        <input type="text" formControlName="correoElectronico" class="form-control gris-color" readonly />
       </div>
     </div>
     <div class="row mt-5">
-      <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA_MERCANCIAS"></ng-alert>
+      <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA_MERCANCIAS" ></ng-alert>
     </div>
     <div class="table-container mt-5">
       <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED" [configuracionTabla]="encabezadosMercancias"
-        [datos]="mercanciaCertificadoTablaDatos"></app-tabla-dinamica>
+        [datos]="mercanciaCertificadoTablaDatos" [disableSeleccionTablaCheckBox]="soloLectura? true : false" ></app-tabla-dinamica>
     </div>
     <div class="row mt-5">
       <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA_PRODUCTORES"></ng-alert>
     </div>
     <div class="table-container mt-5">
       <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED"
-        [configuracionTabla]="encabezadosProductores"></app-tabla-dinamica>
+        [configuracionTabla]="encabezadosProductores" [disableSeleccionTablaCheckBox]="soloLectura? true : false" ></app-tabla-dinamica>
     </div>
   </ng-container>
 </form>
