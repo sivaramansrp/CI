@@ -14,7 +14,7 @@ describe('SeleccionarDocumentosComponent', () => {
 
   beforeEach(() => {
     catalogosServiceMock = {
-      getCatalogo: jest.fn(),
+      getCatalogo: jest.fn(()=> of()),
     } as unknown as jest.Mocked<CatalogosService>;
 
     TestBed.configureTestingModule({
