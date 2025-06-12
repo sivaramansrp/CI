@@ -232,7 +232,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     .pipe(
       takeUntil(this.notificadorDestruccion$),
       map((seccionState) => {
-       this.esFormularioSoloLectura = seccionState.readonly || true;
+       this.esFormularioSoloLectura = seccionState.readonly;
       })
     )
     .subscribe()
