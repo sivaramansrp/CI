@@ -664,6 +664,14 @@
     "numeroDeProcedimiento": "260202"
   },
   {
+    "folioTramite": "0100001000320251005001226",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "AGACE ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "31602"
+  },
+  {
     "folioTramite": "0100001000320251005220203",
     "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
     "dependencia": "AGRICULTURA ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
@@ -719,12 +727,43 @@
     "numeroDeProcedimiento": "221602"
   },
   {
-    "folioTramite": "0100001000320251005000003",
+    "folioTramite": "0100001000320251005000043",
     "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
     "dependencia": "COFEPRIS ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
     "fechInicioTramite": "2025-3-09 0035:05:00",
     "departamento": "COFEPRIS",
-    "numeroDeProcedimiento": "260507"
+    "numeroDeProcedimiento": "260905"
+  },
+  {
+    "folioTramite": "0100001000320251005000043",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "AGRICULTURA ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "AGRICULTURA",
+    "numeroDeProcedimiento": "220703"
+  },
+  {
+    "folioTramite": "0100001000320251005220403",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "SE ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "110219"
+  },
+  {
+    "folioTramite": "0100001000320251005000143",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "SE ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "10703"
+  },
+  {
+    "folioTramite": "0100001000320251005000003",
+    "tipoDeTramite": "Donación de mercancías al Fisco Federal que se encuentren en el extranjero",
+    "dependencia": "AGA ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-04-06 0035:05:00",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "10303"
   }
-
 ]

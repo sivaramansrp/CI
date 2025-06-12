@@ -18,7 +18,7 @@
   <div class="row">
     @switch (indice) {
     @case (1) {
-    <app-datos [pestanaDosFormularioValido]="pestanaDosFormularioValido"
+    <app-datos [consultaState]="consultaState"
       (pestanaCambiado)="pestanaCambiado($event)"></app-datos>
     } @case (2) {
     <app-paso-dos></app-paso-dos>

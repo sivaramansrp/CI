@@ -1,6 +1,6 @@
-import { AlertComponent,ConfiguracionColumna, InputFecha,InputFechaComponent,TablaDinamicaComponent, TablaSeleccion,TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { AlertComponent,ConfiguracionColumna, ConsultaioQuery, ConsultaioState, InputFecha,InputFechaComponent,TablaDinamicaComponent, TablaSeleccion,TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FECHA_VENCIMIENTO, FECHA_EXPEDICION, MercanciaCertificado, ProductoresAsociados } from '../../models/certificado.model';
+import { FECHA_EXPEDICION, FECHA_VENCIMIENTO, MercanciaCertificado, ProductoresAsociados } from '../../models/certificado.model';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud110219State, Tramite110219Store } from '../../estados/Tramite110219.store';
@@ -28,6 +28,16 @@ const TEXTO_DE_ALERTA_PRODUCTORES = 'Productores asociados';
   styleUrl: './certificado-de-origen.component.css',
 })
 export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
+  /**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
+
   /** Formulario para la cancelación de certificados. */
   cancelacionForm!: FormGroup;
 
@@ -95,18 +105,48 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     private certificadoService: CertificadoService,
     private fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
-    private store: Tramite110219Store,
-    private query: Tramite110219Query
+    public store: Tramite110219Store,
+    private query: Tramite110219Query,
+     private consultaioQuery: ConsultaioQuery
   ) {
-    // El constructor se utiliza para la inyección de dependencias.
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
 
   /** Inicializa el componente. */
   ngOnInit(): void {
+    
     this.cancelacionForm = new FormGroup({
       motivoCancelacion: new FormControl('', Validators.required),
+      fechaExpedicion: new FormControl(this.solicitudState?.fechaExpedicion, Validators.required),
+      fechaVencimiento: new FormControl(this.solicitudState?.fechaVencimiento, Validators.required),
+      certificadoDeOrigen: new FormControl(this.solicitudState?.certificadoDeOrigen, Validators.required),
+      bloque: new FormControl(this.solicitudState?.bloque, Validators.required),
+      acuerdo: new FormControl(this.solicitudState?.acuerdo, Validators.required),
+      observaciones: new FormControl(this.solicitudState?.observaciones, Validators.required),
+      nombre: new FormControl(this.solicitudState?.nombre, Validators.required),
+      primerApellido: new FormControl(this.solicitudState?.primerApellido, Validators.required),
+      segundoApellido: new FormControl(this.solicitudState?.segundoApellido, Validators.required),
+      registroFiscal: new FormControl(this.solicitudState?.registroFiscal, Validators.required),
+      razonSocial: new FormControl(this.solicitudState?.razonSocial, Validators.required),
+      calle: new FormControl(this.solicitudState?.calle, Validators.required),
+      numeroLetra: new FormControl(this.solicitudState?.numeroLetra, Validators.required),
+      telefono: new FormControl({ value: this.solicitudState?.telefono, disabled: true }, [Validators.required, Validators.pattern(/^[0-9]{10}$/)]),
+      ciudad: new FormControl(this.solicitudState?.ciudad, Validators.required),
+      fax: new FormControl(this.solicitudState?.fax, [Validators.required, Validators.pattern(/^[0-9]{10}$/)]),
+      correoElectronico: new FormControl(this.solicitudState?.correoElectronico, [Validators.required, Validators.email]),
     });
     this.getMercanciaCertificadoTabla();
+
+    this.inicializarEstadoFormulario();
 
     this.query.selectSolicitud$
       .pipe(
@@ -118,7 +158,30 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       .subscribe();
     this.donanteDomicilio();
   }
+/**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.donanteDomicilio();
+    }
+  }
 
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.donanteDomicilio();
+    if (this.soloLectura) {
+      this.cancelacionForm.disable();
+    } else {
+      this.cancelacionForm.enable();
+    }
+  }
   /** Valida el formulario del destinatario. */
   validarDestinatarioFormulario(): void {
     if (this.cancelacionForm.invalid) {
@@ -170,6 +233,21 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         motivoCancelacion: [this.solicitudState?.motivoCancelacion, [Validators.required]],
         fechaExpedicion: [this.solicitudState?.fechaExpedicion, [Validators.required]],
         fechaVencimiento: [this.solicitudState?.fechaVencimiento, [Validators.required]],
+        certificadoDeOrigen: [this.solicitudState?.certificadoDeOrigen, [Validators.required]],
+        bloque: [this.solicitudState?.bloque, [Validators.required]],
+        acuerdo: [this.solicitudState?.acuerdo, [Validators.required]],
+        observaciones: [this.solicitudState?.observaciones, [Validators.required]],
+        nombre: [this.solicitudState?.nombre, [Validators.required]],
+        primerApellido: [this.solicitudState?.primerApellido, [Validators.required]],
+        segundoApellido: [this.solicitudState?.segundoApellido, [Validators.required]],
+        registroFiscal: [this.solicitudState?.registroFiscal, [Validators.required]],
+        razonSocial: [this.solicitudState?.razonSocial, [Validators.required]],
+        calle: [this.solicitudState?.calle, [Validators.required]],
+        numeroLetra: [this.solicitudState?.numeroLetra, [Validators.required]],
+        telefono: [this.solicitudState?.telefono, [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+        ciudad: [this.solicitudState?.ciudad, [Validators.required]],
+        fax: [this.solicitudState?.fax, [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
+        correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email]]
       }),
     });
 
