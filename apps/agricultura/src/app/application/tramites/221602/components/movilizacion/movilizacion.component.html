@@ -5,7 +5,7 @@
     <div class="row">
       <div class="col-md-4">
         <div class="form-group">
-          <app-catalogo-select [catalogo]="medio" [label]="'Medio de transporte'" [required]="true" name="medio"
+          <app-catalogo-select [catalogo]="medio" [label]="'Medio de transporte'" [required]="true" name="medio" [isDisabled]="esFormularioSoloLectura"
             formControlName="medio" (change)="setValoresStore(MedioForm, 'medio', 'setMedio')">
           </app-catalogo-select>
         </div>
@@ -24,7 +24,7 @@
     <div class="row">
       <div class="col-md-8">
         <div class="form-group">
-          <app-catalogo-select [catalogo]="verificacion" [label]="'Punto de verificación federal:'" [required]="true"
+          <app-catalogo-select [catalogo]="verificacion" [label]="'Punto de verificación federal:'" [required]="true" [isDisabled]="esFormularioSoloLectura"
             name="verificacion" formControlName="verificacion" (change)="setValoresStore(MedioForm, 'verificacion', 'setVerificacion')">
           </app-catalogo-select>
         </div>

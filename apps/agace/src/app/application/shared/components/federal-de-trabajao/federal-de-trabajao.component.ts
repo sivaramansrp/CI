@@ -1,10 +1,11 @@
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, REGEX_RFC, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MENCIONE_TABLA,Mencione } from '../../models/datos-comunes.model';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject,map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosComunesService } from '../../services/datos-comunes.service';
 
 /**
@@ -15,6 +16,7 @@ import { DatosComunesService } from '../../services/datos-comunes.service';
 @Component({
   selector: 'app-federal-de-trabajao',
   standalone: true,
+  providers: [BsModalService],
   imports: [CommonModule, TablaDinamicaComponent, CatalogoSelectComponent, ReactiveFormsModule],
   templateUrl: './federal-de-trabajao.component.html',
   styleUrl: './federal-de-trabajao.component.scss',
@@ -55,6 +57,11 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
    * Datos del catálogo para el tercer bimestre.
    */
   public bimestreTresCatalogo: Catalogo[] = [];
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando se establece en `true`, los campos del formulario no son editables por el usuario.
+   */
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -66,8 +73,14 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
   constructor(
     private datosComunesSvc: DatosComunesService,
     private fb: FormBuilder,
+    @Inject(BsModalService)
     private modalService: BsModalService,
-  ) {}
+    private consultaQuery: ConsultaioQuery
+  ) {
+      this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+      })).subscribe();
+  }
 
   /**
    * Hook del ciclo de vida que se llama después de inicializar el componente.
@@ -77,7 +90,16 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
     this.getMencioneDatos();
     this.getBancoCatalogDatos();
     this.cerearFormulario();
+    this.inicializarEstadoFormulario();
   }
+
+    /**
+     * Inicializa el formulario llamando al método para restablecer o crear la estructura del formulario.
+     * Este método debe ser invocado para asegurar que el formulario esté en su estado inicial.
+     */
+    public inicializarFormulario(): void {
+        this.cerearFormulario();
+    }
 
   /**
    * Inicializa el formulario reactivo con reglas de validación.
@@ -92,6 +114,21 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
       comboBimestresTres: [''],
     });
   }
+
+    /**
+     * Inicializa el estado del formulario según el modo de solo lectura.
+     *
+     * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es true),
+     * ejecuta el método `guardarFormulario` para guardar el formulario.
+     * De lo contrario, inicializa el formulario llamando a `inicializarFormulario`.
+     */
+    public inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+    }
 
   /**
    * Obtiene datos para la tabla dinámica y los asigna al estado del componente.
@@ -120,6 +157,21 @@ export class FederalDeTrabajaoComponent implements OnInit, OnDestroy {
       const API_DATOS = JSON.parse(JSON.stringify(response));
       this.bimestreTresCatalogo = API_DATOS.data;
     });
+  }
+
+  /**
+   * Inicializa el formulario y establece su estado habilitado o deshabilitado según la bandera de solo lectura.
+   * - Llama a `inicializarFormulario()` para restablecer o inicializar el formulario.
+   * - Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es true), deshabilita `numeroDeEmpleadosForm`.
+   * - De lo contrario, habilita `numeroDeEmpleadosForm`.
+   */
+  public guardarFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.numeroDeEmpleadosForm.disable();
+    } else {
+      this.numeroDeEmpleadosForm.enable();
+    }
   }
 
   /**

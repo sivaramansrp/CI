@@ -8,6 +8,7 @@
             formControlName="manifests"
             type="checkbox"
             id="manifiesto"
+            [disabled]="formularioDeshabilitado ? true : false"
           />
           <span class="fw-bold align-middle"> *</span>
           <div>{{ manifiestosText }} </div>

@@ -1,6 +1,6 @@
 import { ANTERIORES_TABLA,Anteriores, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { ComercioExteriorService } from '../../services/comercio-exterior.service';
@@ -19,6 +19,10 @@ import { CommonModule } from '@angular/common';
 })
 export class NumeroDeEmpleadosComponent implements OnInit,OnDestroy {
 
+  /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   */
+  @Input() esFormularioSoloLectura: boolean = false;
   /**
    * Un arreglo para almacenar datos del tipo `Anteriores`, que representa
    * información relacionada con el número de empleados. Esta propiedad se

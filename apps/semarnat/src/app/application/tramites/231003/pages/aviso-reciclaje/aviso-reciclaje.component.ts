@@ -1,5 +1,8 @@
-import { AccionBoton, DatosPasos, ListaPasosWizard, PAGO_DE_DERECHOS, WizardComponent } from '@libs/shared/data-access-user/src';
-import { Component, ViewChild } from '@angular/core';
+import { AccionBoton, ConsultaioState, DatosPasos, ListaPasosWizard, PAGO_DE_DERECHOS, WizardComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { Subject,map, takeUntil } from 'rxjs';
+import { AvisoDeReciclajeServiceService } from '../../Services/aviso-de-reciclaje-service.service';
+import { ConsultaioQuery} from '@ng-mf/data-access-user'
 import { PASOS } from '../../constantes/aviso-de-reciclaje.enum';
 /**
  * Componente que representa la sección de aviso de reciclaje.
@@ -10,7 +13,7 @@ import { PASOS } from '../../constantes/aviso-de-reciclaje.enum';
   selector: 'app-aviso-reciclaje',
   templateUrl: './aviso-reciclaje.component.html',
 })
-export class AvisoReciclajeComponent {
+export class AvisoReciclajeComponent implements OnInit {
 
   /**
      * @property pasos
@@ -49,6 +52,63 @@ export class AvisoReciclajeComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+  /**
+   * Subject utilizado para notificar y limpiar las suscripciones al destruir el componente.
+   */
+  private destroy$ = new Subject<void>();
+
+  /** Subject para notificar la destrucción del componente. */
+  public consultaState!: ConsultaioState;
+
+  /**
+   * Constructor del componente.
+   * @param consultaQuery Servicio para consultar el estado de la consulta.
+   * @param avisoDeReciclajeServiceService Servicio para manejar los datos del aviso de reciclaje.
+   */
+  constructor(
+    private consultaQuery: ConsultaioQuery,
+    private avisoDeReciclajeServiceService: AvisoDeReciclajeServiceService
+  ) { }
+
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Se suscribe al estado de la consulta y actualiza la propiedad consultaState.
+   * Si el estado indica actualización, carga los datos del formulario.
+   */
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          // Actualiza el estado de la consulta
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
+
+    // Si el estado indica actualización, carga los datos del formulario.
+    if (this.consultaState.update) {
+      this.guardarDatosFormulario();
+    }
+  }
+
+  /**
+   * Método para guardar los datos del formulario.
+   * Obtiene los datos iniciales de la solicitud y actualiza el estado del formulario si la respuesta es válida.
+   */
+  guardarDatosFormulario(): void {
+    this.avisoDeReciclajeServiceService
+      .obtenerDatosSolicitudInicial().pipe(
+        takeUntil(this.destroy$)
+      )
+      .subscribe((resp) => {
+        // Si la respuesta existe, actualiza el estado del formulario
+        if (resp) {
+          this.avisoDeReciclajeServiceService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
 
   /**
  * Updates the index value based on the action button event.
