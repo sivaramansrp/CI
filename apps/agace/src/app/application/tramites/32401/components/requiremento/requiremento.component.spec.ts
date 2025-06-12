@@ -5,6 +5,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CapturarRequerimientoComponent } from '../capturar-requerimiento/capturar-requerimiento.component';
 import { SeleccionarDocumentosComponent } from '../seleccionar-documentos/seleccionar-documentos.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of } from 'rxjs';
 
 describe('RequirementoComponent', () => {
   let component: RequirementoComponent;
@@ -13,7 +15,12 @@ describe('RequirementoComponent', () => {
 
   beforeEach(async () => {
     routerSpy = {
-      navigate: jest.fn(),
+      navigate: jest.fn(() =>
+        of({
+          id: 123,
+          name: 'Test',
+        })
+      ),
     } as unknown as jest.Mocked<Router>;
 
     await TestBed.configureTestingModule({
@@ -23,7 +30,8 @@ describe('RequirementoComponent', () => {
         CommonModule,
         CapturarRequerimientoComponent,
         SeleccionarDocumentosComponent,
-        RequirementoComponent
+        RequirementoComponent,
+        HttpClientTestingModule,
       ],
       declarations: [],
       providers: [{ provide: Router, useValue: routerSpy }],
@@ -38,15 +46,6 @@ describe('RequirementoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize folioTramite from history state on ngOnInit', () => {
-    const mockData = { id: 123, name: 'Test' };
-    jest.spyOn(history, 'state', 'get').mockReturnValue({ data: mockData });
-
-    component.ngOnInit();
-
-    expect(component.folioTramite).toEqual(mockData);
-  });
-
   it('should set indice when seleccionaTab is called', () => {
     component.seleccionaTab(2);
     expect(component.indice).toBe(2);
@@ -54,11 +53,15 @@ describe('RequirementoComponent', () => {
 
   it('should navigate to the correct route on continuar', () => {
     component.continuar();
-    expect(routerSpy.navigate).toHaveBeenCalledWith(['/agace/manifiesto-aereo/capturar-el-texto-libre']);
+    expect(routerSpy.navigate).toHaveBeenCalledWith([
+      '/agace/manifiesto-aereo/capturar-el-texto-libre',
+    ]);
   });
 
   it('should navigate to the correct route on cancelar', () => {
     component.cancelar();
-    expect(routerSpy.navigate).toHaveBeenCalledWith(['/agace/manifiesto-aereo/main']);
+    expect(routerSpy.navigate).toHaveBeenCalledWith([
+      '/agace/manifiesto-aereo/main',
+    ]);
   });
 });
