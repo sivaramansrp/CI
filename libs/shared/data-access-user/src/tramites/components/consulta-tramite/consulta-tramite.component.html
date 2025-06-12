@@ -52,6 +52,35 @@
                                 </div>
                             </div>
                         </form>
+                        @if(tieneConfiguracionTablaDatos) {
+                        <div class="row mt-2">
+                            <div class="col-md">
+                            <app-tabla-dinamica
+                                [configuracionTabla]="configuracionTabla"
+                                [datos]="configuracionTablaDatos"
+                                [acciones]="tablaAcciones"
+                                (filaClic)="onFilaClic($event)"
+                            >
+                            </app-tabla-dinamica>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <app-table-pagination
+                            [totalItems]="totalItems"
+                            [itemsPerPage]="itemsPerPage"
+                            [currentPage]="currentPage"
+                            (pageChange)="onPageChange($event)"
+                            (itemsPerPageChange)="onItemsPerPageChange($event)"
+                            >
+                            </app-table-pagination>
+                        </div>
+                    } @else if(!tieneConfiguracionTablaDatos) {
+                        <div class="row mt-5">
+                            <div class="col-md-12">
+                                <h4 class="mb-4 text-center">No se encontraron datos</h4>
+                            </div>
+                        </div>
+                    }
                     </div>
                 </div>
             </div>

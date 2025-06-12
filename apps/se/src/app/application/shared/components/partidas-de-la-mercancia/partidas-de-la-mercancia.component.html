@@ -131,7 +131,7 @@
     <div>
       <h6>Partidas</h6>
       <div *ngIf="mostrarTabla">
-        <app-tabla-dinamica [configuracionTabla]="tableHeaderData" [datos]="tableBodyData"
+        <app-tabla-dinamica [configuracionTabla]="tableHeaderData" [datos]="tableBodyData" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           [tipoSeleccionTabla]="CHECKBOX" (listaDeFilaSeleccionada)="handleListaDeFilaSeleccionada($event)">
         </app-tabla-dinamica>
       </div>

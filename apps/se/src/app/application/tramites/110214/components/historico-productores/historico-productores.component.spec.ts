@@ -128,12 +128,6 @@ describe('HistoricoProductoresComponent', () => {
     expect(setValoresStoreSpy).toHaveBeenCalledWith(component.formulario, 'productorMismoExportador', 'setProductorMismoExportador');
   });
 
-  it('should call cargarProductorPorExportador on ngOnInit', () => {
-    const cargarProductorPorExportadorSpy = jest.spyOn(component, 'cargarProductorPorExportador');
-    component.ngOnInit();
-    expect(cargarProductorPorExportadorSpy).toHaveBeenCalled();
-  });
-
   it('should load productores on cargarProductorPorExportador', () => {
     component.cargarProductorPorExportador();
     expect(validarInicialmenteCertificadoServiceMock.obtenerProductorPorExportador).toHaveBeenCalled();

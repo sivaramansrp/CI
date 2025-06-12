@@ -1,9 +1,6 @@
-import { AccionBoton, BtnContinuarComponent, DatosPasos, ListaPasosWizard, Notificacion, VistaEmergente, WizardComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
+import { AccionBoton, DatosPasos, ListaPasosWizard, Notificacion, VistaEmergente, WizardComponent } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { PASOS } from '../../constantes/concluir-relacion.enum';
-import { PasoDosComponent } from '../paso-dos/paso-dos.component';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ViewChild } from '@angular/core';
 
 /**
@@ -14,14 +11,6 @@ import { ViewChild } from '@angular/core';
  */
 @Component({
   selector: 'app-solicitante-page',
-  standalone: true,
-  imports: [
-    CommonModule,
-    WizardComponent,
-    PasoUnoComponent,
-    PasoDosComponent,
-    BtnContinuarComponent,
-  ],
   templateUrl: './solicitante-page.component.html',
   styleUrl: './solicitante-page.component.scss',
 })

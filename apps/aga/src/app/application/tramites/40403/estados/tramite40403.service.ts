@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { CAATRespuesta } from '../models/atencion-de-renovacion.model';
+import { CAATRespuesta, RespuestaConsulta } from '../models/atencion-de-renovacion.model';
 
 /**
  * Servicio para gestionar la atención a la renovación del trámite 40403.
@@ -15,6 +15,18 @@ import { CAATRespuesta } from '../models/atencion-de-renovacion.model';
  * Clase que representa el servicio de atención a la renovación del trámite 40403.
  */
 export class Tramite40403Service {
+
+  /**
+   * @method getDatosConsulta
+   * @description Obtiene los datos de consulta desde un archivo JSON local.
+   * 
+   * Este método realiza una solicitud HTTP GET para obtener los datos de consulta simulados desde el archivo `consulta_11201.json`.
+   * 
+   * @returns {Observable<RespuestaConsulta>} Un observable que emite la respuesta de los datos de consulta.
+   */
+  getDatosConsulta(): Observable<RespuestaConsulta> {
+    return this.http.get<RespuestaConsulta>(`assets/json/40403/consulta_40403.json`);
+  }
   /**
    * Constructor del servicio.
    * @param http - Cliente HTTP para realizar solicitudes a la API o cargar recursos.
