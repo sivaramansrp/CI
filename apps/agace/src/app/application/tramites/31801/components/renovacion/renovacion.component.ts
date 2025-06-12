@@ -129,10 +129,8 @@ export class RenovacionComponent implements OnInit, OnDestroy {
     this.crearRenovacionForm();
     if (this.esFormularioSoloLectura) {
       this.renovacionForm.disable();
-    } else if (!this.esFormularioSoloLectura) {
-      this.renovacionForm.enable();
     } else {
-      // No se requiere ninguna acción en el formulario
+      this.renovacionForm.enable();
     }
   }
 

@@ -22,9 +22,17 @@ export class DatosComponent implements OnInit,OnDestroy,AfterViewInit {
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
 
-  /** Subject para notificar la destrucción del componente. */
+  /**
+   * Subject utilizado para notificar y gestionar la destrucción del componente.
+   * Se utiliza para cancelar suscripciones activas y evitar fugas de memoria.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
-  public consultaState!:ConsultaioState;
+
+  /**
+   * Estado actual de la consulta obtenido del store.
+   */
+  public consultaState!: ConsultaioState;
+
   /**
    * Esta variable se utiliza para almacenar el índice del subtítulo.
    */
