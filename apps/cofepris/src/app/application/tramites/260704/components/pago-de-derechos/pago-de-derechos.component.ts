@@ -2,14 +2,13 @@ import {
   Catalogo, 
   CatalogoSelectComponent, 
   CatalogosSelect, 
-  ConsultaioQuery, 
-  ConsultaioState, 
   InputFecha, 
   InputFechaComponent, 
   TituloComponent, 
   ValidacionesFormularioService 
 } from "@ng-mf/data-access-user";
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud260704State, Tramite260704Store } from '../../estados/Tramite260704.store';

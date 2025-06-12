@@ -2,8 +2,6 @@ import { AVISO_PRIVACIDAD, DESTINATARIO_CONFIGURACION_TABLA, FABRICANTE_CONFIGUR
 import { 
   AlertComponent, 
   CatalogoSelectComponent, 
-  ConsultaioQuery, 
-  ConsultaioState, 
   InputRadioComponent, 
   TablaDinamicaComponent, 
   TituloComponent 
@@ -14,6 +12,7 @@ import {
   ValidacionesFormularioService 
 } from "@libs/shared/data-access-user/src";
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Destinatario, Fabricante } from "../../models/consulta.model";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 import { ReplaySubject, map, takeUntil } from "rxjs";

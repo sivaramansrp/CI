@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Asociados } from '../../models/consulta.model';
