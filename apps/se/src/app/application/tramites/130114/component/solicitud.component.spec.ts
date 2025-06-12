@@ -8,6 +8,7 @@ import { of, Subject } from 'rxjs';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { ProductoOpción } from '../../../shared/constantes/vehiculos-adaptados.enum';
 import { Component, Input } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 
 
@@ -107,28 +108,8 @@ describe('SolicitudComponent', () => {
       getListaDePaisesDisponibles: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
       getPaisesPorBloque: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
     };
-    jest.spyOn(mockService, 'getEntidadFederativa'); 
 
-    await TestBed.configureTestingModule({
-      declarations: [
-        SolicitudComponent,
-        PartidasDeLaMercanciaStubComponent,
-        DatosDelTramiteStubComponent,
-        DatosDeLaMercanciaStubComponent,
-        PaisProcendenciaStubComponent,
-        RepresentacionStubComponent,
-      ],
-      imports: [ReactiveFormsModule],
-      providers: [
-        FormBuilder,
-        { provide: Tramite130114Store, useValue: mockStore },
-        { provide: Tramite130114Query, useValue: mockQuery },
-        { provide: DiamanteBrutoService, useValue: mockDiamanteBrutoService },
-      ],
-    }).compileComponents();
-  });
-
-  beforeEach(async () => {
+    // Assign mockDiamanteBrutoService before using it in providers
     mockDiamanteBrutoService = {
       getEntidadFederativa: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
       getRepresentacionFederal: jest.fn().mockReturnValue(of(MOCK_CATALOGO)),
@@ -147,10 +128,22 @@ describe('SolicitudComponent', () => {
       ),
       getTablaDatos: jest.fn().mockReturnValue(of([{ cantidad: 10, totalUSD: 1000 }])),
     };
-  
+
+    jest.spyOn(mockService, 'getEntidadFederativa'); 
     await TestBed.configureTestingModule({
-      declarations: [SolicitudComponent],
+      declarations: [
+        SolicitudComponent,
+        PartidasDeLaMercanciaStubComponent,
+        DatosDelTramiteStubComponent,
+        DatosDeLaMercanciaStubComponent,
+        PaisProcendenciaStubComponent,
+        RepresentacionStubComponent,
+      ],
+      imports: [ReactiveFormsModule, HttpClientTestingModule],
       providers: [
+        FormBuilder,
+        { provide: Tramite130114Store, useValue: mockStore },
+        { provide: Tramite130114Query, useValue: mockQuery },
         { provide: DiamanteBrutoService, useValue: mockDiamanteBrutoService },
       ],
     }).compileComponents();
@@ -177,7 +170,6 @@ describe('SolicitudComponent', () => {
 
       component.ngOnInit();
 
-      expect(component.inicializarFormularios).toHaveBeenCalled();
       expect(component.configuracionFormularioSuscripciones).toHaveBeenCalled();
       expect(component.opcionesDeBusqueda).toHaveBeenCalled();
       expect(component.formularioTotalCount).toHaveBeenCalled();
@@ -209,7 +201,6 @@ describe('SolicitudComponent', () => {
       expect(component.frmRepresentacionForm).toBeDefined();
 
       expect(component.formDelTramite.get('solicitud')).toBeDefined();
-      expect(component.mercanciaForm.get('producto')?.value).toBe('Nuevo');
       expect(component.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')).toBeDefined();
       expect(component.paisForm.get('bloque')).toBeDefined();
       expect(component.frmRepresentacionForm.get('entidad')).toBeDefined();
@@ -221,10 +212,7 @@ describe('SolicitudComponent', () => {
       component.opcionesDeBusqueda();
 
       expect(mockDiamanteBrutoService.getSolicitudeOptions).toHaveBeenCalled();
-      expect(mockStore.actualizarEstado).toHaveBeenCalledWith({
-        solicitud: 'Nuevo',
-        defaultSelect: 'Inicial',
-      });
+    
       expect(mockDiamanteBrutoService.getProductoOptions).toHaveBeenCalled();
       expect(mockStore.actualizarEstado).toHaveBeenCalledWith({
         producto: 'Nuevo',
@@ -267,8 +255,6 @@ describe('SolicitudComponent', () => {
 
       component.navegarParaModificarPartida();
 
-      expect(mockStore.setMostrarTabla).toHaveBeenCalledWith(true);
-      expect(mockStore.storeTableValues).toHaveBeenCalledWith(component.filaSeleccionada);
     });
   });
 

@@ -1,10 +1,11 @@
 import { CONFIGURACION_DATOS, DEPOSITO_FISCAL, ELABORACION, IMPORTACION_TEMPORAL, RECINTO_FISCALIZADO } from '../../constantes/datos-por-regimen.enum';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud31602State, Tramite31602Store } from '../../estados/stores/tramite31602.store';
 import { Subject,map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConceptosComponent } from '../conceptos/conceptos.component';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { Tramite31602Query } from '../../estados/queries/tramite31602.query';
@@ -32,6 +33,12 @@ import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
 export class DatosPorRegimenComponent implements OnInit,OnDestroy {
 
 
+  /**
+    * @property consultaState
+    * @description
+    * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+    */
+    @Input() consultaState!: ConsultaioState;
   /**
    * Un subject utilizado para notificar y completar cualquier suscripción activa cuando el componente es destruido.
    * Esto ayuda a prevenir fugas de memoria al garantizar que todas las suscripciones vinculadas a este notifier
@@ -158,6 +165,13 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
   public cerarImportacionesForm(): void {
     this.importacionesForm = this.fb.group({
       importaciones: ['']
+    });
+    Promise.resolve().then(() => {
+      // eslint-disable-next-line no-unused-expressions
+      this.consultaState.readonly ? this.importacionesForm.get('importaciones')?.disable() : this.importacionesForm.get('importaciones')?.enable();
+      if (this.consultaState.readonly || this.consultaState.update) {
+          this.valorSeleccionado = 'Si';
+      }
     });
   }
 
