@@ -20,10 +20,10 @@
       <ng-container *ngIf="!cargarArchivo">
         <div class="row">
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="optionsTratado" [label]="'Tratado/Acuerdo'" [required]="true" id="tratado" formControlName="tratado" (change)=" setValoresStore(validacionForm, 'tratado', 'setTratado') "></app-catalogo-select>
+            <app-catalogo-select [catalogo]="optionsTratado" [label]="'Tratado/Acuerdo'" [required]="true" id="tratado" formControlName="tratado" (change)=" setValoresStore(validacionForm, 'tratado', 'setTratado')" [isDisabled]="soloLectura"></app-catalogo-select>
           </div>
           <div class="col-md-4">
-            <app-catalogo-select [catalogo]="optionsPais" [label]="'País / Bloque'" [required]="true" id="pais" formControlName="pais" (change)="setValoresStore(validacionForm, 'pais', 'setPais')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="optionsPais" [label]="'País / Bloque'" [required]="true" id="pais" formControlName="pais" (change)="setValoresStore(validacionForm, 'pais', 'setPais')" [isDisabled]="soloLectura"></app-catalogo-select>
           </div>
         </div>
         <div class="row mt-5">
@@ -45,29 +45,33 @@
         </div>
         <div class="row mt-5">
           <div class="col-md-4">
-            <input-fecha [setFecha]="registroForm.get('validacionForm.fechaInicial')?.value" [datos]="fechaInicialInput" (valorCambiado)="cambioFechaInicial($event)"></input-fecha>
+            <input-fecha [setFecha]="registroForm.get('validacionForm.fechaInicial')?.value" [datos]="fechaInicialInput" (valorCambiado)="cambioFechaInicial($event)" [isDisabled]="soloLectura"></input-fecha>
           </div>
           <div class="col-md-4">
-            <input-fecha [setFecha]="registroForm.get('validacionForm.fechaFinal')?.value" [datos]="fechaFinalInput" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
+            <input-fecha [setFecha]="registroForm.get('validacionForm.fechaFinal')?.value" [datos]="fechaFinalInput" (valorCambiado)="cambioFechaFinal($event)" [isDisabled]="soloLectura"></input-fecha>
           </div>
         </div>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
-          <button type="button" class="btn btn-primary ms-3" (click)="buscarMercancias()"> Buscar mercancías </button>
+          <button type="button" class="btn btn-primary ms-3" (click)="buscarMercancias()" [disabled]="soloLectura"  > Buscar mercancías </button>
         </div>
         <div class="row mt-5">
           <label>Mercancías disponibles</label>
         </div>
         <div class="table-container mt-5" *ngIf="!hayMercanciasDisponibles">
-          <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.UNDEFINED" [configuracionTabla]="headers"></app-tabla-dinamica>
+          <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.UNDEFINED" [configuracionTabla]="headers" [disableSeleccionTablaRadio]="soloLectura"></app-tabla-dinamica>
         </div>
         <div class="table-container mt-5" *ngIf="hayMercanciasDisponibles">
-          <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.UNDEFINED" [configuracionTabla]="headers" [datos]="mercanciaDisponsiblesTablaDatos" (click)="manejarClic(mercanciaDisponsiblesTablaDatos)"></app-tabla-dinamica>
+          <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.UNDEFINED" [configuracionTabla]="headers" [datos]="mercanciaDisponsiblesTablaDatos" (click)="manejarClic()" [disableSeleccionTablaRadio]="soloLectura"></app-tabla-dinamica>
         </div>
-        <i id="bi-1-square" class="bi bi-1-square" viewBox="0 0 16 16"></i>
+        <nav aria-label="Page navigation example"  *ngIf="hayMercanciasDisponibles">
+          <ul class="pagination d-flex justify-content-center mb-3">
+            <li class="page-item"><a class="page-link">1</a></li>
+          </ul>
+        </nav>
       </ng-container>
       <ng-titulo titulo="Carga de mercancías por archivo" />
       <div class="col-md-12 mt-5 d-flex justify-content-end" *ngIf="!cargarArchivo">
-        <button type="button" class="btn btn-primary ms-3" (click)="cargaArchivo()"> Carga por archivo </button>
+        <button type="button" class="btn btn-primary ms-3" (click)="cargaArchivo()" [disabled]="soloLectura"> Carga por archivo </button>  
       </div>
       <div class="bottom-buffer" *ngIf="cargarArchivo">
         <div class="row">
@@ -91,8 +95,8 @@
         <div class="row">
           <div class="col-md-12">
             <div class="pull-right">
-              <button type="button" class="btn btn-default" (click)="cerrarAdjuntarArchivoMercancias()"> Cerrar </button>
-              <button type="submit" class="btn btn-primary" (click)="darError()"> Enviar </button>
+              <button type="button" class="btn btn-default" (click)="cerrarAdjuntarArchivoMercancias()" [disabled]="soloLectura"> Cerrar </button>
+              <button type="submit" class="btn btn-primary" (click)="darError()" [disabled]="soloLectura"> Enviar </button>
             </div>
           </div>
         </div>
@@ -105,15 +109,19 @@
           <label>Mercancías seleccionadas</label>
         </div>
         <div class="table-container mt-5" *ngIf="!esMercanciaEnEdicion">
-          <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.RADIO" [configuracionTabla]="headersData"></app-tabla-dinamica>
+          <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.RADIO" [configuracionTabla]="headersData" [disableSeleccionTablaRadio]="soloLectura"></app-tabla-dinamica>
         </div>
         <div class="table-container mt-5" *ngIf="esMercanciaEnEdicion">
-          <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.RADIO" [configuracionTabla]="headersData" [datos]="mercanciaSeleccionadasTablaData"></app-tabla-dinamica>
+          <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.RADIO" [configuracionTabla]="headersData" [datos]="mercanciaSeleccionadasTablaData" [disableSeleccionTablaRadio]="soloLectura"></app-tabla-dinamica>
         </div>
-        <i *ngIf="esMercanciaEnEdicion" id="bi-1-square" class="bi bi-1-square" viewBox="0 0 16 16"></i>
+        <nav aria-label="Page navigation example"  *ngIf="esMercanciaEnEdicion">
+          <ul class="pagination d-flex justify-content-center mb-3">
+            <li class="page-item"><a class="page-link">1</a></li>
+          </ul>
+        </nav>
         <div class="col-md-12 mt-5 d-flex justify-content-end" *ngIf="esMercanciaEnEdicion">
-          <button type="button" class="btn btn-default ms-3">Eliminar</button>
-          <button type="button" class="btn btn-primary ms-3" (click)="modificar()"> Modificar </button>
+          <button type="button" class="btn btn-default ms-3" [disabled]="soloLectura">Eliminar</button>
+          <button type="button" class="btn btn-primary ms-3" (click)="modificar()" [disabled]="soloLectura"> Modificar </button>
         </div>
         <div class="row mt-5">
           <div class="alert alert-danger" style="margin-top: 40px" *ngIf="mostrarErrores">
@@ -170,7 +178,7 @@
           <small class="text-danger" *ngIf="mercanciaForm.get('validacionMercanciaForm.cantidad')?.errors?.['pattern']">Este campo es obligatorio.</small>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="optionsUMC" [label]="'UMC'" [required]="true" [tooltipQuestionCircle]="true" id="umc" formControlName="umc" (change)="setValoresStore(validacionMercanciaForm, 'umc', 'setUMC')"></app-catalogo-select>
+          <app-catalogo-select [catalogo]="optionsUMC" [label]="'UMC'" [required]="true" [tooltipQuestionCircle]="true" id="umc" formControlName="umc" (change)="setValoresStore(validacionMercanciaForm, 'umc', 'setUMC')" [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
       </div>
       <div class="row mt-5">
@@ -185,19 +193,19 @@
       </div>
       <div class="row mt-5">
         <div class="col-md-4">
-          <input-fecha [setFecha]="registroForm.get('fecha')?.value" [datos]="fechaFacturaInput" (valorCambiado)="cambioFechaFactura($event)"></input-fecha>
+          <input-fecha [setFecha]="registroForm.get('fecha')?.value" [datos]="fechaFacturaInput" (valorCambiado)="cambioFechaFactura($event)" [isDisabled]="soloLectura"></input-fecha>
         </div>
         <div class="col-md-4">
           <label>N° factura*:</label>
           <input type="text" required="true" class="form-control" formControlName="numeroFactura" (change)=" setValoresStore( validacionMercanciaForm, 'numeroFactura', 'setNFactura' ) " />
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="optionsTipoFactura" [label]="'Tipo de factura'" [required]="true" id="tipoFactura" formControlName="tipoFactura" (change)=" setValoresStore( validacionMercanciaForm, 'tipoFactura', 'setTipoFactura' ) "></app-catalogo-select>
+          <app-catalogo-select [catalogo]="optionsTipoFactura" [label]="'Tipo de factura'" [required]="true" id="tipoFactura" formControlName="tipoFactura" (change)=" setValoresStore( validacionMercanciaForm, 'tipoFactura', 'setTipoFactura')" [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
       </div>
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" class="btn btn-default ms-3" (click)="cancelar()">Cancelar</button>
-        <button type="button" class="btn btn-primary ms-3" (click)="agregar()"> Agregar </button>
+        <button type="button" class="btn btn-default ms-3" (click)="cancelar()" [disabled]="soloLectura">Cancelar</button>
+        <button type="button" class="btn btn-primary ms-3" (click)="agregar()" [disabled]="soloLectura"> Agregar </button>
       </div>
     </ng-container>
   </form>

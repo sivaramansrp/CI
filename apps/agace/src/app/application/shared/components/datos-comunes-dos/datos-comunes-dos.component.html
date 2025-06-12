@@ -4,6 +4,7 @@
         <app-catalogo-select
             [placeholder]="'Seleccione un valor'"
             formControlName="comboBimestresIDCSeleccione"
+            [isDisabled]="esFormularioSoloLectura"
             [catalogo]="comboBimestresIDC"
             (change)="setValoresStore(comunesDosForm,'comboBimestresIDCSeleccione','setComboBimestresIDCSeleccione')"
             >
@@ -29,9 +30,9 @@
         </app-tabla-dinamica>
     </div>
     <div class="d-flex justify-content-end mt-3 mb-4">
-        <button class="btn btn-primary me-2" (click)="abrirModal(instalacionesPrincipales)">Agregar</button>
-        <button class="btn btn-danger me-2">Modificar</button>
-        <button class="btn btn-default me-2">Eliminar</button>
+        <button class="btn btn-primary me-2" (click)="abrirModal(instalacionesPrincipales)" [disabled]="esFormularioSoloLectura">Agregar</button>
+        <button class="btn btn-danger me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+        <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
     </div>
 </div>
 <div class="row mt-5">
@@ -76,7 +77,7 @@
               />
             </div>
             <div>
-              <button id="uploadNewFileExtranjerosN" class="btn btn-primary">
+              <button id="uploadNewFileExtranjerosN" class="btn btn-primary" [disabled]="esFormularioSoloLectura">
                 Anexar
               </button>
             </div>
@@ -114,7 +115,7 @@
             />
           </div>
           <div>
-            <button id="uploadNewFileExtranjerosN" class="btn btn-primary">
+            <button id="uploadNewFileExtranjerosN" class="btn btn-primary" [disabled]="esFormularioSoloLectura">
               Anexar
             </button>
           </div>
@@ -226,7 +227,7 @@
         </lib-input-check>
     </div>
     <div class="d-flex align-items-end justify-content-end">
-        <button type="button" class="btn btn-primary">Agregar</button>
+        <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar</button>
     </div>
   </div>
   <div class="row mt-3">
@@ -239,8 +240,8 @@
         </app-tabla-dinamica>
     </div>
     <div class="d-flex justify-content-end mt-3 mb-4">
-        <button class="btn btn-primary me-2" (click)="abrirModal(modificar)">Modificar</button>
-        <button class="btn btn-default me-2">Eliminar</button>
+        <button class="btn btn-primary me-2" (click)="abrirModal(modificar)" [disabled]="esFormularioSoloLectura">Modificar</button>
+        <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
     </div>
     <p class="fw-bold">Deberá anexar un archivo simple de autorizaci&oacute;n para el
         establecimiento del depósito fiscal para someterse al proceso de
