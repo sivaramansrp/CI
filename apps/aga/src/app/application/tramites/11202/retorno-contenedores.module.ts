@@ -1,4 +1,4 @@
-import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CatalogosService, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputHoraComponent, InputRadioComponent, RepresentanteFiscalComponent, SelectPaisesComponent, SharedModule, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, CatalogoSelectComponent, CatalogosService, CrosslistComponent, FirmaElectronicaComponent, InputCheckComponent, InputFechaComponent, InputHoraComponent, InputRadioComponent, RepresentanteFiscalComponent, SelectPaisesComponent, SharedModule, SolicitanteComponent, TituloComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ContenedorComponent } from './components/contenedor/contenedor.component';
@@ -8,13 +8,11 @@ import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { RetornoContenedoresRoutingModule } from './retorno-contenedores-routing.module';
 import { RouterModule } from '@angular/router';
-import { SolicitanteComponent } from './components/solicitante/solicitante.component';
 import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { ToastrService } from 'ngx-toastr';
 @NgModule({
   declarations: [
-    SolicitanteComponent,
     ContenedorComponent,
     PasoUnoComponent,
     SolicitantePageComponent,
@@ -42,9 +40,10 @@ import { ToastrService } from 'ngx-toastr';
     CatalogoSelectComponent,
     InputRadioComponent,
     PasoTresComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    SolicitanteComponent
   ],
-  exports: [SolicitanteComponent, ContenedorComponent, PasoUnoComponent],
+  exports: [ContenedorComponent, PasoUnoComponent],
   providers: [CatalogosService, ToastrService],
 })
-export class RetornoContenedoresModule {}
+export class RetornoContenedoresModule { }
