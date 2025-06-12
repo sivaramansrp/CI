@@ -48,6 +48,13 @@ export class Tramite420101Query extends Query<Tramite420101State> {
   );
 
   /**
+   * @property {Observable<any>} getDatosTabla$
+   * @description
+   * Selecciona los datos de la propiedad `datosTabla` del estado.
+   * Este observable emite los valores almacenados en `datosTabla`.
+   */
+  public getDatosTabla$ = this.select((state) => state.datosTabla);
+  /**
    * @property {Observable<any>} getNormaDatos$
    * @description
    * Selecciona los datos relacionados con el uso de la lista cruzada (`usoCrossListDatos`) del estado.
