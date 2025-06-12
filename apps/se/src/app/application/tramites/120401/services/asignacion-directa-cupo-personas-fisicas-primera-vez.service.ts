@@ -168,17 +168,13 @@ actualizarEstadoFormulario(DATOS: Partial<Catalogo[]>): void {
   }));
 }
 
-
-
 /**
- * Obtiene los datos del formulario de desistimiento para la toma de muestras de mercancías.
+ * Obtiene los datos precargados para el registro de toma de muestras de mercancías desde un archivo JSON.
  *
- * Realiza una petición HTTP GET para recuperar el objeto `DesistimientoForm` desde un archivo JSON local.
- *
- * @returns Un observable que emite los datos del formulario de desistimiento.
+ * @returns {Observable<Catalogo[]>} Observable con los datos precargados.
  */
 getRegistroTomaMuestrasMercanciasData(): Observable<Catalogo[]> {
-  return this.httpServicios.get<Catalogo[]>(`assets/json/120401/datos-prefill.json`);
+  return this.httpServicios.get<Catalogo[]>(`assets/json/120401/datosPrecargados.json`);
 }
 
 }

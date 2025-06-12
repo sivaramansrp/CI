@@ -144,11 +144,16 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
   subproducto$: Observable<Catalogo | null> =
     this.tramite120401Query.subproducto$;
 
-  /**
-   * Constructor del componente.
-   * @param fb - Servicio de FormBuilder para manejar formularios reactivos.
-   * @param service - Servicio para obtener la selección del cupo desde el backend.
-   */
+/**
+ * Constructor del componente SeleccionDelCupoComponent.
+ * Inicializa los servicios y suscripciones necesarias para el funcionamiento del componente.
+ *
+ * @param fb - Servicio FormBuilder para la creación de formularios reactivos.
+ * @param service - Servicio para obtener datos relacionados con la asignación directa de cupos.
+ * @param tramite120401Store - Store para manejar el estado del trámite 120401.
+ * @param tramite120401Query - Query para consultar el estado del trámite 120401.
+ * @param consultaQuery - Query para consultar el estado de la consulta IO.
+ */
   constructor(
     private fb: FormBuilder,
     private service: AsignacionDirectaCupoPersonasFisicasPrimeraVezService,

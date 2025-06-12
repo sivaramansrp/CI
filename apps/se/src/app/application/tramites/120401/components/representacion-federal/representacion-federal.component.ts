@@ -136,7 +136,7 @@ export class RepresentacionFederalComponent implements OnInit, OnDestroy {
     private tramite120401Query: Tramite120401Query,
     private consultaQuery: ConsultaioQuery,
   ) {
-    // Constructor
+   
   }
 
   /**

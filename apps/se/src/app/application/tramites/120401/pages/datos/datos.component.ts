@@ -42,15 +42,10 @@ export class DatosComponent implements OnInit, OnDestroy{
    */
   formularioDeshabilitado: boolean = false;
 
-  /**
-   * Constructor del componente PasoUnoComponent.
-   *
-   * Inicializa los servicios necesarios y suscribe al estado de consulta.
-   * Si el estado indica que hay una actualización, carga los datos del formulario.
-   *
-   * @param consultaQuery Servicio para consultar el estado de la solicitud.
-   * @param CancelarSolicitudService Servicio para gestionar la cancelación de la solicitud.
-   */
+/**
+ * Servicio de consulta para obtener el estado actual de la consulta.
+ * Servicio de asignación directa para gestionar la lógica de negocio relacionada con la toma de muestras de mercancías.
+ */
   constructor(
     private consultaQuery: ConsultaioQuery,
     private AsignacionDirectaCupoPersonasFisicasPrimeraVezService: AsignacionDirectaCupoPersonasFisicasPrimeraVezService
