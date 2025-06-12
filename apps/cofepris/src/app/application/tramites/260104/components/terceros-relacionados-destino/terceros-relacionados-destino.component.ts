@@ -190,7 +190,7 @@ export class TercerosRelacionadosDestinoComponent implements OnInit,OnDestroy{
   constructor(
     private tercerosDataService: TercerosRelacionadosDestinoService,
     private router: Router,
-    public activatedRoute: ActivatedRoute,private tramiteQuery:Tramite260104Query, private tramiteStore:Tramite260104Store,
+    private activatedRoute: ActivatedRoute,private tramiteQuery:Tramite260104Query, private tramiteStore:Tramite260104Store,
     private consultaioQuery: ConsultaioQuery,)
      {
       this.consultaioQuery.selectConsultaioState$
