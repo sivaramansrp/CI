@@ -1,33 +1,5 @@
 import { TITULO_MODAL_AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/terceros.enums';
-import {
-  ADV_LIMPIA_CAMPOS,
-  CONFIGURACION_ENCABEZADO_TABLA_PAGOS,
-  EMPRESAS_CERTIFICADAS,
-  ESTATUS_PAGADO,
-  ID_NAME_DD,
-  ID_NAME_LDA,
-  LABEL_CROSSLIST,
-  LABEL_DESPACHO_DD,
-  LABEL_DESPACHO_LDA,
-  MSG_ADUANA_PEDIMENTO,
-  MSG_ALERTA_ELIMINAR_ELEMENTO,
-  MSG_ELIMINA_ELEMENTO,
-  MSG_ERROR_NO_INFORMACION,
-  MSG_ERROR_RFC_NO_ENCONTRADO,
-  MSG_MONTO_PAGADO_CUBIERTO,
-  MSJ_ERROR_FECHA,
-  MSJ_ERROR_LINEA_CAPTURA,
-  MSJ_LINEA_CAPTURA_NO_PAGADA,
-  MSJ_LINEA_CAPTURA_USADA,
-  PATENTES_ID,
-  SIN_ITEMS,
-  SIN_VALOR,
-  TEXTO_ACEPTAR,
-  TEXTO_CANCELAR,
-  TRANSPORTE,
-  UN_DIA,
-  VEHICULO,
-} from '../../../../core/enums/5701/tramite5701.enum';
+
 import {
   ALFANUMERICO_ESPACIO,
   AduanaService,
@@ -39,6 +11,8 @@ import {
   FormulariosService,
   ICatalogo,
   MENSAJE_ALERTA_NO_FECHAS,
+  MSG_ALERTA_ELIMINAR_ELEMENTO,
+  MSG_ELIMINA_ELEMENTO,
   Notificacion,
   PROGRAMA_FOMENTO,
   PROGRAMA_IMMEX,
@@ -51,6 +25,8 @@ import {
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
+  TEXTO_ACEPTAR,
+  TEXTO_CANCELAR,
   TIPO_SOLICITUD,
   TablaSeleccion,
   TipoDespachoService,
@@ -130,6 +106,34 @@ import { ValidaLineaPagoService } from '../../../../core/services/5701/pago/vali
 import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
+import {
+  CONFIGURACION_ENCABEZADO_TABLA_PAGOS,
+  EMPRESAS_CERTIFICADAS,
+  ESTATUS_PAGADO,
+  ID_NAME_DD,
+  ID_NAME_LDA,
+  LABEL_CROSSLIST,
+  LABEL_DESPACHO_DD,
+  LABEL_DESPACHO_LDA,
+  PATENTES_ID,
+  SIN_ITEMS,
+  SIN_VALOR,
+  TRANSPORTE,
+  UN_DIA,
+  VEHICULO,
+} from '../../../../core/enums/5701/tramite5701.enum';
+import {
+  MSG_ADUANA_PEDIMENTO,
+  MSG_ERROR_NO_INFORMACION,
+  MSG_ERROR_RFC_NO_ENCONTRADO,
+  MSG_MONTO_PAGADO_CUBIERTO,
+  MSJ_ERROR_FECHA_DIA,
+  MSJ_ERROR_FECHA_MES,
+  MSJ_ERROR_FECHA_SEMANA,
+  MSJ_ERROR_LINEA_CAPTURA,
+  MSJ_LINEA_CAPTURA_NO_PAGADA,
+  MSJ_LINEA_CAPTURA_USADA,
+} from '../../../../core/enums/5701/mensajes-modal-5701.enum';
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
@@ -648,9 +652,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {boolean} - Retorna `true` si el campo tiene un error de patrón, de lo contrario `false`.
    */
   isErrorPattern(field: string): boolean {
-    const CONTROL = this.datosImportadorExportador.get(
-      field
-    ) as FormControl;
+    const CONTROL = this.datosImportadorExportador.get(field) as FormControl;
 
     if (CONTROL) {
       const ERROR_PATTERN = CONTROL.hasError('pattern');
@@ -1353,6 +1355,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
+    const MSJ_ERROR_FECHA =
+      this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL
+        ? MSJ_ERROR_FECHA_DIA
+        : this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.SEMANAL
+        ? MSJ_ERROR_FECHA_SEMANA
+        : MSJ_ERROR_FECHA_MES;
+
     if (this.datosServicio.hasError('invalidIntervalo')) {
       this.limpiarFechasHoras();
       this.nuevaNotificacion = {
@@ -1387,6 +1396,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.limpiarFechasHoras();
       return;
     }
+    const MSJ_ERROR_FECHA =
+      this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL
+        ? MSJ_ERROR_FECHA_DIA
+        : this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.SEMANAL
+        ? MSJ_ERROR_FECHA_SEMANA
+        : MSJ_ERROR_FECHA_MES;
 
     if (
       this.datosServicio.hasError('endDateBeforeStartDate') ||
@@ -1486,6 +1501,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.limpiarFechasHoras();
       return;
     }
+
+    const MSJ_ERROR_FECHA =
+      this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL
+        ? MSJ_ERROR_FECHA_DIA
+        : this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.SEMANAL
+        ? MSJ_ERROR_FECHA_SEMANA
+        : MSJ_ERROR_FECHA_MES;
 
     if (this.datosServicio.hasError('invalidIntervalo')) {
       this.limpiarFechasHoras();
@@ -2265,21 +2287,17 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     if (CHECKED) {
       // Valida si hay fechas seleccionadas
       console.log(this.fechasSeleccionadas.length);
-      
+
       const VALIDACION_FECHAS = this.fechasSeleccionadas.length > 0 || false;
 
       console.log('Validación de fechas seleccionadas:', VALIDACION_FECHAS);
 
-  
-      
       console.log('El campo ya está seleccionado');
-      
-
     } else {
-      console.log('El campo no está seleccionado, se procede a mostrar el modal de confirmación');
-      
+      console.log(
+        'El campo no está seleccionado, se procede a mostrar el modal de confirmación'
+      );
     }
-
 
     // this.tipoDespacho = tipo;
     // const ADUANA = this.despacho.get('idAduanaDespacho')?.value;

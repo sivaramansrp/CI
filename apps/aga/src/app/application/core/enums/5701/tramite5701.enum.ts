@@ -159,4 +159,3 @@ export const LABEL_CROSSLIST: CrossListLable = {
  * @descrfiption Campos requetridos
  */
 export const CAMPOS_OBLIGATORIOS = 'Este campo es obligatorio';
-

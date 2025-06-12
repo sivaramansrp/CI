@@ -3,14 +3,8 @@ import {
   ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS,
   ERR_CAMPOS_OBLIGATORIOS,
   ERR_INPUT_BUSQUEDA_VACIO,
-  MSG_DATOS_GUARDADOS,
-  MSG_ELIMINA_ELEMENTO,
   MSJ_ERROR_GAFETE_EXISTE,
-} from '../../../../core/enums/5701/tramite5701.enum';
-import {
-  CONFIGURACION_ENCABEZADO_TABLA_RESPONSABLES_DESPACHO,
-  MSG_SELECCIONA_REGISTRO,
-} from '../../../../core/enums/5701/responsables-despacho.enum';
+} from '../../../../core/enums/5701/mensajes-modal-5701.enum';
 import {
   Component,
   EventEmitter,
@@ -23,8 +17,12 @@ import {
 } from '@angular/core';
 import {
   ConfiguracionColumna,
+  MSG_DATOS_GUARDADOS,
+  MSG_ELIMINA_ELEMENTO,
+  MSG_SELECCIONA_REGISTRO,
   Notificacion,
   NotificacionesComponent,
+  TITULO_MODAL_AVISO,
   TablaDinamicaComponent,
   TablaSeleccion,
   UppercaseDirective,
@@ -42,11 +40,13 @@ import {
   Tramite5701Store,
 } from '../../../../core/estados/tramites/tramite5701.store';
 import { Subject, map, takeUntil, tap } from 'rxjs';
+import {
+  CONFIGURACION_ENCABEZADO_TABLA_RESPONSABLES_DESPACHO,
+} from '../../../../core/enums/5701/responsables-despacho.enum';
 import { CommonModule } from '@angular/common';
 import { ConsultaResponsableService } from '../../../../core/services/5701/consulta-responsable.service';
 import { ResponsablesDespacho } from '../../../../core/models/5701/tramite5701.model';
 import { TIPO_GAFETE } from '../../../../constantes/5701/constantes-tramite';
-import { TITULO_MODAL_AVISO } from '../../../../core/enums/5701/mensajes-modal-5701.enum';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
 @Component({
   selector: 'agrega-personas',
@@ -361,7 +361,7 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
       tipoNotificacion: 'alert',
       categoria: '',
       modo: 'action',
-      titulo: TITULO_MODAL_AVISO_AVISO,
+      titulo: TITULO_MODAL_AVISO,
       mensaje: EXISTE_RESPONSABLE
         ? MSJ_ERROR_GAFETE_EXISTE
         : MSG_DATOS_GUARDADOS,
@@ -413,7 +413,7 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
         tipoNotificacion: 'alert',
         categoria: '',
         modo: 'action',
-        titulo: TITULO_MODAL_AVISO_AVISO,
+        titulo: TITULO_MODAL_AVISO,
         mensaje: MSG_SELECCIONA_REGISTRO,
         cerrar: false,
         txtBtnAceptar: 'Cerrar',

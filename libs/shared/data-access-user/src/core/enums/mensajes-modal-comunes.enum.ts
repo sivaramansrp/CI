@@ -34,3 +34,9 @@ export const TEXTO_CANCELAR = 'Cancelar';
  */
 export const MSG_ALERTA_ELIMINAR_ELEMENTO =
   '¿Seguro que desea eliminar el registro seleccionado?';
+
+/**
+ * @description
+ * Mensaje de error al intentar eliminar un tercero relacionado sin haber seleccionado un registro.
+ */
+export const MSG_SELECCIONA_REGISTRO = 'Selecciona un registro.';
