@@ -50,6 +50,22 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  CONFIGURACION_ENCABEZADO_TABLA_PAGOS,
+  EMPRESAS_CERTIFICADAS,
+  ESTATUS_PAGADO,
+  ID_NAME_DD,
+  ID_NAME_LDA,
+  LABEL_CROSSLIST,
+  LABEL_DESPACHO_DD,
+  LABEL_DESPACHO_LDA,
+  PATENTES_ID,
+  SIN_ITEMS,
+  SIN_VALOR,
+  TRANSPORTE,
+  UN_DIA,
+  VEHICULO,
+} from '../../../../core/enums/5701/tramite5701.enum';
+import {
   Component,
   Input,
   OnChanges,
@@ -106,22 +122,7 @@ import { ValidaLineaPagoService } from '../../../../core/services/5701/pago/vali
 import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import rfcs from 'libs/shared/theme/assets/json/5701/rfcs.json';
-import {
-  CONFIGURACION_ENCABEZADO_TABLA_PAGOS,
-  EMPRESAS_CERTIFICADAS,
-  ESTATUS_PAGADO,
-  ID_NAME_DD,
-  ID_NAME_LDA,
-  LABEL_CROSSLIST,
-  LABEL_DESPACHO_DD,
-  LABEL_DESPACHO_LDA,
-  PATENTES_ID,
-  SIN_ITEMS,
-  SIN_VALOR,
-  TRANSPORTE,
-  UN_DIA,
-  VEHICULO,
-} from '../../../../core/enums/5701/tramite5701.enum';
+
 import {
   MSG_ADUANA_PEDIMENTO,
   MSG_ERROR_NO_INFORMACION,
