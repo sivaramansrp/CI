@@ -731,8 +731,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
     const CATALOGO_PAISES$ = this.paisesService.getListaPaises().pipe(
       map((resp) => {
-        this.paisesOrigen = resp.datos;
-        this.paisesProcedencia = resp.datos;
+        this.paisesOrigen = resp.datos.sort((a, b) => a.descripcion.localeCompare(b.descripcion, 'es', { sensitivity: 'base' }));
+        this.paisesProcedencia = resp.datos.sort((a, b) => a.descripcion.localeCompare(b.descripcion, 'es', { sensitivity: 'base' }));
       })
     );
 
