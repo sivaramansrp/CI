@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 
 import { BasicRequerimientosRespuesta, ContribuyenteRespuesta, ManifiestosRespuesta } from '../../models/donaciones-extranjeras.model';
 import { Observable } from 'rxjs';
+import { RegistroDeDonacion10303State } from '../../estados/tramites/tramite10303.store';
 import { RespuestaCatalogos } from '@ng-mf/data-access-user';
 
 /**
@@ -165,7 +166,7 @@ export class DonacionesExtranjerasService {
    * Obtiene los datos del registro de donación desde un archivo JSON.
    * @returns Observable con los datos del registro de donación.
    */
-  getRegistroDeDonacionDatos(): Observable<any> {
-    return this.http.get<any>('assets/json/10303/registro-de-donacion-datos.json');
+  getRegistroDeDonacionDatos(): Observable<RegistroDeDonacion10303State> {
+    return this.http.get<RegistroDeDonacion10303State>('assets/json/10303/registro-de-donacion-datos.json');
   }
 }

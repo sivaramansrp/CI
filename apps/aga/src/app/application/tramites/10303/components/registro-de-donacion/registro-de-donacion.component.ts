@@ -3,7 +3,7 @@ import { Subject, map, merge, takeUntil } from 'rxjs';
 import { Modal } from 'bootstrap';
 
 import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
-import mercanciaTable from 'libs/shared/theme/assets/json/10303/mercancia-table.json';
+import mercanciaTable from '@libs/shared/theme/assets/json/10303/mercancia-table.json';
 
 import { BasicRequerimientos, BasicRequerimientosRespuesta, Manifiestos, ManifiestosRespuesta } from '../../models/donaciones-extranjeras.model';
 import { CATALOGOS_ID, Catalogo, ConsultaioQuery, TableBodyData } from '@ng-mf/data-access-user';

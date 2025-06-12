@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
-import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
-import { map, Subject, takeUntil } from 'rxjs';
-import { Tramite10303Store } from '../../estados/tramites/tramite10303.store';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
+
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { DonacionesExtranjerasService } from '../../services/donaciones-extranjeras/donaciones-extranjeras.service';
+import { Tramite10303Store } from '../../estados/tramites/tramite10303.store';
 
 /**
  * Componente para gestionar el paso uno del trámite.
@@ -12,7 +13,7 @@ import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
   templateUrl: './paso-uno.component.html',
   styles: ``
 })
-export class PasoUnoComponent {
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Índice de la pestaña seleccionada.
    */
