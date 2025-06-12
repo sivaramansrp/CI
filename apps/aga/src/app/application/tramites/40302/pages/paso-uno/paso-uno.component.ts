@@ -28,13 +28,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /** Propiedad que almacena el estado actual de la consulta IO.  
  * Se inicializa posteriormente con datos del store o de un observable. */
-    public consultaState!:ConsultaioState;
+   public consultaState!:ConsultaioState;
 
   /**
    * ## Propiedad: indice
    * Define el índice actualmente seleccionado. Se inicializa con el valor `1`.
    */
-  indice:number = 1;
+  public indice:number = 1;
 
   /**
    * ## Método: seleccionaTab
@@ -87,7 +87,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
-  guardarDatosFormulario(): void {
+  private guardarDatosFormulario(): void {
     this.datosDelTramiteService
       .getRegistroTomaMuestrasMercanciasData().pipe(
         takeUntil(this.destroyNotifier$)

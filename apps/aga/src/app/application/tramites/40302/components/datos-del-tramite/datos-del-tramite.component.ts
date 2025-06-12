@@ -55,7 +55,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
-  esFormularioSoloLectura: boolean = false;
+ public esFormularioSoloLectura: boolean = false;
 
   /** Estado de la solicitud tipo 40302. 
  *  Contiene información y progreso de la solicitud. */
@@ -79,15 +79,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       private solcitud40302Query: Solicitud40302Query,
       private consultaioQuery: ConsultaioQuery
     ) {
-      this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
+    // Lógica del constructor aquí
     }
 
   /**
@@ -99,6 +91,16 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Establece los valores iniciales del servicio y suscribe al estado de la solicitud.
    */
   ngOnInit(): void {
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+
     this.datosService.setInitialValues();
     this.establecerSolicitudForm();
     this.suscribirseAlEstado();
@@ -110,7 +112,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Determina si se debe cargar un formulario nuevo o uno existente.  
    * Ejecuta la lógica correspondiente según el estado del componente.
    */
-  inicializarEstadoFormulario(): void {
+private inicializarEstadoFormulario(): void {
     if (this.solicitudForm && this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {
@@ -122,7 +124,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
-  guardarDatosFormulario(): void {
+private guardarDatosFormulario(): void {
     this.establecerSolicitudForm();
     if (this.esFormularioSoloLectura) {
       this.solicitudForm.disable();
@@ -156,14 +158,10 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       cveFolioCaat: [{ value: '3L6V', disabled: true }],
       descTipoCaat: [{ value: 'Naviero', disabled: true }],
       descTipoAgente: [{ value: 'Agente Naviero', disabled: true }],
-      directorGeneralNombre: ['', [Validators.required, Validators.maxLength(200)]],
-      primerApellido: ['', [Validators.required, Validators.maxLength(200)]],
-      segundoApellido: ['', [Validators.maxLength(200)]],
+      directorGeneralNombre: ['HAZEL', [Validators.required, Validators.maxLength(200)]],
+      primerApellido: ['NAVA', [Validators.required, Validators.maxLength(200)]],
+      segundoApellido: ['AVILA', [Validators.maxLength(200)]],
     });
-   
-this.solicitudForm.get('directorGeneralNombre')?.setValue(this.solicitudState.directorGeneralNombre);
-this.solicitudForm.get('primerApellido')?.setValue(this.solicitudState.primerApellido);
-this.solicitudForm.get('segundoApellido')?.setValue(this.solicitudState.segundoApellido);
   }
 
 
