@@ -1,7 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SolicitudComponent } from './solicitud.component';
-import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('SolicitudComponent', () => {
   let component: SolicitudComponent;
@@ -10,8 +11,8 @@ describe('SolicitudComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [SolicitudComponent],
-      imports: [ReactiveFormsModule],
-      providers: [ValidacionesFormularioService]
+      imports: [ReactiveFormsModule, TituloComponent, CatalogoSelectComponent, FormsModule],
+      providers: [ValidacionesFormularioService, provideHttpClient(),]
     }).compileComponents();
   });
 
@@ -30,6 +31,7 @@ describe('SolicitudComponent', () => {
   });
 
   it('should add a new item to datosGeneralesArr when mercanciaAgregar is called', () => {
+    component.datosGeneralesArr = [];
     const initialLength = component.datosGeneralesArr.length;
     component.mercanciaAgregar();
     expect(component.datosGeneralesArr.length).toBe(initialLength + 1);
@@ -42,7 +44,22 @@ describe('SolicitudComponent', () => {
   });
 
   it('should remove an item from datosGeneralesArr when mercancia_borrar is called', () => {
-    component.datosGeneralesArr.push({});
+    component.datosGeneralesArr = [];
+    component.datosGeneralesArr.push({
+      "UMC": "2",
+      "UMT": "valor ficticio",
+      "USO": "2",
+      "cantidadUMC": "valor ficticio",
+      "cantidadUMT": "valor ficticio",
+      "descdelaFraccion": "valor ficticio",
+      "entidadFederativadeOrigen": "2",
+      "fraccionArancelaria": "valor ficticio",
+      "marcasDistintivas": "valor ficticio",
+      "municipiodeOrigen": [
+        "Municipio 2"
+      ],
+      "paisdeOrigen": "3"
+    });
     const initialLength = component.datosGeneralesArr.length;
     component.mercanciaBorrar(0);
     expect(component.datosGeneralesArr.length).toBe(initialLength - 1);
