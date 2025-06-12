@@ -1,16 +1,16 @@
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
 import { Tramite240120Query } from '../../estados/tramite240120Query.query';
 import { Tramite240120Store } from '../../estados/tramite240120Store.store';
-import { takeUntil } from 'rxjs';
 
 /**
  * @title Datos del Trámite Contenedora
@@ -43,6 +43,14 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @property {Subject<void>} destroy$
    */
   private destroy$ = new Subject<void>();
+  /**
+ * Indica si el formulario debe mostrarse en modo solo lectura.
+ *
+ * @type {boolean}
+ * @memberof DatosDelTramiteContenedoraComponent
+ * @default false
+ */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * @constant {number} ID_PROCEDIMIENTO
@@ -58,42 +66,45 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @method constructor
    * @param {Tramite240120Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
    * @param {Tramite240120Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
+   * @param {Router} router - Servicio de Angular Router para la navegación.
+   * @param {ActivatedRoute} activatedRoute - Servicio de Angular ActivatedRoute para obtener la ruta activa.
+   * @param {ConsultaioQuery} consultaQuery - Query para obtener datos de consulta de usuario.
    * @returns {void}
    */
   constructor(
     private tramiteQuery: Tramite240120Query,
     private tramiteStore: Tramite240120Store,
     private router: Router,
-    private activatedRoute: ActivatedRoute
-  ) 
-  {}
+    private activatedRoute: ActivatedRoute,
+    private consultaQuery: ConsultaioQuery,
+  ) { }
 
-    /**
-   * Hook del ciclo de vida que se ejecuta al inicializar el componente.
-   * Suscribe a los observables del estado para mostrar los datos en la vista.
-   *
-   * @method ngOnInit
-   * @returns {void}
-   */
+  /**
+ * Hook del ciclo de vida que se ejecuta al inicializar el componente.
+ * Suscribe a los observables del estado para mostrar los datos en la vista.
+ *
+ * @method ngOnInit
+ * @returns {void}
+ */
   ngOnInit(): void {
     this.tramiteQuery.getMercanciaTablaDatos$
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
-      let necesitaActualizar = false;
-      const DATOS_ACTUALIZADOS = data.map((item, index) => {
-        if (Object.prototype.hasOwnProperty.call(item, 'tableIndex')) {
-        return item;
+        let necesitaActualizar = false;
+        const DATOS_ACTUALIZADOS = data.map((item, index) => {
+          if (Object.prototype.hasOwnProperty.call(item, 'tableIndex')) {
+            return item;
+          }
+          necesitaActualizar = true;
+          return {
+            ...item,
+            tableIndex: index
+          };
+        });
+        this.datosMercanciaTabla = DATOS_ACTUALIZADOS;
+        if (necesitaActualizar) {
+          this.tramiteStore.setMercanciasDatosTabla(DATOS_ACTUALIZADOS);
         }
-        necesitaActualizar = true;
-        return {
-        ...item,
-        tableIndex: index
-        };
-      });
-      this.datosMercanciaTabla = DATOS_ACTUALIZADOS;
-      if (necesitaActualizar) {
-        this.tramiteStore.setMercanciasDatosTabla(DATOS_ACTUALIZADOS);
-      }
       });
 
     this.tramiteQuery.getDatosDelTramite$
@@ -101,6 +112,14 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.datosDelTramiteFormState = data;
       });
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
   /**
    * Actualiza la lista de destinatarios finales en el store del trámite.
@@ -109,27 +128,27 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @param {MercanciaDetalle[]} event - Lista de destinatarios finales actualizada.
    * @returns {void}
    */
-    modificarMercanciasDatos(datos: MercanciaDetalle): void {
-      this.tramiteStore.actualizarMercancias(datos);
-      this.irAAcciones();
-    }
+  modificarMercanciasDatos(datos: MercanciaDetalle): void {
+    this.tramiteStore.actualizarMercancias(datos);
+    this.irAAcciones();
+  }
 
-    /**
-     * Elimina los datos de una mercancía específica del trámite actual.
-     *
-     * @param datos - Objeto de tipo `MercanciaDetalle` que contiene la información de la mercancía a eliminar.
-     *
-     * @remarks
-     * Este método verifica si el objeto `datos` es válido y, en caso afirmativo,
-     * llama al método `eliminarMercancias` del store para eliminar la mercancía correspondiente.
-     *
-     * @see TramiteStore.eliminarMercancias
-     */
-    eliminarMercanciasDatos(datos: MercanciaDetalle): void {
-      if (datos) {
-        this.tramiteStore.eliminarMercancias(datos);
-      }
+  /**
+   * Elimina los datos de una mercancía específica del trámite actual.
+   *
+   * @param datos - Objeto de tipo `MercanciaDetalle` que contiene la información de la mercancía a eliminar.
+   *
+   * @remarks
+   * Este método verifica si el objeto `datos` es válido y, en caso afirmativo,
+   * llama al método `eliminarMercancias` del store para eliminar la mercancía correspondiente.
+   *
+   * @see TramiteStore.eliminarMercancias
+   */
+  eliminarMercanciasDatos(datos: MercanciaDetalle): void {
+    if (datos) {
+      this.tramiteStore.eliminarMercancias(datos);
     }
+  }
 
   /**
    * Navega a una ruta relativa dentro del flujo actual.
