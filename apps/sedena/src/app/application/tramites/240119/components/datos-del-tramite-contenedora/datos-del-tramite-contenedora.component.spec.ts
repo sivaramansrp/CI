@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -10,19 +10,14 @@ import { Component } from '@angular/core';
 import { DatosDelTramiteContenedoraComponent } from './datos-del-tramite-contenedora.component';
 import { Tramite240119Query } from '../../estados/tramite240119Query.query';
 import { Tramite240119Store } from '../../estados/tramite240119Store.store';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ActivatedRoute } from '@angular/router';
 
 @Injectable()
-class MockTramite240119Query {}
+class MockTramite240119Query { }
 
 @Injectable()
-class MockTramite240119Store {}
-
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
+class MockTramite240119Store { }
 
 describe('DatosDelTramiteContenedoraComponent', () => {
   let fixture;
@@ -30,9 +25,8 @@ describe('DatosDelTramiteContenedoraComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ DatosDelTramiteContenedoraComponent, FormsModule, ReactiveFormsModule ],
-      declarations: [],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      imports: [FormsModule, ReactiveFormsModule],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         { provide: Tramite240119Query, useClass: MockTramite240119Query },
         { provide: Tramite240119Store, useClass: MockTramite240119Store },
@@ -44,7 +38,8 @@ describe('DatosDelTramiteContenedoraComponent', () => {
               queryParams: {}
             }
           }
-        }
+        },
+        ConsultaioQuery
       ]
     }).overrideComponent(DatosDelTramiteContenedoraComponent, {
 
@@ -53,10 +48,7 @@ describe('DatosDelTramiteContenedoraComponent', () => {
     component = fixture.debugElement.componentInstance;
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
+
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
@@ -66,8 +58,17 @@ describe('DatosDelTramiteContenedoraComponent', () => {
     component.tramiteQuery = component.tramiteQuery || {};
     component.tramiteQuery.getMercanciaTablaDatos$ = observableOf({});
     component.tramiteQuery.getDatosDelTramite$ = observableOf({});
+    component.consultaQuery = component.consultaQuery || {};
+    component.consultaQuery.selectConsultaioState$ = observableOf({});
     component.ngOnInit();
 
+  });
+
+  it('should run #updateDatosDelTramiteFormulario()', async () => {
+    component.tramiteStore = component.tramiteStore || {};
+    component.tramiteStore.updateDatosDelTramiteFormState = jest.fn();
+    component.updateDatosDelTramiteFormulario({});
+    expect(component.tramiteStore.updateDatosDelTramiteFormState).toHaveBeenCalled();
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -77,13 +78,6 @@ describe('DatosDelTramiteContenedoraComponent', () => {
     component.ngOnDestroy();
     expect(component.destroy$.next).toHaveBeenCalled();
     expect(component.destroy$.complete).toHaveBeenCalled();
-  });
-
-  it('should run #updateDatosDelTramiteFormulario()', async () => {
-    component.tramiteStore = component.tramiteStore || {};
-    component.tramiteStore.updateDatosDelTramiteFormState = jest.fn();
-    component.updateDatosDelTramiteFormulario({});
-    expect(component.tramiteStore.updateDatosDelTramiteFormState).toHaveBeenCalled();
   });
 
 });

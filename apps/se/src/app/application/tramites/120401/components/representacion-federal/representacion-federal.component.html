@@ -9,6 +9,7 @@
             name="entidad" 
             formControlName="entidad"
             (change)="getEntidad()"
+            [isDisabled]="esFormularioSoloLectura"
             >
           </app-catalogo-select>
         </div>
@@ -20,6 +21,7 @@
             name="representacion" 
             formControlName="representacion"
             (change)="getRepresentacion()"
+            [isDisabled]="esFormularioSoloLectura"
            >
           </app-catalogo-select>
         </div>

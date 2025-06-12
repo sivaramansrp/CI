@@ -1,12 +1,19 @@
+import { AutoridadService } from '../../services/autoridad.service';
 import { CapturarRequerimientoComponent } from '../capturar-requerimiento/capturar-requerimiento.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioState } from '@libs/shared/data-access-user/src';
 import { FolioTramite } from '../../models/datos-tramite.model';
+import { FormaRequerimiento } from '../../models/datos-tramite.model';
 import { FormsModule } from '@angular/forms';
-import { OnInit } from '@angular/core';
+import { OnDestroy } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { SeleccionarDocumentosComponent } from '../seleccionar-documentos/seleccionar-documentos.component';
+import { Subject } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente que representa el requerimiento del trámite.
@@ -33,28 +40,67 @@ import { SeleccionarDocumentosComponent } from '../seleccionar-documentos/selecc
   /** Ruta del archivo CSS que define los estilos del componente */
   styleUrl: './requiremento.component.css',
 })
-export class RequirementoComponent implements OnInit {
+export class RequirementoComponent implements OnDestroy {
   /** Datos del folio del trámite */
   folioTramite: FolioTramite = {} as FolioTramite;
 
   /** Índice utilizado para controlar la navegación entre pestañas */
   indice: number = 1;
 
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+  /** Subject para notificar la destrucción del componente. */
+  private destroyNotifier$: Subject<void> = new Subject();
+  /** Estado de la consulta que se obtiene del store. */
+  public consultaState!: ConsultaioState;
+
   /**
    * Constructor que inyecta el servicio de enrutamiento
    * @param router Servicio para navegar entre rutas
    */
-  constructor(private router: Router) {
+  constructor(
+    private router: Router,
+    private consultaQuery: ConsultaioQuery,
+    public autoridadService: AutoridadService
+  ) {
     // Constructor vacío, se puede agregar lógica adicional si es necesario
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
+    if (this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
   }
 
   /**
-   * Método del ciclo de vida que se ejecuta al inicializar el componente
-   * Configura los datos iniciales del folio.
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
-  ngOnInit(): void {
-    this.folioTramite = history?.state?.data;
+  guardarDatosFormulario(): void {
+    this.autoridadService
+      .agregarRequerimiento()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp: FormaRequerimiento) => {
+        if (resp) {
+          this.folioTramite = {
+            folioTramite: resp.folioTramite,
+            tipoTramite: resp.tipoTramite,
+          };
+
+          this.esDatosRespuesta = true;
+          this.autoridadService.actualizarEstadoFormulario(resp);
+        }
+      });
   }
+
+
 
   /**
    * Cambia el índice de pestaña activa
@@ -76,5 +122,13 @@ export class RequirementoComponent implements OnInit {
    */
   cancelar(): void {
     this.router.navigate(['/agace/manifiesto-aereo/main']);
+  }
+
+  /**
+   * Método que se ejecuta cuando el componente se destruye.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

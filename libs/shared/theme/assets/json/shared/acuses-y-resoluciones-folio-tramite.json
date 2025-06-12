@@ -209,9 +209,9 @@
   {
     "folioTramite": "0100001000320251005000003",
     "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
-    "dependencia": "SEDENA ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "dependencia": "SENER ADMINITRACION DE APOYO JURIDICO ADUANA 5",
     "fechInicioTramite": "2025-3-09 0035:05:00",
-    "departamento": "SEDENA",
+    "departamento": "SENER",
     "numeroDeProcedimiento": "130204"
   },
   {
@@ -751,7 +751,47 @@
     "numeroDeProcedimiento": "110219"
   },
   {
-    "folioTramite": "0100001000320251005000002",
+    "folioTramite": "0100001000320251005000143",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "SE ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "10703"
+  },
+  {
+    "folioTramite": "0100001000320251005000003",
+    "tipoDeTramite": "Donación de mercancías al Fisco Federal que se encuentren en el extranjero",
+    "dependencia": "AGA ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-04-06 0035:05:00",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "10303"
+  },
+  {
+    "folioTramite": "0100001000320251005000504",
+    "tipoDeTramite": "Permiso sanitario de importación de medicamentos destinados a pruebas de laboratorio",
+    "dependencia": "COFEPRIS ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260203"
+  },
+  {
+   "folioTramite": "0100001000320251005000003",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "SE ADMINITRACION DE APOYO JURIDICO ADUANA 7 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "120401"
+  },
+  {
+    "folioTramite": "0100001000320251005000594",
+    "tipoDeTramite": "Permiso sanitario de importación de medicamentos destinados a pruebas de laboratorio",
+    "dependencia": "COFEPRIS ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260205"
+  },
+  {
+   "folioTramite": "0100001000320251005000002",
     "tipoDeTramite": "Modificación / Aviso de Despacho de mercancía",
     "dependencia": "AGACE ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
     "fechInicioTramite": "2025-3-09 0035:05:00",
