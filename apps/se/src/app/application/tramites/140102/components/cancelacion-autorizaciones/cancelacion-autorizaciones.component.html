@@ -2,7 +2,7 @@
  <h6>Elija el programa del que desea realizar el trámite</h6>
     <div class="mt-5">
       <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="tableHeaderExtranjeros"
-        [datos]="CancelacionTabladatos"></app-tabla-dinamica>
+        [datos]="CancelacionTabladatos" [disableSeleccionTablaRadio]="consultaState.readonly"></app-tabla-dinamica>
     </div>
-    <app-programa-seleccionado> </app-programa-seleccionado>
+    <app-programa-seleccionado [consultaState]="consultaState"> </app-programa-seleccionado>
 </div>
