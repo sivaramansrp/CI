@@ -44,7 +44,7 @@ export class AgregarFusionEscisionComponent implements OnDestroy, OnInit {
    * Este FormGroup contiene los controles y validaciones necesarios para capturar
    * la información relacionada con el trámite correspondiente.
    */
-  fusionEscisionForm!: FormGroup;
+  public fusionEscisionForm!: FormGroup;
  /**
    * Opciones disponibles para indicar si la entidad está fusionada o no.
    * Utiliza el conjunto de opciones definido en `SI_NO_RADIO`.
@@ -52,13 +52,13 @@ export class AgregarFusionEscisionComponent implements OnDestroy, OnInit {
    * @remarks
    * Este arreglo se utiliza para mostrar opciones de selección (Sí/No) en la interfaz de usuario.
    */
-  fusionadaOpciones = SI_NO_RADIO;
+  public fusionadaOpciones = SI_NO_RADIO;
 
   /**
    * Arreglo que almacena los datos relacionados con las fusiones y escisiones.
    * Cada elemento del arreglo es de tipo `FusionEscision`.
    */
-  fusionEscisionData: FusionEscision[] = [];
+  public fusionEscisionData: FusionEscision[] = [];
 
   /**
    * Notificador utilizado para gestionar la destrucción de suscripciones en el componente.
@@ -72,7 +72,7 @@ export class AgregarFusionEscisionComponent implements OnDestroy, OnInit {
    * @type {Solicitud30505State}
    * @public
    */
-  public AvisoState!: Solicitud30505State;
+  public avisoState!: Solicitud30505State;
 
   /**
    * Constructor de la clase AgregarFusionEscisionComponent.
@@ -115,21 +115,21 @@ export class AgregarFusionEscisionComponent implements OnDestroy, OnInit {
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.AvisoState = seccionState;
+          this.avisoState = seccionState;
         })
       )
       .subscribe()
 
     this.fusionEscisionForm = this.fb.group({
-      certificacionModal: [this.AvisoState?.certificacionModal],
-      rfcBusquedaModal: [this.AvisoState?.rfcBusquedaModal, Validators.required],
-      razonSocialFusionante: [{ value: this.AvisoState?.razonSocialFusionante, disabled: true }, Validators.required],
-      folioVucemFusionante: [{ value: this.AvisoState?.folioVucemFusionante, disabled: true }, Validators.required],
-      fechaInicioVigenciaFusionante: [{ value: this.AvisoState?.fechaInicioVigenciaFusionante, disabled: true }, Validators.required],
-      fechaFinVigenciaFusionante: [{ value: this.AvisoState?.fechaFinVigenciaFusionante, disabled: true }, Validators.required],
+      certificacionModal: [this.avisoState?.certificacionModal],
+      rfcBusquedaModal: [this.avisoState?.rfcBusquedaModal, Validators.required],
+      razonSocialFusionante: [{ value: this.avisoState?.razonSocialFusionante, disabled: true }, Validators.required],
+      folioVucemFusionante: [{ value: this.avisoState?.folioVucemFusionante, disabled: true }, Validators.required],
+      fechaInicioVigenciaFusionante: [{ value: this.avisoState?.fechaInicioVigenciaFusionante, disabled: true }, Validators.required],
+      fechaFinVigenciaFusionante: [{ value: this.avisoState?.fechaFinVigenciaFusionante, disabled: true }, Validators.required],
 
-      rfcBusquedaModalSC: [this.AvisoState?.rfcBusquedaModalSC, Validators.required],
-      razonSocialFusionanteSC: [this.AvisoState?.razonSocialFusionanteSC, Validators.required]
+      rfcBusquedaModalSC: [this.avisoState?.rfcBusquedaModalSC, Validators.required],
+      razonSocialFusionanteSC: [this.avisoState?.razonSocialFusionanteSC, Validators.required]
     });
 
   }

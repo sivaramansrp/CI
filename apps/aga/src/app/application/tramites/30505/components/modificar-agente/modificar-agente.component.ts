@@ -2,12 +2,11 @@ import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user
 import { CommonModule,Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import { Solicitud30505AgregarAgenteState, Tramite30505AgregarAgenteStore } from '../../../../core/estados/tramites/tramite30505-agregar-agente.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { Tramite30505AgregarAgenteQuery } from '../../../../core/queries/tramite30505-agregar-agente.query';
 import productivo from '@libs/shared/theme/assets/json/30505/productivo.json';
 import { AvisoAgente } from '../../../../core/models/30505/aviso-modificacion.model';
 import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
+import { Solicitud30505State, Solicitud30505Store } from '../../../../core/estados/tramites/tramites30505.store';
 
 /**
  * Componente para agregar un agente en el trámite 30505.
@@ -33,21 +32,21 @@ export class ModificarAgenteComponent implements OnInit,OnDestroy {
    * Grupo de controles de formulario que contiene los datos relacionados con el trámite.
    * Utilizado para gestionar y validar la información ingresada por el usuario en el formulario.
    */
-  datosTramite!: FormGroup;
+  public datosTramite!: FormGroup;
 
   /**
    * Indica si el agente debe mostrarse en la interfaz de usuario.
    * 
    * Cuando es `true`, el agente es visible; cuando es `false`, el agente está oculto.
    */
-  mostrarAgente: boolean = false;
+  public mostrarAgente: boolean = false;
 
   /**
    * Indica si se debe mostrar la sección de agencia en la interfaz de usuario.
    * 
    * Cuando es `true`, la agencia se muestra; cuando es `false`, permanece oculta.
    */
-  mostrarAgencia: boolean = false;
+  public mostrarAgencia: boolean = false;
 
   /**
    * Arreglo que contiene el catálogo de sectores productivos AGACE.
@@ -66,7 +65,7 @@ export class ModificarAgenteComponent implements OnInit,OnDestroy {
    * mientras se realiza el proceso de agregar un agente. Utiliza la interfaz
    * `Solicitud30505AgregarAgenteState` para definir la estructura de los datos.
    */
-  public solicitudState!: Solicitud30505AgregarAgenteState;
+  public solicitudState!: Solicitud30505State;
 
   /**
    * Notificador utilizado para destruir suscripciones y evitar fugas de memoria.
@@ -76,8 +75,23 @@ export class ModificarAgenteComponent implements OnInit,OnDestroy {
    */
   public destroyNotifier$: Subject<void> = new Subject();
 
-  public AgenteDatos:AvisoAgente[] = [];
-
+  /**
+   * Arreglo que contiene los datos de los agentes.
+   * Cada elemento del arreglo es de tipo `AvisoAgente`.
+   * 
+   * @type {AvisoAgente[]}
+   */
+  public agenteDatos:AvisoAgente[] = [];
+ 
+   /**
+   * Representa el agente seleccionado en el componente.
+   * 
+   * @type {AvisoAgente}
+   * @remarks
+   * Este objeto almacena la información del agente que ha sido seleccionado
+   * para su modificación. Inicialmente se define como un objeto vacío
+   * con el tipo `AvisoAgente`.
+   */
   public selectedAgente = {} as AvisoAgente;
   
 
@@ -91,7 +105,7 @@ export class ModificarAgenteComponent implements OnInit,OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private tramite30505Store: Tramite30505AgregarAgenteStore,
+    private tramite30505Store: Solicitud30505Store,
     private tercerosService: TercerosRelacionadosService,
     private ubicaccion : Location
   ) {}
@@ -202,7 +216,7 @@ export class ModificarAgenteComponent implements OnInit,OnDestroy {
   public setValoresStore(
     form: FormGroup,
     campo: string,
-    metodoNombre: keyof Tramite30505AgregarAgenteStore,
+    metodoNombre: keyof Solicitud30505Store,
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite30505Store[metodoNombre] as (value: unknown) => void)(VALOR);
@@ -236,8 +250,8 @@ export class ModificarAgenteComponent implements OnInit,OnDestroy {
       razonAgencia: VALOR_FORMULARIO.razonAgencia
     };
 
-    this.AgenteDatos.push(NUEVO_AGENTE);
-    this.tramite30505Store.updateAgenteDatos(this.AgenteDatos);
+    this.agenteDatos.push(NUEVO_AGENTE);
+    this.tramite30505Store.updateAgenteDatos(this.agenteDatos);
     this.datosTramite.reset();
     this.ubicaccion.back();
   }

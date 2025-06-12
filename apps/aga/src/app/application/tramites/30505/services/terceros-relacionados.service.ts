@@ -2,7 +2,7 @@ import { AvisoAgente, FusionDatos, FusionEscision, TercerosRelacionados } from '
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { Solicitud30505Store } from '../../../core/estados/tramites/tramites30505.store';
+import { Solicitud30505State, Solicitud30505Store } from '../../../core/estados/tramites/tramites30505.store';
 
 /**
  * Servicio para gestionar operaciones relacionadas con terceros en el trámite 30505.
@@ -98,13 +98,41 @@ export class TercerosRelacionadosService {
     this.agenteSource.next(data);
   }
 
-   getAvisoDatos(): Observable<any> {
-    return this.http.get<any>('assets/json/280101/PermisoDeExportacion.json');
+   getAvisoDatos(): Observable<Solicitud30505State> {
+    return this.http.get<any>('assets/json/30505/aviso-modificacion.json');
   }
 
-  setDatosFormulario(datos: any): void {
-    // Aquí puedes implementar la lógica para establecer los datos del formulario
-    // Por ejemplo, podrías guardar los datos en un servicio o en el estado de la aplicación
-    console.log('Datos del formulario establecidos:', datos);
+  setDatosFormulario(datos:Solicitud30505State): void {
+    this.tramiteStore.setNumeroEstablecimiento(datos.numeroEstablecimiento);
+    this.tramiteStore.setDescClobGenerica(datos.descClobGenerica);
+    this.tramiteStore.setActividadProductiva(datos.actividadProductiva);
+    this.tramiteStore.setFechaInicioVigencia(datos.fechaInicioVigencia);
+    this.tramiteStore.setFechaFinVigencia(datos.fechaFinVigencia);
+    this.tramiteStore.setCheckboxDatos(datos.selectedCheckbox);
+    this.tramiteStore.setFolioAcuse(datos.folioAcuse);
+    this.tramiteStore.setTipoSolicitudPexim(datos.tipoSolicitudPexim);
+    this.tramiteStore.setCapacidadAlmacenamiento(datos.capacidadAlmacenamiento);
+    this.tramiteStore.setTipoCaat(datos.tipoCaat);
+    this.tramiteStore.setTipoProgFomExp(datos.tipoProgFomExp);
+    this.tramiteStore.setTipoTransito(datos.tipoTransito);
+    this.tramiteStore.setMedioTransporte(datos.medioTransporte);
+    this.tramiteStore.setNombreBanco(datos.nombreBanco);
+    this.tramiteStore.setNomOficialAutorizado(datos.nomOficialAutorizado);
+    this.tramiteStore.setObservaciones(datos.observaciones);
+    this.tramiteStore.setEmpresaControladora(datos.empresaControladora);
+    this.tramiteStore.setDescripcionLugarEmbarque(datos.descripcionLugarEmbarque);
+    this.tramiteStore.setNumeroEstablecimiento(datos.numeroEstablecimiento);
+    this.tramiteStore.updateFusionDatos(datos.fusionEscisionData || []);
+    this.tramiteStore.updateAgenteDatos(datos.agenteDatos || {});
+    if (datos && typeof (datos as any).avisoDatos === 'object' && (datos as any).avisoDatos !== null) {
+      Object.entries((datos as any).avisoDatos).forEach(([key, value]) => {
+        this.tramiteStore.setAvisoDatos(String(value),String(key));
+      });
+    }
+    if (datos && typeof (datos as any).avisoCheckbox === 'object' && (datos as any).avisoCheckbox !== null) {
+      Object.entries((datos as any).avisoCheckbox).forEach(([key, value]) => {
+        this.tramiteStore.setAviso(Boolean(value),String(key));
+      });
+    }
   }
 }

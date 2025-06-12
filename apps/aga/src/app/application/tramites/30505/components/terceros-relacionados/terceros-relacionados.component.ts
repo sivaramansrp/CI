@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { TercerosRelacionados } from '../../../../core/models/30505/aviso-modificacion.model';
 import { TablaAcciones, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
@@ -63,7 +63,12 @@ export class TercerosRelacionadosComponent implements OnDestroy,OnInit {
    */
   public destroyNotifier$: Subject<void> = new Subject();
 
-
+   /**
+    * Indica si el componente debe estar en modo solo lectura.
+    * Cuando es `true`, los campos y acciones estarán deshabilitados para evitar modificaciones.
+    * Valor predeterminado: `false`.
+    */
+   @Input() soloLectura: boolean = false;
   /**
    * Crea una nueva instancia del componente e inyecta el servicio TercerosRelacionadosService.
    * 

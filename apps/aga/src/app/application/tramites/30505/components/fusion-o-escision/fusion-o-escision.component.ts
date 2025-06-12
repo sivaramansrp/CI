@@ -1,6 +1,6 @@
 import { AVISO_RADIO, FUSION_CONFIGURATION_TABLA, FUSION_ESCISION_RADIO, SI_NO_RADIO } from '../../../../core/enums/30505/aviso-de-modificacion.enum';
 import { ActivatedRoute ,Router } from '@angular/router';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FusionEscision, TABLE_ID } from '../../../../core/models/30505/aviso-modificacion.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule , Validators } from '@angular/forms';
 import { InputRadioComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
@@ -45,33 +45,33 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
    * Representa el formulario reactivo utilizado en el componente para gestionar los datos de fusión o escisión.
    * Es una instancia de `FormGroup` que contiene los controles y validaciones del formulario.
    */
-  formulario!: FormGroup;
+  public formulario!: FormGroup;
 
   /**
    * Indica si el mensaje DV (Dígito Verificador) es visible en la interfaz de usuario.
    * 
    * @default false El mensaje no es visible por defecto.
    */
-  dvMessageVisible: boolean = false;
+  public dvMessageVisible: boolean = false;
 
 
   /**
    * Indica si el div completo es visible o no en la interfaz de usuario.
    * Cuando es `true`, el div se muestra; cuando es `false`, el div está oculto.
    */
-  divCompletoVisible: boolean = false;
+  public divCompletoVisible: boolean = false;
   /**
    * Indica si la certificación principal es visible en la interfaz de usuario.
    * 
    * Cuando es `true`, la certificación principal se muestra al usuario.
    * Cuando es `false`, la certificación principal permanece oculta.
    */
-  conCertificacionPrincipalVisible: boolean = false;
+  public conCertificacionPrincipalVisible: boolean = false;
   /**
    * Indica si el elemento relacionado con la certificación principal debe ser visible o no.
    * Cuando es `true`, el elemento no se muestra en la interfaz de usuario.
    */
-  sinCertificacionPrincipalVisible: boolean = false;
+  public sinCertificacionPrincipalVisible: boolean = false;
   
   /**
    * Arreglo que almacena los datos relacionados con la fusión o escisión.
@@ -79,7 +79,7 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
    * 
    * @type {FusionEscision[]}
    */
-  gridFusionEscisionData: FusionEscision[] = [];
+  public gridFusionEscisionData: FusionEscision[] = [];
 
   /**
    * Configuración utilizada para la tabla de fusión.
@@ -89,7 +89,7 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
    * 
    * @see FUSION_CONFIGURATION_TABLA
    */
-  FUSION_CONFIGURATION_TABLA = FUSION_CONFIGURATION_TABLA;
+  public FUSION_CONFIGURATION_TABLA = FUSION_CONFIGURATION_TABLA;
 
   /**
    * Referencia a la clase o interfaz `TablaSeleccion`.
@@ -99,7 +99,7 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
    * 
    * @see TablaSeleccion
    */
-  TablaSeleccion = TablaSeleccion;
+  public tablaSeleccion = TablaSeleccion;
   
   /**
    * Identificador único de la tabla utilizada en el componente.
@@ -108,7 +108,7 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
    * Esta propiedad almacena el valor constante `TABLE_ID`, que se utiliza para identificar la tabla específica
    * dentro del componente de fusión o escisión.
    */
-  TableId:string = TABLE_ID;
+  public tableId:string = TABLE_ID;
 
   /**
    * Opciones disponibles para el componente de radio botones.
@@ -117,7 +117,7 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
    * utilizando la constante `AVISO_RADIO`. Generalmente, estas opciones permiten al usuario
    * seleccionar entre diferentes alternativas relacionadas con el aviso de fusión o escisión.
    */
-  radioOpciones = AVISO_RADIO;
+  public radioOpciones = AVISO_RADIO;
 
   /**
    * Opciones disponibles para el radio de fusión o escisión.
@@ -127,7 +127,7 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
    * 
    * @see FUSION_ESCISION_RADIO - Constante que define las opciones disponibles.
    */
-  fusionEscisionOpciones = FUSION_ESCISION_RADIO;
+  public fusionEscisionOpciones = FUSION_ESCISION_RADIO;
 
   /**
    * Opciones disponibles para indicar si la empresa está fusionada o escindida.
@@ -136,7 +136,7 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
    * @remarks
    * Este arreglo se utiliza para mostrar opciones de selección (Sí/No) en la interfaz de usuario.
    */
-  fusionadaOpciones = SI_NO_RADIO;
+  public fusionadaOpciones = SI_NO_RADIO;
 
   /**
    * Notificador utilizado para gestionar la destrucción de suscripciones en el componente.
@@ -152,7 +152,7 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
    * @type {Solicitud30505State}
    * @public
    */
-  public AvisoState!: Solicitud30505State;
+  public avisoState!: Solicitud30505State;
 
   /**
    * Arreglo que contiene las fusiones o escisiones seleccionadas por el usuario.
@@ -160,7 +160,14 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
    * Cada elemento del arreglo es una instancia de `FusionEscision`, que representa
    * una fusión o escisión específica dentro del trámite.
    */
-  selectedFusion:FusionEscision[] = [];
+  public selectedFusion:FusionEscision[] = [];
+
+    /**
+     * Indica si el componente debe estar en modo solo lectura.
+     * Cuando es `true`, los campos y acciones estarán deshabilitados para evitar modificaciones.
+     * Valor predeterminado: `false`.
+     */
+    @Input() soloLectura: boolean = false;
 
   /**
    * Constructor del componente FusionOEscision.
@@ -201,35 +208,38 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
             .pipe(
               takeUntil(this.destroyNotifier$),
               map((seccionState) => {
-                this.AvisoState = seccionState;
+                this.avisoState = seccionState;
               })
             )
             .subscribe()
             
   this.formulario = this.fb.group({
-      'capacidadAlmacenamiento': [this.AvisoState?.capacidadAlmacenamiento2, Validators.required],
-      'numeroTotalCarros': [this.AvisoState?.numeroTotalCarros, Validators.required],
-      'cantidadBienes': [this.AvisoState?.cantidadBienes, Validators.required],
-      'fechaInspeccion': [this.AvisoState?.fechaInspeccion, Validators.required],
-      'descripcionClobGenerica2': [this.AvisoState?.descripcionClobGenerica2, Validators.required],
-      'rfc': [this.AvisoState?.rfcIdc, Validators.required],
-      'razonSocial': [{ value: this.AvisoState?.razonSocial,disabled:true}, Validators.required],
-      'razonSocialSC':[this.AvisoState?.razonSocialSC, Validators.required],
-      'numFolioTramite': [{ value: this.AvisoState?.numFolioTramite, disabled: true }, Validators.required],
-      'fechaInicioVigencia': [{ value: this.AvisoState?.fechaInicioVigencia, disabled: true }, Validators.required],
-      'fechaFinVigencia': [{ value: this.AvisoState?.fechafinVigencia2, disabled: true }, Validators.required]
+      'capacidadAlmacenamiento': [this.avisoState?.capacidadAlmacenamiento2, Validators.required],
+      'numeroTotalCarros': [this.avisoState?.numeroTotalCarros, Validators.required],
+      'cantidadBienes': [this.avisoState?.cantidadBienes, Validators.required],
+      'fechaInspeccion': [this.avisoState?.fechaInspeccion, Validators.required],
+      'descripcionClobGenerica2': [this.avisoState?.descripcionClobGenerica2, Validators.required],
+      'rfc': [this.avisoState?.rfcIdc, Validators.required],
+      'razonSocial': [{ value: this.avisoState?.razonSocial,disabled:true}, Validators.required],
+      'razonSocialSC':[this.avisoState?.razonSocialSC, Validators.required],
+      'numFolioTramite': [{ value: this.avisoState?.numFolioTramite, disabled: true }, Validators.required],
+      'fechaInicioVigencia': [{ value: this.avisoState?.fechaInicioVigencia, disabled: true }, Validators.required],
+      'fechaFinVigencia': [{ value: this.avisoState?.fechafinVigencia2, disabled: true }, Validators.required]
     });
     
-    if(this.AvisoState?.numeroTotalCarros === "0" || this.AvisoState?.numeroTotalCarros === '1'){
+    if(this.avisoState?.numeroTotalCarros === "0" || this.avisoState?.numeroTotalCarros === '1'){
      this.divCompletoVisible = true; 
     }
-    if(this.AvisoState?.cantidadBienes === "0"){
+    if(this.avisoState?.cantidadBienes === "0"){
     this.sinCertificacionPrincipalVisible = true;
     }
-    if(this.AvisoState?.cantidadBienes === "1"){
+    if(this.avisoState?.cantidadBienes === "1"){
     this.conCertificacionPrincipalVisible = true;
     }
-    this.gridFusionEscisionData = this.AvisoState?.fusionEscisionData;
+    this.gridFusionEscisionData = this.avisoState?.fusionEscisionData;
+    if(this.soloLectura) {
+      this.formulario.disable(); // Disable the form if in read-only mode
+    }
   }
   
    /**

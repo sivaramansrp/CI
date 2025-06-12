@@ -75,33 +75,32 @@
         <solicitante></solicitante>
       } @case (2) { 
           @if(esDatosRespuesta){
-        <app-tipo-de-aviso (checkboxChange)="toggleDataVisibility($event)"></app-tipo-de-aviso>
+        <app-tipo-de-aviso (checkboxChange)="toggleDataVisibility($event)" [soloLectura]="esFormularioSoloLectura"></app-tipo-de-aviso>
           }
       } @case (3) { 
         @if(esDatosRespuesta){
-
-         <app-terceros-relacionados></app-terceros-relacionados>
+         <app-terceros-relacionados [soloLectura]="esFormularioSoloLectura"></app-terceros-relacionados>
         }
       }
       @case (4){
           @if(esDatosRespuesta){
-    <app-fusion-o-escision></app-fusion-o-escision>
+    <app-fusion-o-escision [soloLectura]="esFormularioSoloLectura"></app-fusion-o-escision>
           }
       }
 
       @case(5){
           @if(esDatosRespuesta){
-      <app-aviso-agente></app-aviso-agente>
+      <app-aviso-agente [soloLectura]="esFormularioSoloLectura"></app-aviso-agente>
           }
       }
       @case(6){
           @if(esDatosRespuesta){
-      <app-aviso-calculo></app-aviso-calculo>
+      <app-aviso-calculo [soloLectura]="esFormularioSoloLectura"></app-aviso-calculo>
           }
       }
       @case(7){
           @if(esDatosRespuesta){
-       <app-cambio-denominacion-razon-social></app-cambio-denominacion-razon-social> 
+       <app-cambio-denominacion-razon-social [soloLectura]="esFormularioSoloLectura"></app-cambio-denominacion-razon-social> 
           }
       }
     }

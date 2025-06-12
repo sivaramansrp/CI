@@ -2,11 +2,11 @@ import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user
 import { CommonModule,Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import { Solicitud30505AgregarAgenteState, Tramite30505AgregarAgenteStore } from '../../../../core/estados/tramites/tramite30505-agregar-agente.store';
 import { Subject, map, takeUntil } from 'rxjs';
-import { Tramite30505AgregarAgenteQuery } from '../../../../core/queries/tramite30505-agregar-agente.query';
 import productivo from '@libs/shared/theme/assets/json/30505/productivo.json';
 import { AvisoAgente } from '../../../../core/models/30505/aviso-modificacion.model';
+import { Solicitud30505State, Solicitud30505Store } from '../../../../core/estados/tramites/tramites30505.store';
+import { Solicitud30505Query } from '../../../../core/queries/tramites30505.query';
 
 /**
  * Componente para agregar un agente en el trámite 30505.
@@ -32,21 +32,21 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
    * Grupo de controles de formulario que contiene los datos relacionados con el trámite.
    * Utilizado para gestionar y validar la información ingresada por el usuario en el formulario.
    */
-  datosTramite!: FormGroup;
+ public datosTramite!: FormGroup;
 
   /**
    * Indica si el agente debe mostrarse en la interfaz de usuario.
    * 
    * Cuando es `true`, el agente es visible; cuando es `false`, el agente está oculto.
    */
-  mostrarAgente: boolean = false;
+  public mostrarAgente: boolean = false;
 
   /**
    * Indica si se debe mostrar la sección de agencia en la interfaz de usuario.
    * 
    * Cuando es `true`, la agencia se muestra; cuando es `false`, permanece oculta.
    */
-  mostrarAgencia: boolean = false;
+  public mostrarAgencia: boolean = false;
 
   /**
    * Arreglo que contiene el catálogo de sectores productivos AGACE.
@@ -65,7 +65,7 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
    * mientras se realiza el proceso de agregar un agente. Utiliza la interfaz
    * `Solicitud30505AgregarAgenteState` para definir la estructura de los datos.
    */
-  public solicitudState!: Solicitud30505AgregarAgenteState;
+  public solicitudState!: Solicitud30505State;
 
   /**
    * Notificador utilizado para destruir suscripciones y evitar fugas de memoria.
@@ -81,7 +81,7 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
    * 
    * @type {AvisoAgente[]}
    */
-  public AgenteDatos:AvisoAgente[] = [];
+  public agenteDatos:AvisoAgente[] = [];
 
 
   /**
@@ -94,8 +94,8 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
    */
   constructor(
     private fb: FormBuilder,
-    private tramite30505Store: Tramite30505AgregarAgenteStore,
-    private tramite30505Query: Tramite30505AgregarAgenteQuery,
+    private tramite30505Store: Solicitud30505Store,
+    private tramite30505Query: Solicitud30505Query,
     private ubicaccion : Location
   ) {}
 
@@ -135,17 +135,17 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
   public crearFormulario():void{
     this.datosTramite = this.fb.group({
       tipoFigura: [this.solicitudState?.tipoFigura, Validators.required],
-      patenteModificada: ['', Validators.required],
+      patenteModificada: [this.solicitudState?.patenteModificada, Validators.required],
       numPatenteModal: [this.solicitudState?.numPatenteModal, [Validators.required, Validators.maxLength(4)]],
-      rfcModal: [{ value: ''}, [Validators.required, Validators.maxLength(13)]],
+      rfcModal: [{ value: this.solicitudState?.rfcModal}, [Validators.required, Validators.maxLength(13)]],
       obligFisc: [this.solicitudState?.obligFisc, Validators.requiredTrue],
       autPantente: [this.solicitudState?.autPantente, Validators.requiredTrue],
-      nombre: [{ value: '', disabled: true }, Validators.required],
-      apellidoPaterno: [{ value: '', disabled: true }, Validators.required],
-      apellidoMaterno: [{ value: '', disabled: true }, Validators.required],
-      razonSocial: ['', Validators.required],
+      nombre: [{ value: this.solicitudState?.nombre, disabled: true }, Validators.required],
+      apellidoPaterno: [{ value: this.solicitudState?.apellidoPaterno, disabled: true }, Validators.required],
+      apellidoMaterno: [{ value: this.solicitudState?.apellidoMaterno, disabled: true }, Validators.required],
+      razonSocial: [this.solicitudState.razonSocialAgente, Validators.required],
       patente2: [this.solicitudState?.patente2, [Validators.required, Validators.maxLength(15)]],
-      razonAgencia: ['', Validators.required]
+      razonAgencia: [this.solicitudState?.razonAgencia, Validators.required]
     });
   }
 
@@ -204,7 +204,7 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
   public setValoresStore(
     form: FormGroup,
     campo: string,
-    metodoNombre: keyof Tramite30505AgregarAgenteStore,
+    metodoNombre: keyof Solicitud30505Store,
   ): void {
     const VALOR = form.get(campo)?.value;
     (this.tramite30505Store[metodoNombre] as (value: unknown) => void)(VALOR);
@@ -249,8 +249,8 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
       razonAgencia: VALOR_FORMULARIO.razonAgencia
     };
 
-    this.AgenteDatos.push(NUEVO_AGENTE);
-    this.tramite30505Store.updateAgenteDatos(this.AgenteDatos);
+    this.agenteDatos.push(NUEVO_AGENTE);
+    this.tramite30505Store.updateAgenteDatos(this.agenteDatos);
     this.datosTramite.reset();
     this.ubicaccion.back();
   }

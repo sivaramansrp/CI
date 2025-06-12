@@ -1,5 +1,5 @@
 import { AlertComponent, InputCheckComponent } from '@libs/shared/data-access-user/src';
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud30505State, Solicitud30505Store } from '../../../../core/estados/tramites/tramites30505.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -32,7 +32,7 @@ export class TipoDeAvisoComponent implements OnDestroy,OnInit {
    * Índice actual utilizado para rastrear la posición o el estado dentro del componente.
    * @default 0
    */
-  indice: number = 0;
+  public indice: number = 0;
 
   /**
    * Evento emitido cuando cambia el estado de los checkboxes.
@@ -50,7 +50,7 @@ export class TipoDeAvisoComponent implements OnDestroy,OnInit {
    * @type {FormGroup}
    * @see https://angular.io/api/forms/FormGroup
    */
-  avisoForm!: FormGroup;
+  public avisoForm!: FormGroup;
 
   /**
    * Contiene el texto del aviso, inicializado con el valor de la constante AVISO_MOD.
@@ -59,7 +59,7 @@ export class TipoDeAvisoComponent implements OnDestroy,OnInit {
    * Esta propiedad se utiliza para mostrar o manipular el mensaje de aviso correspondiente
    * al tipo de trámite seleccionado en el componente.
    */
-  TEXTO: string = AVISO_MOD;
+  public TEXTO: string = AVISO_MOD;
 
   /**
    * Notificador utilizado para destruir suscripciones y evitar fugas de memoria.
@@ -74,14 +74,20 @@ export class TipoDeAvisoComponent implements OnDestroy,OnInit {
      * @type {Solicitud30505State}
      * @public
      */
-    public AvisoState!: Solicitud30505State;
+  public avisoState!: Solicitud30505State;
 
   /**
    * Arreglo que almacena los identificadores de los checkboxes seleccionados.
    * Cada elemento del arreglo representa el valor de un checkbox que ha sido marcado por el usuario.
    */
-  selectedCheckboxes: string[] = [];
+  public selectedCheckboxes: string[] = [];
 
+  /**
+   * Indica si el componente debe estar en modo solo lectura.
+   * Cuando es `true`, los campos y acciones estarán deshabilitados para evitar modificaciones.
+   * Valor predeterminado: `false`.
+   */
+  @Input() soloLectura: boolean = false;
   /**
    * Constructor de la clase TipoDeAvisoComponent.
    * 
@@ -120,25 +126,28 @@ export class TipoDeAvisoComponent implements OnDestroy,OnInit {
         .pipe(
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {
-            this.AvisoState = seccionState;
+            this.avisoState = seccionState;
           })
         )
         .subscribe()
 
     this.avisoForm = this.fb.group({
       numeroDeOficio: [
-        { value: this.AvisoState?.numeroDeOficio, disabled: true },
+        { value: this.avisoState?.numeroDeOficio, disabled: true },
       ],
       fechaFinVigencia: [
-        { value: this.AvisoState?.fechaFinVigencia, disabled: true },
+        { value: this.avisoState?.fechaFinVigencia, disabled: true },
       ],
-      avisoDeMod: [this.AvisoState?.avisoDeMod],
-      avisoDeFusion: [this.AvisoState?.avisoDeFusion],
-      avisoDeCal: [this.AvisoState?.avisoDeCal],
-      avisoDenom: [this.AvisoState?.avisoDenom]
+      avisoDeMod: [this.avisoState?.avisoDeMod],
+      avisoDeFusion: [this.avisoState?.avisoDeFusion],
+      avisoDeCal: [this.avisoState?.avisoDeCal],
+      avisoDenom: [this.avisoState?.avisoDenom]
     });
     
-    this.selectedCheckboxes = this.AvisoState?.selectedCheckbox;
+    this.selectedCheckboxes = this.avisoState?.selectedCheckbox;
+    if(this.soloLectura) {
+      this.avisoForm.disable();
+    }
   }
 
 

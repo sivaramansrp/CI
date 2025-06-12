@@ -1,5 +1,5 @@
 import { AVISO_CALCULO_OPCIONES, AVISO_PORCENTAJE_OPCIONES } from '../../../../core/enums/30505/aviso-de-modificacion.enum';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud30505State, Solicitud30505Store } from '../../../../core/estados/tramites/tramites30505.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -35,7 +35,7 @@ export class AvisoCalculoComponent implements OnInit, OnDestroy {
    * en el componente correspondiente. Permite el manejo de los controles y validaciones
    * asociadas a la funcionalidad del aviso de cálculo.
    */
-  avisoDeCalForm!: FormGroup;
+  public avisoDeCalForm!: FormGroup;
 
   /**
    * Indica si el monto de la contribución es visible en la interfaz de usuario.
@@ -43,7 +43,7 @@ export class AvisoCalculoComponent implements OnInit, OnDestroy {
    * Cuando es `true`, el monto de la contribución se muestra al usuario.
    * Cuando es `false`, el monto permanece oculto.
    */
-  montoContribuVisible: boolean = false;
+  public montoContribuVisible: boolean = false;
 
 
   /**
@@ -52,7 +52,7 @@ export class AvisoCalculoComponent implements OnInit, OnDestroy {
    * Cuando es `true`, el monto total de las contribuciones se muestra al usuario.
    * Cuando es `false`, el monto total permanece oculto.
    */
-  montoTotalContribucionesVisible: boolean = false;
+  public montoTotalContribucionesVisible: boolean = false;
 
 
   /**
@@ -62,7 +62,7 @@ export class AvisoCalculoComponent implements OnInit, OnDestroy {
    * que se muestra cuando ocurre un problema durante el proceso de cálculo.
    * Si no hay errores, el valor será una cadena vacía.
    */
-  tblErrorCalculo: string = '';
+  public tblErrorCalculo: string = '';
 
   /**
    * Representa el estado actual de la solicitud para el trámite 30505.
@@ -87,7 +87,7 @@ export class AvisoCalculoComponent implements OnInit, OnDestroy {
    * en el componente de aviso de cálculo. Las opciones son importadas
    * desde la constante `AVISO_CALCULO_OPCIONES`.
    */
-  avisoCalculoOpciones = AVISO_CALCULO_OPCIONES;
+  public avisoCalculoOpciones = AVISO_CALCULO_OPCIONES;
 
   /**
    * Opciones disponibles para seleccionar el porcentaje en el aviso de cálculo.
@@ -95,8 +95,14 @@ export class AvisoCalculoComponent implements OnInit, OnDestroy {
    * Esta propiedad utiliza la constante `AVISO_PORCENTAJE_OPCIONES` para poblar
    * las opciones que el usuario puede elegir en el componente.
    */
-  porcentajeOpciones = AVISO_PORCENTAJE_OPCIONES;
-
+  public porcentajeOpciones = AVISO_PORCENTAJE_OPCIONES;
+ 
+  /**
+   * Indica si el componente debe estar en modo solo lectura.
+   * Cuando es `true`, los campos y acciones estarán deshabilitados para evitar modificaciones.
+   * Valor predeterminado: `false`.
+   */
+  @Input() soloLectura: boolean = false;
 
   /**
    * Constructor del componente AvisoCalculoComponent.
@@ -149,6 +155,9 @@ export class AvisoCalculoComponent implements OnInit, OnDestroy {
     });
 
     this.validaRadioCalculo();
+    if(this.soloLectura) {
+      this.avisoDeCalForm.disable();
+    }
   }
 
   /**

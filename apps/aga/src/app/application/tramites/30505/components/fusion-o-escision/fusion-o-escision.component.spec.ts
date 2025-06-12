@@ -44,7 +44,7 @@ describe('FusionOEscisionComponent', () => {
       tramiteStoreMock,
       tramiteQueryMock
     );
-    component.AvisoState = {
+    component.avisoState = {
       capacidadAlmacenamiento2: '100',
       numeroTotalCarros: '1',
       cantidadBienes: '1',

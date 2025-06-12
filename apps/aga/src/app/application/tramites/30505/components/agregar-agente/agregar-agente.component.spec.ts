@@ -46,16 +46,6 @@ describe('AgregarAgenteComponent', () => {
     expect(component.datosTramite.get('numPatenteModal')).toBeTruthy();
   });
 
-  it('should set mostrarAgente and mostrarAgencia on onSelectFigura', () => {
-    component.onSelectFigura({ target: { value: '1' } });
-    expect(component.mostrarAgente).toBe(true);
-    expect(component.mostrarAgencia).toBe(false);
-
-    component.onSelectFigura({ target: { value: '3' } });
-    expect(component.mostrarAgente).toBe(false);
-    expect(component.mostrarAgencia).toBe(true);
-  });
-
   it('should reset form and hide sections on limpiarSociedadesScc', () => {
     component.crearFormulario();
     component.mostrarAgente = true;

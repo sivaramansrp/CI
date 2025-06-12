@@ -44,7 +44,7 @@ export class ModificarFusionEscisionComponent implements OnDestroy, OnInit {
    * Este FormGroup contiene los controles y validaciones necesarios para capturar
    * la información relacionada con el trámite correspondiente.
    */
-  fusionEscisionForm!: FormGroup;
+  public fusionEscisionForm!: FormGroup;
  /**
    * Opciones disponibles para indicar si la entidad está fusionada o no.
    * Utiliza el conjunto de opciones definido en `SI_NO_RADIO`.
@@ -52,27 +52,19 @@ export class ModificarFusionEscisionComponent implements OnDestroy, OnInit {
    * @remarks
    * Este arreglo se utiliza para mostrar opciones de selección (Sí/No) en la interfaz de usuario.
    */
-  fusionadaOpciones = SI_NO_RADIO;
+  public fusionadaOpciones = SI_NO_RADIO;
 
   /**
    * Arreglo que almacena los datos relacionados con las fusiones y escisiones.
    * Cada elemento del arreglo es de tipo `FusionEscision`.
    */
-  fusionEscisionData: FusionEscision[] = [];
+  public fusionEscisionData: FusionEscision[] = [];
 
   /**
    * Notificador utilizado para gestionar la destrucción de suscripciones en el componente.
    * Se emite un valor cuando el componente se destruye, permitiendo cancelar observables y evitar fugas de memoria.
    */
   public destroyNotifier$: Subject<void> = new Subject();
-
-  /**
-   * Representa el estado actual del aviso dentro del flujo de la solicitud 30505.
-   * 
-   * @type {Solicitud30505State}
-   * @public
-   */
-  public AvisoState!: Solicitud30505State;
 
   /**
    * Objeto que representa la fusión o escisión seleccionada.
@@ -121,9 +113,6 @@ export class ModificarFusionEscisionComponent implements OnDestroy, OnInit {
   }
   /**
    * Inicializa el formulario reactivo para el componente de fusión/escisión.
-   * 
-   * - Suscribe al observable `selectSolicitud$` para obtener el estado actual de la solicitud y actualizar la propiedad `AvisoState`.
-   * - Crea el formulario `fusionEscisionForm` con los controles necesarios, asignando valores iniciales desde `AvisoState`.
    * - Algunos campos del formulario se inicializan como deshabilitados y con validadores requeridos.
    * - La suscripción al observable se gestiona con `takeUntil` para evitar fugas de memoria.
    * 

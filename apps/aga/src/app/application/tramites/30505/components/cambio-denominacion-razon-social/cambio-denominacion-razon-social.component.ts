@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { Solicitud30505State, Solicitud30505Store } from '../../../../core/estados/tramites/tramites30505.store';
 import { Subject, map , takeUntil } from 'rxjs';
@@ -34,7 +34,7 @@ export class CambioDenominacionRazonSocialComponent implements OnDestroy,OnInit{
    * Formulario reactivo para gestionar el aviso de cambio de denominación o razón social.
    * Utilizado para capturar y validar los datos relacionados con el trámite correspondiente.
    */
-  avisoCambioRazonSocialForm!: FormGroup;
+  public avisoCambioRazonSocialForm!: FormGroup;
 
 
   /**
@@ -42,14 +42,14 @@ export class CambioDenominacionRazonSocialComponent implements OnDestroy,OnInit{
    * 
    * Cuando es `true`, el mensaje se muestra; cuando es `false`, el mensaje permanece oculto.
    */
-  mostrarMensaje: boolean = false;
+  public mostrarMensaje: boolean = false;
 
 
   /**
    * Mensaje de error que se muestra cuando la razón social ingresada es igual a la anterior.
    * Se utiliza para informar al usuario que no se han realizado cambios en la razón social.
    */
-  tblErrorRazonSocialIgual: string = '';
+  public tblErrorRazonSocialIgual: string = '';
 
 
   /**
@@ -57,7 +57,7 @@ export class CambioDenominacionRazonSocialComponent implements OnDestroy,OnInit{
    * Se utiliza para mostrar información de error al usuario cuando ocurre un problema
    * con el folio del acuse en el componente de cambio de denominación o razón social.
    */
-  tblErrorFolioAcuse: string = '';
+  public tblErrorFolioAcuse: string = '';
 
 
   /**
@@ -76,8 +76,14 @@ export class CambioDenominacionRazonSocialComponent implements OnDestroy,OnInit{
    * 
    * @type {Solicitud30505State}
    */
-  public AvisoState!: Solicitud30505State;
-
+  public avisoState!: Solicitud30505State;
+ 
+    /**
+     * Indica si el componente debe estar en modo solo lectura.
+     * Cuando es `true`, los campos y acciones estarán deshabilitados para evitar modificaciones.
+     * Valor predeterminado: `false`.
+     */
+    @Input() soloLectura: boolean = false;
 
   /**
    * Constructor de la clase.
@@ -118,19 +124,22 @@ export class CambioDenominacionRazonSocialComponent implements OnDestroy,OnInit{
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
-          this.AvisoState = seccionState;
+          this.avisoState = seccionState;
         })
       )
       .subscribe()
 
     this.avisoCambioRazonSocialForm = this.fb.group({
-      rfcVucem: [{ value: this.AvisoState?.rfcVucem, disabled: true }],
-      razonSocialVucem: [{ value: this.AvisoState?.razonSocialVucem, disabled: true }],
-      rfcIdc: [{ value: this.AvisoState?.rfcIdc, disabled: true }],
-      razonSocialIdc: [{ value: this.AvisoState?.razonSocialIdc, disabled: true }],
-      folioAcuse: [this.AvisoState?.folioAcuse, Validators.required]
+      rfcVucem: [{ value: this.avisoState?.rfcVucem, disabled: true }],
+      razonSocialVucem: [{ value: this.avisoState?.razonSocialVucem, disabled: true }],
+      rfcIdc: [{ value: this.avisoState?.rfcIdc, disabled: true }],
+      razonSocialIdc: [{ value: this.avisoState?.razonSocialIdc, disabled: true }],
+      folioAcuse: [this.avisoState?.folioAcuse, Validators.required]
 
     });
+    if (this.soloLectura) {
+      this.avisoCambioRazonSocialForm.disable();
+    }
   }
 
   /**

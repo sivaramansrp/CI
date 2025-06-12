@@ -1,15 +1,14 @@
 import { AvisoAgente } from '../../../../core/models/30505/aviso-modificacion.model';
 import { ActivatedRoute, Router} from '@angular/router';
-import { Component, OnInit, } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, Input } from '@angular/core';
 import { TablaAcciones, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { AgregarAgenteComponent } from '../agregar-agente/agregar-agente.component';
 import { CommonModule } from '@angular/common';
-import { Subject } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 import { AVISO_AGENTE_DE_TABLA } from '../../../../core/enums/30505/aviso-de-modificacion.enum';
 import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
-import { Tramite30505AgregarAgenteQuery } from '../../../../core/queries/tramite30505-agregar-agente.query';
-import { Tramite30505AgregarAgenteStore } from '../../../../core/estados/tramites/tramite30505-agregar-agente.store';
+import { Solicitud30505State, Solicitud30505Store } from '../../../../core/estados/tramites/tramites30505.store';
+import { Solicitud30505Query } from '../../../../core/queries/tramites30505.query';
 
 /**
  * Componente encargado de gestionar el aviso de agente dentro del trámite 30505.
@@ -32,25 +31,18 @@ import { Tramite30505AgregarAgenteStore } from '../../../../core/estados/tramite
   standalone: true,
   imports: [
     CommonModule,
-    ReactiveFormsModule,
     TablaDinamicaComponent,
     TituloComponent,
     AgregarAgenteComponent
   ]
 })
-export class AvisoAgenteComponent implements OnInit {
-  
-  /**
-   * Representa el formulario reactivo para la gestión de datos del agente.
-   * Utiliza la clase FormGroup de Angular para agrupar y validar los controles del formulario.
-   */
-  formAgente!:FormGroup;
+export class AvisoAgenteComponent{
 
   /**
    * Nombre de la clase CSS utilizada para mostrar u ocultar el modal.
    * Por defecto, el valor es 'modal'.
    */
-  modal: string = 'modal';
+  public modal: string = 'modal';
 
   /**
    * Arreglo que contiene los datos de los avisos de agente.
@@ -82,6 +74,14 @@ export class AvisoAgenteComponent implements OnInit {
    * se cancelen de manera segura utilizando el operador `takeUntil`.
    */
   public destroyNotifier$: Subject<void> = new Subject();
+    
+    /**
+     * Representa el estado actual del aviso en el trámite 30505.
+     * 
+     * @type {Solicitud30505State}
+     * @public
+     */
+    public avisoState!: Solicitud30505State;
 
    /**
    * Arreglo que contiene los agentes seleccionados de tipo AvisoAgente.
@@ -90,9 +90,15 @@ export class AvisoAgenteComponent implements OnInit {
    * Esta propiedad almacena la lista de agentes que han sido seleccionados por el usuario
    * en el componente de aviso de agente.
    */
-  selectedAgente : AvisoAgente[] = [];
+  public selectedAgente : AvisoAgente[] = [];
 
 
+  /**
+   * Indica si el componente debe estar en modo solo lectura.
+   * Cuando es `true`, los campos y acciones estarán deshabilitados para evitar modificaciones.
+   * Valor predeterminado: `false`.
+   */
+  @Input() soloLectura: boolean = false;
   /**
    * Constructor de la clase AvisoAgenteComponent.
    * 
@@ -100,46 +106,10 @@ export class AvisoAgenteComponent implements OnInit {
    * @param router Instancia de Router para la navegación entre rutas.
    * @param route Instancia de ActivatedRoute para acceder a información sobre la ruta actual.
    */
-  constructor(private fb: FormBuilder,private router:Router, private route:ActivatedRoute,private tercerosService:TercerosRelacionadosService, private tramite30505Store: Tramite30505AgregarAgenteStore,
-    private tramite30505Query: Tramite30505AgregarAgenteQuery,
-    private ubicaccion : Location) { 
+  constructor(private router:Router, private route:ActivatedRoute,private tercerosService:TercerosRelacionadosService, private tramite30505Store: Solicitud30505Store,private tramiteQuery: Solicitud30505Query){
     
   }
 
-
-  /**
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * 
-   * - Llama al método `cargarDatos()` para obtener y preparar los datos necesarios.
-   * - Inicializa el formulario reactivo `formAgente` con los campos requeridos y sus validaciones.
-   * 
-   * @returns void
-   */
-  ngOnInit(): void {
-    //this.cargarDatos();
-    this.formAgente = this.fb.group({
-        nombres: ['', [Validators.required]],
-        segundoApellido:['', [Validators.required]],
-        primerApellido: ['', [Validators.required]],
-        tipoFigura: ['', [Validators.required]],
-        patenteAutorizacion: ['', [Validators.required]],
-        se: ['', [Validators.required]],
-  
-    });
-  }
-
- 
-  /**
-   * Carga los datos necesarios para el componente.
-   * 
-   * Este método se encarga de obtener y preparar la información requerida
-   * para el funcionamiento del componente AvisoAgente.
-   * 
-   * @returns {void} No retorna ningún valor.
-   */
-  // cargarDatos(): void {
-  
-  // }
 
   /**
    * Navega a la ruta relativa '../agregar-agente' para agregar un nuevo agente de transporte.
@@ -167,7 +137,7 @@ export class AvisoAgenteComponent implements OnInit {
   getAgenteDatos(evento:AvisoAgente[]):void{
    if (this.avisoAgenteDatos?.length > 0) {
       this.selectedAgente = evento;
-      this.tercerosService.setAgente(this.selectedAgente); // Pass data to the shared service
+      this.tercerosService.setAgente(this.selectedAgente);
     }
   }
 
@@ -184,6 +154,15 @@ export class AvisoAgenteComponent implements OnInit {
   }
 
   /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
+   * Emite una notificación y completa el observable `destroyNotifier$` para limpiar suscripciones y evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
+  /**
    * Navega a la ruta relativa para modificar un agente.
    *
    * Utiliza el enrutador de Angular para redirigir al usuario a la pantalla de modificación de agente,
@@ -194,4 +173,32 @@ export class AvisoAgenteComponent implements OnInit {
         relativeTo: this.route,
       });
   }
+
+   /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Llama al método `inicializarFormulario` para configurar el formulario inicial.
+   */
+  ngOnInit(): void {
+    this.inicializarFormulario();
+  }
+
+  /**
+   * Inicializa el formulario del componente, configurando los datos de los agentes
+   * y estableciendo el estado inicial del formulario.
+   * 
+   * Este método se llama al iniciar el componente para preparar el formulario
+   * con los datos necesarios y establecer la configuración inicial.
+   */
+  inicializarFormulario(): void {
+ this.tramiteQuery.selectSolicitud$
+             .pipe(
+               takeUntil(this.destroyNotifier$),
+               map((seccionState) => {
+                 this.avisoState = seccionState;
+               })
+             )
+             .subscribe()
+    this.avisoAgenteDatos = this.avisoState?.agenteDatos || [];
+            }
+
 }

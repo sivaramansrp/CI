@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
-import { FusionEscision } from '../../models/30505/aviso-modificacion.model';
+import { AvisoAgente, FusionEscision } from '../../models/30505/aviso-modificacion.model';
 
 
 /**
@@ -97,15 +97,29 @@ export interface Solicitud30505State {
   descripcionLugarEmbarque: string;
   actividadProductiva: string;
 
-       certificacionModal: string,
-        rfcBusquedaModal: string,
-        razonSocialFusionante: string,
-        folioVucemFusionante: string,
-        fechaInicioVigenciaFusionante:string,
-        fechaFinVigenciaFusionante: string,
-        rfcBusquedaModalSC: string,
-        razonSocialFusionanteSC: string,
-        fusionEscisionData: FusionEscision[]
+  certificacionModal: string,
+  rfcBusquedaModal: string,
+  razonSocialFusionante: string,
+  folioVucemFusionante: string,
+  fechaInicioVigenciaFusionante: string,
+  fechaFinVigenciaFusionante: string,
+  rfcBusquedaModalSC: string,
+  razonSocialFusionanteSC: string,
+  fusionEscisionData: FusionEscision[]
+
+  tipoFigura: string;
+  numPatenteModal: string;
+  obligFisc: string;
+  autPantente: string;
+  patente2: string;
+  razonAgencia: string;
+  rfcModal: string;
+  patenteModificada: string;
+  nombre: string;
+  apellidoPaterno: string;
+  apellidoMaterno: string;
+  razonSocialAgente: string;
+  agenteDatos: AvisoAgente[];
 }
 /**
  * @description
@@ -156,14 +170,27 @@ export function createInitialSolicitudState(): Solicitud30505State {
     descripcionLugarEmbarque: '',
     actividadProductiva: '',
     certificacionModal: '',
-        rfcBusquedaModal: '',
-        razonSocialFusionante: '',
-        folioVucemFusionante: '',
-        fechaInicioVigenciaFusionante:'',
-        fechaFinVigenciaFusionante: '',
-        rfcBusquedaModalSC: '',
-        razonSocialFusionanteSC: '',
-        fusionEscisionData: []
+    rfcBusquedaModal: '',
+    razonSocialFusionante: '',
+    folioVucemFusionante: '',
+    fechaInicioVigenciaFusionante: '',
+    fechaFinVigenciaFusionante: '',
+    rfcBusquedaModalSC: '',
+    razonSocialFusionanteSC: '',
+    fusionEscisionData: [],
+     tipoFigura: '',
+  numPatenteModal: '',
+  obligFisc: '',
+  autPantente: '',
+  patente2: '',
+  razonAgencia: '',
+  rfcModal: '',
+  patenteModificada: '',
+  nombre: '',
+  apellidoPaterno: '',
+  apellidoMaterno: '',
+  razonSocialAgente: '',
+    agenteDatos: []
   };
 }
 
@@ -218,7 +245,7 @@ export class Solicitud30505Store extends Store<Solicitud30505State> {
   constructor() {
     super(createInitialSolicitudState());
   }
-  
+
   /**
    * Actualiza el estado con un nuevo valor para la propiedad `descClobGenerica`.
    *
@@ -230,7 +257,7 @@ export class Solicitud30505Store extends Store<Solicitud30505State> {
       descClobGenerica,
     }));
   }
-  
+
   /**
    * Establece la fecha de inicio de vigencia en el estado.
    *
@@ -323,7 +350,7 @@ export class Solicitud30505Store extends Store<Solicitud30505State> {
    * @param capacidadAlmacenamiento - Nueva capacidad de almacenamiento a establecer en el estado.
    */
   public setCapacidadAlmacenamiento(capacidadAlmacenamiento: string): void {
-    this.update((state) => ({ 
+    this.update((state) => ({
       ...state,
       capacidadAlmacenamiento,
     }));
@@ -335,90 +362,90 @@ export class Solicitud30505Store extends Store<Solicitud30505State> {
    * @param tipoCaat - El nuevo valor de tipo CAAT que se establecerá en el estado.
    */
   public setTipoCaat(tipoCaat: string): void {
-    this.update((state) => ({   
+    this.update((state) => ({
       ...state,
       tipoCaat,
     }));
   }
 
-/**
- * Establece el valor de `tipoProgFomExp` en el estado de la tienda.
- *
- * @param tipoProgFomExp - El nuevo valor para el campo `tipoProgFomExp`.
- */
-public setTipoProgFomExp(tipoProgFomExp: string): void {
+  /**
+   * Establece el valor de `tipoProgFomExp` en el estado de la tienda.
+   *
+   * @param tipoProgFomExp - El nuevo valor para el campo `tipoProgFomExp`.
+   */
+  public setTipoProgFomExp(tipoProgFomExp: string): void {
     this.update((state) => ({
       ...state,
       tipoProgFomExp,
     }));
   }
 
-/**
- * Establece el tipo de tránsito en el estado de la tienda.
- *
- * @param tipoTransito - El nuevo valor para el tipo de tránsito.
- */
-public setTipoTransito(tipoTransito: string): void {
+  /**
+   * Establece el tipo de tránsito en el estado de la tienda.
+   *
+   * @param tipoTransito - El nuevo valor para el tipo de tránsito.
+   */
+  public setTipoTransito(tipoTransito: string): void {
     this.update((state) => ({
       ...state,
       tipoTransito,
     }));
   }
 
-/**
- * Establece el número de establecimiento en el estado.
- *
- * @param numeroEstablecimiento - El nuevo número de establecimiento a asignar al estado.
- */
-public setNumeroEstablecimiento(numeroEstablecimiento: string): void {
+  /**
+   * Establece el número de establecimiento en el estado.
+   *
+   * @param numeroEstablecimiento - El nuevo número de establecimiento a asignar al estado.
+   */
+  public setNumeroEstablecimiento(numeroEstablecimiento: string): void {
     this.update((state) => ({
       ...state,
       numeroEstablecimiento,
     }));
   }
 
-/**
- * Actualiza el estado con el medio de transporte especificado.
- *
- * @param medioTransporte - El medio de transporte a establecer en el estado.
- */
-public setMedioTransporte(medioTransporte: string): void {
+  /**
+   * Actualiza el estado con el medio de transporte especificado.
+   *
+   * @param medioTransporte - El medio de transporte a establecer en el estado.
+   */
+  public setMedioTransporte(medioTransporte: string): void {
     this.update((state) => ({
       ...state,
       medioTransporte,
     }));
   }
 
-/**
- * Establece el nombre del banco en el estado.
- *
- * @param nombreBanco - El nombre del banco a asignar en el estado.
- */
-public setNombreBanco(nombreBanco: string): void {
+  /**
+   * Establece el nombre del banco en el estado.
+   *
+   * @param nombreBanco - El nombre del banco a asignar en el estado.
+   */
+  public setNombreBanco(nombreBanco: string): void {
     this.update((state) => ({
       ...state,
       nombreBanco,
     }));
   }
 
-/**
- * Establece el nombre del oficial autorizado en el estado.
- *
- * @param nomOficialAutorizado - El nombre del oficial autorizado que se va a asignar al estado.
- */
-public setNomOficialAutorizado(nomOficialAutorizado: string): void {
+  /**
+   * Establece el nombre del oficial autorizado en el estado.
+   *
+   * @param nomOficialAutorizado - El nombre del oficial autorizado que se va a asignar al estado.
+   */
+  public setNomOficialAutorizado(nomOficialAutorizado: string): void {
     this.update((state) => ({
       ...state,
       nomOficialAutorizado,
     }));
   }
 
-/**
- * Establece el valor de la empresa controladora en el estado.
- *
- * @param empresaControladora - El nombre o identificador de la empresa controladora a asignar.
- */
-public setEmpresaControladora(empresaControladora: string): void {
+  /**
+   * Establece el valor de la empresa controladora en el estado.
+   *
+   * @param empresaControladora - El nombre o identificador de la empresa controladora a asignar.
+   */
+  public setEmpresaControladora(empresaControladora: string): void {
     this.update((state) => ({
       ...state,
       empresaControladora,
@@ -467,24 +494,24 @@ public setEmpresaControladora(empresaControladora: string): void {
    *
    * @param fusionToRemove - El objeto FusionEscision que se desea eliminar del estado.
    */
-   public removeFusionadoDato(fusionToRemove: FusionEscision): void {
-   this.update((state) => {
-         const INDICE_BORROR = state.fusionEscisionData.findIndex((ele) =>
-           Object.entries(fusionToRemove).every(([key, value]) => ele[key as keyof FusionEscision] === value)
-         );
-   
-         if (INDICE_BORROR !== -1) {
-           state.fusionEscisionData.splice(INDICE_BORROR, 1);
-         }
-   
-         return {
-           ...state,
-           fusionEscisionData: [...state.fusionEscisionData],
-         };
-       });
+  public removeFusionadoDato(fusionToRemove: FusionEscision): void {
+    this.update((state) => {
+      const INDICE_BORROR = state.fusionEscisionData.findIndex((ele) =>
+        Object.entries(fusionToRemove).every(([key, value]) => ele[key as keyof FusionEscision] === value)
+      );
+
+      if (INDICE_BORROR !== -1) {
+        state.fusionEscisionData.splice(INDICE_BORROR, 1);
+      }
+
+      return {
+        ...state,
+        fusionEscisionData: [...state.fusionEscisionData],
+      };
+    });
   }
 
-  
+
   /**
    * Actualiza el estado agregando nuevos datos de fusión/escisión al arreglo existente.
    *
@@ -493,9 +520,107 @@ public setEmpresaControladora(empresaControladora: string): void {
   public updateFusionDatos(newFusion: FusionEscision[]): void {
     this.update((state) => ({
       ...state,
-      fusionEscisionData: [...state.fusionEscisionData,...newFusion],
+      fusionEscisionData: [...state.fusionEscisionData, ...newFusion],
     }));
   }
 
-  
+  /**
+      * Establece el estado de tipoFigura.
+      * @param tipoFigura - El valor de tipoFigura.
+      */
+  public setTipoFigura(tipoFigura: string) {
+    this.update((state) => ({
+      ...state,
+      tipoFigura,
+    }));
+  }
+  /**
+   * Establece el estado de numPatenteModal.
+   * @param numPatenteModal - El valor de numPatenteModal.
+   */
+  public setNumPatenteModal(numPatenteModal: string) {
+    this.update((state) => ({
+      ...state,
+      numPatenteModal,
+    }));
+  }
+  /**
+   * Establece el estado de obligFisc.
+   * @param obligFisc - El valor de obligFisc.
+   */
+  public setObligFisc(obligFisc: string) {
+    this.update((state) => ({
+      ...state,
+      obligFisc,
+    }));
+  }
+  /**
+   * Establece el estado de autPantente.
+   * @param autPantente - El valor de autPantente.
+   */
+  public setAutPantente(autPantente: string) {
+    this.update((state) => ({
+      ...state,
+      autPantente,
+    }));
+  }
+  /**
+   * Establece el estado de patente2.
+   * @param patente2 - El valor de patente2.
+   */
+  public setPatente2(patente2: string) {
+    this.update((state) => ({
+      ...state,
+      patente2,
+    }));
+  }
+  /**
+   * Establece el estado de razonAgencia.
+   * @param razonAgencia - El valor de razonAgencia.
+   */
+  public setRazonAgencia(razonAgencia: string) {
+    this.update((state) => ({
+      ...state,
+      razonAgencia,
+    }));
+  }
+
+  /**
+   * Actualiza la lista de datos de agentes en el estado agregando nuevos agentes.
+   *
+   * @param newAgente - Un arreglo de objetos de tipo `AvisoAgente` que serán añadidos a la lista existente de `agenteDatos`.
+   */
+  public updateAgenteDatos(newAgente: AvisoAgente[]): void {
+    this.update((state) => ({
+      ...state,
+      agenteDatos: [...state.agenteDatos, ...newAgente],
+    }));
+  }
+
+
+  /**
+   * Elimina un agente específico de la lista `agenteDatos` en el estado.
+   * 
+   * Busca el agente proporcionado (`Agente`) en el arreglo `agenteDatos` comparando todas sus propiedades.
+   * Si encuentra una coincidencia exacta, elimina ese agente del arreglo.
+   * 
+   * @param Agente - El objeto `AvisoAgente` que se desea eliminar de la lista.
+   */
+  public eliminarAgento(Agente: AvisoAgente): void {
+    this.update((state) => {
+      const INDICE_BORROR = state.agenteDatos.findIndex((ele) =>
+        Object.entries(Agente).every(([key, value]) => ele[key as keyof AvisoAgente] === value)
+      );
+
+      if (INDICE_BORROR !== -1) {
+        state.agenteDatos.splice(INDICE_BORROR, 1);
+      }
+
+      return {
+        ...state,
+        agenteDatos: [...state.agenteDatos],
+      };
+    });
+  }
+
 }

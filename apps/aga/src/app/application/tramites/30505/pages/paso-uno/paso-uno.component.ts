@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Solicitud30505State, Solicitud30505Store } from '../../../../core/estados/tramites/tramites30505.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Solicitud30505Query } from '../../../../core/queries/tramites30505.query';
-import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState, ConsultaioStore } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
 
 /**
@@ -30,7 +30,7 @@ export class PasoUnoComponent implements OnDestroy,OnInit{
    * 
    * @default 1 - El valor inicial del índice es 1.
    */
-  indice: number = 1;
+ public indice: number = 1;
 
   /**
    * Notificador utilizado para destruir suscripciones y evitar fugas de memoria.
@@ -44,7 +44,7 @@ export class PasoUnoComponent implements OnDestroy,OnInit{
    * Arreglo que almacena los identificadores de los checkboxes seleccionados por el usuario.
    * Cada elemento del arreglo representa el valor asociado a un checkbox marcado.
    */
-  selectedCheckboxes: string[] = []; 
+  public selectedCheckboxes: string[] = []; 
 
   /**
    * Representa el estado actual de la solicitud 30505 en el componente.
@@ -52,7 +52,7 @@ export class PasoUnoComponent implements OnDestroy,OnInit{
    * @type {Solicitud30505State}
    * @public
    */
-  public AvisoState!: Solicitud30505State;
+  public avisoState!: Solicitud30505State;
   
   /**
    * Referencia al componente hijo SolicitanteComponent.
@@ -86,7 +86,7 @@ export class PasoUnoComponent implements OnDestroy,OnInit{
    * Al inicializar el componente, se establece la consulta inicial en el store de consultas
    * con los parámetros correspondientes al trámite 120204.
    */
-  constructor(private consultaQuery: ConsultaioQuery, private tercerosService:TercerosRelacionadosService,private tramiteQuery: Solicitud30505Query,private tramiteStore: Solicitud30505Store) {
+  constructor(private consultaQuery: ConsultaioQuery, private tercerosService:TercerosRelacionadosService,private tramiteQuery: Solicitud30505Query,private consultaStore: ConsultaioStore,private tramiteStore: Solicitud30505Store) {
     // Inicialización del componente, se pueden agregar más configuraciones si es necesario.
   }
 
@@ -101,6 +101,17 @@ export class PasoUnoComponent implements OnDestroy,OnInit{
    * @returns {void} No retorna ningún valor.
    */
    ngOnInit(): void {
+    this.consultaStore.establecerConsultaio(
+      '30505',
+      'BANDEJA_SOLICITUDES',
+      'se',
+      '03039399393939393',
+      'tipoTramite',
+      'tipoTramite',
+      true,
+      false,
+      true
+    );
 
      this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
       this.consultaState = seccionState;
@@ -109,11 +120,9 @@ export class PasoUnoComponent implements OnDestroy,OnInit{
         this.guardarDatosFormulario();
       } else {
         this.esDatosRespuesta = true;
+        this.initializerFormulario();
       }
-
     })).subscribe();
-
-    this.initializerFormulario();
 
   }
 
@@ -123,12 +132,12 @@ export class PasoUnoComponent implements OnDestroy,OnInit{
             .pipe(
               takeUntil(this.destroyNotifier$),
               map((seccionState) => {
-                this.AvisoState = seccionState;
+                this.avisoState = seccionState;
               })
             )
             .subscribe()
 
-   this.selectedCheckboxes = this.AvisoState?.selectedCheckbox;
+   this.selectedCheckboxes = this.avisoState?.selectedCheckbox;
   }
 
    /**
@@ -153,6 +162,8 @@ export class PasoUnoComponent implements OnDestroy,OnInit{
       .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
+          this.tramiteStore.setCheckboxDatos(resp.selectedCheckbox);
+          this.initializerFormulario();
           this.tercerosService.setDatosFormulario(resp);
         }
       });

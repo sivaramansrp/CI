@@ -21,6 +21,7 @@
           id="btnAgregarPersona"
           class="btn btn-primary"
           (click)="AgregarTransportias()"
+          [disabled]="soloLectura"
         >
           Agregar
         </button>
@@ -29,6 +30,7 @@
           id="btnEliminarPersona"
           class="btn btn-danger"
           (click)="eliminarAgente()"
+          [disabled]="soloLectura"
         >
           Eliminar
         </button>
@@ -37,6 +39,7 @@
           id="btnModificarPersona"
           class="btn btn-secondary"
           (click)="modificarAgente()"
+          [disabled]="soloLectura"
         >
           Modificar
         </button>

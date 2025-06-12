@@ -37,7 +37,7 @@ describe('AgregarFusionEscisionComponent', () => {
       tramiteQueryMock,
       tercerosServiceMock
     );
-    component.AvisoState = {
+    component.avisoState = {
       certificacionModal: '1',
       rfcBusquedaModal: 'RFCX',
       razonSocialFusionante: 'RSF',

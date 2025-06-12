@@ -25,7 +25,7 @@ describe('CambioDenominacionRazonSocialComponent', () => {
       tramiteStoreMock,
       tramiteQueryMock
     );
-    component.AvisoState = {
+    component.avisoState = {
       rfcVucem: 'RFCVUCEM',
       razonSocialVucem: 'RAZONVUCEM',
       rfcIdc: 'RFCIDC',
