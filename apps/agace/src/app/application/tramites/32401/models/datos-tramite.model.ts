@@ -144,3 +144,78 @@ export interface RequerimientoOpcions {
   /** Lista de elementos del catálogo. */
   value: number;
 }
+
+/**
+ * Representa las opciones asociadas a un requerimiento específico.
+ */
+export interface RequerimientoOpciones {
+  /**
+   * Estado actual del trámite.
+   */
+  estadoDelTramite: string;
+
+  /**
+   * Folio único que identifica el trámite.
+   */
+  folioTramite: string;
+
+  /**
+   * Identificador único del requerimiento.
+   */
+  id: number;
+
+  /**
+   * Razón social de la entidad asociada al trámite.
+   */
+  razonSocial: string;
+
+  /**
+   * RFC de la entidad o persona relacionada con el trámite.
+   */
+  rfc: string;
+
+  /**
+   * Tipo de trámite que se está gestionando.
+   */
+  tipoTramite: string;
+}
+
+/**
+ * Representa un requerimiento con su columna asociada y datos de fila.
+ */
+export interface Requerimiento {
+  /**
+   * Nombre o identificador de la columna (usado en visualización o estructura).
+   */
+  column: string;
+
+  /**
+   * Objeto que contiene los datos del requerimiento.
+   */
+  row: RequerimientoOpciones;
+}
+
+/**
+ * Representa la forma de captura de información para un requerimiento.
+ */
+export interface FormaRequerimiento {
+  /**
+   * Folio del trámite al cual está asociado el requerimiento.
+   */
+  folioTramite: string;
+
+  /**
+   * Tipo de trámite relacionado.
+   */
+  tipoTramite: string;
+
+  /**
+   * Motivo por el cual se realiza una cancelación del requerimiento.
+   */
+  motivoCancelacion: string;
+
+  /**
+   * Tipo específico del requerimiento (por ejemplo, técnico, documental, etc.).
+   */
+  tipoDeRequerimiento: string;
+}

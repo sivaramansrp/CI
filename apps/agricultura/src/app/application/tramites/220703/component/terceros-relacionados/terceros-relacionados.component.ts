@@ -3,12 +3,14 @@ import { DESTINO_SERVICIO, DestinoInfo, ExportadorInfo } from '../../constantes/
 import { AcuicolaService } from '../../service/acuicola.service';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { EXPORTADOR_SERVICIO } from '../../constantes/acuicola.enum';
 import { INSTRUCCION_OBLIGATORIA } from '../../constantes/acuicola.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { takeUntil } from 'rxjs';
 
 
@@ -26,6 +28,18 @@ import { takeUntil } from 'rxjs';
   styleUrl: './terceros-relacionados.component.scss'
 })
 export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
+
+ /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false;
+
+ /**
+  * Indica si el campo debe ser deshabilitado.
+  * @property {boolean} campoDeshabilitar
+  */
+  campoDeshabilitar: boolean = false;
 
   /**
     * Subject para notificar la destrucción del componente.
@@ -68,11 +82,20 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * Constructor del componente.
    * @constructor
    * @param {AcuicolaService} acuicolaService - Servicio para obtener datos relacionados con la acuicultura.
+   * @param {ConsultaioQuery} consultaioQuery - Consulta de estado para obtener y observar los datos de la consulta actual.
    */
   constructor(
     private readonly acuicolaService: AcuicolaService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // No se necesita lógica de inicialización adicional.
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      ).subscribe();
   }
 
   /**
@@ -82,8 +105,32 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
  * @returns {void}
  */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
     this.getExportadorDatos();
     this.getDestinoDatos();
+  }
+
+  /**
+  * Evalúa si se debe inicializar o cargar datos en el formulario.  
+  * Además, obtiene la información del catálogo de mercancía.
+  */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    }
+  }
+
+  /**
+   * Guarda los datos del formulario y actualiza el estado del componente.
+   * @method guardarDatosFormulario
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  guardarDatosFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.campoDeshabilitar=true;
+    } else {
+      this.campoDeshabilitar=false;
+    }
   }
 
   /**
