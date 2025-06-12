@@ -24,6 +24,7 @@ export class AmpliacionServiciosService {
    * Constructor del servicio.
    * @constructor
    * @param {HttpClient} http - Cliente HTTP de Angular para realizar solicitudes.
+   * @param {Tramite80206Store} tramiteStore - Store para gestionar el estado del trámite de ampliación de servicios.
    */
   constructor(private readonly http: HttpClient, private tramiteStore: Tramite80206Store) {
     // No se necesita lógica de inicialización adicional.
@@ -101,8 +102,6 @@ export class AmpliacionServiciosService {
     this.tramiteStore.setValor(DATOS.valor);
     this.tramiteStore.setDatosImmex(DATOS.datosImmex);
     this.tramiteStore.setDatosImportacion(DATOS.datosImportacion);
-
-
   }
 
   /**
@@ -110,5 +109,5 @@ export class AmpliacionServiciosService {
    * @returns {Observable<AmpliacionServiciosState>} - Observable con el estado de ampliación de servicios.
    */
   getServiciosData(): Observable<AmpliacionServiciosState> {
-    return this.http.get<AmpliacionServiciosState>('assets/json/80206/datos-prefill.json')}
+    return this.http.get<AmpliacionServiciosState>('assets/json/80206/datos-previos.json')}
 }
