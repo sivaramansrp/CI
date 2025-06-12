@@ -3,16 +3,18 @@ import { Component,OnDestroy,OnInit } from '@angular/core';
 import { FormBuilder,FormGroup,ReactiveFormsModule,Validators} from '@angular/forms';
 
 import { CommonModule,Location } from '@angular/common';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 
-import { Catalogo, InputRadioComponent, TipoPersona } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { Catalogo, TipoPersona } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { Fabricante } from '../../models/terceros-relacionados-destino.model';
+import { PERSONA_OPCIONES_DE_BOTON_DE_RADIO } from '../../../../shared/constantes/tereceros-relacionados-fab-seccion.enum';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite260104Store } from '../../estados/stores/tramite260104.store';
-import { PERSONA_OPCIONES_DE_BOTON_DE_RADIO } from '../../../../shared/constantes/tereceros-relacionados-fab-seccion.enum';
 
 /**
  * @component
@@ -65,6 +67,10 @@ import { PERSONA_OPCIONES_DE_BOTON_DE_RADIO } from '../../../../shared/constante
    */
   public agregarFabricante!: FormGroup;
 
+  /**
+ * Determina si el formulario debe estar en modo solo lectura.
+ */
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Lista de fabricantes asociados al componente.
@@ -108,9 +114,18 @@ import { PERSONA_OPCIONES_DE_BOTON_DE_RADIO } from '../../../../shared/constante
     private fb: FormBuilder,
     private ubicaccion: Location,
     private datosSolicitudService: DatosSolicitudService,
-    private tramiteStore:Tramite260104Store
+    private tramiteStore:Tramite260104Store,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    //constructor necesario para el servicio
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.crearAgregarFormularioAgregarDestinatarioFinal();
+        })
+      )
+      .subscribe();
   }
 
    /**
@@ -276,6 +291,15 @@ import { PERSONA_OPCIONES_DE_BOTON_DE_RADIO } from '../../../../shared/constante
         '',[Validators.required, Validators.email],
       ],
     });
+    if (this.esFormularioSoloLectura) {
+      Object.keys(this.agregarFabricante.controls).forEach((key) => {
+        this.agregarFabricante.get(key)?.disable();
+      });
+    } else {
+      Object.keys(this.agregarFabricante.controls).forEach((key) => {
+        this.agregarFabricante.get(key)?.enable();
+      });
+    }
   }
 
 

@@ -3,9 +3,11 @@ import { TipoDeAvisoComponent } from './tipo-de-aviso.component';
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { DestruccionStore } from '../../estados/Tramite32509.store';
 import { DestruccionQuery } from '../../estados/Tramite32509.query';
-import { SeccionLibStore, SeccionLibQuery, TituloComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
+import { SeccionLibStore, SeccionLibQuery, TituloComponent, InputRadioComponent, InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { of, Subject } from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { AlertComponent } from 'ngx-bootstrap/alert';
 
 describe('TipoDeAvisoComponent', () => {
   let component: TipoDeAvisoComponent;
@@ -69,8 +71,8 @@ describe('TipoDeAvisoComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [TipoDeAvisoComponent],
-      imports: [ReactiveFormsModule, TituloComponent, InputRadioComponent],
+      declarations: [],
+      imports: [ReactiveFormsModule, AlertComponent, InputFechaComponent, TituloComponent, InputRadioComponent, CommonModule, TipoDeAvisoComponent],
       providers: [
         FormBuilder,
         { provide: DestruccionStore, useValue: mockDestruccionStore },

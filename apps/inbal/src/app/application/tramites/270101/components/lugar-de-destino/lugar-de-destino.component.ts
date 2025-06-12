@@ -1,9 +1,10 @@
 import { Catalogo, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ExportarIlustraciones270101State, Tramite270101Store } from '../../../../estados/tramites/270101/tramite270101.store';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { ExportarIlustracionesService } from '../../services/exportar-ilustraciones.service';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { LUGAR_DE_DESTINO } from '../../constantes/exportar-ilustraciones.enum';
@@ -41,6 +42,13 @@ import { Tramite270101Query } from '../../../../estados/queries/270101/tramite27
 })
 
 export class LugarDeDestinoComponent implements OnInit, OnDestroy {
+  /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
+
   /**
    * compo doc
    * @property lugarDeDestinoFormData

@@ -10,12 +10,14 @@ import {
   LABEL_DESPACHO_LDA,
   MSG_ADUANA_PEDIMENTO,
   MSG_ALERTA_ELIMINAR_ELEMENTO,
-  MSG_CAMBIO_TIPO_SOLICITUD,
   MSG_ELIMINA_ELEMENTO,
   MSG_ERROR_NO_INFORMACION,
+  MSG_ERROR_RFC_NO_ENCONTRADO,
+  MSG_MONTO_PAGADO_CUBIERTO,
   MSJ_ERROR_FECHA,
+  MSJ_ERROR_ID_SOCIO_COMERCIAL,
   MSJ_ERROR_LINEA_CAPTURA,
-  MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
+  MSJ_ERROR_RFC_NO_VALIDO,
   MSJ_LINEA_CAPTURA_NO_PAGADA,
   MSJ_LINEA_CAPTURA_USADA,
   PATENTES_ID,
@@ -59,6 +61,7 @@ import {
   TipoPersona,
   TipoSolicitudService,
   TipoTransporteService,
+  TransporteDespacho,
   ValidaRfcService,
   ValidacionesFormularioService,
 } from '@ng-mf/data-access-user';
@@ -90,7 +93,6 @@ import {
   Observable,
   Subject,
   catchError,
-  defaultIfEmpty,
   delay,
   first,
   map,
@@ -126,7 +128,7 @@ import { UsuarioState } from '@libs/shared/data-access-user/src/core/estados/usu
 import { ValidaLineaCapturaService } from '../../../../core/services/5701/pago/valida-linea-captura.service';
 import { ValidaLineaPagoService } from '../../../../core/services/5701/pago/valida-linea-pago.service';
 
-//TODO: Estas importaciones deben eliminarse una vez que se obtengan las patentes y los rfcs de la consulta del api.
+//Estas importaciones deben eliminarse una vez que se obtengan las patentes y los rfcs de la consulta del api.
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import patentes from 'libs/shared/theme/assets/json/5701/patentes.json';
 // eslint-disable-next-line @nx/enforce-module-boundaries
@@ -358,6 +360,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   public datosTablaPagos: LineaCaptura[] = [];
 
   /**
+   * @description Almacena el monto total a pagar en la solicitud.
+   */
+  montoACubrir: number = 0;
+
+  /**
+   * @description Almacena el monto por dia.
+   */
+  montoPorDia: number = 0;
+
+  /**
    * @description Almacena los montos a pagar en la solicitud.
    */
   montoPagadoLineas: number = 0;
@@ -377,7 +389,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   lineaCapturaSeleccionados: LineaCaptura[] = [];
 
-  //TODO: Estas variables se van a eliminar
+  //Estas variables se van a eliminar
   /**
    * Arrelgo de patentes de la empresa
    */
@@ -466,8 +478,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     }
   }
 
-  private validaTipoPersona() {
-    // TODO: Esta validación debería cambiar y validar contra el valor almacenado
+  private validaTipoPersona(): void {
+    // Esta validación debería cambiar y validar contra el valor almacenado
     // en el store.
     if (this.tipoPersona === TipoPersona.FISICA) {
       this.obtenerPatente();
@@ -645,18 +657,32 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   /**
-   * Verifica si el control 'idSocioComercial' tiene el validador 'Validators.required'.
-   *
-   * @returns {boolean} `true` si el control es requerido, de lo contrario `false`.
+   * Error pattern
+   * @returns {boolean} - Retorna `true` si el campo tiene un error de patrón, de lo contrario `false`.
    */
-  isRequired(): boolean {
-    const CONTROL = this.datosImportadorExportador.get(
-      'idSocioComercial'
-    ) as FormControl;
+  isErrorPattern(field: string): boolean {
+    const CONTROL = this.datosImportadorExportador.get(field) as FormControl;
 
     if (CONTROL) {
-      const REQUERIDO = CONTROL.hasValidator(Validators.required);
-      return REQUERIDO;
+      const ERROR_PATTERN = CONTROL.hasError('pattern');
+      return ERROR_PATTERN;
+    }
+
+    return false;
+  }
+
+  /**
+   * Verifica si el control 'idSocioComercial' tiene el validador 'Validators.required'.
+   *
+   * @returns {boolean} `true` si el control es obligatorio, de lo contrario `false`.
+   */
+  // eslint-disable-next-line class-methods-use-this
+  isRequired(form: FormGroup, field: string): boolean | null {
+    const CONTROL = form.get(field) as FormControl;
+
+    if (CONTROL) {
+      const ERROR_PATTERN = CONTROL.hasError('required');
+      return ERROR_PATTERN && CONTROL.touched;
     }
 
     return false;
@@ -853,7 +879,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         nombre: [{ value: this.solicitudState?.nombre, disabled: true }],
         desNumeroRegistro: [
           this.solicitudState?.descripcionNumeroRegistro,
-          [Validators.maxLength(25)],
+          [Validators.maxLength(30)],
         ],
 
         programa: [this.solicitudState?.programa],
@@ -888,10 +914,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
       datosServicio: this.fb.group({
         fechaInicio: [this.solicitudState?.fechaInicio, [Validators.required]],
-        fechaFinal: [
-          this.solicitudState?.fechaFinal,
-          [Validators.required, ValidacionesFormularioService.validaFechaNoHoy],
-        ],
+        fechaFinal: [this.solicitudState?.fechaFinal, [Validators.required]],
         horaInicio: [this.solicitudState?.horaInicio, Validators.required],
         horaFinal: [this.solicitudState?.horaFinal, Validators.required],
         fechasSeleccionadas: this.fb.array([], Validators.required),
@@ -904,10 +927,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         folioDDEX: [this.solicitudState?.autorizacionDDEX],
         idAduanaDespacho: [
           this.solicitudState?.idAduanaDespacho,
-          [Validators.required],
+          [Validators.required, ValidacionesFormularioService.noMenosUnoValor],
         ],
         aduanaDespacho: [this.solicitudState?.aduanaDespacho],
-        idSeccionDespacho: [this.solicitudState?.idSeccionDespacho],
+        idSeccionDespacho: [
+          this.solicitudState?.idSeccionDespacho,
+          [ValidacionesFormularioService.noMenosUnoValor],
+        ],
         seccionAduanera: [this.solicitudState?.seccionAduanera],
         idRecinto: [],
         nombreRecinto: [this.solicitudState?.nombreRecinto],
@@ -980,18 +1006,22 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     const INTERVALO_DIAS = SolicitudComponent.getIntervaloDias(
       this.tipoSolicitudSeleccionada
     );
-    if (
-      FECHA_INICIO &&
-      FECHA_FINAL &&
-      HORA_INICIO &&
-      HORA_FINAL &&
-      INTERVALO_DIAS !== null
-    ) {
-      FECHA_INICIO.setHours(
+
+    const PRIMER_DIA_MES = FECHA_INICIO.getDate() === 1 ? true : false;
+
+    const CAMPOS_NO_NULOS =
+      [FECHA_INICIO, FECHA_FINAL, HORA_INICIO, HORA_FINAL].every(Boolean) &&
+      INTERVALO_DIAS !== null;
+
+    if (CAMPOS_NO_NULOS) {
+      const FECHA_INICIO_HORA = new Date(FECHA_INICIO);
+      const FECHA_FINAL_HORA = new Date(FECHA_FINAL);
+
+      FECHA_INICIO_HORA.setHours(
         parseInt(HORA_INICIO.split(':')[0], 10),
         parseInt(HORA_INICIO.split(':')[1], 10)
       );
-      FECHA_FINAL.setHours(
+      FECHA_FINAL_HORA.setHours(
         parseInt(HORA_FINAL.split(':')[0], 10),
         parseInt(HORA_FINAL.split(':')[1], 10)
       );
@@ -999,11 +1029,23 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       const DIFERENCIA_EN_TIEMPO =
         FECHA_FINAL.getTime() - FECHA_INICIO.getTime();
 
-      const DIFERENCIA_EN_HORAS = DIFERENCIA_EN_TIEMPO / (1000 * 3600);
+      const DIFERENCIA_EN_HORAS =
+        (FECHA_FINAL_HORA.getTime() - FECHA_INICIO_HORA.getTime()) /
+        (1000 * 3600);
 
-      if (DIFERENCIA_EN_TIEMPO <= 0) {
+      if (DIFERENCIA_EN_HORAS <= 0) {
         this.datosServicio.setErrors({ endDateBeforeStartDate: true });
         return;
+      }
+
+      if (PRIMER_DIA_MES) {
+        const VALIDACION_MES =
+          FECHA_INICIO.getMonth() === FECHA_FINAL.getMonth() &&
+          FECHA_INICIO.getFullYear() === FECHA_FINAL.getFullYear();
+        if (!VALIDACION_MES) {
+          this.datosServicio.setErrors({ invalidIntervalo: true });
+          return;
+        }
       }
 
       if (
@@ -1014,13 +1056,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         return;
       }
 
-      const DIFERENCIA_EN_DIAS = DIFERENCIA_EN_TIEMPO / (1000 * 3600 * 24);
+      const DIFERENCIA_EN_DIAS = DIFERENCIA_EN_TIEMPO / (1000 * 3600 * 24) + 1;
 
       if (
         (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.SEMANAL &&
           DIFERENCIA_EN_DIAS > 7) ||
         (this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.MENSUAL &&
-          DIFERENCIA_EN_DIAS > 30)
+          DIFERENCIA_EN_DIAS > 31)
       ) {
         this.datosServicio.setErrors({ invalidIntervalo: true });
       }
@@ -1052,51 +1094,72 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   validaRfc(): void {
-    if (this.datosImportadorExportador.get('RFCImpExp')?.valid) {
-      const RFC_IMP_EXP =
-        this.datosImportadorExportador.get('RFCImpExp')?.value;
-
-      this.validaRfcService
-        .getValidacionRfc(RFC_IMP_EXP)
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          switchMap((validacionResponse) => {
-            if (validacionResponse) {
-              this.muestraCertificaciones = !validacionResponse.datos;
-              this.tramite5701Store.setRfcGenerico(validacionResponse.datos);
-
-              if (validacionResponse.datos) {
-                // Aqui se hará la busqueda del rfc, para obtener el nombre
-                SolicitudComponent.llenarCamposDesactivados(
-                  this.datosImportadorExportador,
-                  'nombre',
-                  RFC_GENERICO
-                );
-                this.tramite5701Store.setNombre(RFC_GENERICO);
-                return EMPTY;
-              }
-              return this.idcService
-                .getInformacionContribuyente(RFC_IMP_EXP)
-                .pipe(tap());
-            } else {
-              // TODO: Implementar mensaje de error para RFC no encontrado.
-            }
-            return EMPTY;
-          }),
-          tap((idcResponse) => {
-            const NOMBRE = idcResponse.datos?.nombre
-              ? idcResponse.datos?.nombre
-              : idcResponse.datos?.razon_social;
-            if (NOMBRE) {
-              this.datosImportadorExportador.get('nombre')?.setValue(NOMBRE);
-              this.getCertificaciones(RFC_IMP_EXP);
-            }
-          })
-        )
-        .subscribe();
-
-      this.tramite5701Store.setRFCImportadorExportador(RFC_IMP_EXP);
+    const RFC_IMP_EXP = this.datosImportadorExportador.get('RFCImpExp')?.value;
+    if (RFC_IMP_EXP && !this.datosImportadorExportador.get('RFCImpExp')?.valid) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Avisos',
+        mensaje: MSJ_ERROR_RFC_NO_VALIDO,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.datosImportadorExportador.get('RFCImpExp')?.reset();
+      return;
     }
+
+
+    this.validaRfcService
+      .getValidacionRfc(RFC_IMP_EXP)
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        switchMap((validacionResponse) => {
+          if (validacionResponse) {
+            this.muestraCertificaciones = !validacionResponse.datos;
+            this.tramite5701Store.setRfcGenerico(validacionResponse.datos);
+
+            if (validacionResponse.datos) {
+              // Aqui se hará la busqueda del rfc, para obtener el nombre
+              SolicitudComponent.llenarCamposDesactivados(
+                this.datosImportadorExportador,
+                'nombre',
+                RFC_GENERICO
+              );
+              this.tramite5701Store.setNombre(RFC_GENERICO);
+              return EMPTY;
+            }
+            return this.idcService
+              .getInformacionContribuyente(RFC_IMP_EXP)
+              .pipe(tap());
+          }
+          return EMPTY;
+        }),
+        tap((idcResponse) => {
+          const NOMBRE = idcResponse.datos?.nombre
+            ? idcResponse.datos?.nombre
+            : idcResponse.datos?.razon_social;
+          if (NOMBRE) {
+            this.datosImportadorExportador.get('nombre')?.setValue(NOMBRE);
+            this.getCertificaciones(RFC_IMP_EXP);
+          } else {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: 'Avisos',
+              mensaje: MSG_ERROR_RFC_NO_ENCONTRADO,
+              cerrar: false,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+          }
+        })
+      )
+      .subscribe();
+
+    this.tramite5701Store.setRFCImportadorExportador(RFC_IMP_EXP);
   }
 
   /**
@@ -1223,8 +1286,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   validaCampoPedimento(): void {
-    const ADUANA_VALIDACION = this.solicitudState?.idAduanaDespacho;
-    if (!ADUANA_VALIDACION) {
+    const ADUANA_VALIDACION = parseInt(
+      this.solicitudState?.idAduanaDespacho,
+      10
+    );
+
+    if (ADUANA_VALIDACION < 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
@@ -1324,16 +1391,35 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   changeFechaFinal(): void {
     this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
-    if (
-      this.datosServicio.get('fechaFinal')?.dirty &&
-      this.datosServicio.get('fechaFinal')?.touched
-    ) {
-      // eslint-disable-next-line no-unused-expressions
-      this.datosServicio.hasError('endDateBeforeStartDate') &&
-        this.limpiarFechasHoras();
-      this.rangoFechas();
+
+    const FECHA_FINAL = this.datosServicio.get('fechaFinal');
+
+    if (!FECHA_FINAL?.dirty || !FECHA_FINAL?.touched) {
+      this.setValoresStore(this.datosServicio, 'fechaFinal', 'setFechaFinal');
+      return;
     }
 
+    if (this.datosServicio.hasError('endDateBeforeStartDate')) {
+      this.limpiarFechasHoras();
+      return;
+    }
+
+    if (this.datosServicio.hasError('invalidIntervalo')) {
+      this.limpiarFechasHoras();
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Avisos',
+        mensaje: MSJ_ERROR_FECHA,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    this.rangoFechas();
     this.setValoresStore(this.datosServicio, 'fechaFinal', 'setFechaFinal');
   }
 
@@ -1346,6 +1432,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   changeHoraFinal(): void {
     this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
+
     this.setValoresStore(this.datosServicio, 'horaFinal', 'setHoraFinal');
 
     if (this.fechaInicioPasadaFechaFinalError()) {
@@ -1408,7 +1495,17 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       HORA_INICIO,
       HORA_FINAL
     );
-    this.colapsable = true;
+
+    this.montoACubrir = this.selectRangoDias.length * this.montoPorDia; // Ejemplo de cálculo, ajustar según lógica real
+    this.pagoCaptura.get('montoAPagar')?.enable();
+    this.pagoCaptura.get('montoAPagar')?.setValue(this.montoACubrir);
+    this.pagoCaptura.get('montoAPagar')?.disable();
+    this.colapsable =
+      this.tipoSolicitudSeleccionada !== TIPO_SOLICITUD.INDIVIDUAL
+        ? false
+        : true;
+
+    this.setValoresStore(this.pagoCaptura, 'montoAPagar', 'setMontoPagar');
   }
 
   /**
@@ -1439,15 +1536,37 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   changeFechaInicio(): void {
     this.datosServicio.updateValueAndValidity();
     this.fechaIntervaloValidator();
-    if (
-      this.datosServicio.get('fechaInicio')?.dirty &&
-      this.datosServicio.get('fechaInicio')?.touched
-    ) {
-      this.rangoFechas();
+
+    const FECHA_INICIO = this.datosServicio.get('fechaInicio');
+
+    if (!FECHA_INICIO?.dirty || !FECHA_INICIO?.touched) {
+      this.setValoresStore(this.datosServicio, 'fechaInicio', 'setFechaInicio');
+      return;
     }
+
+    if (this.datosServicio.hasError('endDateBeforeStartDate')) {
+      this.limpiarFechasHoras();
+      return;
+    }
+
+    if (this.datosServicio.hasError('invalidIntervalo')) {
+      this.limpiarFechasHoras();
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Avisos',
+        mensaje: MSJ_ERROR_FECHA,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    this.rangoFechas();
     this.setValoresStore(this.datosServicio, 'fechaInicio', 'setFechaInicio');
   }
-
   /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
    *
@@ -1653,7 +1772,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @param tipo - Tipo de datos a actualizar ('vehiculo' o 'transporte').
    * @returns void
    */
-  changeAgregarVehiculo(vehiculos: any[], tipo: string): void {
+  changeAgregarVehiculo(vehiculos: TransporteDespacho[], tipo: string): void {
     if (tipo === 'vehiculo') {
       this.tramite5701Store.setTransporte(vehiculos);
     } else if (tipo === 'transporte') {
@@ -1831,30 +1950,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         'setIdAduanaDespacho'
       );
     }
-  }
-
-  /**
-   * Cambia el valor del campo idSocioComercial y actualiza el store correspondiente.
-   *
-   * @returns {void} No retorna ningún valor.
-   */
-  public onIdSocioComercialChange(): void {
-    const ID_SOCIO_COMERCIAL: string =
-      this.datosImportadorExportador.get('idSocioComercial')?.value;
-    this.socioComercial
-      .getSocioComercial(ID_SOCIO_COMERCIAL)
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((response) => {
-          this.tramite5701Store.setBlnSocioComercial(response.datos);
-        })
-      )
-      .subscribe();
-    this.setValoresStore(
-      this.datosImportadorExportador,
-      'idSocioComercial',
-      'setIdSocioComercial'
-    );
   }
 
   /**
@@ -2044,28 +2139,39 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             return;
           }
 
-          //Obtenemos el monto a pagar desde el servicio de parámetros
-          const MONTO_A_PAGAR = this.pagoCaptura
-            .get('montoAPagar')
-            ?.getRawValue();
-
           const DIAS_SERVICIO =
             this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL
               ? UN_DIA
               : this.fechasSeleccionadas.length;
 
-          const MONTO_A_CUBRIR = DIAS_SERVICIO * MONTO_A_PAGAR;
-
-          //TODO: Aqui se hace la validación del monto a pagar y el monto a cubrir
+          const MONTO_A_CUBRIR = DIAS_SERVICIO * this.montoPorDia;
 
           const PAGO = {
             lineaCaptura: LINEA_PAGO,
             monto: responseLineaCapturaPagada.datos.pago_model.importe,
           };
 
-          this.montoPagadoLineas +=
-            responseLineaCapturaPagada.datos.pago_model.importe;
-          this.datosTablaPagos.push(PAGO);
+          if (this.montoPagadoLineas < MONTO_A_CUBRIR) {
+            this.montoPagadoLineas +=
+              responseLineaCapturaPagada.datos.pago_model.importe;
+            this.datosTablaPagos.push(PAGO);
+          } else {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: TITULO_MODAL_ERROR,
+              mensaje: MSG_MONTO_PAGADO_CUBIERTO,
+              cerrar: false,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+            this.pagoCaptura.get('lineaCaptura')?.reset();
+            this.pagoCaptura.get('monto')?.reset();
+            return;
+          }
+
+          // Actualizar el estado una vez, en lugar de en cada iteración
           this.tramite5701Store.setLineasCaptura(this.datosTablaPagos);
 
           //Limpia los campos de la línea de captura y monto
@@ -2097,6 +2203,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       .pipe(
         takeUntil(this.destroyNotifier$),
         tap((montoResponse) => {
+          this.montoPorDia = montoResponse.datos;
           this.pagoCaptura.get('montoAPagar')?.enable();
           this.pagoCaptura.get('montoAPagar')?.setValue(montoResponse.datos);
           this.pagoCaptura.get('montoAPagar')?.disable();
@@ -2139,6 +2246,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               this.despachoSeleccionado = false;
             }
           }
+
+          this.despacho.get('rfcDespachoLDA')?.clearValidators();
+          this.despacho.get('rfcDespachoLDA')?.updateValueAndValidity();
+          this.despacho.get('folioDDEX')?.clearValidators();
+          this.despacho.get('folioDDEX')?.updateValueAndValidity();
         }
         break;
 
@@ -2182,13 +2294,27 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @param tipo - Tipo de despacho seleccionado ('lda' o 'dd').
    * @returns {void} No retorna ningún valor.
    */
-  showConfirmDialogLDA_DD(tipo: string): void {
+  showConfirmDialogLDA_DD(event: Event, tipo: string): void {
+    const CHECKED = event.target as HTMLInputElement;
+
+    this.despacho.get(tipo)?.setValue(CHECKED.checked);
+
     this.tipoDespacho = tipo;
     const ADUANA = this.despacho.get('idAduanaDespacho')?.value;
     const DESPACHO = this.despacho.get('idSeccionDespacho')?.value;
     const RECINTO = this.despacho.get('nombreRecinto')?.value;
 
-    if ((ADUANA || DESPACHO || RECINTO) && this.despacho.touched) {
+    const FORMA_MODIFICADA = Object.keys(this.despacho.controls).some((key) => {
+      if (key !== 'lda' && key !== 'dd') {
+        return (
+          this.despacho.controls[key].dirty ||
+          this.despacho.controls[key].touched
+        );
+      }
+      return false;
+    });
+
+    if ((ADUANA || DESPACHO || RECINTO) > 0 && FORMA_MODIFICADA) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: '',
@@ -2200,6 +2326,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         txtBtnCancelar: 'No',
       };
       this.procesoModal = 'lda_dd';
+    } else if (!this.despacho.get(tipo)?.value) {
+      this.despacho.get('rfcDespachoLDA')?.clearValidators();
+      this.despacho.get('rfcDespachoLDA')?.updateValueAndValidity();
+      this.despacho.get('folioDDEX')?.clearValidators();
+      this.despacho.get('folioDDEX')?.updateValueAndValidity();
     } else {
       this.activaDesactivaCheckLDA_DDEX(tipo);
     }
@@ -2568,5 +2699,48 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   limpiarNotificacion(): void {
     this.nuevaNotificacion = null;
     this.procesoModal = '';
+  }
+
+  /**
+   * @description Valida el ID del socio comercial
+   * @returns {void} No retorna ningún valor.
+   */
+  validarIDSocioComercial(): void {
+    const ID_SOCIO_COMERCIAL: string =
+      this.datosImportadorExportador.get('idSocioComercial')?.value;
+
+    if (ID_SOCIO_COMERCIAL && ID_SOCIO_COMERCIAL) {
+      this.socioComercial
+        .getSocioComercial(ID_SOCIO_COMERCIAL)
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          tap((response) => {
+            if (!response.datos) {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'alert',
+                categoria: 'danger',
+                modo: 'action',
+                titulo: TITULO_MODAL_ERROR,
+                mensaje: MSJ_ERROR_ID_SOCIO_COMERCIAL,
+                cerrar: false,
+                txtBtnAceptar: 'Aceptar',
+                txtBtnCancelar: '',
+              };
+              return EMPTY;
+            }
+            this.tramite5701Store.setBlnSocioComercial(response.datos);
+            this.setValoresStore(
+              this.datosImportadorExportador,
+              'idSocioComercial',
+              'setIdSocioComercial'
+            );
+            return response;
+          }),
+          catchError((error) => {
+            return throwError(() => error);
+          })
+        )
+        .subscribe();
+    }
   }
 }
