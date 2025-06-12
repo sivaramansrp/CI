@@ -5,11 +5,12 @@
       <div class="contenedor-de-mesa">
         <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosTablaDestinatario"
           [tipoSeleccionTabla]="tipoSeleccionTabla"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"></app-tabla-dinamica>
       </div>
       <div class="row mt-3" style="padding-bottom: 20px; text-align: right">
         <div>
-          <button type="button" class="btn btn-primary me-2" (click)="mostrarFormularioMercanciaModal()">
+          <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="mostrarFormularioMercanciaModal()">
             Agregar
           </button>
           <button type="button" class="btn me-2"
