@@ -127,10 +127,21 @@ export const MSJ_ERROR_GAFETE_EXISTE =
   'El número de gafete ya se encuentra registrado, intenta de nuevo';
 
 /**
+ * @description Mensaje de rfc no es válido.
+ */
+export const MSJ_ERROR_RFC_NO_VALIDO = 'El RFC  no es válido.';
+
+/**
  * @description Mensaje de avertencia cuando se va a cambiar de tipo de solicitud y el formulario tiene datos capturados.
  */
 export const MSG_CAMBIO_TIPO_SOLICITUD =
   'Los datos capturados serán borrados, ¿estás de acuerdo (SI/NO)?';
+
+/**
+ * @descrpicion Mensaje de rror cuando no se encuentra el ID del Socio Comercial
+ */
+export const MSJ_ERROR_ID_SOCIO_COMERCIAL =
+  'No se ha encontrado ningún registro de socio comercial con el identificador proporcionado, por favor verifica.';
 
 /**
  * @description Constantes para el manejo de las etiquetas de los inputs de la autorización LDA y DDEX
@@ -297,3 +308,16 @@ export const TEXTO_ACEPTAR = 'Aceptar';
  * @description Texto 'Cancelar' para el botón de cancelación en el modal de aviso
  */
 export const TEXTO_CANCELAR = 'Cancelar';
+
+/**
+ * @description Mensaje de error cuando no se ha encontrado el rfc.
+ */
+export const MSG_ERROR_RFC_NO_ENCONTRADO =
+  'No se encontró el RFC, favor de verificar los datos ingresados.';
+
+/**
+ * @description Mensaje monto pagado cubierto
+ */
+
+export const MSG_MONTO_PAGADO_CUBIERTO =
+  'EL monto a pagar ya ha sido cubierto, no es necesario agregar otra línea de captura.';
