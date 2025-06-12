@@ -85,9 +85,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
 
   private destroyNotifier$: Subject<void> = new Subject();
- /**
-   * Subject para destruir notificador.
-   */
+  /**
+    * Subject para destruir notificador.
+    */
   consultaDatos!: ConsultaioState;
   /**
    * Notificador para cancelar suscripciones activas.
@@ -121,10 +121,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe()
-
-    this.inicializarEstadoFormulario();
-
-  }
+    }
 
 
   /**
@@ -137,11 +134,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.solicitudState = seccionState;
-          this.donanteDomicilio()
         })
       )
       .subscribe();
-    this.inicializarEstadoFormulario();
+    this.donanteDomicilio()
   }
 
   inicializarEstadoFormulario(): void {
@@ -234,10 +230,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       monedaNacional: [this.solicitudState?.monedaNacional, [Validators.required]],
     });
 
-    // Solo deshabilita el formulario si es de solo lectura
-    if (this.esFormularioSoloLectura) {
-      this.registroForm.disable();
-    }
+    this.inicializarEstadoFormulario();
   }
 
   /**
