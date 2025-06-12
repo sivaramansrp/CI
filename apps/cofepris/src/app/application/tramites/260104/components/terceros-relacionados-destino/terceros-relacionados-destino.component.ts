@@ -185,6 +185,7 @@ export class TercerosRelacionadosDestinoComponent implements OnInit,OnDestroy{
    * @param activatedRoute Servicio de Angular ActivatedRoute para acceder a información sobre la ruta activa.
    * @param tramiteQuery Consulta para obtener datos relacionados con el trámite 260104.
    * @param tramiteStore Almacén para gestionar el estado del trámite 260104.
+   * @param consultaioQuery - Servicio para consultar el estado de la sección de IO.
    */
   constructor(
     private tercerosDataService: TercerosRelacionadosDestinoService,
