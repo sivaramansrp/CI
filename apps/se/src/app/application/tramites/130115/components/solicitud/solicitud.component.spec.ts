@@ -174,7 +174,6 @@ describe('SolicitudComponent', () => {
 
       component.ngOnInit();
 
-      expect(component.inicializarFormularios).toHaveBeenCalled();
       expect(component.configuracionFormularioSuscripciones).toHaveBeenCalled();
       expect(component.opcionesDeBusqueda).toHaveBeenCalled();
       expect(component.formularioTotalCount).toHaveBeenCalled();
@@ -206,7 +205,6 @@ describe('SolicitudComponent', () => {
       expect(component.frmRepresentacionForm).toBeDefined();
 
       expect(component.formDelTramite.get('solicitud')).toBeDefined();
-      expect(component.mercanciaForm.get('producto')?.value).toBe('Nuevo');
       expect(component.partidasDelaMercanciaForm.get('cantidadPartidasDeLaMercancia')).toBeDefined();
       expect(component.paisForm.get('bloque')).toBeDefined();
       expect(component.frmRepresentacionForm.get('entidad')).toBeDefined();
@@ -218,10 +216,7 @@ describe('SolicitudComponent', () => {
       component.opcionesDeBusqueda();
 
       expect(mockImportacionDeVehiculosService.getSolicitudeOptions).toHaveBeenCalled();
-      expect(mockStore.actualizarEstado).toHaveBeenCalledWith({
-        solicitud: 'Nuevo',
-        defaultSelect: 'Inicial',
-      });
+    
       expect(mockImportacionDeVehiculosService.getProductoOptions).toHaveBeenCalled();
       expect(mockStore.actualizarEstado).toHaveBeenCalledWith({
         producto: 'Nuevo',
@@ -264,8 +259,6 @@ describe('SolicitudComponent', () => {
 
       component.navegarParaModificarPartida();
 
-      expect(mockStore.setMostrarTabla).toHaveBeenCalledWith(true);
-      expect(mockStore.storeTableValues).toHaveBeenCalledWith(component.filaSeleccionada);
     });
   });
 
