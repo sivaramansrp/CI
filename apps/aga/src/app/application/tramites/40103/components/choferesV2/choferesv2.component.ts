@@ -3,11 +3,13 @@ import {
   ReactiveFormsModule,
 } from '@angular/forms';
 import { CHOFERES_PAGE } from '../../enum/transportista-terrestre.enum';
-import { ChofereAltaDeExtranjerosComponent } from './extranjero/chofere.alta.de.extranjeros.component';
+import { ChofereAltaDeExtranjerosComponent } from './extranjero/alta-de-extranjeros/chofere.alta.de.extranjeros.component';
+import { ChofereModificationDeChoferesComponent } from './extranjero/modification-de-choferes/chofere.modification.de.choferes.component';
 import { ChofereNacionalComponent } from './chofere.nacional/chofere.nacional.component';
 import { ChofereNacionalModificacionComponent } from './chofere.nacional/chofere.nacional.modificacion/chofere.nacional.modificacion.component';
 import { ChofereNacionalNotificationComponent } from './chofere.nacional.nofitication/chofere.nacional.notification.component';
 import { ChofereNacionalRetiradaComponent } from './chofere.nacional/chofere.nacional.retirada/chofere.nacional.retirada.component';
+import { ChofereRetiradaDeChoferesComponent } from './extranjero/retirada-de-choferes/chofere.retirada.de.choferes.component';
 import { CommonModule } from '@angular/common';
 import {
   Component,
@@ -31,7 +33,9 @@ import { TituloComponent } from '@ng-mf/data-access-user';
     ChofereAltaDeExtranjerosComponent,
     ChofereNacionalNotificationComponent,
     ChofereNacionalModificacionComponent,
-    ChofereNacionalRetiradaComponent
+    ChofereNacionalRetiradaComponent,
+    ChofereRetiradaDeChoferesComponent,
+    ChofereModificationDeChoferesComponent
   ],
 })
 export class ChoferesV2Component {

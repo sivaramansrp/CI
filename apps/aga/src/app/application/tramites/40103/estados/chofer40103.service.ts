@@ -73,17 +73,17 @@ export class Chofer40103Service {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(CHOFER_ARRAY));
 
     // Actualizar tienda Akita
-    this.chofer40103Store.update((state) => ({
-      ...state,
-      choferesExtranjero: isExtranjero
-        ? CHOFER_ARRAY
-        : state.choferesExtranjero,
-      choferes: !isExtranjero ? CHOFER_ARRAY : state.choferes,
-    }));
+    // this.chofer40103Store.update((state) => ({
+    //   ...state,
+    //   choferesExtranjero: isExtranjero
+    //     ? CHOFER_ARRAY
+    //     : state.choferesExtranjero,
+    //   choferes: !isExtranjero ? CHOFER_ARRAY : state.choferes,
+    // }));
 
-    if (isExtranjero) {
-      this.choferesListSubject.next(CHOFER_ARRAY);
-    }
+    // if (isExtranjero) {
+    //   this.choferesListSubject.next(CHOFER_ARRAY);
+    // }
   }
 
   /**

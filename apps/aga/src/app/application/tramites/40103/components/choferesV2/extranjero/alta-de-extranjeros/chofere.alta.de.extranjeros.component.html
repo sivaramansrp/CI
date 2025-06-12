@@ -5,7 +5,7 @@
       <h5>Alta de choferes:</h5>
 
       <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="ConfiguracionColumna"
-        [datos]="datosDelChoferNacional" (listaDeFilaSeleccionada)="onChofereNationalSelected($event)">
+        [datos]="datosDelChoferExtranjeros" (listaDeFilaSeleccionada)="onChofereNationalSelected($event)">
       </app-tabla-dinamica>
 
     </div>
@@ -31,8 +31,8 @@
     </div>
     <ng-template #datosDeChoferesModal>
       <div id="datosDeChoferesModal">
-        <app-choferes-datos [datosDeChofere]="datosChofere" #datosDeChoferesModal [readonly]="isReadonly"
-          (addModalEvent)="addModal($event)" (cancelEvent)="cancelModal()"></app-choferes-datos>
+        <app-choferes-datos-extranjeros-dialog [datosDeChofere]="datosChofere" #datosDeChoferesModal [readonly]="isReadonly"
+          (addModalEvent)="addModal($event)" (cancelEvent)="cancelModal()"></app-choferes-datos-extranjeros-dialog>
 
       </div>
     </ng-template>

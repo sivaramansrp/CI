@@ -91,59 +91,29 @@ export const CHOFERES_EXTRANJEROS_TABLA: ConfiguracionColumna<ChoferesExtranjero
         orden: 5,
     },
     {
-        encabezado: 'País',
-        clave: (item: ChoferesExtranjeros) => item.pais,
+        encabezado: 'Estado',
+        clave: (item: ChoferesExtranjeros) => item.estado,
         orden: 6,
     },
     {
-        encabezado: 'Estado',
-        clave: (item: ChoferesExtranjeros) => item.estado,
+        encabezado: 'País',
+        clave: (item: ChoferesExtranjeros) => item.pais,
         orden: 7,
-    },
-    {
-        encabezado: 'Primer Apellido',
-        clave: (item: ChoferesExtranjeros) => item.primerApellido,
-        orden: 8,
-    },
-    {
-        encabezado: 'Segundo Apellido',
-        clave: (item: ChoferesExtranjeros) => item.segundoApellido,
-        orden: 9,
-    },
-    {
-        encabezado: 'RFC',
-        clave: (item: ChoferesExtranjeros) => item.rfc,
-        orden: 10,
-    },
-    {
-        encabezado: 'Número de gafete del chofer',
-        clave: (item: ChoferesExtranjeros) => item.numeroDeGafete,
-        orden: 11,
-    },
-    {
-        encabezado: 'Fecha fin de Vigencia Gafete',
-        clave: (item: ChoferesExtranjeros) => item.fechaFindDeVigencia,
-        orden: 12,
-    },
-    {
-        encabezado: 'Municipio o alcaldía',
-        clave: (item: ChoferesExtranjeros) => item.municipioAlcaldia,
-        orden: 13,
-    },
-    {
-        encabezado: 'Colonia',
-        clave: (item: ChoferesExtranjeros) => item.colonia,
-        orden: 14,
-    },
-    {
-        encabezado: 'País de residencia',
-        clave: (item: ChoferesExtranjeros) => item.paisDeResidencia,
-        orden: 15,
     },
     {
         encabezado: 'Ciudad',
         clave: (item: ChoferesExtranjeros) => item.ciudad,
-        orden: 16,
+        orden: 8,
+    },
+    {
+        encabezado: 'Código Postal',
+        clave: (item: ChoferesExtranjeros) => item.codigoPostal,
+        orden: 9,
+    },
+    {
+        encabezado: 'País de residencia',
+        clave: (item: ChoferesExtranjeros) => item.paisDeResidencia,
+        orden: 10,
     },
 ];
 

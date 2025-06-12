@@ -6,25 +6,25 @@ import {
   TablaDinamicaComponent,
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
-import { CHOFERES_NACIONALES_ALTA } from '../../../enum/choferes-enum';
-import { Chofer40103Query } from '../../../estados/chofer40103.query';
-import { Chofer40103Service } from '../../../estados/chofer40103.service';
+import { CHOFERES_EXTRANJEROS_TABLA } from '../../../../enum/choferes-enum';
+import { Chofer40103Query } from '../../../../estados/chofer40103.query';
+import { Chofer40103Service } from '../../../../estados/chofer40103.service';
+import { ChoferesExtranjeros } from '../../../../models/registro-muestras-mercancias.model';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { DatosDeChoferesNacionalDialogComponent } from './data.de.choferes.dialog/data.de.choferes.nacional.dialog.component';
-import { DatosDelChoferNacional } from '../../../models/registro-muestras-mercancias.model';
+import { DatosDeChoferesExtranjerosDialogComponent } from '../dialog/data.de.choferes.extranjeros.dialog.component';
 
 @Component({
-  selector: 'app-chofere-nacional',
-  templateUrl: './chofere.nacional.component.html',
-  styleUrls: ['./chofere.nacional.component.scss'],
+  selector: 'app-chofere-alta-de-extranjeros',
+  templateUrl: './chofere.alta.de.extranjeros.component.html',
+  styleUrls: ['./chofere.alta.de.extranjeros.component.scss'],
   standalone: true,
   imports: [
     TablaDinamicaComponent, 
-    DatosDeChoferesNacionalDialogComponent,
+    DatosDeChoferesExtranjerosDialogComponent,
   ],
   providers: [BsModalService],
 })
-export class ChofereNacionalComponent implements OnInit, OnDestroy {
+export class ChofereAltaDeExtranjerosComponent implements OnInit, OnDestroy {
   // Add your component logic here
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
@@ -32,21 +32,21 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
    * Configuración de las columnas de la tabla.
    * Define el encabezado, la clave de acceso a los datos y el orden de las columnas.
    */
-  ConfiguracionColumna: ConfiguracionColumna<DatosDelChoferNacional>[] =
-    CHOFERES_NACIONALES_ALTA;
+  ConfiguracionColumna: ConfiguracionColumna<ChoferesExtranjeros>[] =
+    CHOFERES_EXTRANJEROS_TABLA;
 
 
   /**
    * Datos del chofer nacional.
-   * @property {DatosDelChoferNacional[]} datosDelChoferNacional
+   * @property {ChoferesExtranjeros[]} ChoferesExtranjeros
    */
-  datosDelChoferNacional: DatosDelChoferNacional[] = [];
+  datosDelChoferExtranjeros: ChoferesExtranjeros[] = [];
 
   /**
    * Datos del chofer nacional seleccionados.
-   * @property {DatosDelChoferNacional[]} datosDelChoferNacionalSelected
+   * @property {ChoferesExtranjeros[]} datosDelChoferExtranjerosSelected
    */
-  datosDelChoferNacionalSelected: DatosDelChoferNacional[] = [];
+  datosDelChoferExtranjerosSelected: ChoferesExtranjeros[] = [];
 
   /**
    * Texto de la sección.
@@ -56,9 +56,9 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
 
   /**
    * Datos del chofer nacional que se utilizarán para agregar o editar.
-   * @property {DatosDelChoferNacional} datosChofere
+   * @property {ChoferesExtranjeros} datosChofere
    */
-  datosChofere: DatosDelChoferNacional = {} as DatosDelChoferNacional;
+  datosChofere: ChoferesExtranjeros = {} as ChoferesExtranjeros;
 
 
   /**
@@ -106,7 +106,7 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * 
    * - Suscribe a los observables `selectSolicitud$` y `selectConsultaioState$` para obtener y actualizar los datos del chofer nacional y el estado de consulta.
-   * - Actualiza las propiedades `datosDelChoferNacional`, `datosConsulta` e `isReadonly` según los datos recibidos.
+   * - Actualiza las propiedades `datosDelChoferExtranjeros`, `datosConsulta` e `isReadonly` según los datos recibidos.
    * - Utiliza `takeUntil(this.destroy$)` para gestionar la desuscripción automática y evitar fugas de memoria.
    */
   ngOnInit(): void {
@@ -115,7 +115,7 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         map((data) => {
-          this.datosDelChoferNacional = this.datosDelChoferNacional.concat(data?.datosDelChoferNacionalAlta ?? []);
+          this.datosDelChoferExtranjeros = this.datosDelChoferExtranjeros.concat(data?.datosDelChoferExtranjerosAlta ?? []);
         })
       )
       .subscribe();
@@ -135,10 +135,10 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
   /**
    * Maneja el evento cuando se seleccionan uno o más choferes nacionales.
    * 
-   * @param $event - Arreglo de objetos de tipo DatosDelChoferNacional que representa los choferes seleccionados.
+   * @param $event - Arreglo de objetos de tipo ChoferesExtranjeros que representa los choferes seleccionados.
    */
-  onChofereNationalSelected($event: DatosDelChoferNacional[]): void {
-    this.datosDelChoferNacionalSelected = $event;
+  onChofereNationalSelected($event: ChoferesExtranjeros[]): void {
+    this.datosDelChoferExtranjerosSelected = $event;
   }
 
   /**
@@ -148,7 +148,7 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
    * @returns void
    */
   addNewRow(template: TemplateRef<unknown>): void {
-    this.datosChofere = {} as DatosDelChoferNacional;
+    this.datosChofere = {} as ChoferesExtranjeros;
     this.openModal(template);
   }
 
@@ -157,30 +157,30 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
    * 
    * @param template - Referencia a la plantilla del modal que se debe abrir.
    * 
-   * Si no hay filas seleccionadas en `datosDelChoferNacionalSelected`, muestra una advertencia en la consola y no realiza ninguna acción.
+   * Si no hay filas seleccionadas en `choferesExtranjerosSelected`, muestra una advertencia en la consola y no realiza ninguna acción.
    * Si hay al menos una fila seleccionada, asigna la primera fila seleccionada a `datosChofere` y abre el modal correspondiente.
    */
   editSelectedRow(template: TemplateRef<unknown>): void {
-    if (this.datosDelChoferNacionalSelected.length === 0) {
+    if (this.datosDelChoferExtranjerosSelected.length === 0) {
       console.warn('No rows selected for editing.');
       return;
     }
-    this.datosChofere = this.datosDelChoferNacionalSelected[0];
+    this.datosChofere = this.datosDelChoferExtranjerosSelected[0];
     this.openModal(template);
   }
 
   /**
    * Elimina las filas seleccionadas de la lista de datos de choferes nacionales.
    * 
-   * Si hay elementos seleccionados en `datosDelChoferNacionalSelected`, estos se eliminan de la lista principal `datosDelChoferNacional`
+   * Si hay elementos seleccionados en `choferesExtranjerosSelected`, estos se eliminan de la lista principal `choferesExtranjeros`
    * y se limpia la selección. Si no hay elementos seleccionados, muestra una advertencia en la consola.
    */
   deleteSelectedRow(): void {
-    if (this.datosDelChoferNacionalSelected.length > 0) {
-      this.datosDelChoferNacional = this.datosDelChoferNacional.filter(
-        (item) => !this.datosDelChoferNacionalSelected.includes(item)
+    if (this.datosDelChoferExtranjerosSelected.length > 0) {
+      this.datosDelChoferExtranjeros = this.datosDelChoferExtranjeros.filter(
+        (item) => !this.datosDelChoferExtranjerosSelected.includes(item)
       );
-      this.datosDelChoferNacionalSelected = [];
+      this.datosDelChoferExtranjerosSelected = [];
     } else {
       console.warn('No rows selected for deletion.');
     }
@@ -210,14 +210,14 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Agrega un nuevo objeto de tipo `DatosDelChoferNacional` al arreglo `datosDelChoferNacional`.
+   * Agrega un nuevo objeto de tipo `ChoferesExtranjeros` al arreglo `datosDelChoferExtranjeros`.
    * Limpia la selección actual de choferes y cierra el modal.
    *
-   * @param data - Los datos del chofer nacional a agregar.
+   * @param data - Los datos del chofer extranjero a agregar.
    */
-  addModal(data: DatosDelChoferNacional): void {
-    this.datosDelChoferNacional.push(data);
-    this.datosDelChoferNacionalSelected = [];
+  addModal(data: ChoferesExtranjeros): void {
+    this.datosDelChoferExtranjeros.push(data);
+    this.datosDelChoferExtranjerosSelected = [];
     this.cancelModal();
   }
 

@@ -232,29 +232,32 @@ export interface DatosDelChoferNacional {
 
 export interface ChoferesExtranjeros {
   /** Línea de captura del pago. */
-  numeroDelSeguroSocial?: string;
   numero?:string;
-  calle?: string;
-  estado?: string;
-  pais?: string;
-  apellidoPaterno?: string;
-  apellidoMaterno?: string;
-  rfc?: string;
-  gafete?: string;
-  vigenciaGafete?: string;
-  municipio?: string;
-  colonia?: string;
-  paisOrigen?: string;
-  ciudad?: string;
-  curp?: string;
-  numeroExterior?: string;
-  numeroInterior?: string;
   primerApellido?: string;
   segundoApellido?: string;
+
+  nacionalidad?: string;
   numeroDeGafete?: string;
-  fechaFindDeVigencia?: string;
-  municipioAlcaldia?: string;
+  vigenciaGafete?: string;
+
+  numeroDelSeguroSocial?: string;
+  numberDeIdeFiscal?: string;
+
+  pais?: string;
+ 
+  apellidoPaterno?: string;
+  codigoPostal?: string;
+  estado?: string;
+
+  calle?: string;
+  numeroExterior?: string;
+  numeroInterior?: string;
+  
   paisDeResidencia?: string;
+  ciudad?: string;
+
+  correoElectronico?: string;
+  telefono?: string;
 }
 export interface PagoDerechosLista {
   /** Línea de captura del pago. */

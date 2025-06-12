@@ -10,7 +10,7 @@ import { CHOFERES_NACIONALES_ALTA } from '../../../../enum/choferes-enum';
 import { Chofer40103Query } from '../../../../estados/chofer40103.query';
 import { Chofer40103Service } from '../../../../estados/chofer40103.service';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src/core/models/shared/configuracion-columna.model';
-import { DatosDeChoferesNacionalDialogComponent } from '../../data.de.choferes.dialog/data.de.choferes.nacional.dialog.component';
+import { DatosDeChoferesNacionalDialogComponent } from '../data.de.choferes.dialog/data.de.choferes.nacional.dialog.component';
 import { DatosDelChoferNacional } from '../../../../models/registro-muestras-mercancias.model';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
