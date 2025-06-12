@@ -1,10 +1,12 @@
 import { CapturarElTextoLibre } from '../models/datos-tramite.model';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
+import { FormaRequerimiento } from '../models/datos-tramite.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RequerimientoOpcions } from '../models/datos-tramite.model';
 import { RespuestaContenedor } from '../models/datos-tramite.model';
+import { Tramite32401Store } from '../estados/tramite32401.store';
 /**
  * Servicio para interactuar con los datos relacionados con la autoridad.
  * Proporciona métodos para obtener y gestionar listas de trámites, aduanas y solicitudes.
@@ -19,7 +21,10 @@ export class AutoridadService {
    * Inyecta el cliente HTTP para realizar solicitudes.
    * @param http Cliente HTTP para la comunicación con el servidor.
    */
-  constructor(private http: HttpClient) {
+  constructor(
+    private http: HttpClient,
+    private tramite32401Store: Tramite32401Store
+  ) {
     // Constructor vacío, se puede agregar lógica adicional si es necesario.
   }
 
@@ -74,5 +79,26 @@ export class AutoridadService {
     return this.http.get<RequerimientoOpcions[]>(
       `assets/json/32401/requerimiento-opcions.json`
     );
+  }
+
+  /**
+   * Obtiene un requerimiento desde un archivo JSON local.
+   *
+   * @returns Un observable con los datos del requerimiento en formato `FormaRequerimiento`.
+   */
+  agregarRequerimiento(): Observable<FormaRequerimiento> {
+    return this.http.get<FormaRequerimiento>(
+      `assets/json/32401/requerimiento.json`
+    );
+  }
+
+  /**
+   * Actualiza el estado del formulario en el store con los datos proporcionados.
+   *
+   * @param valor - Objeto del tipo `FormaRequerimiento` que contiene el motivo de cancelación y el tipo de requerimiento.
+   */
+  actualizarEstadoFormulario(valor: FormaRequerimiento): void {
+    this.tramite32401Store.setMotivoCancelacion(valor.motivoCancelacion);
+    this.tramite32401Store.setTipoDeRequerimiento(valor.tipoDeRequerimiento);
   }
 }
