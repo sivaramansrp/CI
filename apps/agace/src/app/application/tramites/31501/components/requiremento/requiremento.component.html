@@ -24,8 +24,10 @@
         </ul>
         <ng-container>
             @switch (indice) { @case (1) {
+            @if(esDatosRespuesta){
             <app-capturar-requerimiento></app-capturar-requerimiento>
             }}
-        </ng-container>
+            }
+            </ng-container>
     </div>
 </div>
