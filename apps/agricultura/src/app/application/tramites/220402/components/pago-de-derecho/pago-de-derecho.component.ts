@@ -280,7 +280,7 @@ export class PagoDeDerechoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Este método se utiliza para validar la forma del transporte. - 220401
+   * Este método se utiliza para validar la forma del transporte. - 220402
    * @param form: Forma del transporte
    * @param field: campo del formulario
    * @returns Validaciones del formulario

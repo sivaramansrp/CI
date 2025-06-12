@@ -239,7 +239,7 @@ export class AgregarDestinatarioComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * Este método se utiliza para marcar los controles del formulario como tocados. - 220401
+   * Este método se utiliza para marcar los controles del formulario como tocados. - 220402
    */
   validarDestinatarioFormulario(): void {
     if (this.destinatarioForm.invalid) {

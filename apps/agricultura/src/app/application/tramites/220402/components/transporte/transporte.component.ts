@@ -112,7 +112,7 @@ export class TransporteComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * Este método se utiliza para crear la forma del transporte. - 220401
+   * Este método se utiliza para crear la forma del transporte. - 220402
    */
   crearFormTransporte(): void {
     this.transporteForm = this.fb.group({
@@ -138,7 +138,7 @@ export class TransporteComponent implements OnDestroy, OnInit {
     }
   }
   /**
-   * Este método se utiliza para validar la forma del transporte. - 220401
+   * Este método se utiliza para validar la forma del transporte. - 220402
    * @param form: Forma del transporte
    * @param field: campo del formulario
    * @returns Validaciones del formulario
@@ -148,7 +148,7 @@ export class TransporteComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * Este método se utiliza para marcar los controles del formulario como tocados. - 220401
+   * Este método se utiliza para marcar los controles del formulario como tocados. - 220402
    */
   validarTransporteFormulario(): void {
     if (this.transporteForm.invalid) {
@@ -188,4 +188,4 @@ export class TransporteComponent implements OnDestroy, OnInit {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
-} // Initialize any properties or start any processes here
+}
