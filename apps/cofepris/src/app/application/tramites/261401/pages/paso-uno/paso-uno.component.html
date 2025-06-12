@@ -62,9 +62,13 @@
         @switch (indice) { @case (1) {
         <solicitante [tabindex]="1"></solicitante>
         } @case (2) {
+           @if(esDatosRespuesta){
         <app-datos-de-la-solicitud [tabindex]="2"></app-datos-de-la-solicitud>
+           }
         } @case (3) {
+           @if(esDatosRespuesta){
         <app-terceros-relacionados [tabindex]="3"></app-terceros-relacionados>
+           }
         } @case (4) {
           <app-pago-de-derechos 
           [formularioPagoDerechos]="formularioPagoDerechos"
