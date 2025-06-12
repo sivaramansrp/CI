@@ -101,4 +101,34 @@ describe('DatosSolicitudComponent', () => {
     expect(destroySpy).toHaveBeenCalledWith();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+  it('should call obtenerDatosFormulario and crearFormulario', () => {
+    const obtenerDatosFormularioSpy = jest.spyOn(component, 'obtenerDatosFormulario');
+    const crearFormularioSpy = jest.spyOn(component, 'crearFormulario');
+
+    component.guardarDatosFormulario();
+
+    expect(obtenerDatosFormularioSpy).toHaveBeenCalled();
+    expect(crearFormularioSpy).toHaveBeenCalled();
+  });
+
+  it('should disable the form if esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+
+    const disableSpy = jest.spyOn(component.preOperativeForm, 'disable');
+
+    component.guardarDatosFormulario();
+
+    expect(disableSpy).toHaveBeenCalled();
+  });
+
+  it('should enable the form if esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+
+    const enableSpy = jest.spyOn(component.preOperativeForm, 'enable');
+
+    component.guardarDatosFormulario();
+
+    expect(enableSpy).toHaveBeenCalled();
+  });
 });

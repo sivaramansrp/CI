@@ -103,6 +103,14 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
  * Los controles del formulario incluyen:
  */
   public establecerdomicilioEstablecimiento(): void {
+    this.query.selectProrroga$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.seccionState = seccionState;
+      })
+    )
+    .subscribe()
     this.domicilioEstablecimiento = this.fb.group({
       representanteLegalRFC: [{ value: this.seccionState?.representanteLegalRFC,disabled:false},[Validators.required]],
       buscar: [{ value: this.seccionState?.buscar,disabled:false },[Validators.required]],

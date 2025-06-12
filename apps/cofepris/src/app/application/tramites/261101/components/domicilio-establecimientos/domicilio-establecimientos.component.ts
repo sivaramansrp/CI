@@ -139,6 +139,14 @@ this.inicializarEstadoFormulario();
  * Los controles del formulario incluyen:
  */
   public establecerdomicilioEstablecimiento(): void {
+    this.query.selectProrroga$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.seccionState = seccionState;
+      })
+    )
+    .subscribe()
     this.domicilioEstablecimiento = this.fb.group({
       codigo: [this.seccionState?.codigo,],
       estado: [{ value: this.seccionState.estado, disabled: false }, [Validators.required]],
@@ -169,6 +177,14 @@ this.inicializarEstadoFormulario();
    * @returns {void}
    */
   public avisodeFuncionamientomiento(): void {
+    this.query.selectProrroga$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.seccionState = seccionState;
+      })
+    )
+    .subscribe()
     this.AvisodeFuncionamiento = this.fb.group({
       funcionamiento: [{ value: this.seccionState?.funcionamiento, disabled: false }],
       licencia: [{ value: this.seccionState?.licencia, disabled: false }],

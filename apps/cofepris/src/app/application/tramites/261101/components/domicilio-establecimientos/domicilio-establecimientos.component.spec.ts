@@ -100,4 +100,36 @@ describe('DomicilioEstablecimientosComponent', () => {
   it('should use CHECKBOX as TablaSeleccion enum', () => {
     expect(component.TablaSeleccion).toBe(TablaSeleccion.CHECKBOX);
   });
+  it('should handle empty form values in guardarDatosFormulario', () => {
+    // Ensure the form is empty
+    component.domicilioEstablecimiento.reset();
+  
+    // Spy on the method that saves the data
+    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
+  
+    // Call the method
+    component.guardarDatosFormulario();
+  
+    // Verify that setValoresStore was called with empty values
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.domicilioEstablecimiento, 'estado');
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.domicilioEstablecimiento, 'municipio');
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.domicilioEstablecimiento, 'localidad');
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.domicilioEstablecimiento, 'colonia');
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.domicilioEstablecimiento, 'calle');
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.domicilioEstablecimiento, 'codigoPostal');
+    expect(setValoresStoreSpy).toHaveBeenCalledWith(component.domicilioEstablecimiento, 'numeroExterior');
+  });
+  it('should not call setValoresStore if form is invalid in guardarDatosFormulario', () => {
+    // Mark the form as invalid
+    component.domicilioEstablecimiento.get('estado')?.setErrors({ required: true });
+  
+    // Spy on the method that saves the data
+    const setValoresStoreSpy = jest.spyOn(component, 'setValoresStore');
+  
+    // Call the method
+    component.guardarDatosFormulario();
+  
+    // Verify that setValoresStore was not called
+    expect(setValoresStoreSpy).not.toHaveBeenCalled();
+  });
 });

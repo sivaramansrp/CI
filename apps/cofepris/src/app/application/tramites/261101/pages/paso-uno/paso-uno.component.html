@@ -37,8 +37,9 @@
         @if(esDatosRespuesta){
           <app-pago-de-derechos [formularioPagoDerechos]="formularioPagoDerechos" [banco]="banco"
           (setValoresStoreEvent)="setValoresStore($event)" [isDisabled]="esFormularioSoloLectura"></app-pago-de-derechos>    
-            }
+            } 
         }
+      
        @case (5){
         @if(esDatosRespuesta){
           <app-tramite-asociados [configuracionTabla]="configuracionTabla"
@@ -46,6 +47,8 @@
             }
         }
       }
+    
+     
 
     </ng-container>
   </div>

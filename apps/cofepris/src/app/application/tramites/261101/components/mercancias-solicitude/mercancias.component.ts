@@ -124,6 +124,14 @@ export class MercanciasComponent implements OnInit, OnDestroy {
  * en el contexto del componente.
  */
   crearFormulario(): void {
+    this.query.selectProrroga$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.seccionState = seccionState;
+      })
+    )
+    .subscribe()
     this.Aduana = new FormGroup({
       Aduana: new FormControl(this.seccionState),
     });

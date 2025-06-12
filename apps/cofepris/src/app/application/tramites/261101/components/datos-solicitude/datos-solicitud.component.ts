@@ -162,6 +162,14 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
  * @returns void
  */
   crearFormulario(): void {
+    this.query.selectProrroga$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.seccionState = seccionState;
+      })
+    )
+    .subscribe()
     this.preOperativeForm = this.fb.group({
       ideGenerica1: [this.seccionState?.ideGenerica1],
       observaciones: [this.seccionState?.observaciones, [Validators.required]],

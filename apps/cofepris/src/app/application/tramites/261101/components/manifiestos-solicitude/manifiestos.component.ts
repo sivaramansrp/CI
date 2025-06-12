@@ -140,6 +140,14 @@ export class ManifiestosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   public mercanciasData(): void {
+    this.query.selectProrroga$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.seccionState = seccionState;
+      })
+    )
+    .subscribe()
     this.Aduana = this.fb.group({
       aduanas: [
         {

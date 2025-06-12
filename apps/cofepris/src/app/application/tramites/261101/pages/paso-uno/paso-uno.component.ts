@@ -3,7 +3,7 @@ import {
   ConfiguracionColumna,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, ConsultaioStore } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormControl,
@@ -81,17 +81,30 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
   
     /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
     public esDatosRespuesta: boolean = false;
+      /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
   /**
    * Constructor del componente.
    * Inicializa los servicios y dependencias necesarias.
    */
   constructor(
     private formBuilder: FormBuilder,
- private datosSolicitudService: DatosSolicitudService,
+    private datosSolicitudService: DatosSolicitudService,
     private store: DatosProcedureStore,
     private query: DatosProcedureQuery,
     private consultaQuery: ConsultaioQuery,
   ) { 
+        this.consultaQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.notificadorDestruccion$),
+          map((seccionState: { readonly: boolean })=>{
+            this.esFormularioSoloLectura = seccionState.readonly; 
+          })
+        )
+        .subscribe();
    }
 
   /**
@@ -115,7 +128,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy {
     this.datosSolicitudService.inicializaPagoDeDerechosDatosCatalogos();
       this.consultaQuery.selectConsultaioState$
         .pipe(
-          takeUntil(this.destroyNotifier$),
+          takeUntil(this.notificadorDestruccion$),
           map((seccionState) => {
             this.consultaState = seccionState;
           })

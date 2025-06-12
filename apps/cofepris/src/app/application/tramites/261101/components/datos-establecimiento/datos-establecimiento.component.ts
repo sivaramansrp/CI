@@ -72,7 +72,7 @@ export class DatosestablecimientoComponent implements OnInit, OnDestroy {
           this.inicializarEstadoFormulario();
         })
       )
-      .subscribe()
+      .subscribe();
   }
 
   /**
@@ -98,6 +98,14 @@ export class DatosestablecimientoComponent implements OnInit, OnDestroy {
  *   se obtiene de la propiedad `denominacion` del estado de la sección (`seccionState`).
  */
   crearFormulario(): void {
+    this.query.selectProrroga$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.seccionState = seccionState;
+      })
+    )
+    .subscribe()
     this.datosdelestablecimiento = this.fb.group({
       denominacion: [this.seccionState
         ?.denominacion]
