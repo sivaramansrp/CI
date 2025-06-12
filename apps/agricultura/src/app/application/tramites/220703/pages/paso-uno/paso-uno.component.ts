@@ -63,9 +63,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   constructor(
     private readonly consultaQuery: ConsultaioQuery,
-    private acuicolaService: AcuicolaService) {
-    // No se necesita lógica de inicialización adicional en el constructor.
-  }
+    private acuicolaService: AcuicolaService) { }
 
   /**
   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.

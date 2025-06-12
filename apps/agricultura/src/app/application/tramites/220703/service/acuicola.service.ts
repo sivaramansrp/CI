@@ -311,7 +311,7 @@ export class AcuicolaService {
    * @returns {Observable<AmpliacionServiciosState>} - Observable con el estado de ampliación de servicios.
    */
   getServiciosData(): Observable<TramiteState> {
-    return this.http.get<TramiteState>('assets/json/220703/datos-prefill.json');
+    return this.http.get<TramiteState>('assets/json/220703/datos-precargados.json');
   }
 
 }
