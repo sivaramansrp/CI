@@ -58,7 +58,8 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
   public forma: FormGroup = new FormGroup({
     ninoFormGroup: new FormGroup({}),
   });
-
+  
+  public seleccionados: Partidas[] = [];
   /**
    * @property ninoFormGroup
    * @description
@@ -185,12 +186,12 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
   agregarPartida(): void {
     if (this.ninoFormGroup.valid) {
       const PRODUCTOS = {
-        cantidad: this.ninoFormGroup.get('cantidad')?.value,
-        unidad_de_medida: PLANTILLA_PRODUCTO.unidad_de_medida,
-        fraccion_arancelaria_tigie: PLANTILLA_PRODUCTO.fraccion_arancelaria_tigie,
-        descripcion: this.ninoFormGroup.get('descripcion')?.value,
-        precio_unitario: PLANTILLA_PRODUCTO.precio_unitario,
-        total_usd: this.ninoFormGroup.get('valorPartidaUsd')?.value,
+        cantidad: this.ninoFormGroup.get('partidasCantidad')?.value,
+        unidadDeMedida: PLANTILLA_PRODUCTO.unidad_de_medida,
+        fraccionArancelaria: PLANTILLA_PRODUCTO.fraccion_arancelaria_tigie,
+        descripcion: this.ninoFormGroup.get('partidasDescripcion')?.value,
+        precioUnitario: this.ninoFormGroup.get('valorPartidaUsd')?.value,
+        totalUsd: Number(PLANTILLA_PRODUCTO.precio_unitario)
       };
       this.datospartidas?.push(PRODUCTOS);
       this.ninoFormGroup.reset();
@@ -198,36 +199,31 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @method eliminarPartida
+   * @method onSeleccionChange
    * @description
-   * Método que elimina la última partida de la lista de partidas.
-   * Si no hay partidas, no realiza ninguna acción.
-   */
-  eliminarPartida(): void {
-    if (this.datospartidas.length > 0) {
-      this.datospartidas.pop();
-    }
-  }
-  /**
-   * @method modificarPartida
-   * @description
-   * Método que modifica una partida existente en la lista de partidas.
-   * Actualiza el formulario con los datos de la partida seleccionada y la elimina de la lista.
+   * Método que maneja el cambio de selección en la tabla de partidas.
+   * Actualiza la lista de partidas seleccionadas.
    * 
-   * @param index Índice de la partida a modificar.
+   * @param event Lista de partidas seleccionadas.
    */
-  //modificarPartida(index: number): void {
-    
-    //if (index >= 0 && index < this.datospartidas.length) {
-    //   const PARTIDA = this.datospartidas[index];
-    //   this.ninoFormGroup.patchValue({
-    //     cantidad: PARTIDA.cantidad,
-    //     descripcion: PARTIDA.descripcion,
-    //     valorPartidaUsd: PARTIDA.totalUsd,
-    //   });
-    //   this.datospartidas.splice(index, 1);
-    // }
- // }
+onSeleccionChange(event: Partidas[]): void {
+  this.seleccionados = event;
+}
+  /**
+   * @method eliminarSeleccionados
+   * @description
+   * Método que elimina las partidas seleccionadas de la lista de partidas.
+   * Limpia la selección después de eliminar las partidas.
+   */
+eliminarSeleccionados(): void {
+  this.seleccionados.forEach(row => {
+    const INDEX = this.datospartidas.indexOf(row);
+    if (INDEX > -1) {
+      this.datospartidas.splice(INDEX, 1);
+    }
+  });
+  this.seleccionados = [];
+}
   /**
    * @method ngOnDestroy
    * @description
@@ -236,5 +232,6 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+
   }
 }

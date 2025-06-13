@@ -22,7 +22,7 @@
     <div class="row">
         <h6>Partidas:</h6>
         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="partidasTabla"
-         [disableSeleccionTablaCheckBox]="consultaState.readonly"   [datos]="datospartidas"></app-tabla-dinamica>
+         [disableSeleccionTablaCheckBox]="consultaState.readonly"   [datos]="datospartidas"  (listaDeFilaSeleccionada)="onSeleccionChange($event)"></app-tabla-dinamica>
     </div>
 
     <div class="row">
@@ -32,7 +32,7 @@
     
     <div class="row mt-5 text-end">
         <div>
-            <button type="button" class="btn btn-danger me-2 btn-space" (click)="eliminarPartida()" [disabled]="consultaState.readonly">Eliminar partida</button>
+            <button type="button" class="btn btn-danger me-2 btn-space" [disabled]="consultaState.readonly" (click)="eliminarSeleccionados()">Eliminar partida</button>
             <button type="button" class="btn btn-primary btn-space" [disabled]="consultaState.readonly">Modificar partida</button>
         </div>
     </div>
