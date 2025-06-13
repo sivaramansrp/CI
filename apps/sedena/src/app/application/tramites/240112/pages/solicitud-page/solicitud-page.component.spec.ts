@@ -13,8 +13,8 @@ describe('SolicitudPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SolicitudPageComponent,PasoUnoComponent,PasoDosComponent,PasoTresComponent],
-      imports: [HttpClientTestingModule,WizardComponent,BtnContinuarComponent,SolicitanteComponent],
+      declarations: [SolicitudPageComponent,PasoDosComponent,PasoTresComponent],
+      imports: [HttpClientTestingModule,WizardComponent,BtnContinuarComponent,SolicitanteComponent,PasoUnoComponent],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitudPageComponent);
