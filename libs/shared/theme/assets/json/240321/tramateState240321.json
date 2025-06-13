@@ -49,7 +49,7 @@
   "pagoDerechos": {
     "claveReferencia": "123456789012",
     "cadenaDependencia": "01234567890123456789",
-    "banco": "BANAMEX",
+    "banco": "1",
     "llavePago": "LLAVE123456",
     "fechaPago": "2025-06-01",
     "importePago": "1500.00"
