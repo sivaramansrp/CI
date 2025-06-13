@@ -11,7 +11,7 @@ import {
   PagoDerechosFormState,
 } from '../../models/terceros-relacionados.model';
 import { BANCO } from '../../constantes/datos-solicitud.enum';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { FormBuilder } from '@angular/forms';

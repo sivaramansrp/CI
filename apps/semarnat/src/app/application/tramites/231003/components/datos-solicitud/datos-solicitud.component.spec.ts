@@ -4,7 +4,9 @@ import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DatoSolicitudStore } from '../../estados/tramites/dato-solicitud.store';
 import { DatoSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CUSTOM_ELEMENTS_SCHEMA, ElementRef } from '@angular/core';
+import { of, Subject } from 'rxjs';
 
 jest.mock('bootstrap', () => ({
   Modal: jest.fn().mockImplementation(() => ({
@@ -30,17 +32,17 @@ jest.mock('@libs/shared/theme/assets/json/231003/solicitud.json', () => ({
     PrimasRelacionadas: [
       {
         encabezadoDeTabla: ['Columna1', 'Columna2'],
-        cuerpoTabla: [{ tbodyData: ['Valor1', 'Valor2'] }]
-      }
+        cuerpoTabla: [{ tbodyData: ['Valor1', 'Valor2'] }],
+      },
     ],
     Immex: [],
     table: [
       {
         encabezadoDeTabla: ['Columna1', 'Columna2'],
-        cuerpoTabla: [{ tbodyData: ['Valor1', 'Valor2'] }]
-      }
-    ]
-  }
+        cuerpoTabla: [{ tbodyData: ['Valor1', 'Valor2'] }],
+      },
+    ],
+  },
 }));
 
 describe('DatosSolicitudComponent', () => {
@@ -48,6 +50,8 @@ describe('DatosSolicitudComponent', () => {
   let fixture: ComponentFixture<DatosSolicitudComponent>;
   let mockStore: jest.Mocked<DatoSolicitudStore>;
   let mockQuery: jest.Mocked<DatoSolicitudQuery>;
+  let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
+  let destroy$: Subject<void>;
 
   const initialState = {
     solicitudForm: {
@@ -73,12 +77,33 @@ describe('DatosSolicitudComponent', () => {
     },
     precaucionesManejo: {
       precaucionesManejo: 'manejo',
-    }
+    },
+  };
+
+  const READONLY_STATE_TRUE = {
+    readonly: true,
+    create: true,
+    update: false,
+    procedureId: '',
+    parameter: '',
+    department: '',
+    folioTramite: '',
+    tipoDeTramite: '',
+    estadoDeTramite: '',
+    consultaioSolicitante: null,
+  };
+
+  const READONLY_STATE_FALSE = {
+    ...READONLY_STATE_TRUE,
+    readonly: false,
+    create: true,
   };
 
   beforeEach(async () => {
+    destroy$ = new Subject<void>();
+
     mockQuery = {
-      getValue: jest.fn().mockReturnValue(initialState)
+      getValue: jest.fn().mockReturnValue(initialState),
     } as unknown as jest.Mocked<DatoSolicitudQuery>;
 
     mockStore = {
@@ -86,8 +111,12 @@ describe('DatosSolicitudComponent', () => {
       actualizarEmpresaReciclaje: jest.fn(),
       actualizarLugarReciclaje: jest.fn(),
       actualizarEmpresaTransportista: jest.fn(),
-      actualizarPrecaucionesManejo: jest.fn()
+      actualizarPrecaucionesManejo: jest.fn(),
     } as unknown as jest.Mocked<DatoSolicitudStore>;
+
+    mockConsultaioQuery = {
+      selectConsultaioState$: jest.fn().mockReturnValue(of(READONLY_STATE_FALSE)),
+    } as unknown as jest.Mocked<ConsultaioQuery>;
 
     await TestBed.configureTestingModule({
       imports: [CommonModule, ReactiveFormsModule, DatosSolicitudComponent],
@@ -95,6 +124,7 @@ describe('DatosSolicitudComponent', () => {
         FormBuilder,
         { provide: DatoSolicitudStore, useValue: mockStore },
         { provide: DatoSolicitudQuery, useValue: mockQuery },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
@@ -103,10 +133,17 @@ describe('DatosSolicitudComponent', () => {
     component = fixture.componentInstance;
 
     component.modalElement = {
-      nativeElement: document.createElement('div')
+      nativeElement: document.createElement('div'),
     } as ElementRef;
 
+    component['destroy$'] = destroy$;
+
     fixture.detectChanges();
+  });
+
+  afterEach(() => {
+    destroy$.next();
+    destroy$.complete();
   });
 
   it('debería crear el componente', () => {
@@ -124,11 +161,10 @@ describe('DatosSolicitudComponent', () => {
   it('debería deshabilitar campos si se selecciona "No" en reciclajeInstalaciones', () => {
     component.formularioLugarReciclaje.get('reciclajeInstalaciones')?.setValue('No');
     component.actualizarCampoLugarReciclaje('reciclajeInstalaciones');
-  
+
     expect(component.formularioLugarReciclaje.get('lugarReciclaje')?.disabled).toBe(true);
     expect(component.formularioLugarReciclaje.get('numeroAutorizacionEmpresaReciclaje')?.disabled).toBe(true);
   });
-  
 
   it('debería abrir el modal correctamente al llamar agregarOperacionImp', () => {
     const { Modal } = jest.requireMock('bootstrap');
@@ -137,7 +173,7 @@ describe('DatosSolicitudComponent', () => {
     (Modal as jest.Mock).mockImplementation(() => ({ show: mockShow }));
 
     component.modalElement = {
-      nativeElement: document.createElement('div')
+      nativeElement: document.createElement('div'),
     } as ElementRef;
 
     component.agregarOperacionImp();
@@ -190,6 +226,32 @@ describe('DatosSolicitudComponent', () => {
       expect(mockStore.actualizarPrecaucionesManejo).toHaveBeenCalledWith(
         expect.objectContaining({ precaucionesManejo: NUEVO_VALOR })
       );
+    });
+  });
+
+  describe('deshabilitarFormularios()', () => {
+    it('debería deshabilitar todos los formularios si readonly es true', () => {
+      component.consultaState = READONLY_STATE_TRUE;
+
+      component.deshabilitarFormularios();
+
+      expect(component.solicitudForm.disabled).toBe(true);
+      expect(component.formularioEmpresaReciclaje.disabled).toBe(true);
+      expect(component.formularioLugarReciclaje.disabled).toBe(true);
+      expect(component.formularioEmpresaTransportista.disabled).toBe(true);
+      expect(component.formularioPrecaucionesManejo.disabled).toBe(true);
+    });
+
+    it('debería habilitar todos los formularios si readonly es false', () => {
+      component.consultaState = READONLY_STATE_FALSE;
+
+      component.deshabilitarFormularios();
+
+      expect(component.solicitudForm.enabled).toBe(true);
+      expect(component.formularioEmpresaReciclaje.enabled).toBe(true);
+      expect(component.formularioLugarReciclaje.enabled).toBe(true);
+      expect(component.formularioEmpresaTransportista.enabled).toBe(true);
+      expect(component.formularioPrecaucionesManejo.enabled).toBe(true);
     });
   });
 });

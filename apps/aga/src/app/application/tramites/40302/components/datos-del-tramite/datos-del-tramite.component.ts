@@ -1,11 +1,12 @@
 import { AcuseComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Solicitud40302State, Solicitud40302Store } from './../../estados/tramite40302.store';
+import { Subject, map } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDelTramiteService } from '../../services/datos-del-tramite.service';
-import { Subject } from 'rxjs';
+import { Solicitud40302Query } from '../../estados/tramite40302.query';
 import { takeUntil } from 'rxjs/operators';
-
-import { Solicitud40302Store } from './../../estados/tramite40302.store';
 /**
  * ## DatosDelTramiteComponent
  * 
@@ -51,6 +52,16 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+ public esFormularioSoloLectura: boolean = false;
+
+  /** Estado de la solicitud tipo 40302. 
+ *  Contiene información y progreso de la solicitud. */
+  public solicitudState!: Solicitud40302State;
+
+  /**
    * ## Constructor
    * 
    * Inicializa el componente con las dependencias necesarias.
@@ -62,9 +73,13 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    *   Servicio que gestiona los datos del trámite.
    */
     
-    constructor(private fb: FormBuilder, private datosService: DatosDelTramiteService, 
-      private solicitud40302Store: Solicitud40302Store, ) {
-      this.establecerSolicitudForm();
+    constructor(private fb: FormBuilder, 
+      private datosService: DatosDelTramiteService, 
+      private solicitud40302Store: Solicitud40302Store, 
+      private solcitud40302Query: Solicitud40302Query,
+      private consultaioQuery: ConsultaioQuery
+    ) {
+    // Lógica del constructor aquí
     }
 
   /**
@@ -76,8 +91,46 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Establece los valores iniciales del servicio y suscribe al estado de la solicitud.
    */
   ngOnInit(): void {
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+
     this.datosService.setInitialValues();
+    this.establecerSolicitudForm();
     this.suscribirseAlEstado();
+    this.inicializarEstadoFormulario()
+  }
+
+
+  /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.  
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+private inicializarEstadoFormulario(): void {
+    if (this.solicitudForm && this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+       this.establecerSolicitudForm();
+    }
+  }
+
+/**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+private guardarDatosFormulario(): void {
+    this.establecerSolicitudForm();
+    if (this.esFormularioSoloLectura) {
+      this.solicitudForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.solicitudForm.enable();
+    } 
   }
 
   /**
@@ -89,15 +142,28 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Crea un grupo de formularios con validaciones para los campos requeridos.
    */
   public establecerSolicitudForm(): void {
+
+    /** Suscribe al estado de solicitud 40302 y lo asigna a `solicitudState`.  
+    * Usa `takeUntil` para limpiar la suscripción al destruir el componente. */
+    this.solcitud40302Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.solicitudState = seccionState as Solicitud40302State;
+        })
+      )
+      .subscribe();
+
     this.solicitudForm = this.fb.group({
-      cveFolioCaat: [{ value: '', disabled: true }],
-      descTipoCaat: [{ value: '', disabled: true }],
-      descTipoAgente: [{ value: '', disabled: true }],
-      directorGeneralNombre: ['', [Validators.required, Validators.maxLength(200)]],
-      primerApellido: ['', [Validators.required, Validators.maxLength(200)]],
-      segundoApellido: ['', [Validators.maxLength(200)]],
+      cveFolioCaat: [{ value: '3L6V', disabled: true }],
+      descTipoCaat: [{ value: 'Naviero', disabled: true }],
+      descTipoAgente: [{ value: 'Agente Naviero', disabled: true }],
+      directorGeneralNombre: ['HAZEL', [Validators.required, Validators.maxLength(200)]],
+      primerApellido: ['NAVA', [Validators.required, Validators.maxLength(200)]],
+      segundoApellido: ['AVILA', [Validators.maxLength(200)]],
     });
   }
+
 
   /**
    * ## suscribirseAlEstado

@@ -27,7 +27,7 @@ export class Tramite270201Query extends Query<Tramite270201State> {
    * 
    * @type {Observable<catalogoResponse | null>}
    */
-  selectedOperacion$ = this.select((state) => state.operacion);
+  selectedOperacion$ = this.select((state) => state.tipoDeOperacion);
 
   /**
    * Observable que selecciona el movimiento actual del estado del trámite.
@@ -35,7 +35,7 @@ export class Tramite270201Query extends Query<Tramite270201State> {
    * 
    * @type {Observable<catalogoResponse | null>}
    */
-  selectedMovimiento$ = this.select((state) => state.movimiento); // Corregido
+  selectedMovimiento$ = this.select((state) => state.tipoDeMovimiento); // Corregido
 
   /**
    * Observable que selecciona el motivo actual del estado del trámite.
@@ -67,7 +67,7 @@ export class Tramite270201Query extends Query<Tramite270201State> {
    * 
    * @type {Observable<catalogoResponse | null>}
    */
-  selectedTransporte$ = this.select((state) => state.transporte); // Corregido
+  selectedTransporte$ = this.select((state) => state.medioTransporte); // Corregido
 
   /**
    * Observable que selecciona la aduana actual del estado del trámite.
@@ -75,7 +75,7 @@ export class Tramite270201Query extends Query<Tramite270201State> {
    * 
    * @type {Observable<catalogoResponse | null>}
    */
-  selectedAduana$ = this.select((state) => state.aduana); // Corregido
+  selectedAduana$ = this.select((state) => state.aduanaEntrada); // Corregido
 
   /**
    * Observable que selecciona el autor actual del estado del trámite.
@@ -99,7 +99,7 @@ export class Tramite270201Query extends Query<Tramite270201State> {
    * 
    * @type {Observable<string>}
    */
-  selectedTecnica$ = this.select((state) => state.tecnica); // Corregido
+  selectedTecnica$ = this.select((state) => state.tecnicaDeRealizacion); // Corregido
 
   /**
    * Observable que selecciona el alto actual del estado del trámite.

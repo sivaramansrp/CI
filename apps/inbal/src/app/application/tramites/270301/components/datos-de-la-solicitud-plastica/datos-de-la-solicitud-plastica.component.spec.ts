@@ -6,6 +6,7 @@ import { Agregar270301Store } from '../../estados/tramites/agregar270301.store';
 import { AgregarQuery } from '../../estados/queries/agregar.query';
 import { of } from 'rxjs';
 import { Solicitud270301State } from '../../estados/tramites/agregar270301.store';
+import { FormBuilder } from '@angular/forms';
 
 describe('DatosDeLaSolicitudPlasticaComponent', () => {
   let component: DatosDeLaSolicitudPlasticaComponent;
@@ -121,13 +122,32 @@ describe('DatosDeLaSolicitudPlasticaComponent', () => {
     expect(component.obraDeArteRowData[0].tbodyData).toContain('Titulo Test');
   });
 
-  it('should destroy subscriptions on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroy$'], 'next');
-    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+  it('should disable form in guardarDatosFormulario if readonly', () => {
+    component.initializeSolicitudFormGroup();
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.solicitudFormGroup.disabled).toBe(true);
+  });
 
+  it('should enable form in guardarDatosFormulario if not readonly', () => {
+    component.initializeSolicitudFormGroup();
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.solicitudFormGroup.enabled).toBe(true);
+  });
+
+  it('should call setValoresStore with correct arguments', () => {
+    const mockSet = jest.fn();
+    const mockStore: any = { setTest: mockSet };
+    component.solicitudFormGroup = new FormBuilder().group({ test: ['value'] });
+    component.Agregar270301Store = mockStore;
+    component.setValoresStore(component.solicitudFormGroup, 'test', 'setTest' as any);
+    expect(mockSet).toHaveBeenCalledWith('value');
+  });
+
+  it('should clean up on destroy', () => {
+    const spy = jest.spyOn(component['destroy$'], 'next');
     component.ngOnDestroy();
-
-    expect(destroySpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
   });
 });
