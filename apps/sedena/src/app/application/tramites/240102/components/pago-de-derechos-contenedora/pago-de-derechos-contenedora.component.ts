@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
@@ -7,6 +8,7 @@ import { PagoDerechosFormState } from '../../../../shared/models/pago-de-derecho
 import { Subject } from 'rxjs';
 import { Tramite240102Query } from '../../estados/tramite240102Query.query';
 import { Tramite240102Store } from '../../estados/tramite240102Store.store';
+import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 /**
  * @title Pago de Derechos Contenedora
@@ -34,6 +36,12 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    */
   public pagoDerechoFormState!: PagoDerechosFormState;
 
+    /**
+   * Indica si el formulario está en modo solo lectura.
+   * @property {boolean} esFormularioSoloLectura
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    *
@@ -44,7 +52,8 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite240102Query,
-    private tramiteStore: Tramite240102Store // eslint-disable-next-line no-empty-function
+    private tramiteStore: Tramite240102Store, // eslint-disable-next-line no-empty-function
+    private consultaQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -60,6 +69,15 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.pagoDerechoFormState = data;
       });
+
+    this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.unsubscribe$),
+      map((seccionState) => {
+        this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe();
   }
 
   /**

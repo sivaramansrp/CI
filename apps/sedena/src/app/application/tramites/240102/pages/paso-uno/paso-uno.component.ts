@@ -1,9 +1,16 @@
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { DatosDelTramiteContenedoraComponent } from '../../components/datos-del-tramite-contenedora/datos-del-tramite-contenedora.component';
+import { ImportacionArmamentoFisicasMoralesService } from '../../services/importacion-armamento-fisicas-morales.service';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
+import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 import { Subject } from 'rxjs';
+import { TercerosRelacionadosContenedoraComponent } from '../../components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
 import { Tramite240102Query } from '../../estados/tramite240102Query.query';
 import { Tramite240102Store } from '../../estados/tramite240102Store.store';
+import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -15,6 +22,8 @@ import { takeUntil } from 'rxjs';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
+  standalone: true,
+  imports: [CommonModule, SolicitanteComponent, DatosDelTramiteContenedoraComponent, PagoDeDerechosContenedoraComponent, TercerosRelacionadosContenedoraComponent ],
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
   /**
@@ -33,15 +42,29 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * Esta variable se utiliza para almacenar el índice del subtítulo.
+   */
+  public consultaState!: ConsultaioState;
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+  /**
    * Inicializa el componente con la consulta y el store necesarios para el manejo del estado.
    *
-   * @param tramite240101Query Consulta para acceder al estado del trámite.
-   * @param tramite240101Store Store que permite actualizar el estado del trámite.
+   * @param tramite240102Query Consulta para acceder al estado del trámite.
+   * @param tramite240102Store Store que permite actualizar el estado del trámite.
    */
   constructor(
-    private tramite240101Query: Tramite240102Query,
-    private tramite240101Store: Tramite240102Store // eslint-disable-next-line no-empty-function
-  ) {}
+    private tramite240102Query: Tramite240102Query,
+    private tramite240102Store: Tramite240102Store, // eslint-disable-next-line no-empty-function
+    private consultaQuery: ConsultaioQuery,
+    private importacionArmamentoService: ImportacionArmamentoFisicasMoralesService
+  ) {
+      this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
+        this.consultaState = seccionState;
+      })).subscribe();
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
@@ -50,13 +73,34 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.tramite240101Query.getTabSeleccionado$
+    this.tramite240102Query.getTabSeleccionado$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((tab) => {
         this.indice = tab;
       });
+
+      if (this.consultaState.update) {
+      this.guardarDatosFormulario();
+      } else {
+        this.esDatosRespuesta = true;
+      }
   }
 
+    /**
+   * Guarda los datos del formulario obtenidos del servicio.
+   */
+  guardarDatosFormulario(): void {
+    this.importacionArmamentoService
+      .obtenerRegistroTomarMuestrasDatos().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp) {
+          this.esDatosRespuesta = true;
+          this.importacionArmamentoService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
   /**
    * Actualiza el índice de la pestaña seleccionada en el store.
    *
@@ -64,7 +108,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @returns {void}
    */
   public seleccionaTab(i: number): void {
-    this.tramite240101Store.updateTabSeleccionado(i);
+    this.tramite240102Store.updateTabSeleccionado(i);
   }
 
   /**
