@@ -191,9 +191,16 @@ export class ModificacionGoceInmuebleComponent
     this.getGridDomiciliosModificados(); // Obtiene los domicilios modificados al iniciar el componente
   }
 
-  ngOnInit(): void {
-   this.inicializarEstadoFormulario();
-  }
+ /**
+ * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+ * 
+ * Llama al método `inicializarEstadoFormulario()` para configurar el estado inicial
+ * del formulario al momento de cargar el componente.
+ */
+ngOnInit(): void {
+  this.inicializarEstadoFormulario();
+}
+
 
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.  
