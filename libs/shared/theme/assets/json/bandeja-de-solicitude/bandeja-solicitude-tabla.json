@@ -1998,6 +1998,15 @@
     "numeroDeProcedimiento": "260216"
   },
   {
+      "id": 240112,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SEDENA",
+    "numeroDeProcedimiento": "240112"
+  },
+  {
     "id": 260206,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
