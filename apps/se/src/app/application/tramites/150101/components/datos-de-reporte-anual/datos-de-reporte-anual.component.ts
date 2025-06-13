@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Solicitud150101Query } from '../../estados/solicitud150101.query';
 import { Solicitud150101State } from '../../estados/solicitud150101.store';
 import { Solicitud150101Store } from '../../estados/solicitud150101.store';
@@ -16,6 +16,12 @@ import { SolicitudService } from '../../services/registro-solicitud-anual.servic
   templateUrl: './datos-de-reporte-anual.component.html',
   styleUrl: './datos-de-reporte-anual.component.scss',
 })
+
+/**
+ * @class DatosDeReporteAnnualComponent
+ * @implements {OnInit, OnDestroy}
+ * @description Este componente maneja la lógica del formulario para capturar los datos del reporte anual.
+ */
 export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
   /**
    * @description Formulario reactivo para capturar los datos del reporte anual.
@@ -80,7 +86,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
    */
   inicializarEstadoFormulario(): void {
     if (this.formularioDeshabilitado) {
-      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+      this.guardarDatosFormulario();
     } else {
       this.inicializarFormulario();
     }

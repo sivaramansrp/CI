@@ -19,6 +19,11 @@ import { ReporteFechas } from '../models/programas-reporte.model';
 @Injectable({
   providedIn: 'root',
 })
+
+/**
+ * Servicio para manejar las solicitudes de datos relacionados con los programas y reportes.
+ * Este servicio utiliza HttpClient para realizar solicitudes a archivos JSON locales.
+ */
 export class SolicitudService {
   /**
    * @constructor

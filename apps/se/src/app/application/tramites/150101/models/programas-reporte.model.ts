@@ -41,6 +41,9 @@ export interface ReporteFechas {
   reporteAnualFechaFin: string;
 }
 
+/**
+ * Interfaz que define la estructura de los datos de un reporte anual.
+ */
 export interface RegistroSolicitudDatos {
   /**
      * Fecha de inicio del reporte anual.

@@ -6,6 +6,10 @@ import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Solicitud150101Store } from '../../estados/solicitud150101.store';
 import { SolicitudService } from '../../services/registro-solicitud-anual.service';
 
+/**
+ * @component
+ * @description Componente que maneja los datos del solicitante y la lógica del formulario para el trámite 150101.
+ */
 @Component({
   selector: 'app-datos',
   templateUrl: './datos.component.html',
@@ -13,8 +17,8 @@ import { SolicitudService } from '../../services/registro-solicitud-anual.servic
 })
 export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
- * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
- */
+   * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
+   */
   @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
 
   /**
@@ -45,11 +49,6 @@ export class DatosComponent implements AfterViewInit, OnInit, OnDestroy {
    * Datos de respuesta del servidor utilizados para actualizar el formulario.
    */
   public esDatosRespuesta: boolean = false;
-
-  /**
-   * Indica si el formulario está deshabilitado.
-   */
-  formularioDeshabilitado: boolean = false;
 
   /**
    * Subject para notificar la destrucción del componente.
