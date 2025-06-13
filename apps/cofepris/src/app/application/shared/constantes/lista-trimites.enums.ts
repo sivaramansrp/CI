@@ -558,6 +558,72 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
       },
     ],
   },
+    {
+        tramite: 260901,
+        listaComponentes: [{
+            id: 'solicitud',
+            componentPath: () => import('../../tramites/260901/pages/paso-uno-pages/paso-uno-pages.component').then(m => m.PasoUnoPagesComponent),
+            componentName: 'PasoUnoPagesComponent',
+
+        }]
+    },
+     {
+        tramite: 260907,
+        listaComponentes: [{
+            id: 'solicitud',
+            componentPath: () => import('../../tramites/260907/pages/paso-uno-pages/paso-uno-pages.component').then(m => m.PasoUnoPagesComponent),
+            componentName: 'PasoUnoPagesComponent',
+
+        }]
+    },
+     {
+        tramite: 260908,
+        listaComponentes: [{
+            id: 'solicitud',
+            componentPath: () => import('../../tramites/260908/pages/paso-uno-pages/paso-uno-pages.component').then(m => m.PasoUnoPagesComponent),
+            componentName: 'PasoUnoPagesComponent',
+
+        }]
+    },
+     {
+    tramite: 260213,
+    listaComponentes: [
+      {
+        id: 'solicitud',
+        componentPath: () =>
+          import(
+            '../../tramites/260213/pages/paso-uno/paso-uno.component'
+          ).then((m) => m.PasoUnoComponent),
+        componentName: 'PasoUnoComponent',
+      },
+    ],
+  },
+  {
+    tramite: 260214,
+    listaComponentes: [
+      {
+        id: 'solicitud',
+        componentPath: () =>
+          import(
+            '../../tramites/260213/pages/paso-uno/paso-uno.component'
+          ).then((m) => m.PasoUnoComponent),
+        componentName: 'PasoUnoComponent',
+      },
+    ],
+  },
+  {
+    tramite: 260216,
+    listaComponentes: [
+      {
+        id: 'solicitud',
+        componentPath: () =>
+          import(
+            '../../tramites/260213/pages/paso-uno/paso-uno.component'
+          ).then((m) => m.PasoUnoComponent),
+        componentName: 'PasoUnoComponent',
+      },
+    ],
+  },
   {
     tramite: 260206,
     listaComponentes: [{

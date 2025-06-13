@@ -255,6 +255,12 @@ const ROUTES: Routes = [
     loadComponent: () =>
       import('./datos-generales-tramite/datos-generales-tramite.component').then((m) => m.DatosGeneralesTramiteComponent),
   },
+  {
+      path: 'aviso-de-modificacion',
+    loadChildren: () => 
+      import('./tramites/30505/aviso-de-modificacion.module').then(
+        (m) => m.AvisoDeModificacionModule)
+  }
 ];
 
 @NgModule({
