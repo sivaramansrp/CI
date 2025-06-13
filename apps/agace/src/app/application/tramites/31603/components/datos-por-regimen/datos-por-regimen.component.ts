@@ -166,8 +166,11 @@ export class DatosPorRegimenComponent implements OnInit, OnDestroy {
       importaciones: ['']
     });
     Promise.resolve().then(() => {
-      // eslint-disable-next-line no-unused-expressions
-      this.consultaState.readonly ? this.importacionesForm.get('importaciones')?.disable() : this.importacionesForm.get('importaciones')?.enable();
+      if (this.consultaState.readonly) {
+        this.importacionesForm.get('importaciones')?.disable();
+      } else {
+        this.importacionesForm.get('importaciones')?.enable();
+      }
       if (this.consultaState.readonly || this.consultaState.update) {
           this.valorSeleccionado = 'Si';
       }

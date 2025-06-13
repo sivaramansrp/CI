@@ -159,8 +159,8 @@ export class IvaeiepsDosComponent implements OnInit,OnDestroy {
      */
     public crearPorcentajeMontoForm(): void {
       this.porcentajeMontoForm = this.fb.group({
-        porcentaje: [''],
-        monto: ['']
+        porcentaje: ['hgcgfcgh gcg'],
+        monto: ['vhgvchghch']
       });
     }
   
