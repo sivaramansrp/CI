@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
   Facturador,
   Proveedor,
 } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260218Query } from '../../estados/tramite260218Query.query'; 
 import { Tramite260218Store } from '../../estados/tramite260218Store.store';
@@ -25,7 +26,7 @@ import { Tramite260218Store } from '../../estados/tramite260218Store.store';
   templateUrl: './terceros-relacionados-vista.component.html',
   styleUrl: './terceros-relacionados-vista.component.scss',
 })
-export class TercerosRelacionadosVistaComponent implements OnInit {
+export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    /**
    * @property {Fabricante[]} fabricanteTablaDatos
    * Datos de la tabla de fabricantes.
@@ -63,17 +64,39 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
   destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  public esFormularioSoloLectura: boolean = false; 
+
+    /**
+     * @property {Subject<void>} destroy$
+     * Subject para cancelar suscripciones y evitar fugas de memoria.
+     * @private
+     */
+    private destroy$ = new Subject<void>();
+
+  /**
    * @constructor
    * Inyecta los servicios necesarios para consultar y actualizar el estado del trámite.
    *
    * @param tramiteStore - Store que gestiona el estado de los datos del trámite.
    * @param tramiteQuery - Servicio de consulta que expone observables para leer los datos del store.
+   * @param consultaQuery - Servicio de consulta para acceder al estado de la consulta.
    */
   constructor(
     private tramiteStore: Tramite260218Store,
-    private tramiteQuery: Tramite260218Query
+    private tramiteQuery: Tramite260218Query,
+    private consultaQuery: ConsultaioQuery
   ) {
-    // no realizar ninguna acción
+      this.consultaQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroy$),
+          map((seccionState) => {
+            this.esFormularioSoloLectura = seccionState.readonly;
+          })
+        )
+        .subscribe();
   }
 
 
@@ -165,4 +188,16 @@ export class TercerosRelacionadosVistaComponent implements OnInit {
   addFacturadores(newFacturadores: Facturador[]): void {
     this.tramiteStore.updateFacturadorTablaDatos(newFacturadores);
   }
+
+  /**
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
+   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
+   * @returns {void} No retorna ningún valor.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
 }
