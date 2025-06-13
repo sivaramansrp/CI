@@ -1942,5 +1942,59 @@
      "diasTranscurridos": "4",
      "departamento": "COFEPRIS",
      "numeroDeProcedimiento": "260908"
-    }
+    },
+  {
+    "id": 32501,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32501"
+  },
+  {
+      "id": 240111,
+      "tipoDeTramite": "Solicitud de Permiso",
+      "fecha": "2023-11-03",
+      "fechaActualizacion": "2023-03-20",
+      "diasTranscurridos": "4",
+      "departamento": "SEDENA",
+      "numeroDeProcedimiento": "240111"
+},
+   {
+    "id": 270301,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "INBAL",
+    "numeroDeProcedimiento": "270301"
+  },
+  {
+    "id": 260213,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260213"
+  },
+  {
+    "id": 260214,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260214"
+  },
+  {
+    "id": 260216,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260216"
+  }
 ]
