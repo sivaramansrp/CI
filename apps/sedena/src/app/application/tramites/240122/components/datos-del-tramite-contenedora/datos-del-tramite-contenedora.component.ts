@@ -66,6 +66,16 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy,Af
    */
   public datosDelTramiteFormState!: DatosDelTramiteFormState;
 
+  /**
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   *
+   * @remarks
+   * Cuando esta propiedad es `true`, el formulario no permite la edición de sus campos.
+   *
+   * @compodoc
+   * @description
+   * Determina si el formulario se presenta únicamente para consulta, deshabilitando la edición de los datos.
+   */
   public esFormularioSoloLectura:boolean=false;
 
   /**
