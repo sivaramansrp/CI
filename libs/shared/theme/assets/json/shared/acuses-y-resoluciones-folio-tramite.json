@@ -680,12 +680,29 @@
     "numeroDeProcedimiento": "220404"
   },
   {
+    "folioTramite": "0100001000320251005220203",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "AGA ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "40302"
+  },
+  {
     "folioTramite": "0100001000320251005220403",
     "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
     "dependencia": "AGRICULTURA ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
     "fechInicioTramite": "2025-3-09 0035:05:00",
     "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "220403"
+  }
+  ,
+    {
+    "folioTramite": "0100001000320251005000010",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
+    "dependencia": "AGACE ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32501"
   },
   {
     "folioTramite": "0100001000320251005220403",
@@ -797,5 +814,46 @@
     "fechInicioTramite": "2025-3-09 0035:05:00",
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260205"
-  }
+  },
+    {
+    "folioTramite": "0100001000320251005260516",
+    "tipoDeTramite": "Autorización de mercancia donado que se introduzca",
+    "dependencia": "COFEPRIS ADMINITRACION DE APOYO JURIDICO ADUANA 8 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260516"
+  },
+  {
+    "folioTramite": "0100001000320251005000002",
+    "tipoDeTramite": "Modificación / Aviso de Despacho de mercancía",
+    "dependencia": "AGACE ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "30505"
+  },
+   {
+    "folioTramite": "0100001000320251005000020",
+    "tipoDeTramite": "Autorización para la importación de plaguicidas, nutrientes vegetales, sustancias y materiales tóxicos o peligrosos",
+    "dependencia": "COFEPRIS ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260901"
+  },
+   {
+    "folioTramite": "0100001000320251005000020",
+    "tipoDeTramite": "Autorización para la importación de plaguicidas, nutrientes vegetales, sustancias y materiales tóxicos o peligrosos",
+    "dependencia": "COFEPRIS ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260907"
+  },
+   {
+    "folioTramite": "0100001000320251005000020",
+    "tipoDeTramite": "Autorización para la importación de plaguicidas, nutrientes vegetales, sustancias y materiales tóxicos o peligrosos",
+    "dependencia": "COFEPRIS ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260908"
+   }
+  
 ]
