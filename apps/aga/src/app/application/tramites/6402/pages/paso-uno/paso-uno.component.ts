@@ -1,8 +1,7 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from "@ng-mf/data-access-user";
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from "@ng-mf/data-access-user";
 import { AutorizacionImportacionService } from '../../services/autorizacion-importacion.service';
 import { CommonModule } from '@angular/common';
-import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
 import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
 import { Subject } from 'rxjs';
 import { Tramite6402Query } from '../../estados/tramite6402.query';
@@ -122,6 +121,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((respuesta) => {
         if (respuesta.success) {
+          this.esDatosRespuesta = true;
           const FORM = respuesta?.datos?.solicitudFormulario;
           this.store.setCveAduana(FORM.cveAduana);
           this.store.setCveSeccionAduanal(FORM.cveSeccionAduanal);
