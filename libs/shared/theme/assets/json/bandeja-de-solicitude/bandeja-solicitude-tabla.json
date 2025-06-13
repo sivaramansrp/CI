@@ -1952,6 +1952,15 @@
     "departamento": "AGACE",
     "numeroDeProcedimiento": "32501"
   },
+  {
+      "id": 240111,
+      "tipoDeTramite": "Solicitud de Permiso",
+      "fecha": "2023-11-03",
+      "fechaActualizacion": "2023-03-20",
+      "diasTranscurridos": "4",
+      "departamento": "SEDENA",
+      "numeroDeProcedimiento": "240111"
+},
    {
     "id": 270301,
     "tipoDeTramite": "Solicitud de cs Permiso",
