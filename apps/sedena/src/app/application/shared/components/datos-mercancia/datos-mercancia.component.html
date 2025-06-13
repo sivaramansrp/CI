@@ -37,6 +37,7 @@
             [catalogo]="fraccionesCatalogo"
             [label]="'Fracción arancelaria'"
             [required]="true"
+            [isDisabled]="esFormularioSoloLectura"
           ></app-catalogo-select>
           <div class="error-message">
             <small class="text-danger" *ngIf="datosMercancia.get('fraccionArancelaria')?.touched && datosMercancia.get('fraccionArancelaria')?.hasError('required')">
@@ -165,6 +166,7 @@
             [label]="'UMC'"
             [required]="true"
             [tooltipQuestionCircle]="true"
+            [isDisabled]="esFormularioSoloLectura"
           ></app-catalogo-select>
           <div class="error-message">
             <small
@@ -186,6 +188,7 @@
             [catalogo]="monedaCatalogo"
             [label]="'Tipo moneda'"
             [required]="true"
+            [isDisabled]="esFormularioSoloLectura"
           ></app-catalogo-select>
           <div class="error-message">
             <small
@@ -211,6 +214,7 @@
             [label]="paisDeOriginLabel"
             [fechasSeleccionadas]="seleccionadasPaisDeOriginDatos"
             (fechasSeleccionadasChange)="paisDeOriginSeleccionadasChange($event)"
+            [isDisabled]="esFormularioSoloLectura"
           ></crosslist>
         </div>
       }
@@ -223,6 +227,7 @@
               name="modificarMercancias"
               class="btn btn-default"
               (click)="cancelar()"
+              [disabled]="esFormularioSoloLectura"
             >
               Cancelar
             </button>
@@ -231,6 +236,7 @@
               name="eliminarMercancias"
               class="btn btn-danger ms-2"
               (click)="limpiarFormulario()"
+                  [disabled]="esFormularioSoloLectura"
             >
               Limpiar
             </button>
@@ -239,6 +245,7 @@
               name="agregarMercancias"
               class="btn btn-primary ms-2"
               (click)="guardar()"
+              [disabled]="esFormularioSoloLectura"
             >
               Guardar
             </button>
