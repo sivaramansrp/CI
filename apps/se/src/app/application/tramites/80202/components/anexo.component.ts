@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 import { Subject } from 'rxjs';
@@ -7,6 +7,7 @@ import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 import { tap } from 'rxjs';
 
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { SeccionLibQuery } from '@ng-mf/data-access-user';
 import { SeccionLibState } from '@ng-mf/data-access-user';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
@@ -31,7 +32,7 @@ import { ImmexAmpliacionSensiblesQuery } from '../estados/immex-ampliacion-sensi
   templateUrl: './anexo.component.html',
   styleUrl: './anexo.component.scss',
 })
-export class AnexoComponent implements OnInit, OnDestroy {
+export class AnexoComponent implements OnInit, OnDestroy, AfterViewInit {
 
   /**
    * Representa la selección de la tabla en el componente.
@@ -76,6 +77,14 @@ export class AnexoComponent implements OnInit, OnDestroy {
   private seccionState!: SeccionLibState;
 
   /**
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   *
+   * @type {boolean}
+   * @memberof Anexo1Component
+   */
+  esFormularioSoloLectura:boolean=false;
+
+  /**
    * Constructor del componente.
    * @param {FormBuilder} fb
    * @method constructor
@@ -87,7 +96,8 @@ export class AnexoComponent implements OnInit, OnDestroy {
     private immexAmplicationSensiblesQuery: ImmexAmpliacionSensiblesQuery,
     private validacionesService: ValidacionesFormularioService,
     private seccionStore: SeccionLibStore,
-    private seccionQuery: SeccionLibQuery
+    private seccionQuery: SeccionLibQuery,
+    private readonly consultaQuery: ConsultaioQuery,
   ) {}
   ngOnInit(): void {
     this.seccionQuery.selectSeccionState$
@@ -292,4 +302,44 @@ export class AnexoComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  /**
+ * @inheritdoc
+ * @description
+ * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
+ * 
+ * Suscribe al observable `selectConsultaioState$` para escuchar cambios en el estado de la consulta.
+ * Si el estado indica que no se está creando y el `procedureId` es '80203', actualiza la propiedad `esFormularioSoloLectura`
+ * según el valor de `readonly` en el estado. Luego, inicializa el estado del formulario llamando a `inicializarEstadoFormulario()`.
+ * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$` para evitar fugas de memoria.
+ *
+ */
+ngAfterViewInit(): void {
+ this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          if(!seccionState.create && seccionState.procedureId === '80202') {
+            this.esFormularioSoloLectura = seccionState.readonly;
+          }
+          this.inicializarEstadoFormulario();
+        })
+      ).subscribe();
+}
+
+ /**
+     * @method inicializarEstadoFormulario
+     * @description
+     * Inicializa el estado del formulario dependiendo si está en modo solo lectura.
+     * Si el formulario no existe, lo crea. Si el formulario debe ser solo de lectura,
+     * lo deshabilita; de lo contrario, lo habilita.
+     */
+    inicializarEstadoFormulario(): void {
+      if (this.esFormularioSoloLectura) {
+        this.fraccionForm.disable();
+      } else {
+        this.fraccionForm.enable();
+      }
+    }
+
 }
