@@ -1908,6 +1908,51 @@
     "numeroDeProcedimiento": "260516"
 },
 {
+  "id": 30505,
+  "tipoDeTramite": "Modificación / Aviso de Despacho de mercancía",
+  "fecha": "2023-10-01",
+  "fechaActualizacion": "2023-10-05",
+  "diasTranscurridos": "4",
+  "departamento": "AGACE",
+  "numeroDeProcedimiento": "30505"
+},
+{
+     "id": 260901,
+     "tipoDeTramite": "Solicitud de se Permiso",
+     "fecha": "2023-10-01",
+     "fechaActualizacion": "2023-10-05",
+     "diasTranscurridos": "4",
+     "departamento": "COFEPRIS",
+     "numeroDeProcedimiento": "260901"
+    },
+    {
+     "id": 260907,
+     "tipoDeTramite": "Solicitud de se Permiso",
+     "fecha": "2023-10-01",
+     "fechaActualizacion": "2023-10-05",
+     "diasTranscurridos": "4",
+     "departamento": "COFEPRIS",
+     "numeroDeProcedimiento": "260907"
+    },
+    {
+     "id": 260908,
+     "tipoDeTramite": "Solicitud de se Permiso",
+     "fecha": "2023-10-01",
+     "fechaActualizacion": "2023-10-05",
+     "diasTranscurridos": "4",
+     "departamento": "COFEPRIS",
+     "numeroDeProcedimiento": "260908"
+    },
+  {
+    "id": 32501,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32501"
+  },
+  {
     "id": 150101,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2025-12-06",
@@ -1915,6 +1960,5 @@
     "diasTranscurridos": "4",
     "departamento": "SE",
     "numeroDeProcedimiento": "150101"
-}
-
+  }
 ]
