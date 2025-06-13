@@ -1,11 +1,11 @@
 import { AfterViewInit, Component } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { Subject,map } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDelTramiteContenedoraComponent } from '../../components/datos-del-tramite-contenedora/datos-del-tramite-contenedora.component';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { SolicitudService } from '../../services/solicitud/solicitud.service';
-import { Subject } from 'rxjs';
 import { TercerosRelacionadosContenedoraComponent } from '../../components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
 import { Tramite240122Query } from '../../estados/tramite240122Query.query';
 import { Tramite240122Store } from '../../estados/tramite240122Store.store';
@@ -49,6 +49,14 @@ export class PasoUnoComponent implements OnDestroy, OnInit,AfterViewInit {
    * @type {Subject<void>}
    */
   private destroyNotifier$: Subject<void> = new Subject();
+    /**
+     * @description
+     * Estado actual de la consulta para el trámite.
+     * 
+     * @type {ConsultaioState}
+     * @memberof PasoUnoComponent
+     */
+    public consultaState!:ConsultaioState;
 
   /**
    * @constructor
@@ -60,7 +68,8 @@ export class PasoUnoComponent implements OnDestroy, OnInit,AfterViewInit {
   constructor(
     private tramite240122Query: Tramite240122Query,
     private tramite240122Store: Tramite240122Store,
-    private readonly solicitudService: SolicitudService // eslint-disable-next-line no-empty-function
+    private readonly solicitudService: SolicitudService ,
+    private readonly consultaQuery: ConsultaioQuery// eslint-disable-next-line no-empty-function
   ) {}
 
   /**
@@ -76,6 +85,9 @@ export class PasoUnoComponent implements OnDestroy, OnInit,AfterViewInit {
       .subscribe((tab) => {
         this.indice = tab;
       });
+       this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+          this.consultaState = seccionState;
+      })).subscribe();
   }
   
   /**
@@ -90,10 +102,12 @@ export class PasoUnoComponent implements OnDestroy, OnInit,AfterViewInit {
    * @see https://angular.io/api/core/AfterViewInit
    */
   ngAfterViewInit(): void {
+    if(this.consultaState.update){
     this.solicitudService.getPermisoExtraordinario().pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos)=>{
       this.tramite240122Store.actualizarTrimateState(datos);
     });
+  }
   }
 
   /**
