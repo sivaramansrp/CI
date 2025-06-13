@@ -28,6 +28,7 @@ import { SeccionLibStore } from '@ng-mf/data-access-user';
 import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { TEXTO } from '../../constantes/prosec.module';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-domicilios-de-plantas',
@@ -59,10 +60,28 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    */
   estadoSeleccionar: Catalogo[] = [];
 
+    /** Bandera de solo lectura (puedes adaptarla si tienes lógica para esto) */
+  public esFormularioSoloLectura: boolean = false;
+
+   /**
+   * Bandera para determinar si el formulario es de actualización.
+   * Inicialmente establecido en `false`.
+   *
+   * @description Esta bandera se utiliza para controlar la lógica de actualización del formulario.
+   */
+  private esFormularioActualizacion: boolean = false;
+
   /**
    * @property {Catalogo[]} RepresentacionFederal - Array de catálogos de representación federal.
    */
   RepresentacionFederal: Catalogo[] = [];
+
+    /**
+     * Una propiedad pública que representa el estado de la solicitud de sectores y mercancías.
+     * Esta propiedad se utiliza para almacenar el estado actual de la solicitud.
+     * @type {SolicitudSectoresYMercanciasState}
+     */
+    public solicitudState!: ProsecState;
 
   /**
    * @property {Catalogo[]} ActividadProductiva - Array de catálogos de actividad productiva.
@@ -135,13 +154,23 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly fb: FormBuilder,
-    private ProsecService: ProsecService,
-    private AutorizacionProsecStore: AutorizacionProsecStore,
-    private AUtorizacionProsecQuery: AUtorizacionProsecQuery,
+    private prosecService: ProsecService,
+    private autorizacionProsecStore: AutorizacionProsecStore,
+    private autorizacionProsecQuery: AUtorizacionProsecQuery,
     private seccionStore: SeccionLibStore,
-    private seccionQuery: SeccionLibQuery
+    private seccionQuery: SeccionLibQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Constructor logic can be added here if needed
+      // Inicializa el formulario.
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.esFormularioActualizacion = seccionState.update;
+        })
+      )
+      .subscribe();
   }
 
   ngOnInit(): void {
@@ -153,7 +182,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.AUtorizacionProsecQuery.selectProsec$
+    this.autorizacionProsecQuery.selectProsec$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((state) => {
@@ -172,7 +201,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
         delay(10),
         tap((_value) => {
           if (this.forma.valid) {
-            this.AutorizacionProsecStore.setFormaValida([
+            this.autorizacionProsecStore.setFormaValida([
               { id: 1, descripcion: 'Valida' },
             ]);
           }
@@ -186,6 +215,49 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     } else {
       this.seccionStore.establecerFormaValida([false]);
     }
+
+    this.initActionFormBuild();
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de estados.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos y deshabilita el formulario si es solo lectura.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.forma.disable();
+    } else {
+      this.forma.enable();
+    }
+  }
+
+  /**
+   * Inicializa el formulario reactivo para capturar el estado seleccionado.
+   */
+  inicializarFormulario(): void {
+    this.autorizacionProsecQuery.selectProsec$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+
+    this.initActionFormBuild();
   }
 
   setValoresStore(
@@ -195,7 +267,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   ): void {
     // Cambiado el tipo "any" por "unknown" para cumplir con las reglas de TypeScript
     const VALOR = form.get(campo)?.value;
-    (this.AutorizacionProsecStore[metodoNombre] as (value: unknown) => void)(VALOR);
+    (this.autorizacionProsecStore[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   initActionFormBuild(): void {
@@ -214,12 +286,14 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     });
   }
 
+  
+
   /**
    * @method obtenserListaEstado
    * @description Obtiene la lista de estados desde el servicio.
    */
   obtenerListaEstado(): void {
-    this.ProsecService.obtenerMenuDesplegable('estado.json').subscribe({
+    this.prosecService.obtenerMenuDesplegable('estado.json').subscribe({
       next: (data) => {
         this.estadoSeleccionar = data as Catalogo[];
       },
@@ -235,7 +309,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @description Obtiene la lista de representación federal desde el servicio.
    */
   obtenerListaFederal(): void {
-    this.ProsecService.obtenerMenuDesplegable('federal.json').subscribe({
+    this.prosecService.obtenerMenuDesplegable('federal.json').subscribe({
       next: (data) => {
         this.RepresentacionFederal = data as Catalogo[];
       },
@@ -251,7 +325,7 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
    * @description Obtiene la lista de actividad productiva desde el servicio.
    */
   obtenerListaActividad(): void {
-    this.ProsecService.obtenerMenuDesplegable(
+    this.prosecService.obtenerMenuDesplegable(
       'actividad_productiva.json'
     ).subscribe({
       next: (data) => {
@@ -276,21 +350,21 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   }
 
   estadoSeleccion(Estado: Catalogo): void {
-    this.AutorizacionProsecStore.setEstado([Estado]);
+    this.autorizacionProsecStore.setEstado([Estado]);
   }
 
   fedralSeleccion(RepresentacionFederal: Catalogo): void {
-    this.AutorizacionProsecStore.setRepresentacionFederal([
+    this.autorizacionProsecStore.setRepresentacionFederal([
       RepresentacionFederal,
     ]);
   }
 
   productivaSeleccion(ActividadProductiva: Catalogo): void {
-    this.AutorizacionProsecStore.setActividadProductiva([ActividadProductiva]);
+    this.autorizacionProsecStore.setActividadProductiva([ActividadProductiva]);
   }
 
   recuperarDatos(): void {
-    this.ProsecService.obtenerTablaDatos('plantasDatos.json').subscribe({
+    this.prosecService.obtenerTablaDatos('plantasDatos.json').subscribe({
       next: (response) => {
         if (response && 'plantasDatos' in response && Array.isArray(response.plantasDatos)) {
           this.plantasDatos = response.plantasDatos;
