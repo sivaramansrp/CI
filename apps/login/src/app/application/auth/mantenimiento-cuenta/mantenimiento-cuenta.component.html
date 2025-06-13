@@ -59,7 +59,7 @@
         </div>
 
         <!-- Panel RFC -->
-        <ng-container *ngIf="formularioRecuperar.get('tipoDocumento')?.value === 'RFC'">
+        <ng-container *ngIf="formularioRecuperar.get('tipoDocumento')?.value === TIPO_IDENTIFICACION.RFC">
           <!-- Tipo de Persona -->
           <div class="form-group">
             <label>Tipo de Persona*:</label>
@@ -137,7 +137,7 @@
         </ng-container>
 
         <!-- Panel CURP -->
-        <ng-container *ngIf="formularioRecuperar.get('tipoDocumento')?.value === 'CURP'">
+        <ng-container *ngIf="formularioRecuperar.get('tipoDocumento')?.value === TIPO_IDENTIFICACION.CURP">
           <div class="form-group">
             <label for="usuarioCurp">CURP*:</label>
             <input type="text" 

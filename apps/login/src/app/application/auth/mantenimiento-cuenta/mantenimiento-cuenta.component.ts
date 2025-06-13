@@ -1,13 +1,13 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, distinctUntilChanged, takeUntil} from 'rxjs';
+import { TipoIdentificacion, TipoPersona } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Notificacion} from '@libs/shared/data-access-user/src';
 import { NotificacionesComponent } from "@libs/shared/data-access-user/src/tramites/components/notificaciones/notificaciones.component";
 import { RecuperacionCuentaService } from '../../../estados/RecuperacionCuentaResponse';
 import { RecuperacionStore } from '../../../estados/RecuperacionState.store';
 import { Router } from '@angular/router';
-import { TipoPersona } from '@libs/shared/data-access-user/src';
 
 /**
  * Componente para manejar la recuperación de contraseña
@@ -44,6 +44,8 @@ export class MantenimientoCuentaComponent implements OnInit, OnDestroy {
   public formularioRecuperar!: FormGroup;
   /** Enum de TipoPersona para usar en el template */
   public readonly TIPO_PERSONA = TipoPersona;
+  /** Enum de TipoIdentificacion para usar en el template */
+  public readonly TIPO_IDENTIFICACION = TipoIdentificacion;
   
 /** Notificación para mostrar alertas */
 public nuevaAlertaNotificacion: Notificacion | null = null;
@@ -254,7 +256,7 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
             )
             .subscribe(() => {
                 if (this.esNacionalidadMexicana() && 
-                    this.formularioRecuperar.get('tipoDocumento')?.value === 'RFC' && 
+                    this.formularioRecuperar.get('tipoDocumento')?.value === TIPO_IDENTIFICACION.RFC && 
                     this.formularioRecuperar.get('personaTipo')?.value === TipoPersona.MORAL) {
                     this.esValidoRfcPersonaMoralNacional();
                     this.formularioRecuperar.updateValueAndValidity();
@@ -273,7 +275,7 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
             )
             .subscribe(() => {
                 if (this.esNacionalidadMexicana() && 
-                    this.formularioRecuperar.get('tipoDocumento')?.value === 'RFC' && 
+                    this.formularioRecuperar.get('tipoDocumento')?.value === TIPO_IDENTIFICACION.RFC && 
                     this.formularioRecuperar.get('personaTipo')?.value === TipoPersona.FISICA) {                    
                     this.formularioRecuperar.updateValueAndValidity();
                     this.cdr.detectChanges();
@@ -422,7 +424,7 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
    * @param tipoDoc - Tipo de documento (RFC/CURP)
    * @private
    */
-    private actualizarValidacionesPorTipoDoc(tipoDoc: 'RFC' | 'CURP' | null): void {
+    private actualizarValidacionesPorTipoDoc(tipoDoc: TIPO_IDENTIFICACION.RFC | TIPO_IDENTIFICACION.CURP | null): void {
         if (!tipoDoc) {return;}
 
         const REQUIRED_VALIDATOR = [Validators.required, Validators.minLength(1)];
@@ -432,7 +434,7 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
         if (this.esNacionalidadMexicana()) {
             // ES MEXICANO
             // 2. Validar tipo de identificación
-            if (tipoDoc === 'RFC') {
+            if (tipoDoc === TIPO_IDENTIFICACION.RFC) {
                 // Es RFC - Habilitar selección de tipo de persona
                 this.formularioRecuperar.get('personaTipo')?.enable();
                 
@@ -461,7 +463,7 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
                     this.formularioRecuperar.get('razonSocial')?.setValidators(REQUIRED_VALIDATOR);
                     this.formularioRecuperar.get('razonSocial')?.updateValueAndValidity({ emitEvent: false });
                 }
-            } else if (tipoDoc === 'CURP') {
+            } else if (tipoDoc === TIPO_IDENTIFICACION.CURP) {
                 // Es CURP - Deshabilitar tipo de persona
                 this.formularioRecuperar.get('personaTipo')?.disable();
                 this.formularioRecuperar.get('personaTipo')?.setValue(null, { emitEvent: false });
@@ -580,12 +582,12 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
       }
       
       // Flujo CURP
-      if (FORM_VALUE.tipoDocumento === 'CURP') {
+      if (FORM_VALUE.tipoDocumento === TIPO_IDENTIFICACION.CURP) {
         return this.esValidoCurpNacional();
       }
 
       // Flujo RFC Moral
-      if (FORM_VALUE.tipoDocumento === 'RFC' && FORM_VALUE.personaTipo === TipoPersona.MORAL) {        
+      if (FORM_VALUE.tipoDocumento === TIPO_IDENTIFICACION.RFC && FORM_VALUE.personaTipo === TipoPersona.MORAL) {
         return this.esValidoRfcPersonaMoralNacional();
       }
     }
