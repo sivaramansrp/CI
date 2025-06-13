@@ -177,6 +177,7 @@ export function createInitialState(): Tramite260304State {
       llavePago: '',
       fechaPago: '',
       importePago: '',
+      banco: '',
     },
     tabSeleccionado: 1,
   };

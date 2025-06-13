@@ -1,5 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
+import { ExportacionMedicamentosContenganService } from '../../service/exportacion-medicamentos-contengan.service';
+import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 import { Tramite260304Query } from '../../estados/tramite260304Query.query';
 import { Tramite260304Store } from '../../estados/tramite260304Store.store';
 
@@ -7,6 +15,8 @@ import { Tramite260304Store } from '../../estados/tramite260304Store.store';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
+  standalone: true,
+  imports: [ SolicitanteComponent, ContenedorDeDatosSolicitudComponent, TercerosRelacionadosVistaComponent, PagoDeDerechosContenedoraComponent, ReactiveFormsModule, FormsModule, CommonModule ]
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
   /**
@@ -23,9 +33,18 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * @descripcion
+   * Indica si el formulario debe estar deshabilitado (solo lectura).
+   * Cuando es verdadero, los controles del formulario estarán deshabilitados y no se podrán editar.
+   */
+  formularioDeshabilitado: boolean = false;
+
   constructor(
     private tramite260304Query:Tramite260304Query,
-    private tramite260304Store: Tramite260304Store
+    private tramite260304Store: Tramite260304Store,
+    private consultaQuery: ConsultaioQuery,
+    private exportacionMedicamentosContenganService: ExportacionMedicamentosContenganService
   ) {
     // Constructor necesario para inyectar el store del trámite
   }
@@ -43,6 +62,39 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
         .subscribe((tab) => {
           this.indice = tab;
         });
+
+      this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((seccionState) => {
+        if(seccionState.update){
+          this.formularioDeshabilitado = false;
+            this.guardarDatosFormulario();
+        }
+        if (seccionState.readonly) {
+          this.formularioDeshabilitado = true;
+        }
+      });
+  }
+
+  /**
+   * @descripcion
+   * Obtiene los datos de acuicultura y actualiza el estado del formulario.
+   * 
+   * @remarks
+   * Realiza una suscripción al observable que retorna los datos de acuicultura.
+   * Utiliza `takeUntil` para evitar fugas de memoria al destruir el componente.
+   * Si la respuesta es válida, actualiza el estado del formulario con los datos recibidos.
+   */
+  guardarDatosFormulario(): void {
+    this.exportacionMedicamentosContenganService
+      .getAcuiculturaData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.exportacionMedicamentosContenganService.actualizarEstadoFormulario(resp);
+        }
+      });
   }
 
   /**
