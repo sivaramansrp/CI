@@ -64,15 +64,16 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
   * Si la respuesta es válida, activa el indicador de datos cargados.
   */
   guardarDatosFormulario(): void {
-    this.importacionDeVehiculosService
-      .getDatosDeLaSolicitud()
-      .pipe(takeUntil(this.destroyNotifier$))
+       this.importacionDeVehiculosService
+      .getDatosDeLaSolicitud().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
       .subscribe((resp) => {
-        if (resp) {
-          this.esDatosRespuesta = true;
-          this.importacionDeVehiculosService.actualizarEstadoFormulario(
-            resp
-          );
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.importacionDeVehiculosService.actualizarEstadoFormulario(resp);
+        }else {
+          this.esDatosRespuesta = false;
         }
       });
   }

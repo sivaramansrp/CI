@@ -1,5 +1,4 @@
 import { Component, ViewChild } from '@angular/core';
-import { Subject } from 'rxjs';
 
 import { DatosPasos, ListaPasosWizard, PASOS, WizardComponent } from '@ng-mf/data-access-user';
 
@@ -35,11 +34,6 @@ export class RegistroSolicitudPageComponent{
    * Índice del paso actual.
    */
   indice: number = 1;
-
-  /**
-   * Subject para manejar la desuscripción.
-   */
-  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Referencia al componente WizardComponent.
