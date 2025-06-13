@@ -319,3 +319,43 @@ export const PRECAUCION = '<strong>¡Precaución!</strong> Lorem ipsum dolor sit
    * 
    */
   export const REGEX_FECHA_MES_ANO = /^(0[1-9]|1[0-2])\/\d{4}$/;
+
+/**
+ * @const FECHA_INICIO_VIGENCIA
+ * @description Objeto que define la configuración de la fecha de inicio de vigencia.
+ */
+export const FECHA_INICIO_VIGENCIA = {
+  labelNombre: 'Fecha inicio:',
+  required: false,
+  habilitado: false,
+};
+
+/**
+ * @const FECHA_FINAL_VIGENCIA
+ * @description Objeto que define la configuración de la fecha final de vigencia.
+ */
+export const FECHA_FINAL_VIGENCIA = {
+  labelNombre: 'Fecha fin:',
+  required: false,
+  habilitado: false,
+};
+
+/**
+ * @const FECHA_INICIO_VIGENCIA_DEL_CUPO
+ * @description Objeto que define la configuración de la fecha de inicio de vigencia del cupo.
+ */
+export const FECHA_INICIO_VIGENCIA_DEL_CUPO = {
+  labelNombre: 'Fecha inicio vigencia del cupo:',
+  required: false,
+  habilitado: false,
+};
+
+/**
+ * @const FECHA_FINAL_VIGENCIA_DEL_CUPO
+ * @description Objeto que define la configuración de la fecha final de vigencia del cupo.
+ */
+export const FECHA_FINAL_VIGENCIA_DEL_CUPO = {
+  labelNombre: 'Fecha fin vigencia del cupo:',
+  required: false,
+  habilitado: false,
+};
