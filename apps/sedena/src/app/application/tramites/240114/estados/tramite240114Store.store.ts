@@ -160,4 +160,13 @@ export class Tramite240114Store extends Store<Tramite240114State> {
       mercancialTablaDatos: [...state.mercancialTablaDatos, ...newMercancia],
     }));
   }
+
+  //create a function to set entire state
+  /**
+   * Actualiza el estado completo con un nuevo estado.
+   * @param newState El nuevo estado a establecer.
+   */
+  public setState(newState: Tramite240114State): void {
+    this.update(newState);
+  }
 }

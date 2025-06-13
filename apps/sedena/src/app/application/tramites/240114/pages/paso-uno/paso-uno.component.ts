@@ -4,12 +4,17 @@ import { DatosDelTramiteContenedoraComponent } from '../../components/datos-del-
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { Subject } from 'rxjs';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  SolicitanteComponent,
+} from '@ng-mf/data-access-user';
+import { map, Subject } from 'rxjs';
 import { TercerosRelacionadosContenedoraComponent } from '../../components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
 import { Tramite240114Query } from '../../estados/tramite240114Query.query';
 import { Tramite240114Store } from '../../estados/tramite240114Store.store';
 import { takeUntil } from 'rxjs';
+import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 
 /**
  * @title Paso Uno
@@ -36,6 +41,10 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   formularioDeshabilitado: boolean = true;
   /**
+   * @property {ConsultaioState} consultaState - Estado actual relacionado con la consulta.
+   */
+  public consultaState!: ConsultaioState;
+  /**
    * @property indice
    * @description Indicates the index of the selected tab within the form step.
    * @type {number | undefined}
@@ -58,7 +67,9 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   constructor(
     private tramite240114Query: Tramite240114Query,
-    private tramite240114Store: Tramite240114Store // eslint-disable-next-line no-empty-function
+    private tramite240114Store: Tramite240114Store,
+    private consultaQuery: ConsultaioQuery,
+    private datosSolicitudService: DatosSolicitudService
   ) {}
 
   /**
@@ -73,8 +84,34 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       .subscribe((tab) => {
         this.indice = tab;
       });
+    this.guardarDatosFormulario();
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+          if (this.consultaState.update) {
+            this.guardarDatosFormulario();
+            this.formularioDeshabilitado = false;
+          } else if (this.consultaState.readonly) {
+            this.formularioDeshabilitado = true;
+          }
+        })
+      )
+      .subscribe();
   }
-
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.More actions
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.datosSolicitudService
+      .obtenerRegistroTomarMuestrasDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos) => {
+        this.tramite240114Store.setState(datos);
+      });
+  }
   /**
    * Updates the selected tab index in the store.
    *
