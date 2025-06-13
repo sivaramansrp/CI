@@ -5,7 +5,7 @@ import { ConsultaioQuery, REGEX_DESCRIPCION_ESPECIALES,REGEX_LEADING_SPACES} fro
 import { Subject,map,takeUntil } from 'rxjs';
 import { AgregarQuery } from '../../../../estados/queries/agregar.query';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import aduanasJson from '@libs/shared/theme/assets/json/220401/umc.json';

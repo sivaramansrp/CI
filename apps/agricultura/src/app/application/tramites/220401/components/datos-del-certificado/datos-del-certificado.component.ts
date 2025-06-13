@@ -14,23 +14,20 @@ import {
   Validators,
 } from '@angular/forms';
 /** Importación de componentes reutilizables y modelos. */
-import {
-  CatalogoResponse,
-  CatalogoSelectComponent,
-  ConsultaioQuery,
-  InputRadioComponent,
-} from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Agregar220401Store } from '../../../../estados/tramites/agregar220401.store';
 import { AgregarArchivoComponent } from '@ng-mf/data-access-user';
 import { AgregarQuery } from '../../../../estados/queries/agregar.query';
+import { CatalogoResponse } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { Pantallas220401Service } from '../pantallas220401.service';
 import { TableComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import radioOptionsData from '@libs/shared/theme/assets/json/220401/tipo-de-certifico.json';
 import { solicitud220401State } from '../../../../estados/tramites/agregar220401.store';
 import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json';
-
 /**
  * Componente que gestiona los datos del certificado en la solicitud 220401.
  */
