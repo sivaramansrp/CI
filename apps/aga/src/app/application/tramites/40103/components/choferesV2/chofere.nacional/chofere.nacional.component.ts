@@ -115,7 +115,7 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         map((data) => {
-          this.datosDelChoferNacional = this.datosDelChoferNacional.concat(data?.datosDelChoferNacionalAlta ?? []);
+          this.datosDelChoferNacional = [...data?.datosDelChoferNacionalAlta ?? []];
         })
       )
       .subscribe();
@@ -218,6 +218,8 @@ export class ChofereNacionalComponent implements OnInit, OnDestroy {
   addModal(data: DatosDelChoferNacional): void {
     this.datosDelChoferNacional.push(data);
     this.datosDelChoferNacionalSelected = [];
+
+    this.chofer40103Service.updateDatosDelChoferNacional(this.datosDelChoferNacional);
     this.cancelModal();
   }
 

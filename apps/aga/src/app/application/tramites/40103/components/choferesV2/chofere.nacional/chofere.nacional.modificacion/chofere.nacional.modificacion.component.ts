@@ -19,8 +19,7 @@ import { DatosDelChoferNacional } from '../../../../models/registro-muestras-mer
   styleUrls: ['./chofere.nacional.modificacion.component.scss'],
   standalone: true,
   imports: [
-    TablaDinamicaComponent, 
-    TituloComponent, 
+    TablaDinamicaComponent,  
     DatosDeChoferesNacionalDialogComponent
   ],
   providers: [BsModalService],
@@ -127,7 +126,8 @@ export class ChofereNacionalModificacionComponent implements OnInit {
       .pipe(
         takeUntil(this.destroy$),
         map((data) => {
-          this.datosDelChoferNacional = this.datosDelChoferNacional.concat(data?.datosDelChoferNacionalAlta ?? []);
+          this.datosDelChoferNacional = [...data?.datosDelChoferNacionalModification ?? []];
+          
         })
       )
       .subscribe();
@@ -217,6 +217,7 @@ export class ChofereNacionalModificacionComponent implements OnInit {
     if (this.modalComponent) {
       this.datosDelChoferNacional.push(data);
       this.datosDelChoferNacionalSelected = [];
+      this.chofer40103Service.updateDatosDelChoferNacionalModification(this.datosDelChoferNacional);
     }
     this.cancelModal();
   }

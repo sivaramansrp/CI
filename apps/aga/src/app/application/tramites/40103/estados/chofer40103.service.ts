@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable } from 'rxjs'; 
-import { Chofer, DatosDelChoferNacional, DirectorGeneralData } from '../models/registro-muestras-mercancias.model';
+import { Chofer, ChoferesExtranjeros, DatosDelChoferNacional, DirectorGeneralData } from '../models/registro-muestras-mercancias.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Chofer40103Store } from './chofer40103.store';
 import { DatosDelVehículo } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
@@ -313,10 +313,38 @@ export class Chofer40103Service {
     }));
   }
 
+  updateDatosDelChoferNacionalModification(data: DatosDelChoferNacional[]): void {
+    this.chofer40103Store.update((state) => ({
+      ...state,
+      datosDelChoferNacionalModification: data
+    }));
+  }
+
   updateDatosDelChoferNacionalRetirada(data: DatosDelChoferNacional[]): void {
     this.chofer40103Store.update((state) => ({
       ...state,
       datosDelChoferNacionalRetirada: data
+    }));
+  }
+
+  updateDatosDelChoferExtranjero(data: ChoferesExtranjeros[]): void {
+    this.chofer40103Store.update((state) => ({
+      ...state,
+      datosDelChoferExtranjerosAlta: data
+    }));
+  }
+
+  updateDatosDelChoferExtranjeroModification(data: ChoferesExtranjeros[]): void {
+    this.chofer40103Store.update((state) => ({
+      ...state,
+      datosDelChoferExtranjerosModification: data
+    }));
+  }
+
+  updateDatosDelChoferExtranjeroRetirada(data: ChoferesExtranjeros[]): void {
+    this.chofer40103Store.update((state) => ({
+      ...state,
+      datosDelChoferExtranjerosRetirada: data
     }));
   }
 }

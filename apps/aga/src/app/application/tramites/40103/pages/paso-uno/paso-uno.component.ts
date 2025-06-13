@@ -6,7 +6,7 @@ import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Chofer40103Query } from '../../estados/chofer40103.query';
 import { Chofer40103Service } from '../../estados/chofer40103.service';
 import { Chofer40103Store } from '../../estados/chofer40103.store';
-import { DatosDelChoferNacional } from '../../models/registro-muestras-mercancias.model';
+import { ChoferesExtranjeros, DatosDelChoferNacional } from '../../models/registro-muestras-mercancias.model';
 
 @Component({
   selector: 'paso-uno',
@@ -110,11 +110,24 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
           });
 
           this.chofer40103Service
-            .obtenerTablaDatos<DatosDelChoferNacional>('facturasDisponible.json')
+            .obtenerTablaDatos<DatosDelChoferNacional>('mock-data-choferes-nacionales.json')
             .pipe(takeUntil(this.destroyed$))
             .subscribe( (response) => {
                 this.chofer40103Service.updateDatosDelChoferNacional(response);
+                this.chofer40103Service.updateDatosDelChoferNacionalModification(response);
+                this.chofer40103Service.updateDatosDelChoferNacionalRetirada(response);
             });
+
+          this.chofer40103Service
+            .obtenerTablaDatos<ChoferesExtranjeros>('mock-data-choferes-extranjero.json')
+            .pipe(takeUntil(this.destroyed$))
+            .subscribe( (response) => {
+                this.chofer40103Service.updateDatosDelChoferExtranjero(response);
+                this.chofer40103Service.updateDatosDelChoferExtranjeroModification(response);
+                this.chofer40103Service.updateDatosDelChoferExtranjeroRetirada(response);
+            });
+            
+
         }
     })).subscribe();
   }

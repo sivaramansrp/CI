@@ -2,7 +2,7 @@
 
   <div class="row table-responsive">
     <div class="col-md-12">
-      <h5>Alta de choferes:</h5>
+      <h5>Modificación de choferes extranjeros:</h5>
 
       <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="ConfiguracionColumna"
         [datos]="datosDelChoferExtranjeros" (listaDeFilaSeleccionada)="onChofereNationalSelected($event)">
@@ -14,18 +14,13 @@
   <div class="row mt-3">
     <div class="col-md-12 text-end">
       <div class="btn-group">
-        <button class="btn btn-default" type="button" (click)="editSelectedRow(agregarModalDialog)"
-          [disabled]="isReadonly">
-          Modificar
-        </button>
-
         <button class="btn btn-default" type="button" [disabled]="isReadonly"
           (click)="deleteSelectedRow()">
           Eliminar
         </button>
         <button class="btn btn-primary ms-2" (click)="addNewRow(agregarModalDialog)"
           [disabled]="isReadonly">
-          Agregar
+          Buscar
         </button>
       </div>
     </div>

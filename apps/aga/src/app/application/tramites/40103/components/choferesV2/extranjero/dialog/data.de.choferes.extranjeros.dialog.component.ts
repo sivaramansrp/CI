@@ -369,37 +369,27 @@ export class DatosDeChoferesExtranjerosDialogComponent implements OnInit, OnDest
       return;
     }
 
-    const CHOFER_DATA: ChoferesExtranjeros = {
-      // curp: 'ABCD123456HJKLMN12',
-      // rfc: 'RFC124',
-      numero: 'Juan Pérez',
-      primerApellido: 'Pérez',
-      segundoApellido: 'Gómez',
-      
-      nacionalidad: 'México',
-      numeroDeGafete: 'GAFETE124',
-      vigenciaGafete: '2024-12-31',
-      
-      numeroDelSeguroSocial: '12345678901',
-      numberDeIdeFiscal: '123456789',
-
-      pais: 'México',
-      codigoPostal: '12445',
-      estado: 'Aprobado',
-
-      calle: 'Calle Falsa',
-      numeroExterior: '124',
-      numeroInterior: 'A',
-      paisDeResidencia: '1',
-      ciudad: 'Ciudad 1',
-      telefono: '312443124',
-      correoElectronico: 'abc@xyz.com'
-    };
-
-    await this.updateListsData(CHOFER_DATA);
-
-    // Rellenar el formulario
-    this.formChoferes.patchValue(CHOFER_DATA);
+    await this.chofer40103Service
+      .obtenerTablaDatos<ChoferesExtranjeros>('mock-data-choferes-extranjero.json')
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe( (response) => {
+            if(response?.length === 0) {
+              this.alertaNotificacion = {
+                tipoNotificacion: TipoNotificacionEnum.ALERTA,
+                categoria: CategoriaMensaje.INFORMACION,
+                modo: 'action',
+                titulo: 'Alert',
+                mensaje: 'No se encontró información para el CURP o RFC proporcionado.',
+                cerrar: true,
+                txtBtnAceptar: 'Aceptar',
+                txtBtnCancelar: '',
+              };
+              return;
+            }
+        this.updateListsData(response[0]);
+        // Rellenar el formulario
+        this.formChoferes.patchValue(response[0]);
+      });
   }
 
   /**

@@ -126,7 +126,7 @@ export class ChofereNacionalRetiradaComponent implements OnInit {
       .pipe(
         takeUntil(this.destroyed$),
         map((data) => {
-          this.datosDelChoferNacional = this.datosDelChoferNacional.concat(data.datosDelChoferNacionalRetirada ?? []);
+          this.datosDelChoferNacional = [...data.datosDelChoferNacionalRetirada ?? []];
         })
       )
       .subscribe();
@@ -219,6 +219,7 @@ export class ChofereNacionalRetiradaComponent implements OnInit {
     if (this.modalComponent) {
       this.datosDelChoferNacional.push(data);
       this.datosDelChoferNacionalSelected = [];
+      this.chofer40103Service.updateDatosDelChoferNacionalRetirada(this.datosDelChoferNacional);
     }
     this.cancelModal();
   }
