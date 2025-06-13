@@ -355,7 +355,7 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
   public getComboBimestres(): void {
     this.datosComunesSvc.getComboBimestres().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
       const DATOS = JSON.parse(JSON.stringify(response));
-      this.comboBimestresIDC = DATOS.data;
+      this.comboBimestresIDC = DATOS;
     });
   }
 
