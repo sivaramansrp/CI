@@ -115,7 +115,15 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
  * 
  * Cuando es verdadero, el usuario no puede editar los campos del formulario.
  */
-  public esFormularioSoloLectura: boolean = true;
+  public esFormularioSoloLectura: boolean = false;
+
+    /**
+   * Bandera para determinar si el formulario es de actualización.
+   * Inicialmente establecido en `false`.
+   *
+   * @description Esta bandera se utiliza para controlar la lógica de actualización del formulario.
+   */
+  private esFormularioActualizacion: boolean = false;
   /**
    * @property {Subject<void>} destroy$
    * @description
@@ -303,6 +311,13 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
             // Evita duplicados si navegas varias veces
             this.obraDeArteRowData = [...this.solicitudState.ObraDeArte];
           }
+           if (this.obraDeArteRowData.length === 0) {
+        const OBRA_DE_ARTE_ROW: TablaDatos = {
+          tbodyData: obraDe,
+        };
+        this.obraDeArteRowData.push(OBRA_DE_ARTE_ROW);
+        this.Agregar270301Store.setObraDeArte(this.obraDeArteRowData);
+      }
         })
       )
       .subscribe();
@@ -312,8 +327,10 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
+          
 
-        })
+
+})
       )
       .subscribe();
     /**
@@ -853,6 +870,10 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
      * Actualiza el almacenamiento de obras de arte en la tienda.
      */
     // this.Agregar270301Store.setObraDeArte(this.obraDeArteRowData);
+     /**
+     * Actualiza el almacenamiento de obras de arte en la tienda.
+     */
+    this.Agregar270301Store.setObraDeArte(this.obraDeArteRowData);
 
     /**
      * Alterna la visibilidad del div de la tabla y el modal de obras de arte.

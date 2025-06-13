@@ -50,6 +50,7 @@ export class Service270301Service {
     if (DATOS.emprsaTransportista) {
       this.agregar270301Store.setemprsaTransportista(DATOS.emprsaTransportista);
     }
+     this.agregar270301Store.setObraDeArte(DATOS.ObraDeArte);
     
   }
 
