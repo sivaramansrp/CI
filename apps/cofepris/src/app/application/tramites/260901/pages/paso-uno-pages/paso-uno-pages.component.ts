@@ -4,22 +4,29 @@
  * Este componente representa la primera página del asistente de modificación de permisos sanitarios.
  */
 import {
-  AfterViewInit,
   Component,
+  OnDestroy,
+  OnInit,
   QueryList,
   ViewChild,
   ViewChildren,
 } from '@angular/core';
+
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { DatosDelSolicitudModificacionComponent } from '../../../../shared/components/datos-del-solicitud-modificacion/datos-del-solicitud-modificacion.component';
 import {
   SolicitanteComponent,
-  TIPO_PERSONA,
+
 } from '@libs/shared/data-access-user/src';
-import { DatosDelSolicitudModificacionComponent } from '../../../../shared/components/datos-del-solicitud-modificacion/datos-del-solicitud-modificacion.component';
+
 import { PagoDeDerechosEntradaComponent } from '../../../../shared/components/pago-de-derechos-entrada/pago-de-derechos-entrada.component';
 import { TercerosRelacionadosFabSeccionComponent } from '../../../../shared/components/terceros-relacionados-fab-seccion/terceros-relacionados-fab-seccion.component';
 import { TramitesAsociadosSeccionComponent } from '../../../../shared/components/tramites-asociados-seccion/tramites-asociados-seccion.component';
 
-import { CompleteForm, Destinatario, DomicilioEstablecimiento, Fabricante, Facturador, FormMercancias, PagoDeDerechos, Proveedor, ScianForm, SolicitanteData, SolicitudEstablecimientoForm, SolicitudForm, TercerosRelacionados, Tramite } from '../../models/mod-permiso.model';
+import { CompleteForm, Destinatario, DomicilioEstablecimiento, Fabricante, Facturador, FormMercancias, PagoDeDerechos, Proveedor, ScianForm, SolicitanteData, SolicitudEstablecimientoForm, TercerosRelacionados, Tramite } from '../../models/mod-permiso.model';
+import { Subject ,forkJoin,map, takeUntil } from 'rxjs';
+
+import { ModificacionPermisoSanitario } from '../../services/modificacion-permiso-sanitario.service';
 /*
   * @description
 */
@@ -49,7 +56,59 @@ import { CompleteForm, Destinatario, DomicilioEstablecimiento, Fabricante, Factu
  * - Implementa el hook `AfterViewInit` para inicializar referencias a los componentes hijos después de que
  *   la vista haya sido renderizada.
  */
-export class PasoUnoPagesComponent {
+export class PasoUnoPagesComponent implements OnInit,OnDestroy{
+     /**
+     * showPreFillingOptions
+     * Indica si se deben mostrar las opciones de prellenado.
+     */
+ showPreFillingOptions: boolean = false; 
+
+   /**
+   * Indica si se están mostrando los datos de respuesta.
+   */
+  public esDatosRespuesta: boolean = false;
+  /**
+   * Estado actual de la consulta.
+   */
+  public consultaState!: ConsultaioState;
+  /**
+   * Notificador para destruir las suscripciones y evitar fugas de memoria.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  constructor( private consultaQuery: ConsultaioQuery,
+    
+        private solocitudService: ModificacionPermisoSanitario,
+  ){
+
+  }
+   ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+          this.consultaState = seccionState;
+      })).subscribe();
+    if(this.consultaState.update) {
+    this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+
+   guardarDatosFormulario(): void {
+      forkJoin({
+        registro: this.solocitudService.getRegistroTomaMuestrasMercanciasData(),
+        permiso: this.solocitudService.getPagoDerechos()
+      })
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe(({ registro, permiso }) => {
+          if (registro) {
+            this.esDatosRespuesta = true;
+            this.solocitudService.actualizarEstadoFormulario(registro);
+          }
+          if (permiso) {
+            this.solocitudService.actualizarPagoDerechosFormulario(permiso);
+          }
+        });
+    }
   /**
    * Referencia al componente `SolicitanteComponent` para acceder a sus métodos y propiedades.
    */
@@ -192,5 +251,12 @@ export class PasoUnoPagesComponent {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+/**
+ * Método del ciclo de vida que se ejecuta al destruir el componente.
+ */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
