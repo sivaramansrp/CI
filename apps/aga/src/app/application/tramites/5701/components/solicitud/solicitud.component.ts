@@ -61,6 +61,7 @@ import {
   LABEL_DESPACHO_DD,
   LABEL_DESPACHO_LDA,
   PATENTES_ID,
+  RFC_SOLICITANTE,
   SECCION_ADUANERA,
   SIN_ITEMS,
   SIN_VALOR,
@@ -134,17 +135,20 @@ import {
   MSG_ERROR_NO_INFORMACION,
   MSG_ERROR_RFC_NO_ENCONTRADO,
   MSG_MONTO_PAGADO_CUBIERTO,
+  MSJ_ERROR_FECHAS_NO_SELECCIONADAS,
   MSJ_ERROR_FECHA_DIA,
   MSJ_ERROR_FECHA_FINAL_NO_SELECCIONADA,
   MSJ_ERROR_FECHA_INICIAL_NO_SELECCIONADA,
   MSJ_ERROR_FECHA_MES,
   MSJ_ERROR_FECHA_SEMANA,
-  MSJ_ERROR_FECHAS_NO_SELECCIONADAS,
   MSJ_ERROR_ID_SOCIO_COMERCIAL,
   MSJ_ERROR_LINEA_CAPTURA,
+  MSJ_ERROR_RFC_AUTORIZACION_LDA,
   MSJ_LINEA_CAPTURA_NO_PAGADA,
   MSJ_LINEA_CAPTURA_USADA,
 } from '../../../../core/enums/5701/mensajes-modal-5701.enum';
+import { ValidaDespachoService } from '../../../../core/services/5701/valida-despacho.service';
+import { BodyValidarRFCAutorizacionLDA } from '../../../../core/models/5701/validaciones-depacho.model';
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
@@ -404,12 +408,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * @descripcion Checkbox para despacho lda
    */
-  public checkedLda: boolean = false;
-
-  /**
-   * @descripcion Checkbox para despacho dd
-   */
-  public checkedDd: boolean = false;
+  public activarCatalogoTipoOperacion: boolean = true;
 
   //Estas variables se van a eliminar
   /**
@@ -448,7 +447,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     private readonly validaLineaPagoService: ValidaLineaPagoService,
     private readonly validaLineaCapturaService: ValidaLineaCapturaService,
     private readonly parametroMontoService: ParametroMontoService,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private validaDespachosService: ValidaDespachoService
   ) {}
 
   ngOnInit(): void {
@@ -683,8 +683,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * Error pattern
    * @returns {boolean} - Retorna `true` si el campo tiene un error de patrón, de lo contrario `false`.
    */
-  isErrorPattern(field: string): boolean {
-    const CONTROL = this.datosImportadorExportador.get(field) as FormControl;
+  // eslint-disable-next-line class-methods-use-this
+  isErrorPattern(form: FormGroup, field: string): boolean {
+    const CONTROL = form.get(field) as FormControl;
 
     if (CONTROL) {
       const ERROR_PATTERN = CONTROL.hasError('pattern');
@@ -1140,7 +1141,18 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
+      this.datosImportadorExportador.get('nombre')?.reset();
       this.datosImportadorExportador.get('RFCImpExp')?.reset();
+      return;
+    }
+
+    if (
+      RFC_IMP_EXP === '' &&
+      this.datosImportadorExportador.get('nombre')?.value
+    ) {
+      // Si el RFC está vacío pero el nombre tiene un valor, se limpia el nombre.
+      this.datosImportadorExportador.get('nombre')?.reset();
+      this.tramite5701Store.setNombre('');
       return;
     }
 
@@ -2312,8 +2324,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               this.despachoSeleccionado = false;
               this.tipoDespacho = '';
             } else {
-              this.despacho.get(this.tipoDespacho)?.setValue(false);
-              this.despachoSeleccionado = false;
+              this.despacho.get(this.tipoDespacho)?.setValue(true);
+              this.despachoSeleccionado = true;
             }
           } else {
             if (confirmar) {
@@ -2443,7 +2455,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.despacho.get('dd')?.updateValueAndValidity();
       this.despacho.get('lda')?.reset();
       this.despacho.get('dd')?.reset();
-      
+
       this.despacho.get('rfcDespachoLDA')?.reset();
       this.despacho.get('rfcDespachoLDA')?.clearValidators();
       this.despacho.get('rfcDespachoLDA')?.updateValueAndValidity();
@@ -2451,6 +2463,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.despacho.get('folioDDEX')?.reset();
       this.despacho.get('folioDDEX')?.clearValidators();
       this.despacho.get('folioDDEX')?.updateValueAndValidity();
+
+      this.despacho.get('tipoOperacion')?.setValue(SIN_VALORES);
+
+      this.desactivarSelects(true);
     } else {
       if (CONTROL) {
         CONTROL.setValue(!CONTROL.value, { emitEvent: true }); // 🔥 Alterna el estado
@@ -2471,7 +2487,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         this.despacho.get('lda')?.disable();
         this.selectCatalogoDespacho = this.despachoDDCatalogo;
         this.activarCatalogoDespacho = true;
-        this.despacho.get('folioDDEX')?.setValidators([Validators.required]);
+        this.despacho
+          .get('folioDDEX')
+          ?.setValidators([Validators.required, Validators.pattern(REGEX_RFC)]);
         this.despacho.get('folioDDEX')?.updateValueAndValidity();
         this.desactivarSelects(false);
       }
@@ -2496,7 +2514,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.despacho.get('idSeccionDespacho')?.setValue(SIN_VALORES);
     this.despacho.get('seccionAduanera')?.setValue('');
     this.despacho.get('nombreRecinto')?.setValue(SIN_VALORES);
-    this.despacho.get('tipoOperacion')?.setValue('');
+    this.despacho.get('tipoOperacion')?.setValue(SIN_VALORES);
     this.despacho.get('relacionSociedad')?.setValue(false);
     this.despacho.get('encargoConferido')?.setValue(false);
     this.despacho.get('domicilioDespacho')?.setValue('');
@@ -2558,7 +2576,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     const ESPECIFIQUE_DESPACHO = this.despacho.get('especifique')?.value;
 
     const CATALOGO_VALIDO =
-      CATALOGO_RECINTO !== null && CATALOGO_RECINTO !== '-1';
+      CATALOGO_RECINTO !== null && CATALOGO_RECINTO !== '-1' && CATALOGO_RECINTO !== '-2';
     const ESPECIFIQUE_VALIDO = Boolean(ESPECIFIQUE_DESPACHO?.toString().trim());
 
     return CATALOGO_VALIDO || ESPECIFIQUE_VALIDO;
@@ -2864,15 +2882,15 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   desactivarSelects(activar: boolean): void {
-    ['idAduanaDespacho', 'idSeccionDespacho'].forEach((control) => {
-      if (activar) {
-        this.despacho.get(control)?.enable();
-        this.activarCatalogoDespacho = false;
-      } else {
-        this.despacho.get(control)?.disable();
-        this.activarCatalogoDespacho = true;
-      }
-    });
+    this.despacho.get('idAduanaDespacho')?.[activar ? 'enable' : 'disable']();
+
+    if (this.tipoDespacho === 'dd') {
+      this.activarCatalogoTipoOperacion = activar;
+      this.despacho
+        .get('domicilioDespacho')
+        ?.[activar ? 'enable' : 'disable']();
+    }
+    this.activarCatalogoDespacho = !activar;
   }
 
   /**
@@ -2880,8 +2898,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   changeRfcAutorizacionLDA(): void {
-    const RFC_AUTORIZACION_LDA = this.despacho.get('rfcDespachoLDA')?.value;
-    this.setValoresStore(this.despacho, 'rfcDespachoLDA', 'setAutorizacionLDA');
+    const RFC_AUTORIZACION_LDA = this.despacho.get('rfcDespachoLDA');
 
     const FECHA_INICIAL = this.datosServicio.get('fechaInicio')?.value;
     const FECHA_FINAL = this.datosServicio.get('fechaFinal')?.value;
@@ -2902,7 +2919,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         ? MENSAJES_ERROR.faltaInicial
         : '';
 
-    if (MENSAJE_ERROR) {
+    if (MENSAJE_ERROR && RFC_AUTORIZACION_LDA?.dirty) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: 'danger',
@@ -2920,6 +2937,96 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       return;
     }
 
-    console.log(`RFC Autorización LDA: ${RFC_AUTORIZACION_LDA}`);
+    const HORA_FINAL = this.datosServicio.get('horaFinal')?.value ?? '00:00';
+    const HORA_INICIAL = this.datosServicio.get('horaInicio')?.value ?? '00:00';
+
+    const FECHA_INICIO = `${FECHA_INICIAL} ${HORA_INICIAL}`;
+    const FECHA_FIN = `${FECHA_FINAL} ${HORA_FINAL}`;
+
+    const BODY: BodyValidarRFCAutorizacionLDA = {
+      rfc_lda: RFC_AUTORIZACION_LDA?.value,
+      rfc_solicitante: RFC_SOLICITANTE, // Este es el rfc del solicitante, el que vamos a tomar del store
+      fecha_inicio: FECHA_INICIO,
+      fecha_fin: FECHA_FIN,
+      tipo_patente: this.solicitudState.patente.tipo_patente,
+    };
+
+    this.validaDespachosService
+      .validaRFCAutorizacionLda(BODY)
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        tap((response) => {
+          if (response.datos.length > 0 || !response.datos) {
+            this.despacho.get('idAduanaDespacho')?.enable();
+            this.despacho.get('idSeccionDespacho')?.enable();
+            this.activarCatalogoDespacho = false;
+          } else {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: TITULO_MODAL_AVISO,
+              mensaje: MSJ_ERROR_RFC_AUTORIZACION_LDA,
+              cerrar: false,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+          }
+
+          this.setValoresStore(
+            this.despacho,
+            'rfcDespachoLDA',
+            'setAutorizacionLDA'
+          );
+        }),
+        catchError((_error) => {
+          return EMPTY; // Evita que el error se propague
+        })
+      )
+      .subscribe();
+  }
+
+  changeFolioDDEX(): void {
+    const FOLIO_DDEX = this.despacho.get('folioDDEX');
+    this.setValoresStore(this.despacho, 'folioDDEX', 'setAutorizacionDDEX');
+
+    const FECHA_INICIAL = this.datosServicio.get('fechaInicio')?.value;
+    const FECHA_FINAL = this.datosServicio.get('fechaFinal')?.value;
+
+    const MENSAJES_ERROR = {
+      noFechas: MSJ_ERROR_FECHAS_NO_SELECCIONADAS,
+      faltaFinal: MSJ_ERROR_FECHA_FINAL_NO_SELECCIONADA,
+      faltaInicial: MSJ_ERROR_FECHA_INICIAL_NO_SELECCIONADA,
+    };
+
+    // Determinar el mensaje de error según las fechas seleccionadas
+    const MENSAJE_ERROR =
+      !FECHA_INICIAL && !FECHA_FINAL
+        ? MENSAJES_ERROR.noFechas
+        : !FECHA_FINAL
+        ? MENSAJES_ERROR.faltaFinal
+        : !FECHA_INICIAL
+        ? MENSAJES_ERROR.faltaInicial
+        : '';
+
+    if (MENSAJE_ERROR && FOLIO_DDEX?.dirty) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: TITULO_MODAL_AVISO,
+        mensaje: MENSAJE_ERROR,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+
+      const RFC_LDA = this.despacho.get('rfcDespachoLDA');
+      RFC_LDA?.reset();
+      RFC_LDA?.markAsUntouched();
+      return;
+    }
+
+    console.log('FOLIO_DDEX', FOLIO_DDEX?.value);
   }
 }

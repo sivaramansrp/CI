@@ -179,3 +179,8 @@ export const SECCION_ADUANERA = 'seccionAduanera';
  * @description Constante para el recinto fiscalizado
  */
 export const RECINTO_FISCALIZADO = 'recintoFiscalizado';
+
+/**
+ *@descrption Constante para el RFC del solicitante, este se va a eliminar, cuando se implemente el store del inicio de sesion 
+ */
+export const RFC_SOLICITANTE = 'DODM930823EG4';

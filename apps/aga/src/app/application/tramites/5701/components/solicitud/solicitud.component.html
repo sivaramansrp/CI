@@ -14,7 +14,7 @@
     </div>
   </div>
 
-  @if(tipoSolicitudSeleccionada) {
+  @if(tipoSolicitudSeleccionada > 0) {
   <ng-titulo titulo="Datos del importador/exportador" />
   <div formGroupName="datosImportadorExportador">
     @if (isApoderado && masDeUnaPatente) {
@@ -94,7 +94,10 @@
             Este campo es obligatorio.
           </div>
 
-          <div *ngIf="isErrorPattern('RFCImpExp')" class="mensaje-error">
+          <div
+            *ngIf="isErrorPattern(datosImportadorExportador, 'RFCImpExp')"
+            class="mensaje-error"
+          >
             RFC no es válido.
           </div>
         </div>
@@ -143,12 +146,6 @@
                 )
               "
             />
-            <div
-              *ngIf="isErrorPattern('setDescripcionNumeroRegistro')"
-              class="mensaje-error"
-            >
-              Por favor, ingresa caracteres alfanuméricos.
-            </div>
           </div>
         </div>
       </div>
@@ -286,7 +283,9 @@
               Este campo es obligatorio.
             </div>
             <div
-              *ngIf="isErrorPattern('idSocioComercial')"
+              *ngIf="
+                isErrorPattern(datosImportadorExportador, 'idSocioComercial')
+              "
               class="mensaje-error"
             >
               Por favor, ingresa caracteres alfanuméricos.
@@ -411,6 +410,7 @@
             id="lda"
             (click)="showConfirmDialogLDA_DD('lda')"
             formControlName="lda"
+            maxlength="13"
           />
           <label class="form-check-label" for="lda">Despacho LDA</label>
         </div>
@@ -424,6 +424,7 @@
             id="dd"
             (click)="showConfirmDialogLDA_DD('dd')"
             formControlName="dd"
+            maxlength="13"
           />
           <label class="form-check-label" for="dd">Despacho DD</label>
         </div>
@@ -449,6 +450,12 @@
             maxlength="13"
             [ngClass]="isValid(despacho, 'rfcDespachoLDA') ? 'required' : ''"
           />
+          <div
+            *ngIf="isRequired(despacho, 'rfcDespachoLDA')"
+            class="mensaje-error"
+          >
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
       } @else if (despacho.get('dd')?.value) {
@@ -466,6 +473,17 @@
             "
             [ngClass]="isValid(despacho, 'folioDDEX') ? 'required' : ''"
           />
+
+          <div *ngIf="isRequired(despacho, 'folioDDEX')" class="mensaje-error">
+            Este campo es obligatorio.
+          </div>
+
+          <div
+            *ngIf="isErrorPattern(despacho, 'folioDDEX')"
+            class="mensaje-error"
+          >
+            Formato incorrecto.
+          </div>
         </div>
       </div>
       }
@@ -548,6 +566,7 @@
           formControlName="tipoOperacion"
           [label]="'Tipo de operación'"
           [required]="true"
+          [isDisabled]="!activarCatalogoTipoOperacion"
           (change)="
             setValoresStore(despacho, 'tipoOperacion', 'setTipoOperacion')
           "

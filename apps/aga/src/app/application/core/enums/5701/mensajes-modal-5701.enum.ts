@@ -155,3 +155,5 @@ export const MSJ_ERROR_FECHA_FINAL_NO_SELECCIONADA = 'Debe registrar la fecha fi
  * @description Mensaje de error cuando no se ha seleccionado la fecha inicial.
  */
 export const MSJ_ERROR_FECHA_INICIAL_NO_SELECCIONADA = 'Debe registrar la fecha inicial';
+
+export const MSJ_ERROR_RFC_AUTORIZACION_LDA = 'No está autorizado para operar en LDA, favor de verificar.';
