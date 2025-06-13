@@ -180,7 +180,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       this.updatePagoDerechos.emit(valores);
     });
     this.mostrarBanco = BANCO.includes(this.idProcedimiento) ? true : false;
-
+    this.patchForm();
     if (this.formularioDeshabilitado) {
       this.pagoDerechosForm.disable();
     }
@@ -229,6 +229,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.estadosDatos = data;
+        this.pagoDerechosForm.patchValue({
+          estado: this.pagoDerechoFormState?.estado || this.estadosDatos[0]?.clave,
+        });
       });
   }
 
@@ -243,7 +246,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.bancoDatos = data;
-        this.patchForm();
+        this.pagoDerechosForm.patchValue({
+          banco: this.pagoDerechoFormState?.banco || this.bancoDatos[0]?.clave,
+        });
       });
   }
 
