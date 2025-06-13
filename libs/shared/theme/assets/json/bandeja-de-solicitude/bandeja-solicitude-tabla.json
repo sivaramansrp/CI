@@ -1908,7 +1908,15 @@
     "numeroDeProcedimiento": "260516"
 },
 {
-
+  "id": 30505,
+  "tipoDeTramite": "Modificación / Aviso de Despacho de mercancía",
+  "fecha": "2023-10-01",
+  "fechaActualizacion": "2023-10-05",
+  "diasTranscurridos": "4",
+  "departamento": "AGACE",
+  "numeroDeProcedimiento": "30505"
+},
+{
      "id": 260901,
      "tipoDeTramite": "Solicitud de se Permiso",
      "fecha": "2023-10-01",
@@ -1935,5 +1943,4 @@
      "departamento": "COFEPRIS",
      "numeroDeProcedimiento": "260908"
     }
-
 ]
