@@ -1,12 +1,12 @@
 
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChoferesExtranjeros, DatosDelChoferNacional } from '../../models/registro-muestras-mercancias.model';
 import {ConsultaioQuery, FormularioDinamico,SolicitanteComponent} from '@ng-mf/data-access-user';
 import {DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,PERSONA_MORAL_NACIONAL} from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Chofer40103Query } from '../../estados/chofer40103.query';
 import { Chofer40103Service } from '../../estados/chofer40103.service';
 import { Chofer40103Store } from '../../estados/chofer40103.store';
-import { ChoferesExtranjeros, DatosDelChoferNacional } from '../../models/registro-muestras-mercancias.model';
 
 @Component({
   selector: 'paso-uno',
@@ -126,7 +126,6 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
                 this.chofer40103Service.updateDatosDelChoferExtranjeroModification(response);
                 this.chofer40103Service.updateDatosDelChoferExtranjeroRetirada(response);
             });
-            
 
         }
     })).subscribe();

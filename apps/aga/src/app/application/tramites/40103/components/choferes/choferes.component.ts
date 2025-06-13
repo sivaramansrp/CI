@@ -19,9 +19,9 @@ import { TEXTOS } from '../../enum/choferes-enum';
 import { TituloComponent } from '@ng-mf/data-access-user';
 
 @Component({
-  selector: 'app-choferes-v2',
-  templateUrl: './choferesv2.component.html',
-  styleUrls: ['./choferesv2.component.scss'],
+  selector: 'app-choferes',
+  templateUrl: './choferes.component.html',
+  styleUrls: ['./choferes.component.scss'],
   standalone: true,
   imports: [
     ReactiveFormsModule,
@@ -38,16 +38,11 @@ import { TituloComponent } from '@ng-mf/data-access-user';
     ChofereModificationDeChoferesComponent
   ],
 })
-export class ChoferesV2Component {
+export class ChoferesComponent {
   CHOFERES_PAGE = CHOFERES_PAGE;
   TEXTOS = TEXTOS;
 
   activeTab: string = 'nacional';
-
-  /**
-   *
-   */
-  constructor() { }
 
   /**
    * Establece la pestaña activa.
@@ -55,10 +50,5 @@ export class ChoferesV2Component {
    */
   setActiveTab(tab: string): void {
     this.activeTab = tab;
-    // if (tab === 'extranjero') {
-    //   // this.TEXTOS.titulo = TEXTOS.TITULO_EXTRANJERO;
-    // } else {
-    //   this.TEXTOS.titulo = TEXTOS.TITULO_NACIONAL;
-    // }
   }
 }

@@ -1,5 +1,5 @@
 import { BehaviorSubject, Observable } from 'rxjs'; 
-import { Chofer, ChoferesExtranjeros, DatosDelChoferNacional, DirectorGeneralData } from '../models/registro-muestras-mercancias.model';
+import { ChoferesExtranjeros, DatosDelChoferNacional, DirectorGeneralData } from '../models/registro-muestras-mercancias.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Chofer40103Store } from './chofer40103.store';
 import { DatosDelVehículo } from '@libs/shared/data-access-user/src/core/models/40103/transportista-terrestre.model';
@@ -49,41 +49,6 @@ export class Chofer40103Service {
     if (STORE_DATA) {
       this.choferesListSubject.next(JSON.parse(STORE_DATA));
     }
-  }
-
-  /**
-   * Agrega un nuevo chofer a la lista.
-   * 
-   * @param nuevoMiembro El nuevo chofer a agregar.
-   * @param isExtranjero Indica si el chofer es extranjero. Por defecto es `false`.
-   */
-  addChofer(
-    nuevoMiembro: Chofer,
-    isExtranjero: boolean = false
-  ): void {
-    if (!nuevoMiembro) {
-      return;
-    }
-    const STORAGE_KEY = isExtranjero
-      ? 'choferesextranjeroList'
-      : 'choferesList';
-    const STORE_DATA = localStorage.getItem(STORAGE_KEY);
-    const CHOFER_ARRAY: Chofer[] = STORE_DATA ? JSON.parse(STORE_DATA) : [];
-    CHOFER_ARRAY.push(nuevoMiembro);
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(CHOFER_ARRAY));
-
-    // Actualizar tienda Akita
-    // this.chofer40103Store.update((state) => ({
-    //   ...state,
-    //   choferesExtranjero: isExtranjero
-    //     ? CHOFER_ARRAY
-    //     : state.choferesExtranjero,
-    //   choferes: !isExtranjero ? CHOFER_ARRAY : state.choferes,
-    // }));
-
-    // if (isExtranjero) {
-    //   this.choferesListSubject.next(CHOFER_ARRAY);
-    // }
   }
 
   /**

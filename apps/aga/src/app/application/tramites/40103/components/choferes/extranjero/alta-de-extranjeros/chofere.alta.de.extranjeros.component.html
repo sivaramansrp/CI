@@ -1,11 +1,11 @@
-,<div class="container">
+<div class="container">
 
   <div class="row table-responsive">
     <div class="col-md-12">
-      <h5>Alta de choferes:</h5>
+      <h5>Alta de choferes extranjeros:</h5>
 
       <app-tabla-dinamica [tipoSeleccionTabla]="tipoSeleccionTabla" [configuracionTabla]="ConfiguracionColumna"
-        [datos]="datosDelChoferNacional" (listaDeFilaSeleccionada)="onChofereNationalSelected($event)">
+        [datos]="datosDelChoferExtranjeros" (listaDeFilaSeleccionada)="onChofereNationalSelected($event)">
       </app-tabla-dinamica>
 
     </div>
@@ -18,7 +18,6 @@
           [disabled]="isReadonly">
           Modificar
         </button>
-
         <button class="btn btn-default" type="button" [disabled]="isReadonly"
           (click)="deleteSelectedRow()">
           Eliminar
@@ -31,12 +30,9 @@
     </div>
     <ng-template #datosDeChoferesModal>
       <div id="datosDeChoferesModal">
-        <app-choferes-datos [datosDeChofere]="datosChofere" #datosDeChoferesModal [readonly]="isReadonly"
-          (addModalEvent)="addModal($event)" (cancelEvent)="cancelModal()"></app-choferes-datos>
-
+        <app-choferes-datos-extranjeros-dialog [datosDeChofere]="datosChofere" #datosDeChoferesModal [readonly]="isReadonly"
+          (addModalEvent)="addModal($event)" (cancelEvent)="cancelModal()"></app-choferes-datos-extranjeros-dialog>
       </div>
     </ng-template>
-
-    
   </div>
 
