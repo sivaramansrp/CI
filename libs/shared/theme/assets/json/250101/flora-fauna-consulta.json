@@ -11,40 +11,28 @@
   "agenteAduanalPrimerApellido": "Pérez",
   "agenteAduanalSegundoApellido": "López",
   "agenteAduanalPatente": "AA12",
-  "destinatarioRowData": [
-    {
-      "columna": "Nombre",
-      "valor": "Empresa XYZ"
-    }
-  ],
-  "agenteAduanalRowData": [
-    {
-      "columna": "Nombre",
-      "valor": "Juan Pérez"
-    }
-  ],
   "clave": "TRM250101",
   "dependencia": "SAGARPA",
-  "banco": "Bancomer",
-  "llave": "LLV1234567890",
+  "banco": "2",
+  "llave": "1234567890",
   "fecha": "2025-06-12",
   "importe": "15000.00",
   "revisados": "Documentos completos",
-  "medio": "Digital",
-  "identificacion": "IFE",
-  "economico": "VEH123",
-  "placa": "ABC-123-CDMX",
-  "numero": "TRAM-987654",
-  "fechas": "2025-06-10 al 2025-06-12",
-  "requisito": "Carta porte, RFC, INE",
-  "descripcion": "Trámite de exportación de productos agrícolas",
-  "fraccion": "0804.10.01",
+  "medio": "3",
+  "identificacion": "24021991",
+  "economico": "123",
+  "placa": "364463",
+  "numero": "987654",
+  "fechas": "10/06/2025",
+  "requisito": "2",
+  "descripcion": "1",
+  "fraccion": "1",
   "arancelaria": "Frutas y frutos comestibles",
   "cantidad": "500",
-  "medida": "Kilogramos",
-  "genero": "Mangifera",
-  "especie": "Mangifera indica",
-  "comun": "Mango",
-  "origen": "Veracruz",
-  "procedencia": "Chiapas"
+  "medida": "2",
+  "genero": "2",
+  "especie": "2",
+  "comun": "1",
+  "origen": "4",
+  "procedencia": "4"
 }

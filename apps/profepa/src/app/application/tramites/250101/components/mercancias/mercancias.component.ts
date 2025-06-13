@@ -7,6 +7,7 @@ import { Tramite250101State,Tramite250101Store } from '../../estados/tramite2501
 import { ModalComponent } from '../modal/modal.component';
 import { Tramite250101Query } from '../../estados/tramite250101.query';
 import catalogoDatos from '@libs/shared/theme/assets/json/250101/banco.json';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * Componente encargado de gestionar la sección de mercancías dentro del trámite 250101.
  * Este componente permite al usuario gestionar el formulario relacionado con los productos,
@@ -119,6 +120,12 @@ public solicitudState!: Tramite250101State;
  * destruirse y limpiar las suscripciones a observables, evitando fugas de memoria.
  */
 private destroyNotifier$: Subject<void> = new Subject();
+ /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+public esFormularioSoloLectura: boolean = false;
+
 /**
  * Constructor que inyecta las dependencias necesarias para el componente.
  * 
@@ -129,7 +136,8 @@ private destroyNotifier$: Subject<void> = new Subject();
   constructor(
     private fb: FormBuilder,
     private tramite250101Store: Tramite250101Store,
-    private tramite250101Query: Tramite250101Query //Store encargado de manejar el estado de la solicitud y la lógica de negocio asociada.
+    private tramite250101Query: Tramite250101Query, //Store encargado de manejar el estado de la solicitud y la lógica de negocio asociada.
+    private consultaioQuery: ConsultaioQuery
   ) {
     // Constructor que inyecta las dependencias necesarias
   }
@@ -180,7 +188,42 @@ private destroyNotifier$: Subject<void> = new Subject();
 
     // Deshabilita el campo 'arancelaria' en el formulario.
     this.formMercancias.get('arancelaria')?.disable();
+
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((seccionState) => {
+      this.esFormularioSoloLectura = seccionState.readonly;
+      this.inicializarEstadoFormulario();
+    });
   }
+
+
+   /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.  
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+       this.formMercancias.enable();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+private guardarDatosFormulario(): void {
+    this.detalleData();
+    if (this.esFormularioSoloLectura) {
+      this.formMercancias.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formMercancias.enable();
+    } 
+  }
+
+
   /**
    * Método que agrega un detalle de mercancía al array `fraccionData`.
    * Obtiene los valores del formulario y los mapea a los valores correspondientes 
@@ -189,6 +232,7 @@ private destroyNotifier$: Subject<void> = new Subject();
    * @returns {void}
    */
   detalleData(): void {
+    if (!this.formMercancias) {return}
     const DETALLE_FORMDATA = {
       fraccionArancelaria: this.fraccion.find(item => item.id === Number(this.formMercancias.value.fraccion))?.descripcion,
       cantidad: this.solicitudState.cantidad,

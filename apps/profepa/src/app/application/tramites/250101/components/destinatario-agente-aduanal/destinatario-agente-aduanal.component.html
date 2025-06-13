@@ -9,10 +9,10 @@
                 </div>
             </div>
             <div class="col-md-12 mt-5 d-flex justify-content-end">
-                <button type="button" class="btn btn-danger">Eliminar</button>
-                <button type="button" class="btn btn-default ms-3" id="agregarDestinatario">Seleccionar</button>
+                <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura">Eliminar</button>
+                <button type="button" class="btn btn-default ms-3" id="agregarDestinatario" [disabled]="esFormularioSoloLectura">Seleccionar</button>
                 <button type="button" class="btn btn-primary ms-3" id="capturarDestinatario"
-                    (click)="cambiarDestinatario()">Agregar</button>
+                    (click)="cambiarDestinatario()" [disabled]="esFormularioSoloLectura">Agregar</button>
             </div>
         </div>
 
@@ -26,9 +26,9 @@
             </div>
 
             <div class="col-md-12 mt-5 d-flex justify-content-end">
-                <button type="button" class="btn btn-danger" id="eliminarRequisito">Eliminar</button>
+                <button type="button" class="btn btn-danger" id="eliminarRequisito" [disabled]="esFormularioSoloLectura">Eliminar</button>
                 <button type="button" class="btn btn-primary ms-3" id="agregarRequisito"
-                    (click)="cambiarAgenteAduanal()">Agregar</button>
+                    (click)="cambiarAgenteAduanal()" [disabled]="esFormularioSoloLectura">Agregar</button>
             </div>
         </div>
     </div>

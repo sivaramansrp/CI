@@ -8,7 +8,7 @@
           <div class="col-md-4 ">
             <div class="form-group ">
                 <app-catalogo-select [catalogo]="medio" formControlName="medio" [label]="'Medio transporte'"
-                [required]="true" name="medio" (change)="setValoresStore(transporteForm, 'medio', 'setMedio')" ></app-catalogo-select>
+                [required]="true" name="medio" (change)="setValoresStore(transporteForm, 'medio', 'setMedio')" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
           </div>
           </div>
         </div>
@@ -27,9 +27,9 @@
             </nav>
           </div>
           <div class="col-md-12 mt-5 d-flex justify-content-end">
-            <button type="button" class="btn btn-danger" >Eliminar</button>
+            <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura">Eliminar</button>
             <button type="button" class="btn btn-primary ms-3"
-                (click)="transporte()">Agregar</button>
+                (click)="transporte()" [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
         <app-modal [active]="showtransporteModal">
             <ng-titulo titulo="Transporte" />
@@ -109,9 +109,9 @@
             </nav>
           </div>
           <div class="col-md-12 mt-5 d-flex justify-content-end">
-            <button type="button" class="btn btn-danger" >Eliminar</button>
+            <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura">Eliminar</button>
             <button type="button" class="btn btn-primary ms-3"
-                (click)="requisitos()">Agregar</button>
+                (click)="requisitos()" [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
         <app-modal [active]="showrequisitosModal">
             <ng-titulo titulo=" Seleccionar requisito" />
@@ -119,7 +119,7 @@
                 <div class="col-md-8">
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="requisitoCatalogo" formControlName="requisito" [label]="'Seleccionar requisito'"
-                        [required]="true" name="requisito"  (change)="setValoresStore(transporteForm, 'requisito', 'setRequisito')" ></app-catalogo-select>
+                        [required]="true" name="requisito"  (change)="setValoresStore(transporteForm, 'requisito', 'setRequisito')" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                     </div>
                   </div>
             </div>

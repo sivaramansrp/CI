@@ -8,6 +8,7 @@ import pago from '@libs/shared/theme/assets/json/250101/pago-formdatos.json';
 
 import { Tramite250101State, Tramite250101Store } from '../../estados/tramite250101.store';
 import { Tramite250101Query } from '../../estados/tramite250101.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * Componente encargado de gestionar el pago de derechos dentro del trámite 221602.
  * Permite al usuario ingresar los datos correspondientes al pago de derechos, como clave, dependencia, banco,
@@ -94,6 +95,12 @@ export class PagoDeDerechos250101Component implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente. Inicializa las dependencias necesarias y prepara el formulario reactivo.
    * 
    * @param fb - FormBuilder utilizado para crear el formulario reactivo.
@@ -103,7 +110,8 @@ export class PagoDeDerechos250101Component implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite250101Store: Tramite250101Store,
-    private tramite250101Query: Tramite250101Query
+    private tramite250101Query: Tramite250101Query,
+    private consultaioQuery: ConsultaioQuery
   ) { // Constructor que inyecta las dependencias necesarias
     }
 
@@ -113,7 +121,41 @@ export class PagoDeDerechos250101Component implements OnInit, OnDestroy {
    * Inicializa el formulario reactivo con los valores actuales de la solicitud.
    */
   ngOnInit(): void {
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((seccionState) => {
+      this.esFormularioSoloLectura = seccionState.readonly;
+      this.inicializarEstadoFormulario();
+    });
+
     this.inicializarFormulario();
+
+    this.inicializarEstadoFormulario();
+  }
+
+
+  /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.  
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+       this.pagoDerechosForm.enable();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+private guardarDatosFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.pagoDerechosForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.pagoDerechosForm.enable();
+    } 
   }
 
   /**

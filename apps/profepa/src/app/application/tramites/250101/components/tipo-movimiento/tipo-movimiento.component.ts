@@ -151,6 +151,7 @@ export class TipoMovimientoComponent implements OnInit, OnDestroy {
    * Ejecuta la lógica correspondiente según el estado del componente.
    */
   private inicializarEstadoFormulario(): void {
+     if (!this.tipoMovimientoForm){return}
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
     } else {

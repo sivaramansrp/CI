@@ -8,6 +8,7 @@ import { INPUT_FECHA } from '../../constantes/flora-fauna.enum';
 import { ModalComponent } from '../modal/modal.component';
 import { Tramite250101Query } from '../../estados/tramite250101.query';
 import catalogoDatos from '@libs/shared/theme/assets/json/250101/banco.json';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 /**
  * Componente encargado de gestionar los requisitos y el transporte del trámite 250101.
@@ -88,6 +89,12 @@ export class Requisitos250101Component implements OnInit, OnDestroy {
    * Subject para destruir suscripciones y evitar fugas de memoria.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  public esFormularioSoloLectura: boolean = false;
  
   /**
    * Constructor que inyecta las dependencias necesarias.
@@ -110,7 +117,8 @@ export class Requisitos250101Component implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite250101Store: Tramite250101Store,
-    private tramite250101Query: Tramite250101Query
+    private tramite250101Query: Tramite250101Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // Constructor que inyecta las dependencias necesarias
   }
@@ -138,6 +146,40 @@ export class Requisitos250101Component implements OnInit, OnDestroy {
       fechas: [this.solicitudState.fechas,Validators.required],
       requisito: [this.solicitudState.requisito, Validators.required],
     });
+
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((seccionState) => {
+      this.esFormularioSoloLectura = seccionState.readonly;
+      this.inicializarEstadoFormulario();
+    });
+  }
+
+
+   /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.  
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+       this.transporteForm.enable();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+private guardarDatosFormulario(): void {
+    // this.requisitosDatos();
+    // this.transporteDatos();
+    if (this.esFormularioSoloLectura) {
+      this.transporteForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.transporteForm.enable();
+    } 
   }
 
   /**
