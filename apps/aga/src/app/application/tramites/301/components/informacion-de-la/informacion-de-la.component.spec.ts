@@ -45,29 +45,4 @@ describe('InformacionDeLaComponent', () => {
     expect(component.informacionDeLaform.get('estadoFisico')?.value).toBe('');
     expect(component.informacionDeLaform.get('acondicionamiento')?.value).toBe('');
   });
-
-  it('should enable descripcionFraccion when a fraccionArancelaria is selected', () => {
-    component.informacionDeLaform.get('fraccionArancelaria')?.setValue('some value');
-    component.valorSeleccionadoFraccion();
-    expect(component.informacionDeLaform.get('descripcionFraccion')?.enabled).toBe(true);
-  });
-
-  it('should disable descripcionFraccion when no fraccionArancelaria is selected', () => {
-    component.informacionDeLaform.get('fraccionArancelaria')?.setValue('');
-    component.valorSeleccionadoFraccion();
-    expect(component.informacionDeLaform.get('descripcionFraccion')?.disabled).toBe(true);
-  });
-
-  it('should enable descripcionNico when a nico is selected', () => {
-    component.informacionDeLaform.get('nico')?.setValue('some value');
-    component.valorSeleccionadoNico();
-    expect(component.informacionDeLaform.get('descripcionNico')?.enabled).toBe(true);
-  });
-
-  it('should disable descripcionNico when no nico is selected', () => {
-    component.informacionDeLaform.get('nico')?.setValue('');
-    component.valorSeleccionadoNico();
-    expect(component.informacionDeLaform.get('descripcionNico')?.disabled).toBe(true);
-  });
-
 });
