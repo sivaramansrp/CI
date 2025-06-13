@@ -352,8 +352,8 @@
   {
     "id": 51,
     "tramite": 120201,
-    "linkDashboard": "/se/cupos/consultar-cupo",
-    "linkDepartment": "/pago/cupos/consultar-cupo",
+    "linkDashboard": "/se/expedicion-certificados-asignacion-directa-fisica/fisica",
+    "linkDepartment": "/pago/expedicion-certificados-asignacion-directa-fisica/fisica",
     "department": "se"
   },
   {
@@ -598,14 +598,14 @@
     "id": 86,
     "tramite": 260203,
     "linkDashboard": "/cofepris/medicamentos-registro-sanitario/solicitud",
-    "linkDepartment": "/cofepris/medicamentos-registro-sanitario/solicitud",
+    "linkDepartment": "/pago/medicamentos-registro-sanitario/solicitud",
     "department": "cofepris"
   },
   {
     "id": 87,
     "tramite": 260205,
     "linkDashboard": "/cofepris/materias-primas-destinados/solicitud",
-    "linkDepartment": "/cofepris/materias-primas-destinados/solicitud",
+    "linkDepartment": "/pago/materias-primas-destinados/solicitud",
     "department": "cofepris"
   },
   {
@@ -835,8 +835,8 @@
   {
     "id": 120,
     "tramite": 120202,
-    "linkDashboard": "/se/expedicion-certificados-asignacion-directa/expedicion-certificados-asignacion",
-    "linkDepartment": "/pago/expedicion-certificados-asignacion-directa/expedicion-certificados-asignacion",
+    "linkDashboard": "/se/expedicion-certificados-asignacion-directa-moral/moral",
+    "linkDepartment": "/pago/expedicion-certificados-asignacion-directa-moral/moral",
     "department": "se"
   },
   {
@@ -1291,7 +1291,7 @@
     "id": 185,
     "tramite": 231003,
     "linkDashboard": "/semarnat/aviso-de-reciclaje/datos",
-    "linkDepartment": "/semarnat/aviso-de-reciclaje/datos",
+    "linkDepartment": "/pago/aviso-de-reciclaje/datos",
     "department": "semarnat"
   },
   {
@@ -1332,9 +1332,9 @@
   {
     "id": 191,
     "tramite": 30505,
-    "linkDashboard": "/aga/aviso-de-modificacion/aviso",
+    "linkDashboard": "/agace/aviso-de-modificacion/aviso",
     "linkDepartment": "/pago/aviso-de-modificacion/aviso",
-    "department": "aga"
+    "department": "agace"
   },
   {
     "id": 192,
@@ -2179,8 +2179,8 @@
   {
     "id": 312,
     "tramite": 319,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/aga/operaciones-de-comercio/exterior",
+    "linkDepartment": "/pago/operaciones-de-comercio/exterior",
     "department": "aga"
   },
   {
@@ -3103,8 +3103,8 @@
   {
     "id": 446,
     "tramite": 32514,
-    "linkDashboard": "",
-    "linkDepartment": "",
+    "linkDashboard": "/agace/retorno-seguro-vehiculos-extranjeros/solicitud",
+    "linkDepartment": "/pago/retorno-seguro-vehiculos-extranjeros/solicitud",
     "department": "agace"
   },
   {
@@ -4206,22 +4206,16 @@
     "linkDepartment": "/pago/cupos/solicitud",
     "department": "se"
   },
+
   {
     "id": 604,
-    "tramite": 32514,
-    "linkDashboard": "/agace/retorno-seguro-vehiculos-extranjeros",
-    "linkDepartment": "/pago/retorno-seguro-vehiculos-extranjeros",
-    "department": "agace"
-  },
-  {
-    "id": 605,
     "tramite": 103,
     "linkDashboard": "/aga/autorizacion/mercancia-donada",
     "linkDepartment": "/pago/autorizacion/mercancia-donada",
     "department": "aga"
   },
   {
-    "id": 606,
+    "id": 605,
     "tramite": 140205,
     "linkDashboard": "/se/cancelaciones-certificado/solicitud",
     "linkDepartment": "/pago/cancelaciones-certificado/solicitud",

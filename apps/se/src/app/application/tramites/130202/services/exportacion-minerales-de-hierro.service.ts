@@ -1,16 +1,16 @@
+import { Tramite130202State, Tramite130202Store } from '../estados/tramites/tramites130202.store';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
-
 import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
+import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ExportacionMineralesDeHierroService {
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private tramite130202Store:Tramite130202Store) {
     //
   }
   /**
@@ -68,9 +68,31 @@ export class ExportacionMineralesDeHierroService {
       'assets/json/130202/producto-otions.json'
     );
   }
+
+  /**
+   * @descripcion
+   * Obtiene la lista de partidas de la mercancía desde un archivo JSON.
+   * @returns {Observable<PartidasDeLaMercanciaModelo[]>} Observable que emite la lista de partidas.
+   */
   getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
       return this.http.get<PartidasDeLaMercanciaModelo[]>(
             'assets/json/130202/partidas-de-la.json'
           );
-    }
+  }
+
+  /**
+  * Actualiza el estado del formulario en el store.
+  * @param DATOS Estado actualizado del trámite.
+  */
+  actualizarEstadoFormulario(DATOS: Tramite130202State): void {
+    this.tramite130202Store.actualizarEstado(DATOS);
+  }
+
+  /**
+  * Obtiene los datos de la solicitud.
+  * @returns Observable con los datos de la solicitud.
+  */
+  getDatosDeLaSolicitud(): Observable<Tramite130202State> {
+    return this.http.get<Tramite130202State>('assets/json/130202/datos-de-la-solicitud.json');
+  }
 }

@@ -43,3 +43,112 @@ export interface DivideFraccion {
    */
   subdivision: string;
 }
+/**
+ * Interfaz que representa los datos del formulario a guardar.
+ */
+export interface GuardarDatosFormulario {
+  /**
+   * Clave o número de la aduana auxiliar.
+   */
+  aduanaAux: string | number;
+
+  /**
+   * Número o identificador de la junta técnica derivada.
+   */
+  juntaTecnicaDerivada: string | number;
+
+  /**
+   * Número de pedimento de importación o exportación.
+   */
+  numeroPedimento: string;
+
+  /**
+   * Nombre comercial de la mercancía declarada.
+   */
+  nombreComercialMercancia: string;
+
+  /**
+   * Descripción detallada de la mercancía.
+   */
+  descDetalladaMercancia: string;
+
+  /**
+   * Fracción arancelaria primaria.
+   */
+  fraccionI: string;
+
+  /**
+   * Capítulo correspondiente de la fracción I.
+   */
+  capitulo: string;
+
+  /**
+   * Partida correspondiente de la fracción I.
+   */
+  partida: string;
+
+  /**
+   * Subpartida correspondiente de la fracción I.
+   */
+  subpartida: string;
+
+  /**
+   * Subdivisión correspondiente de la fracción I.
+   */
+  subdivision: string;
+
+  /**
+   * Fracción arancelaria secundaria.
+   */
+  fraccionII: string;
+
+  /**
+   * Capítulo correspondiente de la fracción II.
+   */
+  capituloII: string;
+
+  /**
+   * Partida correspondiente de la fracción II.
+   */
+  partidaII: string;
+
+  /**
+   * Subpartida correspondiente de la fracción II.
+   */
+  subpartidaII: string;
+
+  /**
+   * Subdivisión correspondiente de la fracción II.
+   */
+  subdivisionII: string;
+
+  /**
+   * Fracción arancelaria terciaria.
+   */
+  fraccionIII: string;
+
+  /**
+   * Capítulo correspondiente de la fracción III.
+   */
+  capituloIII: string;
+
+  /**
+   * Partida correspondiente de la fracción III.
+   */
+  partidaIII: string;
+
+  /**
+   * Subpartida correspondiente de la fracción III.
+   */
+  subpartidaIII: string;
+
+  /**
+   * Subdivisión correspondiente de la fracción III.
+   */
+  subdivisionIII: string;
+
+  /**
+   * Indica si los manifiestos han sido seleccionados.
+   */
+  manifiestosSeleccionados: boolean;
+}

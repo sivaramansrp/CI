@@ -28,6 +28,7 @@ export class FitosanitarioStore extends Store<FinalDataToSend> {
         */
     public actualizarDatosForma(datos: MercanciaForm[]): void {
         this.update(state => ({
+            ...state,
             datos
         }));
     }

@@ -15,7 +15,7 @@
                 <div class="form-group">
 
                     <app-catalogo-select [catalogo]="reglaSeleccionada" [label]="'Seleccionar regla'" [required]="false"
-                        name="seleccionarRegla" formControlName="seleccionarRegla"
+                        name="seleccionarRegla" formControlName="seleccionarRegla" [isDisabled]="esFormularioSoloLectura"
                         (selectionChange)="procesarDatosDelHijo($event)"></app-catalogo-select>
 
                 </div>
@@ -26,7 +26,7 @@
                 <div class="form-group">
 
                     <app-catalogo-select [catalogo]="sectorDesplegable" [label]="'Sector'" [required]="false"
-                        name="sector" formControlName="sector"
+                        name="sector" formControlName="sector" [isDisabled]="esFormularioSoloLectura"
                         (selectionChange)="cambioDeSector($event)"></app-catalogo-select>
 
                 </div>

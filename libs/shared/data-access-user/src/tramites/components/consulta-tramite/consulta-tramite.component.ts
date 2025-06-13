@@ -1,20 +1,29 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { TramiteState, TramiteStore } from '../../../core/estados/tramite.store';
 import { CommonModule } from '@angular/common';
+import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
+import { ConsultaioStore } from '../../../core/estados/consulta.store';
 import { Router } from '@angular/router';
 import { TramiteQuery } from '../../../core/queries/tramite.query';
+
+import { REG_X } from '../../constantes/regex.constants';
+import { SeleccionadoDepartamento } from '../../../core/models/shared/bandeja-de-tareas-pendientes.model';
+import { TablaAcciones } from '../../../core/enums/tabla-seleccion.enum';
+import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.component';
+import { TablePaginationComponent } from '../table-pagination/table-pagination.component';
+import { TramiteDetails } from '../../../core/models/tramiteDetails';
 
 @Component({
   selector: 'app-consulta-tramite',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, TablaDinamicaComponent, TablePaginationComponent,],
   templateUrl: './consulta-tramite.component.html',
   styleUrl: './consulta-tramite.component.scss',
 })
 
-export class ConsultaTramiteComponent implements OnInit {
+export class ConsultaTramiteComponent<T> implements OnInit {
   /** 
    * Formulario de búsqueda 
    */
@@ -29,10 +38,71 @@ export class ConsultaTramiteComponent implements OnInit {
     * Notificador para destruir las suscripciones.
     */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Indica si la configuración de datos de la tabla está disponible.
+   */
+  public tieneConfiguracionTablaDatos: boolean = false;
+
+   /* Indica si la bandeja debe mostrar el formulario dinámico */
+  @Input() public tieneBandeja: boolean = false;
+   /* Título de la tabla dentro de la bandeja */
+  @Input() public tablaTitulo!: string;
+  /* Configuración de columnas para la tabla */
+  @Input() configuracionTabla: ConfiguracionColumna<T>[] = [];
+  /* Datos que se muestran en la tabla */
+  @Input() configuracionTablaDatos: any[] = [];
+   /* Datos que se usan en el formulario de la bandeja */
+  @Input() public bandejaSolicitudeDatos: any[] = [];
+  /**
+   * Propiedad de entrada que contiene un arreglo de objetos de datos a duplicar.
+   */
+  @Input() public duplicarDatos: any[] = [];
+  /**
+   * EventEmitter que emite un evento cada vez que un valor cambia en el componente.
+   */
+  @Output() obtenerNombreDelDepartamento: EventEmitter<{ campo: string; valor: any}> = new EventEmitter<{ campo: string; valor: any}>();
+  /**
+   * Propiedad de entrada que contiene la información del departamento actualmente seleccionado.
+   */
+  @Input() public seleccionadoDepartamento: SeleccionadoDepartamento = {
+    tieneDepartamento: false,
+    numeroDeProcedimiento: '',
+    nombreDelDepartamento: '',
+  };
+
+  /* URL a la que se navega al seleccionar un trámite */
+  public procedureUrl!: string;
+  /* Indica si el formulario es válido */
+  public hasValidForm: boolean = false;
+ /* Formulario reactivo principal que contiene otro formGroup */
+  public dinamicasBandejaForma: FormGroup = new FormGroup({
+    bandejaSolicitudeFormGroup: new FormGroup({}),
+  });
+  
+  /* Acciones disponibles en la tabla (editar, etc.) */
+  public tablaAcciones: TablaAcciones[] = [TablaAcciones.EDITAR];
+  /* Copia original de la configuración de la tabla */
+  public originalConfiguracionTabla: any[] = [];
+   /* Lista de detalles de trámite desde JSON */
+  public tramiteData: TramiteDetails[] = [];
+  /* Controla si la sección de país de origen está colapsada o no */
+  public paisDeOriginColapsable = false;
+  /* Total de elementos en la tabla */
+  public totalItems: number = 0;
+   /* Página actual en la paginación */
+  public currentPage: number = 1;
+  /* Cantidad de elementos por página */
+  public itemsPerPage: number = 5;
+  /* Datos del cuerpo para miembros de la empresa paginados */
+  public miembroDeLaEmpresaBodyData: unknown[] = [];
+
+
   constructor(private router: Router,
     private fb: FormBuilder,
     private tramiteStates: TramiteStore,
     private solicitudtramiteQuery: TramiteQuery,
+    private consultaioStore: ConsultaioStore
   ) {
     /**
      * Constructor de la clase ConsultaTramiteComponent.
@@ -66,15 +136,27 @@ export class ConsultaTramiteComponent implements OnInit {
    */
   inicializaFormConsulta(): void {
     this.FormBuscaTramite = this.fb.group({
-      idTramite: [''],
+      idTramite: ['', [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)]],
     });
   }
 
   /**
-   *  Método para buscar el trámite 
+   * Busca el trámite filtrando los datos duplicados por el número de procedimiento ingresado en el formulario.
+   * Si encuentra resultados, actualiza la bandera de configuración de la tabla; si no, marca todos los controles como tocados.
    */
   buscarTramite(): void {
-    this.router.navigate(['datos-generales-tramite']);
+    if (this.FormBuscaTramite.invalid) {
+      this.FormBuscaTramite.markAllAsTouched();
+      this.tieneConfiguracionTablaDatos = false;
+      return;
+    }
+
+    const IDTRAMITE = this.FormBuscaTramite.get('idTramite')?.value?.toString();
+    this.configuracionTablaDatos = this.duplicarDatos.filter(
+      item => item.id?.toString() === IDTRAMITE
+    );
+    this.tieneConfiguracionTablaDatos = this.configuracionTablaDatos.length > 0;
+    this.FormBuscaTramite.reset();
   }
 
   /**
@@ -105,4 +187,70 @@ export class ConsultaTramiteComponent implements OnInit {
      */ 
     this.tramiteStates.update({ [metodoNombre]: VALOR });
   }
+/*
+   * Cambia la página actual en la tabla
+   */
+  public onPageChange(page: number): void {
+    this.currentPage = page;
+    this.updatePagination();
+  }
+  /*
+   * Actualiza los datos visibles de la tabla según la paginación
+   */
+  public updatePagination(): void {
+    const START_INDEX = (this.currentPage - 1) * this.itemsPerPage;
+    this.miembroDeLaEmpresaBodyData = this.miembroDeLaEmpresaBodyData.slice(
+      START_INDEX,
+      START_INDEX + this.itemsPerPage
+    );
+  }
+  /*
+   * Cambia el número de elementos por página y reinicia la página actual
+   */
+  public onItemsPerPageChange(itemsPerPage: number): void {
+    this.itemsPerPage = itemsPerPage;
+    this.currentPage = 1;
+    this.updatePagination();
+  }
+
+/*
+   * Maneja el clic sobre una fila de la tabla.
+   * Navega a la ruta correspondiente dependiendo del origen del trámite
+   */
+  public onFilaClic(event: any): void {
+    const ROW_OBJETO = event;
+    const PROCEDURE: unknown | number = Number(
+      ROW_OBJETO.numeroDeProcedimiento
+    );
+    const ORIGIN: string = ROW_OBJETO.origin; // Inicializar ORIGEN con un valor predeterminado
+    const DEPARTMENTO: string = ROW_OBJETO.departamento.toLowerCase();
+    
+    this.consultaioStore.establecerConsultaio(
+      String(PROCEDURE),
+      ORIGIN,
+      ROW_OBJETO.numeroDeProcedimiento,
+      ROW_OBJETO.folioTramite,
+      ROW_OBJETO.tipoDeTramite,
+      ROW_OBJETO.estadoDeTramite,
+      !this.tieneBandeja ? false : true,
+      false,
+      true
+    );
+    
+    this.router.navigate([`${DEPARTMENTO}/datos-generales-tramite`]);
+  }
+
+
+/**
+   * Verifica si un control del formulario es inválido, tocado o modificado.
+   * @param nombreControl - Nombre del control a verificar.
+   * @returns True si el control es inválido, de lo contrario false.
+   */
+  public esInvalido(nombreControl: string): boolean {
+    const CONTROL = this.FormBuscaTramite.get(nombreControl);
+    return CONTROL
+      ? CONTROL.invalid && (CONTROL.touched || CONTROL.dirty)
+      : false;
+  }
+
 }

@@ -5,10 +5,9 @@ import { RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 
-import { AlertComponent } from '@ng-mf/data-access-user';
+import { AlertComponent, CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 import { DatosDelFabricanteComponent } from './components/datos-del-fabricante/datos-del-fabricante.component';
 import { DatosDonanteExtranjeroComponent } from './components/datos-donante-extranjero/datos-donante-extranjero.component';

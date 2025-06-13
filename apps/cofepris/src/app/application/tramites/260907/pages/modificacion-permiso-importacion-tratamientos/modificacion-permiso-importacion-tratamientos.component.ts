@@ -131,9 +131,7 @@ export class ModificacionPermisoImportacionTratamientosComponent {
       if (this.pasoUnoComponent) {
         // Call collectFormValues() from PasoUnoPagesComponent
         this.payload = this.pasoUnoComponent.collectFormValues();
-        console.log('Payload', this.payload);
-      } else {
-        console.error('PasoUnoPagesComponent is not initialized.');
+       
       }
     
       if (e.valor > 0 && e.valor < 5) {
