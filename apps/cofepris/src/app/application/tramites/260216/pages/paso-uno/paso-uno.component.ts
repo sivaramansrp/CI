@@ -1,12 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
+import { Tramite260216State, Tramite260216Store } from '../../estados/tramite260216Store.store';
 import { CommonModule } from '@angular/common';
 import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
+import { HttpClient } from '@angular/common/http';
 import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 import { Tramite260216Query } from '../../estados/tramite260216Query.query';
-import { Tramite260216Store } from '../../estados/tramite260216Store.store';
 
 @Component({
   selector: 'app-paso-uno',
@@ -22,16 +23,72 @@ import { Tramite260216Store } from '../../estados/tramite260216Store.store';
   styleUrl: './paso-uno.component.css',
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
+
+  /**
+   * Represents the current index or step in a process.
+   * 
+   * @remarks
+   * This property is used to track the position or progress within a sequence of steps.
+   * It can be `undefined` if the index is not set.
+   * 
+   * @defaultValue 1
+   */
   indice: number | undefined = 1;
 
+  /**
+   * Subject used to notify and complete all active subscriptions when the component is destroyed.
+   * This helps prevent memory leaks by unsubscribing from observables in the `ngOnDestroy` lifecycle hook.
+   * 
+   * @private
+   * @remarks
+   * Emit a value and complete this subject in `ngOnDestroy` to clean up subscriptions.
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Esta variable se utiliza para almacenar el índice del subtítulo.
+   */
+  public consultaState!: ConsultaioState;
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+  
+  /**
+   * Subject utilizado para notificar la destrucción del componente y evitar fugas de memoria.
+   * @type {Subject<void>}
+   */
+  public formularioDeshabilitado: boolean = false;
+
+  /**
+   * Initializes the PasoUnoComponent with required services and sets up a subscription
+   * to the consultaQuery's state observable. Updates the local consultaState and
+   * formularioDeshabilitado properties based on the emitted state.
+   *
+   * @param tramite260216Query - Service for querying tramite260216 state.
+   * @param tramite260216Store - Store for managing tramite260216 state.
+   * @param consultaQuery - Service for querying consultaio state.
+   * @param http - Angular HttpClient for making HTTP requests.
+   */
   constructor(
     private tramite260216Query: Tramite260216Query,
-    private tramite260216Store: Tramite260216Store
-  ) {}
+    private tramite260216Store: Tramite260216Store,
+    private consultaQuery: ConsultaioQuery,
+    private readonly http: HttpClient
+  ) {
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.consultaState = seccionState;
+        this.formularioDeshabilitado = seccionState.readonly;
+      })).subscribe();
+  }
 
   ngOnInit(): void {
+    if ( this.consultaState && this.consultaState.procedureId === '260216' &&
+      this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
     this.tramite260216Query.getTabSeleccionado$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((tab) => {
@@ -39,6 +96,49 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       });
   }
 
+  /**
+ * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+ * Luego reinicializa el formulario con los valores actualizados desde el store.
+ */
+  guardarDatosFormulario(): void {
+    this.getRegistroTomaMuestrasMercanciasData().pipe(
+      takeUntil(this.destroyNotifier$)).subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
+
+  /**
+ * Actualiza el estado del formulario con los datos proporcionados.
+ * 
+ * @param DATOS - Estado de la solicitud `Tramite260216State` con la información 
+ *                del tipo de solicitud a actualizar en el store.
+ */
+  actualizarEstadoFormulario(DATOS: Tramite260216State): void {
+    this.tramite260216Store.update((state) => ({
+      ...state,
+      ...DATOS
+    }))
+  }
+
+  /**
+  * Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.
+  * 
+  * @returns Observable con los datos del estado de la solicitud `Solicitud230401State`,
+  *          cargados desde el archivo JSON especificado en la ruta de `assets`.
+  */
+  getRegistroTomaMuestrasMercanciasData(): Observable<Tramite260216State> {
+    return this.http.get<Tramite260216State>('assets/json/260216/respuestaDeActualizacionDe.json');
+  }
+
+
+  /**
+   * Selects a tab by its index and updates the selected tab in the tramite260216Store.
+   *
+   * @param i - The index of the tab to select.
+   */
   seleccionaTab(i: number): void {
     this.tramite260216Store.updateTabSeleccionado(i);
   }
