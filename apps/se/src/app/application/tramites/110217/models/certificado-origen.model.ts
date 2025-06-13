@@ -168,3 +168,30 @@ export interface FormularioMercancia {
   fecha: string;
   numeroFactura: string;
 }
+
+export interface RespuestaConsulta {
+  success: boolean;
+  datos: ConsultaDatos;
+  message: string;
+}
+
+export interface ConsultaDatos {
+  tercerOperador: boolean;
+  grupoOperador: GrupoOperador;
+  grupoTratado: GrupoTratado;
+  grupoDeDomicilio: GrupoDeDomicilio;
+  mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[]
+  mercanciaDisponsiblesTablaDatos: DisponiblesTabla[];
+  observaciones: string;
+  idioma: string;
+  entidadFederativa: string;
+  representacionFederal: string;
+  grupoReceptor: GrupoReceptor;
+  grupoDeDirecciones: GrupoDeDirecciones;
+  grupoRepresentativo: GrupoRepresentativo;
+  grupoDeTransporte: GrupoDeTransporte;
+  datosConfidencialesProductor: boolean;
+  productorMismoExportador: boolean;
+  productoresExportador: HistoricoColumnas[];
+}
+

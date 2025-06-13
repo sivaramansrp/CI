@@ -1,4 +1,4 @@
-import { AgregarDatosProductorFormulario, FormularioMercancia, GrupoDeDomicilio, GrupoTratado } from '../../tramites/110217/models/certificado-origen.model';
+import { AgregarDatosProductorFormulario, DisponiblesTabla, FormularioMercancia, GrupoDeDomicilio, GrupoTratado, HistoricoColumnas, SeleccionadasTabla } from '../../tramites/110217/models/certificado-origen.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { GrupoDeDirecciones } from '../../tramites/110217/models/certificado-origen.model';
 import { GrupoDeTransporte } from '../../tramites/110217/models/certificado-origen.model';
@@ -23,17 +23,17 @@ export interface Tramite110217State {
   /**
    * Idioma seleccionado para el trámite.
    */
-  idioma: Catalogo | null;
+  idioma: string | null;
 
   /**
    * Entidad federativa seleccionada.
    */
-  entidadFederativa: Catalogo | null;
+  entidadFederativa: string | null;
 
   /**
    * Representación federal seleccionada.
    */
-  representacionFederal: Catalogo | null;
+  representacionFederal: string | null;
 
   /**
    * Indica si los datos del productor son confidenciales.
@@ -271,7 +271,7 @@ export class Tramite110217Store extends Store<Tramite110217State> {
    * 
    * @param {Catalogo} idioma - El idioma a establecer.
    */
-  public setIdioma(idioma: Catalogo): void {
+  public setIdioma(idioma: string): void {
     this.update((state) => ({
       ...state,
       idioma,
@@ -285,7 +285,7 @@ export class Tramite110217Store extends Store<Tramite110217State> {
    * 
    * @param {Catalogo} entidadFederativa - La entidad federativa a establecer.
    */
-  public setEntidadFederativa(entidadFederativa: Catalogo): void {
+  public setEntidadFederativa(entidadFederativa: string): void {
     this.update((state) => ({
       ...state,
       entidadFederativa,
@@ -299,7 +299,7 @@ export class Tramite110217Store extends Store<Tramite110217State> {
    * 
    * @param {Catalogo} representacionFederal - La representación federal a establecer.
    */
-  public setRepresentacionFederal(representacionFederal: Catalogo): void {
+  public setRepresentacionFederal(representacionFederal: string): void {
     this.update((state) => ({
       ...state,
       representacionFederal,
@@ -1209,6 +1209,80 @@ export class Tramite110217Store extends Store<Tramite110217State> {
     this.update((state) => ({
       ...state,
       formularioMercancia: { ...state.formularioMercancia, pais },
+    }));
+  }
+
+
+    public setGrupoOperador(grupoOperador: GrupoOperador): void {
+    this.update((state) => ({
+      ...state,
+      grupoOperador,
+    }));
+  }
+
+    
+   public setGrupoRepresentativo(grupoRepresentativo: GrupoRepresentativo): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo,
+    }));
+  }
+
+    public setMercanciaTablaDatos(mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaSeleccionadasTablaDatos,
+    }));
+  }
+
+    public setMercanciaDisponsiblesTablaDatos(mercanciaDisponsiblesTablaDatos: DisponiblesTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaDisponsiblesTablaDatos,
+    }));
+  }
+
+    /**
+   * Actualiza la información del transporte utilizado en el estado del trámite.
+   * 
+   * Este método permite establecer los datos del grupo de transporte en el estado del trámite.
+   * 
+   * @param {GrupoDeTransporte} grupoDeTransporte - Objeto que contiene la información del transporte a actualizar.
+   */
+  public setGrupoDeTransporte(grupoDeTransporte: GrupoDeTransporte): void {
+    this.update((state) => ({
+      ...state,
+      grupoDeTransporte,
+    }));
+  }
+  /**
+   * @method setProductoresExportador
+   * @description Actualiza la lista de productores asociados al exportador en el estado del trámite.
+   * 
+   * Este método permite establecer los datos de los productores asociados al exportador.
+   * 
+   * @param {HistoricoColumnas[]} productoresExportador - Lista de productores asociados al exportador.
+   * 
+   * @returns {void}
+   */
+  public setProductoresExportador(productoresExportador: HistoricoColumnas[]): void {
+    this.update((state) => ({
+      ...state,
+      productoresExportador,
+    }));
+  }
+
+    public setGrupoReceptor(grupoReceptor: GrupoReceptor): void {
+    this.update((state) => ({
+      ...state,
+      grupoReceptor,
+    }));
+  }
+
+    public setGrupoDeDirecciones(grupoDeDirecciones: GrupoDeDirecciones): void {
+    this.update((state) => ({
+      ...state,
+      grupoDeDirecciones,
     }));
   }
 }

@@ -1,12 +1,15 @@
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioState } from '@libs/shared/data-access-user/src';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { REGEX_SOLO_DIGITOS } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ReplaySubject} from 'rxjs';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite110217Query } from '../../../../estados/queries/tramite110217.query';
@@ -35,6 +38,23 @@ import { takeUntil } from 'rxjs';
   styleUrl: './destinatario.component.scss',
 })
 export class DestinatarioComponent implements OnInit, OnDestroy {
+
+/**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
+
+  /**
+   * Subject para notificar la destrucción del componente.
+   * Se utiliza para limpiar las suscripciones y evitar fugas de memoria.
+   */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
 
   /**
    * Formulario reactivo para gestionar los datos del destinatario.
@@ -78,7 +98,8 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     private store: Tramite110217Store,
     private query: Tramite110217Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+      private consultaioQuery: ConsultaioQuery
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -99,6 +120,31 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.donanteDomicilio();
+
+
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.destinatarioFormulario();
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Configura el formulario del destinatario según el estado de la solicitud.
+   *  Si el formulario está en modo solo lectura, deshabilita los campos del formulario.
+   *  @returns {void}
+   */
+    destinatarioFormulario(): void {
+    if (this.soloLectura) {
+      this.registroFormulario.disable();
+    } else {
+      this.registroFormulario.enable();
+    }
   }
 
   /**
@@ -117,25 +163,25 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   donanteDomicilio(): void {
     this.registroFormulario = this.fb.group({
       grupoReceptor: this.fb.group({
-        nombre: [this.solicitudState?.grupoReceptor?.nombre, []],
-        apellidoPrimer: [this.solicitudState?.grupoReceptor?.apellidoPrimer, []],
-        apellidoSegundo: [this.solicitudState?.grupoReceptor?.apellidoSegundo, []],
-        numeroFiscal: [this.solicitudState?.grupoReceptor?.numeroFiscal, [Validators.required]],
-        razonSocial: [this.solicitudState?.grupoReceptor?.razonSocial, []],
+        nombre: [this.solicitudState?.grupoReceptor?.nombre, [Validators.maxLength(250)]],
+        apellidoPrimer: [this.solicitudState?.grupoReceptor?.apellidoPrimer, [Validators.maxLength(20)]],
+        apellidoSegundo: [this.solicitudState?.grupoReceptor?.apellidoSegundo, [Validators.maxLength(20)]],
+        numeroFiscal: [this.solicitudState?.grupoReceptor?.numeroFiscal, [Validators.required, Validators.maxLength(30)]],
+        razonSocial: [this.solicitudState?.grupoReceptor?.razonSocial, [Validators.maxLength(70)]],
       }),
 
       grupoDeDirecciones: this.fb.group({
-        ciudad: [this.solicitudState?.grupoDeDirecciones?.ciudad, [Validators.required]],
-        calle: [this.solicitudState?.grupoDeDirecciones?.calle, [Validators.required]],
-        numeroLetra: [this.solicitudState?.grupoDeDirecciones?.numeroLetra, [Validators.required]],
+        ciudad: [this.solicitudState?.grupoDeDirecciones?.ciudad, [Validators.required,Validators.maxLength(50)]],
+        calle: [this.solicitudState?.grupoDeDirecciones?.calle, [Validators.required,Validators.maxLength(90)]],
+        numeroLetra: [this.solicitudState?.grupoDeDirecciones?.numeroLetra, [Validators.required,Validators.maxLength(30)]],
         lada: [this.solicitudState?.grupoDeDirecciones?.lada, []],
-        telefono: [this.solicitudState?.grupoDeDirecciones?.telefono, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
+        telefono: [this.solicitudState?.grupoDeDirecciones?.telefono, [Validators.pattern(REGEX_SOLO_DIGITOS),Validators.maxLength(20)]],
         fax: [this.solicitudState?.grupoDeDirecciones?.fax, [Validators.pattern(REGEX_SOLO_DIGITOS)]],
-        correoElectronico: [this.solicitudState?.grupoDeDirecciones?.correoElectronico, [Validators.required, Validators.email]],
+        correoElectronico: [this.solicitudState?.grupoDeDirecciones?.correoElectronico, [Validators.required, Validators.email,Validators.maxLength(70)]],
       }),
 
       grupoRepresentativo: this.fb.group({
-        lugar: [this.solicitudState?.grupoRepresentativo?.lugar, [Validators.required, Validators.maxLength(40)]],
+        lugar: [this.solicitudState?.grupoRepresentativo?.lugar, [Validators.required, Validators.maxLength(70)]],
         nombreExportador: [this.solicitudState?.grupoRepresentativo?.nombreExportador, [Validators.required, Validators.maxLength(40)]],
         empresa: [this.solicitudState?.grupoRepresentativo?.empresa, [Validators.required, Validators.maxLength(40)]],
         cargo: [this.solicitudState?.grupoRepresentativo?.cargo, [Validators.required, Validators.maxLength(40)]],
@@ -174,14 +220,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     this.estaDeshabilitado = true;
   }
 
-  /**
-   * Maneja el envío del formulario.
-   * 
-   * Si el formulario es válido, se implementará la lógica para manejar el envío.
-   */
-  onSubmit(): void {
-   
-  }
+ 
 
   /**
    * Valida un campo del formulario.

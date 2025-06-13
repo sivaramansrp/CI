@@ -2,6 +2,8 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { CertificadosOrigenService } from '../../services/certificado-origen.service.ts';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioState } from '@libs/shared/data-access-user/src';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
@@ -9,6 +11,7 @@ import { HistoricoColumnas } from '../../models/certificado-origen.model';
 import { Modal } from 'bootstrap';
 import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ReplaySubject } from 'rxjs';
 import { Subject } from 'rxjs';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
@@ -36,6 +39,25 @@ import { takeUntil } from 'rxjs';
   styleUrl: './historico-productores.component.scss',
 })
 export class HistoricoProductoresComponent implements OnInit, OnDestroy {
+
+/**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
+
+  /**
+   * ReplaySubject para manejar la destrucción del componente.
+   * Se utiliza para cancelar las suscripciones activas y evitar fugas de memoria.
+   */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
+
+
   /**
    * Formulario principal para gestionar los datos de los productores.
    */
@@ -146,7 +168,8 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
     private certificadosOrigenService: CertificadosOrigenService,
     public store: Tramite110217Store,
     public tramiteQuery: Tramite110217Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+     private consultaioQuery: ConsultaioQuery
   ) { }
 
   /**
@@ -166,6 +189,31 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
       .subscribe();
     this.initFormulario();
     this.initAgregarDatosProductorFormulario();
+
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.historocoFormulario();
+        })
+      )
+      .subscribe();
+  }
+
+
+  /**
+   * Carga los datos de idioma y configuración de la tabla.
+   */
+  historocoFormulario(): void {
+    if (this.soloLectura) {
+      this.formulario.disable();
+      this.agregarDatosProductorFormulario.disable();
+    } else {
+      this.formulario.enable();
+      this.agregarDatosProductorFormulario.enable();
+    }
   }
 
   /**

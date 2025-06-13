@@ -57,6 +57,6 @@ export const FECHA_FINAL = {
  */
 export const FECHA_FACTURA = {
   labelNombre: 'Fecha de factura',
-  required: false,
+  required: true,
   habilitado: true,
 };
