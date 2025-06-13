@@ -26,7 +26,7 @@ export class TodosPasosComponent implements OnInit,OnDestroy {
    * 
    * @type {ListaPasosWizard[]}
    */
-  pantallasPasos: ListaPasosWizard[] = PANTA_PASOS;
+  public pantallasPasos: ListaPasosWizard[] = PANTA_PASOS;
 
   /**
    * @property indice
@@ -35,7 +35,7 @@ export class TodosPasosComponent implements OnInit,OnDestroy {
    * 
    * @type {number}
    */
-  indice: number = 1;
+  public indice: number = 1;
 
   /**
    * @property titulo
