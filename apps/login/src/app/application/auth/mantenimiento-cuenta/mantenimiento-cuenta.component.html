@@ -7,7 +7,7 @@
   
   <h3 class="title">Recuperación de Cuenta</h3>
 
-  <form [formGroup]="recuperarForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="formularioRecuperar" (ngSubmit)="alEnviar()">
     <div class="form-section">
       <h3>Información Personal</h3>
 
@@ -34,7 +34,7 @@
       </div>
 
       <!-- Panel Nacional -->
-      <ng-container *ngIf="isMexicana()">
+      <ng-container *ngIf="esNacionalidadMexicana()">
         <!-- Tipo de Identificación -->
         <div class="form-group">
           <label>Tipo de Identificación*:</label>
@@ -59,7 +59,7 @@
         </div>
 
         <!-- Panel RFC -->
-        <ng-container *ngIf="recuperarForm.get('tipoDocumento')?.value === 'RFC'">
+        <ng-container *ngIf="formularioRecuperar.get('tipoDocumento')?.value === 'RFC'">
           <!-- Tipo de Persona -->
           <div class="form-group">
             <label>Tipo de Persona*:</label>
@@ -68,7 +68,7 @@
                 <input type="radio" 
                        id="personaFisica" 
                        formControlName="personaTipo" 
-                       value="Fisica"
+                       [value]="TIPO_PERSONA.FISICA"
                        class="radio-input">
                 <label for="personaFisica">Persona Física</label>
               </div>
@@ -76,7 +76,7 @@
                 <input type="radio" 
                        id="personaMoral" 
                        formControlName="personaTipo" 
-                       value="Moral"
+                       [value]="TIPO_PERSONA.MORAL"
                        class="radio-input">
                 <label for="personaMoral">Persona Moral</label>
               </div>
@@ -84,7 +84,7 @@
           </div>
 
           <!-- Campos comunes RFC -->
-          <div class="form-group" *ngIf="recuperarForm.get('personaTipo')?.value">
+          <div class="form-group" *ngIf="formularioRecuperar.get('personaTipo')?.value">
             <label for="usuario">RFC*:</label>
             <input type="text" 
                    id="usuario" 
@@ -94,7 +94,7 @@
           </div>
 
           <!-- Campos Persona Física -->
-          <ng-container *ngIf="recuperarForm.get('personaTipo')?.value === 'Fisica' ">
+          <ng-container *ngIf="formularioRecuperar.get('personaTipo')?.value === TIPO_PERSONA.FISICA">
             <div class="form-group">
               <label for="nombre">Nombre*:</label>
               <input type="text" 
@@ -124,7 +124,7 @@
           </ng-container>
 
           <!-- Campos Persona Moral -->
-          <ng-container *ngIf="recuperarForm.get('personaTipo')?.value === 'Moral'">
+          <ng-container *ngIf="formularioRecuperar.get('personaTipo')?.value === TIPO_PERSONA.MORAL">
             <div class="form-group">
               <label for="razonSocial">Razón social*:</label>
               <input type="text" 
@@ -137,7 +137,7 @@
         </ng-container>
 
         <!-- Panel CURP -->
-        <ng-container *ngIf="recuperarForm.get('tipoDocumento')?.value === 'CURP'">
+        <ng-container *ngIf="formularioRecuperar.get('tipoDocumento')?.value === 'CURP'">
           <div class="form-group">
             <label for="usuarioCurp">CURP*:</label>
             <input type="text" 
@@ -177,7 +177,7 @@
       </ng-container>
       
       <!-- Panel Extranjero -->
-      <ng-container *ngIf="!isMexicana() && recuperarForm.get('nacionalidad')?.value !== null">
+      <ng-container *ngIf="!esNacionalidadMexicana() && formularioRecuperar.get('nacionalidad')?.value !== null">
         <!-- Tipo de Persona -->
         <div class="form-group">
           <label>Tipo de Persona*:</label>
@@ -186,7 +186,7 @@
               <input type="radio" 
                      id="personaFisicaExt" 
                      formControlName="personaTipo" 
-                     value="fisica"
+                     [value]="TIPO_PERSONA.FISICA"
                      class="radio-input">
               <label for="personaFisicaExt">Persona Física</label>
             </div>
@@ -194,7 +194,7 @@
               <input type="radio" 
                      id="personaMoralExt" 
                      formControlName="personaTipo" 
-                     value="Moral"
+                     [value]="TIPO_PERSONA.MORAL"
                      class="radio-input">
               <label for="personaMoralExt">Persona Moral</label>
             </div>
@@ -202,9 +202,9 @@
         </div>
 
         <!-- Campos según tipo de persona extranjera -->
-        <ng-container *ngIf="recuperarForm.get('personaTipo')?.value">
+        <ng-container *ngIf="formularioRecuperar.get('personaTipo')?.value">
           <!-- Campos Persona Física Extranjera -->
-          <ng-container *ngIf="recuperarForm.get('personaTipo')?.value === 'fisica'">
+          <ng-container *ngIf="formularioRecuperar.get('personaTipo')?.value === TIPO_PERSONA.FISICA">
             <div class="form-group">
               <label for="nombreExt">Nombre*:</label>
               <input type="text" 
@@ -225,7 +225,7 @@
           </ng-container>
 
           <!-- Campos Persona Moral Extranjera -->
-          <ng-container *ngIf="recuperarForm.get('personaTipo')?.value === 'Moral'">
+          <ng-container *ngIf="formularioRecuperar.get('personaTipo')?.value === TIPO_PERSONA.MORAL">
             <div class="form-group">
               <label for="razonSocialExt">Razón social*:</label>
               <input type="text" 
@@ -274,12 +274,12 @@
       <div class="form-actions">
         <button type="button" 
                 class="btn-salir btn btn-primary" 
-                (click)="onSalir()">
+                (click)="alSalir()">
           Salir
         </button>
         <button type="submit" 
                 class="btn-recuperar btn btn-primary" 
-                [disabled]="!recuperarForm.valid || !flujoValido()">
+                [disabled]="!formularioRecuperar.valid || !flujoValido()">
           Recuperar
         </button>
       </div>

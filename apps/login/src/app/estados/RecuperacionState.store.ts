@@ -16,7 +16,7 @@ export interface FormularioRecuperacion {
     /** Tipo de documento de identificación */
     tipoDocumento: 'RFC' | 'CURP' | null;
     /** Tipo de persona (física o moral) */
-    tipoPersona: TipoPersona | null;
+    personaTipo: TipoPersona | null;
     /** Identificador único del usuario (RFC/CURP) */
     usuario: string;
     /** Nombre del usuario */
@@ -53,7 +53,7 @@ export class RecuperacionStore extends Store<FormularioRecuperacion> {
       //formData: {
         nacionalidad: null,
         tipoDocumento: null,
-        tipoPersona: null,
+        personaTipo: null,
         usuario: ''
       //}
     });

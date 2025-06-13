@@ -41,9 +41,9 @@ export class MantenimientoCuentaComponent implements OnInit, OnDestroy {
       CP_EXTRANJERO: /^[A-Za-z0-9- ]{3,10}$/
   };
   /** Formulario reactivo para la recuperación de cuenta */
-  public recuperarForm!: FormGroup;
+  public formularioRecuperar!: FormGroup;
   /** Enum de TipoPersona para usar en el template */
-  public readonly Persona = TipoPersona;
+  public readonly TIPO_PERSONA = TipoPersona;
   
 /** Notificación para mostrar alertas */
 public nuevaAlertaNotificacion: Notificacion | null = null;
@@ -52,7 +52,7 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
   public activeTab: 'nacional' | 'extranjero' = 'nacional';
   
   /** Subject para manejar la limpieza de suscripciones */
-  private readonly destroy$ = new Subject<void>();
+  private readonly destruir$ = new Subject<void>();
 
   /** Constructor del componente */
   constructor(
@@ -70,34 +70,34 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
 
   /** Inicialización del componente */
   public ngOnInit(): void {
-    this.initializeForm();
-    this.subscribeToFormChanges();
+    this.inicializarFormulario();
+    this.suscribirCambiosFormulario();
   }
 
   /** Limpieza al destruir el componente */
   public ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.destruir$.next();
+    this.destruir$.complete();
   }
 
   /**
    * Verifica si la nacionalidad es mexicana
-   * @returns boolean
+   * @returns boolean - true si es mexicana, false si no
    */
-  public isMexicana(): boolean {
-    return this.recuperarForm.get('nacionalidad')?.value === true;
+  public esNacionalidadMexicana(): boolean {
+    return this.formularioRecuperar.get('nacionalidad')?.value === true;
   }
 
   /**
    * Maneja el envío del formulario
    */
-  public onSubmit(): void {    
-    if (this.recuperarForm.valid && this.flujoValido()) {
-      const FORM_DATA = this.recuperarForm.value;
+  public alEnviar(): void {    
+    if (this.formularioRecuperar.valid && this.flujoValido()) {
+      const FORM_DATA = this.formularioRecuperar.value;
       this.updateStore();
       
       this.recuperacionService.recuperarCuenta(FORM_DATA)
-        .pipe(takeUntil(this.destroy$))
+        .pipe(takeUntil(this.destruir$))
         .subscribe({
           next: (response) => {
             if(response.correo !== '' || response.usuario !== '') {
@@ -156,14 +156,14 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
                 txtBtnCancelar: ''
             };
             this.cdr.detectChanges();
-        this.recuperarForm.markAllAsTouched();
+        this.formularioRecuperar.markAllAsTouched();
     }
   }
 
   /**
    * Navega a la página de login
    */
-  public onSalir(): void {
+  public alSalir(): void {
     this.router.navigate(['/login']);
   }
 
@@ -171,8 +171,8 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
    * Inicializa el formulario con valores por defecto
    * @private
    */
-  private initializeForm(): void {
-    this.recuperarForm = this.fb.group({
+  private inicializarFormulario(): void {
+    this.formularioRecuperar = this.fb.group({
       nacionalidad: [null, Validators.required],
       tipoDocumento: [null],
       personaTipo: [''],
@@ -191,54 +191,54 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
    * Suscribe a los cambios en los campos del formulario
    * @private
    */
-  private subscribeToFormChanges(): void {
+  private suscribirCambiosFormulario(): void {
     // Suscripción a cambios en nacionalidad
-    this.recuperarForm.get('nacionalidad')?.valueChanges
+    this.formularioRecuperar.get('nacionalidad')?.valueChanges
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntil(this.destruir$),
         distinctUntilChanged()
       )
       .subscribe(esNacional => {
-        this.clearAlertMessage();
+        this.limpiarMensajeAlerta();
         this.activeTab = esNacional ? 'nacional' : 'extranjero';
-        this.resetFormFields();
+        this.reiniciarCamposFormulario();
         
         if (!esNacional) {
-          this.handleExtranjeroValidations();
+          this.manejarValidacionesExtranjero();
         }
         this.updateStore();
       });
 
     // Suscripción a cambios en tipo de documento
-    this.recuperarForm.get('tipoDocumento')?.valueChanges
+    this.formularioRecuperar.get('tipoDocumento')?.valueChanges
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntil(this.destruir$),
         distinctUntilChanged()
       )
       .subscribe(tipoDoc => {
-        this.clearAlertMessage();
-        this.resetDependentFields();
+        this.limpiarMensajeAlerta();
+        this.reiniciarCamposDependientes();
         
-        if (this.isMexicana()) {
-          this.updateValidationsByDocType(tipoDoc);
+        if (this.esNacionalidadMexicana()) {
+          this.actualizarValidacionesPorTipoDoc(tipoDoc);
           this.updateStore();
         }
       });
 
     // Suscripción a cambios en tipo de persona
-    this.recuperarForm.get('personaTipo')?.valueChanges
+    this.formularioRecuperar.get('personaTipo')?.valueChanges
       .pipe(
-        takeUntil(this.destroy$),
+        takeUntil(this.destruir$),
         distinctUntilChanged()
       )
       .subscribe(tipo => {
-        this.clearAlertMessage();
-        this.resetPersonTypeFields(tipo);
+        this.limpiarMensajeAlerta();
+        this.reiniciarCamposTipoPersona(tipo);
         
-        if (this.isMexicana() && this.recuperarForm.get('tipoDocumento')?.value === 'RFC') {
-          this.updateValidationsByDocType('RFC');
-        } else if (!this.isMexicana()) {
-          this.updateExtranjeroValidations(tipo);
+        if (this.esNacionalidadMexicana() && this.formularioRecuperar.get('tipoDocumento')?.value === 'RFC') {
+          this.actualizarValidacionesPorTipoDoc('RFC');
+        } else if (!this.esNacionalidadMexicana()) {
+          this.actualizarValidacionesExtranjero(tipo);
         }
         
         this.updateStore();
@@ -247,17 +247,17 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
      // Suscripción a campos de RFC Persona Moral
     const RFC_MORAL_FIELDS = ['usuario', 'razonSocial'];
     RFC_MORAL_FIELDS.forEach(field => {
-        this.recuperarForm.get(field)?.valueChanges
+        this.formularioRecuperar.get(field)?.valueChanges
             .pipe(
-                takeUntil(this.destroy$),
+                takeUntil(this.destruir$),
                 distinctUntilChanged()
             )
             .subscribe(() => {
-                if (this.isMexicana() && 
-                    this.recuperarForm.get('tipoDocumento')?.value === 'RFC' && 
-                    this.recuperarForm.get('personaTipo')?.value === TipoPersona.MORAL) {
-                    this.isValidNationalRfcPersonaMoral();
-                    this.recuperarForm.updateValueAndValidity();
+                if (this.esNacionalidadMexicana() && 
+                    this.formularioRecuperar.get('tipoDocumento')?.value === 'RFC' && 
+                    this.formularioRecuperar.get('personaTipo')?.value === TipoPersona.MORAL) {
+                    this.esValidoRfcPersonaMoralNacional();
+                    this.formularioRecuperar.updateValueAndValidity();
                     this.cdr.detectChanges();
                 }
             });
@@ -266,16 +266,16 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
     //Suscripción a campos de RFC Persona Física
     const RFC_FISICA_FIELDS = ['usuario', 'nombre', 'primerApellido', 'segundoApellido'];
     RFC_FISICA_FIELDS.forEach(field => {
-        this.recuperarForm.get(field)?.valueChanges
+        this.formularioRecuperar.get(field)?.valueChanges
             .pipe(
-                takeUntil(this.destroy$),
+                takeUntil(this.destruir$),
                 distinctUntilChanged()
             )
             .subscribe(() => {
-                if (this.isMexicana() && 
-                    this.recuperarForm.get('tipoDocumento')?.value === 'RFC' && 
-                    this.recuperarForm.get('personaTipo')?.value === TipoPersona.FISICA) {                    
-                    this.recuperarForm.updateValueAndValidity();
+                if (this.esNacionalidadMexicana() && 
+                    this.formularioRecuperar.get('tipoDocumento')?.value === 'RFC' && 
+                    this.formularioRecuperar.get('personaTipo')?.value === TipoPersona.FISICA) {                    
+                    this.formularioRecuperar.updateValueAndValidity();
                     this.cdr.detectChanges();
                 }
             });
@@ -283,10 +283,10 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
   }
 
   /**
-   * Limpia el mensaje de alerta
+   * Limpia el mensaje de alerta actual
    * @private
    */
-  private clearAlertMessage(): void {
+  private limpiarMensajeAlerta(): void {
     this.nuevaAlertaNotificacion = null;    
   }
 
@@ -294,7 +294,7 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
    * Resetea los campos del formulario a su estado inicial
    * @private
    */
-  private resetFormFields(): void {
+  private reiniciarCamposFormulario(): void {
     const FIELDS_TO_RESET = [
       'tipoDocumento',
       'personaTipo',
@@ -309,9 +309,9 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
     ];
 
     FIELDS_TO_RESET.forEach(field => {
-      this.recuperarForm.get(field)?.reset();
-      this.recuperarForm.get(field)?.clearValidators();
-      this.recuperarForm.get(field)?.updateValueAndValidity({ emitEvent: false });
+      this.formularioRecuperar.get(field)?.reset();
+      this.formularioRecuperar.get(field)?.clearValidators();
+      this.formularioRecuperar.get(field)?.updateValueAndValidity({ emitEvent: false });
     });
   }
 
@@ -320,21 +320,70 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
    * @param tipo - Tipo de persona (FISICA/MORAL/null)
    * @private
    */
-  private resetPersonTypeFields(tipo: TipoPersona.FISICA | TipoPersona.MORAL | null): void {
-    if (tipo === TipoPersona.FISICA) {
-      this.recuperarForm.get('razonSocial')?.reset();
-    } else {
-      ['nombre', 'primerApellido', 'segundoApellido'].forEach(field => {
-        this.recuperarForm.get(field)?.reset();
-      });
+  private reiniciarCamposTipoPersona(TIPO: TipoPersona.FISICA | TipoPersona.MORAL | null): void {    
+    const VALIDADOR_REQUERIDO = [Validators.required];
+
+    // 1. Deshabilitar y limpiar todos los campos primero
+    ['nombre', 'primerApellido', 'segundoApellido', 'razonSocial'].forEach(CAMPO => {
+        const CONTROL = this.formularioRecuperar.get(CAMPO);
+        CONTROL?.disable();
+        CONTROL?.setValue(null);
+        CONTROL?.clearValidators();
+        CONTROL?.updateValueAndValidity();
+    });
+
+    // 2. Habilitar y validar campos según tipo de persona
+    if (TIPO === TipoPersona.FISICA) {
+        ['nombre', 'primerApellido', 'segundoApellido'].forEach(CAMPO => {
+            const CONTROL = this.formularioRecuperar.get(CAMPO);
+            CONTROL?.enable();
+            CONTROL?.setValidators(VALIDADOR_REQUERIDO);
+            CONTROL?.updateValueAndValidity();
+        });
+
+        // Validar RFC según nacionalidad
+        if (this.esNacionalidadMexicana()) {
+            this.formularioRecuperar.get('usuario')?.setValidators([
+                ...VALIDADOR_REQUERIDO,
+                Validators.pattern(this.REGEX.RFC_MEXICANOFISICA)
+            ]);
+        } else {
+            this.formularioRecuperar.get('usuario')?.setValidators([
+                ...VALIDADOR_REQUERIDO,
+                Validators.pattern(this.REGEX.RFC_EXTRANJERO)
+            ]);
+        }
+    } else if (TIPO === TipoPersona.MORAL) {
+        const CONTROL = this.formularioRecuperar.get('razonSocial');
+        CONTROL?.enable();
+        CONTROL?.setValidators(VALIDADOR_REQUERIDO);
+        CONTROL?.updateValueAndValidity();
+
+        // Validar RFC según nacionalidad
+        if (this.esNacionalidadMexicana()) {
+            this.formularioRecuperar.get('usuario')?.setValidators([
+                ...VALIDADOR_REQUERIDO,
+                Validators.pattern(this.REGEX.RFC_MEXICANOMORAL)
+            ]);
+        } else {
+            this.formularioRecuperar.get('usuario')?.setValidators([
+                ...VALIDADOR_REQUERIDO,
+                Validators.pattern(this.REGEX.RFC_EXTRANJERO)
+            ]);
+        }
     }
+
+    // 3. Actualizar usuario y formulario
+    this.formularioRecuperar.get('usuario')?.updateValueAndValidity();
+    this.formularioRecuperar.updateValueAndValidity();
+    this.cdr.detectChanges();
   }
 
   /**
    * Resetea los campos dependientes cuando cambia el tipo de documento
    * @private
    */
-  private resetDependentFields(): void {
+  private reiniciarCamposDependientes(): void {
     const FIELDS_TO_RESET = [
       'usuario',
       'nombre',
@@ -345,9 +394,9 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
     ];
 
     FIELDS_TO_RESET.forEach(field => {
-      this.recuperarForm.get(field)?.reset();
-      this.recuperarForm.get(field)?.clearValidators();
-      this.recuperarForm.get(field)?.updateValueAndValidity({ emitEvent: false });
+      this.formularioRecuperar.get(field)?.reset();
+      this.formularioRecuperar.get(field)?.clearValidators();
+      this.formularioRecuperar.get(field)?.updateValueAndValidity({ emitEvent: false });
     });
   }
 
@@ -355,16 +404,16 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
    * Maneja las validaciones específicas para usuarios extranjeros
    * @private
    */
-  private handleExtranjeroValidations(): void {
+  private manejarValidacionesExtranjero(): void {
     // Habilitar el campo de tipo de persona
-    this.recuperarForm.get('personaTipo')?.enable();
+    this.formularioRecuperar.get('personaTipo')?.enable();
     
     // Limpiar validaciones previas
-    this.resetFormFields();
+    this.reiniciarCamposFormulario();
     
-    const TIPO = this.recuperarForm.get('personaTipo')?.value;
+    const TIPO = this.formularioRecuperar.get('personaTipo')?.value;
     if (TIPO) {
-      this.updateExtranjeroValidations(TIPO);
+      this.actualizarValidacionesExtranjero(TIPO);
     }
   }
 
@@ -373,22 +422,22 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
    * @param tipoDoc - Tipo de documento (RFC/CURP)
    * @private
    */
-    private updateValidationsByDocType(tipoDoc: 'RFC' | 'CURP' | null): void {
+    private actualizarValidacionesPorTipoDoc(tipoDoc: 'RFC' | 'CURP' | null): void {
         if (!tipoDoc) {return;}
 
         const REQUIRED_VALIDATOR = [Validators.required, Validators.minLength(1)];
-        const USUARIOCONTROL = this.recuperarForm.get('usuario');
+        const USUARIOCONTROL = this.formularioRecuperar.get('usuario');
 
         // 1. Primera validación: Nacionalidad
-        if (this.isMexicana()) {
+        if (this.esNacionalidadMexicana()) {
             // ES MEXICANO
             // 2. Validar tipo de identificación
             if (tipoDoc === 'RFC') {
                 // Es RFC - Habilitar selección de tipo de persona
-                this.recuperarForm.get('personaTipo')?.enable();
+                this.formularioRecuperar.get('personaTipo')?.enable();
                 
                 // 3. Validar tipo de persona
-                const PERSONA = this.recuperarForm.get('personaTipo')?.value;
+                const PERSONA = this.formularioRecuperar.get('personaTipo')?.value;
                 if (PERSONA === TipoPersona.FISICA) {
                     // Validar RFC formato persona física
                     USUARIOCONTROL?.setValidators([
@@ -398,8 +447,8 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
                     
                     // Campos adicionales persona física
                     ['nombre', 'primerApellido', 'segundoApellido'].forEach(field => {
-                        this.recuperarForm.get(field)?.setValidators(REQUIRED_VALIDATOR);
-                        this.recuperarForm.get(field)?.updateValueAndValidity({ emitEvent: false });
+                        this.formularioRecuperar.get(field)?.setValidators(REQUIRED_VALIDATOR);
+                        this.formularioRecuperar.get(field)?.updateValueAndValidity({ emitEvent: false });
                     });
                 } else if (PERSONA === TipoPersona.MORAL) {
                     // Validar RFC formato persona moral
@@ -409,30 +458,38 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
                     ]);
                     
                     // Campos adicionales persona moral
-                    this.recuperarForm.get('razonSocial')?.setValidators(REQUIRED_VALIDATOR);
-                    this.recuperarForm.get('razonSocial')?.updateValueAndValidity({ emitEvent: false });
+                    this.formularioRecuperar.get('razonSocial')?.setValidators(REQUIRED_VALIDATOR);
+                    this.formularioRecuperar.get('razonSocial')?.updateValueAndValidity({ emitEvent: false });
                 }
             } else if (tipoDoc === 'CURP') {
                 // Es CURP - Deshabilitar tipo de persona
-                this.recuperarForm.get('personaTipo')?.disable();
-                this.recuperarForm.get('personaTipo')?.setValue(null, { emitEvent: false });
+                this.formularioRecuperar.get('personaTipo')?.disable();
+                this.formularioRecuperar.get('personaTipo')?.setValue(null, { emitEvent: false });
                 
                 // Validar formato CURP
                 USUARIOCONTROL?.setValidators([
                     ...REQUIRED_VALIDATOR,
                     Validators.pattern(this.REGEX.CURP)
                 ]);
-
-                // Campos adicionales para CURP
-                ['nombre', 'primerApellido', 'segundoApellido'].forEach(field => {
-                    this.recuperarForm.get(field)?.setValidators(REQUIRED_VALIDATOR);
-                    this.recuperarForm.get(field)?.updateValueAndValidity({ emitEvent: false });
+                // Habilitar campos para CURP
+                ['usuario', 'nombre', 'primerApellido', 'segundoApellido'].forEach(CAMPO => {
+                    const CONTROL = this.formularioRecuperar.get(CAMPO);
+                    CONTROL?.enable();
+                    if (CAMPO === 'usuario') {
+                        CONTROL?.setValidators([
+                            ...REQUIRED_VALIDATOR,
+                            Validators.pattern(this.REGEX.CURP)
+                        ]);
+                    } else {
+                        CONTROL?.setValidators(REQUIRED_VALIDATOR);
+                    }
+                    CONTROL?.updateValueAndValidity();
                 });
             }
         } else {
             // ES EXTRANJERO
             // 2. Validar tipo de persona
-            const TIPO_PERSONA = this.recuperarForm.get('personaTipo')?.value;
+            const TIPO_PERSONA = this.formularioRecuperar.get('personaTipo')?.value;
             
             // Validar RFC formato extranjero
             USUARIOCONTROL?.setValidators([
@@ -443,14 +500,14 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
             if (TIPO_PERSONA === TipoPersona.FISICA) {
                 // Campos adicionales persona física extranjera
                 ['nombre', 'primerApellido', 'codigoPostal', 'estado', 'pais'].forEach(field => {
-                    this.recuperarForm.get(field)?.setValidators(REQUIRED_VALIDATOR);
-                    this.recuperarForm.get(field)?.updateValueAndValidity({ emitEvent: false });
+                    this.formularioRecuperar.get(field)?.setValidators(REQUIRED_VALIDATOR);
+                    this.formularioRecuperar.get(field)?.updateValueAndValidity({ emitEvent: false });
                 });
             } else if (TIPO_PERSONA === TipoPersona.MORAL) {
                 // Campos adicionales persona moral extranjera
                 ['razonSocial', 'codigoPostal', 'estado', 'pais'].forEach(field => {
-                    this.recuperarForm.get(field)?.setValidators(REQUIRED_VALIDATOR);
-                    this.recuperarForm.get(field)?.updateValueAndValidity({ emitEvent: false });
+                    this.formularioRecuperar.get(field)?.setValidators(REQUIRED_VALIDATOR);
+                    this.formularioRecuperar.get(field)?.updateValueAndValidity({ emitEvent: false });
                 });
             }
         }
@@ -459,7 +516,7 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
         USUARIOCONTROL?.updateValueAndValidity({ emitEvent: false });
 
         // Forzar actualización del formulario
-        this.recuperarForm.updateValueAndValidity();
+        this.formularioRecuperar.updateValueAndValidity();
     }
 
   /**
@@ -467,31 +524,31 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
    * @param TIPO - Tipo de persona (FISICA/MORAL)
    * @private
    */
-  private updateExtranjeroValidations(TIPO: TipoPersona.FISICA | TipoPersona.MORAL): void {
+  private actualizarValidacionesExtranjero(TIPO: TipoPersona.FISICA | TipoPersona.MORAL): void {
     const REQUIRED_VALIDATOR = [Validators.required, Validators.minLength(1)];
     const CAMPOS_COMUNES = ['codigoPostal', 'estado', 'pais'];
     
     // Limpiar validaciones previas
-    Object.keys(this.recuperarForm.controls).forEach(key => {
-      this.recuperarForm.get(key)?.clearValidators();
-      this.recuperarForm.get(key)?.updateValueAndValidity({ emitEvent: false });
+    Object.keys(this.formularioRecuperar.controls).forEach(key => {
+      this.formularioRecuperar.get(key)?.clearValidators();
+      this.formularioRecuperar.get(key)?.updateValueAndValidity({ emitEvent: false });
     });
 
     // Establecer validaciones según tipo de persona
     if (TIPO === TipoPersona.FISICA) {
       ['nombre', 'primerApellido', ...CAMPOS_COMUNES].forEach(field => {
-        this.recuperarForm.get(field)?.setValidators(REQUIRED_VALIDATOR);
-        this.recuperarForm.get(field)?.updateValueAndValidity({ emitEvent: false });
+        this.formularioRecuperar.get(field)?.setValidators(REQUIRED_VALIDATOR);
+        this.formularioRecuperar.get(field)?.updateValueAndValidity({ emitEvent: false });
       });
     } else {
       ['razonSocial', ...CAMPOS_COMUNES].forEach(field => {
-        this.recuperarForm.get(field)?.setValidators(REQUIRED_VALIDATOR);
-        this.recuperarForm.get(field)?.updateValueAndValidity({ emitEvent: false });
+        this.formularioRecuperar.get(field)?.setValidators(REQUIRED_VALIDATOR);
+        this.formularioRecuperar.get(field)?.updateValueAndValidity({ emitEvent: false });
       });
     }
 
     // Forzar actualización del formulario
-    this.recuperarForm.updateValueAndValidity();
+    this.formularioRecuperar.updateValueAndValidity();
   }
 
   /**
@@ -499,7 +556,7 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
    * @private
    */
   private updateStore(): void {
-    const FORM_DATA = this.recuperarForm.value;
+    const FORM_DATA = this.formularioRecuperar.value;
     
     this.recuperacionStore.update(state => ({
       ...state,
@@ -509,31 +566,32 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
   }
 
   /**
-   * Verifica si el flujo actual es válido según las reglas de negocio
-   * @returns boolean
+   * Valida si el flujo es válido según el tipo de persona y nacionalidad
+   * @returns boolean - true si el flujo es válido, false si no
+   * @public
    */
   public flujoValido(): boolean {
-    const FORM_VALUE = this.recuperarForm.value;
+    const FORM_VALUE = this.formularioRecuperar.value;
     
-    if (this.isMexicana()) {
+    if (this.esNacionalidadMexicana()) {
       // Flujo RFC Física
       if (FORM_VALUE.tipoDocumento === 'RFC' && FORM_VALUE.personaTipo === TipoPersona.FISICA) {
-        return this.isValidNationalRfcPersonaFisica();
+        return this.esValidoRfcPersonaFisicaNacional();
       }
       
       // Flujo CURP
       if (FORM_VALUE.tipoDocumento === 'CURP') {
-        return this.isValidNationalCurp();
+        return this.esValidoCurpNacional();
       }
 
       // Flujo RFC Moral
       if (FORM_VALUE.tipoDocumento === 'RFC' && FORM_VALUE.personaTipo === TipoPersona.MORAL) {        
-        return this.isValidNationalRfcPersonaMoral();
+        return this.esValidoRfcPersonaMoralNacional();
       }
     }
 
     // Flujo Extranjero
-    return this.isValidForeignFlow();
+    return this.esValidoFlujoExtranjero();
   }
 
   /**
@@ -541,11 +599,11 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
    * @returns boolean
    * @private
    */
-  private isValidNationalRfcPersonaFisica(): boolean {
-    const RFC = this.recuperarForm.get('usuario')?.value;
-    const NOMBRE = this.recuperarForm.get('nombre')?.value;
-    const PRIMER_APELLIDO = this.recuperarForm.get('primerApellido')?.value;
-    const SEGUNDO_APELLIDO = this.recuperarForm.get('segundoApellido')?.value;
+  private esValidoRfcPersonaFisicaNacional(): boolean {
+    const RFC = this.formularioRecuperar.get('usuario')?.value;
+    const NOMBRE = this.formularioRecuperar.get('nombre')?.value;
+    const PRIMER_APELLIDO = this.formularioRecuperar.get('primerApellido')?.value;
+    const SEGUNDO_APELLIDO = this.formularioRecuperar.get('segundoApellido')?.value;
 
     // Verificar que los campos requeridos tengan valor
     const HAS_REQUIRED_FIELDS = Boolean(
@@ -565,9 +623,9 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
    * @returns boolean
    * @private
    */
-  private isValidNationalRfcPersonaMoral(): boolean {  
-    const RFC = this.recuperarForm.get('usuario')?.value;
-    const RAZONSOCIAL = this.recuperarForm.get('razonSocial')?.value;
+  private esValidoRfcPersonaMoralNacional(): boolean {  
+    const RFC = this.formularioRecuperar.get('usuario')?.value;
+    const RAZONSOCIAL = this.formularioRecuperar.get('razonSocial')?.value;
 
     const HAS_REQUIRED_FIELDS = Boolean(
         RFC?.trim() && RAZONSOCIAL?.trim()
@@ -582,8 +640,8 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
    * @returns boolean
    * @private
    */
-  private isValidNationalCurp(): boolean {
-    const FORM_VALUE = this.recuperarForm.value;
+  public esValidoCurpNacional(): boolean {
+    const FORM_VALUE = this.formularioRecuperar.value;
     const HAS_REQUIRED_FIELDS = Boolean(
       FORM_VALUE.usuario?.trim() &&
       FORM_VALUE.nombre?.trim() &&
@@ -601,14 +659,14 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
   * @returns boolean - true si el flujo es válido
   * @private
   */
-  private isValidForeignFlow(): boolean {
-    if (!this.recuperarForm.get('personaTipo')?.value) {
+  private esValidoFlujoExtranjero(): boolean {
+    if (!this.formularioRecuperar.get('personaTipo')?.value) {
       return false;
     }
     
-    return this.recuperarForm.get('personaTipo')?.value === TipoPersona.FISICA
-      ? this.isValidForeignPersonaFisica()
-      : this.isValidForeignPersonaMoral();
+    return this.formularioRecuperar.get('personaTipo')?.value === TipoPersona.FISICA
+      ? this.esValidaPersonaFisicaExtranjera()
+      : this.esValidaPersonaMoralExtranjera();
   }
 
   /**
@@ -616,8 +674,8 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
    * @returns boolean
    * @private
    */
-  private isValidForeignPersonaFisica(): boolean {
-    const FORM_VALUE = this.recuperarForm.value;
+  private esValidaPersonaFisicaExtranjera(): boolean {
+    const FORM_VALUE = this.formularioRecuperar.value;
     return Boolean(
       FORM_VALUE.nombre?.trim() &&
       FORM_VALUE.primerApellido?.trim() &&
@@ -632,13 +690,19 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
    * @returns boolean
    * @private
    */
-  private isValidForeignPersonaMoral(): boolean {
-    const FORM_VALUE = this.recuperarForm.value;
-    return Boolean(
-      FORM_VALUE.razonSocial?.trim() &&
-      FORM_VALUE.codigoPostal?.trim() &&
-      FORM_VALUE.estado?.trim() &&
-      FORM_VALUE.pais?.trim()
+  public esValidaPersonaMoralExtranjera(): boolean {
+    const VALORES = {
+        RAZON_SOCIAL: this.formularioRecuperar.get('razonSocial')?.value,
+        CODIGO_POSTAL: this.formularioRecuperar.get('codigoPostal')?.value,
+        ESTADO: this.formularioRecuperar.get('estado')?.value,
+        PAIS: this.formularioRecuperar.get('pais')?.value
+    };
+
+    // Validar que todos los campos requeridos tengan valor
+    const TIENE_CAMPOS_REQUERIDOS = Object.values(VALORES).every(VALOR => 
+        VALOR !== null && VALOR !== undefined && VALOR.toString().trim() !== ''
     );
+
+    return TIENE_CAMPOS_REQUERIDOS;
   }
 }
