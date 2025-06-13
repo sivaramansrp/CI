@@ -4,8 +4,8 @@ import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { Tramite260213State, Tramite260213Store } from '../../estados/tramite260213Store.store';
 import { CommonModule } from '@angular/common';
 import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
-import { HttpClient } from '@angular/common/http';
 import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
+import { PermisoSanitarioMedicosUsoPersonalService } from '../../services/permiso-sanitario-medicos-uso-personal.service';
 import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 import { Tramite260213Query } from '../../estados/tramite260213Query.query';
 
@@ -59,7 +59,6 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @param Tramite260213Query - Servicio para consultar el estado del trámite 260213.
    * @param Tramite260213Store - Almacén para gestionar el estado del trámite 260213.
    * @param consultaQuery - Servicio para consultar el estado de la sección de consulta.
-   * @param http - Cliente HTTP para realizar peticiones al servidor.
    * 
    * Al inicializar el componente, se suscribe al observable `selectConsultaioState$` para actualizar el estado local
    * (`consultaState`) y la propiedad `formularioDeshabilitado` según el estado de solo lectura (`readonly`) de la sección.
@@ -68,7 +67,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
     private Tramite260213Query: Tramite260213Query,
     private Tramite260213Store: Tramite260213Store,
     private consultaQuery: ConsultaioQuery,
-    private readonly http: HttpClient
+    private permisoSanitarioMedicosUsoPersonalService: PermisoSanitarioMedicosUsoPersonalService
   ) {
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),
       map((seccionState) => {
@@ -126,7 +125,7 @@ actualizarEstadoFormulario(DATOS: Tramite260213State): void {
 *          cargados desde el archivo JSON especificado en la ruta de `assets`.
 */
 getRegistroTomaMuestrasMercanciasData(): Observable<Tramite260213State> {
-  return this.http.get<Tramite260213State>('assets/json/260213/respuestaDeActualizacionDe.json');
+  return this.permisoSanitarioMedicosUsoPersonalService.getRegistroTomaMuestrasMercanciasData();
 }
 
   /**

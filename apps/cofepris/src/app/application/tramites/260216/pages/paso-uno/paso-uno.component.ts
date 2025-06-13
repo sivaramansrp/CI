@@ -4,7 +4,7 @@ import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { Tramite260216State, Tramite260216Store } from '../../estados/tramite260216Store.store';
 import { CommonModule } from '@angular/common';
 import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
-import { HttpClient } from '@angular/common/http';
+import { ImportacionDispositivosMedicosDonacionService } from '../../services/importacion-dispositivos-medicos-donacion.service';
 import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 import { Tramite260216Query } from '../../estados/tramite260216Query.query';
@@ -73,7 +73,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
     private tramite260216Query: Tramite260216Query,
     private tramite260216Store: Tramite260216Store,
     private consultaQuery: ConsultaioQuery,
-    private readonly http: HttpClient
+    private importacionDispositivosMedicosDonacionService: ImportacionDispositivosMedicosDonacionService
   ) {
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),
       map((seccionState) => {
@@ -130,7 +130,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   *          cargados desde el archivo JSON especificado en la ruta de `assets`.
   */
   getRegistroTomaMuestrasMercanciasData(): Observable<Tramite260216State> {
-    return this.http.get<Tramite260216State>('assets/json/260216/respuestaDeActualizacionDe.json');
+    return this.importacionDispositivosMedicosDonacionService.getRegistroTomaMuestrasMercanciasData();
   }
 
 
