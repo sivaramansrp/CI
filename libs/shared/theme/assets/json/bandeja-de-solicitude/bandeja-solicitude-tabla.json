@@ -1863,12 +1863,58 @@
       "numeroDeProcedimiento": "110203"
 },
 {
-    "id": 31201,
-    "tipoDeTramite": "Renovación Certificación IVA e IEPS Mod A",
+  "id": 240120,
+  "tipoDeTramite": "Solicitud de Permiso",
+  "fecha": "2023-10-01",
+  "fechaActualizacion": "2023-10-05",
+  "diasTranscurridos": "4",
+  "departamento": "SEDENA",
+  "numeroDeProcedimiento": "240120"
+},
+  {
+    "id": 40302,
+    "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
     "fechaActualizacion": "2023-10-05",
     "diasTranscurridos": "4",
     "departamento": "AGA",
-    "numeroDeProcedimiento": "31201"
-  }
+    "numeroDeProcedimiento": "40302"
+  },
+{
+  "id": 80206,
+  "tipoDeTramite": "Solicitud de Permiso",
+  "fecha": "2023-10-01",
+  "fechaActualizacion": "2023-10-05",
+  "diasTranscurridos": "4",
+  "departamento": "SE",
+  "numeroDeProcedimiento": "80206"
+},
+{
+    "id": 260515,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260515"
+},
+{
+    "id": 260516,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260516"
+},
+{
+  "id": 31201,
+  "tipoDeTramite": "Renovación Certificación IVA e IEPS Mod A",
+  "fecha": "2023-10-01",
+  "fechaActualizacion": "2023-10-05",
+  "diasTranscurridos": "4",
+  "departamento": "AGA",
+  "numeroDeProcedimiento": "31201"
+}
+
 ]
