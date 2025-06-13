@@ -37,7 +37,7 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { PedimentoComponent } from './components/pedimento/pedimento.component';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ServiciosExtraordinariosRoutingModule } from './servicios-extraordinarios-routing.module';
 import { SolicitudComponent } from './components/solicitud/solicitud.component';
@@ -84,7 +84,6 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     forwardRef(() => TransporteComponent),
     forwardRef(() => TablaDinamicaComponent),
     ToastrModule.forRoot(),
-    FormsModule,
   ],
   exports: [PasoUnoComponent],
   providers: [ToastrService, CatalogosService, BsModalService],
