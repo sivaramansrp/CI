@@ -13007,5 +13007,16 @@
     "departamento": "cofepris",
     "numeroDeProcedimiento": "260516",
     "origin": "READ_PROCEDURE"
+  },
+  {
+    "folioTramite": "099226136147361192499352",
+    "tipoDeTramite": "Modificación / Aviso de Despacho de mercancía",
+    "nombreDeLaTarea": "Revisión de presupuesto",
+    "fechaDeAsignacion": "2023-10-09",
+    "estadoDeTramite": "Completado",
+    "departamento": "agace",
+    "numeroDeProcedimiento": "30505",
+    "origin": "READ_PROCEDURE"
   }
+
 ]
