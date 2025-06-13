@@ -203,6 +203,5 @@ export * from './core/models/shared/tramite-folio.model';
 export * from './core/enums/crosslist.enums';
 export * from './core/services/shared/desplazarse-hacia-arriba/desplazarse-hacia-arriba.service';
 
-
-
-
+export * from './core/enums/mensajes-modal-comunes.enum';
+export * from './tramites/directives/alfanumerico/alfanumerico-formato.directive';
