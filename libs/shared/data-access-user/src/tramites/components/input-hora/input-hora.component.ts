@@ -52,6 +52,7 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
    */
   forma: FormGroup;
 
+  @Input() isDisabled : boolean = false;
   /**
    * Valor del input 'hora'.
    */

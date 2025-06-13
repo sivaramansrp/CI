@@ -1,0 +1,74 @@
+{
+    "pasoActivo": 1,
+    "pestanaActiva": 2,
+    "datosSolicitante": {
+        "rfc": "AAL0409235E6",
+        "denominacion": "AGRICOLA ALPE S DE RL DE CV",
+        "actividadEconomica": "Siembra, cultivo y cosecha de otros cultivos",
+        "correoElectronico": "caguileram@ultrasist.com.mx",
+        "pais": "ESTADOSUNIDOSMEXICANOS",
+        "codigoPostal": "34078",
+        "entidadFederativa": "DURANGO",
+        "municipio": "DURANGO",
+        "localidad": "VICTORIADEDURANGO",
+        "colonia": "LOSSAUCES",
+        "calle": "PRIV.PINOPIÑON",
+        "nExt": "703",
+        "nInt": "",
+        "lada": "",
+        "telefono": "",
+        "adace": "Occidente"
+    },
+    "domicilioFormulario": {
+        "nombreComercial": "",
+        "claveEntidadFederativa": "",
+        "claveDelegacionMunicipio": "",
+        "claveColonia": "",
+        "calle": "",
+        "numeroExterior": "",
+        "numeroInterior": "",
+        "codigoPostal": "",
+        "rfc": ""
+    },
+    "avisoFormulario": {
+        "adace": "",
+        "valorProgramaImmex": "",
+        "valorAnioProgramaImmex": "",
+        "tipoAviso": "",
+        "justificacion": "",
+        "periodicidadMensualDestruccion": "",
+        "fechaTranslado": "",
+        "nombreComercial": "",
+        "claveEntidadFederativa": "",
+        "claveDelegacionMunicipio": "",
+        "claveColonia": "",
+        "calle": "",
+        "numeroExterior": "",
+        "numeroInterior": "",
+        "codigoPostal": "",
+        "horaDestruccion": "",
+        "fechaDestruccion": "",
+        "tipoCarga": ""
+    },
+    "procesoFormulario": {
+        "descripcionProcesoDestruccion": "esta es una descripción de prueba del proceso de destrucción"
+    },
+    "desperdicioFormulario": {
+        "descripcionDesperdicio": "",
+        "cantidadDesp": "",
+        "claveUnidadMedidaDesp": "",
+        "porcentaje": "",
+        "descripcionMercancia": "",
+        "circunstanciaHechos": ""
+    },
+    "pedimentoFormulario": {
+        "patenteAutorizacion": "",
+        "pedimento": "",
+        "claveAduanaPedimento": "",
+        "claveFraccionArancelariaPedimento": "",
+        "nicoPedimento": "",
+        "cantidadPedimento": "",
+        "claveUnidadMedidaPedimento": ""
+    },
+    "tipoDocumento": ""
+}

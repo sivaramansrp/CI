@@ -567,3 +567,15 @@ export interface ArchivoDocumentos {
   resolucion: string;
 
 }
+
+export interface Tramite32506Aviso {
+    pasoActivo: number,
+    pestanaActiva: number,
+    datosSolicitante: DatosSolicitante,
+    domicilioFormulario:DomicilioFormulario,
+    avisoFormulario: AvisoFormulario,
+    procesoFormulario: ProcesoFormulario,
+    desperdicioFormulario: DesperdicioFormulario,
+    pedimentoFormulario: PedimentoFormulario,
+    tipoDocumento: string,
+}
