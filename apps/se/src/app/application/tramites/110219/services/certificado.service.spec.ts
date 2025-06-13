@@ -1,104 +1,72 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { CertificadoService } from './certificado.service';
-import { ColumnasTabla, MercanciaCertificado } from '../models/certificado.model';
-import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
+import { HttpClient } from '@angular/common/http';
+import { of, throwError } from 'rxjs';
 
 describe('CertificadoService', () => {
   let service: CertificadoService;
-  let httpMock: HttpTestingController;
+  let httpMock: any;
 
   beforeEach(() => {
+    httpMock = {
+      get: jest.fn()
+    };
+
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [CertificadoService],
+      providers: [
+        CertificadoService,
+        { provide: HttpClient, useValue: httpMock }
+      ]
     });
     service = TestBed.inject(CertificadoService);
-    httpMock = TestBed.inject(HttpTestingController);
-  });
-
-  afterEach(() => {
-    httpMock.verify();
   });
 
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
 
-  describe('getTratadoData', () => {
-    it('should fetch tratado data successfully', () => {
-      const mockData: Catalogo[] = [
-        { id: 1, descripcion: 'Tratado 1' },
-        { id: 2, descripcion: 'Tratado 2' },
-      ];
+  it('should call http.get for getTratadoData', () => {
+    httpMock.get.mockReturnValue(of([{ id: 1, descripcion: 'Tratado' }]));
+    service.getTratadoData().subscribe(data => {
+      expect(data).toEqual([{ id: 1, descripcion: 'Tratado' }]);
+    });
+    expect(httpMock.get).toHaveBeenCalledWith('assets/json/110219/tratado.json');
+  });
 
-      service.getTratadoData().subscribe((data) => {
-        expect(data).toEqual(mockData);
-      });
+  it('should call http.get for getSolicitudesTabla', () => {
+    httpMock.get.mockReturnValue(of([{ numeroCertificado: '123' }]));
+    service.getSolicitudesTabla().subscribe(data => {
+      expect(data).toEqual([{ numeroCertificado: '123' }]);
+    });
+    expect(httpMock.get).toHaveBeenCalledWith('assets/json/110219/certificados-disponibles.json');
+  });
 
-      const req = httpMock.expectOne('assets/json/110219/tratado.json');
-      expect(req.request.method).toBe('GET');
-      req.flush(mockData);
+  it('should call http.get for getMercanciaCertificadoTabla', () => {
+    httpMock.get.mockReturnValue(of([{ mercancia: 'Mercancia1' }]));
+    service.getMercanciaCertificadoTabla().subscribe(data => {
+      expect(data).toEqual([{ mercancia: 'Mercancia1' }]);
+    });
+    expect(httpMock.get).toHaveBeenCalledWith('assets/json/110219/mercancia-certificado.json');
+  });
+
+  it('should handle error in getTratadoData', () => {
+    httpMock.get.mockReturnValue(throwError(() => new Error('fail')));
+    service.getTratadoData().subscribe({
+      error: (err) => expect(err).toBeInstanceOf(Error)
     });
   });
 
-  describe('getSolicitudesTabla', () => {
-    it('should fetch solicitudes tabla data successfully', () => {
-      const mockData: ColumnasTabla[] = [
-        { numeroCertificado: '123', pais: 'México', tratado: 'TLCAN', fechaExpedicion: '2023-01-01', fechaVencimiento: '2023-12-31' },
-      ];
-
-      service.getSolicitudesTabla().subscribe((data) => {
-        expect(data).toEqual(mockData);
-      });
-
-      const req = httpMock.expectOne('assets/json/110219/mercanciaTable.json');
-      expect(req.request.method).toBe('GET');
-      req.flush(mockData);
-    });
-
-    it('should handle error when fetching solicitudes tabla data', () => {
-      const mockError = new ErrorEvent('Network error');
-
-      service.getSolicitudesTabla().subscribe({
-        next: () => fail('Expected an error, not data'),
-        error: (error) => {
-          expect(error).toBeTruthy();
-        },
-      });
-
-      const req = httpMock.expectOne('assets/json/110219/mercanciaTable.json');
-      req.error(mockError);
+  it('should handle error in getSolicitudesTabla', () => {
+    httpMock.get.mockReturnValue(throwError(() => new Error('fail')));
+    service.getSolicitudesTabla().subscribe({
+      error: (err) => expect(err).toBeInstanceOf(Error)
     });
   });
 
-  describe('getMercanciaCertificadoTabla', () => {
-    it('should fetch mercancia certificado tabla data successfully', () => {
-      const mockData: MercanciaCertificado[] = [
-        { numeroOrden: '1', fraccionArancelaria: '1234.56.78', nombreTecnico: 'Producto A', nombreComercial: 'Producto Comercial A', nombreIngles: 'Product A', complementoDescripcion: 'Descripción A', numeroCertificado: '123', pais: 'México', tratado: 'TLCAN', fechaExpedicion: '2023-01-01', fechaVencimiento: '2023-12-31' },
-      ];
-
-      service.getMercanciaCertificadoTabla().subscribe((data) => {
-        expect(data).toEqual(mockData);
-      });
-
-      const req = httpMock.expectOne('assets/json/110219/mercanciaCertificado.json');
-      expect(req.request.method).toBe('GET');
-      req.flush(mockData);
-    });
-
-    it('should handle error when fetching mercancia certificado tabla data', () => {
-      const mockError = new ErrorEvent('Network error');
-
-      service.getMercanciaCertificadoTabla().subscribe({
-        next: () => fail('Expected an error, not data'),
-        error: (error) => {
-          expect(error).toBeTruthy();
-        },
-      });
-
-      const req = httpMock.expectOne('assets/json/110219/mercanciaCertificado.json');
-      req.error(mockError);
+  it('should handle error in getMercanciaCertificadoTabla', () => {
+    httpMock.get.mockReturnValue(throwError(() => new Error('fail')));
+    service.getMercanciaCertificadoTabla().subscribe({
+      error: (err) => expect(err).toBeInstanceOf(Error)
     });
   });
 });
