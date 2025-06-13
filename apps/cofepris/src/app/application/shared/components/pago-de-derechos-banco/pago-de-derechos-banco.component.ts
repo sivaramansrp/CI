@@ -63,10 +63,10 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
     private tramitePagoBancoStore: TramitePagoBancoStore,
     private tramitePagoBancoQuery: TramitePagoBancoQuery,
     @Inject(PagoBancoService)
-    private service: PagoBancoService,
+    private servicio: PagoBancoService,
     private consultaioQuery: ConsultaioQuery
   ) {
-    this.fetchBancoData();
+    this.obtenerDatosBanco();
 
     // Inicializa el formulario.
     this.consultaioQuery.selectConsultaioState$
@@ -168,9 +168,9 @@ export class PagoDeDerechosBancoComponent implements OnInit, OnDestroy {
    * Método para actualizar el banco seleccionado.
    * @param e {Catalogo} Banco seleccionado.
    */
-  fetchBancoData(): void {
-    this.service
-      .getBancoData()
+  obtenerDatosBanco(): void {
+    this.servicio
+      .consultarDatosBanco()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data): void => {
         this.bancoCatalogo.catalogos = data as Catalogo[];

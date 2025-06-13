@@ -533,8 +533,61 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
     }]
   },
   {
-    tramite: 261401,
-    listaComponentes: [{
+    tramite: 260515,
+    listaComponentes: [
+      {
+        id: 'solicitud',
+        componentPath: () =>
+          import(
+            '../../tramites/260515/pages/paso-uno/paso-uno.component'
+          ).then((m) => m.PasoUnoComponent),
+        componentName: 'PasoUnoComponent',
+      },
+    ],
+  },
+      {
+    tramite: 260516,
+    listaComponentes: [
+      {
+        id: 'solicitud',
+        componentPath: () =>
+          import(
+            '../../tramites/260516/pages/paso-uno/paso-uno.component'
+          ).then((m) => m.PasoUnoComponent),
+        componentName: 'PasoUnoComponent',
+      },
+    ],
+  },
+    {
+        tramite: 260901,
+        listaComponentes: [{
+            id: 'solicitud',
+            componentPath: () => import('../../tramites/260901/pages/paso-uno-pages/paso-uno-pages.component').then(m => m.PasoUnoPagesComponent),
+            componentName: 'PasoUnoPagesComponent',
+
+        }]
+    },
+     {
+        tramite: 260907,
+        listaComponentes: [{
+            id: 'solicitud',
+            componentPath: () => import('../../tramites/260907/pages/paso-uno-pages/paso-uno-pages.component').then(m => m.PasoUnoPagesComponent),
+            componentName: 'PasoUnoPagesComponent',
+
+        }]
+    },
+     {
+        tramite: 260908,
+        listaComponentes: [{
+            id: 'solicitud',
+            componentPath: () => import('../../tramites/260908/pages/paso-uno-pages/paso-uno-pages.component').then(m => m.PasoUnoPagesComponent),
+            componentName: 'PasoUnoPagesComponent',
+
+        }]
+    },
+    {
+      tramite: 261401,
+      listaComponentes: [{
         id: 'solicitud',
         componentPath: () =>import('../../tramites/261401/pages/paso-uno/paso-uno.component').then((m) => m.PasoUnoComponent),
         componentName: 'PasoUnoComponent',
