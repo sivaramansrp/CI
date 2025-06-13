@@ -4,7 +4,6 @@
  * Este componente representa la primera página del asistente de modificación de permisos sanitarios.
  */
 import {
-  AfterViewInit,
   Component,
   OnDestroy,
   OnInit,
@@ -14,16 +13,17 @@ import {
 } from '@angular/core';
 
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { DatosDelSolicitudModificacionComponent } from '../../../../shared/components/datos-del-solicitud-modificacion/datos-del-solicitud-modificacion.component';
 import {
   SolicitanteComponent,
-  TIPO_PERSONA,
+
 } from '@libs/shared/data-access-user/src';
-import { DatosDelSolicitudModificacionComponent } from '../../../../shared/components/datos-del-solicitud-modificacion/datos-del-solicitud-modificacion.component';
+
 import { PagoDeDerechosEntradaComponent } from '../../../../shared/components/pago-de-derechos-entrada/pago-de-derechos-entrada.component';
 import { TercerosRelacionadosFabSeccionComponent } from '../../../../shared/components/terceros-relacionados-fab-seccion/terceros-relacionados-fab-seccion.component';
 import { TramitesAsociadosSeccionComponent } from '../../../../shared/components/tramites-asociados-seccion/tramites-asociados-seccion.component';
 
-import { CompleteForm, Destinatario, DomicilioEstablecimiento, Fabricante, Facturador, FormMercancias, PagoDeDerechos, Proveedor, ScianForm, SolicitanteData, SolicitudEstablecimientoForm, SolicitudForm, TercerosRelacionados, Tramite } from '../../models/mod-permiso.model';
+import { CompleteForm, Destinatario, DomicilioEstablecimiento, Fabricante, Facturador, FormMercancias, PagoDeDerechos, Proveedor, ScianForm, SolicitanteData, SolicitudEstablecimientoForm, TercerosRelacionados, Tramite } from '../../models/mod-permiso.model';
 import { Subject ,forkJoin,map, takeUntil } from 'rxjs';
 
 import { ModificacionPermisoSanitario } from '../../services/modificacion-permiso-sanitario.service';
