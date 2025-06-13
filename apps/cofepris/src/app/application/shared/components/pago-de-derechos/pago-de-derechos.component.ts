@@ -143,6 +143,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * con esos valores y suscribe a cambios para mantener el estado sincronizado.
    */
   ngOnInit(): void {
+    this.mostrarBanco = BANCO.includes(this.idProcedimiento) ? true : false;
     this.pagoDerechosForm = this.fb.group({
       claveReferencia: [
         this.pagoDerechoFormState?.claveReferencia || '',
@@ -179,43 +180,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.pagoDerechosForm.valueChanges.subscribe((valores) => {
       this.updatePagoDerechos.emit(valores);
     });
-    this.mostrarBanco = BANCO.includes(this.idProcedimiento) ? true : false;
-    this.patchForm();
+
     if (this.formularioDeshabilitado) {
       this.pagoDerechosForm.disable();
     }
-  }
-
-  /**
-   * Initializes the reactive form `pagoDerechosForm` with controls and validators
-   * for the payment of rights form. Each form control is set with initial values
-   * from `pagoDerechoFormState` if available, or defaults to an empty string.
-   * Validators are applied to enforce required fields, maximum lengths, and
-   * specific patterns for certain fields.
-   *
-   * If the `formularioDeshabilitado` flag is set to true, the entire form is disabled
-   * after creation to prevent user interaction.
-   *
-   * Form controls:
-   * - `claveReferencia`: Required, max length 9.
-   * - `cadenaDependencia`: Required, max length 14.
-   * - `estado`: Required.
-   * - `banco`: Required.
-   * - `llavePago`: Required, must match `REGEX_LLAVE_DE_PAGO_DE_DERECHO`, max length 30.
-   * - `fechaPago`: Required.
-   * - `importePago`: Required, must match `REGEX_PATRON_DECIMAL_2`, max length 16.
-   */
-  patchForm(): void {
-    this.pagoDerechosForm.patchValue({
-      claveReferencia: this.pagoDerechoFormState?.claveReferencia || '',  
-      cadenaDependencia: this.pagoDerechoFormState?.cadenaDependencia || '',
-      estado: this.pagoDerechoFormState?.estado || '',
-      banco: this.pagoDerechoFormState?.banco || '',
-      llavePago: this.pagoDerechoFormState?.llavePago || '',
-      fechaPago: this.pagoDerechoFormState?.fechaPago || '',
-      importePago: this.pagoDerechoFormState?.importePago || '',
-    });
-
   }
 
   /**
@@ -230,7 +198,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.estadosDatos = data;
         this.pagoDerechosForm.patchValue({
-          estado: this.pagoDerechoFormState?.estado || this.estadosDatos[0]?.clave,
+          estado: this.pagoDerechoFormState?.estado || '',
         });
       });
   }
@@ -247,7 +215,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.bancoDatos = data;
         this.pagoDerechosForm.patchValue({
-          banco: this.pagoDerechoFormState?.banco || this.bancoDatos[0]?.clave,
+          banco: this.pagoDerechoFormState?.banco || '',
         });
       });
   }
