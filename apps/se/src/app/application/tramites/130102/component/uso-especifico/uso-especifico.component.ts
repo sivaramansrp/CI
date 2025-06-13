@@ -108,8 +108,7 @@ export class UsoEspicificoComponent implements OnInit {
    * @memberof UsoEspicificoComponent
    */
   ngOnInit(): void {
-this.inicializarEstadoFormulario();
-      this.formularioRegistroService.getFraccionesUsoEspecifico().subscribe(data => {
+    this.formularioRegistroService.getFraccionesUsoEspecifico().subscribe(data => {
       this.datosSocios = data;
     });
     this.formularioRegistroService.registrarFormulario('usoEspicificoForm', this.usoEspicificoForm);
@@ -159,7 +158,7 @@ this.inicializarEstadoFormulario();
 
     this.usoEspicificoForm = this.formbuilt.group({
       fraccionArancelariaProsec: [ this.solicitudState?.fraccionArancelariaProsec, Validators.required],
-      descripción: ['',Validators.required,UsoEspicificoComponent.noLeadingSpacesValidator],
+      descripción: ['',[Validators.required,UsoEspicificoComponent.noLeadingSpacesValidator]],
 
     });
        if (this.esFormularioSoloLectura) {
@@ -184,7 +183,7 @@ this.inicializarEstadoFormulario();
    * @memberof UsoEspicificoComponent
    */
   obtenerRequisitosFraccionArancelariaEsquema(): void {
-    this.usoEspicificoForm.get('descripción')?.setValue('Descripción fraccion PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizará la mercancía a importar) ');
+    this.usoEspicificoForm.get('descripción')?.setValue('Descripción fraccion PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizará la mercancía a importar)');
   }
 
   /**
@@ -198,6 +197,70 @@ this.inicializarEstadoFormulario();
       return { leadingSpaces: true };
     }
     return null;
+  }
+
+  /**
+   * compo doc
+   * @method agregar
+   * @description
+   * Este método se utiliza para agregar una nueva entrada específica a la tabla dinámica.
+   * Verifica si el formulario `ninoFormGroup` es válido antes de crear un objeto con los datos
+   * específicos. Luego, agrega este objeto a la lista de datos de la tabla y actualiza el
+   * estado dinámico del trámite con la nueva entrada. Finalmente, reinicia el formulario.
+   *
+   * Funcionalidad:
+   * - Valida el formulario `ninoFormGroup` antes de procesar los datos.
+   * - Crea un objeto con los datos específicos, incluyendo la fracción arancelaria y la descripción.
+   * - Agrega la nueva entrada a la tabla dinámica y actualiza el estado dinámico del trámite.
+   * - Reinicia el formulario para permitir la entrada de nuevos datos.
+   *
+   * @example
+   * this.agregar();
+   * // Agrega una nueva entrada específica a la tabla dinámica y actualiza el estado del trámite.
+   */
+  public agregar(): void {
+    if (this.usoEspicificoForm.valid) {
+      const ESPECIFICO = {
+        fraccionArancelariaProsec: this.obtenerFraccionArancelariaProsec(),
+        descripción: this.usoEspicificoForm.get('descripción')?.value,
+      };
+      this.datosSocios?.push(ESPECIFICO);
+      this.usoEspicificoForm.reset();
+    }
+  }
+
+  /**
+ * @method obtenerFraccionArancelariaProsec
+ * @description
+ * Obtiene la descripción de la fracción arancelaria seleccionada en el formulario dinámico.
+ * @returns {string} Descripción de la fracción arancelaria seleccionada o una cadena vacía si no existe.
+ */
+  public obtenerFraccionArancelariaProsec(): string {
+    const DESCRIPCION = this.catalogos.find((ele: Catalogo) => ele.id === Number(this.usoEspicificoForm.get('fraccionArancelariaProsec')?.value))?.descripcion;
+    return DESCRIPCION ?? '';
+  }
+
+  /**
+   * compo doc
+   * @method ngOnDestroy
+   * @description
+   * Este método es parte del ciclo de vida del componente y se ejecuta automáticamente
+   * cuando el componente está a punto de ser destruido. Se utiliza para limpiar las suscripciones
+   * activas y evitar fugas de memoria en la aplicación.
+   *
+   * Funcionalidad:
+   * - Notifica a través del `Subject` `destroyNotifier$` que el componente será destruido.
+   * - Completa el `Subject` para liberar los recursos asociados.
+   *
+   * @example
+   * ngOnDestroy(): void {
+   *   this.destroyNotifier$.next();
+   *   this.destroyNotifier$.complete();
+   * }
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
 }

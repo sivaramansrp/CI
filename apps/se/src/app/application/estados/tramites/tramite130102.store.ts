@@ -1,5 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { OctavaTemporal } from '../../tramites/130102/models/octava-temporal.model';
 
 /**
  * Interfaz que define el estado de la solicitud 130102.
@@ -66,6 +67,8 @@ export interface Solicitud130102State {
   productos: string;
 
   solicitud :string; // Indica si la solicitud está activa o pendiente de revisión.
+
+  partidas_tabla?: OctavaTemporal[];
 }
 /**
  * Crea y devuelve el estado inicial de la solicitud.
@@ -339,5 +342,28 @@ public setCriterioDictamen(criterioDictamen: string) {
    */
   public limpiarSolicitud() {
     this.reset();
+  }
+
+  /*
+    * Actualiza el estado de la solicitud.
+    * @param {string} solicitud - Nueva solicitud.
+    */
+  public setPartidasTabla(fieldName: string, value: OctavaTemporal[]) {
+    this.update((state) => ({
+      ...state,
+      [fieldName]: value,
+    }));
+  }
+
+  /**
+   * Set a value dynamically in the store by field name.
+   * @param fieldName The name of the field to update.
+   * @param value The value to set.
+   */
+  public setDynamicFieldValue(fieldName: string, value: unknown): void {
+    this.update((state) => ({
+      ...state,
+      [fieldName]: value,
+    }));
   }
 }

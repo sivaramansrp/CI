@@ -119,7 +119,7 @@
                 <div class="col-md-8"></div>
                 <div class="col-md-4 text-end">
                     <div class="btn-group">
-                        <button class="btn btn-primary me-2" type="button">Cargar archivo</button>
+                        <button class="btn btn-primary me-2" type="button" (click)="cargarArchivo()">Cargar archivo</button>
                         <button class="btn btn-danger" type="button" (click)="validarYEnviarFormulario()">Agregar</button>
                     </div>
                 </div>
@@ -136,7 +136,7 @@
           [datos]="datosSocios"
           [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
           [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
-        
+          (listaDeFilaSeleccionada)="onPartidasSeleccion($event)"
         ></app-tabla-dinamica>
           
             <form [formGroup]="formForTotalCount">  
@@ -168,13 +168,87 @@
                     <div class="col-md-6 col-sm-6"></div>
                     <div class="col-md-6 col-sm-6 text-end">
                         <div class="btn-group">
-                            <button class="btn btn-primary me-2" type="button">Elimina Partida</button>
-                            <button class="btn btn-danger" type="button">Mofificar partida mercancia</button>
+                            <button class="btn btn-primary me-2" type="button" (click)="eliminar()">Elimina Partida</button>
+                            <button class="btn btn-danger" type="button" (click)="abrirModalEditar()">Mofificar partida mercancia</button>
                         </div>
                     </div>
                 </div>
             </form>
         </div>
     </div>
+</div>
+
+<div
+  class="modal fade"
+  #cargarArchivoModal
+  tabindex="-1"
+  aria-labelledby="confirmModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-body">
+        <div class="row">
+          <ng-titulo titulo="Cargar archivo" />
+        </div>
+        <form [formGroup]="archivoFormGroup">
+            <div class="row">
+            <p>Archivo:</p>
+        </div>
+        <div class="row">
+            <div class="col-md-8">
+                <input
+                class="form-control"
+                type="file"
+                formControlName="archivo"
+                id="archivo" 
+            >
+            </div>
+        </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger me-2 btn-space" (click)="cerrar()">Cerrar</button>
+        <button type="button" class="btn btn-primary btn-space" (click)="cerrar()">Enviar</button>
+    </div>
+  </div>
+</div>
+</div>
+
+<div class="modal fade" #modalConfirmacionRef id="modalConfirmacion" tabindex="-1" aria-labelledby="modalConfirmacionLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+      </div>
+      <div class="modal-body">
+        <p>Selecciona un registro a eliminar.</p>
+        <div class="modal-footer custom-footer">
+          <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>Acceptar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" #modalEditarRef id="modalEditarPartida" tabindex="-1" aria-labelledby="modalEditarPartidaLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalEditarPartidaLabel">Modificar partida</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <formas-dinamicas
+          [forma]="modificarPartidaForm"
+          [formularioDatos]="modificarPartidasFormData"
+         (emitirCambioDeValor)="establecerCambioDeValor($event)"
+        ></formas-dinamicas>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" (click)="guardarEdicion()" >Guardar cambios</button>
+      </div>
+    </div>
+  </div>
 </div>
  

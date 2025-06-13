@@ -7,7 +7,7 @@
             <div class="col-8">
                 <app-catalogo-select 
                [label]="'Fracción arancelaria PROSEC (Especificar la fracción arancelaria del producto en el que se utilizará la mercancía a importar)'" 
-                (change)="obtenerRequisitosFraccionArancelariaEsquema();setValoresStore(usoEspicificoForm,'fraccionArancelariaProsec', 'setFraccionArancelariaProsec')" 
+                (change)="obtenerRequisitosFraccionArancelariaEsquema(); setValoresStore(usoEspicificoForm,'fraccionArancelariaProsec', 'setFraccionArancelariaProsec')" 
                 formControlName="fraccionArancelariaProsec"
                 [catalogo]="catalogos"
                [required]="true"
@@ -47,7 +47,7 @@
          
         
             <div class="container text-end mt-5">
-                <button class="btn btn-primary">Agregar</button>
+                <button class="btn btn-primary" (click)="agregar()">Agregar</button>
             </div>
         
     </form>
