@@ -395,12 +395,6 @@ const ROUTES: Routes = [
       ),
   },
   {
-     path: 'aviso-de-modificacion',
-    loadChildren: () => 
-      import('./tramites/30505/aviso-de-modificacion.module').then(
-        (m) => m.AvisoDeModificacionModule)
-  },
-  {
     path: 'renovacion-iva-ieps/mod-a',
     loadChildren: () =>
       import('./tramites/31201/renewal-vat-ieps-mod-a.module').then(
@@ -465,6 +459,11 @@ const ROUTES: Routes = [
     path: 'detalle-v-dictamen',
     loadComponent: () =>
       import('./detalle-v-dictamen/detalle-v-dictamen.component').then((m) => m.DetalleVDictamenComponent),
+  },
+  {
+    path: 'datos-generales-tramite',
+    loadComponent: () =>
+      import('./datos-generales-tramite/datos-generales-tramite.component').then((m) => m.DatosGeneralesTramiteComponent),
   },
 ];
 

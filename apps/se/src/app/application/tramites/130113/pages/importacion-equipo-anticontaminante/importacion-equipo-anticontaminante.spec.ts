@@ -4,6 +4,7 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ImportacionEquipoAnticontaminanteComponent } from './importacion-equipo-anticontaminante';
 import { PASOS } from '../../constants/pasos.enum';
+import { PASOS_IMPORTACION } from '../../constants/importacion-equipo-anticontaminante.enum';
 
 describe('ImportacionEquipoAnticontaminanteComponent', () => {
   let component: ImportacionEquipoAnticontaminanteComponent;
@@ -36,7 +37,7 @@ describe('ImportacionEquipoAnticontaminanteComponent', () => {
   });
 
   it('should have pasos defined', () => {
-    expect(component.pasos).toEqual(PASOS);
+    expect(component.pasosSolicitar).toEqual(PASOS_IMPORTACION);
   });
 
   it('should not update indice if valor is out of range', () => {

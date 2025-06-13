@@ -32,7 +32,8 @@
         <div class="col-md-8">
           <app-catalogo-select [catalogo]="options" formControlName="seccionAduanera"
             [label]="'Aduana de salida/lugar de embarque'" [required]="true"
-            (change)="setValoresStore(datosDelTramiteRealizar,'seccionAduanera', 'setSeccionAduanera');"></app-catalogo-select>
+            (change)="setValoresStore(datosDelTramiteRealizar,'seccionAduanera', 'setSeccionAduanera');"
+            [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
       </div>
 
@@ -51,8 +52,8 @@
       <div class=" row mt-3">
         <div class="col-md-8">
           <app-catalogo-select [catalogo]="options" formControlName="paisDeDestino" [label]="'País de destino'"
-            [required]="true"
-            (change)="setValoresStore(datosDelTramiteRealizar,'paisDeDestino', 'setPaisDeDestino');"></app-catalogo-select>
+            [required]="true" (change)="setValoresStore(datosDelTramiteRealizar,'paisDeDestino', 'setPaisDeDestino');"
+            [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
       </div>
 
@@ -60,7 +61,8 @@
         <div class="col-md-8">
           <app-catalogo-select [catalogo]="options" formControlName="paisDeProcedencia" [label]="'País de procedencia'"
             [required]="true"
-            (change)="setValoresStore(datosDelTramiteRealizar,'paisDeProcedencia', 'setPaisDeProcedencia');"></app-catalogo-select>
+            (change)="setValoresStore(datosDelTramiteRealizar,'paisDeProcedencia', 'setPaisDeProcedencia');"
+            [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
       </div>
 
@@ -119,7 +121,8 @@
                   Datos Generales de la Mercancía:
                 </h4>
                 @if(!mercanciaCollapsable){
-                <button type="button" (click)="mercanciaColapsable()" class="collpase-button collapsed"></button>
+                <button type="button" (click)="mercanciaColapsable()" class="collpase-button collapsed"
+                  [disabled]="soloLectura"></button>
                 }
               </div>
               <div class="panel-collapse collapse in" id="mercancia-colapsable">
@@ -147,8 +150,8 @@
                         <td class="text-center">{{item.UMT}}</td>
                         <td class="text-center">{{item.cantidadUMC}}</td>
                         <td class="text-center">{{item.cantidadUMT}}</td>
-                        <td class="text-center"><button type="button" (click)="mercanciaBorrar(i)"><i
-                              class="bi-trash"></i></button></td>
+                        <td class="text-center"><button type="button" (click)="mercanciaBorrar(i)"
+                            [disabled]="soloLectura"><i class="bi-trash"></i></button></td>
                       </tr>
 
                       <tr>
@@ -217,8 +220,8 @@
                               <div class="col-md-4">
                                 <div class="form-group">
                                   <app-catalogo-select [catalogo]="options" formControlName="UMC" [label]="'UMC'"
-                                    [required]="true"
-                                    (change)="setValoresStore(datosGenerales,'UMC', 'setUMC')"></app-catalogo-select>
+                                    [required]="true" (change)="setValoresStore(datosGenerales,'UMC', 'setUMC')"
+                                    [isDisabled]="soloLectura"></app-catalogo-select>
                                 </div>
                               </div>
                             </div>
@@ -226,15 +229,16 @@
                               <div class="col-md-8">
                                 <app-catalogo-select [catalogo]="options" formControlName="paisdeOrigen"
                                   [label]="'País de origen'" [required]="true"
-                                  (change)="setValoresStore(datosGenerales,'paisdeOrigen', 'setPaisdeOrigen')"></app-catalogo-select>
+                                  (change)="setValoresStore(datosGenerales,'paisdeOrigen', 'setPaisdeOrigen')"
+                                  [isDisabled]="soloLectura"></app-catalogo-select>
                               </div>
                             </div>
                             <div class="col-md-12">
                               <div class="col-md-4">
                                 <app-catalogo-select [catalogo]="options" formControlName="entidadFederativadeOrigen"
-                                  [label]="'Entidad federativa de
-                                  origen'" [required]="true"
-                                  (change)="setValoresStore(datosGenerales,'entidadFederativadeOrigen', 'setEntidadFederativadeOrigen')"></app-catalogo-select>
+                                  [label]="'Entidad federativa de origen'" [required]="true"
+                                  (change)="setValoresStore(datosGenerales,'entidadFederativadeOrigen', 'setEntidadFederativadeOrigen')"
+                                  [isDisabled]="soloLectura"></app-catalogo-select>
                               </div>
                               <div class="col-md-4">
                                 <label for="municipiodeOrigen" class="form-label">Municipio de origen*:</label>
@@ -249,12 +253,12 @@
                               <div class="col-md-4">
                                 <div class="btn-group multi-select">
                                   <div class="d-flex justify-content-center">
-                                    <button type="button" class="btn btn-primary"
-                                      (click)="municipioAgregar()">Agregar</button>
+                                    <button type="button" class="btn btn-primary" (click)="municipioAgregar()"
+                                      [disabled]="soloLectura">Agregar</button>
                                   </div>
                                   <div class="d-flex justify-content-center">
-                                    <button type="button" class="btn btn-danger"
-                                      (click)="municipioEliminar()">Eliminar</button>
+                                    <button type="button" class="btn btn-danger" (click)="municipioEliminar()"
+                                      [disabled]="soloLectura">Eliminar</button>
                                   </div>
                                 </div>
 
@@ -299,8 +303,8 @@
                               <div class="col-md-4">
                                 <div class="form-group">
                                   <app-catalogo-select [catalogo]="options" formControlName="USO" [label]="'USO'"
-                                    [required]="true"
-                                    (change)="setValoresStore(datosGenerales,'USO', 'setUSO')"></app-catalogo-select>
+                                    [required]="true" (change)="setValoresStore(datosGenerales,'USO', 'setUSO')"
+                                    [isDisabled]="soloLectura"></app-catalogo-select>
                                 </div>
                               </div>
                             </div>
@@ -309,10 +313,10 @@
                               <div class="col-md-2"></div>
                               <div class="col-md-4 mt-3">
                                 <div class="btn-group">
-                                  <button class="btn btn-primary me-2" (click)="mercanciaAgregar();"
-                                    type="button">Agregar</button>
-                                  <button (click)="mercanciaColapsable()" class="btn btn-danger"
-                                    type="button">Cancelar</button>
+                                  <button class="btn btn-primary me-2" (click)="mercanciaAgregar();" type="button"
+                                    [disabled]="soloLectura">Agregar</button>
+                                  <button (click)="mercanciaColapsable()" class="btn btn-danger" type="button"
+                                    [disabled]="soloLectura">Cancelar</button>
                                 </div>
                               </div>
                             </div>
@@ -351,8 +355,8 @@
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="options" formControlName="empaques" [label]="'Descripción de los empaques'"
-            [required]="true"
-            (change)="setValoresStore(numeroDescDeLosEmpaques,'empaques', 'setEmpaques')"></app-catalogo-select>
+            [required]="true" (change)="setValoresStore(numeroDescDeLosEmpaques,'empaques', 'setEmpaques')"
+            [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
       </div>
 
@@ -365,13 +369,15 @@
         <div class="col-md-5">
           <app-catalogo-select [catalogo]="options" formControlName="unidadDeVerificar"
             [label]="'Nombre de la unidad de verificación'" [required]="true"
-            (change)="setValoresStore(unidadDeVerificacion,'unidadDeVerificar', 'setUnidadDeVerificar')"></app-catalogo-select>
+            (change)="setValoresStore(unidadDeVerificacion,'unidadDeVerificar', 'setUnidadDeVerificar')"
+            [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
 
         <div class="col-md-5">
           <app-catalogo-select [catalogo]="options" formControlName="terceroEspecialista"
             [label]="'Nombre del tercero especialista fitosanitario'" [required]="true"
-            (change)="setValoresStore(unidadDeVerificacion,'terceroEspecialista', 'setTerceroEspecialista')"></app-catalogo-select>
+            (change)="setValoresStore(unidadDeVerificacion,'terceroEspecialista', 'setTerceroEspecialista')"
+            [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
       </div>
 
@@ -385,13 +391,15 @@
         <div class="col-md-5">
           <app-catalogo-select [catalogo]="options" formControlName="entidadFederative"
             [label]="'Entidad Federativa de Unidad Expedidora'" [required]="true"
-            (change)="setValoresStore(unidadExpedidoraFitosanitario,'entidadFederative', 'setEntidadFederative')"></app-catalogo-select>
+            (change)="setValoresStore(unidadExpedidoraFitosanitario,'entidadFederative', 'setEntidadFederative')"
+            [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
 
         <div class="col-md-5">
           <app-catalogo-select [catalogo]="options" formControlName="fitosanitario"
             [label]="'Módulo de certificado fitosanitario'" [required]="true"
-            (change)="setValoresStore(unidadExpedidoraFitosanitario,'fitosanitario', 'setFitosanitario')"></app-catalogo-select>
+            (change)="setValoresStore(unidadExpedidoraFitosanitario,'fitosanitario', 'setFitosanitario')"
+            [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
 
       </div>
