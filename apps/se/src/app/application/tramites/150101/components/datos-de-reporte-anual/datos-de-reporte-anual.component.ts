@@ -64,7 +64,6 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.formularioDeshabilitado = seccionState.readonly;
-          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
@@ -75,38 +74,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.inicializarEstadoFormulario();
-  }
-
-  /**
-   * Inicializa el estado del formulario basado en si es de solo lectura o no.
-   * Si es de solo lectura, llama a `guardarDatosFormulario` para cargar los datos del formulario.
-   * Si no es de solo lectura, inicializa el formulario con `inicializarFormulario`.
-   * @returns {void}
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.formularioDeshabilitado) {
-      this.guardarDatosFormulario();
-    } else {
-      this.inicializarFormulario();
-    }
-  }
-
-  /**
-   * @method guardarDatosFormulario
-   * @description Guarda los datos del formulario y configura el estado de los campos.
-   * Si el formulario es de solo lectura, deshabilita los campos del formulario.
-   * Si no es de solo lectura, habilita los campos del formulario.
-   * @returns {void}
-   */
-  guardarDatosFormulario(): void {
     this.inicializarFormulario();
-
-    if (this.formularioDeshabilitado) {
-      this.formReporteAnnual.disable();
-    } else if (!this.formularioDeshabilitado) {
-      this.formReporteAnnual.enable();
-    }
   }
 
   /**
@@ -115,7 +83,16 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
    * Configura los validadores y el estado de los campos según corresponda.
    * @returns {void}
    */
-  inicializarFormulario(): void {
+  inicializarFormulario(): void {  
+    this.solicitud150101Query.seleccionarSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((respuesta: Solicitud150101State) => {
+          this.solicitud150101State = respuesta;
+        })
+      )
+      .subscribe();
+
     this.formReporteAnnual = this.fb.group({
       ventasTotales: [
         { value: this.solicitud150101State.ventasTotales, disabled: false },
@@ -148,22 +125,23 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
       ],
     });
 
-    this.solicitud150101Query.seleccionarSolicitud$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((respuesta: Solicitud150101State) => {
-          this.solicitud150101State = respuesta;
-          this.formReporteAnnual.patchValue({
-            ventasTotales: this.solicitud150101State.ventasTotales,
-            totalExportaciones: this.solicitud150101State.totalExportaciones,
-            totalImportaciones: this.solicitud150101State.totalImportaciones,
-            saldo: this.solicitud150101State.saldo,
-            porcentajeExportacion: this.solicitud150101State.porcentajeExportacion,
-          });
-        })
-      )
-      .subscribe();
+    this.inicializarEstadoFormulario();
   }
+
+  /**
+   * @method inicializarEstadoFormulario
+   * @description Inicializa el estado del formulario según si está deshabilitado o no.
+   * Si el formulario está deshabilitado, se deshabilitan todos los campos.
+   * Si no, se habilitan todos los campos.
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.formularioDeshabilitado) {
+      this.formReporteAnnual.disable();
+    } else if (!this.formularioDeshabilitado) {
+      this.formReporteAnnual.enable();
+    }
+  }  
 
   /**
    * @description Actualiza las ventas totales en el store y recalcula el reporte.

@@ -137,13 +137,9 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.formularioDeshabilitado = seccionState.readonly;
-          this.inicializarEstadoFormulario();
         })
       )
-      .subscribe();
-
-    this.obtenerReporteFechas();
-    this.obtenerProgramasReporte();
+      .subscribe();    
   }
 
   /**
@@ -151,37 +147,7 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
-    this.inicializarEstadoFormulario();
-  }
-
-  /**
-   * Inicializa el estado del formulario basado en si es de solo lectura o no.
-   * Si es de solo lectura, llama a `guardarDatosFormulario` para cargar los datos del formulario.
-   * Si no es de solo lectura, inicializa el formulario con `inicializarFormulario`.
-   * @returns {void}
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.formularioDeshabilitado) {
-      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
-    } else {
-      this.inicializarFormulario();
-    }
-  }
-
-  /**
-   * @method guardarDatosFormulario
-   * @description Guarda los datos del formulario y configura el estado de los campos.
-   * Si el formulario es de solo lectura, deshabilita los campos del formulario.
-   * Si no es de solo lectura, habilita los campos del formulario.
-   * @returns {void}
-   */
-  guardarDatosFormulario(): void {
     this.inicializarFormulario();
-    if (this.formularioDeshabilitado) {
-      this.periodoReporteAnual.disable();
-    } else if (!this.formularioDeshabilitado) {
-      this.periodoReporteAnual.enable();
-    }
   }
 
   /**
@@ -191,6 +157,18 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   inicializarFormulario(): void {
+    this.solicitud150101Query.seleccionarSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((respuesta: Solicitud150101State) => {
+          this.solicitud150101State = respuesta;
+        })
+      )
+      .subscribe();
+
+    this.obtenerReporteFechas();
+    this.obtenerProgramasReporte();
+
     this.periodoReporteAnual = this.fb.group({
       reporteAnualFechaInicio: [{ value: this.solicitud150101State?.reporteAnualFechaInicio, disabled: true }],
       reporteAnualFechaFin: [{ value: this.solicitud150101State?.reporteAnualFechaFin, disabled: true }],
@@ -206,28 +184,28 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
       estatus: [{ value: this.solicitud150101State?.estatus, disabled: true }],
     });
 
-    this.solicitud150101Query.seleccionarSolicitud$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((respuesta: Solicitud150101State) => {
-          this.solicitud150101State = respuesta;
-          this.periodoReporteAnual.patchValue({
-            reporteAnualFechaInicio: this.solicitud150101State.reporteAnualFechaInicio,
-            reporteAnualFechaFin: this.solicitud150101State.reporteAnualFechaFin,
-            folioPrograma: this.solicitud150101State.folioPrograma,
-            modalidad: this.solicitud150101State.modalidad,
-            tipoPrograma: this.solicitud150101State.folioPrograma,
-            estatus: this.solicitud150101State.estatus,
-          });
-        })
-      )
-      .subscribe();
+    this.inicializarEstadoFormulario();
+  }  
+
+  /**
+   * @method inicializarEstadoFormulario
+   * @description Inicializa el estado del formulario `periodoReporteAnual` basado en si el formulario está deshabilitado o no.
+   * Si el formulario está deshabilitado, se deshabilita el campo `periodoReporteAnual`.
+   * Si no está deshabilitado, se habilita el campo `periodoReporteAnual`.
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.formularioDeshabilitado) {
+      this.periodoReporteAnual.disable();
+    } else if (!this.formularioDeshabilitado) {
+      this.periodoReporteAnual.enable();
+    }
   }
 
   /**
-     * @description Método para obtener las fechas de inicio y fin del reporte.
-     * Actualiza el estado con las fechas obtenidas del servicio.
-     */
+   * @description Método para obtener las fechas de inicio y fin del reporte.
+   * Actualiza el estado con las fechas obtenidas del servicio.
+   */
   obtenerReporteFechas(): void {
     this.solicitudService
       .obtenerReporteFechas()

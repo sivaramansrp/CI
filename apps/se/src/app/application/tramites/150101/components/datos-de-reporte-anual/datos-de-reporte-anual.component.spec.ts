@@ -4,7 +4,7 @@ import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHE
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { DatosDeReporteAnnualComponent } from './datos-de-reporte-anual.component';
@@ -14,30 +14,30 @@ import { Solicitud150101Query } from '../../estados/solicitud150101.query';
 import { SolicitudService } from '../../services/registro-solicitud-anual.service';
 
 @Injectable()
-class MockSolicitud150101Store {}
+class MockSolicitud150101Store { }
 
 @Injectable()
-class MockSolicitud150101Query {}
+class MockSolicitud150101Query { }
 
 @Injectable()
-class MockSolicitudService {}
+class MockSolicitudService { }
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
   @Input() myCustom;
 }
 
-@Pipe({name: 'translate'})
+@Pipe({ name: 'translate' })
 class TranslatePipe implements PipeTransform {
   transform(value) { return value; }
 }
 
-@Pipe({name: 'phoneNumber'})
+@Pipe({ name: 'phoneNumber' })
 class PhoneNumberPipe implements PipeTransform {
   transform(value) { return value; }
 }
 
-@Pipe({name: 'safeHtml'})
+@Pipe({ name: 'safeHtml' })
 class SafeHtmlPipe implements PipeTransform {
   transform(value) { return value; }
 }
@@ -46,15 +46,15 @@ describe('DatosDeReporteAnnualComponent', () => {
   let fixture;
   let component;
 
-  beforeEach(() => {
+  beforeEach(() => {  
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [FormsModule, ReactiveFormsModule],
       declarations: [
         DatosDeReporteAnnualComponent,
         TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
         MyCustomDirective
       ],
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         FormBuilder,
         { provide: Solicitud150101Store, useClass: MockSolicitud150101Store },
@@ -69,7 +69,7 @@ describe('DatosDeReporteAnnualComponent', () => {
   });
 
   afterEach(() => {
-    component.ngOnDestroy = function() {};
+    component.ngOnDestroy = function () { };
     fixture.destroy();
   });
 
@@ -78,19 +78,25 @@ describe('DatosDeReporteAnnualComponent', () => {
   });
 
   it('should run #ngOnInit()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn().mockReturnValue({
-      patchValue: function() {}
-    });
-    component.solicitud150101State = component.solicitud150101State || {};
-    component.solicitud150101State.ventasTotales = 'ventasTotales';
-    component.solicitud150101State.totalExportaciones = 'totalExportaciones';
-    component.solicitud150101State.totalImportaciones = 'totalImportaciones';
-    component.solicitud150101State.saldo = 'saldo';
-    component.solicitud150101State.porcentajeExportacion = 'porcentajeExportacion';
-    component.solicitud150101Query = component.solicitud150101Query || {};
-    component.solicitud150101Query.seleccionarSolicitud$ = observableOf({});
+    component.solicitud150101Query = {
+      seleccionarSolicitud$: of({
+        "reporteAnualFechaInicio": "01-2024",
+        "reporteAnualFechaFin": "12-2024",
+        "folioPrograma": "2023-9416",
+        "modalidad": "PROSEC",
+        "tipoPrograma": "PROGRAMA NUEVO PRODUCTOR DIRECTO",
+        "estatus": "Vigente - Activo",
+        "ventasTotales": 5000,
+        "totalExportaciones": 3000,
+        "totalImportaciones": 2000,
+        "saldo": 1000,
+        "porcentajeExportacion": 4000
+      })
+    } as any;
+
+    const spy = jest.spyOn(component, 'inicializarFormulario');
     component.ngOnInit();
+    expect(spy).toHaveBeenCalled();
   });
 
   it('should run #obtenerVentasTotales()', async () => {
