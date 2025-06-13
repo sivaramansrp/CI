@@ -1,8 +1,8 @@
-import{AfterViewInit, OnDestroy, OnInit } from '@angular/core';
 import {
   ConsultaioQuery,
   TituloComponent,
-  } from '@libs/shared/data-access-user/src';
+} from '@libs/shared/data-access-user/src';
+import{ OnDestroy, OnInit } from '@angular/core';
 
   import {
     FormBuilder,
@@ -32,7 +32,7 @@ import { Tramite240321Store } from '../../estados/tramite240321Store.store';
   styleUrl: './folio.component.scss',
 })
 
-export class FolioComponent implements OnInit, OnDestroy,AfterViewInit {
+export class FolioComponent implements OnInit, OnDestroy {
 
   /**
    * @property {FormGroup} formularioInfoRegistro
@@ -91,29 +91,15 @@ export class FolioComponent implements OnInit, OnDestroy,AfterViewInit {
                                 takeUntil(this.destroyNotifier$),
                                 map((seccionState)=>{
                                   this.esFormularioSoloLectura = seccionState.readonly; 
+                                  if (this.esFormularioSoloLectura) {
+                                     this.formularioInfoRegistro.disable();
+                                   } else {
+                                     this.formularioInfoRegistro.enable();
+                                   }
                                 })
                               )
                               .subscribe();
     
-  }
-
-  /**
-   * @inheritdoc
-   * @description
-   * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
-   * Suscribe al observable `selectConsultaioState$` para actualizar la propiedad `esFormularioSoloLectura`
-   * según el estado de la sección, y se asegura de cancelar la suscripción cuando el componente se destruye.
-   *
-   * @see https://angular.io/api/core/AfterViewInit
-   *
-   * @memberof FolioComponent
-   */
-  ngAfterViewInit(): void {
-     if(this.esFormularioSoloLectura){
-      this.formularioInfoRegistro.disable();
-    }else{  
-      this.formularioInfoRegistro.enable();
-     }
   }
   /**
    * Inicializa el formulario con los valores del store.
