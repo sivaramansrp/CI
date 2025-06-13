@@ -1951,5 +1951,14 @@
       "diasTranscurridos": "4",
       "departamento": "AGA",
       "numeroDeProcedimiento": "6502"
-    }
+    },
+  {
+    "id": 32501,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32501"
+  }
 ]
