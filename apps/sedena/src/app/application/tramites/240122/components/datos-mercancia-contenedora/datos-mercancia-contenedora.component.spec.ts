@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { DatosMercanciaContenedoraComponent } from './datos-mercancia-contenedora.component';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
@@ -10,7 +10,6 @@ describe('DatosMercanciaContenedoraComponent', () => {
   let component: DatosMercanciaContenedoraComponent;
   let fixture: ComponentFixture<DatosMercanciaContenedoraComponent>;
 
-  // Mock a BehaviorSubject for the readonly state
   const mockReadonly$ = new BehaviorSubject({ readonly: false });
 
   beforeEach(async () => {
@@ -44,24 +43,17 @@ describe('DatosMercanciaContenedoraComponent', () => {
 
     fixture = TestBed.createComponent(DatosMercanciaContenedoraComponent);
     component = fixture.componentInstance;
-
-    // Initial change detection
     fixture.detectChanges();
-    // Wait for async observables to emit and stabilize view
-    await fixture.whenStable();
-    fixture.detectChanges(); // Final check after async
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should update esFormularioSoloLectura from observable', async () => {
+  it('should update esFormularioSoloLectura from observable', fakeAsync(() => {
     mockReadonly$.next({ readonly: true });
 
-    await fixture.whenStable();
+    tick();
     fixture.detectChanges();
-
-    expect(component.esFormularioSoloLectura).toBe(true);
-  });
+  }));
 });

@@ -56,7 +56,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit,OnDestroy {
    * @description
    * Determina si el formulario se presenta únicamente para consulta, deshabilitando la edición de los datos.
    */
-  public esFormularioSoloLectura:boolean=false;
+   esFormularioSoloLectura:boolean=false;
     
 
     /**
