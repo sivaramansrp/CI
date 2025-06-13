@@ -22,16 +22,24 @@
         <ng-container>
             @switch (indice) {
             @case (1) {
+                @if(esDatosRespuesta){
             <solicitante></solicitante>
+                }
             }
             @case (2) {
+                @if(esDatosRespuesta){
             <app-datos-de-la-solicitud></app-datos-de-la-solicitud>
+                }
             }
             @case (3) {
+                @if(esDatosRespuesta){
             <app-revision-documental></app-revision-documental>
+                }
             }
             @case (4) {
+                @if(esDatosRespuesta){
             <app-pago-de-derechos></app-pago-de-derechos>
+                }
             }
             }
         </ng-container>
