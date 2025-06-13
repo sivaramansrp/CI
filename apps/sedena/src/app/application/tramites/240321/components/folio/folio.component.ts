@@ -1,10 +1,7 @@
 import{AfterViewInit, OnDestroy, OnInit } from '@angular/core';
 import {
-  CatalogoSelectComponent,
   ConsultaioQuery,
-  TablaDinamicaComponent, 
   TituloComponent,
-  UppercaseDirective 
   } from '@libs/shared/data-access-user/src';
 
   import {
@@ -28,10 +25,7 @@ import { Tramite240321Store } from '../../estados/tramite240321Store.store';
   imports: [
     ReactiveFormsModule,
     CommonModule,
-    UppercaseDirective,
-    CatalogoSelectComponent,
     FormsModule,
-    TablaDinamicaComponent,
     TituloComponent,
   ],
   templateUrl: './folio.component.html',
