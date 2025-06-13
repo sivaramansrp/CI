@@ -114,8 +114,9 @@ describe('DeLaMuestraComponent', () => {
   });
 
   it('should show modal when folio length > 25', () => {
-    component.Informaciondela = component.fb.group({
-      datosImportadorExportador: component.fb.group({
+    const fb = (component as any).fb;
+    component.Informaciondela = fb.group({
+      datosImportadorExportador: fb.group({
         folio: ['A'.repeat(26)],
         mercancia: ['1']
       })
@@ -137,8 +138,9 @@ describe('DeLaMuestraComponent', () => {
   });
 
   it('should disable form when esFormularioSoloLectura is true in guardarDatosFormulario', () => {
-    component.Informaciondela = component.fb.group({
-      datosImportadorExportador: component.fb.group({
+    const fb = (component as any).fb;
+    component.Informaciondela = fb.group({
+      datosImportadorExportador: fb.group({
         folio: ['123'],
         mercancia: ['1']
       })
