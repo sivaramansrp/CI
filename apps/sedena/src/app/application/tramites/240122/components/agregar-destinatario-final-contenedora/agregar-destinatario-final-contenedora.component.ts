@@ -102,7 +102,7 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit,OnDe
    * @param {DestinoFinal[]} event - Lista de destinatarios finales actualizada.
    * @returns {void}
    * @remarks Este método se utiliza para propagar los cambios en la lista de destinatarios finales al estado global.
-  
+   */
   updateDestinatarioFinalTablaDatos(event: DestinoFinal[]): void {
     this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
   }
