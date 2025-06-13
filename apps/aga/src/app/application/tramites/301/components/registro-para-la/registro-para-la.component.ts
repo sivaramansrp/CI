@@ -1,24 +1,9 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable no-empty-function */
-/* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  AVISO,
-  ConsultaioQuery,
-  IMPORTANTE,
-} from '@ng-mf/data-access-user';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-
-import {
-  Solicitud301State,
-  Tramite301Store,
-} from '../../../../core/estados/tramites/tramite301.store';
-import { Subject, Subscription, map, takeUntil } from 'rxjs';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, IMPORTANTE} from '@ng-mf/data-access-user';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
+import { Solicitud301State, Tramite301Store } from '../../../../core/estados/tramites/tramite301.store';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AlertComponent } from 'libs/shared/data-access-user/src/tramites/components/alert/alert.component';
 import { BtnContinuarComponent } from 'libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
@@ -26,6 +11,7 @@ import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramit
 import { CommonModule } from '@angular/common';
 import { DatosPasos } from 'libs/shared/data-access-user/src/core/models/shared/components.model';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
+import { Pantallas301Service } from '../../services/pantallas301.service';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 
@@ -54,6 +40,8 @@ import { Tramite301Query } from '../../../../core/queries/tramite301.query';
 })
 export class RegistroParaLaComponent implements OnInit, OnDestroy {
 
+  /** Emite el valor de la sección seleccionada al componente padre. */
+  @Output() emitirElValorSeleccionado: EventEmitter<string> = new EventEmitter<string>();
 
   /**
    * Formulario principal del componente.
@@ -72,13 +60,8 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
    */
   public TEXTOS = IMPORTANTE;
 
-  /**
-   * Constantes importadas desde el archivo de enumeración para los mensajes de advertencia.
-   *
-   * @type {AVISO}
-   * @memberof RegistroParaLaComponent
-   */
-  public ADVERTENCIA = AVISO;
+  /** Controla la visibilidad de un campo específico en la interfaz. */
+  public mostrarCampo: boolean = false;
 
   /**
    * Índice del paso actual en el formulario.
@@ -123,14 +106,6 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
   };
 
   /**
-   * Suscripción a los cambios en el formulario reactivo.
-   *
-   * @type {Subscription}
-   * @memberof RegistroParaLaComponent
-   */
-  private subscription: Subscription = new Subscription();
-
-  /**
    * Estado de la solicitud de la sección 301.
    */
   public solicitudState!: Solicitud301State;
@@ -140,11 +115,15 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
-  /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
-  esFormularioSoloLectura: boolean = false; 
+/**
+   * @property consultaState
+   * @type {ConsultaioState}
+   * @public
+   * @description
+   * Almacena el estado actual de la consulta obtenido desde el store.
+   * Se utiliza para controlar el flujo y la visualización de datos en el componente.
+   */
+  public consultaState!: ConsultaioState; 
 
   /**
    * Constructor del componente `RegistroParaLaComponent`.
@@ -158,7 +137,19 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
     private tramite301Store: Tramite301Store,
     private tramite301Query: Tramite301Query,
     private consultaioQuery: ConsultaioQuery,
+    private pantallas301Service: Pantallas301Service
   ) {
+    //
+  }
+
+  /**
+   * Método que se ejecuta cuando el componente es inicializado.
+   * Este método se encarga de obtener los datos necesarios para inicializar el formulario de registro,
+   * incluyendo las opciones para el campo de importaciones/exportaciones.
+   *
+   * @memberof RegistroParaLaComponent
+   */
+  ngOnInit(): void {
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
      *
@@ -170,21 +161,17 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
-       this.esFormularioSoloLectura = seccionState.readonly;
+       this.consultaState = seccionState;
+       this.inicializarFormulario();
       })
     )
     .subscribe()
-  }
-
-  /**
-   * Método que se ejecuta cuando el componente es inicializado.
-   * Este método se encarga de obtener los datos necesarios para inicializar el formulario de registro,
-   * incluyendo las opciones para el campo de importaciones/exportaciones.
-   *
-   * @memberof RegistroParaLaComponent
-   */
-  ngOnInit(): void {
-    this.inicializarFormulario();
+    this.getRegistro();
+    if (this.consultaState.update) {
+      this.mostrarCampo = true;
+    } else {
+      this.mostrarCampo = this.pantallas301Service.obtenerRegistroCampoVisibilidad();
+    }
   }
 
  /**
@@ -194,17 +181,14 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
   * con el valor inicial obtenido del store.
   */
   inicializarFormulario(): void {
-    this.subscription.add(
-      this.tramite301Query.selectSolicitud$
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          map((seccionState) => {
-            this.solicitudState = seccionState;
-          })
-        )
-        .subscribe()
-    );
-    this.getRegistro(); // Llama al método para obtener los datos de registro
+    this.tramite301Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
 
     /**
      * Crea un formulario reactivo (`FormGroup`) con el campo `registro`,
@@ -212,15 +196,18 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
      * El campo es requerido.
      */
     this.registroParaLaForm = this.fb.group({
-      registro: [{value: this.solicitudState?.registro, disable: false}, Validators.required],
+      registro: [this.solicitudState?.registro, Validators.required],
     });
 
     /**
      * Si el procedimiento está en modo solo lectura (`readonly`),
      * se desactiva el campo `registro` para evitar modificaciones por parte del usuario.
      */
-    if(this.esFormularioSoloLectura) {
+    if(this.consultaState.readonly) {
         this.registroParaLaForm.get('registro')?.disable();
+    }
+    if (this.consultaState.update) {
+      this.emitirElValorSeleccionado.emit(this.solicitudState?.registro);
     }
   }
 
@@ -257,7 +244,18 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Tramite301Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    (this.tramite301Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.tramite301Store[metodoNombre] as (value: unknown) => void)(VALOR);
+    this.emitirElValorSeleccionado.emit(VALOR);
+  }
+
+  /**
+ * Activa la visualización del campo si aún no está visible.
+ * @returns {void}
+ * @memberof RegistroParaLaComponent
+ */
+  iniciar(): void {
+    this.pantallas301Service.actualizarRegistroCampo();
+    this.mostrarCampo = this.pantallas301Service.obtenerRegistroCampoVisibilidad();
   }
 
   /**
@@ -267,7 +265,6 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
    * @memberof RegistroParaLaComponent
    */
   ngOnDestroy(): void {
-    this.subscription.unsubscribe();
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
