@@ -73,6 +73,17 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit,OnDe
   constructor(public tramiteStore: Tramite240122Store, public tramiteQuery: Tramite240122Query,private readonly consultaioQuery:ConsultaioQuery) {
     this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
   }
+    /**
+   * @inheritdoc
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe al observable del estado de consulta para actualizar la propiedad
+   * `esFormularioSoloLectura` según el estado de solo lectura (`readonly`) de la sección.
+   * La suscripción se mantiene activa hasta que se emite un valor en `destroyNotifier$`,
+   * lo que previene fugas de memoria.
+   *
+   * @returns {void}
+   */
   ngOnInit(): void {
      this.consultaioQuery.selectConsultaioState$
     .pipe(
@@ -91,7 +102,7 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit,OnDe
    * @param {DestinoFinal[]} event - Lista de destinatarios finales actualizada.
    * @returns {void}
    * @remarks Este método se utiliza para propagar los cambios en la lista de destinatarios finales al estado global.
-   */
+  
   updateDestinatarioFinalTablaDatos(event: DestinoFinal[]): void {
     this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
   }
