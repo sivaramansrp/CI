@@ -1953,12 +1953,30 @@
     "numeroDeProcedimiento": "32501"
   },
   {
-    "id": 260918,
-    "tipoDeTramite": "Solicitud de se Permiso",
+      "id": 240111,
+      "tipoDeTramite": "Solicitud de Permiso",
+      "fecha": "2023-11-03",
+      "fechaActualizacion": "2023-03-20",
+      "diasTranscurridos": "4",
+      "departamento": "SEDENA",
+      "numeroDeProcedimiento": "240111"
+},
+   {
+    "id": 270301,
+    "tipoDeTramite": "Solicitud de cs Permiso",
     "fecha": "2023-10-01",
     "fechaActualizacion": "2023-10-05",
     "diasTranscurridos": "4",
-    "departamento": "COFEPRIS",
-    "numeroDeProcedimiento": "260918"
+    "departamento": "INBAL",
+    "numeroDeProcedimiento": "270301"
+  },
+  {
+        "id": 260918,
+        "tipoDeTramite": "Solicitud de se Permiso",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "COFEPRIS",
+        "numeroDeProcedimiento": "260918"
   }
 ]
