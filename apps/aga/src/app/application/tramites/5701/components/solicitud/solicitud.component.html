@@ -307,6 +307,7 @@
           name="fechaInicio"
           id="fechaInicio"
           formControlName="fechaInicio"
+          placeholder="dd/mm/yyyy"
           [ngClass]="isValid(datosServicio, 'fechaInicio') ? 'required' : ''"
           (change)="changeFechaInicio()"
           (keydown)="$event.preventDefault()"

@@ -2651,13 +2651,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @param tipoTransporte {string} - El tipo de transporte seleccionado.
    * @returns {void} No retorna ningún valor.
    */
-  changeSeleccionTipoVehiculo(tipoTransporte: string): void {
+  changeSeleccionTipoVehiculo(tipoTransporte: string): void {  
     this.transporteArriboSalida.get('tipoTransporte')?.setValue(tipoTransporte);
     this.setValoresStore(
       this.transporteArriboSalida,
-      'tipoTransporteArriboSalida',
+      'tipoTransporte',
       'setTipoTransporteArriboSalida'
-    );
+    );    
   }
 
   /**
