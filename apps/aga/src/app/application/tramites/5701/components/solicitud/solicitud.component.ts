@@ -15,7 +15,9 @@ import {
   MSG_ERROR_RFC_NO_ENCONTRADO,
   MSG_MONTO_PAGADO_CUBIERTO,
   MSJ_ERROR_FECHA,
+  MSJ_ERROR_ID_SOCIO_COMERCIAL,
   MSJ_ERROR_LINEA_CAPTURA,
+  MSJ_ERROR_RFC_NO_VALIDO,
   MSJ_LINEA_CAPTURA_NO_PAGADA,
   MSJ_LINEA_CAPTURA_USADA,
   PATENTES_ID,
@@ -672,10 +674,18 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   /**
    * Verifica si el control 'idSocioComercial' tiene el validador 'Validators.required'.
    *
-   * @returns {boolean} `true` si el control es requerido, de lo contrario `false`.
+   * @returns {boolean} `true` si el control es obligatorio, de lo contrario `false`.
    */
+  // eslint-disable-next-line class-methods-use-this
   isRequired(form: FormGroup, field: string): boolean | null {
-    return this.validacionesService.errorCampoRequerido(form, field);
+    const CONTROL = form.get(field) as FormControl;
+
+    if (CONTROL) {
+      const ERROR_PATTERN = CONTROL.hasError('required');
+      return ERROR_PATTERN && CONTROL.touched;
+    }
+
+    return false;
   }
 
   /**
@@ -1084,60 +1094,72 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   validaRfc(): void {
-    if (this.datosImportadorExportador.get('RFCImpExp')?.valid) {
-      const RFC_IMP_EXP =
-        this.datosImportadorExportador.get('RFCImpExp')?.value;
-
-      this.validaRfcService
-        .getValidacionRfc(RFC_IMP_EXP)
-        .pipe(
-          takeUntil(this.destroyNotifier$),
-          switchMap((validacionResponse) => {
-            if (validacionResponse) {
-              this.muestraCertificaciones = !validacionResponse.datos;
-              this.tramite5701Store.setRfcGenerico(validacionResponse.datos);
-
-              if (validacionResponse.datos) {
-                // Aqui se hará la busqueda del rfc, para obtener el nombre
-                SolicitudComponent.llenarCamposDesactivados(
-                  this.datosImportadorExportador,
-                  'nombre',
-                  RFC_GENERICO
-                );
-                this.tramite5701Store.setNombre(RFC_GENERICO);
-                return EMPTY;
-              }
-              return this.idcService
-                .getInformacionContribuyente(RFC_IMP_EXP)
-                .pipe(tap());
-            }
-            return EMPTY;
-          }),
-          tap((idcResponse) => {
-            const NOMBRE = idcResponse.datos?.nombre
-              ? idcResponse.datos?.nombre
-              : idcResponse.datos?.razon_social;
-            if (NOMBRE) {
-              this.datosImportadorExportador.get('nombre')?.setValue(NOMBRE);
-              this.getCertificaciones(RFC_IMP_EXP);
-            } else {
-              this.nuevaNotificacion = {
-                tipoNotificacion: 'alert',
-                categoria: 'danger',
-                modo: 'action',
-                titulo: 'Avisos',
-                mensaje: MSG_ERROR_RFC_NO_ENCONTRADO,
-                cerrar: false,
-                txtBtnAceptar: 'Aceptar',
-                txtBtnCancelar: '',
-              };
-            }
-          })
-        )
-        .subscribe();
-
-      this.tramite5701Store.setRFCImportadorExportador(RFC_IMP_EXP);
+    const RFC_IMP_EXP = this.datosImportadorExportador.get('RFCImpExp')?.value;
+    if (RFC_IMP_EXP && !this.datosImportadorExportador.get('RFCImpExp')?.valid) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Avisos',
+        mensaje: MSJ_ERROR_RFC_NO_VALIDO,
+        cerrar: false,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+      this.datosImportadorExportador.get('RFCImpExp')?.reset();
+      return;
     }
+
+
+    this.validaRfcService
+      .getValidacionRfc(RFC_IMP_EXP)
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        switchMap((validacionResponse) => {
+          if (validacionResponse) {
+            this.muestraCertificaciones = !validacionResponse.datos;
+            this.tramite5701Store.setRfcGenerico(validacionResponse.datos);
+
+            if (validacionResponse.datos) {
+              // Aqui se hará la busqueda del rfc, para obtener el nombre
+              SolicitudComponent.llenarCamposDesactivados(
+                this.datosImportadorExportador,
+                'nombre',
+                RFC_GENERICO
+              );
+              this.tramite5701Store.setNombre(RFC_GENERICO);
+              return EMPTY;
+            }
+            return this.idcService
+              .getInformacionContribuyente(RFC_IMP_EXP)
+              .pipe(tap());
+          }
+          return EMPTY;
+        }),
+        tap((idcResponse) => {
+          const NOMBRE = idcResponse.datos?.nombre
+            ? idcResponse.datos?.nombre
+            : idcResponse.datos?.razon_social;
+          if (NOMBRE) {
+            this.datosImportadorExportador.get('nombre')?.setValue(NOMBRE);
+            this.getCertificaciones(RFC_IMP_EXP);
+          } else {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: 'Avisos',
+              mensaje: MSG_ERROR_RFC_NO_ENCONTRADO,
+              cerrar: false,
+              txtBtnAceptar: 'Aceptar',
+              txtBtnCancelar: '',
+            };
+          }
+        })
+      )
+      .subscribe();
+
+    this.tramite5701Store.setRFCImportadorExportador(RFC_IMP_EXP);
   }
 
   /**
@@ -1264,8 +1286,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {void} No retorna ningún valor.
    */
   validaCampoPedimento(): void {
-    const ADUANA_VALIDACION = parseInt(this.solicitudState?.idAduanaDespacho, 10);
-    
+    const ADUANA_VALIDACION = parseInt(
+      this.solicitudState?.idAduanaDespacho,
+      10
+    );
+
     if (ADUANA_VALIDACION < 0) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
@@ -1475,7 +1500,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.pagoCaptura.get('montoAPagar')?.enable();
     this.pagoCaptura.get('montoAPagar')?.setValue(this.montoACubrir);
     this.pagoCaptura.get('montoAPagar')?.disable();
-    this.colapsable = true;
+    this.colapsable =
+      this.tipoSolicitudSeleccionada !== TIPO_SOLICITUD.INDIVIDUAL
+        ? false
+        : true;
 
     this.setValoresStore(this.pagoCaptura, 'montoAPagar', 'setMontoPagar');
   }
@@ -1922,30 +1950,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         'setIdAduanaDespacho'
       );
     }
-  }
-
-  /**
-   * Cambia el valor del campo idSocioComercial y actualiza el store correspondiente.
-   *
-   * @returns {void} No retorna ningún valor.
-   */
-  public onIdSocioComercialChange(): void {
-    const ID_SOCIO_COMERCIAL: string =
-      this.datosImportadorExportador.get('idSocioComercial')?.value;
-    this.socioComercial
-      .getSocioComercial(ID_SOCIO_COMERCIAL)
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((response) => {
-          this.tramite5701Store.setBlnSocioComercial(response.datos);
-        })
-      )
-      .subscribe();
-    this.setValoresStore(
-      this.datosImportadorExportador,
-      'idSocioComercial',
-      'setIdSocioComercial'
-    );
   }
 
   /**
@@ -2695,5 +2699,48 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   limpiarNotificacion(): void {
     this.nuevaNotificacion = null;
     this.procesoModal = '';
+  }
+
+  /**
+   * @description Valida el ID del socio comercial
+   * @returns {void} No retorna ningún valor.
+   */
+  validarIDSocioComercial(): void {
+    const ID_SOCIO_COMERCIAL: string =
+      this.datosImportadorExportador.get('idSocioComercial')?.value;
+
+    if (ID_SOCIO_COMERCIAL && ID_SOCIO_COMERCIAL) {
+      this.socioComercial
+        .getSocioComercial(ID_SOCIO_COMERCIAL)
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          tap((response) => {
+            if (!response.datos) {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'alert',
+                categoria: 'danger',
+                modo: 'action',
+                titulo: TITULO_MODAL_ERROR,
+                mensaje: MSJ_ERROR_ID_SOCIO_COMERCIAL,
+                cerrar: false,
+                txtBtnAceptar: 'Aceptar',
+                txtBtnCancelar: '',
+              };
+              return EMPTY;
+            }
+            this.tramite5701Store.setBlnSocioComercial(response.datos);
+            this.setValoresStore(
+              this.datosImportadorExportador,
+              'idSocioComercial',
+              'setIdSocioComercial'
+            );
+            return response;
+          }),
+          catchError((error) => {
+            return throwError(() => error);
+          })
+        )
+        .subscribe();
+    }
   }
 }

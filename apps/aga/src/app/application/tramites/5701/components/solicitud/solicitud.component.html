@@ -84,14 +84,16 @@
               isValid(datosImportadorExportador, 'RFCImpExp') ? 'required' : ''
             "
             libUppercase
-            (change)="validaRfc()"
+            (blur)="validaRfc()"
           />
+
           <div
             *ngIf="isRequired(datosImportadorExportador, 'RFCImpExp')"
             class="mensaje-error"
           >
-            Este campo es requerido.
+            Este campo es obligatorio.
           </div>
+
           <div *ngIf="isErrorPattern('RFCImpExp')" class="mensaje-error">
             RFC no es válido.
           </div>
@@ -141,6 +143,12 @@
                 )
               "
             />
+            <div
+              *ngIf="isErrorPattern('setDescripcionNumeroRegistro')"
+              class="mensaje-error"
+            >
+              Por favor, ingresa caracteres alfanuméricos.
+            </div>
           </div>
         </div>
       </div>
@@ -269,13 +277,13 @@
                   ? 'required'
                   : ''
               "
-              (change)="onIdSocioComercialChange()"
+              (blur)="validarIDSocioComercial()"
             />
             <div
               *ngIf="isRequired(datosImportadorExportador, 'idSocioComercial')"
               class="mensaje-error"
             >
-              Este campo es requerido.
+              Este campo es obligatorio.
             </div>
             <div
               *ngIf="isErrorPattern('idSocioComercial')"
@@ -308,7 +316,7 @@
           *ngIf="isRequired(datosServicio, 'fechaInicio')"
           class="mensaje-error"
         >
-          Este campo es requerido.
+          Este campo es obligatorio.
         </div>
       </div>
 
@@ -342,7 +350,7 @@
           *ngIf="isRequired(datosServicio, 'fechaFinal')"
           class="mensaje-error"
         >
-          Este campo es requerido.
+          Este campo es obligatorio.
         </div>
       </div>
 
@@ -665,6 +673,12 @@
               )
             "
           ></textarea>
+          <div
+            *ngIf="isRequired(mercancia, 'descripcionGenerica')"
+            class="mensaje-error"
+          >
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
 
@@ -682,6 +696,12 @@
               setValoresStore(mercancia, 'justificacion', 'setJustificacion')
             "
           ></textarea>
+          <div
+            *ngIf="isRequired(mercancia, 'justificacion')"
+            class="mensaje-error"
+          >
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
     </div>
