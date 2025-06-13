@@ -4,6 +4,7 @@
   [catalogosArray]="catalogosArray"
   [solicitudOpciones]="opcionesSolicitud"
   (setValoresStoreEvent)="setValoresStore($event)"
+  [esFormularioSoloLectura] ="esFormularioSoloLectura"
 ></app-datos-del-tramite>
 
 <app-datos-de-la-mercancia
@@ -12,6 +13,7 @@
   [fraccionCatalogo]="fraccionCatalogo"
   [unidadCatalogo]="unidadCatalogo"
   (setValoresStoreEvent)="setValoresStore($event)"
+  [esFormularioSoloLectura] ="esFormularioSoloLectura"
 ></app-datos-de-la-mercancia>
 
 
@@ -25,7 +27,7 @@
   (filaSeleccionadaChange)="manejarlaFilaSeleccionada($event)"
   (validarYEnviarFormularioEvent)="validarYEnviarFormulario()"
   (navegarParaModificarPartidaEvent)="navegarParaModificarPartida()"
-  
+  [esFormularioSoloLectura] ="esFormularioSoloLectura"
   (setValoresStoreEvent)="setValoresStore($event)"
 ></app-partidas-de-la-mercancia>
 
@@ -37,6 +39,7 @@
 [selectRangoDias]="selectRangoDias"
 (bloqueCambiar)="enCambioDeBloque($event)"
 (setValoresStoreEvent)="setValoresStore($event)"
+[esFormularioSoloLectura] ="esFormularioSoloLectura"
 ></app-pais-procendencia>
 
 <app-representacion 
@@ -44,5 +47,6 @@
 [entidadFederativa]="entidadFederativa"
 [representacionFederal]="representacionFederal"
 [TEXTOS]="TEXTOS"
-(setValoresStoreEvent)="setValoresStore($event)">
+(setValoresStoreEvent)="setValoresStore($event)"
+[esFormularioSoloLectura] ="esFormularioSoloLectura">
 </app-representacion>
