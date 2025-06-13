@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosProcedureQuery } from '../../../../estados/queries/tramites261103.query';
 import { DatosProcedureState } from '../../../../estados/tramites/tramites261103.store';
 import { DatosProcedureStore } from '../../../../estados/tramites/tramites261103.store';
@@ -14,6 +15,7 @@ import { Subject } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-representante-legal',
@@ -52,6 +54,17 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
  */
   private seccionState!: DatosProcedureState;
   
+
+  /**
+   * Subject para notificar la destrucción del componente.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+  
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
   /**
    * Constructor para SolicitanteComponent.
    * 
@@ -60,8 +73,17 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
   constructor(private fb: FormBuilder,
     private store: DatosProcedureStore,
     private query: DatosProcedureQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // Constructor del componente
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState: { readonly: boolean })=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+      })
+    )
+    .subscribe()
   }
 
   /**
@@ -81,6 +103,14 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
  * Los controles del formulario incluyen:
  */
   public establecerdomicilioEstablecimiento(): void {
+    this.query.selectProrroga$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.seccionState = seccionState;
+      })
+    )
+    .subscribe()
     this.domicilioEstablecimiento = this.fb.group({
       representanteLegalRFC: [{ value: this.seccionState?.representanteLegalRFC,disabled:false},[Validators.required]],
       buscar: [{ value: this.seccionState?.buscar,disabled:false },[Validators.required]],
@@ -88,6 +118,11 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
       representanteLegalApPaterno: [{ value: this.seccionState?.representanteLegalApPaterno ,disabled:false},[Validators.required]],
       representanteLegalApMaterno: [{ value: this.seccionState?.representanteLegalApMaterno,disabled:false },[Validators.required]],
     });
+    if (this.esFormularioSoloLectura) {
+      this.domicilioEstablecimiento.disable();
+    }else{
+      this.domicilioEstablecimiento.enable();
+    }
   }
 
    /**
@@ -124,5 +159,21 @@ obtenerDatosFormulario():void{
     this.seccionState = data;
   });
 }
+
+/**
+ * Inicializa el estado del formulario.
+ * 
+ * Este método realiza las siguientes acciones:
+ * 1. Obtiene los datos del formulario desde el estado mediante el método `obtenerDatosFormulario`.
+ * 2. Configura el formulario reactivo para el domicilio del representante legal utilizando el método `establecerdomicilioEstablecimiento`.
+ * 
+ * Es útil para establecer los valores iniciales del formulario y sincronizarlos con el estado global de la aplicación.
+ * 
+ * @returns {void}
+ */
+inicializarEstadoFormulario(): void {
+  this.obtenerDatosFormulario();
+  this.establecerdomicilioEstablecimiento();        
+    }
 }
 
