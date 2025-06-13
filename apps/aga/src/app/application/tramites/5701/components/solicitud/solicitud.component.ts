@@ -101,6 +101,7 @@ import {
   Solicitud5701State,
   Tramite5701Store,
 } from '../../../../core/estados/tramites/tramite5701.store';
+import { BodyValidarRFCAutorizacionLDA } from '../../../../core/models/5701/validaciones-depacho.model';
 import { CatalogoLista } from '@libs/shared/data-access-user/src/core/models/shared/tipo-solicitud.model';
 import { CertificacionOeaService } from '../../../../core/services/5701/certificacion-oea.service';
 import { CertificacionOrigenService } from '../../../../core/services/5701/certificacion-origen.service';
@@ -148,7 +149,6 @@ import {
   MSJ_LINEA_CAPTURA_USADA,
 } from '../../../../core/enums/5701/mensajes-modal-5701.enum';
 import { ValidaDespachoService } from '../../../../core/services/5701/valida-despacho.service';
-import { BodyValidarRFCAutorizacionLDA } from '../../../../core/models/5701/validaciones-depacho.model';
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
