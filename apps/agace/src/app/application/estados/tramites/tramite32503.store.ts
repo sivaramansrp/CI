@@ -1,4 +1,4 @@
-import { ArchivoDocumentos, AvisoFormulario, DatosSolicitante, DomicilioFormulario, MercanciaFormulario, TipoDocumento } from '../../tramites/32503/models/aviso-traslado.model';
+import { ArchivoDocumentos, AvisoFormulario, AvisoTabla, DatosSolicitante, DomicilioFormulario, MercanciaFormulario, TipoDocumento } from '../../tramites/32503/models/aviso-traslado.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
@@ -29,6 +29,7 @@ export interface Tramite32503State {
   tipoDocumento: string;
   documentosDesplegable: ArchivoDocumentos[];
   valorSeleccionado: string[];
+  tablaDeDatos: AvisoTabla[]
 }
 /**
  * Estado inicial del trámite 32503.
@@ -43,7 +44,7 @@ export interface Tramite32503State {
 export function createInitialState(): Tramite32503State {
   return {
     pasoActivo: 1,
-    pestanaActiva: 1,
+    pestanaActiva: 2,
     datosSolicitante: {
       rfc: "",
       denominacion: "",
@@ -105,7 +106,8 @@ export function createInitialState(): Tramite32503State {
     tipoTablaDatos: [],
     tipoDocumento: '',
     documentosDesplegable: [],
-    valorSeleccionado: []
+    valorSeleccionado: [],
+    tablaDeDatos: []
   };
 }
 /**
@@ -614,6 +616,33 @@ export class Tramite32503Store extends Store<Tramite32503State> {
     this.update((state) => ({
       ...state,
       tipoTablaDatos,
+    }));
+  }
+  /**
+ * Actualiza el formulario de aviso en el estado del trámite.
+ * 
+ * Este método permite establecer los datos del formulario de aviso en el estado del trámite.
+ * 
+ * @param {AvisoFormulario} avisoFormulario - Objeto que contiene los datos del formulario de aviso.
+ */
+  public setAvisoFormulario(avisoFormulario: AvisoFormulario): void {
+    this.update((state) => ({
+      ...state,
+      avisoFormulario,
+    }));
+  }
+
+  /**
+   * Actualiza la tabla de datos en el estado del trámite.
+   * 
+   * Este método permite establecer los datos de la tabla en el estado del trámite.
+   * 
+   * @param {AvisoTabla[]} tablaDeDatos - Lista de datos que se mostrarán en la tabla.
+   */
+  public setTablaDeDatos(tablaDeDatos: AvisoTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      tablaDeDatos,
     }));
   }
 }

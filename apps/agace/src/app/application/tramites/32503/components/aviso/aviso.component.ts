@@ -1,22 +1,23 @@
-import { 
-AlertComponent,
-CatalogoSelectComponent,
-InputFecha,
-InputFechaComponent,
-InputRadioComponent,
-REGEX_ALFANUMERICO_CON_ESPACIOS,
-REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR,
-REGEX_IMPORTE_PAGO,
-REGEX_NUMEROS,
-REGEX_NUMEROS_USD,
-REGEX_REEMPLAZAR,
-REGEX_SOLO_NUMEROS,
-TablaDinamicaComponent,
-TablaSeleccion,
-TituloComponent,
-ValidacionesFormularioService
- } from "@libs/shared/data-access-user/src";
+import {
+  AlertComponent,
+  CatalogoSelectComponent,
+  InputFecha,
+  InputFechaComponent,
+  InputRadioComponent,
+  REGEX_ALFANUMERICO_CON_ESPACIOS,
+  REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR,
+  REGEX_IMPORTE_PAGO,
+  REGEX_NUMEROS,
+  REGEX_NUMEROS_USD,
+  REGEX_REEMPLAZAR,
+  REGEX_SOLO_NUMEROS,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+  ValidacionesFormularioService
+} from "@libs/shared/data-access-user/src";
 import { AvisoTabla, AvisoTablaDatos, Catalogo, CatalogoLista, MercanciaTabla, MercanciaTablaDatos } from "../../models/aviso-traslado.model";
+import { ConsultaioQuery, ConsultaioState } from '@libs/shared/data-access-user/src';
 import { FECHA_INGRESO, TEXTOS, TIPACA, TIPAVI } from "../../constants/aviso-traslado.enum";
 import { AvisoTrasladoService } from "../../services/aviso-traslado.service";
 import { CommonModule } from "@angular/common";
@@ -271,7 +272,17 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * Esta propiedad se utiliza para gestionar y almacenar datos de notificaciones.
    */
   public nuevaNotificacion!: Notificacion;
-
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
   /**
    * Constructor del componente.
    * 
@@ -287,6 +298,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     public tramiteQuery: Tramite32503Query,
     public avisoTrasladoService: AvisoTrasladoService,
     private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery,
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -304,7 +316,17 @@ export class AvisoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.inicializarFormulario();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+    this.tablaDeDatos.datos = this.tramiteState.tablaDeDatos ?? [];
     this.inicializarDomicilioFormulario();
     this.cargarFederativa();
     this.cargarMunicipio();
@@ -312,6 +334,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.inicializarMercanciaFormulario();
     this.cargarFraccionArancelaria();
     this.cargarUnidadMedida();
+    this.inicializarFormulario();
   }
   /**
    * @method setValoresStore
@@ -468,7 +491,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
         tipoAviso: [this.tramiteState?.avisoFormulario?.tipoAviso, [Validators.required]],
         idTransaccion: [this.tramiteState?.avisoFormulario?.idTransaccion, [Validators.maxLength(25), Validators.pattern(REGEX_IMPORTE_PAGO)]],
         motivoProrroga: [this.tramiteState?.avisoFormulario?.motivoProrroga, [Validators.required, Validators.maxLength(250)]],
-        fechaTranslado: [{ value: this.tramiteState?.avisoFormulario?.fechaTranslado, disabled: true }, Validators.required],
+        fechaTranslado: [this.tramiteState?.avisoFormulario?.fechaTranslado, [Validators.required]],
       }),
       direccionOrigen: this.fb.group({
         nombreComercial: [this.tramiteState?.avisoFormulario?.nombreComercial, [Validators.maxLength(250)]],
@@ -485,6 +508,24 @@ export class AvisoComponent implements OnInit, OnDestroy {
 
     });
     this.verificaTipoAviso();
+    this.inicializarEstadoFormulario();
+  }
+  /**
+   * Inicializa el estado de los formularios según el modo de solo lectura.
+   * 
+   * Este método habilita o deshabilita los formularios dependiendo del valor de la propiedad `soloLectura`.
+   * Si `soloLectura` es `true`, los formularios se deshabilitan; de lo contrario, se habilitan.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.avisoFormulario?.disable();
+      this.domicilioFormulario?.disable();
+      this.mercanciaFormulario?.disable();
+    } else {
+      this.avisoFormulario?.enable();
+      this.domicilioFormulario?.enable();
+      this.mercanciaFormulario?.enable();
+    }
   }
   /**
    * @method adaceFormulario
