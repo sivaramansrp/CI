@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { distinctUntilChanged, Subject, takeUntil} from 'rxjs';
+import { Subject, distinctUntilChanged, takeUntil} from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Notificacion} from '@libs/shared/data-access-user/src';
 import { NotificacionesComponent } from "@libs/shared/data-access-user/src/tramites/components/notificaciones/notificaciones.component";
