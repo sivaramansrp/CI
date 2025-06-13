@@ -1,0 +1,10 @@
+{
+  "modalidad": "string",
+  "Estado": "Catalogo[]",
+  "RepresentacionFederal": "Catalogo[]",
+  "ActividadProductiva": "Catalogo[]",
+  "Sector": "Catalogo[]",
+  "Fraccion_arancelaria": "string",
+  "contribuyentes": "string",
+  "formaValida": "Catalogo[]"
+}
