@@ -22,7 +22,7 @@
             [layout]="'horizontal'"
             [gap]="'50px'"
             formControlName="ideGenerica2"
-            (change)="verificaRadioTipoSem()"
+            (valueChange)="verificaRadioTipoSem($event)"
           ></app-input-radio>
         </div>
       </div>
@@ -152,6 +152,7 @@
                   [placeholder]="'Seleccione un valor'"
                   [catalogo]="entidadFederativa"
                   formControlName="cveEntidad"
+                  [isDisabled]="esFormularioSoloLectura"
                 >
                 </app-catalogo-select>
               </div>
@@ -164,6 +165,7 @@
                 [label]="'Alcaldía o Municipio'"
                 [required]="true"
                 name="cveFraccionArancelaria"
+                [isDisabled]="esFormularioSoloLectura"
               ></app-catalogo-select>
             </div>
           </div>
@@ -177,6 +179,7 @@
                 "
                 [required]="true"
                 name="cveTipoDoc"
+                [isDisabled]="esFormularioSoloLectura"
               ></app-catalogo-select>
             </div>
           </div>
