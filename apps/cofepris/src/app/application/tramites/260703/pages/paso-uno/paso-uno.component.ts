@@ -70,6 +70,12 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   public consultaState!: ConsultaioState;
 
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+   esFormularioSoloLectura: boolean = false; 
+
   /**
    * Constructor del componente.
    * Inicializa los servicios y dependencias necesarias.
@@ -81,7 +87,15 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     private tramite260703Query: Tramite260703Query,
     private consultaQuery: ConsultaioQuery
   ) {
-    //no hacer nada
+    this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.notificadorDestruccion$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+       
+      })
+    )
+    .subscribe()
   }
 
   /**
