@@ -1942,5 +1942,23 @@
      "diasTranscurridos": "4",
      "departamento": "COFEPRIS",
      "numeroDeProcedimiento": "260908"
+    },
+    {
+     "id": 260902,
+     "tipoDeTramite": "Solicitud de se Permiso",
+     "fecha": "2023-10-01",
+     "fechaActualizacion": "2023-10-05",
+     "diasTranscurridos": "4",
+     "departamento": "COFEPRIS",
+     "numeroDeProcedimiento": "260902"
+    },
+    {
+     "id": 260903,
+     "tipoDeTramite": "Solicitud de se Permiso",
+     "fecha": "2023-10-01",
+     "fechaActualizacion": "2023-10-05",
+     "diasTranscurridos": "4",
+     "departamento": "COFEPRIS",
+     "numeroDeProcedimiento": "260903"
     }
 ]
