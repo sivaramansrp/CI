@@ -5,6 +5,7 @@
                 [forma]="checkboxFormGroup" 
                 [formularioDatos]="permisoDesistirFormDatos"
                 [estado]="solicitudState"
+                [soloLectura]="esFormularioSoloLectura"
                 (emitirCambioDeValor)="establecerCambioDeValor($event)"
                 >
             </formas-dinamicas>
@@ -33,6 +34,7 @@
                 [forma]="checkboxDosFormGroup" 
                 [formularioDatos]="predeterminadoSeleccionarDatos"
                 [estado]="solicitudState"
+                [soloLectura]="esFormularioSoloLectura"
                 (emitirCambioDeValor)="establecerCambioDeValor($event)"
                 >
             </formas-dinamicas>
@@ -45,6 +47,7 @@
                 [forma]="deLasSiguientesFormGroup" 
                 [formularioDatos]="deLasSiguientesDatos"
                 [estado]="solicitudState"
+                [soloLectura]="esFormularioSoloLectura"
                 (emitirCambioDeValor)="establecerCambioDeValor($event)"
                 >
             </formas-dinamicas>
@@ -57,12 +60,13 @@
                 [forma]="pagoDeDerechosFormGroup" 
                 [formularioDatos]="pagoDeDerechosDatos"
                 [estado]="solicitudState"
+                [soloLectura]="esFormularioSoloLectura"
                 (emitirCambioDeValor)="establecerCambioDeValor($event)"
                 >
             </formas-dinamicas>
         </div>
     </form>
     <div class="d-flex justify-content-end mt-5">
-        <button type="button" class="btn btn-danger">Borrar datos del pago</button>
+        <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura">Borrar datos del pago</button>
     </div>
 </div>
