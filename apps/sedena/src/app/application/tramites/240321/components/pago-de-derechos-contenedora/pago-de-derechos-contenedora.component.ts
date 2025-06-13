@@ -1,11 +1,11 @@
+import { AfterViewInit, Component } from '@angular/core';
+import { Subject,map } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/pago-de-derechos.model';
-import { Subject } from 'rxjs';
 import { Tramite240321Query } from '../../estados/tramite240321Query.query';
 import { Tramite240321Store } from '../../estados/tramite240321Store.store';
 import { takeUntil } from 'rxjs';
@@ -22,7 +22,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './pago-de-derechos-contenedora.component.html',
   styleUrl: './pago-de-derechos-contenedora.component.scss',
 })
-export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
+export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy,AfterViewInit {
   /**
    * Observable para liberar suscripciones al destruir el componente.
    * @property {Subject<void>} unsubscribe$
@@ -34,6 +34,14 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    * @property {PagoDerechosFormState} pagoDerechoFormState
    */
   public pagoDerechoFormState!: PagoDerechosFormState;
+   /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   *
+   * @type {boolean}
+   * @memberof AgregarDestinatarioFinalContenedoraComponent
+   * @see https://compodoc.app/
+   */
+  esFormularioSoloLectura:boolean=false;
 
   /**
    * Constructor del componente.
@@ -66,6 +74,28 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
       });
   }
 
+  /**
+   * @inheritdoc
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
+   * 
+   * Suscribe al observable `selectConsultaioState$` para escuchar cambios en el estado de la sección y actualizar
+   * la propiedad `esFormularioSoloLectura` según el valor de `readonly` en el estado.
+   * 
+   * La suscripción se mantiene activa hasta que se emite un valor en `unsubscribe$`, lo que previene fugas de memoria.
+   * 
+   * @see https://angular.io/api/core/AfterViewInit
+   */
+  ngAfterViewInit(): void {
+        this.consultaioQuery.selectConsultaioState$
+                                  .pipe(
+                                    takeUntil(this.unsubscribe$),
+                                    map((seccionState)=>{
+                                      this.esFormularioSoloLectura = seccionState.readonly; 
+                                    })
+                                  )
+                                  .subscribe();
+  }
   /**
    * Hook del ciclo de vida que se ejecuta al destruir el componente.
    * Libera las suscripciones para evitar fugas de memoria.
