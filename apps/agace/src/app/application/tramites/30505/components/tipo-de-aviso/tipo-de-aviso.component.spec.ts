@@ -43,7 +43,7 @@ describe('TipoDeAvisoComponent', () => {
     // Simulate checking a new checkbox
     const eventCheck = { target: { checked: true } } as any;
     component.selectedCheckboxes = [];
-    component.onCambiarAviso(eventCheck, 'avisoDeFusion');
+    component.onCambiarAviso('avisoDeFusion', eventCheck);
     expect(component.selectedCheckboxes).toContain('avisoDeFusion');
     expect(tramiteStoreMock.setAviso).toHaveBeenCalledWith(true, 'avisoDeFusion');
     expect(emitSpy).toHaveBeenCalledWith(['avisoDeFusion']);
@@ -52,7 +52,7 @@ describe('TipoDeAvisoComponent', () => {
     // Simulate unchecking a checkbox
     const eventUncheck = { target: { checked: false } } as any;
     component.selectedCheckboxes = ['avisoDeFusion'];
-    component.onCambiarAviso(eventUncheck, 'avisoDeFusion');
+    component.onCambiarAviso('avisoDeFusion', eventUncheck);
     expect(component.selectedCheckboxes).not.toContain('avisoDeFusion');
   });
 

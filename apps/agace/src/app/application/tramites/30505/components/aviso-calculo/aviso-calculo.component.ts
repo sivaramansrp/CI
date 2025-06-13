@@ -29,7 +29,6 @@ import { Solicitud30505Query } from '../../../../estados/queries/tramites30505.q
   imports: [CommonModule, ReactiveFormsModule,InputRadioComponent],
 })
 export class AvisoCalculoComponent implements OnInit, OnDestroy {
-
   /**
    * @property {FormGroup} avisoDeCalForm
    * @description
@@ -37,7 +36,7 @@ export class AvisoCalculoComponent implements OnInit, OnDestroy {
    * en el componente correspondiente. Permite el manejo de los controles y validaciones
    * asociadas a la funcionalidad del aviso de cálculo.
    */
-  public avisoDeCalForm!: FormGroup;
+  avisoDeCalForm!: FormGroup;
 
   /**
    * Indica si el monto de la contribución es visible en la interfaz de usuario.
@@ -45,8 +44,7 @@ export class AvisoCalculoComponent implements OnInit, OnDestroy {
    * Cuando es `true`, el monto de la contribución se muestra al usuario.
    * Cuando es `false`, el monto permanece oculto.
    */
-  public montoContribuVisible: boolean = false;
-
+  montoContribuVisible: boolean = false;
 
   /**
    * Indica si el monto total de las contribuciones es visible en la interfaz de usuario.
@@ -54,8 +52,7 @@ export class AvisoCalculoComponent implements OnInit, OnDestroy {
    * Cuando es `true`, el monto total de las contribuciones se muestra al usuario.
    * Cuando es `false`, el monto total permanece oculto.
    */
-  public montoTotalContribucionesVisible: boolean = false;
-
+  montoTotalContribucionesVisible: boolean = false;
 
   /**
    * Almacena el mensaje de error relacionado con el cálculo en la tabla.
@@ -64,7 +61,7 @@ export class AvisoCalculoComponent implements OnInit, OnDestroy {
    * que se muestra cuando ocurre un problema durante el proceso de cálculo.
    * Si no hay errores, el valor será una cadena vacía.
    */
-  public tblErrorCalculo: string = '';
+  tblErrorCalculo: string = '';
 
   /**
    * Representa el estado actual de la solicitud para el trámite 30505.
@@ -72,15 +69,14 @@ export class AvisoCalculoComponent implements OnInit, OnDestroy {
    * @type {Solicitud30505State}
    * @public
    */
-  public solicitudState!: Solicitud30505State;
+  private solicitudState!: Solicitud30505State;
 
   /**
    * Notificador utilizado para gestionar la destrucción de suscripciones en el componente.
    * Se emite un valor y se completa cuando el componente es destruido, permitiendo limpiar recursos y evitar fugas de memoria.
    * 
-   * @private
    */
-  private destroyNotifier$: Subject<void> = new Subject();
+  destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Opciones disponibles para el aviso de cálculo.
@@ -89,7 +85,7 @@ export class AvisoCalculoComponent implements OnInit, OnDestroy {
    * en el componente de aviso de cálculo. Las opciones son importadas
    * desde la constante `AVISO_CALCULO_OPCIONES`.
    */
-  public avisoCalculoOpciones = AVISO_CALCULO_OPCIONES;
+  avisoCalculoOpciones = AVISO_CALCULO_OPCIONES;
 
   /**
    * Opciones disponibles para seleccionar el porcentaje en el aviso de cálculo.
@@ -97,8 +93,8 @@ export class AvisoCalculoComponent implements OnInit, OnDestroy {
    * Esta propiedad utiliza la constante `AVISO_PORCENTAJE_OPCIONES` para poblar
    * las opciones que el usuario puede elegir en el componente.
    */
-  public porcentajeOpciones = AVISO_PORCENTAJE_OPCIONES;
- 
+  porcentajeOpciones = AVISO_PORCENTAJE_OPCIONES;
+
   /**
    * Indica si el componente debe estar en modo solo lectura.
    * Cuando es `true`, los campos y acciones estarán deshabilitados para evitar modificaciones.

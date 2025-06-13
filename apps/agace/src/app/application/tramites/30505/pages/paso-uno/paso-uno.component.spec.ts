@@ -50,7 +50,7 @@ describe('PasoUnoComponent', () => {
   it('should set consultaState, esFormularioSoloLectura, esDatosRespuesta and call initializerFormulario on ngOnInit when update is false', () => {
     const initSpy = jest.spyOn(component, 'initializerFormulario');
     component.ngOnInit();
-    expect(component.consultaState).toBeDefined();
+    expect(component['consultaState']).toBeDefined();
     expect(component.esFormularioSoloLectura).toBe(true);
     expect(component.esDatosRespuesta).toBe(true);
     expect(initSpy).toHaveBeenCalled();
@@ -67,7 +67,7 @@ describe('PasoUnoComponent', () => {
 
   it('should set avisoState and selectedCheckboxes in initializerFormulario', () => {
     component.initializerFormulario();
-    expect(component.avisoState).toBeDefined();
+    expect(component['avisoState']).toBeDefined();
     expect(component.selectedCheckboxes).toEqual(['a', 'b']);
   });
 

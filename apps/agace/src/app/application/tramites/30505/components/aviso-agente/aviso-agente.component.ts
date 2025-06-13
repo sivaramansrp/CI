@@ -44,13 +44,13 @@ export class AvisoAgenteComponent implements OnInit, OnDestroy {
    * Nombre de la clase CSS utilizada para mostrar u ocultar el modal.
    * Por defecto, el valor es 'modal'.
    */
-  public modal: string = 'modal';
+  modal: string = 'modal';
 
   /**
    * Arreglo que contiene los datos de los avisos de agente.
    * Cada elemento es una instancia de la interfaz AvisoAgente.
    */
-  public avisoAgenteDatos: AvisoAgente[] = [];
+  avisoAgenteDatos: AvisoAgente[] = [];
 
   /**
    * Configuración de la tabla utilizada para mostrar los datos del aviso de agente.
@@ -60,7 +60,7 @@ export class AvisoAgenteComponent implements OnInit, OnDestroy {
    * 
    * @see AVISO_AGENTE_DE_TABLA - Objeto de configuración importado que contiene los detalles de la tabla.
    */
-  public AGENTE_CONFIGURATION_TABLA = AVISO_AGENTE_DE_TABLA;
+  CONFIGURACION_TABLA_AGENTE = AVISO_AGENTE_DE_TABLA;
 
   /**
    * Arreglo que contiene las acciones disponibles para la tabla.
@@ -68,14 +68,14 @@ export class AvisoAgenteComponent implements OnInit, OnDestroy {
    * 
    * @type {TablaAcciones[]}
    */
-  public acciones: TablaAcciones[] = [];
+  acciones: TablaAcciones[] = [];
 
   /**
    * Notificador utilizado para destruir suscripciones y evitar fugas de memoria.
    * Se emite un valor cuando el componente es destruido, permitiendo que las suscripciones
    * se cancelen de manera segura utilizando el operador `takeUntil`.
    */
-  public destroyNotifier$: Subject<void> = new Subject();
+  destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Representa el estado actual del aviso en el trámite 30505.
@@ -83,7 +83,7 @@ export class AvisoAgenteComponent implements OnInit, OnDestroy {
    * @type {Solicitud30505State}
    * @public
    */
-  public avisoState!: Solicitud30505State;
+  private avisoState!: Solicitud30505State;
 
   /**
   * Arreglo que contiene los agentes seleccionados de tipo AvisoAgente.
@@ -92,7 +92,7 @@ export class AvisoAgenteComponent implements OnInit, OnDestroy {
   * Esta propiedad almacena la lista de agentes que han sido seleccionados por el usuario
   * en el componente de aviso de agente.
   */
-  public selectedAgente: AvisoAgente[] = [];
+  selectedAgente: AvisoAgente[] = [];
 
 
   /**

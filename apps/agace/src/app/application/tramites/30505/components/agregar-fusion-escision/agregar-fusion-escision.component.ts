@@ -46,7 +46,7 @@ export class AgregarFusionEscisionComponent implements OnDestroy, OnInit {
    * Este FormGroup contiene los controles y validaciones necesarios para capturar
    * la información relacionada con el trámite correspondiente.
    */
-  public fusionEscisionForm!: FormGroup;
+  fusionEscisionForm!: FormGroup;
  /**
    * Opciones disponibles para indicar si la entidad está fusionada o no.
    * Utiliza el conjunto de opciones definido en `SI_NO_RADIO`.
@@ -54,27 +54,27 @@ export class AgregarFusionEscisionComponent implements OnDestroy, OnInit {
    * @remarks
    * Este arreglo se utiliza para mostrar opciones de selección (Sí/No) en la interfaz de usuario.
    */
-  public fusionadaOpciones = SI_NO_RADIO;
+ fusionadaOpciones = SI_NO_RADIO;
 
   /**
    * Arreglo que almacena los datos relacionados con las fusiones y escisiones.
    * Cada elemento del arreglo es de tipo `FusionEscision`.
    */
-  public fusionEscisionData: FusionEscision[] = [];
+  fusionEscisionData: FusionEscision[] = [];
 
   /**
    * Notificador utilizado para gestionar la destrucción de suscripciones en el componente.
    * Se emite un valor cuando el componente se destruye, permitiendo cancelar observables y evitar fugas de memoria.
    */
-  public destroyNotifier$: Subject<void> = new Subject();
+  destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Representa el estado actual del aviso dentro del flujo de la solicitud 30505.
    * 
    * @type {Solicitud30505State}
-   * @public
+   * @private
    */
-  public avisoState!: Solicitud30505State;
+  private avisoState!: Solicitud30505State;
 
   /**
    * Constructor de la clase AgregarFusionEscisionComponent.
@@ -88,7 +88,7 @@ export class AgregarFusionEscisionComponent implements OnDestroy, OnInit {
   constructor(
     private fb: FormBuilder,
     private ubicaccion: Location,
-    public tramiteStore: Solicitud30505Store, public tramiteQuery: Solicitud30505Query,
+    private tramiteStore: Solicitud30505Store, private tramiteQuery: Solicitud30505Query,
     private tercerosService: TercerosRelacionadosService
   ) {
   }

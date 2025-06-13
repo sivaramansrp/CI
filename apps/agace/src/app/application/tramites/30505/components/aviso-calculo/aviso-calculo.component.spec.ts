@@ -1,25 +1,40 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AvisoCalculoComponent } from './aviso-calculo.component';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Solicitud30505Store } from '../../../../estados/tramites/tramites30505.store';
+import { Solicitud30505Query } from '../../../../estados/queries/tramites30505.query';
 import { of } from 'rxjs';
 
 describe('AvisoCalculoComponent', () => {
   let component: AvisoCalculoComponent;
-  let solicitud30505StoreMock: any;
-  let solicitud30505QueryMock: any;
+  let fixture: ComponentFixture<AvisoCalculoComponent>;
+  let storeMock: any;
+  let queryMock: any;
 
-  beforeEach(() => {
-    solicitud30505StoreMock = {
+  beforeEach(async () => {
+    storeMock = {
       setCapacidadAlmacenamiento: jest.fn(),
-      setEmpresaControladora: jest.fn()
-      // ...add other methods as needed for setValoresStore
+      setTipoSolicitudPexim: jest.fn(),
+      setActividadProductiva: jest.fn(),
+      setTipoCaat: jest.fn(),
+      setTipoProgFomExp: jest.fn(),
+      setTipoTransito: jest.fn(),
+      setNumeroEstablecimiento: jest.fn(),
+      setMedioTransporte: jest.fn(),
+      setNombreBanco: jest.fn(),
+      setNomOficialAutorizado: jest.fn(),
+      setObservaciones: jest.fn(),
+      setEmpresaControladora: jest.fn(),
+      setDescripcionLugarEmbarque: jest.fn()
     };
-    solicitud30505QueryMock = {
+    queryMock = {
       selectSolicitud$: of({
         capacidadAlmacenamiento: '1',
         tipoSolicitudPexim: 'PEXIM',
         actividadProductiva: 'PROD',
         tipoCaat: 'CAAT',
-        tipoProgFomExp: 'FOM',
+        tipoProgFomExp: 'PROG',
         tipoTransito: 'TRANS',
         numeroEstablecimiento: '123',
         medioTransporte: 'CAMION',
@@ -30,59 +45,62 @@ describe('AvisoCalculoComponent', () => {
         descripcionLugarEmbarque: 'LUGAR'
       })
     };
-    component = new AvisoCalculoComponent(
-      new FormBuilder(),
-      solicitud30505StoreMock,
-      solicitud30505QueryMock
-    );
-    component.solicitudState = {
-      capacidadAlmacenamiento: '1',
-      tipoSolicitudPexim: 'PEXIM',
-      actividadProductiva: 'PROD',
-      tipoCaat: 'CAAT',
-      tipoProgFomExp: 'FOM',
-      tipoTransito: 'TRANS',
-      numeroEstablecimiento: '123',
-      medioTransporte: 'CAMION',
-      nombreBanco: 'BANCO',
-      nomOficialAutorizado: 'OFICIAL',
-      observaciones: 'OBS',
-      empresaControladora: '1',
-      descripcionLugarEmbarque: 'LUGAR'
-    } as any;
+
+    await TestBed.configureTestingModule({
+      imports: [CommonModule, ReactiveFormsModule, AvisoCalculoComponent],
+      providers: [
+        FormBuilder,
+        { provide: Solicitud30505Store, useValue: storeMock },
+        { provide: Solicitud30505Query, useValue: queryMock }
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(AvisoCalculoComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  it('should initialize form and set visibility flags on ngOnInit', () => {
-    component.ngOnInit();
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should initialize avisoDeCalForm on ngOnInit', () => {
     expect(component.avisoDeCalForm).toBeDefined();
+    expect(component.avisoDeCalForm.get('capacidadAlmacenamiento')).toBeTruthy();
+    expect(component.avisoDeCalForm.get('empresaControladora')).toBeTruthy();
+  });
+
+  it('should disable the form if soloLectura is true', () => {
+    component.soloLectura = true;
+    component.ngOnInit();
+    expect(component.avisoDeCalForm.disabled).toBe(true);
+  });
+
+  it('should call the correct store method in setValoresStore', () => {
+    const form = component.avisoDeCalForm;
+    form.patchValue({ capacidadAlmacenamiento: '1' });
+    storeMock.setCapacidadAlmacenamiento = jest.fn();
+    component.setValoresStore(form, 'capacidadAlmacenamiento', 'setCapacidadAlmacenamiento');
+    expect(storeMock.setCapacidadAlmacenamiento).toHaveBeenCalledWith('1');
+  });
+
+  it('should set montoContribuVisible and montoTotalContribucionesVisible in validaRadioCalculo', () => {
+    component.avisoDeCalForm.patchValue({ capacidadAlmacenamiento: '1', empresaControladora: '1' });
+    component.validaRadioCalculo();
     expect(component.montoContribuVisible).toBe(true);
     expect(component.montoTotalContribucionesVisible).toBe(true);
-  });
 
-  it('should call store method in setValoresStore', () => {
-    component.ngOnInit();
-    component.avisoDeCalForm.get('capacidadAlmacenamiento')?.setValue('2');
-    component.setValoresStore(component.avisoDeCalForm, 'capacidadAlmacenamiento', 'setCapacidadAlmacenamiento');
-    expect(solicitud30505StoreMock.setCapacidadAlmacenamiento).toHaveBeenCalledWith('2');
-  });
-
-  it('should update visibility flags in validaRadioCalculo', () => {
-    component.ngOnInit();
-    component.avisoDeCalForm.get('capacidadAlmacenamiento')?.setValue('0');
-    component.avisoDeCalForm.get('empresaControladora')?.setValue('0');
+    component.avisoDeCalForm.patchValue({ capacidadAlmacenamiento: '0', empresaControladora: '0' });
     component.validaRadioCalculo();
     expect(component.montoContribuVisible).toBe(false);
     expect(component.montoTotalContribucionesVisible).toBe(false);
-    component.avisoDeCalForm.get('capacidadAlmacenamiento')?.setValue('1');
-    component.avisoDeCalForm.get('empresaControladora')?.setValue('1');
-    component.validaRadioCalculo();
-    expect(component.montoContribuVisible).toBe(true);
-    expect(component.montoTotalContribucionesVisible).toBe(true);
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
-    const completeSpy = jest.spyOn<any, any>(component['destroyNotifier$'], 'complete');
+    const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
     component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
 });

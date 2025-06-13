@@ -1,56 +1,47 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AvisoAgenteComponent } from './aviso-agente.component';
-import { FormBuilder } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Solicitud30505Store } from '../../../../estados/tramites/tramites30505.store';
+import { Solicitud30505Query } from '../../../../estados/queries/tramites30505.query';
+import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
+import { of, Subject } from 'rxjs';
 
 describe('AvisoAgenteComponent', () => {
   let component: AvisoAgenteComponent;
+  let fixture: ComponentFixture<AvisoAgenteComponent>;
   let routerMock: any;
-  let storeMock: any;
-  let serviceMock: any;
-  let queryMock: any;
+  let routeMock: any;
+  let tercerosServiceMock: any;
+  let tramiteStoreMock: any;
+  let tramiteQueryMock: any;
 
-  beforeEach(() => {
+  beforeEach(async () => {
     routerMock = { navigate: jest.fn() };
-    queryMock = {
-      selectSolicitud$: jest.fn().mockReturnValue({
-        folioPrograma: '12345',
-        idProgramaSeleccionado: '67890',
-        modalidad: 'Presencial',
-        representacionFederal: 'Federal',
-        tipoPrograma: 'Educativo',
-        estatus: 'Activo',
-      }),
+    routeMock = {};
+    tercerosServiceMock = { setAgente: jest.fn() };
+    tramiteStoreMock = { eliminarAgento: jest.fn() };
+    tramiteQueryMock = {
+      selectSolicitud$: of({ agenteDatos: [{ id: 1, nombre: 'Agente' }] })
     };
-    storeMock = {
-      setDatosData: jest.fn(),
-      setAvisoAgenteDatos: jest.fn(),
-      setModal: jest.fn(),
-      setRadioSelection: jest.fn(),
-      setConfirmar: jest.fn(),
-      setDatos: jest.fn(),
-      setFolioAcuse: jest.fn(),
-      setTipoFigura: jest.fn(),
-      setNumPatenteModal: jest.fn(),
-    
-      setObligFisc: jest.fn(),
-      setAutPantente: jest.fn(),
-      setPatente2: jest.fn(),
-    };
-    serviceMock = {
-      obtenerDatos: jest.fn().mockReturnValue({
-        folioPrograma: '12345',
-        idProgramaSeleccionado: '67890',
-        modalidad: 'Presencial',
-        representacionFederal: 'Federal',
-        tipoPrograma: 'Educativo',
-        estatus: 'Activo',
-      }),
-    };
-      component = new AvisoAgenteComponent(
-        routerMock,
-        serviceMock,
-        storeMock,
-        queryMock
-      );
+
+    await TestBed.configureTestingModule({
+      imports: [AvisoAgenteComponent],
+      providers: [
+        { provide: Router, useValue: routerMock },
+        { provide: ActivatedRoute, useValue: routeMock },
+        { provide: TercerosRelacionadosService, useValue: tercerosServiceMock },
+        { provide: Solicitud30505Store, useValue: tramiteStoreMock },
+        { provide: Solicitud30505Query, useValue: tramiteQueryMock }
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(AvisoAgenteComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
   });
 
   it('should call router.navigate on AgregarTransportias', () => {

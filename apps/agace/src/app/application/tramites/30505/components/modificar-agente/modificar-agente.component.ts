@@ -2,9 +2,9 @@ import { Catalogo, CatalogoSelectComponent } from '@libs/shared/data-access-user
 import { CommonModule,Location } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import { Solicitud30505State, Solicitud30505Store } from '../../../../estados/tramites/tramites30505.store';
 import { Subject, takeUntil } from 'rxjs';
 import { AvisoAgente } from '../../../../core/models/30505/aviso-modificacion.model';
+import { Solicitud30505Store } from '../../../../estados/tramites/tramites30505.store';
 import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
 import productivo from '@libs/shared/theme/assets/json/30505/productivo.json';
 
@@ -32,21 +32,21 @@ export class ModificarAgenteComponent implements OnInit,OnDestroy {
    * Grupo de controles de formulario que contiene los datos relacionados con el trámite.
    * Utilizado para gestionar y validar la información ingresada por el usuario en el formulario.
    */
-  public datosTramite!: FormGroup;
+  datosTramite!: FormGroup;
 
   /**
    * Indica si el agente debe mostrarse en la interfaz de usuario.
    * 
    * Cuando es `true`, el agente es visible; cuando es `false`, el agente está oculto.
    */
-  public mostrarAgente: boolean = false;
+  mostrarAgente: boolean = false;
 
   /**
    * Indica si se debe mostrar la sección de agencia en la interfaz de usuario.
    * 
    * Cuando es `true`, la agencia se muestra; cuando es `false`, permanece oculta.
    */
-  public mostrarAgencia: boolean = false;
+  mostrarAgencia: boolean = false;
 
   /**
    * Arreglo que contiene el catálogo de sectores productivos AGACE.
@@ -56,16 +56,7 @@ export class ModificarAgenteComponent implements OnInit,OnDestroy {
    * Este arreglo se inicializa con los valores provenientes de la constante `productivo`.
    * Se utiliza para mostrar y seleccionar sectores productivos en el componente.
    */
-  public sectorProductivoAgace: Catalogo[] = productivo;
-
-  /**
-   * Estado actual de la solicitud para agregar un agente en el trámite 30505.
-   * 
-   * Esta propiedad almacena la información relevante sobre el estado de la solicitud
-   * mientras se realiza el proceso de agregar un agente. Utiliza la interfaz
-   * `Solicitud30505AgregarAgenteState` para definir la estructura de los datos.
-   */
-  public solicitudState!: Solicitud30505State;
+  sectorProductivoAgace: Catalogo[] = productivo;
 
   /**
    * Notificador utilizado para destruir suscripciones y evitar fugas de memoria.
@@ -73,7 +64,7 @@ export class ModificarAgenteComponent implements OnInit,OnDestroy {
    * 
    * @type {Subject<void>}
    */
-  public destroyNotifier$: Subject<void> = new Subject();
+  destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Arreglo que contiene los datos de los agentes.
@@ -81,7 +72,7 @@ export class ModificarAgenteComponent implements OnInit,OnDestroy {
    * 
    * @type {AvisoAgente[]}
    */
-  public agenteDatos:AvisoAgente[] = [];
+  agenteDatos:AvisoAgente[] = [];
  
    /**
    * Representa el agente seleccionado en el componente.
@@ -92,7 +83,7 @@ export class ModificarAgenteComponent implements OnInit,OnDestroy {
    * para su modificación. Inicialmente se define como un objeto vacío
    * con el tipo `AvisoAgente`.
    */
-  public selectedAgente = {} as AvisoAgente;
+  selectedAgente = {} as AvisoAgente;
   
 
   /**

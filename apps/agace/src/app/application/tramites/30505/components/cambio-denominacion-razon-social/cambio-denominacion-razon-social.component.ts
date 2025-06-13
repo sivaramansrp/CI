@@ -35,7 +35,7 @@ export class CambioDenominacionRazonSocialComponent implements OnDestroy,OnInit{
    * Formulario reactivo para gestionar el aviso de cambio de denominación o razón social.
    * Utilizado para capturar y validar los datos relacionados con el trámite correspondiente.
    */
-  public avisoCambioRazonSocialForm!: FormGroup;
+  avisoCambioRazonSocialForm!: FormGroup;
 
 
   /**
@@ -43,14 +43,14 @@ export class CambioDenominacionRazonSocialComponent implements OnDestroy,OnInit{
    * 
    * Cuando es `true`, el mensaje se muestra; cuando es `false`, el mensaje permanece oculto.
    */
-  public mostrarMensaje: boolean = false;
+  mostrarMensaje: boolean = false;
 
 
   /**
    * Mensaje de error que se muestra cuando la razón social ingresada es igual a la anterior.
    * Se utiliza para informar al usuario que no se han realizado cambios en la razón social.
    */
-  public tblErrorRazonSocialIgual: string = '';
+  tblErrorRazonSocialIgual: string = '';
 
 
   /**
@@ -58,7 +58,7 @@ export class CambioDenominacionRazonSocialComponent implements OnDestroy,OnInit{
    * Se utiliza para mostrar información de error al usuario cuando ocurre un problema
    * con el folio del acuse en el componente de cambio de denominación o razón social.
    */
-  public tblErrorFolioAcuse: string = '';
+  tblErrorFolioAcuse: string = '';
 
 
   /**
@@ -69,7 +69,7 @@ export class CambioDenominacionRazonSocialComponent implements OnDestroy,OnInit{
    * 
    * @type {Subject<void>}
    */
-  public destroyNotifier$: Subject<void> = new Subject();
+  destroyNotifier$: Subject<void> = new Subject();
 
 
   /**
@@ -77,7 +77,7 @@ export class CambioDenominacionRazonSocialComponent implements OnDestroy,OnInit{
    * 
    * @type {Solicitud30505State}
    */
-  public avisoState!: Solicitud30505State;
+  private avisoState!: Solicitud30505State;
  
     /**
      * Indica si el componente debe estar en modo solo lectura.
@@ -93,7 +93,7 @@ export class CambioDenominacionRazonSocialComponent implements OnDestroy,OnInit{
    * @param tramiteStore - Instancia de Solicitud30505Store para manejar el estado de la solicitud.
    * @param tramiteQuery - Instancia de Solicitud30505Query para consultar el estado de la solicitud.
    */
-  constructor(private fb: FormBuilder, public tramiteStore: Solicitud30505Store, public tramiteQuery: Solicitud30505Query) {
+  constructor(private fb: FormBuilder, private tramiteStore: Solicitud30505Store, private tramiteQuery: Solicitud30505Query) {
   }
 
 

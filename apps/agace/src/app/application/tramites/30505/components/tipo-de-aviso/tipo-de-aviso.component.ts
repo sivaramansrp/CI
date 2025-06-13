@@ -74,9 +74,9 @@ export class TipoDeAvisoComponent implements OnDestroy,OnInit {
      * Representa el estado actual de la solicitud 30505 para el aviso.
      * 
      * @type {Solicitud30505State}
-     * @public
+     * @private
      */
-  public avisoState!: Solicitud30505State;
+  private avisoState!: Solicitud30505State;
 
   /**
    * Arreglo que almacena los identificadores de los checkboxes seleccionados.
@@ -98,7 +98,7 @@ export class TipoDeAvisoComponent implements OnDestroy,OnInit {
    * @param tramiteQuery - Instancia de Solicitud30505Query para consultar el estado de los trámites.
    */
   constructor(
-  public fb: FormBuilder,public tramiteStore:Solicitud30505Store,public tramiteQuery:Solicitud30505Query
+  private fb: FormBuilder,private tramiteStore:Solicitud30505Store,private tramiteQuery:Solicitud30505Query
   ) {
    
   }

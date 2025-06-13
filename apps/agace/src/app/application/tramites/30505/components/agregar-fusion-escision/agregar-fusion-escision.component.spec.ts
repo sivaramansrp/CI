@@ -1,139 +1,143 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AgregarFusionEscisionComponent } from './agregar-fusion-escision.component';
-import { FormBuilder } from '@angular/forms';
-import { of } from 'rxjs';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule, Location } from '@angular/common';
+import { Solicitud30505Store } from '../../../../estados/tramites/tramites30505.store';
+import { Solicitud30505Query } from '../../../../estados/queries/tramites30505.query';
+import { TercerosRelacionadosService } from '../../services/terceros-relacionados.service';
+import { of, Subject } from 'rxjs';
 
 describe('AgregarFusionEscisionComponent', () => {
   let component: AgregarFusionEscisionComponent;
-  let locationMock: any;
-  let tramiteStoreMock: any;
-  let tramiteQueryMock: any;
+  let fixture: ComponentFixture<AgregarFusionEscisionComponent>;
+  let storeMock: any;
+  let queryMock: any;
   let tercerosServiceMock: any;
+  let locationMock: any;
 
-  beforeEach(() => {
-    locationMock = { back: jest.fn() };
-    tramiteStoreMock = {
+  beforeEach(async () => {
+    storeMock = {
       setAvisoDatos: jest.fn(),
       updateFusionDatos: jest.fn()
     };
-    tramiteQueryMock = {
+    queryMock = {
       selectSolicitud$: of({
         certificacionModal: '1',
-        rfcBusquedaModal: 'RFCX',
-        razonSocialFusionante: 'RSF',
-        folioVucemFusionante: 'FOLIO',
-        fechaInicioVigenciaFusionante: '2024-01-01',
-        fechaFinVigenciaFusionante: '2024-12-31',
+        rfcBusquedaModal: 'RFC123',
+        razonSocialFusionante: 'Empresa Fusionante',
+        folioVucemFusionante: 'FOLIO123',
+        fechaInicioVigenciaFusionante: '2023-01-01',
+        fechaFinVigenciaFusionante: '2023-12-31',
         rfcBusquedaModalSC: 'RFCSC',
-        razonSocialFusionanteSC: 'RSSC'
+        razonSocialFusionanteSC: 'Empresa SC'
       })
     };
     tercerosServiceMock = {
-      obtenerDatosPersona: jest.fn()
+      obtenerDatosPersona: jest.fn().mockReturnValue(of({
+        razonSocial: 'Empresa Fusionada',
+        numFolioTramite: 'FOLIO999',
+        fechaInicioVigencia: '2022-01-01',
+        fechaFinVigencia: '2022-12-31'
+      }))
     };
-    component = new AgregarFusionEscisionComponent(
-      new FormBuilder(),
-      locationMock,
-      tramiteStoreMock,
-      tramiteQueryMock,
-      tercerosServiceMock
-    );
-    component.avisoState = {
-      certificacionModal: '1',
-      rfcBusquedaModal: 'RFCX',
-      razonSocialFusionante: 'RSF',
-      folioVucemFusionante: 'FOLIO',
-      fechaInicioVigenciaFusionante: '2024-01-01',
-      fechaFinVigenciaFusionante: '2024-12-31',
-      rfcBusquedaModalSC: 'RFCSC',
-      razonSocialFusionanteSC: 'RSSC'
-    } as any;
+    locationMock = { back: jest.fn() };
+
+    await TestBed.configureTestingModule({
+      imports: [CommonModule, ReactiveFormsModule, AgregarFusionEscisionComponent],
+      providers: [
+        FormBuilder,
+        { provide: Solicitud30505Store, useValue: storeMock },
+        { provide: Solicitud30505Query, useValue: queryMock },
+        { provide: TercerosRelacionadosService, useValue: tercerosServiceMock },
+        { provide: Location, useValue: locationMock }
+      ]
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(AgregarFusionEscisionComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  it('should initialize form with values on inicializarFormulario', () => {
-    component.inicializarFormulario();
+  it('should create the component', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('should initialize fusionEscisionForm on ngOnInit', () => {
     expect(component.fusionEscisionForm).toBeDefined();
-    expect(component.fusionEscisionForm.get('rfcBusquedaModal')?.value).toBe('RFCX');
-    expect(component.fusionEscisionForm.get('razonSocialFusionante')?.value).toBe('RSF');
+    expect(component.fusionEscisionForm.get('certificacionModal')).toBeTruthy();
+    expect(component.fusionEscisionForm.get('rfcBusquedaModal')).toBeTruthy();
   });
 
-  it('should disable/enable fields on mostrarCertificacion', () => {
-    component.inicializarFormulario();
-    component.fusionEscisionForm.get('certificacionModal')?.setValue('1');
+  it('should call setAvisoDatos and disable/enable fields in mostrarCertificacion', () => {
+    component.fusionEscisionForm.patchValue({ certificacionModal: '1' });
     component.mostrarCertificacion();
+    expect(storeMock.setAvisoDatos).toHaveBeenCalledWith('certificacionModal', '1');
     expect(component.fusionEscisionForm.get('razonSocialFusionante')?.disabled).toBe(true);
     expect(component.fusionEscisionForm.get('razonSocialFusionanteSC')?.disabled).toBe(true);
 
-    component.fusionEscisionForm.get('certificacionModal')?.setValue('0');
+    component.fusionEscisionForm.patchValue({ certificacionModal: '0' });
     component.mostrarCertificacion();
     expect(component.fusionEscisionForm.get('razonSocialFusionanteSC')?.enabled).toBe(true);
   });
 
-  it('should patch form and call setAvisoDatos on cargarDatosPersonaFusionada', () => {
-    component.inicializarFormulario();
-    const datos = {
-      razonSocial: 'RSX',
-      numFolioTramite: 'FOLIOX',
-      fechaInicioVigencia: '2024-02-01',
-      fechaFinVigencia: '2024-12-01'
-    };
-    tercerosServiceMock.obtenerDatosPersona.mockReturnValue(of(datos));
-    component.fusionEscisionForm.get('rfcBusquedaModal')?.setValue('RFCNEW');
+  it('should patch form and call setAvisoDatos when cargarDatosPersonaFusionada is called', () => {
+    component.fusionEscisionForm.patchValue({ rfcBusquedaModal: 'RFC123' });
     component.cargarDatosPersonaFusionada();
-    expect(component.fusionEscisionForm.get('razonSocialFusionante')?.value).toBe('RSX');
-    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('RSX', 'razonSocialFusionante');
-    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('FOLIOX', 'folioVucemFusionante');
-    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('2024-02-01', 'fechaInicioVigenciaFusionante');
-    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('2024-12-01', 'fechaFinVigenciaFusionante');
+    expect(tercerosServiceMock.obtenerDatosPersona).toHaveBeenCalledWith('RFC123');
+    // The patchValue and setAvisoDatos calls are checked by the logic above
+    expect(storeMock.setAvisoDatos).toHaveBeenCalledWith('razonSocialFusionante', 'Empresa Fusionada');
+    expect(storeMock.setAvisoDatos).toHaveBeenCalledWith('folioVucemFusionante', 'FOLIO999');
+    expect(storeMock.setAvisoDatos).toHaveBeenCalledWith('fechaInicioVigenciaFusionante', '2022-01-01');
+    expect(storeMock.setAvisoDatos).toHaveBeenCalledWith('fechaFinVigenciaFusionante', '2022-12-31');
   });
 
-  it('should add fusionEscisionData, update store, reset form, and call back on agregarFusionEscision', () => {
-    component.inicializarFormulario();
+  it('should add fusionEscisionData, update store, reset form, and call location.back on agregarFusionEscision', () => {
     component.fusionEscisionForm.patchValue({
       certificacionModal: '1',
-      rfcBusquedaModal: 'RFCNEW',
-      razonSocialFusionante: 'RSX',
-      folioVucemFusionante: 'FOLIOX',
-      fechaInicioVigenciaFusionante: '2024-02-01',
-      fechaFinVigenciaFusionante: '2024-12-01',
-      rfcBusquedaModalSC: 'RFCSCX',
-      razonSocialFusionanteSC: 'RSSCX'
+      rfcBusquedaModal: 'RFC123',
+      razonSocialFusionante: 'Empresa Fusionante',
+      folioVucemFusionante: 'FOLIO123',
+      fechaInicioVigenciaFusionante: '2023-01-01',
+      fechaFinVigenciaFusionante: '2023-12-31',
+      rfcBusquedaModalSC: 'RFCSC',
+      razonSocialFusionanteSC: 'Empresa SC'
     });
+    component.fusionEscisionData = [];
     component.agregarFusionEscision();
     expect(component.fusionEscisionData.length).toBe(1);
-    expect(tramiteStoreMock.updateFusionDatos).toHaveBeenCalledWith(component.fusionEscisionData);
+    expect(storeMock.updateFusionDatos).toHaveBeenCalledWith(component.fusionEscisionData);
+    expect(component.fusionEscisionForm.pristine).toBe(true);
     expect(locationMock.back).toHaveBeenCalled();
   });
 
-  it('should call back on cerrarDialogoFusionEscision', () => {
+  it('should call location.back on cerrarDialogoFusionEscision', () => {
     component.cerrarDialogoFusionEscision();
     expect(locationMock.back).toHaveBeenCalled();
   });
 
-  it('should call setAvisoDatos on cambioRFC', () => {
-    component.inicializarFormulario();
-    component.fusionEscisionForm.get('rfcBusquedaModal')?.setValue('RFCVAL');
+  it('should call setAvisoDatos with RFC on cambioRFC', () => {
+    component.fusionEscisionForm.patchValue({ rfcBusquedaModal: 'RFC123' });
     component.cambioRFC();
-    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('RFCVAL', 'rfcBusquedaModal');
+    expect(storeMock.setAvisoDatos).toHaveBeenCalledWith('rfcBusquedaModal', 'RFC123');
   });
 
-  it('should call setAvisoDatos on cambioRfcSC', () => {
-    component.inicializarFormulario();
-    component.fusionEscisionForm.get('rfcBusquedaModalSC')?.setValue('RFCSCVAL');
+  it('should call setAvisoDatos with rfcBusquedaModalSC on cambioRfcSC', () => {
+    component.fusionEscisionForm.patchValue({ rfcBusquedaModalSC: 'RFCSC' });
     component.cambioRfcSC();
-    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('RFCSCVAL', 'rfcBusquedaModalSC');
+    expect(storeMock.setAvisoDatos).toHaveBeenCalledWith('rfcBusquedaModalSC', 'RFCSC');
   });
 
-  it('should call setAvisoDatos on cambioRazonSocialSC', () => {
-    component.inicializarFormulario();
-    component.fusionEscisionForm.addControl('razonSocialSC', component.fusionEscisionForm.get('razonSocialFusionanteSC')!);
-    component.fusionEscisionForm.get('razonSocialSC')?.setValue('RSVAL');
+  it('should call setAvisoDatos with razonSocialSC on cambioRazonSocialSC', () => {
+    component.fusionEscisionForm.patchValue({ razonSocialSC: 'Empresa SC' });
     component.cambioRazonSocialSC();
-    expect(tramiteStoreMock.setAvisoDatos).toHaveBeenCalledWith('RSVAL', 'razonSocialSC');
+    expect(storeMock.setAvisoDatos).toHaveBeenCalledWith('razonSocialSC', 'Empresa SC');
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
     const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
     component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
 });

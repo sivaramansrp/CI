@@ -52,9 +52,9 @@ export class PasoUnoComponent implements OnDestroy,OnInit{
    * Representa el estado actual de la solicitud 30505 en el componente.
    * 
    * @type {Solicitud30505State}
-   * @public
+   * @private
    */
-  public avisoState!: Solicitud30505State;
+  private avisoState!: Solicitud30505State;
   
   /**
    * Referencia al componente hijo SolicitanteComponent.
@@ -63,9 +63,9 @@ export class PasoUnoComponent implements OnDestroy,OnInit{
    * Utiliza el decorador `@ViewChild` para obtener acceso al componente hijo
    * SolicitanteComponent, lo que permite interactuar con él desde este componente.
    * @type {ConsultaioState}
-   * @public
+   * @private
    */
-  public consultaState!: ConsultaioState;
+  private consultaState!: ConsultaioState;
  
    /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;

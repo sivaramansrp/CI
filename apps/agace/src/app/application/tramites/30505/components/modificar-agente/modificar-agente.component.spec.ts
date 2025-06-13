@@ -116,10 +116,10 @@ describe('ModificarAgenteComponent', () => {
       patente2: 'P2',
       razonAgencia: 'AGENCIA'
     });
-    component.AgenteDatos = [];
+    component.agenteDatos = [];
     component.aceptarSociedadesScc();
-    expect(component.AgenteDatos.length).toBe(1);
-    expect(tramite30505StoreMock.updateAgenteDatos).toHaveBeenCalledWith(component.AgenteDatos);
+    expect(component.agenteDatos.length).toBe(1);
+    expect(tramite30505StoreMock.updateAgenteDatos).toHaveBeenCalledWith(component.agenteDatos);
     expect(locationMock.back).toHaveBeenCalled();
   });
 

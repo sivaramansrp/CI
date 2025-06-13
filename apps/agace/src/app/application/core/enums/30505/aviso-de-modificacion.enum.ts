@@ -183,7 +183,7 @@ export const TERCEROS_ENCABEZADO_DE_TABLA: ConfiguracionColumna<TercerosRelacion
  * Esta configuración es utilizada para mostrar información relevante sobre la fusión o escisión,
  * incluyendo RFC, razón social, folio VUCEM y fechas de vigencia de la certificación/renovación.
  */
-export const FUSION_CONFIGURATION_TABLA: ConfiguracionColumna<FusionEscision>[] =
+export const FUSION_CONFIGURACION_TABLA: ConfiguracionColumna<FusionEscision>[] =
   [
     {
       encabezado: 'Registro Federal de Contribuyentes',

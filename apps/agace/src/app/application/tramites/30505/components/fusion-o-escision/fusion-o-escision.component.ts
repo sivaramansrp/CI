@@ -3,7 +3,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule , Validators } from '@angular/forms';
 import { Subject,map,takeUntil } from 'rxjs';
 
-import { AVISO_RADIO, FUSION_CONFIGURATION_TABLA, FUSION_ESCISION_RADIO, SI_NO_RADIO } from '../../../../core/enums/30505/aviso-de-modificacion.enum';
+import { AVISO_RADIO, FUSION_CONFIGURACION_TABLA, FUSION_ESCISION_RADIO, SI_NO_RADIO } from '../../../../core/enums/30505/aviso-de-modificacion.enum';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FusionEscision, TABLE_ID } from '../../../../core/models/30505/aviso-modificacion.model';
 import { InputRadioComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
@@ -47,41 +47,41 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
    * Representa el formulario reactivo utilizado en el componente para gestionar los datos de fusión o escisión.
    * Es una instancia de `FormGroup` que contiene los controles y validaciones del formulario.
    */
-  public formulario!: FormGroup;
+  formulario!: FormGroup;
 
   /**
    * Indica si el mensaje DV (Dígito Verificador) es visible en la interfaz de usuario.
    * 
    * @default false El mensaje no es visible por defecto.
    */
-  public dvMessageVisible: boolean = false;
+  dvMessageVisible: boolean = false;
 
 
   /**
    * Indica si el div completo es visible o no en la interfaz de usuario.
    * Cuando es `true`, el div se muestra; cuando es `false`, el div está oculto.
    */
-  public divCompletoVisible: boolean = false;
+  divCompletoVisible: boolean = false;
   /**
    * Indica si la certificación principal es visible en la interfaz de usuario.
    * 
    * Cuando es `true`, la certificación principal se muestra al usuario.
    * Cuando es `false`, la certificación principal permanece oculta.
    */
-  public conCertificacionPrincipalVisible: boolean = false;
+  conCertificacionPrincipalVisible: boolean = false;
   /**
    * Indica si el elemento relacionado con la certificación principal debe ser visible o no.
    * Cuando es `true`, el elemento no se muestra en la interfaz de usuario.
    */
-  public sinCertificacionPrincipalVisible: boolean = false;
-  
+  sinCertificacionPrincipalVisible: boolean = false;
+
   /**
    * Arreglo que almacena los datos relacionados con la fusión o escisión.
    * Cada elemento del arreglo es una instancia de la interfaz `FusionEscision`.
    * 
    * @type {FusionEscision[]}
    */
-  public gridFusionEscisionData: FusionEscision[] = [];
+  gridFusionEscisionData: FusionEscision[] = [];
 
   /**
    * Configuración utilizada para la tabla de fusión.
@@ -89,9 +89,9 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
    * Esta constante define la estructura, columnas y opciones de visualización
    * para la tabla relacionada con el proceso de fusión o escisión en el componente.
    * 
-   * @see FUSION_CONFIGURATION_TABLA
+   * @see FUSION_CONFIGURACION_TABLA
    */
-  public FUSION_CONFIGURATION_TABLA = FUSION_CONFIGURATION_TABLA;
+  FUSION_CONFIGURACION_TABLA = FUSION_CONFIGURACION_TABLA;
 
   /**
    * Referencia a la clase o interfaz `TablaSeleccion`.
@@ -101,7 +101,7 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
    * 
    * @see TablaSeleccion
    */
-  public tablaSeleccion = TablaSeleccion;
+  tablaSeleccion = TablaSeleccion;
   
   /**
    * Identificador único de la tabla utilizada en el componente.
@@ -110,7 +110,7 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
    * Esta propiedad almacena el valor constante `TABLE_ID`, que se utiliza para identificar la tabla específica
    * dentro del componente de fusión o escisión.
    */
-  public tableId:string = TABLE_ID;
+  tableId:string = TABLE_ID;
 
   /**
    * Opciones disponibles para el componente de radio botones.
@@ -119,7 +119,7 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
    * utilizando la constante `AVISO_RADIO`. Generalmente, estas opciones permiten al usuario
    * seleccionar entre diferentes alternativas relacionadas con el aviso de fusión o escisión.
    */
-  public radioOpciones = AVISO_RADIO;
+  radioOpciones = AVISO_RADIO;
 
   /**
    * Opciones disponibles para el radio de fusión o escisión.
@@ -129,7 +129,7 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
    * 
    * @see FUSION_ESCISION_RADIO - Constante que define las opciones disponibles.
    */
-  public fusionEscisionOpciones = FUSION_ESCISION_RADIO;
+  fusionEscisionOpciones = FUSION_ESCISION_RADIO;
 
   /**
    * Opciones disponibles para indicar si la empresa está fusionada o escindida.
@@ -138,7 +138,7 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
    * @remarks
    * Este arreglo se utiliza para mostrar opciones de selección (Sí/No) en la interfaz de usuario.
    */
-  public fusionadaOpciones = SI_NO_RADIO;
+  fusionadaOpciones = SI_NO_RADIO;
 
   /**
    * Notificador utilizado para gestionar la destrucción de suscripciones en el componente.
@@ -146,15 +146,15 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
    * 
    * @type {Subject<void>}
    */
-  public destroyNotifier$: Subject<void> = new Subject();
-  
+  destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * Representa el estado actual del aviso en el trámite 30505.
    * 
    * @type {Solicitud30505State}
-   * @public
+   * @private
    */
-  public avisoState!: Solicitud30505State;
+  private avisoState!: Solicitud30505State;
 
   /**
    * Arreglo que contiene las fusiones o escisiones seleccionadas por el usuario.
@@ -181,7 +181,7 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
    * @param tramiteStore Store para el manejo del estado de la solicitud 30505.
    * @param tramiteQuery Query para consultar el estado de la solicitud 30505.
    */
-  constructor(private fb: FormBuilder,private router:Router,private route:ActivatedRoute,private tercerosService: TercerosRelacionadosService,public tramiteStore:Solicitud30505Store,public tramiteQuery:Solicitud30505Query) {  
+  constructor(private fb: FormBuilder,private router:Router,private route:ActivatedRoute,private tercerosService: TercerosRelacionadosService,private tramiteStore:Solicitud30505Store,private tramiteQuery:Solicitud30505Query) {  
   }
 
   /**
@@ -240,7 +240,7 @@ export class FusionOEscisionComponent implements OnInit , OnDestroy{
     }
     this.gridFusionEscisionData = this.avisoState?.fusionEscisionData;
     if(this.soloLectura) {
-      this.formulario.disable(); // Disable the form if in read-only mode
+      this.formulario.disable(); // Deshabilitar el formulario si está en modo solo lectura
     }
   }
   

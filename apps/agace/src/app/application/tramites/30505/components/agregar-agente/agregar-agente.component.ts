@@ -34,21 +34,21 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
    * Grupo de controles de formulario que contiene los datos relacionados con el trámite.
    * Utilizado para gestionar y validar la información ingresada por el usuario en el formulario.
    */
- public datosTramite!: FormGroup;
+ datosTramite!: FormGroup;
 
   /**
    * Indica si el agente debe mostrarse en la interfaz de usuario.
    * 
    * Cuando es `true`, el agente es visible; cuando es `false`, el agente está oculto.
    */
-  public mostrarAgente: boolean = false;
+  mostrarAgente: boolean = false;
 
   /**
    * Indica si se debe mostrar la sección de agencia en la interfaz de usuario.
    * 
    * Cuando es `true`, la agencia se muestra; cuando es `false`, permanece oculta.
    */
-  public mostrarAgencia: boolean = false;
+ mostrarAgencia: boolean = false;
 
   /**
    * Arreglo que contiene el catálogo de sectores productivos AGACE.
@@ -58,7 +58,7 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
    * Este arreglo se inicializa con los valores provenientes de la constante `productivo`.
    * Se utiliza para mostrar y seleccionar sectores productivos en el componente.
    */
-  public sectorProductivoAgace: Catalogo[] = productivo;
+  sectorProductivoAgace: Catalogo[] = productivo;
 
   /**
    * Estado actual de la solicitud para agregar un agente en el trámite 30505.
@@ -67,7 +67,7 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
    * mientras se realiza el proceso de agregar un agente. Utiliza la interfaz
    * `Solicitud30505AgregarAgenteState` para definir la estructura de los datos.
    */
-  public solicitudState!: Solicitud30505State;
+  private solicitudState!: Solicitud30505State;
 
   /**
    * Notificador utilizado para destruir suscripciones y evitar fugas de memoria.
@@ -75,7 +75,7 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
    * 
    * @type {Subject<void>}
    */
-  public destroyNotifier$: Subject<void> = new Subject();
+  destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Arreglo que almacena los datos de los agentes.
@@ -83,7 +83,7 @@ export class AgregarAgenteComponent implements OnInit,OnDestroy {
    * 
    * @type {AvisoAgente[]}
    */
-  public agenteDatos:AvisoAgente[] = [];
+  agenteDatos: AvisoAgente[] = [];
 
 
   /**
