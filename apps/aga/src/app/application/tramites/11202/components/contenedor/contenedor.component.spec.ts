@@ -115,6 +115,7 @@ describe('ContenedorComponent', () => {
    */
   it('should add a new contenedor to the grid on agregarAGrid', () => {
     component.ngOnInit();
+    component.contenedores = [];
     component.solicitudForm.setValue({
       idSolicitud: 1,
       tipoBusqueda: 'Contenedor',

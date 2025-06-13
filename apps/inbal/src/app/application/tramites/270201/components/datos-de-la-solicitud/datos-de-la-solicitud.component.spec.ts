@@ -3,7 +3,10 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Tramite270201Store } from '../../estados/tramites/tramite270201.store';
-import { of } from 'rxjs';
+import { Tramite270201Query } from '../../estados/queries/tramite270201.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { of, Subject } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 describe('DatosDeLaSolicitudComponent', () => {
   let solicitudServiceMock: any;
@@ -26,6 +29,7 @@ describe('DatosDeLaSolicitudComponent', () => {
       getTecnicaData: jest.fn().mockReturnValue(of([])),
       getAltoData: jest.fn().mockReturnValue(of([])),
       getArancelariaData: jest.fn().mockReturnValue(of([])),
+      getObraDeArteTabla: jest.fn().mockReturnValue(of({ columns: [] })),
     };
 
     tramiteStoreMock = {
@@ -34,10 +38,12 @@ describe('DatosDeLaSolicitudComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [DatosDeLaSolicitudComponent, ReactiveFormsModule],
+      imports: [DatosDeLaSolicitudComponent, ReactiveFormsModule, CommonModule],
       providers: [
         { provide: SolicitudService, useValue: solicitudServiceMock },
         { provide: Tramite270201Store, useValue: tramiteStoreMock },
+        { provide: Tramite270201Query, useValue: { selectDatosSolicitud$: of(null) } },
+        Tramite270201Store
       ],
     }).compileComponents();
 
@@ -258,5 +264,26 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component.motivoData.length).toBe(1);
     expect(component.monedaData.length).toBe(1);
     expect(component.arancelariaData.length).toBe(1);
+  });
+
+  it('should disable form in readonly mode (guardarDatosFormulario)', () => {
+    component.esFormularioSoloLectura = true;
+    component.guardarDatosFormulario();
+    expect(component.CancelacionForm.disabled).toBe(true);
+  });
+
+  it('should enable form in editable mode (guardarDatosFormulario)', () => {
+    component.esFormularioSoloLectura = false;
+    component.guardarDatosFormulario();
+    expect(component.CancelacionForm.enabled).toBe(true);
+  });
+
+  it('should clean up observables on destroy', () => {
+    (component as any).destroyNotifier$ = new Subject<void>();
+    const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });
