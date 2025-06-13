@@ -1,16 +1,16 @@
 import { ActivatedRoute, Router } from '@angular/router';
+import { Subject, map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240120Query } from '../../estados/tramite240120Query.query';
 import { Tramite240120Store } from '../../estados/tramite240120Store.store';
-import { takeUntil } from 'rxjs';
 
 /**
  * @title Terceros Relacionados Contenedora
@@ -50,7 +50,13 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
    * @property {Proveedor[]} proveedorTablaDatos
    */
   proveedorTablaDatos: Proveedor[] = [];
-
+  /**
+* Indica si el formulario debe mostrarse en modo solo lectura.
+*
+* @type {boolean}
+* @default false
+*/
+  esFormularioSoloLectura: boolean = false;
   /**
    * Identificador del procedimiento actual.
    * @property {number} idProcedimiento
@@ -69,8 +75,9 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
     private tramiteStore: Tramite240120Store,
     private tramiteQuery: Tramite240120Query,
     private router: Router,
-    private activatedRoute: ActivatedRoute
-  ) {}
+    private activatedRoute: ActivatedRoute,
+    private consultaQuery: ConsultaioQuery
+  ) { }
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
@@ -120,6 +127,14 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
           this.tramiteStore.setProveedorTablaDatos(DATOS_ACTUALIZADOS);
         }
       });
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**

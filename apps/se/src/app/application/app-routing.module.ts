@@ -332,7 +332,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'cupos',
+    path: 'expedicion-certificados-asignacion-directa-fisica',
     loadChildren: () =>
       import('./tramites/120201/cupos.module').then((m) => m.CuposModule),
   },
@@ -461,7 +461,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'expedicion-certificados-asignacion-directa',
+    path: 'expedicion-certificados-asignacion-directa-moral',
     loadChildren: () =>
       import('./tramites/120202/expedicion-certificado-asignacion.module').then(
         (m) => m.ExpedicionCertificadoAsignacionModule
@@ -705,6 +705,11 @@ const ROUTES: Routes = [
     path: 'detalle-v-dictamen',
     loadComponent: () =>
       import('./detalle-v-dictamen/detalle-v-dictamen.component').then((m) => m.DetalleVDictamenComponent),
+  },
+  {
+    path: 'datos-generales-tramite',
+    loadComponent: () =>
+      import('./datos-generales-tramite/datos-generales-tramite.component').then((m) => m.DatosGeneralesTramiteComponent),
   },
 ];
 
