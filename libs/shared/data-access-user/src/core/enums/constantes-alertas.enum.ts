@@ -74,10 +74,10 @@ export const MESES = [
 export const SEMANA = [
   'Lunes',
   'Martes',
-  'Miercoles',
+  'Miércoles',
   'Jueves',
   'Viernes',
-  'Sabado',
+  'Sábado',
   'Domingo',
 ];
 
@@ -85,10 +85,10 @@ export const SEMANA_D = [
   'Domingo',
   'Lunes',
   'Martes',
-  'Miercoles',
+  'Miércoles',
   'Jueves',
   'Viernes',
-  'Sabado',
+  'Sábado',
 ];
 
 export const MENSAJEDEALERTA = {

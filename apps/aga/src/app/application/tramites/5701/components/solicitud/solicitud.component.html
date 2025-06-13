@@ -470,7 +470,7 @@
             formControlName="folioDDEX"
             placeholder=""
             (change)="
-              setValoresStore(despacho, 'folioDDEX', 'setAutorizacionDDEX')
+              changeFolioDDEX()
             "
             [ngClass]="isValid(despacho, 'folioDDEX') ? 'required' : ''"
           />

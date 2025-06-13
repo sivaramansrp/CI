@@ -119,7 +119,7 @@ export const CONFIGURACION_ENCABEZADO_TABLA_PAGOS: ConfiguracionColumna<LineaCap
      * - Orden: 1.
      */
     {
-      encabezado: 'lineaCaptura',
+      encabezado: 'Línea captura',
       clave: (fila) => fila.lineaCaptura,
       orden: 1,
     },
@@ -130,7 +130,7 @@ export const CONFIGURACION_ENCABEZADO_TABLA_PAGOS: ConfiguracionColumna<LineaCap
      * - Clave: Obtiene el valor de `correo` de la fila.
      * - Orden: 2.
      */
-    { encabezado: 'monto', clave: (fila) => fila.monto, orden: 2 },
+    { encabezado: 'Monto', clave: (fila) => fila.monto, orden: 2 },
   ];
 
 /**
@@ -156,7 +156,7 @@ export const UN_DIA = 1;
  * @description Etiquetas para el crosslist de fechas
  */
 export const LABEL_CROSSLIST: CrossListLable = {
-  tituluDeLaIzquierda: 'Fechas dentro del período',
+  tituluDeLaIzquierda: 'Fechas dentro del periodo',
   derecha: 'Fechas seleccionadas para el servicio extraordinario',
 };
 

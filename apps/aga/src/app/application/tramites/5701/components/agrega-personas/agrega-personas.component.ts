@@ -22,6 +22,7 @@ import {
   MSG_SELECCIONA_REGISTRO,
   Notificacion,
   NotificacionesComponent,
+  SoloLetrasNumerosDirective,
   TITULO_MODAL_AVISO,
   TablaDinamicaComponent,
   TablaSeleccion,
@@ -57,6 +58,7 @@ import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
     UppercaseDirective,
     NotificacionesComponent,
     TablaDinamicaComponent,
+    SoloLetrasNumerosDirective,
   ],
   templateUrl: './agrega-personas.component.html',
   styleUrl: './agrega-personas.component.scss',
@@ -173,8 +175,9 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {boolean | null} - Devuelve `true` si el campo es válido, `false` si no lo es,
    * o `null` si no se puede determinar la validez.
    */
-  isValid(field: string): boolean | null {
-    return this.validacionesService.isValid(this.personaForm, field);
+  isValid(field: string): boolean | null | undefined {
+    const CONTROL = this.personaForm.get(field);
+    return CONTROL ? Boolean(CONTROL.errors) && CONTROL.touched : null;
   }
 
   /**
@@ -308,12 +311,10 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
       };
 
       this.gafeteRespoDespacho.markAllAsTouched();
-      this.personaForm.markAllAsTouched();
-      this.habilitarCamposFormulario();
       return;
     }
 
-    if (this.personaForm.invalid) {
+    if (this.personaForm.invalid || this.personaForm.disabled) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: '',
@@ -324,6 +325,7 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
         txtBtnAceptar: 'Cerrar',
         txtBtnCancelar: '',
       };
+      this.personaForm.markAllAsTouched();
       return;
     }
 

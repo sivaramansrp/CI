@@ -156,4 +156,12 @@ export const MSJ_ERROR_FECHA_FINAL_NO_SELECCIONADA = 'Debe registrar la fecha fi
  */
 export const MSJ_ERROR_FECHA_INICIAL_NO_SELECCIONADA = 'Debe registrar la fecha inicial';
 
+/**
+ * @description Mensaje error del RFC no autorizado para operar en LDA.
+ */
 export const MSJ_ERROR_RFC_AUTORIZACION_LDA = 'No está autorizado para operar en LDA, favor de verificar.';
+
+/**
+ * @description Mensaje error del RFC no autorizado para operar en DDEX.
+ */
+export const MSJ_ERROR_FOLIO_DDEX = 'EL RFC no está autorizado para realizr DD, favor de verificar.';

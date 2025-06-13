@@ -141,6 +141,7 @@ import {
   MSJ_ERROR_FECHA_INICIAL_NO_SELECCIONADA,
   MSJ_ERROR_FECHA_MES,
   MSJ_ERROR_FECHA_SEMANA,
+  MSJ_ERROR_FOLIO_DDEX,
   MSJ_ERROR_ID_SOCIO_COMERCIAL,
   MSJ_ERROR_LINEA_CAPTURA,
   MSJ_ERROR_RFC_AUTORIZACION_LDA,
@@ -2576,7 +2577,9 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     const ESPECIFIQUE_DESPACHO = this.despacho.get('especifique')?.value;
 
     const CATALOGO_VALIDO =
-      CATALOGO_RECINTO !== null && CATALOGO_RECINTO !== '-1' && CATALOGO_RECINTO !== '-2';
+      CATALOGO_RECINTO !== null &&
+      CATALOGO_RECINTO !== '-1' &&
+      CATALOGO_RECINTO !== '-2';
     const ESPECIFIQUE_VALIDO = Boolean(ESPECIFIQUE_DESPACHO?.toString().trim());
 
     return CATALOGO_VALIDO || ESPECIFIQUE_VALIDO;
@@ -2651,13 +2654,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    * @param tipoTransporte {string} - El tipo de transporte seleccionado.
    * @returns {void} No retorna ningún valor.
    */
-  changeSeleccionTipoVehiculo(tipoTransporte: string): void {  
+  changeSeleccionTipoVehiculo(tipoTransporte: string): void {
     this.transporteArriboSalida.get('tipoTransporte')?.setValue(tipoTransporte);
     this.setValoresStore(
       this.transporteArriboSalida,
       'tipoTransporte',
       'setTipoTransporteArriboSalida'
-    );    
+    );
   }
 
   /**
@@ -3017,16 +3020,34 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         titulo: TITULO_MODAL_AVISO,
         mensaje: MENSAJE_ERROR,
         cerrar: false,
-        txtBtnAceptar: 'Aceptar',
+        txtBtnAceptar: 'Cerrar',
         txtBtnCancelar: '',
       };
 
-      const RFC_LDA = this.despacho.get('rfcDespachoLDA');
-      RFC_LDA?.reset();
-      RFC_LDA?.markAsUntouched();
+      FOLIO_DDEX?.reset();
+      FOLIO_DDEX?.markAsUntouched();
       return;
     }
 
-    console.log('FOLIO_DDEX', FOLIO_DDEX?.value);
+    if (FOLIO_DDEX?.hasError('pattern')) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: TITULO_MODAL_AVISO,
+        mensaje: MSJ_ERROR_FOLIO_DDEX,
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
+
+      FOLIO_DDEX?.reset();
+      FOLIO_DDEX?.markAsUntouched();
+      return;
+    }
+
+    // Aqui se valida el folio DDEX
+    this.despacho.get('idAduanaDespacho')?.enable();
+    this.despacho.get('domicilioDespacho')?.enable();
   }
 }
