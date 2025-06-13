@@ -352,8 +352,8 @@
   {
     "id": 51,
     "tramite": 120201,
-    "linkDashboard": "/se/cupos/consultar-cupo",
-    "linkDepartment": "/pago/cupos/consultar-cupo",
+    "linkDashboard": "/se/expedicion-certificados-asignacion-directa-fisica/fisica",
+    "linkDepartment": "/pago/expedicion-certificados-asignacion-directa-fisica/fisica",
     "department": "se"
   },
   {
@@ -835,8 +835,8 @@
   {
     "id": 120,
     "tramite": 120202,
-    "linkDashboard": "/se/expedicion-certificados-asignacion-directa/expedicion-certificados-asignacion",
-    "linkDepartment": "/pago/expedicion-certificados-asignacion-directa/expedicion-certificados-asignacion",
+    "linkDashboard": "/se/expedicion-certificados-asignacion-directa-moral/moral",
+    "linkDepartment": "/pago/expedicion-certificados-asignacion-directa-moral/moral",
     "department": "se"
   },
   {
@@ -1332,9 +1332,9 @@
   {
     "id": 191,
     "tramite": 30505,
-    "linkDashboard": "/aga/aviso-de-modificacion/aviso",
+    "linkDashboard": "/agace/aviso-de-modificacion/aviso",
     "linkDepartment": "/pago/aviso-de-modificacion/aviso",
-    "department": "aga"
+    "department": "agace"
   },
   {
     "id": 192,
