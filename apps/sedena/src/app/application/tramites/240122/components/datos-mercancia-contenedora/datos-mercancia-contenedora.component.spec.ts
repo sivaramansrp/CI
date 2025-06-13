@@ -3,11 +3,15 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { DatosMercanciaContenedoraComponent } from './datos-mercancia-contenedora.component';
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
-import { of } from 'rxjs';
+import { of, BehaviorSubject } from 'rxjs';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
 describe('DatosMercanciaContenedoraComponent', () => {
   let component: DatosMercanciaContenedoraComponent;
   let fixture: ComponentFixture<DatosMercanciaContenedoraComponent>;
+
+  // Mock a BehaviorSubject for the readonly state
+  const mockReadonly$ = new BehaviorSubject({ readonly: false });
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -16,17 +20,23 @@ describe('DatosMercanciaContenedoraComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            params: of({}), // Mock params as an observable
-            queryParams: of({}), // Mock queryParams if needed
-            data: of({}), // Mock data as an observable
+            params: of({}),
+            queryParams: of({}),
+            data: of({}),
           },
         },
         {
           provide: DatosSolicitudService,
           useValue: {
-            obtenerFraccionesCatalogo: jest.fn().mockReturnValue(of([])), // Mock the method to return an observable
-            obtenerUMCCatalogo: jest.fn().mockReturnValue(of([])), // Mock the method to return an observable
-            obtenerMonedaCatalogo: jest.fn().mockReturnValue(of([])), // Mock the method to return an observable
+            obtenerFraccionesCatalogo: jest.fn().mockReturnValue(of([])),
+            obtenerUMCCatalogo: jest.fn().mockReturnValue(of([])),
+            obtenerMonedaCatalogo: jest.fn().mockReturnValue(of([])),
+          },
+        },
+        {
+          provide: ConsultaioQuery,
+          useValue: {
+            selectConsultaioState$: mockReadonly$.asObservable(),
           },
         },
       ],
@@ -34,10 +44,24 @@ describe('DatosMercanciaContenedoraComponent', () => {
 
     fixture = TestBed.createComponent(DatosMercanciaContenedoraComponent);
     component = fixture.componentInstance;
+
+    // Initial change detection
     fixture.detectChanges();
+    // Wait for async observables to emit and stabilize view
+    await fixture.whenStable();
+    fixture.detectChanges(); // Final check after async
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should update esFormularioSoloLectura from observable', async () => {
+    mockReadonly$.next({ readonly: true });
+
+    await fixture.whenStable();
+    fixture.detectChanges();
+
+    expect(component.esFormularioSoloLectura).toBe(true);
   });
 });

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
@@ -67,7 +67,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit,OnDestroy {
      * @returns {void}
      */
     // eslint-disable-next-line no-empty-function
-    constructor(private tramiteStore: Tramite240122Store,private readonly consultaioQuery:ConsultaioQuery) {}
+    constructor(private tramiteStore: Tramite240122Store,private readonly consultaioQuery:ConsultaioQuery,private readonly cdr: ChangeDetectorRef) {}
 
     ngOnInit(): void {
           this.consultaioQuery.selectConsultaioState$
@@ -75,6 +75,7 @@ export class DatosMercanciaContenedoraComponent implements OnInit,OnDestroy {
                 takeUntil(this.unsubscribe$),
                 map((seccionState)=>{
                   this.esFormularioSoloLectura = seccionState.readonly; 
+                   this.cdr.detectChanges();
                 })
               )
               .subscribe();
