@@ -1,9 +1,10 @@
+import { Component, OnInit } from '@angular/core';
 import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import { Observable, Subject,map,takeUntil } from 'rxjs';
 import { AgregarDestinatarioCustomComponent } from '../../../../shared/components/agregar-destinatario-custom/agregar-destinatario-custom.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
-import { Observable } from 'rxjs';
 import { Tramite240122Query } from '../../estados/tramite240122Query.query';
 import { Tramite240122Store } from '../../estados/tramite240122Store.store';
 
@@ -40,7 +41,7 @@ import { Tramite240122Store } from '../../estados/tramite240122Store.store';
   templateUrl: './agregar-destinatario-final-contenedora.component.html',
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
-export class AgregarDestinatarioFinalContenedoraComponent {
+export class AgregarDestinatarioFinalContenedoraComponent implements OnInit {
   
   /**
    * @property {number} idProcedimiento - Identificador del procedimiento asociado al trámite.
@@ -55,6 +56,12 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    */
   public terechosDatos$!: Observable<DestinoFinal | Proveedor | null | undefined>;
 
+  public esFormularioSoloLectura:boolean = false;
+    /**
+   * Subject para notificar la destrucción del componente.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
   /**
    * Constructor del componente.
    *
@@ -63,8 +70,18 @@ export class AgregarDestinatarioFinalContenedoraComponent {
    * @param {Tramite240122Query} tramiteQuery - Query que permite obtener datos relacionados con el trámite.
    * @returns {void}
    */
-  constructor(public tramiteStore: Tramite240122Store, public tramiteQuery: Tramite240122Query) {
+  constructor(public tramiteStore: Tramite240122Store, public tramiteQuery: Tramite240122Query,private readonly consultaioQuery:ConsultaioQuery) {
     this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
+  }
+  ngOnInit(): void {
+     this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+      })
+    )
+    .subscribe()
   }
 
   /**
