@@ -1,9 +1,12 @@
+import { Component, OnInit } from '@angular/core';
 import { AgregarProveedorCustomComponent } from '../../../../shared/components/agregar-proveedor-custom/agregar-proveedor-custom.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite240122Store } from '../../estados/tramite240122Store.store';
+
+import { Subject,map, takeUntil } from 'rxjs';
 
 /**
  * @component
@@ -36,7 +39,7 @@ import { Tramite240122Store } from '../../estados/tramite240122Store.store';
   templateUrl: './agregar-proveedor-contenedora.component.html',
   styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
-export class AgregarProveedorContenedoraComponent {
+export class AgregarProveedorContenedoraComponent implements OnInit{
 
     /**
      * @property {number} idProcedimiento - Identificador único del procedimiento asociado al trámite 240122.
@@ -44,13 +47,39 @@ export class AgregarProveedorContenedoraComponent {
      */
     public readonly idProcedimiento: number = NUMERO_TRAMITE.TRAMITE_240122;
   
+    public esFormularioSoloLectura:boolean=false;
+        /**
+       * Subject para notificar la destrucción del componente.
+       */
+      private destroyNotifier$: Subject<void> = new Subject();
     /**
      * @constructor
      * @description Constructor que inyecta el store `Tramite240122Store` para gestionar el estado del trámite.
      *
      * @param {Tramite240122Store} tramite240122Store - Store que administra el estado del trámite 240122.
      */
-    constructor(public tramite240122Store: Tramite240122Store) {}
+    constructor(public tramite240122Store: Tramite240122Store,private readonly consultaioQuery: ConsultaioQuery) {}
+
+    /**
+     * @inheritdoc
+     * @description
+     * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+     * Suscribe al observable `selectConsultaioState$` para actualizar la propiedad
+     * `esFormularioSoloLectura` según el estado de la sección. La suscripción se
+     * cancela automáticamente cuando se emite un valor en `destroyNotifier$`.
+     *
+     * @memberof AgregarProveedorContenedoraComponent
+     */
+    ngOnInit(): void {
+       this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+      })
+    )
+    .subscribe()
+    }
   
     /**
      * @method updateProveedorTablaDatos
