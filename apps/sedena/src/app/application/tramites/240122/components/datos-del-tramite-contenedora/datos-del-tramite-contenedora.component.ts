@@ -1,13 +1,14 @@
 import { ActivatedRoute, Router } from '@angular/router';
+import { AfterViewInit, Component } from '@angular/core';
+import { Subject,map, } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { ID_PROCEDIMIENTO } from '../../constantes/exportacion-explosivo-enum';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
 import { Tramite240122Query } from '../../estados/tramite240122Query.query';
 import { Tramite240122Store } from '../../estados/tramite240122Store.store';
 import { takeUntil } from 'rxjs';
@@ -34,7 +35,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './datos-del-tramite-contenedora.component.html',
   styleUrl: './datos-del-tramite-contenedora.component.scss',
 })
-export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy { 
+export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy,AfterViewInit { 
 
   /**
    * Identificador único del procedimiento asociado al trámite.
@@ -65,6 +66,8 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   public datosDelTramiteFormState!: DatosDelTramiteFormState;
 
+  public esFormularioSoloLectura:boolean=false;
+
   /**
    * Constructor del componente.
    *
@@ -77,7 +80,8 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
     private tramiteQuery: Tramite240122Query,
     private tramiteStore: Tramite240122Store,
     private activatedRoute: ActivatedRoute,
-    private router: Router, // eslint-disable-next-line no-empty-function
+    private router: Router, 
+    private readonly consultaioQuery:ConsultaioQuery
   ) {}
 
   /**
@@ -99,6 +103,26 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.datosDelTramiteFormState = data;
       });
+  }
+    /**
+         * @inheritdoc
+         * @description
+         * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+         * Suscribe al observable `selectConsultaioState$` para actualizar la propiedad
+         * `esFormularioSoloLectura` según el estado de la sección. La suscripción se
+         * cancela automáticamente cuando se emite un valor en `destroyNotifier$`.
+         *
+         * @memberof AgregarProveedorContenedoraComponent
+         */
+  ngAfterViewInit(): void {
+           this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.unsubscribe$),
+          map((seccionState)=>{
+            this.esFormularioSoloLectura = seccionState.readonly; 
+          })
+        )
+        .subscribe()
   }
 
   /**
