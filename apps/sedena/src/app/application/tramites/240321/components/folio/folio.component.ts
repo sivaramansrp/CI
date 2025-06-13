@@ -1,5 +1,6 @@
 import {
   CatalogoSelectComponent,
+  ConsultaioQuery,
   TablaDinamicaComponent, 
   TituloComponent,
   UppercaseDirective 
@@ -70,6 +71,7 @@ export class FolioComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private tramiteStore:Tramite240321Store,
     private tramiteQuery:Tramite240321Query,
+    private readonly consultaioQuery:ConsultaioQuery
   ) {
    
     

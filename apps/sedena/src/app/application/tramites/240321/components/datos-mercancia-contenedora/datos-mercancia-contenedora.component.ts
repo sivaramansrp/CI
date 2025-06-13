@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { Tramite240321Store } from '../../estados/tramite240321Store.store';
@@ -26,7 +27,7 @@ export class DatosMercanciaContenedoraComponent {
    * @returns {void}
    */
  
-  constructor(private tramiteStore: Tramite240321Store) {
+  constructor(private tramiteStore: Tramite240321Store,private readonly consultaioQuery:ConsultaioQuery) {
     // 
   }
 

@@ -2,6 +2,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AgregarDestinatarioCustomComponent } from '../../../../shared/components/agregar-destinatario-custom/agregar-destinatario-custom.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -52,7 +53,7 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit, OnD
    * @param {Tramite240321Store} tramiteStore - Store que administra el estado del trámite.
    * @returns {void}
    */
-  constructor(public tramiteStore: Tramite240321Store,private route: ActivatedRoute,private tramiteQuery: Tramite240321Query) {
+  constructor(public tramiteStore: Tramite240321Store,private route: ActivatedRoute,private tramiteQuery: Tramite240321Query,private readonly consultaioQuery:ConsultaioQuery) {
     // 
   }
 

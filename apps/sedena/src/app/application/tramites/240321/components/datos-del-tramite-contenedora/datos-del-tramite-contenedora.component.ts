@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { JustificacionTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
@@ -69,7 +70,8 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite240321Query,
-    private tramiteStore: Tramite240321Store
+    private tramiteStore: Tramite240321Store,
+    private readonly consultaioQuery:ConsultaioQuery
   ) {
     //
   }

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
@@ -44,7 +45,8 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite240321Query,
-    private tramiteStore: Tramite240321Store 
+    private tramiteStore: Tramite240321Store,
+    private readonly consultaioQuery:ConsultaioQuery
   ) {
     // 
   }

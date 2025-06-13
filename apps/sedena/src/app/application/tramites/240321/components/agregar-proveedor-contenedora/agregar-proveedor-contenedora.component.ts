@@ -2,6 +2,7 @@ import { ActivatedRoute } from '@angular/router';
 import { AgregarProveedorCustomComponent } from '../../../../shared/components/agregar-proveedor-custom/agregar-proveedor-custom.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
@@ -39,7 +40,7 @@ export class AgregarProveedorContenedoraComponent implements OnInit, OnDestroy {
   proveedorIndice: string = '';
   
   constructor(public tramite240321Store: Tramite240321Store,private route: ActivatedRoute,
-    private tramiteQuery: Tramite240321Query
+    private tramiteQuery: Tramite240321Query,private readonly consultaioQuery:ConsultaioQuery
   ) {
     // 
   }

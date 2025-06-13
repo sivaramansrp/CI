@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { ModificacionService } from '../../services/modificacion.service';
 import { OnDestroy } from '@angular/core';
@@ -56,7 +57,9 @@ export class TercerosRelacionadosContenedoraComponent
   constructor(
     private tramiteStore: Tramite240321Store,
     private tramiteQuery: Tramite240321Query,
-    private modificacionService: ModificacionService
+    private modificacionService: ModificacionService,
+    private readonly consultaioQuery:ConsultaioQuery
+  
   ) {
     // 
   }
