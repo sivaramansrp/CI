@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
@@ -18,10 +18,16 @@ import { takeUntil } from 'rxjs';
   selector: 'app-pago-de-derechos-contenedora',
   standalone: true,
   imports: [CommonModule, PagoDeDerechosComponent],
-  templateUrl: './pago-de-derechos-contenedora.component.html'
+  templateUrl: './pago-de-derechos-contenedora.component.html',
 })
 export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
-  
+  /**
+   * @property esFormularioSoloLectura
+   * @description Indica si el formulario es de solo lectura.
+   * @type {boolean}
+   */
+  @Input()
+  esFormularioSoloLectura: boolean = false;
   /**
    * Estado actual del formulario de pago de derechos.
    * @property {PagoDerechosFormState} pagoDerechoFormState
@@ -44,9 +50,8 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite240114Query,
-    private tramiteStore: Tramite240114Store
-  ) // eslint-disable-next-line no-empty-function
-  {}
+    private tramiteStore: Tramite240114Store // eslint-disable-next-line no-empty-function
+  ) {}
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.

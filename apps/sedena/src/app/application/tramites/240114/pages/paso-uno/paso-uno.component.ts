@@ -31,6 +31,11 @@ import { takeUntil } from 'rxjs';
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
   /**
+   * @description Constructor del componente.
+   * Inicializa el componente y establece el índice de la pestaña seleccionada.
+   */
+  formularioDeshabilitado: boolean = true;
+  /**
    * @property indice
    * @description Indicates the index of the selected tab within the form step.
    * @type {number | undefined}
