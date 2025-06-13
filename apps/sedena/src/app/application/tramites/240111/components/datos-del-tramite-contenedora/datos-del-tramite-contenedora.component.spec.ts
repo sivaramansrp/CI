@@ -56,17 +56,17 @@ describe('DatosDelTramiteContenedoraComponent', () => {
         {
           provide: ActivatedRoute,
           useValue: {
-            params: of({}), // Mock params as an observable
-            queryParams: of({}), // Mock queryParams if needed
-            data: of({}), // Mock data as an observable
+            params: of({}),
+            queryParams: of({}),
+            data: of({}),
           },
         },
         {
           provide: DatosSolicitudService,
           useValue: {
-            obtenerFraccionesCatalogo: jest.fn().mockReturnValue(of([])), // Mock the method to return an observable
-            obtenerUMCCatalogo: jest.fn().mockReturnValue(of([])), // Mock the method to return an observable
-            obtenerMonedaCatalogo: jest.fn().mockReturnValue(of([])), // Mock the method to return an observable
+            obtenerFraccionesCatalogo: jest.fn().mockReturnValue(of([])),
+            obtenerUMCCatalogo: jest.fn().mockReturnValue(of([])),
+            obtenerMonedaCatalogo: jest.fn().mockReturnValue(of([])),
           },
         },
       ],

@@ -55,11 +55,9 @@ describe('AgregarProveedorContenedoraComponent', () => {
         FormsModule,
         ReactiveFormsModule,
         HttpClientTestingModule,
-        AgregarProveedorContenedoraComponent // if standalone
+        AgregarProveedorContenedoraComponent
       ],
       declarations: [
-        // Uncomment if component is NOT standalone
-        // AgregarProveedorContenedoraComponent,
         TranslatePipe,
         PhoneNumberPipe,
         SafeHtmlPipe,
