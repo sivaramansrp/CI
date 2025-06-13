@@ -34,7 +34,7 @@ export class SectoresMercanciasService {
    */
   getRegistroTomaMuestrasMercanciasData(): Observable<SolicitudSectoresYMercanciasState> {
     return this.http.get<SolicitudSectoresYMercanciasState>(
-      'assets/json/260501/registro_toma_muestras_mercancias.json'
+      'assets/json/90202/registro_toma_muestras_mercancias.json'
     );
   }
 
