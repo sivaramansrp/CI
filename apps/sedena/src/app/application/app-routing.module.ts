@@ -218,6 +218,13 @@ const ROUTES: Routes = [
       import('./detalle-v-dictamen/detalle-v-dictamen.component').then((m) => m.DetalleVDictamenComponent),
   },
   {
+    path: 'permiso-ordinario-importacion-material-explosivo',
+    loadChildren: () =>
+      import(
+        './tramites/240108/permiso-ordinario-importacion-exlposivo.module'
+      ).then((m) => m.PermisoOrdinarioImportacionExlposivoModule),
+  },
+  {
     path: 'datos-generales-tramite',
     loadComponent: () =>
       import('./datos-generales-tramite/datos-generales-tramite.component').then((m) => m.DatosGeneralesTramiteComponent),

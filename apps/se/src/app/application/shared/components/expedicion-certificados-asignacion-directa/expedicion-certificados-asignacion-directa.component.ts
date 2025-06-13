@@ -1,14 +1,14 @@
-import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Catalogo, CatalogoSelectComponent, FECHA_FINAL_VIGENCIA, FECHA_FINAL_VIGENCIA_DEL_CUPO, FECHA_INICIO_VIGENCIA, FECHA_INICIO_VIGENCIA_DEL_CUPO, InputFecha, InputFechaComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
-import { ExpedicionCertificadosAsignacion120202State, Tramite120202Store } from '../../../../estados/tramites/tramite120202.store';
-import { ExpedirMonto, NumeroOficioAsignacionDetalleRespquesta } from '../../models/expedicion-certificados-asignacion.model';
-import { CONFIGURACION_PARA_ENCABEZADO_DE_EXPEDIR_MONTO_TABLA } from '../../constantes/expedicion-certificados-asignacion-constantes.enum';
-import { ExpedicionCertificadosAsignacionService } from '../../services/expedicion-certificados-asignacion/expedicion-certificados-asignacion.service';
-import { Tramite120202Query } from '../../../../estados/queries/tramite120202.query';
+import { ExpedicionCertificadosAsignacion120202State, Tramite120202Store } from '../../../estados/tramites/tramite120202.store';
+import { ExpedirMonto, NumeroOficioAsignacionDetalleRespquesta } from '../../../tramites/120202/models/expedicion-certificados-asignacion.model';
+import { CONFIGURACION_PARA_ENCABEZADO_DE_EXPEDIR_MONTO_TABLA } from '../../../tramites/120202/constantes/expedicion-certificados-asignacion-constantes.enum';
+import { ExpedicionCertificadosAsignacionService } from '../../../tramites/120202/services/expedicion-certificados-asignacion/expedicion-certificados-asignacion.service';
+import { Tramite120202Query } from '../../../estados/queries/tramite120202.query';
 
 /**
  * Componente para la expedición de certificados de asignación directa.
@@ -21,7 +21,8 @@ import { Tramite120202Query } from '../../../../estados/queries/tramite120202.qu
     ReactiveFormsModule,
     TituloComponent,
     CatalogoSelectComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    InputFechaComponent
   ],
   templateUrl: './expedicion-certificados-asignacion-directa.component.html',
   styleUrl: './expedicion-certificados-asignacion-directa.component.scss',
@@ -56,6 +57,39 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit,
    * Configuración de la tabla dinámica.
    */
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
+
+  /**
+   * Fecha inicio de entrada.
+   */
+  fechaInicioInput: InputFecha = FECHA_INICIO_VIGENCIA;
+
+  /**
+   * Fecha final de entrada.
+   */
+  fechaFinVigenciaAprobadaInput: InputFecha = FECHA_FINAL_VIGENCIA;
+
+  /**
+   * Fecha de inicio de vigencia del cupo.
+   */
+  fechaInicioVigenciaInput: InputFecha = FECHA_INICIO_VIGENCIA_DEL_CUPO;
+
+  /**
+   * Fecha final de vigencia del cupo.
+   */
+  fechaFinVigenciaInput: InputFecha = FECHA_FINAL_VIGENCIA_DEL_CUPO;
+
+  /**
+   * Montos seleccionados en la tabla de expedición de monto.
+   * @type {ExpedirMonto[]}
+   */
+  public selectedMonto: ExpedirMonto[] = [];
+
+  /**
+   * Emisor de eventos para mostrar errores.
+   * @type {EventEmitter<boolean>}
+   * @description Emite un valor booleano para indicar si se debe mostrar un error.
+   */
+  @Output() mostrarError: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   /**
    * Estado de la expedición de certificados de asignación.
@@ -283,53 +317,116 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit,
   }
 
   /**
+   * Método para cambiar la fecha inicio de la asignación.
+   * @param nuevo_valor Nuevo valor de la fecha de inicio de la asignación.
+   * @returns {void}
+   */
+  cambioFechaInicio(nuevo_valor: string): void {
+    this.asignacionDatosForm.patchValue({
+      fechaInicio: nuevo_valor,
+    });
+    this.tramite120202Store.setFechaInicio(nuevo_valor);
+  }
+
+  /**
+   * Método para cambiar la fecha de fin de vigencia aprobada.
+   * @param nuevo_valor Nuevo valor de la fecha de fin de vigencia aprobada.
+   * @returns {void}
+   */
+  cambioFechaFinVigenciaAprobada(nuevo_valor: string): void {
+    this.asignacionDatosForm.patchValue({
+      fechaFinVigenciaAprobada: nuevo_valor,
+    });
+    this.tramite120202Store.setFechaFinVigenciaAprobada(nuevo_valor);
+  }
+
+  /**
+   * Método para cambiar la fecha de inicio de vigencia del cupo.
+   * @param nuevo_valor Nuevo valor de la fecha de inicio de vigencia del cupo.
+   * @returns {void}
+   */
+  cambioFechaInicioVigencia(nuevo_valor: string): void {
+    this.cupoDescripcionForm.patchValue({
+      fechaInicioVigencia: nuevo_valor,
+    });
+    this.tramite120202Store.setFechaInicioVigencia(nuevo_valor);
+  }
+
+  /**
+   * Método para cambiar la fecha de fin de vigencia del cupo.
+   * @param nuevo_valor Nuevo valor de la fecha de fin de vigencia del cupo.
+   * @returns {void}
+   */
+  cambioFechaFinVigencia(nuevo_valor: string): void {
+    this.cupoDescripcionForm.patchValue({
+      fechaFinVigencia: nuevo_valor,
+    });
+    this.tramite120202Store.setFechaFinVigencia(nuevo_valor);
+  }
+
+  /**
+   * Método para establecer el valor de alternancia en la tabla de montos a expedir.
+   * @param row - Fila seleccionada de la tabla de montos a expedir.
+   * @description Este método se utiliza para establecer el valor de alternancia en la tabla de montos a expedir.
+   */
+  valorDeAlternancia(row: ExpedirMonto[]): void {
+    this.selectedMonto = row;
+  }
+
+  /**
    * Método para buscar el número de oficio de asignación.
    * @returns {void}
    */
-  buscar(): void {
-    this.asignacionOficioNumeroForm.reset();
-    this.tramite120202Store.setAniosAutorizacion('');
-    this.tramite120202Store.setNumFolioAsignacionAux('');
+  buscar(cveAniosAutorizacion: string, numFolioAsignacionAux: string): void {
+    if (cveAniosAutorizacion === '-1' || numFolioAsignacionAux.length <= 0 || numFolioAsignacionAux === null) {
+      this.mostrarError.emit(true);
+      return;
+    } else {
+      this.mostrarError.emit(false);
+      this.asignacionOficioNumeroForm.reset({ cveAniosAutorizacion: '-1', numFolioAsignacionAux: '' });
+      this.tramite120202Store.setAniosAutorizacion('-1');
+      this.tramite120202Store.setNumFolioAsignacionAux('');
 
-    this.expedicionCertificadosAsignacionService.getNumeroOficioAsignacionDetalle()
-      .pipe((takeUntil(this.destruirNotificador$)))
-      .subscribe((resp: NumeroOficioAsignacionDetalleRespquesta) => {
-        const DATOS = resp.data[0];
-        this.representacionFederalForm.patchValue({
-          estado: DATOS.estado,
-          representacionFederal: DATOS.representacionFederal
+      this.expedicionCertificadosAsignacionService.getNumeroOficioAsignacionDetalle()
+        .pipe((takeUntil(this.destruirNotificador$)))
+        .subscribe((resp: NumeroOficioAsignacionDetalleRespquesta) => {
+          const DATOS = resp.data[0];
+          this.representacionFederalForm.patchValue({
+            estado: DATOS.estado,
+            representacionFederal: DATOS.representacionFederal
+          });
+          this.controlMontosAsignacionForm.patchValue({
+            sumaAprobada: DATOS.sumaAprobada,
+            sumaExpedida: DATOS.sumaExpedida,
+            montoDisponible: DATOS.montoDisponible
+          });
+          this.asignacionDatosForm.patchValue({
+            numOficio: DATOS.numOficio,
+            fechaInicio: DATOS.fechaInicio,
+            fechaFinVigenciaAprobada: DATOS.fechaFinVigenciaAprobada
+          });
+          this.cupoDescripcionForm.patchValue({
+            regimenAduanero: DATOS.regimenAduanero,
+            descripcionProducto: DATOS.descripcionProducto,
+            clasificaionSubproducto: DATOS.clasificaionSubproducto,
+            unidadMedidaOficialCupo: DATOS.unidadMedidaOficialCupo,
+            fechaInicioVigencia: DATOS.fechaInicioVigencia,
+            fechaFinVigencia: DATOS.fechaFinVigencia,
+            mecanismoAsignacion: DATOS.mecanismoAsignacion,
+            tratado: DATOS.tratado,
+            fraccionesArancelarias: DATOS.fraccionesArancelarias,
+            paisesCupo: DATOS.paisesCupo,
+            observaciones: DATOS.observaciones,
+            descripcionFundamento: DATOS.descripcionFundamento
+          });
+          this.distribucionSaldoForm.patchValue({
+            montoDisponibleAsignacion: DATOS.montoDisponibleAsignacion
+          });
+          this.mostrarDetalle = true;
+          this.tramite120202Store.setMostrarDetalle(this.mostrarDetalle);
+          this.setEstablecerDatosCampo();
         });
-        this.controlMontosAsignacionForm.patchValue({
-          sumaAprobada: DATOS.sumaAprobada,
-          sumaExpedida: DATOS.sumaExpedida,
-          montoDisponible: DATOS.montoDisponible
-        });
-        this.asignacionDatosForm.patchValue({
-          numOficio: DATOS.numOficio,
-          fechaInicio: DATOS.fechaInicio,
-          fechaFinVigenciaAprobada: DATOS.fechaFinVigenciaAprobada
-        });
-        this.cupoDescripcionForm.patchValue({
-          regimenAduanero: DATOS.regimenAduanero,
-          descripcionProducto: DATOS.descripcionProducto,
-          clasificaionSubproducto: DATOS.clasificaionSubproducto,
-          unidadMedidaOficialCupo: DATOS.unidadMedidaOficialCupo,
-          fechaInicioVigencia: DATOS.fechaInicioVigencia,
-          fechaFinVigencia: DATOS.fechaFinVigencia,
-          mecanismoAsignacion: DATOS.mecanismoAsignacion,
-          tratado: DATOS.tratado,
-          fraccionesArancelarias: DATOS.fraccionesArancelarias,
-          paisesCupo: DATOS.paisesCupo,
-          observaciones: DATOS.observaciones,
-          descripcionFundamento: DATOS.descripcionFundamento
-        });
-        this.distribucionSaldoForm.patchValue({
-          montoDisponibleAsignacion: DATOS.montoDisponibleAsignacion
-        });
-        this.mostrarDetalle = true;
-        this.tramite120202Store.setMostrarDetalle(this.mostrarDetalle);
-        this.setEstablecerDatosCampo();
-      });
+    }
   }
 
   /**
@@ -377,6 +474,39 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit,
     this.tramite120202Store.setCuerpoTabla(this.cuerpoTabla);
     this.distribucionSaldoForm.get('totalExpedir')?.setValue(valor);
     this.tramite120202Store.setTotalExpedir(MONTO_EXPEDIR_VALOR);
+    
+    this.distribucionSaldoForm.get('montoExpedir')?.setValue('');
+    this.tramite120202Store.setMontoExpedir(null);
+  }
+
+  /**
+   * Elimina el monto seleccionado de la tabla.
+   * @returns {void}
+   */
+  eliminar(): void {
+    if (this.selectedMonto.length > 0) {
+      const INDICE = this.cuerpoTabla.findIndex((elemento) =>
+        Object.entries(this.selectedMonto[0] || {}).every(
+          ([key, value]) => elemento[key as keyof ExpedirMonto] === value
+        )
+      );
+      if (INDICE !== -1) {
+        this.cuerpoTabla.splice(INDICE, 1);
+        this.tramite120202Store.setCuerpoTabla(this.cuerpoTabla);
+      }
+      this.selectedMonto = [];
+    }
+  }  
+
+  /**
+   * Método para validar el formulario.
+   * @returns boolean
+   */
+  validarFormulario(): boolean {
+    if (this.expedicionCertificadosAsignacionForm.invalid) {
+      this.expedicionCertificadosAsignacionForm.markAllAsTouched();
+    }
+    return this.expedicionCertificadosAsignacionForm.valid;
   }
 
   /**
