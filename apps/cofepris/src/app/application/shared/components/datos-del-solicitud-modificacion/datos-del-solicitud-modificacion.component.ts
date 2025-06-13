@@ -67,13 +67,14 @@ import {
   PropietarioTipoPersona,
   ScianModel,
 } from '../../models/datos-de-la-solicitud.model';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject ,map, takeUntil } from 'rxjs';
 import { ScianData } from '../../../shared/models/datos-modificacion.model';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { EstablecimientoService } from '../../services/establecimiento.service';
 import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-representante-seccion/manifiestos-representante-seccion.component';
+
 import { NUEVA_NOTIFICACION, PAIS_DE_PROCEDENCIA_LABEL } from '../../constantes/datos-domicilio-legal.enum';
 /*
  ** component
