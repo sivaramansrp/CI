@@ -15,7 +15,7 @@
   "establecimientoDomicilioTelefono": "12345678",
   "rfcDelProfesionalResponsable": "EFGH987654WXY",
   "nombreDelProfesionalResponsable": "Laura Mendoza",
-  "informacionConfidencialRadio": "sí",
+  "informacionConfidencialRadio": "Si",
   "propietarioData": [],
   "establecimientoData": [],
   "scian": "324110",
@@ -41,5 +41,6 @@
   "noDeLicenciaSanitaria": "LS-112233",
   "noDeLicenciaSanitariaObservaciones": "Vigente hasta 2026",
   "regimenAlQueSeDestinaraLaMercancía": "Temporal",
-  "aduanaDeSalida": "Tijuana"
+  "aduanaDeSalida": "Tijuana",
+  "ideGenerica":"prorroga"
 }
