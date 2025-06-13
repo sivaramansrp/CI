@@ -9,6 +9,12 @@ import { Observable } from 'rxjs';
 })
 export class AgregarDestinatarioService {
 
+  /**
+   * @constructor
+   * @param httpClient Servicio HttpClient para realizar peticiones HTTP.
+   * @param store Instancia de Tramite240112Store para gestionar el estado de la aplicación.
+   * @description Constructor que inicializa el servicio con las dependencias necesarias para manejar destinatarios.
+   */
   constructor(private httpClient: HttpClient, private store: Tramite240112Store ) { }
 
   /**

@@ -61,18 +61,35 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
      { index: 3, title: 'Terceros relacionados', component: 'terceros-relacionados' },
      { index: 4, title: 'Pago de derechos', component: 'pago-de-derechos' }
    ];
-     /**
-      * Inicializa el componente con las consultas y el store necesarios para la gestión del estado.
-      *
-      * @param tramite240112Query Consulta para acceder al estado del trámite.
-      * @param tramite240112Store Store para actualizar el estado del trámite.
-      */
-     constructor(
-       private tramite240112Query: Tramite240112Query,
-       private tramite240112Store: Tramite240112Store,
-       private consultaQuery: ConsultaioQuery,
-       private agregarDestinatarioService: AgregarDestinatarioService
-     ) {}
+    /**
+     * Constructor del componente PasoUnoComponent.
+     * Inicializa los servicios y queries necesarios para el funcionamiento del componente.
+     * 
+     * @param tramite240112Query - Servicio para consultar el estado del trámite.
+     * @param tramite240112Store - Servicio para actualizar el estado del trámite.
+     * @param consultaQuery - Servicio para consultar el estado de la consulta.
+     * @param agregarDestinatarioService - Servicio para gestionar destinatarios y datos del formulario.
+     */
+    constructor(
+      private tramite240112Query: Tramite240112Query,
+      private tramite240112Store: Tramite240112Store,
+      private consultaQuery: ConsultaioQuery,
+      private agregarDestinatarioService: AgregarDestinatarioService
+    ) {}
+
+
+  /**
+   * @override
+   * @method ngOnInit
+   * @description Este método se ejecuta automáticamente cuando el componente se inicializa.
+   * Se utiliza para suscribirse a los observables necesarios y establecer el estado inicial del formulario.
+   * 
+   * @example
+   * // Ejemplo de uso:
+   * ngOnInit(): void {
+   *   // Suscripciones y lógica de inicialización aquí
+   * }
+   */
   ngOnInit(): void {
      this.tramite240112Query.getTabSeleccionado$
        .pipe(takeUntil(this.destroyNotifier$))
