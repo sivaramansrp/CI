@@ -26,7 +26,9 @@
       <solicitante [tabindex]="1" #solicitante></solicitante>
       }
       @case (2) {
+      @if(esDatosRespuesta) {
       <app-registro-de-donacion [tabindex]="2"></app-registro-de-donacion>
+      }
       }
       }
     </ng-container>

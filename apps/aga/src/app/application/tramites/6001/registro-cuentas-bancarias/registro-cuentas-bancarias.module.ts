@@ -9,15 +9,16 @@ import { TodospasosComponent } from '../pages/todospasos/todospasos.component';
 import { PasoDosComponent } from '../pages/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from '../pages/paso-uno/paso-uno.component';
 import { DatosGeneralesComponent } from '../components/datos-generales/datos-generales.component';
-import { AlertComponent, BtnContinuarComponent, FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+import { AlertComponent, AnexarDocumentosComponent, BtnContinuarComponent, FirmaElectronicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { provideHttpClient } from '@angular/common/http';
 import { RegistroCuentasBancariasService } from '../services/registro-cuentas-bancarias.service';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AgregarCuentaComponent } from '../components/agregar-cuenta/agregar-cuenta.component';
+import { PasoTresComponent } from '../pages/paso-tres/paso-tres.component';
 
 
 @NgModule({
-  declarations: [TodospasosComponent,PasoDosComponent,PasoUnoComponent],
+  declarations: [TodospasosComponent,PasoDosComponent,PasoUnoComponent,PasoTresComponent],
   imports: [
     CommonModule,
     RegistroCuentasBancariasRoutingModule,
@@ -27,6 +28,8 @@ import { AgregarCuentaComponent } from '../components/agregar-cuenta/agregar-cue
     FirmaElectronicaComponent,
     BtnContinuarComponent,
     AgregarCuentaComponent,
+    TituloComponent,
+    AnexarDocumentosComponent,
     ToastrModule.forRoot(),
   ],
   providers: [

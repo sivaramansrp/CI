@@ -13,7 +13,7 @@ export const CONFIGURACION_ENCABEZADO_TABLA_TERCEROS: ConfiguracionColumna<Perso
      * - Clave: Obtiene el valor de `nombre` de la fila.
      * - Orden: 1.
      */
-    { encabezado: 'nombre', clave: (fila) => fila.nombre, orden: 1 },
+    { encabezado: 'Nombre', clave: (fila) => fila.nombre, orden: 1 },
 
     /**
      * Encabezado de la columna que muestra el correo electrónico de la persona.
@@ -21,5 +21,5 @@ export const CONFIGURACION_ENCABEZADO_TABLA_TERCEROS: ConfiguracionColumna<Perso
      * - Clave: Obtiene el valor de `correo` de la fila.
      * - Orden: 2.
      */
-    { encabezado: 'correo', clave: (fila) => fila.correo, orden: 2 },
+    { encabezado: 'Correo', clave: (fila) => fila.correo, orden: 2 },
   ];

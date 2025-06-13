@@ -8,6 +8,7 @@
           [label]="aduanaLista.labelNombre"
           [placeholder]="aduanaLista.primerOpcion"
           [required]="true"
+          [isDisabled]="esFormularioSoloLectura"
           formControlName="tipoDeRequerimiento"
           name="tipoDeRequerimiento"
           id="tipoDeRequerimiento"
@@ -27,6 +28,7 @@
         <textarea
           cols="60"
           rows="5"
+          class="form-control area-de-texto"
           formControlName="motivoCancelacion"
           required
           (change)="

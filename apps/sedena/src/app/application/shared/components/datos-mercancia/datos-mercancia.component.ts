@@ -313,14 +313,13 @@ export class DatosMercanciaComponent implements OnInit {
   crearFormaulario(): void {
     this.datosMercancia = this.fb.group({
       descripcion: ['QAS', Validators.required],
-      fraccionArancelaria: ['', Validators.required],
+      fraccionArancelaria: ['', { validators: Validators.required }],
       descFraccion: [
-        '',
         {
-          value: null, 
-          disabled: true, 
+          value: null,
+          disabled: true,
         },
-        Validators.required,
+        { validators: Validators.required },
       ],
       cantidadUMT: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
       umt: [{ value: null, disabled: true }, Validators.required],
@@ -335,7 +334,14 @@ export class DatosMercanciaComponent implements OnInit {
       this.datosMercancia.get('umc')?.disable();
     }
   }
-    onCantidadUMTInput(event: Event): void {
+    /**
+   * Maneja el evento de entrada en el campo cantidadUMT, permitiendo solo números y limitando la longitud a 22 caracteres.
+   * 
+   * @method onCantidadUMTInput
+   * @param {Event} event - Evento de entrada del campo cantidadUMT.
+   * @returns {void}
+   */
+  onCantidadUMTInput(event: Event): void {
       const INPUT = event.target as HTMLInputElement;
       INPUT.value = INPUT.value.replace(REGEX_NUMEROS, '').slice(0, 22);
       this.datosMercancia.get('cantidadUMT')?.setValue(INPUT.value, { emitEvent: false });

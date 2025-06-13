@@ -10,6 +10,7 @@
           rows="3"
           formControlName="justificacion"
           style="height: 90px"
+          [disabled]="esFormularioSoloLectura"
         ></textarea>
         <div class="error-message">
           <small class="text-danger" *ngIf="formDeJustificacion.get('justificacion')?.touched && formDeJustificacion.get('justificacion')?.hasError('required')">
@@ -41,9 +42,9 @@
       [label]="aduanasDisponiblesLabel"
       [fechasSeleccionadas]="seleccionarAduanasDisponiblesDatos"
       [botones]="aduanasBotones"
-      (fechasSeleccionadasChange)="
-        aduanasDisponiblesSeleccionadasChange($event)
-      "
+      (fechasSeleccionadasChange)=
+      "aduanasDisponiblesSeleccionadasChange($event)"
+      [isDisabled]="esFormularioSoloLectura">
     ></crosslist>
   </div>
   <div class="row mt-5">
@@ -52,7 +53,7 @@
         @if(!ocultarPermisoGeneral){
         <div class="col-md-4">
           <label for="permisoGeneral" class="form-label"
-            >Permiso general * :</label
+            >Permiso general*:</label
           >
           <input
             type="text"
@@ -61,6 +62,7 @@
             formControlName="permisoGeneral"
             [required]="true"
             (input)="onPermisoGeneralInput($event)"
+            [disabled]="esFormularioSoloLectura"
           />
           <div class="error-message">
             <small class="text-danger" *ngIf="form.get('permisoGeneral')?.touched && form.get('permisoGeneral')?.hasError('required')">
@@ -86,6 +88,7 @@
             class="form-control"
             formControlName="paisDestino"
             readonly
+            [disabled]="esFormularioSoloLectura"
           />
         </div>
       </div>
@@ -98,6 +101,7 @@
             name="fechaPago"
             (valorCambiado)="onFechaCambiada($event)"
             [setFecha]="form.get('fechaPago')?.value"
+            [isDisabled]="esFormularioSoloLectura"
           ></input-fecha>
           <div class="error-message">
             <small class="text-danger" *ngIf="form.get('fechaPago')?.touched && form.get('fechaPago')?.hasError('required')">
@@ -116,6 +120,7 @@
             name="fechaSalida"
             (valorCambiado)="onFechaSalidaCambiada($event)"
             [setFecha]="form.get('fechaSalida')?.value"
+            [isDisabled]="esFormularioSoloLectura"
           ></input-fecha>
           <div class="error-message">
             <small class="text-danger" *ngIf="form.get('fechaSalida')?.touched && form.get('fechaSalida')?.hasError('required')">
@@ -127,7 +132,7 @@
         }
       <div class="mb-3">
         <label for="usoFinal" class="form-label">
-          Uso final de la mercancía * :
+          Uso final de la mercancía*:
                     <span
           class="bi bi-question-circle-fill fs-4 m-1"
           title="Uso final de la mercancía"
@@ -142,9 +147,10 @@
           formControlName="usoFinal"
           style="height: 90px"
           [required]="true"
+          [disabled]="esFormularioSoloLectura"
         ></textarea>
         <div class="error-message">
-          <small class="text-danger" *ngIf="form.get('usoFinal')?.touched && form.get('usoFinal')?.hasError('required')">
+          <small class="text-danger" *ngIf="form?.get('usoFinal')?.touched && form?.get('usoFinal')?.hasError('required')">
             Este campo es obligatorio.
           </small>          
         </div>
@@ -152,12 +158,13 @@
     </form>
   </div>
   <div class="row mt-5">
-    <h5>Mercancías * :</h5>
+    <h5>Mercancías*:</h5>
     <app-tabla-dinamica
       [tipoSeleccionTabla]="mercanciaTablaConfiguracion.tipoSeleccionTabla"
       [configuracionTabla]="mercanciaTablaConfiguracion.configuracionTabla"
       [datos]="datosMercanciaTabla"
       (listaDeFilaSeleccionada)="mercanciaTablaSeleccionada = $event"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
   </div>
   <div class="row mt-3">
@@ -200,8 +207,8 @@
   <div class="row mt-5">
     <ng-titulo titulo="Periodo"></ng-titulo>
   </div>
-  <h4>Periodo * :</h4>
-  <form [formGroup]="form" class="container">
+  <h4>Periodo*:</h4>
+  <form *ngIf="form" [formGroup]="form" class="container">
     <div class="row">
       <div class="col-md-4">
         <app-input-radio
@@ -210,6 +217,7 @@
           [layout]="'vertical'"
           formControlName="unoSemestre"
           (valueChange)="actualizarUnoSemestre($event)"
+          [disabled]="esFormularioSoloLectura"
         ></app-input-radio>
       </div>
       <div class="col-md-4">
@@ -219,6 +227,7 @@
           [layout]="'vertical'"
           formControlName="dosSemestre"
           (valueChange)="actualizarDosSemestre($event)"
+          [disabled]="esFormularioSoloLectura"
         ></app-input-radio>
       </div>
     </div>
@@ -230,6 +239,7 @@
           [label]="'Año en curso'"
           [required]="false"
           formControlName="anoEnCurso"
+          [isDisabled]="esFormularioSoloLectura"
         ></lib-input-check>
         <div class="error-message">
           <small class="text-danger" *ngIf="form.get('anoEnCurso')?.touched && form.get('anoEnCurso')?.hasError('required')">
@@ -253,6 +263,7 @@
                 formControlName="informacionConfidencial"
                 id="informacionConfidencial"
                 [required]="true"
+                [disabled]="esFormularioSoloLectura"
               />
               <span> *</span>
               <div class="error-message">

@@ -5,6 +5,8 @@ import { CatalogoResponse} from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+
+import { Tramite130119State, Tramite130119Store } from '../../estados/store/tramite130119.store';
 /**
  * Servicio encargado de gestionar los datos de la solicitud.
  */
@@ -21,7 +23,7 @@ export class DatosDeLaSolicitudService {
    * 
    * @param {HttpCoreService} http - El servicio HTTP para realizar peticiones.
    */
-  constructor(private http: HttpClient) { 
+  constructor(private http: HttpClient,private tramite130119Store: Tramite130119Store) { 
     //
   }
 
@@ -75,4 +77,21 @@ export class DatosDeLaSolicitudService {
     return this.http.get<CatalogoResponse[]>('./assets/json/130119/representacion-federal.json');
   }
 
+  /**
+   * Obtiene los datos de la solicitud desde un archivo JSON.
+   * 
+   * @returns {Observable<Tramite130119State>} - Un observable con los datos de la solicitud.
+   */
+  obtenerDatosDeLaSolicitud(): Observable<Tramite130119State> {
+    return this.http.get<Tramite130119State>('./assets/json/130119/datos.json');
+  }
+
+  /**
+   * Establece los datos de la solicitud en el store.
+   * 
+   * @param {Tramite130119State} datos - Los datos de la solicitud a establecer.
+   */
+  establecerDatosDeLaSolicitud(datos: Tramite130119State): void {
+    this.tramite130119Store.establecerDatos({ ...datos });
+  }
 }

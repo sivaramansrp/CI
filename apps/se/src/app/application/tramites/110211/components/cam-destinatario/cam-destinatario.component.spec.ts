@@ -10,7 +10,8 @@ describe('CamDestinatarioComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CamDestinatarioComponent],
+      declarations: [],
+      imports: [CamDestinatarioComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA,NO_ERRORS_SCHEMA],
     }).compileComponents();
 

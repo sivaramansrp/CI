@@ -47,6 +47,7 @@
             [label]="'catagoria'"
             [required]="true"
             name="catagoria"
+            [isDisabled]="formularioDeshabilitado"
           ></app-catalogo-select>
         </div>
       </div>
@@ -135,10 +136,12 @@
   </form>
   <div class="row">
     <div class="col-12 container text-end mt-5">
-      <button class="btn btn-default me-2" (change)="seleccionGuardar()">
+      <button class="btn btn-default me-2" (change)="seleccionGuardar()"
+      [disabled]="formularioDeshabilitado">
         Guardar
       </button>
-      <button class="btn btn-primary me-2" (click)="regresar()">
+      <button class="btn btn-primary me-2" (click)="regresar()"
+      [disabled]="formularioDeshabilitado">
         Regresar Anexo
       </button>
     </div>

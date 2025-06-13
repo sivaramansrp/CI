@@ -1,0 +1,28 @@
+{
+    "combioDeModalidaDatos": {
+        "seleccionaLaModalidad": "Importación",
+        "folio": 12345,
+        "ano": 2024,
+        "seleccionaModalidad": "Definitiva",
+        "cambioModalidad": {
+            "data": [
+                {
+                    "id": 1,
+                    "descripcion": "SERVICIOS"
+                }
+            ]
+        }
+    },
+    "serviciosImmx": {
+        "data": [
+            {
+                "id": 1,
+                "descripcion": "BLINDAJE, MODIFICACION ADAPTACION DE VEHICULO AUTOMOTOR"
+            },
+            {
+                "id": 2,
+                "descripcion": "DISENO O INGENIERIA DE PRODUCTOS"
+            }
+        ]
+    }
+}

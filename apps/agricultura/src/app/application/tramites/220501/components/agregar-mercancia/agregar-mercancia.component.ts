@@ -69,7 +69,7 @@ export class AgregarMercanciaComponent implements OnChanges, OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     public solicitud220501Store: Solicitud220501Store,
-    public solicitud220501Query: Solicitud220501Query,
+    public solicitud220501Query: Solicitud220501Query
   ) {
     this.crearFormulario();
   }

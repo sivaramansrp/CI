@@ -1,3 +1,4 @@
+import {CamState, camCertificadoStore} from '../estados/cam-certificado.store';
 import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
@@ -11,7 +12,7 @@ import { Mercancia } from '../../../shared/models/modificacion.enum';
 export class CamCertificadoService {
   url: string = '../../../../../assets/json/110211/';
 
-  constructor(private readonly http: HttpClient) { }
+  constructor(private readonly http: HttpClient,private tramite110211Store:camCertificadoStore ) { }
  
   /**
    * @description Obtiene un array de objetos `Catalogo` desde un archivo JSON ubicado en la URL especificada.
@@ -58,4 +59,42 @@ export class CamCertificadoService {
     const JSON_URL = this.url + fileName;
       return this.http.get<Mercancia[]>(JSON_URL);
   }
+
+  /**
+   * @description Obtiene todos los datos del certificado CAM desde un archivo JSON ubicado en la URL especificada.
+   * @param fileName El nombre del archivo JSON desde el cual se obtendrán los datos.
+   * @returns Un `Observable` que emite un objeto `CamState`.
+   * @method obtenerTodosDatosCamCertificado
+   * @memberof CamCertificadoService
+   * @usageNotes
+   * Este método construye la URL completa añadiendo el `fileName` a la URL base (`this.url`) 
+   * y realiza una solicitud HTTP GET para recuperar los datos.
+   * 
+   * Ejemplo:
+   * ```typescript
+   * this.camCertificadoService.obtenerTodosDatosCamCertificado('camcertificado.json').subscribe(data => {
+   *   console.log(data);
+   * });
+   * ```
+   */
+  obtenerTodosDatosCamCertificado(fileName: string): Observable<CamState> {
+    const JSON_URL = this.url + fileName;
+    return this.http.get<CamState>(JSON_URL);
+  }
+
+  /**
+   * @method actualizarEstadoFormulario
+   * @description Actualiza el estado del formulario con los datos proporcionados.
+   * @param {CamState} DATOS - Objeto que contiene el nuevo estado del formulario.
+   * @returns {void}
+   *
+   * @memberof CamCertificadoService
+   *
+   * @compodoc
+   * Actualiza el estado completo del formulario en el store correspondiente usando los datos recibidos.
+   */
+  actualizarEstadoFormulario(DATOS:CamState):void{
+    this.tramite110211Store.setEstadoCompleto(DATOS);
+  }
+
 }

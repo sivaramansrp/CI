@@ -5,7 +5,7 @@
  * @fileoverview Componente encargado de gestionar la selección de países de procedencia en un trámite.
  * @module PaisProcendenciaComponent
  */
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 
@@ -20,7 +20,7 @@ import {
 } from '@angular/forms';
 
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CrosslistComponent } from 'libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
 import { TituloComponent } from 'libs/shared/data-access-user/src/tramites/components/titulo/titulo.component';
 
@@ -32,6 +32,8 @@ import { Tramite130102Query } from '../../../../estados/queries/tramite130102.qu
 
 import { Subject, map, takeUntil } from 'rxjs';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
+
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * Componente para la gestión de la selección de países de procedencia.
  */
@@ -49,6 +51,11 @@ import { FormularioRegistroService } from '../../services/octava-temporal.servic
   styleUrl: './pais-procendencia.component.scss',
 })
 export class PaisProcendenciaComponent implements OnInit {
+  /**
+   * Indica si el componente está deshabilitado.
+   * @type {boolean}
+   */
+  @Input() isDisabled! :boolean;
   /**
    * Formulario reactivo para la gestión de países de procedencia.
    */
@@ -93,7 +100,10 @@ export class PaisProcendenciaComponent implements OnInit {
    * Observable utilizado para cancelar suscripciones al destruir el componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-
+/**
+   * Indica si el formulario es de solo lectura.
+   */
+   esFormularioSoloLectura: boolean = false;
 
   /**
    * Botones de acción disponibles para gestionar las listas de fechas.
@@ -126,20 +136,57 @@ export class PaisProcendenciaComponent implements OnInit {
    * @param {HttpClient} http - Servicio HTTP para obtener datos del servidor.
    * @param {FormBuilder} fb - Utilidad para la construcción de formularios reactivos.
    */
-  // eslint-disable-next-line no-empty-function
+
   constructor(private http: HttpClient, private fb: FormBuilder,
     private tramite130102Store: Tramite130102Store,
     private tramite130102Query: Tramite130102Query,
-    private formularioRegistroService: FormularioRegistroService
+    private formularioRegistroService: FormularioRegistroService,
+        private consultaioQuery: ConsultaioQuery
   ) {
-    //constructor
+     this.consultaioQuery.selectConsultaioState$
+         .pipe(
+           takeUntil(this.destroyNotifier$),
+           map((seccionState) => {
+             this.esFormularioSoloLectura = seccionState.readonly;
+            
+             this.inicializarEstadoFormulario();
+           })
+         )
+         .subscribe();
   }
 
   /**
    * Inicializa el componente y configura el formulario.
    */
   ngOnInit() {
-     this.tramite130102Query.selectSolicitud$
+  this.inicializarEstadoFormulario();
+    this.fetchPaisProc();
+    this.formularioRegistroService.registrarFormulario('paisForm', this.paisForm);
+  }
+    inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+   
+  }
+  /**
+    * Guarda los datos del formulario y ajusta su estado según si es de solo lectura o no.
+  */
+   guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.paisForm.disable();
+      } else if (!this.esFormularioSoloLectura) {
+        this.paisForm.enable();
+      } 
+  }
+  /**
+   * Inicializa el formulario reactivo y sus validaciones.
+   */
+  inicializarFormulario(): void {
+   this.tramite130102Query.selectSolicitud$
         .pipe(
           takeUntil(this.destroyNotifier$),
           map((seccionState) => {  
@@ -153,8 +200,9 @@ export class PaisProcendenciaComponent implements OnInit {
       descripcionJustificacion: [this.solicitudState?.descripcionJustificacion, [Validators.required,PaisProcendenciaComponent.noLeadingSpacesValidator]],
       observaciones: [this.solicitudState?.observaciones,[PaisProcendenciaComponent.noLeadingSpacesValidator]]
     });
-    this.fetchPaisProc();
-    this.formularioRegistroService.registrarFormulario('paisForm', this.paisForm);
+     if (this.esFormularioSoloLectura) {
+    this.paisForm.disable();
+  }
   }
   /**
    * Asigna un valor del formulario al store.

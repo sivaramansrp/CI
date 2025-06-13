@@ -12,6 +12,7 @@ import {
 import {
   Bitacora,
   EmpresaSubmanufacturera,
+  ModificacionDatos,
 } from '../models/modificacion-programa-immex-baja-submanufacturera.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
@@ -41,6 +42,7 @@ export interface Tramite80303State {
   serviciosImmexTablaDatos: ServicioImmex[];
   bitacoraTablaDatos: Bitacora[];
   submanufacturerasTablaDatos: EmpresaSubmanufacturera[];
+  modificacionDatos: ModificacionDatos;
 }
 
 /**
@@ -64,6 +66,12 @@ export function createInitialState(): Tramite80303State {
     serviciosImmexTablaDatos: [],
     bitacoraTablaDatos: [],
     submanufacturerasTablaDatos: [],
+    modificacionDatos: {
+      rfc: '',
+      representacionFederal: '',
+      tipoModificacion: '',
+      modificacionPrograma: '',
+    },
   };
 }
 

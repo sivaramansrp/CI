@@ -15,10 +15,11 @@
           name="cargarArchivo"
           id="cargarArchivo"
           required
+          [disabled]="esFormularioSoloLectura"
         />
       </div>
       <div class="col-md-4 d-flex justify-content-end w-100 mb-5">
-        <button type="button" class="btn btn-default" (click)="archivo()">
+        <button type="button" [disabled]="esFormularioSoloLectura" class="btn btn-default" (click)="archivo()">
           Enviar
         </button>
       </div>
@@ -49,6 +50,7 @@
             type="button"
             name="modificarProveedore"
             class="btn btn-default"
+            [disabled]="esFormularioSoloLectura"
           >
             Modificar
           </button>
@@ -57,6 +59,7 @@
             type="button"
             name="eliminarProveedore"
             class="btn btn-danger mx-3"
+            [disabled]="esFormularioSoloLectura"
           >
             Eliminar
           </button>
@@ -65,6 +68,7 @@
             type="button"
             name="agregarProveedore"
             class="btn btn-primary"
+            [disabled]="esFormularioSoloLectura"
             (click)="navigateRegistroProveedoresManual()"
           >
             Agregar

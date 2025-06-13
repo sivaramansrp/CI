@@ -71,6 +71,10 @@ export class ManifiestosRepresentanteSeccionComponent
   manifiestosRepresentanteForm!: FormGroup;
 
   /**
+   * Indica si el formulario debe estar deshabilitado.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
+  /**
    * Constructor del componente.
    * @param fb FormBuilder para inicializar formularios reactivos.
    * @param representanteStore Store para gestionar el estado del representante.
@@ -94,7 +98,7 @@ export class ManifiestosRepresentanteSeccionComponent
 
     this.manifiestosRepresentanteForm = this.fb.group({
       representanteRfc: ['', Validators.required],
-      manifests: ['', Validators.required],
+      manifests: [true, Validators.required],
       informacionConfidencialRadio: ['', Validators.required],
       representanteNombre: ['', Validators.required],
       apellidoPaterno: ['', Validators.required],
@@ -120,6 +124,10 @@ export class ManifiestosRepresentanteSeccionComponent
         this.informacionConfidencialRadioOption = data; // Bind the fetched data
        
       });
+
+      if (this.formularioDeshabilitado) {
+      this.manifiestosRepresentanteForm.disable();
+    }
   }
   /**
    * Maneja el evento de cambio en el campo de RFC del representante.
