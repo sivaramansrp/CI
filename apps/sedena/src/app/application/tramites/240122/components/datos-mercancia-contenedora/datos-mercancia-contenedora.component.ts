@@ -58,4 +58,5 @@ export class DatosMercanciaContenedoraComponent {
     updateMercanciaDetalle(event: MercanciaDetalle[]): void {
       this.tramiteStore.updateMercanciaTablaDatos(event);
     }
+    
 }

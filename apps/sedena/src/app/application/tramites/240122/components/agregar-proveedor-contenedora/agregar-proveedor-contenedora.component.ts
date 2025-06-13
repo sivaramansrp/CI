@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AgregarProveedorCustomComponent } from '../../../../shared/components/agregar-proveedor-custom/agregar-proveedor-custom.component';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
@@ -39,7 +39,7 @@ import { Subject,map, takeUntil } from 'rxjs';
   templateUrl: './agregar-proveedor-contenedora.component.html',
   styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
-export class AgregarProveedorContenedoraComponent implements OnInit{
+export class AgregarProveedorContenedoraComponent implements OnInit , OnDestroy{
 
     /**
      * @property {number} idProcedimiento - Identificador único del procedimiento asociado al trámite 240122.
@@ -91,4 +91,15 @@ export class AgregarProveedorContenedoraComponent implements OnInit{
     updateProveedorTablaDatos(event: Proveedor[]): void {
       this.tramite240122Store.updateProveedorTablaDatos(event);
     }
+      /**
+   * Hook del ciclo de vida que se ejecuta al destruir el componente.
+   * Libera las suscripciones activas para evitar fugas de memoria.
+   *
+   * @method ngOnDestroy
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }
