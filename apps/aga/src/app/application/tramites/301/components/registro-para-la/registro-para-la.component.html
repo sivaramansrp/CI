@@ -5,7 +5,7 @@
 
     <div class="row" style="padding-bottom: 20px; text-align: right">
       <div>
-        <button type="button" class="btn btn-primary btn-space" (click)="iniciar()">Iniciar</button>
+        <button type="button" class="btn btn-primary btn-space" (click)="iniciar()" [disabled]="consultaState.readonly">Iniciar</button>
       </div>
     </div>
     @if (mostrarCampo) {
@@ -15,7 +15,7 @@
       [label]="
         '¿Se han realizado previamente importaciones o exportaciones del producto a registrar?'
       "
-      [isDisabled]="esFormularioSoloLectura"
+      [isDisabled]="consultaState.readonly"
       [required]="true"
       name="registro"
       (change)="setValoresStore(registroParaLaForm, 'registro', 'setRegistro')"

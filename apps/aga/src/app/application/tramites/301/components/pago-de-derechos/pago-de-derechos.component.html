@@ -44,10 +44,10 @@
       </div>
       <div class="row" style="padding-bottom: 20px; text-align: right">
         <div>
-          <button type="button" class="btn btn-default btn-space" (click)="limpiar()">
+          <button type="button" class="btn btn-default btn-space" [disabled]="esFormularioSoloLectura" (click)="limpiar()">
             Limpiar
           </button>
-          <button type="button" class="btn btn-primary btn-space" (click)="agregar()">
+          <button type="button" class="btn btn-primary btn-space" [disabled]="esFormularioSoloLectura" (click)="agregar()">
             Agregar
           </button>
         </div>
@@ -85,7 +85,7 @@
       </nav>
       <div class="row" style="text-align: right">
         <div>
-          <button class="btn btn-danger" type="button" (click)="eliminar()">Eliminar</button>
+          <button class="btn btn-danger" type="button" [disabled]="esFormularioSoloLectura" (click)="eliminar()">Eliminar</button>
         </div>
       </div>
       <div class="row mt-5">

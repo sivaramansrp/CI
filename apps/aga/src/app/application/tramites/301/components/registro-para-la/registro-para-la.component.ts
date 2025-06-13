@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
-import { ConsultaioQuery, IMPORTANTE} from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, IMPORTANTE} from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import { Solicitud301State, Tramite301Store } from '../../../../core/estados/tramites/tramite301.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -115,11 +115,15 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
-  /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
-  esFormularioSoloLectura: boolean = false; 
+/**
+   * @property consultaState
+   * @type {ConsultaioState}
+   * @public
+   * @description
+   * Almacena el estado actual de la consulta obtenido desde el store.
+   * Se utiliza para controlar el flujo y la visualización de datos en el componente.
+   */
+  public consultaState!: ConsultaioState; 
 
   /**
    * Constructor del componente `RegistroParaLaComponent`.
@@ -135,6 +139,17 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
     private consultaioQuery: ConsultaioQuery,
     private pantallas301Service: Pantallas301Service
   ) {
+    //
+  }
+
+  /**
+   * Método que se ejecuta cuando el componente es inicializado.
+   * Este método se encarga de obtener los datos necesarios para inicializar el formulario de registro,
+   * incluyendo las opciones para el campo de importaciones/exportaciones.
+   *
+   * @memberof RegistroParaLaComponent
+   */
+  ngOnInit(): void {
     /**
      * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
      *
@@ -146,22 +161,17 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
     .pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
-       this.esFormularioSoloLectura = seccionState.readonly;
+       this.consultaState = seccionState;
+       this.inicializarFormulario();
       })
     )
     .subscribe()
-  }
-
-  /**
-   * Método que se ejecuta cuando el componente es inicializado.
-   * Este método se encarga de obtener los datos necesarios para inicializar el formulario de registro,
-   * incluyendo las opciones para el campo de importaciones/exportaciones.
-   *
-   * @memberof RegistroParaLaComponent
-   */
-  ngOnInit(): void {
-    this.inicializarFormulario();
-    this.mostrarCampo = this.pantallas301Service.obtenerRegistroCampoVisibilidad();
+    this.getRegistro();
+    if (this.consultaState.update) {
+      this.mostrarCampo = true;
+    } else {
+      this.mostrarCampo = this.pantallas301Service.obtenerRegistroCampoVisibilidad();
+    }
   }
 
  /**
@@ -179,7 +189,6 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.getRegistro(); // Llama al método para obtener los datos de registro
 
     /**
      * Crea un formulario reactivo (`FormGroup`) con el campo `registro`,
@@ -194,8 +203,11 @@ export class RegistroParaLaComponent implements OnInit, OnDestroy {
      * Si el procedimiento está en modo solo lectura (`readonly`),
      * se desactiva el campo `registro` para evitar modificaciones por parte del usuario.
      */
-    if(this.esFormularioSoloLectura) {
+    if(this.consultaState.readonly) {
         this.registroParaLaForm.get('registro')?.disable();
+    }
+    if (this.consultaState.update) {
+      this.emitirElValorSeleccionado.emit(this.solicitudState?.registro);
     }
   }
 
