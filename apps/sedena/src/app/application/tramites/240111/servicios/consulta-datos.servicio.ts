@@ -9,6 +9,16 @@ import { Tramite240111Store } from '../estados/tramite240111Store.store';
   providedIn: 'root',
 })
 export class ConsultaDatosService {
+  /**
+   * Constructor for the service that handles data queries.
+   *
+   * @param http - The Angular HttpClient used for making HTTP requests.
+   * @param tramiteStore - Store for managing the state of Tramite240111.
+   * @param seccionStore - Store for managing the state of SeccionLib.
+   *
+   * This constructor initializes the service with the necessary dependencies.
+   * Additional logic can be added here if required.
+   */
   constructor(
     private http: HttpClient,
     private readonly tramiteStore: Tramite240111Store,
@@ -70,10 +80,6 @@ export class ConsultaDatosService {
     this.tramiteStore.updateMercanciaTablaDatos(DATOS.merccancialTablaDatos);
   }
 
-  /**
-   * Obtiene los datos de la solicitud desde un archivo JSON.
-   * @returns Observable con los datos de la solicitud.
-   */
   /**
    * Obtiene los datos de la solicitud desde un archivo JSON.
    * @returns Observable con los datos de la solicitud.
