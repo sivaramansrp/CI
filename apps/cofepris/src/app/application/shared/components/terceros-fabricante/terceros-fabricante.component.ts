@@ -19,8 +19,8 @@ import {
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   DEFAULT_TABLA_ORDEN,
-  TERCEROS_RELACIONADOS_TABLE_BODY_DATA,
-  TERCEROS_RELACIONADOS_TABLE_HEADER_DATA,
+  TERCEROS_RELACIONADOS_TABLA_BODY_DATOS,
+  TERCEROS_RELACIONADOS_TABLA_HEADER_DATOS,
 } from '../../constantes/terceros-fabricante.enum';
 import {
   REGEX_CURP,
@@ -304,9 +304,9 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    * @returns Un arreglo vacío de TablaDatos.
    */
   fetchTableDummyJson(): void {
-    this.fabricanteRowData.push(TERCEROS_RELACIONADOS_TABLE_BODY_DATA);
-    this.proveedorRowData.push(TERCEROS_RELACIONADOS_TABLE_BODY_DATA);
-    this.formuladorRowData.push(TERCEROS_RELACIONADOS_TABLE_BODY_DATA);
+    this.fabricanteRowData.push(TERCEROS_RELACIONADOS_TABLA_BODY_DATOS);
+    this.proveedorRowData.push(TERCEROS_RELACIONADOS_TABLA_BODY_DATOS);
+    this.formuladorRowData.push(TERCEROS_RELACIONADOS_TABLA_BODY_DATOS);
   }
 
   /**
@@ -816,27 +816,27 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
 
   /**
    * Encabezados para la tabla de fabricantes.
-   * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLE_HEADER_DATA`.
+   * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLA_HEADER_DATOS`.
    *
    * @description Estos encabezados definen las columnas que se mostrarán en la tabla de fabricantes.
    */
-  fabricanteHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
+  fabricanteHeaderData = TERCEROS_RELACIONADOS_TABLA_HEADER_DATOS;
 
   /**
    * Encabezados para la tabla de formuladors.
-   * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLE_HEADER_DATA`.
+   * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLA_HEADER_DATOS`.
    *
    * @description Estos encabezados definen las columnas que se mostrarán en la tabla de formuladors.
    */
-  formuladorHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
+  formuladorHeaderData = TERCEROS_RELACIONADOS_TABLA_HEADER_DATOS;
 
   /**
    * Encabezados para la tabla de proveedores.
-   * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLE_HEADER_DATA`.
+   * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLA_HEADER_DATOS`.
    *
    * @description Estos encabezados definen las columnas que se mostrarán en la tabla de proveedores.
    */
-  proveedorHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
+  proveedorHeaderData = TERCEROS_RELACIONADOS_TABLA_HEADER_DATOS;
 
   public nacional = false;
 
