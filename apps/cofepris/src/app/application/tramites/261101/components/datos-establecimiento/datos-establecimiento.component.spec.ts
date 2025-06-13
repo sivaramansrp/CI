@@ -3,7 +3,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup } from '@angular/forms';
 import { DatosestablecimientoComponent } from './datos-establecimiento.component';
 
 describe('DatosestablecimientoComponent', () => {
-  let component: DatosestablecimientoComponent;
+  let COMPONENT: DatosestablecimientoComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -12,37 +12,37 @@ describe('DatosestablecimientoComponent', () => {
       providers: [FormBuilder],
     });
 
-    const fixture = TestBed.createComponent(DatosestablecimientoComponent);
-    component = fixture.componentInstance;
-    component.datosdelestablecimiento = new FormBuilder().group({
+    const FIXTURE = TestBed.createComponent(DatosestablecimientoComponent);
+    COMPONENT = FIXTURE.componentInstance;
+    COMPONENT.datosdelestablecimiento = new FormBuilder().group({
       denominacion: [''],
     });
   });
 
   it('should create the form and disable it when esFormularioSoloLectura is true', () => {
-    component.esFormularioSoloLectura = true;
-    component.crearFormulario = jest.fn(() => {
-      component.datosdelestablecimiento = new FormBuilder().group({
+    COMPONENT.esFormularioSoloLectura = true;
+    COMPONENT.crearFormulario = jest.fn(() => {
+      COMPONENT.datosdelestablecimiento = new FormBuilder().group({
         denominacion: ['Test Denominacion'],
       });
     });
 
-    component.guardarDatosFormulario();
+    COMPONENT.guardarDatosFormulario();
 
-    expect(component.crearFormulario).toHaveBeenCalled();
-    expect(component.datosdelestablecimiento.disabled).toBe(true);
+    expect(COMPONENT.crearFormulario).toHaveBeenCalled();
+    expect(COMPONENT.datosdelestablecimiento.disabled).toBe(true);
   });
 
   it('should create the form and enable it when esFormularioSoloLectura is false', () => {
-    component.esFormularioSoloLectura = false;
-    component.crearFormulario = jest.fn(() => {
-      component.datosdelestablecimiento = new FormBuilder().group({
+    COMPONENT.esFormularioSoloLectura = false;
+    COMPONENT.crearFormulario = jest.fn(() => {
+      COMPONENT.datosdelestablecimiento = new FormBuilder().group({
         denominacion: ['Test Denominacion'],
       });
     });
 
-    component.guardarDatosFormulario();
-    expect(component.crearFormulario).toHaveBeenCalled();
-    expect(component.datosdelestablecimiento.enabled).toBe(true);
+    COMPONENT.guardarDatosFormulario();
+    expect(COMPONENT.crearFormulario).toHaveBeenCalled();
+    expect(COMPONENT.datosdelestablecimiento.enabled).toBe(true);
   });
 });

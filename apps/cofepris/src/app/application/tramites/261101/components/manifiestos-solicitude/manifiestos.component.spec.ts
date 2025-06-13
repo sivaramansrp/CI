@@ -8,17 +8,17 @@ import { DatosProcedureStore } from '../../../../estados/tramites/tramites261101
 import { of, Subject } from 'rxjs';
 
 describe('ManifiestosComponent', () => {
-  let component: ManifiestosComponent;
-  let fixture: ComponentFixture<ManifiestosComponent>;
-  let queryMock: jest.Mocked<DatosProcedureQuery>;
-  let storeMock: jest.Mocked<DatosProcedureStore>;
+  let COMPONENT: ManifiestosComponent;
+  let FIXTURE: ComponentFixture<ManifiestosComponent>;
+  let QUERY_MOCK: jest.Mocked<DatosProcedureQuery>;
+  let STORE_MOCK: jest.Mocked<DatosProcedureStore>;
 
   beforeEach(async () => {
-    queryMock = {
+    QUERY_MOCK = {
       selectProrroga$: jest.fn(),
     } as unknown as jest.Mocked<DatosProcedureQuery>;
 
-    storeMock = {
+    STORE_MOCK = {
       establecerDatos: jest.fn(),
     } as unknown as jest.Mocked<DatosProcedureStore>;
 
@@ -26,97 +26,97 @@ describe('ManifiestosComponent', () => {
       imports: [ReactiveFormsModule, ManifiestosComponent, InputRadioComponent],
       providers: [
         FormBuilder,
-        { provide: DatosProcedureQuery, useValue: queryMock },
-        { provide: DatosProcedureStore, useValue: storeMock },
+        { provide: DatosProcedureQuery, useValue: QUERY_MOCK },
+        { provide: DatosProcedureStore, useValue: STORE_MOCK },
       ],
     }).compileComponents();
   });
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ManifiestosComponent);
-    component = fixture.componentInstance;
+    FIXTURE = TestBed.createComponent(ManifiestosComponent);
+    COMPONENT = FIXTURE.componentInstance;
 
-    component.radioOptions = [
+    COMPONENT.radioOptions = [
       { label: 'Option 1', value: 'Option 1' },
       { label: 'Option 2', value: 'Option 2' },
     ];
-    component.declaracionEstaMarcado = true;
-    component.Aduana = new FormBuilder().group({
+    COMPONENT.declaracionEstaMarcado = true;
+    COMPONENT.Aduana = new FormBuilder().group({
       aduanas: [false],
       informacionConfidencial: [''],
     });
 
-    fixture.detectChanges();
+    FIXTURE.detectChanges();
   });
 
   it('should create the component', () => {
-    expect(component).toBeTruthy();
+    expect(COMPONENT).toBeTruthy();
   });
 
   it('should bind the checkbox to the form control', () => {
-    const checkbox = fixture.debugElement.query(By.css('input[type="checkbox"]')).nativeElement;
-    expect(checkbox.checked).toBe(true);
-    checkbox.click();
-    fixture.detectChanges();
-    expect(component.Aduana.get('aduanas')?.value).toBe(false);
+    const CHECKBOX = FIXTURE.debugElement.query(By.css('input[type="checkbox"]')).nativeElement;
+    expect(CHECKBOX.checked).toBe(true);
+    CHECKBOX.click();
+    FIXTURE.detectChanges();
+    expect(COMPONENT.Aduana.get('aduanas')?.value).toBe(false);
   });
 
   it('should bind the radio options to the form control', () => {
-    const radioComponent = fixture.debugElement.query(By.directive(InputRadioComponent)).componentInstance;
-    expect(radioComponent.radioOptions).toEqual(['Option 1', 'Option 2']);
+    const RADIO_COMPONENT = FIXTURE.debugElement.query(By.directive(InputRadioComponent)).componentInstance;
+    expect(RADIO_COMPONENT.radioOptions).toEqual(['Option 1', 'Option 2']);
   });
 
   it('should call setValoresStore on radio change', () => {
-    const spy = jest.spyOn(component, 'setValoresStore');
-    const radioComponent = fixture.debugElement.query(By.directive(InputRadioComponent)).componentInstance;
-    radioComponent.change.emit('Option 1');
-    fixture.detectChanges();
-    expect(spy).toHaveBeenCalledWith(component.Aduana, 'informacionConfidencial');
+    const SPY = jest.spyOn(COMPONENT, 'setValoresStore');
+    const RADIO_COMPONENT = FIXTURE.debugElement.query(By.directive(InputRadioComponent)).componentInstance;
+    RADIO_COMPONENT.change.emit('Option 1');
+    FIXTURE.detectChanges();
+    expect(SPY).toHaveBeenCalledWith(COMPONENT.Aduana, 'informacionConfidencial');
   });
 
   it('should initialize the form and disable it if esFormularioSoloLectura is true', () => {
-    component.esFormularioSoloLectura = true;
-    jest.spyOn(component, 'obtenerDatosFormulario').mockImplementation();
-    jest.spyOn(component.Aduana, 'disable');
+    COMPONENT.esFormularioSoloLectura = true;
+    jest.spyOn(COMPONENT, 'obtenerDatosFormulario').mockImplementation();
+    jest.spyOn(COMPONENT.Aduana, 'disable');
 
-    component.inicializarEstadoFormulario();
+    COMPONENT.inicializarEstadoFormulario();
 
-    expect(component.obtenerDatosFormulario).toHaveBeenCalled();
-    expect(component.Aduana.disable).toHaveBeenCalled();
+    expect(COMPONENT.obtenerDatosFormulario).toHaveBeenCalled();
+    expect(COMPONENT.Aduana.disable).toHaveBeenCalled();
   });
 
   it('should initialize the form and enable it if esFormularioSoloLectura is false', () => {
-    component.esFormularioSoloLectura = false;
-    jest.spyOn(component, 'obtenerDatosFormulario').mockImplementation();
-    jest.spyOn(component.Aduana, 'enable');
-    jest.spyOn(component, 'mercanciasData');
+    COMPONENT.esFormularioSoloLectura = false;
+    jest.spyOn(COMPONENT, 'obtenerDatosFormulario').mockImplementation();
+    jest.spyOn(COMPONENT.Aduana, 'enable');
+    jest.spyOn(COMPONENT, 'mercanciasData');
 
-    component.inicializarEstadoFormulario();
+    COMPONENT.inicializarEstadoFormulario();
 
-    expect(component.obtenerDatosFormulario).toHaveBeenCalledTimes(2);
-    expect(component.Aduana.enable).toHaveBeenCalled();
-    expect(component.mercanciasData).toHaveBeenCalled();
+    expect(COMPONENT.obtenerDatosFormulario).toHaveBeenCalledTimes(2);
+    expect(COMPONENT.Aduana.enable).toHaveBeenCalled();
+    expect(COMPONENT.mercanciasData).toHaveBeenCalled();
   });
 
   it('should call ngOnDestroy and complete destroy$', () => {
-    const destroySpy = jest.spyOn(component['destroy$'], 'next');
-    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+    const DESTROY_SPY = jest.spyOn(COMPONENT['destroy$'], 'next');
+    const COMPLETE_SPY = jest.spyOn(COMPONENT['destroy$'], 'complete');
 
-    component.ngOnDestroy();
+    COMPONENT.ngOnDestroy();
 
-    expect(destroySpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    expect(DESTROY_SPY).toHaveBeenCalled();
+    expect(COMPLETE_SPY).toHaveBeenCalled();
   });
 
   it('should call setValoresStore and update the store', () => {
-    component.setValoresStore(component.Aduana, 'aduanas');
-    expect(storeMock.establecerDatos).toHaveBeenCalledWith({ aduanas: false });
+    COMPONENT.setValoresStore(COMPONENT.Aduana, 'aduanas');
+    expect(STORE_MOCK.establecerDatos).toHaveBeenCalledWith({ aduanas: false });
   });
 
   it('should call mercanciasData and initialize the form correctly', () => {
-    component.mercanciasData();
+    COMPONENT.mercanciasData();
 
-    expect(component.Aduana.get('aduanas')?.value).toBe('test');
-    expect(component.Aduana.get('informacionConfidencial')?.value).toBe('confidential');
+    expect(COMPONENT.Aduana.get('aduanas')?.value).toBe('test');
+    expect(COMPONENT.Aduana.get('informacionConfidencial')?.value).toBe('confidential');
   });
 });
