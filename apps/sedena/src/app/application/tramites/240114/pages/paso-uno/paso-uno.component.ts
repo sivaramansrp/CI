@@ -39,7 +39,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @description Constructor del componente.
    * Inicializa el componente y establece el índice de la pestaña seleccionada.
    */
-  formularioDeshabilitado: boolean = true;
+  formularioDeshabilitado: boolean = false;
   /**
    * @property {ConsultaioState} consultaState - Estado actual relacionado con la consulta.
    */
@@ -84,7 +84,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       .subscribe((tab) => {
         this.indice = tab;
       });
-    this.guardarDatosFormulario();
+
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
