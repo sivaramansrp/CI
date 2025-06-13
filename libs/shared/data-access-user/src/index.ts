@@ -34,6 +34,7 @@ export { TablePaginationComponent } from './tramites/components/table-pagination
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
 export { TituloComponent } from './tramites/components/titulo/titulo.component';
 export { TramiteDetails } from './core/models/tramiteDetails';
+export { MenuItemComponent } from './tramites/components/menu-item/menu-item.component';
 export * from './core/queries/tramiteFolio.query';
 export * from './core/estados/tramiteFolio.store';
 export { TramiteStore } from './core/estados/tramite.store';
