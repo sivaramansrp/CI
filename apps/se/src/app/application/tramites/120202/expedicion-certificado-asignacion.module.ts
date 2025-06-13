@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { AlertComponent, BtnContinuarComponent, FirmaElectronicaComponent, SolicitanteComponent, WizardComponent } from '@libs/shared/data-access-user/src';
 import { DatosComponent } from './pages/datos/datos.component';
 import { ExpedicionCertificadoAsignacionRoutingModule } from './expedicion-certificado-asignacion-routing.module';
-import { ExpedicionCertificadosAsignacionDirectaComponent } from './components/expedicion-certificados-asignacion-directa/expedicion-certificados-asignacion-directa.component';
+import { ExpedicionCertificadosAsignacionDirectaComponent } from '../../shared/components/expedicion-certificados-asignacion-directa/expedicion-certificados-asignacion-directa.component';
 import { PantallasComponent } from './pages/pantallas/pantallas.component';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 

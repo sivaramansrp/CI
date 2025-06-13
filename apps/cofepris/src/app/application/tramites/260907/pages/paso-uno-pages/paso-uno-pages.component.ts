@@ -1,7 +1,8 @@
 /**
  * Componente para la modificación de permisos de importación de tratamientos.
  */
-import { AfterViewInit, Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 
 import { CompleteForm, Destinatario, DomicilioEstablecimiento, Fabricante, Facturador, FormMercancias, PagoDeDerechos, Proveedor, ScianForm, SolicitanteData, SolicitudEstablecimientoForm, TercerosRelacionados, Tramite } from '../../models/modificacion-permiso.model';
@@ -10,6 +11,9 @@ import { TercerosRelacionadosFabSeccionComponent } from '../../../../shared/comp
 
 import { PagoDeDerechosEntradaComponent } from '../../../../shared/components/pago-de-derechos-entrada/pago-de-derechos-entrada.component';
 import { TramitesAsociadosSeccionComponent } from '../../../../shared/components/tramites-asociados-seccion/tramites-asociados-seccion.component';
+
+import {Subject, forkJoin, map, takeUntil } from 'rxjs';
+import { ModificacionPermisoImportacionSanitario } from '../../service/modificacion-permiso.service';
 /**
  * Clase que representa el componente de modificación de permisos de importación de tratamientos.
  */
@@ -25,7 +29,65 @@ import { TramitesAsociadosSeccionComponent } from '../../../../shared/components
  * @export
  * @class PasoUnoPagesComponent
  */
-export class PasoUnoPagesComponent {
+export class PasoUnoPagesComponent implements OnInit , OnDestroy {
+    /**
+       * showPreFillingOptions
+       * Indica si se deben mostrar las opciones de prellenado.
+       */
+   showPreFillingOptions: boolean = false; 
+  
+     /**
+     * Indica si se están mostrando los datos de respuesta.
+     */
+    public esDatosRespuesta: boolean = false;
+    /**
+     * Estado actual de la consulta.
+     */
+    public consultaState!: ConsultaioState;
+    /**
+     * Notificador para destruir las suscripciones y evitar fugas de memoria.
+     */
+    private destroyNotifier$: Subject<void> = new Subject();
+  
+    constructor( private consultaQuery: ConsultaioQuery,
+      
+          private solocitudService: ModificacionPermisoImportacionSanitario,
+    ){
+  
+    }
+    /**
+     * Método que se ejecuta al inicializar el componente.
+     */
+     ngOnInit(): void {
+      this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+            this.consultaState = seccionState;
+        })).subscribe();
+      if(this.consultaState.update) {
+      this.guardarDatosFormulario();
+      } else {
+        this.esDatosRespuesta = true;
+      }
+    }
+/**
+ * Método para guardar los datos del formulario.
+ * Utiliza `forkJoin` para realizar múltiples solicitudes simultáneamente y espera a que todas se completen.
+ */
+     guardarDatosFormulario(): void {
+          forkJoin({
+            registro: this.solocitudService.getRegistroTomaMuestrasMercanciasData(),
+            permiso: this.solocitudService.getPagoDerechos()
+          })
+            .pipe(takeUntil(this.destroyNotifier$))
+            .subscribe(({ registro, permiso }) => {
+              if (registro) {
+                this.esDatosRespuesta = true;
+                this.solocitudService.actualizarEstadoFormulario(registro);
+              }
+              if (permiso) {
+                this.solocitudService.actualizarPagoDerechosFormulario(permiso);
+              }
+            });
+        }
   /**
      * Referencia al componente `SolicitanteComponent` para acceder a sus métodos y propiedades.
      */
@@ -171,4 +233,11 @@ export class PasoUnoPagesComponent {
     seleccionaTab(i: number): void {
       this.indice = i;
     }
+    /**
+ * Método del ciclo de vida que se ejecuta al destruir el componente.
+ */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

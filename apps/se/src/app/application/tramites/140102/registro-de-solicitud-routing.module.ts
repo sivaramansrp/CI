@@ -8,7 +8,6 @@ const ROUTES: Routes = [
     component: PantallasComponent
   }
 ];
-
 @NgModule({
   imports: [RouterModule.forChild(ROUTES)],
   exports: [RouterModule]

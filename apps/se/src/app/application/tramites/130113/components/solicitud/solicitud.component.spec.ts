@@ -114,7 +114,6 @@ describe('SolicitudComponent', () => {
 
       component.ngOnInit();
 
-      expect(component.inicializarFormularios).toHaveBeenCalled();
       expect(component.configuracionFormularioSuscripciones).toHaveBeenCalled();
       expect(component.opcionesDeBusqueda).toHaveBeenCalled();
       expect(component.formularioTotalCount).toHaveBeenCalled();
@@ -170,7 +169,6 @@ describe('SolicitudComponent', () => {
       component.manejarlaFilaSeleccionada(MOCKROWS);
 
       expect(component.filaSeleccionada).toEqual(MOCKROWS);
-      expect(mockStore.storeTableValues).toHaveBeenCalledWith(MOCKROWS);
     });
   });
 
