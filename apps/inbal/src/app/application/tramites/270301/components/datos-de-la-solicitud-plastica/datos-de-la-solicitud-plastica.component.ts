@@ -60,7 +60,7 @@ import obraDe from '@libs/shared/theme/assets/json/270301/obra-de.json';
  */
 
 export interface ObraTablaDatos {
-  
+
   columns: string[];
 }
 
@@ -115,7 +115,7 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
  * 
  * Cuando es verdadero, el usuario no puede editar los campos del formulario.
  */
-   public esFormularioSoloLectura: boolean = true;
+  public esFormularioSoloLectura: boolean = true;
   /**
    * @property {Subject<void>} destroy$
    * @description
@@ -271,7 +271,7 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
     public Agregar270301Store: Agregar270301Store,
     private agregarQuery: AgregarQuery,
     private solicitudService: SolicitudService,
-     private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery
   ) {
     // La lógica del constructor se puede añadir aquí si es necesario
   }
@@ -294,240 +294,33 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.solicitudState = seccionState as Solicitud270301State;
           // Restaurar las filas de la tabla de obras de arte si existen en el store
-        if (
-          this.solicitudState &&
-          typeof this.solicitudState === 'object' &&
-          this.solicitudState.ObraDeArte &&
-          Array.isArray(this.solicitudState.ObraDeArte)
-        ) {
-          // Evita duplicados si navegas varias veces
-          this.obraDeArteRowData = [...this.solicitudState.ObraDeArte];
-        }
-      })
-    )
-      //   })
-      // )
-      
+          if (
+            this.solicitudState &&
+            typeof this.solicitudState === 'object' &&
+            this.solicitudState.ObraDeArte &&
+            Array.isArray(this.solicitudState.ObraDeArte)
+          ) {
+            // Evita duplicados si navegas varias veces
+            this.obraDeArteRowData = [...this.solicitudState.ObraDeArte];
+          }
+        })
+      )
       .subscribe();
-      // this.getObraDeArte()
 
-       this.consultaioQuery.selectConsultaioState$
-        .pipe(
-          takeUntil(this.destroy$),
-          map((seccionState)=>{
-            this.esFormularioSoloLectura = seccionState.readonly;
-            
-          })
-        )
-        .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
 
-        this.getObraDeArte();
-
-         /**
-             * @description
-             * Obtiene los datos de las columnas para la tabla de obras de arte desde el servicio de solicitud.
-             * Actualiza la propiedad `tablaObraDeArteData` con los datos recibidos.
-             */
-            this.solicitudService
-              .getObraDeArteTabla()
-              .pipe(takeUntil(this.destroy$))
-              .subscribe((data: ObraTablaDatos) => {
-                this.tablaObraDeArteData = data.columns;
-              });
-        
-            /**
-             * Obtiene los datos de operación desde el servicio y los asigna a `operacionData`.
-             */
-            this.solicitudService
-              .getOperacionData()
-              .pipe(takeUntil(this.destroy$))
-              .subscribe((data) => {
-                this.operacionData = data;
-              });
-        
-            /**
-             * Obtiene los datos de movimiento desde el servicio y los asigna a `movimientoData`.
-             */
-            this.solicitudService
-              .getMovimientoData()
-              .pipe(takeUntil(this.destroy$))
-              .subscribe((data) => {
-                this.movimientoData = data;
-              });
-        
-            /**
-             * Obtiene los datos de país desde el servicio y los asigna a `paisData`.
-             */
-            this.solicitudService
-              .getPaisData()
-              .pipe(takeUntil(this.destroy$))
-              .subscribe((data) => {
-                this.paisData = data;
-              });
-        
-            /**
-             * Obtiene los datos de transporte desde el servicio y los asigna a `transporteData`.
-             */
-            this.solicitudService
-              .getTransporteData()
-              .pipe(takeUntil(this.destroy$))
-              .subscribe((data) => {
-                this.transporteData = data;
-              });
-        
-            /**
-             * Obtiene los datos de aduana desde el servicio y los asigna a `aduanaData`.
-             */
-            this.solicitudService
-              .getAduanaData()
-              .pipe(takeUntil(this.destroy$))
-              .subscribe((data) => {
-                this.aduanaData = data;
-              });
-        
-            /**
-             * Obtiene los datos de motivo desde el servicio y los asigna a `motivoData`.
-             */
-            this.solicitudService
-              .getMotivoData()
-              .pipe(takeUntil(this.destroy$))
-              .subscribe((data) => {
-                this.motivoData = data;
-              });
-        
-            /**
-             * Obtiene los datos de moneda desde el servicio y los asigna a `monedaData`.
-             */
-            this.solicitudService
-              .getMonedaData()
-              .pipe(takeUntil(this.destroy$))
-              .subscribe((data) => {
-                this.monedaData = data;
-              });
-        
-            /**
-             * Obtiene los datos de fracciones arancelarias desde el servicio y los asigna a `arancelariaData`.
-             */
-            this.solicitudService
-              .getArancelariaData()
-              .pipe(takeUntil(this.destroy$))
-              .subscribe((data) => {
-                this.arancelariaData = data;
-              });
-        
-            /**
-             * Inicializa el formulario reactivo principal para gestionar la solicitud.
-             */
-            this.initializeSolicitudFormGroup();
-        
-            /**
-             * Inicializa el formulario reactivo para gestionar datos de las obras de arte.
-             */
-            this.initializeObraDeArteFormGroup();
-        
-            /** Llama al método que configura el formulario según el estado de solo lectura. */
-            this.inicializarEstadoFormulario();
-    //     /**
-    //  * Inicializa el formulario reactivo para gestionar datos de las obras de arte.
-    //  */
-    //    this.initializeObraDeArteFormGroup();
-    //     this.inicializarEstadoFormulario(); // Inicializa el estado del formulario según el modo de solo lectura.
-    }
-
-  //    /**
-  //  * Inicializa el estado del formulario según el modo de solo lectura.
-  //  * Si está en modo solo lectura, deshabilita el formulario; si no, lo habilita y actualiza los valores.
-  //  * @returns {void}
-  //  */
-  // inicializarEstadoFormulario(): void {
-  //   if (!this.solicitudFormGroup) {
-  //     return;
-  //   }
-  //   if (this.esFormularioSoloLectura) {
-  //     this.guardarDatosFormulario();
-  //   } else {
-  //     this.getObraDeArte();
-  //   }  
-  // }
-
-  /**
-   * Determina si se debe cargar un formulario nuevo o uno existente.  
-   * Ejecuta la lógica correspondiente según el estado del componente.
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.guardarDatosFormulario();
-    } else if(this.solicitudFormGroup && this.obraDeArteFormgroup) {
-       this.solicitudFormGroup.enable();
-       this.obraDeArteFormgroup.enable();
-    }
-  
-  }
-
-/**
-     * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-     * Luego reinicializa el formulario con los valores actualizados desde el store.
-     */
-    guardarDatosFormulario(): void {
-      this.initializeSolicitudFormGroup();
-      this.initializeObraDeArteFormGroup();
-       if (this.solicitudFormGroup && this.esFormularioSoloLectura) {
-        this.solicitudFormGroup.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.solicitudFormGroup.enable();
-      } 
-  
-      if (this.obraDeArteFormgroup && this.esFormularioSoloLectura) {
-        this.obraDeArteFormgroup.disable();
-        if (this.obraDeArteRowData.length === 0) {
-        const OBRA_DE_ARTE_ROW: TablaDatos = {
-        tbodyData: obraDe,
-      };
-      this.obraDeArteRowData.push(OBRA_DE_ARTE_ROW);
-    }
-      } else if (!this.esFormularioSoloLectura) {
-        this.obraDeArteFormgroup.enable();
-      }
-      // this.getObraDeArte();
-    }
-/**
-   * Aplica el modo solo lectura o edición al formulario según corresponda.
-   * También actualiza los valores del formulario desde el store.
-   * @returns {void}
-   */
-  // guardarDatosFormulario(): void {
-  //   if (!this.solicitudFormGroup) {
-  //    return;
-  //   }
-  //   /**
-  //  * @method
-  //  * @description
-  //  * Guarda los datos del formulario de solicitud plástica. 
-  //  * Si el formulario no existe, la función termina sin hacer nada.
-  //  * Llama al método `getObraDeArte()` para obtener información adicional.
-  //  * Si el formulario está en modo solo lectura, lo deshabilita; 
-  //  * de lo contrario, lo habilita.
-  //  *
-  //  * @memberof DatosDeLaSolicitudPlasticaComponent
-  //  */
-  //   this.getObraDeArte();
-  //   if (this.esFormularioSoloLectura) {
-  //     this.solicitudFormGroup.disable();
-  //   } else if (!this.esFormularioSoloLectura) {
-  //     this.solicitudFormGroup.enable();
-  //   }
-  // }
-
-  /**
-   * @method getObraDeArte
-   * @description
-   * Este método obtiene los datos de las obras de arte desde el servicio `SolicitudService`.
-   * Los datos obtenidos se asignan a la propiedad `tablaObraDeArteData` para ser utilizados
-   * en la tabla de obras de arte.
-   *
-   * @returns {void}
-   */
-  getObraDeArte(): void {   
+        })
+      )
+      .subscribe();
+    /**
+      * @description
+      * Obtiene los datos de las columnas para la tabla de obras de arte desde el servicio de solicitud.
+      * Actualiza la propiedad `tablaObraDeArteData` con los datos recibidos.
+      */
     this.solicitudService
       .getObraDeArteTabla()
       .pipe(takeUntil(this.destroy$))
@@ -538,7 +331,8 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
     /**
      * Obtiene los datos de operación desde el servicio y los asigna a `operacionData`.
      */
-    this.solicitudService.getOperacionData()
+    this.solicitudService
+      .getOperacionData()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
         this.operacionData = data;
@@ -547,7 +341,8 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
     /**
      * Obtiene los datos de movimiento desde el servicio y los asigna a `movimientoData`.
      */
-    this.solicitudService.getMovimientoData()
+    this.solicitudService
+      .getMovimientoData()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
         this.movimientoData = data;
@@ -556,7 +351,8 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
     /**
      * Obtiene los datos de país desde el servicio y los asigna a `paisData`.
      */
-    this.solicitudService.getPaisData()
+    this.solicitudService
+      .getPaisData()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
         this.paisData = data;
@@ -565,7 +361,8 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
     /**
      * Obtiene los datos de transporte desde el servicio y los asigna a `transporteData`.
      */
-    this.solicitudService.getTransporteData()
+    this.solicitudService
+      .getTransporteData()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
         this.transporteData = data;
@@ -574,7 +371,8 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
     /**
      * Obtiene los datos de aduana desde el servicio y los asigna a `aduanaData`.
      */
-    this.solicitudService.getAduanaData()
+    this.solicitudService
+      .getAduanaData()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
         this.aduanaData = data;
@@ -583,7 +381,8 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
     /**
      * Obtiene los datos de motivo desde el servicio y los asigna a `motivoData`.
      */
-    this.solicitudService.getMotivoData()
+    this.solicitudService
+      .getMotivoData()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
         this.motivoData = data;
@@ -592,7 +391,8 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
     /**
      * Obtiene los datos de moneda desde el servicio y los asigna a `monedaData`.
      */
-    this.solicitudService.getMonedaData()
+    this.solicitudService
+      .getMonedaData()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
         this.monedaData = data;
@@ -601,7 +401,8 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
     /**
      * Obtiene los datos de fracciones arancelarias desde el servicio y los asigna a `arancelariaData`.
      */
-    this.solicitudService.getArancelariaData()
+    this.solicitudService
+      .getArancelariaData()
       .pipe(takeUntil(this.destroy$))
       .subscribe((data) => {
         this.arancelariaData = data;
@@ -617,10 +418,50 @@ export class DatosDeLaSolicitudPlasticaComponent implements OnInit, OnDestroy {
      */
     this.initializeObraDeArteFormGroup();
 
-    /**
-     * Configura el texto HTML para el mensaje del manifiesto de alerta.
-     */
-  
+    /** Llama al método que configura el formulario según el estado de solo lectura. */
+    this.inicializarEstadoFormulario();
+
+  }
+
+  /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.  
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else if (this.solicitudFormGroup && this.obraDeArteFormgroup) {
+      this.solicitudFormGroup.enable();
+      this.obraDeArteFormgroup.enable();
+    }
+
+  }
+
+  /**
+       * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+       * Luego reinicializa el formulario con los valores actualizados desde el store.
+       */
+  guardarDatosFormulario(): void {
+    this.initializeSolicitudFormGroup();
+    this.initializeObraDeArteFormGroup();
+    if (this.solicitudFormGroup && this.esFormularioSoloLectura) {
+      this.solicitudFormGroup.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.solicitudFormGroup.enable();
+    }
+
+    if (this.obraDeArteFormgroup && this.esFormularioSoloLectura) {
+      this.obraDeArteFormgroup.disable();
+      if (this.obraDeArteRowData.length === 0) {
+        const OBRA_DE_ARTE_ROW: TablaDatos = {
+          tbodyData: obraDe,
+        };
+        this.obraDeArteRowData.push(OBRA_DE_ARTE_ROW);
+      }
+    } else if (!this.esFormularioSoloLectura) {
+      this.obraDeArteFormgroup.enable();
+    }
+
   }
 
   public solicitudAlert = TEXTO_MANIFIESTO_ALERT

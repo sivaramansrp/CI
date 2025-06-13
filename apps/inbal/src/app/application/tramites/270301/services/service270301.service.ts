@@ -35,6 +35,15 @@ export class Service270301Service {
    * @param DATOS Estado actual del formulario de trámite 270301.
    */
   actualizarEstadoFormulario(DATOS: Solicitud270301State): void {
+
+    this.agregar270301Store.settipoDeOperacion(DATOS.tipoDeOperacion);
+    this.agregar270301Store.settipoDeMovimiento(DATOS.tipoDeMovimiento);
+    this.agregar270301Store.setmotivo(DATOS.motivo);
+    this.agregar270301Store.setpais(DATOS.pais);
+    this.agregar270301Store.setmedioTransporte(DATOS.medioTransporte);
+    this.agregar270301Store.setdestinofinal(DATOS.destinofinal);
+    this.agregar270301Store.setperiodoEstancia(DATOS.periodoEstancia);
+    this.agregar270301Store.setaduanaEntrada(DATOS.aduanaEntrada);
     if (DATOS.ciudad) {
       this.agregar270301Store.setciudad(DATOS.ciudad);
     }

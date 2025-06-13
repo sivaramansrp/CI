@@ -52,16 +52,7 @@ export class DatosComponent implements OnInit, AfterViewInit, OnDestroy {
      * @returns {void}
      */
   ngOnInit(): void {
-    // this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
-    //   this.consultaState = seccionState;
-    // })).subscribe();
-    // if (this.consultaState.update) {
-    //   this.guardarDatosFormulario();
-    // } else {
-    //   this.esDatosRespuesta = true;
-    // }
-
-     this.consultaQuery.selectConsultaioState$.pipe(
+    this.consultaQuery.selectConsultaioState$.pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
         this.consultaState = seccionState;
