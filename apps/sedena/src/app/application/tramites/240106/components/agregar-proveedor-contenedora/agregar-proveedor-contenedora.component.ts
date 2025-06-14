@@ -1,7 +1,8 @@
+import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import { Observable } from 'rxjs';
 import { Tramite240106Query } from '../../estados/tramite240106Query.query';
 import { Tramite240106Store } from '../../estados/tramite240106Store.store';
 
@@ -14,6 +15,17 @@ import { Tramite240106Store } from '../../estados/tramite240106Store.store';
 })
 export class AgregarProveedorContenedoraComponent {
   /**
+   * Observable que emite información sobre el destino final, proveedor o un valor nulo/indefinido.
+   * 
+   * @type {Observable<DestinoFinal | Proveedor | null | undefined>}
+   * 
+   * @remarks
+   * Este observable se utiliza para gestionar los datos relacionados con los derechos
+   * y destinatarios finales en el contexto de la aplicación.
+   */
+  public terechosDatos$!: Observable<DestinoFinal | Proveedor | null | undefined>;
+
+  /**
    * @constructor
    * @description Constructor que inyecta el store `Tramite260214Store` para gestionar el estado del trámite.
    *
@@ -21,7 +33,7 @@ export class AgregarProveedorContenedoraComponent {
    */
   // eslint-disable-next-line no-empty-function
   constructor(public tramite240106Store: Tramite240106Store, public tramiteQuery: Tramite240106Query) {
-  
+    this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
       }
   /**
    * @method updateProveedorTablaDatos

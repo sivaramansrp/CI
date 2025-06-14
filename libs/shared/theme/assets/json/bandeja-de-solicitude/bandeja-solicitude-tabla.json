@@ -1827,26 +1827,7 @@
   "numeroDeProcedimiento": "240108"
   },
   {
-  "id": 260203,
-  "tipoDeTramite": "Solicitud de Permiso",
-  "fecha": "2023-10-01",
-  "fechaActualizacion": "2023-10-05",
-  "diasTranscurridos": "4",
-  "departamento": "COFEPRIS",
-  "numeroDeProcedimiento": "260203"
-  },
-  {
-    "id": 120401,
-    "tipoDeTramite": "Solicitud de Permiso",
-    "fecha": "2023-10-01",
-    "fechaActualizacion": "2023-10-05",
-    "diasTranscurridos": "4",
-    "departamento": "SE",
-    "numeroDeProcedimiento": "120401"
-},
-{
-  "id": 260205,
-  "tipoDeTramite": "Solicitud de Permiso",
+ "tipoDeTramite": "Solicitud de Permiso",
   "fecha": "2023-10-01",
   "fechaActualizacion": "2023-10-05",
   "diasTranscurridos": "4",
@@ -1906,6 +1887,14 @@
     "diasTranscurridos": "4",
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260516"
+},
+{
+    "id": 240106,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SEDENA",
+    "numeroDeProcedimiento": "240106"
 }
-
 ]

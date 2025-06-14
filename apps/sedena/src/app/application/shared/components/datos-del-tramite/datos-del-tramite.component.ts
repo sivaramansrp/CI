@@ -29,14 +29,16 @@ import {
   ConfiguracionColumna,
   CrossListLable,
   CrosslistComponent,
-  InputCheckComponent,
   InputFecha,
   InputFechaComponent,
-  InputRadioComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
+
+import {
+InputCheckComponent,InputRadioComponent
+} from '@libs/shared/data-access-user/src';
 
 import {
   DatosDelTramiteFormState,
@@ -459,16 +461,16 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         Validators.required,
       ],
       unoSemestre: [
-        this.datosDelTramiteFormState.unoSemestre ?? null,
+        this.datosDelTramiteFormState?.unoSemestre ?? null,
         Validators.required,
       ],
       dosSemestre: [
-        this.datosDelTramiteFormState.dosSemestre ?? null,
+        this.datosDelTramiteFormState?.dosSemestre ?? null,
         Validators.required,
       ],
-      anoEnCurso: [this.datosDelTramiteFormState.anoEnCurso ?? false],
+      anoEnCurso: [this.datosDelTramiteFormState?.anoEnCurso ?? false],
       informacionConfidencial: [
-        this.datosDelTramiteFormState.informacionConfidencial ?? false,
+        this.datosDelTramiteFormState?.informacionConfidencial ?? false,
       ],
     });
   }
@@ -588,8 +590,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     this.crearFormaulario();
     this.manifiestosTexto = MANIFIESTOS_DECLARACION.MANIFIESTOS;
     this.form.patchValue({
-      permisoGeneral: this.datosDelTramiteFormState.permisoGeneral,
-      usoFinal: this.datosDelTramiteFormState.usoFinal,
+      permisoGeneral: this.datosDelTramiteFormState?.permisoGeneral,
+      usoFinal: this.datosDelTramiteFormState?.usoFinal,
     });
     if (this.esFormularioSoloLectura) {
       this.form.disable();
@@ -604,7 +606,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
 
     if (this.esJustificacion) {
       this.formDeJustificacion.patchValue({
-        justificacion: this.justificacionTramiteFormState.justificacion,
+        justificacion: this.justificacionTramiteFormState?.justificacion,
       });
       if (this.esFormularioSoloLectura) {
         this.formDeJustificacion.disable();
@@ -617,7 +619,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     }
 
     this.seleccionarAduanasDisponiblesDatos =
-      this.datosDelTramiteFormState.aduanasSeleccionadas;
+      this.datosDelTramiteFormState?.aduanasSeleccionadas;
 
     this.form.valueChanges
       .pipe(takeUntil(this.destroyNotifier$))
