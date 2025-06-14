@@ -199,11 +199,11 @@ export class AdicionFraccionComponent
    * Subject utilizado para destruir suscripciones y evitar fugas de memoria.
    */
   private destroy$: Subject<void> = new Subject<void>();
-   /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
-  esFormularioSoloLectura: boolean = false; 
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor donde se inyectan servicios y se inicializa el formulario principal.
    */
@@ -212,7 +212,7 @@ export class AdicionFraccionComponent
     private AvisoModifyService: AvisoModifyService,
     private store: Tramite32301Store,
     private query: Tramite32301Query,
-    private consultaioQuery: ConsultaioQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
     this.declaracionForm = this.fb.group({
       tipoCarga: [''],
@@ -224,31 +224,31 @@ export class AdicionFraccionComponent
     });
 
     /**
-         * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
-         *
-         * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
-         * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
-         * - La suscripción se cancela automáticamente cuando `destroy$` emite un valor (para evitar fugas de memoria).
-         */
-        this.consultaioQuery.selectConsultaioState$
-        .pipe(
-          takeUntil(this.destroy$),
-          map((seccionState)=>{
-            this.esFormularioSoloLectura = seccionState.readonly; 
-            this.inicializarEstadoFormulario();
-          })
-        )
-        .subscribe()
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroy$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
    * Inicializa los formularios secundarios y obtiene las opciones de fracción adicional.
    */
   ngOnInit(): void {
-     this.inicializarEstadoFormulario();
+    this.inicializarEstadoFormulario();
   }
- /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
    * Además, obtiene la información del catálogo de mercancía.
    */
   inicializarEstadoFormulario(): void {
@@ -256,27 +256,27 @@ export class AdicionFraccionComponent
       this.guardarDatosFormulario();
     } else {
       this.inicializarFormulario();
-    }  
+    }
   }
-     /**
+  /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
-      this.inicializarFormulario();
-      if (this.esFormularioSoloLectura) {
-        this.declaracionForm.disable();
-        this.declaracionFormModel.disable();
-        this.cargaManualForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
-        this.declaracionForm.enable();
-        this.declaracionFormModel.enable();
-        this.cargaManualForm.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
-      }
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.declaracionForm.disable();
+      this.declaracionFormModel.disable();
+      this.cargaManualForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.declaracionForm.enable();
+      this.declaracionFormModel.enable();
+      this.cargaManualForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
   }
-      /**
+  /**
    * Inicializa el formulario reactivo para capturar el valor de 'registro'.
    * Suscribe al estado almacenado en el store mediante el query `tramite301Query.selectSolicitud$`
    * y lo asigna a la variable local `solicitudState`. Luego, crea el formulario
@@ -284,7 +284,7 @@ export class AdicionFraccionComponent
    */
 
   inicializarFormulario(): void {
-this.declaracionFormModel = this.fb.group({
+    this.declaracionFormModel = this.fb.group({
       archivoProceso: [''],
       registrosProcesoCargados: [{ value: '', disabled: true }],
     });
@@ -406,12 +406,10 @@ this.declaracionFormModel = this.fb.group({
   /**
    * Controla la visibilidad del botón de carga dependiendo del tipo de carga seleccionado.
    */
-  valorSeleccionadoTipoCarga(): void {
-    const SELECTED_VALUE = this.declaracionForm.get('idCarga')?.value;
-
-    if (SELECTED_VALUE === 'TIPCAR.MA') {
+  valorSeleccionadoTipoCarga(ev: string | number): void {
+    if (ev === 'TIPCAR.MA') {
       this.divBtnCargaMVisible = false;
-    } else if (SELECTED_VALUE === 'TIPCAR.CM') {
+    } else if (ev === 'TIPCAR.CM') {
       this.divBtnCargaMVisible = true;
     }
   }

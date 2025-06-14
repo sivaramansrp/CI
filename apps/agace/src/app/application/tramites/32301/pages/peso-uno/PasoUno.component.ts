@@ -11,6 +11,7 @@ import { ProveedorExtranjeroComponent } from '../../components/proveedorExtranje
 import { SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Solicitud32301Service } from '../../services/solicitud32301.service';
 import { TipoDeAvisoComponent } from '../../components/tipoDeAviso/tipoDeAviso.component';
+import { Tramite32301Query } from '../../estados/tramite32301.query';
 /**
  * Interfaz que define las propiedades relacionadas con los tipos de aviso que se seleccionan en el formulario
  * */
@@ -86,7 +87,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   constructor(
     private consultaQuery: ConsultaioQuery,
-    private solicitudService: Solicitud32301Service
+    private solicitudService: Solicitud32301Service,
+    private Tramite32301Query: Tramite32301Query,
   ) {
     // Inicializa el estado de la consulta
   }
@@ -101,21 +103,27 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * - En caso contrario, se activa la bandera `esDatosRespuesta`.
    */
   ngOnInit(): void {
+   
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaState = seccionState;
-          this.esFormularioSoloLectura = seccionState.readonly;
-
-          if (this.consultaState.update) {
-            this.guardarDatosFormulario();
-          } else {
-            this.esDatosRespuesta = true;
-          }
         })
       )
       .subscribe();
+    if (this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+
+     // Suscripción a los cambios del estado del proveedor extranjero
+        this.Tramite32301Query.select()
+          .pipe(takeUntil(this.destroyNotifier$))
+          .subscribe((state) => {
+           this.datosInputCheck = state as unknown as TipoDevAviso;
+          });
   }
 
   /**

@@ -18,6 +18,7 @@ import {
 import {
   CANTIDAD_BIENES_OPTION,
   FUSIONRADIO_OPTIONS,
+  FUSIONRADIO_OPTIONS_ONLY,
 } from '../../enums/fusionOEscision.enum';
 import {
   FormBuilder,
@@ -289,12 +290,13 @@ export class FusionOEscisionComponent
       this.fusionradioOptions = FUSIONRADIO_OPTIONS;
     }
     if (ev === 'fusion2') {
-      this.fusionradioOptions.pop();
+      this.fusionradioOptions = FUSIONRADIO_OPTIONS_ONLY
     }
   }
 
   /** Cambia dinámicamente los títulos y etiquetas según la opción seleccionada */
   mostrarFusionOEscision(ev: string | number): void {
+   
     this.divCompletoVisible = ev === '1' || ev === '0';
     this.fusionOescisionTitulo =
       ev === 1
@@ -309,13 +311,10 @@ export class FusionOEscisionComponent
 
   /** Muestra u oculta los bloques de certificación según la opción elegida */
   mostrarCertificacionFusionada(ev: string | number, ismodel?: string): void {
-    const CANTIDAD_BIENES = this.formulario.get('cantidadBienes')?.value;
-    this.conCertificacionPrincipalVisible = CANTIDAD_BIENES === '1';
+    this.conCertificacionPrincipalVisible = ev === '1';
 
     if (ismodel === 'isModel') {
-      const MODELCANTIDAD_BIENES =
-        this.modelFormulario.get('mCantidadBienes')?.value;
-      this.sinCertificacionPrincipalVisible = MODELCANTIDAD_BIENES === '1';
+      this.sinCertificacionPrincipalVisible = ev === '1';
     }
   }
 
