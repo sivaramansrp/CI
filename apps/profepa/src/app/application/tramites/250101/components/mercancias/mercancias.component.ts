@@ -4,10 +4,12 @@ import { Component,OnDestroy,OnInit} from '@angular/core';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { Subject,map,takeUntil } from 'rxjs';
 import { Tramite250101State,Tramite250101Store } from '../../estados/tramite250101.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ModalComponent } from '../modal/modal.component';
 import { Tramite250101Query } from '../../estados/tramite250101.query';
 import catalogoDatos from '@libs/shared/theme/assets/json/250101/banco.json';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import mercanciasDescDummy from '@libs/shared/theme/assets/json/250101/mercancias-desc-dummy.json'; 
+
 /**
  * Componente encargado de gestionar la sección de mercancías dentro del trámite 250101.
  * Este componente permite al usuario gestionar el formulario relacionado con los productos,
@@ -45,13 +47,23 @@ export class MercanciasComponent implements OnInit, OnDestroy {
    * @type {boolean}
    */
   showMercanciasModal = false;
-  // Definición de las configuraciones de la tabla para mostrar los productos y las mercancías
+  
+  /**
+ * Configuración de columnas para la tabla de productos.
+ * Basada en una constante que define el formato y comportamiento de cada columna.
+ */
   configuracionTabla: ConfiguracionColumna<Producto>[] = CONFIGURATION_TABLA;
   
-  // Definición de las configuraciones de la tabla para mostrar los productos y las mercancías
+  /**
+ * Configuración de columnas para la tabla de mercancías.
+ * Utiliza una constante predefinida con el formato de cada columna.
+ */
   configuracionMercanciasTabla: ConfiguracionColumna<Detalle>[] = CONFIGURATION_TABLA_MERCANCIAS;
 
-  // Formulario reactivo que gestiona la entrada de datos de mercancías
+  /**
+ * Formulario reactivo para gestionar los datos de las mercancías.
+ * Contiene los controles y validaciones relacionados con el trámite.
+ */
   formMercancias!: FormGroup;
   /**
    * Configuración de las columnas de la tabla de exportadores.
@@ -157,6 +169,7 @@ public esFormularioSoloLectura: boolean = false;
    * @returns {void}
    */
   ngOnInit(): void {
+     // Suscribe al estado del trámite y restaura las filas de la tabla si existen
     this.tramite250101Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -189,6 +202,10 @@ public esFormularioSoloLectura: boolean = false;
     // Deshabilita el campo 'arancelaria' en el formulario.
     this.formMercancias.get('arancelaria')?.disable();
 
+/**
+ * Se suscribe al estado de la sección para actualizar el modo de solo lectura del formulario.
+ * Finaliza la suscripción automáticamente al destruirse el componente.
+ */
     this.consultaioQuery.selectConsultaioState$
     .pipe(takeUntil(this.destroyNotifier$))
     .subscribe((seccionState) => {
@@ -218,6 +235,12 @@ private guardarDatosFormulario(): void {
     this.detalleData();
     if (this.esFormularioSoloLectura) {
       this.formMercancias.disable();
+      if(this.producto.length === 0){
+       const PRODUCTO_FORMDATA = {
+       descripcion: catalogoDatos.descripcion[0]?.descripcion ?? '',
+       };
+       this.producto.push(PRODUCTO_FORMDATA);
+      }
     } else if (!this.esFormularioSoloLectura) {
       this.formMercancias.enable();
     } 

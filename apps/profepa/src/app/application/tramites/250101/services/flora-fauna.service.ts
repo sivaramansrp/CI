@@ -4,6 +4,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+/**
+ * @class FloraFaunaService
+ * @description
+ * Servicio encargado de realizar solicitudes HTTP para obtener datos relacionados 
+ * con el trámite 250101. Proporciona métodos para recuperar información de diferentes 
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -26,7 +32,7 @@ export class FloraFaunaService {
     // Lógica de inicialización si es necesario
   }
 
-    /**
+/**
  * Actualiza el estado del formulario con los datos proporcionados.
  *
  * @param DATOS - Objeto que contiene el nuevo estado del trámite (Tramite270201State).
@@ -81,6 +87,10 @@ export class FloraFaunaService {
     this.tramite250101Store.setFraccion(DATOS.fraccion);
   }
 
+/**
+ * Obtiene los datos simulados del trámite 250101 desde un archivo JSON local.
+ * Devuelve un observable con el estado inicial del trámite.
+ */
     getRegistroTomaMuestrasMercanciasData(): Observable<Tramite250101State> {
     return this.http.get<Tramite250101State>('assets/json/250101/flora-fauna-consulta.json');
   }

@@ -7,6 +7,14 @@ import { Tramite250101Query } from '../../estados/tramite250101.query';
 import { CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite250101State } from '../../estados/tramite250101.store';
 
+// Mock catalogoDatos
+(globalThis as any).catalogoDatos = {
+  banco: [
+    { id: 1, descripcion: 'Banco 1' },
+    { id: 2, descripcion: 'Banco 2' }
+  ]
+};
+
 // ✅ Mock the JSON imports
 jest.mock('@libs/shared/theme/assets/json/250101/banco.json', () => ({
   banco: ['MockBank1', 'MockBank2'],

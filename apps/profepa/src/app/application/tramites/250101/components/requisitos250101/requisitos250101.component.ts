@@ -4,12 +4,12 @@ import { Component,OnDestroy,OnInit } from '@angular/core';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { Subject,map,takeUntil } from 'rxjs';
 import { Tramite250101State, Tramite250101Store } from '../../estados/tramite250101.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { INPUT_FECHA } from '../../constantes/flora-fauna.enum';
 import { ModalComponent } from '../modal/modal.component';
 import { Tramite250101Query } from '../../estados/tramite250101.query';
 import catalogoDatos from '@libs/shared/theme/assets/json/250101/banco.json';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-
+import reuisitosDatosDummy from '@libs/shared/theme/assets/json/250101/requisitos-datos-dummy.json';
 /**
  * Componente encargado de gestionar los requisitos y el transporte del trámite 250101.
  * Permite agregar elementos a las tablas dinámicas y almacenar los valores en el estado del store.
@@ -114,6 +114,10 @@ export class Requisitos250101Component implements OnInit, OnDestroy {
       });
       this.tramite250101Store.setFechas(nuevo_valor);
     }
+  /**
+ * Constructor que inyecta el constructor de formularios y los servicios del store y queries.
+ * Permite gestionar el estado y las consultas del trámite 250101.
+ */
   constructor(
     private fb: FormBuilder,
     private tramite250101Store: Tramite250101Store,
@@ -147,6 +151,10 @@ export class Requisitos250101Component implements OnInit, OnDestroy {
       requisito: [this.solicitudState.requisito, Validators.required],
     });
 
+    /**
+ * Se suscribe al estado de la sección para actualizar el modo de solo lectura del formulario.
+ * Finaliza la suscripción automáticamente al destruirse el componente.
+ */
     this.consultaioQuery.selectConsultaioState$
     .pipe(takeUntil(this.destroyNotifier$))
     .subscribe((seccionState) => {
@@ -172,11 +180,27 @@ export class Requisitos250101Component implements OnInit, OnDestroy {
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
-private guardarDatosFormulario(): void {
+public guardarDatosFormulario(): void {
     // this.requisitosDatos();
     // this.transporteDatos();
     if (this.esFormularioSoloLectura) {
       this.transporteForm.disable();
+      if(this.TransporteTabla.length === 0){
+       const TRANSPORTE_FORMDATA = {
+        numeroIdentificacion: reuisitosDatosDummy.numeroIdentificacion,
+        numeroEconomico: reuisitosDatosDummy.numeroIdentificacion,
+        placa: reuisitosDatosDummy.numeroIdentificacion,
+       };
+       this.TransporteTabla.push(TRANSPORTE_FORMDATA);
+      }
+       if(this.RequisitosTabla.length === 0){
+       const REQUISITO_FORMDATA = {
+        No: reuisitosDatosDummy.No,
+        Fecha: reuisitosDatosDummy.Fecha,
+        Tipo: reuisitosDatosDummy.Tipo,
+       };
+       this.RequisitosTabla.push(REQUISITO_FORMDATA);
+      }
     } else if (!this.esFormularioSoloLectura) {
       this.transporteForm.enable();
     } 

@@ -2,13 +2,12 @@ import { Catalogo,CatalogoSelectComponent,InputFechaComponent,TituloComponent } 
 import { Component,OnDestroy,OnInit} from '@angular/core';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { Subject,map,takeUntil } from 'rxjs';
+import { Tramite250101State, Tramite250101Store } from '../../estados/tramite250101.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { INPUT_FECHA_PAGO } from '../../constantes/flora-fauna.enum';
+import { Tramite250101Query } from '../../estados/tramite250101.query';
 import catalogoDatos from '@libs/shared/theme/assets/json/250101/banco.json';
 import pago from '@libs/shared/theme/assets/json/250101/pago-formdatos.json';
-
-import { Tramite250101State, Tramite250101Store } from '../../estados/tramite250101.store';
-import { Tramite250101Query } from '../../estados/tramite250101.query';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * Componente encargado de gestionar el pago de derechos dentro del trámite 221602.
  * Permite al usuario ingresar los datos correspondientes al pago de derechos, como clave, dependencia, banco,

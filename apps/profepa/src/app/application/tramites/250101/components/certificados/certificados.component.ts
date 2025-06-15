@@ -97,6 +97,11 @@ export class CertificadosComponent implements OnInit, OnDestroy {
   tablaPermisoCertificadosFilaDatos: TablaDatos[]=[];
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+   esFormularioSoloLectura: boolean = false;
+  /**
    * @constructor
    * @description
    * Constructor del componente. Inicializa los servicios necesarios.
@@ -134,19 +139,19 @@ export class CertificadosComponent implements OnInit, OnDestroy {
       this.certificadosService
       .getCertificadosFilaDeTabla()
       .subscribe((data: CertificadosFilaTableDatos) => {
-        this.tablaCertificadosFilaDatos.push(data.data); // Asigna los datos de la tabla de certificados fila.
+        this.tablaCertificadosFilaDatos = [data.data]; // Asigna los datos de la tabla de certificados fila.
       });
 
       this.certificadosService
       .getCertificadosFitoFilaDeTabla()
       .subscribe((data: CertificadosFitoFilaTableDatos) => {
-        this.tablaFitosanitoriosFilaDatos.push(data.data); // Asigna los datos de la tabla de certificados fito fila.
+        this.tablaFitosanitoriosFilaDatos = [data.data]; // Asigna los datos de la tabla de certificados fito fila.
       });
 
       this.certificadosService
       .getPermisoCertificadosFilaDeTabla()
       .subscribe((data: PermisosCertificadosFitoFilaTableDatos) => {
-        this.tablaPermisoCertificadosFilaDatos.push(data.data); // Asigna los datos de la tabla de permiso certificados fila.
+        this.tablaPermisoCertificadosFilaDatos= [data.data]; // Asigna los datos de la tabla de permiso certificados fila.
       });
   }
 

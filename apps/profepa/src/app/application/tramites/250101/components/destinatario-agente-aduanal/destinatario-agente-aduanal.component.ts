@@ -1,7 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite250101State, Tramite250101Store } from '../../estados/tramite250101.store';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DESTINATARIO_OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/flora-fauna.enum';
 import { DestinatarioService } from '../../services/destinatario.service';
 import { DestinatarioTablaDatos } from '../../models/flora-fauna.models';
@@ -11,15 +14,13 @@ import { FormGroup } from '@angular/forms';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { ModalComponent } from '../modal/modal.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
 import { TablaDatos } from '../../models/flora-fauna.models';
 import { TableComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Tramite250101State, Tramite250101Store } from '../../estados/tramite250101.store';
-import { Validators } from '@angular/forms';
-// import { takeUntil } from 'rxjs';
 import { Tramite250101Query } from '../../estados/tramite250101.query';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Validators } from '@angular/forms';
+import datosAgenteDummy from '@libs/shared/theme/assets/json/250101/datos-agente-dummy.json';
+import datosDestinatarioDummy from '@libs/shared/theme/assets/json/250101/datos-destinatario-dummy.json'
 /**
  * Componente encargado de gestionar la visualización y manipulación de los datos relacionados con el destinatario 
  * y el agente aduanal dentro del trámite 250101.
@@ -310,14 +311,27 @@ export class DestinatarioAgenteAduanalComponent implements OnInit, OnDestroy {
 private guardarDatosFormulario(): void {
     this.establecerFormDestinatariosModal();
     this.establecerFormAgenteAduanal();
+
     if (this.formDestinatariosModal && this.esFormularioSoloLectura) {
       this.formDestinatariosModal.disable();
+      if (this.tablaDestinatarioFilaDatos.length === 0){
+      const DESTINATARIO_FILA: TablaDatos = {
+        tbodyData: datosDestinatarioDummy,
+      };
+      this.tablaDestinatarioFilaDatos.push(DESTINATARIO_FILA);
+      }
     } else if (!this.esFormularioSoloLectura) {
       this.formDestinatariosModal.enable();
     } 
 
     if (this.formAgenteAduanal && this.esFormularioSoloLectura) {
       this.formAgenteAduanal.disable();
+      if (this.tablaAgenteAduanaFilaDatos.length === 0){
+      const AGENTE_ADUANAL_FILA: TablaDatos = {
+        tbodyData: datosAgenteDummy,
+      };
+      this.tablaAgenteAduanaFilaDatos.push(AGENTE_ADUANAL_FILA);
+      }
     } else if (!this.esFormularioSoloLectura) {
       this.formAgenteAduanal.enable();
     } 
