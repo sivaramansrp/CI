@@ -20,28 +20,16 @@
           (keydown.enter)="seleccionaTab(2)"
           (keydown.space)="seleccionaTab(2)"
           role="button"
-          tabindex="2"
-          >Director General</a
+          tabindex="3"
+          >Choferes</a
         >
       </li>
-
       <li [ngClass]="indice === 3 ? 'active' : ''">
         <a
           data-toggle="tab"
           (click)="seleccionaTab(3)"
           (keydown.enter)="seleccionaTab(3)"
           (keydown.space)="seleccionaTab(3)"
-          role="button"
-          tabindex="3"
-          >Choferes</a
-        >
-      </li>
-      <li [ngClass]="indice === 4 ? 'active' : ''">
-        <a
-          data-toggle="tab"
-          (click)="seleccionaTab(4)"
-          (keydown.enter)="seleccionaTab(4)"
-          (keydown.space)="seleccionaTab(4)"
           role="button"
           tabindex="4"
           >Vehículos</a
@@ -53,10 +41,8 @@
       @switch (indice) { @case (1) {
       <app-solicitante #Solicitante></app-solicitante>
       } @case (2) {
-      <app-director-general></app-director-general>
-      } @case (3) {
       <app-choferes> </app-choferes>
-      } @case (4) {
+      } @case (3) {
         <app-vehiculos></app-vehiculos>
       } }
     </ng-container>
