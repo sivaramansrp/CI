@@ -1,9 +1,11 @@
+import { Tramite130112State, Tramite130112Store } from '../estados/tramites/tramites130112.store';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
+import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
+
 
 /**
  * @descripcion
@@ -22,7 +24,7 @@ export class ImportacionMaterialDeInvestigacionCientificaService {
    * Constructor del servicio. Inyecta el cliente HTTP para realizar solicitudes.
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private tramite130112Store:Tramite130112Store) {}
 
   /**
    * @descripcion
@@ -110,4 +112,19 @@ export class ImportacionMaterialDeInvestigacionCientificaService {
             'assets/json/130111/partidas-de-la.json'
           );
     }
+  /**
+  * Actualiza el estado del formulario en el store.
+  * @param DATOS Estado actualizado del trámite.
+  */
+  actualizarEstadoFormulario(DATOS: Tramite130112State): void {
+    this.tramite130112Store.actualizarEstado(DATOS);
+  }
+
+  /**
+  * Obtiene los datos de la solicitud.
+  * @returns Observable con los datos de la solicitud.
+  */
+  getDatosDeLaSolicitud(): Observable<Tramite130112State> {
+    return this.http.get<Tramite130112State>('assets/json/130112/datos-de-la-solicitud.json');
+  }
 }

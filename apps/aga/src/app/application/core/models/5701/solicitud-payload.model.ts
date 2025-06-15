@@ -5,7 +5,6 @@ import { TransporteDespacho } from '@libs/shared/data-access-user/src';
  *
  * @property id_solicitud Identificador único de la solicitud. Puede ser nulo si la solicitud aún no ha sido creada.
  * @property id_tipo_tramite Identificador del tipo de trámite asociado a la solicitud.
- * @property cve_unidad_administrativa Clave de la unidad administrativa. (Este campo será eliminado próximamente).
  * @property costo_total Costo total del trámite, representado como una cadena.
  * @property rfc RFC del solicitante.
  * @property representante_legal Información del representante legal asociado a la solicitud.
@@ -14,7 +13,6 @@ import { TransporteDespacho } from '@libs/shared/data-access-user/src';
 export interface SolicitudPayload {
   id_solicitud: number | null;
   id_tipo_tramite: number;
-  cve_unidad_administrativa: string; // TODO: Este campo se va a eliminar.
   costo_total: string;
   rfc: string;
   representante_legal: RepresentanteLegal;
@@ -144,7 +142,7 @@ export interface ImportadorExportador {
  * @property bln_despacho - Indica si se realiza el despacho (true/false).
  */
 export interface Despacho {
-  aduana_despacho: string;
+  aduana_despacho: number;
   id_seccion_despacho: number;
   bln_lda: boolean;
   rfc_despacho_lda: string;
@@ -217,7 +215,7 @@ export interface TipoServicio {
   cve_tipo_servicio: number;
   desc_tipo_servicio: string;
   numero_svex: string;
-  rni: number;
+  rni: boolean;
   fecha_inicio_servicio: string;
   fecha_fin_servicio: string;
   hora_inicio_servicio: string;
@@ -293,12 +291,12 @@ export interface ListPersonaNoti {
  * @property {number} mismo_horario - Indicador si coincide el mismo horario (1 = sí, 0 = no).
  */
 export interface ListFechasSevex {
-  fecha: Date;
-  fecha_desc: Date;
+  fecha: string;
+  fecha_desc: string;
   hora_inicio_svex: string;
   hora_final_svex: string;
-  hora_inicio_rni: string;
-  hora_fin_rni: string;
-  fuera_horario: number;
-  mismo_horario: number;
+  hora_inicio_rni?: string;
+  hora_fin_rni?: string;
+  fuera_horario?: number;
+  mismo_horario?: number;
 }

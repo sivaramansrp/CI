@@ -1,4 +1,24 @@
 import {
+  CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_AEREO,
+  CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_CARRETERO,
+  CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_FERROVIARIO,
+  CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_MARITIMO,
+  CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_OTRO,
+  CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_PEATONAL,
+  LABEL_HORA_ARRIBO,
+  LISTA_TIPO_TRANSPORTE,
+  MODIFICAR_ITEM_TRANSPORTE,
+  MSG_AGREGA_TRANSPORTE_EXITOSAMENTE,
+  MSG_CAMBIO_TIPO_TRANSPORTE,
+  MSG_INGRESA_UNA_GUIA,
+  MSG_NUMERO_BL_INVALIDO,
+  MSG_NUMERO_BL_VACIO,
+  MSG_REGISTRA_UNA_GUIA,
+  MSG_SELECCIONA_ITEM,
+  MSG_SELECCIONA_SOLO_UN_REGISTRO,
+  SIN_VALOR_SELECT,
+} from '../../../core/enums/transporte-componente.enum';
+import {
   Component,
   ElementRef,
   EventEmitter,
@@ -18,21 +38,13 @@ import {
   Validators,
 } from '@angular/forms';
 import {
-  HEADER_TABLA_AEREO,
-  HEADER_TABLA_CARRETERO,
-  HEADER_TABLA_FERROVIARIO,
-  HEADER_TABLA_MARITIMO,
-  HEADER_TABLA_OTRO,
-  HEADER_TABLA_PEATONAL,
-  LABEL_HORA_ARRIBO,
-  LISTA_TIPO_TRANSPORTE,
-  MSG_AGREGA_TRANSPORTE_EXITOSAMENTE,
-  MSG_CAMBIO_TIPO_TRANSPORTE,
-} from '../../../core/enums/transporte-componente.enum';
-import {
   ItemTransporteDespacho,
   TransporteDespacho,
 } from '../../../core/models/shared/agregar-transporte.model';
+import {
+  MSG_MODIFICA_ELEMENTO,
+  TITULO_MODAL_AVISO,
+} from '../../../core/enums/mensajes-modal-comunes.enum';
 import {
   Notificacion,
   NotificacionesComponent,
@@ -41,11 +53,14 @@ import { Subject, takeUntil, tap } from 'rxjs';
 import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import { CatalogoSelectComponent } from '../catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
+import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
 import { ICatalogo } from '../../../core/models/shared/catalogo.model';
 import { InputCheckComponent } from '../input-check/input-check.component';
 import { InputHoraComponent } from '../input-hora/input-hora.component';
 import { Modal } from 'bootstrap';
 import { TIPO_TRANSPORTE } from '../../constantes/agregar-transporte.enum';
+import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.component';
+import { TablaSeleccion } from '../../../core/enums/tabla-seleccion.enum';
 import { TipoEquipoService } from '../../../core/services/shared/catalogos/tipo-equipo.service';
 import { ValidaTransporteService } from '../../../core/services/shared/api-validaciones/valida-transporte.service';
 
@@ -62,6 +77,7 @@ import { ValidaTransporteService } from '../../../core/services/shared/api-valid
     InputHoraComponent,
     NotificacionesComponent,
     ReactiveFormsModule,
+    TablaDinamicaComponent,
   ],
 })
 export class TransporteComponent implements OnInit, OnChanges {
@@ -108,38 +124,16 @@ export class TransporteComponent implements OnInit, OnChanges {
     new EventEmitter<string>();
 
   /**
-   * Cabecera de la tabla para el transporte ferroviario.
+   * @description
+   * Configuración de la tabla de terceros.
    */
-  readonly HEADER_TABLA_FERROVIARIO: ItemTransporteDespacho[] =
-    HEADER_TABLA_FERROVIARIO;
+  tablaSeleccion = TablaSeleccion;
 
   /**
-   * Cabecera de la tabla para el transporte carretero.
+   * @description
+   * Encabezado de la tabla de terceros.
    */
-  readonly HEADER_TABLA_CARRETERO: ItemTransporteDespacho[] =
-    HEADER_TABLA_CARRETERO;
-
-  /**
-   * Cabecera de la tabla para el transporte peatonal.
-   */
-  readonly HEADER_TABLA_PEATONAL: ItemTransporteDespacho[] =
-    HEADER_TABLA_PEATONAL;
-
-  /**
-   * Cabecera de la tabla para el transporte otro.
-   */
-  readonly HEADER_TABLA_OTRO: ItemTransporteDespacho[] = HEADER_TABLA_OTRO;
-
-  /**
-   * Cabecera de la tabla para el transporte aereo.
-   */
-  readonly HEADER_TABLA_AEREO: ItemTransporteDespacho[] = HEADER_TABLA_AEREO;
-
-  /**
-   * Cabecera de la tabla para el transporte maritimo.
-   */
-  readonly HEADER_TABLA_MARITIMO: ItemTransporteDespacho[] =
-    HEADER_TABLA_MARITIMO;
+  encabezadoDeTablaTransporte!: ConfiguracionColumna<TransporteDespacho>[];
 
   /**
    * Etiqueta para la hora de arribo.
@@ -254,6 +248,33 @@ export class TransporteComponent implements OnInit, OnChanges {
    */
   checkSeleccionarTodos: boolean = false;
 
+  /**
+   * @property {TransporteDespacho[]} transporteSeleccionado
+   * Almacena la fila seleccionada de la tabla de transportes.
+   */
+  public transporteSeleccionado: TransporteDespacho[] = [];
+
+  /**
+   * @description Proceso del modal
+   */
+  public procesoModal: string = '';
+
+  /**
+   * @description Registro seleccionado en la tabla de transporte.
+   * @type {TransporteDespacho}
+   */
+  registroSeleccionado: TransporteDespacho = {
+    tipo_transporte: SIN_VALOR_SELECT,
+    modelo_transporte: SIN_VALOR_SELECT,
+    tipo_equipo: SIN_VALOR_SELECT,
+    mismosDatosTransporte: false,
+  };
+
+  /**
+   * @description Indica si la acción es de modificación.
+   */
+  accionModificar: boolean = false;
+
   constructor(
     private fb: FormBuilder,
     private tipoEquipoServicio: TipoEquipoService,
@@ -298,10 +319,48 @@ export class TransporteComponent implements OnInit, OnChanges {
         txtBtnAceptar: 'Sí',
         txtBtnCancelar: 'No',
       };
+      this.procesoModal = 'cambioTipoTransporte';
       return;
     }
 
     this.creaTablaTransporte();
+  }
+
+  /**
+   *
+   */
+  static tieneValoresValidos(form: FormGroup): boolean {
+    const VALORES = form.getRawValue();
+    return Object.values(VALORES).some(
+      (valor) =>
+        valor !== null &&
+        valor !== undefined &&
+        valor !== false &&
+        valor !== -1 &&
+        valor !== SIN_VALOR_SELECT &&
+        valor !== ''
+    );
+  }
+
+  /**
+   * @description Asigna el nombre del formulario, segín el transporte elegido.
+   * @return {string} - Nombre del formulario según el tipo de transporte.
+   */
+  static nombreFormaTransporte(tipoTransporte: number): string {
+    switch (tipoTransporte) {
+      case LISTA_TIPO_TRANSPORTE[0].id: // Carretero
+        return 'carreteroForma';
+      case LISTA_TIPO_TRANSPORTE[1].id: // Ferroviario
+        return 'ferroviarioForma';
+      case LISTA_TIPO_TRANSPORTE[2].id: // Aéreo
+        return 'aereoForma';
+      case LISTA_TIPO_TRANSPORTE[3].id: // Marítimo
+        return 'maritimoForma';
+      case LISTA_TIPO_TRANSPORTE[4].id: // Peatonal
+        return 'peatonalForma';
+      default: // Otro
+        return 'otroForma';
+    }
   }
 
   /**
@@ -314,7 +373,7 @@ export class TransporteComponent implements OnInit, OnChanges {
       10
     );
     this.seleccionTipoTransporte.emit(TIPO_TRANSPORTE.toString());
-    this.headerTabla = this.tipoTabla(TIPO_TRANSPORTE);
+    this.encabezadoDeTablaTransporte = this.tipoTabla(TIPO_TRANSPORTE);
   }
 
   /**
@@ -337,13 +396,31 @@ export class TransporteComponent implements OnInit, OnChanges {
    */
   crearCarreteroForm(): void {
     this.carreteroForma = this.fb.group({
-      emp_transportista: ['', [Validators.maxLength(80)]],
-      numero_porte: ['', [Validators.maxLength(50)]],
-      fecha_porte: ['', [Validators.maxLength(10)]],
-      marca_transporte: ['', [Validators.maxLength(70)]],
-      modelo_transporte: [-1],
-      placas_transporte: ['', [Validators.maxLength(150)]],
-      contenedor_transporte: ['', [Validators.maxLength(150)]],
+      emp_transportista: [
+        this.registroSeleccionado?.emp_transportista,
+        [Validators.maxLength(80)],
+      ],
+      numero_porte: [
+        this.registroSeleccionado?.numero_porte,
+        [Validators.maxLength(50)],
+      ],
+      fecha_porte: [
+        this.registroSeleccionado?.fecha_porte,
+        [Validators.maxLength(10)],
+      ],
+      marca_transporte: [
+        this.registroSeleccionado?.marca_transporte,
+        [Validators.maxLength(70)],
+      ],
+      modelo_transporte: [this.registroSeleccionado?.modelo_transporte],
+      placas_transporte: [
+        this.registroSeleccionado?.placas_transporte,
+        [Validators.maxLength(150)],
+      ],
+      contenedor_transporte: [
+        this.registroSeleccionado?.contenedor_transporte,
+        [Validators.maxLength(150)],
+      ],
     });
   }
 
@@ -354,14 +431,19 @@ export class TransporteComponent implements OnInit, OnChanges {
    */
   crearFerroviarioForm(): void {
     this.ferroviarioForma = this.fb.group({
-      numero_bl: ['', [Validators.maxLength(25)]],
-      tipo_equipo: [{ value: '-1', disabled: true }],
+      numero_bl: [
+        this.registroSeleccionado?.numero_bl,
+        [Validators.maxLength(25)],
+      ],
+      tipo_equipo: [
+        { value: this.registroSeleccionado?.tipo_equipo, disabled: true },
+      ],
       iniciales_equipo: [
-        { value: '', disabled: true },
+        { value: this.registroSeleccionado?.iniciales_equipo, disabled: true },
         [Validators.maxLength(10)],
       ],
       numero_equipo: [
-        { value: '', disabled: true },
+        { value: this.registroSeleccionado?.numero_equipo, disabled: true },
         [Validators.maxLength(15)],
       ],
     });
@@ -374,10 +456,22 @@ export class TransporteComponent implements OnInit, OnChanges {
    */
   crearPeatonalForm(): void {
     this.peatonalForma = this.fb.group({
-      rfc_empresa: ['', [Validators.maxLength(13)]],
-      emp_transportista: ['', [Validators.maxLength(80)]],
-      nombre_transportista: ['', [Validators.maxLength(100)]],
-      num_gafete: ['', [Validators.maxLength(20)]],
+      rfc_empresa: [
+        this.registroSeleccionado?.rfc_empresa,
+        [Validators.maxLength(13)],
+      ],
+      emp_transportista: [
+        this.registroSeleccionado?.emp_transportista,
+        [Validators.maxLength(80)],
+      ],
+      nombre_transportista: [
+        this.registroSeleccionado?.nombre_transportista,
+        [Validators.maxLength(100)],
+      ],
+      num_gafete: [
+        this.registroSeleccionado?.num_gafete,
+        [Validators.maxLength(20)],
+      ],
     });
   }
 
@@ -388,9 +482,18 @@ export class TransporteComponent implements OnInit, OnChanges {
    */
   crearOtroForm(): void {
     this.otroForma = this.fb.group({
-      tipo_transporte_des: ['', [Validators.maxLength(100)]],
-      emp_transportista: ['', [Validators.maxLength(80)]],
-      datos_transporte: ['', [Validators.maxLength(250)]],
+      tipo_transporte_des: [
+        this.registroSeleccionado?.tipo_transporte_des,
+        [Validators.maxLength(100)],
+      ],
+      emp_transportista: [
+        this.registroSeleccionado?.emp_transportista,
+        [Validators.maxLength(80)],
+      ],
+      datos_transporte: [
+        this.registroSeleccionado?.datos_transporte,
+        [Validators.maxLength(250)],
+      ],
     });
   }
 
@@ -401,12 +504,28 @@ export class TransporteComponent implements OnInit, OnChanges {
    */
   crearAereoForm(): void {
     this.aereoForma = this.fb.group({
-      arribo_pendiente_aereo: [''],
-      guia_master_aereo: ['', [Validators.maxLength(12)]],
-      guia_house_aereo: ['', [Validators.maxLength(25)]],
-      fecha_arribo_aereo: ['', [Validators.maxLength(15)]],
-      hora_arribo_aereo: ['', [Validators.maxLength(5)]],
-      guia_valida: [{ value: false, disabled: true }],
+      arribo_pendiente_aereo: [
+        this.registroSeleccionado?.arribo_pendiente_aereo,
+      ],
+      guia_master_aereo: [
+        this.registroSeleccionado?.guia_master_aereo,
+        [Validators.maxLength(12)],
+      ],
+      guia_house_aereo: [
+        this.registroSeleccionado?.guia_house_aereo,
+        [Validators.maxLength(25)],
+      ],
+      fecha_arribo_aereo: [
+        this.registroSeleccionado?.fecha_arribo_aereo,
+        [Validators.maxLength(15)],
+      ],
+      hora_arribo_aereo: [
+        this.registroSeleccionado?.hora_arribo_aereo,
+        [Validators.maxLength(5)],
+      ],
+      guia_valida: [
+        { value: this.registroSeleccionado?.guia_valida, disabled: true },
+      ],
     });
   }
 
@@ -417,10 +536,22 @@ export class TransporteComponent implements OnInit, OnChanges {
    */
   crearMaritimoForm(): void {
     this.maritimoForma = this.fb.group({
-      guia_bl_Maritimo: ['', [Validators.maxLength(15)]],
-      guia_house_maritimo: ['', [Validators.maxLength(15)]],
-      nombre_buque_maritimo: ['', [Validators.maxLength(70)]],
-      contenedor_maritimo: ['', Validators.maxLength(600)],
+      guia_bl_Maritimo: [
+        this.registroSeleccionado?.guia_bl_Maritimo,
+        [Validators.maxLength(15)],
+      ],
+      guia_house_maritimo: [
+        this.registroSeleccionado?.guia_house_maritimo,
+        [Validators.maxLength(15)],
+      ],
+      nombre_buque_maritimo: [
+        this.registroSeleccionado?.nombre_buque_maritimo,
+        [Validators.maxLength(70)],
+      ],
+      contenedor_maritimo: [
+        this.registroSeleccionado?.contenedor_maritimo,
+        Validators.maxLength(600),
+      ],
     });
   }
 
@@ -429,21 +560,23 @@ export class TransporteComponent implements OnInit, OnChanges {
    *
    * @returns {ItemTransporte[]} Encabezados de la tabla correspondientes al tipo de transporte seleccionado.
    */
-  tipoTabla(tipoTransporte: number): ItemTransporteDespacho[] {
+  tipoTabla(
+    tipoTransporte: number
+  ): ConfiguracionColumna<TransporteDespacho>[] {
     switch (tipoTransporte) {
-      case 1:
+      case LISTA_TIPO_TRANSPORTE[0].id: // Carretero
         this.anios = TransporteComponent.obtenerAniosModelo();
-        return this.HEADER_TABLA_CARRETERO;
-      case 2:
-        return this.HEADER_TABLA_FERROVIARIO;
-      case 3:
-        return this.HEADER_TABLA_AEREO;
-      case 4:
-        return this.HEADER_TABLA_MARITIMO;
-      case 5:
-        return this.HEADER_TABLA_PEATONAL;
-      default:
-        return this.HEADER_TABLA_OTRO;
+        return CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_CARRETERO;
+      case LISTA_TIPO_TRANSPORTE[1].id: // Ferroviario
+        return CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_FERROVIARIO;
+      case LISTA_TIPO_TRANSPORTE[2].id: // Aéreo
+        return CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_AEREO;
+      case LISTA_TIPO_TRANSPORTE[3].id: // Marítimo
+        return CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_MARITIMO;
+      case LISTA_TIPO_TRANSPORTE[4].id: // Peatonal
+        return CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_PEATONAL;
+      default: // Otro
+        return CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_OTRO;
     }
   }
 
@@ -485,38 +618,30 @@ export class TransporteComponent implements OnInit, OnChanges {
   }
 
   /**
-   * Selecciona o deselecciona todos los checkboxes con la clase 'check-transporte'.
-   *
-   * @param event - Evento que contiene el estado del checkbox principal.
-   * @returns void
-   */
-  seleccionarTodos(event: Event): void {
-    this.checkSeleccionarTodos = !this.checkSeleccionarTodos;
-    const CHECKBOXES = (event.target as HTMLInputElement).checked;
-    this.bodyTabla.forEach((item) => {
-      item.seleccionado = CHECKBOXES;
-    });
-  }
-
-  /**
-   * Selecciona uno o varios checkboxes con la clase 'check-transporte'.
-   */
-  seleccionarItemTabla(i: number): void {
-    const ITEM = this.bodyTabla[i];
-    ITEM.seleccionado = !ITEM.seleccionado;
-  }
-
-  /**
    * Elimina los elementos seleccionados de la tabla de transporte.
    * @returns {void} No retorna ningún valor.
    */
   eliminarSeleccionados(): void {
-    const SELECCIONADOS = this.bodyTabla.every((item) => item.seleccionado);
-
-    if (SELECCIONADOS) {
-      this.bodyTabla = [];
-      this.checkSeleccionarTodos = false;
+    if (this.transporteSeleccionado.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: 'Aviso',
+        mensaje: MSG_SELECCIONA_ITEM,
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
+      return;
     }
+
+    this.bodyTabla = this.bodyTabla.filter(
+      (transporte) =>
+        !this.transporteSeleccionado.some(
+          (seleccionado) => seleccionado === transporte
+        )
+    );
 
     this.datosTabla.emit(this.bodyTabla);
   }
@@ -525,9 +650,18 @@ export class TransporteComponent implements OnInit, OnChanges {
    * Abre el modal para agregar un documento.
    * @returns {void}
    */
-  abrirModal(): void {
+  abrirModal(accion: string = ''): void {
     const MODAL_AGREGA = new Modal(this.agregarTransporte.nativeElement);
     MODAL_AGREGA.show();
+
+    if (accion === MODIFICAR_ITEM_TRANSPORTE) {
+      this.accionModificar = true;
+      const TIPO_TRANSPORTE = parseInt(
+        this.tipoTransporteForma.get('tipoTransporte')?.value,
+        10
+      );
+      this.crearFormaTransporteParaModificar(TIPO_TRANSPORTE);
+    }
   }
 
   /**
@@ -535,16 +669,54 @@ export class TransporteComponent implements OnInit, OnChanges {
    * @returns {void}
    */
   limpiarFormulario(): void {
-    const FORMULARIOS = [
-      this.carreteroForma,
-      this.ferroviarioForma,
-      this.peatonalForma,
-      this.otroForma,
-      this.aereoForma,
-      this.maritimoForma,
-    ];
+    this.carreteroForma.reset({
+      emp_transportista: '',
+      numero_porte: '',
+      fecha_porte: '',
+      marca_transporte: '',
+      modelo_transporte: SIN_VALOR_SELECT, // Valor específico para este campo
+      placas_transporte: '',
+      contenedor_transporte: '',
+    });
 
-    FORMULARIOS.forEach((form) => form?.reset());
+    this.ferroviarioForma.reset({
+      numero_bl: '',
+      tipo_equipo: SIN_VALOR_SELECT, // Valor específico para este campo
+      iniciales_equipo: '',
+      numero_equipo: '',
+    });
+
+    this.aereoForma.reset({
+      arribo_pendiente_aereo: false,
+      guia_master_aereo: '',
+      guia_house_aereo: '',
+      fecha_arribo_aereo: '',
+      hora_arribo_aereo: '',
+      guia_valida: true,
+    });
+
+    // Marítimo
+    this.maritimoForma.reset({
+      guia_bl_Maritimo: '',
+      guia_house_maritimo: '',
+      nombre_buque_maritimo: '',
+      contenedor_maritimo: '',
+    });
+
+    // Peatonal
+    this.peatonalForma.reset({
+      rfc_empresa: '',
+      emp_transportista: '',
+      nombre_transportista: '',
+      num_gafete: '',
+    });
+
+    // Otro
+    this.otroForma.reset({
+      tipo_transporte_des: '',
+      emp_transportista: '',
+      datos_transporte: '',
+    });
 
     this.observaciones.setValue('');
   }
@@ -557,6 +729,8 @@ export class TransporteComponent implements OnInit, OnChanges {
     this.btnCerrarModal.nativeElement.click();
     this.tituloModal = '';
     this.mensajeModal = '';
+    this.accionModificar = false;
+    this.limpiarFormulario();
   }
 
   /**
@@ -569,31 +743,72 @@ export class TransporteComponent implements OnInit, OnChanges {
       this.tipoTransporteForma.get('tipoTransporte')?.value,
       10
     );
+
+    const FORMULARIO_NOMBRE = TransporteComponent.nombreFormaTransporte(
+      TIPO_TRANSPORTE
+    ) as keyof this;
+
+    const FORMULARIO = this[FORMULARIO_NOMBRE] as FormGroup;
+
+    const VALORES =
+      TransporteComponent.tieneValoresValidos(FORMULARIO) &&
+      this.observaciones.value !== null &&
+      this.observaciones.value !== undefined;
+
+    if (!VALORES) {
+      this.cerrarModal();
+      return;
+    }
+
     switch (TIPO_TRANSPORTE) {
-      case 1: {
+      case LISTA_TIPO_TRANSPORTE[0].id: {
+        // Carretero
         const TRANSPORTE: TransporteDespacho = this.carreteroForma.value;
+        TRANSPORTE.modelo_transporte =
+          TRANSPORTE.modelo_transporte === SIN_VALOR_SELECT
+            ? ''
+            : TRANSPORTE.modelo_transporte;
         TRANSPORTE.observaciones = this.observaciones.value;
         TRANSPORTE.seleccionado = false;
         this.bodyTabla.push(TRANSPORTE);
-        this.carreteroForma.reset();
+
+        this.carreteroForma.reset({
+          emp_transportista: '',
+          numero_porte: '',
+          fecha_porte: '',
+          marca_transporte: '',
+          modelo_transporte: SIN_VALOR_SELECT, // Valor específico para este campo
+          placas_transporte: '',
+          contenedor_transporte: '',
+        });
         break;
       }
-
-      case 2: {
+      case LISTA_TIPO_TRANSPORTE[1].id: {
+        // Ferroviario
         const TRANSPORTE: TransporteDespacho =
           this.ferroviarioForma.getRawValue();
         TRANSPORTE.tipo_equipo =
-          TRANSPORTE.tipo_equipo === '-1' ? '' : TRANSPORTE.tipo_equipo;
+          TRANSPORTE.tipo_equipo === SIN_VALOR_SELECT ? '' : TRANSPORTE.tipo_equipo;
         TRANSPORTE.observaciones = this.observaciones.value;
         TRANSPORTE.seleccionado = false;
 
         this.bodyTabla.push(TRANSPORTE);
-        this.ferroviarioForma.reset();
+        this.ferroviarioForma.reset({
+          numero_bl: '',
+          tipo_equipo: SIN_VALOR_SELECT, // Valor específico para este campo
+          iniciales_equipo: '',
+          numero_equipo: '',
+        });
         break;
       }
 
-      case 3: {
+      case LISTA_TIPO_TRANSPORTE[2].id: {
+        // Aéreo
         const TRANSPORTE: TransporteDespacho = this.aereoForma.getRawValue();
+        TRANSPORTE.arribo_pendiente_aereo = TRANSPORTE.arribo_pendiente_aereo
+          ? 'Sí'
+          : 'No';
+        TRANSPORTE.guia_valida = TRANSPORTE.guia_valida ? 'Sí' : 'No';
         TRANSPORTE.observaciones = this.observaciones.value;
         TRANSPORTE.seleccionado = false;
 
@@ -602,7 +817,8 @@ export class TransporteComponent implements OnInit, OnChanges {
         break;
       }
 
-      case 4: {
+      case LISTA_TIPO_TRANSPORTE[3].id: {
+        // Marítimo
         const TRANSPORTE: TransporteDespacho = this.maritimoForma.value;
         TRANSPORTE.observaciones = this.observaciones.value;
         TRANSPORTE.seleccionado = false;
@@ -611,7 +827,8 @@ export class TransporteComponent implements OnInit, OnChanges {
         this.maritimoForma.reset();
         break;
       }
-      case 5: {
+      case LISTA_TIPO_TRANSPORTE[4].id: {
+        // Peatonal
         const TRANSPORTE: TransporteDespacho = this.peatonalForma.value;
         TRANSPORTE.observaciones = this.observaciones.value;
         TRANSPORTE.seleccionado = false;
@@ -622,6 +839,7 @@ export class TransporteComponent implements OnInit, OnChanges {
       }
 
       default: {
+        // Otro
         const TRANSPORTE: TransporteDespacho = this.otroForma.value;
         TRANSPORTE.observaciones = this.observaciones.value;
         TRANSPORTE.seleccionado = false;
@@ -697,11 +915,14 @@ export class TransporteComponent implements OnInit, OnChanges {
                 categoria: '',
                 modo: 'action',
                 titulo: 'Aviso',
-                mensaje: 'Número BL es inválido.',
+                mensaje: MSG_NUMERO_BL_INVALIDO,
                 cerrar: false,
                 txtBtnAceptar: 'Cerrar',
                 txtBtnCancelar: '',
               };
+              this.ferroviarioForma.get('tipo_equipo')?.setValue(SIN_VALOR_SELECT);
+              this.ferroviarioForma.get('iniciales_equipo')?.setValue('');
+              this.ferroviarioForma.get('numero_equipo')?.setValue('');
             }
           }),
           takeUntil(this.destroyNotifier$)
@@ -713,7 +934,7 @@ export class TransporteComponent implements OnInit, OnChanges {
         categoria: '',
         modo: 'action',
         titulo: 'Aviso',
-        mensaje: 'Debes agregar un número BL.',
+        mensaje: MSG_NUMERO_BL_VACIO,
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
         txtBtnCancelar: '',
@@ -735,7 +956,7 @@ export class TransporteComponent implements OnInit, OnChanges {
         categoria: '',
         modo: 'action',
         titulo: 'Aviso',
-        mensaje: 'Debes registar una sola guía.',
+        mensaje: MSG_INGRESA_UNA_GUIA,
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
         txtBtnCancelar: '',
@@ -749,7 +970,7 @@ export class TransporteComponent implements OnInit, OnChanges {
         categoria: '',
         modo: 'action',
         titulo: 'Aviso',
-        mensaje: 'Debes registrar la guía master o la guía house.',
+        mensaje: MSG_REGISTRA_UNA_GUIA,
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
         txtBtnCancelar: '',
@@ -790,18 +1011,191 @@ export class TransporteComponent implements OnInit, OnChanges {
    * @param aceptar {boolean} - Indica si se acepta la acción.
    */
   confirmacionModal(aceptar: boolean): void {
-    if (aceptar && this.nuevaNotificacion.txtBtnCancelar !== '') {
-      this.bodyTabla = [];
-      this.datosTabla.emit(this.bodyTabla);
-      const TIPO_TRANSPORTE = parseInt(
-        this.tipoTransporteForma.get('tipoTransporte')?.value,
-        10
-      );
-      this.headerTabla = this.tipoTabla(TIPO_TRANSPORTE);
-    } else {
-      this.tipoTransporteForma
-        .get('tipoTransporte')
-        ?.setValue(this.tipoTransporteSeleccionado);
+    if (this.procesoModal === 'cambioTipoTransporte') {
+      if (aceptar && this.nuevaNotificacion.txtBtnCancelar) {
+        this.bodyTabla = [];
+        this.datosTabla.emit(this.bodyTabla);
+        const TIPO_TRANSPORTE = parseInt(
+          this.tipoTransporteForma.get('tipoTransporte')?.value,
+          10
+        );
+        this.encabezadoDeTablaTransporte = this.tipoTabla(TIPO_TRANSPORTE);
+      } else {
+        this.tipoTransporteForma
+          .get('tipoTransporte')
+          ?.setValue(this.tipoTransporteSeleccionado);
+      }
+      this.procesoModal = '';
     }
+  }
+
+  /**
+   * @description Método que se ejecuta al hacer clic en el botón "Modificar".
+   * Valida si hay un transporte seleccionado y si es así, abre el modal para modificarlo.
+   * Si no hay transporte seleccionado, muestra una notificación de aviso.
+   * @returns {void} No retorna ningún valor.
+   */
+  btnModificar(): void {
+    if (
+      !this.transporteSeleccionado ||
+      this.transporteSeleccionado.length === 0
+    ) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: 'Aviso',
+        mensaje: MSG_SELECCIONA_ITEM,
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    if (this.transporteSeleccionado.length > 1) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: 'Aviso',
+        mensaje: MSG_SELECCIONA_SOLO_UN_REGISTRO,
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    this.registroSeleccionado = this.transporteSeleccionado[0];
+    this.abrirModal('modificar');
+  }
+
+  /**
+   * @description Crea el formulario de transporte para modificar según el tipo de transporte seleccionado.
+   * @param tipoTransporte {number} - Tipo de transporte seleccionado.
+   * @return {void} No retorna ningún valor.
+   */
+  crearFormaTransporteParaModificar(tipoTransporte: number): void {
+    switch (tipoTransporte) {
+      case LISTA_TIPO_TRANSPORTE[0].id: // Carretero
+        this.carreteroForma.patchValue(this.registroSeleccionado);
+        break;
+      case LISTA_TIPO_TRANSPORTE[1].id: // Ferroviario
+        this.ferroviarioForma.patchValue(this.registroSeleccionado);
+        break;
+      case LISTA_TIPO_TRANSPORTE[2].id: // Aéreo
+        this.aereoForma.patchValue(this.registroSeleccionado);
+        break;
+      case LISTA_TIPO_TRANSPORTE[3].id: // Marítimo
+        this.maritimoForma.patchValue(this.registroSeleccionado);
+        break;
+      case LISTA_TIPO_TRANSPORTE[4].id: // Peatonal
+        this.peatonalForma.patchValue(this.registroSeleccionado);
+        break;
+      default: // Otro
+        this.otroForma.patchValue(this.registroSeleccionado);
+        break;
+    }
+    this.observaciones.setValue(this.registroSeleccionado.observaciones);
+  }
+
+  /**
+   * Método que se ejecuta al hacer clic en el botón "Modificar" del modal para agregar o modificar un tipo de transporte.
+   * @param tipoTransporte {number} - Tipo de transporte seleccionado.
+   */
+  modificarTransporte(): void {
+    const TIPO_TRANSPORTE = parseInt(
+      this.tipoTransporteForma.get('tipoTransporte')?.value,
+      10
+    );
+    const TRANSPORTE: TransporteDespacho = this.bodyTabla.find(
+      (item) => item === this.registroSeleccionado
+    ) as TransporteDespacho;
+
+    switch (TIPO_TRANSPORTE) {
+      case LISTA_TIPO_TRANSPORTE[0].id: // Carretero
+        Object.assign(TRANSPORTE, {
+          emp_transportista:
+            this.carreteroForma.get('emp_transportista')?.value,
+          numero_porte: this.carreteroForma.get('numero_porte')?.value,
+          fecha_porte: this.carreteroForma.get('fecha_porte')?.value,
+          marca_transporte: this.carreteroForma.get('marca_transporte')?.value,
+          modelo_transporte:
+            this.carreteroForma.get('modelo_transporte')?.value === SIN_VALOR_SELECT
+              ? ''
+              : this.carreteroForma.get('modelo_transporte')?.value,
+          placas_transporte:
+            this.carreteroForma.get('placas_transporte')?.value,
+          contenedor_transporte: this.carreteroForma.get(
+            'contenedor_transporte'
+          )?.value,
+        });
+        break;
+      case LISTA_TIPO_TRANSPORTE[1].id: // Ferroviario
+        Object.assign(TRANSPORTE, {
+          numero_bl: this.ferroviarioForma.get('numero_bl')?.value,
+          tipo_equipo:
+            this.ferroviarioForma.get('tipo_equipo')?.value === SIN_VALOR_SELECT
+              ? ''
+              : this.ferroviarioForma.get('tipo_equipo')?.value,
+          iniciales_equipo:
+            this.ferroviarioForma.get('iniciales_equipo')?.value,
+          numero_equipo: this.ferroviarioForma.get('numero_equipo')?.value,
+        });
+        break;
+      case LISTA_TIPO_TRANSPORTE[2].id: // Aéreo
+        Object.assign(TRANSPORTE, {
+          arribo_pendiente_aereo: this.aereoForma.get('arribo_pendiente_aereo')
+            ?.value,
+          guia_master_aereo: this.aereoForma.get('guia_master_aereo')?.value,
+          guia_house_aereo: this.aereoForma.get('guia_house_aereo')?.value,
+          fecha_arribo_aereo: this.aereoForma.get('fecha_arribo_aereo')?.value,
+          hora_arribo_aereo: this.aereoForma.get('hora_arribo_aereo')?.value,
+          guia_valida: this.aereoForma.get('guia_valida')?.value,
+        });
+        break;
+      case LISTA_TIPO_TRANSPORTE[3].id: // Marítimo
+        Object.assign(TRANSPORTE, {
+          guia_bl_Maritimo: this.maritimoForma.get('guia_bl_Maritimo')?.value,
+          guia_house_maritimo: this.maritimoForma.get('guia_house_maritimo')
+            ?.value,
+          nombre_buque_maritimo: this.maritimoForma.get('nombre_buque_maritimo')
+            ?.value,
+          contenedor_maritimo: this.maritimoForma.get('contenedor_maritimo')
+            ?.value,
+        });
+        break;
+      case LISTA_TIPO_TRANSPORTE[4].id: // Peatonal
+        Object.assign(TRANSPORTE, {
+          rfc_empresa: this.peatonalForma.get('rfc_empresa')?.value,
+          emp_transportista: this.peatonalForma.get('emp_transportista')?.value,
+          nombre_transportista: this.peatonalForma.get('nombre_transportista')
+            ?.value,
+          num_gafete: this.peatonalForma.get('num_gafete')?.value,
+        });
+        break;
+      default: // Otro
+        Object.assign(TRANSPORTE, {
+          tipo_transporte_des: this.otroForma.get('tipo_transporte_des')?.value,
+          emp_transportista: this.otroForma.get('emp_transportista')?.value,
+          datos_transporte: this.otroForma.get('datos_transporte')?.value,
+        });
+        break;
+    }
+
+    TRANSPORTE.observaciones = this.observaciones.value;
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: TITULO_MODAL_AVISO,
+      mensaje: MSG_MODIFICA_ELEMENTO,
+      cerrar: false,
+      txtBtnAceptar: 'Cerrar',
+      txtBtnCancelar: '',
+    };
+    this.cerrarModal();
+    this.enviarTransporteTabla();
   }
 }

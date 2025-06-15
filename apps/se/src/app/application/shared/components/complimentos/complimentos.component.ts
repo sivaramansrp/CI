@@ -1,9 +1,7 @@
 import {
   CATALOGOS_ID,
   Catalogo,
-  CatalogoSelectComponent,
   CatalogosService,
-  SelectPaisesComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
@@ -38,9 +36,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { Subject, Subscription, delay, takeUntil } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { ComplimentosService } from '../../services/complimentos.service';
 import { DatosCatalago } from '../../../tramites/80102/models/autorizacion-programa-nuevo.model';
+import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramites/components/select-paises/select-paises.component';
 
 @Component({
   selector: 'app-complimentos',
@@ -58,6 +58,12 @@ import { DatosCatalago } from '../../../tramites/80102/models/autorizacion-progr
   styleUrl: './complimentos.component.scss',
 })
 export class ComplimentosComponent implements OnInit, OnDestroy {
+
+  /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
+
   /**
    * @type {FormGroup}
    * @description Grupo de formularios para los complementos.
@@ -268,6 +274,10 @@ export class ComplimentosComponent implements OnInit, OnDestroy {
 
     if (this.datosFormaComplimentos) {
       this.formaComplimentos.patchValue(this.datosFormaComplimentos);
+    }
+
+    if(this.formularioDeshabilitado) {
+      this.formaComplimentos.disable();
     }
   }
 

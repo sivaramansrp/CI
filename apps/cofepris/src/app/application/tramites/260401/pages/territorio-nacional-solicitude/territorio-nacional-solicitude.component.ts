@@ -3,15 +3,25 @@ import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { PASSOS_TERRITORIO } from '../../constantes/territorio-nacional-solicitude.enum';
 
+/**
+ * Interfaz que representa la estructura de un botón con acción.
+ * @interface AccionBoton
+ */
 interface AccionBoton {
+  /**
+   * Acción que realiza el botón, por ejemplo 'sumar' o 'restar'.
+   */
   accion: string;
+   /**
+   * Valor numérico asociado al botón.
+   */
   valor: number;
 }
 /**
- * Componente TerritorioNacionalSolicitudeComponent
- * 
- * Este componente es responsable de manejar el asistente (wizard) para la solicitud de territorio nacional.
- * Permite la navegación entre los pasos del asistente y la actualización del índice del paso actual.
+ * Componente que representa la solicitud para el territorio nacional.
+ *
+ * @export
+ * @class TerritorioNacionalSolicitudeComponent
  */
 @Component({
   selector: 'app-territorio-nacional-solicitude',
@@ -19,7 +29,18 @@ interface AccionBoton {
 
 })
 export class TerritorioNacionalSolicitudeComponent {
-  
+  /**
+ * Referencia al componente `WizardComponent` hijo, accesible desde la plantilla.
+ *
+ * Esta propiedad permite interactuar directamente con la instancia del wizard para:
+ * - Navegar entre pasos.
+ * - Obtener el estado del asistente.
+ * - Ejecutar métodos del componente hijo desde el componente padre.
+ *
+ * La propiedad es inicializada automáticamente por Angular después del ciclo de detección de vistas (`ngAfterViewInit`).
+ *
+ * @viewChild WizardComponent
+ */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
   /**
    * 
@@ -60,9 +81,9 @@ export class TerritorioNacionalSolicitudeComponent {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {
-        this.wizardComponent.siguiente();
+        this.wizardComponent?.siguiente();
       } else {
-        this.wizardComponent.atras();
+        this.wizardComponent?.atras();
       }
     }
   }

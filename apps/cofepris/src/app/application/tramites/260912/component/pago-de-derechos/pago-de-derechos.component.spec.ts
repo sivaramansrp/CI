@@ -48,6 +48,10 @@ describe('PagoDeDerechosComponent', () => {
         manifests: '',
         acuerdoPublico: '',
         rfc: '',
+        licenciaSanitaria: '',
+        nombre: '',
+        apellidoPaterno: '',
+        apellidoMaterno: '',
       }),
     };
     mockTramite260912Store = {};

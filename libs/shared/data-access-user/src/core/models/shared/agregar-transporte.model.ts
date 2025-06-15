@@ -69,6 +69,7 @@ export interface ItemTransporteDespacho {
 export interface TransporteDespacho {
   seleccionado?: boolean;
   tipo_transporte: string;
+
   emp_transportista?: string;
   numero_porte?: string;
   fecha_porte?: string;
@@ -76,7 +77,6 @@ export interface TransporteDespacho {
   modelo_transporte?: string;
   placas_transporte?: string;
   contenedor_transporte?: string;
-  observaciones?: string;
 
   numero_bl?: string;
   tipo_equipo?: string;
@@ -87,24 +87,25 @@ export interface TransporteDespacho {
   nombre_transportista?: string;
   num_gafete?: string;
 
-  guia_bl_Maritimo: string;
-  guia_house_maritimo: string;
-  nombre_buque_maritimo: string;
-  contenedor_maritimo: string;
-  
-  guia_house_valida: string;
-  guia_master_valida: string;
+  guia_bl_Maritimo?: string;
+  guia_house_maritimo?: string;
+  nombre_buque_maritimo?: string;
+  contenedor_maritimo?: string;
+
+  guia_house_valida?: boolean | string;
+  guia_master_valida?: boolean | string;
   descripcion_equipo?: string;
 
-  arribo_pendiente_aereo: string;
-  guia_master_aereo: string;
-  guia_house_aereo: string;
-  fecha_arribo_aereo: string;
-  hora_arribo_aereo: string;
-  guia_valida: string;
+  arribo_pendiente_aereo?: boolean | string;
+  guia_master_aereo?: string;
+  guia_house_aereo?: string;
+  fecha_arribo_aereo?: string;
+  hora_arribo_aereo?: string;
+  guia_valida?: boolean | string;
 
-  tipo_transporte_des: string;
-  datos_transporte: string;
+  tipo_transporte_des?: string;
+  datos_transporte?: string;
 
-  mismosDatosTransporte: string;
+  observaciones?: string;
+  mismosDatosTransporte?: boolean;
 }

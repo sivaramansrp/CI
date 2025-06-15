@@ -7,6 +7,7 @@ import { CertificadoDeOrigenComponent } from "../../../../shared/components/cert
 import { CertificadoValidacionService } from '../../services/certificado-validacion.service';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../models/configuracion-columna.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Mercancia } from '../../models/configuracion-columna.model';
 import { MercanciasModalComponent } from '../mercancias-modal/mercancias-modal.component';
 import { Modal } from 'bootstrap';
@@ -130,6 +131,11 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
    * @type {ElementRef}
    */
   @ViewChild('modifyModal', { static: false }) modifyModal!: ElementRef;
+    /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -141,6 +147,7 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
    * @param toastr Servicio de notificaciones para mostrar mensajes.
    * @param seccionQuery Consulta para obtener el estado de la sección.
    * @param seccionStore Store para actualizar el estado de la sección.
+   * @param consultaQuery Consulta para obtener el estado de la consulta.
    */
   constructor(
     private fb: FormBuilder,
@@ -149,7 +156,8 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
     public certificadoService: CertificadoValidacionService,
     private toastr: ToastrService,
     private seccionQuery: SeccionLibQuery,
-    private seccionStore: SeccionLibStore
+    private seccionStore: SeccionLibStore,
+    public consultaQuery: ConsultaioQuery
   ) {
     // Suscripción para cargar los valores del formulario desde el store
     this.tramiteQuery.formCertificado$.pipe(
@@ -194,6 +202,14 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
   ngOnInit(): void {
     this.cargarTratadoAcuerdo();
     this.cargarBloque();
+     this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {          
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -206,9 +222,6 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
       .subscribe(
         (data: Catalogo[]) => {
           this.store.setaltaPlanta(data);
-        },
-        (error) => {
-          console.error('Error al cargar los TratadoAcuerdo:', error);
         }
       );
   }
@@ -223,9 +236,6 @@ export class CertificadoOrigenComponent implements AfterViewInit, OnDestroy, OnI
       .subscribe(
         (data: Catalogo[]) => {
           this.store.setBloque(data);
-        },
-        (error) => {
-          console.error('Error al cargar los estados:', error);
         }
       );
   }

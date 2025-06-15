@@ -1,12 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RegistroStates, RegistroStore } from '../../../estados/registro.store';
-import { Subject, catchError, map, of, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { BusquedaRFCQuery } from '../../../queries/registro.query';
 import { CommonModule } from '@angular/common';
 import { ConsultaRegistro } from '../../core/models/consuta-registro.model';
+import { NotificacionesComponent } from '@libs/shared/data-access-user/src';
 import { Router } from '@angular/router';
-import { UsuariosService } from '../../core/service/usuarios.service';
 
 /**
  * Componente para consultar los datos de una persona y mostrar notificaciones relacionadas.
@@ -15,7 +15,7 @@ import { UsuariosService } from '../../core/service/usuarios.service';
 @Component({
   selector: 'app-consulta-persona-notificaciones',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, ReactiveFormsModule, FormsModule, NotificacionesComponent],
   templateUrl: './consulta-persona-notificaciones.component.html',
   styleUrl: './consulta-persona-notificaciones.component.scss',
 })
@@ -42,7 +42,7 @@ export class ConsultaPersonaNotificacionesComponent implements OnInit, OnDestroy
   /**
    * Modelo que contiene los datos del notificador consultado.
    */
-  public modelNotificador!: ConsultaRegistro;
+  public modelNotificador?: ConsultaRegistro;
 
   /**
    * Constructor. Inyecta dependencias necesarias para el funcionamiento del componente.
@@ -55,7 +55,6 @@ export class ConsultaPersonaNotificacionesComponent implements OnInit, OnDestroy
     private fb: FormBuilder,
     private registroStore: RegistroStates,
     private registroQuery: BusquedaRFCQuery,
-    private usuarioService: UsuariosService,
     private router: Router
   ) {
   }
@@ -73,40 +72,21 @@ export class ConsultaPersonaNotificacionesComponent implements OnInit, OnDestroy
         takeUntil(this.destroyNotifier$)
       )
       .subscribe();
-    this.consultaDatos(this.registroState.rfc);
     this.crearFormRequerimiento();
+    this.llenarCamposNotificador();
   }
-
   /**
-   * Consulta los datos de la persona por RFC y actualiza el formulario.
-   * @param rfc RFC de la persona a consultar.
+   * Consulta los datos de la persona notificadora por RFC.
+   * Si el RFC está vacío, no realiza la consulta.
    */
-  consultaDatos(rfc: string) {
-    this.usuarioService.consultaDatosPorRFCoCURP(rfc)
-      .pipe(
-        map((data) => {
-          this.modelNotificador = data;
-          this.registroStore.setModeloNotificador(this.modelNotificador);
-          this.formConsulta.get('nombre')?.setValue(data.nombre);
-          this.formConsulta.get('apellidoPaterno')?.setValue(data.apellidoPaterno);
-          this.formConsulta.get('apellidoMaterno')?.setValue(data.apellidoMaterno);
-          this.formConsulta.get('rfc')?.setValue(data.rfc);
-        }),
-        catchError((_error) => {
-          console.error('Error al consultar datos del trámite', _error);
-          return of(null);
-        }),
-        takeUntil(this.destroyNotifier$)
-      )
-      .subscribe();
-  }
-
-  /**
-   * Se ejecuta al destruir el componente, limpiando las suscripciones.
-   */
-  ngOnDestroy() {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
+  llenarCamposNotificador() {
+    if (this.registroState) {
+      this.formConsulta.get('nombre')?.setValue(this.registroState.personaNotifcador.nombre);
+      this.formConsulta.get('apellidoPaterno')?.setValue(this.registroState.personaNotifcador.apellidoPaterno);
+      this.formConsulta.get('apellidoMaterno')?.setValue(this.registroState.personaNotifcador.apellidoMaterno);
+      this.formConsulta.get('rfc')?.setValue(this.registroState.personaNotifcador.rfc);
+      this.formConsulta.get('curp')?.setValue(this.registroState.personaNotifcador.curp);
+    }
   }
 
   /**
@@ -122,18 +102,26 @@ export class ConsultaPersonaNotificacionesComponent implements OnInit, OnDestroy
   }
 
   /**
+  * Se ejecuta al destruir el componente, limpiando las suscripciones.
+  */
+  ngOnDestroy() {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
+  /**
    * Cancela la operación y navega a la pantalla de registro de notificaciones.
    */
   cancelarDatos() {
     this.registroStore.setValorRegistro(this.registrarDatos = false);
-    this.router.navigate(['login/registro-notificaciones']);
+    this.router.navigate(['login/registro-notificadores']);
   }
   /**
    * Método para confirmar datos y enviar datos a tabla 
    */
   confirmarDatos() {
-    this.registrarDatos = true;
-    this.registroStore.setValorRegistro(this.registrarDatos);
-    this.router.navigate(['login/registro-notificaciones']);
+    this.registroStore.setListaNotificadores(this.registroState.personasNotificaciones || []);
+    this.registroStore.setValorRegistro(this.registrarDatos = true);
+    this.router.navigate(['login/registro-notificadores']);
   }
 }

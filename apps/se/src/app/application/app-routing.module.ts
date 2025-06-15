@@ -332,7 +332,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'cupos',
+    path: 'expedicion-certificados-asignacion-directa-fisica',
     loadChildren: () =>
       import('./tramites/120201/cupos.module').then((m) => m.CuposModule),
   },
@@ -461,7 +461,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'expedicion-certificados-asignacion-directa',
+    path: 'expedicion-certificados-asignacion-directa-moral',
     loadChildren: () =>
       import('./tramites/120202/expedicion-certificado-asignacion.module').then(
         (m) => m.ExpedicionCertificadoAsignacionModule
@@ -620,7 +620,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'modalidad-terciarización',
+    path: 'modalidad-terciarizacion',
     loadChildren: () =>
       import('./tramites/80105/modalidad-terciarización.module').then(
         (m) => m.ModalidadTerciarizaciónModule
@@ -634,7 +634,7 @@ const ROUTES: Routes = [
       ).then((m) => m.ImportacionesAgropecuariasModule),
   },
   {
-    path: 'modificaciones-immex-prosec',
+    path: 'modificaciones-immex',
     loadChildren: () =>
       import('./tramites/80316/modificaciones-immex-prosec.module').then(
         (m) => m.ModificacionesImmexProsecModule
@@ -689,7 +689,28 @@ const ROUTES: Routes = [
         (m) => m.ModalidadControlodoraModule
       ),
   },
-
+  {
+    path: 'certificado-origen',
+    loadChildren: () =>
+      import('./tramites/110217/certificado-origen.module').then(
+        (m) => m.CertificadoOrigenModule
+      ),
+  },
+  {
+    path: 'verificar-dictamen',
+    loadComponent: () =>
+      import('./verificar-dictamen/verificar-dictamen.component').then((m) => m.VerificarDictamenComponent),
+  },
+  {
+    path: 'detalle-v-dictamen',
+    loadComponent: () =>
+      import('./detalle-v-dictamen/detalle-v-dictamen.component').then((m) => m.DetalleVDictamenComponent),
+  },
+  {
+    path: 'datos-generales-tramite',
+    loadComponent: () =>
+      import('./datos-generales-tramite/datos-generales-tramite.component').then((m) => m.DatosGeneralesTramiteComponent),
+  },
 ];
 
 @NgModule({

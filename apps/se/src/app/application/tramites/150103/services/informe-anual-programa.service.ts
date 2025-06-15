@@ -1,4 +1,6 @@
 import { ProgramasReporte, ReporteFechas } from '../models/programas-reporte.model';
+import { Solicitud150103State,Solicitud150103Store } from '../estados/solicitud150103.store';
+
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -11,8 +13,16 @@ export class InformeAnualProgramaService {
    * Constructor del servicio.
    * @param http Cliente HTTP para realizar solicitudes a servicios externos.
    */
-  constructor(private http: HttpClient) {}
-
+  constructor(private http: HttpClient, private solicitud150103Store: Solicitud150103Store) {}
+  actualizarEstadoFormulario(DATOS: Solicitud150103State): void {
+    this.solicitud150103Store.actualizarFolioPrograma(DATOS.folioPrograma);
+    this.solicitud150103Store.actualizarModalidad(DATOS.modalidad);
+    this.solicitud150103Store.actualizarTipoPrograma(DATOS.tipoPrograma);
+    this.solicitud150103Store.actualizarEstatus(DATOS.estatus);
+    this.solicitud150103Store.actualizarVentasTotales(DATOS.ventasTotales);
+    this.solicitud150103Store.actualizarTotalExportaciones(DATOS.totalExportaciones);
+   
+  }
   /**
    * Obtiene los programas de reporte desde un archivo JSON.
    * 
@@ -36,4 +46,14 @@ export class InformeAnualProgramaService {
       'assets/json/150103/reporte-fechas.json'
     );
   }
+
+ /**
+ * @method getRegistroData
+ * @description Método que obtiene los datos de registro desde un archivo JSON.
+ * Realiza una solicitud HTTP para obtener un objeto de tipo `Solicitud150103State`.
+ * @returns Un observable que emite los datos de registro.
+ */
+getRegistroData(): Observable<Solicitud150103State> {
+    return this.http.get<Solicitud150103State>('assets/json/150103/registro.json');
+}
 }

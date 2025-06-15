@@ -5,13 +5,17 @@
       [forma]="ninoFormGroup"
       [formularioDatos]="consultarCupoFormData"
       [estado]="solicitudDeRegistroState"
+      [soloLectura]="consultaState.readonly"
       (emitirCambioDeValor)="establecerCambioDeValor($event)"
     ></formas-dinamicas>
   </div>
 </form>
 <div class="row mt-5">
-    <div class="col-md-8 text-end">
-      <button type="button" class="btn btn-primary" (click)="buscar()">
+  <div class="col-md-4">
+    <p>* Campos obligatorios</p>
+  </div>
+    <div class="col-md-4 text-end">
+      <button type="button" class="btn btn-primary" (click)="buscar()" [disabled]="consultaState.readonly">
         Buscar
       </button>
     </div>
@@ -22,6 +26,7 @@
       <app-tabla-dinamica
         [configuracionTabla]="configuracionParaEncabezadoDeTabla"
         [datos]="cuerpoTabla"
+        [desactivarEmitirEvento]="!consultaState.readonly"
         (filaClic)="controladorDeClicsArchivo($event)"
       >
 

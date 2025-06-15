@@ -1,4 +1,4 @@
-import { CatalogoLista, DisponiblesTabla, SeleccionadasTabla } from '../models/validacion-posteriori.model';
+import { CatalogoLista, DisponiblesTabla, RespuestaConsulta, SeleccionadasTabla } from '../models/validacion-posteriori.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -116,5 +116,16 @@ export class ValidacionPosterioriService {
   obtenerPais(): Observable<CatalogoLista> {
     return this.http
       .get<CatalogoLista>('assets/json/110212/pais.json');
+  }
+  /**
+   * @method getDatosConsulta
+   * @description Obtiene los datos de consulta desde un archivo JSON local.
+   * 
+   * Este método realiza una solicitud HTTP GET para obtener los datos de consulta simulados desde el archivo `consulta_11201.json`.
+   * 
+   * @returns {Observable<RespuestaConsulta>} Un observable que emite la respuesta de los datos de consulta.
+   */
+  getDatosConsulta(): Observable<RespuestaConsulta> {
+    return this.http.get<RespuestaConsulta>(`assets/json/110212/consulta-110212.json`);
   }
 }

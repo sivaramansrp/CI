@@ -10,6 +10,7 @@
                 [label]="'Especie*'"
                 [placeholder]="'Seleccione un valor'"
                 formControlName="especie"
+                [isDisabled]="esFormularioSoloLectura"
                 (change)="setValoresStore(formCombinacion,'especie', 'setespecie')">
                 ></app-catalogo-select>
             </div>
@@ -21,6 +22,7 @@
                 [label]="'Función Zootécnica*'"
                 [placeholder]="'Seleccione un valor'"
                 formControlName="funcionZootecnica"
+                [isDisabled]="esFormularioSoloLectura"
                 (change)="setValoresStore(formCombinacion,'funcionZootecnica', 'setfuncionZootecnica')"
                 ></app-catalogo-select>
             </div>
@@ -32,6 +34,7 @@
                 [label]="'Mercancía'"
                 [required]="true"
                 [placeholder]="'Seleccione un valor'"
+                [isDisabled]="esFormularioSoloLectura"
                 formControlName="mercancia"
                 (change)="setValoresStore(formCombinacion,'mercancia', 'setmercancia')"
               ></app-catalogo-select>
@@ -47,6 +50,7 @@
                 [label]="'País de destino'"
                 [required]="true"
                 [placeholder]="'Seleccione un valor'"
+                [isDisabled]="esFormularioSoloLectura"
                 formControlName="paisDestino"
                 (change)="setValoresStore(formCombinacion,'paisDestino', 'setpaisDestino')"
                 ></app-catalogo-select>
@@ -62,6 +66,7 @@
                 [label]="'Nombre, Denominación o Razón Social'"
                 [required]="true"
                 [placeholder]="'Seleccione un valor'"
+                [isDisabled]="esFormularioSoloLectura"
                 formControlName="nombreEstablecimiento"
                 (change)="setValoresStore(formCombinacion,'nombreEstablecimiento', 'setnombreEstablecimiento')"
                ></app-catalogo-select>
@@ -77,6 +82,7 @@
                 [label]="'Tipo de Actividad del Establecimiento'"
                 [required]="true"
                 [placeholder]="'Seleccione un valor'"
+                [isDisabled]="esFormularioSoloLectura"
                 formControlName="tipoActividad"
                 (change)="setValoresStore(formCombinacion,'tipoActividad', 'settipoActividad')"
                 ></app-catalogo-select>
@@ -97,7 +103,7 @@
                             <label class="form-check-label" for="nombreEstablecimientoCheck">Nombre del Establecimiento</label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="checkbox" id="numeroAutorizacionCheck"  formControlName="numeroAutorizacionCheck" (change)="setValoresStore(formCombinacion,'numeroAutorizacionCheck', 'setnumeroAutorizacionCheck')">
+                            <input class="form-check-input" type="checkbox" id="numeroAutorizacionCheck" formControlName="numeroAutorizacionCheck" (change)="setValoresStore(formCombinacion,'numeroAutorizacionCheck', 'setnumeroAutorizacionCheck')">
                             <label class="form-check-label" for="numeroAutorizacionCheck">Número de Autorización</label>
                         </div>
                         <div class="form-check">
@@ -121,6 +127,7 @@
                 [label]="'Aduana de Salida/Lugar de Embarque'"
                 [required]="true"
                 [placeholder]="'Seleccione un valor'"
+                [isDisabled]="esFormularioSoloLectura"
                 formControlName="aduanaSalida"
                 (change)="setValoresStore(formCombinacion,'aduanaSalida', 'setaduanaSalida')"
               ></app-catalogo-select>
@@ -136,6 +143,7 @@
                 [label]="'OISA de Salida'"
                 [required]="true"
                 [placeholder]="'Seleccione un valor'"
+                [isDisabled]="esFormularioSoloLectura"
                 formControlName="oisaSalida"
                 (change)="setValoresStore(formCombinacion,'oisaSalida', 'setoisaSalida')"
               ></app-catalogo-select>
@@ -151,6 +159,7 @@
                 [label]="'Régimen al que se Destinará la Mercancía'"
                 [required]="true"
                 [placeholder]="'Seleccione un valor'"
+                [isDisabled]="esFormularioSoloLectura"
                 formControlName="regimenMercancia"
                 (change)="setValoresStore(formCombinacion,'regimenMercancia', 'setregimenMercancia')"
               ></app-catalogo-select>
@@ -166,6 +175,7 @@
                 [label]="'País de Origen'"
                 [required]="true"
                 [placeholder]="'Seleccione un valor'"
+                [isDisabled]="esFormularioSoloLectura"
                 formControlName="paisOrigen"
                 (change)="setValoresStore(formCombinacion,'paisOrigen', 'setpaisOrigen')"
               ></app-catalogo-select>

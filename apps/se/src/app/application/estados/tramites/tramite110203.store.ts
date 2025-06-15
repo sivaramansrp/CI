@@ -83,6 +83,12 @@ export interface Solicitud110203State {
 
     /** **País o bloque económico relacionado con la solicitud** */
     paisBloque: string;
+    /** **medida económico relacionado con la solicitud** */
+    medida: string;
+    /** **comercializacion económico relacionado con la solicitud** */
+    comercializacion: string;
+    /** **tipo económico relacionado con la solicitud** */
+     tipo: string;
 }
 
 
@@ -96,6 +102,14 @@ export interface Solicitud110203State {
  */
 export function createInitialState(): Solicitud110203State {
     return {
+          /** Unidad de medida utilizada para cuantificar la mercancía (ej. kilogramos, litros). */
+        medida: '',
+
+        /** Tipo de comercialización de la mercancía (ej. venta, muestra, donación). */
+        comercializacion: '',
+
+        /** Tipo de producto o clasificación según su naturaleza o uso. */
+        tipo: '',
         /** **Tratado o acuerdo comercial seleccionado** */
         tratado: '',
 
@@ -530,6 +544,40 @@ export class Tramite110203Store extends Store<Solicitud110203State> {
     public limpiarSeleccion(): void {
         this.reset();
     }
+      /**
+   * Actualiza el valor del campo "medida" en el estado global de la solicitud.
+   *
+   * @param medida - Nueva unidad de medida seleccionada por el usuario.
+   */
+       public setMedida(medida: string): void {
+        this.update((state) => ({
+            ...state,
+            medida
+        }));
+    }
+      /**
+   * Actualiza el valor del campo "comercializacion" en el estado global de la solicitud.
+   *
+   * @param comercializacion - Nuevo valor del tipo de comercialización seleccionado por el usuario.
+   */
+      public setComercializacion(comercializacion: string): void {
+        this.update((state) => ({
+            ...state,
+            comercializacion
+        }));
+    }
+      /**
+   * Establece el valor de "comercializacion" en el estado.
+   * 
+   * @param comercializacion - Valor que representa el tipo de comercialización de la mercancía.
+   */
+       public setTipo(tipo: string): void {
+        this.update((state) => ({
+            ...state,
+            tipo
+        }));
+    }
 
 
 }
+

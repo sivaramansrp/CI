@@ -1,4 +1,4 @@
-import { BtnContinuarComponent, CatalogoSelectComponent, ServiciosPantallasService } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent, CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AgregarDestinatoriaComponent } from './components/agregar-destinatoria/agregar-destinatoria.component';
 import { CombinacionRequeridaComponent } from './components/combinacion-requerida/combinacion-requerida.component';
@@ -22,6 +22,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
+
 
 @NgModule({
   declarations: [ 
@@ -53,8 +54,8 @@ import { provideHttpClient } from '@angular/common/http';
   
   providers: [
       provideHttpClient(),
-      ServiciosPantallasService,
-      ToastrService,
+      ToastrService
+      
     ],
 })
 /**

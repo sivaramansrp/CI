@@ -112,6 +112,15 @@ export class TablaDinamicaComponent<T> {
   @Input() acciones: TablaAcciones[] = [];
 
   /**
+ * @input desactivarEmitirEvento
+ * @description
+ * Indica si se debe desactivar la emisión del evento al hacer clic en una fila de la tabla.
+ * @type {boolean}
+ * @default true
+ */
+  @Input() desactivarEmitirEvento: boolean = true;
+
+  /**
    * Evento que se emite cuando el usuario selecciona una fila de la tabla.
    * Este evento envía la fila seleccionada (objeto completo) al componente padre.
    *
@@ -167,6 +176,9 @@ export class TablaDinamicaComponent<T> {
    * Este valor se utiliza para determinar el estado del registro y el texto del botón.
    */
   public batonValor: string = ESTADO_REGISTRO.BAJA;
+
+  @Input() desactivarButton: boolean = false;
+
   /**
    * Método para obtener la configuración de las columnas ordenada según el campo "orden".
    *
@@ -252,7 +264,9 @@ export class TablaDinamicaComponent<T> {
    * @param data - Los datos de la fila que fue clickeada.
    */
   onFilaClic(data: T): void {
-    this.filaClic.emit(data);
+    if (this.desactivarEmitirEvento) {
+      this.filaClic.emit(data);
+    }
   }
 
   /**

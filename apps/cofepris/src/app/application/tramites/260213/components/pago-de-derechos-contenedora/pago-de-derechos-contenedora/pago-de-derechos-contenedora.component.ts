@@ -1,5 +1,5 @@
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../../shared/models/terceros-relacionados.model';
 import { Tramite260213Store } from '../../../estados/tramite260213Store.store';
@@ -18,6 +18,11 @@ import { Tramite260213Store } from '../../../estados/tramite260213Store.store';
   styleUrl: './pago-de-derechos-contenedora.component.scss',
 })
 export class PagoDeDerechosContenedoraComponent {
+  /**
+ * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+ */
+  @Input() formularioDeshabilitado: boolean = false;
+
   /**
    * @property {PagoDerechosFormState} pagoDerechos
    * @description Estado actual del formulario de pago de derechos, obtenido del store del trámite.

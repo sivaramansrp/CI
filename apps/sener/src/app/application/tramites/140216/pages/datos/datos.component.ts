@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
+
+import { BusquedaPermisosComponent } from '../../components/busqueda-permisos/busqueda-permisos.component';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
 
 /**
@@ -19,6 +21,12 @@ export class DatosComponent {
    * Configuración del formulario para el domicilio fiscal 
    */
   domicilioFiscal: FormularioDinamico[] = [];
+
+  /**
+   * Referencia al componente de búsqueda de permisos.
+   * @type {BusquedaPermisosComponent}
+   */
+  @ViewChild(BusquedaPermisosComponent) busquedaPermisosComponent!: BusquedaPermisosComponent;
 
   /**
    * Constructor del componente.
