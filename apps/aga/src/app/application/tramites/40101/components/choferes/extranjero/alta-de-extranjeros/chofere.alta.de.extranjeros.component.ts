@@ -115,7 +115,7 @@ export class ChofereAltaDeExtranjerosComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         map((data) => {
-          this.datosDelChoferExtranjeros = this.datosDelChoferExtranjeros.concat(data?.datosDelChoferExtranjerosAlta ?? []);
+          this.datosDelChoferExtranjeros = [...data?.datosDelChoferExtranjerosAlta ?? []];
         })
       )
       .subscribe();
@@ -218,6 +218,9 @@ export class ChofereAltaDeExtranjerosComponent implements OnInit, OnDestroy {
   addModal(data: ChoferesExtranjeros): void {
     this.datosDelChoferExtranjeros.push(data);
     this.datosDelChoferExtranjerosSelected = [];
+
+    this.chofer40101Service
+      .updateDatosDelChoferExtranjero(this.datosDelChoferExtranjeros);
     this.cancelModal();
   }
 
