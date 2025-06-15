@@ -1,45 +1,42 @@
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NgModule, forwardRef } from '@angular/core';
-import { AgregarTransporteComponent } from '@ng-mf/data-access-user';
+import { AgregarTransporteComponent,CatalogosService} from '@ng-mf/data-access-user';
+import { AnexarDocumentosComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { AlertComponent } from '@ng-mf/data-access-user';
-import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { CatalogosService } from '@ng-mf/data-access-user';
+import { Chofer40101Service } from './estado/chofer40101.service';
 import { ChoferesComponent } from './components/choferes/choferes.component';
 import { CommonModule } from '@angular/common';
 import { CrosslistComponent } from '@ng-mf/data-access-user';
 import { DirectorGeneralComponent } from './components/director-general/director-general.component';
 import { FirmaElectronicaComponent } from '@ng-mf/data-access-user';
-import { InicioSesionService } from '@libs/shared/data-access-user/src/core/services/shared/inicio-sesion/inicio-sesion.service';
 import { InputCheckComponent } from '@ng-mf/data-access-user';
 import { InputFechaComponent } from '@ng-mf/data-access-user';
 import { InputHoraComponent } from '@ng-mf/data-access-user';
-import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
+import { NgModule } from '@angular/core';
+import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
+import { ReactiveFormsModule } from '@angular/forms';
 import { RepresentanteFiscalComponent } from '@ng-mf/data-access-user';
 import { RouterModule } from '@angular/router';
 import { SelectPaisesComponent } from '@ng-mf/data-access-user';
 import { SharedModule } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from './components/solicitante/solicitante.component';
 import { SolicitantePageComponent } from './pages/solicitante-page/solicitante-page.component';
-import { SubirDocumentoService } from '@libs/shared/data-access-user/src/core/services/shared/subir-documento/subir-documento.service';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import { ToastrModule } from 'ngx-toastr';
 import { ToastrService } from 'ngx-toastr';
-import { Tramite40101Service } from './estado/tramite40101.service';
-import { TransportistaTerrestreRoutingModule } from './transportista-terrestre-routing.module';
 import { VehiculosComponent } from './components/vehiculos/vehiculos.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
+import { forwardRef } from '@angular/core';
+import { TransportistaTerrestreRoutingModule } from './transportista-terrestre-routing.module';
+
 @NgModule({
   declarations: [
     SolicitantePageComponent,
     PasoUnoComponent,
-    PasoTresComponent,
-    SolicitanteComponent,
+    PasoDosComponent,
+    VehiculosComponent,
     DirectorGeneralComponent,
-    ChoferesComponent,
-    VehiculosComponent
+    SolicitanteComponent,
   ],
   imports: [
     CommonModule,
@@ -51,7 +48,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     forwardRef(() => BtnContinuarComponent),
     ReactiveFormsModule,
     forwardRef(() => AlertComponent),
-    forwardRef(() => FirmaElectronicaComponent),
+    forwardRef(() => FirmaElectronicaComponent),   
     forwardRef(() => AnexarDocumentosComponent),
     forwardRef(() => InputCheckComponent),
     forwardRef(() => InputFechaComponent),
@@ -61,14 +58,14 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     forwardRef(() => RepresentanteFiscalComponent),
     forwardRef(() => SelectPaisesComponent),
     forwardRef(() => CatalogoSelectComponent),
+    ChoferesComponent,
+    TablaDinamicaComponent
+],
+  exports: [
+    PasoUnoComponent,
+    PasoDosComponent,
+   
   ],
-  exports: [PasoUnoComponent, PasoTresComponent, BtnContinuarComponent],
-  providers: [
-    ToastrService,
-    CatalogosService,
-    Tramite40101Service,
-    InicioSesionService,
-    SubirDocumentoService,
-  ],
+  providers: [ToastrService, CatalogosService, Chofer40101Service],
 })
 export class TransportistaTerrestreModule {}

@@ -1,16 +1,13 @@
+/* eslint-disable no-empty-function */
+import { Chofer40101Store, Choferesnacionales40101State } from '../../estado/chofer40101.store';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ReplaySubject, map } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { Tramite40101Query } from '../../estado/tramite40101.query';
-import { Tramite40101Store } from '../../estado/tramite40101.store';
-import mockData from '@libs/shared/theme/assets/json/40101/director-general-mockdata.json';
-import { takeUntil } from 'rxjs';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { map, takeUntil } from 'rxjs/operators';
+import { Chofer40101Query } from '../../estado/chofer40101.query';
+import { Chofer40101Service } from '../../estado/chofer40101.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { Subject } from 'rxjs';
 
-/**
- * Componente para gestionar el formulario del director general.
- */
 @Component({
   selector: 'app-director-general',
   templateUrl: './director-general.component.html',
@@ -18,116 +15,107 @@ import { takeUntil } from 'rxjs';
 })
 export class DirectorGeneralComponent implements OnInit, OnDestroy {
   /**
-   * Formulario reactivo para el director general.
+   * Formulario reactivo que contiene los datos del director general.
+   *
+   * @type {FormGroup}
    */
   directorGeneralForm!: FormGroup;
 
   /**
-   * Emite un valor cuando el componente es destruido para ayudar a cancelar la suscripción de los observables y prevenir fugas de memoria.
-   * Normalmente se usa con el operador `takeUntil` de RxJS en componentes de Angular.
-   * @private
+   * Observable utilizado para manejar la limpieza de recursos al destruir el componente.
+   * Se emite un valor cuando el componente se destruye, completando todas las suscripciones activas.
+   *
+   * @type {Subject<void>}
    */
-  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  private destroy$ = new Subject<void>();
 
   /**
-  * Indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, los campos del formulario no se pueden editar.
-  */
-  esFormularioSoloLectura: boolean = false;
-  consultaState!: ConsultaioState;
+   * Observable para notificar la destrucción del componente.
+   * Se utiliza para cancelar suscripciones activas y evitar fugas de memoria.
+   */
+  public destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Constructor del componente.
-   * @param fb - Inyección del servicio FormBuilder.
-   * @param tramite40101Query - Inyección del servicio Tramite40101Query.
-   * @param tramite40101Store - Inyección del servicio Tramite40101Store.
+   * Estado actual del trámite.
+   * Contiene los datos relacionados con la modificación del trámite.
    */
+  public derechoState: Choferesnacionales40101State = {} as Choferesnacionales40101State;
+
+    /**
+   * Estado de la solicitud.
+   */
+  public solicitud40101State!: Choferesnacionales40101State;
+
   constructor(
     private fb: FormBuilder,
-    private tramite40101Query: Tramite40101Query,
-    private tramite40101Store: Tramite40101Store,
+    private chofer40101Store: Chofer40101Store,
+    private chofer40101Service: Chofer40101Service,
+    private chofer40101Query: Chofer40101Query,
     private consultaioQuery: ConsultaioQuery
-  ) {
-
-  }
+  ) {}
 
   /**
    * Método del ciclo de vida de Angular que se llama después de que las propiedades enlazadas a datos se inicializan.
+   * Inicializa el formulario del director general y establece los valores del formulario.
    */
   ngOnInit(): void {
+    this.chofer40101Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.derechoState = {
+            ...this.derechoState,
+            ...seccionState,
+          };
+        })
+      ).subscribe();
     this.crearFormularioDirectorGeneral();
 
-    /**
-     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
-     *
-     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
-     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
-     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
-     */
     this.consultaioQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyed$),
-      map((seccionState) => {
-        this.esFormularioSoloLectura = seccionState.readonly;
-        this.consultaState = seccionState;
-        if(seccionState.update) {
-          this.setFormValues();
-        }
-        if(seccionState.readonly) {
-          this.directorGeneralForm.disable();
-        }
-      })
-    )
-    .subscribe();
-
-    // Escuche los cambios de formulario y actualice la tienda.
-    this.directorGeneralForm.valueChanges
-      .pipe(takeUntil(this.destroyed$))
-      .subscribe((formData) => {
-        this.updateStore(formData);
-      });
-    this.updateStore(this.directorGeneralForm.value);
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          if(seccionState.readonly) {
+            this.directorGeneralForm.disable();
+          } 
+        })
+      ).subscribe();
   }
 
   /**
    * Crea el formulario para el director general.
    */
   crearFormularioDirectorGeneral(): void {
+    const STATE = this.chofer40101Store?.getValue();
+
     this.directorGeneralForm = this.fb.group({
-      nombre: [this.tramite40101Store.getValue().nombre || '', [Validators.required]],
-      primerApellido: [this.tramite40101Store.getValue().primerApellido || '', [Validators.required]],
-      segundoApellido: [this.tramite40101Store.getValue().segundoApellido || '', [Validators.required]],
+      nombre: [STATE.nombre, [Validators.required]],
+      primerApellido: [STATE.primerApellido, [Validators.required]],
+      segundoApellido: [STATE.segundoApellido, [Validators.required]],
     });
   }
 
   /**
-   * Establece los valores del formulario utilizando datos simulados.
+   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+   * Libera la suscripción a los cambios del formulario.
    */
-  setFormValues(): void {
-    if (mockData) {
-      setTimeout(() => {
-        this.directorGeneralForm.patchValue({
-          nombre: mockData.nombre || '',
-          primerApellido: mockData.primerApellido || '',
-          segundoApellido: mockData.segundoApellido || '',
-        });
-      });
-    }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   /**
-   * Actualiza la tienda con los datos del formulario.
-   * @param updatedData - Los datos actualizados del formulario.
+   * Establecer valores en el store del trámite.
+   * @param form Formulario reactivo.
+   * @param campo Nombre del campo.
+   * @param metodoNombre Nombre del método en el store.
    */
-  updateStore(updatedData: any): void {
-    this.tramite40101Store.setNombre(updatedData.nombre);
-    this.tramite40101Store.setPrimerApellido(updatedData.primerApellido);
-    this.tramite40101Store.setSegundoApellido(updatedData.segundoApellido)
-    // Aquí se puede agregar la lógica para actualizar la tienda con los datos actualizados.
-  }
-
-  ngOnDestroy(): void {
-    this.destroyed$.next(true);
-    this.destroyed$.complete();
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Chofer40101Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.chofer40101Store[metodoNombre] as (valor: unknown) => void)(VALOR);
   }
 }
