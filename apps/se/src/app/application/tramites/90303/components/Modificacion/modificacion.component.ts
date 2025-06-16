@@ -155,6 +155,13 @@ export class ModificacionComponent implements OnInit, OnDestroy, AfterViewInit {
    * Llama a los métodos para obtener los datos de las tablas.
    */
   ngOnInit(): void {
+ this.modificacionForm = this.fb.group({
+    registroFederalContribuyentes: [{ value: '', disabled: true }, []],
+    representacionFederal: [{ value: '', disabled: true }, []],
+    tipoModificacion: [{ value: '', disabled: true }, []],
+    modificacionPrograma: [{ value: '', disabled: true }, []],
+  });
+
      this.obtenerTablaLista();
     this.obtenerTablaPlantas();
     this.obtenerTablaSector();
