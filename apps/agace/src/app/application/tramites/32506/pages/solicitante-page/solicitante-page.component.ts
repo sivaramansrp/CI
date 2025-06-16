@@ -31,7 +31,15 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-solicitante-page',
   standalone: true,
-  imports: [WizardComponent, ReactiveFormsModule, BtnContinuarComponent, AlertComponent,PasoDosComponent, PasoUnoComponent, PasoTresComponent],
+  imports: [
+    WizardComponent,
+    ReactiveFormsModule,
+    BtnContinuarComponent,
+    AlertComponent,
+    PasoDosComponent,
+    PasoUnoComponent,
+    PasoTresComponent,
+  ],
   templateUrl: './solicitante-page.component.html',
   styleUrl: './solicitante-page.component.scss',
 })

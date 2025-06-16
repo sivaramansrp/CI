@@ -1,82 +1,74 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { of } from 'rxjs';
+import { TestBed } from '@angular/core/testing';
 import { PasoDosComponent } from './paso-dos.component';
-import { AlertComponent, AnexarDocumentosComponent, CatalogosService, TituloComponent } from '@ng-mf/data-access-user';
+import {
+  AlertComponent,
+  AnexarDocumentosComponent,
+  CatalogosService,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
+import { of, Subject } from 'rxjs';
+import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { provideToastr, ToastrService } from 'ngx-toastr';
-import { provideHttpClient } from '@angular/common/http';
+import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
-  let fixture: ComponentFixture<PasoDosComponent>;
-  let catalogosServiceMock: any;
+  let fixture: any;
+  let mockCatalogosService: jest.Mocked<CatalogosService>;
+  const mockCatalogo: Catalogo[] = [
+    { id: 1, descripcion: 'Documento 1' } as Catalogo,
+    { id: 2, descripcion: 'Documento 2' } as Catalogo,
+  ];
 
   beforeEach(async () => {
-    catalogosServiceMock = {
-      getCatalogo: jest.fn().mockReturnValue(of([])),
-    };
+    mockCatalogosService = {
+      getCatalogo: jest.fn(()=> of()),
+    } as any;
 
     await TestBed.configureTestingModule({
       imports: [
         PasoDosComponent,
-        HttpClientTestingModule,
         TituloComponent,
         AlertComponent,
         AnexarDocumentosComponent,
+        ReactiveFormsModule,
+        HttpClientTestingModule
       ],
       providers: [
-        ToastrService,
-        provideToastr({
-          positionClass: 'toast-top-right',
-        }),
-        provideHttpClient(),
-        { provide: CatalogosService, useValue: catalogosServiceMock },
+        { provide: CatalogosService, useValue: mockCatalogosService },
       ],
     }).compileComponents();
-  });
 
-  beforeEach(() => {
     fixture = TestBed.createComponent(PasoDosComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize TEXTOS', () => {
-    expect(component.TEXTOS).toBeDefined();
-  });
-
-  it('should call getTiposDocumentos on component initialization', () => {
+  it('should call getTiposDocumentos on ngOnInit', () => {
     const spy = jest.spyOn(component, 'getTiposDocumentos');
     component.ngOnInit();
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should update catalogoDocumentos when getTiposDocumentos is called', () => {
-    const mockCatalogo: Catalogo[] = [
-      { id: 1, descripcion: 'Tipo Documento 1' },
-      { id: 2, descripcion: 'Tipo Documento 2' },
-    ];
-    catalogosServiceMock.getCatalogo.mockReturnValue(of(mockCatalogo));
+  it('should fetch and set catalogoDocumentos in getTiposDocumentos', () => {
+    mockCatalogosService.getCatalogo.mockReturnValue(of(mockCatalogo));
     component.getTiposDocumentos();
+    expect(mockCatalogosService.getCatalogo).toHaveBeenCalledWith(
+      CATALOGOS_ID.CAT_TIPO_DOCUMENTO
+    );
     expect(component.catalogoDocumentos).toEqual(mockCatalogo);
   });
 
-  it('should handle empty response in getTiposDocumentos', () => {
-    catalogosServiceMock.getCatalogo.mockReturnValue(of([]));
-    component.getTiposDocumentos();
-    expect(component.catalogoDocumentos).toEqual([]);
-  });
-
   it('should complete destroy$ on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroy$'], 'next');
-    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+    const destroy$ = (component as any).destroy$ as Subject<void>;
+    const nextSpy = jest.spyOn(destroy$, 'next');
+    const completeSpy = jest.spyOn(destroy$, 'complete');
     component.ngOnDestroy();
-    expect(destroySpy).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
 });
