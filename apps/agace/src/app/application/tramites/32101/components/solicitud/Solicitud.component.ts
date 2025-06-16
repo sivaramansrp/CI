@@ -303,6 +303,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         { value: this.solicitudState?.importeDePago || '7735', disabled: true },
       ],
     });
+    this.inicializarEstadoFormulario()
   }
 
       /**
