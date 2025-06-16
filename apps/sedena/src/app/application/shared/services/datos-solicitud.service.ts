@@ -4,8 +4,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '../models/datos-solicitud.model';
-import { map } from 'rxjs';
+import { Tramite240117State } from '../../tramites/240117/estados/tramite240117Store.store';
 import { Tramite240114State } from '../../tramites/240114/estados/tramite240114Store.store';
+import { map } from 'rxjs';
 
 @Injectable({
   providedIn: AppSedenaModule,
@@ -169,6 +170,11 @@ export class DatosSolicitudService {
    * Obtiene los datos de registro de toma de muestras de mercancías.
    * @returns Observable con los datos del formulario de registro.
    */
+  obtenerRegistroTomarMuestrasDatosQuimacs(): Observable<Tramite240117State> {
+    return this.httpServicios.get<Tramite240117State>(
+      'assets/json/240117/respuestaDeActualizacionDe.json'
+    );
+  }
   obtenerRegistroTomarMuestrasDatos(): Observable<Tramite240114State> {
     return this.httpServicios.get<Tramite240114State>(
       'assets/json/240114/respuestaDeActualizacionDe.json'

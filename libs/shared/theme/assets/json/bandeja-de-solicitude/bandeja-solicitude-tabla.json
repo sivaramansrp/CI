@@ -2034,6 +2034,24 @@
     "numeroDeProcedimiento": "240114"
   },
   {
+    "id": 260217,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260217"
+  },
+  {
+    "id": 240117,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SEDENA",
+    "numeroDeProcedimiento": "240117"
+  },
+  {
     "id": 260218,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
