@@ -277,4 +277,13 @@ this.tramite130302Query.selectExportarIlustraciones$
     this.destroyed$.next();
     this.destroyed$.complete();
   }
+
+  /**
+   * Maneja el cambio de fecha desde el control de fecha.
+   * @param nuevoValor Nueva fecha seleccionada.
+   */
+  onFechaCambiada(nuevoValor: string): void {
+    // Por defecto, actualiza prorrogaAl (ajustar si se requiere otro campo)
+    this.cambioFechaPago(nuevoValor);
+  }
 }
