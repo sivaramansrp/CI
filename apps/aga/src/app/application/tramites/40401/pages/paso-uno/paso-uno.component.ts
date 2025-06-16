@@ -1,4 +1,4 @@
-import { ConsultaioQuery, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
@@ -33,17 +33,22 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Índice del paso actual.
    */
   indice: number = 1;
-    /**
-   * Estado actual del trámite.
-   *
-   * Esta propiedad almacena el estado del trámite obtenido desde el store.
-   */
-    public tramiteState!: Tramite40401State;
+  /**
+ * Estado actual del trámite.
+ *
+ * Esta propiedad almacena el estado del trámite obtenido desde el store.
+ */
+  public tramiteState!: Tramite40401State;
 
   /**
    * Notificador para gestionar la destrucción de suscripciones y evitar fugas de memoria.
    */
   destroyNotifier$: Subject<void> = new Subject();
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+  
+  consultaDatos!: ConsultaioState;
 
   constructor(
     public store: Tramite40401Store,
@@ -62,6 +67,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.indice = i;
     this.store.setPestanaActiva(this.indice);
   }
+
   /**
    * Método del ciclo de vida `OnInit`.
    *
@@ -79,28 +85,40 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     this.indice = this.tramiteState.pestanaActiva;
 
     this.consultaQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$), 
-      map((seccionState) => {
-        // seccionState.update = true; // Asegura que se actualice el estado 
-        if( seccionState.update ) {
-          this.registroCaatAereoService
-            .obtenerCAATAereoData()
-            // .getDirectorGeneralData()
-            .pipe(takeUntil(this.destroyNotifier$))
-            .subscribe((data) => {
-              // Actualiza el estado del chofer40103Store con los datos del director general
-              this.Tramite40401Store.setPais(data.TipoDeCaatAereo);
-              this.Tramite40401Store.setCodigo(data.DodigoDeTransportacion);
-              this.Tramite40401Store.setTransportacion(data.EmpresaDeTransportacion);
-            });
-        }
-      })
-    )
-    .subscribe();
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          // seccionState.update = true; // Asegura que se actualice el estado 
+          this.consultaDatos = seccionState;
 
+        })
+      )
+      .subscribe();
+
+    if (this.consultaDatos.update) {
+      this.guardarDatosFormulario();
+    }else {
+      this.esDatosRespuesta = true;
+    }
   }
 
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.registroCaatAereoService
+        .obtenerCAATAereoData()
+        .pipe(takeUntil(this.destroyNotifier$))
+        .subscribe((data) => {
+          this.esDatosRespuesta = true;
+
+          // Actualiza el estado del chofer40103Store con los datos del director general
+          this.Tramite40401Store.setPais(data.TipoDeCaatAereo);
+          this.Tramite40401Store.setCodigo(data.DodigoDeTransportacion);
+          this.Tramite40401Store.setTransportacion(data.EmpresaDeTransportacion);
+        });
+  }
   /**
    * Método del ciclo de vida `OnDestroy`.
    *

@@ -192,6 +192,11 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     return this.validacionesService.isValid(form, field);
   }
 
+  /**
+   * Limpia el formulario de datos del trámite.
+   * Este método resetea el formulario a su estado inicial y actualiza los valores en el store
+   * para los campos 'pais', 'codigo' y 'transportacion'.
+   */
   limpiar(): void {
    this.datosDelTramiteForm.reset();
     this.setValoresStore(this.datosDelTramiteForm, 'pais', 'setPais');

@@ -26,8 +26,12 @@ export class RegistroCaatAereoService {
     return this.http.get<CatalogoLista>('assets/json/40401/pais.json');
   }
 
+  /**
+   * Fetches the CAAT Aereo data from a local JSON file.
+   *
+   * @returns {Observable<CaatAereoData>} An observable that emits the CAAT Aereo data.
+   */
   obtenerCAATAereoData(): Observable<CaatAereoData> {
     return this.http.get<CaatAereoData>('assets/json/40401/caat.aereo.data.json');
-  }
-  
+  } 
 }
