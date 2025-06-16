@@ -1,10 +1,10 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AfterViewInit } from '@angular/core';
+import { SectoresMercanciasService } from '../../../../shared/services/sectores-mercancias.service';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
-import { map, Subject, takeUntil } from 'rxjs';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { SectoresMercanciasService } from '../../../../shared/services/sectores-mercancias.service';
 /**
  * Componente que representa el primer paso del proceso de solicitud.
  * Contiene un componente de solicitante y permite la navegación entre tabs.
