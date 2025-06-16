@@ -11,3 +11,15 @@
 .ngx-bordered-table .datatable-row-group {
   border: 1px solid #dee2e6;
 }
+
+// .ngx-datatable.bootstrap {
+//   .datatable-header {
+//     .datatable-header-cell {
+//       font-weight: bolder !important;
+//     }
+//   }
+// }
+
+.datatable-header-cell {
+  font-weight: bold !important;
+}
