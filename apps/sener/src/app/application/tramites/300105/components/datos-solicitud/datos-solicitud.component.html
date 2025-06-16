@@ -5,11 +5,12 @@
       <div class="contenedor-de-mesa">
         <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosTablaMercancia"
           [tipoSeleccionTabla]="tipoSeleccionTabla"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
           (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"></app-tabla-dinamica>
       </div>
       <div class="row mt-3" style="padding-bottom: 20px; text-align: right">
         <div>
-          <button type="button" class="btn btn-primary me-2" (click)="mostrarFormularioMercanciaModal()">
+          <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="mostrarFormularioMercanciaModal()">
             Agregar
           </button>
           <button type="button" class="btn btn-default me-2" [disabled]="!enableModficarBoton"
@@ -19,7 +20,7 @@
           <button type="button" class="btn me-2"
             [ngClass]="{'btn-default': !enableEliminarBoton, 'btn-danger': enableEliminarBoton}"
             [disabled]="!enableEliminarBoton" (click)="confirmEliminarMercanciaItem()">Eliminar</button>
-            <button type="button" class="btn btn-primary me-2" (click)="mostrarFormularioMercanciaModal()">
+            <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="mostrarFormularioMercanciaModal()">
               Ver detalle
             </button>
         </div>
@@ -34,6 +35,7 @@
               formControlName="observaciones"
               class="form-control"
               rows="4"
+              (blur)="guardarObservaciones()" 
             ></textarea>
       </div>
     </div>
@@ -177,10 +179,10 @@
           </div>
           <div class="col-md-5 d-flex justify-content-start gap-1">
             <div class="form-group mt-auto">
-              <button type="button" class="btn btn-primary" (click)="enviarFormularioMercancia(true)">
+              <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="enviarFormularioMercancia(true)">
                 Agregar
               </button>
-              <button type="button" class="btn btn-default">Limpiar</button>
+              <button type="button" class="btn btn-default" [disabled]="esFormularioSoloLectura">Limpiar</button>
             </div>
           </div>
         </div>
@@ -193,17 +195,17 @@
             </div>
           </div>
           <div class="col-md-12 mt-3 d-flex justify-content-end gap-1">
-            <button type="button" class="btn btn-danger" (click)="alternarModalMercancia()">
+            <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura" (click)="alternarModalMercancia()">
               Eliminar
             </button>  
           </div>
         </div>
         <div class="row mt-5">
           <div class="col-md-12 d-flex justify-content-end gap-1">
-            <button type="button" class="btn btn-primary" (click)="enviarFormularioMercancia(false)">
+            <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura" (click)="enviarFormularioMercancia(false)">
               Guardar
             </button>
-            <button type="button" class="btn btn-danger" (click)="alternarModalMercancia()">
+            <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura" (click)="alternarModalMercancia()">
               Cancelar
             </button>        
           </div>

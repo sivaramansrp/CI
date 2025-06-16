@@ -14,18 +14,10 @@
     <div class="col-md-12">
       <br /><br />
       <div class="col-md-4">
-        <app-input-radio
-          [radioOptions]="radioOptions"
-          [isRequired]="true"
-          [layout]="'horizontal'"
-          [gap]="'493px'"
-          [isBold]="true"
-          [labelMargin]="'0px'"
-          formControlName="tipoBusqueda"
-          (change)="
+        <app-input-radio [radioOptions]="radioOptions" [isRequired]="true" [layout]="'horizontal'" [gap]="'493px'"
+          [isBold]="true" [labelMargin]="'0px'" formControlName="tipoBusqueda" (change)="
             setValoresStore(solicitudForm, 'tipoBusqueda', 'setTipoBusqueda')
-          "
-        ></app-input-radio>
+          "></app-input-radio>
       </div>
     </div>
   </div>
@@ -35,64 +27,45 @@
     <ng-container formGroupName="datosGenerales">
       <div class="row">
         <div class="col-md-4">
-          <app-catalogo-select
-            [catalogo]="options"
-            formControlName="aduana"
-            [label]="'Aduana/sección aduanera'"
-            [placeholder]="'Selecciona un valor'"
-            [required]="true"
+          <app-catalogo-select [catalogo]="options" formControlName="aduana" [label]="'Aduana/sección aduanera'"
+            [placeholder]="'Selecciona un valor'" [required]="true"
             (change)="setValoresStore(datosGenerales, 'aduana', 'setAduana')"
-          ></app-catalogo-select>
+            [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
       </div>
     </ng-container>
   </div>
- 
+
   <div id="seccionAduanaaFecha" *ngIf="seccionContenedor">
     <ng-titulo titulo="Datos del equipo" />
     <ng-container formGroupName="datosContenedor">
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="inicialesContenedor"
-              >Iniciales del equipo*:
+            <label class="form-label" for="inicialesContenedor">Iniciales del equipo*:
             </label>
-            <input
-              type="text"
-              class="form-control"
-              id="inicialesContenedor"
-              required="true"
-              formControlName="inicialesContenedor"
-              (change)="
+            <input type="text" class="form-control" id="inicialesContenedor" required="true"
+              formControlName="inicialesContenedor" (change)="
                 setValoresStore(
                   datosContenedor,
                   'inicialesContenedor',
                   'setInicialesContenedor'
                 )
-              "
-            />
+              " />
           </div>
         </div>
 
         <div class="col-md-4">
           <div class="form-group">
-            <label class="form-label" for="numeroContenedor"
-              >Datos del equipo*:</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="numeroContenedor"
-              required="true"
-              formControlName="numeroContenedor"
-              (change)="
+            <label class="form-label" for="numeroContenedor">Datos del equipo*:</label>
+            <input type="text" class="form-control" id="numeroContenedor" required="true"
+              formControlName="numeroContenedor" (change)="
                 setValoresStore(
                   datosContenedor,
                   'numeroContenedor',
                   'setNumeroContenedor'
                 )
-              "
-            />
+              " />
           </div>
         </div>
       </div>
@@ -101,22 +74,12 @@
         <div class="row">
           <div class="col-md-12">
             <div class="form-group pull-right">
-              <button
-                type="button"
-                name="limpiar"
-                id="limpiar"
-                class="btn btn-default"
-                (click)="limpiarCampos()"
-              >
+              <button type="button" name="limpiar" id="limpiar" class="btn btn-default" (click)="limpiarCampos()"
+                [disabled]="soloLectura">
                 Limpiar
               </button>
-              <button
-                type="button"
-                name="buscar"
-                id="buscar"
-                class="btn btn-primary mr-3"
-                (click)="datosCaptura()"
-              >
+              <button type="button" name="buscar" id="buscar" class="btn btn-primary mr-3" (click)="datosCaptura()"
+                [disabled]="soloLectura">
                 Buscar
               </button>
             </div>
@@ -125,31 +88,21 @@
       </div>
       <div class="row">
         <div class="col-md-4">
-          <app-catalogo-select
-            [catalogo]="options"
-            formControlName="tipoContenedor"
-            [label]="'Tipo de Contenedor:'"
-            [required]="true"
-            (change)="
+          <app-catalogo-select [catalogo]="options" formControlName="tipoContenedor" [label]="'Tipo de Contenedor:'"
+            [required]="true" (change)="
               setValoresStore(
                 datosContenedor,
                 'tipoContenedor',
                 'setTipoContenedor'
               )
-            "
-          ></app-catalogo-select>
+            " [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
       </div>
       <div class="row">
         <div class="col-md-8">
           <div class="form-group pull-right">
-            <button
-              type="button"
-              name="agregar"
-              id="agregar"
-              class="btn btn-primary"
-              (click)="agregarAGrid()"
-            >
+            <button type="button" name="agregar" id="agregar" class="btn btn-primary" (click)="agregarAGrid()"
+              [disabled]="soloLectura">
               Agregar
             </button>
           </div>
@@ -159,9 +112,8 @@
     <div class="col-md-12 mt-5" id="idGridContenedoresRC">
       <div class="table-responsive">
         <div class="innercontainer">
-          <app-tabla-dinamica [configuracionTabla]="gridContenedores"
-          [datos]="contenedores"></app-tabla-dinamica>
-          </div>
+          <app-tabla-dinamica [configuracionTabla]="gridContenedores" [datos]="contenedores"></app-tabla-dinamica>
+        </div>
       </div>
       <nav aria-label="Page navigation example">
         <ul class="pagination d-flex justify-content-center mb-3">
@@ -170,55 +122,32 @@
       </nav>
     </div>
 
-    <div *ngIf="exceptionCaught">
+    <div *ngIf="exceptionCaught && consultaDatos.create">
       <div class="row" style="margin-top: 30px">
         <div class="form-group">
           <div class="col-md-12">
-            <div
-              class="pull-left text-muted text-vertical-align-button"
-              id="lblCamposObligatorios"
-            >
+            <div class="pull-left text-muted text-vertical-align-button" id="lblCamposObligatorios">
               Faltan campos por capturar.
             </div>
             <br /><br />
             <div style="margin-top: -50px" class="pull-right">
               <div class="col-md-3">
-                <button
-                  type="button"
-                  name="cancelarTramite"
-                  id="cancelarTramite"
-                  class="btn btn-danger"
-                  (click)="openModalCancelarTramite()"
-                >
+                <button type="button" name="cancelarTramite" id="cancelarTramite" class="btn btn-danger"
+                  (click)="openModalCancelarTramite()">
                   Cancelar
                 </button>
               </div>
               <div class="col-md-3">
-                <button
-                  *ngIf="actionBean.requiereGuardadoParcial"
-                  type="button"
-                  name="guardarParcial"
-                  id="guardarSolicitudParcial"
-                  class="btn btn-default"
-                  (click)="tabSeleccionado()"
-                >
+                <button *ngIf="actionBean.requiereGuardadoParcial" type="button" name="guardarParcial"
+                  id="guardarSolicitudParcial" class="btn btn-default" (click)="tabSeleccionado()">
                   Guardar
                 </button>
               </div>
               <div class="col-md-3">
-                <button
-                  type="submit"
-                  name="guardar"
-                  id="guardarSolicitud"
-                  class="btn btn-primary"
-                >
+                <button type="submit" name="guardar" id="guardarSolicitud" class="btn btn-primary">
                   Continuar
                 </button>
-                <input
-                  type="hidden"
-                  formControlName="idSolicitud"
-                  id="idSolicitud"
-                />
+                <input type="hidden" formControlName="idSolicitud" id="idSolicitud" />
               </div>
             </div>
           </div>
@@ -231,52 +160,31 @@
     <div class="row mb-3">
       <div class="col-md-4">
         <ng-titulo titulo="Adjuntar archivo" />
-        <label for="archivoSeleccionado" class="form-label"
-          >Archivo Seleccionado*:</label
-        >
-        <input
-          class="form-control"
-          type="file"
-          name="archivoSeleccionado"
-          id="archivoSeleccionado"
-          required
-        />
+        <label for="archivoSeleccionado" class="form-label">Archivo Seleccionado*:</label>
+        <input class="form-control" type="file" name="archivoSeleccionado" id="archivoSeleccionado" required
+          [disabled]="soloLectura" />
       </div>
       <div class="col-md-4 d-flex justify-content-end" style="width: 100%">
-        <button
-          type="button"
-          class="btn btn-default"
-          (click)="adjuntarArchivo()"
-        >
+        <button type="button" class="btn btn-default" (click)="adjuntarArchivo()" [disabled]="soloLectura">
           Cargar Archivo
         </button>
       </div>
-      <div *ngIf="showArchivoSeleccionadoTable" >
-        <app-tabla-dinamica [configuracionTabla]="encabezadoDeTabla"
-          [datos]="datosTabla"></app-tabla-dinamica>
+      <div *ngIf="showArchivoSeleccionadoTable">
+        <app-tabla-dinamica [configuracionTabla]="encabezadoDeTabla" [datos]="datosTabla"></app-tabla-dinamica>
       </div>
       <div class="col-md-4">
         <ng-titulo titulo="Cargar Archivo" />
-        <label for="cargarArchivo" class="form-label"
-          >Archivo Seleccionado*:</label
-        >
-        <input
-          class="form-control"
-          type="file"
-          name="cargarArchivo"
-          id="cargarArchivo"
-          required
-        />
+        <label for="cargarArchivo" class="form-label">Archivo Seleccionado*:</label>
+        <input class="form-control" type="file" name="cargarArchivo" id="cargarArchivo" required
+          [disabled]="soloLectura" />
       </div>
       <div class="col-md-4 d-flex justify-content-end" style="width: 100%">
-        <button type="button" class="btn btn-default" (click)="Archivo()">
+        <button type="button" class="btn btn-default" (click)="Archivo()" [disabled]="soloLectura">
           Enviar
         </button>
       </div>
       <div *ngIf="showCargarArchivoTable">
-        <app-tabla-dinamica [configuracionTabla]="encabezadoDeTabla"
-                        [datos]="datosTabla"></app-tabla-dinamica>
-       
+        <app-tabla-dinamica [configuracionTabla]="encabezadoDeTabla" [datos]="datosTabla"></app-tabla-dinamica>
       </div>
     </div>
   </div>
@@ -288,12 +196,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="archivo">Archivo:</label>
-            <input
-              type="file"
-              class="form-control"
-              id="archivo"
-              formControlName="archivo"
-            />
+            <input type="file" class="form-control" id="archivo" formControlName="archivo" />
           </div>
         </div>
       </div>
