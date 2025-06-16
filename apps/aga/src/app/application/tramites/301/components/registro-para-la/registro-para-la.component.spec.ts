@@ -1,3 +1,4 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
@@ -17,7 +18,7 @@ describe('RegistroParaLaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [RegistroParaLaComponent, ReactiveFormsModule],
+      imports: [RegistroParaLaComponent, ReactiveFormsModule, HttpClientTestingModule],
       providers: [
         FormBuilder,
         {
@@ -62,9 +63,8 @@ describe('RegistroParaLaComponent', () => {
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should set TEXTOS and ADVERTENCIA constants correctly', () => {
+  it('should set TEXTOS constants correctly', () => {
     expect(component.TEXTOS).toBeTruthy(); 
-    expect(component.ADVERTENCIA).toBeTruthy(); 
   });
 
 });

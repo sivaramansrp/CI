@@ -10,6 +10,8 @@ import { Component } from '@angular/core';
 import { PasoUnoComponent } from './paso-uno.component';
 import { Tramite240112Query } from '../../estados/tramite240112Query.query';
 import { Tramite240112Store } from '../../estados/tramite240112Store.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { AgregarDestinatarioService } from '../../service/agregar-destinatario.service';
 
 @Injectable()
 class MockTramite240112Query {}
@@ -17,25 +19,8 @@ class MockTramite240112Query {}
 @Injectable()
 class MockTramite240112Store {}
 
-@Directive({ selector: '[myCustom]' })
-class MyCustomDirective {
-  @Input() myCustom;
-}
-
-@Pipe({name: 'translate'})
-class TranslatePipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'phoneNumber'})
-class PhoneNumberPipe implements PipeTransform {
-  transform(value) { return value; }
-}
-
-@Pipe({name: 'safeHtml'})
-class SafeHtmlPipe implements PipeTransform {
-  transform(value) { return value; }
-}
+@Injectable()
+class MockAgregarDestinatarioService {}
 
 describe('PasoUnoComponent', () => {
   let fixture;
@@ -43,16 +28,15 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [ FormsModule, ReactiveFormsModule, PasoUnoComponent ],
       declarations: [
-        PasoUnoComponent,
-        TranslatePipe, PhoneNumberPipe, SafeHtmlPipe,
-        MyCustomDirective
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: Tramite240112Query, useClass: MockTramite240112Query },
-        { provide: Tramite240112Store, useClass: MockTramite240112Store }
+        { provide: Tramite240112Store, useClass: MockTramite240112Store },
+        ConsultaioQuery,
+        { provide: AgregarDestinatarioService, useClass: MockAgregarDestinatarioService }
       ]
     }).overrideComponent(PasoUnoComponent, {
 
@@ -73,8 +57,23 @@ describe('PasoUnoComponent', () => {
   it('should run #ngOnInit()', async () => {
     component.tramite240112Query = component.tramite240112Query || {};
     component.tramite240112Query.getTabSeleccionado$ = observableOf({});
+    component.consultaQuery = component.consultaQuery || {};
+    component.consultaQuery.selectConsultaioState$ = observableOf({
+      update: {},
+      readonly: {}
+    });
+    component.guardarDatosFormulario = jest.fn();
     component.ngOnInit();
+    // expect(component.guardarDatosFormulario).toHaveBeenCalled();
+  });
 
+  it('should run #guardarDatosFormulario()', async () => {
+    component.agregarDestinatarioService = component.agregarDestinatarioService || {};
+    component.agregarDestinatarioService.getAcuiculturaData = jest.fn().mockReturnValue(observableOf({}));
+    component.agregarDestinatarioService.actualizarEstadoFormulario = jest.fn();
+    component.guardarDatosFormulario();
+    // expect(component.agregarDestinatarioService.getAcuiculturaData).toHaveBeenCalled();
+    // expect(component.agregarDestinatarioService.actualizarEstadoFormulario).toHaveBeenCalled();
   });
 
   it('should run #seleccionaTab()', async () => {

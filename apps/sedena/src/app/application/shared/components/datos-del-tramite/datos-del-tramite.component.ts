@@ -381,16 +381,16 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     funcion?: () => void;
   }[];
 
-/**
- * Constructor del componente `DatosDelTramiteComponent`.
- * Inicializa los servicios necesarios para la creación de formularios reactivos, navegación relativa,
- * y consulta de estado de la aplicación.
- *
- * @param {FormBuilder} fb - Servicio para crear formularios reactivos.
- * @param {ActivatedRoute} activatedRoute - Ruta activa utilizada para navegación relativa.
- * @param {Router} router - Servicio de enrutamiento para manejar la navegación entre vistas.
- * @param {ConsultaioQuery} consultaioQuery - Servicio para consultar el estado de la aplicación.
- */
+  /**
+   * Constructor del componente `DatosDelTramiteComponent`.
+   * Inicializa los servicios necesarios para la creación de formularios reactivos, navegación relativa,
+   * y consulta de estado de la aplicación.
+   *
+   * @param {FormBuilder} fb - Servicio para crear formularios reactivos.
+   * @param {ActivatedRoute} activatedRoute - Ruta activa utilizada para navegación relativa.
+   * @param {Router} router - Servicio de enrutamiento para manejar la navegación entre vistas.
+   * @param {ConsultaioQuery} consultaioQuery - Servicio para consultar el estado de la aplicación.
+   */
   constructor(
     private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
@@ -419,7 +419,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     }
   }
 
-    /**
+  /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */

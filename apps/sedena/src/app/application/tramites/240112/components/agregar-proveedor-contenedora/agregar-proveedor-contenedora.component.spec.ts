@@ -3,6 +3,8 @@ import { AgregarProveedorContenedoraComponent } from './agregar-proveedor-conten
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 describe('AgregarProveedorContenedoraComponent', () => {
   let component: AgregarProveedorContenedoraComponent;
@@ -10,8 +12,8 @@ describe('AgregarProveedorContenedoraComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations:[AgregarProveedorContenedoraComponent],
-      imports: [HttpClientTestingModule,AgregarProveedorComponent],
+      declarations:[],
+      imports: [HttpClientTestingModule,AgregarProveedorComponent, AgregarProveedorContenedoraComponent, ReactiveFormsModule,FormsModule,CommonModule],
       providers: [DatosSolicitudService],
     }).compileComponents();
 
