@@ -40,69 +40,69 @@ export class CertificadosComponent implements OnInit, OnDestroy {
    * @description
    * Indica si la tabla principal debe mostrarse o no.
    */
-  showTableDiv = true;
+public showTableDiv = true;
 
   /**
    * @property showFitosanitariosModal
    * @description
    * Indica si el modal de certificados fitosanitarios debe mostrarse o no.
    */
-  showFitosanitariosModal = false;
+public showFitosanitariosModal = false;
 
   /**
    * @property showAutorizacionesModal
    * @description
    * Indica si el modal de autorizaciones debe mostrarse o no.
    */
-  showAutorizacionesModal = false;
+public showAutorizacionesModal = false;
 
   /**
    * @property tablaCertificadosData
    * @description
    * Datos relacionados con la tabla de certificados.
    */
-  tablaCertificadosData: string[] = [];
+public tablaCertificadosData: string[] = [];
 
   /**
    * @property tablaFitosanitoriosData
    * @description
    * Datos relacionados con la tabla de certificados fitosanitarios.
    */
-  tablaFitosanitoriosData: string[] = [];
+public tablaFitosanitoriosData: string[] = [];
 
   /**
    * @property tablaPermisoCertificadosData
    * @description
    * Datos relacionados con la tabla de permisos de certificados.
    */
-  tablaPermisoCertificadosData: string[] = [];
+public tablaPermisoCertificadosData: string[] = [];
 
  /**
    * @property tablaCertificadosFilaDatos
    * @description
    * Datos relacionados con la tabla de permisos de certificados fila.
    */
-  tablaCertificadosFilaDatos: TablaDatos[]=[];
+public tablaCertificadosFilaDatos: TablaDatos[]=[];
   /**
    * @property   tablaFitosanitoriosFilaDatos
 
    * @description
    * Datos relacionados con la tabla de permisos de certificados fito sanitorios fila.
    */
-  tablaFitosanitoriosFilaDatos: TablaDatos[]=[];
+ public tablaFitosanitoriosFilaDatos: TablaDatos[]=[];
     /**
    * @property   tablaPermisoCertificadosFilaDatos
 
    * @description
    * Datos relacionados con la tabla de permisos de certificados fito permiso certificados fila.
    */
-  tablaPermisoCertificadosFilaDatos: TablaDatos[]=[];
+ public tablaPermisoCertificadosFilaDatos: TablaDatos[]=[];
 
   /**
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
-   esFormularioSoloLectura: boolean = false;
+  public esFormularioSoloLectura: boolean = false;
 
   /**
  * Notificador para destruir suscripciones al destruir el componente.
@@ -174,7 +174,7 @@ export class CertificadosComponent implements OnInit, OnDestroy {
    * @description
    * Alterna la visibilidad de la tabla principal y el modal de certificados fitosanitarios.
    */
-  cambiarCertificadosFitosanitarios(): void {
+ public cambiarCertificadosFitosanitarios(): void {
     this.showTableDiv = !this.showTableDiv;
     this.showFitosanitariosModal = !this.showFitosanitariosModal;
   }
@@ -184,7 +184,7 @@ export class CertificadosComponent implements OnInit, OnDestroy {
    * @description
    * Alterna la visibilidad de la tabla principal y el modal de autorizaciones.
    */
-  cambiarCertificadosAutorizaciones(): void {
+ public cambiarCertificadosAutorizaciones(): void {
     this.showTableDiv = !this.showTableDiv;
     this.showAutorizacionesModal = !this.showAutorizacionesModal;
   }

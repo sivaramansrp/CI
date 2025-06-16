@@ -45,25 +45,25 @@ export class MercanciasComponent implements OnInit, OnDestroy {
    * Indica si el modal para agregar mercancías está visible o no.
    * @type {boolean}
    */
-  showMercanciasModal = false;
+ public showMercanciasModal = false;
   
   /**
  * Configuración de columnas para la tabla de productos.
  * Basada en una constante que define el formato y comportamiento de cada columna.
  */
-  configuracionTabla: ConfiguracionColumna<Producto>[] = CONFIGURATION_TABLA;
+ public configuracionTabla: ConfiguracionColumna<Producto>[] = CONFIGURATION_TABLA;
   
   /**
  * Configuración de columnas para la tabla de mercancías.
  * Utiliza una constante predefinida con el formato de cada columna.
  */
-  configuracionMercanciasTabla: ConfiguracionColumna<Detalle>[] = CONFIGURATION_TABLA_MERCANCIAS;
+ public configuracionMercanciasTabla: ConfiguracionColumna<Detalle>[] = CONFIGURATION_TABLA_MERCANCIAS;
 
   /**
  * Formulario reactivo para gestionar los datos de las mercancías.
  * Contiene los controles y validaciones relacionados con el trámite.
  */
-  formMercancias!: FormGroup;
+ public formMercancias!: FormGroup;
   /**
    * Configuración de las columnas de la tabla de exportadores.
    * Define el encabezado, clave y el orden de las columnas para la tabla de exportadores.
@@ -72,40 +72,40 @@ export class MercanciasComponent implements OnInit, OnDestroy {
   /**
  * Catálogo de descripciones. Usado para seleccionar la descripción de la mercancía.
  */
-descripcion: Catalogo[] =catalogoDatos.descripcion;
+public descripcion: Catalogo[] =catalogoDatos.descripcion;
 /**
  * Catálogo de fracciones arancelarias. Se utiliza para seleccionar la fracción correspondiente.
  */
-fraccion: Catalogo[] = catalogoDatos.fraccion;
+public fraccion: Catalogo[] = catalogoDatos.fraccion;
 /**
  * Catálogo de unidades de medida. Permite seleccionar la unidad en la que se mide la mercancía.
  */
-medida: Catalogo[] = catalogoDatos.medida;
+public medida: Catalogo[] = catalogoDatos.medida;
 /**
  * Catálogo de géneros. Se usa para seleccionar el género biológico de la especie.
  */
-genero: Catalogo[] = catalogoDatos.genero;
+public genero: Catalogo[] = catalogoDatos.genero;
 /**
  * Catálogo de especies. Permite seleccionar la especie correspondiente del producto.
  */
-especie: Catalogo[] = catalogoDatos.especie;
+public especie: Catalogo[] = catalogoDatos.especie;
 /**
  * Catálogo de nombres comunes. Se utiliza para seleccionar el nombre común de la especie o mercancía.
  */
-comun: Catalogo[] =catalogoDatos.comun;
+public comun: Catalogo[] =catalogoDatos.comun;
 
 /**
  * Catálogo del origen de la mercancía. Indica si es nacional o extranjero, entre otras opciones.
  */
-origen: Catalogo[] = catalogoDatos.origen;
+public origen: Catalogo[] = catalogoDatos.origen;
 /**
  * Catálogo de procedencias. Describe el lugar de origen más específico de la mercancía (ej. país, región).
  */
-procedencia: Catalogo[] = catalogoDatos.procedencia;
+public procedencia: Catalogo[] = catalogoDatos.procedencia;
 /**
  * Lista de productos agregados por el usuario. Cada elemento representa una mercancía distinta.
  */
-  producto: Producto[] = [];
+ public producto: Producto[] = [];
  /**
  * Arreglo que almacena los detalles de las fracciones de mercancías.
  * 
@@ -113,7 +113,7 @@ procedencia: Catalogo[] = catalogoDatos.procedencia;
  * @description Este arreglo se llena con los datos de las fracciones arancelarias de las mercancías 
  * que se van a procesar o que se encuentran registradas en el sistema.
  */
-fraccionData: Detalle[] = [];
+public fraccionData: Detalle[] = [];
 
 /**
  * Estado de la solicitud que contiene información relevante sobre el trámite.
@@ -264,7 +264,7 @@ public guardarDatosFormulario(): void {
    * 
    * @returns {void}
    */
-  detalleData(): void {
+ public detalleData(): void {
     if (!this.formMercancias) {return}
     const DETALLE_FORMDATA = {
       fraccionArancelaria: this.fraccion.find(item => item.id === Number(this.formMercancias.value.fraccion))?.descripcion,
@@ -303,7 +303,7 @@ public guardarDatosFormulario(): void {
    * 
    * @returns {void}
    */
-  detalleCancelar(): void {
+ public detalleCancelar(): void {
     // Muestra u oculta el modal de mercancías
     this.showMercanciasModal = !this.showMercanciasModal;
   }
@@ -312,7 +312,7 @@ public guardarDatosFormulario(): void {
    * 
    * @returns {void}
    */
-  detalleGuardar(): void {
+ public detalleGuardar(): void {
     const PRODUCTO_FORMDATA = {
       descripcion: this.descripcion.find(item => item.id === Number(this.formMercancias.value.descripcion))?.descripcion,
     }

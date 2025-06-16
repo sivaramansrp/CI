@@ -33,12 +33,12 @@ export class Requisitos250101Component implements OnInit, OnDestroy {
   /**
    * Catálogo de medios de transporte.
    */
-  medio: Catalogo[] =catalogoDatos.medio
+  public medio: Catalogo[] =catalogoDatos.medio
 
   /**
    * Catálogo de requisitos.
    */
-  requisitoCatalogo: Catalogo[] = catalogoDatos.requisito;
+  public requisitoCatalogo: Catalogo[] = catalogoDatos.requisito;
 
   /**
    * Tipo de selección para las tablas.
@@ -48,32 +48,32 @@ export class Requisitos250101Component implements OnInit, OnDestroy {
   /**
    * Configuración de la tabla de transporte.
    */
-  configuracionTransporteTabla: ConfiguracionColumna<Transporte>[] = CONFIGURATION_TABLA_TRANSPORTE;
+  public configuracionTransporteTabla: ConfiguracionColumna<Transporte>[] = CONFIGURATION_TABLA_TRANSPORTE;
 
   /**
    * Datos de la tabla de transporte.
    */
-  TransporteTabla: Transporte[] = [];
+  public TransporteTabla: Transporte[] = [];
 
   /**
    * Configuración de la tabla de requisitos.
    */
-  configuracionRequisitosTabla: ConfiguracionColumna<Requisito>[] = CONFIGURATION_TABLA_REQUISITOS;
+  public configuracionRequisitosTabla: ConfiguracionColumna<Requisito>[] = CONFIGURATION_TABLA_REQUISITOS;
 
   /**
    * Datos de la tabla de requisitos.
    */
-  RequisitosTabla: Requisito[] = [];
+  public RequisitosTabla: Requisito[] = [];
 
   /**
    * Estado de visibilidad del modal de transporte.
    */
-  showtransporteModal = false;
+  public showtransporteModal = false;
 
   /**
    * Estado de visibilidad del modal de requisitos.
    */
-  showrequisitosModal = false;
+  public showrequisitosModal = false;
 
   /**
    * Formulario de transporte y requisitos.

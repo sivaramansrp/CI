@@ -118,7 +118,7 @@ export class DestinatarioAgenteAduanalComponent implements OnInit, OnDestroy {
  * 
  * @type {boolean}
  */
-  showTableDiv = true;
+public showTableDiv = true;
   /**
  * Controla la visibilidad del modal para ingresar datos del destinatario.
  * Si `true`, el modal del destinatario será visible.
@@ -126,7 +126,7 @@ export class DestinatarioAgenteAduanalComponent implements OnInit, OnDestroy {
  * 
  * @type {boolean}
  */
-  showDestinatarioModal = false;
+ public showDestinatarioModal = false;
   /**
  * Controla la visibilidad del modal para ingresar datos del agente aduanal.
  * Si `true`, el modal del agente aduanal será visible.
@@ -134,7 +134,7 @@ export class DestinatarioAgenteAduanalComponent implements OnInit, OnDestroy {
  * 
  * @type {boolean}
  */
-  showAgenteModal = false;
+ public showAgenteModal = false;
   /**
  * Controla la visibilidad del modal de aceptación.
  * Si `true`, el modal de aceptación será visible.
@@ -142,7 +142,7 @@ export class DestinatarioAgenteAduanalComponent implements OnInit, OnDestroy {
  * 
  * @type {boolean}
  */
-  showAceptarModal = false;
+ public showAceptarModal = false;
   /**
  * Variable que almacena las opciones de botones de radio disponibles para el destinatario, 
  * definidas en la constante `DESTINATARIO_OPCIONES_DE_BOTON_DE_RADIO`. 
@@ -150,7 +150,7 @@ export class DestinatarioAgenteAduanalComponent implements OnInit, OnDestroy {
  * @type {typeof DESTINATARIO_OPCIONES_DE_BOTON_DE_RADIO}
  */
 
-  destinatarioOpcionDeBotonDeRadio = DESTINATARIO_OPCIONES_DE_BOTON_DE_RADIO;
+ public destinatarioOpcionDeBotonDeRadio = DESTINATARIO_OPCIONES_DE_BOTON_DE_RADIO;
 /**
  * Formulario reactivo para gestionar los datos ingresados en el modal del destinatario, 
  * utilizado para validar y almacenar la información proporcionada por el usuario.
@@ -167,37 +167,37 @@ export class DestinatarioAgenteAduanalComponent implements OnInit, OnDestroy {
  * Almacena los datos de los países obtenidos del catálogo, representados como una lista de objetos `Catalogo`.
  * @type {Catalogo[]}
  */
-  paisData: Catalogo[] = [];
+ public paisData: Catalogo[] = [];
   /**
  * Almacena los datos de los estados obtenidos del catálogo, representados como una lista de objetos `Catalogo`.
  * @type {Catalogo[]}
  */
-  estadoData: Catalogo[] = [];
+ public estadoData: Catalogo[] = [];
   /**
  * Almacena las columnas de la tabla del destinatario, representadas como una lista de cadenas de texto (`string[]`).
  * @type {string[]}
  */
-  tablaDestinatarioData: string[] = [];
+ public tablaDestinatarioData: string[] = [];
   /**
  * Almacena las columnas de la tabla del agente aduanal, representadas como una lista de cadenas de texto (`string[]`).
  * @type {string[]}
  */
-  tablaAgenteAduanalData: string[] = [];
+ public tablaAgenteAduanalData: string[] = [];
 /**
  * Almacena los datos de las filas de la tabla del destinatario, representados como una lista de objetos `TablaDatos`.
  * @type {TablaDatos[]}
  */
-  tablaDestinatarioFilaDatos: TablaDatos[] = [];
+ public tablaDestinatarioFilaDatos: TablaDatos[] = [];
   /**
  * Almacena los datos de las filas de la tabla del agente aduanal, representados como una lista de objetos `TablaDatos`.
  * @type {TablaDatos[]}
  */
-  tablaAgenteAduanaFilaDatos: TablaDatos[] = [];
+ public tablaAgenteAduanaFilaDatos: TablaDatos[] = [];
  /**
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
-   esFormularioSoloLectura: boolean = false;
+  public esFormularioSoloLectura: boolean = false;
 
    /** Estado actual del trámite 270201 asociado a la solicitud. 
    * Contiene datos del flujo y validaciones del proceso. */
@@ -312,9 +312,6 @@ export class DestinatarioAgenteAduanalComponent implements OnInit, OnDestroy {
      * Este método se encarga de inicializar y configurar el formulario específico para el modal del agente aduanal.
      */
     this.establecerFormAgenteAduanal();
-
-    /** Llama al método que configura el formulario según el estado de solo lectura. */
-    this.inicializarEstadoFormulario();
   }
 
    /**
@@ -368,7 +365,7 @@ private guardarDatosFormulario(): void {
  * Este método alterna el estado de las variables `showTableDiv` y `showDestinatarioModal`, 
  * lo que permite mostrar u ocultar la tabla y el modal de destinatario según sea necesario.
  */
-  cambiarDestinatario(): void {
+ public cambiarDestinatario(): void {
     this.showTableDiv = !this.showTableDiv;
     this.showDestinatarioModal = !this.showDestinatarioModal;
   }
@@ -377,7 +374,7 @@ private guardarDatosFormulario(): void {
  * Este método alterna el estado de las variables `showTableDiv` y `showAgenteModal`, 
  * lo que permite mostrar u ocultar la tabla y el modal del agente aduanal según sea necesario.
  */
-  cambiarAgenteAduanal(): void {
+ public cambiarAgenteAduanal(): void {
     this.showTableDiv = !this.showTableDiv;
     this.showAgenteModal = !this.showAgenteModal;
   }
@@ -396,7 +393,7 @@ private guardarDatosFormulario(): void {
  * - `codigoPostalDestinatario`: Campo de texto para el código postal, con validación de longitud máxima y obligatoriedad.
  * - `domicilioDestinatario`: Campo de texto para el domicilio del destinatario, con validación de obligatoriedad.
  */
-  establecerFormDestinatariosModal(): void {
+ private establecerFormDestinatariosModal(): void {
 
    /** Suscribe al estado de solicitud 40302 y lo asigna a `solicitudState`.  
     * Usa `takeUntil` para limpiar la suscripción al destruir el componente. */
@@ -447,7 +444,7 @@ private guardarDatosFormulario(): void {
  * - `segundoApellidoAgenteAduanal`: Campo de texto para el segundo apellido del agente aduanal, con validación de obligatoriedad y longitud máxima.
  * - `patenteAgenteAduanal`: Campo de texto para la patente del agente aduanal, con validación de obligatoriedad y longitud máxima.
  */
-  establecerFormAgenteAduanal(): void {
+ private establecerFormAgenteAduanal(): void {
    /** Suscribe al estado de solicitud 40302 y lo asigna a `solicitudState`.  
     * Usa `takeUntil` para limpiar la suscripción al destruir el componente. */
     this.tramite250101Query.selectSolicitud$
@@ -495,7 +492,7 @@ private guardarDatosFormulario(): void {
  * mientras oculta el modal de destinatario. Es útil para flujos de trabajo que requieren
  * una confirmación antes de proceder con la acción.
  */
-  openAceptarModal(): void {
+ public openAceptarModal(): void {
     this.showDestinatarioModal = !this.showDestinatarioModal;
     this.showAceptarModal = true;
   }
@@ -508,7 +505,7 @@ private guardarDatosFormulario(): void {
  * Se utiliza para confirmar la adición de un destinatario, enviando el formulario con los datos 
  * ingresados y cerrando el modal de aceptación para continuar con el flujo de trabajo.
  */
-  confirmAgregar(): void {
+ public confirmAgregar(): void {
     this.enviarDestinatarioFormulario();
     this.showAceptarModal = false;
   }
@@ -523,7 +520,7 @@ private guardarDatosFormulario(): void {
  * Utiliza las opciones disponibles en los catálogos de países y estados para obtener las descripciones 
  * correspondientes y luego procesa o envía estos valores como parte del formulario de destinatario.
  */
-  enviarDestinatarioFormulario(): void {
+ public enviarDestinatarioFormulario(): void {
     const PAIS_VALOR = this.paisData.find(
       (item: Catalogo) =>
         item.id === this.formDestinatariosModal.value.paisNacionalDestinatario
@@ -557,7 +554,7 @@ private guardarDatosFormulario(): void {
  * Envía los datos del formulario de agente aduanal, agrega la nueva fila al arreglo `tablaAgenteAduanaFilaDatos`,
  * actualiza el store con `setAgenteAduanal`, y alterna la visibilidad de la tabla y el modal.
  */
-  enviarAgenteAduanalFormulario(): void {
+ public enviarAgenteAduanalFormulario(): void {
     const AGENTE_ADUANAL_FILA = {
       tbodyData: [
         this.formAgenteAduanal.value.nombreAgenteAduanal,

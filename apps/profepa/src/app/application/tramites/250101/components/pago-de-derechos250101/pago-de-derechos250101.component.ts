@@ -124,18 +124,11 @@ export class PagoDeDerechos250101Component implements OnInit, OnDestroy {
     .pipe(takeUntil(this.destroyNotifier$))
     .subscribe((seccionState) => {
       this.esFormularioSoloLectura = seccionState.readonly;
+      if(!this.pagoDerechosForm) {
+        this.inicializarFormulario();
+      }
       this.inicializarEstadoFormulario();
     });
-
-  /**
- * Configura la estructura del formulario y define sus controles con sus validaciones iniciales.
- */
-    this.inicializarFormulario();
-
-  /**
- * Establece el estado inicial del formulario, como habilitar o deshabilitar campos según condiciones.
- */
-    this.inicializarEstadoFormulario();
   }
 
 
@@ -151,7 +144,7 @@ export class PagoDeDerechos250101Component implements OnInit, OnDestroy {
        this.pagoDerechosForm.enable();
        this.pagoDerechosForm.get('clave')?.disable();
        this.pagoDerechosForm.get('dependencia')?.disable();
-      this.pagoDerechosForm.get('importe')?.disable()
+       this.pagoDerechosForm.get('importe')?.disable()
     }
   }
 

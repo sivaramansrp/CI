@@ -54,28 +54,28 @@ export class TipoMovimientoComponent implements OnInit, OnDestroy {
    * @description
    * Datos relacionados con las opciones de aduana.
    */
-  aduanaData: Catalogo[] = [];
+  public aduanaData: Catalogo[] = [];
 
   /**
    * @property inspectoriaData
    * @description
    * Datos relacionados con las opciones de inspectoría.
    */
-  inspectoriaData: Catalogo[] = [];
+  public inspectoriaData: Catalogo[] = [];
 
   /**
    * @property municipioData
    * @description
    * Datos relacionados con las opciones de municipio.
    */
-  municipioData: Catalogo[] = [];
+  public municipioData: Catalogo[] = [];
 
   /**
    * @property movimientoOpcionDeBotonDeRadio
    * @description
    * Opciones predefinidas para el tipo de movimiento.
    */
-  movimientoOpcionDeBotonDeRadio = MOVIMIENTO_OPCIONES_DE_BOTON_DE_RADIO;
+  public movimientoOpcionDeBotonDeRadio = MOVIMIENTO_OPCIONES_DE_BOTON_DE_RADIO;
 
   /**
    * @property tipoMovimientoForm
@@ -88,7 +88,7 @@ export class TipoMovimientoComponent implements OnInit, OnDestroy {
   * Indica si el formulario está en modo solo lectura.
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
-   esFormularioSoloLectura: boolean = false;
+  public esFormularioSoloLectura: boolean = false;
 
    /** Estado actual del trámite 270201 asociado a la solicitud. 
    * Contiene datos del flujo y validaciones del proceso. */
@@ -142,15 +142,18 @@ export class TipoMovimientoComponent implements OnInit, OnDestroy {
 
     this.establecerTipoMovimientoFormGroup(); // Configura el formulario reactivo.
 
-    /** Llama al método que configura el formulario según el estado de solo lectura. */
-    this.inicializarEstadoFormulario();
+  if (this.esFormularioSoloLectura) {
+  this.tipoMovimientoForm.get('tipoMovimiento')?.disable();
+} else {
+  this.tipoMovimientoForm.get('tipoMovimiento')?.enable();
+}
   }
   
    /**
    * Determina si se debe cargar un formulario nuevo o uno existente.  
    * Ejecuta la lógica correspondiente según el estado del componente.
    */
-  public inicializarEstadoFormulario(): void {
+  inicializarEstadoFormulario(): void {
      if (!this.tipoMovimientoForm){return}
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
@@ -177,7 +180,7 @@ private guardarDatosFormulario(): void {
    * @description
    * Configura el formulario reactivo con los controles necesarios y sus validaciones.
    */
-  establecerTipoMovimientoFormGroup(): void {
+  private establecerTipoMovimientoFormGroup(): void {
    /** Suscribe al estado de solicitud 40302 y lo asigna a `solicitudState`.  
     * Usa `takeUntil` para limpiar la suscripción al destruir el componente. */
     this.tramite250101Query.selectSolicitud$
