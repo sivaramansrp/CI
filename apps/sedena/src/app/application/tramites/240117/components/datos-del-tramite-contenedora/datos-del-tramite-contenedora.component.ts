@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { ID_PROCEDIMIENTO } from '../../constantes/exportacion-quimicas-sustancias.enum';
@@ -15,13 +15,13 @@ import { takeUntil } from 'rxjs';
  * @name DatosDelTramiteContenedoraComponent
  * @description Componente encargado de gestionar y mostrar los datos del trámite en la interfaz de usuario.
  * Este componente utiliza Akita para manejar el estado del trámite y sus datos asociados.
- * 
+ *
  * @selector app-datos-del-tramite-contenedora
  * @standalone true
  * @imports CommonModule, DatosDelTramiteComponent
  * @templateUrl ./datos-del-tramite-contenedora.component.html
  * @styleUrl ./datos-del-tramite-contenedora.component.scss
- * 
+ *
  * @class DatosDelTramiteContenedoraComponent
  * @implements OnInit, OnDestroy
  */
@@ -32,15 +32,20 @@ import { takeUntil } from 'rxjs';
   templateUrl: './datos-del-tramite-contenedora.component.html',
   styleUrl: './datos-del-tramite-contenedora.component.scss',
 })
-export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy { 
-
-  
+export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
+  /**
+   * @property esFormularioSoloLectura
+   * @description Indica si el formulario es de solo lectura.
+   * @type {boolean}
+   */
+  @Input()
+  esFormularioSoloLectura: boolean = false;
   /**
    * @property {boolean} estaOculto - Indica si el elemento está oculto o visible.
    * @remarks Este valor determina la visibilidad del componente en la interfaz de usuario.
    * @command Cambiar el valor de esta propiedad para alternar la visibilidad.
    */
-  public readonly idProcedimiento:number = ID_PROCEDIMIENTO;
+  public readonly idProcedimiento: number = ID_PROCEDIMIENTO;
   /**
    * Observable para limpiar suscripciones activas al destruir el componente.
    * @property {Subject<void>} unsubscribe$
@@ -80,40 +85,40 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
 
-    ngOnInit(): void {
-      this.tramiteQuery.getMercanciaTablaDatos$
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((data) => {
-          this.datosMercanciaTabla = data;
-        });
-  
-      this.tramiteQuery.getDatosDelTramite$
-        .pipe(takeUntil(this.unsubscribe$))
-        .subscribe((data) => {
-          this.datosDelTramiteFormState = data;
-        });
-    }
-  
-    /**
-     * Hook del ciclo de vida que se ejecuta al destruir el componente.
-     * Libera las suscripciones activas para evitar fugas de memoria.
-     *
-     * @method ngOnDestroy
-     * @returns {void}
-     */
-    ngOnDestroy(): void {
-      this.unsubscribe$.next();
-      this.unsubscribe$.complete();
-    }
-  
-    /**
-     * Actualiza el estado del formulario de datos del trámite en el store.
-     *
-     * @method updateDatosDelTramiteFormulario
-     * @param {DatosDelTramiteFormState} event - Estado actualizado del formulario.
-     * @returns {void}
-     */
-    updateDatosDelTramiteFormulario(event: DatosDelTramiteFormState): void {
-      this.tramiteStore.updateDatosDelTramiteFormState(event);
-    }
+  ngOnInit(): void {
+    this.tramiteQuery.getMercanciaTablaDatos$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.datosMercanciaTabla = data;
+      });
+
+    this.tramiteQuery.getDatosDelTramite$
+      .pipe(takeUntil(this.unsubscribe$))
+      .subscribe((data) => {
+        this.datosDelTramiteFormState = data;
+      });
+  }
+
+  /**
+   * Hook del ciclo de vida que se ejecuta al destruir el componente.
+   * Libera las suscripciones activas para evitar fugas de memoria.
+   *
+   * @method ngOnDestroy
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
+
+  /**
+   * Actualiza el estado del formulario de datos del trámite en el store.
+   *
+   * @method updateDatosDelTramiteFormulario
+   * @param {DatosDelTramiteFormState} event - Estado actualizado del formulario.
+   * @returns {void}
+   */
+  updateDatosDelTramiteFormulario(event: DatosDelTramiteFormState): void {
+    this.tramiteStore.updateDatosDelTramiteFormState(event);
+  }
 }
