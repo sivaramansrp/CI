@@ -7,10 +7,12 @@ import {
 } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TIPO_ACTUALIZACION } from '../../../../shared/constantes/datos-solicitud.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260206Query } from '../../estados/queries/tramite260206Query.query';
 import { Tramite260206Store } from '../../estados/stores/tramite260206Store.store';
+
 /**
  * @component TercerosRelacionadosVistaComponent
  * @description Componente de solo lectura que muestra las tablas de terceros relacionados
@@ -26,6 +28,15 @@ import { Tramite260206Store } from '../../estados/stores/tramite260206Store.stor
   styleUrl: './terceros-relacionados-vista.component.scss',
 })
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
+
+  /**
+   * que indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.
+   *
+   * @type {boolean}
+   */
+  esFormularioSoloLectura!: boolean; 
+
   /**
    * @property {Fabricante[]} fabricanteTablaDatos
    * Datos de la tabla de fabricantes.
@@ -66,8 +77,19 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteStore: Tramite260206Store,
-    private tramiteQuery: Tramite260206Query
-  ) { }
+    private tramiteQuery: Tramite260206Query,
+    private consultaQuery: ConsultaioQuery
+  ) { 
+    this.consultaQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroy$),
+        )
+        .subscribe((seccionState) => {
+          if(!seccionState.create && seccionState.procedureId === '260206') {
+            this.esFormularioSoloLectura = seccionState.readonly;
+          } 
+        });
+  }
 
   /**
    * @method ngOnInit

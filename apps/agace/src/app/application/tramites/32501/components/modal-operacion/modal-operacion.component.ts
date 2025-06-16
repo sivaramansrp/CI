@@ -1,34 +1,22 @@
-import { AlertComponent } from '@libs/shared/data-access-user/src';
-import { AnexarDocumentosComponent } from '@libs/shared/data-access-user/src';
 import { AvisoCatalogo } from '../../models/aviso-catalogo.model';
-import { BtnContinuarComponent } from '@libs/shared/data-access-user/src';
-import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { CrosslistComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { InputCheckComponent } from '@libs/shared/data-access-user/src';
-import { InputFechaComponent } from '@libs/shared/data-access-user/src';
-import { InputHoraComponent } from '@libs/shared/data-access-user/src';
-import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { SelectPaisesComponent } from '@libs/shared/data-access-user/src';
 import { Solicitud32501Query } from '../../estados/solicitud32501.query';
 import { Solicitud32501State } from '../../estados/solicitud32501.store';
 import { Solicitud32501Store } from '../../estados/solicitud32501.store';
 import { Subject } from 'rxjs';
-import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
-import { WizardComponent } from '@libs/shared/data-access-user/src';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
@@ -46,20 +34,9 @@ import { takeUntil } from 'rxjs';
     CommonModule,
     FormsModule,
     HttpClientModule,
-    WizardComponent,
-    BtnContinuarComponent,
-    InputCheckComponent,
-    InputFechaComponent,
-    InputHoraComponent,
-    CrosslistComponent,
     ReactiveFormsModule,
     TituloComponent,
-    SelectPaisesComponent,
-    AnexarDocumentosComponent,
-    AlertComponent,
     CatalogoSelectComponent,
-    InputRadioComponent,
-    TablaDinamicaComponent,
   ],
   providers: [MercanciasDesmontadasOSinMontarService],
   templateUrl: './modal-operacion.component.html',
@@ -149,40 +126,14 @@ export class ModalOperacionComponent implements OnInit, OnDestroy {
         },
       });
   }
-
-  /**
-   * Actualiza la aduana seleccionada en el estado de la solicitud.
-   * @param evento Objeto del catálogo con la información de la aduana.
+/**
+   * Establece los valores del formulario en el estado de la solicitud.
+   * @param formulario Formulario reactivo que contiene los datos de la operación.
+   * @param campo Campo específico del formulario que se va a establecer en el estado.
    */
-  actualizarAduana(evento: Catalogo): void {
-    this.solicitud32501Store.actualizarAduana(evento.id);
-  }
-
-  /**
-   * Actualiza la patente en el estado de la solicitud.
-   * @param evento Evento del input que contiene el nuevo valor.
-   */
-  actualizarPatente(evento: Event): void {
-    const VALOR = evento.target as HTMLInputElement;
-    this.solicitud32501Store.actualizarPatente(VALOR.value);
-  }
-
-  /**
-   * Actualiza el RFC en el estado de la solicitud.
-   * @param evento Evento del input que contiene el nuevo valor.
-   */
-  actualizaRFC(evento: Event): void {
-    const VALOR = evento.target as HTMLInputElement;
-    this.solicitud32501Store.actualizaRFC(VALOR.value);
-  }
-
-  /**
-   * Actualiza el número de pedimento en el estado de la solicitud.
-   * @param evento Evento del input que contiene el nuevo valor.
-   */
-  actualizarPedimento(evento: Event): void {
-    const VALOR = evento.target as HTMLInputElement;
-    this.solicitud32501Store.actualizarPedimento(VALOR.value);
+  establecerValoresEnEstado(formulario: FormGroup, campo: string): void {
+    const VALOR = formulario.get(campo)?.value;
+    this.solicitud32501Store.establecerDatos({ [campo]: VALOR });
   }
 
   /**

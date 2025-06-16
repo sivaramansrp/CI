@@ -74,10 +74,10 @@ export const MESES = [
 export const SEMANA = [
   'Lunes',
   'Martes',
-  'Miercoles',
+  'Miércoles',
   'Jueves',
   'Viernes',
-  'Sabado',
+  'Sábado',
   'Domingo',
 ];
 
@@ -85,10 +85,10 @@ export const SEMANA_D = [
   'Domingo',
   'Lunes',
   'Martes',
-  'Miercoles',
+  'Miércoles',
   'Jueves',
   'Viernes',
-  'Sabado',
+  'Sábado',
 ];
 
 export const MENSAJEDEALERTA = {
@@ -166,7 +166,7 @@ export const ACUSE_SERVICIOS_EXTRAORDINARIOS = {
   ],
 };
 export const IMPORTANTE = {
-  Importante: `<p><strong>Importante:</strong>Si existe duda respecto del producto a registrar o al pago correspondiente, por favor comunicate a los teléfonos 0155 5128 2544 y 0155 5128 2595</p>`,
+  Importante: `<p><strong>Importante: </strong>Si existe duda respecto del producto a registrar o al pago correspondiente, favor de comunicarse a los teléfonos 55 51282544, 55 51282595 y 55 51282553</p>`,
 };
 
 export const ALERTA_DE_MATERIAL = {
