@@ -1,14 +1,14 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   ConfiguracionColumna,
   TablaDinamicaComponent,
 } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DomiciliosDePlantasTabla } from '@libs/shared/data-access-user/src/core/models/90202/expansion-de-productores.model';
 import DomiciliosTabla from '@libs/shared/theme/assets/json/90202/domicilios-de-plantas-tabla.json';
-import { map, Subject, takeUntil } from 'rxjs';
 /**
  * Componente que representa la sección de domicilios de plantas en el formulario.
  * Este componente incluye un formulario reactivo y una tabla dinámica para mostrar los domicilios.
