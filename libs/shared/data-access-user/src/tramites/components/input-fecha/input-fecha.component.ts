@@ -4,9 +4,7 @@ import {
   EventEmitter,
   HostListener,
   Input,
-  OnChanges,
-  Output,
-  SimpleChanges,
+  OnInit, Output
 } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MESES, SEMANA } from '../../../core/enums/constantes-alertas.enum';
@@ -21,7 +19,7 @@ import { InputFecha } from '../../../core/models/shared/components.model';
   templateUrl: './input-fecha.component.html',
   styleUrl: './input-fecha.component.scss',
 })
-export class InputFechaComponent implements OnChanges {
+export class InputFechaComponent implements OnInit {
   /**
    * Emite el valor seleccionado cuando cambia.
    */
@@ -90,8 +88,8 @@ export class InputFechaComponent implements OnChanges {
     this.generarFormulario(OBJECT_DATE);
   }
 
-  ngOnChanges(): void {
-    if (this.setFecha !== '' && this.setFecha !== null) {
+  ngOnInit(): void {
+    if (this.setFecha) {
       const FECHA = this.setFecha.split('/');
       const OBJECT_DATE = moment(`${FECHA[2]}-${FECHA[1]}-${FECHA[0]}`);
       this.generarFormulario(OBJECT_DATE);
@@ -231,6 +229,7 @@ export class InputFechaComponent implements OnChanges {
       );
     }
   }
+
 
   clickDay(day: { name: string; value: number; indexWeek: number }): void {
     const MOUNT_YEAR =

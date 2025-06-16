@@ -1,12 +1,16 @@
+import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
 import { Component } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { ID_PROCEDIMIENTO } from '../../constants/agregar-destinatario.enum';
 import { Tramite240112Store } from '../../estados/tramite240112Store.store';
 
+
 @Component({
   selector: 'app-agregar-destinatario-final-contenedora',
   templateUrl: './agregar-destinatario-final-contenedora.component.html',
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
+  standalone: true,
+  imports: [AgregarDestinatarioFinalComponent]
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
