@@ -1,9 +1,11 @@
 import {
   Catalogo,
   MSG_ELIMINA_ELEMENTO,
+  MSG_SELECCIONA_REGISTRO,
   Notificacion,
   NotificacionesComponent,
   SoloNumerosDirective,
+  TEXTO_CERRAR,
   TipoPedimentoService,
 } from '@ng-mf/data-access-user';
 import {
@@ -48,6 +50,7 @@ import { CommonModule } from '@angular/common';
 import { EstadoPedimentoService } from '../../../../core/services/5701/pedimento/estado-pedimento.service';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
+import { TITULO_MODAL_AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/terceros.enums';
 @Component({
   selector: 'c-pedimento',
   standalone: true,
@@ -325,19 +328,37 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    * Después de eliminar el elemento, se actualiza el título y mensaje del modal,
    * y se abre el modal para mostrar un aviso al usuario.
    */
-  abrirModalEliminar(i: number = 0): void {
-    this.pedimentos.splice(i, 1);
-    this.datosTablaPedimento.emit(this.pedimentos);
+  abrirModalEliminar(): void {
+    if (this.selected.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: TITULO_MODAL_AVISO,
+        mensaje: MSG_SELECCIONA_REGISTRO,
+        cerrar: false,
+        txtBtnAceptar: TEXTO_CERRAR,
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    this.pedimentos = this.pedimentos.filter(
+      (pedimento) => !this.selected.includes(pedimento)
+    );
+
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
-      categoria: 'danger',
+      categoria: '',
       modo: 'action',
-      titulo: 'Avisos',
+      titulo: TITULO_MODAL_AVISO,
       mensaje: MSG_ELIMINA_ELEMENTO,
       cerrar: false,
       txtBtnAceptar: 'Cerrar',
       txtBtnCancelar: '',
     };
+
+    this.datosTablaPedimento.emit(this.pedimentos);
   }
 
   /**
@@ -404,7 +425,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
       this.pedimentos[rowIndex].tipoPedimento === 4
     ) {
       console.log('No se puede editar el tipo de pedimento');
-      
+
       this.editar[rowIndex + '-numero'] = false;
       return;
     }
