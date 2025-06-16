@@ -8,6 +8,8 @@ import { Solicitud260915State, Solicitud260915Store } from '../../estados/tramit
 import { map, takeUntil } from 'rxjs/operators';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 import { DESTINATARIO_CONFIGURACION_TABLA } from '../../constants/column-config.enum';
 import { Destinatario } from '../../models/destinatario.model';
 import { Modal } from 'bootstrap';
@@ -17,7 +19,25 @@ import { Solicitud260915Query } from '../../estados/tramites260915.query';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 
 /**
- * Componente para gestionar los terceros relacionados en el trámite.
+ * Componente para gestionar los terceros relacionados en el trámite 260915.
+ * Permite agregar, editar y eliminar terceros relacionados, así como gestionar la visualización de formularios y tablas.
+ * Integra catálogos, notificaciones, selección de tipo de persona y manejo de estados de solo lectura.
+ *
+ * @selector app-terceros-relacionados
+ * @standalone true
+ * @imports [
+ *   CommonModule,
+ *   TercerosRelacionadosComponent,
+ *   AlertComponent,
+ *   TituloComponent,
+ *   TablaDinamicaComponent,
+ *   ReactiveFormsModule,
+ *   CatalogoSelectComponent,
+ *   NotificacionesComponent,
+ *   InputRadioComponent
+ * ]
+ * @templateUrl ./terceros-relacionados.component.html
+ * @styleUrl ./terceros-relacionados.component.scss
  */
 @Component({
   selector: 'app-terceros-relacionados',
@@ -37,6 +57,12 @@ import { TercerosRelacionadosComponent } from '../../../../shared/components/ter
   styleUrl: './terceros-relacionados.component.scss',
 })
 export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /** Constantes de texto utilizadas en el componente */
   TEXTOS = TEXTOS;
 
@@ -81,10 +107,12 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
    * Variable para almacenar el tipo de público.
    */
   tipoDePublicos: string = '';
+
   /**
    * Opciones de radio para seleccionar el tipo de persona.
    */
   tipoPersonaRadioOptions = TIPO_PERSONA_RADIO_OPTIONS;
+
   /**
    * Notificación actual que se mostrará en el componente.
    */
@@ -99,6 +127,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
    * Lista de pedimentos gestionados en el componente.
    */
   pedimentos: Array<Pedimento> = [];
+
   /** Datos de la tabla de destinatarios */
   tableData: Destinatario[] = [];
 
@@ -107,17 +136,28 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
 
   /**
    * Constructor del componente.
+   * Inicializa el formulario y suscribe el estado de solo lectura.
    * @param fb FormBuilder para crear formularios reactivos.
-   * @param registrarsolicitudmcp Servicio para registrar solicitudes MCP.
+   * @param permisosanitariodispositivosmedicosservice Servicio para obtener catálogos y datos.
    * @param solicitud260915Store Almacén de estado para el trámite 260915.
    * @param solicitud260915Query Consulta de estado para el trámite 260915.
+   * @param consultaioQuery Servicio para consultar el estado de la solicitud.
    */
   constructor(
     private fb: FormBuilder,
-    private permisosanitariodisposivos: PermisoSanitarioDispositivosMedicosService,
+    private permisosanitariodispositivosmedicosservice: PermisoSanitarioDispositivosMedicosService,
     private solicitud260915Store: Solicitud260915Store,
-    private solicitud260915Query: Solicitud260915Query
+    private solicitud260915Query: Solicitud260915Query,
+    public consultaioQuery: ConsultaioQuery,
   ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
     this.crearFormTransporte();
   }
 
@@ -174,9 +214,10 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
 
   /**
    * Método que se ejecuta al inicializar el componente.
+   * Suscribe el estado de la solicitud y prepara el formulario y los datos de países.
    */
   ngOnInit(): void {
-    this.solicitud260915Query.selectSolicitud$
+    this.solicitud260915Query.selectSolicitud260915$
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState: Solicitud260915State) => {
@@ -185,9 +226,36 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    this.crearFormTransporte();
+    this.inicializarEstadoFormulario();
     this.getPaisData();
   }
+
+  /**
+   * Inicializa el formulario dependiendo del modo (solo lectura o editable).
+   * Si está en solo lectura, carga y bloquea el formulario.
+   * Si no, crea un formulario editable.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearFormTransporte();
+    }
+  }
+
+  /**
+   * Crea el formulario y, si está en modo solo lectura, lo deshabilita.
+   * De lo contrario, lo habilita para edición.
+   */
+  guardarDatosFormulario(): void {
+    this.crearFormTransporte();
+    if (this.esFormularioSoloLectura) {
+      this.destinatarioForm.disable();
+    } else {
+      this.destinatarioForm.enable();
+    }
+  }
+
   /**
    * Elimina un pedimento de la lista.
    * @param borrar Indica si se debe proceder con la eliminación.
@@ -195,10 +263,11 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       this.pedimentos.splice(this.elementoParaEliminar, 1);
-      this.eliminarMercancias(); // Llamar a la lógica de eliminación
+      this.eliminarMercancias();
       this.abrirModal(0, true);
     }
   }
+
   /**
    * Abre un modal para mostrar una notificación.
    * @param i Índice del elemento seleccionado (por defecto 0).
@@ -237,7 +306,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
    * Obtiene los datos del catálogo de países.
    */
   getPaisData(): void {
-    this.permisosanitariodisposivos
+    this.permisosanitariodispositivosmedicosservice
       .getPaisData()
       .pipe(takeUntil(this.destroyed$))
       .subscribe((data: Catalogo[]) => {
@@ -267,8 +336,8 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
     if (FORM_DATA.agregarDestinatario) {
         const DESTINATARIO = {
             ...FORM_DATA.agregarDestinatario,
-            ...FORM_DATA.datosPersonales, // Combina objetos anidados en una estructura plana
-            pais: this.getPaisName(FORM_DATA.datosPersonales.pais), // Mapea el id de `pais` a su descripción
+            ...FORM_DATA.datosPersonales,
+            pais: this.getPaisName(FORM_DATA.datosPersonales.pais),
         };
       this.tableData.push(DESTINATARIO);
     }
@@ -304,7 +373,6 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
       this.tableData = this.tableData.filter(
         (row) => !this.selectedRows.has(row.id)
       );
-
       this.selectedRows.clear();
     }
   }
@@ -393,18 +461,16 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Establece valores en el store a partir del formulario.
-   * @param form Formulario reactivo.
-   * @param campo Nombre del campo en el formulario.
-   * @param metodoNombre Método del store para actualizar el valor.
+   * Actualiza un valor específico en el store del trámite.
+   *
+   * @param FormGroup Formulario reactivo del cual se obtiene el valor.
+   * @param control Nombre del control cuyo valor se actualizará en el store.
    */
-  setValoresStore(
-    form: FormGroup,
-    campo: string,
-    metodoNombre: keyof Solicitud260915Store
-  ): void {
-    const VALOR = form.get(campo)?.value;
-    (this.solicitud260915Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  setValoresStore(FormGroup: FormGroup, control: string): void {
+    const VALOR = FormGroup.get(control)?.value;
+    this.solicitud260915Store.setTramite260915State({
+      [control]: VALOR
+    });
   }
 
   /**
@@ -417,6 +483,7 @@ export class TercerosrelacionadosComponent implements OnInit, OnDestroy {
 
   /**
    * Método que se ejecuta al destruir el componente.
+   * Libera recursos y completa las suscripciones.
    */
   ngOnDestroy(): void {
     this.destroyed$.next(true);
