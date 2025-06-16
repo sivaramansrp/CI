@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudPageComponent } from './solicitud-page.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
@@ -8,7 +9,10 @@ describe('SolicitudPageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SolicitudPageComponent,HttpClientTestingModule],
+      imports: [SolicitudPageComponent, HttpClientTestingModule],
+      providers: [
+        { provide: ActivatedRoute, useValue: {} }
+      ],
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitudPageComponent);
