@@ -52,14 +52,4 @@ export const CONFIGURACION_ENCABEZADO_TABLA_RESPONSABLES_DESPACHO: Configuracion
     },
   ];
 
-/**
- * @description
- * Titulo del modal de aviso.
- */
-export const TITULO_MODAL_AVISO = 'Aviso';
 
-/**
- * @description
- * Mensaje de error al intentar eliminar un tercero relacionado sin haber seleccionado un registro.
- */
-export const MSG_SELECCIONA_REGISTRO = 'Selecciona un registro.';

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
@@ -39,6 +39,11 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * @private
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
 
   /**
    * @property tramiteState
