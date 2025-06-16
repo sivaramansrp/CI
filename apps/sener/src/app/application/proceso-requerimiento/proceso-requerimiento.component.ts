@@ -190,6 +190,14 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
     private tramiteQueries: TramiteFolioQueries,
     private desplazarseHaciaArribaService: DesplazarseHaciaArribaService
   ) {
+ this.consultaioStore.establecerConsultaio(
+      '140111',
+      'this.guardarDatos?.parameter',
+      'agace',
+      ' this.guardarDatos?.folioTramite',
+      'this.guardarDatos?.tipoDeTramite',
+      'this.guardarDatos?.estadoDeTramite',
+      true, false, true);
 
     /**
      * Suscripción al estado de consulta.
