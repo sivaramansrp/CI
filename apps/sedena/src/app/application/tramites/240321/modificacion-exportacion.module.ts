@@ -19,7 +19,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 
 @NgModule({
   declarations: [
-    PasoUnoComponent,
+ 
     PasoDosComponent,
     PasoTresComponent,
     SolicitudPageComponent,
@@ -38,6 +38,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     TercerosRelacionadosContenedoraComponent,
     TituloComponent,
     WizardComponent,
+    PasoUnoComponent,
   ],
   exports: [
     PasoUnoComponent,

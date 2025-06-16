@@ -3,12 +3,12 @@
     <ng-titulo titulo="Concluir trámite"></ng-titulo>
     <div class="row">
     <div class="col-md-4">
-        <app-catalogo-select [catalogo]="contenedores.catalogos" [label]="contenedores.labelNombre" [placeholder]="contenedores.primerOpcion" [required]="true" formControlName="contenedores" (change)="setValoresStore(tecnicaForm,'contenedores', 'setContenedores')"></app-catalogo-select>
+        <app-catalogo-select [catalogo]="contenedores.catalogos" [label]="contenedores.labelNombre" [placeholder]="contenedores.primerOpcion" [required]="true" formControlName="contenedores" (change)="setValoresStore(tecnicaForm,'contenedores', 'setContenedores')" [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
     </div>
     <div class="row">
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="aduana.catalogos" [label]="aduana.labelNombre" [placeholder]="aduana.primerOpcion" [required]="true" formControlName="aduana" (change)="setValoresStore(tecnicaForm,'aduana', 'setAduana')"></app-catalogo-select>
+        <app-catalogo-select [catalogo]="aduana.catalogos" [label]="aduana.labelNombre" [placeholder]="aduana.primerOpcion" [required]="true" formControlName="aduana" (change)="setValoresStore(tecnicaForm,'aduana', 'setAduana')" [isDisabled]="soloLectura"></app-catalogo-select>
       </div>
     </div>
     <div class="row">

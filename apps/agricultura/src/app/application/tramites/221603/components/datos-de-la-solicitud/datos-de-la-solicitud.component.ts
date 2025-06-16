@@ -9,12 +9,14 @@ import {
   ConfiguracionColumna,
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery,
+  ConsultaioStore,} from "@ng-mf/data-access-user";
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   Solicitud221603State,
   Tramite221603Store,
 } from '../../estados/tramite221603.store';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { SanidadService } from '../../service/sanidad.service';
 import { Tramite221603Query } from '../../estados/tramite221603.query';
 /**
@@ -65,26 +67,52 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas para la tabla dinámica que muestra las mercancías.
    */
-  configuracionTabla: ConfiguracionColumna<Mercancia>[] = CONFIGURATION_TABLA_MERCANCIAS;
+  configuracionTabla: ConfiguracionColumna<Mercancia>[] =
+    CONFIGURATION_TABLA_MERCANCIAS;
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+
   /**
-   * Constructor del componente.
-   * Inyecta las dependencias necesarias para gestionar el formulario y los datos de la solicitud.
-   * formBuilder Servicio para construir formularios reactivos.
-   * tramite221603Store Servicio para gestionar el estado del trámite.
-   * tramite221603Query Servicio para consultar el estado del trámite.
-   * sanidadService Servicio para obtener datos relacionados con la sanidad.
+   * Constructor del componente DatosDeLaSolicitud.
+   * 
+   * Inicializa las dependencias necesarias mediante inyección de servicios y stores.
+   * Suscribe al estado de consulta para actualizar el modo de solo lectura del formulario
+   * y para inicializar el estado del formulario cuando cambie el estado de la sección.
+   * 
+   *  formBuilder Servicio para construir formularios reactivos.
+   *  tramite221603Store Store para gestionar el estado del trámite 221603.
+   *  tramite221603Query Query para consultar el estado del trámite 221603.
+   *  sanidadService Servicio relacionado con sanidad.
+   *  consultaQuery Query para consultar el estado de la consulta.
+   *  consultaStore Store para gestionar el estado de la consulta.
    */
   constructor(
     private formBuilder: FormBuilder,
     private tramite221603Store: Tramite221603Store,
     private tramite221603Query: Tramite221603Query,
-    public sanidadService: SanidadService
+    public sanidadService: SanidadService,
+    private consultaQuery: ConsultaioQuery,
+    private consultaStore: ConsultaioStore
   ) {
-    // Constructor que inyecta las dependencias necesarias
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly || true;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
   /**
    * Método que se ejecuta cuando el componente es inicializado.
@@ -97,8 +125,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       .subscribe((state: Solicitud221603State) => {
         this.solicitudState = state;
       });
+
     this.inicializarFormulario();
-    this.sanidadService.obtenerFormularioDatos()
+    this.inicializarEstadoFormulario();
+
+    this.sanidadService
+      .obtenerFormularioDatos()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp: FormularioDatos) => {
         this.formularioDatos = resp;
@@ -107,6 +139,17 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.sanidadService.inicializaCatalogosRegimen();
     this.sanidadService.inicializaDatosMercancia();
   }
+
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+       this.datosSolicitudForm.get('guia')?.disable();
+       this.datosSolicitudForm.get('justificacionDescription')?.disable();
+    } else {
+      this.datosSolicitudForm.get('guia')?.enable();
+      this.datosSolicitudForm.get('justificacionDescription')?.enable();
+    }
+  }
+
   /**
    * Inicializa el formulario reactivo con los valores actuales del estado de la solicitud.
    *
@@ -114,7 +157,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    */
   private inicializarFormulario(): void {
     this.datosSolicitudForm = this.formBuilder.group({
-      justificacion: [this.solicitudState.justificacion, Validators.required],
+      justificacionDescription: [this.solicitudState.justificacionDescription, Validators.required],
       aduana: [this.solicitudState.aduana, Validators.required],
       oficina: [this.solicitudState.oficina, Validators.required],
       punto: [this.solicitudState.punto, Validators.required],
@@ -124,7 +167,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         Validators.required,
       ],
     });
-    
   }
 
   /**
@@ -133,9 +175,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   rellenarValoresPredeterminados(): void {
     this.datosSolicitudForm.get('punto')?.setValue(this.formularioDatos?.punto);
     this.datosSolicitudForm.get('punto')?.disable();
-    this.datosSolicitudForm.get('aduana')?.setValue(this.formularioDatos?.aduana);
+    this.datosSolicitudForm
+      .get('aduana')
+      ?.setValue(this.formularioDatos?.aduana);
     this.datosSolicitudForm.get('aduana')?.disable();
-    this.datosSolicitudForm.get('oficina')?.setValue(this.formularioDatos?.oficina);
+    this.datosSolicitudForm
+      .get('oficina')
+      ?.setValue(this.formularioDatos?.oficina);
     this.datosSolicitudForm.get('oficina')?.disable();
   }
 
