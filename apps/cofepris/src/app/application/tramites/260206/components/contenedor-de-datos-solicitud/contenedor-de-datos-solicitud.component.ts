@@ -5,6 +5,7 @@ import { SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@libs/shared/
 import { Tramite260206State, Tramite260206Store } from '../../estados/stores/tramite260206Store.store';
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DATOS_ELEMENTOS_REQUERIDOS } from '../../constantes/maquila-materias-primas.enum';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { Subject } from 'rxjs';
@@ -137,12 +138,48 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
    */
   public elementosRequeridos = DATOS_ELEMENTOS_REQUERIDOS;
 
-  
+  /**
+   * que indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.
+   *
+   * @type {boolean}
+   */
+  esFormularioSoloLectura!: boolean;
+
+  /**
+   * Constructor de la clase que inyecta dependencias relacionadas con el trámite 260206 y el estado de secciones.
+   *
+   * @param {Tramite260206Query} tramite260206Query - Consulta del estado del trámite 260206.
+   * @param {Tramite260206Store} tramite260206Store - Almacén del estado del trámite 260206.
+   * @param {SeccionLibStore} seccionStore - Almacén del estado de la sección.
+   * @param {SeccionLibQuery} seccionQuery - Consulta del estado de la sección.
+   * @param {ConsultaioQuery} consultaQuery - Consulta del estado general del formulario.
+   */
   constructor(private tramite260206Query: Tramite260206Query,
     private tramite260206Store: Tramite260206Store,
-    private seccionStore: SeccionLibStore, private seccionQuery: SeccionLibQuery
-  ) { }
+    private seccionStore: SeccionLibStore, private seccionQuery: SeccionLibQuery,
+    private consultaQuery: ConsultaioQuery
+    
+  ) {
+    this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+    )
+    .subscribe((seccionState) => {
+      if(!seccionState.create && seccionState.procedureId === '260206') {
+        this.esFormularioSoloLectura = seccionState.readonly;
+      } 
+    });
+   }
 
+  /**
+   * Inicializa el componente suscribiéndose a los estados del trámite y de la sección.
+   * 
+   * - Actualiza las configuraciones locales (`opcionConfig`, `scianConfig`, `tablaMercanciasConfig`) a partir del estado del trámite.
+   * - Asigna el estado actual de la sección a la propiedad local `seccion`.
+   * 
+   * Las suscripciones se cancelan automáticamente al destruir el componente.
+   */
   ngOnInit(): void {
     this.tramite260206Query.selectTramiteState$
     .pipe(
@@ -221,16 +258,16 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
   }
 
   /**
- * Verifica si el formulario es válido.
- * 
- * Recorre todos los controles del formulario y verifica si alguno de ellos
- * está habilitado e inválido. Si encuentra un control que cumple con estas
- * condiciones, retorna `false`. Si todos los controles habilitados son válidos,
- * retorna `true`.
- * 
- * @returns {boolean} `true` si todos los controles habilitados son válidos, 
- *                    `false` si al menos uno de los controles habilitados es inválido.
- */
+   * Verifica si el formulario es válido.
+   * 
+   * Recorre todos los controles del formulario y verifica si alguno de ellos
+   * está habilitado e inválido. Si encuentra un control que cumple con estas
+   * condiciones, retorna `false`. Si todos los controles habilitados son válidos,
+   * retorna `true`.
+   * 
+   * @returns {boolean} `true` si todos los controles habilitados son válidos, 
+   *                    `false` si al menos uno de los controles habilitados es inválido.
+   */
   esFormValido(): boolean {
     if (this.tramiteState.datosSolicitudFormState.rfcSanitario) {
       return true;
@@ -255,7 +292,7 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
     }))
   }
 
-    /**
+  /**
    * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
    *
    * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
@@ -263,9 +300,9 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy{
    *
    * @returns {void} No retorna ningún valor.
    */
-    ngOnDestroy(): void {
-      this.destroyNotifier$.next();
-      this.destroyNotifier$.complete();
-    }
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 
 }
