@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ArtefactosPirotecnicosOrdinariosService } from '../../services/artefactos-pirotecnicos-ordinarios.service';
 import { Tramite240119Query } from '../../estados/tramite240119Query.query';
 import { Tramite240119Store } from '../../estados/tramite240119Store.store';
 
@@ -20,7 +22,12 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @type {number | undefined}
    */
   public indice: number | undefined = 1;
-
+  /**
+  * Esta variable se utiliza para almacenar el índice del subtítulo.
+  */
+  public consultaState!: ConsultaioState;
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
   /**
    * @property destroyNotifier$
    * @description Observable notifier to unsubscribe active subscriptions when the component is destroyed.
@@ -34,10 +41,14 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    *
    * @param Tramite240119Query Query to access procedure state.
    * @param tramite240119Store Store to update procedure state.
+   * @param consultaQuery Query to access consultation state.
+   * @param artefactosPirotecnicosOrdinariosService Service to handle pirotechnic artifacts data.
    */
   constructor(
     private tramite240119Query: Tramite240119Query,
-    private tramite240119Store: Tramite240119Store 
+    private tramite240119Store: Tramite240119Store,
+    public consultaQuery: ConsultaioQuery,
+    public artefactosPirotecnicosOrdinariosService: ArtefactosPirotecnicosOrdinariosService
   ) {
     // No hacer nada
   }
@@ -53,6 +64,31 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((tab) => {
         this.indice = tab;
+      });
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
+      this.consultaState = seccionState;
+    })).subscribe();
+    if (this.consultaState && this.consultaState.procedureId === '240119' &&
+      this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+  /**
+* Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+* Luego reinicializa el formulario con los valores actualizados desde el store.
+*/
+  guardarDatosFormulario(): void {
+    this.artefactosPirotecnicosOrdinariosService
+      .obtenerRegistroTomarMuestrasDatos().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.artefactosPirotecnicosOrdinariosService.actualizarEstadoFormulario(resp);
+        }
       });
   }
 

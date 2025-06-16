@@ -34,10 +34,11 @@ export { TablePaginationComponent } from './tramites/components/table-pagination
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
 export { TituloComponent } from './tramites/components/titulo/titulo.component';
 export { TramiteDetails } from './core/models/tramiteDetails';
+export { MenuItemComponent } from './tramites/components/menu-item/menu-item.component';
 export * from './core/queries/tramiteFolio.query';
 export * from './core/estados/tramiteFolio.store';
 export { TramiteStore } from './core/estados/tramite.store';
-export { ValidacionesFormularioService } from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
+export * from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
 export { PANTA_PASOS } from './core/enums/120404/pantallas260514.enum';
 export { AccionBoton } from './core/models/260514/aviso-pantallas.model'
 export * from './core/ambientes';
@@ -202,6 +203,5 @@ export * from './core/models/shared/tramite-folio.model';
 export * from './core/enums/crosslist.enums';
 export * from './core/services/shared/desplazarse-hacia-arriba/desplazarse-hacia-arriba.service';
 
-
-
-
+export * from './core/enums/mensajes-modal-comunes.enum';
+export * from './tramites/directives/alfanumerico/alfanumerico-formato.directive';
