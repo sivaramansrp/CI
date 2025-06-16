@@ -1,9 +1,10 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CATALOGOS_ID } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { TEXTOS } from '@ng-mf/data-access-user';
 import { ReplaySubject } from 'rxjs';
+import { TEXTOS } from '@ng-mf/data-access-user';
+
 import { takeUntil } from 'rxjs/operators';
 
 /**

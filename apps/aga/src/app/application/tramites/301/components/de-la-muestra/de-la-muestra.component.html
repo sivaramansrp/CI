@@ -1,6 +1,6 @@
 <div class="container">
   <ng-titulo titulo="Información de la muestra en despacho" />
-  <form *ngIf="Informaciondela" [formGroup]="Informaciondela" (ngSubmit)="validarFormulario()">
+  <form *ngIf="Informaciondela" [formGroup]="Informaciondela">
     <div formGroupName="datosImportadorExportador">
       <div class="row">
         <div class="col-md-8">
@@ -35,6 +35,7 @@
               formControlName="folio"
               type="text"
               (change)="
+                sobreElCambioFolio();
                 setValoresStore(
                   Informaciondela,
                   'datosImportadorExportador.folio',
@@ -48,3 +49,18 @@
     </div>
   </form>
 </div>
+
+<div class="modal fade" #modalConfirmacionRef id="modalConfirmacion" tabindex="-1" aria-labelledby="modalConfirmacionLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+      <div class="modal-content">
+        <div class="modal-header">
+        </div>
+        <div class="modal-body">
+          <p>El folio debe contener 25 caracteres.</p>
+          <div class="modal-footer custom-footer">
+            <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal>Acceptar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
