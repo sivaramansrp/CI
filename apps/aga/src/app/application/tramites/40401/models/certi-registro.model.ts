@@ -57,3 +57,17 @@ export interface Catalogo {
     id: number;
     descripcion: string;
   }
+
+/**
+ * Interfaz que define la estructura de los datos de CAAT Aéreo.
+ * Esta interfaz incluye información sobre el tipo de CAAT Aéreo, el código de transportación y la empresa de transportación.
+ * @interface CaatAereoData
+ * @property {string} TipoDeCaatAereo - El tipo de CAAT Aéreo, por ejemplo, "Aéreo".
+ * @property {string} DodigoDeTransportacion - El código de transportación asociado al CAAT Aéreo.
+ * @property {string} EmpresaDeTransportacion - El nombre de la empresa de transportación que opera el CAAT Aéreo.
+ */
+  export interface CaatAereoData {
+    TipoDeCaatAereo: string;
+    DodigoDeTransportacion: string;
+    EmpresaDeTransportacion: string;
+  }
