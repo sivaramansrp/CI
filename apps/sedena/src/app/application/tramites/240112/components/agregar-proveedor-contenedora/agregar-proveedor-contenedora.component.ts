@@ -1,13 +1,17 @@
+import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
 import { Component } from '@angular/core';
 import { ID_PROCEDIMIENTO } from '../../constants/agregar-destinatario.enum';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite240112Store } from '../../estados/tramite240112Store.store';
 
 
+
 @Component({
   selector: 'app-agregar-proveedor-contenedora',
   templateUrl: './agregar-proveedor-contenedora.component.html',
   styleUrl: './agregar-proveedor-contenedora.component.scss',
+  standalone: true,
+  imports: [ AgregarProveedorComponent]
 })
 export class AgregarProveedorContenedoraComponent {
 

@@ -33,7 +33,7 @@
             [label]="banco.labelNombre"
             [placeholder]="banco.primerOpcion"
             formControlName="banco"
-            [isDisabled]="false"
+            [isDisabled]="esFormularioSoloLectura"
             (selectionChange)="selectBancoCatalogo($event)"
           ></app-catalogo-select>
         </div>

@@ -51,7 +51,7 @@ export const REPRESENTANTE_LEGAL = [
       labelNombre: 'RFC',
       campo: 'rfc',
       clase: 'col-md-4',
-      tipoInput: 'number',
+      tipoInput: 'text',
       desactivado: true,
       soloLectura: false,
       validadores:[
