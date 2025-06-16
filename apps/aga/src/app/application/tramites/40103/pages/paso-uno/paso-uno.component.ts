@@ -1,7 +1,7 @@
 
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ChoferesExtranjeros, DatosDelChoferNacional } from '../../models/registro-muestras-mercancias.model';
-import {ConsultaioQuery, FormularioDinamico,SolicitanteComponent} from '@ng-mf/data-access-user';
+import {ConsultaioQuery, ConsultaioState, FormularioDinamico,SolicitanteComponent} from '@ng-mf/data-access-user';
 import {DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,PERSONA_MORAL_NACIONAL} from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Chofer40103Query } from '../../estados/chofer40103.query';
@@ -68,6 +68,15 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
   
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+  /**
+  * @property {ConsultaioState} consultaDatos
+  * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+  */
+  consultaDatos!: ConsultaioState;
+
   /**
    * Gancho de ciclo de vida angular que se llama después de que la vista del componente se haya inicializado por completo.
    */
@@ -84,51 +93,76 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   }
 
   /**
-   *
+   * Constructor del componente PasoUnoComponent.
+   * Inicializa el servicio Chofer40103Service y el query ConsultaioQuery.
+   * 
+   * @param chofer40103Service - Servicio para manejar la lógica de negocio relacionada con los choferes.
+   * @param consultaQuery - Query para manejar el estado de la consulta.
    */
   constructor(        
     private chofer40103Service: Chofer40103Service,
-    private chofer40103Query: Chofer40103Query,
-    private chofer40103Store: Chofer40103Store,
     private consultaQuery: ConsultaioQuery
   ) {
     
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se llama al inicializar el componente.
+   * Se suscribe a los cambios en el estado de la consulta y actualiza los datos del chofer
+   * y del director general si hay una actualización.
+   *  * @remarks
+   * Este método se ejecuta una vez que el componente ha sido inicializado y está listo para interactuar con el usuario.
+   * Se utiliza para cargar datos iniciales y configurar el estado del componente.
+   * @returns void
+   **/
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
     .pipe(
       takeUntil(this.destroyed$), 
       map((seccionState) => {
-        if( seccionState.update ) {
-          this.chofer40103Service
-            .getDirectorGeneralData()
-            .pipe(takeUntil(this.destroyed$))
-            .subscribe((data) => {
-              // Actualiza el estado del chofer40103Store con los datos del director general
-              this.chofer40103Service.updateStateDirectorGeneralData(data);
-          });
-
-          this.chofer40103Service
-            .obtenerTablaDatos<DatosDelChoferNacional>('mock-data-choferes-nacionales.json')
-            .pipe(takeUntil(this.destroyed$))
-            .subscribe( (response) => {
-                this.chofer40103Service.updateDatosDelChoferNacional(response);
-                this.chofer40103Service.updateDatosDelChoferNacionalModification(response);
-                this.chofer40103Service.updateDatosDelChoferNacionalRetirada(response);
-            });
-
-          this.chofer40103Service
-            .obtenerTablaDatos<ChoferesExtranjeros>('mock-data-choferes-extranjero.json')
-            .pipe(takeUntil(this.destroyed$))
-            .subscribe( (response) => {
-                this.chofer40103Service.updateDatosDelChoferExtranjero(response);
-                this.chofer40103Service.updateDatosDelChoferExtranjeroModification(response);
-                this.chofer40103Service.updateDatosDelChoferExtranjeroRetirada(response);
-            });
-
-        }
+        this.consultaDatos = seccionState;
     })).subscribe();
+    
+    if (this.consultaDatos.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.chofer40103Service
+      .getDirectorGeneralData()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        // Actualiza el estado del chofer40103Store con los datos del director general
+        this.chofer40103Service.updateStateDirectorGeneralData(data);
+        this.esDatosRespuesta = true;
+      });
+
+    this.chofer40103Service
+      .obtenerTablaDatos<DatosDelChoferNacional>('mock-data-choferes-nacionales.json')
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((response) => {
+        this.chofer40103Service.updateDatosDelChoferNacional(response);
+        this.chofer40103Service.updateDatosDelChoferNacionalModification(response);
+        this.chofer40103Service.updateDatosDelChoferNacionalRetirada(response);
+        this.esDatosRespuesta = true;
+      });
+
+    this.chofer40103Service
+      .obtenerTablaDatos<ChoferesExtranjeros>('mock-data-choferes-extranjero.json')
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((response) => {
+        this.chofer40103Service.updateDatosDelChoferExtranjero(response);
+        this.chofer40103Service.updateDatosDelChoferExtranjeroModification(response);
+        this.chofer40103Service.updateDatosDelChoferExtranjeroRetirada(response);
+        this.esDatosRespuesta = true;
+      });
   }
 
   /**
