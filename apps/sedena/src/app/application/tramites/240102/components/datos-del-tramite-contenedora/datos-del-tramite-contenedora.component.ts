@@ -51,14 +51,15 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @property {DatosDelTramiteFormState} datosDelTramiteFormState
    */
   public datosDelTramiteFormState!: DatosDelTramiteFormState;
-
+  
   /**
-   * Indica si el formulario se encuentra en modo solo lectura.
-   * Cuando es verdadero, los campos del formulario no pueden ser editados.
-   * @property {boolean} esFormularioSoloLectura
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   *
+   * @type {boolean}
+   * @memberof DatosDelTramiteContenedoraComponent
    * @default false
    */
-  @Input() esFormularioSoloLectura: boolean = false;
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
