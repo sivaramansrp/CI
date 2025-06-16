@@ -1,0 +1,23 @@
+{
+    "genericos": "prorroga",
+    "observaciones": "observaciones",
+    "establecimientoRazonSocial": "RazonSocial",
+    "establecimientoCorreoElectronico": "CorreoElectronico",
+    "establecimientoDomicilioCodigoPostal": "DomicilioCodigoPostal",
+    "establecimientoEstados": 1,
+    "descripcionMunicipio": "municipio",
+    "localidad": "localidad",
+    "establishomentoColonias": "colonia",
+    "calle": "calle",
+    "lada": "01",
+    "telefono": "1234567890",
+    "avisoCheckbox": true,
+    "noLicenciaSanitaria": "licencia",
+    "regimen": 1,
+    "aduanasEntradas": 1,
+    "aifaCheckbox": true,
+    "manifests": true,
+    "informacionConfidencialRadio": "radio",
+    "scian": "scian",
+    "descripcionScian": "descripcion_scian"
+}
