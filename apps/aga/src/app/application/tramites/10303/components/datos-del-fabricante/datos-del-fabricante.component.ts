@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subject, map, merge, takeUntil } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 
@@ -41,6 +41,11 @@ export class DatosDelFabricanteComponent implements OnInit, OnDestroy {
   public registroDeDonacionState: RegistroDeDonacion10303State | undefined;
 
   /**
+   * Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado!: boolean;
+
+  /**
    * Constructor del componente.
    * 
    * @param donacionesExtranjerasService Servicio para gestionar las donaciones extranjeras.
@@ -75,6 +80,12 @@ export class DatosDelFabricanteComponent implements OnInit, OnDestroy {
     this.crearDatosDelFabricanteForm();
 
     this.paisSeleccion();
+    
+    if (this.formularioDeshabilitado) {
+      this.datosDelFabricanteForm.disable();
+    } else if (!this.formularioDeshabilitado) {
+      this.datosDelFabricanteForm.enable();
+    }
   }
 
   /**
