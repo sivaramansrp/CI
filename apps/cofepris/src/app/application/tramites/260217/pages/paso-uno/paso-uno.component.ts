@@ -94,7 +94,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   /**
    * Actualiza el estado del formulario con los datos proporcionados.
    * 
-   * @param DATOS - Estado de la solicitud `Solicitud230401State` con la información 
+   * @param DATOS - Estado de la solicitud `Tramite260217State` con la información 
    *                del tipo de solicitud a actualizar en el store.
    */
   actualizarEstadoFormulario(DATOS: Tramite260217State): void {
@@ -108,7 +108,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   /**
   * Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.
   * 
-  * @returns Observable con los datos del estado de la solicitud `Solicitud230401State`,
+  * @returns Observable con los datos del estado de la solicitud `Tramite260217State`,
   *          cargados desde el archivo JSON especificado en la ruta de `assets`.
   */
   getRegistroTomaMuestrasMercanciasData(): Observable<Tramite260217State> {
