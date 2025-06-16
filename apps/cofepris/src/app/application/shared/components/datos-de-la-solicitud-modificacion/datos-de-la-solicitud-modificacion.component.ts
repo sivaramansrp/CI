@@ -9,6 +9,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { ALERT_INSUMOS } from '../../constantes/datos-domicilio-legal.enum';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDelEstablecimientoRFCComponent } from '../datos-del-establecimiento-rfc/datos-del-establecimiento-rfc.component';
 import { DatosSolicitudQuery } from '../../estados/queries/datos-de-la-solicitud-modificacion.query';
 import { EstablecimientoService } from '../../services/establecimiento.service';
@@ -202,6 +203,12 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
    */
   public solicitudState!: DatosSolicitudState;
 
+    /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
 * Abre el modal de confirmación para eliminar un pedimento.
 * 
@@ -237,7 +244,8 @@ abrirModal(i: number = 0): void {
     private formBuilder: FormBuilder,
     private establecimientoService: EstablecimientoService,
     private datosSolicitudStore: DatosSolicitudStore,
-    private datosSolicitudQuery: DatosSolicitudQuery
+    private datosSolicitudQuery: DatosSolicitudQuery,
+    private consultaioQuery: ConsultaioQuery,
   ) {
     //Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
@@ -247,13 +255,29 @@ abrirModal(i: number = 0): void {
    * Método del ciclo de vida `OnInit` que inicializa el componente.
    */
   ngOnInit(): void {
-    this.mensajeManifiestos = MANIFIESTOS_DECLARACION.MANIFIESTOS;
-    this.cargarEstado();
-    this.cargarScian();
-    this.establecerOpcionesGenericas();
-    this.manejarConfidencial();
 
-    this.datosSolicitudQuery.selectSolicitud$
+    /**
+    * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+    * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+    * - Llama a `configurarGrupoForm()` para aplicar configuraciones basadas en el estado recibido.
+    * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+    */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe()
+
+    /**
+     * Se suscribe al estado de `DatosSolicitud` para obtener información actualizada del estado de la solicitud.
+     * - Asigna el estado de la solicitud a la propiedad `solicitudState`.
+     * - La suscripción se cancela automáticamente cuando `destroy$` emite un valor (para evitar fugas de memoria).
+     */
+
+      this.datosSolicitudQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroy$),
         map((seccionState) => {
@@ -262,6 +286,11 @@ abrirModal(i: number = 0): void {
       )
       .subscribe();
 
+    this.mensajeManifiestos = MANIFIESTOS_DECLARACION.MANIFIESTOS;
+    this.cargarEstado();
+    this.cargarScian();
+    this.establecerOpcionesGenericas();
+    this.manejarConfidencial();
     this.configurarGrupoForm();
   }
 
@@ -270,6 +299,7 @@ abrirModal(i: number = 0): void {
    * Configura los formularios reactivos del componente.
    */
   configurarGrupoForm(): void {
+    // Configuración del formulario principal de datos de la solicitud
     this.datosSolicitudform = this.formBuilder.group({
       genericos: [this.solicitudState?.genericos, [Validators.required]],
       observaciones: [this.solicitudState?.observaciones, [Validators.required]],
@@ -299,6 +329,16 @@ abrirModal(i: number = 0): void {
       scian: [this.solicitudState?.scian, Validators.required],
       descripcionScian: [this.solicitudState?.descripcionScian],
     });
+
+      if (this.datosSolicitudform && this.manifiestosRepresentanteForm && this.scianForm) {
+      this.datosSolicitudform.disable();
+      this.manifiestosRepresentanteForm.disable();
+      this.scianForm.disable();
+    } else {
+      this.datosSolicitudform.enable();
+      this.manifiestosRepresentanteForm.enable();
+      this.scianForm.enable();
+    }
   }
 
   /**
