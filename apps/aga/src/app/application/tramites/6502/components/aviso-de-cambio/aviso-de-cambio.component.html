@@ -6,12 +6,13 @@
 <div class="row mt-5">
     <div class="col-md-12">
         <app-tabla-dinamica [configuracionTabla]="instalacionesPrincipalesTabla"
-        [datos]="instalacionesPrincipalesTablaDatos" [tipoSeleccionTabla]="tablaSeleccionCheckbox"></app-tabla-dinamica>
+        [datos]="instalacionesPrincipalesTablaDatos" [tipoSeleccionTabla]="tablaSeleccionCheckbox" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false" 
+        [desactivarEmitirEvento]="esFormularioSoloLectura ? true : false"></app-tabla-dinamica>
     </div>
 </div>
 <div class="row">
     <div class="col-md-12 d-flex justify-content-end mt-3 mb-4">
-        <button class="btn btn-primary me-2" (click)="openModal()">Modificar</button>
+        <button class="btn btn-primary me-2" (click)="openModal()" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
     </div>
 </div>
 

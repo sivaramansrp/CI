@@ -31,6 +31,12 @@
       </tr>
     </thead>
     <tbody>
+      <tr *ngIf="!datos.length">
+        <td [attr.colspan]="obtenerConfiguracionOrdenada().length + (acciones.length ? 1 : 0) + (tipoSeleccionTabla ? 1 : 0)"
+          style="text-align: center;">
+          NO DATA
+        </td>
+      </tr>
       <!-- Crear las filas de manera dinámica -->
       <tr
         *ngFor="let fila of datos; let i = index"
