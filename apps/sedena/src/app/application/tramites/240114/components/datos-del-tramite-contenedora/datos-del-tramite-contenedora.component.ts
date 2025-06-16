@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
@@ -21,9 +21,15 @@ import { takeUntil } from 'rxjs';
   standalone: true,
   imports: [CommonModule, DatosDelTramiteComponent],
   templateUrl: './datos-del-tramite-contenedora.component.html',
-  
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
+  /**
+   * @property esFormularioSoloLectura
+   * @description Indica si el formulario es de solo lectura.
+   * @type {boolean}
+   */
+  @Input()
+  esFormularioSoloLectura: boolean = false;
   /**
    * Observable para limpiar suscripciones activas al destruir el componente.
    * @property {Subject<void>} unsubscribe$
@@ -59,8 +65,7 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   constructor(
     private tramiteQuery: Tramite240114Query,
     private tramiteStore: Tramite240114Store
-  ) // eslint-disable-next-line no-empty-function
-  {}
+  ) {}
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.

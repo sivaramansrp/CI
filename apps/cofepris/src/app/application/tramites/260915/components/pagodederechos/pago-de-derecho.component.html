@@ -6,12 +6,12 @@
                 <div class="col-md-4 mb-3">
                     <label class="form-label" for="clavedereferencia">Clave de referencia:</label>
                     <input class="form-control" id="clavedereferencia" type="text" formControlName="clavedereferencia"
-                    (change)="setValoresStore(pagoDeDerechos,'clavedereferencia', 'setClaveDeReferencia')"/>
+                    (change)="setValoresStore(pagoDeDerechos,'clavedereferencia')"/>
                   </div>
                   <div class="col-md-4 mb-3">
                     <label class="form-label" for="cadenadeladependencia">Cadena de la dependencia:</label>
                     <input class="form-control" id="cadenadeladependencia" type="text" formControlName="cadenadeladependencia"
-                    (change)="setValoresStore(pagoDeDerechos,'cadenadeladependencia', 'setCadenaDelaDependencia')"/>
+                    (change)="setValoresStore(pagoDeDerechos,'cadenadeladependencia')"/>
                   </div>
                 <div class="col-md-4 mb-3">
                   <app-catalogo-select 
@@ -21,7 +21,8 @@
                   [label]="'Banco'" 
                   [required]="true"
                   [placeholder]="bancoData.primerOpcion"
-                  (change)="setValoresStore(pagoDeDerechos,'banco', 'setBanco')"
+                  (change)="setValoresStore(pagoDeDerechos,'banco')"
+                  [isDisabled]="esFormularioSoloLectura"
                   >
                 </app-catalogo-select>
               </div>    
@@ -30,19 +31,20 @@
               <div class="col-md-4 mb-3">
                 <label class="form-label" for="llavedepago">Llave de pago:</label>
                 <input class="form-control" id="llavedepago" type="text" formControlName="llavedepago"
-                (change)="setValoresStore(pagoDeDerechos,'llavedepago', 'setLlavedoPago')"/>
+                (change)="setValoresStore(pagoDeDerechos,'llavedepago')"/>
               </div>
               <div class="col-md-4 mb-3">
                 <input-fecha
                 [datos]="fechaPago"
-                [setFecha]="pagoDeDerechosForm.get('fechaDePago')?.value"
+                [setFecha]="pagoDeDerechos.get('fechadepago')?.value"
+                [isDisabled]="esFormularioSoloLectura"
                 (valorCambiado)="seleccionarFechaInicio($event)"
               ></input-fecha>
               </div>
               <div class="col-md-4 mb-3">
                 <label class="form-label" for="importedepago">Importe de pago:</label>
                 <input class="form-control" id="importedepago" type="text" formControlName="importedepago"
-                (change)="setValoresStore(pagoDeDerechos,'importedepago', 'setImportedePago')"/>
+                (change)="setValoresStore(pagoDeDerechos,'importedepago')"/>
               </div>
             </div>
               <div class="col-md-12 d-flex justify-content-end">
