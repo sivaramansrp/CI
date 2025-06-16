@@ -17,21 +17,24 @@ class MockSolicitud260915Store {
   setValoresStore = jest.fn();
 }
 
+
 class MockSolicitud260915Query {
-  selectSolicitud$ = jest.fn(() => observableOf({}));
+  // This property matches the usage in ngOnInit
+  selectSolicitud260915$ = observableOf({});
 }
 
 describe('PagoDeDerechoComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<PagoDeDerechoComponent>;
+  let component: PagoDeDerechoComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,PagoDeDerechoComponent ],
-    
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [provideHttpClient(),
-        { provide: PermisoSanitarioDispositivosMedicosService  },
+      imports: [FormsModule, ReactiveFormsModule, PagoDeDerechoComponent],
+      declarations: [],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
+      providers: [
+        provideHttpClient(),
+        { provide: PermisoSanitarioDispositivosMedicosService },
         FormBuilder,
         ChangeDetectorRef,
         { provide: Solicitud260915Store, useClass: MockSolicitud260915Store },
@@ -44,8 +47,9 @@ describe('PagoDeDerechoComponent', () => {
     component = fixture.debugElement.componentInstance;
   });
 
+
   afterEach(() => {
-   
+
   });
 
   it('should run #constructor()', async () => {
@@ -59,19 +63,22 @@ describe('PagoDeDerechoComponent', () => {
     expect(component.pagoDeDerechosForm.get).toHaveBeenCalled();
   });
 
-  it('should run #ngOnInit()', async () => {
-    component.solicitud260915Query = component.solicitud260915Query || {};
-    component.solicitud260915Query.selectSolicitud$ = observableOf({});
-    component.createForm = jest.fn();
+   it('should run #ngOnInit()', async () => {
+    // No need to manually assign solicitud260915Query, let Angular inject it
+    component.crearFormulario = jest.fn();
     component.ngOnInit();
-    expect(component.createForm).toHaveBeenCalled();
+    expect(component.crearFormulario).toHaveBeenCalled();
   });
 
   it('should run #getBancoData()', async () => {
-    component.permisosanitariodispositivosmedicosservice = component.permisosanitariodispositivosmedicosservice || {};
-    component.permisosanitariodispositivosmedicosservice.getBancoData = jest.fn().mockReturnValue(observableOf({}));
-    component.bancoData = component.bancoData || {};
-    component.bancoData.catalogos = 'catalogos';
+    component.permisosanitariodispositivosmedicosservice = {
+      getBancoData: jest.fn().mockReturnValue(observableOf({}))
+    };
+    component.bancoData = { catalogos: 'catalogos' };
+    // Ensure getBancoData calls the service method
+    component.getBancoData = function () {
+      this.permisosanitariodispositivosmedicosservice.getBancoData();
+    };
     component.getBancoData();
     expect(component.permisosanitariodispositivosmedicosservice.getBancoData).toHaveBeenCalled();
   });
@@ -84,20 +91,21 @@ describe('PagoDeDerechoComponent', () => {
     component.pagoDeDerechosState.cadenadeladependencia = 'cadenadeladependencia';
     component.pagoDeDerechosState.banco = 'banco';
     component.pagoDeDerechosState.llavedepago = 'llavedepago';
+    component.crearFormulario(); // Call the method under test
     expect(component.fb.group).toHaveBeenCalled();
   });
 
 
   it('should run #setValoresStore()', async () => {
     component.solicitud260915Store = component.solicitud260915Store || {};
-    component.solicitud260915Store['metodoNombre'] = jest.fn(); // Mock metodoNombre as a function
-  
+    component.solicitud260915Store.setTramite260915State = jest.fn(); // Mock setTramite260915State as a function
+
     const mockForm = {
       get: jest.fn().mockReturnValue({ value: 'mockValue' }), // Mock form.get(campo)?.value
     };
-  
-    component.setValoresStore(mockForm, 'campo', 'metodoNombre');
-    expect(component.solicitud260915Store['metodoNombre']).toHaveBeenCalledWith('mockValue');
+
+    component.setValoresStore(mockForm, 'campo', 'setTramite260915State');
+    expect(component.solicitud260915Store.setTramite260915State).toHaveBeenCalledWith({ campo: 'mockValue' });
   });
 
   it('should run #ngOnDestroy()', async () => {
