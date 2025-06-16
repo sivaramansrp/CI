@@ -247,16 +247,14 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
   
     this.calculateTotals();
     const PARTIDAS_TABLA = this.solicitudState['partidas_tabla'];
-    if (!Array.isArray(PARTIDAS_TABLA) || PARTIDAS_TABLA.length === 0) {
+    if ((!Array.isArray(PARTIDAS_TABLA) || PARTIDAS_TABLA.length === 0) && this.esFormularioSoloLectura) {
       this.formularioRegistroService.getPartidasFromJson().pipe(takeUntil(this.destroyNotifier$)).subscribe(partidas => {
         this.datosSocios = partidas;
         this.tramite130102Store.setPartidasTabla('partidas_tabla', this.datosSocios);
       });
     }
 
-    // eslint-disable-next-line dot-notation
     this.formForTotalCount.controls['cantidadTotal'].disable();
-    // eslint-disable-next-line dot-notation
     this.formForTotalCount.controls['valorTotalUSD'].disable();
     this.formularioRegistroService.registrarFormulario('form', this.form);
     this.formularioRegistroService.registrarFormulario('formForTotalCount', this.formForTotalCount);

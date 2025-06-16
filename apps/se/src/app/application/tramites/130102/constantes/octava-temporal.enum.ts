@@ -5,7 +5,9 @@ import { FraccionArancelariaProsec, OctavaTemporal } from "../models/octava-temp
  * debido a que faltan campos obligatorios por capturar.
  */
 export const ERROR_DE_REGISTRO_ALERT =
-'<strong>¡Error de registrot</strong>Faltan campos por capturar.';
+`<div class="d-flex justify-content-center">
+    <strong>¡Error de registro!</strong> Faltan campos por capturar.
+</div>`;
 
 /*
   * Mensaje de alerta que se muestra cuando hay un error en el registro 

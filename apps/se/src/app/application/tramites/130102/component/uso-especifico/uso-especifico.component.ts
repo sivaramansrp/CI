@@ -4,7 +4,7 @@
  * @description Componente para el formulario de Uso Específico, permitiendo al usuario ingresar información sobre el uso específico de un producto, incluyendo la fracción arancelaria y una descripción.
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors } from '@angular/forms';
@@ -34,7 +34,7 @@ import { FraccionArancelariaProsec } from '../../models/octava-temporal.model';
   templateUrl: './uso-especifico.component.html',
   styleUrl: './uso-especifico.component.scss'
 })
-export class UsoEspicificoComponent implements OnInit {
+export class UsoEspicificoComponent implements OnInit, OnDestroy {
    /**
        * @property {TablaSeleccion} tablaSeleccion
        * @description Tabla de selección para la tabla de cupos.
@@ -108,10 +108,14 @@ export class UsoEspicificoComponent implements OnInit {
    * @memberof UsoEspicificoComponent
    */
   ngOnInit(): void {
-    this.formularioRegistroService.getFraccionesUsoEspecifico().subscribe(data => {
-      this.datosSocios = data;
-    });
-    this.formularioRegistroService.registrarFormulario('usoEspicificoForm', this.usoEspicificoForm);
+    const USO_ESPECIFICO_TABLA = this.solicitudState['uso_especifico_tabla'];
+    if ((!Array.isArray(USO_ESPECIFICO_TABLA) || USO_ESPECIFICO_TABLA.length === 0) && this.esFormularioSoloLectura) {
+      this.formularioRegistroService.getFraccionesUsoEspecifico().subscribe(data => {
+        this.datosSocios = data;
+      });
+      this.tramite130102Store.setDynamicFieldValue('uso_especifico_tabla', this.datosSocios);
+      this.formularioRegistroService.registrarFormulario('usoEspicificoForm', this.usoEspicificoForm);
+    }
   }
 
   /**
@@ -152,6 +156,23 @@ export class UsoEspicificoComponent implements OnInit {
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {  
         this.solicitudState = seccionState;
+        if (
+              this.solicitudState &&
+              typeof this.solicitudState === 'object' &&
+              this.solicitudState !== null &&
+              'uso_especifico_tabla' in this.solicitudState
+            ) {
+              const PRODUCTO = this.solicitudState['uso_especifico_tabla'] as FraccionArancelariaProsec[];
+              PRODUCTO.forEach((productoItem: FraccionArancelariaProsec) => {
+                const IS_ALREADY_ADDED = this.datosSocios.some(
+                (item: FraccionArancelariaProsec) => item.fraccionArancelariaProsec === productoItem.fraccionArancelariaProsec
+              );
+  
+              if (!IS_ALREADY_ADDED) {
+                this.datosSocios.push(productoItem);
+              }
+              });
+            }
       })
     )
     .subscribe();
@@ -225,6 +246,7 @@ export class UsoEspicificoComponent implements OnInit {
         descripción: this.usoEspicificoForm.get('descripción')?.value,
       };
       this.datosSocios?.push(ESPECIFICO);
+      this.tramite130102Store.setDynamicFieldValue('uso_especifico_tabla', this.datosSocios);
       this.usoEspicificoForm.reset();
     }
   }

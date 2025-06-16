@@ -5,11 +5,13 @@
  * @module OctavaTemporalComponent
  */
 
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
 import { DatosPasos, WizardComponent } from '@libs/shared/data-access-user/src';
+import { ListaPasosWizard, WizardService } from '@libs/shared/data-access-user/src';
+import { Subject, map, takeUntil } from 'rxjs';
 import {ERROR_DE_REGISTRO_ALERT} from '../../constantes/octava-temporal.enum';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
-import { ListaPasosWizard } from '@libs/shared/data-access-user/src';
 import { OCTA_TEMPO } from 'libs/shared/data-access-user/src/core/services/130102/octava-temporal.enum';
 
 /**
@@ -26,7 +28,7 @@ interface AccionBoton {
   selector: 'app-octava-temporal',
   templateUrl: './octava-temporal.component.html',
 })
-export class OctavaTemporalComponent {
+export class OctavaTemporalComponent implements OnInit, OnDestroy{
   /**
    * Referencia al componente del asistente (wizard) para controlar su navegación.
    */
@@ -63,8 +65,36 @@ export class OctavaTemporalComponent {
    */
   registroAlert = ERROR_DE_REGISTRO_ALERT;
 
+  /*
+  * @description Notificador para destruir el componente y cancelar suscripciones.
+  */
+  private destroyNotifier$: Subject<void> = new Subject();
 
-  constructor(private formularioRegistroService: FormularioRegistroService) {}
+  /*
+  * @description Estado actual de la consulta, obtenido desde el store.
+  */
+  public consultaState!: ConsultaioState;
+
+  /**
+   * @property wizardService
+   * @description
+   * Inyección del servicio `WizardService` para gestionar la lógica y el estado del componente wizard.
+   * @type {WizardService}
+   */
+    private wizardService = inject(WizardService);
+
+
+  constructor(private consultaQuery: ConsultaioQuery, private formularioRegistroService: FormularioRegistroService) {}
+
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+      this.consultaState = seccionState;
+      }
+    )).subscribe();
+  }
 
   /**
    * Maneja el cambio de índice en el flujo del wizard.
@@ -73,22 +103,47 @@ export class OctavaTemporalComponent {
    * @param e - Objeto que contiene la acción y el nuevo valor del índice.
    */
   getValorIndice(e: AccionBoton): void {
-    const TODOS_VALIDOS = this.formularioRegistroService.validarTodosFormularios();
+    if (!this.consultaState.readonly) {
+      const TODOS_VALIDOS = this.formularioRegistroService.validarTodosFormularios();
 
-    if (!TODOS_VALIDOS) {
-      this.mostrarErrorFormularios = true;
-      return;
-    }
-
-    this.mostrarErrorFormularios = false;
-    if (e.valor > 0 && e.valor < 5) {
+      if (!TODOS_VALIDOS) {
+        this.mostrarErrorFormularios = true;
+        return;
+      }
+      this.mostrarErrorFormularios = false;
+      if (e.valor > 0 && e.valor < 5) {
+        this.indice = e.valor;
+        this.datosPasos.indice = e.valor;
+        if (e.accion === 'cont' && !this.mostrarErrorFormularios) {
+          this.indice = e.valor + 1;
+          this.datosPasos.indice = e.valor + 1;
+          this.wizardService.cambio_indice(this.datosPasos.indice);
+          this.wizardComponent.siguiente();
+        } else if (e.accion === 'ant' && !this.mostrarErrorFormularios){
+          this.indice = e.valor - 1;
+          this.datosPasos.indice = e.valor - 1;
+          this.wizardComponent.atras();
+        }
+      }
+    } else {
+      if (e.valor > 0 && this.pantallasPasos.length) {
       this.indice = e.valor;
-
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {
         this.wizardComponent.atras();
       }
     }
+    }
+    
+  }
+
+  /*
+    * Método que se ejecuta al destruir el componente.
+  */
+
+   ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

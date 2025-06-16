@@ -1,6 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { OctavaTemporal } from '../../tramites/130102/models/octava-temporal.model';
+import { FraccionArancelariaProsec, OctavaTemporal } from '../../tramites/130102/models/octava-temporal.model';
 
 /**
  * Interfaz que define el estado de la solicitud 130102.
@@ -69,6 +69,8 @@ export interface Solicitud130102State {
   solicitud :string; // Indica si la solicitud está activa o pendiente de revisión.
 
   partidas_tabla?: OctavaTemporal[];
+
+  uso_especifico_tabla?: FraccionArancelariaProsec[];
 }
 /**
  * Crea y devuelve el estado inicial de la solicitud.
