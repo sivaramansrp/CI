@@ -106,17 +106,30 @@ export class ImportacionExportacionPetroleoComponent implements OnInit, OnDestro
   get ninoFormGroup(): FormGroup {
     return this.forma.get('ninoFormGroup') as FormGroup;
   }
-
-  /**
-   * method onFechaCambiada
-   * description Maneja el cambio de fecha en el formulario.
-   * param nuevo_valor Nueva fecha seleccionada.
+ /**
+   * Actualiza el campo de fecha de pago en el formulario y en el estado global.
+   *
+   * @param nuevo_fechaPago Nueva fecha de pago seleccionada.
    */
-  public onFechaCambiada(nuevo_valor: string): void {
-    this.form.get('fechaPago')?.setValue(nuevo_valor);
-    this.form.get('fechaPago')?.markAsUntouched();
-    this.tramite130302Store.setprorrogaAl(nuevo_valor);
+  cambioFechaPago(nuevo_fechaPago: string): void {
+    this.form.patchValue({
+      prorrogaAl: nuevo_fechaPago,
+    });
+    this.setValoresStore(this.form, 'prorrogaAl', 'setprorrogaAl');
   }
+
+   /**
+   * Actualiza el campo de fecha de pago en el formulario y en el estado global.
+   *
+   * @param nuevo_fechaPago Nueva fecha de pago seleccionada.
+   */
+  oncambioFechaPago(nuevo_fechaPago: string): void {
+    this.form.patchValue({
+      prorrogaDel: nuevo_fechaPago,
+    });
+    this.setValoresStore(this.form, 'prorrogaDel', 'setprorrogaDel');
+  }
+
 
   /**
    * property tipoSeleccionTabla

@@ -23,16 +23,20 @@
     </div>
     <div class="row">
       <div class="col-md-4">
-
-        <input-fecha [datos]="fechaInicioOutput" formControlName="prorrogaDel" (valorCambiado)="onFechaCambiada($event)"
-          [setFecha]="form.get('prorrogaDel')?.value"  [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
+<input-fecha [datos]="fechaInicioInput" [setFecha]="
+                  form.get('prorrogaDel')
+                    ?.value
+                " (valorCambiado)="oncambioFechaPago($event)"
+            [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
       </div>
     </div>
     <div class="row">
       <div class="col-md-4">
-
-        <input-fecha [datos]="fechaInicioInput" formControlName="prorrogaAl" (valorCambiado)="onFechaCambiada($event)"
-          [setFecha]="form.get('prorrogaAl')?.value"  [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
+<input-fecha [datos]="fechaInicioInput" [setFecha]="
+                  form.get('prorrogaAl')
+                    ?.value
+                " (valorCambiado)="cambioFechaPago($event)"
+            [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
       </div>
     </div>
     <div class="col-md-12">
