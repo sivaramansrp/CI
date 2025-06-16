@@ -1,8 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
+import {catchError, map, takeUntil } from 'rxjs';
 import { Router } from '@angular/router';
-import { TramiteFolioService } from '@libs/shared/data-access-user/src/core/services/shared/tramite-folio/tramite-folio.service';
 import { Subject } from 'rxjs';
-import { takeUntil, catchError, map } from 'rxjs';
+import { TramiteFolioService } from '@libs/shared/data-access-user/src/core/services/shared/tramite-folio/tramite-folio.service';
+
+
 
 @Component({
   selector: 'app-paso-tres',
