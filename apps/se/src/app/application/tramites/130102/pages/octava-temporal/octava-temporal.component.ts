@@ -81,11 +81,24 @@ export class OctavaTemporalComponent implements OnInit, OnDestroy{
    * Inyección del servicio `WizardService` para gestionar la lógica y el estado del componente wizard.
    * @type {WizardService}
    */
-    private wizardService = inject(WizardService);
+  private wizardService = inject(WizardService);
 
 
+  /**
+   * Constructor del componente/servicio.
+   * Inyecta los servicios necesarios para la consulta del estado y la gestión del formulario de registro.
+   *
+   * @param {ConsultaioQuery} consultaQuery - Servicio para consultar el estado actual desde el store.
+   * @param {FormularioRegistroService} formularioRegistroService - Servicio para gestionar el formulario de registro.
+   */
   constructor(private consultaQuery: ConsultaioQuery, private formularioRegistroService: FormularioRegistroService) {}
 
+  /**
+   * Método del ciclo de vida `ngOnInit`.
+   * Inicializa el componente y sus dependencias.
+   * Se suscribe al observable del estado de consulta para obtener el estado actual desde el store.
+   * Al recibir un nuevo estado, lo asigna a la propiedad `consultaState`.
+   */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
     .pipe(
@@ -141,7 +154,6 @@ export class OctavaTemporalComponent implements OnInit, OnDestroy{
   /*
     * Método que se ejecuta al destruir el componente.
   */
-
    ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

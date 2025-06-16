@@ -335,6 +335,16 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   }
 
+  /**
+   * Getter para el formulario de modificación de partida.
+   * Retorna el FormGroup asociado a 'modificarPartidaForm' dentro del formulario principal.
+   *
+   * @returns {FormGroup} El formulario reactivo para modificar la partida.
+   *
+   * @example
+   * const form = this.modificarPartidaForm;
+   * // Accede a los controles del formulario de modificación de partida.
+   */
   get modificarPartidaForm(): FormGroup {
     return this.form.get('modificarPartidaForm') as FormGroup;
   }
@@ -362,16 +372,14 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
         sum + parseFloat(item.tbodyData[0]),
       0
     );
-const VALOR_TOTAL_USD = this.tableBodyData.reduce(
-  (sum: number, item: { tbodyData: string[] }) =>
-    sum + parseFloat(item.tbodyData[5]),
-  0
-);
+    const VALOR_TOTAL_USD = this.tableBodyData.reduce(
+      (sum: number, item: { tbodyData: string[] }) =>
+        sum + parseFloat(item.tbodyData[5]),
+      0
+    );
 
-// eslint-disable-next-line dot-notation
-this.formForTotalCount.controls['cantidadTotal'].setValue(CANTIDAD_TOTAL);
-// eslint-disable-next-line dot-notation
-this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTAL_USD);
+    this.formForTotalCount.controls['cantidadTotal'].setValue(CANTIDAD_TOTAL);
+    this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTAL_USD);
   }
  
   /**
@@ -493,48 +501,48 @@ this.formForTotalCount.controls['valorTotalUSD'].setValue(VALOR_TOTAL_USD);
   }
 
   /*
-     * @method abrirModalEditar
-     */
-    onPartidasSeleccion(lista: OctavaTemporal[]): void {
-      this.partidasSeleccionadas = [];
-      this.partidasSeleccionadas = lista;
-      if (!this.partidasSeleccionadas.length) {
-        return;
-      }
-      const FILA_SELECCIONADA = this.partidasSeleccionadas[0];
-      if (FILA_SELECCIONADA) {
-        this.modificarPartidaForm?.patchValue({
-          modificar_cantidad: FILA_SELECCIONADA.cantidad,
-          modificar_descripcion: FILA_SELECCIONADA.descripción,
-          valor_partidas_usd: FILA_SELECCIONADA.totalUsd,
-          fraccion_partidas: FILA_SELECCIONADA.fraccionArancelaria,
+    * @method abrirModalEditar
+    */
+  onPartidasSeleccion(lista: OctavaTemporal[]): void {
+    this.partidasSeleccionadas = [];
+    this.partidasSeleccionadas = lista;
+    if (!this.partidasSeleccionadas.length) {
+      return;
+    }
+    const FILA_SELECCIONADA = this.partidasSeleccionadas[0];
+    if (FILA_SELECCIONADA) {
+      this.modificarPartidaForm?.patchValue({
+        modificar_cantidad: FILA_SELECCIONADA.cantidad,
+        modificar_descripcion: FILA_SELECCIONADA.descripción,
+        valor_partidas_usd: FILA_SELECCIONADA.totalUsd,
+        fraccion_partidas: FILA_SELECCIONADA.fraccionArancelaria,
+      });
+    }
+  }
+
+  /**
+   * @method eliminar
+   * @description
+   * Elimina las partidas seleccionadas de la tabla dinámica (`datosTabla`).
+   * Recorre el arreglo de partidas seleccionadas y elimina cada una de ellas de la tabla,
+   * actualizando el estado dinámico del trámite en el store después de cada eliminación.
+   */
+    eliminar(): void {
+      if (this.partidasSeleccionadas.length) {
+        this.partidasSeleccionadas.forEach((ele: OctavaTemporal) => {
+          const INDICE = this.datosSocios.findIndex((item) => item.fraccionArancelaria === ele.fraccionArancelaria);
+          if (INDICE !== -1) {
+            this.datosSocios.splice(INDICE, 1);
+            this.tramite130102Store.setPartidasTabla('partidas_tabla', this.datosSocios);
+          }
         });
+      } else {
+        const MODAL = new Modal(this.modalConfirmacionRef.nativeElement);
+        MODAL.show();
       }
     }
 
-    /**
-     * @method eliminar
-     * @description
-     * Elimina las partidas seleccionadas de la tabla dinámica (`datosTabla`).
-     * Recorre el arreglo de partidas seleccionadas y elimina cada una de ellas de la tabla,
-     * actualizando el estado dinámico del trámite en el store después de cada eliminación.
-     */
-      eliminar(): void {
-        if (this.partidasSeleccionadas.length) {
-          this.partidasSeleccionadas.forEach((ele: OctavaTemporal) => {
-            const INDICE = this.datosSocios.findIndex((item) => item.fraccionArancelaria === ele.fraccionArancelaria);
-            if (INDICE !== -1) {
-              this.datosSocios.splice(INDICE, 1);
-              this.tramite130102Store.setPartidasTabla('partidas_tabla', this.datosSocios);
-            }
-          });
-        } else {
-          const MODAL = new Modal(this.modalConfirmacionRef.nativeElement);
-          MODAL.show();
-        }
-      }
-
-      /*
+  /*
    * @method abrirModalEditar
    */
   abrirModalEditar(): void {
