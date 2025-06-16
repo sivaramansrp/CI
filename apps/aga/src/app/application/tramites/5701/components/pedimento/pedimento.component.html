@@ -28,10 +28,10 @@
   </div>
 </div>
 
-<div class="row">
+<div class="row mt-3">
   <div class="col-md-12">
     <ngx-datatable
-      class="table table-striped table-hover table-bordered"
+      class="bootstrap ngx-bordered-table table-striped table-bordered"
       #tablaPedimentos
       [columnMode]="ColumnMode.force"
       [rows]="pedimentos"
@@ -88,38 +88,56 @@
         </ng-template>
       </ngx-datatable-column>
 
-      <ngx-datatable-column name="Tipo de pedimento" prop="tipoPedimento">
+      <ngx-datatable-column name="Tipo de pedimento" prop="descTipoPedimento">
         <ng-template
           ngx-datatable-cell-template
           let-rowIndex="rowIndex"
           let-value="value"
           let-row="row"
         >
-          @if (!editar[rowIndex + '-gender']) {
+          @if (!editar[rowIndex + '-descTipoPedimento']) {
           <span
-            title="Double click to edit"
-            (dblclick)="editar[rowIndex + '-gender'] = true"
+            title="Doble click para editar"
+            (dblclick)="editar[rowIndex + '-descTipoPedimento'] = true"
           >
             {{ value }}
           </span>
-          } @if (editar[rowIndex + '-gender']) {
+          } @if (editar[rowIndex + '-descTipoPedimento']) {
           <select
-            (blur)="editar[rowIndex + '-gender'] = false"
-            (change)="actualizarValor($event, 'gender', rowIndex)"
+            (blur)="editar[rowIndex + '-descTipoPedimento'] = false"
+            (change)="actualizarValor($event, 'descTipoPedimento', rowIndex)"
             [value]="value"
           >
-            <option *ngFor="let tipo of tiposPedimento" [value]="tipo.id">
+            <option value="0" disabled>Seleccione un tipo de pedimento</option>
+            <option
+              *ngFor="let tipo of tiposPedimento"
+              [value]="tipo.descripcion"
+            >
               {{ tipo.descripcion }}
             </option>
           </select>
           }
-          {{ row.tipoPedimento }}
         </ng-template>
       </ngx-datatable-column>
 
-      <ngx-datatable-column name="Número" prop="numero">
-        <ng-template let-row="row" ngx-datatable-cell-template>
-          {{ row.numero }}
+      <ngx-datatable-column name="Número (s)" prop="numero">
+        <ng-template
+          ngx-datatable-cell-template
+          let-rowIndex="rowIndex"
+          let-value="value"
+          let-row="row"
+        >
+          @if (editar[rowIndex + '-numero']) {
+          <input
+            (blur)="actualizarValor($event, 'numero', rowIndex)"
+            type="text"
+            [value]="value"
+          />
+          } @else {
+          <span title="Doble click para editar" (dblclick)="editarCelda(rowIndex)">
+            {{ row.numero ? row.numero : 'No definido' }}
+          </span>
+          }
         </ng-template>
       </ngx-datatable-column>
 
@@ -129,7 +147,7 @@
         </ng-template>
       </ngx-datatable-column>
 
-      <ngx-datatable-column name="Validado" prop="pedimentoValidado">
+      <ngx-datatable-column name=" Pedimento Validado" prop="pedimentoValidado">
         <ng-template let-row="row" ngx-datatable-cell-template>
           {{ row.pedimentoValidado }}
         </ng-template>

@@ -1,5 +1,13 @@
-th, td{
-  font-size: small;
-  text-align: center;
+.ngx-bordered-table {
+  border: 1px solid #dee2e6;
+  border-collapse: collapse;
 }
 
+.ngx-bordered-table .datatable-body-row,
+.ngx-bordered-table .datatable-header {
+  border: 1px solid #dee2e6;
+}
+
+.ngx-bordered-table .datatable-row-group {
+  border: 1px solid #dee2e6;
+}

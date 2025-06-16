@@ -469,9 +469,7 @@
             class="form-control"
             formControlName="folioDDEX"
             placeholder=""
-            (change)="
-              changeFolioDDEX()
-            "
+            (change)="changeFolioDDEX()"
             [ngClass]="isValid(despacho, 'folioDDEX') ? 'required' : ''"
           />
 

@@ -291,6 +291,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
                       this.pedimentos.push(PEDIMENTO);
                       this.pedimentoForm.reset();
                       this.datosTablaPedimento.emit(this.pedimentos);
+                      console.log('PEDIMENTOS', this.pedimentos);
                     }
                     break;
                   default:
@@ -376,15 +377,37 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   actualizarValor(event: Event, cell: string, rowIndex: number): void {
-    const target = event.target as HTMLInputElement;
-    console.log('inline editing rowIndex', rowIndex);
+    const TARGET = event.target as HTMLInputElement;
     this.editar[`${rowIndex}-${cell}`] = false;
 
-    // console.log(this.pedimentos[rowIndex][cell]);
-
-    // this.pedimentos[rowIndex][cell] = target.value;
+    if (cell === 'descTipoPedimento' || cell === 'numero') {
+      this.pedimentos[rowIndex][cell] = TARGET.value;
+      if (cell === 'descTipoPedimento') {
+        const TIPO_PEDIMENTO = this.tiposPedimento.find(
+          (tipo) => tipo.descripcion === TARGET.value
+        );
+        if (TIPO_PEDIMENTO) {
+          this.pedimentos[rowIndex].tipoPedimento = TIPO_PEDIMENTO.id;
+        } else {
+          this.pedimentos[rowIndex].tipoPedimento = 0; // Asignar un valor por defecto si no se encuentra el tipo
+        }
+      }
+    }
 
     this.pedimentos = [...this.pedimentos];
-    // console.log('UPDATED!', this.pedimentos[rowIndex][cell]);
+    console.log('PEDIMENTOS ACTUALIZADOS', this.pedimentos);
+  }
+
+  editarCelda(rowIndex: number): void {
+    if (
+      this.pedimentos[rowIndex].tipoPedimento === 0 ||
+      this.pedimentos[rowIndex].tipoPedimento === 4
+    ) {
+      console.log('No se puede editar el tipo de pedimento');
+      
+      this.editar[rowIndex + '-numero'] = false;
+      return;
+    }
+    this.editar[rowIndex + '-numero'] = true;
   }
 }
