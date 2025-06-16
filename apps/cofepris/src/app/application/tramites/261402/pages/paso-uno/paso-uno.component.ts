@@ -4,14 +4,14 @@
  */
 import { Catalogo, ConfiguracionColumna } from '@libs/shared/data-access-user/src'; 
 import { Component, OnDestroy, OnInit } from '@angular/core'; 
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'; 
 import { Solicitud261402State, Tramite261402Store } from '../../../../estados/tramites/tramite261402.store';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject,map, takeUntil } from 'rxjs';
 import { CONFIGURACIONCOLUMNA } from '../../enums/tramite-asociados.enum';
 import { SolicitudModificacionPermisoInternacionService } from '../../services/solicitud-modificacion-permiso-internacion.service';
 import { Tramite261402Query } from '../../../../estados/queries/tramite261402.query'; 
 import { TramiteAsociados } from '../../../../shared/models/tramite-asociados.model'; 
-
 /**
  * Decorador que define el componente Angular para el primer paso del proceso.
  * Incluye el selector del componente y la ruta de su plantilla HTML.
@@ -59,7 +59,19 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Configuración de la tabla para mostrar trámites asociados.
    */
   configuracionTabla: ConfiguracionColumna<TramiteAsociados>[] = CONFIGURACIONCOLUMNA;
+    /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
 
+  /**
+   * Estado actual de la consulta cargado desde el store.
+   * Contiene datos como modo de solo lectura y valores del formulario.
+   */
+  public consultaState!: ConsultaioState;
+       /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+      esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente.
    * formBuilder Constructor para formularios reactivos.
@@ -71,7 +83,8 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private solicitudPermisoService: SolicitudModificacionPermisoInternacionService,
     private tramite261402Store: Tramite261402Store,
-    private tramite261402Query: Tramite261402Query
+    private tramite261402Query: Tramite261402Query,
+    private consultaQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -79,9 +92,40 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Inicializa los datos necesarios para el componente.
    */
   ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.notificadorDestruccion$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
+    if (this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
     this.inicializarDatosSolicitud();
   }
 
+     /**
+  * Obtiene los datos de la solicitud desde un servicio y actualiza el estado del formulario.  
+  * Si la respuesta es válida, activa el indicador de datos cargados.
+  */
+  guardarDatosFormulario(): void {
+       this.solicitudPermisoService
+      .getDatosDeLaSolicitud().pipe(
+        takeUntil(this.notificadorDestruccion$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.solicitudPermisoService.actualizarEstadoFormulario(resp);
+        }else {
+          this.esDatosRespuesta = false;
+        }
+      });
+  }
   /**
    * Inicializa los datos de la solicitud, incluyendo el estado actual y los trámites asociados.
    */
