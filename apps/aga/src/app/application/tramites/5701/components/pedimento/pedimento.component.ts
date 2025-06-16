@@ -1,4 +1,12 @@
 import {
+  Catalogo,
+  MSG_ELIMINA_ELEMENTO,
+  Notificacion,
+  NotificacionesComponent,
+  SoloNumerosDirective,
+  TipoPedimentoService,
+} from '@ng-mf/data-access-user';
+import {
   ColumnMode,
   NgxDatatableModule,
   SelectionType,
@@ -21,22 +29,15 @@ import {
 } from '../../../../core/models/5701/tramite5701.model';
 import {
   ERR_VALIDACION_PEDIMENTO,
-  MSG_ELIMINA_ELEMENTO,
   MSG_NRO_PEDIMENTO,
-} from '../../../../core/enums/5701/tramite5701.enum';
+} from '../../../../core/enums/5701/mensajes-modal-5701.enum';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {
-  Catalogo,
-  Notificacion,
-  NotificacionesComponent,
-  SoloNumerosDirective,
-  TipoPedimentoService,
-} from '@ng-mf/data-access-user';
+
 import {
   Solicitud5701State,
   Tramite5701Store,
