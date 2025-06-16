@@ -1,13 +1,13 @@
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/pago-de-derechos.model';
-import { Subject } from 'rxjs';
 import { Tramite240311Query } from '../../estados/tramite240311Query.query';
 import { Tramite240311Store } from '../../estados/tramite240311Store.store';
-import { takeUntil } from 'rxjs';
 /**
  * @title Pago de Derechos Contenedora
  * @description Componente contenedor que se encarga de enlazar el estado de pago de derechos con el formulario correspondiente.
@@ -34,6 +34,12 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    */
   public pagoDerechoFormState!: PagoDerechosFormState;
 
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+   esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    *
@@ -44,9 +50,18 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite240311Query,
-    private tramiteStore: Tramite240311Store 
+    private tramiteStore: Tramite240311Store,
+    private consultaioQuery: ConsultaioQuery 
   ) {
-  // Constructor del componente 
+   // Constructor del componente 
+      this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.unsubscribe$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe()
   }
 
   /**

@@ -1,15 +1,14 @@
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240311Query } from '../../estados/tramite240311Query.query';
 import { Tramite240311Store } from '../../estados/tramite240311Store.store';
-import { takeUntil } from 'rxjs';
-
 /**
  * @title Terceros Relacionados Contenedora
  * @description Componente contenedor encargado de suscribirse a los datos de destinatarios finales y proveedores del trámite.
@@ -44,6 +43,12 @@ export class TercerosRelacionadosContenedoraComponent
    */
   proveedorTablaDatos: Proveedor[] = [];
 
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+   esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    *
@@ -54,9 +59,18 @@ export class TercerosRelacionadosContenedoraComponent
    */
   constructor(
     private tramiteStore: Tramite240311Store,
-    private tramiteQuery: Tramite240311Query 
+    private tramiteQuery: Tramite240311Query,
+    private consultaioQuery: ConsultaioQuery 
   ) {
     // Constructor del componente 
+      this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.unsubscribe$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe()
   }
 
   /**

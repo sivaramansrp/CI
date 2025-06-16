@@ -1,5 +1,7 @@
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { Tramite240311Store } from '../../estados/tramite240311Store.store';
@@ -18,6 +20,18 @@ import { Tramite240311Store } from '../../estados/tramite240311Store.store';
   styleUrl: './datos-mercancia-contenedora.component.scss',
 })
 export class DatosMercanciaContenedoraComponent {
+   /**
+   * Observable para limpiar suscripciones activas al destruir el componente.
+   * @property {Subject<void>} unsubscribe$
+   */
+  private unsubscribe$ = new Subject<void>();
+
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+   esFormularioSoloLectura: boolean = false;
+   
   /**
    * Constructor del componente.
    *
@@ -25,7 +39,16 @@ export class DatosMercanciaContenedoraComponent {
    * @param {Tramite240311Store} tramiteStore - Store de Akita para actualizar el estado de la tabla de mercancías.
    * @returns {void}
    */
-  constructor(private tramiteStore: Tramite240311Store) {}
+  constructor(private tramiteStore: Tramite240311Store, private consultaioQuery: ConsultaioQuery) {
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.unsubscribe$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe()
+  }
 
   /**
    * Actualiza los datos de la tabla de mercancía en el store.

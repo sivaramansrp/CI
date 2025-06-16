@@ -1,5 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CrosslistComponent } from '@libs/shared/data-access-user/src';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
@@ -8,12 +10,9 @@ import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.mo
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
 import { Tramite240311Query } from '../../estados/tramite240311Query.query';
 import { Tramite240311Store } from '../../estados/tramite240311Store.store';
 import { construirAduanasBotones } from '../../constants/solicitude-de-artificios-pirotecnicos.enum';
-import { takeUntil } from 'rxjs';
-
 /**
  * @title Datos del Trámite Contenedora
  * @description Componente contenedor que se encarga de enlazar el estado del trámite con el componente de datos del trámite.
@@ -72,6 +71,12 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   aduanasBotones: { btnNombre: string; class: string }[] = [];
   
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+   esFormularioSoloLectura: boolean = false;
+  
+  /**
    * Constructor del componente.
    *
    * @method constructor
@@ -81,9 +86,18 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite240311Query,
-    private tramiteStore: Tramite240311Store
+    private tramiteStore: Tramite240311Store,
+     private consultaioQuery: ConsultaioQuery
   ) {
      // Constructor del componente
+     this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.unsubscribe$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe()
   }
 
   /**
