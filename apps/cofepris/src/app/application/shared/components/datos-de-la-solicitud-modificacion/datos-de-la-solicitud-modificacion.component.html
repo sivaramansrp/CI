@@ -37,46 +37,46 @@
       </ng-container>
       <ng-template #noInsumos>
         <section>
-      <ng-titulo titulo="Datos del establecimiento"></ng-titulo>
-      <div class="row">
-        <div class="col-md-8"></div>
-        <div class="col-md-4 d-flex justify-content-end">
-          <button type="button" class="btn btn-primary" (click)="abrirModal()">
-            Seleccionar establecimiento
-          </button>
-        </div>
-      </div>
-      <div class="row">
-        <div class="col-md-8">
-          <div class="form-group">
-            <label class="form-label" for="establecimientoRazonSocial">Denominación o razón social*:</label>
-            <input class="form-control" id="establecimientoRazonSocialId" placeholder="" type="text"
-              formControlName="establecimientoRazonSocial"
-              (change)="actualizarValoresStore(datosSolicitudform,'establecimientoRazonSocial', 'setEstablecimientoRazonSocial')" />
-            <div
-              *ngIf="datosSolicitudform.get('establecimientoRazonSocial')?.touched && datosSolicitudform.get('establecimientoRazonSocial')?.invalid"
-              class="mensaje-error">
-              Este campo es obligatorio.
+          <ng-titulo titulo="Datos del establecimiento"></ng-titulo>
+          <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-4 d-flex justify-content-end">
+              <button type="button" class="btn btn-primary" (click)="abrirModal()">
+                Seleccionar establecimiento
+              </button>
             </div>
           </div>
-        </div>
+          <div class="row">
+            <div class="col-md-8">
+              <div class="form-group">
+                <label class="form-label" for="establecimientoRazonSocial">Denominación o razón social*:</label>
+                <input class="form-control" id="establecimientoRazonSocialId" placeholder="" type="text"
+                  formControlName="establecimientoRazonSocial"
+                  (change)="actualizarValoresStore(datosSolicitudform,'establecimientoRazonSocial', 'setEstablecimientoRazonSocial')" />
+                <div
+                  *ngIf="datosSolicitudform.get('establecimientoRazonSocial')?.touched && datosSolicitudform.get('establecimientoRazonSocial')?.invalid"
+                  class="mensaje-error">
+                  Este campo es obligatorio.
+                </div>
+              </div>
+            </div>
 
-        <div class="col-md-4">
-          <div class="form-group">
-            <label class="form-label" for="establecimientoCorreoElectronico">Correo electrónico*:</label>
-            <input class="form-control" id="establecimientoCorreoElectronicoId" placeholder="" type="text"
-              formControlName="establecimientoCorreoElectronico"
-              (change)="actualizarValoresStore(datosSolicitudform,'establecimientoCorreoElectronico', 'setEstablecimientoCorreoElectronico')" />
-            <div
-              *ngIf="datosSolicitudform.get('establecimientoCorreoElectronico')?.touched && datosSolicitudform.get('establecimientoCorreoElectronico')?.invalid"
-              class="mensaje-error">
-              Este campo es obligatorio.
+            <div class="col-md-4">
+              <div class="form-group">
+                <label class="form-label" for="establecimientoCorreoElectronico">Correo electrónico*:</label>
+                <input class="form-control" id="establecimientoCorreoElectronicoId" placeholder="" type="text"
+                  formControlName="establecimientoCorreoElectronico"
+                  (change)="actualizarValoresStore(datosSolicitudform,'establecimientoCorreoElectronico', 'setEstablecimientoCorreoElectronico')" />
+                <div
+                  *ngIf="datosSolicitudform.get('establecimientoCorreoElectronico')?.touched && datosSolicitudform.get('establecimientoCorreoElectronico')?.invalid"
+                  class="mensaje-error">
+                  Este campo es obligatorio.
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-     </section>
-     </ng-template>
+        </section>
+      </ng-template>
       <ng-titulo titulo="Domicilio del establecimiento"></ng-titulo>
       <div class="row">
         <div class="col-md-4">
@@ -96,7 +96,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <app-catalogo-select [catalogo]="estado" [label]="'Estado'" name="estado" [required]="true"
-              formControlName="establecimientoEstados"
+              formControlName="establecimientoEstados" [isDisabled]="esFormularioSoloLectura ? true : false"
               (change)="actualizarValoresStore(datosSolicitudform,'establecimientoEstados', 'setEstablecimientoEstados')">
             </app-catalogo-select>
           </div>
@@ -180,7 +180,8 @@
         <div class="form-group">
           <label class="form-label" for="scian">S.C.I.A.N.*:</label>
           <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosData"
-            [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX" formcontrolname="scian">
+            [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX" formcontrolname="scian"
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false">
           </app-tabla-dinamica>
         </div>
       </div>
@@ -195,7 +196,7 @@
       <div class="row align-item-center">
         <div class="col-md-4 mt-5">
           <lib-input-check [label]="'Aviso de funcionamiento'" [id]="'avisoCheckbox'" [required]="true"
-            formControlName="avisoCheckbox"
+            formControlName="avisoCheckbox" [isDisabled]="esFormularioSoloLectura ? true : false"
             (change)="actualizarValoresStore(datosSolicitudform,'avisoCheckbox', 'setAvisoCheckbox')"></lib-input-check>
         </div>
         <div class="col-md-4">
@@ -214,18 +215,20 @@
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="estado" [label]="'Régimen'" [required]="true" name="regimen"
             [tooltipQuestionCircle]="true" formControlName="regimen"
+            [isDisabled]="esFormularioSoloLectura ? true : false"
             (change)="actualizarValoresStore(datosSolicitudform,'regimen', 'setRegimen')"></app-catalogo-select>
         </div>
         <div class="col-md-8">
           <app-catalogo-select [catalogo]="estado" [label]="'Aduanas de entradas'" [required]="true"
             name="aduanasEntradas" formControlName="aduanasEntradas"
+            [isDisabled]="esFormularioSoloLectura ? true : false"
             (change)="actualizarValoresStore(datosSolicitudform,'aduanasEntradas', 'setAduanasEntradas')"></app-catalogo-select>
         </div>
       </div>
       <div class="row mt-5" *ngIf="!insumos">
         <div class="col-md-4 ms-auto">
           <lib-input-check [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA)'" [id]="'aifaCheckbox'"
-            [required]="true" formControlName="aifaCheckbox"
+            [required]="true" formControlName="aifaCheckbox" [isDisabled]="esFormularioSoloLectura ? true : false"
             (change)="actualizarValoresStore(datosSolicitudform,'aifaCheckbox', 'setAifaCheckbox')"></lib-input-check>
         </div>
       </div>
@@ -236,7 +239,8 @@
       </div>
       <div class="row mt-5">
         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla"
-          [datos]="mercanciasTablaDatos"></app-tabla-dinamica>
+          [datos]="mercanciasTablaDatos"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"></app-tabla-dinamica>
         <div class="container text-end mt-5">
           <button class="btn btn-default me-2">Modificar</button>
           <button class="btn btn-default me-2">Eliminar</button>
@@ -268,11 +272,11 @@
     </div>
   </form>
   @if (insumos) {
-    <section>
+  <section>
     <app-representante-legal-rfc></app-representante-legal-rfc>
   </section>
   }
-  
+
 </div>
 @if (nuevaNotificacion) {
 <section>
@@ -292,6 +296,7 @@
             <div class="col-md-8">
               <app-catalogo-select [catalogo]="scianJson" [label]="'Clave S.C.I.A.N.*'"
                 [placeholder]="'Seleccione una valor'" formControlName="scian"
+                [isDisabled]="esFormularioSoloLectura ? true : false"
                 (change)="actualizarValoresStore(scianForm,'scian', 'setScian')"></app-catalogo-select>
             </div>
           </div>
