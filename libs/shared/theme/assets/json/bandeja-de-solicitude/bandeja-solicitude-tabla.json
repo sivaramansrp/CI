@@ -2111,5 +2111,14 @@
     "diasTranscurridos": "4",
     "departamento": "SEDENA",
     "numeroDeProcedimiento": "240321"
+  },
+  {
+    "id": 240121,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SEDENA",
+    "numeroDeProcedimiento": "240121"
   }
 ]
