@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -26,7 +26,7 @@ import { Tramite202Query } from '../../../../core/queries/tramite202.query';
   templateUrl: './maniobras-mercancias.component.html',
   styleUrl: './maniobras-mercancias.component.scss',
 })
-export class ManiobrasMercanciasComponent implements OnInit, OnDestroy {
+export class ManiobrasMercanciasComponent implements OnDestroy {
   /**
    * Formulario de maniobras y mercancías.
    */
@@ -84,22 +84,7 @@ export class ManiobrasMercanciasComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-  }
 
-  /**
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * @returns {void}
-   */
-  ngOnInit(): void {
-    this.inicializarFormulario();
-  }
-
-  /**
-   * Inicializa el formulario de maniobras y mercancías.
-   * @returns {void}
-   * @description Este método inicializa los catálogos necesarios, obtiene los manifiestos y configura el estado de la sección de maniobras y mercancías.
-   */
-  inicializarFormulario(): void {
     this.inicializaCatalogos();
 
     this.obtenerManifiestos();
@@ -167,8 +152,8 @@ export class ManiobrasMercanciasComponent implements OnInit, OnDestroy {
     merge(
       ADUANA$
     )
-    .pipe(takeUntil(this.destruirNotificador$))
-    .subscribe();
+      .pipe(takeUntil(this.destruirNotificador$))
+      .subscribe();
   }
 
   /**
@@ -194,12 +179,12 @@ export class ManiobrasMercanciasComponent implements OnInit, OnDestroy {
    */
   obtenerManifiestos(): void {
     this.prestadoresServicioService.getManifiestos()
-    .pipe(takeUntil(this.destruirNotificador$))
-    .subscribe({
-      next: (result: ManifiestosRespuesta) => {
-        this.manifiestos = result?.data;
-      }
-    });
+      .pipe(takeUntil(this.destruirNotificador$))
+      .subscribe({
+        next: (result: ManifiestosRespuesta) => {
+          this.manifiestos = result?.data;
+        }
+      });
   }
 
   /**
