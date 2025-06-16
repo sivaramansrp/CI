@@ -1,12 +1,10 @@
 
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ChoferesExtranjeros, DatosDelChoferNacional } from '../../models/registro-muestras-mercancias.model';
-import {ConsultaioQuery, FormularioDinamico,SolicitanteComponent} from '@ng-mf/data-access-user';
-import {DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL,PERSONA_MORAL_NACIONAL} from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { ConsultaioQuery, ConsultaioState, FormularioDinamico, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
-import { Chofer40102Query } from '../../estados/chofer40102.query';
 import { Chofer40102Service } from '../../estados/chofer40102.service';
-import { Chofer40102Store } from '../../estados/chofer40102.store';
 
 @Component({
   selector: 'paso-uno',
@@ -65,9 +63,21 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * para mostrar o procesar información relacionada con el pedimento.
    */
   @Input() datosNroPedimento!: string;
-  
+
+  /**
+   * Notificador para gestionar la destrucción de suscripciones y evitar fugas de memoria.
+   * Se utiliza para limpiar recursos cuando el componente se destruye.
+   */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
-  
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+  /**
+* @property {ConsultaioState} consultaDatos
+* @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+*/
+  consultaDatos!: ConsultaioState;
+
   /**
    * Gancho de ciclo de vida angular que se llama después de que la vista del componente se haya inicializado por completo.
    */
@@ -86,49 +96,62 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
    *
    */
-  constructor(        
+  constructor(
     private chofer40102Service: Chofer40102Service,
-    private chofer40102Query: Chofer40102Query,
-    private chofer40102Store: Chofer40102Store,
     private consultaQuery: ConsultaioQuery
   ) {
-    
+
   }
 
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyed$), 
-      map((seccionState) => {
-        if( seccionState.update ) {
-          this.chofer40102Service
-            .getDirectorGeneralData()
-            .pipe(takeUntil(this.destroyed$))
-            .subscribe((data) => {
-              // Actualiza el estado del chofer40102Store con los datos del director general
-              this.chofer40102Service.updateStateDirectorGeneralData(data);
-          });
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+        })).subscribe();
 
-          this.chofer40102Service
-            .obtenerTablaDatos<DatosDelChoferNacional>('mock-data-choferes-nacionales.json')
-            .pipe(takeUntil(this.destroyed$))
-            .subscribe( (response) => {
-                this.chofer40102Service.updateDatosDelChoferNacional(response);
-                this.chofer40102Service.updateDatosDelChoferNacionalModification(response);
-                this.chofer40102Service.updateDatosDelChoferNacionalRetirada(response);
-            });
+    if (this.consultaDatos.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
 
-          this.chofer40102Service
-            .obtenerTablaDatos<ChoferesExtranjeros>('mock-data-choferes-extranjero.json')
-            .pipe(takeUntil(this.destroyed$))
-            .subscribe( (response) => {
-                this.chofer40102Service.updateDatosDelChoferExtranjero(response);
-                this.chofer40102Service.updateDatosDelChoferExtranjeroModification(response);
-                this.chofer40102Service.updateDatosDelChoferExtranjeroRetirada(response);
-            });
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
 
-        }
-    })).subscribe();
+    this.chofer40102Service
+      .getDirectorGeneralData()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        // Actualiza el estado del chofer40102Store con los datos del director general
+        this.chofer40102Service.updateStateDirectorGeneralData(data);
+        this.esDatosRespuesta = true;
+      });
+
+    this.chofer40102Service
+      .obtenerTablaDatos<DatosDelChoferNacional>('mock-data-choferes-nacionales.json')
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((response) => {
+        this.chofer40102Service.updateDatosDelChoferNacional(response);
+        this.chofer40102Service.updateDatosDelChoferNacionalModification(response);
+        this.chofer40102Service.updateDatosDelChoferNacionalRetirada(response);
+        this.esDatosRespuesta = true;
+      });
+
+    this.chofer40102Service
+      .obtenerTablaDatos<ChoferesExtranjeros>('mock-data-choferes-extranjero.json')
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((response) => {
+        this.chofer40102Service.updateDatosDelChoferExtranjero(response);
+        this.chofer40102Service.updateDatosDelChoferExtranjeroModification(response);
+        this.chofer40102Service.updateDatosDelChoferExtranjeroRetirada(response);
+        this.esDatosRespuesta = true;
+      });
   }
 
   /**
