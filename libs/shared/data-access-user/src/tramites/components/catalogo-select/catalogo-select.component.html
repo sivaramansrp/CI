@@ -21,10 +21,14 @@
     (change)="handleChange($event)"
     [ngClass]="{ required: isInvalid(), 'col-sm-9': isInline }"
   >
-    <option value="-1">
-      {{ placeholder ? placeholder : 'Seleccione una opción' }}
+    <option
+      value="{{ primerOptionValue }}"
+      selected
+      [hidden]="hiddenPrimerOption"
+      [disabled]="disabledPrimerOption"
+    >
+      {{placeholder ? placeholder : 'Seleccione una opción'}}
     </option>
-
     <option *ngFor="let option of catalogo" [value]="option.id">
       {{ option.descripcion }}
     </option>

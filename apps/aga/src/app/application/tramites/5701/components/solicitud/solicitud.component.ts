@@ -400,6 +400,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   readonly LABEL_CROSSLIST_FECHAS: CrossListLable = LABEL_CROSSLIST;
 
+  /***
+   * @description Sin valor = -1
+   */
+  readonly SIN_VALOR = SIN_VALOR;
+
   /**
    *@description Alamcena las lineas de capturas seleccionadas por el usuario en la tabla.
    */
