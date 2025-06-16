@@ -9,6 +9,7 @@ import { ModificarCorreoElectronicoComponent } from './modificar-correo-electron
 import { NgModule } from '@angular/core';
 import { RegistroCapturistaPrivadoComponent } from './registro-capturista-privado/registro-capturista-privado.component';
 import { RegistroPersonaNotificacionesComponent } from './registro-persona-notificaciones/registro-persona-notificaciones.component';
+import { RegistroUsuarioSinfielComponent } from './registro-usuario-sinfiel/registro-usuario-sinfiel.component';
 
 export const ROUTES_AUTH: Routes = [
   {
@@ -46,6 +47,10 @@ export const ROUTES_AUTH: Routes = [
   {
     path:'menu-usuario',
     component: MenuUsuarioComponent
+  },
+  {
+    path: 'registro_sinFiel',
+    component: RegistroUsuarioSinfielComponent
   },
 
 ];
