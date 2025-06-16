@@ -30,19 +30,20 @@ import {
   Pedimento,
 } from '../../../../core/models/5701/tramite5701.model';
 import {
-  MSG_PEDIMENTO_NO_VALIDO,
-  MSG_NRO_PEDIMENTO,
-  MSG_NRO_PEDIMENTO_LLENAR_DATOS,
-  MSG_PEDIMENTO_YA_CAPTURADO,
-  MSG_PEDIMENTO_EXISTE_YA_PAGADO,
-  MSG_PEDIMENTO_EXISTE_PREVIO,
-} from '../../../../core/enums/5701/mensajes-modal-5701.enum';
-import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+
+import {
+  MSG_NRO_PEDIMENTO,
+  MSG_NRO_PEDIMENTO_LLENAR_DATOS,
+  MSG_PEDIMENTO_EXISTE_PREVIO,
+  MSG_PEDIMENTO_EXISTE_YA_PAGADO,
+  MSG_PEDIMENTO_NO_VALIDO,
+  MSG_PEDIMENTO_YA_CAPTURADO,
+} from '../../../../core/enums/5701/mensajes-modal-5701.enum';
 
 import {
   Solicitud5701State,
@@ -52,9 +53,9 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { BodyEstadoPedimento } from '../../../../core/models/5701/pedimento.model';
 import { CommonModule } from '@angular/common';
 import { EstadoPedimentoService } from '../../../../core/services/5701/pedimento/estado-pedimento.service';
+import { TITULO_MODAL_AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/terceros.enums';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
-import { TITULO_MODAL_AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/terceros.enums';
 @Component({
   selector: 'c-pedimento',
   standalone: true,
@@ -118,20 +119,6 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
   pedimentoForm: FormControl = new FormControl('', [Validators.maxLength(7)]);
 
   /**
-   * @description Array con los encabezados de la tabla de pedimentos.
-   * Se utiliza para mostrar los encabezados de las columnas en la tabla de pedimentos.
-   */
-  hTabla: Array<string> = [
-    'Patente',
-    'Pedimento',
-    'Aduana',
-    'Tipo de pedimento',
-    'Número(s)',
-    'Comprobante de valor',
-    'Pedimento validado',
-  ];
-
-  /**
    * @description Array con los datos de los pedimentos.
    * Se utiliza para almacenar los pedimentos ingresados por el usuario.
    */
@@ -147,11 +134,28 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    */
   tiposPedimento: Catalogo[] = [];
 
-  //Checkbox para editar
+  /**
+   * @description Lista de pedimentos seleccionados en la tabla.
+   * Se utiliza para almacenar los pedimentos que han sido seleccionados por el usuario en la tabla.
+   */
   selected: Pedimento[] = [];
+
+  /**
+   * @description Tipo de selección para la tabla de pedimentos.
+   * Se utiliza para definir el tipo de selección en la tabla de pedimentos.
+   */
   SelectionType = SelectionType;
 
+  /**
+   * @description Objeto para manejar la edición de celdas en la tabla de pedimentos.
+   * Se utiliza para determinar si una celda está en modo de edición.
+   */
   editar: { [key: string]: boolean } = {};
+
+  /**
+   * @description Modo de visualización de columnas en la tabla de pedimentos.
+   * Se utiliza para definir el modo de visualización de las columnas en la tabla de pedimentos.
+   */
   ColumnMode = ColumnMode;
 
   constructor(
@@ -346,7 +350,6 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
                       this.pedimentos.push(PEDIMENTO);
                       this.pedimentoForm.reset();
                       this.datosTablaPedimento.emit(this.pedimentos);
-                      console.log('PEDIMENTOS', this.pedimentos);
                     }
                     break;
                   default:
@@ -440,11 +443,25 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   //Metodos para el checkbox
+  /**
+   * Método que se ejecuta cuando se selecciona un pedimento en la tabla.
+   * Actualiza la lista de pedimentos seleccionados.
+   * @param { selected } - Objeto que contiene los pedimentos seleccionados.
+   * @returns {void}
+   */
   onSelect({ selected }: { selected: Pedimento[] }): void {
     this.selected.splice(0, this.selected.length);
     this.selected.push(...selected);
   }
 
+  /**
+   * Método para actualizar el valor de una celda en la tabla de pedimentos.
+   * Este método se ejecuta cuando se edita una celda en la tabla.
+   * @param {Event} event - El evento que se dispara al editar la celda.
+   * @param { string } cell - El nombre de la celda que se está editando.
+   * @param { number } rowIndex - El índice de la fila que contiene la celda que se está editando.
+   * @returns {void}
+   */
   actualizarValor(event: Event, cell: string, rowIndex: number): void {
     const TARGET = event.target as HTMLInputElement;
     this.editar[`${rowIndex}-${cell}`] = false;
@@ -492,6 +509,11 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
     this.pedimentos = [...this.pedimentos];
   }
 
+  /**
+   * @description Método para editar una celda en la tabla de pedimentos.
+   * @param rowIndex - El índice de la fila que contiene el pedimento a editar.
+   * @returns {void}
+   */
   editarCelda(rowIndex: number): void {
     if (
       this.pedimentos[rowIndex].tipoPedimento === 0 ||

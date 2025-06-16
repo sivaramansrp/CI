@@ -144,6 +144,7 @@ import {
   MSJ_ERROR_FOLIO_DDEX,
   MSJ_ERROR_ID_SOCIO_COMERCIAL,
   MSJ_ERROR_LINEA_CAPTURA,
+  MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
   MSJ_ERROR_RFC_AUTORIZACION_LDA,
   MSJ_LINEA_CAPTURA_NO_PAGADA,
   MSJ_LINEA_CAPTURA_USADA,
@@ -2285,6 +2286,22 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               ],
             })
           );
+        }),
+        catchError((error) => {
+          this.nuevaNotificacion = {
+            tipoNotificacion: 'alert',
+            categoria: 'danger',
+            modo: 'action',
+            titulo: TITULO_MODAL_AVISO,
+            mensaje: error.error?.mensaje || MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
+            cerrar: false,
+            txtBtnAceptar: 'Aceptar',
+            txtBtnCancelar: '',
+          };
+
+          this.pagoCaptura.get('lineaCaptura')?.reset();
+          this.pagoCaptura.get('monto')?.reset();
+          return throwError(() => error);
         })
       )
       .subscribe();
@@ -2362,7 +2379,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               )
           );
           this.lineaCapturaSeleccionados = [];
+
           this.tramite5701Store.setLineasCaptura(this.datosTablaPagos);
+          this.montoPagadoLineas = this.datosTablaPagos.reduce(
+            (total, item) => total + item.monto,
+            0
+          );
+
           this.nuevaNotificacion = {
             tipoNotificacion: 'alert',
             categoria: '',
@@ -2373,6 +2396,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             txtBtnAceptar: 'Cerrar',
             txtBtnCancelar: '',
           };
+
           this.procesoModal = '';
         }
 
@@ -2400,7 +2424,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.tipoDespacho = tipoCheck; // Guarda el tipo de despacho seleccionado
 
     if (CHECKED) {
-      const RECINTO_ESPECIFICADO = this.validaCampoRecintoEspecifique();      
+      const RECINTO_ESPECIFICADO = this.validaCampoRecintoEspecifique();
       if (
         RECINTO_ESPECIFICADO ||
         ID_ADUANA_DESPACHO !== '-1' ||
@@ -2579,7 +2603,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   validaCampoRecintoEspecifique(): boolean {
     const CATALOGO_RECINTO = this.despacho.get('nombreRecinto')?.value;
     const ESPECIFIQUE_DESPACHO = this.despacho.get('especifique')?.value;
-  
+
     const CATALOGO_VALIDO =
       CATALOGO_RECINTO !== null &&
       CATALOGO_RECINTO !== '-1' &&
