@@ -1,14 +1,15 @@
 import {AbstractControl,FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,ValidationErrors,Validators} from '@angular/forms';
-import {Catalogo,CatalogoSelectComponent,ConfiguracionColumna,InputFecha,InputFechaComponent,Notificacion,NotificacionesComponent,Pedimento,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService,} from '@libs/shared/data-access-user/src';
+import {Catalogo,CatalogoSelectComponent,InputFecha,InputFechaComponent,Notificacion,NotificacionesComponent,Pedimento,TablaDinamicaComponent,TablaSeleccion,TituloComponent,ValidacionesFormularioService,} from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosDeLaTabla, TramiteList } from '../../models/datos-tramite.model';
+import { ENCABEZADO_TABLA_DATOS, Solicitud32101Enum } from '../../constants/solicitud32101.enum';
 import { Solicitud32101State, Tramite32101Store } from '../../../../estados/tramites/tramite32101.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaAvisoAcreditacionService } from '../../services/consulta-aviso-acreditacion.service';
 import { FECHA_PAGO } from '../../models/registro.model';
 import { Router } from '@angular/router';
-import { ENCABEZADO_TABLA_DATOS, Solicitud32101Enum } from '../../constants/solicitud32101.enum';
 import { Tramite32101Query } from '../../../../estados/queries/tramite32101.query';
 
 /**
@@ -65,6 +66,16 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * Enumeración que contiene los textos utilizados en el componente.
    */
   solicitudEnum = Solicitud32101Enum;
+
+  /**
+  * Estado actual de la consulta obtenido desde el servicio.
+  */
+  consultaDatos!: ConsultaioState;
+
+  /**
+  * Indica si el formulario está en modo de solo lectura.
+  */
+  soloLectura: boolean = false;
 
   /**
    * Representa una lista de trámites con información adicional.
@@ -154,7 +165,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private validacionesService: ValidacionesFormularioService,
     public tramite32101Store: Tramite32101Store,
     private tramite32101Query: Tramite32101Query,
-    private router: Router
+    private router: Router,
+    private consultaioQuery: ConsultaioQuery
   ) {
     this.tramiteList = {
       catalogos: [],
@@ -208,6 +220,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     this.consultaAvisoAcreditacionService.formData$.pipe(takeUntil(this.destroyNotifier$)).subscribe((formData) => {
       formData.forEach((row) => this.updateTableRow(row));
       });
+
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.consultaDatos = seccionState;
+        this.soloLectura = this.consultaDatos.readonly;
+        this.inicializarEstadoFormulario();
+      })
+    )
+  .subscribe();
   }
 
   /**
@@ -280,6 +303,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         { value: this.solicitudState?.importeDePago || '7735', disabled: true },
       ],
     });
+  }
+
+      /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   * @private
+   */
+  private inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.registroForm?.disable();
+    } else {
+      this.registroForm?.enable();
+    }
   }
 
   /**
