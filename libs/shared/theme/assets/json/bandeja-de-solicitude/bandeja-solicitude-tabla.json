@@ -2157,13 +2157,22 @@
         "departamento": "AGACE",
         "numeroDeProcedimiento": "31501"
     },
-    {
-      "id": 261601,
-      "tipoDeTramite": "Solicitud de Permiso",
-      "fecha": "2023-10-01",
-      "fechaActualizacion": "2023-10-05",
-      "diasTranscurridos": "4",
-      "departamento": "AGACE",
-      "numeroDeProcedimiento": "261601"
-  }
+  {
+    "id": 6102,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "6102"
+},
+{
+  "id": 261601,
+  "tipoDeTramite": "Solicitud de Permiso",
+  "fecha": "2023-10-01",
+  "fechaActualizacion": "2023-10-05",
+  "diasTranscurridos": "4",
+  "departamento": "AGA",
+  "numeroDeProcedimiento": "261601"
+}
 ]
