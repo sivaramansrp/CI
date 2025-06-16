@@ -42,5 +42,6 @@
   "noDeLicenciaSanitariaObservaciones": "Vigente hasta 2026",
   "regimenAlQueSeDestinaraLaMercancía": "Temporal",
   "aduanaDeSalida": "Tijuana",
-  "ideGenerica":"prorroga"
+  "ideGenerica":"prorroga",
+  "manifests":"true"
 }
