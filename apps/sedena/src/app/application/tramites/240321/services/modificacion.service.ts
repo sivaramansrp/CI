@@ -8,6 +8,7 @@ import { DestinoFinalRespuesta, ProveedorRespuesta } from "../models/modificacio
 import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Tramite240321State } from "../estados/tramite240321Store.store";
 
 /**
  * @class ModificacionService
@@ -47,6 +48,15 @@ export class ModificacionService {
    */
   getProveedores(): Observable<ProveedorRespuesta> {
     return this.http.get<ProveedorRespuesta>(`${this.apiUrl}proveedor.json`)
+      .pipe(map((res) => res));
+  }
+   /**
+   * @method getProveedores
+   * @description Fetches the list of "Proveedor" entities from a JSON file.
+   * @returns {Observable<ProveedorRespuesta>} Observable emitting the response containing "Proveedor" data.
+   */
+  getTrimateState240321(): Observable<Tramite240321State> {
+    return this.http.get<Tramite240321State>(`${this.apiUrl}tramateState240321.json`)
       .pipe(map((res) => res));
   }
 }
