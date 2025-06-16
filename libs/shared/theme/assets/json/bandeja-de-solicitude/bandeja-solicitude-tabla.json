@@ -2023,5 +2023,14 @@
     "diasTranscurridos": "4",
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260206"
+  },
+  {
+    "id": 280101,
+    "tipoDeTramite": "Permiso de exportación temporal o definitiva de monumentos o bienes muebles históricos",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "INAH",
+    "numeroDeProcedimiento": "280101"
   }
 ]
