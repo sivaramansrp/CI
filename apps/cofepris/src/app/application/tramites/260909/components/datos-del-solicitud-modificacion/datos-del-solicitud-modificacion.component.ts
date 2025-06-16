@@ -38,7 +38,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Modal } from 'bootstrap';
 
 import { MercanciasInfo,PropietarioTipoPersona,ScianModel} from '../../models/datos-de-la-solicitud.model';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject ,map,takeUntil } from 'rxjs';
 
 import { EstablecimientoService } from '../../service/establecimiento.service';
 
@@ -720,7 +720,7 @@ export class DatosDelSolicitudModificacionComponent implements OnInit, OnDestroy
 
     this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
   }
-
+ 
   /**
    * Habilita o deshabilita el campo "No Licencia Sanitaria" según el estado del checkbox.
    * @param event Evento del checkbox.
