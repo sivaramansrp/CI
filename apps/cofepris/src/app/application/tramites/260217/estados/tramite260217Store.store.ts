@@ -130,7 +130,7 @@ export function createInitialState(): Tramite260217State {
       denominacionRazon: '',
       correoElectronico: '',
       codigoPostal: '',
-      estado: '',
+      estado: '1',
       municipioAlcaldia: '',
       localidad: '',
       colonia: '',

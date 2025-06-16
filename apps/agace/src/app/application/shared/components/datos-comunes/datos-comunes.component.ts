@@ -211,6 +211,7 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     this.datosComunesQuery.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
       this.solicitudState = seccionState;
     })).subscribe();
+    this.getComboBimestres();
     this.getSectorProductivoAgace();
     this.getServiciosAgace();
     this.getAgregarMiembroTablaDatos();
@@ -408,6 +409,24 @@ export class DatosComunesComponent implements OnInit, OnDestroy {
     if(nombre === 'obligadoaTributaren') {
       this.cambioObj.obligadoaTributaren = value === 'Si' ? 'Si' : 'No';
     }
+  }
+
+  /**
+   * Obtiene los datos del combo de bimestres desde el servicio y los asigna a la propiedad `comboBimestresIDC`.
+   * 
+   * Este método se suscribe al observable `getComboBimestres` del servicio `datosComunesSvc`,
+   * procesa la respuesta y extrae la propiedad `data` para poblar la variable `comboBimestresIDC`.
+   * La suscripción se desuscribe automáticamente cuando el observable `destroyNotifier$` emite un valor.
+   * 
+   * @remarks
+   * - La respuesta se copia profundamente utilizando `JSON.parse(JSON.stringify(response))` antes de extraer los datos.
+   * - Asegúrese de que `datosComunesSvc` y `destroyNotifier$` estén correctamente inicializados antes de llamar a este método.
+   */
+  public getComboBimestres(): void {
+    this.datosComunesSvc.getComboBimestres().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
+      const DATOS = JSON.parse(JSON.stringify(response));
+      this.comboBimestresIDC = DATOS;
+    });
   }
 
   /**

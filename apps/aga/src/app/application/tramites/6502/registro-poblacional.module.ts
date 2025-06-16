@@ -8,6 +8,7 @@ import { RegistroPoblacionalRoutingModule } from './registro-poblacional-routing
 import { RegistroPoblacionalService } from './service/registro-poblacional.service';
 import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantalla.service';
 import { SolicitudPasoComponent } from './pages/solicitud-paso/solicitud-paso.component';
+import { Solocitud6502Service } from './service/service6502.service';
 import { ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
 
@@ -33,6 +34,7 @@ import { provideHttpClient } from '@angular/common/http';
     InicioSesionService,
     ServiciosPantallaService,
     RegistroPoblacionalService,
+    Solocitud6502Service
   ],
 })
 export class RegistroPoblacionalModule {}

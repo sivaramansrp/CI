@@ -61,4 +61,11 @@ export class Tramite260218Query extends Query<Tramite260218State> {
   public getFacturadorTablaDatos$ = this.select(
     (state) => state.facturadorTablaDatos
   );
+
+  /**
+   * @property {Observable<number | undefined>} getTabSeleccionado$
+   * @description
+   * Selecciona el índice de la pestaña actualmente seleccionada en el estado.
+   */
+  public getTabSeleccionado$ = this.select((state) => state.tabSeleccionado);
 }
