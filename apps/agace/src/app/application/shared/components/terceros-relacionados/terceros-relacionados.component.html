@@ -6,6 +6,7 @@
                 [forma]="represtantanteLegalFormGroup" 
                 [formularioDatos]="represtantanteLegalDatos"
                 [estado]="importacionstate"
+                [soloLectura]="consultaState.readonly"
                 (emitirCambioDeValor)="establecerCambioDeValor($event)"
                 >
             </formas-dinamicas>
@@ -20,13 +21,13 @@
             [tipoSeleccionTabla]="checkbox">
         </app-tabla-dinamica>
         <div class="d-flex justify-content-end">
-            <button type="button" class="btn btn-primary me-2" (click)="abrirModal(template)">
+            <button type="button" class="btn btn-primary me-2" [disabled]="esFormularioSoloLectura" (click)="abrirModal(template)">
                 Agregar
             </button>
-            <button class="btn btn-danger me-2" type="button">
+            <button class="btn btn-danger me-2" type="button" [disabled]="esFormularioSoloLectura">
                 Modificar
             </button>
-            <button class="btn btn-default" type="button">
+            <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura">
                 Eliminar
             </button>
         </div>

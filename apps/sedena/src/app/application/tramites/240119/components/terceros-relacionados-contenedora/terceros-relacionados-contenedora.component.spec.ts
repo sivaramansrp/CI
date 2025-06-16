@@ -1,6 +1,6 @@
 // @ts-nocheck
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Input, Output } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -11,6 +11,7 @@ import { TercerosRelacionadosContenedoraComponent } from './terceros-relacionado
 import { Tramite240119Store } from '../../estados/tramite240119Store.store';
 import { Tramite240119Query } from '../../estados/tramite240119Query.query';
 import { Router, ActivatedRoute } from '@angular/router';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
 @Injectable()
 class MockTramite240119Store {}
@@ -23,15 +24,13 @@ class MockRouter {
   navigate() {};
 }
 
-
 describe('TercerosRelacionadosContenedoraComponent', () => {
   let fixture;
   let component;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ TercerosRelacionadosContenedoraComponent, FormsModule, ReactiveFormsModule ],
-      declarations: [],
+      imports: [ FormsModule, ReactiveFormsModule ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
         { provide: Tramite240119Store, useClass: MockTramite240119Store },
@@ -47,7 +46,8 @@ describe('TercerosRelacionadosContenedoraComponent', () => {
             fragment: observableOf('fragment'),
             data: observableOf({})
           }
-        }
+        },
+        ConsultaioQuery
       ]
     }).overrideComponent(TercerosRelacionadosContenedoraComponent, {
 
@@ -64,6 +64,8 @@ describe('TercerosRelacionadosContenedoraComponent', () => {
     component.tramiteQuery = component.tramiteQuery || {};
     component.tramiteQuery.getDestinatarioFinalTablaDatos$ = observableOf({});
     component.tramiteQuery.getProveedorTablaDatos$ = observableOf({});
+    component.consultaQuery = component.consultaQuery || {};
+    component.consultaQuery.selectConsultaioState$ = observableOf({});
     component.ngOnInit();
 
   });
@@ -73,8 +75,8 @@ describe('TercerosRelacionadosContenedoraComponent', () => {
     component.tramiteStore.actualizarDatosDestinatario = jest.fn();
     component.irAAcciones = jest.fn();
     component.modificarDestinarioDatos({});
-    // expect(component.tramiteStore.actualizarDatosDestinatario).toHaveBeenCalled();
-    // expect(component.irAAcciones).toHaveBeenCalled();
+    expect(component.tramiteStore.actualizarDatosDestinatario).toHaveBeenCalled();
+    expect(component.irAAcciones).toHaveBeenCalled();
   });
 
   it('should run #modificarProveedorDatos()', async () => {
@@ -82,29 +84,38 @@ describe('TercerosRelacionadosContenedoraComponent', () => {
     component.tramiteStore.actualizarDatosProveedor = jest.fn();
     component.irAAcciones = jest.fn();
     component.modificarProveedorDatos({});
-    // expect(component.tramiteStore.actualizarDatosProveedor).toHaveBeenCalled();
-    // expect(component.irAAcciones).toHaveBeenCalled();
+    expect(component.tramiteStore.actualizarDatosProveedor).toHaveBeenCalled();
+    expect(component.irAAcciones).toHaveBeenCalled();
   });
 
   it('should run #irAAcciones()', async () => {
     component.router = component.router || {};
     component.router.navigate = jest.fn();
     component.irAAcciones({});
-    // expect(component.router.navigate).toHaveBeenCalled();
+    expect(component.router.navigate).toHaveBeenCalled();
   });
 
   it('should run #eliminarDestinatarioFinal()', async () => {
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.eliminarDestinatarioFinal = jest.fn();
     component.eliminarDestinatarioFinal({});
-    // expect(component.tramiteStore.eliminarDestinatarioFinal).toHaveBeenCalled();
+    expect(component.tramiteStore.eliminarDestinatarioFinal).toHaveBeenCalled();
   });
 
   it('should run #eliminarProveedor()', async () => {
     component.tramiteStore = component.tramiteStore || {};
     component.tramiteStore.eliminareliminarProveedorFinal = jest.fn();
     component.eliminarProveedor({});
-    // expect(component.tramiteStore.eliminareliminarProveedorFinal).toHaveBeenCalled();
+    expect(component.tramiteStore.eliminareliminarProveedorFinal).toHaveBeenCalled();
+  });
+
+  it('should run #ngOnDestroy()', async () => {
+    component.destroy$ = component.destroy$ || {};
+    component.destroy$.next = jest.fn();
+    component.destroy$.complete = jest.fn();
+    component.ngOnDestroy();
+    expect(component.destroy$.next).toHaveBeenCalled();
+    expect(component.destroy$.complete).toHaveBeenCalled();
   });
 
 });

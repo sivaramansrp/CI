@@ -1,8 +1,9 @@
 import { Solicitud40302State, Solicitud40302Store } from '../estados/tramite40302.store';
+import { ENVIRONMENT } from '../../../../environments/environment';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable} from 'rxjs';
 import {Solicitud40302Query} from '../estados/tramite40302.query';
-
 /**
  * ## DatosDelTramiteService
  * 
@@ -19,6 +20,15 @@ import {Solicitud40302Query} from '../estados/tramite40302.query';
 @Injectable({ providedIn: 'root' })
 export class DatosDelTramiteService {
   /**
+   * AppConfig es una inyección de dependencias que proporciona la configuración de la aplicación.
+   */
+  urlServer = ENVIRONMENT.URL_SERVER;
+
+  /** 
+   * URL base para obtener catálogos JSON auxiliares.
+   */
+  urlServerCatalogos = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
+  /**
    * ## Constructor
    * 
    * Inicializa el servicio con las dependencias necesarias.
@@ -31,7 +41,8 @@ export class DatosDelTramiteService {
    */
   constructor(
     private solicitudStore: Solicitud40302Store,
-    private solicitudQuery: Solicitud40302Query
+    private solicitudQuery: Solicitud40302Query,
+    private http: HttpClient
   ) {
     // Lógica del constructor aquí
   }
@@ -68,5 +79,26 @@ export class DatosDelTramiteService {
    */
   getSolicitudState(): Observable<Solicitud40302State> {
     return this.solicitudQuery.select();
+  }
+
+  /**
+ * Actualiza el estado del formulario con los datos proporcionados.
+ *
+ * @param DATOS - Objeto que contiene el nuevo estado del trámite (Solicitud40302State).
+ */
+actualizarEstadoFormulario(DATOS: Solicitud40302State): void {
+   this.solicitudStore.setDirectorGeneralNombre(DATOS.directorGeneralNombre);
+   this.solicitudStore.setPrimerApellido(DATOS.primerApellido);
+   this.solicitudStore.setSegundoApellido(DATOS.segundoApellido);
+}
+
+
+/**
+ * Obtiene los datos de registro del transportista para la solicitud 40302.
+ * 
+ * @returns Observable con el estado de la solicitud 40302.
+ */
+  getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud40302State> {
+    return this.http.get<Solicitud40302State>('assets/json/40302/registro-transportista.json');
   }
 }
