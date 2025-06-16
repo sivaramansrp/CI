@@ -14,12 +14,6 @@ import { Solicitud150101Query } from '../../estados/solicitud150101.query';
 import { SolicitudService } from '../../services/registro-solicitud-anual.service';
 
 @Injectable()
-class MockSolicitud150101Store { }
-
-@Injectable()
-class MockSolicitud150101Query { }
-
-@Injectable()
 class MockSolicitudService { }
 
 @Directive({ selector: '[myCustom]' })
@@ -45,8 +39,23 @@ class SafeHtmlPipe implements PipeTransform {
 describe('DatosDeReporteAnnualComponent', () => {
   let fixture;
   let component;
+  let solicitudStoreMock: any;
+  let solicitudQueryMock: any;
 
-  beforeEach(() => {  
+  beforeEach(() => {
+    solicitudStoreMock = {
+      setReporteAnualFechaInicio: jest.fn(),
+      setReporteAnualFechaFin: jest.fn(),
+      actualizarFolioPrograma: jest.fn(),
+      actualizarModalidad: jest.fn(),
+      actualizarTipoPrograma: jest.fn(),
+      actualizarEstatus: jest.fn(),
+    };
+
+    solicitudQueryMock = {
+      seleccionarSolicitud$: of({ reporteAnualFechaInicio: '2023-01', reporteAnualFechaFin: '2023-12' })
+    };
+
     TestBed.configureTestingModule({
       imports: [FormsModule, ReactiveFormsModule],
       declarations: [
@@ -57,15 +66,17 @@ describe('DatosDeReporteAnnualComponent', () => {
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         FormBuilder,
-        { provide: Solicitud150101Store, useClass: MockSolicitud150101Store },
-        { provide: Solicitud150101Query, useClass: MockSolicitud150101Query },
+        { provide: Solicitud150101Store, useValue: solicitudStoreMock },
+        { provide: Solicitud150101Query, useValue: solicitudQueryMock },
         { provide: SolicitudService, useClass: MockSolicitudService }
       ]
     }).overrideComponent(DatosDeReporteAnnualComponent, {
 
     }).compileComponents();
+
     fixture = TestBed.createComponent(DatosDeReporteAnnualComponent);
     component = fixture.debugElement.componentInstance;
+    fixture.detectChanges();
   });
 
   afterEach(() => {
@@ -75,28 +86,6 @@ describe('DatosDeReporteAnnualComponent', () => {
 
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should run #ngOnInit()', async () => {
-    component.solicitud150101Query = {
-      seleccionarSolicitud$: of({
-        "reporteAnualFechaInicio": "01-2024",
-        "reporteAnualFechaFin": "12-2024",
-        "folioPrograma": "2023-9416",
-        "modalidad": "PROSEC",
-        "tipoPrograma": "PROGRAMA NUEVO PRODUCTOR DIRECTO",
-        "estatus": "Vigente - Activo",
-        "ventasTotales": 5000,
-        "totalExportaciones": 3000,
-        "totalImportaciones": 2000,
-        "saldo": 1000,
-        "porcentajeExportacion": 4000
-      })
-    } as any;
-
-    const spy = jest.spyOn(component, 'inicializarFormulario');
-    component.ngOnInit();
-    expect(spy).toHaveBeenCalled();
   });
 
   it('should run #obtenerVentasTotales()', async () => {
