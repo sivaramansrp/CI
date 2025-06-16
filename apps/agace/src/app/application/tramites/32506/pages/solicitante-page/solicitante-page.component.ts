@@ -1,11 +1,16 @@
 import { AVISO } from '@ng-mf/data-access-user';
 import { AccionBoton } from '../../models/aviso-destruccion.model';
+import { AlertComponent } from '@ng-mf/data-access-user';
+import { BtnContinuarComponent } from '@ng-mf/data-access-user';
 import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PASOS } from '../../constants/aviso-destruccion.enum';
+import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TEXTOS } from '../../constants/aviso-destruccion.enum';
@@ -26,7 +31,7 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-solicitante-page',
   standalone: true,
-  imports: [WizardComponent, ReactiveFormsModule],
+  imports: [WizardComponent, ReactiveFormsModule, BtnContinuarComponent, AlertComponent,PasoDosComponent, PasoUnoComponent, PasoTresComponent],
   templateUrl: './solicitante-page.component.html',
   styleUrl: './solicitante-page.component.scss',
 })
