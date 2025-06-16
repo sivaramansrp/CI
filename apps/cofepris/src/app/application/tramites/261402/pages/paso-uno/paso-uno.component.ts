@@ -85,7 +85,16 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     private tramite261402Store: Tramite261402Store,
     private tramite261402Query: Tramite261402Query,
     private consultaQuery: ConsultaioQuery
-  ) {}
+  ) {
+    this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.notificadorDestruccion$),
+      map((seccionState: { readonly: boolean })=>{
+        this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe();
+  }
 
   /**
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
