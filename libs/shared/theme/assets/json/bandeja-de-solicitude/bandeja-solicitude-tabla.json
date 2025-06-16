@@ -2041,5 +2041,14 @@
     "diasTranscurridos": "4",
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260217"
+  },
+  {
+    "id": 31202,
+    "tipoDeTramite": "Renovación Certificación IVA e IEPS Mod A",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "31202"
   }
 ]
