@@ -1,6 +1,4 @@
-import { ListaDeDatosFinal, Plantas, SectoresYMercancias, createDatosState } from '../models/prosec.module';
 import { Store, StoreConfig } from '@datorama/akita';
-import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 
 export interface ProsecState {
