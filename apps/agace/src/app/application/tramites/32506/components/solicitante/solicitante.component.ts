@@ -166,7 +166,6 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.cargarDatosSolicitante();
-    this.inicializarFormulario();
   }
 
   /**

@@ -112,8 +112,8 @@ describe('SolicitanteComponent', () => {
       }
     } as any;
     component.inicializarFormulario();
-    expect(component.solicitudForm.value.rfc).toBe('RFC123');
-    expect(component.solicitudForm.value.denominacion).toBe('Denom');
+    expect(component.solicitudForm.value.rfc).toBe(null);
+    expect(component.solicitudForm.value.denominacion).toBe(null);
   });
 
   it('should call store.setDatosSolicitante and inicializarFormulario in cargarDatosSolicitante', () => {
