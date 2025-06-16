@@ -2068,5 +2068,14 @@
      "diasTranscurridos": "4",
      "departamento": "COFEPRIS",
      "numeroDeProcedimiento": "260903"
+    },
+    {
+      "id": 6502,
+      "tipoDeTramite": "Solicitud de Permiso",
+      "fecha": "2023-10-01",
+      "fechaActualizacion": "2023-10-05",
+      "diasTranscurridos": "4",
+      "departamento": "AGA",
+      "numeroDeProcedimiento": "6502"
     }
 ]
