@@ -626,7 +626,7 @@
     "id": 90,
     "tramite": 260214,
     "linkDashboard": "/cofepris/importacion-dispositivos-medicos-uso/contenedor-de-pasos",
-    "linkDepartment": "/cofepris/importacion-dispositivos-medicos-uso/contenedor-de-pasos",
+    "linkDepartment": "/pago/importacion-dispositivos-medicos-uso/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
@@ -640,7 +640,7 @@
     "id": 92,
     "tramite": 260216,
     "linkDashboard": "/cofepris/importacion-dispositivos-medicos-donacion/contenedor-de-pasos",
-    "linkDepartment": "/cofepris/importacion-dispositivos-medicos-donacion/contenedor-de-pasos",
+    "linkDepartment": "/pago/importacion-dispositivos-medicos-donacion/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
@@ -1025,7 +1025,7 @@
     "id": 147,
     "tramite": 260213,
     "linkDashboard": "/cofepris/permiso-sanitario-medicos-uso-personal",
-    "linkDepartment": "/cofepris/permiso-sanitario-medicos-uso-personal",
+    "linkDepartment": "/pago/permiso-sanitario-medicos-uso-personal",
     "department": "cofepris"
   },
   {
@@ -1332,9 +1332,9 @@
   {
     "id": 191,
     "tramite": 30505,
-    "linkDashboard": "/aga/aviso-de-modificacion/aviso",
+    "linkDashboard": "/agace/aviso-de-modificacion/aviso",
     "linkDepartment": "/pago/aviso-de-modificacion/aviso",
-    "department": "aga"
+    "department": "agace"
   },
   {
     "id": 192,
