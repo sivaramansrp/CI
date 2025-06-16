@@ -17,13 +17,15 @@
                     <solicitante></solicitante>
                 }              
                 @case (2) {
-                    <datos-de-la-solicitud></datos-de-la-solicitud>
-                    <periodo-en-el-extranjero></periodo-en-el-extranjero>
-                    <motivo-de-la-exportacion></motivo-de-la-exportacion>
-                    <lugar-de-destino></lugar-de-destino>
-                    <aduana (formularioEventoEmitir)="formularioEventoEmitir($event)"></aduana>
+                    @if (esDatosRespuesta) {
+                        <datos-de-la-solicitud [consultaState]="consultaState"></datos-de-la-solicitud>
+                        <periodo-en-el-extranjero [consultaState]="consultaState"></periodo-en-el-extranjero>
+                        <motivo-de-la-exportacion [consultaState]="consultaState"></motivo-de-la-exportacion>
+                        <lugar-de-destino [consultaState]="consultaState"></lugar-de-destino>
+                        <aduana [consultaState]="consultaState" (formularioEventoEmitir)="formularioEventoEmitir($event)"></aduana>
+                    }
                 } @case (3) {
-                    <pago-de-derechos></pago-de-derechos>
+                    <pago-de-derechos [consultaState]="consultaState"></pago-de-derechos>
                 }
             }
         </ng-container>

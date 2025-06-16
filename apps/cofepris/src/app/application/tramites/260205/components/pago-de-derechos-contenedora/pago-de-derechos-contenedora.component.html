@@ -2,5 +2,7 @@
 
     <app-pago-de-derechos 
     [pagoDerechoFormState]="pagoDerechos"
-    (updatePagoDerechos)="updatePagoDerechos($event)"></app-pago-de-derechos>
+    (updatePagoDerechos)="updatePagoDerechos($event)"
+    [formularioDeshabilitado]="esFormularioSoloLectura"
+></app-pago-de-derechos>
 }

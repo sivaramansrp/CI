@@ -1,9 +1,8 @@
 {
     "data": {
-        "id": 1,
-        "puntoDeInspeccion": "QA",
-        "primerApellido": "QA",
-        "segundoApellido": "QA",
-        "cantidadContenedores": 123
+        "nombreInspector": "qbc",
+        "primerApellido": "qbc",
+        "segundoApellido": "qbc",
+        "cantidadContenedores": 146
     }
 }

@@ -28,10 +28,8 @@ describe('PasoUnoComponent', () => {
       imports: [
         FormsModule,
         ReactiveFormsModule,
-        HttpClientTestingModule 
-      ],
-      declarations: [
-        PasoUnoComponent 
+        HttpClientTestingModule,
+        PasoUnoComponent
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
