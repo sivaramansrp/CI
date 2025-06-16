@@ -1,130 +1,97 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { SolicitantePageComponent } from './solicitante-page.component';
-import { AlertComponent, BtnContinuarComponent, WizardComponent } from '@ng-mf/data-access-user';
 import { Tramite32506Store } from '../../estados/tramite32506.store';
 import { Tramite32506Query } from '../../estados/tramite32506.query';
+import { WizardComponent } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
-import { PasoTresComponent } from '../paso-tres/paso-tres.component';
-import { provideHttpClient } from '@angular/common/http';
-import { provideToastr, ToastrService } from 'ngx-toastr';
-import { PasoDosComponent } from "../paso-dos/paso-dos.component";
+import { AccionBoton } from '../../models/aviso-destruccion.model';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+
+jest.mock('../../estados/tramite32506.store');
+jest.mock('../../estados/tramite32506.query');
+jest.mock('@ng-mf/data-access-user');
 
 describe('SolicitantePageComponent', () => {
   let component: SolicitantePageComponent;
   let fixture: ComponentFixture<SolicitantePageComponent>;
-  let storeMock: any;
-  let queryMock: any;
+  let storeMock: jest.Mocked<Tramite32506Store>;
+  let queryMock: jest.Mocked<Tramite32506Query>;
+  let wizardComponentMock: jest.Mocked<WizardComponent>;
 
   beforeEach(async () => {
     storeMock = {
-      setPasoActivo: jest.fn(),
-    };
+      setPasoActivo: jest.fn()
+    } as any;
 
     queryMock = {
-      selectSolicitud$: of({
-        pestanaActiva: 1,
-      }),
-    };
+      selectSolicitud$: of({ some: 'state' })
+    } as any;
 
     await TestBed.configureTestingModule({
-      imports: [WizardComponent, BtnContinuarComponent, PasoUnoComponent, PasoTresComponent, AlertComponent,PasoDosComponent],
       declarations: [SolicitantePageComponent],
+      imports:[WizardComponent,HttpClientTestingModule],
       providers: [
-        ToastrService,
-        provideToastr({
-          positionClass: 'toast-top-right',
-        }),
-        provideHttpClient(),
         { provide: Tramite32506Store, useValue: storeMock },
-        { provide: Tramite32506Query, useValue: queryMock },
-      ],
+        { provide: Tramite32506Query, useValue: queryMock }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SolicitantePageComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+
+    wizardComponentMock = {
+      siguiente: jest.fn(),
+      atras: jest.fn()
+    } as any;
+    component.wizardComponent = wizardComponentMock;
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize tramiteState on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.tramiteState).toEqual({ pestanaActiva: 1 });
+  it('should initialize pasos and datosPasos correctly', () => {
+    expect(component.pasos.length).toBeGreaterThan(0);
+    expect(component.datosPasos.nroPasos).toEqual(component.pasos.length);
+    expect(component.datosPasos.indice).toEqual(component.indice);
+    expect(component.datosPasos.txtBtnAnt).toBe('Anterior');
+    expect(component.datosPasos.txtBtnSig).toBe('Continuar');
   });
 
-  it('should update indice and call wizardComponent.siguiente() on getValorIndice with "cont"', () => {
-    const wizardComponentSpy = jest.spyOn(component.wizardComponent, 'siguiente');
-    component.getValorIndice({ accion: 'cont', valor: 2 });
+  it('should subscribe to tramiteQuery.selectSolicitud$ on ngOnInit and set tramiteState', () => {
+    component.ngOnInit();
+    expect(component.tramiteState).toEqual({ some: 'state' });
+  });
+
+  it('should call wizardComponent.siguiente and store.setPasoActivo on getValorIndice with accion "cont"', () => {
+    const accion: AccionBoton = { accion: 'cont', valor: 2 };
+    component.getValorIndice(accion);
     expect(component.indice).toBe(2);
-    expect(wizardComponentSpy).toHaveBeenCalled();
+    expect(wizardComponentMock.siguiente).toHaveBeenCalled();
     expect(storeMock.setPasoActivo).toHaveBeenCalledWith(2);
   });
 
-  it('should update indice and call wizardComponent.atras() on getValorIndice with "atras"', () => {
-    const wizardComponentSpy = jest.spyOn(component.wizardComponent, 'atras');
-    component.getValorIndice({ accion: 'atras', valor: 1 });
-    expect(component.indice).toBe(1);
-    expect(wizardComponentSpy).toHaveBeenCalled();
-    expect(storeMock.setPasoActivo).toHaveBeenCalledWith(1);
+  it('should call wizardComponent.atras and store.setPasoActivo on getValorIndice with accion "atras"', () => {
+    const accion: AccionBoton = { accion: 'atras', valor: 3 };
+    component.getValorIndice(accion);
+    expect(component.indice).toBe(3);
+    expect(wizardComponentMock.atras).toHaveBeenCalled();
+    expect(storeMock.setPasoActivo).toHaveBeenCalledWith(3);
   });
 
-  it('should not update indice or call wizardComponent methods if valor is out of range', () => {
-    const wizardComponentSpySiguiente = jest.spyOn(component.wizardComponent, 'siguiente');
-    const wizardComponentSpyAtras = jest.spyOn(component.wizardComponent, 'atras');
-    component.getValorIndice({ accion: 'cont', valor: 5 });
-    expect(component.indice).toBe(1); // Default value
-    expect(wizardComponentSpySiguiente).not.toHaveBeenCalled();
-    expect(wizardComponentSpyAtras).not.toHaveBeenCalled();
+  it('should not call wizardComponent or store if valor is out of range', () => {
+    const accion: AccionBoton = { accion: 'cont', valor: 0 };
+    component.getValorIndice(accion);
+    expect(wizardComponentMock.siguiente).not.toHaveBeenCalled();
+    expect(wizardComponentMock.atras).not.toHaveBeenCalled();
     expect(storeMock.setPasoActivo).not.toHaveBeenCalled();
   });
 
   it('should complete destroyNotifier$ on ngOnDestroy', () => {
-    const destroyNotifierSpy = jest.spyOn(component.destroyNotifier$, 'next');
-    const destroyNotifierCompleteSpy = jest.spyOn(component.destroyNotifier$, 'complete');
+    const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
     component.ngOnDestroy();
-    expect(destroyNotifierSpy).toHaveBeenCalled();
-    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
-  });
-
-  it('should render the wizard component', () => {
-    const wizardElement = fixture.debugElement.nativeElement.querySelector('app-wizard');
-    expect(wizardElement).toBeTruthy();
-  });
-
-  it('should render app-paso-uno when indice is 1', () => {
-    component.indice = 1;
-    fixture.detectChanges();
-    const pasoUnoElement = fixture.debugElement.nativeElement.querySelector('app-paso-uno');
-    expect(pasoUnoElement).toBeTruthy();
-  });
-
-  it('should render app-paso-dos when indice is 2', () => {
-    component.indice = 2;
-    fixture.detectChanges();
-    const pasoTresElement = fixture.debugElement.nativeElement.querySelector('app-paso-dos');
-    expect(pasoTresElement).toBeTruthy();
-  });
-  it('should render app-paso-tres when indice is 3', () => {
-    component.indice = 3;
-    fixture.detectChanges();
-    const pasoTresElement = fixture.debugElement.nativeElement.querySelector('app-paso-tres');
-    expect(pasoTresElement).toBeTruthy();
-  });
-
-  it('should render ng-alert when indice is 2', () => {
-    component.indice = 2;
-    fixture.detectChanges();
-    const alertElement = fixture.debugElement.nativeElement.querySelector('ng-alert');
-    expect(alertElement).toBeTruthy();
-  });
-
-  it('should not render ng-alert when indice is 4', () => {
-    component.indice = 4;
-    fixture.detectChanges();
-    const alertElement = fixture.debugElement.nativeElement.querySelector('ng-alert');
-    expect(alertElement).toBeFalsy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

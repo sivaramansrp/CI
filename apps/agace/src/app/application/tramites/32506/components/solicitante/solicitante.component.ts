@@ -1,23 +1,21 @@
-import {
-  Component,
-  EventEmitter,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
-import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-} from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoDestruccionService } from '../../services/aviso-destruccion.service';
+import { Component } from '@angular/core';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { EventEmitter } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { Output } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite32506Query } from '../../estados/tramite32506.query';
 import { Tramite32506State } from '../../estados/tramite32506.store';
 import { Tramite32506Store } from '../../estados/tramite32506.store';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente para gestionar el formulario del solicitante.

@@ -1,10 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { of } from 'rxjs';
 import { PasoDosComponent } from './paso-dos.component';
-import { CatalogosService } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, CatalogosService, TituloComponent } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { provideToastr, ToastrService } from 'ngx-toastr';
 import { provideHttpClient } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -13,19 +14,25 @@ describe('PasoDosComponent', () => {
 
   beforeEach(async () => {
     catalogosServiceMock = {
-      getCatalogo: jest.fn().mockReturnValue(of([]))
+      getCatalogo: jest.fn().mockReturnValue(of([])),
     };
 
     await TestBed.configureTestingModule({
-      imports: [PasoDosComponent],
+      imports: [
+        PasoDosComponent,
+        HttpClientTestingModule,
+        TituloComponent,
+        AlertComponent,
+        AnexarDocumentosComponent,
+      ],
       providers: [
         ToastrService,
         provideToastr({
           positionClass: 'toast-top-right',
         }),
         provideHttpClient(),
-        { provide: CatalogosService, useValue: catalogosServiceMock }
-      ]
+        { provide: CatalogosService, useValue: catalogosServiceMock },
+      ],
     }).compileComponents();
   });
 
@@ -52,7 +59,7 @@ describe('PasoDosComponent', () => {
   it('should update catalogoDocumentos when getTiposDocumentos is called', () => {
     const mockCatalogo: Catalogo[] = [
       { id: 1, descripcion: 'Tipo Documento 1' },
-      { id: 2, descripcion: 'Tipo Documento 2' }
+      { id: 2, descripcion: 'Tipo Documento 2' },
     ];
     catalogosServiceMock.getCatalogo.mockReturnValue(of(mockCatalogo));
     component.getTiposDocumentos();

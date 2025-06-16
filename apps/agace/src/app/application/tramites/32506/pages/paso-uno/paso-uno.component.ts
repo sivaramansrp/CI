@@ -1,15 +1,18 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { AvisoComponent } from '../../components/aviso/aviso.component';
 import { AvisoDestruccionService } from '../../services/aviso-destruccion.service';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ConsultaioState } from '@libs/shared/data-access-user/src';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
 import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
 import { Subject } from 'rxjs';
 import { Tramite32506Aviso } from '../../models/aviso-destruccion.model';
 import { Tramite32506Query } from '../../estados/tramite32506.query';
 import { Tramite32506State } from '../../estados/tramite32506.store';
 import { Tramite32506Store } from '../../estados/tramite32506.store';
+import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
@@ -73,7 +76,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     public store: Tramite32506Store,
     public tramiteQuery: Tramite32506Query,
     public avisoDestruccionService: AvisoDestruccionService,
-    private consultaQuery: ConsultaioQuery,
+    private consultaQuery: ConsultaioQuery
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -85,7 +88,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * con los datos obtenidos. También inicializa el índice de la pestaña activa.
    */
   ngOnInit(): void {
-      this.consultaQuery.selectConsultaioState$
+    this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -110,20 +113,20 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-     * Luego reinicializa el formulario con los valores actualizados desde el store.
-     */
-    guardarDatosFormulario(): void {
-      this.avisoDestruccionService
-        .guardarDatosFormulario()
-        .pipe(takeUntil(this.destroyNotifier$))
-        .subscribe((resp: Tramite32506Aviso) => {
-          if (resp) {
-            this.esDatosRespuesta = true;
-            this.avisoDestruccionService.actualizarEstadoFormulario(resp);
-          }
-        });
-    }
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.avisoDestruccionService
+      .guardarDatosFormulario()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp: Tramite32506Aviso) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.avisoDestruccionService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
 
   /**
    * Cambia la pestaña activa.
