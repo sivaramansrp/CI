@@ -1,7 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 import { AccionBoton } from '../../enums/accion-botton.enum';
-import { PASOS } from '../../constants/pasos.enum';
 import { PASOS_IMPORTACION } from '../../constants/importacion-equipo-anticontaminante.enum';
 
 /**

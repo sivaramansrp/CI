@@ -8,7 +8,7 @@
           [label]="'Régimen aduanero'"
           name="regimen"
           formControlName="regimen"
-          (change)="getRegimen()"
+          (change)="getRegimen()"   [isDisabled]="esFormularioSoloLectura"
         >
         </app-catalogo-select>
       </div>
@@ -18,7 +18,7 @@
           [label]="'Tratado o bloque comercial'"
           name="tratado"
           formControlName="tratado"
-          (change)="getTratado()"
+          (change)="getTratado()"   [isDisabled]="esFormularioSoloLectura"
         >
         </app-catalogo-select>
       </div>
@@ -28,7 +28,7 @@
           [label]="'Nombre de producto'"
           name="producto"
           formControlName="producto"
-          (change)="obtenerValorProducto()"
+          (change)="obtenerValorProducto()" [isDisabled]="esFormularioSoloLectura"
         >
         </app-catalogo-select>
       </div>
@@ -38,7 +38,7 @@
           [label]="'Nombre del subproducto'"
           name="subproducto"
           formControlName="subproducto"
-          (change)="getSubproducto()"
+          (change)="getSubproducto()"  [isDisabled]="esFormularioSoloLectura"
         >
         </app-catalogo-select>
       </div>

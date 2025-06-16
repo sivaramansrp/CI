@@ -82,7 +82,6 @@ export class DatosGeneralesTramiteComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private solicitudtramiteQuery: TramiteQuery,
     private consultaioQuery: ConsultaioQuery,
-    private consultaQuery: ConsultaioQuery,
   ) {
     this.consultaioQuery.selectConsultaioState$
       .pipe(
