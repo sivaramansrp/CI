@@ -34,10 +34,14 @@
         <solicitante></solicitante>
         }
         @case (2) {
+        @if(esDatosRespuesta){
         <app-tipo-movimiento></app-tipo-movimiento>
+          }
         }
         @case (3) {
+        @if(esDatosRespuesta){
         <app-destinatario-agente-aduanal></app-destinatario-agente-aduanal>
+        }
         }
         @case (4) {
           <app-mercancias></app-mercancias>
@@ -46,8 +50,9 @@
           <app-requisitos></app-requisitos>
         }
         @case (6) {
+        @if(esDatosRespuesta){
           <app-pago-de-derechos></app-pago-de-derechos>
-             
+          }   
         }
         }
       </ng-container>
