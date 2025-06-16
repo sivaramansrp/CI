@@ -50,10 +50,11 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   public esDatosRespuesta: boolean = false;
 
   /**
-   * Inicializa el componente con la consulta y el store necesarios para el manejo del estado.
-   *
-   * @param tramite240102Query Consulta para acceder al estado del trámite.
-   * @param tramite240102Store Store que permite actualizar el estado del trámite.
+   * Constructor del componente.
+   * @param tramite240102Query - Query de Akita para obtener los datos del trámite 240102.
+   * @param tramite240102Store - Store de Akita que gestiona el estado del trámite 240102.
+   * @param consultaQuery - Query para consultar información adicional.
+   * @param importacionArmamentoService - Servicio para la importación de armamento de personas físicas y morales.
    */
   constructor(
     private tramite240102Query: Tramite240102Query,

@@ -48,6 +48,7 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    * @method constructor
    * @param {Tramite240102Query} tramiteQuery - Query para obtener el estado actual del pago de derechos.
    * @param {Tramite240102Store} tramiteStore - Store que administra el estado del pago de derechos.
+   * @param {ConsultaioQuery} consultaQuery Servicio para consultar información adicional relacionada con el trámite.
    * @returns {void}
    */
   constructor(
