@@ -1,8 +1,8 @@
+import { AutorizacionProsecStore, ProsecState } from '../estados/autorizacion-prosec.store';
 import { Catalogo, RespuestaCatalogos } from '@ng-mf/data-access-user';
 import { Observable, map } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AutorizacionProsecStore, ProsecState } from '../estados/autorizacion-prosec.store';
 
 @Injectable({
   providedIn: 'root'

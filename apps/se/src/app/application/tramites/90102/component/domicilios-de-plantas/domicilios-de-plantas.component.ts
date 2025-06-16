@@ -1,7 +1,6 @@
 import {
   AlertComponent,
   Catalogo,
-  CatalogoSelectComponent,
   TablaDinamicaComponent,
   TituloComponent,
 } from '@ng-mf/data-access-user';
@@ -19,6 +18,7 @@ import {
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { FilaPlantas } from '../../models/prosec.module';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ProsecService } from '../../services/prosec.service';
@@ -201,15 +201,13 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
         delay(10),
         tap((_value) => {
           if (this.forma.valid) {
-            this.autorizacionProsecStore.setFormaValida([
-              { id: 1, descripcion: 'Valida' },
-            ]);
+            this.autorizacionProsecStore.setFormaValida('1');
           }
         })
       )
       .subscribe();
 
-    if (this.domiciliosState.formaValida[0]?.descripcion === 'AllValida') {
+    if (this.domiciliosState.formaValida[0] === 'AllValida') {
       this.seccionStore.establecerSeccion([true]);
       this.seccionStore.establecerFormaValida([true]);
     } else {
@@ -347,20 +345,6 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     this.obtenerListaFederal();
     this.obtenerListaActividad();
     this.recuperarDatos();
-  }
-
-  estadoSeleccion(Estado: Catalogo): void {
-    this.autorizacionProsecStore.setEstado([Estado]);
-  }
-
-  fedralSeleccion(RepresentacionFederal: Catalogo): void {
-    this.autorizacionProsecStore.setRepresentacionFederal([
-      RepresentacionFederal,
-    ]);
-  }
-
-  productivaSeleccion(ActividadProductiva: Catalogo): void {
-    this.autorizacionProsecStore.setActividadProductiva([ActividadProductiva]);
   }
 
   recuperarDatos(): void {
