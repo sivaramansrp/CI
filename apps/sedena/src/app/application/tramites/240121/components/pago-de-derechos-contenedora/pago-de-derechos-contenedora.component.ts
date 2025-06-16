@@ -1,13 +1,13 @@
+import { Subject, map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/pago-de-derechos.model';
-import { Subject } from 'rxjs';
 import { Tramite240121Query } from '../../estados/tramite240121Query.query';
 import { Tramite240121Store } from '../../estados/tramite240121Store.store';
-import { takeUntil } from 'rxjs';
 /**
  * @title Pago de Derechos Contenedora
  * @description Componente contenedor que se encarga de enlazar el estado de pago de derechos con el formulario correspondiente.
@@ -33,20 +33,27 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    * @property {PagoDerechosFormState} pagoDerechoFormState
    */
   public pagoDerechoFormState!: PagoDerechosFormState;
-
+  /**
+* Indica si el formulario debe mostrarse en modo solo lectura.
+*
+* @type {boolean}
+* @default false
+*/
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente.
    *
    * @method constructor
    * @param {Tramite240121Query} tramiteQuery - Query para obtener el estado actual del pago de derechos.
    * @param {Tramite240121Store} tramiteStore - Store que administra el estado del pago de derechos.
+   * @param {ConsultaioQuery} consultaQuery - Query para obtener el estado de la consulta.
    * @returns {void}
    */
   constructor(
     private tramiteQuery: Tramite240121Query,
-    private tramiteStore: Tramite240121Store
-  ) 
-  {}
+    private tramiteStore: Tramite240121Store,
+    private consultaQuery: ConsultaioQuery
+  ) { }
 
   /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
@@ -61,6 +68,14 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.pagoDerechoFormState = data;
       });
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
