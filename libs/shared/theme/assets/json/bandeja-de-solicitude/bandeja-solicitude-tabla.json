@@ -2183,5 +2183,23 @@
   "diasTranscurridos": "4",
   "departamento": "SE",
   "numeroDeProcedimiento": "130107"
-}
+},
+{
+    "id": 32502,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32502"
+  },
+  {
+    "id": 32102,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32102"
+  }
 ]
