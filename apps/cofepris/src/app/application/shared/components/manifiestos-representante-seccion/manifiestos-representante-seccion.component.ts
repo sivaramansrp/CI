@@ -230,10 +230,8 @@ export class ManifiestosRepresentanteSeccionComponent
       this.inicializarFormulario();
       if (this.formularioDeshabilitado) {
         this.manifiestosRepresentanteForm.disable();
-      } else if (!this.formularioDeshabilitado) {
-        this.manifiestosRepresentanteForm.enable();
       } else {
-        // No se requiere ninguna acción en el formulario
+        this.manifiestosRepresentanteForm.enable();
       }
   }
 

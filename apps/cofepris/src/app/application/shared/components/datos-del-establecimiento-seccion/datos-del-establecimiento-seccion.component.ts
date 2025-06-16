@@ -182,10 +182,8 @@ export class DatosDelEstablecimientoSeccionComponent
       this.inicializarFormulario();
       if (this.formularioDeshabilitado) {
         this.detosEstablecimiento.disable();
-      } else if (!this.formularioDeshabilitado) {
-        this.detosEstablecimiento.enable();
       } else {
-        // No se requiere ninguna acción en el formulario
+        this.detosEstablecimiento.enable();
       }
   }
 
