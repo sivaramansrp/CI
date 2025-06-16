@@ -1,17 +1,44 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PantallasComponent } from './pantallas.component';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/enums/260604/aviso-exportacion.enum';
-import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/260604/aviso-exportacion.model';
+import { WizardComponent } from '@libs/shared/data-access-user/src';
+import { PANTA_PASOS } from '@ng-mf/data-access-user';
+import { AccionBoton } from '@ng-mf/data-access-user';
+import { ValidacionDeFormularioService } from '../../services/forma-servicio/validacion-de-formulario.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { of } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'; 
 
 describe('PantallasComponent', () => {
   let component: PantallasComponent;
+  let fixture: ComponentFixture<PantallasComponent>;
+  let validacionDeFormularioServiceMock: any;
+  let consultaQueryMock: any;
 
-  beforeEach(() => {
-    component = new PantallasComponent();
+  beforeEach(async () => {
+    validacionDeFormularioServiceMock = {
+      isFormValid: jest.fn().mockReturnValue(true)
+    };
+    consultaQueryMock = {
+      selectConsultaioState$: of({ update: false })
+    };
+
+    await TestBed.configureTestingModule({
+      declarations: [PantallasComponent],
+      providers: [
+        { provide: ValidacionDeFormularioService, useValue: validacionDeFormularioServiceMock },
+        { provide: ConsultaioQuery, useValue: consultaQueryMock }
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA] 
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(PantallasComponent);
+    component = fixture.componentInstance;
+   
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
     } as unknown as WizardComponent;
+    fixture.detectChanges();
   });
 
   it('should create the component', () => {
@@ -26,40 +53,74 @@ describe('PantallasComponent', () => {
     expect(component.indice).toBe(1);
   });
 
-  it('should initialize datosPasos with correct values', () => {
-    expect(component.datosPasos).toEqual({
-      nroPasos: component.pantallasPasos.length,
-      indice: component.indice,
-      txtBtnAnt: 'Anterior',
-      txtBtnSig: 'Continuar',
-    });
+  it('should set indiceDePestanaSeleccionada to event value on pestanaCambiado', () => {
+    component.pestanaCambiado(3);
+    expect(component.indiceDePestanaSeleccionada).toBe(3);
   });
 
-  it('should update the index and call wizardComponent.siguiente when accion is "cont"', () => {
+  it('should reset indiceDePestanaSeleccionada to 1 if event is invalid', () => {
+    component.indiceDePestanaSeleccionada = 5;
+    component.pestanaCambiado(undefined as any);
+    expect(component.indiceDePestanaSeleccionada).toBe(1);
+  });
+
+  it('should update indice and call wizardComponent.siguiente for accion "cont"', () => {
     const accionBoton: AccionBoton = { accion: 'cont', valor: 2 };
     component.getValorIndice(accionBoton);
     expect(component.indice).toBe(2);
+    expect(component.datosPasos.indice).toBe(2);
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
-  it('should update the index and call wizardComponent.atras when accion is not "cont"', () => {
-    const accionBoton: AccionBoton = { accion: 'atras', valor: 2 };
+  it('should update indice and call wizardComponent.atras for accion not "cont"', () => {
+    const accionBoton: AccionBoton = { accion: 'ant', valor: 2 };
     component.getValorIndice(accionBoton);
     expect(component.indice).toBe(2);
+    expect(component.datosPasos.indice).toBe(2);
     expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should not update the index if the value is out of range (less than 1)', () => {
-    const accionBoton: AccionBoton = { accion: 'cont', valor: 0 };
-    component.getValorIndice(accionBoton);
-    expect(component.indice).toBe(1); // Default value remains unchanged
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+  it('should not update indice if valor is out of range', () => {
+    component.indice = 1;
+    component.getValorIndice({ accion: 'cont', valor: 0 });
+    expect(component.indice).toBe(1);
+    component.getValorIndice({ accion: 'cont', valor: 99 });
+    expect(component.indice).toBe(1);
   });
 
-  it('should not update the index if the value is out of range (greater than 4)', () => {
-    const accionBoton: AccionBoton = { accion: 'cont', valor: 5 };
-    component.getValorIndice(accionBoton);
-    expect(component.indice).toBe(1); // Default value remains unchanged
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
+  it('should reset indiceDePestanaSeleccionada to 1 if valor !== 1', () => {
+    component.indiceDePestanaSeleccionada = 5;
+    component.getValorIndice({ accion: 'cont', valor: 2 });
+    expect(component.indiceDePestanaSeleccionada).toBe(1);
+  });
+
+  it('should not reset indiceDePestanaSeleccionada if valor === 1', () => {
+    component.indiceDePestanaSeleccionada = 5;
+    component.getValorIndice({ accion: 'cont', valor: 1 });
+    expect(component.indiceDePestanaSeleccionada).toBe(5);
+  });
+
+  it('should return programaSeleccionadoFormValid as true if form is valid', () => {
+    validacionDeFormularioServiceMock.isFormValid.mockReturnValue(true);
+    expect(component.programaSeleccionadoFormValid).toBe(true);
+  });
+
+  it('should return programaSeleccionadoFormValid as false if form is invalid', () => {
+    validacionDeFormularioServiceMock.isFormValid.mockReturnValue(false);
+    expect(component.programaSeleccionadoFormValid).toBe(false);
+  });
+
+  it('should clean up subscriptions on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should subscribe to consultaQuery.selectConsultaioState$ on ngOnInit', () => {
+    component.consultaState = undefined as any;
+    component.ngOnInit();
+    expect(component.consultaState).toEqual({ update: false });
   });
 });

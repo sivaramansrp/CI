@@ -1,7 +1,8 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputCheckComponent, InputRadioComponent, REGEX_RFC, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { CONTROL_INVENTARIOS_TABLA, ControlInventarios, DATOS_COMUNES_TEXTOS_TRES, INSTALACIONES_PRINCIPALES_TABLA, InstalacionesPrincipalesTablaInfo } from '../../models/datos-comunes.model';
-import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { DatosComunesState, DatosComunesStore } from '../../estados/stores/datos-comunes.store';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject,map, takeUntil } from 'rxjs';
@@ -21,6 +22,7 @@ import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
 @Component({
   selector: 'app-datos-comunes-dos',
   standalone: true,
+  providers: [BsModalService],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -135,6 +137,11 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
    * @type {DatosComunesState}
    */
   public solicitudState!: DatosComunesState;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando se establece en `true`, los campos del formulario no son editables por el usuario.
+   */
+  public esFormularioSoloLectura: boolean = false;
 
 
   /**
@@ -148,12 +155,16 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
    */
   constructor(
     private datosComunesSvc: DatosComunesService,
+    @Inject(BsModalService)
     private modalService: BsModalService,
     private fb: FormBuilder,
     private datosComunesStore: DatosComunesStore,
-    private datosComunesQuery: DatosComunesQuery
+    private datosComunesQuery: DatosComunesQuery,
+    private consultaQuery: ConsultaioQuery
   ) {
-    // Constructor de la clase DatosComunesDosComponent
+      this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+      })).subscribe();
   }
 
   /**
@@ -184,7 +195,29 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
     this.crearComunesDosFormulario();
     this.crearInstalacionesPrincipalesFormulario();
     this.crearModificarForm();
+    this.inicializarEstadoFormulario();
   }
+
+    /**
+     * Inicializa el formulario suscribiéndose al observable del estado de solicitud,
+     * actualizando el estado local en consecuencia y creando los grupos de formularios requeridos.
+     * 
+     * Este método realiza las siguientes acciones:
+     * - Se suscribe a `datosComunesQuery.selectSolicitud$` para mantener actualizado `solicitudState`,
+     *   anulando la suscripción automáticamente cuando `destroyNotifier$` emite.
+     * - Llama a `crearComunesDosFormulario()` para configurar los controles del formulario común.
+     * - Llama a `crearInstalacionesPrincipalesFormulario()` para configurar el formulario de instalaciones principales.
+     * - Llama a `crearModificarForm()` para configurar el formulario de modificación.
+     */
+    public inicializarFormulario(): void {
+      this.datosComunesQuery.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+        this.solicitudState = seccionState;
+      })).subscribe();
+
+        this.crearComunesDosFormulario();
+        this.crearInstalacionesPrincipalesFormulario();
+        this.crearModificarForm();
+    }
 
   /**
    * Inicializa el FormGroup `comunesDosForm` con controles predefinidos y sus respectivos validadores.
@@ -322,7 +355,7 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
   public getComboBimestres(): void {
     this.datosComunesSvc.getComboBimestres().pipe(takeUntil(this.destroyNotifier$)).subscribe((response) => {
       const DATOS = JSON.parse(JSON.stringify(response));
-      this.comboBimestresIDC = DATOS.data;
+      this.comboBimestresIDC = DATOS;
     });
   }
 
@@ -381,6 +414,39 @@ export class DatosComunesDosComponent implements OnInit,OnDestroy {
    */
   public abrirModal(template: TemplateRef<void>): void {
     this.modalRef = this.modalService.show(template, { class: 'modal-lg',});
+  }
+
+  /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   * 
+   * - Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es true), guarda el estado actual del formulario llamando a `guardarFormulario()`.
+   * - De lo contrario, inicializa el formulario llamando a `inicializarFormulario()`.
+   */
+  public inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Inicializa el formulario y alterna su estado habilitado/deshabilitado según la bandera de solo lectura.
+   *
+   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), todos los formularios relacionados se deshabilitan.
+   * De lo contrario, todos los formularios relacionados se habilitan para su edición.
+   */
+  public guardarFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.comunesDosForm.disable();
+      this.instalacionesPrincipalesForm.disable();
+      this.modificarForm.disable();
+    } else {
+      this.comunesDosForm.enable();
+      this.instalacionesPrincipalesForm.enable();
+      this.modificarForm.enable();
+    }
   }
 
 

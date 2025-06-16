@@ -43,4 +43,15 @@ export class BandejaDeSolicitudeService {
       })
     );
   }
+
+  /**
+   * Recupera la información de los tramites
+   */
+    public getConsultaTramiteTablaDatos(): Observable<JSONResponse> {
+    return this.http.get<JSONResponse>('assets/json/consulta-tramite/consulta-tramite-tabla.json').pipe(
+      catchError((error) => {
+        return throwError(() => error);
+      })
+    );
+  } 
 }

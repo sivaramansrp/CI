@@ -7,6 +7,8 @@ import { OperacionDeImportacion } from '../models/aviso-catalogo.model';
 import { catchError } from 'rxjs';
 import { throwError } from 'rxjs';
 
+import { Solicitud32501State, Solicitud32501Store } from '../estados/solicitud32501.store';
+
 /**
  * Servicio para gestionar la obtención de datos relacionados con
  * el aviso del catálogo, la operación de importación y los requisitos obligatorios.
@@ -19,7 +21,7 @@ export class MercanciasDesmontadasOSinMontarService {
    * Constructor del servicio.
    * @param http Cliente HTTP para realizar peticiones a archivos JSON.
    */
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private tramite32501Store: Solicitud32501Store) {
     // El constructor está intencionalmente vacío para la inyección de dependencias
   }
 
@@ -68,5 +70,19 @@ export class MercanciasDesmontadasOSinMontarService {
           return throwError(() => error);
         })
       );
+  }
+  /**
+   * Obtiene los datos del estado de la solicitud desde un archivo JSON.
+   * @returns Observable con el estado de la solicitud.
+   */
+  obtenerDatosEstado(): Observable<Solicitud32501State> {
+    return this.http.get<Solicitud32501State>('assets/json/32501/datos.json');
+  }
+  /**
+   * Establece los datos del estado de la solicitud en el store.
+   * @param datos Datos del estado de la solicitud.
+   */
+  establecerDatosEstado(datos: Solicitud32501State): void {
+    this.tramite32501Store.establecerDatos({ ...datos });
   }
 }

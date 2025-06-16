@@ -7,7 +7,7 @@ export const PERMISO_MAQUILA = [
     indice: 1,
     titulo: 'Capturar solicitud',
     activo: true,
-    completado: true,
+    completado: false,
   },
   {
     indice: 2,
@@ -22,3 +22,5 @@ export const PERMISO_MAQUILA = [
     completado: false,
   },
 ];
+
+

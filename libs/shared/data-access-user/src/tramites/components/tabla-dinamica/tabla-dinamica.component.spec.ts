@@ -1,155 +1,101 @@
-import { EventEmitter } from '@angular/core';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TablaDinamicaComponent } from './tabla-dinamica.component';
+import { ESTADO_REGISTRO, TEXTO_FILA_REGISTRO } from '../../../tramites/constantes/constantes';
 
-fdescribe('TablaDinamicaComponent', () => {
-  let component: TablaDinamicaComponent<any>;
-  let mockFilaSeleccionada: jasmine.SpyObj<EventEmitter<any>>;
+interface DatosPrueba {
+  id: number;
+  nombre: string;
+  desEstatus?: string;
+}
 
-  beforeEach(() => {
-    // Create a mock of EventEmitter with a spy on 'emit' method
-    mockFilaSeleccionada = jasmine.createSpyObj('EventEmitter', ['emit']);
-    component = new TablaDinamicaComponent();
-    component.filaSeleccionada = mockFilaSeleccionada;
-    component.configuracionTabla = [
-      { encabezado: 'Columna 1', clave: (row: any) => row.col1, orden: 3 },
-      { encabezado: 'Columna 2', clave: (row: any) => row.col2, orden: 1 },
-      { encabezado: 'Columna 3', clave: (row: any) => row.col3, orden: 2 }
-    ];
-    spyOn(component.listaDeFilaSeleccionada, 'emit');
-    component.filasSeleccionadas = [];
+describe('TablaDinamicaComponent', () => {
+  let component: TablaDinamicaComponent<DatosPrueba>;
+  let fixture: ComponentFixture<TablaDinamicaComponent<DatosPrueba>>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [TablaDinamicaComponent],
+    }).compileComponents();
+
+    fixture = TestBed.createComponent(TablaDinamicaComponent as any);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('debería crear el componente correctamente', () => {
+    expect(component).toBeTruthy();
+  });
+
+  it('debería emitir "filaSeleccionada" y actualizar el ID seleccionado al ejecutar seleccionarFila()', () => {
+    const datosPrueba : DatosPrueba = { id: 1, nombre: 'Test' };
+    const espia = jest.spyOn(component.filaSeleccionada, 'emit');
+
+    component.seleccionarFila(1, datosPrueba);
+
+    expect(component.idFilaSeleccionada).toBe(1);
+    expect(espia).toHaveBeenCalledWith(datosPrueba);
+  });
+
+  it('debería alternar la selección del checkbox', () => {
     component.datos = [
-      { id: 1, nombre: 'Elemento 1' },
-      { id: 2, nombre: 'Elemento 2' },
-      { id: 3, nombre: 'Elemento 3' },
-      { id: 4, nombre: 'Elemento 4' }
+      { id: 1, nombre: 'Row 1' },
+      { id: 2, nombre: 'Row 2' },
     ];
 
+    const evento: any = { target: { checked: true } };
+
+    const espiaEmitir  = jest.spyOn(component.listaDeFilaSeleccionada, 'emit');
+    component.cambiarEstadoCheckbox(evento, 0);
+
+    expect(component.filasSeleccionadas).toContain(0);
+    expect(espiaEmitir).toHaveBeenCalledWith([component.datos[0]]);
   });
 
-  it('debería devolver las columnas ordenadas por "orden"', () => {
-    const configOrdenada = component.obtenerConfiguracionOrdenada();
+  it('debería seleccionar y deseleccionar todas las filas', () => {
+    component.datos = [
+      { id: 1, nombre: 'Row 1' },
+      { id: 2, nombre: 'Row 2' },
+    ];
 
-    // Comprobamos que las columnas estén ordenadas correctamente
-    expect(configOrdenada[0].orden).toBe(1);
-    expect(configOrdenada[1].orden).toBe(2);
-    expect(configOrdenada[2].orden).toBe(3);
-  });
+    const espiaEmitir = jest.spyOn(component.listaDeFilaSeleccionada, 'emit');
 
-  it('debería devolver un arreglo vacío si configuracionTabla está vacío', () => {
-    component.configuracionTabla = [];
-    const configOrdenada = component.obtenerConfiguracionOrdenada();
-    expect(configOrdenada.length).toBe(0);
-  });
+    component.seleccionarDeseleccionarTodos({ target: { checked: true } } as any);
+    expect(component.filasSeleccionadas).toEqual([0, 1]);
+    expect(espiaEmitir).toHaveBeenCalledWith(component.datos);
 
-  it('debería actualizar idFilaSeleccionada y emitir la fila seleccionada correctamente', () => {
-    const filaSeleccionadaMock = { calle: 'Calle 123', numeroExterior: '456' };
-    const idFila = 1;
-
-    // Llamamos al método con los valores simulados
-    component.seleccionarFila(idFila, filaSeleccionadaMock);
-
-    // Verificamos que 'idFilaSeleccionada' se haya actualizado correctamente
-    expect(component.idFilaSeleccionada).toBe(idFila);
-
-    // Verificamos que el método 'emit' haya sido llamado con la fila seleccionada
-    expect(mockFilaSeleccionada.emit).toHaveBeenCalledWith(filaSeleccionadaMock);
-  });
-
-  it('debería deseleccionar todos los elementos cuando se desmarca el checkbox "Seleccionar todo"', () => {
-    const evento = { target: { checked: false } } as unknown as Event; // Simulamos el evento cuando el checkbox está desmarcado
-
-    // Llamamos al método con el evento
-    component.seleccionarDeseleccionarTodos(evento);
-
-    // Comprobamos que el método emitió un array vacío
-    expect(component.listaDeFilaSeleccionada.emit).toHaveBeenCalledWith([]);
-  });
-
-  it('debería actualizar el array de filas seleccionadas correctamente cuando se marca el checkbox "Seleccionar todo"', () => {
-    const evento = { target: { checked: true } } as unknown as Event;
-
-    // Llamamos al método
-    component.seleccionarDeseleccionarTodos(evento);
-
-    // Comprobamos que las filas seleccionadas contienen todos los índices
-    expect(component.filasSeleccionadas).toEqual([0, 1, 2, 3]);
-  });
-
-  it('debería limpiar el array de filas seleccionadas cuando se desmarca el checkbox "Seleccionar todo"', () => {
-    const evento = { target: { checked: false } } as unknown as Event;
-
-    // Llamamos al método
-    component.seleccionarDeseleccionarTodos(evento);
-
-    // Comprobamos que el array de filas seleccionadas está vacío
+    component.seleccionarDeseleccionarTodos({ target: { checked: false } } as any);
     expect(component.filasSeleccionadas).toEqual([]);
+    expect(espiaEmitir).toHaveBeenCalledWith([]);
   });
 
-  it('debería agregar el índice al array filasSeleccionadas cuando el checkbox está seleccionado', () => {
-    const evento = { target: { checked: true } } as unknown as Event; // Simulamos el evento cuando el checkbox está marcado
-    const indice = 1;
+  it('debería emitir filaClic si desactivarEmitirEvento es verdadero', () => {
+    component.desactivarEmitirEvento = true;
+    const espia = jest.spyOn(component.filaClic, 'emit');
+    const datosPrueba = { id: 1, nombre: 'Row' };
 
-    // Llamamos al método con el evento y el índice
-    component.cambiarEstadoCheckbox(evento, indice);
-
-    // Comprobamos que el índice se ha añadido al array de filasSeleccionadas
-    expect(component.filasSeleccionadas).toContain(indice);
-    // Verificamos que el emitter haya sido llamado con los datos correspondientes
-    expect(component.listaDeFilaSeleccionada.emit).toHaveBeenCalledWith([
-      { id: 1, nombre: 'Elemento 1' },
-      { id: 2, nombre: 'Elemento 2' }
-    ]);
+    component.onFilaClic(datosPrueba);
+    expect(espia).toHaveBeenCalledWith(datosPrueba);
   });
 
-  it('debería eliminar el índice del array filasSeleccionadas cuando el checkbox está deseleccionado', () => {
-    const evento = { target: { checked: false } } as unknown as Event; // Simulamos el evento cuando el checkbox está desmarcado
-    const indice = 1;
+  it('debería emitir alternarValor cuando cambiarValor es llamado', () => {
+    const espia = jest.spyOn(component.alternarValor, 'emit');
+    const eventoFila  = { row: { id: 1, nombre: 'Row' }, column: 'nombre' };
 
-    // Inicializamos las filas seleccionadas con un índice previamente agregado
-    component.filasSeleccionadas = [1, 2];
-
-    // Llamamos al método con el evento y el índice
-    component.cambiarEstadoCheckbox(evento, indice);
-
-    // Comprobamos que el índice ha sido eliminado del array de filasSeleccionadas
-    expect(component.filasSeleccionadas).not.toContain(indice);
-    // Verificamos que el emitter haya sido llamado con los datos correspondientes
-    expect(component.listaDeFilaSeleccionada.emit).toHaveBeenCalledWith([
-      { id: 2, nombre: 'Elemento 2' }
-    ]);
+    component.cambiarValor(eventoFila);
+    expect(espia).toHaveBeenCalledWith(eventoFila);
   });
 
-  it('no debería agregar el índice al array filasSeleccionadas si ya está presente cuando se selecciona el checkbox', () => {
-    const evento = { target: { checked: true } } as unknown as Event;
-    const indice = 1;
+  it('debería retornar ACTIVAR si fila.desEstatus es BAJA en obtenerTextoBoton()', () => {
+    const fila = { id: 1, nombre: 'Row', desEstatus: TEXTO_FILA_REGISTRO.BAJA };
+    const resultado  = component.obtenerTextoBoton(fila);
 
-    // Inicializamos las filas seleccionadas con el índice ya presente
-    component.filasSeleccionadas = [1];
-
-    // Llamamos al método con el evento y el índice
-    component.cambiarEstadoCheckbox(evento, indice);
-
-    // Comprobamos que el índice no se añade nuevamente al array de filasSeleccionadas
-    expect(component.filasSeleccionadas).toEqual([1]);
+    expect(resultado).toBe(ESTADO_REGISTRO.ACTIVAR);
   });
 
-  it('debería emitir un array vacío si todas las filas son deseleccionadas', () => {
-    const evento = { target: { checked: false } } as unknown as Event;
-    const indice = 1;
+  it('debería retornar el valor por defecto de botonValor si fila.desEstatus no es BAJA', () => {
+    const fila = { id: 1, nombre: 'Row', desEstatus: 'OTRO' };
+    const resultado = component.obtenerTextoBoton(fila);
 
-    // Inicializamos las filas seleccionadas con algunos índices
-    component.filasSeleccionadas = [1, 2, 3];
-
-    // Llamamos al método para deseleccionar todas las filas
-    component.cambiarEstadoCheckbox(evento, indice);
-
-    // Comprobamos que el array de filas seleccionadas se actualiza correctamente
-    expect(component.filasSeleccionadas).toEqual([2, 3]);
-    // Verificamos que el emitter haya sido llamado con los datos restantes
-    expect(component.listaDeFilaSeleccionada.emit).toHaveBeenCalledWith([
-      { id: 2, nombre: 'Elemento 2' },
-      { id: 3, nombre: 'Elemento 3' }
-    ]);
+    expect(resultado).toBe(component.batonValor);
   });
-
 });

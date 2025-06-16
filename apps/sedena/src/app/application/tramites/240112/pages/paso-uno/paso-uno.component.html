@@ -13,13 +13,13 @@
       @switch (indice) { @case (1) {
       <solicitante></solicitante>
       } @case (2) {
-      <app-datos-del-tramite-contenedora></app-datos-del-tramite-contenedora>
+      <app-datos-del-tramite-contenedora [formularioDeshabilitado]="formularioDeshabilitado"></app-datos-del-tramite-contenedora>
       }
       @case (3) {
-      <app-terceros-relacionados-contenedora></app-terceros-relacionados-contenedora>
+      <app-terceros-relacionados-contenedora [formularioDeshabilitado]="formularioDeshabilitado"></app-terceros-relacionados-contenedora>
       }
       @case (4) {
-      <app-pago-de-derechoc></app-pago-de-derechoc>
+      <app-pago-de-derechoc [formularioDeshabilitado]="formularioDeshabilitado"></app-pago-de-derechoc>
       }
       @default {
       <solicitante></solicitante>

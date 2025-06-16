@@ -41,6 +41,7 @@ import { ApiResponse } from "../../models/datos-info.model";
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '../../models/configuracion-columna.model';
 import { HttpClient } from '@angular/common/http';
+import { Input } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Tramite80206Store } from '../../estados/tramite80206.store';
 
@@ -193,6 +194,13 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   * @property {boolean} esFormularioSoloLectura
+   */
+  @Input() esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    * @constructor
    * @param {FormBuilder} fb - Servicio para la creación de formularios.
@@ -219,7 +227,6 @@ export class AmpliacionAnexoComponent implements OnInit, OnDestroy {
   ngOnInit():void {
    this.getDatos();
     this.suscribirseADatosImmex();
-   // this.suscribirseADatos();
     this.suscribirseAFields();
   }
   /**

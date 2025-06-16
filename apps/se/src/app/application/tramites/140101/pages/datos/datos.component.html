@@ -23,8 +23,10 @@
                 <solicitante #Solicitante></solicitante>
             }
             @case (2) {
+                 @if(esDatosRespuesta){
                 <!-- Caso 2: Mostrar componente "app-programa-a-cancelar" -->
-                <app-programa-a-cancelar></app-programa-a-cancelar>
+                <app-programa-a-cancelar [soloLectura]="esFormularioSoloLectura"></app-programa-a-cancelar>
+                 }
             }
             }
         </ng-container>

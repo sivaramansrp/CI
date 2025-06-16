@@ -67,8 +67,10 @@
         <div class="col-md-4">
           <input-fecha
             [datos]="fechaInspeccionInput"
+            (valorCambiado)="cambiarFechaInicio($event)"
+            name="fechaInspeccionInput"
             [setFecha]="datosDeLaSolicitudForm.get('fechaInspeccionInput')?.value"
-            (valorCambiado)="cambioFechaInspeccion($event)"
+            [isDisabled]="esFormularioSoloLectura"
           ></input-fecha>
         </div>
 
@@ -90,7 +92,7 @@
               [label]="aduanaDeIngreso.labelNombre"
               [placeholder]="aduanaDeIngreso.primerOpcion"
               formControlName="aduanaDeIngreso"
-              [isDisabled]="false"
+              [isDisabled]="esFormularioSoloLectura" 
               (selectionChange)="cambioAduanaDeIngreso($event)"
             ></app-catalogo-select>
           </div>
@@ -108,11 +110,13 @@
         </div>
         <div class="col-md-8">
           <div class="form-group">
-            <app-catalogo-select
-              [catalogo]="puntoDeInspeccion.catalogos"
+           <app-catalogo-select
+              [catalogo]="puntoDeInspeccion.catalogos" 
               [label]="puntoDeInspeccion.labelNombre"
               [placeholder]="puntoDeInspeccion.primerOpcion"
+              formControlName="puntoDeInspeccion"
               [isDisabled]="true"
+              (selectionChange)="cambioPuntoDeInspeccion($event)"
             ></app-catalogo-select>
           </div>
         </div>
@@ -175,7 +179,7 @@
             [label]="tipoContenedor.labelNombre"
             [placeholder]="tipoContenedor.primerOpcion"
             formControlName="tipoContenedor"
-            [isDisabled]="false"
+            [isDisabled]="esFormularioSoloLectura"
             (selectionChange)="cambioTipoContenedor($event)"
           ></app-catalogo-select>
         </div>
@@ -252,6 +256,7 @@
           [tipoSeleccionTabla]="tablaSeleccionCheckbox"
           [configuracionTabla]="exportadorTabla"
           [datos]="mercanciaDatos"
+          [disableSeleccionTablaCheckBox]="campoDeshabilitar"
         ></app-tabla-dinamica>
       </div>
     </div>
