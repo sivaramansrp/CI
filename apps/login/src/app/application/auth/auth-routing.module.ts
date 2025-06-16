@@ -53,11 +53,15 @@ export const ROUTES_AUTH: Routes = [
   },
   {
     path: 'consulta-accionista-extranjero-fisica',
-    component:ConsultaAccionistaExtranjeroFisicaComponent
+    component: ConsultaAccionistaExtranjeroFisicaComponent
   },
   {
     path: 'consulta-accionista-extranjero-moral',
     component: ConsultaAccionistaExtranjeroMoralComponent
+  },
+  {
+    path: 'menu-usuario',
+    component: MenuUsuarioComponent
   },
 ];
 

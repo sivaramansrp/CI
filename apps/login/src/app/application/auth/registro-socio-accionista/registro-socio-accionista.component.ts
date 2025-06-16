@@ -1,7 +1,7 @@
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { AccionistaStore, AccionistaStoreService } from '../../../estados/accionista.store';
 import { CONFIGURACION_ENCABEZADO_SOCIO, CONFIGURACION_ENCABEZADO_SOCIO_EXTRANJERO } from '../../core/constantes/socio-accionista.enum';
-import { Catalogo, CatalogoSelectComponent, REGEX_RFC_FISICA, REGEX_RFC_MORAL, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, Notificacion, NotificacionesComponent, REGEX_RFC_FISICA, REGEX_RFC_MORAL, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy } from '@angular/core';
 import { Subject, catchError, map, of, takeUntil } from 'rxjs';
 import { AccionistaDatosQuery } from '../../../queries/accionista.query';
@@ -13,30 +13,66 @@ import { Router } from '@angular/router';
 import { UsuariosService } from '../../core/service/usuarios.service';
 import data from '@libs/shared/theme/assets/json/login/cat-pais.json';
 
+/**
+ * Componente responsable del registro de socios accionistas, tanto nacionales como extranjeros (persona física o moral).
+ * Incluye lógica para validaciones condicionales, consultas y navegación según el tipo de persona y nacionalidad.
+ */
 @Component({
   selector: 'app-registro-socio-accionista',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, TablaDinamicaComponent, CatalogoSelectComponent],
+  imports: [CommonModule, ReactiveFormsModule, TablaDinamicaComponent, CatalogoSelectComponent, NotificacionesComponent],
   templateUrl: './registro-socio-accionista.component.html',
   styleUrl: './registro-socio-accionista.component.scss',
 })
 export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
+
+  /** Formulario principal del componente */
   FormSocioAccionista!: FormGroup;
+
+  /** Enumeración para controlar la selección de filas en tablas */
   tablaSeleccion = TablaSeleccion;
+
+  /** Catálogo de países disponible para el usuario */
   catPais!: Catalogo[];
+
+  /** Configuración del encabezado de tabla para socios nacionales */
   encabezadoDeTablaAccionista = CONFIGURACION_ENCABEZADO_SOCIO;
+
+  /** Configuración del encabezado de tabla para socios extranjeros */
   encabezadoDeTablaAccionistaExtranjero = CONFIGURACION_ENCABEZADO_SOCIO_EXTRANJERO;
+
+  /** Lista de socios accionistas nacionales */
   public listaSociosAccionistas: ConsultaSocioNacional[] = [];
+
+  /** Lista de socios accionistas extranjeros */
   public listaSociosAccionistasExtranjeros: ConsultaSocioExtranjero[] = [];
+
+  /** Socios nacionales seleccionados */
   public socioAccionistaSeleccionado: ConsultaSocioNacional[] = [];
+
+  /** Socios extranjeros seleccionados */
   public socioAccionistaExtranjerosSeleccionado: ConsultaSocioExtranjero[] = [];
 
+  /** Subject utilizado para destruir subscripciones al destruir el componente */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /** Datos del socio nacional consultado */
   socioNacional?: ConsultaSocioNacional;
+
+  /** Datos del socio extranjero físico consultado */
   socioExtranjero?: ConsultaSocioExtranjero;
+
+  /** Datos del socio extranjero moral consultado */
   socioExtranjeroMoral?: ConsultaSocioExtranjero;
+
+  /** Controla si se debe visualizar la tabla */
   public visualizarTabla: boolean = false;
+
+  /** Estado inicial del store de accionistas */
   public accionistaInicialStore!: AccionistaStore;
+
+  /** Notificación para mostrar mensajes al usuario.*/
+  public nuevaNotificacion!: Notificacion;
 
   constructor(
     private fb: FormBuilder,
@@ -58,6 +94,9 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Inicializa el componente, obtiene catálogos, estado inicial y configura validaciones dinámicas.
+   */
   ngOnInit(): void {
     this.catPais = data;
     this.busquedaQuery.selectSolicitud$
@@ -68,8 +107,6 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$)
       )
       .subscribe();
-
-    // Escucha cambios para aplicar validaciones dinámicas
     this.FormSocioAccionista.get('tipoNacionalidad')?.valueChanges.subscribe(() => {
       this.actualizarValidaciones();
     });
@@ -81,14 +118,21 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
     this.listaSociosAccionistasExtranjeros = this.accionistaInicialStore.listaAccionistasExtranjeros;
   }
 
+  /** Getter para el campo tipoNacionalidad del formulario */
   get tipoNacionalidad() {
     return this.FormSocioAccionista.get('tipoNacionalidad')?.value;
   }
 
+  /** Getter para el campo personaNacional del formulario */
   get personaNacional() {
     return this.FormSocioAccionista.get('personaNacional')?.value;
   }
 
+  /**
+   * Validador estático para validar RFC (persona física o moral).
+   * @param control - Campo a validar
+   * @returns Error de validación o null si es válido
+   */
   static validadorRFC(control: AbstractControl): ValidationErrors | null {
     const VALUE = control.value;
     if (!VALUE) {
@@ -98,6 +142,9 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
     return ES_VALIDO ? null : { rfcInvalido: true };
   }
 
+  /**
+   * Lógica para agregar un socio accionista nacional o extranjero según tipo.
+   */
   agregarSocioAccionista() {
     const NACIONALIDAD = this.tipoNacionalidad;
     const PERSONA = this.personaNacional;
@@ -176,15 +223,20 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
 
   }
 
+  /**
+   * Elimina subscripciones al destruir el componente.
+   */
   ngOnDestroy() {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
 
+  /**
+   * Aplica reglas de validación dinámica a los campos del formulario según el tipo de persona y nacionalidad.
+   */
   actualizarValidaciones() {
     const NACIONALIDAD = this.tipoNacionalidad;
     const PERSONA = this.personaNacional;
-
     const RFC = this.FormSocioAccionista.get('rfc');
     const NOMBRE = this.FormSocioAccionista.get('nombre');
     const APELLIDOPATERNO = this.FormSocioAccionista.get('apellidoPaterno');
@@ -215,7 +267,6 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
         RAZONSOCIAL?.setValidators([Validators.required]);
       }
     }
-
     RFC?.updateValueAndValidity();
     NOMBRE?.updateValueAndValidity();
     APELLIDOPATERNO?.updateValueAndValidity();
@@ -224,10 +275,32 @@ export class RegistroSocioAccionistaComponent implements OnInit, OnDestroy {
     ESTADO?.updateValueAndValidity();
     RAZONSOCIAL?.updateValueAndValidity();
   }
+
+  /**
+   * Navega hacia la vista de firma electrónica.
+   */
   enviarFirma() {
-    this.router.navigate(['login/firma-electronica']);
+    if (this.listaSociosAccionistasExtranjeros.length > 0) {
+      this.router.navigate(['login/firma-electronica']);
+    }
+    else {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: 'Alerta',
+        mensaje: 'No hay accionistas para enviar a firmar.',
+        cerrar: false,
+        tiempoDeEspera: 2000,
+        txtBtnAceptar: 'Aceptar',
+        txtBtnCancelar: '',
+      };
+    }
   }
 
+  /**
+   * Elimina los elementos seleccionados en ambas listas (nacional y extranjero).
+   */
   eliminarSeleccionados() {
     this.socioAccionistaSeleccionado.forEach((socio) => {
       const INDEX = this.listaSociosAccionistas.indexOf(socio);

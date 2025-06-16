@@ -1,30 +1,29 @@
 /**
  * Representa la información de un socio extranjero.
- *
- * @property razonSocial - Razón social de la empresa o entidad (si aplica).
- * @property nombre - Nombre(s) del socio extranjero.
- * @property apellidoPaterno - Apellido paterno del socio extranjero.
- * @property apellidoMaterno - Apellido materno del socio extranjero.
- * @property pais - País de residencia del socio extranjero.
- * @property codigoPostal - Código postal de la dirección del socio extranjero.
- * @property estado - Estado o provincia de la dirección.
- * @property calle - Calle de la dirección.
- * @property numeroInterior - Número interior de la dirección (opcional).
- * @property numeroExterior - Número exterior de la dirección.
- * @property numeroSeguroSocial - Número de seguro social del socio extranjero.
- * @property numeroIdentificacionFiscal - Número de identificación fiscal del socio extranjero.
  */
 export interface ConsultaSocioExtranjero {
+    /** Razón social del socio extranjero (para personas morales) */
     razonSocial: string;
+    /** Nombre del socio extranjero (para personas físicas) */
     nombre: string;
+    /** Apellido paterno del socio extranjero */
     apellidoPaterno: string;
+    /** Apellido materno del socio extranjero */
     apellidoMaterno: string;
+    /** País de residencia del socio extranjero */
     pais: string;
+    /** Código postal del socio extranjero */
     codigoPostal: string;
+    /** Estado o provincia del socio extranjero */
     estado: string;
+    /** Calle del domicilio del socio extranjero */
     calle: string;
+    /** Número interior del domicilio */
     numeroInterior: string;
+    /** Número exterior del domicilio */
     numeroExterior: string;
+    /** Número de seguro social del socio extranjero */
     numeroSeguroSocial: string;
+    /** Número de identificación fiscal del socio extranjero */
     numeroIdentificacionFiscal: string;
 }
