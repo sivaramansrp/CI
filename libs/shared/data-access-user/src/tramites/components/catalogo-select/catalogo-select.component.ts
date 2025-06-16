@@ -45,6 +45,10 @@ export class CatalogoSelectComponent
   @Input() isInline: boolean = false;
   @Input() questionCircleTooltip?: string = '';
 
+  @Input() hiddenPrimerOption: boolean = true;
+  @Input() disabledPrimerOption: boolean = true;
+  @Input() primerOptionValue!: number;
+
   formSelect: FormGroup;
   value: string = '';
 
