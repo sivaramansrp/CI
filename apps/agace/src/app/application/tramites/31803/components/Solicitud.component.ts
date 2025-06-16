@@ -124,7 +124,6 @@ export class SolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe()
-    this.inicializarEstadoFormulario();
   }
 
   /**

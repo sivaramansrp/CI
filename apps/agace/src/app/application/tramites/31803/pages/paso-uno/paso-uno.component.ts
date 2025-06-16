@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL, } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { SharedModule, SolicitanteComponent, } from '@libs/shared/data-access-user/src';
@@ -18,7 +18,7 @@ import { SolicitudComponent } from "../../components/Solicitud.component";
   standalone: true,
   imports: [SharedModule, CommonModule, SolicitanteComponent, SolicitudComponent],
 })
-export class PasoUnoComponent implements AfterViewInit, OnInit {
+export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
 
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false; // Indica si hay datos de respuesta del servidor
@@ -80,7 +80,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit {
       .pipe(
         takeUntil(this.destroyNotifier$),
       )
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     // eslint-disable-next-line @typescript-eslint/no-explicit-any
       .subscribe((resp: any) => {
         if (resp) {
           this.esDatosRespuesta = true;
@@ -138,5 +138,10 @@ export class PasoUnoComponent implements AfterViewInit, OnInit {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

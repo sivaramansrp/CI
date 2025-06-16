@@ -56,7 +56,14 @@ export class RegistroSolicitudService {
     return this.http.get<Catalogo[]>('assets/json/31803/banco.json');
   }
 
-  getSolicitudDatos(): Observable<Catalogo[]> {
-    return this.http.get<Catalogo[]>('assets/json/31803/solicitud-banco.json');
-  }
+/**
+ * Obtiene los datos de la solicitud desde un archivo JSON.
+ * Realiza una solicitud HTTP para obtener un arreglo de objetos de tipo `Catalogo`
+ * desde el archivo 'solicitud-banco.json'.
+ *
+ * @returns Un observable que emite una lista de objetos de tipo `Catalogo`.
+ */
+getSolicitudDatos(): Observable<Catalogo[]> {
+  return this.http.get<Catalogo[]>('assets/json/31803/solicitud-banco.json');
+}
 }
