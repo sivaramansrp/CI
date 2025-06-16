@@ -22,13 +22,20 @@ interface AccionBoton {
   valor: number;
 }
 
+/**
+ * Componente principal para el trámite de Permiso Sanitario de Dispositivos Médicos.
+ * Gestiona la navegación entre los pasos del wizard, la visualización de avisos y la integración
+ * con el componente hijo WizardComponent.
+ *
+ * @selector app-permiso-sanitario-dispositivos-medicos
+ * @templateUrl ./permiso-sanitario-dispositivos-medicos.component.html
+ * @styleUrl ./permiso-sanitario-dispositivos-medicos.component.scss
+ */
 @Component({
   selector: 'app-permiso-sanitario-dispositivos-medicos',
   templateUrl: './permiso-sanitario-dispositivos-medicos.component.html',
   styleUrls: ['./permiso-sanitario-dispositivos-medicos.component.scss'],
- 
 })
-
 export class PermisoSanitarioDispositivosMedicosComponent {
   /**
    * Lista de pasos del wizard.
@@ -60,16 +67,15 @@ export class PermisoSanitarioDispositivosMedicosComponent {
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
-     * 
-     * Una cadena que representa la clase CSS para una alerta de información.
-     * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
-     */
-    public infoAlert = 'alert-info';
+   * Una cadena que representa la clase CSS para una alerta de información.
+   * Esta clase se utiliza para aplicar estilo a los mensajes de información en el componente.
+   */
+  public infoAlert = 'alert-info';
   
-    /**
-     * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
-     */
-    TEXTOS = AVISO;
+  /**
+   * Asigna el aviso de privacidad simplificado al atributo `TEXTOS`.
+   */
+  TEXTOS = AVISO;
 
   /**
    * Constructor del componente.
