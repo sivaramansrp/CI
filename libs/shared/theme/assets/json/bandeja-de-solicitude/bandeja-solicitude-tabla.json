@@ -36,6 +36,15 @@
     "numeroDeProcedimiento": "31602"
   },
   {
+    "id": 31603,
+    "tipoDeTramite": "Consulta de Proceso 31603",
+    "fecha": "2020-11-01",
+    "fechaActualizacion": "2020-11-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "31603"
+  },
+  {
     "id": 31601,
     "tipoDeTramite": "Antecesor",
     "fecha": "2023-10-01",
@@ -1996,5 +2005,23 @@
     "diasTranscurridos": "4",
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260216"
+  },
+  {
+      "id": 240112,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SEDENA",
+    "numeroDeProcedimiento": "240112"
+  },
+  {
+    "id": 260206,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260206"
   }
 ]

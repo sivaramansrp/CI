@@ -9,13 +9,13 @@
             [datos]="numeroDeEmpleadosDatos">
         </app-tabla-dinamica>
       <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-primary me-2" (click)="abrirModal(template)">
+        <button type="button" class="btn btn-primary me-2" (click)="abrirModal(template)" [disabled]="esFormularioSoloLectura">
             Agregar
         </button>
-      <button class="btn btn-default me-2" type="button">
+      <button class="btn btn-default me-2" type="button" [disabled]="esFormularioSoloLectura">
         Modificar
       </button>
-      <button class="btn btn-default" type="button">Eliminar</button>
+      <button class="btn btn-default" type="button" [disabled]="esFormularioSoloLectura">Eliminar</button>
       </div>
     </div>
   </div>
