@@ -23,7 +23,7 @@ export class PagoBancoService {
    *
    * @returns Observable que emite un arreglo de objetos Catalogo.
    */
-  getBancoData(): Observable<Catalogo[]> {
+  consultarDatosBanco(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('./assets/json/260501/banco-options.json');
   }
   
