@@ -35,12 +35,6 @@ export class Service130302Service {
    * @param DATOS Estado actual del formulario de trámite 130302.
    */
   actualizarEstadoFormulario(DATOS: ExportarIlustraciones130302State): void {
-    // if (DATOS.acotacion) {
-    //   this.tramite130302Store.setacotacion(DATOS.acotacion);
-    // }
-    // if (DATOS.saldoDisponible) {
-    //   this.tramite130302Store.setsaldoDisponible(DATOS.saldoDisponible);
-    // }
     if (DATOS.prorrogaDel) {
       this.tramite130302Store.setprorrogaDel(DATOS.prorrogaDel);
     }
