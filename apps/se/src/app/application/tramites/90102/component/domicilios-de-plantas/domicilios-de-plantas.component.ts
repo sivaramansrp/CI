@@ -15,20 +15,20 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FilaPlantas } from '../../models/prosec.module';
 import { HttpErrorResponse } from '@angular/common/http';
 import { ProsecService } from '../../services/prosec.service';
 import { SeccionLibQuery } from '@ng-mf/data-access-user';
 import { SeccionLibState } from '@ng-mf/data-access-user';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
-import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { TEXTO } from '../../constantes/prosec.module';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 @Component({
   selector: 'app-domicilios-de-plantas',
