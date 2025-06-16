@@ -11,16 +11,18 @@
       <div class="mt-5">
         <h5>Fabricante:</h5>
         <div class="table-responsive mt-5">
-          <ng-table [commonTableHeader]="tablaEncabezadoData" [commonTableBody]="fabricanteRowData"></ng-table>
+       
+         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="configuracionTabla" 
+       [datos]="fabricanteRowData" (listaDeFilaSeleccionada)="onFabricanteSeleccionados($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"></app-tabla-dinamica>
         </div>
         <br />
   
         <div class="d-flex justify-content-end mt-3">
           <div>
-            <button class="btn btn-danger mx-2" type="button" >Eliminar</button>
-            <button class="btn btn-default mx-2" type="button">Modificar</button>
+            <button class="btn btn-danger mx-2" type="button"  (click)="eliminarSeleccionadosFabricante()" [disabled]="esFormularioSoloLectura" >Eliminar</button>
+            <button class="btn btn-default mx-2" type="button" [disabled]="esFormularioSoloLectura"   (click)="onModificarFabricante()">Modificar</button>
           </div>
-          <button type="button" class="btn btn-primary" (click)="toggleDivFabricante()">
+          <button type="button" class="btn btn-primary" (click)="toggleDivFabricante()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
         </div>
@@ -30,17 +32,18 @@
       <div class="mt-5">
         <h5>Destinatario (destino final)*:</h5>
         <div class="table-responsive mt-5">
-          <ng-table [commonTableHeader]="tablaEncabezadoData" [commonTableBody]="destinatarioRowData">
-          </ng-table>
+        
+           <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="configuracionTablaDestinatario" 
+       [datos]="destinatarioRowData" (listaDeFilaSeleccionada)="onDestinatarioSeleccionados($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"></app-tabla-dinamica>
         </div>
         <br />
   
         <div class="d-flex justify-content-end mt-3">
           <div >
-            <button class="btn btn-danger mx-2" type="button">Eliminar</button>
-            <button class="btn btn-default mx-2" type="button">Modificar</button>
+            <button class="btn btn-danger mx-2" type="button" (click)="eliminarSeleccionadosDestinatario()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+            <button class="btn btn-default mx-2" type="button" [disabled]="esFormularioSoloLectura"  (click)="onModificarDestinatario()">Modificar</button>
           </div>
-          <button type="button" class="btn btn-primary" (click)="toggleDivDestinatario()">
+          <button type="button" class="btn btn-primary" (click)="toggleDivDestinatario()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
         </div>
@@ -50,16 +53,18 @@
       <div class="mt-5">
         <h5>Proveedor:</h5>
         <div class="table-responsive mt-5">
-          <ng-table [commonTableHeader]="tablaEncabezadoData" [commonTableBody]="proveedorRowData"></ng-table>
+         
+      <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="configuracionTablaProveedor" 
+       [datos]="proveedorRowData" (listaDeFilaSeleccionada)="onProveedorSeleccionados($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"></app-tabla-dinamica>
         </div>
         <br />
   
         <div class="d-flex justify-content-end mt-3">
           <div >
-            <button class="btn btn-danger mx-2" type="button">Eliminar</button>
-            <button class="btn btn-default mx-2" type="button">Modificar</button>
+            <button class="btn btn-danger mx-2" type="button" (click)="eliminarSeleccionadosProveedor()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+            <button class="btn btn-default mx-2" type="button" [disabled]="esFormularioSoloLectura"  (click)="onModificarProveedor()">Modificar</button>
           </div>
-          <button type="button" class="btn btn-primary" (click)="toggleDivProveedor()">
+          <button type="button" class="btn btn-primary" (click)="toggleDivProveedor()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
         </div>
@@ -69,16 +74,18 @@
       <div class="mt-5">
         <h5>Facturador:</h5>
         <div class="table-responsive mt-5">
-          <ng-table [commonTableHeader]="tablaEncabezadoData" [commonTableBody]="facturadorRowData"></ng-table>
+        
+        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="configuracionTablaFacturador" 
+       [datos]="facturadorRowData" (listaDeFilaSeleccionada)="onFacturadorSeleccionados($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"></app-tabla-dinamica>
         </div>
         <br />
   
         <div class="d-flex justify-content-end mt-3">
           <div >
-            <button class="btn btn-danger mx-2" type="button">Eliminar</button>
-            <button class="btn btn-default mx-2" type="button">Modificar</button>
+            <button class="btn btn-danger mx-2" type="button" (click)="eliminarSeleccionadosFacturador()" [disabled]="esFormularioSoloLectura">Eliminar</button>
+            <button class="btn btn-default mx-2" type="button" [disabled]="esFormularioSoloLectura" (click)="onModificarFacturador()">Modificar</button>
           </div>
-          <button type="button" class="btn btn-primary" (click)="toggleDivFacturador()">
+          <button type="button" class="btn btn-primary" (click)="toggleDivFacturador()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
         </div>
@@ -459,7 +466,7 @@
                   Cancelar
                 </button>
                 <button type="button" class="btn btn-default" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                  aria-controls="offcanvasRight">
+                  aria-controls="offcanvasRight"   (click)="agregarFabricanteFormGroup.reset()">
                   Limpiar
                 </button>
                 <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
@@ -682,7 +689,7 @@
                   Cancelar
                 </button>
                 <button type="button" class="btn btn-default" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                  aria-controls="offcanvasRight">
+                  aria-controls="offcanvasRight"  (click)="agregarDestinatarioFormGroup.reset()">
                   Limpiar
                 </button>
                 <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
@@ -885,7 +892,7 @@
                 Cancelar
               </button>
               <button type="button" class="btn btn-default" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                aria-controls="offcanvasRight">
+                aria-controls="offcanvasRight"  (click)="agregarProveedorFormGroup.reset()" >
                 Limpiar
               </button>
               <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
@@ -1073,7 +1080,7 @@
                   Cancelar
                 </button>
                 <button type="button" class="btn btn-default" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-                  aria-controls="offcanvasRight">
+                  aria-controls="offcanvasRight"   (click)="agregarFacturadorFormGroup.reset()">
                   Limpiar
                 </button>
                 <button type="button" class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"

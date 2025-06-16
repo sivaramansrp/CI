@@ -207,7 +207,16 @@ export class Tramite260605Store extends Store<Solicitud260605State> {
       cantidadSolicitada,
     }));
   }
-
+ /**
+   * Establece la cantidadSolicitada en el estado.
+   * @param {string} costumbresActuales - La cantidadSolicitada a establecer.
+   */
+  public setCostumbresActuales(costumbresActuales: string):void {
+    this.update((state) => ({
+      ...state,
+      costumbresActuales,
+    }));
+  }
   /**
    * Restablece el estado al estado inicial.
    */

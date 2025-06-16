@@ -7,6 +7,8 @@ import { ConsultaCapturistaPrivadoComponent } from './consulta-capturista-privad
 import { ConsultaPersonaNotificacionesComponent } from './consulta-persona-notificaciones/consulta-persona-notificaciones.component';
 import { ConsultaSocioAccionistaComponent } from './consulta-socio-accionista/consulta-socio-accionista.component';
 import { FirmaPageComponent } from '@libs/shared/data-access-user/src';
+import { MenuUsuarioComponent } from './menu-usuario/menu-usuario.component';
+import { ModificarCorreoElectronicoComponent } from './modificar-correo-electronico/modificar-correo-electronico.component';
 import { NgModule } from '@angular/core';
 import { RegistroCapturistaPrivadoComponent } from './registro-capturista-privado/registro-capturista-privado.component';
 import { RegistroPersonaNotificacionesComponent } from './registro-persona-notificaciones/registro-persona-notificaciones.component';

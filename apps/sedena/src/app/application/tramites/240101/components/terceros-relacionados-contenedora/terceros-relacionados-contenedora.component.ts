@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -8,6 +9,7 @@ import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240101Query } from '../../estados/tramite240101Query.query';
 import { Tramite240101Store } from '../../estados/tramite240101Store.store';
+import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -21,7 +23,7 @@ import { takeUntil } from 'rxjs';
   standalone: true,
   imports: [CommonModule, TercerosRelacionadosComponent],
   templateUrl: './terceros-relacionados-contenedora.component.html',
-  styleUrl: './terceros-relacionados-contenedora.component.css',
+  styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
 export class TercerosRelacionadosContenedoraComponent
   implements OnInit, OnDestroy
@@ -45,16 +47,28 @@ export class TercerosRelacionadosContenedoraComponent
   proveedorTablaDatos: Proveedor[] = [];
 
   /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   *
+   * @type {boolean}
+   * @memberof TercerosRelacionadosContenedoraComponent
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    *
    * @method constructor
    * @param {Tramite240101Store} tramiteStore - Store de Akita que maneja el estado del trámite.
    * @param {Tramite240101Query} tramiteQuery - Query de Akita para obtener datos del trámite.
+   * @param {ConsultaioQuery} consultaQuery - Servicio para realizar consultas adicionales relacionadas.
    * @returns {void}
    */
   constructor(
     private tramiteStore: Tramite240101Store,
-    private tramiteQuery: Tramite240101Query // eslint-disable-next-line no-empty-function
+    private tramiteQuery: Tramite240101Query,
+    private consultaQuery: ConsultaioQuery
+     // eslint-disable-next-line no-empty-function
   ) {}
 
   /**
@@ -76,6 +90,15 @@ export class TercerosRelacionadosContenedoraComponent
       .subscribe((data) => {
         this.proveedorTablaDatos = data;
       });
+
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
   /**
    * Hook que se ejecuta al destruir el componente.

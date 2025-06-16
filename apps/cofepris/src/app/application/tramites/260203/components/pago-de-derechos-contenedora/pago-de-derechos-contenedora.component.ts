@@ -1,5 +1,7 @@
+import { Observable, map } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite260203Store } from '../../estados/stores/tramite260203Store.store';
@@ -25,6 +27,15 @@ export class PagoDeDerechosContenedoraComponent {
    */
 
   public pagoDerechos: PagoDerechosFormState;
+
+  /**
+  * Observable que indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.
+  *
+  * @type {Observable<boolean>}
+  */
+  esFormularioSoloLectura!: Observable<boolean>;
+  
   /**
    * @constructor
    * @description Constructor que inyecta el store `Tramite260203Store` para gestionar el estado del trámite.
@@ -32,8 +43,17 @@ export class PagoDeDerechosContenedoraComponent {
    *
    * @param tramiteStore - Store que administra el estado del trámite 260214.
    */
-  constructor(public tramiteStore: Tramite260203Store) {
+  constructor(public tramiteStore: Tramite260203Store, private consultaQuery: ConsultaioQuery) {
     this.pagoDerechos = this.tramiteStore.getValue().pagoDerechos;
+    this.esFormularioSoloLectura = this.consultaQuery.selectConsultaioState$
+       .pipe(
+         map((seccionState) => {
+           if(!seccionState.create && seccionState.procedureId === '260203') {
+             return seccionState.readonly;
+           } 
+           return false;
+         })
+       );
   }
 
   /**

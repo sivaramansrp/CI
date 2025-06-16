@@ -25,13 +25,19 @@
             <solicitante [tabindex]="1"></solicitante>
         }
         @case (2) {
+          @if(esDatosRespuesta){
             <app-datos-de-la-solicitud></app-datos-de-la-solicitud>
             <app-representante-legal></app-representante-legal>
+          }
         }
         @case (3) {
-          <app-terceros-relacionados-destino></app-terceros-relacionados-destino>
+          @if(esDatosRespuesta){
+            <app-terceros-relacionados-destino></app-terceros-relacionados-destino>
+          }
         } @case (4) {
-          <app-pago-de-derechos-contenedora></app-pago-de-derechos-contenedora>
+          @if(esDatosRespuesta){
+            <app-pago-de-derechos-contenedora></app-pago-de-derechos-contenedora>
+          }
         }
         }
       </ng-container>

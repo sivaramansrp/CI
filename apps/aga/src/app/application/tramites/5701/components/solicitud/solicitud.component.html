@@ -14,7 +14,7 @@
     </div>
   </div>
 
-  @if(tipoSolicitudSeleccionada) {
+  @if(tipoSolicitudSeleccionada > 0) {
   <ng-titulo titulo="Datos del importador/exportador" />
   <div formGroupName="datosImportadorExportador">
     @if (isApoderado && masDeUnaPatente) {
@@ -79,12 +79,27 @@
             placeholder="RFC"
             type="text"
             formControlName="RFCImpExp"
+            maxlength="13"
             [ngClass]="
               isValid(datosImportadorExportador, 'RFCImpExp') ? 'required' : ''
             "
             libUppercase
-            (change)="validaRfc()"
+            (blur)="validaRfc()"
           />
+
+          <div
+            *ngIf="isRequired(datosImportadorExportador, 'RFCImpExp')"
+            class="mensaje-error"
+          >
+            Este campo es obligatorio.
+          </div>
+
+          <div
+            *ngIf="isErrorPattern(datosImportadorExportador, 'RFCImpExp')"
+            class="mensaje-error"
+          >
+            RFC no es válido.
+          </div>
         </div>
       </div>
       <div class="col-md-8">
@@ -102,7 +117,9 @@
       </div>
     </div>
     }
-    <section id="seccion-certificaciones" *ngIf="">
+
+    <!-- Aqui se debe ocultar si el rfc es un rfc generico -->
+    <section id="seccion-certificaciones">
       <div class="row">
         <div class="col-md-4">
           <div class="form-group">
@@ -115,6 +132,7 @@
               placeholder=""
               type="text"
               formControlName="desNumeroRegistro"
+              maxlength="25"
               [ngClass]="
                 isValid(datosImportadorExportador, 'desNumeroRegistro')
                   ? 'required'
@@ -250,8 +268,28 @@
               formControlName="idSocioComercial"
               placeholder=""
               type="text"
-              (change)="onIdSocioComercialChange()"
+              maxlength="30"
+              [ngClass]="
+                isValid(datosImportadorExportador, 'idSocioComercial')
+                  ? 'required'
+                  : ''
+              "
+              (blur)="validarIDSocioComercial()"
             />
+            <div
+              *ngIf="isRequired(datosImportadorExportador, 'idSocioComercial')"
+              class="mensaje-error"
+            >
+              Este campo es obligatorio.
+            </div>
+            <div
+              *ngIf="
+                isErrorPattern(datosImportadorExportador, 'idSocioComercial')
+              "
+              class="mensaje-error"
+            >
+              Por favor, ingresa caracteres alfanuméricos.
+            </div>
           </div>
         </div>
       </div>
@@ -269,15 +307,17 @@
           name="fechaInicio"
           id="fechaInicio"
           formControlName="fechaInicio"
+          placeholder="dd/mm/yyyy"
           [ngClass]="isValid(datosServicio, 'fechaInicio') ? 'required' : ''"
-          (change)="
-            setValoresStore(datosServicio, 'fechaInicio', 'setFechaInicio')
-          "
+          (change)="changeFechaInicio()"
+          (keydown)="$event.preventDefault()"
         />
-
-        @if (isValid(datosServicio,'fechaInicio')) {
-        <div class="mensaje-error">Fecha no válida</div>
-        }
+        <div
+          *ngIf="isRequired(datosServicio, 'fechaInicio')"
+          class="mensaje-error"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
 
       <div class="col-md-4">
@@ -304,17 +344,14 @@
           formControlName="fechaFinal"
           [ngClass]="isValid(datosServicio, 'fechaFinal') ? 'required' : ''"
           (change)="changeFechaFinal()"
+          (keydown)="$event.preventDefault()"
         />
-
-        @if (isValid(datosServicio,'fechaFinal')) {
-        <div class="mensaje-error">Fecha no válida</div>
-        } @if (intervaloFechaError()) {
-        <div class="mensaje-error">Intervalo de fecha no válido</div>
-        } @if (fechaInicioPasadaFechaFinalError()) {
-        <div class="mensaje-error">
-          La fecha de inicio no debe ser despues que la fecha final
+        <div
+          *ngIf="isRequired(datosServicio, 'fechaFinal')"
+          class="mensaje-error"
+        >
+          Este campo es obligatorio.
         </div>
-        }
       </div>
 
       <div class="col-md-4">
@@ -325,13 +362,6 @@
           [inputId]="'horaFinal'"
           (change)="changeHoraFinal()"
         ></input-hora>
-        @if (intervaloFechaError()) {
-        <div class="mensaje-error">Intervalo de fecha no válido</div>
-        } @if (fechaInicioPasadaFechaFinalError()) {
-        <div class="mensaje-error">
-          La fecha de incio no debe ser despues que la fecha final
-        </div>
-        }
       </div>
     </div>
 
@@ -357,6 +387,8 @@
                 <crosslist
                   [fechas]="selectRangoDias"
                   [fechasSeleccionadas]="solicitudState.fechasSeleccionadas"
+                  [label]="LABEL_CROSSLIST_FECHAS"
+                  [mensajeAlerta]="MENSAJE_ALERTA_CROSSLIST"
                   (fechasSeleccionadasChange)="changeCrosslist($event)"
                 ></crosslist>
               </div>
@@ -379,6 +411,7 @@
             id="lda"
             (click)="showConfirmDialogLDA_DD('lda')"
             formControlName="lda"
+            maxlength="13"
           />
           <label class="form-check-label" for="lda">Despacho LDA</label>
         </div>
@@ -392,6 +425,7 @@
             id="dd"
             (click)="showConfirmDialogLDA_DD('dd')"
             formControlName="dd"
+            maxlength="13"
           />
           <label class="form-check-label" for="dd">Despacho DD</label>
         </div>
@@ -413,11 +447,16 @@
             class="form-control"
             formControlName="rfcDespachoLDA"
             placeholder=""
-            (change)="
-              setValoresStore(despacho, 'rfcDespachoLDA', 'setAutorizacionLDA')
-            "
+            (blur)="changeRfcAutorizacionLDA()"
+            maxlength="13"
             [ngClass]="isValid(despacho, 'rfcDespachoLDA') ? 'required' : ''"
           />
+          <div
+            *ngIf="isRequired(despacho, 'rfcDespachoLDA')"
+            class="mensaje-error"
+          >
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
       } @else if (despacho.get('dd')?.value) {
@@ -431,10 +470,21 @@
             formControlName="folioDDEX"
             placeholder=""
             (change)="
-              setValoresStore(despacho, 'folioDDEX', 'setAutorizacionDDEX')
+              changeFolioDDEX()
             "
             [ngClass]="isValid(despacho, 'folioDDEX') ? 'required' : ''"
           />
+
+          <div *ngIf="isRequired(despacho, 'folioDDEX')" class="mensaje-error">
+            Este campo es obligatorio.
+          </div>
+
+          <div
+            *ngIf="isErrorPattern(despacho, 'folioDDEX')"
+            class="mensaje-error"
+          >
+            Formato incorrecto.
+          </div>
         </div>
       </div>
       }
@@ -491,7 +541,10 @@
           [required]="false"
         >
           <option value="-1">Selecciona una opción...</option>
-          <option *ngFor="let recinto of recintoCatalogo" [value]="recinto">
+          <option
+            *ngFor="let recinto of recintoCatalogo"
+            [value]="recinto.id_recinto_fiscalizado"
+          >
             {{ recinto.descripcion }}
           </option>
         </select>
@@ -514,6 +567,7 @@
           formControlName="tipoOperacion"
           [label]="'Tipo de operación'"
           [required]="true"
+          [isDisabled]="!activarCatalogoTipoOperacion"
           (change)="
             setValoresStore(despacho, 'tipoOperacion', 'setTipoOperacion')
           "
@@ -568,7 +622,9 @@
           <textarea
             class="form-control h-25"
             id="exampleFormControlTextarea1"
-            rows="3"
+            rows="5"
+            cols="10"
+            maxlength="200"
             formControlName="domicilioDespacho"
             id="domicilioDespacho"
             placeholder=""
@@ -622,10 +678,12 @@
             >Descripción genérica*:</label
           >
           <textarea
-            class="form-control"
-            rows="3"
+            class="form-control h-25"
+            rows="5"
+            cols="10"
             id="descripcionGenerica"
             formControlName="descripcionGenerica"
+            maxlength="500"
             (change)="
               setValoresStore(
                 mercancia,
@@ -634,6 +692,12 @@
               )
             "
           ></textarea>
+          <div
+            *ngIf="isRequired(mercancia, 'descripcionGenerica')"
+            class="mensaje-error"
+          >
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
 
@@ -641,14 +705,22 @@
         <div class="form-group">
           <label for="justificacion" class="form-label">Justificación*:</label>
           <textarea
-            class="form-control"
-            rows="3"
+            class="form-control h-25"
+            rows="5"
+            cols="10"
             id="justificacion"
             formControlName="justificacion"
+            maxlength="1000"
             (change)="
               setValoresStore(mercancia, 'justificacion', 'setJustificacion')
             "
           ></textarea>
+          <div
+            *ngIf="isRequired(mercancia, 'justificacion')"
+            class="mensaje-error"
+          >
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
     </div>
@@ -677,7 +749,12 @@
 
   <ng-titulo titulo="Personas responsables del despacho (máximo 5)" />
 
-  <agrega-personas />
+  <agrega-personas
+    [personasResponsablesDespachoSeleccionados]="
+      solicitudState.personasResponsablesDespacho
+    "
+    (responsablesDespachoChange)="changeResponsablesDespacho($event)"
+  />
 
   <ng-titulo titulo="Pagos" />
   <div formGroupName="pagoCaptura">
@@ -706,6 +783,7 @@
           placeholder=""
           type="text"
           formControlName="lineaCaptura"
+          maxlength="20"
           (change)="
             setValoresStore(pagoCaptura, 'lineaCaptura', 'setLineaCaptura')
           "
@@ -719,6 +797,7 @@
           placeholder=""
           type="text"
           formControlName="monto"
+          maxlength="12"
           (change)="setValoresStore(pagoCaptura, 'monto', 'setMonto')"
         />
       </div>
@@ -731,11 +810,17 @@
           <button
             class="btn btn-primary me-2"
             type="button"
-            (click)="consultarLineaCaptura()"
+            (click)="agregarPagoSea()"
           >
             Consultar
           </button>
-          <button class="btn btn-danger" type="button">Eliminar</button>
+          <button
+            class="btn btn-danger"
+            type="button"
+            (click)="eliminarLineaCaptura()"
+          >
+            Eliminar
+          </button>
         </div>
       </div>
     </div>
@@ -755,6 +840,7 @@
           [tipoSeleccionTabla]="tablaSeleccionPagos.CHECKBOX"
           [configuracionTabla]="encabezadoDeTablaPagos"
           [datos]="datosTablaPagos"
+          (listaDeFilaSeleccionada)="lineaCapturaSeleccionados = $event"
         >
         </app-tabla-dinamica>
       </div>

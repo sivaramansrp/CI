@@ -1,9 +1,9 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, map } from 'rxjs';
 import { Capturista } from '../models/capturista.model';
 import { ConsultaRegistro } from '../models/consulta-registro.model';
 import { ConsultaSocioExtranjero } from '../models/consulta-socio-extranjero.model';
 import { ConsultaSocioNacional } from '../models/consulta-socio-nacional.model';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 /**
@@ -29,12 +29,14 @@ export class UsuariosService {
      * @param curp CURP del usuario (opcional).
      * @returns Observable con los datos del registro consultado.
      */
-    consultaDatosPorRFCoCURP(rfc?: string): Observable<ConsultaRegistro> {
-        let params = new HttpParams();
-        if (rfc) {
-            params = params.set('rfc', rfc);
-        }
-        return this.http.get<ConsultaRegistro>(`/assets/json/login/consulta-registro.json`, { params });
+    consultaNotificadores(rfc: string): Observable<ConsultaRegistro | undefined> {
+        return this.http.get<ConsultaRegistro[]>(`/assets/json/login/consulta-notificadores.json`).pipe(
+            map((capturistas) => {
+                return capturistas.find(c =>
+                    (rfc ? c.rfc === rfc : true)
+                );
+            })
+        );
     }
 
     /**

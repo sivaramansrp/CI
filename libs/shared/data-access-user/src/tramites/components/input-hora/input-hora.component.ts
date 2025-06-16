@@ -32,7 +32,6 @@ import { ValidacionesFormularioService } from '../../../core/services/shared/val
   ],
 })
 export class InputHoraComponent implements OnChanges, ControlValueAccessor {
-
   /**
    * Etiqueta para mostrar junto al componente.
    */
@@ -59,21 +58,19 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
   value: string = '';
 
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
-  private onChange: (value: string) => void = () => { };
+  private onChange: (value: string) => void = () => {};
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
-  private onTouched: () => void = () => { };
+  private onTouched: () => void = () => {};
 
   constructor(private validacionesService: ValidacionesFormularioService) {
     this.forma = new FormGroup({
-      hora: new FormControl('', [
-        Validators.pattern(HORA_PATTERN),
-      ]),
+      hora: new FormControl('', [Validators.pattern(HORA_PATTERN)]),
     });
   }
 
   /**
    * Detecta cambios en las propiedades de entrada y actualiza las validaciones del campo 'hora'.
-   * 
+   *
    * @param changes - Cambios detectados en las propiedades de entrada.
    * @returns void
    */
@@ -94,11 +91,11 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
   }
 
   /**
-  * Maneja el evento de cambio de un input tipo text.
-  * 
-  * @param event - Evento de cambio del text.
-  * @returns void
-  */
+   * Maneja el evento de cambio de un input tipo text.
+   *
+   * @param event - Evento de cambio del text.
+   * @returns void
+   */
   // ✅ Implement `ControlValueAccessor`
   handleChange(event: Event): void {
     const VALUE = (event.target as HTMLSelectElement).value;
@@ -107,7 +104,7 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
 
   /**
    * Escribe un valor string en el control de formulario 'hora'.
-   * 
+   *
    * @param value - Valor string a establecer en el control.
    * @returns void
    */
@@ -141,4 +138,16 @@ export class InputHoraComponent implements OnChanges, ControlValueAccessor {
   get isValid(): boolean | null | undefined {
     return this.forma.get('hora')?.errors && this.forma.get('hora')?.touched;
   }
-} 
+
+  /**
+   * Verifica si el tipo de error es 'required' en el campo 'hora'.
+   * @param {string} errorType - Tipo de error a verificar.
+   * @returns {boolean} `true` si el error es 'required', de lo contrario `false`.
+   */
+  getTipoError(errorType: string): boolean | null | undefined {
+    return (
+      this.forma.get('hora')?.hasError(errorType) &&
+      this.forma.get('hora')?.touched
+    );
+  }
+}

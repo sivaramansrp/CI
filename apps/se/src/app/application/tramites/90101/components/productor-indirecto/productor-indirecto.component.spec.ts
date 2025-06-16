@@ -12,8 +12,7 @@ describe('ProductorIndirectoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ProductorIndirectoComponent],
-      imports: [HttpClientTestingModule, TablaDinamicaComponent],
+      imports: [HttpClientTestingModule, TablaDinamicaComponent, ProductorIndirectoComponent],
       providers: [FormBuilder, ProsecService]
     })
     .compileComponents();

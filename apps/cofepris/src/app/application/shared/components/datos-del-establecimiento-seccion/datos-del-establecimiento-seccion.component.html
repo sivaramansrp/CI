@@ -3,7 +3,7 @@
 <form [formGroup]="detosEstablecimiento">
   <div class="col-md-12 mb-5">
     <div class="pull-right">
-      <button name="establecimiento" class="btn btn-primary" (click)="openEstablecimientoModal()">
+      <button name="establecimiento" class="btn btn-primary" (click)="openEstablecimientoModal()" [disabled]="formularioDeshabilitado ? true : false">
         Seleccionar establecimiento
       </button>
     </div>
@@ -58,7 +58,7 @@
           Acerar
         </div>
         <div class="modal-footer mt-5 d-flex justify-content-center">
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="formularioDeshabilitado ? true : false">
             Cancelar
           </button>
         </div>

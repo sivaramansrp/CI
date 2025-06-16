@@ -13,30 +13,33 @@ import {
 } from '@angular/forms';
 import {
   Catalogo,
-  CatalogoSelectComponent,
-  InputRadioComponent,
   REGEX_SOLO_NUMEROS,
   TituloComponent,
 } from '@ng-mf/data-access-user';
 import { Component, Inject, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   DEFAULT_TABLA_ORDEN,
-  TERCEROS_RELACIONADOS_TABLE_HEADER_DATA,
+  TERCEROS_RELACIONADOS_TABLA_BODY_DATOS,
+  TERCEROS_RELACIONADOS_TABLA_HEADER_DATOS,
 } from '../../constantes/terceros-fabricante.enum';
 import {
   REGEX_CURP,
   REGEX_RFC_FISICA,
   REGEX_RFC_MORAL,
 } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
+import { TercerosFabricanteState, TercerosFabricanteStore } from '../../estados/stores/terceros-fabricante.store';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { ModalComponent } from '../modal/modal.component';
 import NacionalidadRadioOptions from '@libs/shared/theme/assets/json/260501/nacionalidad-options.json';
 import SELECT_OPTIONS_DATA from '@libs/shared/theme/assets/json/260501/fabricante-select-options-data.json';
 import { TablaDatos } from '../../models/terceros-fabricante.model';
 import { TableComponent } from '@ng-mf/data-access-user';
+import { TercerosFabricanteQuery } from '../../estados/queries/terceros-fabricante.query';
 import { TercerosFabricanteService } from '../../services/terceros-fabricante.service';
-import { TercerosFabricanteStore } from '../../estados/stores/terceros-fabricante.store';
 import TipoPersonaRadioOptions from '@libs/shared/theme/assets/json/260501/tipo-persona-options.json';
 import TipoPersonaTresRadioOptions from '@libs/shared/theme/assets/json/260501/tipo-persona-tres-options.json';
 
@@ -250,6 +253,22 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
    */
   tipoPersonaTresOptions = TipoPersonaTresRadioOptions;
 
+  /** Bandera de solo lectura (puedes adaptarla si tienes lógica para esto) */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Bandera para determinar si el formulario es de actualización.
+   * Inicialmente establecido en `false`.
+   *
+   * @description Esta bandera se utiliza para controlar la lógica de actualización del formulario.
+   */
+  private esFormularioActualizacion: boolean = false;
+
+  /**
+     * Estado de la solicitud de la sección PagoBanco.
+     */
+    public solicitudState!: TercerosFabricanteState;
+
   /**
    * Constructor del componente.
    * Inyecta el FormBuilder, el store del trámite y el servicio de terceros.
@@ -261,10 +280,69 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tercerosFabricanteStore: TercerosFabricanteStore,
+    private tercerosFabricanteQuery: TercerosFabricanteQuery,
     @Inject(TercerosFabricanteService)
-    private service: TercerosFabricanteService
+    private service: TercerosFabricanteService,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // Inicializa el store del trámite.
+    this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState)=>{
+            this.esFormularioSoloLectura = seccionState.readonly; 
+            this.esFormularioActualizacion = seccionState.update;
+          })
+        )
+        .subscribe()
+  }
+
+  /**
+   * Método para obtener datos de ejemplo para la tabla.
+   * Retorna un arreglo vacío de tipo TablaDatos.
+   *
+   * @returns Un arreglo vacío de TablaDatos.
+   */
+  fetchTableDummyJson(): void {
+    this.fabricanteRowData.push(TERCEROS_RELACIONADOS_TABLA_BODY_DATOS);
+    this.proveedorRowData.push(TERCEROS_RELACIONADOS_TABLA_BODY_DATOS);
+    this.formuladorRowData.push(TERCEROS_RELACIONADOS_TABLA_BODY_DATOS);
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de estados.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+    if(this.esFormularioSoloLectura || this.esFormularioActualizacion) {
+      this.fetchTableDummyJson();
+    }
+  }
+
+    /**
+   * Inicializa el formulario reactivo para capturar el estado seleccionado.
+   */
+    inicializarFormulario(): void {
+      this.tercerosFabricanteQuery.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.solicitudState = seccionState;
+          })
+        )
+        .subscribe();
+    }
+
+  /**
+   * Carga datos y deshabilita el formulario si es solo lectura.
+  */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
   }
 
   /**
@@ -294,6 +372,8 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
     this.initializeAgregarFabricanteFormGroup();
     this.initializeAgregarFormuladorFormGroup();
     this.initializeAgregarProveedorFormGroup();
+
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -736,27 +816,27 @@ export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
 
   /**
    * Encabezados para la tabla de fabricantes.
-   * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLE_HEADER_DATA`.
+   * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLA_HEADER_DATOS`.
    *
    * @description Estos encabezados definen las columnas que se mostrarán en la tabla de fabricantes.
    */
-  fabricanteHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
+  fabricanteHeaderData = TERCEROS_RELACIONADOS_TABLA_HEADER_DATOS;
 
   /**
    * Encabezados para la tabla de formuladors.
-   * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLE_HEADER_DATA`.
+   * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLA_HEADER_DATOS`.
    *
    * @description Estos encabezados definen las columnas que se mostrarán en la tabla de formuladors.
    */
-  formuladorHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
+  formuladorHeaderData = TERCEROS_RELACIONADOS_TABLA_HEADER_DATOS;
 
   /**
    * Encabezados para la tabla de proveedores.
-   * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLE_HEADER_DATA`.
+   * Utiliza los mismos encabezados definidos en `TERCEROS_RELACIONADOS_TABLA_HEADER_DATOS`.
    *
    * @description Estos encabezados definen las columnas que se mostrarán en la tabla de proveedores.
    */
-  proveedorHeaderData = TERCEROS_RELACIONADOS_TABLE_HEADER_DATA;
+  proveedorHeaderData = TERCEROS_RELACIONADOS_TABLA_HEADER_DATOS;
 
   public nacional = false;
 

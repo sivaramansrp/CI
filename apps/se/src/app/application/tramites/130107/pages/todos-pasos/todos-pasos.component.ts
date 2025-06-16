@@ -1,7 +1,7 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { PANTA_PASOS, TITULO_PASO_DOS, TITULO_PASO_TRES, TITULO_PASO_UNO } from '../../constantes/importaciones-agropecuarias.enum';
-import { Subject } from 'rxjs';
+
 
 /**
  * @component TodosPasosComponent
@@ -17,7 +17,7 @@ import { Subject } from 'rxjs';
   selector: 'app-todos-pasos',
   templateUrl: './todos-pasos.component.html',
 })
-export class TodosPasosComponent implements OnDestroy {
+export class TodosPasosComponent {
   /**
    * @property pantallasPasos
    * @description
@@ -25,7 +25,7 @@ export class TodosPasosComponent implements OnDestroy {
    * 
    * @type {ListaPasosWizard[]}
    */
-  pantallasPasos: ListaPasosWizard[] = PANTA_PASOS;
+  public pantallasPasos: ListaPasosWizard[] = PANTA_PASOS;
 
   /**
    * @property indice
@@ -34,7 +34,7 @@ export class TodosPasosComponent implements OnDestroy {
    * 
    * @type {number}
    */
-  indice: number = 1;
+  public indice: number = 1;
 
   /**
    * @property titulo
@@ -46,15 +46,6 @@ export class TodosPasosComponent implements OnDestroy {
    */
   public titulo: string = TITULO_PASO_UNO;
 
-  /**
-   * @property destroyed$
-   * @description
-   * Sujeto utilizado para destruir observables y evitar fugas de memoria.
-   * 
-   * @type {Subject<void>}
-   * @private
-   */
-  private destroyed$ = new Subject<void>();
 
   /**
    * @property wizardComponent
@@ -81,6 +72,16 @@ export class TodosPasosComponent implements OnDestroy {
   };
 
   /**
+    * @description
+    * Constructor del componente.
+    * Inyecta el servicio de validación de formularios.
+    * @param validacionDeFormularioService Servicio para manejar la validación de formularios.
+    */
+  constructor() {
+    /** Inyecta el servicio de consulta para obtener el estado actual de la consulta. */
+  }
+
+  /**
    * @method getValorIndice
    * @description
    * Método utilizado para actualizar el índice del paso actual y el título correspondiente.
@@ -104,16 +105,5 @@ export class TodosPasosComponent implements OnDestroy {
         this.wizardComponent.atras();
       }
     }
-  }
-
-  /**
-   * @method ngOnDestroy
-   * @description
-   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
-   * Este método completa el observable `destroyed$` para cancelar las suscripciones activas.
-   */
-  ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
   }
 }
