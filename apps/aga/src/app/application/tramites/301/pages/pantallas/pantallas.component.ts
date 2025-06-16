@@ -1,5 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Component, ViewChild } from '@angular/core';
+import { AVISO } from '@ng-mf/data-access-user';
 import { AccionBoton } from 'libs/shared/data-access-user/src/core/models/301/servicios-pantallas.model';
 import { DatosPasos } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
@@ -17,6 +18,15 @@ import { WizardComponent } from '@libs/shared/data-access-user/src/tramites/comp
   templateUrl: './pantallas.component.html',
 })
 export class PantallasComponent {
+
+   /**
+   * Constantes importadas desde el archivo de enumeración para los mensajes de advertencia.
+   *
+   * @type {AVISO}
+   * @memberof RegistroParaLaComponent
+   */
+  public ADVERTENCIA = AVISO;
+
   /**
    * Esta variable se utiliza para almacenar la lista de pasos.
    */

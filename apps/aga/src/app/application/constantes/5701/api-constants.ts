@@ -137,3 +137,9 @@ export const API_GET_VALIDA_LINEA_CAPTURA = `pago/linea-captura/${LINEA_CAPTURA_
  * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/pago/swagger-ui/index.html#/Pago/pago
  */
 export const API_GET_VALIDA_LINEA_CAPTURA_PAGADA = `pago/valida/${LINEA_CAPTURA_QUERY}`;
+
+/**
+ * API para validar el rfc auroizacion LDA
+ * @see http://api-vucem-1069277193.us-east-1.elb.amazonaws.com/api/catalogo/swagger-ui/index.html#/LDA/valida-lda
+ */
+export const API_POST_VALIDA_LDA = `catalogo/solicitud/valida-lda`;

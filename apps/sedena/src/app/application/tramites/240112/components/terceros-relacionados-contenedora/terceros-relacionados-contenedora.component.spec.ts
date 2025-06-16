@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TercerosRelacionadosContenedoraComponent } from './terceros-relacionados-contenedora.component';
 import { ActivatedRoute } from '@angular/router';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 describe('TercerosRelacionadosContenedoraComponent', () => {
   let component: TercerosRelacionadosContenedoraComponent;
@@ -9,8 +11,8 @@ describe('TercerosRelacionadosContenedoraComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [TercerosRelacionadosContenedoraComponent],
-      imports: [TercerosRelacionadosComponent],
+      declarations: [],
+      imports: [TercerosRelacionadosComponent, TercerosRelacionadosContenedoraComponent, ReactiveFormsModule,FormsModule,CommonModule],
       providers: [
         { provide: ActivatedRoute, useValue: {} },
       ],

@@ -17,11 +17,10 @@ import {
   InputHoraComponent,
   InputRadioComponent,
   SelectPaisesComponent,
-  TablaDinamicaComponent,
   TituloComponent,
   WizardComponent,
 } from '@libs/shared/data-access-user/src';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('ModalOperacionComponent', () => {
   let component: ModalOperacionComponent;
@@ -191,6 +190,7 @@ describe('ModalOperacionComponent', () => {
       actualizarPatente: jest.fn(() => of('ABC123')),
       actualizaRFC: jest.fn(() => of('RFC123')),
       actualizarPedimento: jest.fn(() => of('PED123')),
+      establecerDatos: jest.fn(), 
     } as unknown as jest.Mocked<Solicitud32501Store>;
 
     await TestBed.configureTestingModule({
@@ -212,8 +212,6 @@ describe('ModalOperacionComponent', () => {
         AlertComponent,
         CatalogoSelectComponent,
         InputRadioComponent,
-        TablaDinamicaComponent,
-        HttpClientTestingModule,
       ],
       providers: [
         {
@@ -222,6 +220,7 @@ describe('ModalOperacionComponent', () => {
         },
         { provide: Solicitud32501Query, useValue: solicitud32501QueryMock },
         { provide: Solicitud32501Store, useValue: solicitud32501StoreMock },
+        provideHttpClientTesting(),
       ],
     }).compileComponents();
   });
@@ -253,34 +252,29 @@ describe('ModalOperacionComponent', () => {
     ).toHaveBeenCalled();
   });
 
-  it('should update aduana when actualizarAduana is called', () => {
-    const mockCatalogo = { id: 1, descripcion: 'Aduana1' };
-    component.actualizarAduana(mockCatalogo);
-    expect(solicitud32501StoreMock.actualizarAduana).toHaveBeenCalledWith(1);
-  });
+  it('should update aduana when establecerValoresEnEstado is called', () => {
+  component.frmDatosOperacionImp.get('aduana')?.setValue(1);
+  component.establecerValoresEnEstado(component.frmDatosOperacionImp, 'aduana');
+  expect(solicitud32501StoreMock.establecerDatos).toHaveBeenCalledWith({ aduana: 1 });
+});
 
-  it('should update patente when actualizarPatente is called', () => {
-    const mockEvent = { target: { value: 'ABC123' } } as unknown as Event;
-    component.actualizarPatente(mockEvent);
-    expect(solicitud32501StoreMock.actualizarPatente).toHaveBeenCalledWith(
-      'ABC123'
-    );
-  });
+it('should update patente when establecerValoresEnEstado is called', () => {
+  component.frmDatosOperacionImp.get('patente')?.setValue('ABC123');
+  component.establecerValoresEnEstado(component.frmDatosOperacionImp, 'patente');
+  expect(solicitud32501StoreMock.establecerDatos).toHaveBeenCalledWith({ patente: 'ABC123' });
+});
 
-  it('should update RFC when actualizaRFC is called', () => {
-    const mockEvent = { target: { value: 'RFC123' } } as unknown as Event;
-    component.actualizaRFC(mockEvent);
-    expect(solicitud32501StoreMock.actualizaRFC).toHaveBeenCalledWith('RFC123');
-  });
+it('should update RFC when establecerValoresEnEstado is called', () => {
+  component.frmDatosOperacionImp.get('rfc')?.setValue('RFC123');
+  component.establecerValoresEnEstado(component.frmDatosOperacionImp, 'rfc');
+  expect(solicitud32501StoreMock.establecerDatos).toHaveBeenCalledWith({ rfc: 'RFC123' });
+});
 
-  it('should update pedimento when actualizarPedimento is called', () => {
-    const mockEvent = { target: { value: 'PED123' } } as unknown as Event;
-    component.actualizarPedimento(mockEvent);
-    expect(solicitud32501StoreMock.actualizarPedimento).toHaveBeenCalledWith(
-      'PED123'
-    );
-  });
-
+it('should update pedimento when establecerValoresEnEstado is called', () => {
+  component.frmDatosOperacionImp.get('pedimento')?.setValue('PED123');
+  component.establecerValoresEnEstado(component.frmDatosOperacionImp, 'pedimento');
+  expect(solicitud32501StoreMock.establecerDatos).toHaveBeenCalledWith({ pedimento: 'PED123' });
+});
   it('should return true if a form control is invalid and touched in noEsValido', () => {
     component.frmDatosOperacionImp.controls['patente'].setErrors({
       required: true,
