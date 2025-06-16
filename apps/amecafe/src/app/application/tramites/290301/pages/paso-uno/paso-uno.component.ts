@@ -19,6 +19,7 @@ export class PasoUnoComponent implements OnInit,OnDestroy{
   /** Índice de la pestaña seleccionada. */
   indice: number = 1;
 
+  /** Indica si se están mostrando los datos de respuesta. */
   public esDatosRespuesta: boolean = false;
 
   /** Subject para notificar la destrucción del componente. */
@@ -36,6 +37,11 @@ export class PasoUnoComponent implements OnInit,OnDestroy{
      
   }
 
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Suscribe al estado de la consulta y actualiza el estado local.
+   * Si el estado indica que se está actualizando, guarda los datos del formulario.
+   */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
           this.consultaState = seccionState;
@@ -46,6 +52,10 @@ export class PasoUnoComponent implements OnInit,OnDestroy{
       this.esDatosRespuesta = true;
     }
   }
+  /**
+   * Método para inicializar el estado del formulario.
+   * Actualiza el estado del formulario con los datos de la consulta.
+   */
   guardarDatosFormulario(): void {
     this.nacionalRegistroDelCafeExportadoresService
       .getConsultaData().pipe(
@@ -68,6 +78,10 @@ export class PasoUnoComponent implements OnInit,OnDestroy{
     this.indice = i;
   }
 
+  /**
+   * Método que se ejecuta al destruir el componente.
+   * Notifica que el componente ha sido destruido y completa el Subject.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next(); 
     this.destroyNotifier$.complete(); 

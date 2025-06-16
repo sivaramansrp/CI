@@ -10,7 +10,12 @@ import { Solicitud290301State, Solicitud290301Store } from '../estados/tramite29
 })
 export class NacionalRegistroDelCafeExportadoresService {
 
+  /** Constructor del servicio NacionalRegistroDelCafeExportadoresService */
   constructor(private http: HttpClient, private solicitud290301Store: Solicitud290301Store) {}
+  /**
+   * Actualiza el estado del formulario con los datos proporcionados.
+   * @param DATOS Datos de la solicitud que se van a actualizar en el store.
+   */
   actualizarEstadoFormulario(DATOS: Solicitud290301State): void {
      this.solicitud290301Store.setJustificacion(DATOS.justificacion);
      this.solicitud290301Store.setProductorDeCafe(DATOS.productorDeCafe);
@@ -50,8 +55,11 @@ export class NacionalRegistroDelCafeExportadoresService {
   getCafeExportadoresData(): Observable<CafeExportadoresData[]> {
       return this.http.get<CafeExportadoresData[]>('./assets/json/290301/cafedeexportacionData.json');
     }
-
-    getConsultaData(): Observable<Solicitud290301State> {
-      return this.http.get<Solicitud290301State>('assets/json/290301/consulta.json');
-    }
+    /**
+ * Obtiene los datos de consulta desde un archivo JSON.
+ * @returns Observable con los datos de la consulta en el estado de la solicitud.
+ */
+getConsultaData(): Observable<Solicitud290301State> {
+  return this.http.get<Solicitud290301State>('assets/json/290301/consulta.json');
+}
 }

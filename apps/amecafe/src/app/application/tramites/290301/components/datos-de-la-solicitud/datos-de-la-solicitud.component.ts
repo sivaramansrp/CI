@@ -92,14 +92,13 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   /** Observable para manejar la destrucción del componente */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
-  public esDatosRespuesta: boolean = false;
-
   /** Estado de la consulta que se obtiene del store. */
   public consultaState!: ConsultaioState;
 
   /** Consulta de estado para la solicitud */
   consultaDatos!: ConsultaioState;
   
+  /** Indica si el formulario es de solo lectura */
   esFormularioSoloLectura: boolean = false;
 
   constructor(
@@ -133,12 +132,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       map((seccionState) => {
         this.consultaDatos = seccionState;
         this.esFormularioSoloLectura = this.consultaDatos.readonly;
-        this.inicializarEstadoFormulario();
-        
+        this.inicializarEstadoFormulario(); 
       })
-      
-    )
-    .subscribe();
+    )   
+   .subscribe();
     this.inicializarEstadoFormulario();
   }
 
@@ -146,7 +143,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   createForm(): void {
     this.datosSolicitudForma = this.fb.group({
       justificacion: [this.dataDeLaSolicitudState?.justificacion],
-      productorDeCafe: [this.dataDeLaSolicitudState.productorDeCafe || ''],
+      productorDeCafe: [this.dataDeLaSolicitudState.productorDeCafe],
       claveDelPadron: [
         {
           value: this.dataDeLaSolicitudState?.claveDelPadron || '',
@@ -222,6 +219,10 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         this.cafeExportadoresTableDatos = data as CafeExportadoresData[];
       });
   }
+  /**
+   * Método para inicializar el estado del formulario
+   * dependiendo de si es solo lectura o no.
+   */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.datosSolicitudForma?.disable();
@@ -229,6 +230,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     else {
       this.datosSolicitudForma?.enable();
     }
+   
 }
 
   /**
