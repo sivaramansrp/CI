@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnDestroy } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Bitacora } from '../../models/bitacora.model';
@@ -18,7 +18,7 @@ import { ReplaySubject, takeUntil, map } from 'rxjs';
   templateUrl: './bitacora.component.html',
   styleUrl: './bitacora.component.scss'
 })
-export class BitacoraTablaComponent {
+export class BitacoraTablaComponent implements OnDestroy {
 /**
    * Lista de bitácoras obtenidas del servicio
    * @type {Bitacora[]}
@@ -69,4 +69,12 @@ export class BitacoraTablaComponent {
         )
         .subscribe()
     }
+  /**
+   * Método que se ejecuta cuando el componente se destruye.
+   * Se utiliza para limpiar los recursos y evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyed$.next(true);
+    this.destroyed$.complete();
+  }  
 }
