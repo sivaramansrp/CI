@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ConsultaAccionistaExtranjeroMoralComponent } from './consulta-accionista-extranjero-moral.component';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('ConsultaAccionistaExtranjeroMoralComponent', () => {
   let component: ConsultaAccionistaExtranjeroMoralComponent;
@@ -8,6 +9,7 @@ describe('ConsultaAccionistaExtranjeroMoralComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ConsultaAccionistaExtranjeroMoralComponent],
+      providers: [provideHttpClient()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(

@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RegistroSocioAccionistaComponent } from './registro-socio-accionista.component';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('RegistroSocioAccionistaComponent', () => {
   let component: RegistroSocioAccionistaComponent;
@@ -8,6 +9,7 @@ describe('RegistroSocioAccionistaComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [RegistroSocioAccionistaComponent],
+      providers: [provideHttpClient()]
     }).compileComponents();
 
     fixture = TestBed.createComponent(RegistroSocioAccionistaComponent);
