@@ -5,8 +5,9 @@ import {
   Facturador,
   Proveedor,
 } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260217Query } from '../../estados/tramite260217Query.query';
 import { Tramite260217Store } from '../../estados/tramite260217Store.store';
@@ -58,18 +59,33 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     private destroy$ = new Subject<void>();
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  public esFormularioSoloLectura: boolean = false; 
+
+  /**
    * @constructor
    * Inyecta los servicios necesarios para consultar y actualizar el estado del trámite.
    *
    * @param tramiteStore - Store que gestiona el estado de los datos del trámite.
    * @param tramiteQuery - Servicio de consulta que expone observables para leer los datos del store.
+   * @param consultaQuery - Servicio de consulta que expone el estado de la consulta actual.
    */
   constructor(
     private tramiteStore: Tramite260217Store,
-    private tramiteQuery: Tramite260217Query
+    private tramiteQuery: Tramite260217Query,
+    private consultaQuery: ConsultaioQuery
   ) {
-        // No se necesita lógica de inicialización adicional.
-  }
+       this.consultaQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroy$),
+            map((seccionState) => {
+              this.esFormularioSoloLectura = seccionState.readonly;
+            })
+          )
+          .subscribe();
+  } 
 
   /**
    * @method ngOnInit
