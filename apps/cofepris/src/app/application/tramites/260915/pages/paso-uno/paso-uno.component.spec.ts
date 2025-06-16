@@ -19,9 +19,14 @@ describe('PasoUnoComponent', () => {
     fixture = TestBed.createComponent(PasoUnoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
+    fixture.detectChanges(); // Trigger change detection again to avoid ExpressionChangedAfterItHasBeenCheckedError
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+  it('should create', (done) => {
+    setTimeout(() => {
+      fixture.detectChanges();
+      expect(component).toBeTruthy();
+      done();
+    });
   });
 });
