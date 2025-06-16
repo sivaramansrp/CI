@@ -1,9 +1,8 @@
 import {
-  CatalogoSelectComponent,
-  TablaDinamicaComponent, 
+  ConsultaioQuery,
   TituloComponent,
-  UppercaseDirective 
-  } from '@ng-mf/data-access-user';
+} from '@libs/shared/data-access-user/src';
+import{ OnDestroy, OnInit } from '@angular/core';
 
   import {
     FormBuilder,
@@ -11,12 +10,10 @@ import {
     FormsModule,
     ReactiveFormsModule,
   } from '@angular/forms';
-import{OnDestroy, OnInit } from '@angular/core';
 import {map,takeUntil}from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 import { Component} from '@angular/core';
 import { Subject } from 'rxjs';
-import { Subscription } from 'rxjs';
 import {Tramite240321Query} from '../../estados/tramite240321Query.query'
 import { Tramite240321State } from '../../estados/tramite240321Store.store';
 import { Tramite240321Store } from '../../estados/tramite240321Store.store'; 
@@ -28,10 +25,7 @@ import { Tramite240321Store } from '../../estados/tramite240321Store.store';
   imports: [
     ReactiveFormsModule,
     CommonModule,
-    UppercaseDirective,
-    CatalogoSelectComponent,
     FormsModule,
-    TablaDinamicaComponent,
     TituloComponent,
   ],
   templateUrl: './folio.component.html',
@@ -57,6 +51,14 @@ export class FolioComponent implements OnInit, OnDestroy {
    */
   
   private destroyNotifier$: Subject<void> = new Subject();
+      /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   *
+   * @type {boolean}
+   * @memberof AgregarDestinatarioFinalContenedoraComponent
+   * @see https://compodoc.app/
+   */
+  esFormularioSoloLectura:boolean=false;
 
   /**
    * Constructor del componente.
@@ -70,6 +72,7 @@ export class FolioComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private tramiteStore:Tramite240321Store,
     private tramiteQuery:Tramite240321Query,
+    private readonly consultaioQuery:ConsultaioQuery
   ) {
    
     
@@ -83,6 +86,19 @@ export class FolioComponent implements OnInit, OnDestroy {
   
     this.inicializarFormularioInfoRegistro();
     this.initializeFormFromStore();
+     this.consultaioQuery.selectConsultaioState$
+                              .pipe(
+                                takeUntil(this.destroyNotifier$),
+                                map((seccionState)=>{
+                                  this.esFormularioSoloLectura = seccionState.readonly; 
+                                  if (this.esFormularioSoloLectura) {
+                                     this.formularioInfoRegistro.disable();
+                                   } else {
+                                     this.formularioInfoRegistro.enable();
+                                   }
+                                })
+                              )
+                              .subscribe();
     
   }
   /**
