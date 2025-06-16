@@ -246,7 +246,7 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
     this.formularioTotalCount();
   
     this.calculateTotals();
-    const PARTIDAS_TABLA = this.solicitudState['partidas_tabla'];
+    const PARTIDAS_TABLA = this.solicitudState?.['partidas_tabla'];
     if ((!Array.isArray(PARTIDAS_TABLA) || PARTIDAS_TABLA.length === 0) && this.esFormularioSoloLectura) {
       this.formularioRegistroService.getPartidasFromJson().pipe(takeUntil(this.destroyNotifier$)).subscribe(partidas => {
         this.datosSocios = partidas;

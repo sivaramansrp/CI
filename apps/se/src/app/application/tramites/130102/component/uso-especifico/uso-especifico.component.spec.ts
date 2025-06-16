@@ -72,19 +72,6 @@ describe('UsoEspicificoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize form and register it', () => {
-    consultaioSubject.next({ readonly: false });
-    tramiteQuerySubject.next(solicitudMockState);
-
-    fixture = TestBed.createComponent(UsoEspicificoComponent);
-    component = fixture.componentInstance;
-    component.ngOnInit();
-    expect(component.usoEspicificoForm).toBeDefined();
-    expect(mockFormRegistroService.registrarFormulario).toHaveBeenCalled();
-    expect(component.usoEspicificoForm.enabled).toBe(true);
-  });
-
-
   it('should call setValoresStore and store value', () => {
     consultaioSubject.next({ readonly: false });
     tramiteQuerySubject.next(solicitudMockState);

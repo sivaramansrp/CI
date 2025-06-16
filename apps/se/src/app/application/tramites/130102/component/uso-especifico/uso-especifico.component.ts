@@ -108,7 +108,7 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
    * @memberof UsoEspicificoComponent
    */
   ngOnInit(): void {
-    const USO_ESPECIFICO_TABLA = this.solicitudState['uso_especifico_tabla'];
+    const USO_ESPECIFICO_TABLA = this.solicitudState?.['uso_especifico_tabla'];
     if ((!Array.isArray(USO_ESPECIFICO_TABLA) || USO_ESPECIFICO_TABLA.length === 0) && this.esFormularioSoloLectura) {
       this.formularioRegistroService.getFraccionesUsoEspecifico().subscribe(data => {
         this.datosSocios = data;

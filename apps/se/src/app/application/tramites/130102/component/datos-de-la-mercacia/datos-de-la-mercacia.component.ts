@@ -310,7 +310,7 @@ export class DetosDelLaMarcaciaComponent implements OnInit , OnDestroy {
    * @description Carga las opciones de productos desde el JSON.
    */
   fetchProductoOptions(): void {
-    this.producto = productoOptions.options;
+    this.producto = productoOptions?.options;
   }
 
   /**
