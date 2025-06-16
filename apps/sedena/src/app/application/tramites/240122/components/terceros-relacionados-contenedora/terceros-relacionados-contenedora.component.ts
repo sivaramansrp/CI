@@ -1,12 +1,13 @@
 import { ActivatedRoute, Router } from '@angular/router';
+import { AfterViewInit, Component } from '@angular/core';
+import { Subject,map } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240122Query } from '../../estados/tramite240122Query.query';
 import { Tramite240122Store } from '../../estados/tramite240122Store.store';
@@ -35,7 +36,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './terceros-relacionados-contenedora.component.html',
   styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
-export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestroy {
+export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestroy,AfterViewInit {
 
   /**
    * Identificador del procedimiento asignado al trámite específico.
@@ -74,6 +75,8 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
    */
   prefillProveedorData: boolean = true;
 
+  public esFormularioSoloLectura:boolean=false;
+
   /**
    * Constructor del componente.
    *
@@ -88,7 +91,8 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
     private tramiteQuery: Tramite240122Query,
     private tramiteStore: Tramite240122Store,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private readonly consultaioQuery:ConsultaioQuery
   ) {}
 
   /**
@@ -110,6 +114,30 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit, OnDestr
       .subscribe((data) => {
         this.proveedorTablaDatos = data;
       });
+  }
+
+  /**
+   * @inheritdoc
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
+   * 
+   * Suscribe al observable `selectConsultaioState$` para escuchar cambios en el estado de la sección y actualizar
+   * la propiedad `esFormularioSoloLectura` según el valor de `readonly` en el estado.
+   * 
+   * La suscripción se mantiene activa hasta que se emite un valor en `destroy$`, lo que previene fugas de memoria.
+   * 
+   * @see https://angular.io/api/core/AfterViewInit
+   */
+  ngAfterViewInit(): void {
+       this.consultaioQuery.selectConsultaioState$
+                  .pipe(
+                    takeUntil(this.destroy$),
+                    map((seccionState)=>{
+                      this.esFormularioSoloLectura = seccionState.readonly; 
+                    })
+                  )
+                  .subscribe();
+          
   }
 
   /**
