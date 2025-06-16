@@ -352,8 +352,8 @@
   {
     "id": 51,
     "tramite": 120201,
-    "linkDashboard": "/se/cupos/consultar-cupo",
-    "linkDepartment": "/pago/cupos/consultar-cupo",
+    "linkDashboard": "/se/expedicion-certificados-asignacion-directa-fisica/fisica",
+    "linkDepartment": "/pago/expedicion-certificados-asignacion-directa-fisica/fisica",
     "department": "se"
   },
   {
@@ -598,14 +598,14 @@
     "id": 86,
     "tramite": 260203,
     "linkDashboard": "/cofepris/medicamentos-registro-sanitario/solicitud",
-    "linkDepartment": "/cofepris/medicamentos-registro-sanitario/solicitud",
+    "linkDepartment": "/pago/medicamentos-registro-sanitario/solicitud",
     "department": "cofepris"
   },
   {
     "id": 87,
     "tramite": 260205,
     "linkDashboard": "/cofepris/materias-primas-destinados/solicitud",
-    "linkDepartment": "/cofepris/materias-primas-destinados/solicitud",
+    "linkDepartment": "/pago/materias-primas-destinados/solicitud",
     "department": "cofepris"
   },
   {
@@ -626,7 +626,7 @@
     "id": 90,
     "tramite": 260214,
     "linkDashboard": "/cofepris/importacion-dispositivos-medicos-uso/contenedor-de-pasos",
-    "linkDepartment": "/cofepris/importacion-dispositivos-medicos-uso/contenedor-de-pasos",
+    "linkDepartment": "/pago/importacion-dispositivos-medicos-uso/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
@@ -640,7 +640,7 @@
     "id": 92,
     "tramite": 260216,
     "linkDashboard": "/cofepris/importacion-dispositivos-medicos-donacion/contenedor-de-pasos",
-    "linkDepartment": "/cofepris/importacion-dispositivos-medicos-donacion/contenedor-de-pasos",
+    "linkDepartment": "/pago/importacion-dispositivos-medicos-donacion/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
@@ -835,8 +835,8 @@
   {
     "id": 120,
     "tramite": 120202,
-    "linkDashboard": "/se/expedicion-certificados-asignacion-directa/expedicion-certificados-asignacion",
-    "linkDepartment": "/pago/expedicion-certificados-asignacion-directa/expedicion-certificados-asignacion",
+    "linkDashboard": "/se/expedicion-certificados-asignacion-directa-moral/moral",
+    "linkDepartment": "/pago/expedicion-certificados-asignacion-directa-moral/moral",
     "department": "se"
   },
   {
@@ -1025,14 +1025,14 @@
     "id": 147,
     "tramite": 260213,
     "linkDashboard": "/cofepris/permiso-sanitario-medicos-uso-personal",
-    "linkDepartment": "/cofepris/permiso-sanitario-medicos-uso-personal",
+    "linkDepartment": "/pago/permiso-sanitario-medicos-uso-personal",
     "department": "cofepris"
   },
   {
     "id": 148,
     "tramite": 260217,
     "linkDashboard": "/cofepris/dispositivos-medicos-sin-registrar/contenedor-de-pasos",
-    "linkDepartment": "/cofepris/dispositivos-medicos-sin-registrar/contenedor-de-pasos",
+    "linkDepartment": "/pago/dispositivos-medicos-sin-registrar/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
@@ -1332,9 +1332,9 @@
   {
     "id": 191,
     "tramite": 30505,
-    "linkDashboard": "/aga/aviso-de-modificacion/aviso",
+    "linkDashboard": "/agace/aviso-de-modificacion/aviso",
     "linkDepartment": "/pago/aviso-de-modificacion/aviso",
-    "department": "aga"
+    "department": "agace"
   },
   {
     "id": 192,

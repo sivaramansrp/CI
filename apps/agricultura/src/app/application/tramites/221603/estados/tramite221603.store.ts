@@ -5,11 +5,12 @@ import { Injectable } from '@angular/core';
  * Interface que representa el estado de la solicitud para el trámite 221603.
  * Este estado contiene la información relacionada con los datos de la solicitud.
  */
+
 export interface Solicitud221603State {
   /**
    * Justificación para la solicitud.
    */
-  justificacion: string;
+  justificacionDescription: string;
 
   /**
    * Aduana de ingreso para el trámite.
@@ -95,6 +96,11 @@ export interface Solicitud221603State {
    * Importe relacionado con el trámite.
    */
   importe: string;
+
+  /**
+ * Justificación adicional para la solicitud.
+ */
+  justificacion: string;
 }
 
 /**
@@ -103,7 +109,7 @@ export interface Solicitud221603State {
  */
 export function createInitialState(): Solicitud221603State {
   return {
-    justificacion: '',
+    justificacionDescription: '',
     aduana: '',
     oficina: '',
     punto: '',
@@ -121,6 +127,7 @@ export function createInitialState(): Solicitud221603State {
     llave: '',
     fecha: '',
     importe: '',
+    justificacion: '',
   };
 }
 
@@ -138,6 +145,18 @@ export class Tramite221603Store extends Store<Solicitud221603State> {
    */
   constructor() {
     super(createInitialState());
+  }
+
+  /**
+   * Actualiza dinámicamente el estado de la solicitud para el campo y valor proporcionados.
+   * Nombre del campo del estado a actualizar.
+   * Valor a establecer en el campo especificado.
+   */
+  public setValoresStore(campo: string, valor: string): void {
+    this.update((state) => ({
+      ...state,
+      [campo]: valor,
+    }));
   }
 
   /**
@@ -159,6 +178,17 @@ export class Tramite221603Store extends Store<Solicitud221603State> {
     this.update((state) => ({
       ...state,
       justificacion,
+    }));
+  }
+
+   /**
+   * Actualiza el estado con la justificación proporcionada.
+   * justificacion La justificación a establecer.
+   */
+  public setJustificacionDescription(justificacionDescription: string): void {
+    this.update((state) => ({
+      ...state,
+      justificacionDescription,
     }));
   }
 

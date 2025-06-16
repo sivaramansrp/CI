@@ -158,6 +158,7 @@
                     [catalogo]="bimestreUnoCatalogo"
                     formControlName="comboBimestresUno"
                     [label]="'Bimestre'"
+                    [isDisabled]="esFormularioSoloLectura"
                     [required]="true"
                     (change)="setValoresStore(conceptosForm,'comboBimestresUno', 'setComboBimestresUno')"
                   >
@@ -166,6 +167,7 @@
                     [catalogo]="bimestreDosCatalogo"
                     formControlName="comboBimestresDos"
                     [label]="'Bimestre'"
+                    [isDisabled]="esFormularioSoloLectura"
                     [required]="true"
                     (change)="setValoresStore(conceptosForm,'comboBimestresDos', 'setComboBimestresDos')"
                   >
@@ -174,6 +176,7 @@
                     [catalogo]="bimestreTresCatalogo"
                     formControlName="comboBimestresTres"
                     [label]="'Bimestre'"
+                    [isDisabled]="esFormularioSoloLectura"
                     [required]="true"
                     (change)="setValoresStore(conceptosForm,'comboBimestresTres', 'setComboBimestresTres')"
                   >
@@ -197,7 +200,7 @@
                 </app-input-radio>
           </div>
           @if(conEmpleadosSeleccionado === 'Si') {
-            <app-numero-de-empleados></app-numero-de-empleados>
+            <app-numero-de-empleados [esFormularioSoloLectura]="esFormularioSoloLectura"></app-numero-de-empleados>
           }
           <div class="col-md-12 mt-3">
             <p class="fw-bold">
