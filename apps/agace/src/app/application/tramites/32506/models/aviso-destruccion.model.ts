@@ -568,14 +568,52 @@ export interface ArchivoDocumentos {
 
 }
 
+/**
+ * Representa la estructura de los datos del trámite 32506 para el aviso.
+ */
 export interface Tramite32506Aviso {
-    pasoActivo: number,
-    pestanaActiva: number,
-    datosSolicitante: DatosSolicitante,
-    domicilioFormulario:DomicilioFormulario,
-    avisoFormulario: AvisoFormulario,
-    procesoFormulario: ProcesoFormulario,
-    desperdicioFormulario: DesperdicioFormulario,
-    pedimentoFormulario: PedimentoFormulario,
-    tipoDocumento: string,
+  /**
+   * Paso actual en el formulario o flujo del trámite.
+   */
+  pasoActivo: number;
+
+  /**
+   * Pestaña actualmente activa en la interfaz del formulario.
+   */
+  pestanaActiva: number;
+
+  /**
+   * Información del solicitante que realiza el trámite.
+   */
+  datosSolicitante: DatosSolicitante;
+
+  /**
+   * Datos del domicilio relacionados con el formulario.
+   */
+  domicilioFormulario: DomicilioFormulario;
+
+  /**
+   * Información general del aviso (empresa, traslado, justificación, etc.).
+   */
+  avisoFormulario: AvisoFormulario;
+
+  /**
+   * Detalles del proceso de destrucción del desperdicio.
+   */
+  procesoFormulario: ProcesoFormulario;
+
+  /**
+   * Información sobre el desperdicio a declarar.
+   */
+  desperdicioFormulario: DesperdicioFormulario;
+
+  /**
+   * Información del pedimento relacionado con la mercancía.
+   */
+  pedimentoFormulario: PedimentoFormulario;
+
+  /**
+   * Tipo de documento relacionado al trámite.
+   */
+  tipoDocumento: string;
 }
