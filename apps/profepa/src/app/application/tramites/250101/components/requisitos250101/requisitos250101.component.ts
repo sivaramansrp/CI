@@ -141,6 +141,32 @@ export class Requisitos250101Component implements OnInit, OnDestroy {
       )
       .subscribe();
 
+      /**
+ * Si la tabla de transporte está vacía, se agrega una fila con datos dummy de identificación.
+ * Los campos número de identificación, número económico y placa se inicializan con el mismo valor.
+ */
+     if(this.TransporteTabla.length === 0){
+       const TRANSPORTE_FORMDATA = {
+        numeroIdentificacion: reuisitosDatosDummy.numeroIdentificacion,
+        numeroEconomico: reuisitosDatosDummy.numeroIdentificacion,
+        placa: reuisitosDatosDummy.numeroIdentificacion,
+       };
+       this.TransporteTabla.push(TRANSPORTE_FORMDATA);
+      }
+
+      /**
+ * Si la tabla de requisitos está vacía, se agrega una fila con datos dummy.
+ * Los campos incluyen número, fecha y tipo del requisito.
+ */
+       if(this.RequisitosTabla.length === 0){
+       const REQUISITO_FORMDATA = {
+        No: reuisitosDatosDummy.No,
+        Fecha: reuisitosDatosDummy.Fecha,
+        Tipo: reuisitosDatosDummy.Tipo,
+       };
+       this.RequisitosTabla.push(REQUISITO_FORMDATA);
+      }
+
     this.transporteForm = this.fb.group({
       medio: [this.solicitudState.medio, Validators.required],
       identificacion: [this.solicitudState.identificacion,[Validators.required,Validators.maxLength(16)]],
@@ -181,8 +207,6 @@ export class Requisitos250101Component implements OnInit, OnDestroy {
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
 public guardarDatosFormulario(): void {
-    // this.requisitosDatos();
-    // this.transporteDatos();
     if (this.esFormularioSoloLectura) {
       this.transporteForm.disable();
       if(this.TransporteTabla.length === 0){

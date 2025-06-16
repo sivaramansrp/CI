@@ -8,7 +8,6 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ModalComponent } from '../modal/modal.component';
 import { Tramite250101Query } from '../../estados/tramite250101.query';
 import catalogoDatos from '@libs/shared/theme/assets/json/250101/banco.json';
-import mercanciasDescDummy from '@libs/shared/theme/assets/json/250101/mercancias-desc-dummy.json'; 
 
 /**
  * Componente encargado de gestionar la sección de mercancías dentro del trámite 250101.
@@ -178,6 +177,17 @@ public esFormularioSoloLectura: boolean = false;
         })
       )
       .subscribe();
+
+  /**
+ * Si no hay productos registrados, se agrega uno con la descripción del catálogo.
+ * Usa el primer elemento del catálogo o una cadena vacía por defecto.
+ */
+      if(this.producto.length === 0){
+       const PRODUCTO_FORMDATA = {
+       descripcion: catalogoDatos.descripcion[0]?.descripcion ?? '',
+       };
+       this.producto.push(PRODUCTO_FORMDATA);
+      }
 /**
  * Inicializa el formulario `formMercancias` con los valores de estado de la solicitud.
  * El formulario está compuesto por varios campos, todos ellos requeridos. 
@@ -231,7 +241,7 @@ public esFormularioSoloLectura: boolean = false;
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
-private guardarDatosFormulario(): void {
+public guardarDatosFormulario(): void {
     this.detalleData();
     if (this.esFormularioSoloLectura) {
       this.formMercancias.disable();

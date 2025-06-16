@@ -8,10 +8,12 @@ import { CertificadosFilaTableDatos, CertificadosFitoFilaTableDatos, Certificado
 import { Component, OnDestroy, OnInit } from '@angular/core';// Importa decoradores y ciclos de vida de Angular
 import { CertificadosService } from '../../services/certificados.service';// Servicio para obtener datos relacionados con los certificados.
 import { CommonModule } from '@angular/common';// Importa directivas comunes de Angular como ngIf y ngFor
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ModalComponent } from '../modal/modal.component'; // Componente para mostrar modales.
 import { Subject } from 'rxjs'; // Utilidad de RxJS para manejar observables y suscripciones.
 import { TableComponent } from '@libs/shared/data-access-user/src'; // Importa componente compartido para la tabla.
 import { TituloComponent } from '@libs/shared/data-access-user/src'; // Importa componente compartido para el título.
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * @component CertificadosComponent
@@ -101,13 +103,19 @@ export class CertificadosComponent implements OnInit, OnDestroy {
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
    esFormularioSoloLectura: boolean = false;
+
+  /**
+ * Notificador para destruir suscripciones al destruir el componente.
+ * Utiliza un Subject para emitir una señal de finalización.
+ */
+   private destroyNotifier$: Subject<void> = new Subject();
   /**
    * @constructor
    * @description
    * Constructor del componente. Inicializa los servicios necesarios.
    * @param certificadosService - Servicio para obtener datos relacionados con los certificados.
    */
-  constructor(private certificadosService: CertificadosService) {
+  constructor(private certificadosService: CertificadosService,private consultaioQuery: ConsultaioQuery) {
     // Constructor vacío.
   }
 
@@ -118,6 +126,12 @@ export class CertificadosComponent implements OnInit, OnDestroy {
    * Obtiene datos de los servicios y los asigna a las propiedades correspondientes.
    */
   ngOnInit(): void {
+  this.consultaioQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe(state => {
+      this.esFormularioSoloLectura = Boolean(state.readonly);
+    });
+
     this.certificadosService
       .getFitosanitoriosEncabezadoDeTabla()
       .subscribe((data: CertificadosTablaDatos) => {

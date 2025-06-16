@@ -236,6 +236,32 @@ export class DestinatarioAgenteAduanalComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
+      /**
+ * Si no existen datos en la tabla de destinatarios, se inicializa con un valor por defecto.
+ * Luego, se actualiza el store con la nueva fila de destinatario.
+ */
+   if (this.tablaDestinatarioFilaDatos.length === 0){
+      const DESTINATARIO_FILA: TablaDatos = {
+        tbodyData: datosDestinatarioDummy,
+      };
+      this.tablaDestinatarioFilaDatos.push(DESTINATARIO_FILA);
+      this.tramite250101Store.establecerDestinatario(
+        this.tablaDestinatarioFilaDatos);
+      }
+
+      /**
+ * Si no existen datos en la tabla de agente aduanal, se agrega un valor por defecto.
+ * Luego, se actualiza el store con la nueva fila del agente aduanal.
+ */
+    if (this.tablaAgenteAduanaFilaDatos.length === 0){
+      const AGENTE_ADUANAL_FILA: TablaDatos = {
+        tbodyData: datosAgenteDummy,
+      };
+      this.tablaAgenteAduanaFilaDatos.push(AGENTE_ADUANAL_FILA);
+      this.tramite250101Store.establecerAgenteAduanal(
+        this.tablaAgenteAduanaFilaDatos);
+      }
+
     this.destinatarioService
       .getDestinatarioEncabezadoDeTabla()
       .pipe(takeUntil(this.destroy$))

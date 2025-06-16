@@ -101,14 +101,14 @@ describe('TipoMovimientoComponent', () => {
   
   it('should disable the form if esFormularioSoloLectura is true', () => {
     component.esFormularioSoloLectura = true;
-    component.tipoMovimientoForm.enable(); // ensure it's enabled first
+    component.tipoMovimientoForm.enable(); 
     component.inicializarEstadoFormulario();
     expect(component.tipoMovimientoForm.disabled).toBe(true);
   });
 
   it('should enable the form if esFormularioSoloLectura is false', () => {
     component.esFormularioSoloLectura = false;
-    component.tipoMovimientoForm.disable(); // ensure it's disabled first
+    component.tipoMovimientoForm.disable(); 
     component.inicializarEstadoFormulario();
     expect(component.tipoMovimientoForm.enabled).toBe(true);
   });
