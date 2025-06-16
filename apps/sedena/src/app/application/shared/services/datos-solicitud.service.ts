@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '../models/datos-solicitud.model';
+import { Tramite240118State } from '../../tramites/240118/estados/tramite240118Store.store';
 import { map } from 'rxjs';
 
 @Injectable({
@@ -162,5 +163,11 @@ export class DatosSolicitudService {
     return this.httpServicios
       .get<{ monedaCatalogo: Catalogo[] }>(this.jsonUrl)
       .pipe(map((res) => res.monedaCatalogo));
+  }
+
+  obtenerRegistroTomarMuestrasDatos240118(): Observable<Tramite240118State> {
+    return this.httpServicios.get<Tramite240118State>(
+      'assets/json/240118/respuestaDeActualizacionDe.json'
+    );
   }
 }
