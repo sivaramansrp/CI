@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -8,8 +9,8 @@ import { PagoDerechosFormState } from '../../../../shared/models/pago-de-derecho
 import { Subject } from 'rxjs';
 import { Tramite240105Query } from '../../estados/tramite240105Query.query';
 import { Tramite240105Store } from '../../estados/tramite240105Store.store';
+import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-
 
 /**
  * @title Pago de Derechos Contenedora
@@ -46,16 +47,22 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   /**
-   * Constructor del componente.
-   *
-   * @method constructor
-   * @param {Tramite240101Query} tramiteQuery - Query para obtener el estado actual del pago de derechos.
-   * @param {Tramite240101Store} tramiteStore - Store que administra el estado del pago de derechos.
-   * @returns {void}
+   * Indica si el formulario está en modo solo lectura.
+   * @property {boolean} esFormularioSoloLectura
    */
+  esFormularioSoloLectura: boolean = false;
+
+/**
+ * Constructor del componente.
+ *
+ * @param {Tramite240105Query} tramiteQuery - Servicio para consultar el estado actual del trámite de pago de derechos.
+ * @param {Tramite240105Store} tramiteStore - Store encargado de gestionar el estado del pago de derechos.
+ * @param {ConsultaioQuery} consultaQuery - Servicio para realizar consultas adicionales relacionadas.
+ */
   constructor(
     private tramiteQuery: Tramite240105Query,
-    private tramiteStore: Tramite240105Store
+    private tramiteStore: Tramite240105Store,
+    private consultaQuery: ConsultaioQuery 
   ) // eslint-disable-next-line no-empty-function
   {}
 
@@ -72,6 +79,14 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.pagoDerechoFormState = data;
       });
+    this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroy$),
+      map((seccionState) => {
+        this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe();
   }
   /**
    * Actualiza el estado del formulario de pago de derechos en el store.
