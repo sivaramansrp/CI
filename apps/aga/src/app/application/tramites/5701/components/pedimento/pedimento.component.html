@@ -28,7 +28,117 @@
   </div>
 </div>
 
-<div class="row mt-5">
+<div class="row">
+  <div class="col-md-12">
+    <ngx-datatable
+      class="table table-striped table-hover table-bordered"
+      #tablaPedimentos
+      [columnMode]="ColumnMode.force"
+      [rows]="pedimentos"
+      [scrollbarH]="true"
+      [rowHeight]="'auto'"
+    >
+      <!-- <ngx-datatable-column
+        [width]="30"
+        [sortable]="false"
+        [canAutoResize]="false"
+        [draggable]="false"
+        [resizeable]="false"
+      >
+        <ng-template
+          ngx-datatable-header-template
+          let-allRowsSelected="allRowsSelected"
+          let-selectFn="selectFn"
+        >
+          <input
+            type="checkbox"
+            [checked]="allRowsSelected"
+            (change)="selectFn()"
+          />
+        </ng-template>
+        <ng-template
+          ngx-datatable-cell-template
+          let-value="value"
+          let-isSelected="isSelected"
+          let-onCheckboxChangeFn="onCheckboxChangeFn"
+        >
+          <input
+            type="checkbox"
+            [checked]="isSelected"
+            (change)="onCheckboxChangeFn($event)"
+          />
+        </ng-template>
+      </ngx-datatable-column> -->
+
+      <ngx-datatable-column name="Patente" prop="patente">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row.patente }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Pedimento" prop="pedimento">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row.pedimento }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Aduana" prop="aduana">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row.aduana }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Tipo de pedimento" prop="tipoPedimento">
+        <ng-template
+          ngx-datatable-cell-template
+          let-rowIndex="rowIndex"
+          let-value="value"
+          let-row="row"
+        >
+          @if (!editar[rowIndex + '-gender']) {
+          <span
+            title="Double click to edit"
+            (dblclick)="editar[rowIndex + '-gender'] = true"
+          >
+            {{ value }}
+          </span>
+          } @if (editar[rowIndex + '-gender']) {
+          <select
+            (blur)="editar[rowIndex + '-gender'] = false"
+            (change)="actualizarValor($event, 'gender', rowIndex)"
+            [value]="value"
+          >
+            <option *ngFor="let tipo of tiposPedimento" [value]="tipo.id">
+              {{ tipo.descripcion }}
+            </option>
+          </select>
+          }
+          {{ row.tipoPedimento }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Número" prop="numero">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row.numero }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Comprobante de valor" prop="comprobanteValor">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row.comprobanteValor }}
+        </ng-template>
+      </ngx-datatable-column>
+
+      <ngx-datatable-column name="Validado" prop="pedimentoValidado">
+        <ng-template let-row="row" ngx-datatable-cell-template>
+          {{ row.pedimentoValidado }}
+        </ng-template>
+      </ngx-datatable-column>
+    </ngx-datatable>
+  </div>
+</div>
+
+<!-- <div class="row mt-5">
   <div class="col-md-12">
     <table class="table table-respomsive" id="idTablaPedimento">
       <thead>
@@ -61,7 +171,7 @@
       </tbody>
     </table>
   </div>
-</div>
+</div> -->
 
 @if (nuevaNotificacion) {
 <section>

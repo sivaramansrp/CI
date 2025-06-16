@@ -1299,7 +1299,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         titulo: 'Avisos',
         mensaje: MSG_ADUANA_PEDIMENTO,
         cerrar: false,
-        txtBtnAceptar: 'Aceptar',
+        txtBtnAceptar: 'Cerrar',
         txtBtnCancelar: '',
       };
       return;

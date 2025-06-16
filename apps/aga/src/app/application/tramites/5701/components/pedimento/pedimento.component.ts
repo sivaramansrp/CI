@@ -1,4 +1,9 @@
 import {
+  ColumnMode,
+  NgxDatatableModule,
+  SelectionType,
+} from '@swimlane/ngx-datatable';
+import {
   Component,
   EventEmitter,
   Input,
@@ -26,9 +31,11 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  Catalogo,
   Notificacion,
   NotificacionesComponent,
   SoloNumerosDirective,
+  TipoPedimentoService,
 } from '@ng-mf/data-access-user';
 import {
   Solicitud5701State,
@@ -40,7 +47,6 @@ import { CommonModule } from '@angular/common';
 import { EstadoPedimentoService } from '../../../../core/services/5701/pedimento/estado-pedimento.service';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
-
 @Component({
   selector: 'c-pedimento',
   standalone: true,
@@ -49,6 +55,7 @@ import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
     CommonModule,
     forwardRef(() => SoloNumerosDirective),
     NotificacionesComponent,
+    NgxDatatableModule,
   ],
   templateUrl: './pedimento.component.html',
   styleUrl: './pedimento.component.scss',
@@ -112,9 +119,8 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
     'Aduana',
     'Tipo de pedimento',
     'Número(s)',
-    'Comprobante Valor',
-    'Pedimento Validado',
-    'Accion',
+    'Comprobante de valor',
+    'Pedimento validado',
   ];
 
   /**
@@ -128,18 +134,51 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    */
   public nuevaNotificacion!: Notificacion;
 
+  /**
+   * @description Tipos de pedimento disponibles.
+   */
+  tiposPedimento: Catalogo[] = [];
+
+  //Checkbox para editar
+  selected: Pedimento[] = [];
+  SelectionType = SelectionType;
+
+  editar: { [key: string]: boolean } = {};
+  ColumnMode = ColumnMode;
+
   constructor(
     private tramite5701Query: Tramite5701Query,
     private tramite5701Store: Tramite5701Store,
-    private estadoPedimentoService: EstadoPedimentoService
+    private estadoPedimentoService: EstadoPedimentoService,
+    private tipoPedimentoService: TipoPedimentoService
   ) {}
 
   ngOnInit(): void {
+    this.getTiposPedimento();
     this.tramite5701Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((solicitudState) => {
           this.solicitudState = solicitudState;
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Obtiene los tipos de pedimento disponibles y los almacena en una variable.
+   */
+  getTiposPedimento(): void {
+    this.tipoPedimentoService
+      .getListaTipoPedimento()
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((response) => {
+          if (response.datos.length > 0) {
+            this.tiposPedimento = response.datos;
+          } else {
+            this.tiposPedimento = [];
+          }
         })
       )
       .subscribe();
@@ -215,7 +254,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
             titulo: 'Avisos',
             mensaje: MSG_NRO_PEDIMENTO,
             cerrar: false,
-            txtBtnAceptar: 'Aceptar',
+            txtBtnAceptar: 'Cerrar',
             txtBtnCancelar: '',
           };
           break;
@@ -323,5 +362,28 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  //Metodos para el checkbox
+  onActivate(event: any): void {
+    console.log('Activate Event', event);
+  }
+
+  onSelect({ selected }: { selected: Pedimento[] }): void {
+    this.selected.splice(0, this.selected.length);
+    this.selected.push(...selected);
+  }
+
+  actualizarValor(event: Event, cell: string, rowIndex: number): void {
+    const target = event.target as HTMLInputElement;
+    console.log('inline editing rowIndex', rowIndex);
+    this.editar[`${rowIndex}-${cell}`] = false;
+
+    // console.log(this.pedimentos[rowIndex][cell]);
+
+    // this.pedimentos[rowIndex][cell] = target.value;
+
+    this.pedimentos = [...this.pedimentos];
+    // console.log('UPDATED!', this.pedimentos[rowIndex][cell]);
   }
 }
