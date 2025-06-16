@@ -19,7 +19,7 @@ export interface Solicitud32501State {
   /**
    * Identificador genérico.
    */
-  ideGenerica1: string;
+  ideGenerica1: string | number;
 
   /**
    * Identificación de la transacción en VU.
@@ -118,7 +118,7 @@ export interface Solicitud32501State {
  */
 export function createInitialSolicitudState(): Solicitud32501State {
   return {
-    adace: '',
+    adace: '2424',
     fechaIniExposicion: '',
     ideGenerica1: '',
     idTransaccionVU: '',
@@ -159,216 +159,10 @@ export class Solicitud32501Store extends Store<Solicitud32501State> {
   }
 
   /** Métodos para actualizar diferentes propiedades del estado de la solicitud. */
-
-  /**
-   * Actualiza el valor de "Adace".
-   */
-  actualizarAdace(adace: string): void {
+  public establecerDatos(datos: Partial<Solicitud32501State>): void {
     this.update((state) => ({
       ...state,
-      adace,
-    }));
-  }
-
-  /**
-   * Actualiza la fecha de inicio de exposición.
-   */
-  actualizarFechaIniExposicion(fechaIniExposicion: string): void {
-    this.update((state) => ({
-      ...state,
-      fechaIniExposicion,
-    }));
-  }
-
-  /**
-   * Actualiza la clave de identificación genérica.
-   */
-  actualizarIdeGenerica1(ideGenerica1: string): void {
-    this.update((state) => ({
-      ...state,
-      ideGenerica1,
-    }));
-  }
-
-  /**
-   * Actualiza el identificador de transacción en VU.
-   */
-  actualizarIdTransaccionVU(idTransaccionVU: string): void {
-    this.update((state) => ({
-      ...state,
-      idTransaccionVU,
-    }));
-  }
-
-  /**
-   * Actualiza la clave de fracción arancelaria.
-   */
-  actualizarCveFraccionArancelaria(
-    cveFraccionArancelaria: string | number
-  ): void {
-    this.update((state) => ({
-      ...state,
-      cveFraccionArancelaria,
-    }));
-  }
-
-  /**
-   * Actualiza el NICO (Número de Identificación Comercial).
-   */
-  actualizarNico(nico: string): void {
-    this.update((state) => ({
-      ...state,
-      nico,
-    }));
-  }
-
-  /**
-   * Actualiza el peso de la mercancía.
-   */
-  actualizarPeso(peso: string): void {
-    this.update((state) => ({
-      ...state,
-      peso,
-    }));
-  }
-
-  /**
-   * Actualiza el valor en USD de la mercancía.
-   */
-  actualizarValorUSD(valorUSD: string): void {
-    this.update((state) => ({
-      ...state,
-      valorUSD,
-    }));
-  }
-
-  /**
-   * Actualiza la descripción de la mercancía.
-   */
-  actualizarDescripcionMercancia(descripcionMercancia: string): void {
-    this.update((state) => ({
-      ...state,
-      descripcionMercancia,
-    }));
-  }
-
-  /**
-   * Actualiza el nombre comercial.
-   */
-  actualizarNombreComercial(nombreComercial: string): void {
-    this.update((state) => ({
-      ...state,
-      nombreComercial,
-    }));
-  }
-
-  /**
-   * Actualiza la entidad federativa seleccionada.
-   */
-  actualizarEntidadFederativa(entidadFederativa: string | number): void {
-    this.update((state) => ({
-      ...state,
-      entidadFederativa,
-    }));
-  }
-
-  /**
-   * Actualiza la delegación o municipio seleccionado.
-   */
-  actualizarDelegacionMunicipio(delegacionMunicipio: string | number): void {
-    this.update((state) => ({
-      ...state,
-      delegacionMunicipio,
-    }));
-  }
-
-  /**
-   * Actualiza la colonia seleccionada.
-   */
-  actualizarColonia(colonia: string | number): void {
-    this.update((state) => ({
-      ...state,
-      colonia,
-    }));
-  }
-
-  /**
-   * Actualiza la calle registrada.
-   */
-  actualizarCalle(calle: string): void {
-    this.update((state) => ({
-      ...state,
-      calle,
-    }));
-  }
-
-  /**
-   * Actualiza el número exterior de la dirección.
-   */
-  actualizarNumeroExterior(numeroExterior: string): void {
-    this.update((state) => ({
-      ...state,
-      numeroExterior,
-    }));
-  }
-
-  /**
-   * Actualiza el número interior de la dirección.
-   */
-  actualizarNumeroInterior(numeroInterior: string): void {
-    this.update((state) => ({
-      ...state,
-      numeroInterior,
-    }));
-  }
-
-  /**
-   * Actualiza el código postal registrado.
-   */
-  actualizarCodigoPostal(codigoPostal: string): void {
-    this.update((state) => ({
-      ...state,
-      codigoPostal,
-    }));
-  }
-
-  /**
-   * Actualiza la patente del agente aduanal.
-   */
-  actualizarPatente(patente: string): void {
-    this.update((state) => ({
-      ...state,
-      patente,
-    }));
-  }
-
-  /**
-   * Actualiza el RFC del agente aduanal.
-   */
-  actualizaRFC(rfc: string): void {
-    this.update((state) => ({
-      ...state,
-      rfc,
-    }));
-  }
-
-  /**
-   * Actualiza el número de pedimento.
-   */
-  actualizarPedimento(pedimento: string): void {
-    this.update((state) => ({
-      ...state,
-      pedimento,
-    }));
-  }
-
-  /**
-   * Actualiza la aduana de importación.
-   */
-  actualizarAduana(aduana: string | number): void {
-    this.update((state) => ({
-      ...state,
-      aduana,
+      ...datos,
     }));
   }
 
