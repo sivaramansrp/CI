@@ -16,6 +16,7 @@ import {
 } from '@angular/forms';
 import { Catalogo } from '../../../core/models/shared/catalogos.model';
 import { CommonModule } from '@angular/common';
+import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 @Component({
   selector: 'app-catalogo-select',
   standalone: true,
@@ -69,7 +70,7 @@ export class CatalogoSelectComponent
       if (this.required) {
         this.formSelect
           .get('selectControl')
-          ?.setValidators([Validators.required]);
+          ?.setValidators([Validators.required, ValidacionesFormularioService.noMenosUnoValor]);
       } else {
         this.formSelect.get('selectControl')?.clearValidators();
       }

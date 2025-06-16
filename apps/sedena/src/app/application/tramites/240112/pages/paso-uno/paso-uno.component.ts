@@ -1,12 +1,23 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
+import { AgregarDestinatarioService } from '../../service/agregar-destinatario.service';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user'
+import { DatosDelTramiteContenedoraComponent } from '../../components/datos-del-tramite-contenedora/datos-del-tramite-contenedora.component';
+import { PagoDeDerechocComponent } from '../../components/pago-de-derechoc/pago-de-derechoc.component';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { TercerosRelacionadosContenedoraComponent } from '../../components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
 import { Tramite240112Query } from '../../estados/tramite240112Query.query';
 import { Tramite240112Store } from '../../estados/tramite240112Store.store';
+
 
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
+  standalone: true,
+  imports: [SolicitanteComponent, TercerosRelacionadosContenedoraComponent, DatosDelTramiteContenedoraComponent, PagoDeDerechocComponent,ReactiveFormsModule, FormsModule, CommonModule]
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
    /**
@@ -24,6 +35,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       * @type {Subject<void>}
       */
      private destroyNotifier$: Subject<void> = new Subject();
+
+    /**
+     * @descripcion
+     * Indica si el formulario debe estar deshabilitado (solo lectura).
+     * Cuando es verdadero, los controles del formulario estarán deshabilitados y no se podrán editar.
+     */
+    formularioDeshabilitado: boolean = false;
    
 
    /**
@@ -43,23 +61,76 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
      { index: 3, title: 'Terceros relacionados', component: 'terceros-relacionados' },
      { index: 4, title: 'Pago de derechos', component: 'pago-de-derechos' }
    ];
-     /**
-      * Inicializa el componente con las consultas y el store necesarios para la gestión del estado.
-      *
-      * @param tramite240112Query Consulta para acceder al estado del trámite.
-      * @param tramite240112Store Store para actualizar el estado del trámite.
-      */
-     constructor(
-       private tramite240112Query: Tramite240112Query,
-       private tramite240112Store: Tramite240112Store // eslint-disable-next-line no-empty-function
-     ) {}
+    /**
+     * Constructor del componente PasoUnoComponent.
+     * Inicializa los servicios y queries necesarios para el funcionamiento del componente.
+     * 
+     * @param tramite240112Query - Servicio para consultar el estado del trámite.
+     * @param tramite240112Store - Servicio para actualizar el estado del trámite.
+     * @param consultaQuery - Servicio para consultar el estado de la consulta.
+     * @param agregarDestinatarioService - Servicio para gestionar destinatarios y datos del formulario.
+     */
+    constructor(
+      private tramite240112Query: Tramite240112Query,
+      private tramite240112Store: Tramite240112Store,
+      private consultaQuery: ConsultaioQuery,
+      private agregarDestinatarioService: AgregarDestinatarioService
+    ) {}
+
+
+  /**
+   * @override
+   * @method ngOnInit
+   * @description Este método se ejecuta automáticamente cuando el componente se inicializa.
+   * Se utiliza para suscribirse a los observables necesarios y establecer el estado inicial del formulario.
+   * 
+   * @example
+   * // Ejemplo de uso:
+   * ngOnInit(): void {
+   *   // Suscripciones y lógica de inicialización aquí
+   * }
+   */
   ngOnInit(): void {
      this.tramite240112Query.getTabSeleccionado$
        .pipe(takeUntil(this.destroyNotifier$))
        .subscribe((tab) => {
          this.indice = tab ?? 1; 
        });
+      
+      this.consultaQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((seccionState) => {
+      if(seccionState.update){
+        this.formularioDeshabilitado = false;
+          this.guardarDatosFormulario();
+      }
+      if (seccionState.readonly) {
+        this.formularioDeshabilitado = true;
+      }
+    });
    }
+
+   /**
+   * @descripcion
+   * Obtiene los datos de acuicultura y actualiza el estado del formulario.
+   * 
+   * @remarks
+   * Realiza una suscripción al observable que retorna los datos de acuicultura.
+   * Utiliza `takeUntil` para evitar fugas de memoria al destruir el componente.
+   * Si la respuesta es válida, actualiza el estado del formulario con los datos recibidos.
+   */
+  guardarDatosFormulario(): void {
+    this.agregarDestinatarioService
+      .getAcuiculturaData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.agregarDestinatarioService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
+
    /**
     * Método que cambia el índice de la pestaña seleccionada en función del valor recibido.
     * Este método se utiliza para navegar entre las diferentes pestañas del formulario.
