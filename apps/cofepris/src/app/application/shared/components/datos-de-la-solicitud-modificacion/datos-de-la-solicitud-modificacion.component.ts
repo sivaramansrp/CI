@@ -52,7 +52,7 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
    * Indica si los insumos están habilitados o no.
    */
   @Input() insumos: boolean = false;
- 
+
   /**
    * @description
    * Formulario principal para capturar los datos de la solicitud.
@@ -203,10 +203,10 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
    */
   public solicitudState!: DatosSolicitudState;
 
-    /**
-   * Indica si el formulario está en modo solo lectura.
-   * Cuando es `true`, los campos del formulario no se pueden editar.
-   */
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
   esFormularioSoloLectura: boolean = false;
 
   /**
@@ -217,21 +217,21 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
 * 
 * @param i - Índice del pedimento que se desea eliminar. Por defecto, es 0.
 */
-abrirModal(i: number = 0): void {
-  this.nuevaNotificacion = {
-    tipoNotificacion: 'alert',
-    categoria: 'danger',
-    modo: 'action',
-    titulo: '',
-    mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
-    cerrar: false,
-    tiempoDeEspera: 2000,
-    txtBtnAceptar: 'Aceptar',
-    txtBtnCancelar: 'Cancelar',
-  };
+  abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
 
-  this.elementoParaEliminar = i;
-}
+    this.elementoParaEliminar = i;
+  }
   /**
    * @description
    * Constructor del componente.
@@ -277,7 +277,7 @@ abrirModal(i: number = 0): void {
      * - La suscripción se cancela automáticamente cuando `destroy$` emite un valor (para evitar fugas de memoria).
      */
 
-      this.datosSolicitudQuery.selectSolicitud$
+    this.datosSolicitudQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroy$),
         map((seccionState) => {
@@ -330,7 +330,7 @@ abrirModal(i: number = 0): void {
       descripcionScian: [this.solicitudState?.descripcionScian],
     });
 
-      if (this.datosSolicitudform && this.manifiestosRepresentanteForm && this.scianForm) {
+    if (this.datosSolicitudform && this.manifiestosRepresentanteForm && this.scianForm) {
       this.datosSolicitudform.disable();
       this.manifiestosRepresentanteForm.disable();
       this.scianForm.disable();
