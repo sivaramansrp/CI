@@ -1,3 +1,4 @@
+import { ConsultaioQuery, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
@@ -6,7 +7,7 @@ import { map } from 'rxjs';
 
 import { CommonModule } from '@angular/common';
 import { DatosDelTramiteComponent } from '../../components/datos-del-tramite/datos-del-tramite.component';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { RegistroCaatAereoService } from '../../services/RegistroCaatAereoController.service';
 import { Tramite40401Query } from '../../../../core/queries/tramite40401.query';
 import { Tramite40401State } from '../../../../core/estados/tramites/tramite40401.store';
 import { Tramite40401Store } from '../../../../core/estados/tramites/tramite40401.store';
@@ -46,7 +47,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
 
   constructor(
     public store: Tramite40401Store,
-    public tramiteQuery: Tramite40401Query
+    public tramiteQuery: Tramite40401Query,
+    private consultaQuery: ConsultaioQuery,
+    private registroCaatAereoService: RegistroCaatAereoService,
+    private Tramite40401Store: Tramite40401Store
   ) {
     // Inicializa el paso activo en el store
   }
@@ -73,6 +77,28 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.indice = this.tramiteState.pestanaActiva;
+
+    this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$), 
+      map((seccionState) => {
+        // seccionState.update = true; // Asegura que se actualice el estado 
+        if( seccionState.update ) {
+          this.registroCaatAereoService
+            .obtenerCAATAereoData()
+            // .getDirectorGeneralData()
+            .pipe(takeUntil(this.destroyNotifier$))
+            .subscribe((data) => {
+              // Actualiza el estado del chofer40103Store con los datos del director general
+              this.Tramite40401Store.setPais(data.TipoDeCaatAereo);
+              this.Tramite40401Store.setCodigo(data.DodigoDeTransportacion);
+              this.Tramite40401Store.setTransportacion(data.EmpresaDeTransportacion);
+            });
+        }
+      })
+    )
+    .subscribe();
+
   }
 
   /**

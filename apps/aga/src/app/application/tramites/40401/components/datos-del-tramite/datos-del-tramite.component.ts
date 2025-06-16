@@ -5,6 +5,7 @@ import {
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, SolicitanteComponent } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
@@ -61,6 +62,11 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * Estado actual de la solicitud del trámite.
    */
   public solicitudState!: Tramite40401State;
+  
+  /**
+   * Indica si el formulario es de solo lectura.
+   */
+  readonly: boolean = false;
 
   /**
    * Constructor del componente.
@@ -76,7 +82,9 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     private registroCaatAereoService: RegistroCaatAereoService,
     public store: Tramite40401Store,
     public tramiteQuery: Tramite40401Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaQuery: ConsultaioQuery,
+    
   ) {
     // Constructor vacío
   }
@@ -95,8 +103,22 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-      this.initializeForm();
-      this.cargarCAATAereo();
+
+    this.initializeForm();
+    this.cargarCAATAereo();
+
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$), 
+        map((seccionState) => {
+          // seccionState.update = true; // Asegura que se actualice el estado 
+          if( seccionState.readonly ) {
+            this.readonly = seccionState.readonly;
+            this.datosDelTramiteForm.disable();
+          }
+        })
+      )
+      .subscribe();
   }
 
   /**

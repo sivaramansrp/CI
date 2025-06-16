@@ -1,4 +1,4 @@
-import { CatalogoLista } from '../models/certi-registro.model';
+import { CaatAereoData, CatalogoLista } from '../models/certi-registro.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -24,6 +24,10 @@ export class RegistroCaatAereoService {
    */
   obtenerCAATAereo(): Observable<CatalogoLista> {
     return this.http.get<CatalogoLista>('assets/json/40401/pais.json');
+  }
+
+  obtenerCAATAereoData(): Observable<CaatAereoData> {
+    return this.http.get<CaatAereoData>('assets/json/40401/caat.aereo.data.json');
   }
   
 }
