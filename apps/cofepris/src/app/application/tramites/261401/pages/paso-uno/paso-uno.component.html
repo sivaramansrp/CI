@@ -74,6 +74,7 @@
           [formularioPagoDerechos]="formularioPagoDerechos"
           [banco]="banco"
           (setValoresStoreEvent)="setValoresStore($event)"
+          [isDisabled]="esFormularioSoloLectura"
           ></app-pago-de-derechos>
         } @case (5) {
           <app-tramite-asociados
