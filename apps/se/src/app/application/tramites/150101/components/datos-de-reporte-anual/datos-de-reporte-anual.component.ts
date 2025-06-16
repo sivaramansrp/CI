@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
@@ -22,7 +22,7 @@ import { SolicitudService } from '../../services/registro-solicitud-anual.servic
  * @implements {OnInit, OnDestroy}
  * @description Este componente maneja la lógica del formulario para capturar los datos del reporte anual.
  */
-export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
+export class DatosDeReporteAnnualComponent implements OnDestroy {
   /**
    * @description Formulario reactivo para capturar los datos del reporte anual.
    */
@@ -67,23 +67,7 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-  }
 
-  /**
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * @returns {void}
-   */
-  ngOnInit(): void {
-    this.inicializarFormulario();
-  }
-
-  /**
-   * @method inicializarFormulario
-   * @description Inicializa el formulario reactivo con los valores del estado de la solicitud.
-   * Configura los validadores y el estado de los campos según corresponda.
-   * @returns {void}
-   */
-  inicializarFormulario(): void {  
     this.solicitud150101Query.seleccionarSolicitud$
       .pipe(
         takeUntil(this.destroyed$),

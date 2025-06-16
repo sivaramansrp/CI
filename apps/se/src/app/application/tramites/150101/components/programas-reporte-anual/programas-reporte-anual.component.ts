@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { BsDatepickerConfig } from 'ngx-bootstrap/datepicker';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
@@ -36,7 +36,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './programas-reporte-anual.component.html',
   styleUrl: './programas-reporte-anual.component.scss',
 })
-export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
+export class ProgramasReporteAnnualComponent implements OnDestroy {
   /** Formulario reactivo para administrar los datos del reporte anual */
   periodoReporteAnual!: FormGroup;
   /**
@@ -139,24 +139,8 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
           this.formularioDeshabilitado = seccionState.readonly;
         })
       )
-      .subscribe();    
-  }
-
-  /**
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * @returns {void}
-   */
-  ngOnInit(): void {
-    this.inicializarFormulario();
-  }
-
-  /**
-   * @method inicializarFormulario
-   * @description Inicializa el formulario `periodoReporteAnual` con los valores del estado de la solicitud.
-   * Deshabilita los campos del formulario para que no puedan ser editados.
-   * @returns {void}
-   */
-  inicializarFormulario(): void {
+      .subscribe();
+      
     this.solicitud150101Query.seleccionarSolicitud$
       .pipe(
         takeUntil(this.destroyed$),
@@ -185,7 +169,7 @@ export class ProgramasReporteAnnualComponent implements OnInit, OnDestroy {
     });
 
     this.inicializarEstadoFormulario();
-  }  
+  }
 
   /**
    * @method inicializarEstadoFormulario
