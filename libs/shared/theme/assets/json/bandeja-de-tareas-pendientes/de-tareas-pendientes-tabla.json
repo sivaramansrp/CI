@@ -14432,7 +14432,7 @@
     "nombreDeLaTarea": "confirmar notificación de resolución",
     "fechaDeAsignacion": "2023-10-05",
     "estadoDeTramite": "Pendiente",
-    "departamento": "cofepris",
+    "departamento": "se",
     "numeroDeProcedimiento": "90102",
     "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-RESOLUCION"
   },
@@ -14442,7 +14442,7 @@
     "nombreDeLaTarea": "Functionario verificar requerimiento",
     "fechaDeAsignacion": "2023-10-06",
     "estadoDeTramite": "Completado",
-    "departamento": "cofepris",
+    "departamento": "se",
     "numeroDeProcedimiento": "90102",
     "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
   },
@@ -14452,7 +14452,7 @@
     "nombreDeLaTarea": "Generar opinión",
     "fechaDeAsignacion": "2023-10-07",
     "estadoDeTramite": "En Proceso",
-    "departamento": "cofepris",
+    "departamento": "se",
     "numeroDeProcedimiento": "90102",
     "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
   },
@@ -14462,7 +14462,7 @@
     "nombreDeLaTarea": "Revisión de presupuesto",
     "fechaDeAsignacion": "2023-10-09",
     "estadoDeTramite": "Completado",
-    "departamento": "cofepris",
+    "departamento": "se",
     "numeroDeProcedimiento": "90102",
     "origin": "READ_PROCEDURE"
   },
