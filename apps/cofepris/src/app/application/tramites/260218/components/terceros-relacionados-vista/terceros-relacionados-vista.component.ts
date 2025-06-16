@@ -69,13 +69,6 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   public esFormularioSoloLectura: boolean = false; 
 
-    /**
-     * @property {Subject<void>} destroy$
-     * Subject para cancelar suscripciones y evitar fugas de memoria.
-     * @private
-     */
-    private destroy$ = new Subject<void>();
-
   /**
    * @constructor
    * Inyecta los servicios necesarios para consultar y actualizar el estado del trámite.
@@ -91,7 +84,7 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   ) {
       this.consultaQuery.selectConsultaioState$
         .pipe(
-          takeUntil(this.destroy$),
+          takeUntil(this.destroyNotifier$),
           map((seccionState) => {
             this.esFormularioSoloLectura = seccionState.readonly;
           })
