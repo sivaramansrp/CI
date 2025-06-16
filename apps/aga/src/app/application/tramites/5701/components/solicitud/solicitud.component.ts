@@ -2400,7 +2400,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.tipoDespacho = tipoCheck; // Guarda el tipo de despacho seleccionado
 
     if (CHECKED) {
-      const RECINTO_ESPECIFICADO = this.validaCampoRecintoEspecifique();
+      const RECINTO_ESPECIFICADO = this.validaCampoRecintoEspecifique();      
       if (
         RECINTO_ESPECIFICADO ||
         ID_ADUANA_DESPACHO !== '-1' ||
@@ -2579,7 +2579,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   validaCampoRecintoEspecifique(): boolean {
     const CATALOGO_RECINTO = this.despacho.get('nombreRecinto')?.value;
     const ESPECIFIQUE_DESPACHO = this.despacho.get('especifique')?.value;
-
+  
     const CATALOGO_VALIDO =
       CATALOGO_RECINTO !== null &&
       CATALOGO_RECINTO !== '-1' &&
