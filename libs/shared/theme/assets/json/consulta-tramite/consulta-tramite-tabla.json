@@ -138,6 +138,15 @@
         "numeroDeProcedimiento": "6502"
     },
     {
+        "id": "110216",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "110216"
+    },
+    {
         "id": "202",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2025-06-01",

@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud31501State, Tramite31501Store } from '../../../../estados/tramites/tramite31501.store';
@@ -21,7 +21,7 @@ import { TramiteList } from '../../models/datos-tramite.model';
     SolicitanteComponent,
   ],
   templateUrl: './capturar-requerimiento.component.html',
-  styleUrl: './capturar-requerimiento.component.css',
+  styleUrl: './capturar-requerimiento.component.scss',
 })
 export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
   tramiteList: {
@@ -68,12 +68,26 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
    * Esta propiedad indica el índice del paso actual en el wizard, comenzando desde 1.
    */
   indice: number = 1;
+  
+    /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+    /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
 
   constructor(
     private autoridadService: AutoridadService,
     private fb: FormBuilder,
     public tramite31501Store: Tramite31501Store,
-    private tramite31501Query: Tramite31501Query
+    private tramite31501Query: Tramite31501Query,
+    private consultaioQuery: ConsultaioQuery,
   ) {
     this.tramiteList = {
       catalogos: [],
@@ -96,7 +110,17 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-    this.inicializarFormulario();
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+      this.inicializarFormulario();
     this.fetchAduanaList();
   }
 
@@ -112,7 +136,7 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
   inicializarFormulario(): void {
     this.capturarRequirementoForm = this.fb.group({
       motivoCancelacion: [
-        this.solicitud31501State?.motivoCancelacion,
+        {value: this.solicitud31501State?.motivoCancelacion, disabled: this.soloLectura},
         Validators.required,
       ],
       tipoDeRequerimiento: [
@@ -120,6 +144,24 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
         Validators.required,
       ],
     });
+    this.inicializarEstadoFormulario();
+  }
+
+    /**
+  * @method inicializarEstadoFormulario
+  * @description Inicializa el estado del formulario según el modo de solo lectura.
+  * 
+  * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
+  * En caso contrario, habilita los controles del formulario.
+  * 
+  * @returns {void}
+  */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.capturarRequirementoForm?.disable();
+    } else {
+      this.capturarRequirementoForm?.enable();
+    }
   }
 
   /**
