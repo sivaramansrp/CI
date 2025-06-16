@@ -64,13 +64,12 @@ export class PasoUnoComponent implements OnInit {
           this.consultaState = seccionState;
         })
       )
-      .subscribe();
-
-    // Si el estado indica que hay una actualización, guarda los datos del formulario y de pago de derechos
-    if (this.consultaState.update) {
-      this.guardarDatosFormulario();
-      this.guardarDatosFormularioPagoDerechos();
-    } 
+      .subscribe(() => {
+        if (this.consultaState.update) {
+          this.guardarDatosFormulario();
+          this.guardarDatosFormularioPagoDerechos();
+        }
+      });
   }
  
 
