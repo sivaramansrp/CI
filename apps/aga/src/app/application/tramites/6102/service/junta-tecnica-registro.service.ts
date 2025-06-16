@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
+import { RespuestaConsulta } from '../estados/models/exencion-impuestos.model';
 
 /**
  * Servicio para gestionar las operaciones relacionadas con la Junta Técnica de Registro.
@@ -37,5 +38,13 @@ export class JuntaTecnicaRegistroService {
      */
     getOptionLista(catalogo: string): Observable<RespuestaCatalogos> {
       return this.http.get<RespuestaCatalogos>(`assets/json/6201/${catalogo}.json`);
+    }
+
+    /**
+     * Obtiene los datos para la consulta del trámite.
+     * @returns {Observable<RespuestaConsulta>} Observable con los datos de consulta.
+     */
+    getDatosConsulta(): Observable<RespuestaConsulta> {
+      return this.http.get<RespuestaConsulta>('assets/json/6102/consulta_6102.json');
     }
 }
