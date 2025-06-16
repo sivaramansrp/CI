@@ -140,8 +140,17 @@ export class CatalogoSelectComponent
     });
   }
 
+  /**
+   * @description Función que se ejecuta cuando el valor del select cambia.
+   * Esta función se utiliza para notificar al formulario reactivo sobre el cambio de valor.
+   */
   // eslint-disable-next-line class-methods-use-this, @typescript-eslint/no-empty-function
   private onChange: (value: string) => void = () => {};
+
+  /**
+   * @description Función que se ejecuta cuando el control del formulario es tocado.
+   * Esta función se utiliza para marcar el control como "tocado" en el formulario reactivo.
+   */
   // eslint-disable-next-line class-methods-use-this, no-empty-function, @typescript-eslint/no-empty-function
   private onTouched: () => void = () => {};
 
