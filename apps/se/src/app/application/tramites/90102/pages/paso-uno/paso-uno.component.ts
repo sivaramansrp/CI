@@ -5,6 +5,7 @@ import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ProsecService } from '../../services/prosec.service';
+import { SectoresMercanciasService } from '../../../../shared/services/sectores-mercancias.service';
 /**
  * Componente que representa el primer paso del proceso de solicitud.
  * Contiene un componente de solicitante y permite la navegación entre tabs.
@@ -61,7 +62,9 @@ export class PasoUnoComponent implements AfterViewInit {
    */
   constructor(
     private prosecService: ProsecService,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+    private sectoresMercanciasServicio: SectoresMercanciasService,
+    
   ) {}
 
   /**
@@ -99,6 +102,15 @@ export class PasoUnoComponent implements AfterViewInit {
         if (resp) {
           this.esDatosRespuesta = true;
           this.prosecService.actualizarEstadoFormulario(resp);
+        }
+      });
+      this.sectoresMercanciasServicio
+      .getRegistroTomaMuestrasMercanciasData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.sectoresMercanciasServicio.actualizarEstadoFormulario(resp);
         }
       });
   }
