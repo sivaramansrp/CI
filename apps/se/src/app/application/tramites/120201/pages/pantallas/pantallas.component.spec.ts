@@ -33,6 +33,15 @@ describe('PantallasComponent', () => {
     };
     component.wizardComponent = mockWizardComponent as unknown as WizardComponent;
 
+    component.datos = {
+      expedicionCertificadosAsignacionDirectaComponent: {
+        validarFormulario: jest.fn().mockReturnValue(true)
+      }
+    } as any;
+
+    component.esValido = true;
+    component.indice = 1;
+
     component.getValorIndice({ accion: 'cont', valor: 2 });
     expect(component.indice).toBe(2);
     expect(mockWizardComponent.siguiente).toHaveBeenCalled();

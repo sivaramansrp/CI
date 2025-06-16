@@ -10,6 +10,13 @@ import { Query } from '@datorama/akita';
  */
 @Injectable({ providedIn: 'root' })
 export class Solicitud40302Query extends Query<Solicitud40302State> {
+
+  /**
+   * Selecciona el estado completo de la solicitud
+   */
+  selectSolicitud$ = this.select((state) => {
+    return state;
+  });
   
   /**
    * ## Propiedad: selectedDirectorGeneralNombre$

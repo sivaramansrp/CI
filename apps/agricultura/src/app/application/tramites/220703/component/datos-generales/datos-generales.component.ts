@@ -5,6 +5,7 @@ import { MERCANCIA_SERVICIO, MercanciaInfo } from '../../constantes/acuicola.enu
 import { TramiteState, TramiteStore } from '../../estados/tramite220703.store';
 import { AcuicolaService } from '../../service/acuicola.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery} from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { TramiteStoreQuery } from '../../estados/tramite220703.query';
 import { map } from 'rxjs';
@@ -140,6 +141,12 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
   private seccion!: SeccionLibState;
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false; 
+
+  /**
    * Constructor del componente.
    * @constructor
    * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
@@ -148,6 +155,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @param {TramiteStore} tramiteStore - Store para gestionar el estado del trámite.
    * @param {SeccionLibQuery} seccionQuery - Query para acceder al estado de la sección.
    * @param {SeccionLibStore} seccionStore - Store para gestionar el estado de la sección.
+   * @param {ConsultaioQuery} consultaioQuery - Query para acceder al estado de la consulta.
    */
   constructor(
     private readonly fb: FormBuilder,
@@ -156,8 +164,16 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
     private tramiteStore: TramiteStore,
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
+    private readonly consultaioQuery: ConsultaioQuery
   ) {
-    // No se necesita lógica de inicialización adicional.
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      ).subscribe();  
   }
 
   /**
@@ -167,6 +183,7 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
     this.iniciarFormulario();
     this.getAduanaDeIngreso();
     this.getOficinaDeInspeccion();
@@ -186,12 +203,45 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
           puntoDeInspeccion: datos.puntoDeInspeccion,
           regimenAlQueDestina: datos.regimenAlQueDestina,
           datosParaMovilizacion: datos.datosParaMovilizacion,
-          puntoDeVerificacion: datos.puntoDeVerificacion
+          puntoDeVerificacion: datos.puntoDeVerificacion,
+          numeroDeGuia: datos.numeroDeGuia,
+          identificacionDelTransporte: datos.identificacionDelTransporte,
+          nombreDeLaEmpresaTransportista: datos.nombreDeLaEmpresaTransportista,
+          folioDelTramite: datos.folioDelTramite,
         });
       })
     )
       .subscribe();
 
+  }
+
+    /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.iniciarFormulario();
+    }  
+  }
+
+    /**
+   * Guarda los datos del formulario y actualiza el estado del componente.
+   * Si el formulario está en modo solo lectura, deshabilita los campos.
+   * Si no, habilita los campos para permitir la edición.
+   *
+   * @method guardarDatosFormulario
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  guardarDatosFormulario(): void {
+    this.iniciarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.datosGeneralesForm.disable();
+    } else {
+      this.datosGeneralesForm.enable();
+    }
   }
 
   /**
@@ -201,16 +251,16 @@ export class DatosGeneralesComponent implements OnInit, OnDestroy {
    */
   iniciarFormulario(): void {
     this.datosGeneralesForm = this.fb.group({
-      folioDelTramite: [{ value: '150220020032024220100001', disabled: true }, Validators.required],
+      folioDelTramite: [{ value: this.tramiteState.folioDelTramite, disabled: true }, Validators.required],
       aduanaDeIngreso: [{ value: this.tramiteState.aduanaDeIngreso }, Validators.required],
       oficinaDeInspeccion: [{ value: this.tramiteState.oficinaDeInspeccion }, Validators.required],
       puntoDeInspeccion: [{ value: this.tramiteState.puntoDeInspeccion }, Validators.required],
-      numeroDeGuia: [{ value: '', disabled: true }, Validators.required],
-      regimenAlQueDestina: [{ value: this.tramiteState.aduanaDeIngreso }, Validators.required],
+      numeroDeGuia: [{ value: this.tramiteState.numeroDeGuia, disabled: true }],
+      regimenAlQueDestina: [{ value: this.tramiteState.regimenAlQueDestina }, Validators.required],
       datosParaMovilizacion: [{ value: this.tramiteState.datosParaMovilizacion }, Validators.required],
       puntoDeVerificacion: [{ value: this.tramiteState.puntoDeVerificacion }, Validators.required],
-      identificacionDelTransporte: [{ value: '', disabled: true }, Validators.required],
-      nombreDeLaEmpresaTransportista: [{ value: '', disabled: true }, Validators.required],
+      identificacionDelTransporte: [{ value: this.tramiteState.identificacionDelTransporte, disabled: true }, Validators.required],
+      nombreDeLaEmpresaTransportista: [{ value: this.tramiteState.nombreDeLaEmpresaTransportista, disabled: true }, Validators.required],
     });
   }
 

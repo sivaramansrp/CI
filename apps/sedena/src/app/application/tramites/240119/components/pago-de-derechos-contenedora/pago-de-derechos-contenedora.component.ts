@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/pago-de-derechos.model';
 import { Tramite240119Query } from '../../estados/tramite240119Query.query';
@@ -30,18 +31,25 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    * @property {PagoDerechosFormState} pagoDerechoFormState
    */
   public pagoDerechoFormState!: PagoDerechosFormState;
-
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * @property {boolean} esFormularioSoloLectura
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente.
    *
    * @method constructor
    * @param {Tramite240119Query} tramiteQuery - Query para obtener el estado actual del pago de derechos.
    * @param {Tramite240119Store} tramiteStore - Store que administra el estado del pago de derechos.
+   * @param {ConsultaioQuery} consultaQuery - Query para obtener el estado de la consulta.
    * @returns {void}
+   * 
    */
   constructor(
     private tramiteQuery: Tramite240119Query,
-    private tramiteStore: Tramite240119Store
+    private tramiteStore: Tramite240119Store,
+    private consultaQuery: ConsultaioQuery
   ) {
     // No hacer nada
   }
@@ -59,6 +67,14 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.pagoDerechoFormState = data;
       });
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
