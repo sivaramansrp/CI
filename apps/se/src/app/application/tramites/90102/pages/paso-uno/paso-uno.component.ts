@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AfterViewInit } from '@angular/core';
@@ -14,7 +14,7 @@ import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constan
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
 })
-export class PasoUnoComponent implements AfterViewInit {
+export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
   /**
    * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
    * @type {SolicitanteComponent}
