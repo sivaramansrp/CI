@@ -183,6 +183,8 @@ export class DomicillioDelEstablecimientoSeccionComponent
     this.loadEstado();
     this.loadScian();
     this.inicializarEstadoFormulario();
+        // Cargar el estado inicial en el formulario
+
 
     this.establecimientoService.getScianDatos().pipe(takeUntil(this.destroy$))
       .subscribe((response: ScianModel[]) => {
@@ -295,7 +297,33 @@ export class DomicillioDelEstablecimientoSeccionComponent
     return this.domicilioEstablecimiento.get('avisoDeFuncionamiento')?.value;
   }
 
+   /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.formularioDeshabilitado) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }  
+  }
+
+  
   /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.formularioDeshabilitado) {
+        this.domicilioEstablecimiento.disable();
+      } else{
+        this.domicilioEstablecimiento.enable();
+      } 
+  }
+
+    /**
    * Inicializa el formulario reactivo para el domicilio del establecimiento y el formulario SCIAN.
    * También carga el estado inicial del formulario desde el store.
    */
@@ -323,41 +351,13 @@ export class DomicillioDelEstablecimientoSeccionComponent
       descripcionScian: ['', Validators.required],
     });
 
-    // Cargar el estado inicial en el formulario
-    this.domicilioEstablecimientoQuery
+        this.domicilioEstablecimientoQuery
       .select()
       .pipe(takeUntil(this.destroy$))
       .subscribe((state) => {
         this.domicilioEstablecimiento.patchValue(state, { emitEvent: false });
       });
-  }
 
-   /**
-   * Evalúa si se debe inicializar o cargar datos en el formulario.  
-   * Además, obtiene la información del catálogo de mercancía.
-   */
-  inicializarEstadoFormulario(): void {
-    if (this.formularioDeshabilitado) {
-      this.guardarDatosFormulario();
-    } else {
-      this.inicializarFormulario();
-    }  
-  }
-
-  
-  /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
-  guardarDatosFormulario(): void {
-      this.inicializarFormulario();
-      if (this.formularioDeshabilitado) {
-        this.domicilioEstablecimiento.disable();
-      } else if (!this.formularioDeshabilitado) {
-        this.domicilioEstablecimiento.enable();
-      } else {
-        // No se requiere ninguna acción en el formulario
-      }
   }
 
 

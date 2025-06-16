@@ -210,6 +210,8 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
       .subscribe((response: PropietarioModel[]) => {
         this.propietarioData= response;
      });
+
+     this.inicializarFormulario();
   }
 
   /**
@@ -218,8 +220,6 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
-    } else{
-       this.inicializarFormulario();
     }
   }
 
@@ -227,7 +227,6 @@ export class PropietarioComponent implements AfterViewInit, OnInit, OnDestroy {
      * Guarda los datos del formulario y ajusta el estado de solo lectura.
      */
     guardarDatosFormulario(): void {
-      this.inicializarFormulario();
       if (this.esFormularioSoloLectura) {
         this.propietarioradioForm?.disable();
       } else {
