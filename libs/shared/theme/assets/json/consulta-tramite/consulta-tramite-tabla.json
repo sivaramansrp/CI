@@ -111,6 +111,15 @@
         "numeroDeProcedimiento": "240102"
     },
     {
+        "id": "40102",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "40102"
+    },
+    {
         "id": "230101",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",

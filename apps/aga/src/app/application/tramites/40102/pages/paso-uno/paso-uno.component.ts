@@ -103,6 +103,12 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
 
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se llama al inicializar el componente.
+   * Se utiliza para suscribirse a los cambios en el estado de la consulta
+   * y cargar los datos necesarios para el formulario.
+   * @returns void
+   */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
       .pipe(
