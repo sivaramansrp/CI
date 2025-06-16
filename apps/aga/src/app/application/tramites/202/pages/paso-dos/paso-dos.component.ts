@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 
 import { CATALOGOS_ID, Catalogo, CatalogosService, TEXTOS } from '@ng-mf/data-access-user';
@@ -13,6 +13,12 @@ import { PrestadoresServicioService } from '../../services/prestadores-servicio/
   styles: ``,
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
+  /**
+   * Escucha el evento para cargar los documentos que se emite desde <solicitud-page>.
+   * @type {EventEmitter<void>}
+   */
+  @Input() cargaArchivosEvento!: EventEmitter<void>;
+
   /**
    * Textos utilizados en el componente.
    */

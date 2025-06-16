@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 
@@ -6,6 +6,7 @@ import { Catalogo, CatalogoSelectComponent, TituloComponent } from '@libs/shared
 import { Manifiestos, ManifiestosRespuesta } from '../../models/prestadores-servicio.model';
 import { ManiobrasMercancias202State, Tramite202Store } from '../../../../core/estados/tramites/tramite202.store';
 import { Subject, map, merge, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { PrestadoresServicioService } from '../../services/prestadores-servicio/prestadores-servicio.service';
 import { Tramite202Query } from '../../../../core/queries/tramite202.query';
 
@@ -25,7 +26,7 @@ import { Tramite202Query } from '../../../../core/queries/tramite202.query';
   templateUrl: './maniobras-mercancias.component.html',
   styleUrl: './maniobras-mercancias.component.scss',
 })
-export class ManiobrasMercanciasComponent implements OnInit, OnDestroy {
+export class ManiobrasMercanciasComponent implements OnDestroy {
   /**
    * Formulario de maniobras y mercancías.
    */
@@ -41,6 +42,12 @@ export class ManiobrasMercanciasComponent implements OnInit, OnDestroy {
    * Lista de manifiestos obtenidos desde el servicio.
    */
   manifiestos: Manifiestos[] = [];
+
+  /**
+   * @property {boolean} formularioDeshabilitado
+   * @description Indica si el formulario está deshabilitado (solo lectura).
+   */
+  formularioDeshabilitado: boolean = false;
 
   /**
    * Estado de la sección de maniobras y mercancías.
@@ -60,19 +67,24 @@ export class ManiobrasMercanciasComponent implements OnInit, OnDestroy {
    * @param tramite202Store Tienda para gestionar el estado del trámite 202. 
    * @param tramite202Query Consulta para obtener datos del trámite 202.
    * @param prestadoresServicioService Servicio para obtener datos de manifiestos y aduanas.
+   * @param consultaioQuery - Query para gestionar el estado de la consulta.
    */
   constructor(
     public fb: FormBuilder,
     private tramite202Store: Tramite202Store,
     private tramite202Query: Tramite202Query,
-    private prestadoresServicioService: PrestadoresServicioService
-  ) { }
+    private prestadoresServicioService: PrestadoresServicioService,
+    public consultaioQuery: ConsultaioQuery
+  ) { 
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.formularioDeshabilitado = seccionState.readonly;
+        })
+      )
+      .subscribe();
 
-  /**
-   * NgOnInit se ejecuta al inicializar el componente.
-   * Inicializa los catálogos, obtiene los manifiestos y establece el estado de la sección.
-   */
-  ngOnInit(): void {
     this.inicializaCatalogos();
 
     this.obtenerManifiestos();
@@ -90,6 +102,23 @@ export class ManiobrasMercanciasComponent implements OnInit, OnDestroy {
     this.crearManiobrasMercanciasForm();
 
     this.aduanaSeleccion();
+
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * @method inicializarEstadoFormulario
+   * @description Inicializa el estado del formulario según si está deshabilitado o no.
+   * Si el formulario está deshabilitado, se deshabilitan todos los campos.
+   * Si no, se habilitan todos los campos.
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.formularioDeshabilitado) {
+      this.maniobrasMercanciasForm.disable();
+    } else if (!this.formularioDeshabilitado) {
+      this.maniobrasMercanciasForm.enable();
+    }
   }
 
   /**
@@ -123,8 +152,8 @@ export class ManiobrasMercanciasComponent implements OnInit, OnDestroy {
     merge(
       ADUANA$
     )
-    .pipe(takeUntil(this.destruirNotificador$))
-    .subscribe();
+      .pipe(takeUntil(this.destruirNotificador$))
+      .subscribe();
   }
 
   /**
@@ -150,12 +179,12 @@ export class ManiobrasMercanciasComponent implements OnInit, OnDestroy {
    */
   obtenerManifiestos(): void {
     this.prestadoresServicioService.getManifiestos()
-    .pipe(takeUntil(this.destruirNotificador$))
-    .subscribe({
-      next: (result: ManifiestosRespuesta) => {
-        this.manifiestos = result?.data;
-      }
-    });
+      .pipe(takeUntil(this.destruirNotificador$))
+      .subscribe({
+        next: (result: ManifiestosRespuesta) => {
+          this.manifiestos = result?.data;
+        }
+      });
   }
 
   /**
