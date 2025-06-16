@@ -64,7 +64,7 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteQuery: Tramite240114Query,
-    private tramiteStore: Tramite240114Store // eslint-disable-next-line no-empty-function
+    private tramiteStore: Tramite240114Store
   ) {}
 
   /**
