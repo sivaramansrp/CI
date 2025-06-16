@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Solicitud31603IvaeiepsState, Tramite31603IvaeiepsStore } from '../../estados/stores/tramite31603ivaeieps.store';
 import { Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { NumeroDeEmpleadosComponent } from '../numero-de-empleados/numero-de-empleados.component';
 import { RegistrosDeComercioExteriorService } from '../../services/registros-de-comercio-exterior.service';
 import { Tramite31603IvaeiepsQuery } from '../../estados/queries/tramite31603ivaeieps.query';
@@ -80,6 +81,11 @@ export class ConceptosComponent implements OnInit, OnDestroy {
     * de la aplicación para el trámite específico 31603.
     */
    public solicitudState!: Solicitud31603IvaeiepsState;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando se establece en `true`, los campos del formulario no son editables por el usuario.
+   */
+  public esFormularioSoloLectura: boolean = false;
  
    /**
     * Construye una instancia del ConceptosComponent.
@@ -93,9 +99,12 @@ export class ConceptosComponent implements OnInit, OnDestroy {
      private fb: FormBuilder,
      private comercioExteriorSvc: RegistrosDeComercioExteriorService,
      private tramite31603Store: Tramite31603IvaeiepsStore,
-     private tramite31603Query: Tramite31603IvaeiepsQuery
+     private tramite31603Query: Tramite31603IvaeiepsQuery,
+     private consultaQuery: ConsultaioQuery
    ) {
-     // Constructor vacío
+     this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+      })).subscribe();
    }
  
    /**
@@ -113,6 +122,7 @@ export class ConceptosComponent implements OnInit, OnDestroy {
      })).subscribe();
      this.crearConceptosForm();
      this.getBancoCatalogDatos();
+     this.inicializarEstadoFormulario();
    }
    
  
@@ -183,6 +193,22 @@ export class ConceptosComponent implements OnInit, OnDestroy {
    public onConEmpleados(value: string | number): void {
      this.conEmpleadosSeleccionado = value;
    }
+
+  /**
+   * Inicializa el formulario para el componente.
+   * 
+   * Se suscribe al observable `selectSolicitud$` de `tramite31602Query` para actualizar la propiedad local
+   * `solicitudState` cada vez que el observable emite un nuevo valor. La suscripción se cancela automáticamente
+   * cuando `destroyNotifier$` emite, previniendo fugas de memoria.
+   * Después de configurar la suscripción, llama a `crearConceptosForm()` para crear e inicializar
+   * el grupo de formularios para conceptos.
+   */
+  public inicializarFormulario(): void {
+    this.tramite31603Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+        this.solicitudState = seccionState;
+    })).subscribe();
+    this.crearConceptosForm();
+  }
  
    /**
     * Obtiene datos del catálogo de bancos desde el servicio `comercioExteriorSvc` y asigna
@@ -198,6 +224,24 @@ export class ConceptosComponent implements OnInit, OnDestroy {
        this.bimestreTresCatalogo = API_DATOS.data;
      });
    }
+
+    /**
+     * Inicializa el estado del formulario según su estado de solo lectura.
+     *
+     * - Si el formulario es de solo lectura (`esFormularioSoloLectura` es true), guarda el formulario llamando a `guardarFormulario()`.
+     * - De lo contrario, inicializa el formulario llamando a `inicializarFormulario()`.
+     * - Actualiza `valorSeleccionado` con el valor del control 'empleadosPropios' del formulario.
+     * - Actualiza `conEmpleadosSeleccionado` con el valor del control 'conEmpleados' del formulario.
+     */
+    public inicializarEstadoFormulario(): void {
+      if (this.esFormularioSoloLectura) {
+        this.guardarFormulario();
+      } else {
+        this.inicializarFormulario();
+      }
+      this.valorSeleccionado = this.conceptosForm.get('empleadosPropios')?.value;
+      this.conEmpleadosSeleccionado = this.conceptosForm.get('conEmpleados')?.value;
+  }
  
    /**
     * Actualiza el store con un valor de un campo específico del formulario.
@@ -211,6 +255,23 @@ export class ConceptosComponent implements OnInit, OnDestroy {
      const VALOR = form.get(campo)?.value;
      (this.tramite31603Store[metodoNombre] as (value: unknown) => void)(VALOR);
    }
+
+    /**
+     * Inicializa el formulario y establece su estado habilitado o deshabilitado según la bandera de solo lectura.
+     *
+     * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), el formulario se deshabilita para evitar la interacción del usuario.
+     * De lo contrario, el formulario se habilita para permitir la edición.
+     *
+     * @returns {void}
+     */
+    public guardarFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.conceptosForm.disable();
+      } else {
+        this.conceptosForm.enable();
+      }
+    }
  
    /**
     * Gancho del ciclo de vida que se llama cuando el componente es destruido.

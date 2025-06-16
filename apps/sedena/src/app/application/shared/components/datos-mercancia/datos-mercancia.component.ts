@@ -329,14 +329,13 @@ export class DatosMercanciaComponent implements OnInit,AfterViewInit {
   crearFormaulario(): void {
     this.datosMercancia = this.fb.group({
       descripcion: ['QAS', Validators.required],
-      fraccionArancelaria: ['', Validators.required],
+      fraccionArancelaria: ['', { validators: Validators.required }],
       descFraccion: [
-        '',
         {
-          value: null, 
-          disabled: true, 
+          value: null,
+          disabled: true,
         },
-        Validators.required,
+        { validators: Validators.required },
       ],
       cantidadUMT: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
       umt: [{ value: null, disabled: true }, Validators.required],
