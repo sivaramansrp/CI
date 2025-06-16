@@ -59,6 +59,13 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
     ninoFormGroup: new FormGroup({}),
   });
   
+  /**
+   * @property seleccionados
+   * @description
+   * Lista de partidas seleccionadas en la tabla de partidas.
+   * 
+   * @type {Partidas[]}
+   */
   public seleccionados: Partidas[] = [];
   /**
    * @property ninoFormGroup
