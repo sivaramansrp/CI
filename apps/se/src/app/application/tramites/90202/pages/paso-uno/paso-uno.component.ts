@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AfterViewInit } from '@angular/core';
+import { Inject } from '@angular/core';
 import { SectoresMercanciasService } from '../../../../shared/services/sectores-mercancias.service';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TIPO_PERSONA } from '@libs/shared/data-access-user/src/tramites/constantes/constantes';
@@ -60,7 +61,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * @param consultaQuery Consulta para obtener el estado de la consulta.
    */
   constructor(
-    private sectoresMercanciasServicio: SectoresMercanciasService,
+    @Inject(SectoresMercanciasService) private sectoresMercanciasServicio: SectoresMercanciasService,
     private consultaQuery: ConsultaioQuery
   ) {}
 
