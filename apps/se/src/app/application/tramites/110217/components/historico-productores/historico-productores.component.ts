@@ -7,6 +7,7 @@ import { ConsultaioState } from '@libs/shared/data-access-user/src';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
+import { HISTORICO_ENCABZADOS } from '../../constants/certificado-origen.enum.js';
 import { HistoricoColumnas } from '../../models/certificado-origen.model';
 import { Modal } from 'bootstrap';
 import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
@@ -23,6 +24,7 @@ import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
+
 
 /**
  * Componente para gestionar el histórico de productores.
@@ -76,38 +78,8 @@ export class HistoricoProductoresComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas de la tabla dinámica.
    */
-  tableColumns: ConfiguracionColumna<HistoricoColumnas>[] = [
-    {
-      encabezado: 'Nombre del productor',
-      clave: (elementos) => elementos.nombreProductor,
-      orden: 1
-    },
-    {
-      encabezado: 'Número de registro fiscal',
-      clave: (elementos) => elementos.numeroRegistroFiscal,
-      orden: 2,
-    },
-    {
-      encabezado: 'Dirección',
-      clave: (elementos) => elementos.direccion,
-      orden: 3,
-    },
-    {
-      encabezado: 'Correo Electrónico',
-      clave: (elementos) => elementos.correoElectronico,
-      orden: 4,
-    },
-    {
-      encabezado: 'Teléfono',
-      clave: (elementos) => elementos.telefono,
-      orden: 5,
-    },
-    {
-      encabezado: 'Fax',
-      clave: (elementos) => elementos.fax,
-      orden: 6,
-    },
-  ];
+  tableColumns: ConfiguracionColumna<HistoricoColumnas>[] = HISTORICO_ENCABZADOS;
+    
 
   /**
    * Lista de productores disponibles para el exportador.

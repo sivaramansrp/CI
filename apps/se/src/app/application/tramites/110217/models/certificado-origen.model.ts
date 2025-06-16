@@ -169,18 +169,26 @@ export interface FormularioMercancia {
   numeroFactura: string;
 }
 
+/**
+ *  Representa los datos del formulario de certificado de origen.
+  *  @interface FormularioCertificadoOrigen
+  */ 
 export interface RespuestaConsulta {
   success: boolean;
   datos: ConsultaDatos;
   message: string;
 }
 
+/**
+ *  Representa los datos de la consulta del certificado de origen.
+ *  @interface ConsultaDatos
+  */
 export interface ConsultaDatos {
   tercerOperador: boolean;
   grupoOperador: GrupoOperador;
   grupoTratado: GrupoTratado;
   grupoDeDomicilio: GrupoDeDomicilio;
-  mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[]
+  mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[];
   mercanciaDisponsiblesTablaDatos: DisponiblesTabla[];
   observaciones: string;
   idioma: string;
@@ -194,4 +202,3 @@ export interface ConsultaDatos {
   productorMismoExportador: boolean;
   productoresExportador: HistoricoColumnas[];
 }
-

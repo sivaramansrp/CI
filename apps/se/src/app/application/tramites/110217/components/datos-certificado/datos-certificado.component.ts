@@ -176,6 +176,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
       ],
     });
     this.formDatosCertificado.markAllAsTouched();
+    this.certificadoFormulario();
   }
 
   /**

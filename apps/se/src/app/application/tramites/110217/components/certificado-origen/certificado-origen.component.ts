@@ -8,6 +8,7 @@ import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ConsultaioState } from '@libs/shared/data-access-user/src';
+import { DISPONIBLES_ENCABEZADOS } from '../../constants/certificado-origen.enum';
 import { DisponiblesTabla } from '../../models/certificado-origen.model.js';
 import { ElementRef } from '@angular/core';
 import { FECHA_FACTURA } from '../../constants/certificado-origen.enum';
@@ -23,6 +24,7 @@ import { OnInit } from '@angular/core';
 import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ReplaySubject } from 'rxjs';
+import {SLECCIONADAS_ENCABEZADOS } from '../../constants/certificado-origen.enum';
 import { SeleccionadasTabla } from '../../models/certificado-origen.model.js';
 import { Subject } from 'rxjs';
 import { TERCEROS_TEXTO_DE_ALERTA } from '../../constants/certificado-origen.enum';
@@ -110,38 +112,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    *
    * Define los encabezados y las claves para mostrar los datos de las mercancías disponibles.
    */
-  public disponiblesEncabezados: ConfiguracionColumna<DisponiblesTabla>[] = [
-    {
-      encabezado: 'Fracción arancelaria',
-      clave: (ele: DisponiblesTabla) => ele.fraccionArancelaria,
-      orden: 1,
-    },
-    {
-      encabezado: 'Nombre técnico',
-      clave: (ele: DisponiblesTabla) => ele.nombreTecnico,
-      orden: 2,
-    },
-    {
-      encabezado: 'Nombre comercial',
-      clave: (ele: DisponiblesTabla) => ele.nombreComercial,
-      orden: 3,
-    },
-    {
-      encabezado: 'Número de registro de productos',
-      clave: (ele: DisponiblesTabla) => ele.numeroRegistroProductos,
-      orden: 4,
-    },
-    {
-      encabezado: 'Fecha expedición',
-      clave: (ele: DisponiblesTabla) => ele.fechaExpedicion,
-      orden: 5,
-    },
-    {
-      encabezado: 'Fecha vencimiento',
-      clave: (ele: DisponiblesTabla) => ele.fechaVencimiento,
-      orden: 6,
-    },
-  ];
+  public disponiblesEncabezados: ConfiguracionColumna<DisponiblesTabla>[] = DISPONIBLES_ENCABEZADOS;
+
 
   /**
    * Datos de la tabla de mercancías disponibles.
@@ -162,49 +134,8 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    *
    * Define los encabezados y las claves para mostrar los datos de las mercancías seleccionadas.
    */
-  public seleccionadasEncabezados: ConfiguracionColumna<SeleccionadasTabla>[] =
-    [
-      {
-        encabezado: 'Fracción arancelaria',
-        clave: (ele: SeleccionadasTabla) => ele.fraccionArancelaria,
-        orden: 1,
-      },
-      {
-        encabezado: 'Cantidad',
-        clave: (ele: SeleccionadasTabla) => ele.cantidad,
-        orden: 2,
-      },
-      {
-        encabezado: 'Unidad de medida',
-        clave: (ele: SeleccionadasTabla) => ele.unidadMedida,
-        orden: 3,
-      },
-      {
-        encabezado: 'Valor mercancía',
-        clave: (ele: SeleccionadasTabla) => ele.valorMercancia,
-        orden: 4,
-      },
-      {
-        encabezado: 'Tipo de factura',
-        clave: (ele: SeleccionadasTabla) => ele.tipoFactura,
-        orden: 5,
-      },
-      {
-        encabezado: 'Número factura',
-        clave: (ele: SeleccionadasTabla) => ele.numFactura,
-        orden: 6,
-      },
-      {
-        encabezado: 'Complemento descripción',
-        clave: (ele: SeleccionadasTabla) => ele.complementoDescripcion,
-        orden: 7,
-      },
-      {
-        encabezado: 'Fecha factura',
-        clave: (ele: SeleccionadasTabla) => ele.fechaFactura,
-        orden: 8,
-      },
-    ];
+  public seleccionadasEncabezados: ConfiguracionColumna<SeleccionadasTabla>[] =SLECCIONADAS_ENCABEZADOS;
+    
   /**
    * Datos de la tabla de mercancías seleccionadas.
    *
@@ -354,8 +285,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-      console.log('solicitudState', this.solicitudState);
-
+ 
     this.inicializarFormularioCertificado();
     this.inicializarFormularioMercancia();
     this.inicializarFormularioArchivo();
@@ -376,6 +306,11 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
       .subscribe();
   }
 
+  /**
+   * Destruye el componente y libera recursos.
+   *
+   * Este método se llama cuando el componente se destruye, asegurando que no queden suscripciones activas.
+   */
   inicializarFormulario(): void {
     if (this.soloLectura) {
       this.formularioCertificado.disable();
@@ -509,6 +444,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         ],
       }),
     });
+    this.inicializarFormulario();
   }
 
   /**
@@ -568,6 +504,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         [Validators.required],
       ],
     });
+    this.inicializarFormulario();
   }
 
   /**
@@ -579,6 +516,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     this.formularioArchivo = this.fb.group({
       archivo: [this.solicitudState?.tercerOperador, [Validators.required]],
     });
+    this.inicializarFormulario();
   }
 
   /**

@@ -1,5 +1,4 @@
 import { AgregarDatosProductorFormulario, DisponiblesTabla, FormularioMercancia, GrupoDeDomicilio, GrupoTratado, HistoricoColumnas, SeleccionadasTabla } from '../../tramites/110217/models/certificado-origen.model';
-import { Catalogo } from '@libs/shared/data-access-user/src';
 import { GrupoDeDirecciones } from '../../tramites/110217/models/certificado-origen.model';
 import { GrupoDeTransporte } from '../../tramites/110217/models/certificado-origen.model';
 import { GrupoOperador } from '../../tramites/110217/models/certificado-origen.model';
@@ -1213,6 +1212,11 @@ export class Tramite110217Store extends Store<Tramite110217State> {
   }
 
 
+  /**
+   *  Actualiza el estado del trámite con los datos del formulario de mercancía.
+   *  Este método permite establecer los datos del formulario de mercancía en el estado del trámite.
+   *  @param {FormularioMercancia} formularioMercancia - Objeto que contiene los datos del formulario de mercancía.
+   */
     public setGrupoOperador(grupoOperador: GrupoOperador): void {
     this.update((state) => ({
       ...state,
@@ -1220,7 +1224,12 @@ export class Tramite110217Store extends Store<Tramite110217State> {
     }));
   }
 
-    
+    /**
+   * Actualiza el grupo representativo en el estado del trámite.
+   *  Este método permite establecer los datos del grupo representativo en el estado del trámite.
+   * @param {GrupoRepresentativo} grupoRepresentativo - Objeto que contiene los datos del grupo representativo.
+   *  @returns {void}
+   */
    public setGrupoRepresentativo(grupoRepresentativo: GrupoRepresentativo): void {
     this.update((state) => ({
       ...state,
@@ -1228,6 +1237,12 @@ export class Tramite110217Store extends Store<Tramite110217State> {
     }));
   }
 
+  /**
+   * Actualiza el estado del trámite con los datos del formulario de mercancía.
+   *  Este método permite establecer los datos del formulario de mercancía en el estado del trámite.
+   * @param {FormularioMercancia} formularioMercancia - Objeto que contiene los datos del formulario de mercancía.
+   *  @returns {void}
+   */
     public setMercanciaTablaDatos(mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[]): void {
     this.update((state) => ({
       ...state,
@@ -1235,6 +1250,12 @@ export class Tramite110217Store extends Store<Tramite110217State> {
     }));
   }
 
+  /**
+   * Actualiza la información de las mercancías disponibles en la tabla de datos.
+   *  Este método permite establecer los datos de las mercancías disponibles en la tabla de datos del trámite.
+   * @param {DisponiblesTabla[]} mercanciaDisponsiblesTablaDatos - Lista de mercancías disponibles en la tabla de datos.
+   *  @returns {void}
+   */
     public setMercanciaDisponsiblesTablaDatos(mercanciaDisponsiblesTablaDatos: DisponiblesTabla[]): void {
     this.update((state) => ({
       ...state,
@@ -1242,12 +1263,11 @@ export class Tramite110217Store extends Store<Tramite110217State> {
     }));
   }
 
-    /**
-   * Actualiza la información del transporte utilizado en el estado del trámite.
-   * 
-   * Este método permite establecer los datos del grupo de transporte en el estado del trámite.
-   * 
-   * @param {GrupoDeTransporte} grupoDeTransporte - Objeto que contiene la información del transporte a actualizar.
+   /**
+   * Actualiza el grupo de transporte en el estado del trámite.
+   *  Este método permite establecer los datos del grupo de transporte del trámite.
+   * @param {GrupoDeTransporte} grupoDeTransporte - Objeto que contiene los datos del grupo de transporte.
+   *   @returns {void}
    */
   public setGrupoDeTransporte(grupoDeTransporte: GrupoDeTransporte): void {
     this.update((state) => ({
@@ -1271,7 +1291,13 @@ export class Tramite110217Store extends Store<Tramite110217State> {
       productoresExportador,
     }));
   }
-
+    
+  /**
+   * Actualiza el estado del trámite con los datos del grupo receptor.
+   *  Este método permite establecer los datos del grupo receptor en el estado del trámite.
+   * @param {GrupoReceptor} grupoReceptor - Objeto que contiene los datos del grupo receptor.
+   *  @returns {void}
+   */
     public setGrupoReceptor(grupoReceptor: GrupoReceptor): void {
     this.update((state) => ({
       ...state,
@@ -1279,6 +1305,14 @@ export class Tramite110217Store extends Store<Tramite110217State> {
     }));
   }
 
+   /**
+   * Actualiza la información del grupo de direcciones en el estado del trámite.
+   * 
+   * Este método permite establecer los datos del grupo de direcciones del receptor.
+   * 
+   * @param {GrupoDeDirecciones} grupoDeDirecciones - Objeto que contiene la información de las direcciones a actualizar.
+   * @returns {void}
+   */
     public setGrupoDeDirecciones(grupoDeDirecciones: GrupoDeDirecciones): void {
     this.update((state) => ({
       ...state,

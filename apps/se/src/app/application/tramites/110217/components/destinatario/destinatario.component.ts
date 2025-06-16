@@ -199,6 +199,7 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
         numeroVuelo: [this.solicitudState?.grupoDeTransporte?.numeroVuelo, [Validators.maxLength(15)]]
       }),
     });
+     this.destinatarioFormulario();
   }
 
   /**
