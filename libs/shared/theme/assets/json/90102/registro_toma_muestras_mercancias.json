@@ -1,8 +1,8 @@
 {
   "modalidad": "string",
-  "Estado": "Catalogo[]",
-  "RepresentacionFederal": "Catalogo[]",
-  "ActividadProductiva": "Catalogo[]",
+  "Estado": "1",
+  "RepresentacionFederal": "1",
+  "ActividadProductiva": "1",
   "Sector": "Catalogo[]",
   "Fraccion_arancelaria": "string",
   "contribuyentes": "string",
