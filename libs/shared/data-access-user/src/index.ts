@@ -3,7 +3,6 @@ import exp from 'constants';
 export { AcusesYResolucionesFolioDelTramiteBusquedaComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-busqueda/acuses-y-resoluciones-folio-del-tramite-busqueda.component';
 export { AcusesYResolucionesFolioDelTramiteDetallesComponent } from './tramites/components/acuses-y-resoluciones-folio-del-tramite-detalles/acuses-y-resoluciones-folio-del-tramite-detalles.component';
 export { LibBandejaComponent } from './tramites/components/lib-bandeja/lib-bandeja.component';
-export { DatosGeneralesTramiteComponent } from './tramites/components/datos-generales-tramite/datos-generales-tramite.component';
 export { ConsultaTramiteComponent } from './tramites/components/consulta-tramite/consulta-tramite.component';
 export { ReviewersTabsComponent } from './tramites/components/reviewers-tabs/reviewers-tabs.component';
 export { ASIGNACION_REGISTRO } from './tramites/constantes/120404/entidad.enum';
@@ -24,6 +23,7 @@ export { PASOS as PASOS_CUATRO_STEPS } from './tramites/constantes/paso-cuatro-s
 export { PASOS as PASOS_TRES_STEPS } from './tramites/constantes/paso-tres-steps.enum';
 export { RespuestaCatalogos } from './core/models/shared/catalogos.model';
 export { BandejaDeSolicitudes } from './core/models/shared/lib-bandeja.model';
+export { ConsultaTramite } from './core/models/shared/consulta-tramite.model'
 export { BandejaDeTareasPendientes } from './core/models/shared/bandeja-de-tareas-pendientes.model';
 export { SolicitanteasigncionserviceService } from './core/services/120404/solicitanteasigncionservice.service';
 export { TablaConEntradaComponent } from './tramites/components/tabla-con-entrada/tabla-con-entrada.component';
@@ -34,10 +34,11 @@ export { TablePaginationComponent } from './tramites/components/table-pagination
 export { TEXTOS as TEXTOS_303 } from './tramites/constantes/303/texto.enum';
 export { TituloComponent } from './tramites/components/titulo/titulo.component';
 export { TramiteDetails } from './core/models/tramiteDetails';
+export { MenuItemComponent } from './tramites/components/menu-item/menu-item.component';
 export * from './core/queries/tramiteFolio.query';
 export * from './core/estados/tramiteFolio.store';
 export { TramiteStore } from './core/estados/tramite.store';
-export { ValidacionesFormularioService } from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
+export * from './core/services/shared/validaciones-formulario/validaciones-formulario.service';
 export { PANTA_PASOS } from './core/enums/120404/pantallas260514.enum';
 export { AccionBoton } from './core/models/260514/aviso-pantallas.model'
 export * from './core/ambientes';
@@ -200,7 +201,7 @@ export * from './tramites/components/transporte/transporte.component';
 export * from './tramites/components/agregar-transporte/agregar-transporte.component';
 export * from './core/models/shared/tramite-folio.model';
 export * from './core/enums/crosslist.enums';
+export * from './core/services/shared/desplazarse-hacia-arriba/desplazarse-hacia-arriba.service';
 
-
-
-
+export * from './core/enums/mensajes-modal-comunes.enum';
+export * from './tramites/directives/alfanumerico/alfanumerico-formato.directive';

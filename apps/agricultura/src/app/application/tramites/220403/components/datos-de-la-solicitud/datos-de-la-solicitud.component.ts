@@ -2,10 +2,12 @@
  * Componente para gestionar los datos de la solicitud en el trámite.
  */
 import {
+  AlertComponent,
   CatalogosService,
   ConfiguracionColumna,
   FormularioDinamico,
   InputConfig,
+  InputFechaComponent,
   InputTypes,
   LabelValueDatos,
   MenuConfig,
@@ -13,18 +15,24 @@ import {
   SeccionLibQuery,
   SeccionLibState,
   SeccionLibStore,
+  TablaDinamicaComponent,
   TablaSeleccion,
+  TituloComponent,
 } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { ColumnasTabla, CombinacionRequerida, DatosRealizar } from '../../models/acuicola.module';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { DATOS_COMBINACION_REQUERIDA, DATOS_TRAMITE_REALIZAR } from '../../constants/input-datos-config';
 import {
   FormBuilder,
   FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
   ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 import { ExportaccionAcuicolaService } from '../../services/exportaccion-acuicola.service';
 import { MENSAJE_DOBLE_CLIC } from '../../constants/acuicola.module';
 import { Tramite220403Query } from '../../estados/tramite220403.query';
@@ -41,8 +49,26 @@ interface FilaSolicitud {
   selector: 'app-datos-de-la-solicitud',
   templateUrl: './datos-de-la-solicitud.component.html',
   styleUrl: './datos-de-la-solicitud.component.css',
+  standalone: true,
+  imports: [ TituloComponent, AlertComponent, TablaDinamicaComponent, InputRadioComponent, InputFechaComponent, CatalogoSelectComponent, FormsModule, ReactiveFormsModule, CommonModule],
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+
+  /**
+   * @input
+   * @description
+   * Indica si el formulario debe estar deshabilitado. Cuando es `true`, los controles del formulario estarán inactivos y no permitirán la edición por parte del usuario.
+   * @type {boolean}
+   */
+   @Input() formularioDeshabilitado: boolean = false;
+
+   /**
+   * @descripcion
+   * Indica si el formulario se encuentra en modo solo lectura.
+   * Cuando es verdadero, los controles del formulario estarán deshabilitados.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Notificador para la destrucción del componente y la cancelación de suscripciones.
    */
@@ -305,6 +331,18 @@ inputTypes = InputTypes;
 private seccionState!: SeccionLibState
 
 
+  /**
+   * Constructor del componente DatosDeLaSolicitudComponent.
+   * Inicializa los servicios y dependencias necesarias para el funcionamiento del componente.
+   * 
+   * @param fb - Servicio FormBuilder para la creación y gestión de formularios reactivos.
+   * @param catalogosServicios - Servicio para la obtención de catálogos.
+   * @param exportaccionAcuicolaServcios - Servicio específico para operaciones de exportación acuícola.
+   * @param tramite220403Query - Query para la gestión del estado del trámite 220403.
+   * @param tramite220403store - Store para la gestión del estado del trámite 220403.
+   * @param seccionStore - Store para la gestión del estado de la sección.
+   * @param seccionQuery - Query para la gestión del estado de la sección.
+   */
   constructor(
     private fb: FormBuilder,
     private catalogosServicios: CatalogosService,
@@ -320,6 +358,13 @@ private seccionState!: SeccionLibState
     });
   }
 
+  /**
+   * @inheritdoc
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Aquí se inicializan las suscripciones a los estados y se configuran los valores iniciales del formulario.
+   * @memberof DatosDeLaSolicitudComponent
+   */
   ngOnInit(): void {
     this.configuracion.forEach((eachConfig: InputConfig, groupIndex: number) => {
       this.inicializarFormGroup(eachConfig.menu, eachConfig.formGroupName, groupIndex);
@@ -354,9 +399,9 @@ private seccionState!: SeccionLibState
       .pipe(takeUntil(this.destroyNotifier$)) // Ensures unsubscribe on component destruction
       .subscribe(
         () => {
-    if( (this.formulario.get('datosRealizar')?.valid) && (this.formulario.get('combinacionRequerida')?.valid) ){
       this.tramite220403store.setDatosRealizar(this.formulario.get('datosRealizar')?.value);
       this.tramite220403store.setCombinacionRequerida(this.formulario.get('combinacionRequerida')?.value);
+    if( (this.formulario.get('datosRealizar')?.valid) && (this.formulario.get('combinacionRequerida')?.valid) ){
       const VALIDA = this.formulario.get('datosRealizar')?.valid ? true : false;
       this.tramite220403store.setDatosRealizarValidada(VALIDA);
       this.tramite220403store.setCombinacionRequeridaValidada(VALIDA);
@@ -367,6 +412,28 @@ private seccionState!: SeccionLibState
       this.seccionStore.establecerFormaValida([false]);
     }
         })
+        
+    if(this.formularioDeshabilitado){
+      this.esFormularioSoloLectura = true;
+      this.inicializarEstadoFormulario();
+    }
+  }
+
+  /**
+   * Inicializa el estado del formulario según si está en modo solo lectura o editable.
+   * Si el formulario está en modo solo lectura, deshabilita todos los controles.
+   * Si no, habilita los controles para permitir la edición.
+   *
+   * @method
+   * @memberof CertificadoOrigenComponent
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.formulario.disable();
+    }
+    else {
+      this.formulario.enable();
+    } 
   }
   
 

@@ -2,7 +2,16 @@
     <div class="col-md-12">
         <div class="card shadow-md border">
             <div class="card-body p-5">
-                <app-consulta-tramite></app-consulta-tramite>
+                <app-consulta-tramite
+                [tieneBandeja]="false"
+                [tablaTitulo]="'Solicitud'"
+                [configuracionTabla]="bandejaConfiguracionTabla"
+                [configuracionTablaDatos]="bandejaTablaDatos"
+                [bandejaSolicitudeDatos]="bandejaSolicitudeFormaDatos"
+                [seleccionadoDepartamento]="selectedDepartamentoObj"
+                [duplicarDatos]="copiarBandejaTablaDatos"
+                (obtenerNombreDelDepartamento)="procedureNumero($event)"
+                ></app-consulta-tramite>
             </div>
         </div>
     </div>

@@ -51,6 +51,7 @@
                   formControlName="banco"
                   [label]="'Banco'"
                   [required]="true"
+                  [isDisabled]="esFormularioSoloLectura"
                   (change)="
                     setValoresStore(
                       datosImportadorExportador,
