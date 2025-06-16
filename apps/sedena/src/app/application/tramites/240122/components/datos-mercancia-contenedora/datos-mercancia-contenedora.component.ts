@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject,map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
@@ -6,7 +7,6 @@ import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.mo
 import { NUMERO_TRAMITE } from '../../../../shared/constants/datos-solicitud.enum';
 import { Tramite240122Store } from '../../estados/tramite240122Store.store';
 
-import { Subject,map, takeUntil } from 'rxjs';
 /**
  * @title Datos de la Mercancía Contenedora
  * @description Componente contenedor encargado de recibir los datos de mercancía y actualizar el estado global del trámite.

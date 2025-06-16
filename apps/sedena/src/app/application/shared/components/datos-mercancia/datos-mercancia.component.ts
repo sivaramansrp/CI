@@ -82,7 +82,13 @@ export class DatosMercanciaComponent implements OnInit,AfterViewInit {
    */
   @Input() formaDatos!: MercanciaDetalle | null | undefined;
 
-
+  /**
+   * @input
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no serán editables.
+   * 
+   * @type {boolean}
+   */
   @Input() esFormularioSoloLectura:boolean =false;
 
   /**
