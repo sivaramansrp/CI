@@ -61,12 +61,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   public consultaState!: ConsultaioState;
 
   /**
-   * Indica si el formulario está en modo solo lectura.
-   * Cuando es `true`, los campos del formulario no se pueden editar.
-   */
-  public esFormularioSoloLectura: boolean = false;
-
-  /**
    * Notificador utilizado para gestionar la destrucción de suscripciones en el componente.
    *
    * Este Subject emite un valor cuando el componente se destruye, permitiendo cancelar
@@ -98,7 +92,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * Se suscribe al observable `selectConsultaioState$` para obtener el estado actual de la consulta.
    *
    * - Asigna el estado recibido a `consultaState`.
-   * - Establece si el formulario debe estar en modo solo lectura (`esFormularioSoloLectura`).
    * - Si el estado indica que se debe actualizar (`update` es verdadero), se llama a `guardarDatosFormulario()`.
    * - En caso contrario, se activa la bandera `esDatosRespuesta`.
    */
