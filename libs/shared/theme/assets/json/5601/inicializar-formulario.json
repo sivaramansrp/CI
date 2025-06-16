@@ -3,16 +3,16 @@
   "certificacionEmpresa": "ISO 14001",
   "otraCertificacion": "Certificación de Buenas Prácticas Ambientales",
   
-  "aduana": "Aduana de Manzanillo",
-  "seccionAduanera": "Sección 1",
-  "tipoOperacion": "Importación",
+  "aduana": "1",
+  "seccionAduanera": "1",
+  "tipoOperacion": "1",
   "fechaOperacion": "2025-06-01",
   "motivoDespachoDomicilio": "No se cuenta con instalaciones en aduana",
   "observaciones": "La operación se realizó sin contratiempos",
   
   "especificacionesMercancia": "Empaque reforzado, temperatura controlada",
   "descripcionMercancia": "Componentes electrónicos para ensamblaje",
-  "tipoMoneda": "USD",
+  "tipoMoneda": "1",
   "valorMercancia": "25000",
   
   "esquemasControlSeguridad": "Vigilancia 24/7, cámaras de seguridad y GPS",
