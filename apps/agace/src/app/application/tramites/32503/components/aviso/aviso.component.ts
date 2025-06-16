@@ -276,6 +276,23 @@ export class AvisoComponent implements OnInit, OnDestroy {
    * @property {ConsultaioState} consultaDatos
    * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
    */
+  /**
+ * Expresiones regulares utilizadas para validaciones y reemplazos.
+ * 
+ * Estas propiedades contienen las expresiones regulares que se utilizan en la clase
+ * para realizar validaciones o reemplazos en los formularios.
+ */
+  REGEX_REEMPLAZAR = REGEX_REEMPLAZAR;
+
+  /**
+   * Expresión regular para validar y reemplazar caracteres alfanuméricos con espacios.
+   */
+  REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR = REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR;
+
+  /**
+   * Expresión regular para validar y reemplazar números.
+   */
+  REGEX_NUMEROS = REGEX_NUMEROS;
   consultaDatos!: ConsultaioState;
   /**
    * @property {boolean} soloLectura
@@ -770,7 +787,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   sanitizeAlphanumeric(form: FormGroup, control: string, event: Event): void {
     const INPUT = event?.target as HTMLInputElement;
-    const REEMPLAZAR = INPUT?.value.replace(REGEX_REEMPLAZAR, '');
+    const REEMPLAZAR = INPUT?.value.replace(this.REGEX_REEMPLAZAR, '');
     form.get(control)?.setValue(REEMPLAZAR, { emitEvent: false });
   }
   /**
@@ -786,7 +803,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   sanitizeAlphanumericWithSpace(form: FormGroup, control: string, event: Event): void {
     const INPUT = event?.target as HTMLInputElement;
-    const REEMPLAZAR = INPUT?.value.replace(REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR, '');
+    const REEMPLAZAR = INPUT?.value.replace(this.REGEX_ALFANUMERICO_CON_ESPACIOS_REEMPLAZAR, '');
     form.get(control)?.setValue(REEMPLAZAR, { emitEvent: false });
   }
   /**
@@ -802,7 +819,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   sanitizeNumeric(form: FormGroup, control: string, event: Event): void {
     const INPUT = event?.target as HTMLInputElement;
-    const REEMPLAZAR = INPUT?.value.replace(REGEX_NUMEROS, '');
+    const REEMPLAZAR = INPUT?.value.replace(this.REGEX_NUMEROS, '');
     form.get(control)?.setValue(REEMPLAZAR, { emitEvent: false });
   }
   /**

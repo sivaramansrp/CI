@@ -44,7 +44,7 @@ export interface Tramite32503State {
 export function createInitialState(): Tramite32503State {
   return {
     pasoActivo: 1,
-    pestanaActiva: 2,
+    pestanaActiva: 1,
     datosSolicitante: {
       rfc: "",
       denominacion: "",
