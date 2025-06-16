@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { InputTypes, Props } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, InputFechaComponent, InputRadioComponent, InputTypes, Props, TablaDinamicaComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
@@ -12,6 +12,8 @@ import { CatalogosService } from '@ng-mf/data-access-user';
 import { ExportaccionAcuicolaService } from '../../services/exportaccion-acuicola.service';
 import { Tramite220403Query } from '../../estados/tramite220403.query';
 import { Tramite220403Store } from '../../estados/tramite220403.store';
+import { AlertComponent } from 'ngx-bootstrap/alert';
+import { CommonModule } from '@angular/common';
 
 // Mock Services
 @Injectable()
@@ -36,8 +38,7 @@ describe('TransporteComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, HttpClientModule],
-      declarations: [TransporteComponent],
+      imports: [TransporteComponent, TituloComponent, AlertComponent, TablaDinamicaComponent, InputRadioComponent, InputFechaComponent, CatalogoSelectComponent, FormsModule, ReactiveFormsModule, CommonModule, HttpClientModule],
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [
         FormBuilder,

@@ -22,6 +22,7 @@ import {
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionVisibilidad } from '../../models/datos-domicilio-legal.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DEFAULT_CONFIGURACION_VISIBILIDAD } from '../../constantes/datos-domicilio-legal.enum';
 import { DatosDomicilioLegalQuery } from '../../estados/queries/datos-domicilio-legal.query';
 import { DomicilioComponent } from '../domicilio-establecimiento/domicilio-establecimiento.component';
@@ -98,6 +99,9 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    */
   elementoParaEliminar!: number;
 
+   /** Bandera de solo lectura (puedes adaptarla si tienes lógica para esto) */
+  public esFormularioSoloLectura: boolean = false;
+
   /**
    * Notificador para destruir observables.
    */
@@ -111,16 +115,70 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
   /**
    * Constructor del componente.
    * @param fb
-   * @param DatosDomicilioLegalStore
-   * @param DatosDomicilioLegalQuery
+   * @param datosDomicilioLegalStore
+   * @param datosDomicilioLegalQuery
    */
   constructor(
     public readonly fb: FormBuilder,
-    private DatosDomicilioLegalStore: DatosDomicilioLegalStore,
-    private DatosDomicilioLegalQuery: DatosDomicilioLegalQuery
+    private datosDomicilioLegalStore: DatosDomicilioLegalStore,
+    private datosDomicilioLegalQuery: DatosDomicilioLegalQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // Inicializa el formulario.
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState)=>{
+        this.esFormularioSoloLectura = seccionState.readonly; 
+      })
+    )
+    .subscribe()
   }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de estados.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+    // this.getEstadoCatalogo();
+  }
+    /**
+   * Carga datos y deshabilita el formulario si es solo lectura.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+     this.forma = this.fb.group({
+      rfcDel: [{ value: this.solicitudState?.rfcDel, disabled: true },Validators.pattern(REGEX_RFC_FISICA)],
+      denominacion: [
+        { value: this.solicitudState?.denominacion, disabled: true },
+        Validators.required,
+      ],
+      correo: [
+        { value: this.solicitudState?.correo, disabled: true },
+        [Validators.required,Validators.pattern(REGEX_CORREO_ELECTRONICO)]
+      ],
+    });
+  }
+
+  /**
+   * Inicializa el formulario reactivo para capturar el estado seleccionado.
+   */
+    inicializarFormulario(): void {
+      this.datosDomicilioLegalQuery.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.solicitudState = seccionState;
+          })
+        )
+        .subscribe();
+        
+    }
 
   /**
    * Grupo de formularios principal.
@@ -132,7 +190,7 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
    * Método que se llama cuando se inicializa el componente
    * */
   ngOnInit(): void {
-    this.DatosDomicilioLegalQuery.selectSolicitud$
+    this.datosDomicilioLegalQuery.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -151,6 +209,8 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
         [Validators.required,Validators.pattern(REGEX_CORREO_ELECTRONICO)]
       ],
     });
+        this.inicializarEstadoFormulario();
+
   }
 
   /**
@@ -205,7 +265,7 @@ export class DatosDeLaComponent implements OnInit, OnDestroy {
   ): void {
     const VALOR = form.get(campo)?.value;
     (
-      this.DatosDomicilioLegalStore[metodoNombre] as (
+      this.datosDomicilioLegalStore[metodoNombre] as (
         value: string | number | boolean
       ) => void
     )(VALOR);

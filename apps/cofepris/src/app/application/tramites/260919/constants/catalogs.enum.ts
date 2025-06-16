@@ -14,7 +14,7 @@ export const ESTADO_DATA: CatalogosSelect = {
  * Datos de configuración para el campo de "Clave S.C.I.A.N.".
  */
 export const CLAVE_SCIAN_DATA: CatalogosSelect = {
-  labelNombre: 'Cave S.C.I.A.N.*:',
+  labelNombre: 'Clave S.C.I.A.N.*:',
   required: true,
   primerOpcion: 'Selecciona un medio de transporte',
   catalogos: [],

@@ -34,7 +34,7 @@
             [catalogo]="banco.catalogos"
             [label]="banco.labelNombre"
             [placeholder]="banco.primerOpcion"
-            [isDisabled]="false"
+            [isDisabled]="formularioDeshabilitado"
             formControlName="banco"
             (selectionChange)="selectBancoCatalogo($event)"
           ></app-catalogo-select>

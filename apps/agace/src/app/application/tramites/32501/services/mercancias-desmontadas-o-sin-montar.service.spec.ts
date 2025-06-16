@@ -6,18 +6,26 @@ import {
 import { MercanciasDesmontadasOSinMontarService } from './mercancias-desmontadas-o-sin-montar.service';
 import { AvisoCatalogo } from '../models/aviso-catalogo.model';
 import { OperacionDeImportacion } from '../models/aviso-catalogo.model';
+import { Solicitud32501State } from '../estados/solicitud32501.store';
 
 describe('MercanciasDesmontadasOSinMontarService', () => {
   let service: MercanciasDesmontadasOSinMontarService;
   let httpMock: HttpTestingController;
+  let tramite32501StoreMock: { establecerDatos: jest.Mock };
 
   beforeEach(() => {
+    tramite32501StoreMock = { establecerDatos: jest.fn() };
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
-      providers: [MercanciasDesmontadasOSinMontarService],
+      providers: [
+        MercanciasDesmontadasOSinMontarService,
+        { provide: 'Solicitud32501Store', useValue: tramite32501StoreMock }
+      ],
     });
     service = TestBed.inject(MercanciasDesmontadasOSinMontarService);
     httpMock = TestBed.inject(HttpTestingController);
+    // Forzar el store mock si el servicio lo requiere como propiedad privada
+    (service as any).tramite32501Store = tramite32501StoreMock;
   });
 
   afterEach(() => {
@@ -51,7 +59,7 @@ describe('MercanciasDesmontadasOSinMontarService', () => {
       },
       entidadFederativa: {
         catalogos: [
-          {
+           {
             id: 1,
             descripcion: 'MEXICO-1',
           },
@@ -212,5 +220,68 @@ describe('MercanciasDesmontadasOSinMontarService', () => {
       'assets/json/32501/operacion-de-importacion.json'
     );
     req.error(mockError);
+  });
+
+  it('should fetch datos del estado de la solicitud', () => {
+    const mockData: Solicitud32501State = {
+      adace: '',
+      fechaIniExposicion: '',
+      ideGenerica1: '',
+      idTransaccionVU: '',
+      cveFraccionArancelaria: '',
+      nico: '',
+      peso: '',
+      valorUSD: '',
+      descripcionMercancia: '',
+      nombreComercial: '',
+      entidadFederativa: '',
+      delegacionMunicipio: '',
+      colonia: '',
+      calle: '',
+      numeroExterior: '',
+      numeroInterior: '',
+      codigoPostal: '',
+      patente: '',
+      rfc: '',
+      pedimento: '',
+      aduana: '',
+    };
+
+    service.obtenerDatosEstado().subscribe((data) => {
+      expect(data).toEqual(mockData);
+    });
+
+    const req = httpMock.expectOne('assets/json/32501/datos.json');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockData);
+  });
+
+  it('should call establecerDatos del store al establecerDatosEstado', () => {
+    const datos: Solicitud32501State = {
+      adace: 'a',
+      fechaIniExposicion: 'b',
+      ideGenerica1: 'c',
+      idTransaccionVU: 'd',
+      cveFraccionArancelaria: 'e',
+      nico: 'f',
+      peso: 'g',
+      valorUSD: 'h',
+      descripcionMercancia: 'i',
+      nombreComercial: 'j',
+      entidadFederativa: 'k',
+      delegacionMunicipio: 'l',
+      colonia: 'm',
+      calle: 'n',
+      numeroExterior: 'o',
+      numeroInterior: 'p',
+      codigoPostal: 'q',
+      patente: 'r',
+      rfc: 's',
+      pedimento: 't',
+      aduana: 'u',
+    };
+
+    service.establecerDatosEstado(datos);
+    expect(tramite32501StoreMock.establecerDatos).toHaveBeenCalledWith({ ...datos });
   });
 });

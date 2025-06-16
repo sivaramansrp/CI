@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InputFecha, InputFechaComponent } from '@libs/shared/data-access-user/src';
 import { Subject,map, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FitosanitarioService } from '../../service/fitosanitario.service';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import {PagoDeDerechosResponseDos } from '../../modelos/acuicola.model';
@@ -73,6 +74,18 @@ cambioFechaDePago(nuevo_valor: string): void {
 
   tramiteState: TramiteState={} as TramiteState;
 
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+   esFormularioSoloLectura: boolean = false; 
+
+   /**
+    * Indica si el campo debe ser deshabilitado.
+    * @property {boolean} campoDeshabilitar
+    */
+   campoDeshabilitar:boolean= false;
+ 
   /**
    * Subject utilizado para gestionar la destrucción de suscripciones.
    */
@@ -89,10 +102,30 @@ cambioFechaDePago(nuevo_valor: string): void {
     private readonly fitosanitarioService: FitosanitarioService,
     private tramiteStoreQuery: TramiteStoreQuery,
     private tramiteStore: TramiteStore,
-    
-  ) {
-    // No se necesita lógica de inicialización adicional.
-   }
+    private readonly consultaioQuery: ConsultaioQuery
+     ) {
+       this.consultaioQuery.selectConsultaioState$
+         .pipe(
+           takeUntil(this.destroyNotifier$),
+           map((seccionState) => {
+             this.esFormularioSoloLectura = seccionState.readonly;
+             this.inicializarEstadoFormulario();
+           })
+         ).subscribe();
+      }
+
+   /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.iniciarFormulario();
+    }  
+
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -112,6 +145,25 @@ cambioFechaDePago(nuevo_valor: string): void {
       })
     )
       .subscribe();
+  }
+
+  /**
+   * Guarda los datos del formulario y actualiza el estado del componente.
+   * Si el formulario está en modo solo lectura, deshabilita los campos.
+   * Si no, habilita los campos para permitir la edición.
+   *
+   * @method guardarDatosFormulario
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  guardarDatosFormulario(): void {
+    this.iniciarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.campoDeshabilitar=true;
+      this.pagosDerechosForm.disable();
+    } else {
+      this.campoDeshabilitar=false;
+      this.pagosDerechosForm.enable();
+    }
 
   }
 

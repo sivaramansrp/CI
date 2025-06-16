@@ -35,12 +35,8 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 @NgModule({
   declarations: [
     AcuicolaComponent,
-    PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
-    TransporteComponent,
-    DatosDeLaSolicitudComponent,
-    PagoDeDerechosComponent,
   ],
   imports: [
     CommonModule,
@@ -66,7 +62,11 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     TercerosComponent,
     ToastrModule.forRoot(),
     InputRadioComponent,
-    TablaDinamicaComponent
+    TablaDinamicaComponent,
+    TransporteComponent,
+    DatosDeLaSolicitudComponent,
+    PagoDeDerechosComponent,
+    PasoUnoComponent,
 ],
   providers:[ToastrService],
 })

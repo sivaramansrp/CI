@@ -25,7 +25,8 @@
       <div class="col-md-12">
         <div class="pull-right">
           <button type="button" class="btn btn-primary" name="buscarSolicitudPorCAAT" id="buscarSolicitudPorCAAT"
-            (click)="buscarSolicitudPorCAAT()">
+            (click)="buscarSolicitudPorCAAT()" [disabled]="soloLectura">
+            
             Buscar
           </button>
         </div>
@@ -56,13 +57,13 @@
     <div class="row mb-3">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="tipoDeCaatAerea" formControlName="tipoDeCaatAerea"
-          [label]="'Tipo de CAAT Aéreo'" name="tipoDeCaatAerea" [isDisabled]="true"
-          (change)="setValoresStore(formulario, 'tipoDeCaatAerea', 'establecerTipoDeCaatAerea')"></app-catalogo-select>
+          [label]="'Tipo de CAAT Aéreo'" name="tipoDeCaatAerea" 
+          (change)="setValoresStore(formulario, 'tipoDeCaatAerea', 'establecerTipoDeCaatAerea')" [isDisabled]="soloLectura"></app-catalogo-select>
       </div>
 
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="ideCodTransportacionAerea" formControlName="ideCodTransportacionAerea"
-          [label]="'Código de Transportación Aéreo'" name="ideCodTransportacionAerea" [isDisabled]="true"
+          [label]="'Código de Transportación Aéreo'" name="ideCodTransportacionAerea" [isDisabled]="soloLectura"
           (change)="setValoresStore(formulario, 'ideCodTransportacionAerea', 'establecerIdeCodTransportacionAerea')"></app-catalogo-select>
       </div>
     </div>

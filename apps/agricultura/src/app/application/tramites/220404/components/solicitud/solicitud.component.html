@@ -23,10 +23,11 @@
         <div class="row mb-3">
           <div class="col-md-8">
             <div class="form-group">
+      
               <label for="descripcion" class="form-label">Motivo de desistimiento*:</label>
               <textarea class="form-control" rows="3" id="descripcion" formControlName="descripcion" 
-              [ngClass]="isValid(formPermisoDesistir,'descripcion') ? 'required' : ''" 
-              (change)="onDescripcionChange()"></textarea>
+              [ngClass]="isValid(formPermisoDesistir,'descripcion') ? 'required' : ''"    
+              (change)="onDescripcionChange()" ></textarea>
             </div>
           </div>
         </div>

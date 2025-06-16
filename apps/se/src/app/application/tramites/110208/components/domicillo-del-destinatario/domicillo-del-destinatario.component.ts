@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { Solicitud110208State, Tramite110208Store } from '../../../../estados/tramites/tramite110208.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite110208Query } from '../../../../estados/queries/tramite110208.query';
 import { ValidarInicalmenteService } from '../../services/validar-inicalmente/validar-inicalmente.service';
 
@@ -28,6 +29,10 @@ export class DomicilloDelDestinatarioComponent implements OnInit, OnDestroy {
    * @type {Solicitud110208State}
    */
   public solicitudState!: Solicitud110208State;
+  /**
+   * Determina si el formulario debe estar en modo solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Notificador para destruir observables activos y evitar pérdidas de memoria.
@@ -59,14 +64,33 @@ export class DomicilloDelDestinatarioComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private service: ValidarInicalmenteService,
     private tramite110208Store: Tramite110208Store,
-    private tramite110208Query: Tramite110208Query
-  ) {}
+    private tramite110208Query: Tramite110208Query,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
 
   /**
    * Método que se ejecuta al inicializar el componente.
    * Configura el formulario y suscribe al estado de la solicitud.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+  /**
+   * Inicializa el formulario con datos del store y aplica validaciones.
+   * También aplica configuración de solo lectura si es necesario.
+   * @method inicializarEstadoFormulario
+   */
+  inicializarEstadoFormulario(): void {
     this.tramite110208Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -88,6 +112,15 @@ export class DomicilloDelDestinatarioComponent implements OnInit, OnDestroy {
       correoElectronico: [this.solicitudState?.correoElectronico, Validators.required],
       paisDestino: [this.solicitudState?.paisDestino]
     });
+    if (this.esFormularioSoloLectura) {
+      Object.keys(this.domicilioDestinatario.controls).forEach((key) => {
+        this.domicilioDestinatario.get(key)?.disable();
+      });
+    } else {
+      Object.keys(this.domicilioDestinatario.controls).forEach((key) => {
+        this.domicilioDestinatario.get(key)?.enable();
+      });
+    }
   }
 
   /**
