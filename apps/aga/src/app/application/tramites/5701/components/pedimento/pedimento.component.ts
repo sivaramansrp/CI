@@ -30,8 +30,12 @@ import {
   Pedimento,
 } from '../../../../core/models/5701/tramite5701.model';
 import {
-  ERR_VALIDACION_PEDIMENTO,
+  MSG_PEDIMENTO_NO_VALIDO,
   MSG_NRO_PEDIMENTO,
+  MSG_NRO_PEDIMENTO_LLENAR_DATOS,
+  MSG_PEDIMENTO_YA_CAPTURADO,
+  MSG_PEDIMENTO_EXISTE_YA_PAGADO,
+  MSG_PEDIMENTO_EXISTE_PREVIO,
 } from '../../../../core/enums/5701/mensajes-modal-5701.enum';
 import {
   FormControl,
@@ -264,6 +268,42 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
           break;
 
         default: {
+          const PEDIMENTOS_VALIDOS = this.pedimentos.every(
+            (item) => item.tipoPedimento !== 0 && item.numero !== ''
+          );
+          const PEDIMENTO_EXISTE = this.pedimentos.some(
+            (item) => item.pedimento === NUMERO_PEDIMENTO
+          );
+
+          if (this.pedimentos.length > 0 && !PEDIMENTOS_VALIDOS) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: TITULO_MODAL_AVISO,
+              mensaje: MSG_NRO_PEDIMENTO_LLENAR_DATOS,
+              cerrar: false,
+              txtBtnAceptar: TEXTO_CERRAR,
+              txtBtnCancelar: '',
+            };
+            return;
+          }
+
+          if (this.pedimentos.length > 0 && PEDIMENTO_EXISTE) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: TITULO_MODAL_AVISO,
+              mensaje: MSG_PEDIMENTO_YA_CAPTURADO,
+              cerrar: false,
+              txtBtnAceptar: TEXTO_CERRAR,
+              txtBtnCancelar: '',
+            };
+
+            return;
+          }
+
           const BODY: BodyEstadoPedimento = {
             aduana: parseInt(this.solicitudState.idAduanaDespacho, 10),
             patente: 23424,
@@ -291,6 +331,18 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
                         comprobanteValor: '',
                         pedimentoValidado: response.datos.pedimento_valido,
                       };
+
+                      this.nuevaNotificacion = {
+                        tipoNotificacion: 'alert',
+                        categoria: 'success',
+                        modo: 'action',
+                        titulo: TITULO_MODAL_AVISO,
+                        mensaje: MSG_PEDIMENTO_NO_VALIDO,
+                        cerrar: false,
+                        txtBtnAceptar: TEXTO_CERRAR,
+                        txtBtnCancelar: '',
+                      };
+
                       this.pedimentos.push(PEDIMENTO);
                       this.pedimentoForm.reset();
                       this.datosTablaPedimento.emit(this.pedimentos);
@@ -303,7 +355,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
                       categoria: 'danger',
                       modo: 'action',
                       titulo: 'Avisos',
-                      mensaje: ERR_VALIDACION_PEDIMENTO,
+                      mensaje: MSG_PEDIMENTO_NO_VALIDO,
                       cerrar: false,
                       txtBtnAceptar: 'Aceptar',
                       txtBtnCancelar: '',
@@ -388,10 +440,6 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
   }
 
   //Metodos para el checkbox
-  onActivate(event: any): void {
-    console.log('Activate Event', event);
-  }
-
   onSelect({ selected }: { selected: Pedimento[] }): void {
     this.selected.splice(0, this.selected.length);
     this.selected.push(...selected);
@@ -407,16 +455,41 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
         const TIPO_PEDIMENTO = this.tiposPedimento.find(
           (tipo) => tipo.descripcion === TARGET.value
         );
+
         if (TIPO_PEDIMENTO) {
           this.pedimentos[rowIndex].tipoPedimento = TIPO_PEDIMENTO.id;
-        } else {
-          this.pedimentos[rowIndex].tipoPedimento = 0; // Asignar un valor por defecto si no se encuentra el tipo
+          this.pedimentos[rowIndex].numero = '';
+
+          if (TIPO_PEDIMENTO.id) {
+            if (TIPO_PEDIMENTO.id !== 4) {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'alert',
+                categoria: 'success',
+                modo: 'action',
+                titulo: TITULO_MODAL_AVISO,
+                mensaje: MSG_PEDIMENTO_EXISTE_YA_PAGADO,
+                cerrar: false,
+                txtBtnAceptar: TEXTO_CERRAR,
+                txtBtnCancelar: '',
+              };
+            } else {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'alert',
+                categoria: 'danger',
+                modo: 'action',
+                titulo: TITULO_MODAL_AVISO,
+                mensaje: MSG_PEDIMENTO_EXISTE_PREVIO,
+                cerrar: false,
+                txtBtnAceptar: TEXTO_CERRAR,
+                txtBtnCancelar: '',
+              };
+            }
+          }
         }
       }
     }
 
     this.pedimentos = [...this.pedimentos];
-    console.log('PEDIMENTOS ACTUALIZADOS', this.pedimentos);
   }
 
   editarCelda(rowIndex: number): void {
@@ -424,11 +497,10 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
       this.pedimentos[rowIndex].tipoPedimento === 0 ||
       this.pedimentos[rowIndex].tipoPedimento === 4
     ) {
-      console.log('No se puede editar el tipo de pedimento');
-
       this.editar[rowIndex + '-numero'] = false;
       return;
     }
+
     this.editar[rowIndex + '-numero'] = true;
   }
 }

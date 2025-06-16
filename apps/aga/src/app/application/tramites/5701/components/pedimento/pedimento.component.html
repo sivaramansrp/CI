@@ -39,7 +39,6 @@
       [rowHeight]="'auto'"
       [selected]="selected"
       [selectionType]="SelectionType.checkbox"
-      (activate)="onActivate($event)"
       (select)="onSelect($event)"
     >
       <ngx-datatable-column
@@ -142,7 +141,7 @@
             title="Doble click para editar"
             (dblclick)="editarCelda(rowIndex)"
           >
-            {{ row.numero ? row.numero : 'No definido' }}
+            {{ row.numero ? row.numero : 'Sin número' }}
           </span>
           }
         </ng-template>
@@ -174,8 +173,8 @@
       Eliminar
     </button>
   </div>
-</div>
 
+</div>
 @if (nuevaNotificacion) {
 <section>
   <lib-notificaciones [notificacionInput]="nuevaNotificacion">
