@@ -204,7 +204,7 @@ export class Tramite240117Store extends Store<Tramite240117State> {
       modificarDestinarioDatos: null,
     }));
   }
-  //create a function to set entire state
+
   /**
    * Actualiza el estado completo con un nuevo estado.
    * @param newState El nuevo estado a establecer.
