@@ -40,7 +40,7 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
      * Updates the state with the information of sectors and goods.
      * @param sectoresYMercancias Data of sectors and goods.
      */
-    public setModalidad(modalidad: string) {
+    public setModalidad(modalidad: string): void {
         this.update((state) => ({
             ...state,
             modalidad, // Wraps the data in an array
@@ -51,49 +51,49 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
      * Updates the state with the information of plants.
      * @param Plantas Data of plants.
      */
-    public setEstado(Estado: string) {
+    public setEstado(Estado: string): void {
         this.update((state) => ({
             ...state,
             Estado, // Wraps the data in an array
         }));
     }
 
-    public setRepresentacionFederal(RepresentacionFederal: string) {
+    public setRepresentacionFederal(RepresentacionFederal: string): void {
         this.update((state) => ({
             ...state,
             RepresentacionFederal,
         }));
     }
 
-    public setActividadProductiva(ActividadProductiva: string) {
+    public setActividadProductiva(ActividadProductiva: string): void {
         this.update((state) => ({
             ...state,
             ActividadProductiva,
         }));
     }
 
-    public setSector(Sector: string) {
+    public setSector(Sector: string): void {
         this.update((state) => ({
             ...state,
             Sector,
         }));
     }
 
-    public setFraccionArancelaria(Fraccion_arancelaria: string) {
+    public setFraccionArancelaria(Fraccion_arancelaria: string): void {
         this.update((state) => ({
             ...state,
             Fraccion_arancelaria,
         }));
     }
 
-    public setcontribuyentes(contribuyentes: string) {
+    public setcontribuyentes(contribuyentes: string): void {
         this.update((state) => ({
             ...state,
             contribuyentes,
         }));
     }
 
-    public setFormaValida(formaValida: string){
+    public setFormaValida(formaValida: string): void {
         this.update((state) => ({
             ...state,
             formaValida,
