@@ -1,8 +1,7 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Component, ViewChild } from '@angular/core';
 import { PANTA_PASOS, TITULO_PASO_DOS, TITULO_PASO_TRES, TITULO_PASO_UNO } from '../../constantes/importaciones-agropecuarias.enum';
-import { Subject, map,takeUntil } from 'rxjs';
+
 
 /**
  * @component TodosPasosComponent
@@ -18,7 +17,7 @@ import { Subject, map,takeUntil } from 'rxjs';
   selector: 'app-todos-pasos',
   templateUrl: './todos-pasos.component.html',
 })
-export class TodosPasosComponent implements OnInit,OnDestroy {
+export class TodosPasosComponent {
   /**
    * @property pantallasPasos
    * @description
@@ -47,15 +46,6 @@ export class TodosPasosComponent implements OnInit,OnDestroy {
    */
   public titulo: string = TITULO_PASO_UNO;
 
-  /**
-   * @property destroyed$
-   * @description
-   * Sujeto utilizado para destruir observables y evitar fugas de memoria.
-   * 
-   * @type {Subject<void>}
-   * @private
-   */
-  private destroyed$ = new Subject<void>();
 
   /**
    * @property wizardComponent
@@ -81,52 +71,14 @@ export class TodosPasosComponent implements OnInit,OnDestroy {
     txtBtnSig: 'Continuar',
   };
 
-   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
-  public esDatosRespuesta: boolean = false;
-
-  /** Subject para notificar la destrucción del componente. */
-  private destroyNotifier$: Subject<void> = new Subject();
   /**
-  * @property consultaState
-  * @description
-  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
-  */
-  public consultaState!: ConsultaioState;
-
-   /**
-     * @description
-     * Constructor del componente.
-     * Inyecta el servicio de validación de formularios.
-     * @param validacionDeFormularioService Servicio para manejar la validación de formularios.
-     */
-    constructor(
-      private consultaQuery: ConsultaioQuery
-    ) { }
-/**
-     * compo doc
-     * @method ngOnInit
-     * @description
-     * Método de inicialización del componente `DatosComponent`.
-     * 
-     * Detalles:
-     * - Se suscribe al observable `selectConsultaioState$` del store `ConsultaioQuery` para obtener el estado actual de la consulta.
-     * - Utiliza `takeUntil` para cancelar la suscripción cuando el componente se destruye, evitando fugas de memoria.
-     * - Actualiza la propiedad `consultaState` con el estado recibido.
-     * - Si la propiedad `update` del estado es verdadera, llama al método `guardarDatosFormulario()`.
-     * - Si no, establece la bandera `esDatosRespuesta` en `true` para indicar que se deben mostrar los datos de respuesta.
-     * 
-     * @example
-     * this.ngOnInit();
-     * // Inicializa el componente y gestiona el flujo de datos según el estado de la consulta.
-     */
-  ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => { 
-          this.consultaState = seccionState;
-        })
-      ).subscribe();
+    * @description
+    * Constructor del componente.
+    * Inyecta el servicio de validación de formularios.
+    * @param validacionDeFormularioService Servicio para manejar la validación de formularios.
+    */
+  constructor() {
+    /** Inyecta el servicio de consulta para obtener el estado actual de la consulta. */
   }
 
   /**
@@ -153,16 +105,5 @@ export class TodosPasosComponent implements OnInit,OnDestroy {
         this.wizardComponent.atras();
       }
     }
-  }
-
-  /**
-   * @method ngOnDestroy
-   * @description
-   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
-   * Este método completa el observable `destroyed$` para cancelar las suscripciones activas.
-   */
-  ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
   }
 }
