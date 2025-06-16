@@ -2,7 +2,7 @@
  * @file
  * Componente que maneja la lógica de la página de datos para el trámite 260903.
  */
-import { Component, OnInit } from '@angular/core';
+import { Component,OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject,forkJoin,takeUntil } from 'rxjs';
 import { ActualizacionImportacionService } from '../../services/actualizacion-importacion.service';
@@ -16,7 +16,7 @@ import { ActualizacionImportacionService } from '../../services/actualizacion-im
   selector: 'app-datos-260903',
   templateUrl: './datos-260903.component.html',
 })
-export class Datos260903Component implements OnInit {
+export class Datos260903Component implements OnInit, OnDestroy {
 
    /**
      * showPreFillingOptions
@@ -41,7 +41,7 @@ export class Datos260903Component implements OnInit {
  * Índice de la pestaña actualmente seleccionada.
  * Inicializado a 1 por defecto.
  */
-  indice = 1;
+ public indice = 1;
 /**
  * Constructor del componente Datos260903Component.
  * @param consultaQuery - Servicio para consultar el estado de la información.
@@ -96,5 +96,12 @@ export class Datos260903Component implements OnInit {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+    /**
+ * Método del ciclo de vida que se ejecuta al destruir el componente.
+ */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

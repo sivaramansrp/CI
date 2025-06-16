@@ -2,7 +2,7 @@
  * PasoUnoComponent
  * Componente que representa el primer paso del proceso de modificación de permiso sanitario.
  */
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { ModificacionPermisoSanitarioService } from '../../services/modificacion-permosi-sanitario.service';
 
@@ -22,7 +22,7 @@ import { Subject,forkJoin,takeUntil } from 'rxjs';
  * Componente que representa el primer paso del proceso de modificación de permiso sanitario.
  * Este componente se encarga de mostrar la información del solicitante y del establecimiento,
  */
-export class PasoUnoComponent implements OnInit ,AfterViewInit {
+export class PasoUnoComponent implements OnInit ,AfterViewInit ,OnDestroy{
   
    /**
      * showPreFillingOptions
@@ -105,7 +105,7 @@ export class PasoUnoComponent implements OnInit ,AfterViewInit {
    /**
     * Índice actual del subtítulo seleccionado en la interfaz.
     */
-   indice: number = 1;
+  public indice: number = 1;
  
    /**
     * Método para actualizar el índice del subtítulo seleccionado.
@@ -120,4 +120,11 @@ export class PasoUnoComponent implements OnInit ,AfterViewInit {
    * Cuando es `true`, el botón de copiar datos será visible; cuando es `false`, el botón estará oculto.
    */
    mostrarBotonCopiarDatos: boolean = false;
+   /**
+ * Método del ciclo de vida que se ejecuta al destruir el componente.
+ */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }

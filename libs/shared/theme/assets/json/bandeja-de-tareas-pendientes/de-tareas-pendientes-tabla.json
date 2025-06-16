@@ -13298,6 +13298,16 @@
     "numeroDeProcedimiento": "260903",
     "origin": "READ_PROCEDURE"
   },
+  {
+    "folioTramite": "1111222233334444555566667",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Generar opinión",
+    "fechaDeAsignacion": "2023-10-07",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "cofepris",
+    "numeroDeProcedimiento": "260903",
+    "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
+  },
    {
     "folioTramite": "0215523965732296454156770",
     "tipoDeTramite": "Solicitud de Proceso Interno",
@@ -13367,8 +13377,18 @@
     "departamento": "cofepris",
     "numeroDeProcedimiento": "260902",
     "origin": "READ_PROCEDURE"
-  }
-  ,{
+  },
+   {
+    "folioTramite": "1111222233334444555566667",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Generar opinión",
+    "fechaDeAsignacion": "2023-10-07",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "cofepris",
+    "numeroDeProcedimiento": "260902",
+    "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
+  },
+  {
     "folioTramite": "0215523965732296454156770",
     "tipoDeTramite": "Solicitud de Proceso Interno",
     "nombreDeLaTarea": "Evaluar solicitud",
