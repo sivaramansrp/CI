@@ -29,6 +29,8 @@ import {
 
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -36,7 +38,7 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Modal } from 'bootstrap';
 
 import { MercanciasInfo,PropietarioTipoPersona,ScianModel} from '../../models/datos-de-la-solicitud.model';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 
 import { EstablecimientoService } from '../../service/establecimiento.service';
 
@@ -475,7 +477,12 @@ export class DatosDelSolicitudModificacionComponent implements OnInit, OnDestroy
    * Datos de la tabla de mercancías.
    */
   mercanciasTablaDatos: MercanciasInfo[] = [];
-
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los formularios estarán deshabilitados y no se podrán editar.
+   * Cuando es `false`, los formularios estarán habilitados para edición.
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente.
    *
@@ -487,9 +494,17 @@ export class DatosDelSolicitudModificacionComponent implements OnInit, OnDestroy
     private fb: FormBuilder,
     private establecimientoService: EstablecimientoService,
     private domicilioEstablecimientoStore: DatosDelSolicituteSeccionStateStore,
-    private domicilioEstablecimientoQuery: DatosDelSeccionQuery
+    private domicilioEstablecimientoQuery: DatosDelSeccionQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Constructor
+      this.consultaioQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroy$),
+            map((seccionState) => {
+              this.esFormularioSoloLectura = seccionState.readonly;
+            })
+          )
+          .subscribe()
   }
 
   
