@@ -26,7 +26,7 @@ import { ValidadorCertificadoCamRoutingModule } from './validador-certificado-ca
     CertificadoDeOrigenComponent,
     DatosCertificadoComponent,
     DestinatarioComponent,
-    TituloComponent,
+    TituloComponent
   ],
   providers:[ToastrService]
 })

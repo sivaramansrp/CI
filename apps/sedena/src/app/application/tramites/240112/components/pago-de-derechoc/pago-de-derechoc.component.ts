@@ -1,16 +1,30 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import { ID_PROCEDIMIENTO } from '../../constants/agregar-destinatario.enum';
+import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../shared/models/pago-de-derechos.model';
 import { Tramite240112Query } from '../../estados/tramite240112Query.query';
 import { Tramite240112Store } from '../../estados/tramite240112Store.store';
+
 
 @Component({
   selector: 'app-pago-de-derechoc',
   templateUrl: './pago-de-derechoc.component.html',
   styleUrl: './pago-de-derechoc.component.scss',
+  standalone: true,
+  imports: [PagoDeDerechosComponent]
 })
 export class PagoDeDerechocComponent implements OnInit, OnDestroy {
+
+  /**
+   * @input
+   * @description
+   * Indica si el formulario debe estar deshabilitado. Cuando es `true`, los controles del formulario estarán inactivos y no permitirán la edición por parte del usuario.
+   * @type {boolean}
+   */
+   @Input() formularioDeshabilitado: boolean = false;
+
+   
   /**
      * @var {number} idProcedimiento
      * @description Identificador único del procedimiento asociado.

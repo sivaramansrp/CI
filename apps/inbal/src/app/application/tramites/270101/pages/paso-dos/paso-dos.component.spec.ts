@@ -1,12 +1,21 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { PasoDosComponent } from './paso-dos.component';
 import { HttpClientModule } from '@angular/common/http';
-import {
-  AnexarDocumentosComponent,
-  TituloComponent,
-} from '@libs/shared/data-access-user/src';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
+import { Component } from '@angular/core';
+import { Subject } from 'rxjs';
+
+@Component({
+  selector: 'anexar-documentos',
+  template: '',
+})
+
+class MockAnexarDocumentosComponent {
+  cargaArchivosEvento = new Subject<any>();
+  destroyNotifier$ = new Subject<void>();
+  confirmUpload = jest.fn();
+}
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -14,10 +23,9 @@ describe('PasoDosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PasoDosComponent],
+      declarations: [PasoDosComponent, MockAnexarDocumentosComponent],
       imports: [
         HttpClientModule,
-        AnexarDocumentosComponent,
         TituloComponent,
         ToastrModule.forRoot(),
       ],
