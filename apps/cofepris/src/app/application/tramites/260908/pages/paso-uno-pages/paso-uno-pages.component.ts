@@ -1,7 +1,8 @@
 /**
  * Componente para la modificación de permisos de importación de tratamientos.
  */
-import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 
 import { DatosDelSolicitudModificacionComponent } from '../../../../shared/components/datos-del-solicitud-modificacion/datos-del-solicitud-modificacion.component';
@@ -22,11 +23,32 @@ import {
 } from '../../models/mod-permiso.model';
 import { FormDataService } from '../../services/form-data-service';
 
+import { Subject ,forkJoin, map, takeUntil } from 'rxjs';
+import { ModificacionPermisoMeds } from '../../services/modificacion-permiso-meds.service';
+
 @Component({
   selector: 'app-paso-uno-pages',
   templateUrl: './paso-uno-pages.component.html',
 })
-export class PasoUnoPagesComponent {
+export class PasoUnoPagesComponent implements OnInit , OnDestroy {
+     /**
+         * showPreFillingOptions
+         * Indica si se deben mostrar las opciones de prellenado.
+         */
+     showPreFillingOptions: boolean = false; 
+    
+       /**
+       * Indica si se están mostrando los datos de respuesta.
+       */
+      public esDatosRespuesta: boolean = false;
+      /**
+       * Estado actual de la consulta.
+       */
+      public consultaState!: ConsultaioState;
+      /**
+       * Notificador para destruir las suscripciones y evitar fugas de memoria.
+       */
+      private destroyNotifier$: Subject<void> = new Subject();
   /**
    * Referencia al componente `SolicitanteComponent` para acceder a sus métodos y propiedades.
    */
@@ -61,8 +83,44 @@ export class PasoUnoPagesComponent {
    *
    * @param formDataService Servicio para manejar los datos del formulario.
    */
-  constructor(private formDataService: FormDataService) {}
-
+  constructor(private formDataService: FormDataService ,
+     private consultaQuery: ConsultaioQuery,
+      private solocitudService: ModificacionPermisoMeds,
+  ) {}
+/**
+ * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+ * Se suscribe al estado de consulta y, dependiendo de si hay una actualización,
+ */
+    ngOnInit(): void {
+        this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+              this.consultaState = seccionState;
+          })).subscribe();
+        if(this.consultaState.update) {
+        this.guardarDatosFormulario();
+        } else {
+          this.esDatosRespuesta = true;
+        }
+      }
+/**
+ * Método para guardar los datos del formulario.
+ * Utiliza `forkJoin` para realizar múltiples solicitudes simultáneamente y espera a que todas se completen.
+ */
+       guardarDatosFormulario(): void {
+                forkJoin({
+                  registro: this.solocitudService.getRegistroTomaMuestrasMercanciasData(),
+                  permiso: this.solocitudService.getPagoDerechos()
+                })
+                  .pipe(takeUntil(this.destroyNotifier$))
+                  .subscribe(({ registro, permiso }) => {
+                    if (registro) {
+                      this.esDatosRespuesta = true;
+                      this.solocitudService.actualizarEstadoFormulario(registro);
+                    }
+                    if (permiso) {
+                      this.solocitudService.actualizarPagoDerechosFormulario(permiso);
+                    }
+                  });
+              }
   /**
    * Método para recopilar los valores de los formularios de todos los componentes hijos.
    *
@@ -149,5 +207,12 @@ export class PasoUnoPagesComponent {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+  /**
+ * Método del ciclo de vida que se ejecuta al destruir el componente.
+ */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

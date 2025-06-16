@@ -30,6 +30,7 @@ export interface Tramite260218State {
   seleccionadoTablaMercanciasDatos: TablaMercanciasDatos[]; // Datos seleccionados de las mercancías.
   opcionesColapsableState: boolean; // Estado de las opciones colapsables en la interfaz.
   pagoDerechos: PagoDerechosFormState; // Datos de pago de derechos.
+  tabSeleccionado?: number; // Pestaña seleccionada en la interfaz, opcional.
 }
 
 // Función que inicializa el estado de la solicitud.
@@ -98,6 +99,7 @@ export function createInitialState(): Tramite260218State {
       fechaPago: '',
       importePago: '',
     },
+    tabSeleccionado: 1, // Pestaña seleccionada por defecto.
   };
 }
 
@@ -241,6 +243,18 @@ export class Tramite260218Store extends Store<Tramite260218State> {
     this.update((state) => ({
       ...state,
       pagoDerechos: nuevoPagoDerechos,
+    }));
+  }
+
+  /**
+   * @method updateTabSeleccionado
+   * @description Actualiza el índice de la pestaña seleccionada.
+   * @param {number} tabSeleccionado - Nuevo índice de la pestaña.
+   */
+  public updateTabSeleccionado(tabSeleccionado: number): void {
+    this.update((state) => ({
+      ...state,
+      tabSeleccionado: tabSeleccionado,
     }));
   }
 }
