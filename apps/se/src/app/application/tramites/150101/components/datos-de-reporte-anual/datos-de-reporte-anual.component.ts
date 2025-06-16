@@ -1,11 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Solicitud150101Query } from '../../estados/solicitud150101.query';
 import { Solicitud150101State } from '../../estados/solicitud150101.store';
 import { Solicitud150101Store } from '../../estados/solicitud150101.store';
 import { SolicitudService } from '../../services/registro-solicitud-anual.service';
-import { Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs';
 
 /**
  * @component
@@ -16,11 +16,23 @@ import { map, takeUntil } from 'rxjs';
   templateUrl: './datos-de-reporte-anual.component.html',
   styleUrl: './datos-de-reporte-anual.component.scss',
 })
-export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
+
+/**
+ * @class DatosDeReporteAnnualComponent
+ * @implements {OnInit, OnDestroy}
+ * @description Este componente maneja la lógica del formulario para capturar los datos del reporte anual.
+ */
+export class DatosDeReporteAnnualComponent implements OnDestroy {
   /**
    * @description Formulario reactivo para capturar los datos del reporte anual.
    */
   formReporteAnnual!: FormGroup;
+
+  /**
+   * @property {boolean} formularioDeshabilitado
+   * @description Indica si el formulario está deshabilitado (solo lectura).
+   */
+  formularioDeshabilitado: boolean = false;
 
   /**
    * @description Estado actual de la solicitud, obtenido desde el store.
@@ -38,20 +50,33 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
    * @param solicitud150101Store - Store que gestiona el estado del reporte.
    * @param solicitud150101Query - Query para seleccionar datos del estado del reporte.
    * @param solicitudService - Servicio para obtener y enviar datos relacionados con el reporte.
+   * @param consultaioQuery - Query para gestionar el estado de la consulta.
    */
   constructor(
     public fb: FormBuilder,
     public solicitud150101Store: Solicitud150101Store,
     public solicitud150101Query: Solicitud150101Query,
-    public solicitudService: SolicitudService
-  ) {}
+    public solicitudService: SolicitudService,
+    public consultaioQuery: ConsultaioQuery
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.formularioDeshabilitado = seccionState.readonly;
+        })
+      )
+      .subscribe();
 
-  /**
-   * @lifecycle
-   * @description Método del ciclo de vida de Angular llamado tras la inicialización del componente.
-   * Configura el formulario y sus valores iniciales, además de suscribirse a cambios en el estado.
-   */
-  ngOnInit(): void {
+    this.solicitud150101Query.seleccionarSolicitud$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((respuesta: Solicitud150101State) => {
+          this.solicitud150101State = respuesta;
+        })
+      )
+      .subscribe();
+
     this.formReporteAnnual = this.fb.group({
       ventasTotales: [
         { value: this.solicitud150101State.ventasTotales, disabled: false },
@@ -84,22 +109,23 @@ export class DatosDeReporteAnnualComponent implements OnInit, OnDestroy {
       ],
     });
 
-    this.solicitud150101Query.seleccionarSolicitud$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((respuesta: Solicitud150101State) => {
-          this.solicitud150101State = respuesta;
-          this.formReporteAnnual.patchValue({
-            ventasTotales: this.solicitud150101State.ventasTotales,
-            totalExportaciones: this.solicitud150101State.totalExportaciones,
-            totalImportaciones: this.solicitud150101State.totalImportaciones,
-            saldo: this.solicitud150101State.saldo,
-            porcentajeExportacion: this.solicitud150101State.porcentajeExportacion,
-          });
-        })
-      )
-      .subscribe();
+    this.inicializarEstadoFormulario();
   }
+
+  /**
+   * @method inicializarEstadoFormulario
+   * @description Inicializa el estado del formulario según si está deshabilitado o no.
+   * Si el formulario está deshabilitado, se deshabilitan todos los campos.
+   * Si no, se habilitan todos los campos.
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.formularioDeshabilitado) {
+      this.formReporteAnnual.disable();
+    } else if (!this.formularioDeshabilitado) {
+      this.formReporteAnnual.enable();
+    }
+  }  
 
   /**
    * @description Actualiza las ventas totales en el store y recalcula el reporte.
