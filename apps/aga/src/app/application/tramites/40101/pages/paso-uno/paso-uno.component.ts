@@ -129,39 +129,35 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
-    if (this.consultaDatos.update) {
-      this.chofer40101Service
-        .getDirectorGeneralData()
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe((data) => {
-          // Actualiza el estado del chofer40101Store con los datos del director general
-          this.chofer40101Service.updateStateDirectorGeneralData(data);
-          this.esDatosRespuesta = true;
-        });
+    this.chofer40101Service
+      .getDirectorGeneralData()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((data) => {
+        // Actualiza el estado del chofer40101Store con los datos del director general
+        this.chofer40101Service.updateStateDirectorGeneralData(data);
+        this.esDatosRespuesta = true;
+      });
 
-      this.chofer40101Service
-        .obtenerTablaDatos<DatosDelChoferNacional>('mock-data-choferes-nacionales.json')
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe((response) => {
-          this.chofer40101Service.updateDatosDelChoferNacional(response);
-          this.chofer40101Service.updateDatosDelChoferNacionalModification(response);
-          this.chofer40101Service.updateDatosDelChoferNacionalRetirada(response);
-          this.esDatosRespuesta = true;
+    this.chofer40101Service
+      .obtenerTablaDatos<DatosDelChoferNacional>('mock-data-choferes-nacionales.json')
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((response) => {
+        this.chofer40101Service.updateDatosDelChoferNacional(response);
+        this.chofer40101Service.updateDatosDelChoferNacionalModification(response);
+        this.chofer40101Service.updateDatosDelChoferNacionalRetirada(response);
+        this.esDatosRespuesta = true;
 
-        });
+      });
 
-      this.chofer40101Service
-        .obtenerTablaDatos<ChoferesExtranjeros>('mock-data-choferes-extranjero.json')
-        .pipe(takeUntil(this.destroyed$))
-        .subscribe((response) => {
-          this.chofer40101Service.updateDatosDelChoferExtranjero(response);
-          this.chofer40101Service.updateDatosDelChoferExtranjeroModification(response);
-          this.chofer40101Service.updateDatosDelChoferExtranjeroRetirada(response);
-          this.esDatosRespuesta = true;
-        });
-    } else {
-      this.esDatosRespuesta = true;
-    }
+    this.chofer40101Service
+      .obtenerTablaDatos<ChoferesExtranjeros>('mock-data-choferes-extranjero.json')
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe((response) => {
+        this.chofer40101Service.updateDatosDelChoferExtranjero(response);
+        this.chofer40101Service.updateDatosDelChoferExtranjeroModification(response);
+        this.chofer40101Service.updateDatosDelChoferExtranjeroRetirada(response);
+        this.esDatosRespuesta = true;
+      });
   }
 
   /**
