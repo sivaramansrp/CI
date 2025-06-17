@@ -2,17 +2,17 @@
     <div class="row">
         <formas-dinamicas formularioTitulo="Partidas de la mercancía" [forma]="ninoFormGroup"
             [formularioDatos]="partidasDeLaMercancia" [estado]="solicitudDeRegistroState"
-            (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+            [soloLectura]="consultaState.readonly" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
     </div>
 
     <div class="row mt-5">
         <div class="col-md-8"></div>
         <div class="col-md-4 text-end">
             <div class="btn-group">
-                <button class="btn btn-primary me-2" type="button">
+                <button class="btn btn-primary me-2" type="button" [disabled]="consultaState.readonly">
                     Cargar archivo
                 </button>
-                <button class="btn btn-primary ms-2" (click)="agregarPartida()">
+                <button class="btn btn-primary ms-2" (click)="agregarPartida()" [disabled]="consultaState.readonly">
                     Agregar
                 </button>
             </div>
@@ -22,18 +22,18 @@
     <div class="row">
         <h6>Partidas:</h6>
         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="partidasTabla"
-            [datos]="datospartidas"></app-tabla-dinamica>
+         [disableSeleccionTablaCheckBox]="consultaState.readonly"   [datos]="datospartidas"  (listaDeFilaSeleccionada)="onSeleccionChange($event)"></app-tabla-dinamica>
     </div>
 
     <div class="row">
         <formas-dinamicas [forma]="ninoFormGroup" [formularioDatos]="partidasDeLa" [estado]="solicitudDeRegistroState"
-            (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+         [soloLectura]="consultaState.readonly"   (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
     </div>
     
     <div class="row mt-5 text-end">
         <div>
-            <button type="button" class="btn btn-danger me-2 btn-space">Eliminar partida</button>
-            <button type="button" class="btn btn-primary btn-space">Modificar partida</button>
+            <button type="button" class="btn btn-danger me-2 btn-space" [disabled]="consultaState.readonly" (click)="eliminarSeleccionados()">Eliminar partida</button>
+            <button type="button" class="btn btn-primary btn-space" [disabled]="consultaState.readonly">Modificar partida</button>
         </div>
     </div>
 </form>

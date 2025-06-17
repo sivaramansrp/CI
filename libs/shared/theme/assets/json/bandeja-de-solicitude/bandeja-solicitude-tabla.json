@@ -1718,6 +1718,15 @@
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260513"
   },
+{
+   "id": 31802,
+   "tipoDeTramite": "Solicitud de acuso",
+   "fecha": "2023-10-01",
+   "fechaActualizacion": "2023-10-05",
+   "diasTranscurridos": "4",
+   "departamento": "AGACE",
+   "numeroDeProcedimiento": "31802"
+},
   {
     "id": 260104,
     "tipoDeTramite": "Antecesor",
@@ -2176,12 +2185,21 @@
   "numeroDeProcedimiento": "260918"
 },
 {
-  "id": 130302,
-  "tipoDeTramite": "Solicitud de Permiso",
+  "id": 130107,
+  "tipoDeTramite": "Solicitudddd certificado CAM",
+  "fecha": "2022-10-05",
+  "fechaActualizacion": "2022-10-25",
+  "diasTranscurridos": "4",
+  "departamento": "SE",
+  "numeroDeProcedimiento": "130107"
+},
+{
+  "id": 31201,
+  "tipoDeTramite": "Renovación Certificación IVA e IEPS Mod A",
   "fecha": "2023-10-01",
   "fechaActualizacion": "2023-10-05",
   "diasTranscurridos": "4",
-  "departamento": "SENER",
-  "numeroDeProcedimiento": "130302"
+  "departamento": "AGA",
+  "numeroDeProcedimiento": "31201"
 }
 ]
