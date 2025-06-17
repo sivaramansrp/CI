@@ -147,13 +147,15 @@
             [layout]="'vertical'"
             name="tipoMercancia"
             formControlName="tipoMercancia"
-            (change)="setValoresStore()"
+            (change)="radioBotonSeleccionado()"
           ></app-input-radio>
         </div>
       </div>
         </div>
       <div class="row">
+        @if(notificationCheck){
         <ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
+      }
         <div class="row mt-5">
           <div class="col-md-12">
             <label for="mercancia">Mercancías</label>
@@ -168,14 +170,14 @@
         </div>
         <div class="row my-5">
           <div class="col-md-12 d-flex justify-content-end">
-            <button type="button" class="btn btn-default">Modificar</button>
-            <button type="button" class="btn btn-danger ms-3">Eliminar</button>
-            <button type="button" class="btn btn-primary ms-3">Agregar</button>
+            <button type="button" class="btn btn-default" [disabled]="!notificationCheck">Modificar</button>
+            <button type="button" class="btn btn-danger ms-3"[disabled]="!notificationCheck">Eliminar</button>
+            <button type="button" class="btn btn-primary ms-3" [disabled]="!notificationCheck">Agregar</button>
           </div>
         </div>
       </div>
     </form>
-      <div>
+      <div>`
     @if(moduloEmergente){
         <lib-notificaciones
           [notificacionInput]="nuevaNotificacion"

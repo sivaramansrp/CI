@@ -205,6 +205,16 @@ configuracionColumnasoli: ConfiguracionColumna<FilaSolicitud>[] = [
    * @property {boolean} esFormularioSoloLectura
    */
   esFormularioSoloLectura:boolean = false;
+
+
+
+
+  /**
+   * @description Indica si la notificación ha sido verificada o marcada.
+   * @type {boolean}
+   * @memberof DatosDeLaSolicitudComponent
+   */
+  notificationCheck:boolean=false;
   /**
    * Constructor del componente.
    * @constructor
@@ -291,7 +301,7 @@ this.datosDelaSolicitud.get('claveUCON')?.valueChanges
    */
   initActionFormBuild():void { 
     this.datosDelaSolicitud = this.fb.group({
-      tipoMercancia: ['no', Validators.required],
+      tipoMercancia: ['yes', Validators.required],
       aduanaIngreso: ['', Validators.required],
       oficinaInspeccion: ['', Validators.required],
       puntoInspeccion: ['', Validators.required],
@@ -409,6 +419,19 @@ this.datosDelaSolicitud.get('claveUCON')?.valueChanges
       const VALOR = this.datosDelaSolicitud.value;
       this.certificadoZoosanitarioServices.updateDatosDeLaSolicitud(VALOR);
     }
+
+    radioBotonSeleccionado(): void {
+ const VALOR = this.datosDelaSolicitud.value.tipoMercancia;
+ if(VALOR !== '' && VALOR !== null && VALOR !== undefined) {
+  this.notificationCheck=true;
+ }
+else{
+this.notificationCheck=false;
+}
+this.setValoresStore();
+    }
+
+    
   /**
    * Elimina un pedimento de la lista si el parámetro `borrar` es verdadero.
    *
