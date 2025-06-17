@@ -3,8 +3,9 @@
  * @description Servicio para obtener los datos del permiso IMMEX.
  */
 import { HttpClient } from '@angular/common/http';
+import { ImmexAmpliacionSensiblesState } from '../estados/immex-ampliacion-sensibles.store';
+import { ImmexAmpliacionSensiblesStore } from '../estados/immex-ampliacion-sensibles.store';
 import { ImmexAmplicationSensibleDatosDelFormulario } from '../models/immex-ampliacion-sensibles.model';
-import { ImmexAmpliacionSensiblesState, ImmexAmpliacionSensiblesStore } from '../estados/immex-ampliacion-sensibles.store';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -56,6 +57,12 @@ export class PermisoImmexDatosService {
    * @returns {void}
    */
    actualizarEstadoFormulario(DATOS:ImmexAmplicationSensibleDatosDelFormulario): void {
-    console.log('DATOS', DATOS);
+    this.tramite80202Store.update((state) => ({
+      ...state,
+      datosFormulario: {
+        ...state.datosFormulario,
+        ...DATOS,
+      },
+    }));
    }
 }

@@ -1,14 +1,19 @@
 import { AnexoComponent } from '../../components/anexo.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, SeccionLibStore, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { ConsultaioQuery} from '@ng-mf/data-access-user';
+import { ConsultaioState} from '@ng-mf/data-access-user';
 import { EventEmitter } from '@angular/core';
 import { ImmexAmplicationSensibleDatosDelFormulario } from '../../models/immex-ampliacion-sensibles.model';
 import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { PermisoImmexDatosService } from '../../services/permiso-immex-datos.service';
 import { SECCIONES_TRAMITE_80202 } from '../../constants/immex-ampliacion-sensibles.enums';
-import { Subject,map, takeUntil } from 'rxjs';
+import { SeccionLibStore } from '@ng-mf/data-access-user';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
+import { Subject } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-paso-uno',
