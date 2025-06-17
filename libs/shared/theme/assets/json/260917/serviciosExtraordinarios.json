@@ -1,0 +1,20 @@
+{
+"denominacionORazonSocial":"Nombre por defecto",
+"correoElectronico":"correo@ejemplo.com",
+"codigoPostal": "00000",
+"estado": "1",
+"municipio": "Municipio/Alcaldía por defecto",
+"localidad": "Localidad por defecto",
+"colonia": "Colonia por defecto",
+"calle": "Calle por defecto",
+"lada": "000",
+"telefono": "0000000000",
+"rfc": "RFC000000XXX",
+"nombre": "Nombre por defecto",
+"apellidoPaterno": "Apellido Paterno por defecto",
+"apellidoMaterno": "Apellido Materno por defecto",
+"aceptaPublicacion":"Si",
+"aduanasEntradas":"1",
+"regimen":"1",
+"licenciaSanitaria":"0000000000"
+}
