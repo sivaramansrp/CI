@@ -32,15 +32,15 @@ export const ALERT = {
  * Opciones para el botón de radio de la sección de solicitudes.
  */
 export const OPCION_DE_BOTON_DE_RADIO = [
-  { label: 'Prórroga', value: 'prorroga' },
-  { label: 'Modificación', value: 'modificacion' },
-  { label: 'Modificación y prórroga', value: 'modificacion_prorroga' },
+  { label: 'Prórroga', value: '0' },
+  { label: 'Modificación', value: '1' },
+  { label: 'Modificación y prórroga', value: '2' },
 ];
 
 /**
  * Opciones para el botón de radio de la sección de hacerlos.
  */
 export const HACERLOS_RADIO_OPTIONS = [
-  { label: 'No', value: 'no' },
-  { label: 'Sí', value: 'si' },
+  { label: 'No', value: '0' },
+  { label: 'Sí', value: '1' },
 ];
