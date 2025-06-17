@@ -18,13 +18,15 @@
  *
  * @templateUrl ./paso-uno-cs.component.html
  */
-
-import { Component } from '@angular/core';
-
+import { Component, OnInit } from '@angular/core';
 import { CONFIGURACION_DOS_DATOS, SECCIONES_TRAMITE_230401 } from '../../constantes/nuevo-programa.enum';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { FraccionArancelariaDescripcion } from '../../../../shared/models/empresas.model';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
+import { Subject, takeUntil } from 'rxjs';
+import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
+import { Solocitud80103Service } from '../../services/service80103service'
+
 
 /*
   * Componente para gestionar el primer paso del trámite 80103.
@@ -45,7 +47,16 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/
  * Este componente gestiona la visualización y selección de pestañas,
  * así como la configuración de las secciones correspondientes.
  */
-export class PasoUnoCsComponent {
+export class PasoUnoCsComponent implements OnInit {
+   /** Bandera que indica si los datos de respuesta están disponibles o han sido cargados.  
+   *  Se utiliza para controlar la lógica de visualización o validación en el componente. */
+     public esDatosRespuesta: boolean = false;
+     /** Almacena el estado actual de la consulta relacionada con el trámite.  
+   *  Contiene información necesaria para mostrar o procesar datos en el componente. */
+     public consultaState!:ConsultaioState;
+     /** Notificador utilizado para cancelar suscripciones al destruir el componente.  
+   *  Ayuda a prevenir fugas de memoria en flujos observables. */
+     private destroyNotifier$: Subject<void> = new Subject();
   /*
   * Almacena la configuración de las pestañas del primer paso.
   */
@@ -59,7 +70,8 @@ export class PasoUnoCsComponent {
  * 
  * @param seccionStore 
  */
-  constructor(private seccionStore: SeccionLibStore){
+  constructor(private seccionStore: SeccionLibStore, private Solocitud80103Service: Solocitud80103Service,
+      private consultaQuery: ConsultaioQuery){
     this.asignarSecciones();
   }
 
@@ -89,6 +101,54 @@ export class PasoUnoCsComponent {
     this.seccionStore.establecerSeccion(SECCIONES);
     this.seccionStore.establecerFormaValida(FORMA_VALIDA);
   }
-
+  /** Inicializa el componente suscribiéndose al estado de consulta.  a
+   *  Ejecuta lógica según si se requiere actualización o solo visualización. */
+        ngOnInit(): void {
+       this.consultaQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyNotifier$))
+          .subscribe((seccionState) => {
+            this.consultaState = seccionState
+            if (this.consultaState.update) {
+               this.guardarDatosFormulario();
+               } else {
+                this.esDatosRespuesta = true;
+              }
+          });        
+    }
+ /** Obtiene los datos del formulario desde un JSON simulado y actualiza el store.  
+ *  Marca la bandera de respuesta si la información es válida. */
+     guardarDatosFormulario(): void {
+    this.Solocitud80103Service
+      .getRegistroTomaMuestrasMercanciasData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.Solocitud80103Service.actualizarEstadoFormulario(resp);
+        }
+      });
+          this.Solocitud80103Service
+      .getRegistroTomaMuestrasMercanciasDatas().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.Solocitud80103Service.actualizarEstadoFormularios(resp);
+        }
+      });
+          this.Solocitud80103Service
+      .getRegistroTomaMuestrasMercanciasDatass().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.Solocitud80103Service.actualizarEstadoFormularioss(resp);
+        }
+      });
+  }
   
 }

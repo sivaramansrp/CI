@@ -15,7 +15,7 @@
 
     <div class="col-md-4">
       <div class="form-group">
-        <app-catalogo-select [catalogo]="estadoCatalogo" [label]="'Estado'" [required]="true" [isDisabled]="false"
+        <app-catalogo-select [catalogo]="estadoCatalogo" [label]="'Estado'" [required]="true" [isDisabled]="false" [isDisabled]="esFormularioSoloLectura"
           name="estado" formControlName="estado" (selectionChange)="cambiarEstado($event)"></app-catalogo-select>
       </div>
     </div>
@@ -36,7 +36,7 @@
   <div class="col-md-12">
     <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" [configuracionTabla]="configuracionTablaDisponibles"
       [datos]="datosTablaSubfabricantesDisponibles"
-      (listaDeFilaSeleccionada)="onPlantasDisponiblesSeleccionadas($event)"></app-tabla-dinamica>
+      (listaDeFilaSeleccionada)="onPlantasDisponiblesSeleccionadas($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
   </div>
 
   <div class="row justify-content-end">
@@ -52,7 +52,7 @@
   <div class="col-md-12">
     <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion" [configuracionTabla]="configuracionTablaSeleccionadas"
       [datos]="datosTablaSubfabricantesSeleccionadas"
-      (listaDeFilaSeleccionada)="onPlantasSeleccionadas($event)"></app-tabla-dinamica>
+      (listaDeFilaSeleccionada)="onPlantasSeleccionadas($event)" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
   </div>
 
   <div class="row justify-content-end">

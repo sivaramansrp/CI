@@ -6,7 +6,7 @@ import {Subject,map,takeUntil } from 'rxjs';
 import { ANEXO_TRES_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
 import { FraccionArancelariaDescripcion } from '../../models/empresas.model';
 import { Tramite80104Query } from '../../../estados/queries/tramite80104.query';
-
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * Decorador que define la configuración del componente AnexoTresComponent.
  * 
@@ -68,22 +68,71 @@ export class AnexoTresComponent implements OnInit, OnDestroy {
 
   /** Lista de elementos agregados al Anexo Tres */
   anexoTres: FraccionArancelariaDescripcion[] = [];
-
+ /** Indica si el formulario debe mostrarse en modo solo lectura.  
+ *  Controla la habilitación o deshabilitación de los campos. */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor que inyecta servicios de formularios y de estado (store y query).
    */
   constructor(
     private fb: FormBuilder,
     private tramite80104Store: Tramite80104Store,
-    private tramite80104Query: Tramite80104Query
-  ) {}
+    private tramite80104Query: Tramite80104Query,
+   private consultaioQuery: ConsultaioQuery,
+        ) { 
+       this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        
+          this.inicializarCertificadoFormulario();
+        })
+      )
+      .subscribe();
+    }   
 
-  /**
-   * Ciclo de vida: se ejecuta al inicializar el componente.
-   * Inicializa los formularios y sus valores.
+     /**
+   * Método que se ejecuta cuando el componente es inicializado.
+   * 
+   * Inicializa el formulario reactivo con los valores actuales de la solicitud.
    */
   ngOnInit(): void {
-    this.inicializarFormulario();
+    this.inicializarCertificadoFormulario();
+  }
+   /**
+   * Método para inicializar el formulario reactivo con los datos de la solicitud.
+   * 
+   * Este método configura los campos del formulario con los valores actuales del estado de la solicitud
+   * y aplica las validaciones necesarias. También deshabilita ciertos campos y establece valores predeterminados.
+   */
+  inicializarCertificadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+     this.inicializarFormulario();
+    }  
+  }
+  /**
+   * @comdoc
+   * Guarda los datos del formulario de combinación requerida.
+   * 
+   * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
+   * - Si el formulario es de solo lectura, lo deshabilita.
+   * - Si no es de solo lectura, lo habilita.
+   * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.anexoDosForm.disable();
+         this.anexoTresForm.disable();
+   
+      } else {
+        this.anexoDosForm.enable();
+          this.anexoTresForm.enable();
+      
+      }
   }
 
   /**
@@ -107,13 +156,13 @@ export class AnexoTresComponent implements OnInit, OnDestroy {
  * Actualmente no se aplican validadores, pero pueden añadirse si se requiere validación en el futuro.
  */
     this.anexoDosForm = this.fb.group({
-      fraccionArancelaria: [''],
-      descripcion: ['']
+      fraccionArancelaria: [this.solicitudState.fraccionArancelaria],
+      descripcion: [this.solicitudState.descripcion]
     });
     /* Formulario para Anexo Tres con campos de fracción y descripción */
     this.anexoTresForm = this.fb.group({
-      fraccionTres: [''],
-      descripcionTres: ['']
+      fraccionTres: [this.solicitudState.fraccionTres],
+      descripcionTres: [this.solicitudState.descripcionTres]
     });
     /* Obtiene los valores actuales del estado para Anexo Dos y Anexo Tres */
     this.anexoDos = this.tramite80104Query.getValue().anexoDos;

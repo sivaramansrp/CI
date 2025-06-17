@@ -6,8 +6,8 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
-
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, OnInit } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import {
   DatosSubcontratista,
   PlantasSubfabricante,
@@ -22,6 +22,7 @@ import { CommonModule } from '@angular/common';
 import { DetallesPlantasComponent } from '../detalles-plantas/detalles-plantas.component';
 import { Modal } from 'bootstrap';
 import { Router } from '@angular/router';
+import { map, Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'empresass-subfabricante',
@@ -42,7 +43,7 @@ import { Router } from '@angular/router';
  * Este componente permite gestionar los datos de las empresas subfabricantes,
  * incluyendo la selección de plantas, la configuración de la tabla y el cambio de estados.
  */
-export class EmpresasSubfabricantesComponent {
+export class EmpresasSubfabricantesComponent implements OnInit {
 
   /**
    * Referencia al elemento modal para complementar plantas.
@@ -270,13 +271,67 @@ export class EmpresasSubfabricantesComponent {
    * @description Esta propiedad almacena las plantas que han sido seleccionadas por el usuario para realizar algún proceso (como eliminación o agrupación).
    */
   plantasSeleccionadas: PlantasSubfabricante[] = [];
-
+  /** Indica si el formulario debe mostrarse en modo solo lectura.  
+ *  Controla la habilitación o deshabilitación de los campos. */
+  esFormularioSoloLectura: boolean = false;
+  /**
+   * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
   /**
    * Constructor para inicializar el formulario de datos del subcontratista.
    * @param fb - FormBuilder para la creación del formulario reactivo.
    */
-  constructor(private fb: FormBuilder, private router: Router) {
-    this.inicializarFormularioDatosSubcontratista();
+  constructor(private fb: FormBuilder, private router: Router,private consultaioQuery: ConsultaioQuery,  
+  ) { 
+       this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        
+          this.inicializarCertificadoFormulario();
+        })
+      )
+      .subscribe();
+    }
+     /**
+   * Método que se ejecuta cuando el componente es inicializado.
+   * 
+   * Inicializa el formulario reactivo con los valores actuales de la solicitud.
+   */
+  ngOnInit(): void {
+    this.inicializarCertificadoFormulario();
+  }
+ /**
+   * Método para inicializar el formulario reactivo con los datos de la solicitud.
+   * 
+   * Este método configura los campos del formulario con los valores actuales del estado de la solicitud
+   * y aplica las validaciones necesarias. También deshabilita ciertos campos y establece valores predeterminados.
+   */
+  inicializarCertificadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+     this.inicializarFormularioDatosSubcontratista();
+    }  
+  }
+    /**
+   * @comdoc
+   * Guarda los datos del formulario de combinación requerida.
+   * 
+   * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
+   * - Si el formulario es de solo lectura, lo deshabilita.
+   * - Si no es de solo lectura, lo habilita.
+   * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormularioDatosSubcontratista();
+      if (this.esFormularioSoloLectura) {
+        this._formularioDatosSubcontratista.disable();        
+      } else {
+        this._formularioDatosSubcontratista.enable();       
+      }
   }
 
   /**

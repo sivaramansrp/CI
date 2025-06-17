@@ -21,7 +21,7 @@
  * @styleUrl ./aggregar-complimentos.component.scss
  */
 
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { map, Observable, Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplimentosComponent } from '../../../../shared/components/complimentos/complimentos.component';
 
@@ -30,6 +30,9 @@ import { DatosComplimentos } from '../../../../shared/models/complimentos.model'
 import { SociaoAccionistas } from '../../../../shared/models/complimentos.model';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+/*
+
 /*
   * Componente para agregar cumplimentos en el trámite 80103.
   * 
@@ -76,17 +79,30 @@ export class AggregarComplimentosComponent implements OnDestroy {
     * @memberof AggregarComplimentosComponent
     */
   tablaDatosComplimentosExtranjera$: Observable<SociaoAccionistas[]>;
+   /** Indica si el formulario debe mostrarse en modo solo lectura.  
+ *  Controla la habilitación o deshabilitación de los campos. */
+  esFormularioSoloLectura: boolean = false;
   /*
   * Constructor del componente.
   * 
   * @param {Tramite80101Store} store - Almacén de estado para gestionar los datos de los cumplimentos.
   * @param {Tramite80101Query} tramiteQuery - Consulta para obtener los datos de los cumplimentos.
   */
-
 constructor(
     private store: Tramite80101Store,
     private tramiteQuery: Tramite80101Query,
-  ) {
+ private consultaioQuery: ConsultaioQuery,  
+  ) { 
+       this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        
+                  })
+      )
+      .subscribe();
+    
     this.tablaDatosComplimentos$ =
       this.tramiteQuery.selectTablaDatosComplimentos$;
     this.tablaDatosComplimentosExtranjera$ =
