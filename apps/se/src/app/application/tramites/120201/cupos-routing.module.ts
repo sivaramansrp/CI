@@ -4,7 +4,7 @@ import { PantallasComponent } from './pages/pantallas/pantallas.component';
 
 const ROUTES: Routes = [
   {
-    path: 'fisica',
+    path: 'persona-fisica',
     component: PantallasComponent,
   }
 ];
