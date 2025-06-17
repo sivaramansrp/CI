@@ -59,14 +59,14 @@ constructor(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.consultaState = seccionState;
-          if (this.consultaState.update) {
+        })
+      )
+      .subscribe();
+       if (this.consultaState.update) {
             this.guardarDatosFormulario();
           } else {
             this.esDatosRespuesta = true;
           }
-        })
-      )
-      .subscribe();
   }
 
   /**
