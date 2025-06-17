@@ -1,11 +1,10 @@
 <div class="container">
-  <ng-titulo titulo="Acreditación de infraestructura (etapa
-pre-operativa)"></ng-titulo>
+  <ng-titulo titulo="Acreditación de infraestructura (etapa pre-operativa)"></ng-titulo>
   <form [formGroup]="registroForm">
   <ng-container>
     <div class="row mb-3">
                   <div class="col-md-4">
-                      <app-catalogo-select [catalogo]="tramiteList.catalogos" [label]="tramiteList.labelNombre" [placeholder]="tramiteList.primerOpcion" [required]="true"  formControlName="tipoDeInversion" name="tipoDeInversion" id="tipoDeInversion" (change)="setValoresStore(registroForm, 'tipoDeInversion', 'setTipoDeInversion')"></app-catalogo-select>
+                      <app-catalogo-select [catalogo]="tramiteList.catalogos" [label]="tramiteList.labelNombre" [placeholder]="tramiteList.primerOpcion" [required]="true"  formControlName="tipoDeInversion" name="tipoDeInversion" id="tipoDeInversion" (change)="setValoresStore(registroForm, 'tipoDeInversion', 'setTipoDeInversion')" [isDisabled]="soloLectura"></app-catalogo-select>
                   </div>
                   <div class="col-md-5">
                       <label for="valorEnPesos" class="form-label">Valor en pesos*:</label>
@@ -17,10 +16,10 @@ pre-operativa)"></ng-titulo>
                   </div>
                   <div class="col-md-5">
                     <app-catalogo-select [catalogo]="aduana.catalogos" [label]="aduana.labelNombre"
-                      [placeholder]="aduana.primerOpcion" [required]="true"  formControlName="listaDeDocumentos" name="listaDeDocumentos" id="listaDeDocumentos" (change)="setValoresStore(registroForm, 'listaDeDocumentos', 'setListaDeDocumentos')"></app-catalogo-select>
+                      [placeholder]="aduana.primerOpcion" [required]="true"  formControlName="listaDeDocumentos" name="listaDeDocumentos" id="listaDeDocumentos" (change)="setValoresStore(registroForm, 'listaDeDocumentos', 'setListaDeDocumentos')" [isDisabled]="soloLectura"></app-catalogo-select>
                   </div>
                   <div class="col-md-12 mt-5 d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary ms-3" (click)="poblarTabla()">Agregar</button>
+                    <button type="button" class="btn btn-primary ms-3" (click)="poblarTabla()" [disabled]="soloLectura">Agregar</button>
                   </div>
                   @if (nuevaNotificacion) { <section>
         <lib-notificaciones [notificacionInput]="nuevaNotificacion"
@@ -30,7 +29,7 @@ pre-operativa)"></ng-titulo>
   </ng-container>
   <ng-container>
     <h6>Datos de la inversión</h6>
-    <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="encabezadoDeTabla" [datos]="configuracionTablaDatos" (filaSeleccionada)="onCheckboxClicked($event)"></app-tabla-dinamica>
+    <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="encabezadoDeTabla" [datos]="configuracionTablaDatos" (filaSeleccionada)="onCheckboxClicked($event)" [disableSeleccionTablaCheckBox]="soloLectura"></app-tabla-dinamica>
     <div class="col-md-12 mt-5 d-flex justify-content-end" *ngIf="configuracionTablaDatos.length > 0">
       <button type="button" name="modificarMercancias" class="btn btn-default" (click)="modificarFilaSeleccionada()">Modificar</button>
       <button type="button" name="eliminarMercancias" class="btn btn-danger ms-2" (click)="eliminarFilasSeleccionadas()">Eliminar</button>
@@ -79,14 +78,14 @@ pre-operativa)"></ng-titulo>
       <input class="form-control" [ngClass]="isValid(cadenaDeLaDependencia, 'cadenaDeLaDependencia') ? 'required' : ''" type="string" formControlName="cadenaDeLaDependencia" name="cadenaDeLaDependencia" id="cadenaDeLaDependencia" (change)="setValoresStore(registroForm, 'cadenaDeLaDependencia', 'setCadenaDeLaDependencia')" />
     </div>
     <div class="col-md-5">
-      <app-catalogo-select [catalogo]="banco.catalogos" [label]="banco.labelNombre" [placeholder]="banco.primerOpcion" formControlName="banco" name="banco" id="banco" (change)="setValoresStore(registroForm, 'banco', 'setBanco')"></app-catalogo-select>
+      <app-catalogo-select [catalogo]="banco.catalogos" [label]="banco.labelNombre" [placeholder]="banco.primerOpcion" formControlName="banco" name="banco" id="banco" (change)="setValoresStore(registroForm, 'banco', 'setBanco')" [isDisabled]="soloLectura"></app-catalogo-select>
     </div>
     <div class="col-md-4">
       <label for="llaveDePago" class="form-label">Llave de pago:</label>
       <input class="form-control" [ngClass]="isValid(llaveDePago, 'llaveDePago') ? 'required' : ''" type="number" formControlName="llaveDePago" name="llaveDePago" id="llaveDePago" (change)="setValoresStore(registroForm, 'llaveDePago', 'setLlaveDePago')" />
     </div>
     <div class="col-md-5">
-      <input-fecha [datos]="fechaInicialInput"   (valorCambiado)="cambioFechaIngreso($event)" [setFecha]="registroForm.get('fechaInicialInput')?.value"></input-fecha>
+      <input-fecha [datos]="fechaInicialInput"   (valorCambiado)="cambioFechaIngreso($event)" [setFecha]="registroForm.get('fechaInicialInput')?.value" [isDisabled]="soloLectura"></input-fecha>
       <div *ngIf="registroForm.get('fechaInicialInput')?.hasError('fechaInvalida')" class="text-danger">
     The payment date must be less than or equal to the current date.
   </div>
@@ -96,7 +95,7 @@ pre-operativa)"></ng-titulo>
       <input class="form-control" [ngClass]="isValid(importeDePago, 'importeDePago') ? 'required' : ''" type="number" formControlName="importeDePago" name="importeDePago" id="importeDePago" (change)="setValoresStore(registroForm, 'importeDePago', 'setImporteDePago')" />
     </div>
     <div class="col-md-12 text-end mt-3">
-          <button class="btn btn-danger" (click)="borrar()">Borrar datos del pago</button>
+          <button class="btn btn-danger" (click)="borrar()" [disabled]="soloLectura">Borrar datos del pago</button>
         </div>
   </ng-container>
   

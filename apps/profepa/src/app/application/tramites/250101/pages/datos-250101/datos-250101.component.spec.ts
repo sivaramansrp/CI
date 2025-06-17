@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import {HttpClientTestingModule} from '@angular/common/http/testing';
 import { Datos250101Component } from './datos-250101.component';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 
 describe('Datos250101Component', () => {
   let component: Datos250101Component;
@@ -15,7 +16,7 @@ describe('Datos250101Component', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [Datos250101Component],
-      imports:[],
+      imports:[HttpClientTestingModule,SolicitanteComponent],
       providers: [
         { provide: 'SolicitanteService', useValue: mockSolicitanteService },
       ],
