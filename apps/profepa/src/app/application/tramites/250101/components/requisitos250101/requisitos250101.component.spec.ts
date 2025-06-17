@@ -1,10 +1,61 @@
+jest.mock('@libs/shared/theme/assets/json/250101/banco.json', () => ({
+  __esModule: true,
+  default: {
+    medio: [
+      { id: 1, descripcion: 'Medio 1' },
+      { id: 2, descripcion: 'Medio 2' }
+    ],
+      requisito: [
+      { id: 1, descripcion: 'requisito 1' },
+      { id: 2, descripcion: 'requisito 2' }
+    ],
+    // Add other properties if your component uses them
+  }
+}), { virtual: true });
+
+// Mock reuisitosDatosDummy
+jest.mock('@libs/shared/theme/assets/json/250101/requisitos-datos-dummy.json', () => ({
+  __esModule: true,
+  default: {
+  numeroIdentificacion: 'ABC123',
+  numeroEconomico: 'ECO456',
+  placa: 'XYZ789',
+  No: '1',
+  Fecha: '2024-01-01',
+  Tipo: 'Permiso'
+  }
+}), { virtual: true });
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Requisitos250101Component } from './requisitos250101.component';
 import { Tramite250101Query } from '../../estados/tramite250101.query';
 import { Tramite250101Store } from '../../estados/tramite250101.store';
 import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
+// Mock Tramite250101Store
+class Tramite250101StoreMock {
+  setFechas = jest.fn();
+}
+
+// Mock Tramite250101Query
+class Tramite250101QueryMock {
+  selectSolicitud$ = of({
+    medio: 1,
+    identificacion: 'ID123',
+    economico: 'ECO456',
+    placa: 'PLACA789',
+    numero: 'NUM001',
+    fechas: '2024-01-01',
+    requisito: 1
+  });
+}
+
+// Mock ConsultaioQuery
+class ConsultaioQueryMock {
+  selectConsultaioState$ = of({ readonly: false });
+}
 
 describe('Requisitos250101Component', () => {
   let component: Requisitos250101Component;
@@ -21,6 +72,8 @@ describe('Requisitos250101Component', () => {
     requisito: 3,
   };
 
+
+  
   beforeEach(async () => {
     storeMock = {
       setMedio: jest.fn(),
@@ -32,12 +85,14 @@ describe('Requisitos250101Component', () => {
       setRequisito: jest.fn(),
     };
 
+    
     await TestBed.configureTestingModule({
       imports: [ReactiveFormsModule, FormsModule, Requisitos250101Component],
       providers: [
         FormBuilder,
         { provide: Tramite250101Query, useValue: { selectSolicitud$: of(mockState) } },
         { provide: Tramite250101Store, useValue: storeMock },
+        { provide: 'ConsultaioQuery', useClass: ConsultaioQueryMock }
       ],
       schemas: [CUSTOM_ELEMENTS_SCHEMA], // Avoid errors for unknown elements
     }).compileComponents();
@@ -46,6 +101,8 @@ describe('Requisitos250101Component', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(Requisitos250101Component);
     component = fixture.componentInstance;
+
+    // (component as any).consultaioQuery = TestBed.inject('ConsultaioQuery');
     fixture.detectChanges();
   });
 
@@ -88,8 +145,8 @@ describe('Requisitos250101Component', () => {
     });
 
     component.showrequisitosModal = true;
-    component.RequisitosDatos();
-    expect(component.RequisitosTabla.length).toBe(1);
+    component.requisitosDatos();
+    expect(component.requisitosTabla.length).toBe(1);
     expect(component.showrequisitosModal).toBe(false);
   });
 
@@ -105,7 +162,7 @@ describe('Requisitos250101Component', () => {
     });
 
     component.showtransporteModal = true;
-    component.TransporteDatos();
+    component.transporteDatos();
     expect(component.TransporteTabla.length).toBe(1);
     expect(component.showtransporteModal).toBe(false);
   });
@@ -123,4 +180,25 @@ describe('Requisitos250101Component', () => {
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+    it('should disable form in readonly mode (guardarDatosFormulario)', () => {
+      component.esFormularioSoloLectura = true;
+      component.guardarDatosFormulario();
+      expect(component.transporteForm.disabled).toBe(true);
+    });
+  
+    it('should enable form in editable mode (guardarDatosFormulario)', () => {
+      component.esFormularioSoloLectura = false;
+      component.guardarDatosFormulario();
+      expect(component.transporteForm.enabled).toBe(true);
+    });
+  
+    it('should clean up observables on destroy', () => {
+      (component as any).destroyNotifier$ = new Subject<void>();
+      const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
+      const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
+      component.ngOnDestroy();
+      expect(nextSpy).toHaveBeenCalled();
+      expect(completeSpy).toHaveBeenCalled();
+    });
 });

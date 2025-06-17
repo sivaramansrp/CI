@@ -2232,6 +2232,15 @@
     "numeroDeProcedimiento": "260304"
   },
   {
+    "id": 250101,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "PROFEPA",
+    "numeroDeProcedimiento": "250101"
+  },
+  {
     "id": 290301,
     "tipoDeTramite": "Solicitud de cs Permiso",
     "fecha": "2023-10-01",
@@ -2241,6 +2250,33 @@
     "numeroDeProcedimiento": "290301"
   },
   {
+    "id": 261601,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "261601"
+  },
+  {
+  "id": 6402,
+  "tipoDeTramite": "Solicitud de Permiso",
+  "fecha": "2023-10-01",
+  "fechaActualizacion": "2023-10-05",
+  "diasTranscurridos": "4",
+  "departamento": "AGA",
+  "numeroDeProcedimiento": "6402"
+  },
+  {
+    "id": 31202,
+    "tipoDeTramite": "Renovación Certificación IVA e IEPS Mod A",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "31202"
+  },
+  {
     "id": 32101,
     "tipoDeTramite": "Solicitud de cs Permiso",
     "fecha": "2023-10-01",
@@ -2248,5 +2284,5 @@
     "diasTranscurridos": "4",
     "departamento": "AGACE",
     "numeroDeProcedimiento": "32101"
-  }
+}
 ]
