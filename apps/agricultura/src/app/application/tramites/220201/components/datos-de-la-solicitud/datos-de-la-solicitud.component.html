@@ -175,4 +175,12 @@
         </div>
       </div>
     </form>
+      <div>
+    @if(moduloEmergente){
+        <lib-notificaciones
+          [notificacionInput]="nuevaNotificacion"
+          (confirmacionModal)="eliminarPedimento($event)"
+        ></lib-notificaciones>
+    }
+    </div>
   </div>

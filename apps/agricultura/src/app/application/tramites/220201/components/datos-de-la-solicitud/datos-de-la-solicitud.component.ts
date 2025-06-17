@@ -4,13 +4,13 @@ import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
 import { TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 
-import {AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, CrosslistComponent, InputRadioComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@ng-mf/data-access-user';
+import {AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, CrosslistComponent, InputRadioComponent, Notificacion, NotificacionesComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { HttpClient } from '@angular/common/http';
 
 import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
 
-import {Subject, map, takeUntil } from 'rxjs';
+import {Subject, debounceTime, map, takeUntil } from 'rxjs';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
 import { FilaSolicitud } from '../../models/220201/capturar-solicitud.model';
@@ -42,7 +42,8 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
            CrosslistComponent,
            InputRadioComponent,
            AlertComponent,
-           TablaDinamicaComponent]
+           TablaDinamicaComponent,
+          NotificacionesComponent]
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy,AfterViewInit {
   /**
@@ -115,6 +116,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy,AfterViewI
    */
   regimen: Catalogo[] = [];
 
+    /**
+   * @property moduloEmergente
+   * @description Indica si el módulo emergente está activo.
+   * @type {boolean}
+   * @default false
+   */
+  public moduloEmergente: boolean = false;
+
   opcionDeBotonDeRadio: RadioOpcion[] = [
     {
       "label": "Animales Vivos",
@@ -174,7 +183,12 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
     { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
     { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
   ];
-
+  /**
+   * Representa una nueva notificación que será utilizada en el componente.
+   * 
+   * @type {Notificacion}
+   */
+  public nuevaNotificacion!: Notificacion;
   /**
    * Notificador para destruir el componente.
    * @property {Subject<void>} destroyNotifier$
@@ -219,8 +233,18 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
   ngOnInit(): void {
         this.crearFormulario();
     this.initActionFormBuild();
- 
-
+ this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Por favor seleccione un archivo CSV.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'OK',
+      txtBtnCancelar: '',
+    };
+    
 
   }
 
@@ -245,6 +269,16 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
         })
       )
       .subscribe();
+this.datosDelaSolicitud.get('claveUCON')?.valueChanges
+  .pipe(debounceTime(300))
+  .subscribe(value => {
+    if (value.length < 5) {
+      this.moduloEmergente = false; 
+    } else {
+      const PATTERN = /^UCON[a-zA-Z0-9]{4,10}$/;
+      this.moduloEmergente = !PATTERN.test(value);
+    }
+  });
   }
   /**
    * Inicializa el grupo de formularios anidado para los datos de la solicitud.
@@ -256,7 +290,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
       aduanaIngreso: ['', Validators.required],
       oficinaInspeccion: ['', Validators.required],
       puntoInspeccion: ['', Validators.required],
-      claveUCON: ['', Validators.maxLength(15)],
+      claveUCON: [''],
       establecimientoTIFs: [''],
       nombreVeterinario: [''],
       numeroGuia: [''],
@@ -370,7 +404,18 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
       const VALOR = this.datosDelaSolicitud.value;
       this.certificadoZoosanitarioServices.updateDatosDeLaSolicitud(VALOR);
     }
-
+  /**
+   * Elimina un pedimento de la lista si el parámetro `borrar` es verdadero.
+   *
+   * @param borrar - Indica si se debe eliminar el pedimento seleccionado.
+   * 
+   * Si `borrar` es `true`, elimina el elemento en la posición `elementoParaEliminar` del arreglo `pedimentos`.
+   */
+  eliminarPedimento(borrar: boolean): void {
+    if(borrar){
+      this.moduloEmergente = false;
+    }
+  }
   /**
    * @inheritdoc
    * @description
