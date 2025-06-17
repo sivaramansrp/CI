@@ -1,5 +1,6 @@
 import { Catalogo, RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { Destinatario, Exportador, FormularioDatos, Mercancia } from '../enum/sanidad.enum';
+import { Solicitud221603State, Tramite221603Store } from '../estados/tramite221603.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -59,7 +60,7 @@ export class SanidadService {
    * Inyecta el cliente HTTP para realizar solicitudes a los catálogos y datos necesarios.
    * http Cliente HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private tramite221603Store: Tramite221603Store) { }
 
   /**
    * Inicializa los datos del catálogo de regímenes aduaneros.
@@ -114,6 +115,35 @@ export class SanidadService {
     this.obtenerRespuestaPorUrl(this, 'banco', '/221603/banco.json');
     this.obtenerRespuestaPorUrl(this, 'justificacionCatalogo', '/221603/justificacion.json');
   }
+
+  /**
+   * Obtiene los datos de la solicitud 221603.
+   * Realiza una petición HTTP para recuperar el estado actual de la solicitud desde un archivo JSON.
+   * 
+   * Observable<Solicitud221603State> - Observable con los datos de la solicitud.
+   */
+  public getData(): Observable<Solicitud221603State> {
+    return this.http.get<Solicitud221603State>('assets/json/221603/solicitud.json');
+  }
+
+/**
+ * actualizarEstadoFormulario
+ * Actualiza el estado del formulario de la solicitud 221603 en el store correspondiente,
+ * estableciendo los valores de cada campo a partir del objeto de estado proporcionado.
+ *
+ * {Solicitud221603State} resp - Objeto que contiene el estado actual del formulario,
+ * incluyendo justificación, aduana, oficina, punto, guía, régimen, carro, medio de transporte,
+ * exención de pago, clave, dependencia, banco, llave, fecha e importe.
+ *
+ * {void}
+ */
+ public actualizarEstadoFormulario(resp: Solicitud221603State): void {
+  for (const CAMPO of Object.keys(resp) as (keyof Solicitud221603State)[]) {
+    if (Object.prototype.hasOwnProperty.call(resp, CAMPO)) {
+      this.tramite221603Store.setValoresStore(CAMPO, resp[CAMPO]);
+    }
+  }
+ }
 
   /**
    * Método genérico para obtener datos desde una URL y asignarlos a una variable del servicio.

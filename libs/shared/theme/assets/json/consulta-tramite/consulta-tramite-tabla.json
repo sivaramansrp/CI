@@ -129,6 +129,24 @@
         "numeroDeProcedimiento": "220102"
     },
     {
+        "id": "6502",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "6502"
+    },
+    {
+        "id": "110216",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "110216"
+    },
+    {
         "id": "120201",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2025-06-10",

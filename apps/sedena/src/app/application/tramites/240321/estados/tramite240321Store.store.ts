@@ -220,6 +220,10 @@ export class Tramite240321Store extends Store<Tramite240321State> {
       folio: folio,
     }));
   }
-  
-
+  public updateState(state: Tramite240321State): void {
+    this.update((currentState) => ({
+      ...currentState,
+      ...state,
+    }));
+  }
 }
