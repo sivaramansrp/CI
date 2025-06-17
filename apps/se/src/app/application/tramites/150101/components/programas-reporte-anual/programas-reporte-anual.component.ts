@@ -137,6 +137,7 @@ export class ProgramasReporteAnnualComponent implements OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.formularioDeshabilitado = seccionState.readonly;
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
