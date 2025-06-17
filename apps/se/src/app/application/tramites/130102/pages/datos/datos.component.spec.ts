@@ -27,4 +27,31 @@ describe('DatosComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should call guardarDatosFormulario if consultaState.update is true', () => {
+    const guardarDatosFormularioSpy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.consultaState = { update: true } as any;
+    component.ngOnInit();
+    expect(guardarDatosFormularioSpy).toHaveBeenCalled();
+  });
+
+  it('should set esDatosRespuesta to true if consultaState.update is false', () => {
+    component.consultaState = { update: false } as any;
+    component.ngOnInit();
+    expect(component.esDatosRespuesta).toBe(true);
+  });
+
+  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn((component as any).destroyNotifier$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroyNotifier$, 'complete');
+    component.ngOnDestroy();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should update indice when seleccionaTab is called', () => {
+    component.seleccionaTab(3);
+    expect(component.indice).toBe(3);
+  });
+
 });
