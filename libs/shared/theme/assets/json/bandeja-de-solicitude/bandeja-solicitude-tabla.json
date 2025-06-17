@@ -1691,6 +1691,15 @@
     "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "221602"
   },
+    {
+    "id": 260704,
+    "tipoDeTramite": "Solicitud Procedure 260701",
+    "fecha": "2024-11-01",
+    "fechaActualizacion": "2024-11-07",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260704"
+  },
   {
     "id": 260905,
     "tipoDeTramite": "Solicitudddd",
