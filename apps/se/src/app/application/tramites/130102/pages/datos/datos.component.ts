@@ -1,6 +1,6 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil} from 'rxjs';
-import { ConsultaioState} from '@ng-mf/data-access-user';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil} from 'rxjs';
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
 @Component({
@@ -18,14 +18,15 @@ export class DatosComponent implements OnInit, OnDestroy {
     /*
   * @description Estado actual de la consulta, obtenido desde el store.
     */
-  @Input() consultaState!: ConsultaioState;
+  public consultaState!: ConsultaioState;
   /**
    * Constructor del componente DatosComponent.
    * @param consultaQuery ConsultaQuery para obtener el estado de la consulta.
    * @param formularioRegistroService Servicio para manejar el registro del formulario.
    */
   constructor(
-     private formularioRegistroService: FormularioRegistroService
+    private consultaQuery: ConsultaioQuery,
+    private formularioRegistroService: FormularioRegistroService
   ){
 
   }
@@ -34,11 +35,18 @@ export class DatosComponent implements OnInit, OnDestroy {
   * Se suscribe al estado de la consulta y actualiza la variable consultaState.
   */
    ngOnInit(): void {
-    if(this.consultaState.update) {
-      this.guardarDatosFormulario();
-    } else {
-      this.esDatosRespuesta = true;
-    }
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+          if(this.consultaState.update) {
+            this.guardarDatosFormulario();
+          } else {
+            this.esDatosRespuesta = true;
+          }
+        }
+      )).subscribe();
   }
   /**
    * Este método inicializa el formulario con validaciones y carga datos de productos.

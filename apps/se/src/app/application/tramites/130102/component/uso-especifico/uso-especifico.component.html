@@ -11,7 +11,7 @@
                 formControlName="fraccionArancelariaProsec"
                 [catalogo]="catalogos"
                [required]="true"
-                 [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
+                 [isDisabled]="consultaState.readonly ? true : false"></app-catalogo-select>
                @if (usoEspicificoForm.controls['fraccionArancelariaProsec'].invalid && usoEspicificoForm.controls['fraccionArancelariaProsec'].touched) {
                 <div class="text-danger">
                   @if (usoEspicificoForm.controls['fraccionArancelariaProsec'].errors?.['required']) {
@@ -47,7 +47,7 @@
          
         
             <div class="container text-end mt-5">
-                <button class="btn btn-primary" (click)="agregar()">Agregar</button>
+                <button class="btn btn-primary" (click)="agregar()" [disabled]="consultaState.readonly">Agregar</button>
             </div>
         
     </form>
@@ -62,11 +62,12 @@
           [configuracionTabla]="configuracionTabla"
           [datos]="datosSocios"
           [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX"
-          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
+          [disableSeleccionTablaCheckBox]="consultaState.readonly"
+          [desactivarEmitirEvento]="!consultaState.readonly"
         
         ></app-tabla-dinamica>
     </div>
     <div class="container text-end mt-5">
-        <button class="btn btn-danger">Eliminar seleccionado</button>
+        <button class="btn btn-danger" [disabled]="consultaState.readonly">Eliminar seleccionado</button>
     </div>
 </div>

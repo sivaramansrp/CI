@@ -23,7 +23,7 @@ import { Tramite130102Query } from '../../../../estados/queries/tramite130102.qu
 import { Subject, map, takeUntil } from 'rxjs'; 
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
-import { ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { FRACCIONES_ANARCIA_TABLA } from '../../constantes/octava-temporal.enum';
 import { FraccionArancelariaProsec } from '../../models/octava-temporal.model';
 
@@ -74,16 +74,16 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
    * Observable utilizado para cancelar suscripciones al destruir el componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-/*
-   * Indica si el formulario es de solo lectura.
-   */
-   esFormularioSoloLectura: boolean = false;
+
+  /*
+  * @description Estado actual de la consulta, obtenido desde el store.
+  */
+  public consultaState!: ConsultaioState;
 
   /**
    * @constructor
    * @param {FormBuilder} formbuilt Servicio para construir el formulario.
    */
-  // eslint-disable-next-line no-empty-function
   constructor(private formbuilt: FormBuilder,
     private tramite130102Store: Tramite130102Store,
     private tramite130102Query: Tramite130102Query,
@@ -94,7 +94,7 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
          .pipe(
            takeUntil(this.destroyNotifier$),
            map((seccionState) => {
-             this.esFormularioSoloLectura = seccionState.readonly;
+             this.consultaState = seccionState;
             
              this.inicializarEstadoFormulario();
            })
@@ -109,7 +109,7 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
    */
   ngOnInit(): void {
     const USO_ESPECIFICO_TABLA = this.solicitudState?.['uso_especifico_tabla'];
-    if ((!Array.isArray(USO_ESPECIFICO_TABLA) || USO_ESPECIFICO_TABLA.length === 0) && this.esFormularioSoloLectura) {
+    if ((!Array.isArray(USO_ESPECIFICO_TABLA) || USO_ESPECIFICO_TABLA.length === 0) && this.consultaState.readonly) {
       this.formularioRegistroService.getFraccionesUsoEspecifico().subscribe(data => {
         this.datosSocios = data;
       });
@@ -124,7 +124,7 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
    * @memberof UsoEspicificoComponent
    */
   inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
+    if (this.consultaState.readonly) {
       this.guardarDatosFormulario();
     } else {
       this.inicializarFormulario();
@@ -137,9 +137,9 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
     * */
    guardarDatosFormulario(): void {
       this.inicializarFormulario();
-      if (this.esFormularioSoloLectura) {
+      if (this.consultaState.readonly) {
         this.usoEspicificoForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
+      } else if (!this.consultaState.readonly) {
         this.usoEspicificoForm.enable();
       } else {
         // No se requiere ninguna acción en el formulario
@@ -182,9 +182,13 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
       descripción: ['',[Validators.required,UsoEspicificoComponent.noLeadingSpacesValidator]],
 
     });
-       if (this.esFormularioSoloLectura) {
-    this.usoEspicificoForm.disable();
-  }
+    if (this.consultaState.readonly) {
+      this.usoEspicificoForm.disable();
+      this.obtenerRequisitosFraccionArancelariaEsquema();
+    }
+    if (this.consultaState.update) {
+      this.obtenerRequisitosFraccionArancelariaEsquema();
+    }
   }
     /**
    * Asigna un valor del formulario al store.
@@ -204,7 +208,9 @@ export class UsoEspicificoComponent implements OnInit, OnDestroy {
    * @memberof UsoEspicificoComponent
    */
   obtenerRequisitosFraccionArancelariaEsquema(): void {
-    this.usoEspicificoForm.get('descripción')?.setValue('Descripción fraccion PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizará la mercancía a importar)');
+    const DESCRIPCION = 'Descripción fraccion PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizará la mercancía a importar)';
+    this.usoEspicificoForm.get('descripción')?.setValue(DESCRIPCION);
+    this.tramite130102Store.setDynamicFieldValue('descripción', DESCRIPCION);
   }
 
   /**
