@@ -2214,12 +2214,21 @@
     "numeroDeProcedimiento": "240118"
   },
   {
-    "id": 261601,
-    "tipoDeTramite": "Solicitud de Permiso",
+    "id": 40402,
+    "tipoDeTramite": "Registro CAA del transportista",
     "fecha": "2023-10-01",
     "fechaActualizacion": "2023-10-05",
     "diasTranscurridos": "4",
-    "departamento": "COFEPRIS",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "40402"
+  },
+  {
+    "id": 261601,
+    "tipoDeTramite": "Registro CAA del transportista",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
     "numeroDeProcedimiento": "261601"
   }
 ]
