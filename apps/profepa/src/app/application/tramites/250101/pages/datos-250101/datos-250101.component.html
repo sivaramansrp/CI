@@ -38,24 +38,35 @@
         <solicitante></solicitante>
         }
         @case (2) {
+           @if(esDatosRespuesta){
         <app-tipo-movimiento></app-tipo-movimiento>
         }
+        }
         @case (3) {
+           @if(esDatosRespuesta){
         <app-destinatario-agente-aduanal></app-destinatario-agente-aduanal>
         }
+        }
         @case (4) {
+           @if(esDatosRespuesta){
         <app-certificados></app-certificados>
         }
+        }
         @case (5) {
+           @if(esDatosRespuesta){
           <app-mercancias></app-mercancias>
         } 
+        }
         @case (6) {
+           @if(esDatosRespuesta){
           <app-requisitos250101></app-requisitos250101>
         }
-        @case (7) {
-          <app-pago-de-derechos250101></app-pago-de-derechos250101>
-             
         }
+        @case (7) {
+           @if(esDatosRespuesta){
+          <app-pago-de-derechos250101></app-pago-de-derechos250101>
+          }
+         }
         }
       </ng-container>
     </div>
