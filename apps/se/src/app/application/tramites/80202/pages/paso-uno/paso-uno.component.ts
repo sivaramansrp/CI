@@ -1,11 +1,14 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, SeccionLibStore, SolicitanteComponent } from '@ng-mf/data-access-user';
-import { Subject,map, takeUntil } from 'rxjs';
 import { AnexoComponent } from '../../components/anexo.component';
 import { CommonModule } from '@angular/common';
-import { PermisoImmexDatosService } from '../../services/permiso-immex-datos.service';
+import { Component } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, SeccionLibStore, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { EventEmitter } from '@angular/core';
 import { ImmexAmplicationSensibleDatosDelFormulario } from '../../models/immex-ampliacion-sensibles.model';
+import { OnInit } from '@angular/core';
+import { Output } from '@angular/core';
+import { PermisoImmexDatosService } from '../../services/permiso-immex-datos.service';
 import { SECCIONES_TRAMITE_80202 } from '../../constants/immex-ampliacion-sensibles.enums';
+import { Subject,map, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-paso-uno',
@@ -14,7 +17,7 @@ import { SECCIONES_TRAMITE_80202 } from '../../constants/immex-ampliacion-sensib
   standalone:true,
   imports: [CommonModule, SolicitanteComponent, AnexoComponent],
 })
-export class PasoUnoComponent {
+export class PasoUnoComponent implements OnInit {
   /**
    * Índice que representa el número actual o posición en un flujo o proceso.
    * Se inicializa con un valor predeterminado de 1.

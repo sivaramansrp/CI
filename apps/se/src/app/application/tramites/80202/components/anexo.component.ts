@@ -12,18 +12,18 @@ import { SeccionLibQuery } from '@ng-mf/data-access-user';
 import { SeccionLibState } from '@ng-mf/data-access-user';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
 
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 
 import {
   ImmexAmpliacionSensiblesState,
   ImmexAmpliacionSensiblesStore,
 } from '../estados/immex-ampliacion-sensibles.store';
 import { ImmexAmpliacionSensiblesQuery } from '../estados/immex-ampliacion-sensibles.query';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
 /**
  * @title Anexo
@@ -37,11 +37,11 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   styleUrl: './anexo.component.scss',
   standalone: true,
   imports: [
-    TituloComponent,
+    CatalogoSelectComponent,
     CommonModule,
     ReactiveFormsModule,
     TablaDinamicaComponent,
-    CatalogoSelectComponent,
+    TituloComponent,
   ]
 })
 export class AnexoComponent implements OnInit, OnDestroy, AfterViewInit {

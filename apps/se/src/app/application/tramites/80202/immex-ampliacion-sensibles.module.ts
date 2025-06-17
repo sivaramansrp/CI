@@ -20,12 +20,12 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 
 // Application imports
 import { AnexoComponent } from './components/anexo.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ImmexAmpliacionSensiblesRoutingModule } from './immex-ampliacion-sensibles-routing.module';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 @NgModule({
   declarations: [
