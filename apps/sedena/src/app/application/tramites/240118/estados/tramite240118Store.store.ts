@@ -336,6 +336,11 @@ export class Tramite240118Store extends Store<Tramite240118State> {
     });
   }
 
+  /**
+   * Actualiza el estado del store con un nuevo estado.
+   *
+   * @param newState - El nuevo estado que se establecerá en el store.
+   */
   public setState(newState: Tramite240118State): void {
     this.update(newState);
   }

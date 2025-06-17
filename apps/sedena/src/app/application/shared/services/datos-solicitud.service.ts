@@ -165,11 +165,11 @@ export class DatosSolicitudService {
       .get<{ monedaCatalogo: Catalogo[] }>(this.jsonUrl)
       .pipe(map((res) => res.monedaCatalogo));
   }
+
   /**
    * Obtiene los datos de registro de toma de muestras de mercancías.
    * @returns Observable con los datos del formulario de registro.
    */
-
   obtenerRegistroTomarMuestrasDatos240118(): Observable<Tramite240118State> {
     return this.httpServicios.get<Tramite240118State>(
       'assets/json/240118/respuestaDeActualizacionDe.json'

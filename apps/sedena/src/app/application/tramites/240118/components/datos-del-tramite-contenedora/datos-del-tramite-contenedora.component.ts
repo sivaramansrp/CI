@@ -59,6 +59,8 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @method constructor
    * @param {Tramite240118Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
    * @param {Tramite240118Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
+   *  @param {Router} router - Servicio de Angular Router para navegar entre rutas.
+   * @param {ActivatedRoute} activatedRoute - Servicio de Angular ActivatedRoute para obtener información
    * @returns {void}
    */
   constructor(
