@@ -184,6 +184,12 @@ export class CancelacionGarantiaService {
     );
   }
 
+  /**
+   * Obtiene los datos de cancelación de garantía desde un archivo JSON local.
+   * @returns {Observable<CancelacionGarantia270101State>} Observable con el estado de la cancelación de garantía.
+   * @example
+   * this.getCancelacionGarantiaData().subscribe(data => { ... });
+   */
   getCancelacionGarantiaData(): Observable<CancelacionGarantia270101State> {
     return this.http.get<CancelacionGarantia270101State>('assets/json/31401/cancelacion-garantia.json');
   }
