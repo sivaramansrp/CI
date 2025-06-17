@@ -9,14 +9,10 @@ import { SECCIONES_TRAMITE_80202 } from '../../constants/immex-ampliacion-sensib
 
 @Component({
   selector: 'app-paso-uno',
-  templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
+  templateUrl: './paso-uno.component.html',
   standalone:true,
-  imports: [
-        CommonModule,
-        SolicitanteComponent,
-        AnexoComponent
-  ]
+  imports: [CommonModule, SolicitanteComponent, AnexoComponent],
 })
 export class PasoUnoComponent {
   /**
@@ -82,7 +78,10 @@ export class PasoUnoComponent {
       .subscribe((resp) => {
         if(resp){
         this.esDatosRespuesta = true;
-      this.permisoImmexDatosService.actualizarEstadoFormulario(resp?.immexRegistro || {} as ImmexAmplicationSensibleDatosDelFormulario)
+        // Use the correct property from resp that matches ImmexAmplicationSensibleDatosDelFormulario
+        this.permisoImmexDatosService.actualizarEstadoFormulario(
+          (resp as unknown as ImmexAmplicationSensibleDatosDelFormulario) || {}
+        );
         }
       });
   }

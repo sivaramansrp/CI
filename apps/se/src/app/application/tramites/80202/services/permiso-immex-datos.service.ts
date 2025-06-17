@@ -2,11 +2,11 @@
  * @Injectable
  * @description Servicio para obtener los datos del permiso IMMEX.
  */
-import { ImmexRegistroState, ImmexRegistroStore } from '../../estados/tramites/tramite80202.store';
+import { ImmexAmpliacionSensiblesState, ImmexAmpliacionSensiblesStore } from '../estados/immex-ampliacion-sensibles.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { immexRegistroform } from '../../modelos/immex-registro-de-solicitud-modality.model';
+import { ImmexAmplicationSensibleDatosDelFormulario } from '../models/immex-ampliacion-sensibles.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,7 +23,7 @@ export class PermisoImmexDatosService {
    * @description Constructor que inicializa el cliente HTTP para realizar solicitudes.
    * @param {HttpClient} httpClient - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private httpClient: HttpClient,private readonly tramite80202Store:ImmexRegistroStore) {}
+  constructor(private httpClient: HttpClient,private readonly tramite80202Store:ImmexAmpliacionSensiblesStore) {}
 
   /**
    * @method getDatos
@@ -43,8 +43,8 @@ export class PermisoImmexDatosService {
    *
    * @memberof PermisoImmexDatosService
    */
-  getRegistroTomaMuestrasMercanciasData(): Observable<ImmexRegistroState> {
-    return this.httpClient.get<ImmexRegistroState>('assets/json/80202/immexRegistro.json');
+  getRegistroTomaMuestrasMercanciasData(): Observable<ImmexAmpliacionSensiblesState> {
+    return this.httpClient.get<ImmexAmpliacionSensiblesState>('assets/json/80202/immexRegistro.json');
   }
   /**
    * @method actualizarEstadoFormulario
@@ -55,7 +55,7 @@ export class PermisoImmexDatosService {
    *
    * @returns {void}
    */
-   actualizarEstadoFormulario(DATOS:immexRegistroform): void {
-    this.tramite80202Store.setImmexRegistro(DATOS);
+   actualizarEstadoFormulario(DATOS:ImmexAmplicationSensibleDatosDelFormulario): void {
+    // this.tramite80202Store.setImmexRegistro(DATOS);
    }
 }
