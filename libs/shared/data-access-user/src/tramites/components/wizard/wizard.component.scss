@@ -5,6 +5,17 @@ $wizard-border: #ececec;
 $wizard-extensive-border: #611232;
 $wizard-extensive-hover-bg: #545454;
 
+.wizard-steps {
+    display: flex;
+    align-items: center;
+    li:last-child {
+        width: auto;
+        display: flex;
+        align-self: center;
+        flex-grow: 1;
+    }
+}
+
 .wizard-steps,
 .wizard-steps-extensive {
     margin: 0 0 25px;
@@ -78,8 +89,6 @@ $wizard-extensive-hover-bg: #545454;
             }
 
             &:last-child {
-                top: 4px;
-                width: 94px;
                 border-top-right-radius: 5px;
                 border-bottom-right-radius: 5px;
 
@@ -226,18 +235,11 @@ $wizard-extensive-hover-bg: #545454;
     }
     .wizard-steps li {
         padding: 0 20px 0 50px;
-        &:last-child {
-            width: 144px;
-            top: 7px;
-        }
     }
 }
 
 @media (min-width: 1200px) {
     .wizard-steps li {
         padding: 0 30px 0 50px;
-        &:last-child {
-            width: 304px;
-        }
     }
 }

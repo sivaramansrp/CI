@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { PagoDeDerechos, PagoDeDerechosRevision } from '../../modelos/acuicola.model';
 import { map, takeUntil } from 'rxjs';
 import { AcuicolaService } from '../../service/acuicola.service';
+import { ConsultaioQuery} from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 import { TramiteState } from '../../estados/tramite220703.store';
 import { TramiteStore } from '../../estados/tramite220703.store';
@@ -67,19 +68,34 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false; 
+
+  /**
    * Constructor del componente.
    * @param fb Servicio para la creación de formularios reactivos.
    * @param acuicolaService Servicio para interactuar con la lógica de negocio relacionada con la acuicultura.
    * @param {TramiteStoreQuery} tramiteStoreQuery - Query para acceder al estado del trámite.
    * @param {TramiteStore} tramiteStore - Store para gestionar el estado del trámite.
+   * @param {ConsultaioQuery} consultaioQuery - Query para acceder al estado de la consulta.
    */
   constructor(
     private readonly fb: FormBuilder,
     private readonly acuicolaService: AcuicolaService,
     private tramiteStoreQuery: TramiteStoreQuery,
     private tramiteStore: TramiteStore,
+    private readonly consultaioQuery: ConsultaioQuery
   ) {
-    // No se necesita lógica de inicialización adicional.
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      ).subscribe();  
   }
 
   /**
@@ -87,7 +103,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * Inicializa el formulario, carga los datos del banco y los datos de pago de derechos.
    */
   ngOnInit(): void {
-    this.iniciarFormulario();
+    this.inicializarEstadoFormulario();
     this.getBancoDatos();
     this.pagoDeCargarDatos();
     this.pagoDerechosRevision();
@@ -119,13 +135,42 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       llaveDePago: [{ value: this.tramiteState.llaveDePago }, Validators.required],
       fechaPagoDeDerechos: [{ value: this.tramiteState.fechaPagoDeDerechos, disabled: true }, Validators.required],
       importeDePago: [{ value: this.tramiteState.importeDePago, disabled: true }, Validators.required],
-      claveDeReferenciaRevision: [{ value: '', disabled: true }, Validators.required],
-      cadenaDependenciaRevision: [{ value: '', disabled: true }, Validators.required],
-      bancoRevision: [{ value: '', disabled: true }, Validators.required],
-      llaveDePagoRevision: [{ value: '', disabled: true }, Validators.required],
-      fechaPagoDeDerechosRevision: [{ value: '', disabled: true }, Validators.required],
-      importeDePagoRevision: [{ value: '', disabled: true }, Validators.required],
+      claveDeReferenciaRevision: [{ value: this.tramiteState.claveDeReferenciaRevision, disabled: true }, Validators.required],
+      cadenaDependenciaRevision: [{ value: this.tramiteState.cadenaDependenciaRevision, disabled: true }, Validators.required],
+      bancoRevision: [{ value: this.tramiteState.bancoRevision, disabled: true }, Validators.required],
+      llaveDePagoRevision: [{ value: this.tramiteState.llaveDePagoRevision, disabled: true }, Validators.required],
+      fechaPagoDeDerechosRevision: [{ value: this.tramiteState.fechaPagoDeDerechosRevision, disabled: true }, Validators.required],
+      importeDePagoRevision: [{ value: this.tramiteState.importeDePagoRevision, disabled: true }, Validators.required],
     });
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.iniciarFormulario();
+    }  
+  }
+
+  /**
+   * Guarda los datos del formulario y actualiza el estado del componente.
+   * Si el formulario está en modo solo lectura, deshabilita los campos.
+   * Si no, habilita los campos para permitir la edición.
+   *
+   * @method guardarDatosFormulario
+   * @returns {void} Este método no retorna ningún valor.
+   */
+  guardarDatosFormulario(): void {
+    this.iniciarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.pagosDeDerechosForm.disable();
+    } else {
+      this.pagosDeDerechosForm.enable();
+    }
   }
 
   /**

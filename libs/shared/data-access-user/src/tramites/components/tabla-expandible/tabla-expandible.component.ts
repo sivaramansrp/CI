@@ -54,6 +54,12 @@ export class TablaExpandibleComponent<T, TN> {
   @Input() tableId!: string;
 
   /**
+   * Este input permite deshabilitar la selección de filas mediante checkboxes en la tabla.
+   * Si se establece en `true`, los checkboxes de selección estarán deshabilitados.
+   */
+  @Input() disableSeleccionTablaCheckBox: boolean = false;
+
+  /**
    * Valor de selección de entrada
    */
   private _seleccionEntrada!: number;

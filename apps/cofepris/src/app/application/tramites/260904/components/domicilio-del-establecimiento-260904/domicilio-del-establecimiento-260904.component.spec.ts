@@ -110,4 +110,73 @@ describe('DomicilioDelEstablecimiento260904Component', () => {
     expect(spy).toHaveBeenCalled();
   });
 
+  it('should create form, domicilio, and representanteLegal with initial values from estadoSeleccionado', () => {
+  component.estadoSeleccionado = {
+    codigoPostal: '12345',
+    estado: { id: '1', descripcion: 'CDMX' },
+    municipioOAlcaldia: 'Benito Juárez',
+    localidad: 'Del Valle',
+    colonias: 'Narvarte',
+    calle: 'Xola',
+    lada: '55',
+    telefono: '12345678',
+    avisoCheckbox: 'true',
+    regimen: { id: '1', descripcion: 'General' },
+    aduanasEntradas: { id: '1', descripcion: 'Aduana 1' },
+    aifaCheckbox: 'true',
+    manifests: 'true',
+    acuerdoPublico: 'Acuerdo',
+    rfc: 'RFC123',
+  } as any;
+
+  component.crearFormulario();
+
+  expect(component.form.get('codigoPostal')?.value).toBe('12345');
+  expect(component.form.get('municipioOAlcaldia')?.value).toBe('Benito Juárez');
+  expect(component.form.get('calle')?.value).toBe('Xola');
+  expect(component.domicilio.get('regimen')?.value).toEqual({ id: '1', descripcion: 'General' });
+  expect(component.domicilio.get('aduanasEntradas')?.value).toEqual({ id: '1', descripcion: 'Aduana 1' });
+  expect(component.representanteLegal.get('acuerdoPublico')?.value).toBe('Acuerdo');
+  expect(component.representanteLegal.get('rfc')?.value).toBe('RFC123');
+});
+
+  it('should disable all controls when esFormularioSoloLectura is true', () => {
+  component.crearFormulario();
+  component.esFormularioSoloLectura = true;
+  component.inicializarEstadoFormulario();
+
+  expect(component.form.get('codigoPostal')?.disabled).toBe(true);
+  expect(component.form.get('municipioOAlcaldia')?.disabled).toBe(true);
+  expect(component.domicilio.get('avisoCheckbox')?.disabled).toBe(true);
+  expect(component.representanteLegal.get('acuerdoPublico')?.disabled).toBe(true);
+  expect(component.representanteLegal.get('rfc')?.disabled).toBe(true);
+});
+
+it('should enable all controls when esFormularioSoloLectura is false', () => {
+  component.crearFormulario();
+  component.esFormularioSoloLectura = false;
+  component.inicializarEstadoFormulario();
+
+  expect(component.form.get('codigoPostal')?.enabled).toBe(true);
+  expect(component.form.get('municipioOAlcaldia')?.enabled).toBe(true);
+  expect(component.domicilio.get('avisoCheckbox')?.enabled).toBe(true);
+  expect(component.representanteLegal.get('acuerdoPublico')?.enabled).toBe(true);
+  expect(component.representanteLegal.get('rfc')?.enabled).toBe(true);
+});
+
+it('should update estadoSeleccionado when getValorStore is called', () => {
+  const testState = {
+    codigoPostal: '77777',
+    municipioOAlcaldia: 'Test Municipio'
+  } as any;
+
+  const query = TestBed.inject(Tramite260904Query);
+  jest.spyOn(query, 'selectTramite260904$', 'get').mockReturnValue(of(testState));
+
+  component['tramite260904Query'] = query;
+  component.getValorStore();
+
+  expect(component.estadoSeleccionado).toEqual(testState);
+});
+
 });

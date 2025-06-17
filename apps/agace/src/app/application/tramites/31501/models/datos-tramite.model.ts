@@ -34,3 +34,10 @@ export interface datosDeLaTabla {
   razonSocial: string;
   estadoDelTramite: number;
 }
+
+export interface FormaRequerimiento {
+  folioTramite: string;
+  tipoTramite: string;
+  motivoCancelacion: string;
+  tipoDeRequerimiento: string;
+}
