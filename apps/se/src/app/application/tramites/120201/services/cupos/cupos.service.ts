@@ -1,3 +1,4 @@
+import { ExpedicionCertificadosAsignacion120202State } from '../../../../estados/tramites/tramite120202.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -80,5 +81,14 @@ export class CuposService {
    */
   obtenerTablaDatos(): Observable<RespuestaCuposTabla> {
     return this.http.get<RespuestaCuposTabla>('assets/json/120201/tabla-cupos.json');
+  }
+
+  /**
+   * Método para obtener los datos de consulta de persona física.
+   * @returns Observable<ExpedicionCertificadosAsignacion120202State> - Observable que emite el estado de la consulta de persona física.
+   * @description Método para obtener los datos de consulta de persona física.
+   */
+  getConsultaPersonaFisicaDatos(): Observable<ExpedicionCertificadosAsignacion120202State> {
+    return this.http.get<ExpedicionCertificadosAsignacion120202State>('assets/json/120201/consulta-persona-fisica.json');
   }
 }
