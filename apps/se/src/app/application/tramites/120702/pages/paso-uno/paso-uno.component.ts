@@ -33,7 +33,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
    * ## Propiedad: indice
    * Define el índice actualmente seleccionado. Se inicializa con el valor `1`.
    */
-  indice = 1;
+  indice:number = 1;
 
     /**
    * ## Método: seleccionaTab

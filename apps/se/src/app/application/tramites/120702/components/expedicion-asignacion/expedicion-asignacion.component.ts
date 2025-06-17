@@ -20,12 +20,13 @@ import {
   MontoExpedirTablaDatos,
   TablaDatos,
 } from '../../models/expedicion-certificados-frontera.models';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { DescripcionCupoComponent } from '../descripcion-cupo/descripcion-cupo.component';
 import { ExpedicionCertificadosFronteraService } from '../../services/expedicion-certificados-frontera.service';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { Tramite120702Query } from '../../estados/tramite120702.query';
-import { Tramite120702Store } from '../../estados/tramite120702.store';
+import { Tramite120702Store, Solicitud120702State } from '../../estados/tramite120702.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 /**
  * Componente responsable de la sección de asignación de expedición de certificados.
@@ -89,6 +90,16 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
    */
   montoTablaFilaDatos: TablaDatos[] = [];
 
+ /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  public esFormularioSoloLectura: boolean = false;
+
+   /** Estado de la solicitud tipo 40302. 
+ *  Contiene información y progreso de la solicitud. */
+  public solicitudState!: Solicitud120702State;
+  
   /**
    * Constructor del componente.
    * @param fb Constructor de formularios.
@@ -100,13 +111,37 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private tramite120702Store : Tramite120702Store,
     private tramite120702Query: Tramite120702Query,
-    private expedicionCertificadosFronteraService: ExpedicionCertificadosFronteraService
+    private expedicionCertificadosFronteraService: ExpedicionCertificadosFronteraService,
+    private consultaioQuery: ConsultaioQuery
   ) {}
 
   /**
    * Inicializa el componente y configura el formulario y los datos requeridos.
    */
   ngOnInit(): void {
+      // this.consultaioQuery.selectConsultaioState$
+      // .pipe(
+      //   takeUntil(this.destroy$),
+      //   map((seccionState) => {
+      //     this.esFormularioSoloLectura = seccionState.readonly;
+      //     if(!this.asignacionForm) {
+      //       this.establecerAsignacionFormGroup();
+      //     }
+      //     this.inicializarEstadoFormulario();
+      //   })
+      // )
+      // .subscribe();
+
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroy$))
+    .subscribe((seccionState) => {
+      this.esFormularioSoloLectura = seccionState.readonly;
+      if(!this.asignacionForm) {
+        this.establecerAsignacionFormGroup();
+      }
+      this.inicializarEstadoFormulario();
+    });
+
     this.expedicionCertificadosFronteraService
       .getAnoOficioDatos()
       .pipe(takeUntil(this.destroy$))
@@ -121,13 +156,53 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
         this.montoTablaDatos = data.columns;
       });
 
+    // this.establecerAsignacionFormGroup();
+
+    // this.inicializarEstadoFormulario();
+  }
+
+ /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.  
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (!this.asignacionForm) {return}
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+       this.asignacionForm.enable();
+    }
+  }
+
+   /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    if (!this.asignacionForm) {return}
     this.establecerAsignacionFormGroup();
+    if (this.esFormularioSoloLectura) {
+      this.asignacionForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.asignacionForm.enable();
+    } 
   }
 
   /**
    * Establece la estructura inicial del formulario reactivo de asignación.
    */
   establecerAsignacionFormGroup(): void {
+      /** Suscribe al estado de solicitud 40302 y lo asigna a `solicitudState`.  
+    * Usa `takeUntil` para limpiar la suscripción al destruir el componente. */
+    this.tramite120702Query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.solicitudState = seccionState as Solicitud120702State;
+        })
+      )
+      .subscribe();
+
     this.asignacionForm = this.fb.group({
       anoDelOficio: ['', [Validators.required]],
       numeroOficio: ['', [Validators.required]],
@@ -185,7 +260,7 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
   /**
    * Procesa el valor del campo montoAExpedir y actualiza la tabla y valores dependientes.
    */
-  enviarMontoFormulario(): void {
+  public enviarMontoFormulario(): void {
     const MONTO_A_EXPEDIR = this.asignacionForm.get('montoAExpedir')?.value || 0;
 
     const MONTO_DISPONIBLE = this.asignacionForm.get('montoADisponible')?.value || this.defaultMontoDisponible;
