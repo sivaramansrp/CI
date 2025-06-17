@@ -1,26 +1,26 @@
 // @ts-nocheck
-import { isPlatformBrowser } from '@angular/common';
-import {
-  Component,
-  CUSTOM_ELEMENTS_SCHEMA,
-  Directive,
-  Injectable,
-  Input,
-  NO_ERRORS_SCHEMA,
-  Output,
-  Pipe,
-  PipeTransform
-} from '@angular/core';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 
-import { SeccionLibStore } from '@libs/shared/data-access-user/src';
-
+import { Component } from '@angular/core';
 import { PasoUnoComponent } from './paso-uno.component';
+import { Tramite240121Query } from '../../estados/tramite240121Query.query';
+import { Tramite240121Store } from '../../estados/tramite240121Store.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { PermisoOrdinarioExportacionExplosivoService } from '../../services/permiso-ordinario-exportacion-explosivo.service';
 
+@Injectable()
+class MockTramite240121Query {}
+
+@Injectable()
+class MockTramite240121Store {}
+
+@Injectable()
+class MockPermisoOrdinarioExportacionExplosivoService {}
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -56,18 +56,10 @@ describe('PasoUnoComponent', () => {
       ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        {
-          provide: ActivatedRoute,
-          useValue: {
-            snapshot: {url: 'url', params: {}, queryParams: {}, data: {}},
-            url: observableOf('url'),
-            params: observableOf({}),
-            queryParams: observableOf({}),
-            fragment: observableOf('fragment'),
-            data: observableOf({})
-          }
-        },
-        SeccionLibStore
+        { provide: Tramite240121Query, useClass: MockTramite240121Query },
+        { provide: Tramite240121Store, useClass: MockTramite240121Store },
+        ConsultaioQuery,
+        { provide: PermisoOrdinarioExportacionExplosivoService, useClass: MockPermisoOrdinarioExportacionExplosivoService }
       ]
     }).overrideComponent(PasoUnoComponent, {
 
@@ -76,20 +68,17 @@ describe('PasoUnoComponent', () => {
     component = fixture.debugElement.componentInstance;
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
-
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
   it('should run #ngOnInit()', async () => {
-    component.route = component.route || {};
-    component.route.queryParams = observableOf({});
+    component.tramite240121Query = component.tramite240121Query || {};
+    component.tramite240121Query.getTabSeleccionado$ = observableOf({});
+    component.consultaQuery = component.consultaQuery || {};
+    component.consultaQuery.selectConsultaioState$ = observableOf({});
+    component.guardarDatosFormulario = jest.fn();
     component.ngOnInit();
-
   });
 
   it('should run #ngOnDestroy()', async () => {
@@ -99,13 +88,6 @@ describe('PasoUnoComponent', () => {
     component.ngOnDestroy();
     expect(component.destroyNotifier$.next).toHaveBeenCalled();
     expect(component.destroyNotifier$.complete).toHaveBeenCalled();
-  });
-
-  it('should run #seleccionaTab()', async () => {
-    component.tabChanged = component.tabChanged || {};
-    component.tabChanged.emit = jest.fn();
-    component.seleccionaTab({});
-    expect(component.tabChanged.emit).toHaveBeenCalled();
   });
 
 });

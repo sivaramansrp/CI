@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { ID_PROCEDIMIENTO } from '../../constants/agregar-destinatario.enum';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { Tramite240112Store } from '../../estados/tramite240112Store.store';
@@ -7,6 +8,8 @@ import { Tramite240112Store } from '../../estados/tramite240112Store.store';
   selector: 'app-datos-mercancia-contenedora',
   templateUrl: './datos-mercancia-contenedora.component.html',
   styleUrl: './datos-mercancia-contenedora.component.scss',
+  standalone: true,
+  imports: [ DatosMercanciaComponent]
 })
 export class DatosMercanciaContenedoraComponent {
   /**

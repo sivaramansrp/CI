@@ -1,10 +1,11 @@
-import { Catalogo, CatalogoSelectComponent,TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo,ConsultaioQuery,TituloComponent } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder,FormGroup,ReactiveFormsModule,Validators } from '@angular/forms';
-import { Observable, Subject } from 'rxjs';
+import { Observable,Subject,map} from 'rxjs';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { AsignacionDirectaCupoPersonasFisicasPrimeraVezService } from '../../services/asignacion-directa-cupo-personas-fisicas-primera-vez.service';
 import { CONFIGURACION_CUPOS_DISPONIBLES_TABLA } from '../../constants/asignacion-directa-cupo.enums';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../models/configuracio-columna.model';
 import { DescripcionDelCupoComponent } from '../descripcion-del-cupo/descripcion-del-cupo.component';
@@ -112,6 +113,12 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
    */
   private destroyed$ = new Subject<void>();
 
+     /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * @property {Observable<Catalogo | null>} regimen$
    * Observable que emite el valor actual del régimen seleccionado en el estado.
@@ -137,16 +144,22 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
   subproducto$: Observable<Catalogo | null> =
     this.tramite120401Query.subproducto$;
 
-  /**
-   * Constructor del componente.
-   * @param fb - Servicio de FormBuilder para manejar formularios reactivos.
-   * @param service - Servicio para obtener la selección del cupo desde el backend.
-   */
+/**
+ * Constructor del componente SeleccionDelCupoComponent.
+ * Inicializa los servicios y suscripciones necesarias para el funcionamiento del componente.
+ *
+ * @param fb - Servicio FormBuilder para la creación de formularios reactivos.
+ * @param service - Servicio para obtener datos relacionados con la asignación directa de cupos.
+ * @param tramite120401Store - Store para manejar el estado del trámite 120401.
+ * @param tramite120401Query - Query para consultar el estado del trámite 120401.
+ * @param consultaQuery - Query para consultar el estado de la consulta IO.
+ */
   constructor(
     private fb: FormBuilder,
     private service: AsignacionDirectaCupoPersonasFisicasPrimeraVezService,
     private tramite120401Store: Tramite120401Store,
-    private tramite120401Query: Tramite120401Query
+    private tramite120401Query: Tramite120401Query,
+    private consultaQuery: ConsultaioQuery,
   ) {
     this.service.obtenerRespuestaPorUrl('datos', '/120401/asignacion.json');
     this.tramite120401Query.tramiteState$
@@ -179,7 +192,31 @@ export class SeleccionDelCupoComponent implements OnInit, OnDestroy {
           });
         }
       });
+
+      
+            this.consultaQuery.selectConsultaioState$
+            .pipe(
+              takeUntil(this.destroyed$),
+              map((seccionState) => {
+                this.esFormularioSoloLectura = seccionState.readonly;
+                this.inicializarEstadoFormulario();
+              })
+            )
+            .subscribe();
   }
+
+   
+        /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+     inicializarEstadoFormulario(): void {
+      if(!this.seleccionForm){
+        this.initializeForm();
+      }
+      if (this.esFormularioSoloLectura) {
+          this.seleccionForm.disable();
+      }
+    }
 
   /**
    * Método de ciclo de vida de Angular: Se ejecuta cuando el componente es destruido.

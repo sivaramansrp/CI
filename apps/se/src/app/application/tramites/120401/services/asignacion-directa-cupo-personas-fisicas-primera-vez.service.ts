@@ -155,4 +155,26 @@ export class AsignacionDirectaCupoPersonasFisicasPrimeraVezService {
       'assets/json/120401/tratdos-dropdown.json'
     );
   }
+
+  /**
+ * Actualiza el estado del formulario de desistimiento en el store.
+ * 
+ * @param {Partial<DesistimientoForm>} DATOS - Datos parciales del formulario para actualizar el estado.
+ */
+actualizarEstadoFormulario(DATOS: Partial<Catalogo[]>): void {
+  this.tramite120401Store.update((state) => ({
+    ...state,
+    ...DATOS
+  }));
+}
+
+/**
+ * Obtiene los datos precargados para el registro de toma de muestras de mercancías desde un archivo JSON.
+ *
+ * @returns {Observable<Catalogo[]>} Observable con los datos precargados.
+ */
+getRegistroTomaMuestrasMercanciasData(): Observable<Catalogo[]> {
+  return this.httpServicios.get<Catalogo[]>(`assets/json/120401/datosPrecargados.json`);
+}
+
 }

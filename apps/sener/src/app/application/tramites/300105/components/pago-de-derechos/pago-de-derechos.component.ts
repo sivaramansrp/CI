@@ -8,6 +8,7 @@ import {
 import { AutorizacionDeRayosXService } from '../../services/autorizacion-de-rayos-x.service';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { INPUT_FECHA_CONFIG } from '../../enum/permiso.enum';
 import { Tramite300105Query } from '../../estados/tramite300105.query';
 
@@ -56,6 +57,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   };
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+
+  /**
    * Constructor del componente.
    * Inicializa los servicios y configura el formulario.
    * Parámetros:
@@ -69,8 +76,24 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private tramite300105Store: Tramite300105Store,
     private tramite300105Query: Tramite300105Query,
     @Inject(AutorizacionDeRayosXService)
-    private autorizacionDeRayosXService: AutorizacionDeRayosXService
+    private autorizacionDeRayosXService: AutorizacionDeRayosXService,
+    private consultaioQuery: ConsultaioQuery,
   ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe()
     this.fetchBancoData();
   }
 
@@ -98,6 +121,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         importePago: [this.solicitudState?.importePago],
       }),
     });
+
+    if(this.esFormularioSoloLectura) {
+      this.formSolicitud.disable();
+    } else {
+      this.formSolicitud.enable();
+    }
   }
 
   /**

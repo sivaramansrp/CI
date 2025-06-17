@@ -1,6 +1,7 @@
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Catalogo } from '../../models/validar-inicialmente-certificado.model';
 import { CatalogoLista } from '../../models/validar-inicialmente-certificado.model';
-import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent } from "@libs/shared/data-access-user/src";
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
@@ -63,6 +64,18 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
   public tramiteState!: Tramite110214State;
 
   /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    * 
    * @param {FormBuilder} fb - Constructor para crear formularios reactivos.
@@ -75,6 +88,7 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
     private validarInicialmenteCertificadoService: ValidarInicialmenteCertificadoService,
     public store: Tramite110214Store,
     public tramiteQuery: Tramite110214Query,
+    private consultaioQuery: ConsultaioQuery,
   ) { }
 
   /**
@@ -91,6 +105,16 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.tramiteState = seccionState;
+        })
+      )
+      .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
@@ -118,6 +142,23 @@ export class DatosCertificadoComponent implements OnInit, OnDestroy {
       representacionFederal: [this.tramiteState?.representacionFederal, [Validators.required, Validators.min(0)]],
     });
     this.formDatosCertificado.markAllAsTouched();
+    this.inicializarEstadoFormulario();
+  }
+  /**
+   * @method inicializarEstadoFormulario
+   * @description Inicializa el estado del formulario según el modo de solo lectura.
+   * 
+   * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
+   * En caso contrario, habilita los controles del formulario.
+   * 
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.formDatosCertificado?.disable();
+    } else {
+      this.formDatosCertificado?.enable();
+    }
   }
 
   /**

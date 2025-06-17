@@ -1,5 +1,5 @@
-import { DatosDeLaTabla, RespuestaContenedor, RespuestaTramite } from '../models/datos-tramite.model';
-import { BehaviorSubject, Observable, Subject } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { DatosDeLaTabla, RespuestaConsulta, RespuestaTramite } from '../models/datos-tramite.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -59,5 +59,13 @@ export class ConsultaAvisoAcreditacionService {
    */
   setUpdatedRow(row: DatosDeLaTabla[]): void {
     this.selectedRowSource.next(row);
+  }
+
+    /**
+ * Obtiene los datos para la consulta del trámite.
+ * @returns {Observable<RespuestaConsulta>} Observable con los datos de consulta.
+ */
+  getDatosConsulta(): Observable<RespuestaConsulta> {
+    return this.http.get<RespuestaConsulta>('assets/json/32101/consulta_32101.json');
   }
 }

@@ -1,9 +1,10 @@
 import { Catalogo, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ImportacionesAgropecuariasState, ImportacionesAgropecuariasStore } from '../../estados/importaciones-agropecuarias.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { DATOS_DE_LA_MERCANCIA } from '../../constantes/datos-de-la-solicitud.enum';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { ImportacionesAgropecuariasQuery } from '../../estados/importaciones-agropecuarias.query';
@@ -29,6 +30,12 @@ import { ServicioDeFormularioService } from '../../services/formulario-validacio
 })
 
 export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
+  /**
+   *
+   * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+   */
+  @Input() consultaState!: ConsultaioState;
+
   /**
    * @property destroy$
    * @description
@@ -95,7 +102,7 @@ export class DatosDeLaMercanciaComponent implements OnInit, OnDestroy {
     private importacionesAgropecuariasStore: ImportacionesAgropecuariasStore,
     private importacionesAgropecuariasQuery: ImportacionesAgropecuariasQuery,
     private servicioDeFormularioService: ServicioDeFormularioService
-  ) {}
+  ) { }
 
   /**
    * @method ngOnInit

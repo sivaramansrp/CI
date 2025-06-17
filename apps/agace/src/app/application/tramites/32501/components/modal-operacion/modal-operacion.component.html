@@ -13,7 +13,7 @@
         formControlName="patente"
         class="form-control"
         [ngClass]="esValido('patente') ? 'required' : ''"
-        (change)="actualizarPatente($event)"
+        (change)="establecerValoresEnEstado(frmDatosOperacionImp, 'patente')"
       />
       <div *ngIf="noEsValido('patente')" class="text-danger">
         Este campo es obligatorio
@@ -27,7 +27,7 @@
         formControlName="rfc"
         class="form-control"
         [ngClass]="esValido('rfc') ? 'required' : ''"
-        (change)="actualizaRFC($event)"
+        (change)="establecerValoresEnEstado(frmDatosOperacionImp, 'rfc')"
       />
       <div *ngIf="noEsValido('rfc')" class="text-danger">
         Este campo es obligatorio
@@ -43,7 +43,7 @@
         formControlName="pedimento"
         class="form-control"
         [ngClass]="esValido('pedimento') ? 'required' : ''"
-        (change)="actualizarPedimento($event)"
+        (change)="establecerValoresEnEstado(frmDatosOperacionImp, 'pedimento')"
       />
       <div *ngIf="noEsValido('pedimento')" class="text-danger">
         Este campo es obligatorio
@@ -56,7 +56,7 @@
         [label]="opcionAduana.labelNombre"
         [required]="opcionAduana.required"
         name="aduana"
-        (selectionChange)="actualizarAduana($event)"
+        (selectionChange)="establecerValoresEnEstado(frmDatosOperacionImp, 'aduana')"
       ></app-catalogo-select>
       <div *ngIf="noEsValido('aduana')" class="text-danger">
         Este campo es obligatorio
