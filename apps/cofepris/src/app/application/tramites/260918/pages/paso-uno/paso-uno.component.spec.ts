@@ -1,28 +1,69 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { ModificacionPermisoLabService } from '../../services/modificacion-permiso-lab.service';
+import { of } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
-describe('PasoUnoComponent', (): void => {
-  let componente: PasoUnoComponent;
+describe('PasoUnoComponent', () => {
+  let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
+  let mockConsultaQuery: Partial<ConsultaioQuery>;
+  let mockModificacionService: Partial<ModificacionPermisoLabService>;
 
-  beforeEach(async (): Promise<void> => {
+  const RESPUESTA_MOCK: Record<string, string> = { campo: 'valor' };
+
+  const CONSULTAIO_STATE_MOCK: ConsultaioState = {
+    procedureId: '123',
+    parameter: 'abc',
+    department: 'semarnat',
+    folioTramite: '999888777',
+    tipoDeTramite: 'Permiso Modificación',
+    estadoDeTramite: 'EN_PROCESO',
+    readonly: false,
+    create: false,
+    update: true,
+    consultaioSolicitante: null
+  };
+
+  beforeEach(async () => {
+    mockConsultaQuery = {
+      selectConsultaioState$: of(CONSULTAIO_STATE_MOCK)
+    };
+
+    mockModificacionService = {
+      obtenerDatosInicialesFormulario: jest.fn().mockReturnValue(of(RESPUESTA_MOCK)),
+      actualizarEstadoFormulario: jest.fn(),
+      obtenerValoresFormularioPagoDerechos: jest.fn().mockReturnValue(of(RESPUESTA_MOCK)),
+      actualizarValoresFormularioPagoDerechos: jest.fn()
+    };
+
     await TestBed.configureTestingModule({
       declarations: [PasoUnoComponent],
-      schemas: [NO_ERRORS_SCHEMA], 
+      providers: [
+        { provide: ConsultaioQuery, useValue: mockConsultaQuery },
+        { provide: ModificacionPermisoLabService, useValue: mockModificacionService }
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
-    componente = fixture.componentInstance;
-    fixture.detectChanges();
+    component = fixture.componentInstance;
   });
 
-  it('debería crear el componente', (): void => {
-    expect(componente).toBeTruthy();
+  it('debe inicializar el componente y cargar los datos si "update" es true', () => {
+    component.ngOnInit();
+
+    expect(component.consultaState).toEqual(CONSULTAIO_STATE_MOCK);
+    expect(mockModificacionService.obtenerDatosInicialesFormulario).toHaveBeenCalled();
+    expect(mockModificacionService.actualizarEstadoFormulario).toHaveBeenCalledWith(RESPUESTA_MOCK);
+    expect(mockModificacionService.obtenerValoresFormularioPagoDerechos).toHaveBeenCalled();
+    expect(mockModificacionService.actualizarValoresFormularioPagoDerechos).toHaveBeenCalledWith(RESPUESTA_MOCK);
   });
 
-  it('debería actualizar el índice cuando se llama seleccionaTab()', (): void => {
-    componente.seleccionaTab(2);
-    expect(componente.indice).toBe(2);
+  it('debe actualizar el índice de pestaña correctamente', () => {
+    const NUEVO_INDICE: number = 3;
+    component.seleccionaTab(NUEVO_INDICE);
+    expect(component.indice).toBe(NUEVO_INDICE);
   });
 });
