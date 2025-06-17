@@ -439,8 +439,12 @@ opcionSeleccionMexicana = [
       this.esFormularioVisible = false;
     }
   }
-
-  /** Método para inicializar el estado del formulario según si es de solo lectura */
+  
+  /**
+ * Método para inicializar el estado del formulario.
+ * Si el formulario es de solo lectura, se deshabilita.
+ * De lo contrario, se habilita.
+ */
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.formularioEmpresa?.disable();
