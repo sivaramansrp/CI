@@ -169,19 +169,26 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
  * @type {ConfiguracionColumna<FilaSolicitud>[]}
  */
 configuracionColumnasoli: ConfiguracionColumna<FilaSolicitud>[] = [
-  { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 1 },
-  { encabezado: 'Descripción Nico', clave: (fila) => fila.descripcionNico, orden: 2 },
-  { encabezado: 'Descripción', clave: (fila) => fila.descripcion, orden: 3 },
-  { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.unidadDeMedidaDeTarifaUMT, orden: 4 },
-  { encabezado: 'Cantidad UMT', clave: (fila) => fila.cantidadUMT, orden: 5 },
-  { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.unidadDeMedidaDeComercializacionUMC, orden: 6 },
-  { encabezado: 'Cantidad UMC', clave: (fila) => fila.cantidadUMC, orden: 7 },
-  { encabezado: 'Especie', clave: (fila) => fila.especie, orden: 8 },
-  { encabezado: 'Uso', clave: (fila) => fila.uso, orden: 9 },
-  { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen, orden: 10 },
-  { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia, orden: 11 },
-  { encabezado: 'Certificado Internacional Electrónico', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 12 },
+  { encabezado: 'No. partida', clave: (fila) => fila.noPartida, orden: 1 },
+  { encabezado: 'Tipo de requisito', clave: (fila) => fila.tipoRequisito, orden: 2 },
+  { encabezado: 'Requisito', clave: (fila) => fila.requisito, orden: 3 },
+  { encabezado: 'Número de Certificado Internacional', clave: (fila) => fila.numeroCertificadoInternacional, orden: 4 },
+  { encabezado: 'Fracción arancelaria', clave: (fila) => fila.fraccionArancelaria, orden: 5 },
+  { encabezado: 'Descripción de la fracción', clave: (fila) => fila.descripcionFraccion, orden: 6 },
+  { encabezado: 'Nico', clave: (fila) => fila.nico, orden: 7 },
+  { encabezado: 'Descripción Nico', clave: (fila) => fila.descripcionNico, orden: 8 },
+  { encabezado: 'Descripción', clave: (fila) => fila.descripcion, orden: 9 },
+  { encabezado: 'Unidad de medida de tarifa (UMT)', clave: (fila) => fila.unidadDeMedidaDeTarifaUMT, orden: 10 },
+  { encabezado: 'Cantidad UMT', clave: (fila) => fila.cantidadUMT, orden: 11 },
+  { encabezado: 'Unidad de medida de comercialización (UMC)', clave: (fila) => fila.unidadDeMedidaDeComercializacionUMC, orden: 12 },
+  { encabezado: 'Cantidad UMC', clave: (fila) => fila.cantidadUMC, orden: 13 },
+  { encabezado: 'Especie', clave: (fila) => fila.especie, orden: 14 },
+  { encabezado: 'Uso', clave: (fila) => fila.uso, orden: 15 },
+  { encabezado: 'País de origen', clave: (fila) => fila.paisDeOrigen, orden: 16 },
+  { encabezado: 'País de procedencia', clave: (fila) => fila.paisDeProcedencia, orden: 17 },
+  { encabezado: 'Certificado Internacional Electrónico', clave: (fila) => fila.certificadoInternacionalElectronico, orden: 18 },
 ];
+
   /**
    * Representa una nueva notificación que será utilizada en el componente.
    * 
