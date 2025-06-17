@@ -347,7 +347,17 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     this.recuperarDatos();
   }
 
-  recuperarDatos(): void {
+  /**
+ * Recupera los datos de las plantas desde el servicio.
+ *
+ * Este método realiza una petición al servicio `ProsecService` para obtener los datos de las plantas
+ * desde el archivo `plantasDatos.json`. Si la respuesta contiene la propiedad `plantasDatos` y es un
+ * arreglo, asigna esos datos a la propiedad `plantasDatos` del componente. En caso contrario, o si ocurre
+ * un error en la petición, la propiedad `plantasDatos` se inicializa como un arreglo vacío.
+ *
+ * @returns {void}
+ */
+recuperarDatos(): void {
     this.prosecService.obtenerTablaDatos('plantasDatos.json').subscribe({
       next: (response) => {
         if (response && 'plantasDatos' in response && Array.isArray(response.plantasDatos)) {
@@ -362,6 +372,14 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
+   *
+   * Este método emite un valor y completa el Subject `destroyNotifier$` para cancelar todas las suscripciones
+   * activas realizadas con `takeUntil(this.destroyNotifier$)`, evitando así posibles fugas de memoria.
+   *
+   * @returns {void}
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
