@@ -1,10 +1,19 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Tramite40402Store, Tramitenacionales40402State } from '../../estados/tramite40402.store';
+import { map, takeUntil } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Subject } from 'rxjs';
+import { Tramite40402Query } from '../../estados/tramite40402.query';
 import { Tramite40402Service } from '../../estados/tramite40402.service';
-import { takeUntil } from 'rxjs';
 
+/**
+ * Componente para la gestión de datos del trámite
+ * 
+ * @remarks
+ * Este componente maneja la captura y visualización de información relacionada con trámites de transporte aéreo
+ */
 @Component({
   selector: 'app-datos-tramite',
   templateUrl: './datos-tramite.component.html',
@@ -12,55 +21,106 @@ import { takeUntil } from 'rxjs';
 })
 export class DatosTramiteComponent implements OnInit, OnDestroy {
   /**
-   * Formulario reactivo utilizado para capturar los datos del trámite.
+   * Formulario reactivo para capturar datos del trámite
    */
   formulario!: FormGroup;
+  
   /**
-   * Lista de códigos de transportación obtenidos desde el servicio.
+   * Lista de códigos de transportación
    */
   codigoTransportacion: unknown[] = [];
+  
   /**
-   * Lista de tipos de CAAT aéreo obtenidos desde el servicio.
+   * Lista de tipos de CAAT aéreo
    */
   tipoCaatAereo: unknown[] = [];
+  
   /**
-   * Catálogo de tipos de CAAT aéreo.
+   * Catálogo de tipos de CAAT aéreo
    */
   public tipoDeCaatAerea!: Catalogo[];
+  
   /**
-   * Catálogo de códigos de transportación aérea.
+   * Catálogo de códigos de transportación aérea
    */
   public ideCodTransportacionAerea!: Catalogo[];
+  
   /**
-   * Notificador para gestionar la destrucción de suscripciones activas.
+   * Datos de consulta del trámite desde estado global
    */
-
+  consultaDatos!: ConsultaioState;
+  
+  /**
+   * Indica si se deben mostrar datos de respuesta directamente
+   */
+  public esDatosRespuesta: boolean = false;
+  
+  /**
+   * Notificador para desuscripciones
+   */
   private destroyNotifier$ = new Subject<void>();
+  
   /**
-   * Constructor del componente.
-   * @param fb - FormBuilder para inicializar el formulario reactivo.
-   * @param tramite40402Service - Servicio para interactuar con la API relacionada con el trámite.
+   * Estado de transportación marítima
    */
+  public transportacionMaritimaState!: Tramitenacionales40402State;
+  
+  /**
+   * Indica si el formulario es de solo lectura
+   */
+  soloLectura: boolean = false;
 
+  /**
+   * Constructor del componente
+   * 
+   * @param fb - Constructor de formularios reactivos
+   * @param tramite40402Service - Servicio para operaciones de trámite
+   * @param consultaioQuery - Consulta de estado de trámite
+   * @param tramite40402Query - Consulta de estado específico
+   * @param store - Almacenamiento de estado del trámite
+   */
   constructor(
     private fb: FormBuilder,
-    private tramite40402Service: Tramite40402Service
+    private tramite40402Service: Tramite40402Service,
+    private consultaioQuery: ConsultaioQuery,
+    private tramite40402Query: Tramite40402Query,
+    private store: Tramite40402Store
   ) {}
-  /**
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   */
 
+  /**
+   * Inicialización del componente
+   */
   ngOnInit(): void {
+    this.tramite40402Query.selectSeccionState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.transportacionMaritimaState = seccionState;
+        })
+      )
+      .subscribe();
+
     this.inicializarFormulario();
     this.cargarCodigoTransportacion();
     this.cargarTipoCaatAereo();
     this.tipoDeCaatAereaData();
     this.ideCodTransportacionAereaData();
+    
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
-  /**
-   * Inicializa el formulario reactivo con los campos necesarios.
-   */
 
+  /**
+   * Inicializa el formulario reactivo
+   */
   private inicializarFormulario(): void {
     this.formulario = this.fb.group({
       idSolicitud: [''],
@@ -69,32 +129,37 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
       claveFolioCAAT: ['', [Validators.required, Validators.maxLength(4)]],
       cveFolioCaat: [''],
       descripcionTipoCaat: [''],
-      tipoDeCaatAerea: [],
-      ideCodTransportacionAerea: [],
-      codIataIcao: [''],
+      tipoDeCaatAerea: [this.transportacionMaritimaState?.tipoDeCaatAerea],
+      ideCodTransportacionAerea: [this.transportacionMaritimaState?.ideCodTransportacionAerea],
+      codIataIcao: [this.transportacionMaritimaState?.codIataIcao],
       fechaInicioVigencia: [''],
       fechaFinVigencia: [''],
     });
+    this.inicializarEstadoFormulario();
   }
-  /**
-   * Obtiene un FormArray de solicitudes CAAT del formulario.
-   */
 
+  /**
+   * Obtiene solicitudes CAAT como FormArray
+   * 
+   * @returns FormArray de solicitudes CAAT
+   */
   get caatSolicitudes(): FormArray {
     return this.formulario.get('solicitud.caatSolicitudes') as FormArray;
   }
+
   /**
-   * Convierte el valor del campo `claveFolioCAAT` a mayúsculas.
-   * @param event - Evento que contiene el valor ingresado por el usuario.
+   * Convierte a mayúsculas el campo claveFolioCAAT
+   * 
+   * @param event - Evento de entrada
    */
   caatConMayusculas(event: any): void {
     const VALOR = event.target.value;
     this.formulario.get('claveFolioCAAT')?.setValue(VALOR.toUpperCase());
   }
-  /**
-   * Carga los códigos de transportación desde el servicio.
-   */
 
+  /**
+   * Carga códigos de transportación desde servicio
+   */
   public cargarCodigoTransportacion(): void {
     this.tramite40402Service
       .geTideCodTransportacionAerea()
@@ -103,20 +168,23 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
         this.codigoTransportacion = datos;
       });
   }
+
   /**
-   * Carga los tipos de CAAT aéreo desde el servicio.
+   * Carga tipos de CAAT aéreo desde servicio
    */
   public cargarTipoCaatAereo(): void {
     this.tramite40402Service
-      .getTipoDeCaatAerea ()
+      .getTipoDeCaatAerea()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((datos) => {
         this.tipoCaatAereo = datos;
       });
   }
+
   /**
-   * Marca todos los controles del formulario como tocados para mostrar errores.
-   * @param formGroup - Grupo de formulario a marcar como tocado.
+   * Marca todos los controles de un formGroup como touched
+   * 
+   * @param formGroup - Grupo de formulario a marcar
    */
   markFormGroupTouched(formGroup: FormGroup): void {
     Object.values(formGroup.controls).forEach((control) => {
@@ -127,8 +195,9 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
       }
     });
   }
+
   /**
-   * Busca una solicitud utilizando el valor de `claveFolioCAAT` proporcionado en el formulario.
+   * Busca solicitud por clave CAAT
    */
   buscarSolicitudPorCAAT(): void {
     if (this.formulario.valid) {
@@ -156,20 +225,21 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
         });
     }
   }
-  /**
-   * Carga los datos del catálogo de tipos de CAAT aéreo desde el servicio.
-   */
 
+  /**
+   * Carga datos de catálogo tipo CAAT aéreo
+   */
   tipoDeCaatAereaData(): void {
     this.tramite40402Service
-      .getTipoDeCaatAerea ()
+      .getTipoDeCaatAerea()
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.tipoDeCaatAerea = data;
       });
   }
+
   /**
-   * Carga los datos del catálogo de códigos de transportación aérea desde el servicio.
+   * Carga datos de catálogo códigos transportación aérea
    */
   ideCodTransportacionAereaData(): void {
     this.tramite40402Service
@@ -179,12 +249,35 @@ export class DatosTramiteComponent implements OnInit, OnDestroy {
         this.ideCodTransportacionAerea = data;
       });
   }
+
   /**
-   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
-   * Limpia las suscripciones activas para evitar fugas de memoria.
+   * Destrucción del componente
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * Establece valores en el store
+   * 
+   * @param form - Formulario origen
+   * @param campo - Nombre del campo
+   * @param metodoNombre - Método del store a invocar
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite40402Store): void {
+    const VALOR = form.get(campo)?.value;
+    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+   * Inicializa estado de habilitación del formulario
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.formulario?.disable();
+    } else {
+      this.formulario?.enable();
+    }
   }
 }

@@ -1,8 +1,12 @@
-import { AccionBoton } from '@ng-mf/data-access-user';
+import { AccionBoton, BtnContinuarComponent } from '@ng-mf/data-access-user';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '../../constants/importacion-armas-municiones.enum';
+import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+import { PasoTresComponent } from '../paso-tres/paso-tres.component';
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { TITULOMENSAJE } from '../../constants/importacion-armas-municiones.enum';
 import { ViewChild } from '@angular/core';
 import { WizardComponent } from '@ng-mf/data-access-user';
@@ -14,9 +18,17 @@ import { WizardComponent } from '@ng-mf/data-access-user';
  */
 @Component({
   selector: 'app-solicitud-page',
-  standalone: false,
+  standalone: true,
   templateUrl: './solicitud-page.component.html',
   styleUrl: './solicitud-page.component.scss',
+  imports: [
+    CommonModule,
+    WizardComponent,
+    PasoUnoComponent,
+    PasoDosComponent,
+    PasoTresComponent,
+    BtnContinuarComponent
+  ]
 })
 export class SolicitudPageComponent {
   /**
