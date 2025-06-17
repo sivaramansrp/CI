@@ -2239,5 +2239,14 @@
     "diasTranscurridos": "4",
     "departamento": "AMECAFE",
     "numeroDeProcedimiento": "290301"
+  },
+  {
+    "id": 120201,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2025-06-10",
+    "fechaActualizacion": "2025-06-16",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "120201"
   }
 ]
