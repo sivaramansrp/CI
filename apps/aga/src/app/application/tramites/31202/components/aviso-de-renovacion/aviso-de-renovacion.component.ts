@@ -3,7 +3,8 @@ import { FormBuilder, FormGroup } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, InputCheckComponent, InputFecha, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState, InputFechaComponent } from '@ng-mf/data-access-user';
 
 import {AvisoValor, FECHA_DE_PAGO } from '../../models/aviso.model';
 
@@ -68,6 +69,16 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
    */
   valorSeleccionado!: string;
 
+    /**
+   * Estado actual de la consulta obtenido desde el servicio.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * Indica si el formulario está en modo de solo lectura.
+   */
+  soloLectura: boolean = false;
+
 
   /**
    * Constructor del componente.
@@ -80,7 +91,8 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private service: AvisoUnicoService,
     private unicoStore: UnicoStore,
-    private unicoQuery: UnicoQuery
+    private unicoQuery: UnicoQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // Inicializa el formulario reactivo y el estado de la solicitud.
   }
@@ -103,6 +115,16 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
     this.loadLocalidad();
     this.loadAsignacionData();
     this.cargarRadio();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -122,6 +144,7 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
       fechaPago: [this.solicitudState?.fechaPago],
       importePago: [{ value: '', disabled: true }],
     });
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -211,5 +234,17 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
   cambiarRadio(value: string | number): void {
     this.valorSeleccionado = value as string;
     this.unicoStore.setValorSeleccionado(this.valorSeleccionado);
+  }
+
+    /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   * @private
+   */
+  private inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.avisoForm?.disable();
+    } else {
+      this.avisoForm?.enable();
+    }
   }
 }
