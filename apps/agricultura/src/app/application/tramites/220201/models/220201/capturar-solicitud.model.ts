@@ -128,6 +128,25 @@ export interface FilaSolicitud {
 }
 
 /**
+ * @description
+ * Representa los datos de una solicitud en el trámite 220201.
+ *
+ * @property {string} fechaCreacion - Fecha en la que se creó la solicitud.
+ * @property {string} mercancia - Nombre o descripción de la mercancía solicitada.
+ * @property {number} cantidad - Cantidad de mercancía solicitada.
+ * @property {string} proovedor - Nombre del proveedor de la mercancía.
+ *
+ * @compodoc
+ * @es Representa la estructura de los datos requeridos para capturar una solicitud en el trámite 220201.
+ */
+export interface SolicitudData {
+  fechaCreacion: string;
+  mercancia: string;
+  cantidad: number;
+  proovedor: string;
+}
+
+/**
  * @interface ApiSolicitud
  * @description Representación parcial de una solicitud con los datos que se envían o reciben desde una API.
  *

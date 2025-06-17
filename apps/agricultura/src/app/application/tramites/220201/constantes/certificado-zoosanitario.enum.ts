@@ -78,3 +78,16 @@ export const TERCEROR_TEXTO_DE_ALERTA =
 export const IDDEUSUARIO = 21;
 
 export const FECHAPAGODATE ='15/03/2025'
+
+
+/**
+ * @description
+ * Mensaje que indica que al dar doble clic en el registro seleccionado se creará una nueva solicitud
+ * con los mismos datos de la solicitud elegida.
+ *
+ * @compodoc
+ * @es
+ * Mensaje mostrado al usuario cuando realiza doble clic en un registro, informando que se generará
+ * una nueva solicitud con los datos de la solicitud seleccionada.
+ */
+export const SELECCIONADO = 'Al dar doble clic en el registro seleccionado creara una nueva solicitud con los mismos datos de la solicitud elegida';

@@ -2,18 +2,18 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 
-import { TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
+import { SELECCIONADO, TEXTOS } from '../../constantes/certificado-zoosanitario.enum';
 
-import {AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, CrosslistComponent, InputRadioComponent, Notificacion, NotificacionesComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import {AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, ConsultaioQuery, InputRadioComponent, Notificacion, NotificacionesComponent, RespuestaCatalogos, SharedModule, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { HttpClient } from '@angular/common/http';
 
 import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
 
+import { FilaSolicitud, SolicitudData } from '../../models/220201/capturar-solicitud.model';
 import {Subject, debounceTime, map, takeUntil } from 'rxjs';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
-import { FilaSolicitud } from '../../models/220201/capturar-solicitud.model';
 import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 
 
@@ -39,7 +39,6 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
            TituloComponent,
            ReactiveFormsModule,
            CatalogoSelectComponent,
-           CrosslistComponent,
            InputRadioComponent,
            AlertComponent,
            TablaDinamicaComponent,
@@ -58,11 +57,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy,AfterViewI
    */
   forma!: FormGroup;
 
-  /**
-   * Rango de días para el select.
-   * @property {string[]} selectRangoDias
-   */
-  selectRangoDias: string[] = [];
 
   /**
    * Indica si la sección es colapsable.
@@ -206,7 +200,7 @@ configuracionColumnasoli: ConfiguracionColumna<FilaSolicitud>[] = [
    */
   esFormularioSoloLectura:boolean = false;
 
-
+seleccionado:string=SELECCIONADO;
 
 
   /**
@@ -215,6 +209,58 @@ configuracionColumnasoli: ConfiguracionColumna<FilaSolicitud>[] = [
    * @memberof DatosDeLaSolicitudComponent
    */
   notificationCheck:boolean=false;
+/**
+ * @description
+ * Configuración de las columnas para la tabla de solicitudes de datos.
+ * Utiliza la interfaz ConfiguracionColumna para definir las columnas.
+ *
+ * @type {ConfiguracionColumna<SolicitudData>[]}
+ */
+configuracionColumnasSolicitud: ConfiguracionColumna<SolicitudData>[] = [
+  { encabezado: 'Fecha Creación', clave: (fila) => fila.fechaCreacion, orden: 1 },
+  { encabezado: 'Mercancía', clave: (fila) => fila.mercancia, orden: 2 },
+  { encabezado: 'Cantidad', clave: (fila) => fila.cantidad, orden: 3 },
+  { encabezado: 'Proovedor', clave: (fila) => fila.proovedor, orden: 4 },
+];
+/**
+ * @description
+ * Cuerpo de la tabla de solicitudes con datos de ejemplo.
+ * Este arreglo contiene objetos que representan las filas de la tabla.
+ *
+ * @type {SolicitudData[]}
+ */
+cuerpoTablaSolicitud: SolicitudData[] = [
+  {
+    fechaCreacion: '2025-06-17 10:30:00',
+    mercancia: 'Laptop HP',
+    cantidad: 5,
+    proovedor: 'Tech Solutions Inc.'
+  },
+  {
+    fechaCreacion: '2025-06-16 14:15:30',
+    mercancia: 'Monitor Dell 27"',
+    cantidad: 10,
+    proovedor: 'Global Electronics'
+  },
+  {
+    fechaCreacion: '2025-06-15 09:00:00',
+    mercancia: 'Teclado Mecánico RGB',
+    cantidad: 8,
+    proovedor: 'Peripherals World'
+  },
+  {
+    fechaCreacion: '2025-06-14 17:45:10',
+    mercancia: 'Mouse Inalámbrico Logitech',
+    cantidad: 12,
+    proovedor: 'Tech Accessories Co.'
+  },
+  {
+    fechaCreacion: '2025-06-13 11:20:05',
+    mercancia: 'Impresora Epson EcoTank',
+    cantidad: 3,
+    proovedor: 'Print Masters'
+  }
+];
   /**
    * Constructor del componente.
    * @constructor
