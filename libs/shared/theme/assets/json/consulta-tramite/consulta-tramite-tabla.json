@@ -147,6 +147,15 @@
         "numeroDeProcedimiento": "220102"
     },
     {
+        "id": "40401",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "STPS",
+        "numeroDeProcedimiento": "40401"
+    },
+    {
         "id": "6502",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
