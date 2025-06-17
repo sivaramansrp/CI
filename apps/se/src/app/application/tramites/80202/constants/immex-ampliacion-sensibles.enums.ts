@@ -151,3 +151,24 @@ export const TERCEROR_TEXTO_DE_ALERTA =
  * @valor 21
  */
 export const IDDEUSUARIO = 21;
+
+/**
+ * @const SECCIONES_TRAMITE_80203
+ * @description Configuración de las secciones y validaciones para cada paso del trámite IMMEX.
+ *
+ * @property {Object} PASO_1 - Configuración de validaciones para el paso 1.
+ * @property {Object} PASO_2 - Configuración de validaciones para el paso 2.
+ * @property {Object} PASO_3 - Configuración de validaciones para el paso 3.
+ */
+export const SECCIONES_TRAMITE_80202 = {
+    PASO_1: {
+        VALIDACION_SECCION_1: false,
+        VALIDACION_SECCION_2: true,
+    },
+    PASO_2: {
+        VALIDACION_SECCION: true,
+    },
+    PASO_3: {
+        requiereValidacion: true,
+    },
+};
