@@ -7,7 +7,7 @@ import { ConsultaioState } from '@libs/shared/data-access-user/src';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
-import { HISTORICO_ENCABZADOS } from '../../constants/certificado-origen.enum.js';
+import { HISTORICO_ENCABZADOS } from '../../constants/certificado-origen.enum';
 import { HistoricoColumnas } from '../../models/certificado-origen.model';
 import { Modal } from 'bootstrap';
 import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
