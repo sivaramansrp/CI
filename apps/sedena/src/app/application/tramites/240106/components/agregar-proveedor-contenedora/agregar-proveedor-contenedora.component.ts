@@ -1,10 +1,21 @@
+import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
+import { Observable } from 'rxjs';
 import { Tramite240106Query } from '../../estados/tramite240106Query.query';
 import { Tramite240106Store } from '../../estados/tramite240106Store.store';
 
+/**
+ * Componente contenedor para agregar proveedores en el trámite 240106.
+ *
+ * Este componente se encarga de gestionar la visualización y actualización de los datos
+ * relacionados con los proveedores y destinatarios finales, utilizando el store y query
+ * correspondientes al trámite.
+ *
+ * @export
+ * @class AgregarProveedorContenedoraComponent
+ */
 @Component({
   selector: 'app-agregar-proveedor-contenedora',
   standalone: true,
@@ -14,21 +25,37 @@ import { Tramite240106Store } from '../../estados/tramite240106Store.store';
 })
 export class AgregarProveedorContenedoraComponent {
   /**
-   * @constructor
-   * @description Constructor que inyecta el store `Tramite260214Store` para gestionar el estado del trámite.
+   * Observable que emite información sobre el destino final, proveedor o un valor nulo/indefinido.
    *
-   * @param tramite260106Store - Store que administra el estado del trámite 260214.
+   * @type {Observable<DestinoFinal | Proveedor | null | undefined>}
+   *
+   * @remarks
+   * Este observable se utiliza para gestionar los datos relacionados con los derechos
+   * y destinatarios finales en el contexto de la aplicación.
    */
-  // eslint-disable-next-line no-empty-function
-  constructor(public tramite240106Store: Tramite240106Store, public tramiteQuery: Tramite240106Query) {
-  
-      }
+  public terechosDatos$!: Observable<DestinoFinal | Proveedor | null | undefined>;
+
   /**
-   * @method updateProveedorTablaDatos
-   * @description Actualiza los datos de la tabla de proveedores en el store del trámite.
+   * Constructor del componente.
    *
-   * @param {Proveedor[]} event - Lista de proveedores que se actualizarán en el store.
-   * @returns {void} Este método no retorna ningún valor.
+   * Inyecta el store y el query para gestionar el estado y la consulta de datos
+   * del trámite 240106.
+   *
+   * @param tramite240106Store Store que administra el estado del trámite 240106.
+   * @param tramiteQuery Query para obtener los datos relacionados con terceros.
+   */
+  constructor(
+    public tramite240106Store: Tramite240106Store,
+    public tramiteQuery: Tramite240106Query
+  ) {
+    this.terechosDatos$ = this.tramiteQuery.obtenerTercerosDatos$;
+  }
+
+  /**
+   * Actualiza los datos de la tabla de proveedores en el store del trámite.
+   *
+   * @param {Proveedor[]} event Lista de proveedores que se actualizarán en el store.
+   * @returns {void}
    */
   updateProveedorTablaDatos(event: Proveedor[]): void {
     this.tramite240106Store.updateProveedorTablaDatos(event);
