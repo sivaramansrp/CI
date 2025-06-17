@@ -93,6 +93,15 @@
         "numeroDeProcedimiento": "80101"
     },
     {
+        "id": "40103",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "40103"
+    },
+    {
         "id": "240101",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
@@ -100,6 +109,15 @@
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
         "numeroDeProcedimiento": "240101"
+    },
+    {
+        "id": "40101",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "40101"
     },
     {
         "id": "230101",
@@ -209,5 +227,41 @@
         "diasTranscurridos": "4",
         "departamento": "AGACE",
         "numeroDeProcedimiento": "32503"
+    },
+    {
+        "id": "202",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-01",
+        "fechaActualizacion": "2025-06-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "202"
+    },
+    {
+        "id":"150101",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-01",
+        "fechaActualizacion": "2025-06-07",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "150101"
+    },
+    {
+        "id": "120201",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-10",
+        "fechaActualizacion": "2025-06-10",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "120201"
+    },
+    {
+        "id": "120603",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-10",
+        "fechaActualizacion": "2025-06-10",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "120603"
     }
 ]
