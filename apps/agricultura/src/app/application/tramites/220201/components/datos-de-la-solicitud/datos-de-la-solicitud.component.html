@@ -49,8 +49,8 @@
             [label]="'Oficina de inspección de sanidad Agropecuaria'"
             [required]="true"
             name="oficinaInspeccion"
-             [isDisabled]="esFormularioSoloLectura"
-               (change)="setValoresStore()"
+            [isDisabled]="esFormularioSoloLectura"
+            (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
         <div class="col-md-12">
@@ -80,7 +80,8 @@
               placeholder=""
               type="text"
               libUppercase
-                   (change)="setValoresStore()"
+              [maxlength]="15"
+              (change)="setValoresStore()"
             />
           </div>
         </div>
@@ -91,8 +92,8 @@
             [label]="'Establecimiento TIF'"
             [required]="false"
             name="establecimientoTIFs"
-             [isDisabled]="esFormularioSoloLectura"
-               (change)="setValoresStore()"
+            [isDisabled]="esFormularioSoloLectura"
+            (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
         <div class="col-md-12">
@@ -116,7 +117,8 @@
               placeholder=""
               type="text"
               libUppercase
-                   (change)="setValoresStore()"
+              [maxlength]="50"
+              (change)="setValoresStore()"
             />
           </div>
         </div>
@@ -127,8 +129,8 @@
             [label]="'Régimen'"
             [required]="true"
             name="regimen"
-             [isDisabled]="esFormularioSoloLectura"
-               (change)="setValoresStore()"
+            [isDisabled]="esFormularioSoloLectura"
+            (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
     
@@ -145,8 +147,7 @@
             [layout]="'vertical'"
             name="tipoMercancia"
             formControlName="tipoMercancia"
-
-               (change)="setValoresStore()"
+            (change)="setValoresStore()"
           ></app-input-radio>
         </div>
       </div>
