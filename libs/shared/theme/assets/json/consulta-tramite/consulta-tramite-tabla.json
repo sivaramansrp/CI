@@ -192,6 +192,16 @@
         "numeroDeProcedimiento": "701"
     },
     {
+       "id":"260704",
+        "folioTramite": "0100001000320251005000002",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "COFEPRIS",
+        "numeroDeProcedimiento": "260704"  
+    },
+    {
         "id": "120201",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2025-06-10",
