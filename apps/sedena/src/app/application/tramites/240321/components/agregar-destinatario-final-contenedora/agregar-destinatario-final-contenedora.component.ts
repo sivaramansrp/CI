@@ -1,11 +1,12 @@
+import { AfterViewInit, Component } from '@angular/core';
+import {Subject, map } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 import { AgregarDestinatarioCustomComponent } from '../../../../shared/components/agregar-destinatario-custom/agregar-destinatario-custom.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
 import { Tramite240321Query } from '../../estados/tramite240321Query.query';
 import { Tramite240321Store } from '../../estados/tramite240321Store.store';
 import { takeUntil } from 'rxjs';
@@ -24,7 +25,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './agregar-destinatario-final-contenedora.component.html',
   styleUrl: './agregar-destinatario-final-contenedora.component.scss',
 })
-export class AgregarDestinatarioFinalContenedoraComponent implements OnInit, OnDestroy {
+export class AgregarDestinatarioFinalContenedoraComponent implements OnInit, OnDestroy,AfterViewInit {
    /**
      * Subject utilizado para gestionar la desuscripción de observables.
      * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
@@ -44,6 +45,14 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit, OnD
    * @property {DestinoFinal[]} destinatarioFinalTablaDatos
    */
   destinatarioFinalTablaDatos: DestinoFinal[] = [];
+  /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   *
+   * @type {boolean}
+   * @memberof AgregarDestinatarioFinalContenedoraComponent
+   * @see https://compodoc.app/
+   */
+  esFormularioSoloLectura:boolean=false;
 
   /**
    * Constructor del componente.
@@ -52,7 +61,7 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit, OnD
    * @param {Tramite240321Store} tramiteStore - Store que administra el estado del trámite.
    * @returns {void}
    */
-  constructor(public tramiteStore: Tramite240321Store,private route: ActivatedRoute,private tramiteQuery: Tramite240321Query) {
+  constructor(public tramiteStore: Tramite240321Store,private route: ActivatedRoute,private tramiteQuery: Tramite240321Query,private readonly consultaioQuery:ConsultaioQuery) {
     // 
   }
 
@@ -98,6 +107,30 @@ export class AgregarDestinatarioFinalContenedoraComponent implements OnInit, OnD
       });
         });
      
+  }
+  /**
+   * @inheritdoc
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
+   * 
+   * Suscribe al observable `selectConsultaioState$` para escuchar cambios en el estado de la sección y actualizar
+   * la propiedad `esFormularioSoloLectura` según el valor de `readonly` en el estado.
+   * 
+   * La suscripción se mantiene activa hasta que se emite un valor en `unsubscribe$`, lo que previene fugas de memoria.
+   * 
+   * @see https://angular.io/api/core/AfterViewInit
+   * 
+   * @memberof AgregarDestinatarioFinalContenedoraComponent
+   */
+  ngAfterViewInit(): void {
+   this.consultaioQuery.selectConsultaioState$
+                    .pipe(
+                      takeUntil(this.unsubscribe$),
+                      map((seccionState)=>{
+                        this.esFormularioSoloLectura = seccionState.readonly; 
+                      })
+                    )
+                    .subscribe();
   }
   /**
    * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.

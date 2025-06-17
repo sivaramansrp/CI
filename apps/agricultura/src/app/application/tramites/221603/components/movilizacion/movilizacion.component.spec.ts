@@ -2,10 +2,18 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { MovilizacionComponent } from './movilizacion.component';
-import { Solicitud221603State, Tramite221603Store } from '../../estados/tramite221603.store';
+import {
+  Solicitud221603State,
+  Tramite221603Store,
+} from '../../estados/tramite221603.store';
 import { Tramite221603Query } from '../../estados/tramite221603.query';
 import { SanidadService } from '../../service/sanidad.service';
-import { AlertComponent, CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import {
+  AlertComponent,
+  CatalogoSelectComponent,
+  ConsultaioQuery,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
 
 const mockSolicitudState: Solicitud221603State = {
   justificacion: '',
@@ -25,7 +33,7 @@ const mockSolicitudState: Solicitud221603State = {
   llave: '',
   fecha: '',
   importe: '',
-  exento:'',
+  exento: '',
 };
 
 const mockFormularioDatos = {
@@ -59,7 +67,13 @@ describe('MovilizacionComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [MovilizacionComponent],
-      imports: [ReactiveFormsModule, FormsModule, TituloComponent, AlertComponent, CatalogoSelectComponent],
+      imports: [
+        ReactiveFormsModule,
+        FormsModule,
+        TituloComponent,
+        AlertComponent,
+        CatalogoSelectComponent,
+      ],
       providers: [
         FormBuilder,
         { provide: Tramite221603Store, useValue: tramite221603StoreMock },
@@ -116,8 +130,14 @@ describe('MovilizacionComponent', () => {
   });
 
   it('should call ngOnDestroy and clean up resources', () => {
-    const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    const destroyNotifierSpy = jest.spyOn(
+      component['destroyNotifier$'],
+      'next'
+    );
+    const destroyNotifierCompleteSpy = jest.spyOn(
+      component['destroyNotifier$'],
+      'complete'
+    );
     component.ngOnDestroy();
     expect(destroyNotifierSpy).toHaveBeenCalled();
     expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
@@ -125,7 +145,62 @@ describe('MovilizacionComponent', () => {
 
   it('should call sanidadService methods on ngOnInit', () => {
     component.ngOnInit();
-    expect(sanidadService.inicializaMovilizacionDatosCatalogos).toHaveBeenCalled();
+    expect(
+      sanidadService.inicializaMovilizacionDatosCatalogos
+    ).toHaveBeenCalled();
     expect(sanidadService.obtenerFormularioDatos).toHaveBeenCalled();
+  });
+
+  it('should set esFormularioSoloLectura and call inicializarEstadoFormulario when consultaQuery emits', () => {
+    const consultaQuery = TestBed.inject(ConsultaioQuery);
+    const inicializarEstadoFormularioSpy = jest.spyOn(
+      component,
+      'inicializarEstadoFormulario'
+    );
+    // Simulate observable emission
+    (consultaQuery.selectConsultaioState$ as any).next({ readonly: true });
+    expect(component.esFormularioSoloLectura).toBe(true);
+    expect(inicializarEstadoFormularioSpy).toHaveBeenCalled();
+  });
+
+  it('should disable empresa and transporte when esFormularioSoloLectura is true', () => {
+    component.medioForm = component['formBuilder'].group({
+      empresa: ['test'],
+      transporte: ['test'],
+    });
+    component.esFormularioSoloLectura = true;
+    component.inicializarEstadoFormulario();
+    expect(component.medioForm.get('empresa')?.disabled).toBe(true);
+    expect(component.medioForm.get('transporte')?.disabled).toBe(true);
+  });
+
+  it('should enable empresa and transporte when esFormularioSoloLectura is false', () => {
+    component.medioForm = component['formBuilder'].group({
+      empresa: ['test'],
+      transporte: ['test'],
+    });
+    component.esFormularioSoloLectura = false;
+    component.inicializarEstadoFormulario();
+    expect(component.medioForm.get('empresa')?.enabled).toBe(true);
+    expect(component.medioForm.get('transporte')?.enabled).toBe(true);
+  });
+
+  it('should set transporte and empresa from formularioDatos if not present in solicitudState', () => {
+    component.solicitudState = {
+      ...mockSolicitudState,
+      transporte: '',
+      empresa: '',
+    };
+    component.formularioDatos = {
+      transporte: 'Barco',
+      empresa: 'NEW COMPANY',
+    } as any;
+    component.medioForm = component['formBuilder'].group({
+      transporte: [''],
+      empresa: [''],
+    });
+    component.rellenarValoresPredeterminados();
+    expect(component.medioForm.get('transporte')?.value).toBe('Barco');
+    expect(component.medioForm.get('empresa')?.value).toBe('NEW COMPANY');
   });
 });

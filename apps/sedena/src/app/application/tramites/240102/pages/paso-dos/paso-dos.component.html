@@ -3,5 +3,7 @@
   
     <ng-alert [CONTENIDO]="TEXTOS"></ng-alert>
   
-    <anexar-documentos [catalogoDocumentos]='catalogoDocumentos'></anexar-documentos>
+    <anexar-documentos [catalogoDocumentos]='catalogoDocumentos'
+    [regresarSeccionCargarDocumentoEvento]="regresarSeccionCargarDocumentoEvento"
+    [cargaArchivosEvento]="reenviarEvento"></anexar-documentos>
   </div>
