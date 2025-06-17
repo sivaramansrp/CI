@@ -636,16 +636,16 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
     tramite: 260913,
     listaComponentes: [{
         id: 'solicitud',
-        componentPath: () => import('../../tramites/260913/pages/pantallas/pantallas.component').then(m => m.PantallasComponent),
-        componentName: 'PantallasComponent',
+        componentPath: () => import('../../tramites/260913/pages/datos/datos.component').then(m => m.DatosComponent),
+        componentName: 'DatosComponent',
     }]
   },
   {
     tramite: 260914,
     listaComponentes: [{
         id: 'solicitud',
-        componentPath: () => import('../../tramites/260914/pages/pantallas/pantallas.component').then(m => m.PantallasComponent),
-        componentName: 'PantallasComponent',
+        componentPath: () => import('../../tramites/260914/pages/datos/datos.component').then(m => m.DatosComponent),
+        componentName: 'DatosComponent',
     }]
   },
   {

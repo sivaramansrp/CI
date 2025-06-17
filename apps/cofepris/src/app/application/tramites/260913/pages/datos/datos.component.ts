@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Subject,map,takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { EstablecimientoService } from '../../../../shared/services/establecimiento.service'
 
 /**
@@ -13,18 +13,18 @@ import { EstablecimientoService } from '../../../../shared/services/establecimie
   selector: 'app-datos',
   templateUrl: './datos.component.html',
 })
-export class DatosComponent implements OnInit,OnDestroy{
+export class DatosComponent implements OnInit, OnDestroy {
   /**
    * @description
    * Variable que almacena el índice del subtítulo seleccionado.
    * Por defecto, el índice inicial es `1`.
    */
   indice: number = 1;
-/**
-   * @property destroyNotifier$
-   * @description
-   * Subject utilizado para notificar la destrucción del componente y cancelar suscripciones activas.
-   */
+  /**
+     * @property destroyNotifier$
+     * @description
+     * Subject utilizado para notificar la destrucción del componente y cancelar suscripciones activas.
+     */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
@@ -48,18 +48,18 @@ export class DatosComponent implements OnInit,OnDestroy{
    */
   constructor(
     private establecimientoService: EstablecimientoService,
-     private consultaQuery: ConsultaioQuery,
-  ) {}
- /**
-   * @method ngOnInit
-   * @description
-   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-   * Suscribe al estado de la consulta y decide si se deben guardar los datos del formulario o mostrar los datos de respuesta.
-   */
+    private consultaQuery: ConsultaioQuery,
+  ) { }
+  /**
+    * @method ngOnInit
+    * @description
+    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+    * Suscribe al estado de la consulta y decide si se deben guardar los datos del formulario o mostrar los datos de respuesta.
+    */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$.pipe(
       takeUntil(this.destroyNotifier$),
-      map((seccionState) => {  debugger;
+      map((seccionState) => {
         this.consultaState = seccionState;
         if (this.consultaState.update) {
           this.guardarDatosFormulario();
@@ -83,7 +83,7 @@ export class DatosComponent implements OnInit,OnDestroy{
         takeUntil(this.destroyNotifier$)
       )
       .subscribe((resp) => {
-        if (resp) { debugger;
+        if (resp) {
           this.esDatosRespuesta = true;
           this.establecimientoService.actualizarEstadoFormulario(resp);
         }
