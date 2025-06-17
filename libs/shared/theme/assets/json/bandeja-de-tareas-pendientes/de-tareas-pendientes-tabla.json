@@ -10635,15 +10635,5 @@
     "departamento": "agace",
     "numeroDeProcedimiento": "31401",
     "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
-  },
-  {
-    "folioTramite": "099226136147361192499352",
-    "tipoDeTramite": "Registro de solicitud de servicio",
-    "nombreDeLaTarea": "Revisión de presupuesto",
-    "fechaDeAsignacion": "2023-10-09",
-    "estadoDeTramite": "Completado",
-    "departamento": "agace",
-    "numeroDeProcedimiento": "31401",
-    "origin": "READ_PROCEDURE"
   }
 ]
