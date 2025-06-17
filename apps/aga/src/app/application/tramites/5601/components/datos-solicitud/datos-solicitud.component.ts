@@ -198,11 +198,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroyed$),
         map((seccionState) => {
-         this.consultaState = seccionState;
-         this.deshabilitarFormularios();
+          this.consultaState = seccionState;
         })
       )
-      .subscribe()
+      .subscribe();
+
   }
 
 
@@ -243,19 +243,6 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       if (event.campo === 'tipoOperacion') {
         this.alCambiarTipoOperacion();
       }
-    }
-  }
-
-   deshabilitarFormularios(): void {
-    if (this.consultaState?.readonly) {
-      // Deshabilita los formularios si el estado es solo lectura
-    this.forma.get('ninoFormGroup')?.disable();
-    } else {
-      // Habilita los formularios si el estado permite edición
-      this.forma.enable();
-      this.formularioMercancia.enable();
-      this.formularioLogistica.enable();
-      this.formularioUbicacion.enable();
     }
   }
 

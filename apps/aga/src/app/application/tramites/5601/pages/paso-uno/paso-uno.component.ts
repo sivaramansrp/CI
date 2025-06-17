@@ -22,20 +22,19 @@ export class PasoUnoComponent {
 
   constructor(private consultaQuery: ConsultaioQuery,private solicitudDespachoExportacionService: SolicitudDespachoExportacionService){
     // Se suscribe al observable del estado y actualiza la propiedad local.
-    this.consultaQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroy$),
-        map((seccionState) => {
-          this.consultaState = seccionState;
-        })
-      )
-      .subscribe();
-
-    // Si el estado indica actualización, carga los datos del formulario.
-    if (this.consultaState.update) {
-      this.guardarDatosFormulario();
-    } 
-
+   this.consultaQuery.selectConsultaioState$
+     .pipe(
+       takeUntil(this.destroy$),
+       map((seccionState) => {
+         this.consultaState = seccionState;
+         return seccionState;
+       })
+     )
+     .subscribe((state) => {
+       if (state.update) {
+         this.guardarDatosFormulario();
+       }
+     });
   }
 
   

@@ -1,5 +1,6 @@
 import { CategoriaMensaje,Notificacion,NotificacionesComponent, TipoNotificacionEnum } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery,ConsultaioState } from '@ng-mf/data-access-user';
 import { FORMULARIO_CERTIFICACION_DETALLES, MENSAJE_MODAL, TITULO_MODAL } from '../../constantes/tramite5601.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -67,6 +68,8 @@ export class CertificacionesComponent implements OnInit, OnDestroy {
    */
   nuevaNotificacion!: Notificacion;
 
+  public consultaState!:ConsultaioState;
+
   /**
    * Constructor del componente.
    * @param fb - FormBuilder para crear formularios reactivos.
@@ -74,7 +77,7 @@ export class CertificacionesComponent implements OnInit, OnDestroy {
    * @param tramite5601Query - Query para obtener datos del estado del trámite 5601.
    */
   constructor(private fb: FormBuilder, private tramite5601Store: Tramite5601Store,
-    private tramite5601Query: Tramite5601Query) {
+    private tramite5601Query: Tramite5601Query,private consultaioQuery: ConsultaioQuery) {
     // Inicializa el formulario de certificación
   }
 
@@ -92,6 +95,16 @@ export class CertificacionesComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+       this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
+
   }
 
   /**
