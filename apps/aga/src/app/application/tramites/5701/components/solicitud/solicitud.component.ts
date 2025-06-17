@@ -3123,23 +3123,40 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         txtBtnCancelar: '',
       };
 
+      this.despacho.get('idAduanaDespacho')?.enable();
+      this.despacho.get('domicilioDespacho')?.enable();
       FOLIO_DDEX?.reset();
       FOLIO_DDEX?.markAsUntouched();
       return;
     }
 
-    this.validaDespachosService
-      .validaRFCAutorizacionDDEX(FOLIO_DDEX?.value)
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        tap((response) => {
-          if (response.datos) {
-            this.despacho.get('idAduanaDespacho')?.enable();
-            this.despacho.get('idSeccionDespacho')?.enable();
-            this.despacho.get('tipoOperacion')?.enable();
+    if (FOLIO_DDEX?.value) {
+      this.validaDespachosService
+        .validaRFCAutorizacionDDEX(FOLIO_DDEX?.value)
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          tap((response) => {
+            if (response.datos) {
+              this.despacho.get('idAduanaDespacho')?.enable();
+              this.despacho.get('tipoOperacion')?.enable();
 
-            this.activarCatalogoDespacho = false;
-          } else {
+              this.activarCatalogoDespacho = false;
+            } else {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'alert',
+                categoria: 'danger',
+                modo: 'action',
+                titulo: TITULO_MODAL_AVISO,
+                mensaje: MSJ_ERROR_FOLIO_DDEX,
+                cerrar: false,
+                txtBtnAceptar: TEXTO_CERRAR,
+                txtBtnCancelar: '',
+              };
+              this.despacho.get('idAduanaDespacho')?.enable();
+              this.despacho.get('domicilioDespacho')?.enable();
+            }
+          }),
+          catchError((_error) => {
             this.nuevaNotificacion = {
               tipoNotificacion: 'alert',
               categoria: 'danger',
@@ -3150,29 +3167,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
               txtBtnAceptar: TEXTO_CERRAR,
               txtBtnCancelar: '',
             };
-          }
-
-          this.despacho.get('idAduanaDespacho')?.enable();
-          this.despacho.get('domicilioDespacho')?.enable();
-          this.despacho.get('tipoOperacion')?.enable();
-
-          this.despacho.get('tipoDespacho')?.enable();
-          this.despacho.get('tipoDespacho')?.disable();
-        }),
-        catchError((_error) => {
-          this.nuevaNotificacion = {
-            tipoNotificacion: 'alert',
-            categoria: 'danger',
-            modo: 'action',
-            titulo: TITULO_MODAL_AVISO,
-            mensaje: MSJ_ERROR_FOLIO_DDEX,
-            cerrar: false,
-            txtBtnAceptar: TEXTO_CERRAR,
-            txtBtnCancelar: '',
-          };
-          return EMPTY; // Evita que el error se propague
-        })
-      )
-      .subscribe();
+            this.despacho.get('idAduanaDespacho')?.enable();
+            this.despacho.get('domicilioDespacho')?.enable();
+            return EMPTY; // Evita que el error se propague
+          })
+        )
+        .subscribe();
+    }
   }
 }
