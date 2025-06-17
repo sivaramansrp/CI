@@ -58,6 +58,10 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
         }));
     }
 
+    /**
+     * Actualiza el campo 'RepresentacionFederal' en el estado.
+     * @param RepresentacionFederal Valor de la representación federal a establecer.
+     */
     public setRepresentacionFederal(RepresentacionFederal: string): void {
         this.update((state) => ({
             ...state,
@@ -65,6 +69,10 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
         }));
     }
 
+    /**
+     * Actualiza el campo 'ActividadProductiva' en el estado.
+     * @param ActividadProductiva Valor de la actividad productiva a establecer.
+     */
     public setActividadProductiva(ActividadProductiva: string): void {
         this.update((state) => ({
             ...state,
@@ -72,6 +80,10 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
         }));
     }
 
+    /**
+     * Actualiza el campo 'Sector' en el estado.
+     * @param Sector Valor del sector a establecer.
+     */
     public setSector(Sector: string): void {
         this.update((state) => ({
             ...state,
@@ -79,6 +91,10 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
         }));
     }
 
+    /**
+     * Actualiza el campo 'Fraccion_arancelaria' en el estado.
+     * @param Fraccion_arancelaria Valor de la fracción arancelaria a establecer.
+     */
     public setFraccionArancelaria(Fraccion_arancelaria: string): void {
         this.update((state) => ({
             ...state,
@@ -86,6 +102,10 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
         }));
     }
 
+    /**
+     * Actualiza el campo 'contribuyentes' en el estado.
+     * @param contribuyentes Valor de los contribuyentes a establecer.
+     */
     public setcontribuyentes(contribuyentes: string): void {
         this.update((state) => ({
             ...state,
@@ -93,6 +113,10 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
         }));
     }
 
+    /**
+     * Actualiza el campo 'formaValida' en el estado.
+     * @param formaValida Valor de la forma válida a establecer.
+     */
     public setFormaValida(formaValida: string): void {
         this.update((state) => ({
             ...state,
