@@ -1,4 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery,
+  ConsultaioStore,} from "@ng-mf/data-access-user";
 import {
   EXENTO_DE_RADIO_BOTONS,
   FormularioDatos,
@@ -8,7 +10,7 @@ import {
   Solicitud221603State,
   Tramite221603Store,
 } from '../../estados/tramite221603.store';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { SanidadService } from '../../service/sanidad.service';
 import { Tramite221603Query } from '../../estados/tramite221603.query';
 
@@ -59,6 +61,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente. Inicializa las dependencias necesarias y prepara el formulario reactivo.
    *
    * formBuilder - FormBuilder utilizado para crear el formulario reactivo.
@@ -70,8 +78,20 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private formBuilder: FormBuilder,
     private tramite221603Store: Tramite221603Store,
     private tramite221603Query: Tramite221603Query,
-    public sanidadService: SanidadService
-  ) {}
+    public sanidadService: SanidadService,
+    private consultaQuery: ConsultaioQuery,
+    private consultaStore: ConsultaioStore
+  ) {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly || true;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
 
   /**
    * Método que se ejecuta cuando el componente es inicializado.
@@ -87,16 +107,39 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.sanidadService.inicializaPagoDeDerechosDatosCatalogos();
     this.inicializarFormulario();
 
-    this.disableJustificacion = this.solicitudState.exento === '1' ? false : true;
-    this.disableBanco = this.solicitudState.exento === '1' ? true : false;
+this.disableJustificacion = (this.solicitudState?.exento ?? '') !== '1';
+this.disableBanco = (this.solicitudState?.exento ?? '') === '1';
 
-    this.sanidadService.obtenerFormularioDatos().subscribe((formularioDatos: FormularioDatos) => {
-      this.formularioDatos = formularioDatos;
-      this.actualizarControlesDelFormulario();
-      if (this.solicitudState.exento === '1') {
-        this.limpiarFormularioYDeshabilitarControles();
-      }
-    });
+    this.sanidadService
+      .obtenerFormularioDatos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((formularioDatos: FormularioDatos) => {
+        this.formularioDatos = formularioDatos;
+        this.actualizarControlesDelFormulario();
+        if (this.solicitudState.exento === '1') {
+          this.limpiarFormularioYDeshabilitarControles();
+        }
+      });
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Inicializa el estado del formulario según si está en modo solo lectura o editable.
+   * Si el formulario es solo lectura, deshabilita los campos correspondientes.
+   * Si es editable, habilita los campos necesarios.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.disableBanco = true;
+      this.pagoDerechosForm.get('fecha')?.disable();
+      this.pagoDerechosForm.get('llave')?.disable();
+      this.pagoDerechosForm.get('exentoDePago')?.disable();
+    } else {
+      this.disableBanco = true;
+      this.pagoDerechosForm.get('fecha')?.enable();
+      this.pagoDerechosForm.get('llave')?.enable();
+      this.pagoDerechosForm.get('exentoDePago')?.enable();
+    }
   }
 
   /**
@@ -112,7 +155,10 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       banco: [this.solicitudState.banco, Validators.required],
       llave: [this.solicitudState.llave, Validators.required],
       fecha: [this.solicitudState.fecha, Validators.required],
-      importe: [this.solicitudState.importe, [Validators.required, Validators.min(1)]],
+      importe: [
+        this.solicitudState.importe,
+        [Validators.required, Validators.min(1)],
+      ],
     });
   }
 
@@ -125,8 +171,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.pagoDerechosForm.get('dependencia')?.disable();
     this.pagoDerechosForm.get('importe')?.disable();
     this.pagoDerechosForm.get('clave')?.setValue(this.formularioDatos?.clave);
-    this.pagoDerechosForm.get('dependencia')?.setValue(this.formularioDatos?.dependencia);
-    this.pagoDerechosForm.get('importe')?.setValue(this.formularioDatos?.importe);
+    this.pagoDerechosForm
+      .get('dependencia')
+      ?.setValue(this.formularioDatos?.dependencia);
+    this.pagoDerechosForm
+      .get('importe')
+      ?.setValue(this.formularioDatos?.importe);
   }
 
   /**

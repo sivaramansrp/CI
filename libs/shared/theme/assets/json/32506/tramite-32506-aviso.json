@@ -1,0 +1,74 @@
+{
+    "pasoActivo": 1,
+    "pestanaActiva": 2,
+    "datosSolicitante": {
+        "rfc": "AAL0409235E6",
+        "denominacion": "AGRICOLA ALPE S DE RL DE CV",
+        "actividadEconomica": "Siembra, cultivo y cosecha de otros cultivos",
+        "correoElectronico": "caguileram@ultrasist.com.mx",
+        "pais": "ESTADOSUNIDOSMEXICANOS",
+        "codigoPostal": "34078",
+        "entidadFederativa": "DURANGO",
+        "municipio": "DURANGO",
+        "localidad": "VICTORIADEDURANGO",
+        "colonia": "LOSSAUCES",
+        "calle": "PRIV.PINOPIÑON",
+        "nExt": "703",
+        "nInt": "",
+        "lada": "",
+        "telefono": "",
+        "adace": "Occidente"
+    },
+    "domicilioFormulario": {
+        "nombreComercial": "NOMBRE COMERCIAL",
+        "claveEntidadFederativa": "Test",
+        "claveDelegacionMunicipio": "Test",
+        "claveColonia": "Test",
+        "calle": "Test",
+        "numeroExterior": "10",
+        "numeroInterior": "20",
+        "codigoPostal": "12345",
+        "rfc": "AAL0409235E6"
+    },
+    "avisoFormulario": {
+        "adace": "Test",
+        "valorProgramaImmex": "Test",
+        "valorAnioProgramaImmex": "Test",
+        "tipoAviso": "Test",
+        "justificacion": "Test",
+        "periodicidadMensualDestruccion": "Test",
+        "fechaTranslado": "Test",
+        "nombreComercial": "NOMBRE COMERCIAL",
+        "claveEntidadFederativa": "Test",
+        "claveDelegacionMunicipio": "Test",
+        "claveColonia": "Test",
+        "calle": "Test",
+        "numeroExterior": "10",
+        "numeroInterior": "20",
+        "codigoPostal": "12345",
+        "horaDestruccion": "00:00",
+        "fechaDestruccion": "2023-10-01",
+        "tipoCarga": "Test"
+    },
+    "procesoFormulario": {
+        "descripcionProcesoDestruccion": "esta es una descripción de prueba del proceso de destrucción"
+    },
+    "desperdicioFormulario": {
+        "descripcionDesperdicio": "Test",
+        "cantidadDesp": "Test",
+        "claveUnidadMedidaDesp": "Test",
+        "porcentaje": "Test",
+        "descripcionMercancia": "Test",
+        "circunstanciaHechos": "Test"
+    },
+    "pedimentoFormulario": {
+        "patenteAutorizacion": "2452",
+        "pedimento": "5254782",
+        "claveAduanaPedimento": "ALTAMIRA",
+        "claveFraccionArancelariaPedimento": "certificado",
+        "nicoPedimento": "02",
+        "cantidadPedimento": "25",
+        "claveUnidadMedidaPedimento": "Litro"
+    },
+    "tipoDocumento": ""
+}

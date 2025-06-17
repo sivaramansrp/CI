@@ -1,10 +1,6 @@
-
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
-import { ActivatedRoute } from '@angular/router';
-import { of } from 'rxjs';
-import { ToastrModule } from 'ngx-toastr';
+import {  HttpClientModule } from '@angular/common/http';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -12,21 +8,7 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule,ToastrModule.forRoot()
-      ],
-      providers: [
-             {
-               provide: ActivatedRoute,
-               useValue: {
-                 params: of({ id: '123' }), // Mock params if needed
-                 snapshot: {
-                   paramMap: {
-                     get: (key: string) => '123' // Mock paramMap if needed
-                   }
-                 }
-               }
-             }
-           ]
+      imports: [PasoUnoComponent,HttpClientModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
