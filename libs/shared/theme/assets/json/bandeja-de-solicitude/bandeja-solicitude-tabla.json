@@ -2186,7 +2186,7 @@
     "departamento": "AGACE",
     "numeroDeProcedimiento": "31501"
   },
-  {
+  {  
     "id": 6102,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -2418,6 +2418,15 @@
     "diasTranscurridos": "4",
     "departamento": "SEDENA",
     "numeroDeProcedimiento": "240107"
+  },
+  {
+    "id": 31801,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2025-12-06",
+    "fechaActualizacion": "2025-12-06",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "31801"
   }
  
 ]
