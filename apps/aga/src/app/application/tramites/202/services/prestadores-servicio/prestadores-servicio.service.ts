@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { ManifiestosRespuesta } from '../../models/prestadores-servicio.model';
+import { ManiobrasMercancias202State } from '../../../../core/estados/tramites/tramite202.store';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
 /**
@@ -53,5 +54,14 @@ export class PrestadoresServicioService {
    */
   obtenerDocumentosSeleccionados(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/202/documentos-seleccionados.json');
+  }
+
+  /**
+   * Obtiene los datos de los prestadores de servicio desde un archivo JSON.
+   * 
+   * @returns Observable con el estado de maniobras y mercancías.
+   */
+  obtenerPrestadoresServicioDatos(): Observable<ManiobrasMercancias202State> {
+    return this.http.get<ManiobrasMercancias202State>('assets/json/202/prestadores-servicio.json');
   }
 }
