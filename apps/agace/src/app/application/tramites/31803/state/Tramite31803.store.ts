@@ -18,7 +18,7 @@ export interface Solicitud31803State {
   /** Número de operación asociado a la solicitud. */
   numeroOperacion: string;
   /** Lista de bancos asociados a la solicitud. */
-  banco: Catalogo[] | null;
+  banco: string;
   /** Llave única asociada a la solicitud. */
   llave: string;
   /** Primer manifiesto asociado a la solicitud. */
@@ -36,7 +36,7 @@ export interface Solicitud31803State {
 export function createInitialState(): Solicitud31803State {
   return {
     numeroOperacion: '',
-    banco:[],
+    banco:'',
     llave: '',
     manifiesto1: '',
     manifiesto2: '',
@@ -65,7 +65,7 @@ export class Tramite31803Store extends Store<Solicitud31803State> {
    * Actualiza la lista de bancos en el estado.
    * @param banco Lista de bancos de tipo `Catalogo[]`.
    */
-  public setBanco(banco: Catalogo[]): void {
+  public setBanco(banco:string): void {
     this.update((state) => ({ ...state, banco }));
   }
 

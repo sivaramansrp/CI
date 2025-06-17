@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL, } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
+import { RegistroSolicitudService, SolicitudDatosResponse } from '../../services/registro-solicitud-service.service';
 import { SharedModule, SolicitanteComponent, } from '@libs/shared/data-access-user/src';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { RegistroSolicitudService } from '../../services/registro-solicitud-service.service';
 import { Solicitud31803State } from '../../state/Tramite31803.store';
 import { SolicitudComponent } from "../../components/Solicitud.component";
 
@@ -74,28 +74,27 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * `actualizarEstadoFormulario` del servicio.
    * La suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
    */
-  guardarDatosFormulario(): void {
-    this.solicitud31803Service
-      .getSolicitudDatos()
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-      )
-     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .subscribe((resp: any) => {
-        if (resp) {
-          this.esDatosRespuesta = true;
-          const SOLICITUD_STATE: Solicitud31803State = {
-            numeroOperacion: resp.numeroOperacion,
-            banco: resp.banco.descripcion,
-            llave: resp.llave,
-            manifiesto1: resp.manifiesto1,
-            manifiesto2: resp.manifiesto2,
-            fechaPago: resp.fechaPago,
-          };
-          this.solicitud31803Service.actualizarEstadoFormulario(SOLICITUD_STATE);
-        }
-      });
-  }
+guardarDatosFormulario(): void {
+  this.solicitud31803Service
+    .getSolicitudDatos()
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+    )
+    .subscribe((resp: SolicitudDatosResponse) => {
+      if (resp) {
+        this.esDatosRespuesta = true;
+        const SOLICITUD_STATE: Solicitud31803State = {
+          numeroOperacion: resp.numeroOperacion,
+          banco: resp.banco,
+          llave: resp.llave,
+          manifiesto1: resp.manifiesto1,
+          manifiesto2: resp.manifiesto2,
+          fechaPago: resp.fechaPago,
+        };
+        this.solicitud31803Service.actualizarEstadoFormulario(SOLICITUD_STATE);
+      }
+    });
+}
 
   /**
  * Referencia al componente de solicitante.

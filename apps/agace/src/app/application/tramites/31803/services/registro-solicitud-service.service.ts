@@ -3,6 +3,15 @@ import { Solicitud31803State, Tramite31803Store } from '../state/Tramite31803.st
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+// Define or import the SolicitudDatosResponse interface
+export interface SolicitudDatosResponse {
+  numeroOperacion: string;
+  banco: string ;
+  llave: string;
+  manifiesto1: string;
+  manifiesto2: string;
+  fechaPago: string;
+}
 
 /**
  * Servicio para gestionar las operaciones relacionadas con la solicitud del trámite 31803.
@@ -63,7 +72,7 @@ export class RegistroSolicitudService {
  *
  * @returns Un observable que emite una lista de objetos de tipo `Catalogo`.
  */
-getSolicitudDatos(): Observable<Catalogo[]> {
-  return this.http.get<Catalogo[]>('assets/json/31803/solicitud-banco.json');
+getSolicitudDatos(): Observable<SolicitudDatosResponse> {
+  return this.http.get<SolicitudDatosResponse>('assets/json/31803/solicitud-banco.json');
 }
 }
