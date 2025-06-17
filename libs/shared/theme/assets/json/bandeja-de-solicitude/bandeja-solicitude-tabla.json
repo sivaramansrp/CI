@@ -2201,5 +2201,14 @@
   "diasTranscurridos": "4",
   "departamento": "AGA",
   "numeroDeProcedimiento": "31201"
-}
+},
+{
+    "id": 120403,
+    "tipoDeTramite": "Consulta de Proceso",
+    "fecha": "2023-10-06",
+    "fechaActualizacion": "2023-10-12",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "120403"
+  }
 ]
