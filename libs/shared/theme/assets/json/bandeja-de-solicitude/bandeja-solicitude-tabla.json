@@ -2214,6 +2214,51 @@
     "numeroDeProcedimiento": "240118"
   },
   {
+    "id": 40402,
+    "tipoDeTramite": "Registro CAA del transportista",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "40402"
+  },
+  {
+    "id": 260304,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260304"
+  },
+  {
+    "id": 250101,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "PROFEPA",
+    "numeroDeProcedimiento": "250101"
+  },
+  {
+    "id": 290301,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AMECAFE",
+    "numeroDeProcedimiento": "290301"
+  },
+  {
+    "id": 261601,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "261601"
+  },
+  {
     "id": 240105,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",

@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
@@ -144,6 +144,14 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * Lista de elementos adicionales que pueden ser incluidos en el formulario/trámite.
    */
   public readonly elementosAnadidos = ELEMENTOS_ANADIDOS;
+
+  /**
+   * @input
+   * @description
+   * Indica si el formulario debe estar deshabilitado. Cuando es `true`, los controles del formulario estarán inactivos y no permitirán la edición por parte del usuario.
+   * @type {boolean}
+   */
+   @Input() formularioDeshabilitado: boolean = false;
 
   /**
    * @constructor
