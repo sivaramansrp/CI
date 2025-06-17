@@ -9,7 +9,7 @@
   <ng-titulo titulo="Prorrogar" />
 
   <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="tercerosProd"
-    [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX">
+    [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
   </app-tabla-dinamica>
 
   <div class="datos-prorroga">
@@ -23,16 +23,20 @@
     </div>
     <div class="row">
       <div class="col-md-4">
-
-        <input-fecha [datos]="fechaInicioOutput" formControlName="prorrogaDel" (valorCambiado)="onFechaCambiada($event)"
-          [setFecha]="form.get('prorrogaDel')?.value"></input-fecha>
+<input-fecha [datos]="fechaInicioInput" [setFecha]="
+                  form.get('fechaPago')
+                    ?.value
+                " (valorCambiado)="cambioFechaPago($event)"
+                    [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
       </div>
     </div>
     <div class="row">
       <div class="col-md-4">
-
-        <input-fecha [datos]="fechaInicioInput" formControlName="prorrogaAl" (valorCambiado)="onFechaCambiada($event)"
-          [setFecha]="form.get('prorrogaAl')?.value"></input-fecha>
+<input-fecha [datos]="fechaInicioInput" [setFecha]="
+                  form.get('prorrogaAl')
+                    ?.value
+                " (valorCambiado)="oncambioFechaPago($event)"
+            [isDisabled]="esFormularioSoloLectura ? true : false"></input-fecha>
       </div>
     </div>
     <div class="col-md-12">
