@@ -173,3 +173,22 @@ export interface ArchivoDocumentos {
   tamano: number;
   resolucion: string;
 }
+/**
+ * Representa la respuesta de una consulta.
+ * 
+ * Contiene información sobre el éxito de la operación, los datos obtenidos y un mensaje relacionado.
+ */
+export interface RespuestaConsulta {
+  success: boolean;
+  datos: ConsultaDatos;
+  message: string;
+}
+/**
+ * Representa los datos obtenidos de una consulta.
+ * 
+ * Contiene información sobre el formulario de aviso y la tabla de datos.
+ */
+export interface ConsultaDatos {
+  avisoFormulario: AvisoFormulario;
+  tablaDeDatos: AvisoTabla[]
+}

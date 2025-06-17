@@ -1,8 +1,10 @@
-
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
-import { Solicitud261601State, Solicitud261601Store } from '../../estados/tramites261601.store';
+import {
+  Solicitud261601State,
+  Solicitud261601Store,
+} from '../../estados/tramites261601.store';
 
 import { CommonModule } from '@angular/common';
 import { CorreccionInternaDeLaCofeprisService } from '../../services/correccion-interna-de-la-cofepris.service';
@@ -11,8 +13,11 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Solicitud261601Query } from '../../estados/tramites261601.query';
 import { TEXTOS } from '../../constants/constants.enum';
 
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  TituloComponent,
+} from '@libs/shared/data-access-user/src';
 
 /**
  * Componente para gestionar la solicitud del trámite 261601.
@@ -77,6 +82,19 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
+    /**
+     * Indica si el formulario es de solo lectura.
+     */
+    esFormularioSoloLectura: boolean = false;
+  
+    /**
+     * Estado de los datos de consulta.
+     */
+    consultaDatos!: ConsultaioState;
+
+  /** Estado de la consulta que se obtiene del store. */
+  public consultaState!: ConsultaioState;
+
   /**
    * Constructor del componente.
    * @param correccionService Servicio para obtener datos de corrección interna.
@@ -88,8 +106,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private correccionService: CorreccionInternaDeLaCofeprisService,
     private solicitud261601Store: Solicitud261601Store,
     private solicitud261601Query: Solicitud261601Query,
-    private fb: FormBuilder
-  ) {}
+    private fb: FormBuilder,
+    private consultaioQuery: ConsultaioQuery) {}
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -107,6 +125,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.loadFolioDelTramite();
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+        this.consultaDatos = seccionState;
+        this.esFormularioSoloLectura = this.consultaDatos.readonly;
+        this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe();
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -115,6 +144,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   createForm(): void {
     this.solicitudForm = this.fb.group({
       detalledelaSolicitud: [this.solicitudState?.detalledelaSolicitud],
+      cumplocon: [this.solicitudState?.cumplocon],
       rfc: [this.solicitudState?.rfc || this.rfc],
       legalRazonSocial: [this.solicitudState?.legalRazonSocial],
       apellidoPaterno: [this.solicitudState?.apellidoPaterno],
@@ -142,7 +172,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       if (data && data.length > 0) {
         const SOLICITUD_DATA = data[0];
         this.solicitudForm.patchValue({
-          legalRazonSocial: SOLICITUD_DATA.nombreORazónSocial,
+          legalRazonSocial: SOLICITUD_DATA.legalRazonSocial,
           apellidoPaterno: SOLICITUD_DATA.apellidoPaterno,
           apellidoMaterno: SOLICITUD_DATA.apellidoMaterno,
         });
@@ -155,14 +185,36 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   }
 
   /**
+   * Inicializa el estado del formulario.
+   * Si el formulario es de solo lectura, lo deshabilita.
+   * De lo contrario, lo habilita.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.solicitudForm?.disable();
+    }
+    else {
+      this.solicitudForm?.enable();
+    }
+}
+
+  /**
    * Actualiza un valor específico en el store.
    * @param form Formulario reactivo.
    * @param campo Nombre del campo en el formulario.
    * @param metodoNombre Método del store a invocar.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Solicitud261601Store): void {
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Solicitud261601Store
+  ): void {
     const VALOR = form.get(campo)?.value;
-    (this.solicitud261601Store[metodoNombre] as (value: string | number | null) => void)(VALOR);
+    (
+      this.solicitud261601Store[metodoNombre] as (
+        value: string | number | null
+      ) => void
+    )(VALOR);
   }
 
   /**
