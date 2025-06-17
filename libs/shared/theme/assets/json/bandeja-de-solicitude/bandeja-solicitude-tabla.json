@@ -2321,12 +2321,21 @@
   "numeroDeProcedimiento": "240105"
   },
   {
-  "id": 130302,
-  "tipoDeTramite": "Solicitud de Permiso",
-  "fecha": "2023-10-01",
-  "fechaActualizacion": "2023-10-05",
-  "diasTranscurridos": "4",
-  "departamento": "SEDENA",
-  "numeroDeProcedimiento": "130302"
+    "id": 32503,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32503"
+  },
+  {
+     "id": 280101,
+    "tipoDeTramite": "Permiso de exportación temporal o definitiva de monumentos o bienes muebles históricos",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "INAH",
+    "numeroDeProcedimiento": "280101"
   }
 ]
