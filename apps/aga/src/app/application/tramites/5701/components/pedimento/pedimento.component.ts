@@ -49,7 +49,7 @@ import {
   Solicitud5701State,
   Tramite5701Store,
 } from '../../../../core/estados/tramites/tramite5701.store';
-import { Subject, map, takeUntil } from 'rxjs';
+import { EMPTY, Subject, empty, map, takeUntil } from 'rxjs';
 import { BodyEstadoPedimento } from '../../../../core/models/5701/pedimento.model';
 import { CommonModule } from '@angular/common';
 import { EstadoPedimentoService } from '../../../../core/services/5701/pedimento/estado-pedimento.service';
@@ -158,6 +158,9 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    */
   ColumnMode = ColumnMode;
 
+  mensajes = {
+    emptyMessage: 'No hay datos disponibles',
+  };
   constructor(
     private tramite5701Query: Tramite5701Query,
     private tramite5701Store: Tramite5701Store,
@@ -304,8 +307,6 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
               txtBtnAceptar: TEXTO_CERRAR,
               txtBtnCancelar: '',
             };
-
-            return;
           }
 
           const BODY: BodyEstadoPedimento = {
