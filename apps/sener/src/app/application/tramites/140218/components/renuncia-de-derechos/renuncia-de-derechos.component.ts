@@ -216,9 +216,9 @@ export class RenunciaDeDerechosComponent implements OnInit, OnDestroy {
      * @void
      * Este método no retorna ningún valor.
      */
-    public establecerCambioDeValor(event: { campo: string; valor: any }): void {
+    public establecerCambioDeValor(event: { campo: string; valor: unknown }): void {
       if (event && typeof event.valor === 'object' && event.valor !== null && 'id' in event.valor) {
-        const VALOR = event.valor.id;
+        const VALOR = (event.valor as { id: string | number }).id;
         this.tramite140218Store.setDynamicFieldValue(event.campo, VALOR);
       } else if (event) {
         this.tramite140218Store.setDynamicFieldValue(event.campo, event.valor);
