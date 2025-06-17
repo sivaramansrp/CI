@@ -2214,6 +2214,15 @@
     "numeroDeProcedimiento": "240118"
   },
   {
+    "id": 40402,
+    "tipoDeTramite": "Registro CAA del transportista",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "40402"
+  },
+  {
     "id": 260304,
     "tipoDeTramite": "Solicitud de cs Permiso",
     "fecha": "2023-10-01",
