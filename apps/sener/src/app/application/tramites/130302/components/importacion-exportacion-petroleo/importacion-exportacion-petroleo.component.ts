@@ -176,12 +176,12 @@ this.tramite130302Query.selectExportarIlustraciones$
         })
       )
       .subscribe();
-    this.form = new FormGroup({
-      saldoDisponible: new FormControl({ value: '', disabled: true }),
-      fechaPago: new FormControl({ value: '', disabled: true }),
-      prorrogaAl: new FormControl({ value: '', disabled: true }),
+    this.form = this.fb.group({
+      fechaPago: [this.exportarIlustracionesState?.fechaPago],
+      prorrogaAl: [this.exportarIlustracionesState?.prorrogaAl],
       motivoJustificacion: new FormControl(this.exportarIlustracionesState?.motivoJustificacion),
       otrasDeclaraciones: new FormControl(this.exportarIlustracionesState?.otrasDeclaraciones),
+      
     });
  /*
      * Si el formulario está en modo solo lectura, deshabilita todos los campos.
@@ -206,6 +206,18 @@ this.tramite130302Query.selectExportarIlustraciones$
     });
     this.setValoresStore(this.form, 'fechaPago', 'setfechaPago');
   }
+  /**
+   * Actualiza el campo de fecha de pago en el formulario y en el estado global.
+   *
+   * @param nuevo_fechaPago Nueva fecha de pago seleccionada.
+   */
+  oncambioFechaPago(nuevo_fechaPago: string): void {
+    this.form.patchValue({
+      fechaPago: nuevo_fechaPago,
+    });
+    this.setValoresStore(this.form, 'prorrogaAl', 'setprorrogaAl');
+  }
+
 
   /**
    * method loadAsignacionData

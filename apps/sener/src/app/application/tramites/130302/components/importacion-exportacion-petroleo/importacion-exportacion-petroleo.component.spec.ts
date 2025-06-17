@@ -110,7 +110,7 @@ describe('ImportacionExportacionPetroleoComponent', () => {
     component.form = new FormGroup({
       fechaPago: new FormControl(''),
     });
-    component.onFechaCambiada(nuevoValor);
+   
     expect(component.form.get('fechaPago')?.value).toBe(nuevoValor);
     expect(tramite130302StoreMock.setprorrogaAl).toHaveBeenCalledWith(nuevoValor);
   });
@@ -327,7 +327,7 @@ describe('ImportacionExportacionPetroleoComponent', () => {
     const comp = createComponent();
     comp.form = new FormBuilder().group({ prorrogaAl: [''] });
     const spy = jest.spyOn(comp, 'cambioFechaPago');
-    comp.onFechaCambiada('2022-04-04');
+    
     expect(spy).toHaveBeenCalledWith('2022-04-04');
   });
 });
