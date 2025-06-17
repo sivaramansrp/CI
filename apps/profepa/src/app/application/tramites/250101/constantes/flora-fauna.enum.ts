@@ -76,6 +76,10 @@ export const DESTINATARIO_OPCIONES_DE_BOTON_DE_RADIO = [
   }
 ];
 
+/**
+ * Constante que representa la configuración del campo de entrada para la fecha de pago.
+ * Puede ser usada en formularios o componentes que requieren seleccionar una fecha.
+ */
 export const INPUT_FECHA_PAGO = {
   /**
    * Propiedad labelNombre
@@ -95,6 +99,11 @@ export const INPUT_FECHA_PAGO = {
    */
   habilitado: true,
 };
+
+/**
+ * Configuración del campo de entrada para una fecha genérica.
+ * Esta constante puede ser utilizada para definir un input de tipo fecha en un formulario.
+ */
 export const INPUT_FECHA = {
   /**
    * Propiedad labelNombre
