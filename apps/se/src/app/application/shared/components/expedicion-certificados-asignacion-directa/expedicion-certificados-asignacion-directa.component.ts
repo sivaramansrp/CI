@@ -128,6 +128,7 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
         takeUntil(this.destruirNotificador$),
         map((seccionState) => {
           this.formularioDeshabilitado = seccionState.readonly;
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
@@ -149,8 +150,6 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
     this.crearExpedicionCertificadosAsignacionForm();
 
     this.aniosAutorizacionSeleccion();
-
-    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -264,6 +263,8 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnDestr
         ]
       })
     });
+
+    this.inicializarEstadoFormulario();
   }
 
   /**
