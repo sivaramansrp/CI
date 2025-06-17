@@ -202,6 +202,33 @@
         "numeroDeProcedimiento": "260704"  
     },
     {
+        "id": "32503",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "32503"
+    },
+    {
+        "id": "202",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-01",
+        "fechaActualizacion": "2025-06-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "202"
+    },
+    {
+        "id":"150101",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-01",
+        "fechaActualizacion": "2025-06-07",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "150101"
+    },
+    {
         "id": "120201",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2025-06-10",
