@@ -25,8 +25,6 @@ export class TramiteAsociadosComponent {
    */
   @Input() configuracionTabla!: ConfiguracionColumna<TramiteAsociados>[];
 
-  @Input() isDisabled : boolean = false;
-
   /**
    * Lista de trámites asociados que se mostrarán en la tabla.
    */
