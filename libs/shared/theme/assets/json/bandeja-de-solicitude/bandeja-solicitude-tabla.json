@@ -2337,5 +2337,14 @@
     "diasTranscurridos": "4",
     "departamento": "INAH",
     "numeroDeProcedimiento": "280101"
+  },
+  {
+    "id": 202,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2025-06-05",
+    "fechaActualizacion": "2025-06-13",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "202"
   }
 ]
