@@ -238,7 +238,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
       categoria: 'danger',
       modo: 'action',
       titulo: '',
-      mensaje: 'Por favor seleccione un archivo CSV.',
+      mensaje: 'No existe información para la clave UCON: aaaaaaa123##aaa y RFC: LEQI8101314S7 proporcionados. Favor de verificar.',
       cerrar: false,
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'OK',
