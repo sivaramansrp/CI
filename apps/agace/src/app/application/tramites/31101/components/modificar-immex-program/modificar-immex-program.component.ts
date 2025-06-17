@@ -1,4 +1,4 @@
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { Catalogo, ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
@@ -70,6 +70,12 @@ export class ModificarImmexProgramComponent implements OnInit, OnDestroy {
   solicitud31101State: Solicitud31101State = {} as Solicitud31101State;
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    *  Constructor del componente.
    * @param {FormBuilder} fb - Servicio de construcción de formularios reactivos.
    * @param {SolicitudService} solicitudService - Servicio de solicitud de datos.
@@ -78,8 +84,25 @@ export class ModificarImmexProgramComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     public solicitudService: SolicitudService,
     public solicitud31101Store: Solicitud31101Store, // /** Estado de la solicitud */
-    public solicitud31101Query: Solicitud31101Query // /** Consultas sobre la solicitud */
+    public solicitud31101Query: Solicitud31101Query, // /** Consultas sobre la solicitud */
+    public consultaioQuery: ConsultaioQuery
   ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = !seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     this.conseguirDatosGeneralesOpcionDeRadio();
     this.conseguirDatosGeneralesCatologo();
   }
@@ -88,6 +111,36 @@ export class ModificarImmexProgramComponent implements OnInit, OnDestroy {
    *  Inicializa el formulario al montar el componente.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.modificarImmexProgramForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.modificarImmexProgramForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  inicializarFormulario(): void {
     this.modificarImmexProgramForm = this.fb.group({
       instalacionesPrincipales: [
         this.solicitud31101State.instalacionesPrincipales,
@@ -131,7 +184,6 @@ export class ModificarImmexProgramComponent implements OnInit, OnDestroy {
       )
       .subscribe();
   }
-
   /**
    *  Obtiene los datos generales de las opciones de radio.
    */

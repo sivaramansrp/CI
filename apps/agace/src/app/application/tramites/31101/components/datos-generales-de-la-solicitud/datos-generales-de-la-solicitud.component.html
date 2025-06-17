@@ -68,7 +68,7 @@
           [label]="conceptoLista.labelNombre"
           [placeholder]="conceptoLista.primerOpcion"
           [required]="false"
-          [isDisabled]="false"
+          [isDisabled]="esFormularioSoloLectura"
           name="concepto"
           id="concepto"
           (selectionChange)="actualizarConcepto($event)"
@@ -166,6 +166,7 @@
           <button
             type="button"
             name="Agregar"
+            [disabled]="esFormularioSoloLectura"
             id="btnBusqRfc"
             class="btn btn-primary me-5"
           >
@@ -187,6 +188,7 @@
           <button
             type="button"
             name="eliminar"
+            [disabled]="esFormularioSoloLectura"
             id="btnBusqRfcEliminar"
             class="btn btn-danger me-5"
             (click)="eliminarRFCDatos()"
@@ -338,6 +340,7 @@
               type="button"
               name="cargaArchivoProcesos"
               id="cargaArchivoProcesos"
+              [disabled]="esFormularioSoloLectura"
               class="btn btn-primary me-md-3"
             >
               Cargar archivo
@@ -377,6 +380,7 @@
           <div class="col-md-4 d-flex justify-content-end">
             <button
               type="button"
+              [disabled]="esFormularioSoloLectura"
               name="cargaArchivoProcesos"
               id="cargaArchivoProcesos"
               class="btn btn-primary me-md-3"
@@ -570,6 +574,7 @@
             type="button"
             id="agregarSocio"
             data-bs-toggle="modal"
+            [disabled]="esFormularioSoloLectura"
             data-bs-target="#modalAgregarMiembrosEmpresa"
             (click)="agregarMiembrosEmpresa()"
             class="btn btn-primary ms-3"
@@ -655,7 +660,7 @@
           [label]="tipoDeInversionLista.labelNombre"
           [placeholder]="tipoDeInversionLista.primerOpcion"
           [required]="true"
-          [isDisabled]="false"
+          [isDisabled]="esFormularioSoloLectura"
           name="tipoInversion"
           id="tipoInversion"
           (selectionChange)="actualizarTipoInversion($event)"
@@ -712,6 +717,7 @@
           <button
             type="button"
             id="eliminarSocio"
+            [disabled]="esFormularioSoloLectura"
             (click)="eliminarMiembrosDeLaEmpresa()"
             class="btn btn-danger"
           >
@@ -721,6 +727,7 @@
           <button
             type="button"
             id="agregarSocio"
+            [disabled]="esFormularioSoloLectura"
             (click)="agregarMiembrosDeLaEmpresa()"
             class="btn btn-primary ms-3"
           >
@@ -801,7 +808,7 @@
           [label]="modalidadDelProgramaIMMEX.labelNombre"
           [placeholder]="modalidadDelProgramaIMMEX.primerOpcion"
           [required]="false"
-          [isDisabled]="false"
+          [isDisabled]="esFormularioSoloLectura"
           name="modalidadDelProgramaIMMEX"
           id="modalidadDelProgramaIMMEX"
           (selectionChange)="actualizarModalidadProgramaImmex($event)"
@@ -823,6 +830,7 @@
             type="button"
             id="modificarSocio"
             class="btn btn-secondary"
+            [disabled]="esFormularioSoloLectura"
             data-bs-toggle="modal"
             data-bs-target="#modificarImmexProgram"
             (click)="modificarImmexProgram()"
@@ -833,6 +841,7 @@
           <button
             type="button"
             id="eliminarSocio"
+            [disabled]="esFormularioSoloLectura"
             (click)="eliminarImmexProgram()"
             class="btn btn-danger ms-3"
           >
@@ -843,6 +852,7 @@
             type="button"
             id="agregarSocio"
             class="btn btn-primary ms-3"
+            [disabled]="esFormularioSoloLectura"
             data-bs-toggle="modal"
             data-bs-target="#agregarImmexProgram"
             (click)="agregarImmexProgram()"
@@ -927,6 +937,7 @@
       <div class="col-md-4 mt-4">
         <input-fecha
           [datos]="fechaDeFinDeVigencia"
+          [isDisabled]="esFormularioSoloLectura"
           [setFecha]="datosGeneralesForm.get('fechaFinVigencia1')?.value"
           (valorCambiado)="actualizarFechaFinVigencia1($event)"
         >
@@ -995,6 +1006,7 @@
       <div class="col-md-4 mt-4">
         <input-fecha
           [datos]="fechaDeFinDeVigencia"
+          [isDisabled]="esFormularioSoloLectura"
           [setFecha]="datosGeneralesForm.get('fechaFinVigencia2')?.value"
           (valorCambiado)="actualizarFechaFinVigencia2($event)"
         >
@@ -1160,6 +1172,7 @@
             <button
               type="button"
               name="cargaArchivoProcesos"
+              [disabled]="esFormularioSoloLectura"
               id="cargaArchivoProcesos"
               class="btn btn-primary me-md-3"
             >
