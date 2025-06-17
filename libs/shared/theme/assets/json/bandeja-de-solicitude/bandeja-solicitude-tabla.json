@@ -2194,6 +2194,15 @@
   "numeroDeProcedimiento": "130107"
 },
 {
+  "id": 31201,
+  "tipoDeTramite": "Renovación Certificación IVA e IEPS Mod A",
+  "fecha": "2023-10-01",
+  "fechaActualizacion": "2023-10-05",
+  "diasTranscurridos": "4",
+  "departamento": "AGA",
+  "numeroDeProcedimiento": "31201"
+},
+{
   "id": 40402,
   "tipoDeTramite": "Registro CAA del transportista",
   "fecha": "2023-10-01",
