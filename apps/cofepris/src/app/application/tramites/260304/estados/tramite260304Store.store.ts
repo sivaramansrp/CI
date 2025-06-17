@@ -72,8 +72,21 @@ export interface Tramite260304State {
    */
   seleccionadoScianDatos: TablaScianConfig[];
 
+    /**
+   * @property {Otros[]} [seleccionadoOtrosDatos]
+   * @description
+   * Lista de elementos "Otros" seleccionados en la tabla.
+   * Puede ser utilizada para operaciones como edición, eliminación o visualización de detalles de los registros seleccionados.
+   */
   seleccionadoOtrosDatos?: Otros[];
-   seleccionadoDestinatarioDatos?: Destinatario[];
+
+  /**
+   * @property {Destinatario[]} [seleccionadoDestinatarioDatos]
+   * @description
+   * Lista de destinatarios seleccionados en la tabla.
+   * Permite gestionar acciones sobre los destinatarios seleccionados, como edición o eliminación.
+   */
+  seleccionadoDestinatarioDatos?: Destinatario[];
 
   /**
    * @type {TablaMercanciasDatos[]}

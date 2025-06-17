@@ -11,6 +11,24 @@ import { TercerosRelacionadosVistaComponent } from '../../components/terceros-re
 import { Tramite260304Query } from '../../estados/tramite260304Query.query';
 import { Tramite260304Store } from '../../estados/tramite260304Store.store';
 
+/**
+ * @component
+ * @name PasoUnoComponent
+ * @description
+ * Componente principal para el paso uno del trámite 260304.
+ * Gestiona la visualización y manipulación de los datos del solicitante, terceros relacionados,
+ * pago de derechos y datos de la solicitud. Permite la selección de pestañas y controla el estado
+ * de solo lectura del formulario según el estado de la solicitud.
+ * 
+ * @author
+ * Equipo de desarrollo Cofepris
+ * 
+ * @version
+ * 1.0.0
+ * 
+ * @example
+ * <app-paso-uno></app-paso-uno>
+ */
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
@@ -37,9 +55,19 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @descripcion
    * Indica si el formulario debe estar deshabilitado (solo lectura).
    * Cuando es verdadero, los controles del formulario estarán deshabilitados y no se podrán editar.
+   * @type {boolean}
    */
   formularioDeshabilitado: boolean = false;
 
+  /**
+   * Constructor del componente.
+   * Inyecta los servicios y stores necesarios para la gestión del estado y la obtención de datos.
+   * 
+   * @param tramite260304Query Consulta el estado del trámite 260304.
+   * @param tramite260304Store Store para actualizar el estado del trámite 260304.
+   * @param consultaQuery Consulta el estado general de la solicitud.
+   * @param exportacionMedicamentosContenganService Servicio para obtener y actualizar datos de acuicultura.
+   */
   constructor(
     private tramite260304Query:Tramite260304Query,
     private tramite260304Store: Tramite260304Store,
@@ -53,6 +81,8 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
    * Se suscribe al flujo de datos `getTabSeleccionado$` para obtener el índice de la pestaña seleccionada
    * y actualizar el valor de `indice`. Se utiliza `takeUntil` para desuscribirse cuando el componente se destruya.
+   * 
+   * También se suscribe al estado de consulta para habilitar o deshabilitar el formulario según corresponda.
    * 
    * @returns {void}
    */
