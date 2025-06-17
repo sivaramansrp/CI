@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Observable, Subject, map, takeUntil } from 'rxjs';
-import { Tramite260209State, Tramite260209Store } from '../../estados/tramite260209Store.store';
-import { HttpClient } from '@angular/common/http';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ImportacionDestinadosDonacioService } from '../../services/importacion-destinados-donacio.service';
 import { Tramite260209Query } from '../../estados/tramite260209Query.query';
+import { Tramite260209Store } from '../../estados/tramite260209Store.store';
 
 
 @Component({
@@ -43,13 +43,13 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @param {Tramite260209Query} tramite260209Query - Query para acceder al estado del trámite
    * @param {Tramite260209Store} tramite260209Store - Store para actualizar el estado del trámite
    * @param {ConsultaioQuery} consultaQuery - Query para acceder al estado de la consulta
-   * @param {HttpClient} http - Cliente HTTP para realizar peticiones al servidor
+   * @param {ImportacionDestinadosDonacioService} importacionDestinadosDonacioService - Servicio para importar datos de donación
    */
   constructor(
     private tramite260209Query: Tramite260209Query,
     private tramite260209Store: Tramite260209Store,
     private consultaQuery: ConsultaioQuery,
-    private readonly http: HttpClient
+    private importacionDestinadosDonacioService: ImportacionDestinadosDonacioService,
   ) { 
      this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),
       map((seccionState) => {
@@ -82,37 +82,13 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   * Luego reinicializa el formulario con los valores actualizados desde el store.
   */
   guardarDatosFormulario(): void {
-    this.getRegistroTomaMuestrasMercanciasData().pipe(
+    this.importacionDestinadosDonacioService.getRegistroTomaMuestrasMercanciasData().pipe(
       takeUntil(this.destroyNotifier$)).subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
-          this.actualizarEstadoFormulario(resp);
+          this.importacionDestinadosDonacioService.actualizarEstadoFormulario(resp);
         }
       });
-  }
-
-  /**
-   * Actualiza el estado del formulario con los datos proporcionados.
-   * 
-   * @param DATOS - Estado de la solicitud `Tramite260209State` con la información 
-   *                del tipo de solicitud a actualizar en el store.
-   */
-  actualizarEstadoFormulario(DATOS: Tramite260209State): void {
-    this.tramite260209Store.update((state) => ({
-      ...state,
-      ...DATOS
-    }));
-
-  }
-
-  /**
-  * Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.
-  * 
-  * @returns Observable con los datos del estado de la solicitud `Tramite260209State`,
-  *          cargados desde el archivo JSON especificado en la ruta de `assets`.
-  */
-  getRegistroTomaMuestrasMercanciasData(): Observable<Tramite260209State> {
-    return this.http.get<Tramite260209State>('assets/json/260209/datos.json');
   }
 
   /**
