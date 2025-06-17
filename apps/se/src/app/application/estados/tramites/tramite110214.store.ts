@@ -1,5 +1,4 @@
-import { AgregarDatosProductorFormulario, FormularioMercancia, GrupoTratado, SeleccionadasTabla } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { AgregarDatosProductorFormulario, DisponiblesTabla, FormularioMercancia, GrupoTratado, HistoricoColumnas, SeleccionadasTabla } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
 import { GrupoDeDirecciones } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
 import { GrupoReceptor } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
 import { GrupoRepresentativo } from '../../tramites/110214/models/validar-inicialmente-certificado.model';
@@ -78,7 +77,7 @@ export interface Tramite110214State {
   /**
    * Representación federal seleccionada.
    */
-  representacionFederal: Catalogo | null;
+  representacionFederal: string | null;
 
   /**
    * Observaciones relacionadas con el trámite.
@@ -88,12 +87,12 @@ export interface Tramite110214State {
   /**
    * Entidad federativa seleccionada.
    */
-  entidadFederativa: Catalogo | null;
+  entidadFederativa: string | null;
 
   /**
    * Idioma seleccionado.
    */
-  idioma: Catalogo | null;
+  idioma: string | null;
 
   /**
    * Información del formulario de mercancías.
@@ -104,6 +103,30 @@ export interface Tramite110214State {
    * Información del grupo tratado.
    */
   grupoTratado: GrupoTratado;
+  /**
+   * @property {SeleccionadasTabla[]} mercanciaSeleccionadasTablaDatos
+   * @description Lista de mercancías seleccionadas para ser mostradas en la tabla de datos.
+   * 
+   * Contiene los datos de las mercancías que han sido seleccionadas por el usuario durante el trámite.
+   */
+  mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[];
+  /**
+   * @property {DisponiblesTabla[]} mercanciaDisponsiblesTablaDatos
+   * @description Lista de mercancías disponibles para ser mostradas en la tabla de datos.
+   * 
+   * Contiene los datos de las mercancías que están disponibles para ser seleccionadas por el usuario durante el trámite.
+   */
+  mercanciaDisponsiblesTablaDatos: DisponiblesTabla[];
+  /**
+   * @property {HistoricoColumnas[]} productoresExportador
+   * @description Lista de productores asociados al exportador.
+   */
+  productoresExportador: HistoricoColumnas[];
+  /**
+   * @property {SeleccionadasTabla[]} historicoMercanciaSeleccionadasTablaDatos
+   * @description Historial de mercancías seleccionadas en la tabla de datos.
+   */
+  historicoMercanciaSeleccionadasTablaDatos: SeleccionadasTabla[];
 }
 
 /**
@@ -177,6 +200,10 @@ export function createInitialState(): Tramite110214State {
       fechaFinalInput: '',
       fechaInicialInput: '',
     },
+    mercanciaSeleccionadasTablaDatos: [],
+    mercanciaDisponsiblesTablaDatos: [],
+    productoresExportador: [],
+    historicoMercanciaSeleccionadasTablaDatos: [],
   };
 }
 /**
@@ -491,9 +518,9 @@ export class Tramite110214Store extends Store<Tramite110214State> {
   /**
    * Actualiza la representación federal seleccionada.
    * 
-   * @param {Catalogo} representacionFederal - Representación federal seleccionada.
+   * @param {string} representacionFederal - Representación federal seleccionada.
    */
-  public setRepresentacionFederal(representacionFederal: Catalogo): void {
+  public setRepresentacionFederal(representacionFederal: string): void {
     this.update((state) => ({
       ...state,
       representacionFederal,
@@ -515,9 +542,9 @@ export class Tramite110214Store extends Store<Tramite110214State> {
   /**
    * Actualiza la entidad federativa seleccionada.
    * 
-   * @param {Catalogo} entidadFederativa - Entidad federativa seleccionada.
+   * @param {string} entidadFederativa - Entidad federativa seleccionada.
    */
-  public setEntidadFederativa(entidadFederativa: Catalogo): void {
+  public setEntidadFederativa(entidadFederativa: string): void {
     this.update((state) => ({
       ...state,
       entidadFederativa,
@@ -527,9 +554,9 @@ export class Tramite110214Store extends Store<Tramite110214State> {
   /**
    * Actualiza el idioma seleccionado.
    * 
-   * @param {Catalogo} idioma - Idioma seleccionado.
+   * @param {string} idioma - Idioma seleccionado.
    */
-  public setIdioma(idioma: Catalogo): void {
+  public setIdioma(idioma: string): void {
     this.update((state) => ({
       ...state,
       idioma,
@@ -808,6 +835,118 @@ export class Tramite110214Store extends Store<Tramite110214State> {
     this.update((state) => ({
       ...state,
       grupoTratado: { ...state.grupoTratado, fechaInicialInput },
+    }));
+  }
+  /**
+   * @method setGrupoReceptor
+   * @description Actualiza la información del receptor en el estado del trámite.
+   * 
+   * Este método permite establecer los datos del receptor en el grupo receptor del estado.
+   * 
+   * @param {GrupoReceptor} grupoReceptor - Objeto que contiene la información del receptor a actualizar.
+   * 
+   * @returns {void}
+   */
+  public setGrupoReceptor(grupoReceptor: GrupoReceptor): void {
+    this.update((state) => ({
+      ...state,
+      grupoReceptor,
+    }));
+  }
+  /**
+   * @method setGrupoDeDirecciones
+   * @description Actualiza la información de las direcciones del receptor en el estado del trámite.
+   * 
+   * Este método permite establecer los datos del grupo de direcciones en el estado del trámite.
+   * 
+   * @param {GrupoDeDirecciones} grupoDeDirecciones - Objeto que contiene la información de las direcciones a actualizar.
+   * 
+   * @returns {void}
+   */
+  public setGrupoDeDirecciones(grupoDeDirecciones: GrupoDeDirecciones): void {
+    this.update((state) => ({
+      ...state,
+      grupoDeDirecciones,
+    }));
+  }
+  /**
+   * @method setGrupoRepresentativo
+   * @description Actualiza la información representativa del trámite en el estado.
+   * 
+   * Este método permite establecer los datos del grupo representativo en el estado del trámite.
+   * 
+   * @param {GrupoRepresentativo} grupoRepresentativo - Objeto que contiene la información representativa a actualizar.
+   * 
+   * @returns {void}
+   */
+  public setGrupoRepresentativo(grupoRepresentativo: GrupoRepresentativo): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo,
+    }));
+  }
+  /**
+  * @method setMercanciaTablaDatos
+  * @description Actualiza la lista de mercancías seleccionadas en la tabla de datos del estado del trámite.
+  * 
+  * Este método permite establecer las mercancías seleccionadas por el usuario en la tabla de datos.
+  * 
+  * @param {SeleccionadasTabla[]} mercanciaSeleccionadasTablaDatos - Lista de mercancías seleccionadas a actualizar en el estado.
+  * 
+  * @returns {void}
+  */
+  public setMercanciaTablaDatos(mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaSeleccionadasTablaDatos,
+    }));
+  }
+  /**
+   * @method setMercanciaDisponsiblesTablaDatos
+   * @description Actualiza la lista de mercancías disponibles en la tabla de datos del estado del trámite.
+   * 
+   * Este método permite establecer las mercancías disponibles para ser seleccionadas por el usuario en la tabla de datos.
+   * 
+   * @param {DisponiblesTabla[]} mercanciaDisponsiblesTablaDatos - Lista de mercancías disponibles a actualizar en el estado.
+   * 
+   * @returns {void}
+   */
+  public setMercanciaDisponsiblesTablaDatos(mercanciaDisponsiblesTablaDatos: DisponiblesTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaDisponsiblesTablaDatos,
+    }));
+  }
+  /**
+   * @method setProductoresExportador
+   * @description Actualiza la lista de productores asociados al exportador en el estado del trámite.
+   * 
+   * Este método permite establecer los datos de los productores asociados al exportador.
+   * 
+   * @param {HistoricoColumnas[]} productoresExportador - Lista de productores asociados al exportador.
+   * 
+   * @returns {void}
+   */
+  public setProductoresExportador(productoresExportador: HistoricoColumnas[]): void {
+    this.update((state) => ({
+      ...state,
+      productoresExportador,
+    }));
+  }
+  /**
+   * @method setHistoricoMercanciaSeleccionadasTablaDatos
+   * @description Actualiza el historial de mercancías seleccionadas en la tabla de datos del estado del trámite.
+   * 
+   * Este método permite establecer los datos del historial de mercancías seleccionadas por el usuario.
+   * 
+   * @param {SeleccionadasTabla[]} historicoMercanciaSeleccionadasTablaDatos - Lista de mercancías seleccionadas a actualizar en el historial.
+   * 
+   * @returns {void}
+   */
+  public setHistoricoMercanciaSeleccionadasTablaDatos(historicoMercanciaSeleccionadasTablaDatos: SeleccionadasTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      historicoMercanciaSeleccionadasTablaDatos,
     }));
   }
 }

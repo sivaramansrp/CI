@@ -84,3 +84,103 @@ export interface AvisoValor {
    */
   importePago: string;
 }
+
+/**
+ * @interface
+ * @name RespuestaConsulta
+ * @description
+ * Interfaz que representa la respuesta de una consulta.
+ */
+export interface RespuestaConsulta {
+  /**
+   * @property {boolean} success
+   * @description Indica si la consulta fue exitosa.
+   */
+  success: boolean;
+
+  /**
+   * @property {ConsultaDatos} datos
+   * @description Datos resultantes de la consulta.
+   */
+  datos: ConsultaDatos;
+
+  /**
+   * @property {string} message
+   * @description Mensaje de la respuesta.
+   */
+  message: string;
+}
+
+/**
+ * @interface
+ * @name ConsultaDatos
+ * @description
+ * Contiene los datos obtenidos de una consulta.
+ */
+export interface ConsultaDatos {
+  /**
+   * @property {string} mapTipoTramite
+   * @description Mapa del tipo de trámite.
+   */
+  mapTipoTramite: string;
+
+  /**
+   * @property {string} mapDeclaracionSolicitud
+   * @description Mapa de la declaración de la solicitud.
+   */
+  mapDeclaracionSolicitud: string;
+
+  /**
+   * @property {string} envioAviso
+   * @description Indica si se envió el aviso.
+   */
+  envioAviso: string;
+
+  /**
+   * @property {string} numeroAviso
+   * @description Número del aviso generado.
+   */
+  numeroAviso: string;
+
+  /**
+   * @property {string} claveReferencia
+   * @description Clave de referencia de la operación.
+   */
+  claveReferencia: string;
+
+  /**
+   * @property {string} numeroOperacion
+   * @description Número de la operación.
+   */
+  numeroOperacion: string;
+
+  /**
+   * @property {string} cadenaDependencia
+   * @description Cadena de dependencia relacionada.
+   */
+  cadenaDependencia: string;
+
+  /**
+   * @property {string} banco
+   * @description Nombre del banco relacionado.
+   */
+  banco: string;
+
+  /**
+   * @property {string} llavePago
+   * @description Llave de pago utilizada.
+   */
+  llavePago: string;
+
+  /**
+   * @property {string} fechaPago
+   * @description Fecha en la que se realizó el pago.
+   */
+  fechaPago: string;
+
+  /**
+   * @property {string} importePago
+   * @description Importe monetario del pago.
+   */
+  importePago: string;
+}

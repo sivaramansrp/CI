@@ -121,7 +121,7 @@ export const CAMPOS_FORMULARIO_DATOS_DEL_TRAMITE = [
     ],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 0,
+    marginTop: 2,
     mostrar: true,
     habilitado: true,
     row: 1
@@ -402,7 +402,7 @@ export const CAMPOS_FORMULARIO_MERCANCIAS = [
     validadores: [],
     marcadorDePosicion: '',
     valorPredeterminado: '',
-    marginTop: 0,
+    marginTop: 2,
     mostrar: false,
     habilitado: true,
     row:7

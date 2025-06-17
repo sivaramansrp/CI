@@ -4,6 +4,8 @@ import { DatosMercanciaContenedoraComponent } from './datos-mercancia-contenedor
 import { DatosSolicitudService } from '../../../../shared/services/datos-solicitud.service';
 import { of } from 'rxjs';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 describe('DatosMercanciaContenedoraComponent', () => {
   let component: DatosMercanciaContenedoraComponent;
@@ -11,8 +13,8 @@ describe('DatosMercanciaContenedoraComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DatosMercanciaContenedoraComponent],
-      imports: [DatosMercanciaComponent],
+      declarations: [],
+      imports: [DatosMercanciaComponent, DatosMercanciaContenedoraComponent, ReactiveFormsModule,FormsModule ,CommonModule],
       providers: [
         {
           provide: ActivatedRoute,

@@ -1,6 +1,7 @@
 import { AlertComponent, Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, InputFecha, REGEX_PATRON_DECIMAL_2, REGEX_SOLO_DIGITOS, TablaDinamicaComponent, TablaSeleccion, TableBodyData, TableComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { ColumnasTabla, FECHA_FACTURA, FECHA_FINAL, FECHA_INICIAL, SeleccionadasTabla } from '../../models/registro.model';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -218,6 +219,16 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
   optionsTipoFactura!: Catalogo[];
 
   /**
+   * Estado actual de la consulta.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * Indica si el formulario está en modo de solo lectura.
+   */
+  soloLectura: boolean = false;
+
+  /**
    * Datos de la tabla de mercancías disponibles.
    * Representa una lista de objetos que contienen información sobre las mercancías disponibles
    * para ser seleccionadas en el formulario.
@@ -256,7 +267,8 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     private store: Tramite110223Store,
     private query: Tramite110223Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
         // El constructor se utiliza para la inyección de dependencias.
   }
@@ -265,8 +277,11 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
    * Maneja el evento de clic para habilitar el formulario de edición.
    */
   manejarClic(): void {
-    this.esFormulario = true;
-  }
+    if (this.soloLectura) {
+      this.esFormulario = false;
+    } else {
+      this.esFormulario = true;
+    }  }
 
   /**
    * Valida el formulario del destinatario.
@@ -300,6 +315,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.getUnidadMedida();
     this.getTipoFactura();
     this.getSolicitudesTabla();
+    this.getSolicitudesDataTabla();
 
     this.query.selectSolicitud$
       .pipe(
@@ -310,6 +326,16 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.donanteDomicilio();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -652,6 +678,7 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
         ],
       }),
     });
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -684,4 +711,19 @@ export class CertificadoDeOrigenComponent implements OnInit, OnDestroy {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  /**
+   * Inicializa el estado del formulario según el modo de solo lectura.
+   */
+    inicializarEstadoFormulario(): void {
+      if (this.soloLectura) {
+        this.registroForm?.disable();
+        this.mercanciaForm?.disable();
+        this.hayMercanciasDisponibles = true;
+        this.esMercanciaEnEdicion = true;
+      } else {
+        this.registroForm?.enable();
+        this.mercanciaForm?.enable();
+      }
+    }
 }

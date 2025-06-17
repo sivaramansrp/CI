@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { AfterViewInit, Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CROSLISTA_DE_PAISES } from '../../constants/datos-solicitud.enum';
 import { Catalogo } from '@ng-mf/data-access-user';
@@ -43,7 +43,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './datos-mercancia.component.html',
   styleUrl: './datos-mercancia.component.scss',
 })
-export class DatosMercanciaComponent implements OnInit {
+export class DatosMercanciaComponent implements OnInit,AfterViewInit {
   /**
    * Observable para controlar el ciclo de vida de las suscripciones.
    * @property {Subject<void>} unsubscribe$
@@ -81,6 +81,15 @@ export class DatosMercanciaComponent implements OnInit {
    * @input
    */
   @Input() formaDatos!: MercanciaDetalle | null | undefined;
+
+  /**
+   * @input
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no serán editables.
+   * 
+   * @type {boolean}
+   */
+  @Input() esFormularioSoloLectura:boolean =false;
 
   /**
    * Evento que se emite cuando se actualiza una mercancía existente en la lista.
@@ -304,6 +313,19 @@ export class DatosMercanciaComponent implements OnInit {
       this.datosMercancia.enable();
     }
   }
+ /**
+   * Inicializa el formulario reactivo con valores por defecto y validaciones.
+   * @method ngAfterViewInit
+   * @returns {void}
+   */
+  ngAfterViewInit(): void {
+    if(this.esFormularioSoloLectura){
+      this.datosMercancia.disable();
+    }
+    else{
+      this.datosMercancia.enable();
+    }
+  }
 
   /**
    * Crea el formulario reactivo `agregarDestinatarioFinal` utilizando `FormBuilder`.
@@ -313,14 +335,13 @@ export class DatosMercanciaComponent implements OnInit {
   crearFormaulario(): void {
     this.datosMercancia = this.fb.group({
       descripcion: ['QAS', Validators.required],
-      fraccionArancelaria: ['', Validators.required],
+      fraccionArancelaria: ['', { validators: Validators.required }],
       descFraccion: [
-        '',
         {
-          value: null, 
-          disabled: true, 
+          value: null,
+          disabled: true,
         },
-        Validators.required,
+        { validators: Validators.required },
       ],
       cantidadUMT: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)]],
       umt: [{ value: null, disabled: true }, Validators.required],

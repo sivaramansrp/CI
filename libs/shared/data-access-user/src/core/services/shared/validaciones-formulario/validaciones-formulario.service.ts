@@ -41,7 +41,8 @@ export class ValidacionesFormularioService {
    * @param {string} campo  : Nombre del campo a validar, si el control es un FormGroup
    * @returns {boolean | null} : Retorna true si el campo o control es requerido y ha sido tocado, de lo contrario retorna false
    */
-  public errorCampoRequerido = ValidacionesFormularioService.errorCampoRequerido;
+  public errorCampoRequerido =
+    ValidacionesFormularioService.errorCampoRequerido;
   static errorCampoRequerido(
     control: AbstractControl,
     campo?: string
@@ -54,16 +55,13 @@ export class ValidacionesFormularioService {
   }
 
   /**
-  * Obtiene el error de un campo con patterns
-  * @param {AbstractControl} control : Control del formulario
-  * @param {string} campo Nombre del campo a validar, si el control es un FormGroup
-  * @returns {boolean | null} : Retorna true si el campo o control contiene errores de pattern y ha sido tocado, de lo contrario retorna false
-  */
+   * Obtiene el error de un campo con patterns
+   * @param {AbstractControl} control : Control del formulario
+   * @param {string} campo Nombre del campo a validar, si el control es un FormGroup
+   * @returns {boolean | null} : Retorna true si el campo o control contiene errores de pattern y ha sido tocado, de lo contrario retorna false
+   */
   public errorEmail = ValidacionesFormularioService.errorEmail;
-  static errorEmail(
-    control: AbstractControl,
-    campo?: string
-  ): boolean | null {
+  static errorEmail(control: AbstractControl, campo?: string): boolean | null {
     if (control instanceof FormGroup && campo) {
       const CAMPO_CONTROL = control.controls[campo];
       return CAMPO_CONTROL?.errors?.['email'] && CAMPO_CONTROL.touched;
@@ -89,10 +87,9 @@ export class ValidacionesFormularioService {
     return control.errors && control.errors['pattern'] && control.touched;
   }
 
-
   /**
    * Valida que la fecha seleccionada no sea anterior o igual a hoy.
-   * 
+   *
    * @param control - Control del formulario que contiene la fecha a validar.
    * @returns Un objeto con el error `minDate` si la fecha es inválida, o `null` si es válida.
    */
@@ -101,5 +98,9 @@ export class ValidacionesFormularioService {
     HOY.setHours(0, 0, 0, 0);
     const DIA_SELECCIONADO = new Date(control.value);
     return DIA_SELECCIONADO > HOY ? null : { minDate: true };
+  }
+
+  static noMenosUnoValor(control: AbstractControl): ValidationErrors | null {
+    return control.value < 1 ? { noMenosUno: true } : null;
   }
 }

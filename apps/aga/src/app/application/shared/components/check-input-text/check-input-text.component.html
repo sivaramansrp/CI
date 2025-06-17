@@ -4,20 +4,33 @@
       <label class="form-check-label" [for]="idCheckbox">
         {{ label }}
       </label>
-      <input class="form-check-input" type="checkbox" title="Checkbox" value="" [id]="idCheckbox"
-        formControlName="checkbox" (change)="cambioInputTexto()">
+      <input
+        class="form-check-input"
+        type="checkbox"
+        title="Checkbox"
+        value=""
+        [id]="idCheckbox"
+        formControlName="checkbox"
+        (change)="cambioInputTexto()"
+      />
     </div>
   </div>
 
-
-  @if(!hidden) {
-  @if (labelText) {
+  @if(!hidden) { @if (labelText) {
   <label class="form-check-label" [for]="idInputTexto">
     {{ labelText }}
   </label>
   }
-  <input type="text" class="form-control" formControlName="texto" name="texto" [id]="idInputTexto" placeholder=""
-    title="Texto" (change)="enviarValoresCheckboxInput()">
+  <input
+    type="text"
+    class="form-control"
+    formControlName="texto"
+    name="texto"
+    [id]="idInputTexto"
+    placeholder=""
+    maxlength="{{maxLengthValidacion}}"
+    title="Texto"
+    (change)="enviarValoresCheckboxInput()"
+  />
   }
-
 </div>

@@ -8,7 +8,7 @@
  * @author Equipo VUCEM
  * @since 2025
  */
-import { Catalogo, LabelValueDatos, RespuestaCatalogos, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
+import { Catalogo, LabelValueDatos, PersonaTerceros, RespuestaCatalogos, SeccionLibQuery, SeccionLibState, SeccionLibStore } from '@ng-mf/data-access-user';
 import { Observable, Subject, map, of, takeUntil } from 'rxjs';
 import { FormularioGrupo } from '../models/acuicola.module';
 import { HttpClient } from '@angular/common/http';
@@ -138,5 +138,34 @@ export class ExportaccionAcuicolaService {
       this.seccionStore.establecerSeccion([true]);
       this.seccionStore.establecerFormaValida([false]);
     }
+  }
+
+  /**
+   * @description Obtiene los datos del formulario de certificados de origen desde un archivo JSON local.
+   * @returns {Observable<TramiteState>} Observable con el estado del trámite.
+   */
+  public getAcuiculturaData(): Observable<FormularioGrupo> {
+    return this.httpClient.get<FormularioGrupo>('assets/json/220403/exportaccion-acuicola.json');
+  }
+
+  /**
+   * @description Actualiza el estado completo del formulario en el store de acuicultura.
+   * @param DATOS Objeto de tipo Acuicultura con los datos a actualizar.
+   */
+  public actualizarEstadoFormulario(DATOS: FormularioGrupo): void {
+    this.store.setDatosRealizar(DATOS.datosRealizar);
+    this.store.setCombinacionRequerida(DATOS.combinacionRequerida);
+    this.store.setTransporte(DATOS.transporte);
+    this.store.setPagoDerechos(DATOS.pagoDerechos);
+  }
+
+  /**
+   * Actualiza la lista de terceros relacionados con la solicitud.
+   *
+   * @param {PersonaTerceros[]} tercerosRelacionados Lista de terceros.
+   * @memberof CertificadoZoosanitarioServiceService
+   */
+  updateTercerosRelacionados(tercerosRelacionados: PersonaTerceros[]): void {
+    this.store.actualizarTercerosRelacionados(tercerosRelacionados);
   }
 }
