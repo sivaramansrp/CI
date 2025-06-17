@@ -48,14 +48,18 @@ export class DatosComponent implements OnInit, OnDestroy, AfterViewInit {
      * @returns {void}
      */
   ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$), map((seccionState) => {
-      this.consultaState = seccionState;
-    })).subscribe();
-    if (this.consultaState.update) {
-      this.guardarDatosFormulario();
-    } else {
-      this.esDatosRespuesta = true;
-    }
+   this.consultaQuery.selectConsultaioState$.pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.consultaState = seccionState;
+        if (this.consultaState.update) {
+          this.guardarDatosFormulario();
+        } else {
+          this.esDatosRespuesta = true;
+        }
+      })
+    ).subscribe();
+
   }
 
   /**
@@ -101,6 +105,7 @@ export class DatosPageComponent {
         takeUntil(this.destroyNotifier$)
       )
       .subscribe((resp) => {
+        console.log('Datos recibidos:', resp);
         if (resp) {
           this.esDatosRespuesta = true;
           this.service130302Service.actualizarEstadoFormulario(resp);

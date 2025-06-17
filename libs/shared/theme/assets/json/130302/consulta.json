@@ -1,6 +1,5 @@
 {
-  "prorrogaDel": "2024-01-01",
-  "prorrogaAl": "2024-12-31",
-  "motivoJustificacion": "1",
-  "otrasDeclaraciones": "abc123456789"
+  "fechaPago": "01-01-2024",
+  "motivoJustificacion": "valor ficticio",
+  "otrasDeclaraciones": "valor ficticio"
  }

@@ -106,32 +106,8 @@ export class ImportacionExportacionPetroleoComponent implements OnInit, OnDestro
   get ninoFormGroup(): FormGroup {
     return this.forma.get('ninoFormGroup') as FormGroup;
   }
- /**
-   * Actualiza el campo de fecha de pago en el formulario y en el estado global.
-   *
-   * @param nuevo_fechaPago Nueva fecha de pago seleccionada.
-   */
-  cambioFechaPago(nuevo_fechaPago: string): void {
-    this.form.patchValue({
-      prorrogaAl: nuevo_fechaPago,
-    });
-    this.setValoresStore(this.form, 'prorrogaAl', 'setprorrogaAl');
-  }
 
-   /**
-   * Actualiza el campo de fecha de pago en el formulario y en el estado global.
-   *
-   * @param nuevo_fechaPago Nueva fecha de pago seleccionada.
-   */
-  oncambioFechaPago(nuevo_fechaPago: string): void {
-    this.form.patchValue({
-      prorrogaDel: nuevo_fechaPago,
-    });
-    this.setValoresStore(this.form, 'prorrogaDel', 'setprorrogaDel');
-  }
-
-
-  /**
+/**
    * property tipoSeleccionTabla
    * description Tipo de selección para la tabla dinámica.
    */
@@ -175,7 +151,7 @@ export class ImportacionExportacionPetroleoComponent implements OnInit, OnDestro
         })
       )
       .subscribe();
-      
+
     this.configurarGrupoForm();
     this.loadMercancias();
     this.loadAsignacionData();
@@ -202,7 +178,7 @@ this.tramite130302Query.selectExportarIlustraciones$
       .subscribe();
     this.form = new FormGroup({
       saldoDisponible: new FormControl({ value: '', disabled: true }),
-      prorrogaDel: new FormControl({ value: '', disabled: true }),
+      fechaPago: new FormControl({ value: '', disabled: true }),
       prorrogaAl: new FormControl({ value: '', disabled: true }),
       motivoJustificacion: new FormControl(this.exportarIlustracionesState?.motivoJustificacion),
       otrasDeclaraciones: new FormControl(this.exportarIlustracionesState?.otrasDeclaraciones),
@@ -220,6 +196,18 @@ this.tramite130302Query.selectExportarIlustraciones$
   }
 
   /**
+   * Actualiza el campo de fecha de pago en el formulario y en el estado global.
+   *
+   * @param nuevo_fechaPago Nueva fecha de pago seleccionada.
+   */
+  cambioFechaPago(nuevo_fechaPago: string): void {
+    this.form.patchValue({
+      fechaPago: nuevo_fechaPago,
+    });
+    this.setValoresStore(this.form, 'fechaPago', 'setfechaPago');
+  }
+
+  /**
    * method loadAsignacionData
    * description Carga datos del solicitante y los asigna al formulario.
    */
@@ -229,8 +217,8 @@ this.tramite130302Query.selectExportarIlustraciones$
       .subscribe((data: AvisoValor) => {
         this.form.patchValue({
           saldoDisponible: data.saldoDisponible,
-          prorrogaDel: data.prorrogaDel,
-          prorrogaAl: data.prorrogaAl,
+          // prorrogaDel: data.prorrogaDel,
+          // prorrogaAl: data.prorrogaAl,
         });
       });
   }
@@ -246,6 +234,7 @@ this.tramite130302Query.selectExportarIlustraciones$
         this.tercerosProd = resp;
       });
   }
+
 
   /**
    * method establecerCambioDeValor
@@ -279,12 +268,5 @@ this.tramite130302Query.selectExportarIlustraciones$
     this.destroyed$.complete();
   }
 
-  /**
-   * Maneja el cambio de fecha desde el control de fecha.
-   * @param nuevoValor Nueva fecha seleccionada.
-   */
-  onFechaCambiada(nuevoValor: string): void {
-    // Por defecto, actualiza prorrogaAl (ajustar si se requiere otro campo)
-    this.cambioFechaPago(nuevoValor);
-  }
+ 
 }
