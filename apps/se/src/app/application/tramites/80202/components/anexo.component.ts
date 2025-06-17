@@ -14,13 +14,17 @@ import { SeccionLibStore } from '@ng-mf/data-access-user';
 
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 
 import {
   ImmexAmpliacionSensiblesState,
   ImmexAmpliacionSensiblesStore,
 } from '../estados/immex-ampliacion-sensibles.store';
 import { ImmexAmpliacionSensiblesQuery } from '../estados/immex-ampliacion-sensibles.query';
-
+import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
+import { ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { TituloComponent } from '@ng-mf/data-access-user';
 /**
  * @title Anexo
  * @description Componente que permite visualizar el anexo de la solicitud
@@ -31,6 +35,14 @@ import { ImmexAmpliacionSensiblesQuery } from '../estados/immex-ampliacion-sensi
   selector: 'app-anexo',
   templateUrl: './anexo.component.html',
   styleUrl: './anexo.component.scss',
+  standalone: true,
+  imports: [
+    TituloComponent,
+    CommonModule,
+    ReactiveFormsModule,
+    TablaDinamicaComponent,
+    CatalogoSelectComponent,
+  ]
 })
 export class AnexoComponent implements OnInit, OnDestroy, AfterViewInit {
 
@@ -309,7 +321,7 @@ export class AnexoComponent implements OnInit, OnDestroy, AfterViewInit {
  * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
  * 
  * Suscribe al observable `selectConsultaioState$` para escuchar cambios en el estado de la consulta.
- * Si el estado indica que no se está creando y el `procedureId` es '80203', actualiza la propiedad `esFormularioSoloLectura`
+ * Si el estado indica que no se está creando y el `procedureId` es '80202', actualiza la propiedad `esFormularioSoloLectura`
  * según el valor de `readonly` en el estado. Luego, inicializa el estado del formulario llamando a `inicializarEstadoFormulario()`.
  * La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$` para evitar fugas de memoria.
  *

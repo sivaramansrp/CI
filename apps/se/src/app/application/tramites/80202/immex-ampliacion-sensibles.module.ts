@@ -25,10 +25,10 @@ import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
 import { PasoUnoComponent } from './pages/paso-uno/paso-uno.component';
 import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 @NgModule({
   declarations: [
-    AnexoComponent,
     PasoDosComponent,
     PasoTresComponent,
     SolicitudPageComponent,
@@ -37,6 +37,7 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     AlertComponent,
     BtnContinuarComponent,
     CommonModule,
+    AnexoComponent,
     PasoUnoComponent,
     FirmaElectronicaComponent,
     ImmexAmpliacionSensiblesRoutingModule,
@@ -47,5 +48,6 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     WizardComponent,
     forwardRef(() => AnexarDocumentosComponent),
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ImmexAmpliacionSensiblesModule {}
