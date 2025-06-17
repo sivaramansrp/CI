@@ -66,7 +66,7 @@ export class DatosComponent implements OnInit, OnDestroy {
    * 
    * `true` representa que la pestaña está activa, mientras que `false` indica que no lo está.
    */
-  tabIndex: boolean = false;
+  private tabIndex: boolean = false;
 
   /**
    * Constructor del componente.
