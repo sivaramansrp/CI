@@ -62,9 +62,9 @@ export class DatosComponent implements OnInit, OnDestroy, AfterViewInit {
     ngOnInit(): void {
     // Se ejecuta al inicializar el componente
     this.consultaQuery.selectConsultaioState$.pipe(
-      takeUntil(this.destroyed$), // Se desuscribe al destruir el componente
-      map((seccionState) => {
-        this.consultaState = seccionState; // Asigna el estado de la consulta
+      takeUntil(this.destroyNotifier$), // Se desuscribe al destruir el componente
+      map((consultaState) => {
+        this.consultaState = consultaState; // Asigna el estado de la consulta
       })
     ).subscribe();
     if (this.consultaState?.update) {
@@ -73,7 +73,15 @@ export class DatosComponent implements OnInit, OnDestroy, AfterViewInit {
       this.esDatosRespuesta = true; // Si no, activa el modo de datos de respuesta
     }
   }
-  
+    /**
+   * Obtiene los datos de la solicitud desde el servicio y actualiza el estado global.
+   * 
+   * Realiza una petición al servicio para obtener los datos de la solicitud.
+   * Al recibir la respuesta, marca que existen datos de respuesta y construye un objeto `Solicitud31803State`
+   * con los datos recibidos. Luego, actualiza el estado global del formulario utilizando el método
+   * `actualizarEstadoFormulario` del servicio.
+   * La suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
+   */
     guardarDatosFormulario(): void {
     // Método para guardar los datos del formulario
     this.service
@@ -82,6 +90,7 @@ export class DatosComponent implements OnInit, OnDestroy, AfterViewInit {
       )
       .subscribe((resp) => {
         if (resp) {
+       // Imprime los datos de respuesta en la consola
           this.esDatosRespuesta = true; // Marca que hay datos de respuesta
           this.service.actualizarEstadoFormulario(resp); // Actualiza el estado del formulario con la respuesta
         }
@@ -103,12 +112,16 @@ export class DatosComponent implements OnInit, OnDestroy, AfterViewInit {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
-
-
   
-  ngOnDestroy(): void {
-    // Se ejecuta al destruir el componente
-    this.destroyNotifier$.next(); // Emite el evento de destrucción
-    this.destroyNotifier$.complete(); // Completa el subject para limpiar suscripciones
-  }
+/**
+ * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+ * 
+ * Este método emite un evento a través de `destroyNotifier$` para notificar a las suscripciones activas
+ * que deben cancelarse, evitando fugas de memoria. Luego, completa el subject para liberar recursos.
+ */
+ngOnDestroy(): void {
+  // Se ejecuta al destruir el componente
+  this.destroyNotifier$.next(); // Emite el evento de destrucción
+  this.destroyNotifier$.complete(); // Completa el subject para limpiar suscripciones
+}
 }

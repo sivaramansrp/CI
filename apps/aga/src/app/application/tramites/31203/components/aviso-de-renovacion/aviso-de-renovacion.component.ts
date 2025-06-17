@@ -1,23 +1,16 @@
+import { AvisoValor, FECHA_DE_PAGO } from '../../models/aviso.model';
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConsultaioQuery, ConsultaioState, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
-
-import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConsultaioQuery, ConsultaioState, InputCheckComponent, InputFecha, InputFechaComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-
-import { AvisoValor, FECHA_DE_PAGO } from '../../models/aviso.model';
-
-import { AvisoUnicoService } from '../../services/aviso-unico.service';
-
 import { map, takeUntil } from 'rxjs';
-import { Subject } from 'rxjs';
-
+import { AvisoUnicoService } from '../../services/aviso-unico.service';
+import { CommonModule } from '@angular/common';
 import { PreOperativo } from '../../models/aviso.model';
-
+import { ReactiveFormsModule } from '@angular/forms';
+import { Subject } from 'rxjs';
+import { UnicoQuery } from '../../estados/queries/unico.query';
 import { UnicoState } from '../../estados/renovacion.store';
 import { UnicoStore } from '../../estados/renovacion.store';
-
-import { UnicoQuery } from '../../estados/queries/unico.query';
 
 /**
  * Componente que representa el aviso de renovación.
@@ -102,7 +95,6 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.consultaDatos = seccionState;
           this.esFormularioSoloLectura = this.consultaDatos.readonly;
-          console.log('Estado de consulta............:', this.esFormularioSoloLectura);
           this.inicializarEstadoFormulario();
         })
       )
@@ -123,7 +115,6 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.donanteDomicilio()
-    // this.initializeForm();
     this.loadLocalidad();
     this.loadAsignacionData();
     this.cargarRadio();
@@ -221,13 +212,20 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
     });
   }
 
-  guardarDatosDelFormulario(): void {
-    if (this.esFormularioSoloLectura) {
-      this.avisoForm.disable();
-    } else {
-      this.avisoForm.enable();
-    }
+/**
+ * Habilita o deshabilita el formulario según el modo de solo lectura.
+ * 
+ * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es `true`), 
+ * deshabilita todos los controles del formulario para evitar modificaciones.
+ * Si no está en modo solo lectura, habilita todos los controles del formulario para permitir la edición.
+ */
+guardarDatosDelFormulario(): void {
+  if (this.esFormularioSoloLectura) {
+    this.avisoForm.disable();
+  } else {
+    this.avisoForm.enable();
   }
+}
 
   /**
    * Establece valores en el almacén desde el formulario.
@@ -249,6 +247,7 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
   datosDeAvisoForm(): void {
     if (this.esFormularioSoloLectura && this.avisoForm) {
       this.avisoForm.get('mapTipoTramite')?.disable();
+      this.avisoForm.get('cadenaDependencia');
       this.avisoForm.get('mapDeclaracionSolicitud')?.disable();
       this.avisoForm.get('envioAviso')?.disable();
       this.avisoForm.get('numeroAviso')?.disable();

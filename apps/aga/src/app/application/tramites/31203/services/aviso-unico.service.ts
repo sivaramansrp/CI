@@ -1,12 +1,10 @@
-import { Injectable } from '@angular/core';
-
-import { HttpClient } from '@angular/common/http';
-
-import { Observable, catchError, throwError } from 'rxjs';
 
 import { AvisoValor, PreOperativo } from '../models/aviso.model';
+import { Observable, catchError, throwError } from 'rxjs';
 import { UnicoState, UnicoStore } from '../estados/renovacion.store';
 import { ENVIRONMENT } from '@libs/shared/data-access-user/src';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 
 /**
  * @class
@@ -85,6 +83,10 @@ export class AvisoUnicoService {
    * @param DATOS Objeto con los datos del formulario de tipo Solicitud10301State.
    */
   actualizarEstadoFormulario(DATOS: UnicoState): void {
+    this.unicoStore.setmapTipoTramite(DATOS.mapTipoTramite);
+    this.unicoStore.setmapDeclaracionSolicitud(DATOS.mapDeclaracionSolicitud);
+    this.unicoStore.setenvioAviso(DATOS.envioAviso);
+    this.unicoStore.setnumeroAviso(DATOS.numeroAviso);
     this.unicoStore.setclaveReferencia(DATOS.claveReferencia);
     this.unicoStore.setnumeroOperacion(DATOS.numeroOperacion);
     this.unicoStore.setcadenaDependencia(DATOS.cadenaDependencia);
