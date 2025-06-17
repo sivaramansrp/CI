@@ -6,8 +6,8 @@ import {FormBuilder,FormGroup,FormsModule,ReactiveFormsModule} from '@angular/fo
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaAvisoAcreditacionService } from '../../services/consulta-aviso-acreditacion.service';
-import { Tramite32101Query } from '../../../../estados/queries/tramite32101.query';
 import { Router } from '@angular/router';
+import { Tramite32101Query } from '../../../../estados/queries/tramite32101.query';
 
 @Component({
   selector: 'app-componente-de-actualizacion',
