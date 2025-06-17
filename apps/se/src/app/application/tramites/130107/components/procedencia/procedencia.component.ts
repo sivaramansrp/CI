@@ -1,11 +1,12 @@
 import { CROSLISTA_DE_PAISES, PAIS_PROCEDENCIA, PAIS_PROCEDENCIA_TODOS } from '../../constantes/datos-de-la-solicitud.enum';
 import { Catalogo, ModeloDeFormaDinamica } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, QueryList, ViewChildren } from '@angular/core';
 import { CrossListLable, CrosslistComponent } from '@libs/shared/data-access-user/src/tramites/components/crosslist/crosslist.component';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ImportacionesAgropecuariasState, ImportacionesAgropecuariasStore } from '../../estados/importaciones-agropecuarias.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { ImportacionesAgropecuariasQuery } from '../../estados/importaciones-agropecuarias.query';
 import { ImportacionesAgropecuariasService } from '../../services/importaciones-agropecuarias.service';
@@ -30,6 +31,11 @@ import { ServicioDeFormularioService } from '../../services/formulario-validacio
 })
 
 export class PaisProcedenciaComponent implements OnInit, OnDestroy {
+  /**
+  *
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
   /**
    * @property destroy$
    * @description
@@ -173,7 +179,7 @@ export class PaisProcedenciaComponent implements OnInit, OnDestroy {
     private importacionesAgropecuariasStore: ImportacionesAgropecuariasStore,
     private importacionesAgropecuariasQuery: ImportacionesAgropecuariasQuery,
     private servicioDeFormularioService: ServicioDeFormularioService
-  ) {}
+  ) { }
 
   /**
    * @method ngOnInit

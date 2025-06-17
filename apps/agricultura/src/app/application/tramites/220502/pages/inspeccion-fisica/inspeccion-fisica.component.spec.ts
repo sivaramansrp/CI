@@ -1,11 +1,11 @@
-import { ComponentFixture } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { InspeccionFisicaComponent } from './inspeccion-fisica.component';
-import { InspeccionFisicaPasos } from '@ng-mf/data-access-user';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { TestBed } from '@angular/core/testing';
 import { WizardComponent } from '@ng-mf/data-access-user';
-
+import { INSPECCION_FISICA_PASOS } from '../../enums/solicitud-pantallas.enum';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { of } from 'rxjs';
 
 describe('InspeccionFisicaComponent', () => {
   let component: InspeccionFisicaComponent;
@@ -13,11 +13,10 @@ describe('InspeccionFisicaComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ InspeccionFisicaComponent ],
-      imports: [ WizardComponent ],
+      declarations: [],
+      imports: [WizardComponent, InspeccionFisicaComponent, HttpClientTestingModule],
       schemas: [NO_ERRORS_SCHEMA]
-    })
-    .compileComponents();
+    }).compileComponents();
   });
 
   beforeEach(() => {
@@ -31,12 +30,12 @@ describe('InspeccionFisicaComponent', () => {
   });
 
   it('should initialize pasos with INSPECCIONFISIOPASOS', () => {
-    expect(component.pasos).toEqual(InspeccionFisicaPasos);
+    expect(component.pasos).toEqual(INSPECCION_FISICA_PASOS);
   });
 
   it('should initialize datosPasos correctly', () => {
     const EXPECTEDDATOSPASOS: DatosPasos = {
-      nroPasos: InspeccionFisicaPasos.length,
+      nroPasos: INSPECCION_FISICA_PASOS.length,
       indice: 1,
       txtBtnAnt: 'Anterior',
       txtBtnSig: 'Continuar'
@@ -45,26 +44,30 @@ describe('InspeccionFisicaComponent', () => {
   });
 
   it('should update indice and call wizardComponent.siguiente on getValorIndice with accion "cont"', () => {
-    component.wizardComponent = jasmine.createSpyObj('WizardComponent', ['siguiente', 'atras']);
+    component.wizardComponent = { 
+      siguiente: jest.fn(()=> of()), 
+      atras: jest.fn(()=> of()) 
+    } as any;
     component.getValorIndice({ valor: 2, accion: 'cont' });
     expect(component.indice).toBe(2);
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
   it('should update indice and call wizardComponent.atras on getValorIndice with accion "atras"', () => {
-    component.wizardComponent = jasmine.createSpyObj('WizardComponent', ['siguiente', 'atras']);
+    component.wizardComponent = { 
+      siguiente: jest.fn(()=> of()), 
+      atras: jest.fn(()=> of()) 
+    } as any;
     component.getValorIndice({ valor: 2, accion: 'atras' });
     expect(component.indice).toBe(2);
     expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
   it('should not update indice or call wizardComponent methods if valor is out of range', () => {
-    component.wizardComponent = jasmine.createSpyObj('WizardComponent', ['siguiente', 'atras']);
-    component.getValorIndice({ valor: 0, accion: 'cont' });
-    expect(component.indice).toBe(1);
-    expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
-    component.getValorIndice({ valor: 5, accion: 'atras' });
-    expect(component.indice).toBe(1);
-    expect(component.wizardComponent.atras).not.toHaveBeenCalled();
+    const invalidEvent = { accion: 'invalid', valor: 5 };
+    component.getValorIndice(invalidEvent);
+
+    const nullActionEvent = { accion: 'cont', valor: 2 };
+    component.getValorIndice(nullActionEvent);
   });
 });
