@@ -93,6 +93,15 @@
         "numeroDeProcedimiento": "80101"
     },
     {
+        "id": "40103",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "40103"
+    },
+    {
         "id": "240101",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
@@ -100,6 +109,15 @@
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
         "numeroDeProcedimiento": "240101"
+    },
+    {
+        "id": "40101",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "40101"
     },
     {
         "id": "230101",
@@ -129,6 +147,15 @@
         "numeroDeProcedimiento": "220102"
     },
     {
+        "id": "40401",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "STPS",
+        "numeroDeProcedimiento": "40401"
+    },
+    {
         "id": "6502",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
@@ -145,5 +172,105 @@
         "diasTranscurridos": "4",
         "departamento": "SE",
         "numeroDeProcedimiento": "110216"
+    },
+    {
+        "id": "290301",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AMECAFE",
+        "numeroDeProcedimiento": "290301"
+    },
+    {
+        "id": "261601",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "COFEPRIS",
+        "numeroDeProcedimiento": "261601"
+    },
+    {
+        "id": "290201",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AMECAFE",
+        "numeroDeProcedimiento": "290201"
+    },
+    {
+        "id": "150103",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "150103"
+    },
+    {
+        "id": "701",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "701"
+    },
+    {
+       "id":"260704",
+        "folioTramite": "0100001000320251005000002",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2023-10-01",
+        "fechaActualizacion": "2023-10-05",
+        "diasTranscurridos": "4",
+        "departamento": "COFEPRIS",
+        "numeroDeProcedimiento": "260704"  
+    },
+    {
+        "id": "32503",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "32503"
+    },
+    {
+        "id": "202",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-01",
+        "fechaActualizacion": "2025-06-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "202"
+    },
+    {
+        "id":"150101",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-01",
+        "fechaActualizacion": "2025-06-07",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "150101"
+    },
+    {
+        "id": "120201",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-10",
+        "fechaActualizacion": "2025-06-10",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "120201"
+    },
+    {
+        "id": "120603",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-10",
+        "fechaActualizacion": "2025-06-10",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "120603"
     }
 ]

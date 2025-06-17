@@ -16,9 +16,9 @@
 </div>
 <div class="col-md-12 mt-5 d-flex justify-content-end">    
    
-    <button type="button" class="btn btn-danger">Borrar</button>
-    <button type="button" class="btn btn-default ms-3">Guardor datos</button>    
-    <button type="button" class="btn btn-primary ms-3"  (click)="mercancias()" >Agregar</button>
+    <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura">Borrar</button>
+    <button type="button" class="btn btn-default ms-3" [disabled]="esFormularioSoloLectura">Guardor datos</button>    
+    <button type="button" class="btn btn-primary ms-3"  (click)="mercancias()" [disabled]="esFormularioSoloLectura">Agregar</button>
   </div>
 
   <app-modal [active]="showMercanciasModal">
@@ -30,7 +30,7 @@
         <div class="col-md-8">
             <div class="form-group">
               <app-catalogo-select [catalogo]="descripcion" formControlName="descripcion" [label]="'Descripción del producto'"
-                [required]="true" name="descripcion" (change)="setValoresStore(formMercancias, 'descripcion', 'setDescripcion')"></app-catalogo-select>
+                [required]="true" name="descripcion" (change)="setValoresStore(formMercancias, 'descripcion', 'setDescripcion')" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
             </div>
           </div>
       </div>
@@ -40,7 +40,7 @@
         <div class="col-md-4">
             <div class="form-group">
               <app-catalogo-select [catalogo]="fraccion" formControlName="fraccion" [label]="'Fracción arancelaria'"
-                [required]="true" name="fraccion"  (change)="setValoresStore(formMercancias, 'fraccion', 'setFraccion')"></app-catalogo-select>
+                [required]="true" name="fraccion"  (change)="setValoresStore(formMercancias, 'fraccion', 'setFraccion')" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
             </div>
           </div>
           <div class="col-md-8">
@@ -72,13 +72,13 @@
           <div class="col-md-4">
             <div class="form-group">
                 <app-catalogo-select [catalogo]="medida" formControlName="medida" [label]="' Unidad de medida'"
-                [required]="true" name="medida"(change)="setValoresStore(formMercancias, 'medida', 'setMedida')" ></app-catalogo-select>
+                [required]="true" name="medida"(change)="setValoresStore(formMercancias, 'medida', 'setMedida')" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
                 <app-catalogo-select [catalogo]="genero" formControlName="genero" [label]="'Género'"
-                [required]="true" name="genero" (change)="setValoresStore(formMercancias, 'genero', 'setGenero')" ></app-catalogo-select>
+                [required]="true" name="genero" (change)="setValoresStore(formMercancias, 'genero', 'setGenero')" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
             </div>
           </div>
       </div>
@@ -86,13 +86,13 @@
         <div class="col-md-4">
             <div class="form-group">
                 <app-catalogo-select [catalogo]="especie" formControlName="especie" [label]="'Especie'"
-                [required]="true" name="especie" (change)="setValoresStore(formMercancias, 'especie', 'setEspecie')" ></app-catalogo-select>
+                [required]="true" name="especie" (change)="setValoresStore(formMercancias, 'especie', 'setEspecie')" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
                 <app-catalogo-select [catalogo]="comun" formControlName="comun" [label]="'Nombre común'"
-                [required]="true" name="comun" (change)="setValoresStore(formMercancias, 'comun', 'setComun')"></app-catalogo-select>
+                [required]="true" name="comun" (change)="setValoresStore(formMercancias, 'comun', 'setComun')" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
             </div>
           </div>
       </div>
@@ -100,13 +100,13 @@
         <div class="col-md-4">
             <div class="form-group">
                 <app-catalogo-select [catalogo]="origen" formControlName="origen" [label]="'País de origen'"
-                [required]="true" name="origen" (change)="setValoresStore(formMercancias, 'origen', 'setOrigen')" ></app-catalogo-select>
+                [required]="true" name="origen" (change)="setValoresStore(formMercancias, 'origen', 'setOrigen')" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
             </div>
           </div>
           <div class="col-md-4">
             <div class="form-group">
                 <app-catalogo-select [catalogo]="procedencia" formControlName="procedencia" [label]="'País de procedencia'"
-                [required]="true" name="procedencia" (change)="setValoresStore(formMercancias, 'procedencia', 'setProcedencia')" ></app-catalogo-select>
+                [required]="true" name="procedencia" (change)="setValoresStore(formMercancias, 'procedencia', 'setProcedencia')" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
             </div>
           </div>
       </div>
