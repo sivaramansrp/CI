@@ -10,7 +10,7 @@ import { HttpClient } from '@angular/common/http';
 
 import { RadioOpcion } from '../../models/220201/certificado-zoosanitario.model';
 
-import {Subject, map, skip, takeUntil } from 'rxjs';
+import {Subject, map, takeUntil } from 'rxjs';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
 import { FilaSolicitud } from '../../models/220201/capturar-solicitud.model';
@@ -35,13 +35,14 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
   styleUrls: ['./datos-de-la-solicitud.component.scss'],
   standalone: true,
   imports:[SharedModule,
-          CommonModule, TituloComponent,
-              ReactiveFormsModule,
-              CatalogoSelectComponent,
-            CrosslistComponent,
-          InputRadioComponent,
-             AlertComponent,
-        TablaDinamicaComponent]
+           CommonModule,
+           TituloComponent,
+           ReactiveFormsModule,
+           CatalogoSelectComponent,
+           CrosslistComponent,
+           InputRadioComponent,
+           AlertComponent,
+           TablaDinamicaComponent]
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy,AfterViewInit {
   /**
@@ -224,7 +225,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
   }
 
    ngAfterViewInit(): void {
-       this.datosDelaSolicitud.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe((changes) => {
+       this.datosDelaSolicitud.valueChanges.pipe(takeUntil(this.destroyNotifier$)).subscribe(() => {
       const FORMA_VALIDA_ACTUALIZADA = {
         dataDeLaSolicitud: false, 
       };
@@ -249,13 +250,13 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * Inicializa el grupo de formularios anidado para los datos de la solicitud.
    * @method initActionFormBuild
    */
-  initActionFormBuild() { 
+  initActionFormBuild():void { 
     this.datosDelaSolicitud = this.fb.group({
       tipoMercancia: ['no', Validators.required],
       aduanaIngreso: ['', Validators.required],
       oficinaInspeccion: ['', Validators.required],
       puntoInspeccion: ['', Validators.required],
-      claveUCON: [''],
+      claveUCON: ['', Validators.maxLength(15)],
       establecimientoTIFs: [''],
       nombreVeterinario: [''],
       numeroGuia: [''],
@@ -274,7 +275,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * Alterna el estado colapsable de la sección del formulario.
    * @method mostrar_colapsable
    */
-  mostrar_colapsable() {
+  mostrar_colapsable():void {
     this.colapsable = !this.colapsable;
   }
 
@@ -282,7 +283,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * Obtiene las listas desplegables.
    * @method obtenerListasDesplegables
    */
-  obtenerListasDesplegables() {
+  obtenerListasDesplegables():void {
     this.obtenerIngresoSelectList();
     this.obtenerSanidadAgropecuariaList();
     this.obtenerPuntoInspeccionList();
@@ -295,7 +296,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * Obtiene la lista para el select de aduana de ingreso.
    * @method obtenerIngresoSelectList
    */
-  obtenerIngresoSelectList() {
+  obtenerIngresoSelectList():void {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/aduana_de_ingreso.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.aduanaDeIngreso = DATOS;
@@ -306,7 +307,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * Obtiene la lista para el select de sanidad agropecuaria.
    * @method obtenerSanidadAgropecuariaList
    */
-  obtenerSanidadAgropecuariaList() {
+  obtenerSanidadAgropecuariaList():void {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/oficina_de_inspeccion.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.sanidadAgropecuaria = DATOS;
@@ -317,7 +318,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * Obtiene la lista para el select de punto de inspección.
    * @method obtenerPuntoInspeccionList
    */
-  obtenerPuntoInspeccionList() {
+  obtenerPuntoInspeccionList():void {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/punto.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.puntoInspeccion = DATOS;
@@ -328,7 +329,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * Obtiene la lista para el select de establecimiento.
    * @method obtenerEstablecimientoList
    */
-  obtenerEstablecimientoList() {
+  obtenerEstablecimientoList():void {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/establecimiento.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.establecimientoTIF = DATOS;
@@ -340,7 +341,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * @method obtenerVeterinarioList
    */
 
-  obtenerVeterinarioList() {
+  obtenerVeterinarioList():void {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/nombre.json').pipe(takeUntil(this.destroyNotifier$)).subscribe((data): void => {
       const DATOS = data?.data;
       this.veterinario = DATOS;
@@ -351,7 +352,7 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
    * Obtiene la lista para el select de régimen.
    * @method obtenerRegimenList
    */
-  obtenerRegimenList() {
+  obtenerRegimenList():void {
     this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/regimen.json').pipe(takeUntil(this.destroyNotifier$)).subscribe(data => {
       const DATOS = data?.data;
       this.regimen = DATOS;
