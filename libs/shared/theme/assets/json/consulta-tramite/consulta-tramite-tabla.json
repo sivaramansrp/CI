@@ -147,6 +147,15 @@
         "numeroDeProcedimiento": "110216"
     },
     {
+        "id": "290301",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AMECAFE",
+        "numeroDeProcedimiento": "290301"
+    },
+    {
         "id": "120201",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2025-06-10",
