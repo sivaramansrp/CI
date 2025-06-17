@@ -10,6 +10,9 @@ export interface Solicitud261601State {
   /** Representa una descripción o información adicional sobre la solicitud.*/
   detalledelaSolicitud: string;
 
+    /** Indica si se cumple con los requisitos establecidos para la solicitud. */
+    cumplocon: boolean;
+
   /** Registro Federal de Contribuyentes (RFC) */
   rfc: string;
 
@@ -35,7 +38,8 @@ export function createInitialSolicitudState(): Solicitud261601State {
   return {
     /** Representa una descripción o información adicional sobre la solicitud.*/
     detalledelaSolicitud: '',
-
+    /** Valor inicial que indica si se cumple con los requisitos establecidos para la solicitud. */
+    cumplocon: true,
     /** Registro Federal de Contribuyentes (RFC) */
     rfc: '',
 
@@ -71,7 +75,16 @@ export class Solicitud261601Store extends Store<Solicitud261601State> {
       rfc,
     }));
   }
-
+   /**
+   * Método para actualizar el estado de si se cumplen los requisitos establecidos para la solicitud.
+   * @param cumplocon Valor booleano que indica si se cumplen los requisitos.
+   */
+   public setCumplocon(cumplocon: boolean): void {
+    this.update((state) => ({
+      ...state,
+      cumplocon,
+    }));
+  }
   /**
    * Método para actualizar la razón social legal en el estado.
    * @param legalRazonSocial Razón social legal a establecer.
