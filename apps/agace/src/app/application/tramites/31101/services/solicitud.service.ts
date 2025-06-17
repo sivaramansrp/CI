@@ -139,27 +139,48 @@ export class SolicitudService {
     );
   }
 
+  /**
+   * Obtiene el catálogo de entidades federativas.
+   *
+   * @returns Un observable con los datos del catálogo de tipo `CatalogosSelect`,
+   * cargado desde un archivo JSON local.
+   */
   entidadFederativaCatalogo(): Observable<CatalogosSelect> {
     return this.http.get<CatalogosSelect>(
       'assets/json/31101/entidad-federativa-catalogo.json'
     );
   }
 
+  /**
+   * Guarda los datos del formulario.
+   *
+   * @returns Un observable con la respuesta del modelo `Solicitud31101Model`,
+   * simulando una carga desde un archivo JSON local.
+   */
   guardarDatosFormulario(): Observable<Solicitud31101Model> {
     return this.http.get<Solicitud31101Model>(
       'assets/json/31101/solicitud31101.json'
     );
   }
 
+  /**
+   * Actualiza el estado del formulario en el store.
+   *
+   * @param respuesta Objeto de tipo `Solicitud31101Model` que contiene la nueva información del formulario.
+   */
   actualizarEstadoFormulario(respuesta: Solicitud31101Model): void {
     this.solicitud31101Store.actualizarTipoDeGarantia(respuesta.tipoDeGarantia);
-    this.solicitud31101Store.actualizarModalidadDeLaGarantia(respuesta.modalidadDeLaGarantia);
+    this.solicitud31101Store.actualizarModalidadDeLaGarantia(
+      respuesta.modalidadDeLaGarantia
+    );
     this.solicitud31101Store.actualizarTipoSector(respuesta.tipoSector);
     this.solicitud31101Store.actualizarConcepto(respuesta.concepto);
     this.solicitud31101Store.actualizar3500(respuesta[3500]);
     this.solicitud31101Store.actualizar3501(respuesta[3501]);
     this.solicitud31101Store.actualizar3502(respuesta[3502]);
-    this.solicitud31101Store.actualizarDatosGeneralesRFC(respuesta.datosGeneralesRFC);
+    this.solicitud31101Store.actualizarDatosGeneralesRFC(
+      respuesta.datosGeneralesRFC
+    );
     this.solicitud31101Store.actualizar3503(respuesta[3503]);
     this.solicitud31101Store.actualizar3504(respuesta[3504]);
     this.solicitud31101Store.actualizar3505(respuesta[3505]);
@@ -181,16 +202,30 @@ export class SolicitudService {
     this.solicitud31101Store.actualizar3519(respuesta[3519]);
     this.solicitud31101Store.actualizar3520(respuesta[3520]);
     this.solicitud31101Store.actualizarTipoInversion(respuesta.tipoInversion);
-    this.solicitud31101Store.actualizarCantidadInversion(respuesta.cantidadInversion);
+    this.solicitud31101Store.actualizarCantidadInversion(
+      respuesta.cantidadInversion
+    );
     this.solicitud31101Store.actualizarDescInversion(respuesta.descInversion);
     this.solicitud31101Store.actualizar3521(respuesta[3521]);
     this.solicitud31101Store.actualizar3522(respuesta[3522]);
-    this.solicitud31101Store.actualizarClaveEnumeracionD0(respuesta.claveEnumeracionD0);
-    this.solicitud31101Store.actualizarClaveEnumeracionD1(respuesta.claveEnumeracionD1);
-    this.solicitud31101Store.actualizarClaveEnumeracionD2(respuesta.claveEnumeracionD2);
-    this.solicitud31101Store.actualizarClaveEnumeracionD3(respuesta.claveEnumeracionD3);
-    this.solicitud31101Store.actualizarClaveEnumeracionH(respuesta.claveEnumeracionH);
-    this.solicitud31101Store.actualizarModalidadProgramaImmex(respuesta.modalidadProgramaImmex);
+    this.solicitud31101Store.actualizarClaveEnumeracionD0(
+      respuesta.claveEnumeracionD0
+    );
+    this.solicitud31101Store.actualizarClaveEnumeracionD1(
+      respuesta.claveEnumeracionD1
+    );
+    this.solicitud31101Store.actualizarClaveEnumeracionD2(
+      respuesta.claveEnumeracionD2
+    );
+    this.solicitud31101Store.actualizarClaveEnumeracionD3(
+      respuesta.claveEnumeracionD3
+    );
+    this.solicitud31101Store.actualizarClaveEnumeracionH(
+      respuesta.claveEnumeracionH
+    );
+    this.solicitud31101Store.actualizarModalidadProgramaImmex(
+      respuesta.modalidadProgramaImmex
+    );
     this.solicitud31101Store.actualizarTextoGenerico4(respuesta.textoGenerico4);
     this.solicitud31101Store.actualizarTextoGenerico5(respuesta.textoGenerico5);
     this.solicitud31101Store.actualizar3523(respuesta[3523]);
@@ -198,10 +233,18 @@ export class SolicitudService {
     this.solicitud31101Store.actualizar3525(respuesta[3525]);
     this.solicitud31101Store.actualizar3526(respuesta[3526]);
     this.solicitud31101Store.actualizar3527(respuesta[3527]);
-    this.solicitud31101Store.actualizarFechaFinVigencia1(respuesta.fechaFinVigencia1);
-    this.solicitud31101Store.actualizarNumeroAutorizacion1(respuesta.numeroAutorizacion1);
-    this.solicitud31101Store.actualizarFechaFinVigencia2(respuesta.fechaFinVigencia2);
-    this.solicitud31101Store.actualizarNumeroAutorizacion2(respuesta.numeroAutorizacion2);
+    this.solicitud31101Store.actualizarFechaFinVigencia1(
+      respuesta.fechaFinVigencia1
+    );
+    this.solicitud31101Store.actualizarNumeroAutorizacion1(
+      respuesta.numeroAutorizacion1
+    );
+    this.solicitud31101Store.actualizarFechaFinVigencia2(
+      respuesta.fechaFinVigencia2
+    );
+    this.solicitud31101Store.actualizarNumeroAutorizacion2(
+      respuesta.numeroAutorizacion2
+    );
     this.solicitud31101Store.actualizar3528(respuesta[3528]);
     this.solicitud31101Store.actualizar3529(respuesta[3529]);
     this.solicitud31101Store.actualizarTextoGenerico6(respuesta.textoGenerico6);
@@ -209,57 +252,133 @@ export class SolicitudService {
     this.solicitud31101Store.actualizar3530(respuesta[3530]);
     this.solicitud31101Store.actualizar3531(respuesta[3531]);
     this.solicitud31101Store.actualizarTextoGenerico9(respuesta.textoGenerico9);
-    this.solicitud31101Store.actualizarTextoGenerico10(respuesta.textoGenerico10);
-    this.solicitud31101Store.actualizarTextoGenerico11(respuesta.textoGenerico11);
-    this.solicitud31101Store.actualizarTextoGenerico12(respuesta.textoGenerico12);
-    this.solicitud31101Store.actualizarTextoGenerico13(respuesta.textoGenerico13);
-    this.solicitud31101Store.actualizarTextoGenerico14(respuesta.textoGenerico14);
-    this.solicitud31101Store.actualizarTextoGenerico15(respuesta.textoGenerico15);
-    this.solicitud31101Store.actualizarTextoGenerico16(respuesta.textoGenerico16);
-    this.solicitud31101Store.actualizarTextoGenerico17(respuesta.textoGenerico17);
-    this.solicitud31101Store.actualizarTextoGenerico18(respuesta.textoGenerico18);
-    this.solicitud31101Store.actualizarTextoGenerico19(respuesta.textoGenerico19);
-    this.solicitud31101Store.actualizarTextoGenerico20(respuesta.textoGenerico20);
-    this.solicitud31101Store.actualizarTextoGenerico21(respuesta.textoGenerico21);
-    this.solicitud31101Store.actualizarTextoGenerico22(respuesta.textoGenerico22);
-    this.solicitud31101Store.actualizarTextoGenerico23(respuesta.textoGenerico23);
-    this.solicitud31101Store.actualizarTextoGenerico24(respuesta.textoGenerico24);
+    this.solicitud31101Store.actualizarTextoGenerico10(
+      respuesta.textoGenerico10
+    );
+    this.solicitud31101Store.actualizarTextoGenerico11(
+      respuesta.textoGenerico11
+    );
+    this.solicitud31101Store.actualizarTextoGenerico12(
+      respuesta.textoGenerico12
+    );
+    this.solicitud31101Store.actualizarTextoGenerico13(
+      respuesta.textoGenerico13
+    );
+    this.solicitud31101Store.actualizarTextoGenerico14(
+      respuesta.textoGenerico14
+    );
+    this.solicitud31101Store.actualizarTextoGenerico15(
+      respuesta.textoGenerico15
+    );
+    this.solicitud31101Store.actualizarTextoGenerico16(
+      respuesta.textoGenerico16
+    );
+    this.solicitud31101Store.actualizarTextoGenerico17(
+      respuesta.textoGenerico17
+    );
+    this.solicitud31101Store.actualizarTextoGenerico18(
+      respuesta.textoGenerico18
+    );
+    this.solicitud31101Store.actualizarTextoGenerico19(
+      respuesta.textoGenerico19
+    );
+    this.solicitud31101Store.actualizarTextoGenerico20(
+      respuesta.textoGenerico20
+    );
+    this.solicitud31101Store.actualizarTextoGenerico21(
+      respuesta.textoGenerico21
+    );
+    this.solicitud31101Store.actualizarTextoGenerico22(
+      respuesta.textoGenerico22
+    );
+    this.solicitud31101Store.actualizarTextoGenerico23(
+      respuesta.textoGenerico23
+    );
+    this.solicitud31101Store.actualizarTextoGenerico24(
+      respuesta.textoGenerico24
+    );
     this.solicitud31101Store.actualizarAlerta2(respuesta.alerta2);
-    this.solicitud31101Store.actualizarPolizaDeFianzaActual(respuesta.polizaDeFianzaActual);
+    this.solicitud31101Store.actualizarPolizaDeFianzaActual(
+      respuesta.polizaDeFianzaActual
+    );
     this.solicitud31101Store.actualizarNumeroFolio(respuesta.numeroFolio);
     this.solicitud31101Store.actualizarRfcInstitucion(respuesta.rfcInstitucion);
-    this.solicitud31101Store.actualizarFechaExpedicion(respuesta.fechaExpedicion);
-    this.solicitud31101Store.actualizarFechaInicioVigenciaNo(respuesta.fechaInicioVigenciaNo);
-    this.solicitud31101Store.actualizarFechaFinVigenciaNo(respuesta.fechaFinVigenciaNo);
-    this.solicitud31101Store.actualizarFechaInicioVigencia(respuesta.fechaInicioVigencia);
-    this.solicitud31101Store.actualizarFechaFinVigencia(respuesta.fechaFinVigencia);
+    this.solicitud31101Store.actualizarFechaExpedicion(
+      respuesta.fechaExpedicion
+    );
+    this.solicitud31101Store.actualizarFechaInicioVigenciaNo(
+      respuesta.fechaInicioVigenciaNo
+    );
+    this.solicitud31101Store.actualizarFechaFinVigenciaNo(
+      respuesta.fechaFinVigenciaNo
+    );
+    this.solicitud31101Store.actualizarFechaInicioVigencia(
+      respuesta.fechaInicioVigencia
+    );
+    this.solicitud31101Store.actualizarFechaFinVigencia(
+      respuesta.fechaFinVigencia
+    );
     this.solicitud31101Store.actualizarImporteTotal(respuesta.importeTotal);
-    this.solicitud31101Store.actualizarRazonSocialAnterior(respuesta.razonSocialAnterior);
-    this.solicitud31101Store.actualizarRazonSocialActual(respuesta.razonSocialActual);
+    this.solicitud31101Store.actualizarRazonSocialAnterior(
+      respuesta.razonSocialAnterior
+    );
+    this.solicitud31101Store.actualizarRazonSocialActual(
+      respuesta.razonSocialActual
+    );
     this.solicitud31101Store.actualizarRfc(respuesta.rfc);
     this.solicitud31101Store.actualizarCurp(respuesta.curp);
     this.solicitud31101Store.actualizarNombre(respuesta.nombre);
-    this.solicitud31101Store.actualizarApellidoPaterno(respuesta.apellidoPaterno);
-    this.solicitud31101Store.actualizarApellidoMaterno(respuesta.apellidoMaterno);
-    this.solicitud31101Store.actualizarMiembroCaracterDe(respuesta.miembroCaracterDe);
-    this.solicitud31101Store.actualizarMiembroTributarMexico(respuesta.miembroTributarMexico);
-    this.solicitud31101Store.actualizarMiembroNacionalidad(respuesta.miembroNacionalidad);
+    this.solicitud31101Store.actualizarApellidoPaterno(
+      respuesta.apellidoPaterno
+    );
+    this.solicitud31101Store.actualizarApellidoMaterno(
+      respuesta.apellidoMaterno
+    );
+    this.solicitud31101Store.actualizarMiembroCaracterDe(
+      respuesta.miembroCaracterDe
+    );
+    this.solicitud31101Store.actualizarMiembroTributarMexico(
+      respuesta.miembroTributarMexico
+    );
+    this.solicitud31101Store.actualizarMiembroNacionalidad(
+      respuesta.miembroNacionalidad
+    );
     this.solicitud31101Store.actualizarMiembroRFC(respuesta.miembroRfc);
-    this.solicitud31101Store.actualizarMiembroRegistroFederal(respuesta.miembroRegistroFederal);
-    this.solicitud31101Store.actualizarMiembroNombreCompleto(respuesta.miembroNombreCompleto);
-    this.solicitud31101Store.actualizarMiembroTipoPersonaMuestra(respuesta.miembroTipoPersonaMuestra);
+    this.solicitud31101Store.actualizarMiembroRegistroFederal(
+      respuesta.miembroRegistroFederal
+    );
+    this.solicitud31101Store.actualizarMiembroNombreCompleto(
+      respuesta.miembroNombreCompleto
+    );
+    this.solicitud31101Store.actualizarMiembroTipoPersonaMuestra(
+      respuesta.miembroTipoPersonaMuestra
+    );
     this.solicitud31101Store.actualizarMiembroNombre(respuesta.miembroNombre);
-    this.solicitud31101Store.actualizarMiembroApellidoPaterno(respuesta.miembroApellidoPaterno);
-    this.solicitud31101Store.actualizarMiembroApellidoMaterno(respuesta.miembroApellidoMaterno);
-    this.solicitud31101Store.actualizarMiembroNombreEmpresa(respuesta.miembroNombreEmpresa);
-    this.solicitud31101Store.actualizarEntidadFederativa(respuesta.entidadFederativa);
-    this.solicitud31101Store.actualizarInstalacionesPrincipales(respuesta.instalacionesPrincipales);
+    this.solicitud31101Store.actualizarMiembroApellidoPaterno(
+      respuesta.miembroApellidoPaterno
+    );
+    this.solicitud31101Store.actualizarMiembroApellidoMaterno(
+      respuesta.miembroApellidoMaterno
+    );
+    this.solicitud31101Store.actualizarMiembroNombreEmpresa(
+      respuesta.miembroNombreEmpresa
+    );
+    this.solicitud31101Store.actualizarEntidadFederativa(
+      respuesta.entidadFederativa
+    );
+    this.solicitud31101Store.actualizarInstalacionesPrincipales(
+      respuesta.instalacionesPrincipales
+    );
     this.solicitud31101Store.actualizarMunicipio(respuesta.municipio);
-    this.solicitud31101Store.actualizarTipoDeInstalacion(respuesta.tipoDeInstalacion);
+    this.solicitud31101Store.actualizarTipoDeInstalacion(
+      respuesta.tipoDeInstalacion
+    );
     this.solicitud31101Store.actualizarFederativa(respuesta.federativa);
     this.solicitud31101Store.actualizarRegistroSE(respuesta.registroSE);
     this.solicitud31101Store.actualizarDesceripe(respuesta.desceripe);
     this.solicitud31101Store.actualizarCodigoPostal(respuesta.codigoPostal);
-    this.solicitud31101Store.actualizarProcesoProductivo(respuesta.procesoProductivo);
+    this.solicitud31101Store.actualizarProcesoProductivo(
+      respuesta.procesoProductivo
+    );
   }
 }

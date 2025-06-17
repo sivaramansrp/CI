@@ -59,11 +59,24 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /** Estado de la consulta que se obtiene del store. */
   public consultaState!: ConsultaioState;
 
+  /**
+   * Constructor del componente.
+   *
+   * @param consultaQuery Inyección del servicio de consulta del estado de la sección.
+   * @param solicitudService Servicio para manejar la lógica relacionada con la solicitud.
+   */
   constructor(
     private consultaQuery: ConsultaioQuery,
     public solicitudService: SolicitudService
   ) {}
 
+  /**
+ * Ciclo de vida `ngOnInit`.
+ * 
+ * - Se suscribe al estado de `consultaQuery` para obtener el estado actual de la sección.
+ * - Si el estado indica una actualización (`update`), se ejecuta `guardarDatosFormulario`.
+ * - En caso contrario, se establece `esDatosRespuesta` en `true`.
+ */
   ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$
       .pipe(
