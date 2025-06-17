@@ -68,7 +68,10 @@ export class CertificacionesComponent implements OnInit, OnDestroy {
    */
   nuevaNotificacion!: Notificacion;
 
-  public consultaState!:ConsultaioState;
+  /**
+   * Estado actual de la consulta IO, obtenido desde el store.
+   */
+  public consultaState!: ConsultaioState;
 
   /**
    * Constructor del componente.

@@ -78,7 +78,10 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   public formularioUbicacionMercancia = UBICACION_MERCANCIA;
 
-  public consultaState!:ConsultaioState;
+  /**
+   * Estado actual de la consulta IO.
+   */
+  public consultaState!: ConsultaioState;
 
   
 
