@@ -16,14 +16,14 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-        <button *ngIf="seleccionadaDestinatario" type="button" name="modificarMercancias" class="btn btn-default" (click)="modificarDestinatario()">
+        <button *ngIf="seleccionadaDestinatario" type="button" name="modificarMercancias" class="btn btn-default" (click)="modificarDestinatario()"disabled="formularioDeshabilitado">
           Modificar
         </button>
-        <button  *ngIf="seleccionadaDestinatario" type="button" name="eliminarMercancias" class="btn btn-danger ms-2" (click)="eliminarDestinatario()">
+        <button  *ngIf="seleccionadaDestinatario" type="button" name="eliminarMercancias" class="btn btn-danger ms-2" (click)="eliminarDestinatario()" disabled="formularioDeshabilitado">
           Eliminar
         </button>
 
-        <button type="button" name="agregarMercancias" class="btn btn-primary ms-2"
+        <button type="button" name="agregarMercancias" class="btn btn-primary ms-2" disabled="formularioDeshabilitado"
           (click)="navigate(tipoTablaDatos.DESTINATARIO)">
           Agregar
         </button>
@@ -43,14 +43,14 @@
   <div class="row mt-5">
     <div class="col-md-12">
       <div class="pull-right">
-        <button *ngIf="seleccionadaOtros" type="button" name="modificarMercancias" class="btn btn-default" (click)="modificarOtros()">
+        <button *ngIf="seleccionadaOtros" type="button" name="modificarMercancias" class="btn btn-default" (click)="modificarOtros()" disabled="formularioDeshabilitado">
           Modificar
         </button>
-        <button *ngIf="seleccionadaOtros" type="button" name="eliminarMercancias" class="btn btn-danger ms-2" (click)="eliminarOtros()">
+        <button *ngIf="seleccionadaOtros" type="button" name="eliminarMercancias" class="btn btn-danger ms-2" (click)="eliminarOtros()" disabled="formularioDeshabilitado">
           Eliminar
         </button>
 
-        <button type="button" name="agregarMercancias" class="btn btn-primary ms-2" (click)="navigateOtros()">
+        <button type="button" name="agregarMercancias" class="btn btn-primary ms-2" (click)="navigateOtros()" disabled="formularioDeshabilitado">
           Agregar
         </button>
       </div>
