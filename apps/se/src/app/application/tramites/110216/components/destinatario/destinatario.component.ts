@@ -1,3 +1,4 @@
+import { ConsultaioQuery, ConsultaioState, REGEX_SOLO_DIGITOS } from '@ng-mf/data-access-user';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -5,7 +6,6 @@ import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { REGEX_SOLO_DIGITOS } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
@@ -65,6 +65,18 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
    * Indicador para verificar si el formulario está vacío.
    */
   estaVacio: boolean = false;
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -78,7 +90,8 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     private store: Tramite110216Store,
     private query: Tramite110216Query,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery,
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -97,7 +110,16 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     this.donanteDomicilio();
   }
 
@@ -153,8 +175,24 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
         numeroVuelo: [this.solicitudState?.grupoDeTransporte?.numeroVuelo, [Validators.maxLength(15)]]
       }),
     });
+    this.inicializarEstadoFormulario();
   }
-
+  /**
+   * @method inicializarEstadoFormulario
+   * @description Inicializa el estado del formulario según el modo de solo lectura.
+   * 
+   * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
+   * En caso contrario, habilita los controles del formulario.
+   * 
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.registroFormulario?.disable();
+    } else {
+      this.registroFormulario?.enable();
+    }
+  }
   /**
    * Valida el formulario del destinatario.
    * 

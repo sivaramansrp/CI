@@ -1,16 +1,28 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { DatosDelTramiteFormState, MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { Subject, takeUntil } from 'rxjs';
+import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { ID_PROCEDIMIENTO } from '../../constants/agregar-destinatario.enum';
 import { Tramite240112Query } from '../../estados/tramite240112Query.query';
 import { Tramite240112Store } from '../../estados/tramite240112Store.store';
+
 
 @Component({
   selector: 'app-datos-del-tramite-contenedora',
   templateUrl: './datos-del-tramite-contenedora.component.html',
   styleUrl: './datos-del-tramite-contenedora.component.scss',
+  standalone: true,
+  imports: [DatosDelTramiteComponent]
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit,OnDestroy {
+
+  /**
+   * @input
+   * @description
+   * Indica si el formulario debe estar deshabilitado. Cuando es `true`, los controles del formulario estarán inactivos y no permitirán la edición por parte del usuario.
+   * @type {boolean}
+   */
+   @Input() formularioDeshabilitado: boolean = false;
 
     /**
      * Datos de la tabla de mercancías que se muestran en el formulario.

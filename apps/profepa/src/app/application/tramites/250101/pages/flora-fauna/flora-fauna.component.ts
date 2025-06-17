@@ -2,8 +2,8 @@ import { Component, ViewChild } from '@angular/core';
 import {
   DatosPasos,
   ListaPasosWizard,
-  WizardComponent,
-} from '@ng-mf/data-access-user';
+  WizardComponent
+} from '@libs/shared/data-access-user/src';
 import { ALERTA_COM } from '@libs/shared/data-access-user/src/tramites/constantes/110208/certificado.enum';
 import { FLORA_FAUNA } from '../../constantes/flora-fauna.enum';
 

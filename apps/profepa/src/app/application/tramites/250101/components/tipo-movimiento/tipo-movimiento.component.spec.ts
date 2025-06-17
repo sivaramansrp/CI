@@ -4,6 +4,15 @@ import { of } from 'rxjs';
 import { TipoMovimientoComponent } from './tipo-movimiento.component';
 import { TipoMovimientoService } from '../../services/tipo-movimiento.service';
 import { Tramite250101Store } from '../../estados/tramite250101.store';
+import { Tramite250101Query } from '../../estados/tramite250101.query';
+
+class Tramite250101QueryMock {
+  tipoAduana$ = of([]);
+  tipoInspectoria$ = of([]);
+  tipoMunicipio$ = of([]);
+  destinatarioDenominacion$ = of([]);
+  selectSolicitud$ = of({});
+}
 
 describe('TipoMovimientoComponent', () => {
   let component: TipoMovimientoComponent;
@@ -30,6 +39,7 @@ describe('TipoMovimientoComponent', () => {
       providers: [
         { provide: TipoMovimientoService, useValue: tipoMovimientoServiceMock },
         { provide: Tramite250101Store, useValue: tramite250101StoreMock },
+        { provide: Tramite250101Query, useClass: Tramite250101QueryMock },
       ],
     }).compileComponents();
 
@@ -86,5 +96,30 @@ describe('TipoMovimientoComponent', () => {
 
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  
+  it('should disable the form if esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+    component.tipoMovimientoForm.enable(); 
+    component.inicializarEstadoFormulario();
+    expect(component.tipoMovimientoForm.disabled).toBe(true);
+  });
+
+  it('should enable the form if esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+    component.tipoMovimientoForm.disable(); 
+    component.inicializarEstadoFormulario();
+    expect(component.tipoMovimientoForm.enabled).toBe(true);
+  });
+
+  it('should handle empty data from services gracefully', () => {
+    tipoMovimientoServiceMock.getAduanaData.mockReturnValueOnce(of([]));
+    tipoMovimientoServiceMock.getInspectoriaData.mockReturnValueOnce(of([]));
+    tipoMovimientoServiceMock.getAlcaldiaData.mockReturnValueOnce(of([]));
+    component.ngOnInit();
+    expect(component.aduanaData).toEqual([]);
+    expect(component.inspectoriaData).toEqual([]);
+    expect(component.municipioData).toEqual([]);
   });
 });

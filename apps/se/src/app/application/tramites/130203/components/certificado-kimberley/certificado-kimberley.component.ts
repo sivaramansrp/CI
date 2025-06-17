@@ -1,29 +1,21 @@
-import { Subject, takeUntil } from 'rxjs';
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-
-
 import {
   Catalogo,
-  CatalogoSelectComponent,
+  ConsultaioQuery,
   REG_X,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Validators } from '@angular/forms';
-
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import {
   Tramite130203State,
   Tramite130203Store,
 } from '../../estados/tramites/tramites130203.store';
-
-import { Tramite130203Query } from '../../estados/queries/tramite130203.query';
-
+import { CatalogoSelectComponent, } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CommonModule } from '@angular/common';
 import { ExportacionDeDiamantesEnBrutoService } from '../../services/exportacion-de-diamantes-en-bruto.service';
+import { ReactiveFormsModule } from '@angular/forms';
+import { Tramite130203Query } from '../../estados/queries/tramite130203.query';
 
 /**
  * @description
@@ -98,7 +90,29 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    */
   private destroyed$ = new Subject<void>();
 
+  /**
+   * Identificador del país emisor seleccionado.
+   * Puede ser un número o `null` si no se ha seleccionado ninguno.
+   */
   paisId: number | null = null;
+
+  /**
+   * Suscripción a los cambios en el formulario reactivo.
+   */
+  private subscription: Subscription = new Subscription();
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Estado interno de la sección actual del trámite 130110.
+   * Utilizado para gestionar y almacenar la información relacionada con esta sección.
+   * Propiedad privada.
+   */
+  private seccionState!: Tramite130203State;
  
   /**
    * @description
@@ -107,14 +121,24 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    * @param tramite130203Store Store para gestionar el estado del trámite.
    * @param tramite130203Query Query para obtener datos del estado del trámite.
    * @param exportacionDeDiamantesEnBrutoService Servicio para obtener datos relacionados con la exportación.
+   * @param consultaioQuery Query para obtener datos de consulta.
    */
   constructor(
     private fb: FormBuilder,
     private tramite130203Store: Tramite130203Store,
     private tramite130203Query: Tramite130203Query,
-    private exportacionDeDiamantesEnBrutoService: ExportacionDeDiamantesEnBrutoService
+    private exportacionDeDiamantesEnBrutoService: ExportacionDeDiamantesEnBrutoService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    this.inicializarFormulario();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -122,10 +146,50 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
     this.loadData();
     this.subscribeToState();
-    
+  }
 
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+   /**
+   * @method
+   * @name guardarDatosFormulario
+   * @description
+   * Inicializa los formularios y obtiene los datos de la tabla.
+   * Dependiendo del modo de solo lectura (`esFormularioSoloLectura`),
+   * deshabilita o habilita todos los formularios del componente.
+   * Si el formulario está en modo solo lectura, todos los formularios se deshabilitan para evitar modificaciones.
+   * Si no está en modo solo lectura, todos los formularios se habilitan para permitir la edición.
+   *
+   * @returns {void}
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.formularioEmpresa.disable();
+      this.datosDelExportador.disable();
+      this.datosDelImportador.disable();
+      this.datosDeLaRemesa.disable();
+      this.datosDeLosDiamantes.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.formularioEmpresa.enable();
+      this.datosDelExportador.enable();
+      this.datosDelImportador.enable();
+      this.datosDeLaRemesa.enable();
+      this.datosDeLosDiamantes.enable();
+    }
   }
 
   /**
@@ -146,7 +210,6 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
         });
         this.datosDelExportador.patchValue({
           direccionExportador: seccionState.direccionExportador,
-          
         });
         this.datosDelImportador.patchValue({
           nombreImportador: seccionState.nombreImportador,
@@ -162,19 +225,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
           cantidadEnQuilates: seccionState.cantidadEnQuilates,
           valorDeLosDiamantes: seccionState.valorDeLosDiamantes,
         });        
-      })
-    
-
-    
-  }
-
-  /**
-   * @description
-   * Método para limpiar las suscripciones al destruir el componente.
-   */
-  ngOnDestroy(): void {
-    this.destroyed$.next();
-    this.destroyed$.complete();
+      });
   }
 
   /**
@@ -202,8 +253,7 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
         this.datosDelExportador.patchValue({
           nombreExportador: nombreExportador,
         });
-      })
-
+      });
   }
 
   /**
@@ -211,43 +261,73 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
    * Inicializa el formulario principal.
    */
   public inicializarFormulario(): void {
+    this.subscription.add(
+      this.tramite130203Query.selectSolicitud$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+            this.seccionState = seccionState;
+          })
+        )
+        .subscribe()
+    );
     this.formularioEmpresa = this.fb.group({
       especifique: [
-        {disabled: true, value: ''},
-        Validators.maxLength(20),
+        { value: this.seccionState?.especifique, disabled: true },
+        [Validators.maxLength(20)],
       ],
-      numero: ['', [Validators.required]],
-      tipoEmpresa: [
-        '',
-        Validators.required,
-      ],
-      nombre: ['', [Validators.required]],
-      lineaCheckbox: [''],
-      paisOrigen: [
-        '',
-        Validators.required,
-      ],
+      numero: [this.seccionState?.numero, [Validators.required]],
+      tipoEmpresa: [this.seccionState?.tipoEmpresa, [Validators.required]],
+      nombre: [this.seccionState?.nombre, [Validators.required]],
+      lineaCheckbox: this.seccionState?.lineaCheckbox,
+      paisOrigen: [this.seccionState?.paisOrigen, [Validators.required]],
     });
+
     this.datosDelExportador = this.fb.group({
-      nombreExportador: [{
-          value: '',
-          disabled: true,
-        }
+      nombreExportador: [
+        { value: this.seccionState?.nombreExportador, disabled: true },
       ],
-      direccionExportador: ['', [Validators.required]],
-    })
+      direccionExportador: [
+        this.seccionState?.direccionExportador,
+        [Validators.required],
+      ],
+    });
+
     this.datosDelImportador = this.fb.group({
-      nombreImportador: ['', [Validators.required]],
-      direccionImportador: ['', [Validators.required]],
+      nombreImportador: [
+        this.seccionState?.nombreImportador,
+        [Validators.required],
+      ],
+      direccionImportador: [
+        this.seccionState?.direccionImportador,
+        [Validators.required],
+      ],
     });
+
     this.datosDeLaRemesa = this.fb.group({
-      numeroEnLetraDeLosLotes: ['', [Validators.required]],
-      numeroEnLetraDeLosLotesEnIngles: ['', [Validators.required]],
-      numeroDeFactura: ['', [Validators.required]],
+      numeroEnLetraDeLosLotes: [
+        this.seccionState?.numeroEnLetraDeLosLotes,
+        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
+      ],
+      numeroEnLetraDeLosLotesEnIngles: [
+        this.seccionState?.numeroEnLetraDeLosLotesEnIngles,
+        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
+      ],
+      numeroDeFactura: [
+        this.seccionState?.numeroDeFactura,
+        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS)],
+      ],
     });
+
     this.datosDeLosDiamantes = this.fb.group({
-      cantidadEnQuilates: ['', [Validators.required]],
-      valorDeLosDiamantes: ['', [Validators.required]],
+      cantidadEnQuilates: [
+        this.seccionState?.cantidadEnQuilates,
+        [Validators.required],
+      ],
+      valorDeLosDiamantes: [
+        this.seccionState?.valorDeLosDiamantes,
+        [Validators.required],
+      ],
     });
   }
 
@@ -279,7 +359,6 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     if(campo === 'tipoEmpresa'){
       this.updateNombreIngles(Number(VALOR));
     }
-    
   }
 
   /**
@@ -293,39 +372,6 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
     return CONTORL
       ? CONTORL.invalid && (CONTORL.dirty || CONTORL.touched)
       : false;
-  }
-
-  /**
-   * @description
-   * Crea los formularios secundarios para exportador, importador, remesa y diamantes.
-   */
-  crearFormulario(): void {
-    this.datosDelExportador = this.fb.group({
-      nombreExportador: [
-        {
-          value: 'INTEGRADORA DE URBANIZACIONES SIGNUM S DE RL DE CV',
-          disabled: true,
-        },
-      ],
-      direccionExportador: ['', [Validators.required]],
-    });
-
-    this.datosDelImportador = this.fb.group({
-      nombreImportador: ['', [Validators.required]],
-      direccionImportador: ['', [Validators.required]],
-    });
-
-    this.datosDeLaRemesa = this.fb.group({
-      numeroEnLetraDeLosLotes: ['',
-        [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS),]],
-      numeroEnLetraDeLosLotesEnIngles: ['', [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS),]],
-      numeroDeFactura: ['', [Validators.required, Validators.pattern(REG_X.SOLO_NUMEROS),]],
-    });
-
-    this.datosDeLosDiamantes = this.fb.group({
-      cantidadEnQuilates: ['', [Validators.required]],
-      valorDeLosDiamantes: ['', [Validators.required]],
-    });
   }
 
   /**
@@ -435,5 +481,15 @@ export class CertificadoKimberleyComponent implements OnInit, OnDestroy {
       'valorDeLosDiamantes'
     )?.value;
     this.tramite130203Store.actualizarEstado(VALOR_DE_LOS_DIAMANTES);
+  }
+
+  /**
+   * @description
+   * Método para limpiar las suscripciones al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+    this.destroyed$.next();
+    this.destroyed$.complete();
   }
 }

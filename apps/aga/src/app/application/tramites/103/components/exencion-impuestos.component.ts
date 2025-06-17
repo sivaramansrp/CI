@@ -1,6 +1,7 @@
-import { AlertComponent, CatalogoSelectComponent, ConsultaioQuery, ConsultaioState, InputCheckComponent, InputRadioComponent, REGEX_POSTAL, REGEX_TELEFONO_DIGITOS, TableBodyData, TableComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { AlertComponent, CatalogoSelectComponent, InputCheckComponent, InputRadioComponent, REGEX_POSTAL, REGEX_TELEFONO_DIGITOS, TableBodyData, TableComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Catalogo, Solicitud103State, Tramite103Store } from '../estados/tramite103.store';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -13,9 +14,10 @@ import { Tramite103Query } from '../estados/tramite103.query';
 import mercanciaTable from '@libs/shared/theme/assets/json/103/mercancia-table.json';
 
 /**
- * Componente para la gestión de exención de impuestos
- * 
- * @Component Decorador que define el componente Angular
+ * @componente
+ * @description
+ * Componente para la gestión de exención de impuestos.
+ * Maneja formularios, catálogos, tablas de mercancías y modales relacionados con el trámite.
  */
 @Component({
   selector: 'app-exencion-impuestos',
@@ -36,130 +38,128 @@ import mercanciaTable from '@libs/shared/theme/assets/json/103/mercancia-table.j
 })
 export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   /**
-   * Formulario principal del trámite
+   * Formulario principal para el trámite de exención de impuestos.
    */
   tramiteForm!: FormGroup;
 
   /**
-   * Formulario para agregar mercancías
+   * Formulario para agregar mercancías al trámite.
    */
   agregarMercanciasForm!: FormGroup;
 
   /**
-   * Sujeto para manejar la destrucción de observables
+   * Sujeto para manejar la finalización de observables al destruir el componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Estado actual de la solicitud
+   * Estado actual de la solicitud del trámite.
    */
   public solicitudState!: Solicitud103State;
 
   /**
-   * Encabezado de la tabla de mercancías
+   * Encabezados de la tabla de mercancías.
    */
   public mercanciaHeaderData: string[] = [];
 
   /**
-   * Cuerpo de la tabla de mercancías
+   * Datos del cuerpo de la tabla de mercancías.
    */
   public mercanciaBodyData: TableBodyData[] = [];
 
   /**
-   * Datos de la tabla de mercancías
+   * Datos de la tabla de mercancías obtenidos desde un archivo JSON.
    */
   public getMercanciaTableData = mercanciaTable;
 
   /**
-   * Catálogos seleccionados
+   * Catálogos de fechas seleccionadas.
    */
   fechasSeleccionadas: Catalogo[] = [];
 
   /**
-   * Lista de condiciones de mercancía disponibles
+   * Lista de condiciones disponibles para la mercancía.
    */
   condicionMercancia!: Catalogo[];
 
   /**
-   * Lista de unidades de medida disponibles
+   * Lista de unidades de medida disponibles.
    */
   unidadMedida!: Catalogo[];
 
   /**
-   * Lista de años disponibles
+   * Lista de años disponibles.
    */
   ano!: Catalogo[];
 
   /**
-   * Lista de países disponibles
+   * Lista de países disponibles.
    */
   pais!: Catalogo[];
 
   /**
-   * Lista de aduanas disponibles
+   * Lista de aduanas disponibles.
    */
   aduana!: Catalogo[];
 
   /**
-   * Lista de destinos de mercancía disponibles
+   * Lista de destinos disponibles para la mercancía.
    */
   destinoMercancia!: Catalogo[];
 
   /**
-   * Referencia al modal para agregar mercancías
+   * Referencia al elemento modal para agregar mercancías.
    */
   @ViewChild('modalAgregarMercancias') modalElement!: ElementRef;
 
   /**
-   * Referencia al modal de confirmación
+   * Referencia al elemento modal de confirmación.
    */
   @ViewChild('confirmarModal') confirmarModalElement!: ElementRef;
 
   /**
-   * Referencia al botón para cerrar el modal
+   * Referencia al botón para cerrar el modal.
    */
   @ViewChild('closeModal') closeModal!: ElementRef;
 
   /**
-   * Referencia al botón para cerrar el modal de confirmación
+   * Referencia al botón para cerrar el modal de confirmación.
    */
   @ViewChild('closeConfirmarModal') closeConfirmarModal!: ElementRef;
 
   /**
-   * Datos de las mercancías
+   * Datos de las mercancías registradas.
    */
   public datosDelMercancia: DatosDelMercancia[] = [];
 
   /**
-   * Valor seleccionado del radio
+   * Valor seleccionado en el grupo de opciones de radio.
    */
   valorSeleccionado!: string;
 
   /**
-   * Opciones de radio
+   * Opciones disponibles para el grupo de radio.
    */
   radioOpcions = RADIO_OPCIONS;
 
   /**
-   * @property {ConsultaioState} consultaDatos
-   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   * Estado actual de la consulta relacionada con el trámite.
    */
   consultaDatos!: ConsultaioState;
 
   /**
-   * @property {boolean} soloLectura
-   * @description Indica si el formulario o los campos están en modo de solo lectura.
-   * @default false
+   * Indica si el formulario está en modo de solo lectura.
    */
   soloLectura: boolean = false;
 
   /**
-   * Constructor del componente
-   * @param exencionImpuestoService Servicio para exención de impuestos
-   * @param store Almacén de estado del trámite
-   * @param query Consulta del estado del trámite
-   * @param fb Constructor de formularios
-   * @param validacionesService Servicio de validaciones
+   * Constructor del componente.
+   * @param {ExencionImpuestosService} exencionImpuestoService Servicio para operaciones de exención de impuestos.
+   * @param {Tramite103Store} store Almacén para el estado del trámite.
+   * @param {Tramite103Query} query Consulta para el estado del trámite.
+   * @param {FormBuilder} fb Constructor de formularios reactivos.
+   * @param {ValidacionesFormularioService} validacionesService Servicio para validaciones de formulario.
+   * @param {ConsultaioQuery} consultaioQuery Consulta para el estado de la consulta.
    */
   constructor(
     private exencionImpuestoService: ExencionImpuestosService,
@@ -171,10 +171,10 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   ) {}
 
   /**
-   * Inicialización del componente
+   * Método de inicialización del componente.
+   * Configura observables, inicializa catálogos y formularios.
    */
   ngOnInit(): void {
-
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -193,7 +193,8 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene el estado actual de la solicitud
+   * Obtiene el estado actual de la solicitud desde el almacén.
+   * @private
    */
   private obtenerEstadoSolicitud(): void {
     this.query.selectSolicitud$
@@ -207,7 +208,8 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Inicializa los catálogos necesarios
+   * Inicializa los catálogos necesarios para el formulario.
+   * @private
    */
   private inicializaCatalogos(): void {
     const ADUANA$ = this.exencionImpuestoService.getAduana().pipe(
@@ -252,7 +254,8 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Inicializa el formulario de donante y domicilio
+   * Inicializa los formularios principales con valores y validaciones.
+   * @private
    */
   private donanteDomicilio(): void {
     this.tramiteForm = this.fb.group({
@@ -270,7 +273,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
         telefono: [this.solicitudState?.telefono, [Validators.required, Validators.pattern(REGEX_TELEFONO_DIGITOS)]],
         correoElectronico: [this.solicitudState?.correoElectronico, [Validators.required, Validators.email, Validators.maxLength(50)]],
         pais: [this.solicitudState?.pais, [Validators.required]],
-        codigoPostal: [{ value: this.solicitudState?.codigoPostal, disabled: true }, [Validators.required, Validators.pattern(REGEX_POSTAL)], Validators.maxLength(8)],
+        codigoPostal: [{ value: this.solicitudState?.codigoPostal, disabled: true }, [Validators.required, Validators.pattern(REGEX_POSTAL)]],
         estado: [{ value: this.solicitudState?.estado, disabled: true }, [Validators.required, Validators.maxLength(50)]],
         colonia: [{ value: this.solicitudState?.colonia, disabled: true }, [Validators.required, Validators.maxLength(50)]],
         opcion: [this.solicitudState?.opcion]
@@ -295,31 +298,31 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene el grupo de formulario de exención de impuestos
-   * @returns FormGroup del formulario de exención de impuestos
+   * Obtiene el grupo de formulario para exención de impuestos.
+   * @returns {FormGroup} Grupo de formulario.
    */
   get exencionImpuestos(): FormGroup {
     return this.tramiteForm.get('exencionImpuestos') as FormGroup;
   }
 
   /**
-   * Obtiene el grupo de formulario de importador/exportador
-   * @returns FormGroup del formulario de importador/exportador
+   * Obtiene el grupo de formulario para importador/exportador.
+   * @returns {FormGroup} Grupo de formulario.
    */
   get importadorExportador(): FormGroup {
     return this.tramiteForm.get('importadorExportador') as FormGroup;
   }
 
   /**
-   * Obtiene el grupo de formulario de datos de mercancía
-   * @returns FormGroup del formulario de datos de mercancía
+   * Obtiene el grupo de formulario para datos de mercancía.
+   * @returns {FormGroup} Grupo de formulario.
    */
   get datosMercancia(): FormGroup {
     return this.agregarMercanciasForm.get('datosMercancia') as FormGroup;
   }
 
   /**
-   * Maneja la selección de aduana
+   * Maneja la selección de aduana y actualiza el almacén.
    */
   aduanaSeleccion(): void {
     const ADUANA = this.tramiteForm.get('exencionImpuestos.aduana')?.value;
@@ -327,7 +330,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja la selección de destino de mercancía
+   * Maneja la selección de destino de mercancía y actualiza el almacén.
    */
   destinoMercanciaSeleccion(): void {
     const DESTINO_MERCANCIA = this.tramiteForm.get('exencionImpuestos.destinoMercancia')?.value;
@@ -335,7 +338,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja la selección de condición de mercancía
+   * Maneja la selección de condición de mercancía y actualiza el almacén.
    */
   condicionMercanciaSeleccion(): void {
     const CONDICION_MERCANCIA = this.agregarMercanciasForm.get('datosMercancia.condicionMercancia')?.value;
@@ -343,7 +346,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja la selección de unidad de medida
+   * Maneja la selección de unidad de medida y actualiza el almacén.
    */
   unidadMedidaSeleccion(): void {
     const UNIDAD_MEDIDA = this.agregarMercanciasForm.get('datosMercancia.unidadMedida')?.value;
@@ -351,7 +354,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja la selección de año
+   * Maneja la selección de año y actualiza el almacén.
    */
   anoSeleccion(): void {
     const ANO = this.agregarMercanciasForm.get('datosMercancia.ano')?.value;
@@ -359,7 +362,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja la selección de país
+   * Maneja la selección de país y actualiza el almacén.
    */
   paisSeleccion(): void {
     const PAIS = this.tramiteForm.get('importadorExportador.pais')?.value;
@@ -367,7 +370,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja la selección de organismo público
+   * Maneja la selección de organismo público y actualiza el almacén.
    */
   organismoPublico(): void {
     const ORGANISMOPUBLICO = this.tramiteForm.get('exencionImpuestos.organismoPublico')?.value;
@@ -375,7 +378,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja la selección de vehículo
+   * Maneja la selección de vehículo y actualiza el almacén.
    */
   vehiculo(): void {
     const VEHICULO = this.agregarMercanciasForm.get('datosMercancia.vehiculo')?.value;
@@ -383,7 +386,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Valida el formulario de destinatario
+   * Valida el formulario de destinatario marcando todos los controles como tocados si es inválido.
    */
   validarDestinatarioFormulario(): void {
     if (this.tramiteForm.invalid) {
@@ -392,10 +395,10 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Establece valores en el store del trámite
-   * @param form Formulario del cual se obtiene el valor
-   * @param campo Nombre del campo del formulario
-   * @param metodoNombre Nombre del método en el store
+   * Establece un valor en el almacén a partir de un campo de formulario.
+   * @param {FormGroup} form Grupo de formulario.
+   * @param {string} campo Nombre del campo.
+   * @param {keyof Tramite103Store} metodoNombre Nombre del método en el almacén.
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite103Store): void {
     const VALOR = form.get(campo)?.value;
@@ -403,7 +406,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Abre el modal para agregar mercancías
+   * Abre el modal para agregar mercancías.
    */
   abrirDialogoMercancias(): void {
     if (this.modalElement) {
@@ -413,7 +416,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Cierra el modal actual
+   * Cierra el modal actualmente abierto.
    */
   cerrarModal(): void {
     if (this.closeModal) {
@@ -422,7 +425,8 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Agrega mercancías al formulario y cierra el modal
+   * Agrega mercancías al trámite si el formulario es válido.
+   * Actualiza la tabla y cierra el modal.
    */
   agregarMercancias(): void {
     if (!this.agregarMercanciasForm.valid) {
@@ -459,7 +463,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Abre el modal de confirmación si el formulario es válido
+   * Abre el modal de confirmación si el formulario de mercancías es válido.
    */
   agregarConfirmarModal(): void {
     if (this.agregarMercanciasForm.valid === true) {
@@ -474,7 +478,7 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Obtiene los datos de mercancías
+   * Inicializa los datos de la tabla de mercancías.
    */
   public obtenerMercancia(): void {
     this.mercanciaHeaderData = this.getMercanciaTableData?.mercanciaTable?.tableHeader;
@@ -482,8 +486,8 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Cambia el valor seleccionado del radio
-   * @param value Valor seleccionado
+   * Cambia el valor seleccionado en el grupo de radio y actualiza el almacén.
+   * @param {string | number} value Nuevo valor seleccionado.
    */
   cambiarRadio(value: string | number): void {
     this.valorSeleccionado = value as string;
@@ -491,14 +495,19 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método que se ejecuta al destruir el componente
+   * Método de limpieza al destruir el componente.
+   * Finaliza observables y libera recursos.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
 
-  inicializarEstadoFormulario(): void {
+  /**
+   * Inicializa el estado de los formularios según el modo de solo lectura.
+   * @private
+   */
+  private inicializarEstadoFormulario(): void {
     if (this.soloLectura) {
       this.tramiteForm?.disable();
       this.agregarMercanciasForm?.disable();
@@ -507,5 +516,4 @@ export class ExencionImpuestosComponent implements OnInit, OnDestroy {
       this.agregarMercanciasForm?.enable();
     }
   }
-
 }

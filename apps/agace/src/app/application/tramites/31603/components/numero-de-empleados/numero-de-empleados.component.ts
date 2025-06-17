@@ -1,6 +1,6 @@
 import { ANTERIORES_TABLA,Anteriores, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { Component, Inject, Input, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -18,12 +18,17 @@ import { RegistrosDeComercioExteriorService } from '../../services/registros-de-
 @Component({
   selector: 'app-numero-de-empleados',
   standalone: true,
+  providers: [BsModalService],
   imports: [CommonModule,ReactiveFormsModule,TablaDinamicaComponent,CatalogoSelectComponent],
   templateUrl: './numero-de-empleados.component.html',
   styleUrl: './numero-de-empleados.component.scss',
 })
 export class NumeroDeEmpleadosComponent implements OnInit,OnDestroy {
 
+    /**
+     * Indica si el formulario debe mostrarse en modo solo lectura.
+     */
+    @Input() esFormularioSoloLectura: boolean = false;
   /**
    * Un arreglo para almacenar datos del tipo `Anteriores`, que representa
    * información relacionada con el número de empleados. Esta propiedad se
@@ -86,6 +91,7 @@ export class NumeroDeEmpleadosComponent implements OnInit,OnDestroy {
    */
   constructor(
     private comercioExteriorSvc: RegistrosDeComercioExteriorService,
+    @Inject(BsModalService)
     private modalService: BsModalService,
     private fb: FormBuilder
   ) {

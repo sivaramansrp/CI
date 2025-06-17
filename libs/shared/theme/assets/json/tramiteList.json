@@ -626,7 +626,7 @@
     "id": 90,
     "tramite": 260214,
     "linkDashboard": "/cofepris/importacion-dispositivos-medicos-uso/contenedor-de-pasos",
-    "linkDepartment": "/cofepris/importacion-dispositivos-medicos-uso/contenedor-de-pasos",
+    "linkDepartment": "/pago/importacion-dispositivos-medicos-uso/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
@@ -640,7 +640,7 @@
     "id": 92,
     "tramite": 260216,
     "linkDashboard": "/cofepris/importacion-dispositivos-medicos-donacion/contenedor-de-pasos",
-    "linkDepartment": "/cofepris/importacion-dispositivos-medicos-donacion/contenedor-de-pasos",
+    "linkDepartment": "/pago/importacion-dispositivos-medicos-donacion/contenedor-de-pasos",
     "department": "cofepris"
   },
   {
@@ -1025,14 +1025,14 @@
     "id": 147,
     "tramite": 260213,
     "linkDashboard": "/cofepris/permiso-sanitario-medicos-uso-personal",
-    "linkDepartment": "/cofepris/permiso-sanitario-medicos-uso-personal",
+    "linkDepartment": "/pago/permiso-sanitario-medicos-uso-personal",
     "department": "cofepris"
   },
   {
     "id": 148,
     "tramite": 260217,
     "linkDashboard": "/cofepris/dispositivos-medicos-sin-registrar/contenedor-de-pasos",
-    "linkDepartment": "/cofepris/dispositivos-medicos-sin-registrar/contenedor-de-pasos",
+    "linkDepartment": "/pago/dispositivos-medicos-sin-registrar/contenedor-de-pasos",
     "department": "cofepris"
   },
   {

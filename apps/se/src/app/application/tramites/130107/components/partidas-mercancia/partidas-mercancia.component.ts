@@ -1,9 +1,10 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { FormGroup, ReactiveFormsModule, } from '@angular/forms';
 import { ImportacionesAgropecuariasState, ImportacionesAgropecuariasStore } from '../../estados/importaciones-agropecuarias.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { ImportacionesAgropecuariasQuery } from '../../estados/importaciones-agropecuarias.query';
 import { PARTIDAS } from '../../constantes/datos-de-la-solicitud.enum';
@@ -33,6 +34,11 @@ import { ServicioDeFormularioService } from '../../services/formulario-validacio
 
 export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
   /**
+  *
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
+  /**
    * @property destroy$
    * @description
    * Sujeto utilizado para destruir las suscripciones y evitar fugas de memoria.
@@ -52,7 +58,15 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
   public forma: FormGroup = new FormGroup({
     ninoFormGroup: new FormGroup({}),
   });
-
+  
+  /**
+   * @property seleccionados
+   * @description
+   * Lista de partidas seleccionadas en la tabla de partidas.
+   * 
+   * @type {Partidas[]}
+   */
+  public seleccionados: Partidas[] = [];
   /**
    * @property ninoFormGroup
    * @description
@@ -132,7 +146,7 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
     private importacionesAgropecuariasStore: ImportacionesAgropecuariasStore,
     private importacionesAgropecuariasQuery: ImportacionesAgropecuariasQuery,
     private servicioDeFormularioService: ServicioDeFormularioService
-  ) {}
+  ) { }
 
   /**
    * @method ngOnInit
@@ -159,7 +173,7 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
    * 
    * @param event Objeto que contiene el campo y el valor a actualizar.
    */
-  
+
   establecerCambioDeValor(event: { campo: string; valor: object | string }): void {
     if (event) {
       const VALID_VALUE = typeof event.valor === 'object' ? JSON.stringify(event.valor) : event.valor;
@@ -179,18 +193,44 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
   agregarPartida(): void {
     if (this.ninoFormGroup.valid) {
       const PRODUCTOS = {
-        cantidad: this.ninoFormGroup.get('cantidad')?.value,
-        unidad_de_medida: PLANTILLA_PRODUCTO.unidad_de_medida,
-        fraccion_arancelaria_tigie: PLANTILLA_PRODUCTO.fraccion_arancelaria_tigie,
-        descripcion: this.ninoFormGroup.get('descripcion')?.value,
-        precio_unitario: PLANTILLA_PRODUCTO.precio_unitario,
-        total_usd: this.ninoFormGroup.get('valorPartidaUsd')?.value,
+        cantidad: this.ninoFormGroup.get('partidasCantidad')?.value,
+        unidadDeMedida: PLANTILLA_PRODUCTO.unidad_de_medida,
+        fraccionArancelaria: PLANTILLA_PRODUCTO.fraccion_arancelaria_tigie,
+        descripcion: this.ninoFormGroup.get('partidasDescripcion')?.value,
+        precioUnitario: this.ninoFormGroup.get('valorPartidaUsd')?.value,
+        totalUsd: Number(PLANTILLA_PRODUCTO.precio_unitario)
       };
       this.datospartidas?.push(PRODUCTOS);
       this.ninoFormGroup.reset();
     }
   }
 
+  /**
+   * @method onSeleccionChange
+   * @description
+   * Método que maneja el cambio de selección en la tabla de partidas.
+   * Actualiza la lista de partidas seleccionadas.
+   * 
+   * @param event Lista de partidas seleccionadas.
+   */
+onSeleccionChange(event: Partidas[]): void {
+  this.seleccionados = event;
+}
+  /**
+   * @method eliminarSeleccionados
+   * @description
+   * Método que elimina las partidas seleccionadas de la lista de partidas.
+   * Limpia la selección después de eliminar las partidas.
+   */
+eliminarSeleccionados(): void {
+  this.seleccionados.forEach(row => {
+    const INDEX = this.datospartidas.indexOf(row);
+    if (INDEX > -1) {
+      this.datospartidas.splice(INDEX, 1);
+    }
+  });
+  this.seleccionados = [];
+}
   /**
    * @method ngOnDestroy
    * @description
@@ -199,5 +239,6 @@ export class PartidasDeLaMercanciaComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
+
   }
 }
