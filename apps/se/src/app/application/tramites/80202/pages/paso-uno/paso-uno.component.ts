@@ -1,10 +1,10 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, SeccionLibStore, SolicitanteComponent } from '@ng-mf/data-access-user';
 import { Subject,map, takeUntil } from 'rxjs';
-import { AnexoComponent } from '../../components/anexo/anexo.component';
+import { AnexoComponent } from '../../components/anexo.component';
 import { CommonModule } from '@angular/common';
-import { PermisoImmexDatosService } from '../../servicios/immex/permiso-immex-datos.service';
-import { immexRegistroform } from '../../modelos/immex-registro-de-solicitud-modality.model';
+import { PermisoImmexDatosService } from '../../services/permiso-immex-datos.service';
+import { ImmexAmplicationSensibleDatosDelFormulario } from '../../models/immex-ampliacion-sensibles.model';
 import { SECCIONES_TRAMITE_80202 } from '../../constants/immex-ampliacion-sensibles.enums';
 
 @Component({
@@ -15,7 +15,7 @@ import { SECCIONES_TRAMITE_80202 } from '../../constants/immex-ampliacion-sensib
   imports: [
         CommonModule,
         SolicitanteComponent,
-        Anexo1Component
+        AnexoComponent
   ]
 })
 export class PasoUnoComponent {
@@ -82,7 +82,7 @@ export class PasoUnoComponent {
       .subscribe((resp) => {
         if(resp){
         this.esDatosRespuesta = true;
-      this.permisoImmexDatosService.actualizarEstadoFormulario(resp?.immexRegistro || {} as immexRegistroform)
+      this.permisoImmexDatosService.actualizarEstadoFormulario(resp?.immexRegistro || {} as ImmexAmplicationSensibleDatosDelFormulario)
         }
       });
   }
