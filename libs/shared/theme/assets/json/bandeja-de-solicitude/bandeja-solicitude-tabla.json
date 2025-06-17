@@ -2259,6 +2259,32 @@
     "numeroDeProcedimiento": "261601"
   },
   {
+  "id": 6402,
+  "tipoDeTramite": "Solicitud de Permiso",
+  "fecha": "2023-10-01",
+  "fechaActualizacion": "2023-10-05",
+  "diasTranscurridos": "4",
+  "departamento": "AGA",
+  "numeroDeProcedimiento": "6402"
+  },
+  {
+    "id": 31202,
+    "tipoDeTramite": "Renovación Certificación IVA e IEPS Mod A",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "31202"
+},
+{ "id": 90303,
+    "tipoDeTramite": "Solicitudddd certificado CAM",
+    "fecha": "2022-10-05",
+    "fechaActualizacion": "2022-10-25",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "90303"
+  },
+  {
     "id": 240105,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
