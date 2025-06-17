@@ -2391,6 +2391,24 @@
     "diasTranscurridos": "4",
     "departamento": "SENER",
     "numeroDeProcedimiento": "130302"
+  },
+  {
+    "id": 110217,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "110217"
+  },
+  {
+    "id": 32507,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32507"
   }
  
 ]
