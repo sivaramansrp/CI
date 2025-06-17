@@ -71,6 +71,7 @@
               <i
                 class="bi bi-question-circle-fill"
                 style="margin-bottom: '5px'"
+                [title]="'Sólo para usuarios que cuenten con la contraseña UCON e importen productos cárnicos'"
               ></i
             ></label>
             <input
@@ -131,6 +132,7 @@
             name="regimen"
             [isDisabled]="esFormularioSoloLectura"
             (change)="setValoresStore()"
+            [tooltipQuestionCircle]="true"
           ></app-catalogo-select>
         </div>
     
