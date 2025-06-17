@@ -57,12 +57,10 @@ export class PermisoImmexDatosService {
    * @returns {void}
    */
    actualizarEstadoFormulario(DATOS:ImmexAmplicationSensibleDatosDelFormulario): void {
-    this.tramite80202Store.update((state) => ({
-      ...state,
-      datosFormulario: {
-        ...state.datosFormulario,
-        ...DATOS,
-      },
-    }));
+    this.tramite80202Store.setFraccionArancelariaSensibles(DATOS.fraccionArancelariaSensibles);
+    this.tramite80202Store.setFraccionArancelaria(DATOS.fraccionArancelaria);
+    this.tramite80202Store.setDescripcionDelProducto(DATOS.descripciondelproducto);
+    this.tramite80202Store.setTablaFraccionArancelaria(DATOS.tablaFraccionArancelaria);
+    this.tramite80202Store.setTablaFraccionDeImportacion(DATOS.tablaFraccionDeImportacion);
    }
 }
