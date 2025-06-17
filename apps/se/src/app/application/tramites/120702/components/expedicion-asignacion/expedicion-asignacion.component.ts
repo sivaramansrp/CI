@@ -20,13 +20,13 @@ import {
   MontoExpedirTablaDatos,
   TablaDatos,
 } from '../../models/expedicion-certificados-frontera.models';
+import { Solicitud120702State, Tramite120702Store } from '../../estados/tramite120702.store';
 import { Subject, map, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DescripcionCupoComponent } from '../descripcion-cupo/descripcion-cupo.component';
 import { ExpedicionCertificadosFronteraService } from '../../services/expedicion-certificados-frontera.service';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { Tramite120702Query } from '../../estados/tramite120702.query';
-import { Tramite120702Store, Solicitud120702State } from '../../estados/tramite120702.store';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 /**
  * Componente responsable de la sección de asignación de expedición de certificados.
@@ -68,27 +68,27 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
   /**
    * Texto para la etiqueta del campo fecha de inicio.
    */
-  fechaIncicioAsignacion = INPUT_FECHA_INICIO;
+  public fechaIncicioAsignacion = INPUT_FECHA_INICIO;
 
   /**
    * Texto para la etiqueta del campo fecha fin.
    */
-  fechaFinAsignacion = INPUT_FECHA_FIN;
+  public fechaFinAsignacion = INPUT_FECHA_FIN;
 
   /**
    * Datos de catálogo para el año del oficio.
    */
-  anoOficioDatos: Catalogo[] = [];
+  public anoOficioDatos: Catalogo[] = [];
 
   /**
    * Nombres de las columnas para la tabla de montos.
    */
-  montoTablaDatos: string[] = [];
+  public montoTablaDatos: string[] = [];
 
   /**
    * Filas de datos para la tabla de montos a expedir.
    */
-  montoTablaFilaDatos: TablaDatos[] = [];
+  public montoTablaFilaDatos: TablaDatos[] = [];
 
  /**
   * Indica si el formulario está en modo solo lectura.
@@ -142,6 +142,13 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
       this.inicializarEstadoFormulario();
     });
 
+    if (this.montoTablaFilaDatos.length === 0) {
+      const OBRA_DE_ARTE_ROW: TablaDatos = {
+      tbodyData: ["10"],
+    };
+    this.montoTablaFilaDatos.push(OBRA_DE_ARTE_ROW);
+  }
+
     this.expedicionCertificadosFronteraService
       .getAnoOficioDatos()
       .pipe(takeUntil(this.destroy$))
@@ -171,6 +178,16 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
       this.guardarDatosFormulario();
     } else {
        this.asignacionForm.enable();
+       this.asignacionForm.get('estado')?.disable();
+       this.asignacionForm.get('representacionFederal')?.disable();
+       this.asignacionForm.get('montoAsignado')?.disable();
+       this.asignacionForm.get('montoExpedido')?.disable();
+       this.asignacionForm.get('montoDisponible')?.disable();
+       this.asignacionForm.get('datosNumeroOficio')?.disable();
+       this.asignacionForm.get('fechaInicioVigencia')?.disable();
+       this.asignacionForm.get('fechaFinVigencia')?.disable();
+       this.asignacionForm.get('montoADisponible')?.disable();
+       this.asignacionForm.get('totalAExpedir')?.disable();
     }
   }
 
@@ -183,6 +200,12 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
     this.establecerAsignacionFormGroup();
     if (this.esFormularioSoloLectura) {
       this.asignacionForm.disable();
+      if (this.montoTablaFilaDatos.length === 0) {
+      const OBRA_DE_ARTE_ROW: TablaDatos = {
+      tbodyData: ["10"],
+    };
+    this.montoTablaFilaDatos.push(OBRA_DE_ARTE_ROW);
+  }
     } else if (!this.esFormularioSoloLectura) {
       this.asignacionForm.enable();
     } 
@@ -218,6 +241,14 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
       montoAExpedir: ['', [Validators.required]],
       totalAExpedir: [{ value: '', disabled: true }],
     });
+
+    this.asignacionForm.patchValue({
+      anoDelOficio:this.solicitudState.anoDelOficio,
+      numeroOficio:this.solicitudState.numeroOficio,
+      montoAExpedir:this.solicitudState.montoAExpedir,
+      fechaInicioVigencia:this.solicitudState.fechaInicioVigencia,
+      fechaFinVigencia:this.solicitudState.fechaFinVigencia,
+    })
   }
 
   /**
