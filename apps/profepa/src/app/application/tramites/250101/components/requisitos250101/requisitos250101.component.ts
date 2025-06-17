@@ -4,11 +4,12 @@ import { Component,OnDestroy,OnInit } from '@angular/core';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { Subject,map,takeUntil } from 'rxjs';
 import { Tramite250101State, Tramite250101Store } from '../../estados/tramite250101.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { INPUT_FECHA } from '../../constantes/flora-fauna.enum';
 import { ModalComponent } from '../modal/modal.component';
 import { Tramite250101Query } from '../../estados/tramite250101.query';
 import catalogoDatos from '@libs/shared/theme/assets/json/250101/banco.json';
-
+import reuisitosDatosDummy from '@libs/shared/theme/assets/json/250101/requisitos-datos-dummy.json';
 /**
  * Componente encargado de gestionar los requisitos y el transporte del trámite 250101.
  * Permite agregar elementos a las tablas dinámicas y almacenar los valores en el estado del store.
@@ -32,12 +33,12 @@ export class Requisitos250101Component implements OnInit, OnDestroy {
   /**
    * Catálogo de medios de transporte.
    */
-  medio: Catalogo[] =catalogoDatos.medio
+  public medio: Catalogo[] =catalogoDatos.medio
 
   /**
    * Catálogo de requisitos.
    */
-  requisitoCatalogo: Catalogo[] = catalogoDatos.requisito;
+  public requisitoCatalogo: Catalogo[] = catalogoDatos.requisito;
 
   /**
    * Tipo de selección para las tablas.
@@ -47,32 +48,32 @@ export class Requisitos250101Component implements OnInit, OnDestroy {
   /**
    * Configuración de la tabla de transporte.
    */
-  configuracionTransporteTabla: ConfiguracionColumna<Transporte>[] = CONFIGURATION_TABLA_TRANSPORTE;
+  public configuracionTransporteTabla: ConfiguracionColumna<Transporte>[] = CONFIGURATION_TABLA_TRANSPORTE;
 
   /**
    * Datos de la tabla de transporte.
    */
-  TransporteTabla: Transporte[] = [];
+  public TransporteTabla: Transporte[] = [];
 
   /**
    * Configuración de la tabla de requisitos.
    */
-  configuracionRequisitosTabla: ConfiguracionColumna<Requisito>[] = CONFIGURATION_TABLA_REQUISITOS;
+  public configuracionRequisitosTabla: ConfiguracionColumna<Requisito>[] = CONFIGURATION_TABLA_REQUISITOS;
 
   /**
    * Datos de la tabla de requisitos.
    */
-  RequisitosTabla: Requisito[] = [];
+  public requisitosTabla: Requisito[] = [];
 
   /**
    * Estado de visibilidad del modal de transporte.
    */
-  showtransporteModal = false;
+  public showtransporteModal = false;
 
   /**
    * Estado de visibilidad del modal de requisitos.
    */
-  showrequisitosModal = false;
+  public showrequisitosModal = false;
 
   /**
    * Formulario de transporte y requisitos.
@@ -88,6 +89,12 @@ export class Requisitos250101Component implements OnInit, OnDestroy {
    * Subject para destruir suscripciones y evitar fugas de memoria.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  public esFormularioSoloLectura: boolean = false;
  
   /**
    * Constructor que inyecta las dependencias necesarias.
@@ -107,10 +114,15 @@ export class Requisitos250101Component implements OnInit, OnDestroy {
       });
       this.tramite250101Store.setFechas(nuevo_valor);
     }
+  /**
+ * Constructor que inyecta el constructor de formularios y los servicios del store y queries.
+ * Permite gestionar el estado y las consultas del trámite 250101.
+ */
   constructor(
     private fb: FormBuilder,
     private tramite250101Store: Tramite250101Store,
-    private tramite250101Query: Tramite250101Query
+    private tramite250101Query: Tramite250101Query,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // Constructor que inyecta las dependencias necesarias
   }
@@ -129,6 +141,32 @@ export class Requisitos250101Component implements OnInit, OnDestroy {
       )
       .subscribe();
 
+      /**
+ * Si la tabla de transporte está vacía, se agrega una fila con datos dummy de identificación.
+ * Los campos número de identificación, número económico y placa se inicializan con el mismo valor.
+ */
+     if(this.TransporteTabla.length === 0){
+       const TRANSPORTE_FORMDATA = {
+        numeroIdentificacion: reuisitosDatosDummy.numeroIdentificacion,
+        numeroEconomico: reuisitosDatosDummy.numeroIdentificacion,
+        placa: reuisitosDatosDummy.numeroIdentificacion,
+       };
+       this.TransporteTabla.push(TRANSPORTE_FORMDATA);
+      }
+
+      /**
+ * Si la tabla de requisitos está vacía, se agrega una fila con datos dummy.
+ * Los campos incluyen número, fecha y tipo del requisito.
+ */
+       if(this.requisitosTabla.length === 0){
+       const REQUISITO_FORMDATA = {
+        No: reuisitosDatosDummy.No,
+        Fecha: reuisitosDatosDummy.Fecha,
+        Tipo: reuisitosDatosDummy.Tipo,
+       };
+       this.requisitosTabla.push(REQUISITO_FORMDATA);
+      }
+
     this.transporteForm = this.fb.group({
       medio: [this.solicitudState.medio, Validators.required],
       identificacion: [this.solicitudState.identificacion,[Validators.required,Validators.maxLength(16)]],
@@ -138,6 +176,58 @@ export class Requisitos250101Component implements OnInit, OnDestroy {
       fechas: [this.solicitudState.fechas,Validators.required],
       requisito: [this.solicitudState.requisito, Validators.required],
     });
+
+    /**
+ * Se suscribe al estado de la sección para actualizar el modo de solo lectura del formulario.
+ * Finaliza la suscripción automáticamente al destruirse el componente.
+ */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((seccionState) => {
+      this.esFormularioSoloLectura = seccionState.readonly;
+      this.inicializarEstadoFormulario();
+    });
+  }
+
+
+   /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.  
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+       this.transporteForm.enable();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+public guardarDatosFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.transporteForm.disable();
+      if(this.TransporteTabla.length === 0){
+       const TRANSPORTE_FORMDATA = {
+        numeroIdentificacion: reuisitosDatosDummy.numeroIdentificacion,
+        numeroEconomico: reuisitosDatosDummy.numeroIdentificacion,
+        placa: reuisitosDatosDummy.numeroIdentificacion,
+       };
+       this.TransporteTabla.push(TRANSPORTE_FORMDATA);
+      }
+       if(this.requisitosTabla.length === 0){
+       const REQUISITO_FORMDATA = {
+        No: reuisitosDatosDummy.No,
+        Fecha: reuisitosDatosDummy.Fecha,
+        Tipo: reuisitosDatosDummy.Tipo,
+       };
+       this.requisitosTabla.push(REQUISITO_FORMDATA);
+      }
+    } else if (!this.esFormularioSoloLectura) {
+      this.transporteForm.enable();
+    } 
   }
 
   /**
@@ -196,7 +286,7 @@ export class Requisitos250101Component implements OnInit, OnDestroy {
       Fecha: this.transporteForm.value.fechas,
       Tipo: this.requisitoCatalogo.find(item => item.id === Number(this.transporteForm.value.requisito))?.descripcion,
     };
-    this.RequisitosTabla.push(REQUISITO_FORMDATA);
+    this.requisitosTabla.push(REQUISITO_FORMDATA);
     this.showrequisitosModal = !this.showrequisitosModal;
   }
 
