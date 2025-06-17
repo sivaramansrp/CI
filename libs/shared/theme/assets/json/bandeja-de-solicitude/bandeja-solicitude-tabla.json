@@ -2366,6 +2366,15 @@
     "numeroDeProcedimiento": "120201"
   },
    {
+    "id": 130302,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2025-06-10",
+    "fechaActualizacion": "2025-06-16",
+    "diasTranscurridos": "4",
+    "departamento": "SENER",
+    "numeroDeProcedimiento": "130302"
+  },
+  {
     "id": 110217,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -2374,4 +2383,5 @@
     "departamento": "SE",
     "numeroDeProcedimiento": "110217"
   }
+ 
 ]
