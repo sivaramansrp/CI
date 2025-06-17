@@ -1350,15 +1350,6 @@
     "numeroDeProcedimiento": "80306"
   },
   {
-    "id": 260402,
-    "tipoDeTramite": "Solicitudddd",
-    "fecha": "2022-10-05",
-    "fechaActualizacion": "2022-10-25",
-    "diasTranscurridos": "3",
-    "departamento": "COFEPRIS",
-    "numeroDeProcedimiento": "260402"
-  },
-  {
     "id": 260401,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -2150,6 +2141,24 @@
     "departamento": "SEDENA",
     "numeroDeProcedimiento": "240121"
   },
+    {
+    "id": 90102,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "90102"
+  },
+    {
+    "id": 90202,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "90202"
+  },
   {
     "id": 240102,
     "tipoDeTramite": "Solicitud de Permiso",
@@ -2357,6 +2366,42 @@
     "numeroDeProcedimiento": "150101"
   },
   {
+    "id": 120201,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2025-06-10",
+    "fechaActualizacion": "2025-06-16",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "120201"
+  },
+   {
+    "id": 130302,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2025-06-10",
+    "fechaActualizacion": "2025-06-16",
+    "diasTranscurridos": "4",
+    "departamento": "SENER",
+    "numeroDeProcedimiento": "130302"
+  },
+  {
+    "id": 110217,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "110217"
+  },
+  {
+    "id": 32507,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32507"
+  },
+  {
     "id": 31801,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2025-12-06",
@@ -2365,4 +2410,5 @@
     "departamento": "AGACE",
     "numeroDeProcedimiento": "31801"
   }
+ 
 ]
