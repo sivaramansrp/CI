@@ -1,19 +1,6 @@
-import { CommonModule } from '@angular/common';
-
-import { Component } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
-
-import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs';
-
-import { AlertComponent } from '@ng-mf/data-access-user';
-import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogosService } from '@ng-mf/data-access-user';
-import { TEXTOS } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { CATALOGOS_ID,Catalogo, CatalogosService ,TEXTOS } from '@ng-mf/data-access-user';
+import { Component ,OnDestroy, OnInit } from '@angular/core';
+import { Subject,takeUntil } from 'rxjs';
 /**
  * @component PasoDosComponent
  * @description Componente correspondiente al segundo paso del flujo de solicitud.

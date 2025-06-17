@@ -30,6 +30,7 @@
         <textarea class="form-control" id="detalledelaSolicitud" rows="2" height="50"
         placeholder="" style="height: 100px" formControlName="detalledelaSolicitud" 
         (change)="setValoresStore(solicitudForm,'detalledelaSolicitud', 'setDetalledelaSolicitud')"
+        [disabled]="esFormularioSoloLectura"
        ></textarea>
       </div>
     </div>
@@ -38,7 +39,10 @@
 <div class="alert alert-info">
   <label style="font-weight: normal">
     <div class="col-md-1 mt-5">
-      <input type="checkbox" class="mt-5" />
+      <input type="checkbox" class="mt-5" formControlName="cumplocon" 
+      (change)="setValoresStore(solicitudForm,'cumplocon', 'setCumplocon')"
+      [disabled]="esFormularioSoloLectura"
+      />
       <b> *</b>
     </div>
     <div class="col-md-11 mt-4">{{ TEXTOS.TEXTOS_MANIFIESTOS}} </div>
@@ -50,6 +54,7 @@
     <label class="form-label" for="rfc">RFC*:</label>
     <input class="form-control" type="text" formControlName="rfc" [value]="rfc" 
     (change)="setValoresStore(solicitudForm,'rfc', 'setRfc')"
+    [disabled]="esFormularioSoloLectura"
     />
   </div>
   <div class="col-md-2 mt-4">
@@ -60,19 +65,23 @@
     <div class="col-md-4 mt-4">
       <label class="form-label" for="legalRazonSocial">Nombre o Razón Social*:</label>
       <input class="form-control" type="text" formControlName="legalRazonSocial" [value]="legalRazonSocial" 
-      (change)="setValoresStore(solicitudForm,'rfc', 'setRfc')"
+      (change)="setValoresStore(solicitudForm,'legalRazonSocial', 'setLegalRazonSocial')"
+      [disabled]="esFormularioSoloLectura"
       />
     </div>
     <div class="col-md-4 mt-4">
       <label class="form-label" for="apellidoPaterno">Apellido paterno*:</label>
       <input class="form-control" type="text" formControlName="apellidoPaterno"[value]="apellidoPaterno" 
       (change)="setValoresStore(solicitudForm,'apellidoPaterno', 'setApellidoPaterno')"
+      [disabled]="esFormularioSoloLectura"
+
       />
     </div>
     <div class="col-md-4 mt-4">
       <label class="form-label" for="apellidoMaterno">Apellido materno:</label>
       <input class="form-control" type="text" formControlName="apellidoMaterno" [value]="apellidoMaterno" 
       (change)="setValoresStore(solicitudForm,'apellidoMaterno', 'setApellidoMaterno')"
+      [disabled]="esFormularioSoloLectura"
       />
     </div>
   </div>

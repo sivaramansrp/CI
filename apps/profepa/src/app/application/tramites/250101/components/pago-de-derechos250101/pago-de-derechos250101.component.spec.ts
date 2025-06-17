@@ -1,3 +1,13 @@
+jest.mock('@libs/shared/theme/assets/json/250101/banco.json', () => ({
+  __esModule: true,
+  default: {
+    banco: [
+      { id: 1, descripcion: 'Banco 1' },
+      { id: 2, descripcion: 'Banco 2' }
+    ],
+  }
+}), { virtual: true });
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormBuilder, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { of } from 'rxjs';
@@ -6,11 +16,6 @@ import { Tramite250101Store } from '../../estados/tramite250101.store';
 import { Tramite250101Query } from '../../estados/tramite250101.query';
 import { CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite250101State } from '../../estados/tramite250101.store';
-
-// ✅ Mock the JSON imports
-jest.mock('@libs/shared/theme/assets/json/250101/banco.json', () => ({
-  banco: ['MockBank1', 'MockBank2'],
-}));
 
 jest.mock('@libs/shared/theme/assets/json/250101/pago-formdatos.json', () => ({
   formData: {
@@ -173,5 +178,28 @@ describe('PagoDeDerechos250101Component', () => {
     component.ngOnDestroy();
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  
+  it('should return early if pagoDerechosForm is undefined', () => {
+    component.pagoDerechosForm = undefined as any;
+    expect(() => component.inicializarEstadoFormulario()).not.toThrow();
+  });
+
+  it('should call guardarDatosFormulario if esFormularioSoloLectura is true', () => {
+    component.esFormularioSoloLectura = true;
+    const spy = jest.spyOn(component, 'guardarDatosFormulario');
+    component.inicializarEstadoFormulario();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should enable the form and disable specific controls if esFormularioSoloLectura is false', () => {
+    component.esFormularioSoloLectura = false;
+    component.pagoDerechosForm.disable();
+    component.inicializarEstadoFormulario();
+    expect(component.pagoDerechosForm.enabled).toBe(true);
+    expect(component.pagoDerechosForm.get('clave')?.disabled).toBe(true);
+    expect(component.pagoDerechosForm.get('dependencia')?.disabled).toBe(true);
+    expect(component.pagoDerechosForm.get('importe')?.disabled).toBe(true);
   });
 });
