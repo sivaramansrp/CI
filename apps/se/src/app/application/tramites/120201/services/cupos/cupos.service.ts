@@ -1,9 +1,9 @@
+import { ExpedicionCertificadosAsignacion120202State } from '../../../../estados/tramites/tramite120202.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { RespuestaCuposTabla } from '../../models/cupos.model';
-import { ExpedicionCertificadosAsignacion120202State } from '../../../../estados/tramites/tramite120202.store';
 
 /**
  * Servicio para obtener los catálogos de la aplicación.
