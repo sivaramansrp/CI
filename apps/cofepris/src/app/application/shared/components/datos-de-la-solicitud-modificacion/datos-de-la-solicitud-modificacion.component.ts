@@ -57,37 +57,37 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
    * @description
    * Formulario principal para capturar los datos de la solicitud.
    */
-  datosSolicitudform!: FormGroup;
+  public datosSolicitudform!: FormGroup;
 
   /**
    * @description
    * Formulario para capturar los manifiestos del representante.
    */
-  manifiestosRepresentanteForm!: FormGroup;
+  public manifiestosRepresentanteForm!: FormGroup;
 
   /**
    * @description
    * Formulario para capturar datos SCIAN.
    */
-  scianForm!: FormGroup;
+  public scianForm!: FormGroup;
 
   /**
    * @description
    * Datos SCIAN agregados por el usuario.
    */
-  personaparas: ScianModel[] = [];
+  public personaparas: ScianModel[] = [];
 
   /**
    * @description
    * Datos del catálogo SCIAN.
    */
-  scianJson: Catalogo[] = [];
+  public scianJson: Catalogo[] = [];
 
   /**
    * @description
    * Instancia del modal de Bootstrap.
    */
-  modalInstance!: Modal;
+  public modalInstance!: Modal;
 
   /**
    * @description
@@ -100,42 +100,42 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
    * @description
    * Textos de alerta utilizados en el componente.
    */
-  TEXTOS = ALERT;
+  public TEXTOS = ALERT;
   /**
    * @description
    * Mensaje de alerta para insumos.
    */
-  TEXTOS_INSUMOS = ALERT_INSUMOS;
+  public TEXTOS_INSUMOS = ALERT_INSUMOS;
 
   /**
    * @description
    * Clase CSS para las alertas.
    */
-  class = 'alert-warning';
+  public class = 'alert-warning';
 
   /**
    * @description
    * Configuración de columnas para la tabla de datos SCIAN.
    */
-  configuracionTabla: ConfiguracionColumna<ScianData>[] = SCIAN_DATA;
+  public configuracionTabla: ConfiguracionColumna<ScianData>[] = SCIAN_DATA;
 
   /**
    * @description
    * Configuración de selección de tabla.
    */
-  tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  public tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
    * @description
    * Datos cargados dinámicamente para la tabla SCIAN.
    */
-  datosData: ScianData[] = [];
+  public datosData: ScianData[] = [];
 
   /**
    * @description
    * Enum para la selección de tablas.
    */
-  tipoSeleccionTabla = TablaSeleccion;
+  public tipoSeleccionTabla = TablaSeleccion;
 
   /**
    * @description
@@ -147,7 +147,7 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
    * @description
    * Índice del elemento que se desea eliminar de la lista de pedimentos.
    */
-  elementoParaEliminar!: number;
+  public elementoParaEliminar!: number;
 
   /**
    * @description
@@ -159,43 +159,43 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
    * @description
    * Lista de pedimentos gestionados en el componente.
    */
-  pedimentos: Array<Pedimento> = [];
+  public pedimentos: Array<Pedimento> = [];
 
   /**
    * @description
    * Configuración de columnas de la tabla de mercancías.
    */
-  mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIAS_DATA;
+  public mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIAS_DATA;
 
   /**
    * @description
    * Datos de la tabla de mercancías.
    */
-  mercanciasTablaDatos: MercanciasInfo[] = [];
+  public mercanciasTablaDatos: MercanciasInfo[] = [];
 
   /**
    * @description
    * Texto de los manifiestos.
    */
-  mensajeManifiestos: string = '';
+  public mensajeManifiestos: string = '';
 
   /**
    * @description
    * Lista de estados disponibles.
    */
-  estado: Catalogo[] = [];
+  public estado: Catalogo[] = [];
 
   /**
    * @description
    * Opciones genéricas para el formulario.
    */
-  datosGenericos: PropietarioTipoPersona[] = [];
+  public datosGenericos: PropietarioTipoPersona[] = [];
 
   /**
    * @description
    * Opciones para el radio de información confidencial.
    */
-  informacionConfidencialRadioOption: PropietarioTipoPersona[] = [];
+  public informacionConfidencialRadioOption: PropietarioTipoPersona[] = [];
 
   /**
    * @description
@@ -207,7 +207,7 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
  * Indica si el formulario está en modo solo lectura.
  * Cuando es `true`, los campos del formulario no se pueden editar.
  */
-  esFormularioSoloLectura: boolean = false;
+  public esFormularioSoloLectura: boolean = false;
 
   /**
 * Abre el modal de confirmación para eliminar un pedimento.
