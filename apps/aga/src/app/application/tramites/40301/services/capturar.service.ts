@@ -1,10 +1,10 @@
-import { Solicitud40301State, Solicitud40301Store } from '../estados/tramite40301.store';
+import { Tramite40301State, Tramite40301Store } from '../estados/tramite40301.store';
 import { CaatNaviroMetaInfo } from '../modelos/caat-naviero.modalidad.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Solicitud40301Query } from '../estados/tramite40301.query';
+import { Tramite40301Query } from '../estados/tramite40301.query';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +13,8 @@ export class CapturarService {
   private baseUrl: string = 'assets/json/40301/';
 
   constructor(private http: HttpClient,
-              private solicitudStore: Solicitud40301Store,
-              private solicitudQuery: Solicitud40301Query) {
+              private tramite40301Store: Tramite40301Store,
+              private tramite40301Query: Tramite40301Query) {
     // Lógica del constructor aquí
   }
 
@@ -27,22 +27,22 @@ export class CapturarService {
    * Actualiza el estado del almacén con los valores predeterminados.
    */
   setInitialValues(): void {
-    this.solicitudStore.setInitialValues();
+    this.tramite40301Store.setInitialValues();
   }
 
   /**
-   * ## getSolicitudState
+   * ## gettramiteState
    * 
    * Obtiene el estado actual de la solicitud como un Observable.
    * 
    * ### Retorno
-   * Un `Observable` que emite el estado de la solicitud (`Solicitud40301State`).
+   * Un `Observable` que emite el estado de la solicitud (`Tramite40301State`).
    * 
    * ### Funcionalidad
    * Utiliza la consulta (`Query`) para seleccionar el estado actual del almacén.
    */
-  getSolicitudState(): Observable<Solicitud40301State> {
-    return this.solicitudQuery.select();
+  getTramiteState(): Observable<Tramite40301State> {
+    return this.tramite40301Query.select();
   }
 
   /**
