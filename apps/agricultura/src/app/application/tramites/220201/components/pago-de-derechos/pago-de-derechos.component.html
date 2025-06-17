@@ -12,7 +12,7 @@
               [isRequired]="true"
               [layout]="'horizontal'"
               formControlName="exentoPago"
-                 (change)="setValoresStore()"
+              (change)="setValoresStore()"
             ></app-input-radio>
           </div>
         </div>
@@ -22,17 +22,18 @@
             formControlName="justificacion"
             [label]="'Justificación'"
             [required]="true"
-        [isDisabled]="esFormularioSoloLectura"
+            [isDisabled]="esFormularioSoloLectura"
             name="justificacion"
-               (change)="setValoresStore()"
+            (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
-        <div class="col-md-8"></div>
+        <div class="col-md-8">
+        </div>
         <div class="col-md-4">
           <div class="form-group">
             <label class="form-label" for="nombreImportExport"
               >Clave de referencia*</label
-            >
+          >
             <input
               class="form-control"
               id="nombreImportExport"
@@ -40,7 +41,7 @@
               type="text"
               name="claveReferencia"
               formControlName="claveReferencia"
-                 (change)="setValoresStore()"
+              (change)="setValoresStore()"
             />
           </div>
         </div>
@@ -57,7 +58,7 @@
               libUppercase
               name="cadenaDependencia"
               formControlName="cadenaDependencia"
-                 (change)="setValoresStore()"
+              (change)="setValoresStore()"
             />
           </div>
         </div>
@@ -67,9 +68,9 @@
             formControlName="banco"
             [label]="'Banco'"
             [required]="true"
-             [isDisabled]="true"
+            [isDisabled]="true"
             name="banco"
-               (change)="setValoresStore()"
+            (change)="setValoresStore()"
           ></app-catalogo-select>
         </div>
         <div class="col-md-4">
@@ -85,7 +86,7 @@
               libUppercase
               name="llavePago"
               formControlName="llavePago"
-                 (change)="setValoresStore()"
+              (change)="setValoresStore()"
             />
           </div>
         </div>
@@ -111,7 +112,7 @@
               type="text"
               name="importePago"
               formControlName="importePago"
-                 (change)="setValoresStore()"
+              (change)="setValoresStore()"
             />
           </div>
         </div>
