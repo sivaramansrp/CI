@@ -1,3 +1,4 @@
+import { Tramite260304State, Tramite260304Store } from '../estados/tramite260304Store.store';
 import { Facturador } from '../../../shared/models/terceros-relacionados.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -16,7 +17,7 @@ export class ExportacionMedicamentosContenganService {
    */
   private jsonUrl = 'assets/json/260304/';
   
-  constructor(public httpServicios: HttpClient) {
+  constructor(public httpServicios: HttpClient, public store: Tramite260304Store) {
     // Constructor necesario para inyectar el servicio HttpClient
   }
 
@@ -31,5 +32,32 @@ export class ExportacionMedicamentosContenganService {
     return this.httpServicios.get<Facturador>(
       this.jsonUrl + 'buscar-otros.json'
     );
+  }
+
+  /**
+   * Obtiene los datos del formulario de certificados de origen desde un archivo JSON local.
+   * @returns {Observable<DestruccionState>} Observable con el estado del trámite.
+   */
+  public getAcuiculturaData(): Observable<Tramite260304State> {
+    return this.httpServicios.get<Tramite260304State>('assets/json/260304/forma.json');
+  }
+
+  /**
+   * Actualiza el estado completo del formulario en el store de acuicultura.
+   * Cada campo del objeto recibido es asignado al store correspondiente.
+   * 
+   * @param DATOS Objeto de tipo DestruccionState con los datos a actualizar.
+   */
+  public actualizarEstadoFormulario(DATOS: Tramite260304State): void {
+    this.store.updateOpcionConfigDatos(DATOS.opcionConfigDatos);
+    this.store.updateDestinatarioTablaDatos(DATOS.destinatarioTableDatos);
+    this.store.updateOtrosTablaDatos(DATOS.otrosTablaDatos);
+    this.store.updateOpcionConfigDatos(DATOS.opcionConfigDatos);
+    this.store.updateSeleccionadoOtrosDatos(DATOS.seleccionadoOtrosDatos ?? []);
+    this.store.updateSeleccionadoDestinatarioDatos(DATOS.seleccionadoDestinatarioDatos ?? []);
+    this.store.updateScianConfigDatos(DATOS.scianConfigDatos);
+    this.store.updateTablaMercanciasConfigDatos(DATOS.tablaMercanciasConfigDatos);
+    this.store.updatePagoDerechos(DATOS.pagoDerechos);
+    this.store.updateTabSeleccionado(DATOS.tabSeleccionado ?? 0);
   }
 }

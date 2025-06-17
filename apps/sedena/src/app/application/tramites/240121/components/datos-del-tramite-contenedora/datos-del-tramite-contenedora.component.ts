@@ -1,5 +1,7 @@
+import { Subject, map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { FormBuilder } from '@angular/forms';
@@ -9,11 +11,9 @@ import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.mo
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
 import { Tramite240121Query } from '../../estados/tramite240121Query.query';
 import { Tramite240121Store } from '../../estados/tramite240121Store.store';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
-import { takeUntil } from 'rxjs';
 /**
  * @title Datos del Trámite Contenedora
  * @description Componente contenedor que se encarga de enlazar el estado del trámite con el componente de datos del trámite.
@@ -62,7 +62,14 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @memberof DatosDelTramiteContenedoraComponent
    */
   public datosMercanciaTabla: MercanciaDetalle[] = [];
-
+  /**
+ * Indica si el formulario debe mostrarse en modo solo lectura.
+ *
+ * @type {boolean}
+ * @memberof DatosDelTramiteContenedoraComponent
+ * @default false
+ */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Estado actual del formulario de datos del trámite.
    * 
@@ -88,6 +95,7 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    * @param {Tramite240121Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
    * @param {Tramite240121Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
    * @param {ValidacionesFormularioService} validacionesService - Servicio para validar formularios.
+   * @param {ConsultaioQuery} consultaQuery - Query para obtener datos de consulta de usuario.
    * @memberof DatosDelTramiteContenedoraComponent
    */
   constructor(
@@ -95,6 +103,7 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
     private tramiteQuery: Tramite240121Query,
     private tramiteStore: Tramite240121Store,
     private validacionesService: ValidacionesFormularioService,
+    private consultaQuery: ConsultaioQuery
   ) {
     this.crearFormCombinacion();
   }
@@ -119,6 +128,14 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.datosDelTramiteFormState = data;
       });
+       this.consultaQuery.selectConsultaioState$
+            .pipe(
+              takeUntil(this.unsubscribe$),
+              map((seccionState) => {
+                this.esFormularioSoloLectura = seccionState.readonly;
+              })
+            )
+            .subscribe();
   }
 
   /**

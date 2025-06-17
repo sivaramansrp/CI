@@ -1,8 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
-import { CATALOGOS_ID } from '@ng-mf/data-access-user';
+import { AlertComponent, AnexarDocumentosComponent, CATALOGOS_ID, TituloComponent } from '@ng-mf/data-access-user';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { CatalogosService } from '@ng-mf/data-access-user';
 
@@ -20,6 +20,12 @@ import { TEXTOS_REQUISITOS } from '../../constants/importacion-armas-municiones.
   selector: 'app-paso-dos',
   templateUrl: './paso-dos.component.html',
   styleUrl: './paso-dos.component.scss',
+  standalone: true,
+  imports: [
+    AlertComponent,
+    TituloComponent,
+    AnexarDocumentosComponent
+  ],
 })
 export class PasoDosComponent implements OnInit, OnDestroy {
   /**
@@ -64,6 +70,20 @@ export class PasoDosComponent implements OnInit, OnDestroy {
    * @type {Subject<void>}
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * @output
+   * @description Evento emitido para reenviar el evento actual.
+   * @type {EventEmitter<void>}
+   */
+  @Output() reenviarEvento = new EventEmitter<void>();
+
+  /**
+   * Evento emitido para regresar a la sección de carga de documento.
+   * 
+   * @event regresarSeccionCargarDocumentoEvento
+   */
+  @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>()
 
   /**
    * @constructor
