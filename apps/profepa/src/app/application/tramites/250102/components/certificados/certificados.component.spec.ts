@@ -10,11 +10,9 @@ describe('CertificadosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      // Import the module that declares CertificadosComponent, e.g., CertificadosModule
-      // Replace 'CertificadosModule' with the actual module name if different
       imports: [CertificadosComponent],
       declarations: [],
-      schemas: [NO_ERRORS_SCHEMA] // Para ignorar errores de componentes hijos
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
 
     fixture = TestBed.createComponent(CertificadosComponent);
