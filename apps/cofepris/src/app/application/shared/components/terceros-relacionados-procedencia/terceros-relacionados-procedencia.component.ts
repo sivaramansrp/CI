@@ -108,6 +108,9 @@ export class TercerosRelacionadosProcedenciaComponent implements OnInit {
     this.tercerosProcedenciaService.getInformacioDeTabla().pipe(takeUntil(this.destroy$)).subscribe((data) => {
       this.fabricanteHeaderData = data.columns
     });
+     this.tercerosProcedenciaService.getFabricanteDatos().pipe(takeUntil(this.destroy$)).subscribe((data) => {
+      this.fabricanteRowData = data;
+    });
   }
 
   /**

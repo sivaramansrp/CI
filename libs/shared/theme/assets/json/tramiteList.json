@@ -352,8 +352,8 @@
   {
     "id": 51,
     "tramite": 120201,
-    "linkDashboard": "/se/expedicion-certificados-asignacion-directa-fisica/fisica",
-    "linkDepartment": "/pago/expedicion-certificados-asignacion-directa-fisica/fisica",
+    "linkDashboard": "/se/cupos/persona-fisica",
+    "linkDepartment": "/pago/cupos/persona-fisica",
     "department": "se"
   },
   {
@@ -835,8 +835,8 @@
   {
     "id": 120,
     "tramite": 120202,
-    "linkDashboard": "/se/expedicion-certificados-asignacion-directa-moral/moral",
-    "linkDepartment": "/pago/expedicion-certificados-asignacion-directa-moral/moral",
+    "linkDashboard": "/se/expedicion-certificado-asignacion/persona-moral",
+    "linkDepartment": "/pago/expedicion-certificado-asignacion/persona-moral",
     "department": "se"
   },
   {
@@ -1032,7 +1032,7 @@
     "id": 148,
     "tramite": 260217,
     "linkDashboard": "/cofepris/dispositivos-medicos-sin-registrar/contenedor-de-pasos",
-    "linkDepartment": "/cofepris/dispositivos-medicos-sin-registrar/contenedor-de-pasos",
+    "linkDepartment": "/pago/dispositivos-medicos-sin-registrar/contenedor-de-pasos",
     "department": "cofepris"
   },
   {

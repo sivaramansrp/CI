@@ -251,14 +251,37 @@ export const CONFIGURACION_ACCIONISTAS_TABLA = [
   },
 ];
    
-// Interfaz que define la estructura de un elemento añadido.
+/**
+ * Interfaz que define las propiedades de un elemento añadido en el trámite de permiso de exportación.
+ * 
+ * Esta interfaz es utilizada para representar los elementos que se añaden a la solicitud de permiso,
+ * incluyendo detalles como la descripción, dimensiones y presentación del elemento.
+ */
 export interface Elemento {
-  descElementoAnadido: string; // Descripción del elemento añadido.
-  idElementoAnadido: string; // ID del elemento añadido.
-  descripcionPresentacion: string; // Descripción de la presentación del elemento.
-  alto: number; // Altura del elemento.
-  ancho: number; // Ancho del elemento.
-  profundidad: number; // Profundidad del elemento.
+  /**
+   * Propiedades del elemento añadido.
+   */
+  descElementoAnadido: string;
+  /**
+   * ID del elemento añadido.
+   */
+  idElementoAnadido: string;
+  /**
+   * Descripción de la presentación del material del elemento.
+   */
+  descripcionPresentacion: string;
+  /**
+   * Dimensiones del elemento añadido.
+   */
+  alto: number;
+  /**
+   * Ancho del elemento añadido.
+   */
+  ancho: number;
+  /**
+   * Profundidad del elemento añadido.
+   */
+  profundidad: number;
 }
 
 // Configuración de la tabla para mostrar los datos de los elementos añadidos.

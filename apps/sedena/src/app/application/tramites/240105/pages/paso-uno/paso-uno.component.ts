@@ -4,11 +4,14 @@ import { DatosDelTramiteContenedoraComponent } from '../../components/datos-del-
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
+
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { ImportaciónDeSustanciasQuímicasService } from '../../services/importación-de-sustancias-químicas.service';
 import { Subject } from 'rxjs';
 import { TercerosRelacionadosContenedoraComponent } from '../../components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
 import { Tramite240105Query } from '../../estados/tramite240105Query.query';
 import { Tramite240105Store } from '../../estados/tramite240105Store.store';
+import { map} from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -46,15 +49,36 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Initializes the component with required query and store for state management.
+   * Esta variable se utiliza para almacenar el índice del subtítulo.
+   */
+  public consultaState!: ConsultaioState;
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+  /**
+   * Inicializa el componente con las dependencias necesarias para la gestión de estado.
    *
-   * @param Tramite260210Query Query to access procedure state.
-   * @param tramite260214Store Store to update procedure state.
+   * @param tramite240105Query Consulta el estado del trámite.
+   * @param tramite240105Store Permite actualizar el estado del trámite.
+   * @param consultaQuery Consulta el estado del solicitante.
+   * @param sustanciasQuímicasService Servicio para la gestión de importación de sustancias químicas.
    */
   constructor(
     private tramite240105Query: Tramite240105Query,
-    private tramite240105Store: Tramite240105Store // eslint-disable-next-line no-empty-function
-  ) {}
+    private tramite240105Store: Tramite240105Store,
+    private consultaQuery: ConsultaioQuery,
+    private sustanciasQuímicasService: ImportaciónDeSustanciasQuímicasService
+    // eslint-disable-next-line no-empty-function
+  ) {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
+  }
 
   /**
    * Angular lifecycle method that runs on component initialization.
@@ -67,6 +91,27 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((tab) => {
         this.indice = tab;
+      });
+    if (this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+
+  /**
+   * Guarda los datos del formulario obtenidos del servicio.
+   */
+  guardarDatosFormulario(): void {
+    this.sustanciasQuímicasService
+      .obtenerRegistroTomarMuestrasDatos().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp) {
+          this.esDatosRespuesta = true;
+          this.sustanciasQuímicasService.actualizarEstadoFormulario(resp);
+        }
       });
   }
 
