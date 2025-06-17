@@ -179,7 +179,7 @@ export class DatosestablecimientoComponent implements OnInit, OnDestroy {
     this.crearFormulario();
     if (this.esFormularioSoloLectura) {
       this.datosdelestablecimiento.disable();
-    } else if (!this.esFormularioSoloLectura) {
+    } else{
       this.datosdelestablecimiento.enable();
     }
   }

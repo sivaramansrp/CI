@@ -64,13 +64,13 @@ export class TercerosRelacionadosFabricanteComponent {
    * Esto se utiliza para definir las configuraciones y propiedades de la tabla
    * en el componente "Terceros Relacionados".
    */
-  public configuracionFabricante = FABRICANTE_TABLA;
+  public configuracionFabricante: Array<{ encabezado: string; clave: keyof Fabricante }> = FABRICANTE_TABLA as Array<{ encabezado: string; clave: keyof Fabricante }>;
   /**
    * Objeto de configuración para la tabla "Otros".
    * Esta propiedad se inicializa con la constante `OTROS_TABLA`,
    * que define la estructura y configuraciones para la tabla.
    */
-  public configuracionOtros = OTROS_TABLA;
+  public configuracionOtros: Array<{ encabezado: string; clave: keyof Fabricante }> = OTROS_TABLA as Array<{ encabezado: string; clave: keyof Fabricante }>;
 
   /**
    * Una propiedad pública que contiene los datos o la configuración para el componente.
@@ -85,7 +85,7 @@ export class TercerosRelacionadosFabricanteComponent {
    * @type {ConfiguracionColumna<Fabricante>[]} Configuración de las columnas de la tabla.
    */
   public configuracionTabla: ConfiguracionColumna<Fabricante>[] =
-    this.generateConfiguracionTabla(this.configuracionFabricante);
+    TercerosRelacionadosFabricanteComponent.generateConfiguracionTabla(this.configuracionFabricante);
   /**
    * @public
    * @property {ConfiguracionColumna<Fabricante>[]} configuracionFacturadorTabla
@@ -95,7 +95,7 @@ export class TercerosRelacionadosFabricanteComponent {
    * por `configuracionFabricante` a través del método `generateConfiguracionTabla`.
    */
   public configuracionFacturadorTabla: ConfiguracionColumna<Fabricante>[] =
-    this.generateConfiguracionTabla(this.configuracionFabricante);
+    TercerosRelacionadosFabricanteComponent.generateConfiguracionTabla(this.configuracionFabricante);
   /**
    * Configuración de la tabla para "Proveedor".
    *
@@ -103,7 +103,7 @@ export class TercerosRelacionadosFabricanteComponent {
    * a través del método `generateConfiguracionTabla`.
    */
   public configuracionProveedorTabla: ConfiguracionColumna<Fabricante>[] =
-    this.generateConfiguracionTabla(this.configuracionFabricante);
+    TercerosRelacionadosFabricanteComponent.generateConfiguracionTabla(this.configuracionFabricante);
   /**
    * Configuración de la tabla para el certificado analítico relacionado con los fabricantes.
    *
@@ -113,14 +113,14 @@ export class TercerosRelacionadosFabricanteComponent {
    * @type {ConfiguracionColumna<Fabricante>[]} - Arreglo de configuraciones de columnas para la tabla.
    */
   public configuracionCertificadoAnaliticoTabla: ConfiguracionColumna<Fabricante>[] =
-    this.generateConfiguracionTabla(this.configuracionFabricante);
+    TercerosRelacionadosFabricanteComponent.generateConfiguracionTabla(this.configuracionFabricante);
   /**
    * Configuración de la tabla para los datos de "Otros".
    *
    * @type {ConfiguracionColumna<Otros>[]} Configuración de las columnas de la tabla.
    */
   public configuracionOtrosTabla: ConfiguracionColumna<Otros>[] =
-    this.generateConfiguracionTabla(this.configuracionOtros);
+    TercerosRelacionadosFabricanteComponent.generateConfiguracionTabla(this.configuracionOtros);
   /**
    * Subject para notificar la destrucción del componente.
    */
@@ -148,8 +148,7 @@ export class TercerosRelacionadosFabricanteComponent {
           )
           .subscribe()
       }
-  /* eslint-disable @typescript-eslint/no-explicit-any */
-  /* eslint-disable class-methods-use-this */
+
   /**
    * Genera un arreglo de configuración para una tabla basado en el arreglo de datos proporcionado.
    *
@@ -163,12 +162,10 @@ export class TercerosRelacionadosFabricanteComponent {
    *   - `clave`: Una función que obtiene el valor de la clave especificada de un objeto de datos.
    *   - `orden`: El orden de la columna, comenzando desde 1.
    */
-  generateConfiguracionTabla(datosArray: any): ConfiguracionColumna<any>[] {
-    const FIELDS: Array<{ encabezado: string; clave: keyof Fabricante }> =
-      datosArray;
-    return FIELDS.map((field, index) => ({
+  static generateConfiguracionTabla(datosArray: Array<{ encabezado: string; clave: keyof Fabricante }>): ConfiguracionColumna<Fabricante>[] {
+    return datosArray.map((field, index) => ({
       encabezado: field.encabezado,
-      clave: (item: any) => item[field.clave],
+      clave: (item: Fabricante) => item[field.clave],
       orden: index + 1,
     }));
   }

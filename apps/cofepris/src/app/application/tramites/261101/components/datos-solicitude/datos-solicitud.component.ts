@@ -236,7 +236,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.crearFormulario();
     if (this.esFormularioSoloLectura) {
       this.preOperativeForm.disable();
-    } else if (!this.esFormularioSoloLectura) {
+    } else{
       this.preOperativeForm.enable();
     }
   }
