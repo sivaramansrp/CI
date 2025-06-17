@@ -184,9 +184,6 @@ export class SectoresYMercanciasComponent implements OnInit, OnDestroy {
     } else {
       this.inicializarFormulario();
     }
-    // if(this.esFormularioSoloLectura || this.esFormularioActualizacion) {
-    //   this.fetchTableDummyJson();
-    // }
   }
 
   /**
