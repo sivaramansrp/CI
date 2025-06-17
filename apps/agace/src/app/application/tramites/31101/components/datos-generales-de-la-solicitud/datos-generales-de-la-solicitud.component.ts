@@ -206,7 +206,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
       .pipe(
         takeUntil(this.destroy$),
         map((seccionState) => {
-          this.esFormularioSoloLectura = !seccionState.readonly;
+          this.esFormularioSoloLectura = seccionState.readonly;
           this.inicializarEstadoFormulario();
         })
       )
