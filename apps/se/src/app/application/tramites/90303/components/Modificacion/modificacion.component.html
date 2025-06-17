@@ -1,14 +1,15 @@
+<form [formGroup]="modificacionForm" (ngSubmit)="validarDestinatarioFormulario()">
 <div class="row mt-5">
     <div class="col-md-6">
       <div class="form-group">
         <label class="form-label" for="registroFederalContribuyentes">Registro Federal de Contribuyentes:</label>
-        <input class="form-control gris-color" type="text" id="registroFederalContribuyentes" formControlName="registroFederalContribuyentes">
+        <input class="form-control gris-color" type="text" id="registroFederalContribuyentes" formControlName="registroFederalContribuyentes" [disabled]="soloLectura" readonly>
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
         <label class="form-label" for="representacionFederal">Representación federal:</label>
-        <input class="form-control gris-color" type="text" id="representacionFederal" formControlName="representacionFederal">
+        <input class="form-control gris-color" type="text" id="representacionFederal" formControlName="representacionFederal" [disabled]="soloLectura" readonly >
       </div>
     </div>
   </div>
@@ -16,19 +17,19 @@
     <div class="col-md-6">
       <div class="form-group">
         <label class="form-label" for="tipoModificacion">Tipo de modificación:</label>
-        <input class="form-control gris-color" type="text" id="tipoModificacion" formControlName="tipoModificacion">
+        <input class="form-control gris-color" type="text" id="tipoModificacion" formControlName="tipoModificacion" [disabled]="soloLectura" readonly>
       </div>
     </div>
     <div class="col-md-6">
       <div class="form-group">
         <label class="form-label" for="modificacionPrograma">Modificación de programa:</label>
-        <input class="form-control gris-color" type="text" id="modificacionPrograma" formControlName="modificacionPrograma">
+        <input class="form-control gris-color" type="text" id="modificacionPrograma" formControlName="modificacionPrograma" [disabled]="soloLectura" readonly>
       </div>
     </div>
   </div>
   <!-- Lista de domicilios -->
   <ng-titulo titulo="Lista de domicilios" />
-    <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.BUTTON" [configuracionTabla]="listaTabla" (click)="onFilaClic($event)" [datos]="listaTablaDatos" ></app-tabla-dinamica>
+    <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.BUTTON" [configuracionTabla]="listaTabla" [desactivarButton]="soloLectura" (click)="onFilaClic($event)" [datos]="listaTablaDatos" ></app-tabla-dinamica>
   <!-- Plantas -->
   <ul class="nav nav-tabs">
     <li class="nav-item">
@@ -42,3 +43,4 @@
   <app-producir-mercancias [mercanciasProducir]="listaTablaMercancia"></app-producir-mercancias>
   <!-- Productor indirecto -->
   <app-productor-indirecto [productoIndirectoDatos]="listaTablaProductor"></app-productor-indirecto>
+  </form>
