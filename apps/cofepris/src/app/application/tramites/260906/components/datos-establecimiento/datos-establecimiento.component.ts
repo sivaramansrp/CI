@@ -1,5 +1,6 @@
 import { AL_DAR, AlertComponent, InputRadioComponent, Notificacion, NotificacionesComponent, Pedimento, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud260906State, Tramite260906Store } from '../../../../estados/tramites/tramite260906.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -7,14 +8,10 @@ import { CommonModule } from '@angular/common';
 import { DomicilloComponent } from '../domicillo/domicillo.component';
 import { ManifiestosComponent } from '../manifiestos/manifiestos.component';
 import { RepresentanteLegalComponent } from '../representante-legal/representanteLegal.component';
-import { SolicitudDatosService } from '../../services/solicitud-datos.service';
 import { Tramite260906Query } from '../../../../estados/queries/tramite260906.query';
 import tipoOperacion from '@libs/shared/theme/assets/json/260906/tipoOperacion.json';
 
 /**
- * @component
- * @name DatosEstablecimientoComponent
- * @description
  * Componente responsable de gestionar y mostrar los datos principales del formulario,
  * incluyendo domicilio, manifiestos y representante legal.
  */
@@ -37,81 +34,63 @@ import tipoOperacion from '@libs/shared/theme/assets/json/260906/tipoOperacion.j
 })
 export class DatosEstablecimientoComponent implements OnInit, OnDestroy {
 
+  /** Lista de pedimentos asociados */
   pedimentos: Array<Pedimento> = [];
+  
+  /** Índice del elemento a eliminar */
   elementoParaEliminar!: number;
+  
+  /** Configuración para nueva notificación */
   public nuevaNotificacion!: Notificacion;
 
-  /**
-   * Indica si un campo es requerido o no.
-   * @type {boolean}
-   * @default false
-   */
+  /** Indica si un campo es requerido o no */
   noRequerido: boolean = false;
 
-  /**
-   * Estado de la solicitud.
-   * @type {Solicitud260906State}
-   */
+  /** Estado de la solicitud */
   public solicitudState!: Solicitud260906State;
 
-  /**
-   * Notificador para destruir observables y evitar memory leaks.
-   * @private
-   * @type {Subject<void>}
-   */
+  /** Notificador para destruir observables y evitar memory leaks */
   private destroyNotifier$: Subject<void> = new Subject();
 
-  /**
-   * Grupo de formularios principal.
-   * @type {FormGroup}
-   */
+  /** Grupo de formularios principal */
   public forma!: FormGroup;
 
-  /**
-   * Opciones para los radio buttons, cargadas desde un archivo JSON.
-   * @type {RadioOptions[]}
-   */
+  /** Opciones para los radio buttons */
   radioOptions = tipoOperacion;
 
-  /**
-   * Indica si la sección es colapsable.
-   * @type {boolean}
-   * @default true
-   */
+  /** Indica si la sección es colapsable */
   public colapsable: boolean = true;
 
-  /**
-   * Constantes importadas desde el archivo de enumeración que contienen textos importantes y advertencias.
-   * @type {typeof AL_DAR}
-   */
+  /** Constantes con textos importantes y advertencias */
   public TEXTOS = AL_DAR;
+  
+  /** Estado actual de la consulta */
+  consultaDatos!: ConsultaioState;
+  
+  /** Indica si el formulario está en modo solo lectura */
+  soloLectura: boolean = false;
 
   /**
-   * @constructor
-   * Inicializa el componente y gestiona la inyección de dependencias necesarias.
-   *
-   * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
-   * @param {Tramite260906Store} tramite260906Store - Store para gestionar el estado del trámite.
-   * @param {Tramite260906Query} tramite260906Query - Consulta para obtener datos del estado del trámite.
-   * @param {SolicitudDatosService} solicitudDatosService - Servicio para gestionar datos de la solicitud.
+   * Constructor que inyecta dependencias necesarias
+   * 
+   * @param fb Servicio para construir formularios reactivos
+   * @param tramite260906Store Store para gestionar el estado del trámite
+   * @param tramite260906Query Consulta para obtener datos del estado del trámite
+   * @param consultaioQuery Consulta para obtener datos de la consulta
    */
   constructor(
     public readonly fb: FormBuilder,
     private tramite260906Store: Tramite260906Store,
     private tramite260906Query: Tramite260906Query,
-    public solicitudDatosService: SolicitudDatosService
-  ) {
-    // Inicialización adicional si es necesario
-  }
+    private consultaioQuery: ConsultaioQuery
+  ) { }
 
   /**
-   * Método del ciclo de vida de Angular que se llama al inicializar el componente.
-   * Obtiene datos del estado de la solicitud y configura el formulario.
-   * @returns {void}
+   * Método del ciclo de vida que se llama al inicializar el componente.
+   * Configura observables para el estado de la solicitud y consulta.
    */
   ngOnInit(): void {
-    this.tramite260906Query
-      .selectSolicitud$
+    this.tramite260906Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -121,41 +100,57 @@ export class DatosEstablecimientoComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.inicializarFormGroup();
-  }
-
-  inicializarFormGroup(): void {
-    this.forma = this.fb.group({
-      /**
-       * Indicador de selección "tipoOperacion".
-       */
-      tipoOperacion: [this.solicitudState?.tipoOperacion, [Validators.required]],
-      tipoOperacionJustificacion: [this.solicitudState?.tipoOperacionJustificacion, [Validators.required]],
-      /**
-       * RFC del solicitante, campo deshabilitado.
-       */
-      rfcResponsableSanitario: [this.solicitudState?.rfcResponsableSanitario],
-      /**
-       * Denominación del solicitante, campo requerido.
-       */
-      denominacion: [this.solicitudState?.denominacion, Validators.required],
-      /**
-       * Correo electrónico del solicitante, campo requerido.
-       */
-      correo: [this.solicitudState?.correo, Validators.required]
-    });
+    
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
-   * Alterna el estado colapsable de la sección del formulario.
-   * @returns {void}
+   * Inicializa el grupo de formularios con validadores y valores iniciales
+   */
+  inicializarFormGroup(): void {
+    this.forma = this.fb.group({
+      tipoOperacion: [
+        this.solicitudState?.tipoOperacion,
+        [Validators.required]
+      ],
+      tipoOperacionJustificacion: [
+        this.solicitudState?.tipoOperacionJustificacion,
+        [Validators.required]
+      ],
+      rfcResponsableSanitario: [
+        this.solicitudState?.rfcResponsableSanitario
+      ],
+      denominacion: [
+        this.solicitudState?.denominacion,
+        Validators.required
+      ],
+      correo: [
+        this.solicitudState?.correo,
+        Validators.required
+      ]
+    });
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Alterna el estado colapsable de la sección del formulario
    */
   public mostrar_colapsable(): void {
     this.colapsable = !this.colapsable;
   }
 
   /**
-   * Habilita todos los controles del formulario si están deshabilitados.
-   * @returns {void}
+   * Habilita todos los controles del formulario si están deshabilitados
+   * y muestra una notificación
    */
   public toggleFormControls(): void {
     this.abrirModal();
@@ -168,12 +163,11 @@ export class DatosEstablecimientoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Establece el valor de un campo en el store de Tramite260906.
-   *
-   * @param {FormGroup} form - El grupo de formularios que contiene el campo.
-   * @param {string} campo - El nombre del campo cuyo valor se va a establecer.
-   * @param {keyof Tramite260906Store} metodoNombre - El nombre del método en el store que se utilizará para establecer el valor.
-   * @returns {void}
+   * Establece valores en el store del trámite
+   * 
+   * @param form Grupo de formulario que contiene el campo
+   * @param campo Nombre del campo a actualizar
+   * @param metodoNombre Nombre del método en el store que actualiza el valor
    */
   public setValoresStore(
     form: FormGroup,
@@ -185,18 +179,17 @@ export class DatosEstablecimientoComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Actualiza el valor de "tipoOperacion" en el Store.
-   * @param {any} evento - Valor seleccionado para la propiedad "tipoOperacion".
-   * @returns {void}
+   * Actualiza el valor de "tipoOperacion" en el Store
+   * 
+   * @param evento Valor seleccionado para la propiedad
    */
   setTipoOperacion(evento: string | number): void {
     this.tramite260906Store.setTipoOperacion(evento);
   }
 
   /**
-   * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
-   * Este método completa el observable `destroyNotifier$` para cancelar las suscripciones activas.
-   * @returns {void}
+   * Método del ciclo de vida que se llama al destruir el componente
+   * Limpia las suscripciones activas
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
@@ -204,14 +197,8 @@ export class DatosEstablecimientoComponent implements OnInit, OnDestroy {
   }
 
   /**
- * Elimina un elemento de la lista de pedimentos en la posición especificada.
- * 
- * @param {number} i - El índice del elemento a eliminar.
- * 
- * @remarks
- * Después de eliminar el elemento, se actualiza el título y mensaje del modal,
- * y se abre el modal para mostrar un aviso al usuario.
- */
+   * Configura y abre un modal de notificación informativa
+   */
   abrirModal(): void {
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
@@ -223,7 +210,18 @@ export class DatosEstablecimientoComponent implements OnInit, OnDestroy {
       tiempoDeEspera: 2000,
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
-    }
+    };
   }
 
+  /**
+   * Inicializa el estado del formulario según el modo de solo lectura
+   * @private
+   */
+  private inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.forma?.disable();
+    } else {
+      this.forma?.enable();
+    }
+  }
 }
