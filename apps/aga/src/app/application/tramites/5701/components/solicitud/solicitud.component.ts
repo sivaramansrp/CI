@@ -152,8 +152,8 @@ import {
   MSJ_LINEA_CAPTURA_NO_PAGADA,
   MSJ_LINEA_CAPTURA_USADA,
 } from '../../../../core/enums/5701/mensajes-modal-5701.enum';
-import { ValidaDespachoService } from '../../../../core/services/5701/valida-despacho.service';
 import { SIN_VALOR_SELECT } from '@libs/shared/data-access-user/src/core/enums/transporte-componente.enum';
+import { ValidaDespachoService } from '../../../../core/services/5701/valida-despacho.service';
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
