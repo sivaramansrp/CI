@@ -24,6 +24,10 @@ import { UnicoStore } from '../../estados/renovacion.store';
   styleUrls: ['./aviso-de-renovacion.component.scss'],
 })
 export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
+  /**
+   * Indica si el formulario es de solo lectura.
+   * Si es verdadero, los campos del formulario no se pueden editar.
+   */
   esFormularioSoloLectura: boolean = false;
   /**
    * Fecha inicial para el campo de fecha.
@@ -74,6 +78,7 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
     primerOpcion: 'Selecciona un valor',
     catalogos: [],
   };
+
   /**
    * Constructor del componente.
    * @param fb Constructor de formularios reactivos.
@@ -88,7 +93,6 @@ export class AvisoDeRenovacionComponent implements OnInit, OnDestroy {
     private unicoStore: UnicoStore,
     private unicoQuery: UnicoQuery
   ) {
-    // El constructor se utiliza para la inyección de dependencias.
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),

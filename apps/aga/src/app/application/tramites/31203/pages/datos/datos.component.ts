@@ -24,9 +24,7 @@ export class DatosComponent implements OnInit, OnDestroy, AfterViewInit {
   constructor(
     private service:AvisoUnicoService, // Servicio para manejar la solicitud
     private consultaQuery: ConsultaioQuery // Servicio para consultar el estado
-  ) {
-    // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
-  }
+  ) { }
 
    /**
    * Referencia al componente de solicitante.
@@ -60,7 +58,6 @@ export class DatosComponent implements OnInit, OnDestroy, AfterViewInit {
   indice: number = 1;
 
     ngOnInit(): void {
-    // Se ejecuta al inicializar el componente
     this.consultaQuery.selectConsultaioState$.pipe(
       takeUntil(this.destroyNotifier$), // Se desuscribe al destruir el componente
       map((consultaState) => {
@@ -83,14 +80,12 @@ export class DatosComponent implements OnInit, OnDestroy, AfterViewInit {
    * La suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
    */
     guardarDatosFormulario(): void {
-    // Método para guardar los datos del formulario
     this.service
       .getDatosDeTrtamitelDoc().pipe(
         takeUntil(this.destroyNotifier$) // Se desuscribe al destruir el componente
       )
       .subscribe((resp) => {
         if (resp) {
-       // Imprime los datos de respuesta en la consola
           this.esDatosRespuesta = true; // Marca que hay datos de respuesta
           this.service.actualizarEstadoFormulario(resp); // Actualiza el estado del formulario con la respuesta
         }
@@ -120,7 +115,6 @@ export class DatosComponent implements OnInit, OnDestroy, AfterViewInit {
  * que deben cancelarse, evitando fugas de memoria. Luego, completa el subject para liberar recursos.
  */
 ngOnDestroy(): void {
-  // Se ejecuta al destruir el componente
   this.destroyNotifier$.next(); // Emite el evento de destrucción
   this.destroyNotifier$.complete(); // Completa el subject para limpiar suscripciones
 }
