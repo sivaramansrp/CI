@@ -1,16 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
-import { CertificadosService } from './certificados.service';
+import { FloraFaunaService } from './flora-fauna.service';
 
-describe('CertificadosService', () => {
-  let service: CertificadosService;
+describe('FloraFaunaService', () => {
+  let service: FloraFaunaService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule], 
-      providers: [CertificadosService]
+           imports: [HttpClientTestingModule], 
+            providers: [FloraFaunaService]
     });
-    service = TestBed.inject(CertificadosService);
+    service = TestBed.inject(FloraFaunaService);
   });
 
   it('should be created', () => {
