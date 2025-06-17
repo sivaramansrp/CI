@@ -113,13 +113,18 @@ export interface DatosParaMovilizacionNacional {
  * @property {string} nico - Número de identificación comercial.
  */
 export interface FilaSolicitud {
-  noPartida: string;
-  tipoRequisito: string;
-  requisito: string;
-  numeroCertificadoInternacional: string;
-  fraccionArancelaria: string;
-  descripcionFraccion: string;
   nico: string;
+  descripcionNico: string;
+  descripcion: string;
+  unidadDeMedidaDeTarifaUMT: string;
+  cantidadUMT: number;
+  unidadDeMedidaDeComercializacionUMC: string;
+  cantidadUMC: number;
+  especie: string;
+  uso: string;
+  paisDeOrigen: string; 
+  paisDeProcedencia: string;
+  certificadoInternacionalElectronico: string; 
 }
 
 /**
