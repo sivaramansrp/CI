@@ -1,11 +1,12 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user'
 import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
 import { ImportacionMateriasPrimasService } from '../../service/importacion-materias-primas.service';
 import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 import { Tramite260301Query } from '../../estados/tramite260301Query.query';
 import { Tramite260301Store } from '../../estados/tramite260301Store.store';
@@ -49,7 +50,6 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * 
    * @param tramite260301Query Consulta el estado y los datos relacionados con el trámite 260301.
    * @param tramite260301Store Maneja el estado global del trámite 260301.
-   * @param store Alias adicional para el store del trámite 260301.
    * @param consultaQuery Servicio para consultar información adicional relacionada.
    * @param importacionMateriasPrimasService Servicio para gestionar la importación de materias primas.
    *
@@ -57,7 +57,6 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   constructor(
     private tramite260301Query: Tramite260301Query,
     private tramite260301Store: Tramite260301Store,
-    private store: Tramite260301Store,
     private consultaQuery: ConsultaioQuery,
     private importacionMateriasPrimasService: ImportacionMateriasPrimasService
   ) {
