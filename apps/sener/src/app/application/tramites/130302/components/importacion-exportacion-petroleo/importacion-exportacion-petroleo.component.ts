@@ -231,9 +231,7 @@ this.tramite130302Query.selectExportarIlustraciones$
       .subscribe((data: AvisoValor) => {
         this.form.patchValue({
           saldoDisponible: data.saldoDisponible,
-          // prorrogaDel: data.prorrogaDel,
-          // prorrogaAl: data.prorrogaAl,
-        });
+         });
       });
   }
 
