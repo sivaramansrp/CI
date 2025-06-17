@@ -5,7 +5,9 @@ import { catchError, switchMap, throwError } from 'rxjs';
 import { DocumentoService } from '../../..';
 import { BodyTablaAcuse } from '../../../core/models/shared/catalogos.model';
 import { DocumentosRequest } from '../../../core/models/shared/documentos-request.model';
+import { Tramite5701Query } from '../../../core/queries/tramite5701.query';
 import { AlertComponent } from '../alert/alert.component';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'lib-component-acuse',
@@ -37,11 +39,15 @@ export class AcuseComponent implements OnChanges {
 
 
   constructor(private router: Router,
-    private documentosService: DocumentoService
+    private documentosService: DocumentoService,
+   private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
-    this.generarYMostrarDocumentos();
+   this.route.queryParams.subscribe(params => {
+    const idSolicitud = params['solicitud'];
+    this.generarYMostrarDocumentos(idSolicitud);
+    });
   }
 
   /**
@@ -64,13 +70,13 @@ export class AcuseComponent implements OnChanges {
    * Utiliza el servicio `documentosService` para generar el documento basado en los parámetros proporcionados.
    * Luego, obtiene el contenido del documento generado y lo muestra en la tabla de acuse.
    */
-  private generarYMostrarDocumentos(): void {
+  private generarYMostrarDocumentos(id: string): void {
     const body: DocumentosRequest = {
       tipo_dependencia: "AGA",
       tipo_tramite: "5701",
       tipo_documento: 1,
       parametros: {
-        id_solicitud: +localStorage.getItem('id_solicitud')!,
+        id_solicitud: +id,
       }
     };
 

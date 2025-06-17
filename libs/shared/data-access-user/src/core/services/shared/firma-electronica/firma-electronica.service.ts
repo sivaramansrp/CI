@@ -12,7 +12,7 @@ import { WindowKey } from '../../../models/shared/window-key';
 })
 export class FirmaElectronicaService {
 
-  urlServer = ENVIRONMENT.URL_SERVER;
+  urlServer = ENVIRONMENT.API_HOST;
 
   constructor(private http: HttpClient) { }
 
@@ -20,7 +20,7 @@ export class FirmaElectronicaService {
    * Obtiene la cadena original para firmar.
    */
   obtenerCadenaOriginal(body: CadenaOriginalRequest): Observable<BaseResponse> {
-    return this.http.post<BaseResponse>(`${this.urlServer}/api/tramite/cadena-original`, body);
+    return this.http.post<BaseResponse>(`${this.urlServer}/api/tramite/solicitud/genera-cadena-original`, body);
   }
 
   /**
@@ -30,89 +30,76 @@ export class FirmaElectronicaService {
     return this.http.post<BaseResponse>(`${this.urlServer}/api/tramite/firmar`, body);
   }
 
-    /**
-   * Valida y firma la cadena usando FielUtil.js
-   * @param certFile Archivo del certificado (.cer)
-   * @param keyFile Archivo de la llave privada (.key)
-   * @param password Contraseña de la llave privada
-   * @param cadenaOriginal Cadena original a firmar
-   * @returns Promesa con los datos de la firma
+  /**
+   * Firma una cadena original utilizando los archivos de certificado y llave, y la contraseña proporcionada.
+   * 
+   * @param cerInput Input HTML para el archivo de certificado (.cer).
+   * @param keyInput Input HTML para el archivo de llave privada (.key).
+   * @param passwordInput Input HTML para la contraseña de la llave privada.
+   * @param cadenaOriginal Cadena original a firmar (opcional).
+   * @param soloValidar Si es true, solo valida sin generar firma (opcional, por defecto false).
+   * 
+   * @returns Un objeto con la firma generada, el certificado en formato hexadecimal, el número de serie y el RFC.
    */
-async firmarCadena(
-  cerInput: HTMLInputElement,
-  keyInput: HTMLInputElement,
-  passwordInput: HTMLInputElement,
-  cadenaOriginal?: string
-): Promise<{ firma: string; certificado: any; serialNumber: string; rfc: string }> {
-  try {
-    const PKI = window['PKI' as WindowKey];
+  async firmarCadena(
+    cerInput: HTMLInputElement,
+    keyInput: HTMLInputElement,
+    passwordInput: HTMLInputElement,
+    cadenaOriginal?: string,
+    soloValidar: boolean = false
+  ): Promise<{ firma?: string; certificado: any; serialNumber: string; rfc: string, fechaFin: string }> {
+    try {
+      const PKI = window['PKI' as WindowKey];
 
-    if (!PKI?.SAT?.FielUtil) {
-      throw new Error('La librería FielUtil no está disponible');
-    }
+      if (!PKI?.SAT?.FielUtil) throw new Error('La librería FielUtil no está disponible');
+      if (!cerInput.files?.length || !keyInput.files?.length) throw new Error('No se seleccionaron archivos válidos');
+      if (!passwordInput.value) throw new Error('La contraseña no puede estar vacía');
 
-    if (!cerInput.files?.length || !keyInput.files?.length) {
-      throw new Error('No se seleccionaron archivos válidos');
-    }
+      const compatibilidad = PKI.SAT.FielUtil.validaNavegador(cerInput);
+      if (compatibilidad !== true) throw new Error(PKI.SAT.FielUtil.obtenMensajeError(compatibilidad));
 
-    if (!passwordInput.value) {
-      throw new Error('La contraseña no puede estar vacía');
-    }
+      const cadenaAFirmar = soloValidar ? ' ' : (cadenaOriginal || '');
 
-    const compatibilidad = PKI.SAT.FielUtil.validaNavegador(cerInput);
-    if (compatibilidad !== true) {
-      throw new Error(PKI.SAT.FielUtil.obtenMensajeError(compatibilidad));
-    }
+      return await new Promise((resolve, reject) => {
+        PKI.SAT.FielUtil.validaFielyFirmaCadena(
+          cerInput,
+          keyInput,
+          passwordInput,
+          () => cadenaAFirmar,
+          (error_code: any, certificado: any, firma: any) => {
+            if (error_code === 0) {
+              try {
+                const cert = new PKI.SAT.Certificado(certificado);
+                //this.validarVigenciaCertificado(cert);
 
-    return await new Promise((resolve, reject) => {
-      PKI.SAT.FielUtil.validaFielyFirmaCadena(
-        cerInput,
-        keyInput,
-        passwordInput,
-        (certificado: any) => {
-          try {
-            const cert = new PKI.SAT.Certificado(certificado);
-            this.validarVigenciaCertificado(cert);
-
-            resolve({
-              firma: '', // No se firma si no hay cadenaOriginal
-              certificado,
-              serialNumber: cert.getNumeroSerie().replace(/ /g, ''),
-              rfc: cert.getRFC().replace(/ /g, '')
-            });
-          } catch (error) {
-            reject(error);
-          }
-        },
-        (error_code: any, certificado: any, firma: any) => {
-          if (error_code === 0) {
-            try {
-              const cert = new PKI.SAT.Certificado(certificado);
-              this.validarVigenciaCertificado(cert);
-
-              resolve({
-                firma: firma || '', // Firma generada si hay cadena
-                certificado,
-                serialNumber: cert.getNumeroSerie().replace(/ /g, ''),
-                rfc: cert.getRFC().replace(/ /g, '')
-              });
-            } catch (error) {
-              reject(error);
+                resolve({
+                  firma: soloValidar ? undefined : firma,
+                  certificado: certificado.hex,
+                  serialNumber: cert.getNumeroSerie().replace(/ /g, ''),
+                  rfc: cert.getRFC().replace(/ /g, ''),
+                  fechaFin: cert.getFechaFin().toISOString()
+                });
+              } catch (error) {
+                reject(error);
+              }
+            } else {
+              reject(new Error(PKI.SAT.FielUtil.obtenMensajeError(error_code)));
             }
-          } else {
-            reject(new Error(PKI.SAT.FielUtil.obtenMensajeError(error_code)));
-          }
-        },
-        cadenaOriginal || ''
-      );
-    });
-  } catch (error) {
-    console.error('Error en firmarCadena:', error);
-    throw error;
+          },
+          cadenaAFirmar
+        );
+      });
+    } catch (error) {
+      console.error('Error en firmarCadena:', error);
+      throw error;
+    }
   }
-}
 
-
+  /**
+   * Valida la vigencia del certificado.
+   * @param cert El certificado a validar.
+   * @throws Error si el certificado no está vigente.
+   */
   private validarVigenciaCertificado(cert: any): void {
     const hoy = new Date();
     const inicio = new Date(cert.getFechaInicio());

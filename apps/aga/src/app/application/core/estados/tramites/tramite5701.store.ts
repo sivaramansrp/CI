@@ -14,6 +14,7 @@ import { LineaCaptura } from '../../models/5701/linea-captura.model';
  */
 export interface Solicitud5701State {
   idSolicitud: number | null;
+  folioFirma: string;
   tipoSolicitud: number;
   descripcionTipoSolicitud: string;
 
@@ -115,6 +116,7 @@ export interface Terceros5701State {
 export function createInitialState(): Solicitud5701State {
   return {
     idSolicitud: 0,
+    folioFirma: '',
     descripcionTipoSolicitud: '',
     tipoSolicitud: -1,
     RFCImportadorExportador: '',
@@ -215,6 +217,17 @@ export class Tramite5701Store extends Store<Solicitud5701State> {
     this.update((state) => ({
       ...state,
       tipoSolicitud,
+    }));
+  }
+
+  /**
+ * Guarda el folio de la firma en el estado.
+ * @param folioFirma - El folio de la firma que se va a guardar.
+ */
+  public setFolioFirma(folioFirma: string): void {
+    this.update((state) => ({
+      ...state,
+      folioFirma,
     }));
   }
 

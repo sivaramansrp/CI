@@ -24,7 +24,7 @@ export class DocumentosService {
  * @returns Un `Observable` de tipo `BaseResponse` que contiene el resultado de la operación.
  */
   enviarFirma(body: FirmarRequest): Observable<BaseResponse> {
-    return this.http.post<BaseResponse>(`${this.urlServer}/api/tramite/firmar`, body);
+    return this.http.post<BaseResponse>(`${this.urlServer}/api/firma/tramite`, body);
   }
 
 }

@@ -20,8 +20,9 @@ export class FirmaElectronicaComponent {
   @Output() firma = new EventEmitter<string>();
   @Output() datosFirma = new EventEmitter<{
     firma: string;
-    serialNumber: string;
+    certSerialNumber: string;
     rfc: string;
+    fechaFin: string;
   }>();
 
   certFileObj?: File;
@@ -30,7 +31,7 @@ export class FirmaElectronicaComponent {
   cerInputElement?: HTMLInputElement;
   keyInputElement?: HTMLInputElement;
   passwordInputElement?: HTMLInputElement;
-  
+
 
   FormCertificado = this.fb.group({
     password: ['', [Validators.required]],
@@ -41,7 +42,7 @@ export class FirmaElectronicaComponent {
     private toastrService: ToastrService,
     private formValidator: ValidacionesFormularioService,
     private firmaService: FirmaElectronicaService
-  ) {}
+  ) { }
 
   /**
    * Getter para saber si el componente esta siendo usado para hacer 'login'
@@ -60,11 +61,16 @@ export class FirmaElectronicaComponent {
     return this.formValidator.isValid(this.FormCertificado, field);
   }
 
- handleFile(type: string, event: Event): void {
+  /**
+   * Metodo para saber si el campo del formulario es invalido.
+   * @param field El nombre del campo del formulario que se va a validar.
+   * @returns {boolean | null} : Regresa un booleano si el campo es invalido o no o puede regresar null si no se ha tocado el campo.
+   */
+  handleFile(type: string, event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files?.length) {
       const file = input.files[0];
-      
+
       // Validar extensión y tipo MIME
       if (type === 'cer') {
         if (!file.name.endsWith('.cer') && !file.type.includes('application/x-x509-ca-cert')) {
@@ -79,13 +85,18 @@ export class FirmaElectronicaComponent {
           return;
         }
         this.keyFileObj = file;
-        this.keyInputElement = input; 
+        this.keyInputElement = input;
       }
     }
   }
 
- async onSubmit(): Promise<void> {
-   this.passwordInputElement = document.getElementById('password') as HTMLInputElement;
+  /**
+   * Método para manejar el evento de cambio en el campo de contraseña.
+   * @param event El evento del input de contraseña.
+   */
+  async onSubmit(): Promise<void> {
+    this.passwordInputElement = document.getElementById('password') as HTMLInputElement;
+
     if (this.FormCertificado.invalid) {
       this.FormCertificado.markAllAsTouched();
       this.toastrService.error('Por favor complete todos los campos');
@@ -100,29 +111,39 @@ export class FirmaElectronicaComponent {
     this.isLoading = true;
 
     try {
-      // 1. Validar y firmar - Pasamos los elementos input
+      const esLogin = this.tipo === 'login';
       const resultado = await this.firmaService.firmarCadena(
         this.cerInputElement,
         this.keyInputElement,
         this.passwordInputElement,
-        this.cadenaOriginal
+        esLogin ? undefined : this.cadenaOriginal,
+        esLogin
       );
 
-      // 2. Emitir eventos
-      this.valido.emit(true);
-      this.datosFirma.emit({
-        firma: resultado.firma,
-        serialNumber: resultado.serialNumber,
-        rfc: resultado.rfc
-      });
+      if (esLogin) {
+        // Caso login: solo validación
+        this.valido.emit(true);
+      } else {
+        // Caso firma: emitir datos completos
+        if (!resultado.firma) {
+          throw new Error('No se generó la firma electrónica');
+        }
 
-      this.toastrService.success('Firma electrónica generada correctamente');
-      
+        this.valido.emit(true);
+        this.datosFirma.emit({
+          firma: resultado.firma,
+          certSerialNumber: resultado.certificado,
+          rfc: resultado.rfc,
+          fechaFin: resultado.fechaFin,
+        });
+        this.toastrService.success('Firma electrónica generada correctamente');
+      }
+
     } catch (error) {
       console.error('Error al firmar:', error);
       this.valido.emit(false);
       this.toastrService.error(
-        error instanceof Error ? error.message : 'Error al generar la firma'
+        error instanceof Error ? error.message : 'Error al validar la firma'
       );
     } finally {
       this.isLoading = false;
