@@ -36,7 +36,7 @@
       @case (4){
         @if(esDatosRespuesta){
       <app-pago-de-derechos [formularioPagoDerechos]="formularioPagoDerechos" [banco]="banco"
-        (setValoresStoreEvent)="setValoresStore($event)"></app-pago-de-derechos>
+        (setValoresStoreEvent)="setValoresStore($event)" [isDisabled]="esFormularioSoloLectura"></app-pago-de-derechos>
         }
       } @case (5){
         @if(esDatosRespuesta){
