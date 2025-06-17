@@ -1,11 +1,12 @@
+import { AfterViewInit, Component } from '@angular/core';
+import {Subject, map } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { ModificacionService } from '../../services/modificacion.service';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240321Query } from '../../estados/tramite240321Query.query';
 import { Tramite240321Store } from '../../estados/tramite240321Store.store';
@@ -25,7 +26,7 @@ import { takeUntil } from 'rxjs';
   styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
 export class TercerosRelacionadosContenedoraComponent
-  implements OnInit, OnDestroy
+  implements OnInit, OnDestroy,AfterViewInit
 {
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
@@ -44,7 +45,14 @@ export class TercerosRelacionadosContenedoraComponent
    * @property {Proveedor[]} proveedorTablaDatos
    */
   proveedorTablaDatos: Proveedor[] = [];
-
+   /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   *
+   * @type {boolean}
+   * @memberof AgregarDestinatarioFinalContenedoraComponent
+   * @see https://compodoc.app/
+   */
+  esFormularioSoloLectura:boolean=false;
   /**
    * Constructor del componente.
    *
@@ -56,7 +64,9 @@ export class TercerosRelacionadosContenedoraComponent
   constructor(
     private tramiteStore: Tramite240321Store,
     private tramiteQuery: Tramite240321Query,
-    private modificacionService: ModificacionService
+    private modificacionService: ModificacionService,
+    private readonly consultaioQuery:ConsultaioQuery
+  
   ) {
     // 
   }
@@ -84,6 +94,30 @@ export class TercerosRelacionadosContenedoraComponent
       });
     
   }
+
+
+  /**
+     * @inheritdoc
+     * @description
+     * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
+     * 
+     * Suscribe al observable `selectConsultaioState$` para escuchar cambios en el estado de la sección y actualizar
+     * la propiedad `esFormularioSoloLectura` según el valor de `readonly` en el estado.
+     * 
+     * La suscripción se mantiene activa hasta que se emite un valor en `unsubscribe$`, lo que previene fugas de memoria.
+     * 
+     * @see https://angular.io/api/core/AfterViewInit
+     */
+    ngAfterViewInit(): void {
+          this.consultaioQuery.selectConsultaioState$
+                                    .pipe(
+                                      takeUntil(this.unsubscribe$),
+                                      map((seccionState)=>{
+                                        this.esFormularioSoloLectura = seccionState.readonly; 
+                                      })
+                                    )
+                                    .subscribe();
+    }
 
   /**
    * Método que obtiene los destinatarios finales desde el servicio de modificación.

@@ -4,9 +4,11 @@ import { Component,OnDestroy,OnInit} from '@angular/core';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { Subject,map,takeUntil } from 'rxjs';
 import { Tramite250101State,Tramite250101Store } from '../../estados/tramite250101.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ModalComponent } from '../modal/modal.component';
 import { Tramite250101Query } from '../../estados/tramite250101.query';
 import catalogoDatos from '@libs/shared/theme/assets/json/250101/banco.json';
+
 /**
  * Componente encargado de gestionar la sección de mercancías dentro del trámite 250101.
  * Este componente permite al usuario gestionar el formulario relacionado con los productos,
@@ -43,15 +45,25 @@ export class MercanciasComponent implements OnInit, OnDestroy {
    * Indica si el modal para agregar mercancías está visible o no.
    * @type {boolean}
    */
-  showMercanciasModal = false;
-  // Definición de las configuraciones de la tabla para mostrar los productos y las mercancías
-  configuracionTabla: ConfiguracionColumna<Producto>[] = CONFIGURATION_TABLA;
+ public showMercanciasModal = false;
   
-  // Definición de las configuraciones de la tabla para mostrar los productos y las mercancías
-  configuracionMercanciasTabla: ConfiguracionColumna<Detalle>[] = CONFIGURATION_TABLA_MERCANCIAS;
+  /**
+ * Configuración de columnas para la tabla de productos.
+ * Basada en una constante que define el formato y comportamiento de cada columna.
+ */
+ public configuracionTabla: ConfiguracionColumna<Producto>[] = CONFIGURATION_TABLA;
+  
+  /**
+ * Configuración de columnas para la tabla de mercancías.
+ * Utiliza una constante predefinida con el formato de cada columna.
+ */
+ public configuracionMercanciasTabla: ConfiguracionColumna<Detalle>[] = CONFIGURATION_TABLA_MERCANCIAS;
 
-  // Formulario reactivo que gestiona la entrada de datos de mercancías
-  formMercancias!: FormGroup;
+  /**
+ * Formulario reactivo para gestionar los datos de las mercancías.
+ * Contiene los controles y validaciones relacionados con el trámite.
+ */
+ public formMercancias!: FormGroup;
   /**
    * Configuración de las columnas de la tabla de exportadores.
    * Define el encabezado, clave y el orden de las columnas para la tabla de exportadores.
@@ -60,40 +72,40 @@ export class MercanciasComponent implements OnInit, OnDestroy {
   /**
  * Catálogo de descripciones. Usado para seleccionar la descripción de la mercancía.
  */
-descripcion: Catalogo[] =catalogoDatos.descripcion;
+public descripcion: Catalogo[] =catalogoDatos.descripcion;
 /**
  * Catálogo de fracciones arancelarias. Se utiliza para seleccionar la fracción correspondiente.
  */
-fraccion: Catalogo[] = catalogoDatos.fraccion;
+public fraccion: Catalogo[] = catalogoDatos.fraccion;
 /**
  * Catálogo de unidades de medida. Permite seleccionar la unidad en la que se mide la mercancía.
  */
-medida: Catalogo[] = catalogoDatos.medida;
+public medida: Catalogo[] = catalogoDatos.medida;
 /**
  * Catálogo de géneros. Se usa para seleccionar el género biológico de la especie.
  */
-genero: Catalogo[] = catalogoDatos.genero;
+public genero: Catalogo[] = catalogoDatos.genero;
 /**
  * Catálogo de especies. Permite seleccionar la especie correspondiente del producto.
  */
-especie: Catalogo[] = catalogoDatos.especie;
+public especie: Catalogo[] = catalogoDatos.especie;
 /**
  * Catálogo de nombres comunes. Se utiliza para seleccionar el nombre común de la especie o mercancía.
  */
-comun: Catalogo[] =catalogoDatos.comun;
+public comun: Catalogo[] =catalogoDatos.comun;
 
 /**
  * Catálogo del origen de la mercancía. Indica si es nacional o extranjero, entre otras opciones.
  */
-origen: Catalogo[] = catalogoDatos.origen;
+public origen: Catalogo[] = catalogoDatos.origen;
 /**
  * Catálogo de procedencias. Describe el lugar de origen más específico de la mercancía (ej. país, región).
  */
-procedencia: Catalogo[] = catalogoDatos.procedencia;
+public procedencia: Catalogo[] = catalogoDatos.procedencia;
 /**
  * Lista de productos agregados por el usuario. Cada elemento representa una mercancía distinta.
  */
-  producto: Producto[] = [];
+ public producto: Producto[] = [];
  /**
  * Arreglo que almacena los detalles de las fracciones de mercancías.
  * 
@@ -101,7 +113,7 @@ procedencia: Catalogo[] = catalogoDatos.procedencia;
  * @description Este arreglo se llena con los datos de las fracciones arancelarias de las mercancías 
  * que se van a procesar o que se encuentran registradas en el sistema.
  */
-fraccionData: Detalle[] = [];
+public fraccionData: Detalle[] = [];
 
 /**
  * Estado de la solicitud que contiene información relevante sobre el trámite.
@@ -119,6 +131,12 @@ public solicitudState!: Tramite250101State;
  * destruirse y limpiar las suscripciones a observables, evitando fugas de memoria.
  */
 private destroyNotifier$: Subject<void> = new Subject();
+ /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+public esFormularioSoloLectura: boolean = false;
+
 /**
  * Constructor que inyecta las dependencias necesarias para el componente.
  * 
@@ -129,7 +147,8 @@ private destroyNotifier$: Subject<void> = new Subject();
   constructor(
     private fb: FormBuilder,
     private tramite250101Store: Tramite250101Store,
-    private tramite250101Query: Tramite250101Query //Store encargado de manejar el estado de la solicitud y la lógica de negocio asociada.
+    private tramite250101Query: Tramite250101Query, //Store encargado de manejar el estado de la solicitud y la lógica de negocio asociada.
+    private consultaioQuery: ConsultaioQuery
   ) {
     // Constructor que inyecta las dependencias necesarias
   }
@@ -149,6 +168,7 @@ private destroyNotifier$: Subject<void> = new Subject();
    * @returns {void}
    */
   ngOnInit(): void {
+     // Suscribe al estado del trámite y restaura las filas de la tabla si existen
     this.tramite250101Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -157,6 +177,17 @@ private destroyNotifier$: Subject<void> = new Subject();
         })
       )
       .subscribe();
+
+  /**
+ * Si no hay productos registrados, se agrega uno con la descripción del catálogo.
+ * Usa el primer elemento del catálogo o una cadena vacía por defecto.
+ */
+      if(this.producto.length === 0){
+       const PRODUCTO_FORMDATA = {
+       descripcion: catalogoDatos.descripcion[0]?.descripcion ?? '',
+       };
+       this.producto.push(PRODUCTO_FORMDATA);
+      }
 /**
  * Inicializa el formulario `formMercancias` con los valores de estado de la solicitud.
  * El formulario está compuesto por varios campos, todos ellos requeridos. 
@@ -180,7 +211,52 @@ private destroyNotifier$: Subject<void> = new Subject();
 
     // Deshabilita el campo 'arancelaria' en el formulario.
     this.formMercancias.get('arancelaria')?.disable();
+
+/**
+ * Se suscribe al estado de la sección para actualizar el modo de solo lectura del formulario.
+ * Finaliza la suscripción automáticamente al destruirse el componente.
+ */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((seccionState) => {
+      this.esFormularioSoloLectura = seccionState.readonly;
+      this.inicializarEstadoFormulario();
+    });
   }
+
+
+   /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.  
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+       this.formMercancias.enable();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+public guardarDatosFormulario(): void {
+    this.detalleData();
+    if (this.esFormularioSoloLectura) {
+      this.formMercancias.disable();
+      if(this.producto.length === 0){
+       const PRODUCTO_FORMDATA = {
+       descripcion: catalogoDatos.descripcion[0]?.descripcion ?? '',
+       };
+       this.producto.push(PRODUCTO_FORMDATA);
+      }
+    } else if (!this.esFormularioSoloLectura) {
+      this.formMercancias.enable();
+    } 
+  }
+
+
   /**
    * Método que agrega un detalle de mercancía al array `fraccionData`.
    * Obtiene los valores del formulario y los mapea a los valores correspondientes 
@@ -188,7 +264,8 @@ private destroyNotifier$: Subject<void> = new Subject();
    * 
    * @returns {void}
    */
-  detalleData(): void {
+ public detalleData(): void {
+    if (!this.formMercancias) {return}
     const DETALLE_FORMDATA = {
       fraccionArancelaria: this.fraccion.find(item => item.id === Number(this.formMercancias.value.fraccion))?.descripcion,
       cantidad: this.solicitudState.cantidad,
@@ -226,7 +303,7 @@ private destroyNotifier$: Subject<void> = new Subject();
    * 
    * @returns {void}
    */
-  detalleCancelar(): void {
+ public detalleCancelar(): void {
     // Muestra u oculta el modal de mercancías
     this.showMercanciasModal = !this.showMercanciasModal;
   }
@@ -235,7 +312,7 @@ private destroyNotifier$: Subject<void> = new Subject();
    * 
    * @returns {void}
    */
-  detalleGuardar(): void {
+ public detalleGuardar(): void {
     const PRODUCTO_FORMDATA = {
       descripcion: this.descripcion.find(item => item.id === Number(this.formMercancias.value.descripcion))?.descripcion,
     }

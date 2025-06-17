@@ -8,6 +8,7 @@ import {
   ValidacionesFormularioService 
 } from "@ng-mf/data-access-user";
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud260704State, Tramite260704Store } from '../../estados/Tramite260704.store';
@@ -30,7 +31,15 @@ import { Tramite260704Query } from '../../estados/Tramite260704.query';
   styleUrls: ['./pago-de-derechos.component.css'],
 })
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
-
+/**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
   /**
    * Estado actual de la solicitud.
    */
@@ -75,8 +84,18 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private query: Tramite260704Query,
     public fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) { 
-    // Constructor vacío, no requiere inicialización adicional.
+   this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -95,8 +114,31 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .subscribe();
     this.donanteDomicilio();
     this.obtenerDatosBanco();
+    this.inicializarEstadoFormulario();
   }
-
+/**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.donanteDomicilio();
+    }
+  }
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.donanteDomicilio();
+    if (this.soloLectura) {
+      this.pagoDeDerechosForm.disable();
+    } else {
+      this.pagoDeDerechosForm.enable();
+    }
+  }
   /**
    * Obtiene los datos del catálogo de bancos a través del servicio de consulta.
    */

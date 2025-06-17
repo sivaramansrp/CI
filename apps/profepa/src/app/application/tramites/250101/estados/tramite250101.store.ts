@@ -178,6 +178,10 @@ export function createInitialState(): Tramite250101State {
   };
 }
 
+/**
+ * Store que gestiona el estado de la sección Trámite 250101.
+ * Configurada para ser reiniciable y disponible a nivel global en la aplicación.
+ */
 @Injectable({
   providedIn: 'root',
 })
