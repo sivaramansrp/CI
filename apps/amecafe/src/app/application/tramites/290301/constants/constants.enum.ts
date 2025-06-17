@@ -4,9 +4,9 @@ import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
 /** Opciones para el radio button */
 export const RADIO_OPCION = [
     /** Opción para "Sí" */
-    { label: 'Sí', value: 'true' },
+    { label: 'Sí', value: 'Si' },
     /** Opción para "No" */
-    { label: 'No', value: 'false' }
+    { label: 'No', value: 'No' }
 ];
 
 /** Configuración de columnas para la tabla de regiones */

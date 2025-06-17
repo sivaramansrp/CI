@@ -33,7 +33,7 @@ describe('TransportacionMaritimaService', () => {
       expect(response).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne('assets/json/40201/pais-catalogo.json');
+    const req = httpMock.expectOne('assets/json/40402/pais-catalogo.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
@@ -45,7 +45,7 @@ describe('TransportacionMaritimaService', () => {
       expect(response).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne('assets/json/40201/estado-catalogo.json');
+    const req = httpMock.expectOne('assets/json/40402/estado-catalogo.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
@@ -57,7 +57,7 @@ describe('TransportacionMaritimaService', () => {
       expect(response).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne('assets/json/40201/municipio-catalogo.json');
+    const req = httpMock.expectOne('assets/json/40402/municipio-catalogo.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
@@ -69,7 +69,7 @@ describe('TransportacionMaritimaService', () => {
       expect(response).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne('assets/json/40201/colonia-catalogo.json');
+    const req = httpMock.expectOne('assets/json/40402/colonia-catalogo.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
@@ -95,7 +95,7 @@ describe('TransportacionMaritimaService', () => {
       expect(response).toEqual(mockResponse);
     });
 
-    const req = httpMock.expectOne('assets/json/40201/buscar-empresa-caat.json');
+    const req = httpMock.expectOne('assets/json/40402/buscar-empresa-caat.json');
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
