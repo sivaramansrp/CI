@@ -1,48 +1,62 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { of, ReplaySubject } from 'rxjs';
 import { PagoDeDerechosComponent } from './pago-de-derechos.component';
 import { ConsultaService } from '../../service/consulta.service';
 import { Tramite260704Store } from '../../estados/Tramite260704.store';
 import { Tramite260704Query } from '../../estados/Tramite260704.query';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { FormBuilder, ReactiveFormsModule, FormGroup, Validators } from '@angular/forms';
+import { of, ReplaySubject } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('PagoDeDerechosComponent', () => {
   let component: PagoDeDerechosComponent;
   let fixture: ComponentFixture<PagoDeDerechosComponent>;
   let consultaServiceMock: any;
-  let storeMock: any;
-  let queryMock: any;
+  let tramiteStoreMock: any;
+  let tramiteQueryMock: any;
+  let validacionesServiceMock: any;
+  let consultaioQueryMock: any;
 
   beforeEach(async () => {
     consultaServiceMock = {
-      obtenerDatosBanco: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Banco Test' }])),
+      obtenerDatosBanco: jest.fn().mockReturnValue(of([{ id: 1, descripcion: 'Banco1' }])),
     };
-
-    storeMock = {
+    tramiteStoreMock = {
       setFechaPago: jest.fn(),
+      setClaveDeReferencia: jest.fn(),
+      setCadenaDependecia: jest.fn(),
+      setBanco: jest.fn(),
+      setLiaveDePago: jest.fn(),
+      setImporteDePago: jest.fn(),
     };
-
-    queryMock = {
+    tramiteQueryMock = {
       selectSolicitud$: of({
-        claveDeReferencia: '12345',
-        cadenaDependecia: 'Dependencia Test',
-        fechaPago: '2025-04-10',
-        banco: 'Banco Test',
-        liaveDePago: 'Clave123',
-        importeDePago: '1000',
+        claveDeReferencia: 'REF123',
+        cadenaDependecia: 'CADENA',
+        fechaPago: '2024-01-01',
+        banco: 'BANAMEX',
+        liaveDePago: 'LLAVE123',
+        importeDePago: '1000'
       }),
+    };
+    validacionesServiceMock = {
+      isValid: jest.fn().mockReturnValue(true),
+    };
+    consultaioQueryMock = {
+      selectConsultaioState$: of({ readonly: false }),
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,PagoDeDerechosComponent],
-      declarations: [],
+      imports: [ReactiveFormsModule, PagoDeDerechosComponent],
       providers: [
         FormBuilder,
         { provide: ConsultaService, useValue: consultaServiceMock },
-        { provide: Tramite260704Store, useValue: storeMock },
-        { provide: Tramite260704Query, useValue: queryMock },
+        { provide: Tramite260704Store, useValue: tramiteStoreMock },
+        { provide: Tramite260704Query, useValue: tramiteQueryMock },
+        { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
+        { provide: 'ConsultaioQuery', useValue: consultaioQueryMock }
       ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PagoDeDerechosComponent);
@@ -50,85 +64,102 @@ describe('PagoDeDerechosComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize forms and fetch data on ngOnInit', () => {
-    const spyDonanteDomicilio = jest.spyOn(component, 'donanteDomicilio');
-    const spyObtenerDatosBanco = jest.spyOn(component, 'obtenerDatosBanco');
-
+  it('should initialize form and call obtenerDatosBanco and inicializarEstadoFormulario on ngOnInit', () => {
+    jest.spyOn(component, 'donanteDomicilio');
+    jest.spyOn(component, 'obtenerDatosBanco');
+    jest.spyOn(component, 'inicializarEstadoFormulario');
     component.ngOnInit();
-
-    expect(spyDonanteDomicilio).toHaveBeenCalled();
-    expect(spyObtenerDatosBanco).toHaveBeenCalled();
-    expect(component.solicitudState).toEqual({
-      claveDeReferencia: '12345',
-      cadenaDependecia: 'Dependencia Test',
-      fechaPago: '2025-04-10',
-      banco: 'Banco Test',
-      liaveDePago: 'Clave123',
-      importeDePago: '1000',
-    });
+    expect(component.donanteDomicilio).toHaveBeenCalled();
+    expect(component.obtenerDatosBanco).toHaveBeenCalled();
+    expect(component.inicializarEstadoFormulario).toHaveBeenCalled();
   });
 
-  it('should fetch banco data', () => {
+  it('should call guardarDatosFormulario if soloLectura in inicializarEstadoFormulario', () => {
+    component.soloLectura = true;
+    jest.spyOn(component, 'guardarDatosFormulario');
+    component.inicializarEstadoFormulario();
+    expect(component.guardarDatosFormulario).toHaveBeenCalled();
+  });
+
+  it('should call donanteDomicilio if not soloLectura in inicializarEstadoFormulario', () => {
+    component.soloLectura = false;
+    jest.spyOn(component, 'donanteDomicilio');
+    component.inicializarEstadoFormulario();
+    expect(component.donanteDomicilio).toHaveBeenCalled();
+  });
+
+  it('should call donanteDomicilio and enable/disable form in guardarDatosFormulario', () => {
+    component.pagoDeDerechosForm = new FormBuilder().group({
+      claveDeReferencia: [''],
+      cadenaDependecia: [''],
+      fechaPago: [''],
+      banco: [''],
+      liaveDePago: [''],
+      importeDePago: [''],
+    });
+    component.soloLectura = true;
+    jest.spyOn(component.pagoDeDerechosForm, 'disable');
+    jest.spyOn(component, 'donanteDomicilio');
+    component.guardarDatosFormulario();
+    expect(component.donanteDomicilio).toHaveBeenCalled();
+    expect(component.pagoDeDerechosForm.disable).toHaveBeenCalled();
+
+    component.soloLectura = false;
+    jest.spyOn(component.pagoDeDerechosForm, 'enable');
+    component.guardarDatosFormulario();
+    expect(component.pagoDeDerechosForm.enable).toHaveBeenCalled();
+  });
+
+  it('should call consultaService.obtenerDatosBanco and set bancoCatalogo.catalogos in obtenerDatosBanco', () => {
     component.obtenerDatosBanco();
     expect(consultaServiceMock.obtenerDatosBanco).toHaveBeenCalled();
-    expect(component.bancoCatalogo.catalogos).toEqual([{ id: 1, descripcion: 'Banco Test' }]);
+    expect(component.bancoCatalogo.catalogos).toEqual([{ id: 1, descripcion: 'Banco1' }]);
   });
 
-  it('should update fechaPago in the form and store', () => {
-    const nuevoFechaPago = '2025-04-15';
-    component.pagoDeDerechosForm = component.fb.group({
-      fechaPago: [''],
+  it('should patch value and call setValoresStore in cambioFechaPago', () => {
+    component.pagoDeDerechosForm = new FormBuilder().group({
+      fechaPago: ['']
     });
-
-    component.cambioFechaPago(nuevoFechaPago);
-
-    expect(component.pagoDeDerechosForm.get('fechaPago')?.value).toBe(nuevoFechaPago);
-    expect(storeMock.setFechaPago).toHaveBeenCalledWith(nuevoFechaPago);
+    jest.spyOn(component, 'setValoresStore');
+    component.cambioFechaPago('2024-01-01');
+    expect(component.setValoresStore).toHaveBeenCalledWith(component.pagoDeDerechosForm, 'fechaPago', 'setFechaPago');
   });
 
-  it('should validate form fields using isValid', () => {
-    component.pagoDeDerechosForm = component.fb.group({
-      fechaPago: ['2025-04-10'],
-    });
-
-    const isValid = component.isValid(component.pagoDeDerechosForm, 'fechaPago');
-    expect(isValid).toBe(true);
+  it('should call validacionesService.isValid in isValid', () => {
+    const form = new FormBuilder().group({ campo: [''] });
+    expect(component.isValid(form, 'campo')).toBe(true);
+    expect(validacionesServiceMock.isValid).toHaveBeenCalled();
   });
 
-  it('should set values in the store using setValoresStore', () => {
-    const form = component.fb.group({
-      fechaPago: ['2025-04-10'],
-    });
-
-    component.setValoresStore(form, 'fechaPago', 'setFechaPago');
-
-    expect(storeMock.setFechaPago).toHaveBeenCalledWith('2025-04-10');
+  it('should call store method in setValoresStore', () => {
+    const form = new FormBuilder().group({ claveDeReferencia: ['REF123'] });
+    component.setValoresStore(form, 'claveDeReferencia', 'setClaveDeReferencia');
+    expect(tramiteStoreMock.setClaveDeReferencia).toHaveBeenCalledWith('REF123');
   });
 
-  it('should initialize the form in donanteDomicilio', () => {
+  it('should initialize pagoDeDerechosForm in donanteDomicilio', () => {
+    component.solicitudState = {
+      claveDeReferencia: 'REF123',
+      cadenaDependecia: 'CADENA',
+      fechaPago: '2024-01-01',
+      banco: 'BANAMEX',
+      liaveDePago: 'LLAVE123',
+      importeDePago: '1000'
+    } as any;
     component.donanteDomicilio();
-
-    expect(component.pagoDeDerechosForm.value).toEqual({
-      claveDeReferencia: '12345',
-      cadenaDependecia: 'Dependencia Test',
-      fechaPago: '2025-04-10',
-      banco: 'Banco Test',
-      liaveDePago: 'Clave123',
-      importeDePago: '1000',
-    });
+    expect(component.pagoDeDerechosForm).toBeTruthy();
+    expect(component.pagoDeDerechosForm.get('claveDeReferencia')?.value).toBe('REF123');
   });
 
-  it('should destroy subscriptions on ngOnDestroy', () => {
-    const spyNext = jest.spyOn(component['destroyed$'], 'next');
-    const spyComplete = jest.spyOn(component['destroyed$'], 'complete');
-
+  it('should complete destroyed$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroyed$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();
-
-    expect(spyNext).toHaveBeenCalledWith(true);
-    expect(spyComplete).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalledWith(true);
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

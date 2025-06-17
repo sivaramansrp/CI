@@ -1691,6 +1691,15 @@
     "departamento": "AGRICULTURA",
     "numeroDeProcedimiento": "221602"
   },
+    {
+    "id": 260704,
+    "tipoDeTramite": "Solicitud Procedure 260701",
+    "fecha": "2024-11-01",
+    "fechaActualizacion": "2024-11-07",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260704"
+  },
   {
     "id": 260905,
     "tipoDeTramite": "Solicitudddd",
@@ -2283,14 +2292,23 @@
     "diasTranscurridos": "4",
     "departamento": "SE",
     "numeroDeProcedimiento": "90303"
-  },
+    },
   {
-    "id": 240105,
-    "tipoDeTramite": "Solicitud de Permiso",
+    "id": 32101,
+    "tipoDeTramite": "Solicitud de cs Permiso",
     "fecha": "2023-10-01",
     "fechaActualizacion": "2023-10-05",
     "diasTranscurridos": "4",
-    "departamento": "SEDENA",
-    "numeroDeProcedimiento": "240105"
+    "departamento": "AGACE",
+    "numeroDeProcedimiento": "32101"
+},
+  {
+  "id": 240105,
+  "tipoDeTramite": "Solicitud de Permiso",
+  "fecha": "2023-10-01",
+  "fechaActualizacion": "2023-10-05",
+  "diasTranscurridos": "4",
+  "departamento": "SEDENA",
+  "numeroDeProcedimiento": "240105"
   }
 ]
