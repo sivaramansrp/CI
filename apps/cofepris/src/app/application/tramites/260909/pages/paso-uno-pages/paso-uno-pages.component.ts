@@ -1,7 +1,8 @@
 /**
  * Componente para la modificación de permisos de importación de tratamientos.
  */
-import { Component, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { Component, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 
 import { CompleteForm, Destinatario, DomicilioEstablecimiento, Fabricante, Facturador, FormMercancias, PagoDeDerechos, Proveedor, ScianForm, SolicitanteData, SolicitudEstablecimientoForm, TercerosRelacionados, Tramite } from '../../models/modificacion-permiso.model';
@@ -11,6 +12,9 @@ import { PagoDeDerechosEntradaComponent } from '../../../../shared/components/pa
 import { TramitesAsociadosSeccionComponent } from '../../../../shared/components/tramites-asociados-seccion/tramites-asociados-seccion.component';
 
 import { DatosDelSolicitudModificacionComponent } from '../../components/datos-del-solicitud-modificacion/datos-del-solicitud-modificacion.component';
+import { EstablecimientoService } from '../../service/establecimiento.service';
+
+import {Subject, map,takeUntil } from 'rxjs';
 /**
  * Clase que representa el componente de modificación de permisos de importación de tratamientos.
  */
@@ -26,7 +30,45 @@ import { DatosDelSolicitudModificacionComponent } from '../../components/datos-d
  * @export
  * @class PasoUnoPagesComponent
  */
-export class PasoUnoPagesComponent {
+export class PasoUnoPagesComponent implements OnInit {
+  constructor( private consultaQuery: ConsultaioQuery,
+    private establecimientoService : EstablecimientoService
+  ){
+
+  }
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+ /** Identificador de la sección seleccionada para mostrar el componente correspondiente. */
+  public seccionSeleccionada!: string;
+
+  /** Subject para notificar la destrucción del componente. */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /** Estado actual de la consulta obtenido desde el store. */
+  public consultaState!:ConsultaioState;
+   ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+        this.consultaState = seccionState;
+        if(this.consultaState.update) {
+          this.guardarDatosFormulario();
+        } else {
+          this.esDatosRespuesta = true;
+        }
+    })).subscribe();
+  }
+guardarDatosFormulario(): void {
+  this.establecimientoService
+    .getPagoDerechos()
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((resp) => {
+      if (resp) {
+        this.esDatosRespuesta = true;
+        this.establecimientoService.actualizarEstadoFormulario(resp);
+       
+      }
+    });
+}
   /**
      * Referencia al componente `SolicitanteComponent` para acceder a sus métodos y propiedades.
      */

@@ -136,6 +136,7 @@
               [required]="true"
               formControlName="establecimientoEstados"
               (change)="enCambioDeControl('establecimientoEstados')"
+                 [isDisabled]="esFormularioSoloLectura"
             >
             </app-catalogo-select>
           </div>
@@ -331,6 +332,7 @@
           [tooltipQuestionCircle]="true"
           formControlName="regimen"
           (change)="enControlCambioFormulario('regimen')"
+             [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
       </div>
       <div class="col-md-8">
@@ -341,6 +343,7 @@
           name="aduanasEntradas"
           formControlName="aduanasEntradas"
           (change)="enControlCambioFormulario('aduanasEntradas')"
+             [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
       </div>
     </div>
@@ -367,9 +370,8 @@
         </button>
       </div>
     </div>
-
-    <app-manifiestos></app-manifiestos>
-    <app-representante-legal></app-representante-legal>
+<app-manifiestos-representante-seccion  [formularioDeshabilitado]="esFormularioSoloLectura"
+   ></app-manifiestos-representante-seccion>
 
   </form>
 </div>
@@ -401,6 +403,7 @@ aria-hidden="true"
                 [placeholder]="'Seleccione una valor'"
                 formControlName="scian"
                 (change)="onContriloChange('scian')"
+                   [isDisabled]="esFormularioSoloLectura"
               ></app-catalogo-select>
             </div>
           </div>
@@ -468,6 +471,7 @@ aria-hidden="true"
               [label]="'Clasificación del producto'"
               [required]="true"
               name="clasificacion"
+                 [isDisabled]="esFormularioSoloLectura"
             ></app-catalogo-select>
           </div>
           <div class="form-group">

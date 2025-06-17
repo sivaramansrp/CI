@@ -49,6 +49,7 @@ import { RepresentanteLegalComponent } from '../../../../shared/components/repre
 
 import { CROSLISTA_DE_PAISES, FECHA_DE_PAGO, MERCANCIAS_DATA, SCIAN_TABLE_CONFIG } from '../../constantes/medicamentos-donacion.enum';
 import { DatosDelSeccionQuery } from '../../estados/datos-del-solicitud-seccion.query';
+import { ManifiestosRepresentanteSeccionComponent } from '../../../../shared/components/manifiestos-representante-seccion/manifiestos-representante-seccion.component';
 
 
 /**
@@ -128,6 +129,7 @@ import { DatosDelSeccionQuery } from '../../estados/datos-del-solicitud-seccion.
     AlertComponent,
     InputCheckComponent,
     NotificacionesComponent,
+     ManifiestosRepresentanteSeccionComponent,
   ],
 
   templateUrl: './datos-del-solicitud-modificacion.component.html',
@@ -530,6 +532,12 @@ export class DatosDelSolicitudModificacionComponent implements OnInit, OnDestroy
     this.loadEstadoData();
     this.crearAgregarFormulario();
     this.estadoDelServicio();
+      if (this.esFormularioSoloLectura) {
+      this.formMercancias.disable();
+      this.domicilioEstablecimiento.disable();
+      this.solicitudEstablecimientoForm.disable();
+      this.scianForm.disable();
+    }
   }
 
   /**
@@ -697,11 +705,11 @@ export class DatosDelSolicitudModificacionComponent implements OnInit, OnDestroy
    * Carga los datos del catálogo de justificación.
    */
   enCambioDeControl(controlName: string): void {
-    const valorSeleccionado = this.domicilioEstablecimiento.get(controlName)?.value;
+    const VALOR_SELECCIONADO = this.domicilioEstablecimiento.get(controlName)?.value;
     this.domicilioEstablecimientoStore.update({
-    [controlName]: valorSeleccionado
+    [controlName]: VALOR_SELECCIONADO
   });
-  if (controlName === 'ideGenerica1' && valorSeleccionado === 'modificacion') {
+  if (controlName === 'ideGenerica1' && VALOR_SELECCIONADO === 'modificacion') {
     this.domicilioEstablecimiento.get('observaciones')?.enable();
   } else {
     this.domicilioEstablecimiento.get('observaciones')?.disable();
