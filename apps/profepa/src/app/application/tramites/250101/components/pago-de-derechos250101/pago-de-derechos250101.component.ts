@@ -152,7 +152,7 @@ export class PagoDeDerechos250101Component implements OnInit, OnDestroy {
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
-private guardarDatosFormulario(): void {
+public guardarDatosFormulario(): void {
     if (!this.pagoDerechosForm) {return}
     this.inicializarFormulario();
     if (this.esFormularioSoloLectura) {

@@ -63,7 +63,7 @@ export class Requisitos250101Component implements OnInit, OnDestroy {
   /**
    * Datos de la tabla de requisitos.
    */
-  public RequisitosTabla: Requisito[] = [];
+  public requisitosTabla: Requisito[] = [];
 
   /**
    * Estado de visibilidad del modal de transporte.
@@ -158,13 +158,13 @@ export class Requisitos250101Component implements OnInit, OnDestroy {
  * Si la tabla de requisitos está vacía, se agrega una fila con datos dummy.
  * Los campos incluyen número, fecha y tipo del requisito.
  */
-       if(this.RequisitosTabla.length === 0){
+       if(this.requisitosTabla.length === 0){
        const REQUISITO_FORMDATA = {
         No: reuisitosDatosDummy.No,
         Fecha: reuisitosDatosDummy.Fecha,
         Tipo: reuisitosDatosDummy.Tipo,
        };
-       this.RequisitosTabla.push(REQUISITO_FORMDATA);
+       this.requisitosTabla.push(REQUISITO_FORMDATA);
       }
 
     this.transporteForm = this.fb.group({
@@ -217,13 +217,13 @@ public guardarDatosFormulario(): void {
        };
        this.TransporteTabla.push(TRANSPORTE_FORMDATA);
       }
-       if(this.RequisitosTabla.length === 0){
+       if(this.requisitosTabla.length === 0){
        const REQUISITO_FORMDATA = {
         No: reuisitosDatosDummy.No,
         Fecha: reuisitosDatosDummy.Fecha,
         Tipo: reuisitosDatosDummy.Tipo,
        };
-       this.RequisitosTabla.push(REQUISITO_FORMDATA);
+       this.requisitosTabla.push(REQUISITO_FORMDATA);
       }
     } else if (!this.esFormularioSoloLectura) {
       this.transporteForm.enable();
@@ -286,7 +286,7 @@ public guardarDatosFormulario(): void {
       Fecha: this.transporteForm.value.fechas,
       Tipo: this.requisitoCatalogo.find(item => item.id === Number(this.transporteForm.value.requisito))?.descripcion,
     };
-    this.RequisitosTabla.push(REQUISITO_FORMDATA);
+    this.requisitosTabla.push(REQUISITO_FORMDATA);
     this.showrequisitosModal = !this.showrequisitosModal;
   }
 

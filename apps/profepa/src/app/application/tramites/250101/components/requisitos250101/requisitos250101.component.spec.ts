@@ -1,3 +1,31 @@
+jest.mock('@libs/shared/theme/assets/json/250101/banco.json', () => ({
+  __esModule: true,
+  default: {
+    medio: [
+      { id: 1, descripcion: 'Medio 1' },
+      { id: 2, descripcion: 'Medio 2' }
+    ],
+      requisito: [
+      { id: 1, descripcion: 'requisito 1' },
+      { id: 2, descripcion: 'requisito 2' }
+    ],
+    // Add other properties if your component uses them
+  }
+}), { virtual: true });
+
+// Mock reuisitosDatosDummy
+jest.mock('@libs/shared/theme/assets/json/250101/requisitos-datos-dummy.json', () => ({
+  __esModule: true,
+  default: {
+  numeroIdentificacion: 'ABC123',
+  numeroEconomico: 'ECO456',
+  placa: 'XYZ789',
+  No: '1',
+  Fecha: '2024-01-01',
+  Tipo: 'Permiso'
+  }
+}), { virtual: true });
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Requisitos250101Component } from './requisitos250101.component';
 import { Tramite250101Query } from '../../estados/tramite250101.query';
@@ -5,22 +33,6 @@ import { Tramite250101Store } from '../../estados/tramite250101.store';
 import { ReactiveFormsModule, FormsModule, FormBuilder } from '@angular/forms';
 import { of, Subject } from 'rxjs';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-
-// Mock catalogoDatos
-jest.mock('@libs/shared/theme/assets/json/250101/banco.json', () => ({
-  medio: [{ id: 1, descripcion: 'Aéreo' }],
-  requisito: [{ id: 1, descripcion: 'Permiso' }]
-}), { virtual: true });
-
-// Mock reuisitosDatosDummy
-jest.mock('@libs/shared/theme/assets/json/250101/requisitos-datos-dummy.json', () => ({
-  numeroIdentificacion: 'ABC123',
-  numeroEconomico: 'ECO456',
-  placa: 'XYZ789',
-  No: '1',
-  Fecha: '2024-01-01',
-  Tipo: 'Permiso'
-}), { virtual: true });
 
 // Mock Tramite250101Store
 class Tramite250101StoreMock {
@@ -134,7 +146,7 @@ describe('Requisitos250101Component', () => {
 
     component.showrequisitosModal = true;
     component.requisitosDatos();
-    expect(component.RequisitosTabla.length).toBe(1);
+    expect(component.requisitosTabla.length).toBe(1);
     expect(component.showrequisitosModal).toBe(false);
   });
 
