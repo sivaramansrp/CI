@@ -1,5 +1,5 @@
 {
-    "genericos": "prorroga",
+   "datosSolicitudState":{ "genericos": "prorroga",
     "observaciones": "observaciones",
     "establecimientoRazonSocial": "RazonSocial",
     "establecimientoCorreoElectronico": "CorreoElectronico",
@@ -17,7 +17,16 @@
     "aduanasEntradas": 1,
     "aifaCheckbox": true,
     "manifests": true,
-    "informacionConfidencialRadio": "radio",
+    "informacionConfidencialRadio": "No",
     "scian": "scian",
     "descripcionScian": "descripcion_scian"
+},
+     "permisoImportacionBiologicaState": {
+      "setClaveDeReferncia": "clave_referencia",
+      "setCadenaDeLaDependencia": "cadena_dependencia",
+      "setBanco": "1",
+      "setLlaveDePago": "1234567890",
+      "setFechaDePago": "2025-06-01",
+      "setImporteDePago": "1000.00"
+     }
 }
