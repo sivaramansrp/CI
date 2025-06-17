@@ -3,7 +3,7 @@
   <form [formGroup]="federatariosFormGroup">
     <div class="row">
       <formas-dinamicas [forma]="federatariosFormGroup"
-        [formularioDatos]="representanteLegalFormData"></formas-dinamicas>
+        [formularioDatos]="representanteLegalFormData" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
       <div class="row mt-5">
         <div class="col-12 container text-end mt-5">
           <button class="btn btn-default me-2">Eliminar</button>
@@ -34,7 +34,7 @@
       <form [formGroup]="expresasFormGroup">
         <div class="row">
           <formas-dinamicas [forma]="expresasFormGroup"
-            [formularioDatos]="expresasFormData"></formas-dinamicas>
+            [formularioDatos]="expresasFormData"    (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
           <div class="row mt-5">
             <div class="col-12 container text-end mt-5">
               <button class="btn btn-default me-2">Eliminar</button>

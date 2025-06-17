@@ -31,6 +31,10 @@ import { MontosDeInversionComponent } from '../montos-de-inversion/montos-de-inv
 import { ReactiveFormsModule } from '@angular/forms';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
+import { FederatoriosQuery } from '../../../estados/queries/federatarios.query';
+import { FederatoriosState, FederatoriosStore } from '../../../estados/tramites/federatarios.store';
+import { map, Subject, takeUntil } from 'rxjs';
+import { Catalogo } from '@libs/shared/data-access-user/src';
 /**
  * Componente para los federatarios y plantas
  * @export FederatariosYPlantasComponent
@@ -189,19 +193,27 @@ export class FederatariosYPlantasComponent {
    * Opciones de estados disponibles
    * @property {[]} estadoOptions
    */
-  estadoOptions: [] = [];
+    @Input() estadoOptions!:Catalogo[];
 
   /**
    * Texto para mostrar en la alerta
    * @property {string} textodAlerta
    */
-  public textodAlerta = TEXTO_DE_ALERTA;
 
+  public textodAlerta = TEXTO_DE_ALERTA;
+/**
+   * Estado de la solicitud 250101, que contiene los valores actuales de la solicitud.
+   */
+  public solicitudState!: FederatoriosState;
   /**
    * Formulario para los datos de federatarios
    * @property {FormGroup} federatariosFormGroup
    */
   public federatariosFormGroup!: FormGroup;
+/**
+   * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
 
   public expresasFormGroup!: FormGroup;
 
@@ -217,7 +229,16 @@ export class FederatariosYPlantasComponent {
    * @param {Router} router - Servicio de Angular para la navegación.
    * @param {ActivatedRoute} activatedRoute - Servicio de Angular para obtener información sobre la ruta actual.
    */
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute ,private federatoriosQuery:FederatoriosQuery,private federatoriosStore:FederatoriosStore)
+   {
+     this.federatoriosQuery.selectSolicitud$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.solicitudState = seccionState as FederatoriosState;
+            })
+          )
+          .subscribe();
     this.initFederatariosFormGroup();
     this.initExpresasFormGroup();
   }
@@ -229,14 +250,14 @@ export class FederatariosYPlantasComponent {
    */
   initFederatariosFormGroup(): void {
     this.federatariosFormGroup = new FormGroup({
-      nombre: new FormControl('', Validators.required),
-      fechaInicioInput: new FormControl(''),
-      primerApellido: new FormControl(''),
-      segundoApellido: new FormControl(''),
-      numeroDeActa: new FormControl(''),
-      numeroDeNotaria: new FormControl(''),
-      estado: new FormControl(''),
-      estadoOptions: new FormControl(''),
+      nombre: new FormControl( this.solicitudState['fechaDelActa'], Validators.required),
+      fechaDelActa: new FormControl(this.solicitudState['fechaInicioInput']),
+      primerApellido: new FormControl(this.solicitudState['primerApellido']),
+      segundoApellido: new FormControl(this.solicitudState['segundoApellido']),
+      numeroDeActa: new FormControl(this.solicitudState['numeroDeActa']),
+      numeroDeNotaria: new FormControl(this.solicitudState['numeroDeNotaria']),
+      estado: new FormControl(this.solicitudState['estado']),
+      estadoOptions: new FormControl(this.solicitudState['estadoOptions']),
     });
   }
 
@@ -252,10 +273,10 @@ export class FederatariosYPlantasComponent {
    */
   initExpresasFormGroup(): void {
     this.expresasFormGroup = new FormGroup({
-      taxId: new FormControl('', Validators.required),
-      nombreDelEmpresa: new FormControl('', Validators.required),
-      pais: new FormControl('', Validators.required),
-      direccion: new FormControl('', Validators.required),
+      taxId: new FormControl(this.solicitudState['taxId'], Validators.required),
+      nombreDelEmpresa: new FormControl(this.solicitudState['nombreDelEmpresa'], Validators.required),
+      pais: new FormControl(this.solicitudState['pais'], Validators.required),
+      direccion: new FormControl(this.solicitudState['direccion'], Validators.required),
     });
   }
   /**
@@ -367,6 +388,27 @@ export class FederatariosYPlantasComponent {
    */
   aggregarExpresasDatos(): void {
     this.expresasDatos.push(this.expresasFormGroup.value);
+  }
+    /**
+  * compo doc
+  * @method establecerCambioDeValor
+  * @description
+  * Este método se utiliza para manejar los cambios en los valores de un formulario dinámico.
+  * Recibe un evento que contiene el nombre del campo y su nuevo valor, y actualiza el estado
+  * dinámico del formulario en el store correspondiente.
+  * 
+  * @param event - Un objeto que contiene el campo que ha cambiado y su nuevo valor.
+  * El objeto tiene la estructura: `{ campo: string; valor: any }`.
+  * 
+  * @example
+  * establecerCambioDeValor({ campo: 'nombre', valor: 'Juan' });
+  * // Actualiza el campo 'nombre' con el valor 'Juan' en el store dinámico.
+  */
+  establecerCambioDeValor(event: { campo: string; valor: object | string }): void {
+    if (event) {
+      this.federatoriosStore.setDynamicFieldValue(event.campo, event.valor);
+      
+    }
   }
 
 }

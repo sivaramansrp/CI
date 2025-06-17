@@ -246,7 +246,17 @@
   "monedaNacionalMensual": 1200000,
   "monedaNacionalDeDosPeriodos": 2300000,
   "volumenMensual": 480,
-  "twoPeriodVolume": 970
+  "twoPeriodVolume": 970,
+  "nombre": "1",
+  "fechaDelActa": "1",
+  "primerApellido": "1",
+  "segundoApellido": "1",
+  "numeroDeActa": "1",
+  "numeroDeNotaria": "1",
+  "estadoOptions": "1",
+  "estadoUno": "1",
+  "estadoDos": "1",
+  "estadoTres": "1"
  
 
 }

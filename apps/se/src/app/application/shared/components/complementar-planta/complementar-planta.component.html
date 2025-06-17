@@ -1,6 +1,8 @@
 <div class="container">
   <ng-titulo [titulo]="'Complemento de planta'"></ng-titulo>
-
+ 
+    <form [formGroup]="complementarForm">
+      <div class="form">
   <div class="row">
     <div class="col-md-4">
       <app-catalogo-select
@@ -8,6 +10,8 @@
         [label]="'Permanecerá mercancía al amparo del programa'"
         [required]="true"
         name="estado"
+        formControlName="permanecera" (change)="setValoresStore(complementarForm, 'permanecera', 'setPermanecera')"
+      
       ></app-catalogo-select>
     </div>
     <div class="col-md-4">
@@ -16,18 +20,19 @@
         [label]="'Tipo de documento'"
         [required]="true"
         name="estado"
+        formControlName="tipo" (change)="setValoresStore(complementarForm, 'tipo', 'setTipo')"
       ></app-catalogo-select>
     </div>
   </div>
   <div class="row">
     <div class="col-md-4">
       <div class="form-group">
-        <input-fecha [datos]="fetchaDeFirma"></input-fecha>
+        <input-fecha [datos]="fetchaDeFirma" [setFecha]="complementarForm.get('fechaDeFirma')?.value" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
       </div>
     </div>
     <div class="col-md-4">
       <div class="form-group">
-        <input-fecha [datos]="fetchaDeFinDeVigencia"></input-fecha>
+        <input-fecha [datos]="fetchaDeFinDeVigencia" [setFecha]="complementarForm.get('fetchaDeFinDeVigencia')?.value" (valorCambiado)="cambioFechaFinale($event)"></input-fecha>
       </div>
     </div>
   </div>
@@ -51,4 +56,6 @@
       </button>
     </div>
   </div>
+</div>
+    </form>
 </div>

@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Solicitud80104State, Tramite80104Store } from '../../../estados/tramites/tramite80104.store';
 import { Tramite80101State, Tramite80101Store } from '../estados/tramite80101.store';
 import { ComplementosSeccionState, ComplementosSeccionStore } from '../../../estados/tramites/complementos-seccion.store';
+import { FederatoriosState, FederatoriosStore } from '../../../estados/tramites/federatarios.store';
 
 @Injectable({
   providedIn: 'root',
@@ -22,6 +23,7 @@ export class Solocitud80103Service {
 /** Constructor que inyecta servicios HTTP y el store del trámite 110203.  
  *  Utilizado para inicializar dependencias necesarias en el componente. */
   constructor(private http: HttpClient, private tramite80104Store: Tramite80104Store,private tramite80101Store:Tramite80101Store, private complementosSeccionStore: ComplementosSeccionStore,
+    private federatoriosStore: FederatoriosStore,
         ) {
     // Lógica de inicialización si es necesario
   }
@@ -81,6 +83,13 @@ actualizarEstadoFormularioss(DATOS: ComplementosSeccionState): void {
     this.complementosSeccionStore.setDynamicFieldValue(key, value);
   });
 }
+actualizarEstadoFormulariosss(DATOS: FederatoriosState): void {
+ Object.entries(DATOS).forEach(([key, value]) => {
+    this.federatoriosStore.setDynamicFieldValue(key, value);
+  });
+
+
+}
 
 /** Obtiene los datos simulados del registro de toma de muestras de mercancías  
  *  desde un archivo JSON local para el trámite 110203. */
@@ -98,6 +107,8 @@ actualizarEstadoFormularioss(DATOS: ComplementosSeccionState): void {
   getRegistroTomaMuestrasMercanciasDatass(): Observable<ComplementosSeccionState> {
     return this.http.get<ComplementosSeccionState>('assets/json/80104/serviciosExtraordinarios.json');
   }
-
+  getRegistroTomaMuestrasMercanciasDatasss(): Observable<FederatoriosState> {
+    return this.http.get<FederatoriosState>('assets/json/80104/serviciosExtraordinarios.json');
+  }
 
 }
