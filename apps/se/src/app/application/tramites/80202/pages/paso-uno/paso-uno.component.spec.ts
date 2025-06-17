@@ -10,8 +10,8 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent],
-      imports: [SolicitanteComponent, HttpClientModule],
+      declarations: [PasoUnoComponent, SolicitanteComponent],
+      imports: [HttpClientModule],
       providers: [SolicitanteService],
     }).compileComponents();
 
