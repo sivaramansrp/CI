@@ -69,6 +69,7 @@
               [catalogo]="banco"
               [label]="'Banco'"
               (change)="setValoresStore(formularioPagoDerechos, 'bancoClave')"
+              [isDisabled]="isDisabled"
             ></app-catalogo-select>
           </div>
         </div>
@@ -97,6 +98,7 @@
             [setFecha]="formularioPagoDerechos.get('fecPago')?.value"
             [datos]="configuracionFechaFinal"
             (valorCambiado)="setValoresStore(formularioPagoDerechos, 'fecPago')"
+            [isDisabled]="isDisabled"
           />
         </div>
         <div class="col-md-4">
@@ -120,6 +122,7 @@
             class="btn btn-danger" 
             (click)="formularioPagoDerechos.reset()"
             type="button"
+            [disabled]="isDisabled"
             >
             Borrar datos del pago
             </button>

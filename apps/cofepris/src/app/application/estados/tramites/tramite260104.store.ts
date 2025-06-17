@@ -310,7 +310,7 @@ export function createInitialState(): Solicitud260104State {
  */
 @StoreConfig({ name: 'tramite260104', resettable: true })
 
-export class Tramite260104Store extends Store<Solicitud260104State>{
+export class Tramite260104StoreDos extends Store<Solicitud260104State>{
     /**
      * Crea una instancia de Tramite31601Store.
      * Inicializa la tienda con el estado inicial.

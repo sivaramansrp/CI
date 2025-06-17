@@ -57,7 +57,7 @@ export class SolicitantePageComponent {
    * Incluye el número total de pasos, el índice actual y los textos de los botones.
    * Se inicializa con los valores predeterminados.
    */
-  datosPasos: DatosPasos = {
+    datosPasos: DatosPasos = {
     // Número total de pasos en el wizard, basado en la longitud del array `pantallasPasos`.
     nroPasos: this.pantallasPasos.length,
 

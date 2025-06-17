@@ -149,7 +149,7 @@ export class DetalleDelPermisoComponent implements OnInit, OnDestroy {
             vigenciaPeriodo: PERMISOS_VIGENTES.periodoDeVigencia,
             unidadMedida: PERMISOS_VIGENTES.unidad,
             cantidad: PERMISOS_VIGENTES.cantidadAutorizada,
-            valorFacturaUSD: PERMISOS_VIGENTES.valorAutorizada,
+            valorFacturaUSD: PERMISOS_VIGENTES.valorAutorizado,
             saldo: PERMISOS_VIGENTES.saldo,
             fraccionArancelaria: PERMISOS_VIGENTES.fraccionArancelaria,
             nico: PERMISOS_VIGENTES.nico,

@@ -1,8 +1,8 @@
 import { ActivatedRoute, Router } from '@angular/router'; // Importa clases para manejar rutas y navegación.
-import { Component, OnDestroy, OnInit } from '@angular/core'; // Importa las clases base para componentes de Angular.
+import { Component, Input, OnDestroy, OnInit } from '@angular/core'; // Importa las clases base para componentes de Angular.
 import { CommonModule } from '@angular/common'; // Importa funcionalidades comunes de Angular.
+import {ReactiveFormsModule } from '@angular/forms'; // Importa clases para formularios reactivos.
 
-import { FormBuilder, ReactiveFormsModule } from '@angular/forms'; // Importa clases para formularios reactivos.
 import { Subject, map, takeUntil } from 'rxjs'; // Importa clases para manejar observables y suscripciones.
 
 import { CONFIGURACION_ACCIONISTAS_TABLA, Monumentos } from '../../constantes/permiso-de-exportacion.enum'; // Importa la configuración de la tabla y la interfaz `Monumentos`.
@@ -13,7 +13,21 @@ import { Solicitud280101State, Tramite280101Store } from '../../../../estados/tr
 import { Tramite280101Query } from '../../../../estados/queries/tramite280101.query'; // Importa la consulta para el estado del trámite.
 
 /**
- * Componente para gestionar el formulario del solicitante.
+ * Componente para la gestión de monumentos en el trámite 280101.
+ *
+ * Este componente permite visualizar, agregar y eliminar monumentos asociados a una solicitud.
+ * Utiliza formularios reactivos y una tabla dinámica para la presentación y manipulación de los datos.
+ *
+ * @remarks
+ * - El componente es standalone y utiliza módulos comunes de Angular.
+ * - Permite operar en modo solo lectura para evitar modificaciones.
+ *
+ * @example
+ * <app-monumento [soloLectura]="true"></app-monumento>
+ *
+ * @see Monumentos
+ * @see Tramite280101Store
+ * @see Tramite280101Query
  */
 @Component({
   selector: 'app-monumento', // Define el selector del componente.
@@ -36,12 +50,12 @@ export class MonumentoComponent implements OnInit,OnDestroy{
   /**
    * Selección de la tabla.
    */
-  TablaSeleccion = TablaSeleccion;
+  tablaSeleccion = TablaSeleccion;
 
   /**
    * Estado de la solicitud 280101.
    */
-  public solicitudState!: Solicitud280101State;
+  private solicitudState!: Solicitud280101State;
 
   /**
    * Subject para manejar la destrucción del componente y evitar fugas de memoria.
@@ -59,15 +73,19 @@ export class MonumentoComponent implements OnInit,OnDestroy{
   public monumentoSeleccionLista: Monumentos[] = [];
 
   /**
+   * Indica si el componente debe estar en modo solo lectura.
+   * Cuando es `true`, los campos y acciones estarán deshabilitados para evitar modificaciones.
+   */
+  @Input() soloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
-   * @param fb FormBuilder para crear formularios reactivos.
    * @param router Router para la navegación.
    * @param activatedRoute ActivatedRoute para rutas relativas.
    * @param store Store para manejar el estado del trámite.
    * @param query Query para obtener el estado del trámite.
    */
   constructor(
-    private fb: FormBuilder,
     public router: Router,
     public activatedRoute: ActivatedRoute,
     private store: Tramite280101Store,
@@ -113,6 +131,11 @@ export class MonumentoComponent implements OnInit,OnDestroy{
     this.monumentoSeleccionLista = []; // Limpia la lista de selección.
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
+   * Emite una notificación y completa el observable `destroyNotifier$` para limpiar suscripciones
+   * y evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();

@@ -1,12 +1,12 @@
 import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import {
+  Solicitud32505State,
+  Tramite32505Store,
+} from '../../../../estados/tramites/trimite32505.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { AvisoService } from '../../services/aviso.service';
 import { TituloComponent } from '@ng-mf/data-access-user';
-import {
-  Solicitud32502State,
-  tramite32505Store,
-} from '../../../../estados/tramites/trimite32505.store';
 import { Tramite32505Query } from '../../../../estados/queries/tramite32505.query';
 
 /**
@@ -38,7 +38,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    * 
    * Contiene toda la información relacionada con el estado del trámite.
    */
-  public tramiteState!: Solicitud32502State;
+  public tramiteState!: Solicitud32505State;
 
   /**
    * Evento para emitir cuando se desea continuar al siguiente paso.
@@ -55,7 +55,7 @@ export class SolicitanteComponent implements OnInit, OnDestroy {
    */
   constructor(
     public fb: FormBuilder,
-    public store: tramite32505Store,
+    public store: Tramite32505Store,
     public tramiteQuery: Tramite32505Query,
     private avisoService: AvisoService,
   

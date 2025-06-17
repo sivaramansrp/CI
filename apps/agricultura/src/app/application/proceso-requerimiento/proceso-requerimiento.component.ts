@@ -15,6 +15,7 @@ import {
   ConsultaioState,
   ConsultaioStore,
   DatosPasos,
+  DesplazarseHaciaArribaService,
   EncabezadoRequerimientoComponent,
   FirmaElectronicaComponent,
   ListaPasosWizard,
@@ -38,7 +39,6 @@ import { OnInit } from '@angular/core';
 import { ReviewersTabsComponent } from '@libs/shared/data-access-user/src/tramites/components/reviewers-tabs/reviewers-tabs.component';
 import { Router } from '@angular/router';
 import { Type } from '@angular/core';
-
 
 /**
  * Componente principal para el proceso de requerimiento.
@@ -72,7 +72,7 @@ import { Type } from '@angular/core';
   styleUrl: './proceso-requerimiento.component.scss',
 })
 export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
-   /**
+  /**
    * Lista de pasos del wizard de requerimientos.
    */
   pasos: ListaPasosWizard[] = PASOS_REQUERIMIENTOS;
@@ -188,8 +188,9 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
     private catalogosServices: CatalogosService,
     private requerimientoService: AtenderRequerimientoService,
     private tramiteQueries: TramiteFolioQueries,
+    private desplazarseHaciaArribaService: DesplazarseHaciaArribaService
   ) {
- 
+
     /**
      * Suscripción al estado de consulta.
      * Guarda los datos actuales del estado en `guardarDatos`.
@@ -207,16 +208,16 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
      * Obtiene la información del requerimiento desde el servicio.
      * Extrae y asigna la fecha y justificación del requerimiento.
      */
-    this.requerimientoService.informacionRequisitos()
-    .pipe(
-      takeUntil(this.destroyNotifier$)
-    ).subscribe({
-      next: (resp): void => {
-        const DATOS = resp.data;
-        this.fechaRequerimiento = DATOS.fechaRequerimiento;
-        this.justificacionRequerimiento = DATOS.justificacionRequerimiento;
-      },
-    });
+    this.requerimientoService
+      .informacionRequisitos()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe({
+        next: (resp): void => {
+          const DATOS = resp.data;
+          this.fechaRequerimiento = DATOS.fechaRequerimiento;
+          this.justificacionRequerimiento = DATOS.justificacionRequerimiento;
+        },
+      });
 
     /**
      * Asigna valores a propiedades locales a partir de `guardarDatos`.
@@ -254,15 +255,22 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
      */
     const URL_ACTUAL = this.router.url;
     this.url = URL_ACTUAL.split('/')[1];
-    
+
     /**
      * Obtiene el folio del trámite actual desde el servicio `tramiteQueries`.
      */
     this.folio = this.tramiteQueries.getTramite();
-      /**
-   * Genera el texto de alerta de acuse con el folio del trámite.
-   */
+    /**
+     * Genera el texto de alerta de acuse con el folio del trámite.
+     */
     this.txtAlerta = TXT_ALERTA_ACUSE(this.folio);
+
+    /**
+     * Realiza un desplazamiento suave hacia la parte superior de la página usando el servicio.
+     *
+     * Se utiliza para mejorar la experiencia de usuario al cambiar de paso o al inicializar el componente.
+     */
+    this.desplazarseHaciaArribaService.desplazarArriba();
   }
 
   /**
@@ -307,9 +315,9 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
    * @return {void}
    */
   getValorIndice(e: AccionBoton): void {
-    if (e.valor > 0 && e.valor < 5) {
+    if (e?.valor && e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
-      if (this.indice === 1) {
+      if (this.indice !== 2) {
           this.consultaioStore.establecerConsultaio(
           this.guardarDatos?.procedureId,
           this.guardarDatos?.parameter,
@@ -317,7 +325,10 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
           this.guardarDatos?.folioTramite,
           this.guardarDatos?.tipoDeTramite,
           this.guardarDatos?.estadoDeTramite,
-          true,false,false);
+          true,
+          false,
+          false
+        );
       } else {
         this.consultaioStore.establecerConsultaio(
           this.guardarDatos?.procedureId,
@@ -326,13 +337,18 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
           this.guardarDatos?.folioTramite,
           this.guardarDatos?.tipoDeTramite,
           this.guardarDatos?.estadoDeTramite,
-          false,false,true);
+          false,
+          false,
+          true
+        );
       }
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {
         this.wizardComponent.atras();
       }
+
+      this.desplazarseHaciaArribaService.desplazarArriba();
     }
   }
 
@@ -372,6 +388,16 @@ export class ProcesoRequerimientoComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
-    this.consultaioStore.establecerConsultaio('', '', '', '', '', '', false, true, false);
+    this.consultaioStore.establecerConsultaio(
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      false,
+      true,
+      false
+    );
   }
 }

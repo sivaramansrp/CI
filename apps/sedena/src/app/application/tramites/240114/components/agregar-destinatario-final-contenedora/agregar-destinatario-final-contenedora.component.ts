@@ -18,6 +18,13 @@ import { Tramite240114Store } from '../../estados/tramite240114Store.store';
 })
 export class AgregarDestinatarioFinalContenedoraComponent {
   /**
+   * @property esFormularioSoloLectura
+   * @description Indica si el formulario es de solo lectura.
+   * @type {boolean}
+   */
+
+  esFormularioSoloLectura: boolean = false;
+  /**
    * Constructor del componente.
    *
    * @method constructor
@@ -37,5 +44,4 @@ export class AgregarDestinatarioFinalContenedoraComponent {
   updateDestinatarioFinalTablaDatos(event: DestinoFinal[]): void {
     this.tramiteStore.updateDestinatarioFinalTablaDatos(event);
   }
- 
 }

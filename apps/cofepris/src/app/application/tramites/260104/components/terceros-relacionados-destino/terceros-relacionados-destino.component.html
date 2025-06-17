@@ -21,6 +21,8 @@
 		[datos]="destinatarioFinalTablaDatos"
 		[tipoSeleccionTabla]="tipoSeleccionTabla"
     (listaDeFilaSeleccionada)="getDestinatarioDatos($event)"
+	[disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false" 
+	[desactivarEmitirEvento]="esFormularioSoloLectura ? true : false"
 	  ></app-tabla-dinamica>
 	</div>
   
@@ -33,6 +35,7 @@
 			name="modificarMercancias"
 			class="btn btn-default"
             (click)="modifySelectedDestinatarios()"
+			[disabled]="esFormularioSoloLectura ? true : false"
 		  >
 			Modificar
 		  </button>
@@ -41,6 +44,7 @@
 			name="eliminarMercancias"
 			class="btn btn-danger ms-2"
 			(click)="eliminarSelectedDestinatario()"
+			[disabled]="esFormularioSoloLectura ? true : false"
 		  >
 			Eliminar
 		  </button>
@@ -50,6 +54,7 @@
 			name="agregarMercancias"
 			class="btn btn-primary ms-2"
 			(click)="irAAcciones('../agregar-destinatario-final')"
+			[disabled]="esFormularioSoloLectura ? true : false"
 		  >
 			Agregar
 		  </button>
@@ -70,6 +75,8 @@
 		[configuracionTabla]="configuracionTablaFabricante"
 		[datos]="fabricanteTablaDatos"
 		[tipoSeleccionTabla]="tipoSeleccionTabla"
+		[disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false" 
+		[desactivarEmitirEvento]="esFormularioSoloLectura ? true : false"
 	  ></app-tabla-dinamica>
 	</div>
   
@@ -81,6 +88,7 @@
 			type="button"
 			name="modificarMercancias"
 			class="btn btn-default"
+			[disabled]="esFormularioSoloLectura ? true : false"
 		  >
 			Modificar
 		  </button>
@@ -89,6 +97,7 @@
 			name="eliminarMercancias"
 			class="btn btn-danger ms-2"
 			(click)="eliminarSelectedFabricante()"
+			[disabled]="esFormularioSoloLectura ? true : false"
 		  >
 			Eliminar
 		  </button>
@@ -98,6 +107,7 @@
 			name="agregarMercancias"
 			class="btn btn-primary ms-2"
 			(click)="irAAcciones('../agregar-fabricante')"
+			[disabled]="esFormularioSoloLectura ? true : false"
 		  >
 			Agregar
 		  </button>

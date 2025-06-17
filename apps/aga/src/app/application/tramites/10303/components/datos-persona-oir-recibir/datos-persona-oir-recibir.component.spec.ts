@@ -11,7 +11,7 @@ describe('DatosPersonaOirRecibirComponent', () => {
 
   beforeEach(() => {
     mockDonacionesExtranjerasService = {
-      getPaises: jest.fn(),
+      getPaises: jest.fn().mockReturnValue(of({ data: [{ id: 1, nombre: 'India' }] })),
       buscarContribuyente: jest.fn()
     };
     mockTramite10303Store = {
@@ -53,6 +53,7 @@ describe('DatosPersonaOirRecibirComponent', () => {
   });
 
   it('should reset the form when no contributor is found', () => {
+    component.ngOnInit();
     const resetSpy = jest.spyOn(component.datosPersonaOirRecibirForm, 'reset');
     component.restablecerFormulario();
     expect(resetSpy).toHaveBeenCalled();
@@ -67,6 +68,7 @@ describe('DatosPersonaOirRecibirComponent', () => {
   });
 
   it('should handle contributor not found scenario', () => {
+    component.ngOnInit();
     mockDonacionesExtranjerasService.buscarContribuyente.mockReturnValue(of({ data: [null] }));
     component.buscarContribuyenteRfc(4, 'ABC123');
     expect(mockToastr.error).toHaveBeenCalledWith('Valor erronio');

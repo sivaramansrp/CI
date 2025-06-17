@@ -12,7 +12,7 @@
       [configuracionTabla]="destinoFinalTablaConfiguracion.configuracionTabla"
       [datos]="destinatarioFinalTablaDatos"
       (listaDeFilaSeleccionada)="destinarioTablaSeleccionada = $event"
-      
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
   </div>
   <div class="row mt-5">
@@ -24,7 +24,7 @@
             name="modificarMercancias"
             class="btn btn-default"
             (click)="modificarDestinatario()"
-            [disabled]="destinarioTablaSeleccionada.length !== 1" 
+            [disabled]="destinarioTablaSeleccionada.length !== 1 || esFormularioSoloLectura" 
           >
             Modificar
           </button>
@@ -33,7 +33,7 @@
             name="eliminarMercancias"
             class="btn btn-danger ms-2"
             (click)="eliminarDestinatarioFinal()"
-            [disabled]="destinarioTablaSeleccionada.length !== 1" 
+            [disabled]="destinarioTablaSeleccionada.length !== 1 || esFormularioSoloLectura" 
           >
             Eliminar
           </button>
@@ -42,6 +42,7 @@
           type="button"
           name="agregarMercancias"
           class="btn btn-primary ms-2"
+          [disabled]="esFormularioSoloLectura"
           (click)="irAAcciones('../agregar-destino-final')"
         >
           Agregar
@@ -58,6 +59,7 @@
       [configuracionTabla]="dproveedorTablaConfiguracion.configuracionTabla"
       [datos]="proveedorTablaDatos"
       (listaDeFilaSeleccionada)="proveedorTablaSeleccionada = $event"
+      [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
     ></app-tabla-dinamica>
   </div>
   <div class="row mt-5">
@@ -69,7 +71,7 @@
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
-          [disabled]="proveedorTablaSeleccionada.length !== 1"
+          [disabled]="proveedorTablaSeleccionada.length !== 1 || esFormularioSoloLectura"
           (click)="modificarProveedor()"
         >
           Modificar
@@ -79,7 +81,7 @@
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
           (click)="eliminarProveedorFinal()"
-          [disabled]="proveedorTablaSeleccionada.length !== 1"
+          [disabled]="proveedorTablaSeleccionada.length !== 1 || esFormularioSoloLectura"
         >
           Eliminar
         </button>
@@ -89,6 +91,7 @@
           type="button"
           name="agregarMercancias"
           class="btn btn-primary ms-2"
+          [disabled]="esFormularioSoloLectura"
           (click)="irAAcciones('../agregar-proveedor')"
         >
           Agregar
