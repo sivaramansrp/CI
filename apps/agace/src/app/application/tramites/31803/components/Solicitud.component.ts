@@ -82,10 +82,18 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     * Subject para destruir notificador.
     */
   consultaDatos!: ConsultaioState;
+  
+/**
+ * Indica si el formulario se encuentra en modo solo lectura.
+ * Si es `true`, los controles del formulario estarán deshabilitados para evitar modificaciones.
+ */
+esFormularioSoloLectura: boolean = false;
 
-  esFormularioSoloLectura: boolean = false;
-  // public consultaDatos!: Solicitud31803State;
-  public destroyNotifier$: ReplaySubject<boolean> = new ReplaySubject(1);
+/**
+ * Subject utilizado para notificar y limpiar suscripciones activas al destruir el componente.
+ * Se emite un valor y se completa en el método `ngOnDestroy` para evitar fugas de memoria.
+ */
+public destroyNotifier$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
   * Configuración para el catálogo de bancos.

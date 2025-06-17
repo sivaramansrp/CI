@@ -31,13 +31,9 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
    * @param router Inyecta el servicio Router para la navegación.
    */
   constructor(
-    // private router: Router,
     private consultaQuery: ConsultaioQuery,
-    // private validacionesService: ValidacionesFormularioService,
     private solicitud31803Service: RegistroSolicitudService, // Servicio para manejar el estado de la solicitud 31802
-  ) {
-    // El constructor se utiliza para la inyección de dependencias.
-  }
+  ) { }
 
   /**
      * Inicializa el componente y suscripciones al estado de consulta.
@@ -56,7 +52,6 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
         })
       )
       .subscribe();
-    // Inicializa el formulario con los valores actuales del estado
     if (this.consultaState?.update) {
       this.guardarDatosFormulario();
     } else {
@@ -138,9 +133,14 @@ guardarDatosFormulario(): void {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
-
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
-  }
+/**
+ * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+ *
+ * Emite un valor y completa el subject `destroyNotifier$` para notificar a todas las suscripciones
+ * que deben finalizarse, evitando así fugas de memoria.
+ */
+ngOnDestroy(): void {
+  this.destroyNotifier$.next();
+  this.destroyNotifier$.complete();
+}
 }

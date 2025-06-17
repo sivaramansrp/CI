@@ -146,4 +146,13 @@
         "departamento": "SE",
         "numeroDeProcedimiento": "110216"
     }
+    {
+        "id": "31803",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGACE",
+        "numeroDeProcedimiento": "31803"
+    }
 ]
