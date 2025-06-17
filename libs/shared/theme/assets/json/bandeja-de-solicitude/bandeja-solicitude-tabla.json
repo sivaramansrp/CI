@@ -963,15 +963,6 @@
     "numeroDeProcedimiento": "11201"
   },
   {
-    "id": 290101,
-    "tipoDeTramite": "Solicitud de Permiso",
-    "fecha": "2023-10-01",
-    "fechaActualizacion": "2023-10-05",
-    "diasTranscurridos": "4",
-    "departamento": "COFEPRIS",
-    "numeroDeProcedimiento": "260303"
-  },
-  {
     "id": 30901,
     "tipoDeTramite": "Solicitud de Permiso1s",
     "fecha": "2023-11-01",
@@ -2411,7 +2402,25 @@
     "numeroDeProcedimiento": "120603"
   },
   {
-     "id": 31801,
+    "id": 290101,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "AMECAFE",
+    "numeroDeProcedimiento": "290101"
+  },
+  {
+    "id": 240107,
+    "tipoDeTramite": "Solicitud de cs Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SEDENA",
+    "numeroDeProcedimiento": "240107"
+  },
+  {
+    "id": 31801,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2025-12-06",
     "fechaActualizacion": "2025-12-06",
