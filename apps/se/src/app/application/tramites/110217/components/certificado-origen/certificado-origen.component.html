@@ -13,29 +13,35 @@
         <div class="checkbox">
           <input type="checkbox" id="tercerOperador" formControlName="tercerOperador"
             (change)="setValoresStore(formularioCertificado,'tercerOperador', 'setTercerOperador')" />
-          <label for="tercerOperador">&nbsp;si</label>
+          <label for="tercerOperador">&nbsp;Si</label>
         </div>
       </div>
     </div>
 
-    <div class="row" *ngIf="solicitudState?.tercerOperador">
+     <div class="row" *ngIf="solicitudState?.tercerOperador">
       <ng-container formGroupName="grupoOperador" *ngIf="formularioCertificado.get('grupoOperador')">
         <div class="row">
           <div class="col-md-4 mb-3">
             <label>Nombre(s):</label>
             <input type="text" class="form-control" formControlName="nombre"
+              [readonly]="grupoOperador.get('razonSocial')?.value !== ''"
+              [ngClass]="{'gray-glass': grupoOperador.get('razonSocial')?.value !== ''}"
               (change)="setValoresStore(grupoOperador, 'nombre', 'setGrupoOperadorNombre')" />
           </div>
           <div class="col-md-4 mb-3">
             <label>Primer apellido:</label>
             <input type="text" class="form-control" id="primerApellido" formControlName="apellidoPrimer"
+              [readonly]="grupoOperador.get('razonSocial')?.value !== ''"
+              [ngClass]="{'gray-glass': grupoOperador.get('razonSocial')?.value !== ''}"
               (click)="onClick()"
               (change)="setValoresStore(grupoOperador, 'apellidoPrimer','setGrupoOperadorApellidoPrimer')" />
           </div>
           <div class="col-md-4 mb-3">
             <label>Segundo apellido:</label>
-            <input type="text" class="form-control" id="segundoApellido" formControlName="apellidoSegundo" (change)="
-                    setValoresStore(grupoOperador, 'apellidoSegundo', 'setGrupoOperadorSegundo')" />
+            <input type="text" class="form-control" id="segundoApellido" formControlName="apellidoSegundo"
+              [readonly]="grupoOperador.get('razonSocial')?.value !== ''"
+              [ngClass]="{'gray-glass': grupoOperador.get('razonSocial')?.value !== ''}"
+              (change)="setValoresStore(grupoOperador, 'apellidoSegundo', 'setGrupoOperadorSegundo')" />
           </div>
         </div>
         <div class="row">
@@ -47,30 +53,29 @@
           </div>
           <div class="col-md-8 mb-3">
             <label>Razón social:</label>
-            {{grupoOperador.get('apellidoPrimer')?.value}}
-            <input type="text" class="form-control"
-              [ngClass]="{'gray-glass': grupoOperador.get('apellidoPrimer')?.value !== ''}" id="denominacion"
-              [readonly]=" grupoOperador.get('apellidoPrimer')?.value !== ''" formControlName="razonSocial"
+              <input type="text" class="form-control"
+              [ngClass]="{'gray-glass': grupoOperador.get('nombre')?.value !== '' || grupoOperador.get('apellidoPrimer')?.value !== '' || grupoOperador.get('apellidoSegundo')?.value !== ''}" id="denominacion"
+              [readonly]="grupoOperador.get('nombre')?.value !== '' || grupoOperador.get('apellidoPrimer')?.value !== '' || grupoOperador.get('apellidoSegundo')?.value !== ''" formControlName="razonSocial"
               (change)="setValoresStore(grupoOperador, 'razonSocial', 'setGrupoOperadorRazonSocial')" />
           </div>
         </div>
       </ng-container>
     </div>
 
-    <div class="row">
+    <div class="row" *ngIf="solicitudState?.tercerOperador">
       <ng-titulo titulo="Domicilio del tracer operador" />
       <ng-container formGroupName="grupoDeDomicilio">
         <div class="row">
           <div class="col-md-4">
             <app-catalogo-select [catalogo]="optionsPais" [label]="'País'" [required]="true" id="pais"
-              formControlName="pais" [ngClass]="isValid(grupoDeDomicilio,'pais') ? 'required' : ''"
+              formControlName="pais" [isDisabled]="soloLectura" [ngClass]="isValid(grupoDeDomicilio,'pais') ? 'required' : ''"
               (change)="setValoresStore(grupoDeDomicilio, 'pais', 'setGrupoDeDomicilioPais')"></app-catalogo-select>
           </div>
           <div class="col-md-8 mb-3">
             <label>Ciudad (población, estado o provincia):</label>
             <input type="text" class="form-control" id="ciudad" formControlName="ciudad"
               [ngClass]="isValid(grupoDeDomicilio,'ciudad') ? 'required' : ''"
-              (change)="setValoresStore(grupoDeDomicilio, 'ciudad','setGrupoDeDomicilioCiudad')" />
+              (change)="setValoresStore(grupoDeDomicilio, 'ciudad','setGrupoDeDomicilioCiudad')"[disabled]="soloLectura" />
           </div>
         </div>
         <div class="row">
@@ -78,13 +83,13 @@
             <label>Calle:</label>
             <input type="text" class="form-control" id="nombre" formControlName="calle"
               [ngClass]="isValid(grupoDeDomicilio,'calle') ? 'required' : ''"
-              (change)="setValoresStore(grupoDeDomicilio, 'calle', 'setGrupoDeDomicilioCalle')" />
+              (change)="setValoresStore(grupoDeDomicilio, 'calle', 'setGrupoDeDomicilioCalle')" [disabled]="soloLectura"/>
           </div>
           <div class="col-md-4 mb-3">
             <label>Número y/o letra:</label>
             <input type="text" class="form-control" id="numeroLetra" formControlName="numeroLetra"
               [ngClass]="isValid(grupoDeDomicilio,'numeroLetra') ? 'required' : ''"
-              (change)="setValoresStore(grupoDeDomicilio, 'numeroLetra', 'setGrupoDeDomicilioNumeroLetra')" />
+              (change)="setValoresStore(grupoDeDomicilio, 'numeroLetra', 'setGrupoDeDomicilioNumeroLetra')"[disabled]="soloLectura" />
           </div>
         </div>
         <div class="row">
@@ -92,26 +97,26 @@
             <label>Lada:</label>
             <input type="text" class="form-control" id="lada" formControlName="lada"
               [ngClass]="isValid(grupoDeDomicilio,'lada') ? 'required' : ''"
-              (change)="setValoresStore(grupoDeDomicilio, 'lada', 'setGrupoDeDomicilioLada')" />
+              (change)="setValoresStore(grupoDeDomicilio, 'lada', 'setGrupoDeDomicilioLada')" [disabled]="soloLectura"/>
           </div>
           <div class="col-md-3 mb-3">
             <label>Teléfono:</label>
             <input type="text" class="form-control" id="telefono" formControlName="telefono"
               [ngClass]="isValid(grupoDeDomicilio,'telefono') ? 'required' : ''"
-              (change)="setValoresStore(grupoDeDomicilio, 'telefono', 'setGrupoDeDomicilioTelefono')" />
+              (change)="setValoresStore(grupoDeDomicilio, 'telefono', 'setGrupoDeDomicilioTelefono')" [disabled]="soloLectura"/>
           </div>
           <div class="col-md-4 mb-3">
             <label>Fax:</label>
             <input type="text" class="form-control" id="fax" formControlName="fax"
               [ngClass]="isValid(grupoDeDomicilio,'fax') ? 'required' : ''"
-              (change)="setValoresStore(grupoDeDomicilio, 'fax', 'setGrupoDeDomicilioFax')" />
+              (change)="setValoresStore(grupoDeDomicilio, 'fax', 'setGrupoDeDomicilioFax')"[disabled]="soloLectura" />
           </div>
           <div class="col-md-4 mb-3">
             <label>Correo electrónico:</label><span class="bi bi-question-circle-fill" title="ejemplo@dominio.com"
               data-bs-toggle="tooltip"></span>
             <input type="text" class="form-control" id="correoElectronico" formControlName="correoElectronico"
               [ngClass]="isValid(grupoDeDomicilio,'correoElectronico') ? 'required' : ''"
-              (change)="setValoresStore(grupoDeDomicilio,'correoElectronico','setGrupoDeDomicilioCorreoElectronico')" />
+              (change)="setValoresStore(grupoDeDomicilio,'correoElectronico','setGrupoDeDomicilioCorreoElectronico')" [disabled]="soloLectura"/>
           </div>
         </div>
       </ng-container>
@@ -120,13 +125,13 @@
       <div class="row">
         <ng-titulo titulo="Tratado y país o bloque" />
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="optionsTratado" [label]="'Tratado/Acuerdo*:'" [required]="true" id="tratado"
-            formControlName="tratado" [ngClass]="isValid(grupoTratado,'tratado') ? 'required' : ''"
+          <app-catalogo-select [catalogo]="optionsTratado" [label]="'Tratado/Acuerdo'" [required]="true" id="tratado"
+            formControlName="tratado" [isDisabled]="soloLectura" [ngClass]="isValid(grupoTratado,'tratado') ? 'required' : ''"
             (change)=" setValoresStore(grupoTratado, 'tratado', 'setGrupoTratadoTratado') "></app-catalogo-select>
         </div>
         <div class="col-md-4">
-          <app-catalogo-select [catalogo]="optionsPais" [label]="'País / Bloque*:'" [required]="true" id="pais"
-            formControlName="pais" [ngClass]="isValid(grupoTratado,'pais') ? 'required' : ''"
+          <app-catalogo-select [catalogo]="optionsPais" [label]="'País / Bloque'" [required]="true" id="pais"
+            formControlName="pais" [isDisabled]="soloLectura" [ngClass]="isValid(grupoTratado,'pais') ? 'required' : ''"
             (change)="setValoresStore(grupoTratado, 'pais', 'setGrupoTratadoPais')"></app-catalogo-select>
         </div>
       </div>
@@ -135,19 +140,19 @@
           <label>Fracción arancelaria:</label>
           <input type="number" class="form-control" formControlName="fraccionArancelaria"
             [ngClass]="isValid(grupoTratado,'fraccionArancelaria') ? 'required' : ''"
-            (change)=" setValoresStore( grupoTratado, 'fraccionArancelaria', 'setGrupoTratadoFraccionArancelaria' ) " />
+            (change)=" setValoresStore( grupoTratado, 'fraccionArancelaria', 'setGrupoTratadoFraccionArancelaria' ) "[disabled]="soloLectura" />
         </div>
         <div class="col-md-4">
           <label># Registro producto:</label>
           <input type="text" class="form-control" formControlName="numeroRegistro"
             [ngClass]="isValid(grupoTratado,'numeroRegistro') ? 'required' : ''"
-            (change)=" setValoresStore( grupoTratado, 'numeroRegistro', 'setGrupoTratadoNumeroRegistro' ) " />
+            (change)=" setValoresStore( grupoTratado, 'numeroRegistro', 'setGrupoTratadoNumeroRegistro' ) " [disabled]="soloLectura"/>
         </div>
         <div class="col-md-4">
           <label>Nombre comercial:</label>
           <input type="text" class="form-control" formControlName="nombreComercial"
             [ngClass]="isValid(grupoTratado,'nombreComercial') ? 'required' : ''"
-            (change)=" setValoresStore( grupoTratado, 'nombreComercial', 'setGrupoTratadoNombreComercial' ) " />
+            (change)=" setValoresStore( grupoTratado, 'nombreComercial', 'setGrupoTratadoNombreComercial' ) " [disabled]="soloLectura"/>
         </div>
       </div>
       <div class="row mt-3">
@@ -156,17 +161,17 @@
       <div class="row mt-5">
         <div class="col-md-4">
           <input-fecha [setFecha]="formularioCertificado.get('grupoTratado.fechaInicial')?.value"
-            [datos]="fechaInicialInput" (valorCambiado)="cambioFechaInicial($event)"></input-fecha>
+            [datos]="fechaInicialInput" (valorCambiado)="cambioFechaInicial($event)" [isDisabled]="soloLectura"></input-fecha>
         </div>
         <div class="col-md-4">
           <input-fecha [setFecha]="formularioCertificado.get('grupoTratado.fechaFinal')?.value"
-            [datos]="fechaFinalInput" (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
+            [datos]="fechaFinalInput" (valorCambiado)="cambioFechaFinal($event)" [isDisabled]="soloLectura"></input-fecha>
         </div>
       </div>
     </ng-container>
 
     <div class="col-md-12 mt-5 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary ms-3"> Buscar mercancías </button>
+      <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura"> Buscar mercancías </button>
     </div>
 
     <div class="row mt-5">
@@ -175,14 +180,14 @@
     <ng-container>
       <div class="table-container mt-5">
         <app-tabla-dinamica [configuracionTabla]="disponiblesEncabezados" [datos]="mercanciaDisponsiblesTablaDatos"
-          (filaClic)="disponiblesSeleccionDeFilas($event)"></app-tabla-dinamica>
+          (filaClic)="disponiblesSeleccionDeFilas($event)" ></app-tabla-dinamica>
       </div>
     </ng-container>
     <ng-titulo titulo="Carga de mercancías por archivo" />
     <div class="col-md-12 mt-5 d-flex justify-content-end">
-      <button type="button" class="btn btn-primary ms-3" (click)="cargaArchivo()"> Carga por archivo </button>
+      <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura" (click)="cargaArchivo()"> Carga por archivo </button>
     </div>
-    <div class="row mt-5">
+      <div class="row mt-5 text-center">
       <ng-alert [CONTENIDO]="TEXTO_DE_ALERTA" style="margin-top: 40px"></ng-alert>
     </div>
     <ng-container>
@@ -193,8 +198,8 @@
         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.RADIO" [configuracionTabla]="seleccionadasEncabezados"
           [datos]="mercanciaSeleccionadasTablaDatos" (filaSeleccionada)="seleccionDeFilas($event)"></app-tabla-dinamica>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
-          <button type="button" class="btn btn-danger ms-3" (click)="eliminar()">Eliminar</button>
-          <button type="button" class="btn btn-primary ms-3"> Modificar </button>
+          <button type="button" class="btn btn-danger ms-3" [disabled]="soloLectura" (click)="eliminar()">Eliminar</button>
+          <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura"> Modificar </button>
         </div>
       </div>
     </ng-container>
@@ -224,8 +229,8 @@
 
       </div>
       <div class="modal-footer custom-footer">
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal> Cerrar </button>
-        <button type="submit" class="btn btn-primary" (click)="enviar()"> Enviar </button>
+        <button type="button" class="btn btn-default" [disabled]="soloLectura" data-bs-dismiss="modal" #closeModal> Cerrar </button>
+        <button type="submit" class="btn btn-primary" [disabled]="soloLectura" (click)="enviar()"> Enviar </button>
       </div>
     </div>
   </div>
@@ -242,33 +247,33 @@
                 <label>Fracción arancelaria:</label>
                 <input type="text" required="true" class="form-control gray-glass" readonly
                   formControlName="fraccionMercanciaArancelaria"
-                  (change)=" setValoresStore( formularioMercancia, 'fraccionMercanciaArancelaria', 'setFraccionMercanciaArancelaria' ) " />
+                  (change)=" setValoresStore( formularioMercancia, 'fraccionMercanciaArancelaria', 'setFraccionMercanciaArancelaria' ) " [disabled]="soloLectura"/>
               </div>
               <div class="col-md-8">
                 <label>Nombre comercial de la mercancía(igual que en la factura):</label>
                 <input type="text" required="true" class="form-control gray-glass"
                   formControlName="nombreComercialDelaMercancia" readonly
-                  (change)=" setValoresStore( formularioMercancia, 'nombreComercialDelaMercancia', 'setNombreComercialDelaMercancia' ) " />
+                  (change)=" setValoresStore( formularioMercancia, 'nombreComercialDelaMercancia', 'setNombreComercialDelaMercancia' ) " [disabled]="soloLectura"/>
               </div>
             </div>
             <div class="row mt-5">
               <div class="col-md-8">
                 <label>Nombre técnico:</label>
                 <input type="text" required="true" class="form-control gray-glass" formControlName="nombreTecnico"
-                  readonly (change)=" setValoresStore( formularioMercancia, 'nombreTecnico', 'setNombreTecnico' ) " />
+                  readonly (change)=" setValoresStore( formularioMercancia, 'nombreTecnico', 'setNombreTecnico' ) "[disabled]="soloLectura" />
               </div>
             </div>
             <div class="row mt-5">
               <div class="col-md-8">
                 <label>Nomre en inglés:</label>
                 <input type="text" required="true" class="form-control gray-glass" formControlName="nombreEnIngles"
-                  readonly (change)=" setValoresStore( formularioMercancia, 'nombreEnIngles', 'setNombreEnIngles' ) " />
+                  readonly (change)=" setValoresStore( formularioMercancia, 'nombreEnIngles', 'setNombreEnIngles' ) "[disabled]="soloLectura" />
               </div>
               <div class="col-md-4">
                 <label>Otras instancias:</label>
                 <input type="text" required="true" class="form-control gray-glass" formControlName="otrasInstancias"
                   readonly
-                  (change)=" setValoresStore( formularioMercancia, 'otrasInstancias', 'setOtrasInstancias' ) " />
+                  (change)=" setValoresStore( formularioMercancia, 'otrasInstancias', 'setOtrasInstancias' ) " [disabled]="soloLectura"/>
               </div>
             </div>
             <div class="row mt-5">
@@ -276,7 +281,7 @@
                 <label>Criterio para conferir origen:</label>
                 <input type="text" required="true" class="form-control gray-glass"
                   formControlName="criterioParaConferir" readonly
-                  (change)=" setValoresStore( formularioMercancia, 'criterioParaConferir', 'setCriterioParaConferir' ) " />
+                  (change)=" setValoresStore( formularioMercancia, 'criterioParaConferir', 'setCriterioParaConferir' ) " [disabled]="soloLectura"/>
               </div>
             </div>
 
@@ -285,11 +290,11 @@
                 <label>Cantidad*:</label>
                 <input type="number" class="form-control" formControlName="cantidad"
                   [ngClass]="isValid(formularioMercancia,'cantidad') ? 'required' : ''"
-                  (change)=" setValoresStore( formularioMercancia, 'cantidad', 'setCantidad' ) " />
+                  (change)=" setValoresStore( formularioMercancia, 'cantidad', 'setCantidad' ) "[disabled]="soloLectura" />
               </div>
               <div class="col-md-4">
                 <app-catalogo-select [catalogo]="optionsPais" [label]="'UMC'" [required]="true" id="pais"
-                  formControlName="pais" [ngClass]="isValid(formularioMercancia,'pais') ? 'required' : ''"
+                  formControlName="pais" [isDisabled]="soloLectura" [ngClass]="isValid(formularioMercancia,'pais') ? 'required' : ''"
                   (change)="setValoresStore(formularioMercancia, 'pais', 'setPais')"></app-catalogo-select>
               </div>
 
@@ -299,29 +304,30 @@
                 <label>Valor de la mercancía(dólares)*:</label>
                 <input type="text" required="true" class="form-control" formControlName="valorDelaMercancia"
                   [ngClass]="isValid(formularioMercancia,'valorDelaMercancia') ? 'required' : ''"
-                  (change)=" setValoresStore( formularioMercancia, 'valorDelaMercancia', 'setValorDelaMercancia' ) " />
+                  (change)=" setValoresStore( formularioMercancia, 'valorDelaMercancia', 'setValorDelaMercancia' ) " [disabled]="soloLectura"/>
               </div>
-              <div class="col-md-8">
+             <div class="col-md-8">
                 <label>Complemento de la descripción*:</label>
                 <textarea rows="3" class="w-100" formControlName="complementoDelaDescripcion"
                   [ngClass]="isValid(formularioMercancia,'complementoDelaDescripcion') ? 'required' : ''"
-                  (change)=" setValoresStore( formularioMercancia, 'complementoDelaDescripcion', 'setComplementoDelaDescripcion' ) "></textarea>
+                  (change)=" setValoresStore( formularioMercancia, 'complementoDelaDescripcion', 'setComplementoDelaDescripcion' ) " style="resize: none;" [disabled]="soloLectura"></textarea>
               </div>
             </div>
 
             <div class="row mt-5">
               <div class="col-md-4">
                 <input-fecha [setFecha]="formularioMercancia.get('fecha')?.value" [datos]="fechaFacturaInput"
-                  (valorCambiado)="cambioFechaFactura($event)"></input-fecha>
+                  (valorCambiado)="cambioFechaFactura($event)" [isDisabled]="soloLectura"></input-fecha>
               </div>
               <div class="col-md-4">
-                <label>N° factura:</label>
+                <label>N° factura*:</label>
                 <input type="text" required="true" class="form-control" formControlName="numeroFactura"
-                  (change)=" setValoresStore( formularioMercancia, 'numeroFactura', 'setNumeroFactura' ) " />
+                  (change)=" setValoresStore( formularioMercancia, 'numeroFactura', 'setNumeroFactura' ) "[disabled]="soloLectura" />
               </div>
               <div class="col-md-4">
-                <app-catalogo-select [catalogo]="optionsTipoFactura" [label]="'Tipo de factura'" id="tipoFactura"
-                  formControlName="tipoFactura"
+                <app-catalogo-select [catalogo]="optionsTipoFactura" [label]="'Tipo de factura'" [required]="true" id="tipoFactura"
+                  formControlName="tipoFactura" [isDisabled]="soloLectura"
+                  [ngClass]="isValid(formularioMercancia,'tipoFactura') ? 'required' : ''"
                   (change)=" setValoresStore( formularioMercancia, 'tipoFactura', 'setTipoFactura' ) "></app-catalogo-select>
               </div>
             </div>
@@ -330,8 +336,8 @@
 
       </div>
       <div class="modal-footer custom-footer mt-4">
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal" #closeModal> Cancelar </button>
-        <button type="submit" class="btn btn-primary" #closeModal> Agregar </button>
+        <button type="button" class="btn btn-default" [disabled]="soloLectura" data-bs-dismiss="modal" #closeModal > Cancelar </button>
+        <button type="submit" class="btn btn-primary" [disabled]="soloLectura" #closeModal> Agregar </button>
       </div>
     </div>
   </div>

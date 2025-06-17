@@ -1,92 +1,158 @@
-// @ts-nocheck
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import {
-  CUSTOM_ELEMENTS_SCHEMA,
-  NO_ERRORS_SCHEMA,
-  Pipe,
-  PipeTransform,
-  Injectable,
-} from '@angular/core';
-import {
-  ReactiveFormsModule,
-  FormBuilder,
-  FormGroup,
-  FormControl,
-} from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
 import { VehiculosComponent } from './vehiculos.component';
-import { Chofer40103Service } from '../../estados/chofer40103.service';
-import { Chofer40103Store } from '../../estados/chofer40103.store';
-import { Chofer40103Query } from '../../estados/chofer40103.query';
-import { of, throwError } from 'rxjs';
-
-@Injectable()
-class MockChofer40103Store {
-  setUnidadesdeArrastre = jest.fn();
-}
-
-@Injectable()
-class MockChofer40103Service {
-  getTipoVehiculoArrastreAGA = jest.fn().mockReturnValue(of([]));
-  getPaisEmisor = jest.fn().mockReturnValue(of([]));
-  getcolorAGA = jest.fn().mockReturnValue(of([]));
-}
-
-@Injectable()
-class MockChofer40103Query {
-  getvehiculos$ = of([]);
-  getUnidadesdeArrastre$ = of([]);
-}
-
-@Pipe({ name: 'translate' })
-class TranslatePipe implements PipeTransform {
-  transform(value: any) {
-    return value;
-  }
-}
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { Tramite40103Store } from '../../estados/Tramite40103Store';
+import { Tramite40103Query } from '../../estados/tramite40103.query';
+import { modificarTerrestreService } from '../services/modificacar-terrestre.service';
+import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
+import { of } from 'rxjs';
 
 describe('VehiculosComponent', () => {
-  let fixture: ComponentFixture<VehiculosComponent>;
   let component: VehiculosComponent;
-  let choferService: Chofer40103Service;
-  let choferStore: Chofer40103Store;
-  let choferQuery: Chofer40103Query;
-  let toastr: ToastrService;
+  let fixture: ComponentFixture<VehiculosComponent>;
+  let mockStore: any;
+  let mockQuery: any;
+  let mockService: any;
+  let mockValidaciones: any;
 
   beforeEach(async () => {
+    mockStore = {
+      // Add mock methods if needed
+    };
+    mockQuery = {
+      selectSolicitud$: of({
+        datosVehiculo: {},
+        datosUnidad: {},
+      }),
+    };
+    mockService = {
+      obtenerPedimentoTabla: jest.fn().mockReturnValue(of({ datos: [] })),
+      obtenerTipoDeVehiculo: jest.fn().mockReturnValue(of({ datos: [] })),
+    };
+    mockValidaciones = {
+      isValid: jest.fn().mockReturnValue(true),
+    };
+
     await TestBed.configureTestingModule({
-      declarations: [VehiculosComponent, TranslatePipe],
       imports: [ReactiveFormsModule],
+      declarations: [VehiculosComponent],
       providers: [
         FormBuilder,
-        {
-          provide: ToastrService,
-          useValue: { success: jest.fn(), error: jest.fn() },
-        },
-        { provide: Chofer40103Service, useClass: MockChofer40103Service },
-        { provide: Chofer40103Store, useClass: MockChofer40103Store },
-        { provide: Chofer40103Query, useClass: MockChofer40103Query },
+        { provide: Tramite40103Store, useValue: mockStore },
+        { provide: Tramite40103Query, useValue: mockQuery },
+        { provide: modificarTerrestreService, useValue: mockService },
+        { provide: ValidacionesFormularioService, useValue: mockValidaciones },
       ],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
     }).compileComponents();
 
     fixture = TestBed.createComponent(VehiculosComponent);
     component = fixture.componentInstance;
-    choferService = TestBed.inject(Chofer40103Service);
-    choferStore = TestBed.inject(Chofer40103Store);
-    choferQuery = TestBed.inject(Chofer40103Query);
-    toastr = TestBed.inject(ToastrService);
+    // Provide minimal state for forms
+    component.tramiteState = {
+      datosVehiculo: {},
+      datosUnidad: {},
+    } as any;
+    fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ()', () => {
-    const mockFormGroup = new FormGroup({
-      solicitudVehiculoVin2: new FormControl(''),
-      solicitudVehiculoTipoVehiculo: new FormControl(''),
-      solicitudVehiculoNumeroEconomico: new FormControl(''),
+  it('should select tab', () => {
+    const result = component.selectTab('unidadarrastre');
+    expect(component.selectedTab).toBe('Unidad de arrastre');
+    expect(result).toBe('unidadarrastre');
+  });
+
+  it('should initialize forms', () => {
+    component.tramiteState = {
+      datosVehiculo: {},
+      datosUnidad: {},
+    } as any;
+    component.inicializarFormulario();
+    expect(component.vehiculoFormulario).toBeDefined();
+    expect(component.unidadFormulario).toBeDefined();
+  });
+
+  it('should validate form field', () => {
+    const form = component.vehiculoFormulario;
+    const result = component.isValid(form, 'numero');
+    expect(mockValidaciones.isValid).toHaveBeenCalled();
+    expect(result).toBe(true);
+  });
+
+  it('should add vehicle data', () => {
+    component.vehiculoFormulario = component.fb.group({
+      numero: ['123'],
+      tipoDeVehiculo: ['tipo'],
+      idDeVehiculo: ['id'],
+      numeroPlaca: ['placa'],
+      paisEmisor: ['pais'],
+      estado: ['estado'],
+      marca: ['marca'],
+      modelo: ['modelo'],
+      ano: ['2020'],
+      transponder: ['trans'],
+      colorVehiculo: ['rojo'],
+      numuroEconomico: ['eco'],
+      numero2daPlaca: ['placa2'],
+      estado2daPlaca: ['estado2'],
+      paisEmisor2daPlaca: ['pais2'],
+      descripcion: ['desc'],
     });
+    component.closeModal = { nativeElement: { click: jest.fn() } } as any;
+    component.vehiculosTablaConfig.datos = [];
+    component.agregarVahiculodata();
+    expect(component.vehiculosTablaConfig.datos.length).toBe(1);
+  });
+
+  it('should add unidad data', () => {
+    component.unidadFormulario = component.fb.group({
+      vinVehiculo: ['vin'],
+      tipoDeUnidadArrastre: ['tipo'],
+      idDeVehiculo: ['id'],
+      numeroEconomico: ['eco'],
+      numeroPlaca: ['placa'],
+      paisEmisor: ['pais'],
+      estado: ['estado'],
+      colorVehiculo: ['rojo'],
+      numero2daPlaca: ['placa2'],
+      estado2daPlaca: ['estado2'],
+      paisEmisor2daPlaca: ['pais2'],
+      descripcion: ['desc'],
+    });
+    component.closeUnidadModal = { nativeElement: { click: jest.fn() } } as any;
+    component.unidadesTablaConfig.datos = [];
+    component.agregarUnidadData();
+    expect(component.unidadesTablaConfig.datos.length).toBe(1);
+  });
+
+  it('should clear vehiculo form', () => {
+    component.vehiculoFormulario = component.fb.group({ test: ['value'] });
+    component.limpiarVahiculodata();
+    expect(component.vehiculoFormulario.value).toEqual({ test: null });
+  });
+
+  it('should clear unidad form', () => {
+    component.unidadFormulario = component.fb.group({ test: ['value'] });
+    component.limpiarUnidaddata();
+    expect(component.unidadFormulario.value).toEqual({ test: null });
+  });
+
+  it('should open notification modal', () => {
+    component.abrirModal();
+    expect(component.nuevaNotificacion).toBeDefined();
+    expect(component.nuevaNotificacion.mensaje).toContain('agregado');
+  });
+
+  it('should call cargarTipoDeVehiculo', () => {
+    component.cargarTipoDeVehiculo();
+    expect(mockService.obtenerTipoDeVehiculo).toHaveBeenCalled();
+  });
+
+  it('should call cargarPedimentoTabla', () => {
+    component.cargarPedimentoTabla();
+    expect(mockService.obtenerPedimentoTabla).toHaveBeenCalled();
   });
 });
