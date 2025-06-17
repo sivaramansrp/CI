@@ -105,7 +105,7 @@ export class DatosPageComponent {
         takeUntil(this.destroyNotifier$)
       )
       .subscribe((resp) => {
-        console.log('Datos recibidos:', resp);
+        
         if (resp) {
           this.esDatosRespuesta = true;
           this.service130302Service.actualizarEstadoFormulario(resp);

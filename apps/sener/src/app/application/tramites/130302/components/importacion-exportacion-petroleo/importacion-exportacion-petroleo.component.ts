@@ -176,9 +176,11 @@ this.tramite130302Query.selectExportarIlustraciones$
         })
       )
       .subscribe();
-    this.form = this.fb.group({
-      fechaPago: [this.exportarIlustracionesState?.fechaPago],
-      prorrogaAl: [this.exportarIlustracionesState?.prorrogaAl],
+    
+      this.form = this.fb.group({
+      saldoDisponible: [new FormControl({ value: '', disabled: true })],
+      fechaPago: [this.exportarIlustracionesState?.fechaPago, { disabled: true }],
+      prorrogaAl: [this.exportarIlustracionesState?.prorrogaAl, { disabled: true }],
       motivoJustificacion: new FormControl(this.exportarIlustracionesState?.motivoJustificacion),
       otrasDeclaraciones: new FormControl(this.exportarIlustracionesState?.otrasDeclaraciones),
       
