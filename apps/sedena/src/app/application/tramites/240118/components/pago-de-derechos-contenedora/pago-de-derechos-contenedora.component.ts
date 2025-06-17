@@ -1,5 +1,5 @@
-import { Component,OnDestroy,OnInit } from '@angular/core';
-import { Subject,takeUntil } from 'rxjs';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ID_PROCEDIMIENTO } from '../../constants/solicitud-permiso-extraordinario-exportacion';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
@@ -22,6 +22,13 @@ import { Tramite240118Store } from '../../estados/tramite240118Store.store';
 })
 export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
   /**
+   * @property esFormularioSoloLectura
+   * @description Indica si el formulario es de solo lectura.
+   * @type {boolean}
+   */
+  @Input()
+  esFormularioSoloLectura: boolean = false;
+  /**
    * Observable para liberar suscripciones al destruir el componente.
    * @property {Subject<void>} unsubscribe$
    */
@@ -33,12 +40,12 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
    */
   public pagoDerechoFormState!: PagoDerechosFormState;
 
-    /**
-     * @property {boolean} estaOculto - Indica si el elemento está oculto o visible.
-     * @remarks Este valor determina la visibilidad del componente en la interfaz de usuario.
-     * @command Cambiar el valor de esta propiedad para alternar la visibilidad.
-     */
-    public readonly idProcedimiento:number = ID_PROCEDIMIENTO;
+  /**
+   * @property {boolean} estaOculto - Indica si el elemento está oculto o visible.
+   * @remarks Este valor determina la visibilidad del componente en la interfaz de usuario.
+   * @command Cambiar el valor de esta propiedad para alternar la visibilidad.
+   */
+  public readonly idProcedimiento: number = ID_PROCEDIMIENTO;
   /**
    * Constructor del componente.
    *
@@ -50,8 +57,7 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
   constructor(
     private tramiteQuery: Tramite240118Query,
     private tramiteStore: Tramite240118Store
-  ) 
-  {
+  ) {
     // No hacer nada
   }
 
