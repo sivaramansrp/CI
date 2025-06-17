@@ -4,7 +4,7 @@
     <div class="col-md-12">
       <div class="table-responsive">
         <h6>Monumento*:</h6>
-        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="configTableArray" [datos]="monumentoTablaDatos" (listaDeFilaSeleccionada)="monumentoSeleccionLista = $event"></app-tabla-dinamica>
+        <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="configTableArray" [datos]="monumentoTablaDatos" (listaDeFilaSeleccionada)="monumentoSeleccionLista = $event" [disableSeleccionTablaCheckBox]="soloLectura"></app-tabla-dinamica>
       </div>
       <div class="col-md-12">
         
@@ -20,10 +20,10 @@
           <div class="col-md-12"> 
           <div class="pull-right">
             <div class="col-md-6">  
-        <button type="button" id="btn-borrar-parte" class="btn btn-danger monumento-borrar" [disabled] ="!monumentoSeleccionLista.length" (click)="Borrar()">Borrar</button>
+        <button type="button" id="btn-borrar-parte" class="btn btn-danger monumento-borrar" [disabled] ="!monumentoSeleccionLista.length || soloLectura" (click)="Borrar()">Borrar</button>
         </div>
         <div class="col-md-6">  
-        <button type="button" id="btn-agregar-parte" class="btn btn-primary" (click)="agregar()">Agregar</button>
+        <button type="button" id="btn-agregar-parte" class="btn btn-primary" [disabled]="soloLectura" (click)="agregar()">Agregar</button>
       </div>
       </div>
         </div>
