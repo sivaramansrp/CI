@@ -105,9 +105,13 @@ export class ImportacionEquipoAnticontaminanteService {
     );
   }
 
+  /**
+   * Obtiene la tabla de datos de partidas de la mercancía desde un archivo JSON.
+   * {Observable<PartidasDeLaMercanciaModelo[]>} Observable que emite la lista de partidas de la mercancía.
+   */
   getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
-      return this.http.get<PartidasDeLaMercanciaModelo[]>(
-            'assets/json/130113/partidas-de-la.json'
-          );
-    }
+    return this.http.get<PartidasDeLaMercanciaModelo[]>(
+      'assets/json/130113/partidas-de-la.json'
+    );
+  }
 }
