@@ -1,8 +1,6 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Component, ViewChild } from '@angular/core';
 import { FORMA_INVALIDO_ALERTA, FORMA_VALIDO_ALERTA } from '../../constantes/cancelacion-garantia.enum';
-import { Subject, map, takeUntil } from 'rxjs';
 import { FormaServicioService } from '../../services/forma-servicio/forma-servicio.service';
 import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/services/31601/servicios-pantallas.enum';
 
@@ -28,7 +26,7 @@ import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/services/316
   templateUrl: './pantallas.component.html',
 })
 
-export class PantallasComponent implements OnInit, OnDestroy {
+export class PantallasComponent {
   /**
    * Lista de pasos del wizard.
    * @type {ListaPasosWizard[]}
@@ -105,20 +103,6 @@ export class PantallasComponent implements OnInit, OnDestroy {
  */
   public esFormaValido!: boolean;
 
-  
-  /** 
-  * @property destroyNotifier$
-  * @description
-  * Subject para notificar la destrucción del componente. */
-  private destroyNotifier$: Subject<void> = new Subject();
-
-  /**
-  * @property consultaState
-  * @description
-  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
-  */
-  public consultaState!: ConsultaioState;
-
    /**
  * @constructor
  * @description
@@ -126,38 +110,9 @@ export class PantallasComponent implements OnInit, OnDestroy {
  * @param {FormaServicioService} formaServicioService - Servicio para gestionar formularios dinámicos.
  */
    constructor(
-    public formaServicioService: FormaServicioService,
-    private consultaQuery: ConsultaioQuery
+    public formaServicioService: FormaServicioService
   ) {
     //
-  }
-
-   /**
-   * compo doc
-   * @method ngOnInit
-   * @description
-   * Método de inicialización del componente `PantallasComponent`.
-   * 
-   * Detalles:
-   * - Se suscribe al observable `selectConsultaioState$` del store `ConsultaioQuery` para obtener el estado actual de la consulta.
-   * - Utiliza `takeUntil` para cancelar la suscripción cuando el componente se destruye, evitando fugas de memoria.
-   * - Actualiza la propiedad `consultaState` con el estado recibido.
-   * 
-   * @example
-   * this.ngOnInit();
-   * // Inicializa el componente y gestiona el flujo de datos según el estado de la consulta.
-   */
-  ngOnInit(): void {
-    this.consultaQuery.selectConsultaioState$
-    .pipe(
-      takeUntil(this.destroyNotifier$),
-      map((seccionState) => {
-        this.consultaState = { ...seccionState, update: true, readonly: true };
-        // this.consultaState = seccionState;
-        console.log('this.consultaState ', this.consultaState)
-
-      })
-    ).subscribe();
   }
 
   /**
@@ -192,21 +147,5 @@ export class PantallasComponent implements OnInit, OnDestroy {
         this.wizardComponent.atras();
       }
     }
-  }
-
-  /**
- * @method ngOnDestroy
- * @description
- * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
- * 
- * Detalles:
- * - Emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores que el componente está siendo destruido.
- * - Completa el observable para liberar recursos y evitar fugas de memoria.
- * 
- * @returns {void} No retorna ningún valor.
- */
-  ngOnDestroy(): void {
-    this.destroyNotifier$.next();
-    this.destroyNotifier$.complete();
   }
 }

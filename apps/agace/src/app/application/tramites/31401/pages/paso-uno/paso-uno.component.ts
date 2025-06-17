@@ -1,8 +1,8 @@
 
-import { Component, Input, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CancelacionGarantiaService } from '../../services/cancelacion-garantia/cancelacion-garantia.service';
-import { ConsultaioState } from '@ng-mf/data-access-user';
 /**
   * @Component
   * @selector paso-uno
@@ -24,7 +24,7 @@ import { ConsultaioState } from '@ng-mf/data-access-user';
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
 })
-export class PasoUnoComponent implements OnInit {
+export class PasoUnoComponent implements OnInit, OnDestroy {
 
   /**
   * @property consultaState
@@ -59,7 +59,8 @@ export class PasoUnoComponent implements OnInit {
      * @param {CancelacionGarantiaService} cancelacionGarantiaService - Servicio para gestionar datos de exportación.
      */
     constructor(
-      public cancelacionGarantiaService: CancelacionGarantiaService
+      public cancelacionGarantiaService: CancelacionGarantiaService,
+      private consultaQuery: ConsultaioQuery
         ) {
       //
     }
@@ -81,11 +82,19 @@ export class PasoUnoComponent implements OnInit {
    * // Inicializa el componente y gestiona el flujo de datos según el estado de la consulta.
    */
   ngOnInit(): void {
-    if(this.consultaState?.update) {
-      this.guardarDatosFormulario();
-    } else {
-      this.esDatosRespuesta = true;
-    }
+    this.consultaQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.consultaState = { ...seccionState, update: true, readonly: true };
+            // this.consultaState = seccionState;
+            if(this.consultaState?.update) {
+              this.guardarDatosFormulario();
+            } else {
+              this.esDatosRespuesta = true;
+            }
+          })
+        ).subscribe();
   }
 
   /**
@@ -99,7 +108,6 @@ export class PasoUnoComponent implements OnInit {
       )
       .subscribe((resp) => {
         if (resp) {
-          console.log('resp', resp)
           this.esDatosRespuesta = true;
           Object.entries(resp).forEach(([key, value]) => {
             this.cancelacionGarantiaService.actualizarEstadoFormulario(key, value);
@@ -117,5 +125,21 @@ export class PasoUnoComponent implements OnInit {
    */
   seleccionaTab(i: number): void {
     this.indice = i;
+  }
+
+  /**
+   * @method ngOnDestroy
+   * @description
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   * 
+   * Detalles:
+   * - Emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores que el componente está siendo destruido.
+   * - Completa el observable para liberar recursos y evitar fugas de memoria.
+   * 
+   * @returns {void} No retorna ningún valor.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
