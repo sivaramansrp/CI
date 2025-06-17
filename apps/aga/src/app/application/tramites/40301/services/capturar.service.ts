@@ -77,4 +77,24 @@ export class CapturarService {
   obtenerIdTramite(): Observable<string> {
     return this.http.get<string>(`${this.baseUrl}/obtenerIdTramite`);
   }
+
+  /**
+   * Actualiza el estado del formulario con los datos proporcionados.
+   * @param data - Datos del formulario a actualizar.
+   */
+  actualizarEstadoFormulario(data: Tramite40301State): void {
+    this.tramite40301Store.setDirectorGeneralNombre(data.directorGeneralNombre);
+    this.tramite40301Store.setPrimerApellido(data.primerApellido);
+    this.tramite40301Store.setSegundoApellido(data.segundoApellido);
+    this.tramite40301Store.setRol(data.rol);
+    this.tramite40301Store.setTipoAgente(data.tipoAgente);
+  }
+
+  /**
+   * Recupera los datos guardados del trámite desde un archivo JSON.
+   * @returns Observable<Tramite40301State>
+   */
+  getTramiteSavedData(): Observable<Tramite40301State> {
+    return this.http.get<Tramite40301State>(`${this.baseUrl}/tramiteSavedData.json`);
+  }
 }

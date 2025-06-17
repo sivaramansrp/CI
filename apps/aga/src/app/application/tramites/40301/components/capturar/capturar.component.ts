@@ -1,10 +1,11 @@
 import { AGENT_CATALOG, CATALOGOS_40301_ID, META_INFO_40301 } from '../../enum/caat-naviero.enum';
+import { Catalogo, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { Tramite40301State, Tramite40301Store } from '../../estados/tramite40301.store';
 import { CapturarService } from '../../services/capturar.service';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+// import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Tramite40301Query } from '../../estados/tramite40301.query';
 
 @Component({
@@ -61,6 +62,8 @@ export class CapturarComponent implements OnInit, OnDestroy {
    * Estado actual de la solicitud del trámite.
    */
   public solicitudState!: Tramite40301State;
+  consultaDatos!: ConsultaioState;
+  soloLectura: boolean = false;
 
   /**
    * Constructor del componente CapturarComponent.
@@ -69,9 +72,9 @@ export class CapturarComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private capturarService: CapturarService,
     private tramite40301Store: Tramite40301Store,
-    private tramite40301Query: Tramite40301Query
+    private tramite40301Query: Tramite40301Query, 
+    private consultaioQuery: ConsultaioQuery
   ) {
-    this.establecerSolicitudForm();
   }
 
   ngOnInit(): void {
@@ -82,6 +85,22 @@ export class CapturarComponent implements OnInit, OnDestroy {
         this.solicitudState = state;
       });
 
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          // this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+
+    this.establecerSolicitudForm();
+    
+    if(this.soloLectura) {
+      this.solicitudForm.disable();
+    }
     this.suscribirseAlEstado();
   }
 
@@ -98,10 +117,10 @@ export class CapturarComponent implements OnInit, OnDestroy {
     this.solicitudForm = this.fb.group({
       cveFolioCaat: [{ value: this.solicitudState?.cveFolioCaat, disabled: true }],
       rol: [{ value: this.solicitudState?.rol, disabled: true }],
-      tipoAgente: [this.solicitudState?.tipoAgente, Validators.required],
-      directorGeneralNombre: [this.solicitudState?.directorGeneralNombre, [Validators.required, Validators.maxLength(200)]],
-      primerApellido: [this.solicitudState?.primerApellido, [Validators.required, Validators.maxLength(200)]],
-      segundoApellido: [this.solicitudState?.segundoApellido, [Validators.maxLength(200)]],
+      tipoAgente: [{ value: this.solicitudState?.tipoAgente, disabled: this.soloLectura }, [Validators.required]],
+      directorGeneralNombre: [{ value: this.solicitudState?.directorGeneralNombre, disabled: this.soloLectura }, [Validators.required, Validators.maxLength(200)]],
+      primerApellido: [{ value: this.solicitudState?.primerApellido, disabled: this.soloLectura }, [Validators.required, Validators.maxLength(200)]],
+      segundoApellido: [{ value: this.solicitudState?.segundoApellido, disabled: this.soloLectura }, [Validators.maxLength(200)]],
     });
   }
 
@@ -164,6 +183,7 @@ export class CapturarComponent implements OnInit, OnDestroy {
    */
   limpiarAgente(): void {
     this.solicitudForm.reset();
+    this.tramite40301Store.reset();
   }
 
   /**
