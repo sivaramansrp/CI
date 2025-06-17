@@ -529,4 +529,12 @@ export class Tramite120202Store extends Store<ExpedicionCertificadosAsignacion12
             mostrarDetalle,
         }));
     }
+
+    /**
+     * Actualiza el estado de la consulta de persona física.
+     * @param nuevoDatos - Nuevo estado de la consulta de persona física.
+     */
+    public setConsultaPersonaFisicaState(nuevoDatos: ExpedicionCertificadosAsignacion120202State): void {
+        this.update(nuevoDatos);
+    }
 }
