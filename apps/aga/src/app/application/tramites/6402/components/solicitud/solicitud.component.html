@@ -6,19 +6,19 @@
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="aduanas" [label]="'Aduana'" [required]="true" id="cveAduana"
             formControlName="cveAduana" [ngClass]="isValid(datosAduana,'cveAduana') ? 'required' : ''"
-            (change)="setValoresStore(datosAduana, 'cveAduana', 'setCveAduana')"></app-catalogo-select>
+            (change)="setValoresStore(datosAduana, 'cveAduana', 'setCveAduana')" [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="aduaneras" [label]="'Sección aduanera'" [required]="true"
             id="cveSeccionAduanal" formControlName="cveSeccionAduanal"
             [ngClass]="isValid(datosAduana,'cveSeccionAduanal') ? 'required' : ''"
-            (change)="setValoresStore(datosAduana, 'cveSeccionAduanal', 'setCveSeccionAduanal')"></app-catalogo-select>
+            (change)="setValoresStore(datosAduana, 'cveSeccionAduanal', 'setCveSeccionAduanal')" [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="recintoFiscalizado" [label]="'Recinto fiscalizado'" [required]="true"
             id="cveRecintoFiscalizado" formControlName="cveRecintoFiscalizado"
             [ngClass]="isValid(datosAduana,'cveRecintoFiscalizado') ? 'required' : ''"
-            (change)="setValoresStore(datosAduana, 'cveRecintoFiscalizado', 'setCveRecintoFiscalizado')"></app-catalogo-select>
+            (change)="setValoresStore(datosAduana, 'cveRecintoFiscalizado', 'setCveRecintoFiscalizado')" [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
       </div>
     </ng-container>
@@ -30,7 +30,7 @@
           <app-catalogo-select [catalogo]="tipoDeDocumento" [label]="'Tipo de documento'" [required]="true"
             id="cveTipoDocumento" formControlName="cveTipoDocumento"
             [ngClass]="isValid(datosPedimento,'cveTipoDocumento') ? 'required' : ''"
-            (change)="cambiarTipoDocumento();setValoresStore(datosPedimento, 'cveTipoDocumento', 'setCveTipoDocumento')"></app-catalogo-select>
+            (change)="cambiarTipoDocumento();setValoresStore(datosPedimento, 'cveTipoDocumento', 'setCveTipoDocumento')" [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
         <div class="col-md-2"></div>
         <div class="col-md-5">
@@ -119,7 +119,7 @@
         </div>
         <div class="col-md-2">
           @if (this.datosPedimento.get('cveTipoDocumento')?.value !== 'Formato oficial') {
-          <button type="button" class="btn btn-primary ms-3" [disabled]="false">
+          <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura">
             Validor
           </button>
           }
@@ -152,14 +152,14 @@
         <div class="col-md-5">
           <div class="form-group datepicker-group">
             <input-fecha [datos]="fechaImportacion" [setFecha]="datosPedimento.get('fechaImportacionTemporal')?.value"
-              (valorCambiado)="cambioImportacionTemporal($event)"></input-fecha>
+              (valorCambiado)="cambioImportacionTemporal($event)" [isDisabled]="soloLectura"></input-fecha>
           </div>
         </div>
         <div class="col-md-2"></div>
         <div class="col-md-5">
           <div class="form-group datepicker-group">
             <input-fecha [datos]="fechaVencimiento" [setFecha]="datosPedimento.get('fechaVencimiento')?.value"
-              (valorCambiado)="cambioVencimiento($event)"></input-fecha>
+              (valorCambiado)="cambioVencimiento($event)" [isDisabled]="soloLectura"></input-fecha>
           </div>
         </div>
       </div>
@@ -182,7 +182,7 @@
             <label class="form-label" for="marca">Marca</label>
           </div>
           <div>
-            <input id="marca" name="marca" type="text" class="form-control"
+            <input id="marca" name="marca" type="text" formControlName="marca" class="form-control"
               [ngClass]="isValid(datosPedimento,'marca') ? 'required' : ''"
               (change)="setValoresStore(datosPedimento, 'marca', 'setMarca')" />
           </div>
@@ -228,16 +228,16 @@
       <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccion.CHECKBOX" [configuracionTabla]="tablaDeDatos.encabezadas"
         [datos]="tablaDeDatos.datos" (listaDeFilaSeleccionada)="filaSeleccionada($event)"></app-tabla-dinamica>
       <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-primary ms-3" [disabled]="false" (click)="abiertoMercancia()">
+        <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura" (click)="abiertoMercancia()">
           Agregar
         </button>
-        <button type="button" class="btn btn-primary ms-3" [disabled]="false">
+        <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura">
           Modificar
         </button>
-        <button type="button" class="btn btn-danger ms-3" [disabled]="false">
+        <button type="button" class="btn btn-danger ms-3" [disabled]="soloLectura">
           Consultar
         </button>
-        <button type="button" class="btn btn-danger ms-3" [disabled]="false" (click)="eliminarMercancia()">
+        <button type="button" class="btn btn-danger ms-3" [disabled]="soloLectura" (click)="eliminarMercancia()">
           Eliminar
         </button>
       </div>
@@ -249,7 +249,7 @@
           <app-catalogo-select [catalogo]="medioDeTransporte" [label]="'Medio de transporte'" [required]="true"
             id="cveMedioTrasporte" formControlName="cveMedioTrasporte"
             [ngClass]="isValid(datosMedioTransporte,'cveMedioTrasporte') ? 'required' : ''"
-            (change)="setValoresStore(datosMedioTransporte, 'cveMedioTrasporte', 'setCveMedioTrasporte')"></app-catalogo-select>
+            (change)="setValoresStore(datosMedioTransporte, 'cveMedioTrasporte', 'setCveMedioTrasporte')" [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
 
         @if (datosMedioTransporte.get('cveMedioTrasporte')?.value === '' ||
@@ -320,7 +320,7 @@
         @if(datosMedioTransporte.get('cveMedioTrasporte')?.value !== 'Carretero'){
         <div class="col-md-2 mt-5">
 
-          <button type="button" class="btn btn-primary ms-3" [disabled]="false">
+          <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura">
             Validor
           </button>
 
@@ -346,7 +346,7 @@
           <app-catalogo-select [catalogo]="paisDeProcedencia" [label]="'País de procedencia'" [required]="false"
             id="cvePaisProcedencia" formControlName="cvePaisProcedencia"
             [ngClass]="isValid(datosMedioTransporte,'cvePaisProcedencia') ? 'required' : ''"
-            (change)="setValoresStore(datosMedioTransporte, 'cvePaisProcedencia', 'setCvePaisProcedencia')"></app-catalogo-select>
+            (change)="setValoresStore(datosMedioTransporte, 'cvePaisProcedencia', 'setCvePaisProcedencia')" [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
         <div class="col-md-3">
           @if (datosMedioTransporte.get('cveMedioTrasporte')?.value === '' ||
@@ -383,7 +383,7 @@
           } @else if(datosMedioTransporte.get('cveMedioTrasporte')?.value === 'Carretero'){
           <div class="form-group datepicker-group">
             <input-fecha [datos]="fechaCartaPorte" [setFecha]="datosMedioTransporte.get('fechaCartaPorte')?.value"
-              (valorCambiado)="cambioFechaCartaPorte($event)"></input-fecha>
+              (valorCambiado)="cambioFechaCartaPorte($event)" [isDisabled]="soloLectura"></input-fecha>
           </div>
           }
         </div>
@@ -451,7 +451,7 @@
           <div class="form-group">
             <label for="observaciones" class="form-label">Observaciones</label>
             <label for="observaciones">:</label>
-            <textarea id="observaciones" name="observaciones" rows="5" class="form-control textarea"
+            <textarea id="observaciones" name="observaciones" rows="5" class="form-control textarea" formControlName="observaciones"
               [ngClass]="isValid(datosMedioTransporte,'observaciones') ? 'required' : ''"
               (change)="setValoresStore(datosMedioTransporte, 'observaciones', 'setObservaciones')"></textarea>
           </div>
@@ -466,13 +466,13 @@
           <app-catalogo-select [catalogo]="siNo"
             [label]="'¿Ya se le dio destino a las partes o refacciones reemplazadas?'" [required]="true" id="conDestino"
             formControlName="conDestino" [ngClass]="isValid(datosDestinoMercancia,'conDestino') ? 'required' : ''"
-            (change)="setValoresStore(datosDestinoMercancia, 'conDestino', 'setConDestino')"></app-catalogo-select>
+            (change)="setValoresStore(datosDestinoMercancia, 'conDestino', 'setConDestino')" [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="tipoDeDestino" [label]="'Tipo de destino'" [required]="true"
             id="cveTipoDestino" formControlName="cveTipoDestino"
             [ngClass]="isValid(datosDestinoMercancia,'cveTipoDestino') ? 'required' : ''"
-            (change)="setValoresStore(datosDestinoMercancia, 'cveTipoDestino', 'setCveTipoDestino')"></app-catalogo-select>
+            (change)="setValoresStore(datosDestinoMercancia, 'cveTipoDestino', 'setCveTipoDestino')" [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
       </div>
       @if(datosDestinoMercancia.get('conDestino')?.value !== 'No'){
@@ -483,7 +483,7 @@
           <app-catalogo-select [catalogo]="tipoDeDocumento" [label]="'Tipo de documento'" [required]="true"
             id="cveTipoDocumentoReemplazada" formControlName="cveTipoDocumentoReemplazada"
             [ngClass]="isValid(datosDestinoMercancia,'cveTipoDocumentoReemplazada') ? 'required' : ''"
-            (change)="setValoresStore(datosDestinoMercancia, 'cveTipoDocumentoReemplazada', 'setCveTipoDocumentoReemplazada')"></app-catalogo-select>
+            (change)="setValoresStore(datosDestinoMercancia, 'cveTipoDocumentoReemplazada', 'setCveTipoDocumentoReemplazada')" [isDisabled]="soloLectura"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <div>
@@ -516,7 +516,7 @@
         <div class="col-md-3">
           <div class="form-group datepicker-group">
             <input-fecha [datos]="fechaDestino" [setFecha]="datosDestinoMercancia.get('fechaDescruccionDestino')?.value"
-              (valorCambiado)="cambioFechaDestino($event)"></input-fecha>
+              (valorCambiado)="cambioFechaDestino($event)" [isDisabled]="soloLectura"></input-fecha>
           </div>
         </div>
         <div class="col-md-8">
