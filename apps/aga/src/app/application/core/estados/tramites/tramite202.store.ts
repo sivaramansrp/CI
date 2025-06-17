@@ -74,4 +74,13 @@ export class Tramite202Store extends Store<ManiobrasMercancias202State> {
             aduana,
         }));
     }
+
+    /**
+     * Actualiza el estado completo del almacén con nuevos datos.
+     * @param nuevoDatos - Nuevo estado para el almacén.
+     * @returns {void}
+     */
+    public setPrestadoresServicioState(nuevoDatos: ManiobrasMercancias202State): void {
+        this.update(nuevoDatos);
+    }
 }

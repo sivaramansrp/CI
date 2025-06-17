@@ -1,13 +1,16 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
-import { SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
+import { Solicitud32101State, Tramite32101Store } from '../../../../estados/tramites/tramite32101.store';
+import { Subject, map, takeUntil } from 'rxjs';
+import { ConsultaAvisoAcreditacionService } from '../../services/consulta-aviso-acreditacion.service';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
 @Component({
   selector: 'paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss'
 })
-export class PasoUnoComponent implements AfterViewInit {
+export class PasoUnoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   /**
    * Referencia al componente `SolicitanteComponent` dentro de la vista.
@@ -49,6 +52,98 @@ export class PasoUnoComponent implements AfterViewInit {
   indice: number = 1;
 
   /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esDatosRespuesta: boolean = false;
+
+    /**
+   * Notificador para destruir las suscripciones y evitar fugas de memoria.
+   *
+   * Este `Subject` se utiliza para cancelar las suscripciones activas cuando
+   * el componente se destruye.
+   */
+  destroyNotifier$: Subject<void> = new Subject();
+
+    /**
+   * Estado actual del trámite 6402.
+   *
+   * Esta propiedad almacena el estado del trámite obtenido desde el store.
+   */
+  public tramiteState!: Solicitud32101State;
+
+    /**
+   * Constructor del componente.
+   *
+   * @param {Tramite6402Store} store - Store para gestionar el estado del trámite.
+   * @param {Tramite6402Query} tramiteQuery - Query para obtener el estado del trámite.
+   */
+  constructor(
+    public store: Tramite32101Store,
+    public consultaioQuery: ConsultaioQuery,
+    public consultaAvisoAcreditacionService: ConsultaAvisoAcreditacionService
+  ) {
+    // El constructor se utiliza para la inyección de dependencias.
+  }
+
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   *
+   * Este método suscribe al estado del trámite y actualiza la propiedad `tramiteState`
+   * con los datos obtenidos. También inicializa el índice de la pestaña activa.
+   */
+  ngOnInit(): void {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+        })
+      )
+      .subscribe();
+    if (this.consultaDatos.update) {
+      this.fetchGetDatosConsulta();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+
+  /**
+   * Obtiene los datos de consulta del servicio y actualiza el store.
+   */
+  public fetchGetDatosConsulta(): void {
+    this.consultaAvisoAcreditacionService
+      .getDatosConsulta()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
+        if (respuesta.success) {
+          this.esDatosRespuesta = true;
+          const FORM = respuesta?.datos?.solicitudFormulario;
+          this.store.setTipoDeInversion(FORM.tipoDeInversion ?? []);
+          this.store.setValorEnPesos(FORM.valorEnPesos ?? 0);
+          this.store.setDescripcionGeneral(FORM.descripcionGeneral ?? '');
+          this.store.setListaDeDocumentos(FORM.listaDeDocumentos ?? '');
+          this.store.setManifiesto1(FORM.manifiesto1 ?? '');
+          this.store.setManifiesto2(FORM.manifiesto2 ?? '');
+          this.store.setManifiesto3(FORM.manifiesto3 ?? '');
+          this.store.setClaveDeReferencia(FORM.claveDeReferencia ?? 0);
+          this.store.setCadenaDeLaDependencia(FORM.cadenaDeLaDependencia ?? '');
+          this.store.setNumeroDeOperacion(FORM.numeroDeOperacion ?? 0);
+          this.store.setBanco(FORM.banco ?? []);
+          this.store.setLlaveDePago(FORM.llaveDePago ?? 0);
+          this.store.setFechaInicialInput(FORM.fechaInicialInput ?? '');
+          this.store.setImporteDePago(FORM.importeDePago ?? 0);
+        }
+      });
+  }
+
+  /**
    * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
    * 
    * En este método:
@@ -61,6 +156,17 @@ export class PasoUnoComponent implements AfterViewInit {
     this.persona = PERSONA_MORAL_NACIONAL;
     this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
     this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+  }
+
+    /**
+   * Método que se ejecuta al destruir el componente.
+   *
+   * Este método emite un valor al `destroyNotifier$` y lo completa para cancelar
+   * todas las suscripciones activas y evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
   /**

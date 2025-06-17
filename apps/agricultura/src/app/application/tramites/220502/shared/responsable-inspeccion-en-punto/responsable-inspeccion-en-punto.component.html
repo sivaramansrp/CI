@@ -4,26 +4,135 @@
       <div class="col-md-4">
         <div class="form-field">
           <label for="nombreInsp" class="form-label">Nombre(s):</label>
-          <input class="form-control" type="text" formControlName="nombre" id="nombreInsp" (change)="setNombre($event)" />
+          <input
+          class="form-control"
+          type="text"
+          formControlName="nombre"
+          id="nombreInsp"
+          (change)="setNombre($event)"
+        />
+        <span
+          *ngIf="
+            grupoFormularioPadre
+              .get(claveDeControl + '.nombre')
+              ?.hasError('maxlength') &&
+            grupoFormularioPadre.get(claveDeControl + '.nombre')?.touched
+          "
+          class="text-danger"
+        >
+          Por favor, no escribas más de 150 caracteres
+        </span>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-field">
             <label for="primerapellido" class="form-label">Primer apellido:</label>
-            <input class="form-control" type="text" formControlName="primerapellido" id="primerapellido" (change)="setPrimerapellido($event)" />
+            <input
+          class="form-control"
+          type="text"
+          formControlName="primerapellido"
+          id="primerapellido"
+          (change)="setPrimerapellido($event)"
+        />
+        <span
+          *ngIf="
+            grupoFormularioPadre
+              .get(claveDeControl + '.primerapellido')
+              ?.hasError('maxlength') &&
+            grupoFormularioPadre.get(claveDeControl + '.primerapellido')
+              ?.touched
+          "
+          class="text-danger"
+        >
+          Por favor, no escribas más de 80 caracteres
+        </span>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-field">
-            <label for="segundoapellido" class="form-label">Segundo apellido:</label>
-            <input class="form-control" type="text" formControlName="segundoapellido" id="segundoapellido" (change)="setSegundoapellido($event)" />
+            <label for="segundoapellido" class="form-label"
+            >Segundo apellido:</label
+        >
+        <input
+          class="form-control"
+          type="text"
+          formControlName="segundoapellido"
+          id="segundoapellido"
+          (change)="setSegundoapellido($event)"
+        />
+        <span
+          *ngIf="
+            grupoFormularioPadre
+              .get(claveDeControl + '.segundoapellido')
+              ?.hasError('maxlength') &&
+            grupoFormularioPadre.get(claveDeControl + '.segundoapellido')
+              ?.touched
+          "
+          class="text-danger"
+        >
+          Por favor, no escribas más de 80 caracteres
+        </span>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-field">
-            <label for="mercancia" class="form-label">Cantidad de contenedores en que arriba la mercancía*:<span class="bi bi-question-circle-fill" title="Número de tolvas, furgones o contenedores en que arriba la mercancía" data-bs-toggle="tooltip"></span></label>
-            <input class="form-control" type="text" formControlName="mercancia" id="mercancia" (change)="setMercancia($event)" />
-        </div>
+            <label for="mercancia" class="form-label"
+          >Cantidad de contenedores en que arriba la mercancía<span
+            class="require"
+            [ngClass]="{
+              'text-danger':
+                grupoFormularioPadre.get(claveDeControl + '.mercancia')
+                  ?.invalid &&
+                grupoFormularioPadre.get(claveDeControl + '.mercancia')?.touched
+            }"
+            >*</span
+          >:<span
+            class="bi bi-question-circle-fill"
+            title="Número de tolvas, furgones o contenedores en que arriba la mercancía"
+            data-bs-toggle="tooltip"
+          ></span
+        ></label>
+            <input
+          class="form-control"
+          type="text"
+          formControlName="mercancia"
+          id="mercancia"
+          (change)="setMercancia($event)"
+        />
+        <span
+          *ngIf="
+            grupoFormularioPadre
+              .get(claveDeControl + '.mercancia')
+              ?.hasError('pattern') &&
+            grupoFormularioPadre.get(claveDeControl + '.mercancia')?.touched
+          "
+          class="text-danger"
+        >
+          Por favor, sólo escribe dígitos
+        </span>
+        <span
+          *ngIf="
+            grupoFormularioPadre
+              .get(claveDeControl + '.mercancia')
+              ?.hasError('maxlength') &&
+            grupoFormularioPadre.get(claveDeControl + '.mercancia')?.touched
+          "
+          class="text-danger"
+        >
+          Por favor, no escriba más de 3 dígitos.
+        </span>
+        <span
+          *ngIf="
+            grupoFormularioPadre
+              .get(claveDeControl + '.mercancia')
+              ?.hasError('required') &&
+            grupoFormularioPadre.get(claveDeControl + '.mercancia')?.touched
+          "
+          class="text-danger"
+        >
+          Este campo es obligatorio
+        </span>
+      </div>
       </div>
       <div class="col-md-4">
         <div class="form-field">

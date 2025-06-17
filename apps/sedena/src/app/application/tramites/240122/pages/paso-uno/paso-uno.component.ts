@@ -1,10 +1,11 @@
+import { AfterViewInit, Component } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState, SolicitanteComponent } from '@ng-mf/data-access-user';
+import { Subject,map } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { DatosDelTramiteContenedoraComponent } from '../../components/datos-del-tramite-contenedora/datos-del-tramite-contenedora.component';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { SolicitanteComponent } from '@ng-mf/data-access-user';
-import { Subject } from 'rxjs';
+import { SolicitudService } from '../../services/solicitud/solicitud.service';
 import { TercerosRelacionadosContenedoraComponent } from '../../components/terceros-relacionados-contenedora/terceros-relacionados-contenedora.component';
 import { Tramite240122Query } from '../../estados/tramite240122Query.query';
 import { Tramite240122Store } from '../../estados/tramite240122Store.store';
@@ -32,7 +33,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.scss',
 })
-export class PasoUnoComponent implements OnDestroy, OnInit {
+export class PasoUnoComponent implements OnDestroy, OnInit,AfterViewInit {
 
   /**
    * @property indice
@@ -48,6 +49,14 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @type {Subject<void>}
    */
   private destroyNotifier$: Subject<void> = new Subject();
+    /**
+     * @description
+     * Estado actual de la consulta para el trámite.
+     * 
+     * @type {ConsultaioState}
+     * @memberof PasoUnoComponent
+     */
+    public consultaState!:ConsultaioState;
 
   /**
    * @constructor
@@ -58,7 +67,9 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   constructor(
     private tramite240122Query: Tramite240122Query,
-    private tramite240122Store: Tramite240122Store // eslint-disable-next-line no-empty-function
+    private tramite240122Store: Tramite240122Store,
+    private readonly solicitudService: SolicitudService ,
+    private readonly consultaQuery: ConsultaioQuery// eslint-disable-next-line no-empty-function
   ) {}
 
   /**
@@ -74,6 +85,29 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       .subscribe((tab) => {
         this.indice = tab;
       });
+       this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+          this.consultaState = seccionState;
+      })).subscribe();
+  }
+  
+  /**
+   * @inheritdoc
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
+   * 
+   * @remarks
+   * Aquí se realiza una suscripción al servicio `solicitudService.getPermisoExtraordinario()` para obtener los datos necesarios
+   * y actualizar el estado del trámite en el store correspondiente. La suscripción se gestiona con `takeUntil` para evitar fugas de memoria.
+   * 
+   * @see https://angular.io/api/core/AfterViewInit
+   */
+  ngAfterViewInit(): void {
+    if(this.consultaState.update){
+    this.solicitudService.getPermisoExtraordinario().pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((datos)=>{
+      this.tramite240122Store.actualizarTrimateState(datos);
+    });
+  }
   }
 
   /**
