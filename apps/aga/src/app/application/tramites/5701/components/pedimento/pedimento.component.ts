@@ -49,7 +49,7 @@ import {
   Solicitud5701State,
   Tramite5701Store,
 } from '../../../../core/estados/tramites/tramite5701.store';
-import { EMPTY, Subject, empty, map, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { BodyEstadoPedimento } from '../../../../core/models/5701/pedimento.model';
 import { CommonModule } from '@angular/common';
 import { EstadoPedimentoService } from '../../../../core/services/5701/pedimento/estado-pedimento.service';
