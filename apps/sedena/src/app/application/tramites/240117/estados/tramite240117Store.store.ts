@@ -64,12 +64,12 @@ export function createInitialState(): Tramite240117State {
  * Utiliza Akita para el control reactivo del estado.
  *
  * @fileoverview
- * Este archivo contiene la definición de la clase `Tramite240117Store`, 
- * que extiende la funcionalidad de la clase `Store` para manejar el estado 
- * de la aplicación relacionado con el trámite 240117. 
- * Proporciona métodos para actualizar diferentes partes del estado, 
+ * Este archivo contiene la definición de la clase `Tramite240117Store`,
+ * que extiende la funcionalidad de la clase `Store` para manejar el estado
+ * de la aplicación relacionado con el trámite 240117.
+ * Proporciona métodos para actualizar diferentes partes del estado,
  * como pestañas seleccionadas, datos de formularios y tablas de datos.
- * 
+ *
  * @author [Tu Nombre]
  * @version 1.0
  */
@@ -203,5 +203,13 @@ export class Tramite240117Store extends Store<Tramite240117State> {
       modificarProveedorDatos: datos,
       modificarDestinarioDatos: null,
     }));
+  }
+
+  /**
+   * Actualiza el estado completo con un nuevo estado.
+   * @param newState El nuevo estado a establecer.
+   */
+  public setState(newState: Tramite240117State): void {
+    this.update(newState);
   }
 }

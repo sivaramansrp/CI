@@ -194,9 +194,9 @@ export const DATOS_DE_LA_MERCANCIA = [
  */
 export const PARTIDAS_DE_LA_MERCANCIA = [
   {
-    id: 'cantidad',
+    id: 'partidasCantidad',
     labelNombre: 'Cantidad',
-    campo: 'cantidad',
+    campo: 'partidasCantidad',
     clase: 'col-md-4',
     tipoInput: 'number',
     desactivado: false,
@@ -235,7 +235,7 @@ export const PARTIDAS_DE_LA_MERCANCIA = [
   {
     id: 'descripcion',
     labelNombre: 'Descripción',
-    campo: 'descripcion',
+    campo: 'partidasDescripcion',
     clase: 'col-md-8',
     tipoInput: 'textarea',
     desactivado: false,
@@ -407,5 +407,5 @@ export const REPRESENTACION_FEDERAL = [
 export const PLANTILLA_PRODUCTO = {
   unidad_de_medida: 'Kilogramo',
   fraccion_arancelaria_tigie: '9099',
-  precio_unitario: 1.0
+  precio_unitario: "100"
 };
