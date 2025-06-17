@@ -3,9 +3,8 @@ import { ExportacionDeDiamantesEnBrutoComponent } from './exportacion-de-diamant
 import { PASOS_EXPORTACION } from '../../constants/exportacion-de-diamantes-en-bruto.enum';
 import { AccionBoton } from '../../enums/accion-botton.enum';
 import { BtnContinuarComponent, WizardComponent } from '@libs/shared/data-access-user/src';
-import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('ExportacionDeDiamantesEnBrutoComponent', () => {
   let component: ExportacionDeDiamantesEnBrutoComponent;
@@ -13,8 +12,7 @@ describe('ExportacionDeDiamantesEnBrutoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ExportacionDeDiamantesEnBrutoComponent, SolicitudComponent, PasoUnoComponent],
-      imports: [WizardComponent, BtnContinuarComponent],
+      imports: [WizardComponent, BtnContinuarComponent, HttpClientTestingModule],
       providers: [],
       schemas: [NO_ERRORS_SCHEMA],
     }).compileComponents();

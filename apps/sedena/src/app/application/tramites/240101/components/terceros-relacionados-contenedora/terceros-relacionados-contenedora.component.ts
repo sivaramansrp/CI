@@ -61,6 +61,7 @@ export class TercerosRelacionadosContenedoraComponent
    * @method constructor
    * @param {Tramite240101Store} tramiteStore - Store de Akita que maneja el estado del trámite.
    * @param {Tramite240101Query} tramiteQuery - Query de Akita para obtener datos del trámite.
+   * @param {ConsultaioQuery} consultaQuery - Servicio para realizar consultas adicionales relacionadas.
    * @returns {void}
    */
   constructor(

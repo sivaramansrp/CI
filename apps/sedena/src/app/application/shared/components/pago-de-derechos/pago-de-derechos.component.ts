@@ -39,7 +39,6 @@ import { takeUntil } from 'rxjs';
     CatalogoSelectComponent,
     ReactiveFormsModule,
     InputFechaComponent,
-
     TituloComponent,
   ],
   templateUrl: './pago-de-derechos.component.html',

@@ -1,6 +1,7 @@
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
 import { OnDestroy } from '@angular/core';
@@ -11,6 +12,7 @@ import { Subject } from 'rxjs';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240102Query } from '../../estados/tramite240102Query.query';
 import { Tramite240102Store } from '../../estados/tramite240102Store.store';
+import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 /**
  * @title Terceros Relacionados Contenedora
@@ -47,19 +49,32 @@ export class TercerosRelacionadosContenedoraComponent
    */
   proveedorTablaDatos: Proveedor[] = [];
 
+    /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   *
+   * @type {boolean}
+   * @memberof TercerosRelacionadosContenedoraComponent
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    *
-   * @method constructor
-   * @param {Tramite240102Store} tramiteStore - Store de Akita que maneja el estado del trámite.
-   * @param {Tramite240102Query} tramiteQuery - Query de Akita para obtener datos del trámite.
+   * @constructor
+   * @param {Tramite240102Store} tramiteStore - Store de Akita que gestiona el estado del trámite.
+   * @param {Tramite240102Query} tramiteQuery - Query de Akita para obtener los datos del trámite.
+   * @param {Router} router - Servicio de enrutamiento de Angular.
+   * @param {ActivatedRoute} activatedRoute - Ruta activa actual.
+   * @param {ConsultaioQuery} consultaQuery - Query para consultar información adicional.
    * @returns {void}
    */
   constructor(
     private tramiteStore: Tramite240102Store,
     private tramiteQuery: Tramite240102Query, // eslint-disable-next-line no-empty-function
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private consultaQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -81,6 +96,15 @@ export class TercerosRelacionadosContenedoraComponent
       .subscribe((data) => {
         this.proveedorTablaDatos = data;
       });
+
+      this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.unsubscribe$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
