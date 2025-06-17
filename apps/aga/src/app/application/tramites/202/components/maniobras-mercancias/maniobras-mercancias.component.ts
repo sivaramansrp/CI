@@ -81,6 +81,7 @@ export class ManiobrasMercanciasComponent implements OnDestroy {
         takeUntil(this.destruirNotificador$),
         map((seccionState) => {
           this.formularioDeshabilitado = seccionState.readonly;
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
@@ -102,8 +103,6 @@ export class ManiobrasMercanciasComponent implements OnDestroy {
     this.crearManiobrasMercanciasForm();
 
     this.aduanaSeleccion();
-
-    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -134,6 +133,8 @@ export class ManiobrasMercanciasComponent implements OnDestroy {
         [Validators.required]
       ]
     });
+
+    this.inicializarEstadoFormulario();
   }
 
   /**
