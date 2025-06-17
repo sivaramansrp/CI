@@ -227,5 +227,14 @@
         "diasTranscurridos": "4",
         "departamento": "SE",
         "numeroDeProcedimiento": "150101"
+    },
+    {
+        "id": "120201",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-10",
+        "fechaActualizacion": "2025-06-10",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "120201"
     }
 ]
