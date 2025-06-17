@@ -193,8 +193,6 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
     this.initActionFormBuild();
     this.obtenerLista();
 
-    this.seccionStore.establecerFormaValida([false]);
-
     this.forma.statusChanges
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -206,13 +204,6 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    if (this.domiciliosState.formaValida[0] === 'AllValida') {
-      this.seccionStore.establecerSeccion([true]);
-      this.seccionStore.establecerFormaValida([true]);
-    } else {
-      this.seccionStore.establecerFormaValida([false]);
-    }
 
     this.initActionFormBuild();
     this.inicializarEstadoFormulario();
