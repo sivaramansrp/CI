@@ -2,15 +2,15 @@
 <label for="Persona física extranjero">Persona física extranjera:</label>
 <div class="row mt-5">
   <div class="col-md-12">
-    <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="configuracionParaPFEEncabezadoDeTabla" [datos]="personaFisicaExtranjeraTabla"></app-tabla-dinamica>
+    <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="configuracionParaPFEEncabezadoDeTabla" [datos]="personaFisicaExtranjeraTabla" [disableSeleccionTablaCheckBox]="soloLectura"></app-tabla-dinamica>
   </div>
 </div>
 <div class="row">
   <div class="col-md-12">
     <div class="pull-right">
-      <button type="button" name="ModificarPFE" class="btn btn-default"> Modificar </button>
-      <button type="button" name="EliminarPFE" class="btn btn-danger ms-2"> Eliminar </button>
-      <button type="button" name="AgregarPFE" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalAgregarPFE"> Agregar </button>
+      <button type="button" name="ModificarPFE" class="btn btn-default" [disabled]="soloLectura"> Modificar </button>
+      <button type="button" name="EliminarPFE" class="btn btn-danger ms-2" [disabled]="soloLectura"> Eliminar </button>
+      <button type="button" name="AgregarPFE" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalAgregarPFE" [disabled]="soloLectura"> Agregar </button>
     </div>
   </div>
 </div>
@@ -90,9 +90,9 @@
             <p>* Campos obligatorios</p>
           </div>
           <div class="col-md-4 d-flex justify-content-end">
-            <button type="button" class="btn btn-primary" id="limpiarPFE" name="limpiar" (click)="limpiarDatosPFE()">Limpiar</button>
-            <button type="button" class="btn btn-default mx-2" id="cancelarPFE" name="cancelar" data-bs-dismiss="modal" #closeModal>Cancelar</button>
-            <button type="button" class="btn btn-primary" id="guardarPFE" name="guardar" (click)="agregarPFE(personaFisicaExtranjeraForm.getRawValue())">Agregar</button>
+            <button type="button" class="btn btn-primary" id="limpiarPFE" name="limpiar" (click)="limpiarDatosPFE()" [disabled]="soloLectura">Limpiar</button>
+            <button type="button" class="btn btn-default mx-2" id="cancelarPFE" name="cancelar" data-bs-dismiss="modal" #closeModal [disabled]="soloLectura">Cancelar</button>
+            <button type="button" class="btn btn-primary" id="guardarPFE" name="guardar" (click)="agregarPFE(personaFisicaExtranjeraForm.getRawValue())" [disabled]="soloLectura">Agregar</button>
           </div>
         </div>
       </div>
