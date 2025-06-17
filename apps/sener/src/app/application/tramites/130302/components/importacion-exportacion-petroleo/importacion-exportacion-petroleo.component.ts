@@ -153,16 +153,7 @@ export class ImportacionExportacionPetroleoComponent implements OnInit, OnDestro
    */
   constructor(private fb: FormBuilder, private service: PermisoPetroleoService, private tramite130302Store: Tramite130302Store,
     private tramite130302Query: Tramite130302Query, private consultaioQuery: ConsultaioQuery,) 
-    { 
-        this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyed$),
-        map((seccionState) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-        })
-      )
-      .subscribe();
-    }
+    { }
 
   /**
    * property configuracionTabla
@@ -175,6 +166,16 @@ export class ImportacionExportacionPetroleoComponent implements OnInit, OnDestro
    * description Inicializa el componente y carga datos iniciales.
    */
   ngOnInit(): void {
+
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
+      
     this.configurarGrupoForm();
     this.loadMercancias();
     this.loadAsignacionData();

@@ -78,7 +78,7 @@ export class DatosPageComponent {
   /**
   * Esta variable se utiliza para almacenar el índice del subtítulo.
   */
-  indice: number = 1;
+   public indice: number = 1;
   /**
    * Este método se utiliza para establecer el índice del subtítulo.
    */

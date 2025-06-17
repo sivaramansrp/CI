@@ -26,7 +26,7 @@ export class Service130302Service {
    * @param http Cliente HTTP para realizar peticiones.
    * @param tramite130302Store Almacén de estado para el trámite 130302.
    */
-  constructor(private http: HttpClient, private tramite130302Store: Tramite130302Store,) {
+  constructor(private http: HttpClient, private tramite130302Store: Tramite130302Store) {
     // Lógica de inicialización si es necesario
   }
 
