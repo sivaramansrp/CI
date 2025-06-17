@@ -10,6 +10,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { ComplementarQuery } from '../../../estados/queries/complementar.query';
+import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
+import { map, Subject, takeUntil } from 'rxjs';
 
 /**
  * Componente para gestionar los montos de inversión.
@@ -39,7 +42,7 @@ export class MontosDeInversionComponent {
    * Opciones disponibles para el tipo de inversión.
    * @property {Array} tipoOptions
    */
-  tipoOptions = [];
+  tipoOptions = [{ "id": 1, "descripcion": "JALISCO" }];
 
   /**
    * Lista de montos de inversión.
@@ -64,13 +67,21 @@ export class MontosDeInversionComponent {
    * @property {Array} montosDeInversionDatos
    */
   montosDeInversionDatos = [];
-
+ /**
+   * Estado de la solicitud 221601, que contiene los valores actuales de la solicitud.
+   */
+  public solicitudState!: ComplementarState;
+  /**
+   * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
   /**
    * Constructor del componente.
    * @constructor
    * @param {FormBuilder} fb - Servicio para construcción de formularios
    */
-  constructor(private fb: FormBuilder, private ubicaccion: Location) {
+  constructor(private fb: FormBuilder, private ubicaccion: Location,private complementarStore: ComplementarStore,
+      private complementarQuery: ComplementarQuery) {
     this.createMontosDeInversionForm();
   }
 
@@ -80,14 +91,33 @@ export class MontosDeInversionComponent {
    * @returns {void}
    */
   createMontosDeInversionForm(): void {
+    
+         this.complementarQuery.selectSolicitud$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.solicitudState = seccionState as ComplementarState;
+            })
+          )
+          .subscribe();
     this.montosDeInversionForm = this.fb.group({
-      tipo: [''],
+      tipos: [''],
       cantidad: [''],
       descripsion: [''],
       mnx: [''],
     });
   }
-
+/**
+   * Método que actualiza el store con los valores del formulario.
+   * 
+   * @param form - Formulario reactivo con los datos actuales.
+   * @param campo - El campo que debe actualizarse en el store.
+   * @param metodoNombre - El nombre del método en el store que se debe invocar.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof ComplementarStore): void {
+    const VALOR = form.get(campo)?.value;
+    (this.complementarStore[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
   /**
    * Vuelve a la ubicación anterior en el historial del navegador.
    * @returns {void}

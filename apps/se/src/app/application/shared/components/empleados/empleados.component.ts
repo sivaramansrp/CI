@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { FormBuilder, Validators } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -14,6 +14,9 @@ import { Location } from '@angular/common';
 import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 import { TituloComponent } from '@ng-mf/data-access-user';
+import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
+import { ComplementarQuery } from '../../../estados/queries/complementar.query';
+import { map, Subject, takeUntil } from 'rxjs';
 
 /**
  * Componente para gestionar la información de empleados.
@@ -39,7 +42,14 @@ export class EmpleadosComponent {
    * @property {FormGroup} empleadosForm
    */
   empleadosForm!: FormGroup;
-
+/**
+   * Estado de la solicitud 221601, que contiene los valores actuales de la solicitud.
+   */
+  public solicitudState!: ComplementarState;
+  /**
+   * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
   /**
    * Indica si el campo de razón social está deshabilitado.
    * @property {boolean} disableRazonSocial
@@ -93,7 +103,8 @@ export class EmpleadosComponent {
    * @constructor
    * @param {FormBuilder} fb - Servicio para construcción de formularios
    */
-  constructor(public fb: FormBuilder, private ubicaccion: Location) {
+  constructor(public fb: FormBuilder, private ubicaccion: Location,private complementarStore: ComplementarStore,
+        private complementarQuery: ComplementarQuery) {
     this.crearFormularioEmpleados();
   }
 
@@ -103,18 +114,28 @@ export class EmpleadosComponent {
    * @returns {void}
    */
   crearFormularioEmpleados(): void {
+     this.complementarQuery.selectSolicitud$
+              .pipe(
+                takeUntil(this.destroyNotifier$),
+                map((seccionState) => {
+                  this.solicitudState = seccionState as ComplementarState;
+                })
+              )
+              .subscribe();
     this.empleadosForm = this.fb.group({
-      totalDeEmpleados: [''],
-      directos: [''],
-      cedulaDeCuotas: [''],
-      fechaDeCedula: [''],
-      indirectos: [''],
-      contrato: [''],
-      objetoDelContratoDelServicio: [''],
-      fechaFirma: [''],
-      fechaFinVigencia: [''],
-      rfc: [''],
-      razonSocial: [''],
+      totalDeEmpleados: ['', Validators.required],
+  directos: ['' ],
+  indirectos: [ ''],
+  directo: ['' ],
+  cedula: ['' ],
+  fechaCedula: [ ''],
+  indirectosDatos: [ ''],
+  contrato: ['' ],
+  objeto: ['' ],
+  fechaFirma: [ ''],
+  fechaFinVigencia: [ ''],
+  rfcEmpresa: [ ''],
+  razonSocial: [ '']
     });
   }
 
@@ -124,5 +145,46 @@ export class EmpleadosComponent {
    */
   regrasar(): void {
     this.ubicaccion.back();
+  }
+   /**
+   * Maneja los cambios en el campo "Fecha de Pago".
+   * Actualiza el estado del almacén con la fecha de pago proporcionada.  
+   */
+   cambiofetchaDeCedula(nuevo_valor: string): void {
+    this.empleadosForm.patchValue({
+      fechaCedula: nuevo_valor,
+    });
+    this.complementarStore.setFechaCedula(nuevo_valor);
+  }
+   /**
+   * Maneja los cambios en el campo "Fecha de Pago".
+   * Actualiza el estado del almacén con la fecha de pago proporcionada.  
+   */
+   cambiofetchaDeFirma(nuevo_valor: string): void {
+    this.empleadosForm.patchValue({
+      fechaFirma: nuevo_valor,
+    });
+    this.complementarStore.setFechaFirma(nuevo_valor);
+  }
+   /**
+   * Maneja los cambios en el campo "Fecha de Pago".
+   * Actualiza el estado del almacén con la fecha de pago proporcionada.  
+   */
+   cambiofechaFinVigencia(nuevo_valor: string): void {
+    this.empleadosForm.patchValue({
+      fechaFinVigencia: nuevo_valor,
+    });
+    this.complementarStore.setFechaFinVigencia(nuevo_valor);
+  }
+   /**
+   * Método que actualiza el store con los valores del formulario.
+   * 
+   * @param form - Formulario reactivo con los datos actuales.
+   * @param campo - El campo que debe actualizarse en el store.
+   * @param metodoNombre - El nombre del método en el store que se debe invocar.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof ComplementarStore): void {
+    const VALOR = form.get(campo)?.value;
+    (this.complementarStore[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 }

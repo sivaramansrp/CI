@@ -8,10 +8,29 @@ import { Injectable } from '@angular/core';
  */
 export interface ComplementarState {
 
-   permanecera: string;
+  permanecera: string;
   tipo: string;
   fechaDeFirma: string;
   fetchaDeFinDeVigencia: string;
+   tipos: string;
+  cantidad: string;
+  descripsion: string;
+  mnx: string;
+   totalDeEmpleados: string;
+  directos: string;
+  indirectos: string;
+  directo: string;
+  cedula: string;
+  fechaCedula: string;
+  indirectosDatos: string;
+  contrato: string;
+  objeto: string;
+  fechaFirma: string;
+  fechaFinVigencia: string;
+  rfcEmpresa: string;
+  razonSocial: string;
+  
+
 }
 
 /**
@@ -23,10 +42,26 @@ export function createInitialState(): ComplementarState {
     permanecera: '',
     tipo: '',
     fechaDeFirma: '',
-    fetchaDeFinDeVigencia: ''
+    fetchaDeFinDeVigencia: '',
+     tipos: '',
+    cantidad: '',
+    descripsion: '',
+    mnx: '',
+       totalDeEmpleados: '',
+    directos: '',
+    indirectos: '',
+    directo: '',
+    cedula: '',
+    fechaCedula: '',
+    indirectosDatos: '',
+    contrato: '',
+    objeto: '',
+    fechaFirma: '',
+    fechaFinVigencia: '',
+    rfcEmpresa: '',
+    razonSocial: ''
   };
 }
-
 /**
  * Store para la gestión del estado de la solicitud del trámite 221602.
  * Utiliza Akita para la gestión de estado y permite actualizar los valores relacionados con el trámite.
@@ -69,6 +104,72 @@ public setFetchaDeFinDeVigencia(fetchaDeFinDeVigencia: string): void {
     ...state,
     fetchaDeFinDeVigencia,
   }));
+}
+public setTipos(tipos: string): void {
+    this.update((state) => ({ ...state, tipos }));
+  }
+
+  public setCantidad(cantidad: string): void {
+    this.update((state) => ({ ...state, cantidad }));
+  }
+
+  public setDescripsion(descripsion: string): void {
+    this.update((state) => ({ ...state, descripsion }));
+  }
+
+  public setMnx(mnx: string): void {
+    this.update((state) => ({ ...state, mnx }));
+  }
+public setTotalDeEmpleados(totalDeEmpleados: string): void {
+  this.update((state) => ({ ...state, totalDeEmpleados }));
+}
+
+public setDirectos(directos: string): void {
+  this.update((state) => ({ ...state, directos }));
+}
+
+public setIndirectos(indirectos: string): void {
+  this.update((state) => ({ ...state, indirectos }));
+}
+
+public setDirecto(directo: string): void {
+  this.update((state) => ({ ...state, directo }));
+}
+
+public setCedula(cedula: string): void {
+  this.update((state) => ({ ...state, cedula }));
+}
+
+public setFechaCedula(fechaCedula: string): void {
+  this.update((state) => ({ ...state, fechaCedula }));
+}
+
+public setIndirectosDatos(indirectosDatos: string): void {
+  this.update((state) => ({ ...state, indirectosDatos }));
+}
+
+public setContrato(contrato: string): void {
+  this.update((state) => ({ ...state, contrato }));
+}
+
+public setObjeto(objeto: string): void {
+  this.update((state) => ({ ...state, objeto }));
+}
+
+public setFechaFirma(fechaFirma: string): void {
+  this.update((state) => ({ ...state, fechaFirma }));
+}
+
+public setFechaFinVigencia(fechaFinVigencia: string): void {
+  this.update((state) => ({ ...state, fechaFinVigencia }));
+}
+
+public setRfcEmpresa(rfcEmpresa: string): void {
+  this.update((state) => ({ ...state, rfcEmpresa }));
+}
+
+public setRazonSocial(razonSocial: string): void {
+  this.update((state) => ({ ...state, razonSocial }));
 }
 
 
