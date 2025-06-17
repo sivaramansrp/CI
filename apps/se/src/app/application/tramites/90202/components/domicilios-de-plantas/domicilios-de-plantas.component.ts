@@ -169,8 +169,6 @@ export class DomiciliosDePlantasComponent implements OnInit, OnDestroy {
   inicializarEstadoFormulario(): void {
     if (this.esFormularioSoloLectura) {
       this.guardarDatosFormulario();
-    } else {
-      // Si el formulario es editable, se inicializa el formulario.
     }
   }
 
