@@ -1,7 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InputFecha, InputFechaComponent, REG_X, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Subject, map, takeUntil } from 'rxjs';
+import { REG_X, TituloComponent } from '@libs/shared/data-access-user/src';
+
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { InputFechaComponent } from '@libs/shared/data-access-user/src/tramites/components/input-fecha/input-fecha.component';
+
+import { InputFecha } from '@libs/shared/data-access-user/src';
+
+import { Subject, Subscription, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 
 import { FECHA_FINAL, FECHA_INICIAL, FECHA_PAGO } from '../../constantes/renovacion.enum';
@@ -64,6 +70,21 @@ export class RenovacionComponent implements OnInit, OnDestroy {
   private destruirNotificador$: Subject<void> = new Subject();
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Si es verdadero, los campos del formulario estarán deshabilitados para edición.
+   * {boolean}
+   */
+  esFormularioSoloLectura: boolean = false; 
+
+  /** Suscripción general para manejar y limpiar las suscripciones del componente. Se utiliza para evitar fugas de memoria. */
+  private subscription: Subscription = new Subscription();
+  
+  /**
+   * Estado seleccionado del trámite 110218.
+   * Contiene los valores actuales almacenados en el estado global.
+   */
+  estadoSeleccionado!: Renovacion31801State;
+  /**
    * Constructor del componente.
    * @param fb FormularioBuilder para crear formularios reactivos.
    * @param tramite31801Store Tienda para gestionar el estado del trámite 31801. 
@@ -74,8 +95,44 @@ export class RenovacionComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     private tramite31801Store: Tramite31801Store,
     private tramite31801Query: Tramite31801Query,
-    private renovacionService: RenovacionService
-  ) { }
+    private renovacionService: RenovacionService,
+    private consultaioQuery: ConsultaioQuery,
+  ) { 
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destruirNotificador$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+       this.inicializarEstadoFormulario();
+      })
+    )
+    .subscribe()
+  }
+  
+  /**
+   * Inicializa el estado del formulario dependiendo si es solo lectura o editable.
+   * Si es solo lectura, deshabilita los campos y ajusta la configuración de la fecha.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.crearRenovacionForm();
+    }
+  }
+
+  /**
+   * Guarda los datos del formulario y ajusta el estado de solo lectura.
+   * Deshabilita o habilita los campos y la fecha según corresponda.
+   */
+  guardarDatosFormulario(): void {
+    this.crearRenovacionForm();
+    if (this.esFormularioSoloLectura) {
+      this.renovacionForm.disable();
+    } else {
+      this.renovacionForm.enable();
+    }
+  }
 
   /**
    * Inicializa los catálogos necesarios para el componente.
@@ -93,9 +150,7 @@ export class RenovacionComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-    // Inicializar el formulario principal
-    this.crearRenovacionForm();
+    this.inicializarEstadoFormulario()
   }
 
   /**
@@ -103,6 +158,17 @@ export class RenovacionComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   crearRenovacionForm(): void {
+    this.subscription.add(
+      this.tramite31801Query.selectSeccionState$
+        .pipe(
+          takeUntil(this.destruirNotificador$),
+          map((seccionState) => {
+            this.renovacionState = seccionState;
+          })
+        )
+        .subscribe()
+    );
+
     this.renovacionForm = this.fb.group({
       numeroOficio: [
         { value: this.renovacionState?.numeroOficio || '', disabled: true },
@@ -200,7 +266,7 @@ export class RenovacionComponent implements OnInit, OnDestroy {
   onManifiestoCheckboxCambiar(event: Event, index: number): void {
     const VALOR_ENTRADA = event.target as HTMLInputElement;
     this.seleccionadaManifiesto.controls[index].setValue(VALOR_ENTRADA.checked);
-    this.setValoresStore(this.renovacionForm, 'seleccionadaManifiesto', 'setSeleccionadaManifiesto');
+    this.setValorStore(this.renovacionForm, 'seleccionadaManifiesto');
   }
 
   /**
@@ -212,21 +278,32 @@ export class RenovacionComponent implements OnInit, OnDestroy {
     this.renovacionForm.patchValue({
       fechaPago: nuevo_fechaPago,
     });
-    this.setValoresStore(this.renovacionForm, 'fechaPago', 'setFechaPago');
+    this.setValorStore(this.renovacionForm, 'fechaPago');
   }
 
   /**
-   * Establece los valores en el store de tramite31801.
-   *
-   * @param {FormGroup} form - El formulario del cual se obtiene el valor.
-   * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
-   * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
-   * @returns {void}
+   * Obtiene el estado actual del trámite desde el store.
+   * Suscribe al observable del estado y actualiza la propiedad `estadoSeleccionado`.
    */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31801Store): void {
-    const VALOR = form.get(campo)?.value;
-    (this.tramite31801Store[metodoNombre] as (value: unknown) => void)(VALOR);
+  getValorStore(): void {
+    this.tramite31801Query.selectSeccionState$
+      .pipe(takeUntil(this.destruirNotificador$))
+      .subscribe((data) => {
+        this.estadoSeleccionado = data;
+      });
   }
+  
+  /**
+   * Actualiza un valor específico en el store del trámite.
+   * FormGroup - Formulario reactivo.
+   * control - Nombre del control cuyo valor se actualizará en el store.
+   */
+   setValorStore(FormGroup: FormGroup, control: string): void {
+    const VALOR = FormGroup.get(control)?.value;
+    this.tramite31801Store.setTramite31801State({
+      [control]: VALOR,
+    });
+   }
 
   /**
    * Se ejecuta al destruir el componente.
