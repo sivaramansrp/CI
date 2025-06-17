@@ -22,7 +22,8 @@
     <div class="row mt-5">
       <div class="col-md-12">
         <app-tabla-dinamica [tipoSeleccionTabla]="solicitudSeleccionTabla" [datos]="solicitudDatos"
-          [configuracionTabla]="solicitudConfiguracionTabla" (filaSeleccionada)="actualizarProgramasReporte($event)">
+          [configuracionTabla]="solicitudConfiguracionTabla" [disableSeleccionTablaRadio]="formularioDeshabilitado"
+          (filaSeleccionada)="actualizarProgramasReporte($event)">
         </app-tabla-dinamica>
       </div>
     </div>

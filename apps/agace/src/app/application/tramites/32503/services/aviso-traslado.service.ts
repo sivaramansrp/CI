@@ -1,4 +1,4 @@
-import { AvisoTablaDatos, CatalogoLista,DatosSolicitante, MercanciaTablaDatos } from '../models/aviso-traslado.model';
+import { AvisoTablaDatos, CatalogoLista, DatosSolicitante, MercanciaTablaDatos, RespuestaConsulta } from '../models/aviso-traslado.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -84,5 +84,16 @@ export class AvisoTrasladoService {
   obtenerFraccionArancelaria(): Observable<CatalogoLista> {
     return this.http.get<CatalogoLista>(`assets/json/32503/entidad-federativa.json`);
   }
- 
+  /**
+   * @method getDatosConsulta
+   * @description Obtiene los datos de consulta desde un archivo JSON local.
+   * 
+   * Este método realiza una solicitud HTTP GET para obtener los datos de consulta simulados desde el archivo `consulta_32503.json`.
+   * 
+   * @returns {Observable<RespuestaConsulta>} Un observable que emite la respuesta de los datos de consulta.
+   */
+  getDatosConsulta(): Observable<RespuestaConsulta> {
+    return this.http.get<RespuestaConsulta>(`assets/json/32503/consulta-32503.json`);
+  }
+
 }

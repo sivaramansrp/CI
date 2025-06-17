@@ -145,6 +145,11 @@ export class ElementoAnadidasComponent implements OnInit,OnDestroy {
     }
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta cuando el componente es destruido.
+   * Emite una señal a través del observable `destroyed$` para notificar a los suscriptores
+   * que deben limpiar recursos o cancelar suscripciones, y luego completa el observable.
+   */
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
