@@ -150,7 +150,6 @@ inicializarEstadoFormulario(): void {
   if (this.esFormularioSoloLectura) {
     this.guardarDatosFormulario();
   } else {
-
     this.crearFormulario();
   }
   this.query.selectProrroga$?.pipe(takeUntil(this.destroy$))
@@ -178,7 +177,7 @@ guardarDatosFormulario(): void {
   this.crearFormulario();
   if (this.esFormularioSoloLectura) {
     this.datosdelestablecimiento.disable();
-  } else if (!this.esFormularioSoloLectura) {
+  } else {
     this.datosdelestablecimiento.enable();
   }
 }
