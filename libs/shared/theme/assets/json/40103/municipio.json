@@ -1,10 +1,8 @@
 [
-    { "clave": "MX", "descripcion": "Municipio de Guadalajara" },
-    { "clave": "US", "descripcion": "Municipio de Medellín" },
-    { "clave": "CA", "descripcion": "Alcaldía de Bogotá" },
-    { "clave": "ES", "descripcion": "Alcaldía Benito Juárez" },
-    { "clave": "AR", "descripcion": "Municipio de Maracaibo" },
-    { "clave": "BR", "descripcion": "Alcaldía de Lima" }
-  
-  ]
-  
+  { "id": 1, "clave": "MX", "descripcion": "Municipio de Guadalajara" },
+  { "id": 2, "clave": "US", "descripcion": "Municipio de Medellín" },
+  { "id": 3, "clave": "CA", "descripcion": "Alcaldía de Bogotá" },
+  { "id": 4, "clave": "ES", "descripcion": "Alcaldía Benito Juárez" },
+  { "id": 5, "clave": "AR", "descripcion": "Municipio de Maracaibo" },
+  { "id": 6, "clave": "BR", "descripcion": "Alcaldía de Lima" }
+]
