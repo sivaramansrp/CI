@@ -116,6 +116,7 @@ export interface solicitud220401State {
   
   /** Tipo de transporte utilizado para la mercancía o animales. */
   tipoDeTransporte: string;
+  tratamiento: string;
 }
 
 /**
@@ -221,7 +222,8 @@ export function createInitialState(): solicitud220401State {
     regimenMercancia:'',
     paisOrigen:'',
     exentoPago:'',
-    tipoDeTransporte:''
+    tipoDeTransporte:'',
+    tratamiento:''
   };
   
 }
@@ -663,4 +665,16 @@ public setfuncionZootecnica(funcionZootecnica: string) {
       tipoDeTransporte,
     }));
   }
+/**
+ * Actualiza el estado con el valor proporcionado para el tratamiento.
+ *
+ * @param tratamiento - El nuevo valor de tratamiento a establecer en el estado.
+ */
+public setTratamiento(tratamiento:string):void {
+    this.update((state) => ({
+      ...state,
+      tratamiento,
+    }));
+  }
+  
 }

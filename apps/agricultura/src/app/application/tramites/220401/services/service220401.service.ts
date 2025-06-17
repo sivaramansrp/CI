@@ -58,6 +58,8 @@ export class Solocitud220401Service {
     this.tramite301Store.setregimenMercancia(DATOS.regimenMercancia);
     this.tramite301Store.setpaisOrigen(DATOS.paisOrigen);
     this.tramite301Store.setexentoPago(DATOS.exentoPago);
+    this.tramite301Store.setTratamiento(DATOS.tratamiento);
+    this.tramite301Store.settipoDeTransporte(DATOS.tipoDeTransporte);  
   }
 
   getRegistroTomaMuestrasMercanciasData(): Observable<solicitud220401State> {

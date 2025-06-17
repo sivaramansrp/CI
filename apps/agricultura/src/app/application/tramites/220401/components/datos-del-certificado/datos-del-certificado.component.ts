@@ -56,7 +56,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
   /**
    * Valor seleccionado en el componente de radio.
    */
-  selectedValue: string = 'Nuevo';
+  selectedValue: string = 'Producto..';
  /** Valor seleccionado en el componente de radio. */
   defaultSelect: string | number = 'oficina central';
   /** Notificador para destruir las suscripciones al salir del componente. */
@@ -98,7 +98,9 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          
+          if(seccionState.readonly || seccionState.update){
+             this.setCatalogosDatos()
+          }
         })
       )
       .subscribe()
@@ -197,8 +199,28 @@ this.inicializarCertificadoFormulario();
       this.datosdelForm= this.fb.group({
         datoscertificado:[this.solicitudState?.datoscertificado],
         certificada: [this.solicitudState?.certificada],
+        tratamiento:[this.solicitudState?.tratamiento],
       })
   }
+
+  /**
+   * Establece el valor predeterminado "1" para cada control de formulario especificado en la configuración de catálogos.
+   * 
+   * Itera sobre la lista `catalogConfigs` y, para cada configuración, busca el control correspondiente en `formGroup1`
+   * utilizando el nombre del control (`controlName`). Si el control existe, se le asigna el valor "1".
+   * 
+   * @remarks
+   * Este método se utiliza para inicializar los controles de selección (dropdown) con un valor por defecto.
+   */
+  setCatalogosDatos(): void {
+    this.catalogConfigs.forEach((config) => {
+      const DROP_DOWN = this.formGroup1.get(config.controlName);
+      if (DROP_DOWN) {
+        DROP_DOWN.setValue("1");
+      }
+    });
+  }
+
       /**
    * Maneja los cambios en el valor seleccionado.
    */

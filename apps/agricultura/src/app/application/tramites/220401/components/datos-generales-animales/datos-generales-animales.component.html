@@ -318,20 +318,21 @@
             type="button"
             class="btn btn-default btn-space"
             (click)="limpiarDatosCapturaMercancia()"
+            [disabled]="esFormularioSoloLectura? true : false"
           >
             Limpiar
           </button>
           <button
             type="button"
             class="btn btn-default btn-space"
-            
+            [disabled]="esFormularioSoloLectura? true : false"
           >
             Modificar
           </button>
           <button
             type="button"
             class="btn btn-primary btn-space"
-           
+           [disabled]="esFormularioSoloLectura? true : false"
           >
             Agregar
           </button>
