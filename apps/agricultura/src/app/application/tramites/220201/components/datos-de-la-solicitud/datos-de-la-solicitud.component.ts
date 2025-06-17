@@ -371,6 +371,15 @@ tipoSeleccionsoli: TablaSeleccion = TablaSeleccion.UNDEFINED;
       this.certificadoZoosanitarioServices.updateDatosDeLaSolicitud(VALOR);
     }
 
+  /**
+   * @inheritdoc
+   * @description
+   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
+   * Se utiliza para emitir una notificación y completar el observable `destroyNotifier$`, 
+   * permitiendo limpiar suscripciones y evitar fugas de memoria.
+   *
+   * @see https://angular.io/guide/lifecycle-hooks#ondestroy
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
