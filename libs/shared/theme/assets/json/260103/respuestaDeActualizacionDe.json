@@ -6,7 +6,7 @@
         "llavePago": "LLAVE987654",
         "fechaPago": "2024-06-20",
         "importePago": "1500.00",
-        "banco": "Banco Ejemplo"
+        "banco": "1"
     },
     "datosSolicitudFormState": {
         "rfcSanitario": "SAN123456789",
@@ -37,7 +37,7 @@
         "fechaDeFabricacio": "2024-01-01",
         "fechaDeCaducidad": "2025-01-01",
         "regimenLaMercancia": "Definitivo",
-        "aduana": "1"
+        "aduana": "101"
     },
     "scianConfigDatos": [
             {
@@ -119,7 +119,7 @@
             "especifiqueObligatorio": "Sí"
         }
     ],
-    "destinatarioTablaDatos": [
+    "destinatarioTableDatos": [
         {
             "id": 1,
             "nombreRazonSocial": "Farmacia Destino S.A. de C.V.",
@@ -214,54 +214,6 @@
             "primerApellido": "Gómez",
             "segundoApellido": "López",
             "razonSocial": "Facturador Dos S.A.",
-            "lada": "55"
-        }
-    ],
-    "proveedorTablaDatos": [
-        {
-            "nombreRazonSocial": "Proveedor Uno S.A. de C.V.",
-            "rfc": "PRO123456789",
-            "curp": "CURP123456HDFRNS03",
-            "telefono": "5553334455",
-            "correoElectronico": "contacto@proveedoruno.com",
-            "calle": "Av. Proveedor",
-            "numeroExterior": "30",
-            "numeroInterior": "301",
-            "pais": "México",
-            "colonia": "Industrial",
-            "municipioAlcaldia": "Azcapotzalco",
-            "localidad": "Ciudad de México",
-            "entidadFederativa": "CDMX",
-            "estadoLocalidad": "CDMX",
-            "codigoPostal": "02900",
-            "coloniaEquivalente": "Industrial",
-            "nombres": "Pedro",
-            "primerApellido": "Hernández",
-            "segundoApellido": "Ruiz",
-            "razonSocial": "Proveedor Uno S.A. de C.V.",
-            "lada": "55"
-        },
-        {
-            "nombreRazonSocial": "Proveedor Dos S.A.",
-            "rfc": "PRO987654321",
-            "curp": "CURP987654MDFRNS04",
-            "telefono": "5554445566",
-            "correoElectronico": "ventas@proveedordos.com",
-            "calle": "Calle Proveedor",
-            "numeroExterior": "40",
-            "numeroInterior": "402",
-            "pais": "México",
-            "colonia": "Obrera",
-            "municipioAlcaldia": "Venustiano Carranza",
-            "localidad": "Ciudad de México",
-            "entidadFederativa": "CDMX",
-            "estadoLocalidad": "CDMX",
-            "codigoPostal": "06800",
-            "coloniaEquivalente": "Obrera",
-            "nombres": "Laura",
-            "primerApellido": "Martínez",
-            "segundoApellido": "Soto",
-            "razonSocial": "Proveedor Dos S.A.",
             "lada": "55"
         }
     ],
