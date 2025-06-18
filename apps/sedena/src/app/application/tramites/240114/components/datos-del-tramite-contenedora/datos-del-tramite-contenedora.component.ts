@@ -1,14 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, ViewChild } from '@angular/core';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Tramite240114Query } from '../../estados/tramite240114Query.query';
 import { Tramite240114Store } from '../../estados/tramite240114Store.store';
 import { takeUntil } from 'rxjs';
+import { DatosMercanciaContenedoraComponent } from '../datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 
 /**
  * @title Datos del Trámite Contenedora
@@ -19,10 +21,12 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-datos-del-tramite-contenedora',
   standalone: true,
-  imports: [CommonModule, DatosDelTramiteComponent],
+  imports: [CommonModule, DatosDelTramiteComponent, ModalComponent],
   templateUrl: './datos-del-tramite-contenedora.component.html',
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
+  @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
+
   /**
    * @property esFormularioSoloLectura
    * @description Indica si el formulario es de solo lectura.
@@ -109,5 +113,14 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
    */
   updateDatosDelTramiteFormulario(event: DatosDelTramiteFormState): void {
     this.tramiteStore.updateDatosDelTramiteFormState(event);
+  }
+
+  openModal(): void {
+    this.modalComponent.abrir(DatosMercanciaContenedoraComponent, {
+      cerrarModal: this.cerrarModal.bind(this),
+    });
+  }
+  cerrarModal(): void {
+    this.modalComponent.cerrar();
   }
 }

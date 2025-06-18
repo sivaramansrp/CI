@@ -62,10 +62,10 @@ import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
-import { ModalComponent } from '../modal/modal.component';
 import { REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
 import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { map } from 'rxjs/operators';
+import { DatosMercanciaContenedoraComponent } from '../../../tramites/240118/components/datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 /**
  * @title Datos del Trámite
  * @description Componente que gestiona el formulario de datos del trámite como permisos, uso final y selección de aduanas.
@@ -84,14 +84,11 @@ import { map } from 'rxjs/operators';
     InputRadioComponent,
     InputCheckComponent,
     InputFechaComponent,
-    ModalComponent,
   ],
   templateUrl: './datos-del-tramite.component.html',
   styleUrl: './datos-del-tramite.component.scss',
 })
 export class DatosDelTramiteComponent implements OnInit, OnDestroy {
-  @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
-
   showModal: boolean = false;
   /**
    * @property {number} idProcedimiento
@@ -370,6 +367,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   @Output() updateDatosDelTramiteFormulario =
     new EventEmitter<DatosDelTramiteFormState>();
 
+  @Output() openModal = new EventEmitter<void>();
+
   /**
    * Evento emitido cuando se actualiza el formulario de justificación del trámite.
    * @event updateJustificacionFormulario
@@ -509,7 +508,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     // this.router.navigate([accionesPath], {
     //   relativeTo: this.activatedRoute,
     // });
-    this.modalComponent.abrir(DatosMercanciaComponent, { userId: 42 });
+
+    this.openModal.emit();
   }
 
   /**
