@@ -1127,5 +1127,32 @@
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
         "numeroDeProcedimiento": "260102"
+    },
+    {
+        "id": "140216",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-11",
+        "fechaActualizacion": "2025-06-18",
+        "diasTranscurridos": "4",
+        "departamento": "SENER",
+        "numeroDeProcedimiento": "140216"
+    },
+    {
+        "id": "220501",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-11",
+        "fechaActualizacion": "2025-06-18",
+        "diasTranscurridos": "4",
+        "departamento": "AGRICULTURA",
+        "numeroDeProcedimiento": "220501"
+    },
+    {
+        "id": "10303",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-11",
+        "fechaActualizacion": "2025-06-18",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "10303"
     }
 ]
