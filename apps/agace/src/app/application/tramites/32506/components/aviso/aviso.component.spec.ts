@@ -1,4 +1,3 @@
-// aviso.component.spec.ts
 import { TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { AvisoComponent } from './aviso.component';

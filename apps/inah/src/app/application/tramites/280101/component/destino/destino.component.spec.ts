@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-import { of } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { Tramite280101Store } from '../../../../estados/tramite/tramite280101.store';
-import { Tramite280101Query } from '../../../../estados/queries/tramite280101.query';
 import { DestinoComponent } from './destino.component';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Tramite280101Store } from '../../../../estados/tramite/tramite280101.store';
+import { Tramite280101Query } from '../../../../estados/queries//tramite280101.query';
+import { of } from 'rxjs';
 
 describe('DestinoComponent', () => {
   let component: DestinoComponent;
@@ -16,26 +16,32 @@ describe('DestinoComponent', () => {
     storeMock = {
       setPais: jest.fn(),
       setCodigoPostal: jest.fn(),
+      setEstado: jest.fn(),
+      setMunicipioOAlcadia: jest.fn(),
+      setLocalidad: jest.fn(),
+      setColonia: jest.fn(),
+      setNumeroExterior: jest.fn(),
+      setNumeroInterior: jest.fn(),
+      setCalle: jest.fn(),
     };
-
     queryMock = {
       selectSolicitud$: of({
-        pais: [{ id: 1, descripcion: 'México' }],
-        codigoPostal: 12345,
-        estado: 1,
-        municipioOAlcadia: 'Municipio',
-        localidad: 'Localidad',
-        colonia: 1,
-        numeroExterior: 100,
-        numeroInterior: 200,
-        calle: 'Calle Principal',
+        pais: 'MX',
+        codigoPostal: '12345',
+        estado: 'CDMX',
+        municipioOAlcadia: 'Alcaldia',
+        localidad: 'Centro',
+        colonia: 'Roma',
+        numeroExterior: '10',
+        numeroInterior: '20',
+        calle: 'Insurgentes',
       }),
     };
 
     await TestBed.configureTestingModule({
-      declarations: [],
-      imports: [ReactiveFormsModule,DestinoComponent, TituloComponent],
+      imports: [CommonModule, ReactiveFormsModule, DestinoComponent],
       providers: [
+        FormBuilder,
         { provide: Tramite280101Store, useValue: storeMock },
         { provide: Tramite280101Query, useValue: queryMock },
       ],
@@ -50,36 +56,31 @@ describe('DestinoComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with values from the query', () => {
-    expect(component.DestinoForm.value).toEqual({
-      pais: [{ id: 1, descripcion: 'México' }],
-      codigoPostal: 12345,
-      estado: 1,
-      municipioOAlcadia: 'Municipio',
-      localidad: 'Localidad',
-      colonia: 1,
-      numeroExterior: 100,
-      numeroInterior: 200,
-      calle: 'Calle Principal',
-    });
+  it('should initialize destinoForm with correct values on ngOnInit', () => {
+    expect(component.destinoForm).toBeDefined();
+    expect(component.destinoForm.get('pais')?.value).toBe('MX');
+    expect(component.destinoForm.get('calle')?.value).toBe('Insurgentes');
   });
 
-  it('should call the correct store method when setValoresStore is invoked', () => {
-    const form = component.DestinoForm;
+  it('should disable the form if soloLectura is true', () => {
+    component.soloLectura = true;
+    component.establecerValoresFormulario();
+    expect(component.destinoForm.disabled).toBe(true);
+  });
+
+  it('should call the correct store method in setValoresStore', () => {
+    const form = component.destinoForm;
+    form.patchValue({ pais: 'US' });
+    storeMock.setPais = jest.fn();
     component.setValoresStore(form, 'pais', 'setPais');
-    expect(storeMock.setPais).toHaveBeenCalledWith([{ id: 1, descripcion: 'México' }]);
-
-    component.setValoresStore(form, 'codigoPostal', 'setCodigoPostal');
-    expect(storeMock.setCodigoPostal).toHaveBeenCalledWith(12345);
+    expect(storeMock.setPais).toHaveBeenCalledWith('US');
   });
 
-  it('should clean up subscriptions on destroy', () => {
-    const destroyNotifierSpy = jest.spyOn(component['destroyNotifier$'], 'next');
-    const destroyNotifierCompleteSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
-
+  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
-
-    expect(destroyNotifierSpy).toHaveBeenCalled();
-    expect(destroyNotifierCompleteSpy).toHaveBeenCalled();
+    expect(nextSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });

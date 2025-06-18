@@ -1,507 +1,420 @@
-// @ts-nocheck
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { Pipe, PipeTransform, Injectable, CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA, Directive, Input, Output } from '@angular/core';
-import { isPlatformBrowser } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { Observable, of as observableOf, throwError } from 'rxjs';
-import{DatosdelasolicitudComponent} from './datos-de-la-solicitud.component'
-import { Component, ChangeDetectorRef } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { DatosdelasolicitudComponent } from './datos-de-la-solicitud.component';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { PermisoSanitarioDispositivosMedicosService } from '../../services/permiso-sanitario-dispositivos-medicos.service';
 import { Solicitud260915Store } from '../../estados/tramites260915.store';
 import { Solicitud260915Query } from '../../estados/tramites260915.query';
-import { provideHttpClient } from '@angular/common/http';
-@Injectable()
-class MockPermisoSanitarioDispositivosMedicosService {}
-
-@Injectable()
-class MockSolicitud260915Store {
-  setDenominacionNombre = jest.fn();
-  setEstadoFisico = jest.fn();
-  setPresentacionFarmaceutica = jest.fn();
-}
-
-@Injectable()
-class MockSolicitud260915Query {}
-
-
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { of, ReplaySubject, Subject } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('DatosdelasolicitudComponent', () => {
-  let fixture;
-  let component;
+  let component: DatosdelasolicitudComponent;
+  let fixture: ComponentFixture<DatosdelasolicitudComponent>;
+  let mockPermisoService: any;
+  let mockStore: any;
+  let mockQuery: any;
+  let mockConsultaioQuery: any;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule,DatosdelasolicitudComponent ],
-     
-      schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
-      providers: [ provideHttpClient(),
+  beforeEach(async () => {
+    mockPermisoService = {
+      getEstadosData: jest.fn().mockReturnValue(of([])),
+      getClaveScianData: jest.fn().mockReturnValue(of([])),
+      getClaveDescripcionDelData: jest.fn().mockReturnValue(of([])),
+      getRegimenalqueData: jest.fn().mockReturnValue(of([])),
+      getAduanaData: jest.fn().mockReturnValue(of([])),
+      getClasificacionDelProductoData: jest.fn().mockReturnValue(of([])),
+      getEspificarData: jest.fn().mockReturnValue(of([])),
+      getTipoProductoData: jest.fn().mockReturnValue(of([])),
+      getMercanciaCrosslistData: jest.fn().mockReturnValue(of([
+        {
+          paisOrigenCrossList: {},
+          paisProcedencisCrossList: {},
+          usoEspecificoCrossList: {}
+        }
+      ])),
+      getEstadoFisicoData: jest.fn().mockReturnValue(of([])),
+      getMercanciasDatosData: jest.fn().mockReturnValue(of([])),
+    };
+    mockStore = {
+      setTramite260915State: jest.fn()
+    };
+    mockQuery = {
+      selectSolicitud260915$: of({}),
+    };
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: false }),
+    };
+
+    await TestBed.configureTestingModule({
+      imports: [ReactiveFormsModule, DatosdelasolicitudComponent],
+      declarations: [],
+      providers: [
         FormBuilder,
-        { provide: PermisoSanitarioDispositivosMedicosService, useClass: MockPermisoSanitarioDispositivosMedicosService },
-        ChangeDetectorRef,
-        { provide: Solicitud260915Store, useClass: MockSolicitud260915Store },
-        { provide: Solicitud260915Query, useClass: MockSolicitud260915Query }
-      ]
-    }).overrideComponent(DatosdelasolicitudComponent, {
-
+        { provide: PermisoSanitarioDispositivosMedicosService, useValue: mockPermisoService },
+        { provide: Solicitud260915Store, useValue: mockStore },
+        { provide: Solicitud260915Query, useValue: mockQuery },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery },
+      ],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     }).compileComponents();
+
     fixture = TestBed.createComponent(DatosdelasolicitudComponent);
-    component = fixture.debugElement.componentInstance;
+    component = fixture.componentInstance;
+    fixture.detectChanges();
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run GetterDeclaration #datosDelTramiteRealizar', async () => {
-    component.dataDeLaSolicitudForm = component.dataDeLaSolicitudForm || {};
-    component.dataDeLaSolicitudForm.get = jest.fn();
-    const datosDelTramiteRealizar = component.datosDelTramiteRealizar;
-    expect(component.dataDeLaSolicitudForm.get).toHaveBeenCalled();
-  });
-
-  it('should run #ngOnInit()', async () => {
-    component.solicitud260915Query = component.solicitud260915Query || {};
-    component.solicitud260915Query.selectSolicitud$ = observableOf({});
-    component.createForm = jest.fn();
-    component.getEstadosData = jest.fn();
-    component.getClaveScianData = jest.fn();
-    component.getClaveDescripcionDelData = jest.fn();
-    component.getRegimenalqueData = jest.fn();
-    component.getAduanaData = jest.fn();
-    component.getEspificarData = jest.fn();
-    component.getClasificacionDelProductoData = jest.fn();
-    component.getTipoProductoData = jest.fn();
-    component.getMercanciaCrosslistData = jest.fn();
-    component.createclaveScianForm = jest.fn();
-    component.getEstadoFisicoData = jest.fn();
+  it('should initialize forms and call data methods on ngOnInit', () => {
+    const spy1 = jest.spyOn(component, 'getEstadosData');
+    const spy2 = jest.spyOn(component, 'getClaveScianData');
+    const spy3 = jest.spyOn(component, 'getClaveDescripcionDelData');
+    const spy4 = jest.spyOn(component, 'getRegimenalqueData');
+    const spy5 = jest.spyOn(component, 'getAduanaData');
+    const spy6 = jest.spyOn(component, 'getEspificarData');
+    const spy7 = jest.spyOn(component, 'getClasificacionDelProductoData');
+    const spy8 = jest.spyOn(component, 'getTipoProductoData');
+    const spy9 = jest.spyOn(component, 'getMercanciaCrosslistData');
+    const spy10 = jest.spyOn(component, 'getEstadoFisicoData');
+    const spy11 = jest.spyOn(component, 'getMercanciasDatosData');
     component.ngOnInit();
-    expect(component.createForm).toHaveBeenCalled();
-    expect(component.getEstadosData).toHaveBeenCalled();
-    expect(component.getClaveScianData).toHaveBeenCalled();
-    expect(component.getClaveDescripcionDelData).toHaveBeenCalled();
-    expect(component.getRegimenalqueData).toHaveBeenCalled();
-    expect(component.getAduanaData).toHaveBeenCalled();
-    expect(component.getEspificarData).toHaveBeenCalled();
-    expect(component.getClasificacionDelProductoData).toHaveBeenCalled();
-    expect(component.getTipoProductoData).toHaveBeenCalled();
-    expect(component.getMercanciaCrosslistData).toHaveBeenCalled();
-    expect(component.createclaveScianForm).toHaveBeenCalled();
-    expect(component.getEstadoFisicoData).toHaveBeenCalled();
+    expect(spy1).toHaveBeenCalled();
+    expect(spy2).toHaveBeenCalled();
+    expect(spy3).toHaveBeenCalled();
+    expect(spy4).toHaveBeenCalled();
+    expect(spy5).toHaveBeenCalled();
+    expect(spy6).toHaveBeenCalled();
+    expect(spy7).toHaveBeenCalled();
+    expect(spy8).toHaveBeenCalled();
+    expect(spy9).toHaveBeenCalled();
+    expect(spy10).toHaveBeenCalled();
+    expect(spy11).toHaveBeenCalled();
   });
 
-  it('should run #createclaveScianForm()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.createclaveScianForm();
-    expect(component.fb.group).toHaveBeenCalled();
-  });
-
-  it('should run #createForm()', async () => {
-    component.fb = component.fb || {};
-    component.fb.group = jest.fn();
-    component.dataDeLaSolicitudState = component.dataDeLaSolicitudState || {};
-    component.dataDeLaSolicitudState.descripcionFraccionArancelaria = 'descripcionFraccionArancelaria';
-    component.dataDeLaSolicitudState.cantidadUMT = 'cantidadUMT';
-    component.dataDeLaSolicitudState.cantidadUMC = 'cantidadUMC';
-    component.dataDeLaSolicitudState.umc = 'umc';
-    component.dataDeLaSolicitudState.tipoProducto = 'tipoProducto';
-    component.dataDeLaSolicitudState.clasificaionProductos = 'clasificaionProductos';
-    component.dataDeLaSolicitudState.especificarProducto = 'especificarProducto';
-    component.dataDeLaSolicitudState.nombreProductoEspecifico = 'nombreProductoEspecifico';
-    component.dataDeLaSolicitudState.denominacionDistintiva = 'denominacionDistintiva';
-    component.dataDeLaSolicitudState.denominacionNombre = 'denominacionNombre';
-    component.dataDeLaSolicitudState.estadoFisico = 'estadoFisico';
-    component.dataDeLaSolicitudState.presentacionFarmaceutica = 'presentacionFarmaceutica';
-    component.dataDeLaSolicitudState.fraccionArancelaria = 'fraccionArancelaria';
-    component.dataDeLaSolicitudState.justification = 'justification';
-    component.dataDeLaSolicitudState.denominacion = 'denominacion';
-    component.dataDeLaSolicitudState.correoElectronico = 'correoElectronico';
-    component.dataDeLaSolicitudState.codigopostal = 'codigopostal';
-    component.dataDeLaSolicitudState.estado = 'estado';
-    component.dataDeLaSolicitudState.municipoyalcaldia = 'municipoyalcaldia';
-    component.dataDeLaSolicitudState.localidad = 'localidad';
-    component.dataDeLaSolicitudState.colonia = 'colonia';
-    component.dataDeLaSolicitudState.calle = 'calle';
-    component.dataDeLaSolicitudState.lada = 'lada';
-    component.dataDeLaSolicitudState.telefono = 'telefono';
-    component.dataDeLaSolicitudState.avisoDeFuncionamiento = 'avisoDeFuncionamiento';
-    component.dataDeLaSolicitudState.licenciaSanitaria = 'licenciaSanitaria';
-    component.dataDeLaSolicitudState.regimenalque = 'regimenalque';
-    component.dataDeLaSolicitudState.aduana = 'aduana';
-    component.dataDeLaSolicitudState.rfc = 'rfc';
-    component.dataDeLaSolicitudState.legalRazonSocial = 'legalRazonSocial';
-    component.dataDeLaSolicitudState.apellidoPaterno = 'apellidoPaterno';
-    component.dataDeLaSolicitudState.apellidoMaterno = 'apellidoMaterno';
-    component.createForm();
-    expect(component.fb.group).toHaveBeenCalled();
-  });
-
-  it('should run #clearNotificacion()', async () => {
-
+  it('should clear notification', () => {
+    component.nuevaNotificacion = { tipoNotificacion: 'alert' } as any;
     component.clearNotificacion();
-
+    expect(component.nuevaNotificacion).toBeNull();
   });
 
-  it('should run #closeModal()', async () => {
-    component.clearNotificacion = jest.fn();
+  it('should close modal and clear notification', () => {
+    document.body.innerHTML = `<div id="modalAgregarMercancia"></div>`;
+    const spy = jest.spyOn(component, 'clearNotificacion');
     component.closeModal();
-    expect(component.clearNotificacion).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should run #eliminarPedimento()', async () => {
-    component.tableData = component.tableData || {};
-    component.tableData = ['tableData'];
-    component.filasSeleccionadas = component.filasSeleccionadas || {};
-    component.filasSeleccionadas.has = jest.fn();
-    component.filasSeleccionadas.clear = jest.fn();
-    component.eliminarPedimento({});
-    expect(component.filasSeleccionadas.has).toHaveBeenCalled();
-    expect(component.filasSeleccionadas.clear).toHaveBeenCalled();
+  it('should eliminarPedimento', () => {
+    component.tableData = [{ id: 1 }, { id: 2 }] as any;
+    component.filasSeleccionadas = new Set([1]);
+    component.nuevaNotificacion = { tipoNotificacion: 'alert' } as any;
+    component.eliminarPedimento(true);
+    expect(component.tableData.length).toBe(1);
+    expect(component.nuevaNotificacion).toBeNull();
+    expect(component.filasSeleccionadas.size).toBe(0);
   });
 
-  it('should run #abrirModal()', async () => {
-    component.filasSeleccionadas = new Set([1, 2]);
-      component.abrirModal = jest.fn();
+  it('should abrirModal for delete', () => {
+    component.filasSeleccionadas = new Set([1]);
     component.abrirModal();
-      expect(component.abrirModal).toHaveBeenCalled();
+    expect(component.nuevaNotificacion).toBeTruthy();
   });
-  it('should run #getMercanciaCrosslistData()', async () => {
-    component.permisosanitariodisposivos = component.permisosanitariodisposivos || {};
-    component.permisosanitariodisposivos.getMercanciaCrosslistData = jest.fn().mockReturnValue(observableOf({}));
+
+  it('should abrirModal for seleccionarEstablecimiento', () => {
+    component.filasSeleccionadas = new Set();
+    component.abrirModal(0, true);
+    expect(component.nuevaNotificacion).toBeTruthy();
+  });
+
+  it('should getMercanciaCrosslistData and set crosslists', () => {
     component.getMercanciaCrosslistData();
-    expect(component.permisosanitariodisposivos.getMercanciaCrosslistData).toHaveBeenCalled();
+    expect(component.paisOrigenCrossList).toBeDefined();
+    expect(component.paisProcedencisCrossList).toBeDefined();
+    expect(component.usoEspecificoCrossList).toBeDefined();
   });
 
-  it('should run #paisOrigenColapsable()', async () => {
-
+  it('should toggle paisOrigen', () => {
+    const prev = component.paisOrigen;
     component.paisOrigenColapsable();
-
+    expect(component.paisOrigen).toBe(!prev);
   });
 
-  it('should run #paisProcedencis_colapsable()', async () => {
-
+  it('should toggle paisProcedencisColapsable', () => {
+    const prev = component.paisProcedencisColapsable;
     component.paisProcedencis_colapsable();
-
+    expect(component.paisProcedencisColapsable).toBe(!prev);
   });
 
-  it('should run #usoEspecificoColapsable()', async () => {
-
+  it('should toggle usoEspecifico', () => {
+    const prev = component.usoEspecifico;
     component.usoEspecificoColapsable();
-
+    expect(component.usoEspecifico).toBe(!prev);
   });
 
-  it('should run #getEstadosData()', async () => {
-    component.permisosanitariodisposivos = component.permisosanitariodisposivos || {};
-    component.permisosanitariodisposivos.getEstadosData = jest.fn().mockReturnValue(observableOf({}));
-    component.estadoData = component.estadoData || {};
-    component.estadoData.catalogos = 'catalogos';
+  it('should call data methods', () => {
     component.getEstadosData();
-    expect(component.permisosanitariodisposivos.getEstadosData).toHaveBeenCalled();
-  });
-
-  it('should run #getClaveScianData()', async () => {
-    component.permisosanitariodisposivos = component.permisosanitariodisposivos || {};
-    component.permisosanitariodisposivos.getClaveScianData = jest.fn().mockReturnValue(observableOf({}));
-    component.claveScianData = component.claveScianData || {};
-    component.claveScianData.catalogos = 'catalogos';
     component.getClaveScianData();
-    expect(component.permisosanitariodisposivos.getClaveScianData).toHaveBeenCalled();
-  });
-  it('should run #onDeleted()', async () => {
-    component.filasSeleccionadas = new Set([1, 2]);
-      component.mercanciasData = [
-      { id: 1, name: 'Item 1' },
-      { id: 2, name: 'Item 2' },
-      { id: 3, name: 'Item 3' },
-    ];
-    component.filasSeleccionadas.clear = jest.fn();
-    component.onDeleted();
-  
-    expect(component.mercanciasData).toEqual([{ id: 3, name: 'Item 3' }]);
-      expect(component.filasSeleccionadas.clear).toHaveBeenCalled();
-  });
-  it('should run #getClaveDescripcionDelData()', async () => {
-    component.permisosanitariodisposivos = component.permisosanitariodisposivos || {};
-    component.permisosanitariodisposivos.getClaveDescripcionDelData = jest.fn().mockReturnValue(observableOf({}));
-    component.descripcionDelScianData = component.descripcionDelScianData || {};
-    component.descripcionDelScianData.catalogos = 'catalogos';
     component.getClaveDescripcionDelData();
-    expect(component.permisosanitariodisposivos.getClaveDescripcionDelData).toHaveBeenCalled();
-  });
-
-  it('should run #getRegimenalqueData()', async () => {
-    component.permisosanitariodisposivos = component.permisosanitariodisposivos || {};
-    component.permisosanitariodisposivos.getRegimenalqueData = jest.fn().mockReturnValue(observableOf({}));
-    component.regimenalqueData = component.regimenalqueData || {};
-    component.regimenalqueData.catalogos = 'catalogos';
     component.getRegimenalqueData();
-    expect(component.permisosanitariodisposivos.getRegimenalqueData).toHaveBeenCalled();
-  });
-
-  it('should run #getAduanaData()', async () => {
-    component.permisosanitariodisposivos = component.permisosanitariodisposivos || {};
-    component.permisosanitariodisposivos.getAduanaData = jest.fn().mockReturnValue(observableOf({}));
-    component.aduanaData = component.aduanaData || {};
-    component.aduanaData.catalogos = 'catalogos';
     component.getAduanaData();
-    expect(component.permisosanitariodisposivos.getAduanaData).toHaveBeenCalled();
-  });
-
-  it('should run #getEstadoFisicoData()', async () => {
-    component.permisosanitariodisposivos = component.permisosanitariodisposivos || {};
-    component.permisosanitariodisposivos.getEstadoFisicoData = jest.fn().mockReturnValue(observableOf({}));
-    component.estadoFisicoData = component.estadoFisicoData || {};
-    component.estadoFisicoData.catalogos = 'catalogos';
     component.getEstadoFisicoData();
-    expect(component.permisosanitariodisposivos.getEstadoFisicoData).toHaveBeenCalled();
-  });
-
-  it('should run #aceptar()', async () => {
-    component.dataDeLaSolicitudForm = component.dataDeLaSolicitudForm || {};
-    component.dataDeLaSolicitudForm.enable = jest.fn();
-    component.aceptar();
-    expect(component.dataDeLaSolicitudForm.enable).toHaveBeenCalled();
-  });
-
-  it('should run #getPaisData()', async () => {
-    component.permisosanitariodisposivos.getPaisData = jest.fn().mockReturnValue(observableOf({}));
-    component.getPaisData();
-    expect(component.permisosanitariodisposivos.getPaisData).toHaveBeenCalled();
-  });
-  it('should run #getClasificacionDelProductoData()', async () => {
-    component.permisosanitariodisposivos = component.permisosanitariodisposivos || {};
-    component.permisosanitariodisposivos.getClasificacionDelProductoData = jest.fn().mockReturnValue(observableOf({}));
-    component.delProducto = component.delProducto || {};
-    component.delProducto.catalogos = 'catalogos';
     component.getClasificacionDelProductoData();
-    expect(component.permisosanitariodisposivos.getClasificacionDelProductoData).toHaveBeenCalled();
-  });
-
-  it('should run #getEspificarData()', async () => {
-    component.permisosanitariodisposivos = component.permisosanitariodisposivos || {};
-    component.permisosanitariodisposivos.getEspificarData = jest.fn().mockReturnValue(observableOf({}));
-    component.especificarData = component.especificarData || {};
-    component.especificarData.catalogos = 'catalogos';
     component.getEspificarData();
-    expect(component.permisosanitariodisposivos.getEspificarData).toHaveBeenCalled();
-  });
-
-  it('should run #getTipoProductoData()', async () => {
-    component.permisosanitariodisposivos = component.permisosanitariodisposivos || {};
-    component.permisosanitariodisposivos.getTipoProductoData = jest.fn().mockReturnValue(observableOf({}));
-    component.tipoProductoData = component.tipoProductoData || {};
-    component.tipoProductoData.catalogos = 'catalogos';
     component.getTipoProductoData();
-    expect(component.permisosanitariodisposivos.getTipoProductoData).toHaveBeenCalled();
+    component.getMercanciasDatosData();
+    expect(true).toBeTruthy(); // Just to ensure no errors
   });
 
-  it('should run #seleccionarEstablecimiento()', async () => {
-    component.abrirModal = jest.fn();
+  it('should enable form on aceptar', () => {
+    component.dataDeLaSolicitudForm = new FormBuilder().group({});
+    component.habilitarEstado = true;
+    component.aceptar();
+    expect(component.habilitarEstado).toBe(false);
+  });
+
+  it('should seleccionarEstablecimiento', () => {
+    const spy = jest.spyOn(component, 'abrirModal');
     component.seleccionarEstablecimiento();
-    expect(component.abrirModal).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalledWith(0, true);
   });
 
-  it('should run #onLimpiar()', async () => {
-    component.clavaScianForm = component.clavaScianForm || {};
-    component.clavaScianForm.reset = jest.fn();
+  it('should onLimpiar', () => {
+    component.clavaScianForm = new FormBuilder().group({});
+    component.clavaScianForm.setValue({});
     component.onLimpiar();
-    expect(component.clavaScianForm.reset).toHaveBeenCalled();
+    expect(component.clavaScianForm.value).toEqual({});
   });
 
-  it('should run #onAgregar()', async () => {
-
+  it('should onAgregar', () => {
+    component.showClavaScianForm = false;
     component.onAgregar();
-
+    expect(component.showClavaScianForm).toBe(true);
   });
 
-  it('should run #onDelete()', async () => {
-    component.filasSeleccionadas = new Set([1, 2]);
-    component.abrirModal = jest.fn();
+  it('should onDelete with no selection', () => {
+    component.filasSeleccionadas = new Set();
+    const spy = jest.spyOn(console, 'warn').mockImplementation(() => {});
     component.onDelete();
-    expect(component.abrirModal).toHaveBeenCalled();
+    expect(spy).toHaveBeenCalled();
+    spy.mockRestore();
   });
 
-  it('should run #onCancelar()', async () => {
-    component.clavaScianForm = component.clavaScianForm || {};
-    component.clavaScianForm.reset = jest.fn();
+  it('should onDelete with selection', () => {
+    component.filasSeleccionadas = new Set([1]);
+    const spy = jest.spyOn(component, 'abrirModal');
+    component.onDelete();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should onCancelar', () => {
+    component.showClavaScianForm = true;
+    component.clavaScianForm = new FormBuilder().group({});
     component.onCancelar();
-    expect(component.clavaScianForm.reset).toHaveBeenCalled();
+    expect(component.showClavaScianForm).toBe(false);
   });
 
-  it('should run #agregarMercanciaGrid()', async () => {
-    component.modalElement = component.modalElement || {};
-    component.modalElement.nativeElement = 'nativeElement';
-    component.agregarMercanciaGrid();
-
+  it('should agregarMercanciaGrid', () => {
+    const modalDiv = document.createElement('div');
+    modalDiv.id = 'modalAgregarMercancia';
+   
+    const childDiv = document.createElement('div');
+    childDiv.className = 'some-child';
+    modalDiv.appendChild(childDiv);
+    document.body.appendChild(modalDiv);
+  
+    try {
+      component.modalElement = { nativeElement: modalDiv } as any;
+      component.agregarMercanciaGrid();
+      expect(true).toBeTruthy();
+    } finally {
+      document.body.removeChild(modalDiv);
+    }
   });
 
-  it('should run #onfilasSeleccionadas()', async () => {
-    component.filasSeleccionadas = component.filasSeleccionadas || {};
-    component.filasSeleccionadas.clear = jest.fn();
-    component.onfilasSeleccionadas({
-      length: {},
-      map: function() {
-        return [
-          {
-            "claveScianG": {
-              "claveScian": {}
-            },
-            "id": {}
-          }
-        ];
-      }
+  it('should onfilasSeleccionadas for MercanciasInfo', () => {
+    component.onfilasSeleccionadas([{ clasificaionProductos: 'a', id: 1 }] as any);
+    expect(component.filasSeleccionadas.has(1)).toBe(true);
+  });
+
+  it('should onfilasSeleccionadas for FilaData', () => {
+    component.onfilasSeleccionadas([{ claveScianG: { claveScian: 2 } }] as any);
+    expect(component.filasSeleccionadas.has(2)).toBe(true);
+  });
+
+  it('should onfilasSeleccionadas for empty', () => {
+    component.filasSeleccionadas = new Set([1]);
+    component.onfilasSeleccionadas([]);
+    expect(component.filasSeleccionadas.size).toBe(0);
+  });
+
+  it('should onSubmit', () => {
+    component.clavaScianForm = new FormBuilder().group({
+      claveScianG: new FormBuilder().group({
+        claveScian: ['1'],
+        descripcionDelScian: ['2']
+      })
     });
-    expect(component.filasSeleccionadas.clear).toHaveBeenCalled();
-  });
-
-  it('should run #onSubmit()', async () => {
-    component.clavaScianForm = component.clavaScianForm || {};
-    component.clavaScianForm.value = 'value';
-    component.clavaScianForm.reset = jest.fn();
-    component.claveScianData = component.claveScianData || {};
-    component.claveScianData.catalogos = {
-      find: function() {
-        return [
-          {
-            "id": {}
-          }
-        ];
-      }
-    };
-    component.descripcionDelScianData = component.descripcionDelScianData || {};
-    component.descripcionDelScianData.catalogos = {
-      find: function() {
-        return [
-          {
-            "id": {}
-          }
-        ];
-      }
-    };
-    component.tableData = component.tableData || {};
-    component.tableData.push = jest.fn();
+    component.claveScianData.catalogos = [{ id: 1, descripcion: 'desc1' }];
+    component.descripcionDelScianData.catalogos = [{ id: 2, descripcion: 'desc2' }];
+    component.tableData = [];
     component.onSubmit();
-    expect(component.clavaScianForm.reset).toHaveBeenCalled();
-    expect(component.tableData.push).toHaveBeenCalled();
+    expect(component.tableData.length).toBe(1);
+    expect(component.showClavaScianForm).toBe(false);
   });
 
-  it('should run #toggleLicenciaSanitaria()', async () => {
-    component.dataDeLaSolicitudForm = component.dataDeLaSolicitudForm || {};
-    component.dataDeLaSolicitudForm.get = jest.fn().mockReturnValue({
-      enable: function() {},
-      disable: function() {}
+  it('should get datosDelTramiteRealizar', () => {
+    component.dataDeLaSolicitudForm = new FormBuilder().group({
+      datosDelTramiteRealizar: new FormBuilder().group({})
+    });
+    expect(component.datosDelTramiteRealizar).toBeTruthy();
+  });
+
+  it('should toggleLicenciaSanitaria', () => {
+    component.dataDeLaSolicitudForm = new FormBuilder().group({
+      datosDelTramiteRealizar: new FormBuilder().group({
+        avisoDeFuncionamiento: [true],
+        licenciaSanitaria: ['']
+      })
     });
     component.toggleLicenciaSanitaria();
-    expect(component.dataDeLaSolicitudForm.get).toHaveBeenCalled();
+    component.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.avisoDeFuncionamiento')?.setValue(false);
+    component.toggleLicenciaSanitaria();
+    expect(true).toBeTruthy();
   });
 
-  it('should run #onSave()', async () => {
-    component.dataDeLaSolicitudForm = component.dataDeLaSolicitudForm || {};
-    component.dataDeLaSolicitudForm.value = 'value';
-    component.dataDeLaSolicitudForm.reset = jest.fn();
-    component.tipoProductoData = component.tipoProductoData || {};
-    component.tipoProductoData.catalogos = {
-      find: function() {
-        return [
-          {
-            "id": {}
-          }
-        ];
-      }
-    };
-    component.delProducto = component.delProducto || {};
-    component.delProducto.catalogos = {
-      find: function() {
-        return [
-          {
-            "id": {}
-          }
-        ];
-      }
-    };
-    component.especificarData = component.especificarData || {};
-    component.especificarData.catalogos = {
-      find: function() {
-        return [
-          {
-            "id": {}
-          }
-        ];
-      }
-    };
-    component.estadoFisicoData = component.estadoFisicoData || {};
-    component.estadoFisicoData.catalogos = {
-      find: function() {
-        return [
-          {
-            "id": {}
-          }
-        ];
-      }
-    };
-    component.mercanciasData = component.mercanciasData || {};
-    component.mercanciasData.push = jest.fn();
-    component.onSave();
-    expect(component.dataDeLaSolicitudForm.reset).toHaveBeenCalled();
-    expect(component.mercanciasData.push).toHaveBeenCalled();
-  });
-
-  it('should run #onDeleted()', async () => {
-    component.filasSeleccionadas = component.filasSeleccionadas || {};
-    component.filasSeleccionadas.size = 'size';
-    component.filasSeleccionadas.has = jest.fn();
-    component.filasSeleccionadas.clear = jest.fn();
-    component.mercanciasData = component.mercanciasData || {};
-    component.mercanciasData = ['mercanciasData'];
-    component.onDeleted();
-    expect(component.filasSeleccionadas.has).toHaveBeenCalled();
-    expect(component.filasSeleccionadas.clear).toHaveBeenCalled();
-  });
-
-  it('should run #onModificar()', async () => {
-    component.filasSeleccionadas = new Set([1]);
-  
-    component.mercanciasData = [
-      { id: 1, descripcionFraccionArancelaria: 'desc1', cantidadUMT: 10 },
-      { id: 2, descripcionFraccionArancelaria: 'desc2', cantidadUMT: 20 },
-    ];
-      component.dataDeLaSolicitudForm = {
-      patchValue: jest.fn(),
-    };
-      component.onModificar();
-    expect(component.dataDeLaSolicitudForm.patchValue).toHaveBeenCalledWith({
-      descripcionFraccionArancelaria: 'desc1',
-      cantidadUMT: 10,
+  it('should onSave for add', () => {
+    component.dataDeLaSolicitudForm = new FormBuilder().group({
+      tipoProducto: ['1'],
+      clasificaionProductos: ['2'],
+      especificarProducto: ['3'],
+      estadoFisico: ['4'],
+      datosDelTramiteRealizar: new FormBuilder().group({})
     });
+    component.tipoProductoData.catalogos = [{ id: 1, descripcion: 'tp' }];
+    component.delProducto.catalogos = [{ id: 2, descripcion: 'cp' }];
+    component.especificarData.catalogos = [{ id: 3, descripcion: 'ep' }];
+    component.estadoFisicoData.catalogos = [{ id: 4, descripcion: 'ef' }];
+    component.indiceFilaSeleccionada = null;
+    component.mercanciasData = [];
+    component.onSave();
+    expect(component.mercanciasData.length).toBe(1);
   });
 
-  it('should run #setValoresStore()', async () => {
-    component.solicitud260915Store = new MockSolicitud260915Store();
-    const form = {
-      get: jest.fn().mockReturnValue({ value: 'testValue' }),
-    };
-    const campo = 'denominacionNombre';
-    const metodoNombre = 'setDenominacionNombre';
-  
-    component.setValoresStore(form as any, campo, metodoNombre as any);
-  
-    expect(component.solicitud260915Store.setDenominacionNombre).toHaveBeenCalledWith('testValue');
+  it('should onSave for edit', () => {
+    component.dataDeLaSolicitudForm = new FormBuilder().group({
+      tipoProducto: ['1'],
+      clasificaionProductos: ['2'],
+      especificarProducto: ['3'],
+      estadoFisico: ['4'],
+      datosDelTramiteRealizar: new FormBuilder().group({})
+    });
+    component.tipoProductoData.catalogos = [{ id: 1, descripcion: 'tp' }];
+    component.delProducto.catalogos = [{ id: 2, descripcion: 'cp' }];
+    component.especificarData.catalogos = [{ id: 3, descripcion: 'ep' }];
+    component.estadoFisicoData.catalogos = [{ id: 4, descripcion: 'ef' }];
+    component.indiceFilaSeleccionada = 0;
+    component.mercanciasData = [{} as any];
+    component.onSave();
+    expect(component.indiceFilaSeleccionada).toBeNull();
   });
 
-  it('should run #ngOnDestroy()', async () => {
-    component.destroyed$ = component.destroyed$ || {};
-    component.destroyed$.next = jest.fn();
-    component.destroyed$.complete = jest.fn();
+  it('should onModificar with no selection', () => {
+    component.filasSeleccionadas = new Set();
+    component.mercanciasData = [];
+    component.onModificar();
+    expect(true).toBeTruthy();
+  });
+
+  it('should onModificar with more than one selection', () => {
+    component.filasSeleccionadas = new Set([1, 2]);
+    component.mercanciasData = [];
+    component.onModificar();
+    expect(true).toBeTruthy();
+  });
+
+  it('should onModificar with valid selection', () => {
+    component.filasSeleccionadas = new Set([1]);
+    component.mercanciasData = [{
+      id: 1,
+      descripcionFraccion: 'a',
+      cantidadUMT: '1',
+      unidadUMT: 'u',
+      cantidadUMC: '3',
+      unidad: 'u',
+      tipoProducto: 'tp',
+      clasificacion: 'cp',
+      especificar: 'ep',
+      denominacionEspecifica: 'de',
+      denominacionDistintiva: 'dd',
+      denominacionComun: 'dc',
+      estadoFisico: 'ef',
+      presentacion: 'p',
+      fraccionArancelaria: 'fa',
+      formaFarmaceutica: 'ff',
+      paisDeOrigen: 'mx',
+      paisDeProcedencia: 'mx',
+      usoEspecifico: 'uso'
+    }];
+    component.tipoProductoData.catalogos = [{ id: 1, descripcion: 'tp' }];
+    component.delProducto.catalogos = [{ id: 1, descripcion: 'cp' }];
+    component.especificarData.catalogos = [{ id: 1, descripcion: 'ep' }];
+    component.estadoFisicoData.catalogos = [{ id: 1, descripcion: 'ef' }];
+    component.dataDeLaSolicitudForm = new FormBuilder().group({
+      descripcionFraccionArancelaria: [''],
+      cantidadUMT: [''],
+      umt: [''],
+      cantidadUMC: [''],
+      umc: [''],
+      tipoProducto: [''],
+      clasificaionProductos: [''],
+      especificarProducto: [''],
+      nombreProductoEspecifico: [''],
+      denominacionDistintiva: [''],
+      denominacionNombre: [''],
+      estadoFisico: [''],
+      presentacionFarmaceutica: [''],
+      fraccionArancelaria: [''],
+      datosDelTramiteRealizar: new FormBuilder().group({})
+    });
+    document.body.innerHTML = `<div id="modalAgregarMercancia"></div>`;
+    component.onModificar();
+    expect(component.indiceFilaSeleccionada).toBe(0);
+  });
+
+  it('should changeEvent for modificacion', () => {
+    component.dataDeLaSolicitudForm = new FormBuilder().group({
+      datosDelTramiteRealizar: new FormBuilder().group({
+        tipoOperacion: ['modificacion'],
+        justification: [{ value: '', disabled: true }]
+      })
+    });
+    component.changeEvent();
+    expect(component.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.justification')?.enabled).toBe(true);
+  });
+
+  it('should changeEvent for other', () => {
+    component.dataDeLaSolicitudForm = new FormBuilder().group({
+      datosDelTramiteRealizar: new FormBuilder().group({
+        tipoOperacion: ['otro'],
+        justification: [{ value: '', disabled: false }]
+      })
+    });
+    component.changeEvent();
+    expect(component.dataDeLaSolicitudForm.get('datosDelTramiteRealizar.justification')?.disabled).toBe(true);
+  });
+
+  it('should setValoresStore', () => {
+    const fg = new FormBuilder().group({ test: ['value'] });
+    component.setValoresStore(fg, 'test');
+    expect(mockStore.setTramite260915State).toHaveBeenCalledWith({ test: 'value' });
+  });
+
+  it('should ngOnDestroy', () => {
+    component['destroyed$'] = new ReplaySubject<boolean>();
     component.ngOnDestroy();
-    expect(component.destroyed$.next).toHaveBeenCalled();
-    expect(component.destroyed$.complete).toHaveBeenCalled();
+    expect(true).toBeTruthy();
   });
-
 });

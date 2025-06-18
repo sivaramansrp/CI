@@ -174,7 +174,7 @@ export const INFORMACION_DE_LA_OBRA_ARTE = [
       desactivado: true,
       soloLectura: true,
       marcadorDePosicion: '',
-      valorPredeterminado: '',
+      valorPredeterminado: 'Declaración de importación',
       marginTop: 0,
     },
     {

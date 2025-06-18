@@ -36,6 +36,14 @@ interface AccionBoton {
   templateUrl: './solicitud-de-reporte.component.html',
   styleUrl: './solicitud-de-reporte.component.scss',
 })
+
+/**
+ * Clase que maneja la lógica del componente de solicitud de reporte.
+ * 
+ * @class SolicitudDeReporteComponent
+ * @description Este componente gestiona el flujo de pasos para la solicitud de un reporte anual,
+ * utilizando un asistente (wizard) para navegar entre los diferentes pasos.
+ */
 export class SolicitudDeReporteComponent {
   /**
    * Referencia al componente del asistente (wizard) utilizado en este componente.
