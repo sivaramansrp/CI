@@ -13,7 +13,8 @@ import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.s
 import { Subject } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
-import { map, takeUntil } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 /**
  * Componente para realizar la búsqueda de folios, visualización de datos de facturas
