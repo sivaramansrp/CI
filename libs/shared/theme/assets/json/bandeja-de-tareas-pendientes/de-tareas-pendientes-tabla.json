@@ -4632,16 +4632,6 @@
     "nombreDeLaTarea": "Revisión de presupuesto",
     "fechaDeAsignacion": "2023-10-09",
     "estadoDeTramite": "Completado",
-    "departamento": "se",
-    "numeroDeProcedimiento": "110222",
-    "origin": "READ_PROCEDURE"
-  },
-  {
-    "folioTramite": "099226136147361192499352",
-    "tipoDeTramite": "Registro de solicitud de servicio",
-    "nombreDeLaTarea": "Revisión de presupuesto",
-    "fechaDeAsignacion": "2023-10-09",
-    "estadoDeTramite": "Completado",
     "departamento": "agricultura",
     "numeroDeProcedimiento": "220203",
     "origin": "READ_PROCEDURE"
@@ -9137,26 +9127,6 @@
     "origin": "FLUJO_FUNCIONARIO_GENERAR_OPINION"
   },
   {
-    "folioTramite": "198765432109876",
-    "tipoDeTramite": "Registro de solicitud de servicio",
-    "nombreDeLaTarea": "Revisión de presupuesto",
-    "fechaDeAsignacion": "2023-10-09",
-    "estadoDeTramite": "Completado",
-    "departamento": "semarnat",
-    "numeroDeProcedimiento": "230501",
-    "origin": "READ_PROCEDURE"
-  },
-  {
-    "folioTramite": "198765432109876",
-    "tipoDeTramite": "Registro de solicitud de servicio",
-    "nombreDeLaTarea": "Revisión de presupuesto",
-    "fechaDeAsignacion": "2023-10-09",
-    "estadoDeTramite": "Completado",
-    "departamento": "se",
-    "numeroDeProcedimiento": "110202",
-    "origin": "READ_PROCEDURE"
-  },
-  {
     "folioTramite": "0215523965732296454156770",
     "tipoDeTramite": "Solicitud de Proceso Interno",
     "nombreDeLaTarea": "Evaluar solicitud",
@@ -10627,16 +10597,6 @@
     "origin": "READ_PROCEDURE"
   },
   {
-    "folioTramite": "198765432109655",
-    "tipoDeTramite": "Registro de solicitud de servicio",
-    "nombreDeLaTarea": "Revisión de presupuesto",
-    "fechaDeAsignacion": "2023-10-09",
-    "estadoDeTramite": "Completado",
-    "departamento": "agace",
-    "numeroDeProcedimiento": "32515",
-    "origin": "READ_PROCEDURE"
-  },
-  {
     "folioTramite": "7123456789220403",
     "tipoDeTramite": "Solicitud de Proceso Interno",
     "nombreDeLaTarea": "Evaluar solicitud",
@@ -11706,6 +11666,16 @@
     "numeroDeProcedimiento": "31603",
     "origin": "FLUJO_FUNCIONARIO_EVALUAR"
   },
+    {
+    "folioTramite": "0215523965732296454156770",
+    "tipoDeTramite": "Solicitud de Proceso Interno",
+    "nombreDeLaTarea": "Evaluar solicitud",
+    "fechaDeAsignacion": "2023-10-01",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "sedena",
+    "numeroDeProcedimiento": "240119",
+    "origin": "FLUJO_FUNCIONARIO_EVALUAR"
+  },
   {
     "folioTramite": "0594662081554576343756766",
     "tipoDeTramite": "Consulta de Proceso",
@@ -11757,16 +11727,6 @@
     "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
   },
   {
-    "folioTramite": "099226136147361192499352",
-    "tipoDeTramite": "Registro de solicitud de servicio",
-    "nombreDeLaTarea": "Revisión de presupuesto",
-    "fechaDeAsignacion": "2023-10-09",
-    "estadoDeTramite": "Completado",
-    "departamento": "sedena",
-    "numeroDeProcedimiento": "240119",
-    "origin": "READ_PROCEDURE"
-  },
-  {
     "folioTramite": "04530673095962921812220102",
     "tipoDeTramite": "Registro de solicitud de servicio",
     "nombreDeLaTarea": "Generar opinión",
@@ -11774,7 +11734,7 @@
     "estadoDeTramite": "En Proceso",
     "departamento": "sedena",
     "numeroDeProcedimiento": "240119",
-    "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
+    "origin": "FLUJO_FUNCIONARIO_GENERAR_OPINION"
   },
   {
     "folioTramite": "1234567890123456789012395",
@@ -12155,16 +12115,6 @@
     "departamento": "sedena",
     "numeroDeProcedimiento": "240120",
     "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
-  },
-  {
-    "folioTramite": "099226136147361192499352",
-    "tipoDeTramite": "Registro de solicitud de servicio",
-    "nombreDeLaTarea": "Revisión de presupuesto",
-    "fechaDeAsignacion": "2023-10-09",
-    "estadoDeTramite": "Completado",
-    "departamento": "sedena",
-    "numeroDeProcedimiento": "240120",
-    "origin": "READ_PROCEDURE"
   },
   {
     "folioTramite": "04530673095962921812220102",
@@ -13917,16 +13867,6 @@
     "departamento": "sedena",
     "numeroDeProcedimiento": "240121",
     "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
-  },
-  {
-    "folioTramite": "099226136147361192499352",
-    "tipoDeTramite": "Registro de solicitud de servicio",
-    "nombreDeLaTarea": "Revisión de presupuesto",
-    "fechaDeAsignacion": "2023-10-09",
-    "estadoDeTramite": "Completado",
-    "departamento": "sedena",
-    "numeroDeProcedimiento": "240121",
-    "origin": "READ_PROCEDURE"
   },
   {
     "folioTramite": "04530673095962921812220102",
