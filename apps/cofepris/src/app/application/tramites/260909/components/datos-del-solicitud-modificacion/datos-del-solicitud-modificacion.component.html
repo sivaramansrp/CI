@@ -270,6 +270,7 @@
           [datos]="personaparas"
           [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX"
           formcontrolname="scian"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
         >
         </app-tabla-dinamica>
       </div>
@@ -357,6 +358,7 @@
         [tipoSeleccionTabla]="tablaSeleccionCheckbox"
         [configuracionTabla]="mercanciasTabla"
         [datos]="mercanciasTablaDatos"
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
       ></app-tabla-dinamica>
       <div class="container text-end mt-5">
         <button class="btn btn-default me-2">Eliminar</button>
@@ -370,7 +372,7 @@
         </button>
       </div>
     </div>
-<app-manifiestos-representante-seccion  [formularioDeshabilitado]="esFormularioSoloLectura"
+<app-manifiestos-representante-seccion  
    ></app-manifiestos-representante-seccion>
 
   </form>

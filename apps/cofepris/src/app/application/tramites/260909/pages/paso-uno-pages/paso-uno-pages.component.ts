@@ -14,7 +14,7 @@ import { TramitesAsociadosSeccionComponent } from '../../../../shared/components
 import { DatosDelSolicitudModificacionComponent } from '../../components/datos-del-solicitud-modificacion/datos-del-solicitud-modificacion.component';
 import { EstablecimientoService } from '../../service/establecimiento.service';
 
-import {Subject, map,takeUntil } from 'rxjs';
+import {Subject, forkJoin, map,takeUntil } from 'rxjs';
 /**
  * Clase que representa el componente de modificación de permisos de importación de tratamientos.
  */
@@ -66,14 +66,18 @@ export class PasoUnoPagesComponent implements OnInit {
    * Método para limpiar los datos del formulario y restablecer el estado del componente.
    */
 guardarDatosFormulario(): void {
-  this.establecimientoService
-    .getPagoDerechos()
+  forkJoin({
+    pagoDerechos: this.establecimientoService.getPagoDerechos(), // returns DatosDelSolicituteSeccionState
+    estadoDerechos: this.establecimientoService.getEstadoDerechos() // returns DatosDomicilioLegalStore
+  })
     .pipe(takeUntil(this.destroyNotifier$))
-    .subscribe((resp) => {
-      if (resp) {
+    .subscribe(({ pagoDerechos, estadoDerechos }) => {
+      if (pagoDerechos) {
         this.esDatosRespuesta = true;
-        this.establecimientoService.actualizarEstadoFormulario(resp);
-       
+        this.establecimientoService.actualizarEstadoFormulario(pagoDerechos); // expects DatosDelSolicituteSeccionState
+      }
+      if (estadoDerechos) {
+        this.establecimientoService.actualizarFormulario(estadoDerechos); // expects DatosDomicilioLegalStore
       }
     });
 }

@@ -3,7 +3,7 @@
  * Este servicio proporciona métodos para interactuar con los datos relacionados con el establecimiento,
  * incluyendo catálogos, datos de representantes, manifiestos, y propietarios.
  */
-import { DatosDelSolicituteSeccionState, DatosDelSolicituteSeccionStateStore} from '../estados/datos-del-solicitud-seccion.store';
+import { DatosDelSolicituteSeccionStateInterface, DatosDelSolicituteSeccionStateStoreI} from '../estados/datos-del-solicitud-seccion.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
@@ -13,7 +13,9 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
 
 import { PropietarioTipoPersona } from '../models/datos-de-la-solicitud.model';
 
-import { DatosDomicilioLegalStore } from '../../../shared/estados/stores/datos-domicilio-legal.store';
+import { DatosDomicilioLegalState } from '../../../shared/estados/stores/datos-domicilio-legal.store';
+
+import { DatosDelSolicituteSeccionState, DatosDelSolicituteSeccionStateStore } from '../../../shared/estados/stores/datos-del-solicitute-seccion.store';
 
 /**
  * @class EstablecimientoService
@@ -29,7 +31,7 @@ export class EstablecimientoService {
    * @param http Cliente HTTP para realizar solicitudes.
    */
   constructor(private http: HttpClient,
-    private tramiteStore: DatosDelSolicituteSeccionStateStore,
+    private tramiteStore: DatosDelSolicituteSeccionStateStoreI,
   private tramiteStoreData: DatosDelSolicituteSeccionStateStore
   ) {
     //constructor
@@ -60,26 +62,26 @@ export class EstablecimientoService {
   }
   /**
    * 
-   * @returns {Observable<DatosDelSolicituteSeccionState>} Un observable con los datos del establecimiento.
+   * @returns {Observable<DatosDelSolicituteSeccionStateInterface>} Un observable con los datos del establecimiento.
    * @description
    */
-  getPagoDerechos(): Observable<DatosDelSolicituteSeccionState> {
-      return this.http.get<DatosDelSolicituteSeccionState>('assets/json/260909/serviciosExtraordinarios260909.json');
+  getPagoDerechos(): Observable<DatosDelSolicituteSeccionStateInterface> {
+      return this.http.get<DatosDelSolicituteSeccionStateInterface>('assets/json/260909/serviciosExtraordinarios260909.json');
     }
     /**
      * 
      * @returns {Observable<DatosDomicilioLegalStore>} Un observable con los datos del estado de derechos.
      * @description
      */
-    getEstadoDerechos(): Observable<DatosDomicilioLegalStore> {
-    return this.http.get<DatosDomicilioLegalStore>('assets/json/260909/serviciosExtraordinarios.json');
+    getEstadoDerechos(): Observable<DatosDelSolicituteSeccionState> {
+    return this.http.get<DatosDelSolicituteSeccionState>('assets/json/260909/serviciosExtraordinarios.json');
   }
   /**
    * 
    * @param DATOS Datos del solicitante que se actualizarán en el estado del formulario.
    * @description
    */
-  actualizarEstadoFormulario(DATOS: DatosDelSolicituteSeccionState): void {
+  actualizarEstadoFormulario(DATOS: DatosDelSolicituteSeccionStateInterface): void {
   this.tramiteStore.setEstablecimientoCorreoElectronico(DATOS.establecimientoCorreoElectronico);
   this.tramiteStore.setEstablecimientoDomicilioCodigoPostal(DATOS.establecimientoDomicilioCodigoPostal);
   this.tramiteStore.setIdeGenerica1(DATOS.ideGenerica1);
@@ -102,8 +104,11 @@ export class EstablecimientoService {
   this.tramiteStore.setAduanasEntradas(DATOS.aduanasEntradas);
   this.tramiteStore.setDescripcionScian(DATOS.descripcionScian);
    this.tramiteStore.setRepresentanteApellidos(DATOS.apellidoMaterno,DATOS.apellidoPaterno);
-   this.tramiteStoreData.setRepresentanteRfc(DATOS.establecimientoRFCResponsableSanitario);
-  this.tramiteStoreData.setRepresentanteNombre(DATOS.establecimientoRazonSocial); 
+  
 }
-
+actualizarFormulario(DATOS: DatosDelSolicituteSeccionState): void {
+this.tramiteStoreData.setRepresentanteRfc(DATOS.representanteRfc);
+this.tramiteStoreData.setRepresentanteNombre(DATOS.representanteNombre);
+this.tramiteStoreData.setRepresentanteApellidos(DATOS.apellidoPaterno, DATOS.apellidoMaterno);
+}
 }

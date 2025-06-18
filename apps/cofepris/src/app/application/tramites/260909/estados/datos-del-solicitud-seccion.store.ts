@@ -13,7 +13,7 @@ import { Store, StoreConfig } from '@datorama/akita';
  * @interface DatosDelSolicituteSeccionState
  * Representa la estructura del estado global para los datos de la solicitud.
  */
-export interface DatosDelSolicituteSeccionState {
+export interface DatosDelSolicituteSeccionStateInterface {
     manifests:string
 /**
    * RFC del representante.
@@ -147,7 +147,7 @@ export interface DatosDelSolicituteSeccionState {
  * Crea el estado inicial para `DatosDelSolicituteSeccionState`.
  * @returns {DatosDelSolicituteSeccionState} El estado inicial.
  */
-export function createInitialState(): DatosDelSolicituteSeccionState {
+export function createInitialState(): DatosDelSolicituteSeccionStateInterface {
   return {
       manifests:'',
      representanteRfc: '',
@@ -188,7 +188,7 @@ export function createInitialState(): DatosDelSolicituteSeccionState {
  */
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'datosDelSolicitud' })
-export class DatosDelSolicituteSeccionStateStore extends Store<DatosDelSolicituteSeccionState> {
+export class DatosDelSolicituteSeccionStateStoreI extends Store<DatosDelSolicituteSeccionStateInterface> {
   /**
    * Constructor de la clase.
    * Inicializa el estado con los valores predeterminados.
@@ -201,7 +201,10 @@ export class DatosDelSolicituteSeccionStateStore extends Store<DatosDelSolicitut
    * @param manifests Nuevo valor para 'manifests'.
    */
  public setManifests(manifests: string): void {
-    this.update({ manifests });
+    this.update(state => ({
+      ...state,
+      manifests,
+    }));
   }
     /**
    * Actualiza los apellidos del representante.
@@ -209,7 +212,11 @@ export class DatosDelSolicituteSeccionStateStore extends Store<DatosDelSolicitut
    * @param apellidoMaterno Nuevo apellido materno.
    */
 public setRepresentanteApellidos(apellidoPaterno: string, apellidoMaterno: string): void {
-    this.update({ apellidoPaterno, apellidoMaterno });
+    this.update(state => ({
+      ...state,
+      apellidoPaterno,
+      apellidoMaterno,
+    }));
   }
 
   /**
@@ -217,14 +224,21 @@ public setRepresentanteApellidos(apellidoPaterno: string, apellidoMaterno: strin
    * @param rfc Nuevo RFC del representante.
    */
 public setRepresentanteRfc(rfc: string): void {
-    this.update({ representanteRfc: rfc });
+    this.update(state => ({
+      ...state,
+      representanteRfc: rfc,
+    }));
   }
    /**
    * Actualiza el nombre del representante.
    * @param nombre Nuevo nombre del representante.
    */
-public setRepresentanteNombre(nombre: string): void {
-    this.update({ representanteNombre: nombre });
+public setRepresentanteNombre(representanteNombre: string): void {
+    this.update(state=>({
+      ...state,
+      representanteNombre: representanteNombre,
+    }))
+    
   }
 /**
  * 
