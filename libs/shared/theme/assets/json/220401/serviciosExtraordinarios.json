@@ -1,7 +1,7 @@
 {
-  "certificada": "No",
+  "certificada": "Producto..",
   "identificationDelTransporte": "Desconocido",
-  "Justificacion": "No especificada",
+  "Justificacion": "1",
   "numerodeContenedor": "000000",
   "fechdeEmbarque": "1970-01-01",
   "numerodeFlejes": "0",
@@ -14,7 +14,7 @@
   "color": "No especificado",
   "numeroAutorizacionCITES": "N/A",
   "aduana": "1",
-  "osia": "No aplica",
+  "osia": "oficina central",
   "sexo": "1",
   "otro": "Ninguno",
   "puntoIngreso": "Desconocido",
@@ -27,6 +27,7 @@
   "llaveDePago": "0000-0000",
   "fechaPago": "1970-01-01",
   "Banco": "1",
+  "exentoPago": "No",
   "especie": "1",
   "funcionZootecnica": "1",
   "mercancia": "1",
@@ -37,8 +38,8 @@
   "oisaSalida": "1",
   "regimenMercancia": "1",
   "paisOrigen": "1",
-  "exentoPago": "No",
-  "tratamiento":"tratamiento",
+  "tratamiento": "tratamiento",
+  "tipoDeTransporte":"1",
   "presentacion":"presentacion",
   "marcaEmbarque":"marcaEmbarque"
 }
