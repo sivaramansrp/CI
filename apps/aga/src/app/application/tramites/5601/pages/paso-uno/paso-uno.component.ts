@@ -15,6 +15,9 @@ export class PasoUnoComponent {
  */
   indice: number = 1;
 
+  /**
+   * Subject utilizado para cancelar las suscripciones cuando el componente se destruye.
+   */
   private destroy$ = new Subject<void>();
 
   /** Subject para notificar la destrucción del componente. */
@@ -37,14 +40,17 @@ export class PasoUnoComponent {
      });
   }
 
-  
+  /**
+   * Guarda los datos del formulario obteniéndolos del servicio y actualiza el estado del formulario.
+   */
   guardarDatosFormulario(): void {
     this.solicitudDespachoExportacionService
       .obtenerDatosInicialesFormulario().pipe(
-        takeUntil(this.destroy$)
+        takeUntil(this.destroy$) // Cancela la suscripción cuando el componente se destruye
       )
       .subscribe((resp) => {
         if (resp) {
+          // Actualiza el estado del formulario con la respuesta recibida
           this.solicitudDespachoExportacionService.actualizarEstadoFormulario(resp);
         }
       });
