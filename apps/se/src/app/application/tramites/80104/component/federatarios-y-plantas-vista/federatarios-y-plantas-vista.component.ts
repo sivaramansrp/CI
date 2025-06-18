@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
-
+import { Catalogo, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import {
   FEDERATARIOS,
   FederatariosEncabezado,
@@ -62,7 +61,7 @@ export class FederatariosYPlantasVistaComponent {
    * @property {FederatariosEncabezado[]} federatariosTablaLista
    */
   public federatariosTablaLista: FederatariosEncabezado[] = [];
-
+  public estadosCatalogos: Catalogo[] = [{ "id": 1, "descripcion": "JALISCO" }];
   /**
    * Lista de plantas disponibles para mostrar en la tabla
    * @property {PlantasDisponibles[]} plantasDisponiblesTablaLista

@@ -116,7 +116,7 @@ export class PasoUnoCsComponent implements OnInit {
             }
         });        
   }
- /** Obtiene los datos del formulario desde un JSON simulado y actualiza el store.  
+/** Obtiene los datos del formulario desde un JSON simulado y actualiza el store.  
  *  Marca la bandera de respuesta si la información es válida. */
      guardarDatosFormulario(): void {
     this.Solocitud80104Service
@@ -140,15 +140,34 @@ export class PasoUnoCsComponent implements OnInit {
         }
       });
           this.Solocitud80104Service
-      .getRegistroTomaMuestrasMercanciasDatass().pipe(
+      .getRegistroComplementosData().pipe(
         takeUntil(this.destroyNotifier$)
       )
       .subscribe((resp) => {
         if(resp){
         this.esDatosRespuesta = true;
-        this.Solocitud80104Service.actualizarEstadoFormularioss(resp);
+        this.Solocitud80104Service.actualizarComplementos(resp);
+        }
+      });
+      this.Solocitud80104Service
+      .getRegistroFederatoriosData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.Solocitud80104Service.actualizarFederatorios(resp);
+        }
+      });
+        this.Solocitud80104Service
+      .getRegistroComplementarData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.Solocitud80104Service.actualizarComplementar(resp);
         }
       });
   }
-  
 }

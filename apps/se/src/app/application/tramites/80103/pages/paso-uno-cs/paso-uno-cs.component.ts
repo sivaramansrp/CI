@@ -140,33 +140,33 @@ export class PasoUnoCsComponent implements OnInit {
         }
       });
           this.Solocitud80103Service
-      .getRegistroTomaMuestrasMercanciasDatass().pipe(
+      .getRegistroComplementosData().pipe(
         takeUntil(this.destroyNotifier$)
       )
       .subscribe((resp) => {
         if(resp){
         this.esDatosRespuesta = true;
-        this.Solocitud80103Service.actualizarEstadoFormularioss(resp);
+        this.Solocitud80103Service.actualizarComplementos(resp);
         }
       });
       this.Solocitud80103Service
-      .getRegistroTomaMuestrasMercanciasDatasss().pipe(
+      .getRegistroFederatoriosData().pipe(
         takeUntil(this.destroyNotifier$)
       )
       .subscribe((resp) => {
         if(resp){
         this.esDatosRespuesta = true;
-        this.Solocitud80103Service.actualizarEstadoFormulariosss(resp);
+        this.Solocitud80103Service.actualizarFederatorios(resp);
         }
       });
         this.Solocitud80103Service
-      .getRegistroTomaMuestrasMercanciasDatassss().pipe(
+      .getRegistroComplementarData().pipe(
         takeUntil(this.destroyNotifier$)
       )
       .subscribe((resp) => {
         if(resp){
         this.esDatosRespuesta = true;
-        this.Solocitud80103Service.actualizarEstadoFormulariossss(resp);
+        this.Solocitud80103Service.actualizarComplementar(resp);
         }
       });
   }

@@ -79,17 +79,17 @@ this.tramite80101Store.eliminarTablaDatosComplimentos(DATOS.tablaDatosCompliment
 this.tramite80101Store.eliminarTablaDatosComplimentosExtranjera(DATOS.tablaDatosComplimentosExtranjera);
   }
 
-actualizarEstadoFormularioss(DATOS: ComplementosSeccionState): void {
+actualizarComplementos(DATOS: ComplementosSeccionState): void {
   Object.entries(DATOS).forEach(([key, value]) => {
     this.complementosSeccionStore.setDynamicFieldValue(key, value);
   });
 }
-actualizarEstadoFormulariosss(DATOS: FederatoriosState): void {
+actualizarFederatorios(DATOS: FederatoriosState): void {
  Object.entries(DATOS).forEach(([key, value]) => {
     this.federatoriosStore.setDynamicFieldValue(key, value);
   });
 }
-actualizarEstadoFormulariossss(DATOS: ComplementarState): void {
+actualizarComplementar(DATOS: ComplementarState): void {
   this.complementarStore.setPermanecera(DATOS.permanecera);
   this.complementarStore.setTipo(DATOS.tipo);
   this.complementarStore.setFechaDeFirma(DATOS.fechaDeFirma);
@@ -138,13 +138,13 @@ actualizarEstadoFormulariossss(DATOS: ComplementarState): void {
   }
     /** Obtiene los datos simulados del registro de toma de muestras de mercancías  
  *  desde un archivo JSON local para el trámite 110203. */
-  getRegistroTomaMuestrasMercanciasDatass(): Observable<ComplementosSeccionState> {
+  getRegistroComplementosData(): Observable<ComplementosSeccionState> {
     return this.http.get<ComplementosSeccionState>('assets/json/80104/serviciosExtraordinarios.json');
   }
-  getRegistroTomaMuestrasMercanciasDatasss(): Observable<FederatoriosState> {
+  getRegistroFederatoriosData(): Observable<FederatoriosState> {
     return this.http.get<FederatoriosState>('assets/json/80104/serviciosExtraordinarios.json');
   }
-  getRegistroTomaMuestrasMercanciasDatassss(): Observable<ComplementarState> {
+  getRegistroComplementarData(): Observable<ComplementarState> {
     return this.http.get<ComplementarState>('assets/json/80104/serviciosExtraordinarios.json');
   }
 

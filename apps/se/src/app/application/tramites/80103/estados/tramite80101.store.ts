@@ -1,8 +1,8 @@
 import { AnexoEncabezado, AnexoUnoEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
 import { AnnexoDosTres, AnnexoUno } from '../models/nuevo-programa-industrial.model';
 import { AnexoDosEncabezado } from '../../../shared/models/nuevo-programa-industrial.model';
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoPaises } from '@ng-mf/data-access-user';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { CatalogoPaises } from '@libs/shared/data-access-user/src';
 import { DatosComplimentos } from '../../../shared/models/complimentos.model';
 import { DatosEmpresaExtranjera} from '../models/nuevo-programa-industrial.model';
 import { DatosSubcontratista } from '../../../shared/models/empresas-subfabricanta.model';
