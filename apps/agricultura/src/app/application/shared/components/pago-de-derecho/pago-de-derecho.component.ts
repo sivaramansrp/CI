@@ -1,12 +1,11 @@
-import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, RespuestaCatalogos, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Component, OnDestroy } from '@angular/core';
 import {FECHAPAGODATE, FECHA_DE_PAGO } from '../../constantes/pago-de-derechos.enum';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { CertificadoZoosanitarioServiceService } from '../../../tramites/220201/services/220201/certificado-zoosanitario.service';
+import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-zoosanitario.model';
-import { Subject } from 'rxjs';
 
 @Component({
   selector: 'app-pago-de-derechos',
@@ -20,10 +19,10 @@ import { Subject } from 'rxjs';
         InputRadioComponent,
         FormsModule
   ],
-  templateUrl: './pago-de-derechos.component.html',
-  styleUrl: './pago-de-derechos.component.scss',
+  templateUrl: './pago-de-derecho.component.html',
+  styleUrl: './pago-de-derecho.component.scss',
 })
-export class PagoDeDerechosComponent {
+export class PagoDeDerechoComponent implements OnDestroy {
    /**
      * Configuración predeterminada para el campo de fecha de pago.
      */
@@ -86,8 +85,44 @@ export class PagoDeDerechosComponent {
     constructor(
       private readonly fb: FormBuilder,
       private readonly httpServicios: HttpClient,
-      private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
     ) {
-  
+      this.obtenerDetallesDeListaDeOpciones();
     }
+
+     obtenerDetallesDeListaDeOpciones(): void {
+        this.obtenerBancoSelectorList();
+        this.obtenerListaDeJustificaciones();
+      }
+    
+      /**
+       * Realiza una petición para obtener el catálogo de bancos.
+       */
+      obtenerBancoSelectorList(): void {
+        this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/banco.json')
+          .pipe(takeUntil(this.destroyNotifier$))
+          .subscribe((data): void => {
+            const DATOS = data?.data;
+            this.bancoSelector = DATOS as Catalogo[];
+          });
+      }
+    
+      /**
+       * Realiza una petición para obtener el catálogo de justificaciones.
+       */
+      obtenerListaDeJustificaciones(): void {
+        this.httpServicios.get<RespuestaCatalogos>('../../../../../assets/json/220201/Justificación.json')
+          .pipe(takeUntil(this.destroyNotifier$))
+          .subscribe((data): void => {
+            const DATOS = data?.data;
+            this.justificacionSelector = DATOS as Catalogo[];
+          });
+      }
+
+        /**
+   * Limpia las suscripciones para evitar fugas de memoria al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
 }
