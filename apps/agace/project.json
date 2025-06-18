@@ -161,7 +161,7 @@
       "options": {
         "buildTarget": "agace:build",
         "port": 4209,
-        "watch": false
+        "watch": true
       },
       "configurations": {
         "development": {
