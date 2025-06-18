@@ -17,7 +17,7 @@ import { OnInit } from '@angular/core';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 import { Subject } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { Tramite140104Query } from '../../estados/desistimiento-de-permiso.query';
+import { DesistimientoQuery } from '../../estados/desistimiento-de-permiso.query';
 import { Validators } from '@angular/forms';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
@@ -153,7 +153,7 @@ export class CancelacionDeCertificadosComponent implements OnInit, OnDestroy {
 
   constructor(private fb: FormBuilder, private servicioDeMensajesService: ServicioDeMensajesService,
         private consultaQuery: ConsultaioQuery,
-    private tramite140104Query: Tramite140104Query
+    private desistimientoQuery: DesistimientoQuery
   ) {
     // Formulario de búsqueda
     this.formularioGrupo = new FormGroup({

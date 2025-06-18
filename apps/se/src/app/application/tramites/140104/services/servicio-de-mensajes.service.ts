@@ -1,5 +1,5 @@
 import { BehaviorSubject } from 'rxjs';
-import { CuposDisponibles } from '../models/cancelacion-de-certificados.model';
+import { CuposDisponibles, PermisosDatos } from '../models/cancelacion-de-certificados.model';
 import { CuposDisponiblesDatos } from '../models/cancelacion-de-certificados.model';
 import { DesistimientoStore } from '../estados/desistimiento-de-permiso.store';
 import { HttpClient } from '@angular/common/http';
@@ -105,12 +105,21 @@ export class ServicioDeMensajesService {
   }
 
   /**
+  Obtiene los datos simulados para el registro de toma de muestras de mercancías.
+  Realiza una solicitud HTTP al archivo 'requestCancallar.json' ubicado en la carpeta de assets.
+  Devuelve un observable que emite el estado de la solicitud de cancelación.
+  @returns {Observable<CancelarSolicitudState>} Observable que emite los datos del estado de la solicitud de cancelación. */
+  getRegistroTomaMuestrasMercanciasData(): Observable<PermisosDatos> {
+    return this.http.get<PermisosDatos>('assets/json/140104/permisosCancelar.json');
+  }
+
+  /**
  * Actualiza el estado del formulario con los datos proporcionados.
  * 
  * @param DATOS - Estado de la solicitud `Solicitud230401State` con la información 
  *                del tipo de solicitud a actualizar en el store.
  */
-actualizarEstadoFormulario(DATOS: Partial<PermisosDatos>): void {
+actualizarEstadoFormulario(DATOS: Partial<CuposDisponiblesDatos>): void {
   this.desistimientoStore.update((state) => ({
     ...state,
     ...DATOS

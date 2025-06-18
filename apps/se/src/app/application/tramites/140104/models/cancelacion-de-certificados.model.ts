@@ -76,6 +76,24 @@ export interface FacturasSeleccionadasParaDevolver {
     /** Monto que se devolverá de la factura */
     saldo_a_devolver: string;
 }
+
+export interface Cancelacion {
+    folioTramite: string;
+    tipoDeSolicitud: string;
+    regimen: string;
+    cdr: string;
+    condicionDeLaMercancia: string;
+    fraccionArancelaria: string;
+    umt: string;
+    cantidad: string;
+    usd: string;
+}
+
+export interface PermisosDatos {
+    datos: Cancelacion[];
+    motivoCancelacion?: string;
+}
+
 /**
  * Función para crear el estado inicial de los datos de permiso.
  * Esta función crea y devuelve un objeto de tipo PermisosDatos, 

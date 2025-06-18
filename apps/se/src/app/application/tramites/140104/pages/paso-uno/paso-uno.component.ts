@@ -111,7 +111,18 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
-          this.servicioDeMensajesService.actualizarEstadoFormulario(resp);
+          const cuposDisponiblesDatos = {
+            ...resp,
+            datos: (resp.datos || []).map((cancelacion: any) => ({
+              ...cancelacion,
+              cupo: cancelacion.cupo ?? null,
+              nombre_de_producto: cancelacion.nombre_de_producto ?? '',
+              nombre_del_subproducto: cancelacion.nombre_del_subproducto ?? '',
+              mecanismo_de_asignación: cancelacion.mecanismo_de_asignación ?? '',
+              tipo_cupo: cancelacion.tipo_cupo ?? ''
+            }))
+          };
+          this.servicioDeMensajesService.actualizarEstadoFormulario(cuposDisponiblesDatos);
 
         }
       });
