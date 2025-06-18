@@ -76,26 +76,6 @@ this.tramite6403Store.setFechaDescruccionDestino(DATOS.solicitudFormulario.fecha
 this.tramite6403Store.setEstadoTipoDocumentoDestino(DATOS.solicitudFormulario.estadoTipoDocumentoDestino);
 this.tramite6403Store.setAutoridadPresentoAvisoDestruccion(DATOS.solicitudFormulario.autoridadPresentoAvisoDestruccion);
 
-// Para datosSolicitante
-this.tramite6403Store.setRfc(DATOS.datosSolicitante.rfc);
-this.tramite6403Store.setDenominacion(DATOS.datosSolicitante.denominacion);
-this.tramite6403Store.setActividadEconomica(DATOS.datosSolicitante.actividadEconomica);
-this.tramite6403Store.setCorreoElectronico(DATOS.datosSolicitante.correoElectronico);
-this.tramite6403Store.setPais(DATOS.datosSolicitante.pais);
-this.tramite6403Store.setCodigoPostal(DATOS.datosSolicitante.codigoPostal);
-this.tramite6403Store.setHoraDestruccion(DATOS.datosSolicitante.horaDestruccion);
-this.tramite6403Store.setFechaDestruccion(DATOS.datosSolicitante.fechaDestruccion);
-this.tramite6403Store.setEntidadFederativa(DATOS.datosSolicitante.entidadFederativa);
-this.tramite6403Store.setMunicipio(DATOS.datosSolicitante.municipio);
-this.tramite6403Store.setLocalidad(DATOS.datosSolicitante.localidad);
-this.tramite6403Store.setColonia(DATOS.datosSolicitante.colonia);
-this.tramite6403Store.setCalle(DATOS.datosSolicitante.calle);
-this.tramite6403Store.setNExt(DATOS.datosSolicitante.nExt);
-this.tramite6403Store.setNInt(DATOS.datosSolicitante.nInt);
-this.tramite6403Store.setLada(DATOS.datosSolicitante.lada);
-this.tramite6403Store.setTelefono(DATOS.datosSolicitante.telefono);
-this.tramite6403Store.setAdace(DATOS.datosSolicitante.adace);
-
 // Para mercanciaFormulario
 this.tramite6403Store.setModalDescMercancia(DATOS.mercanciaFormulario.modalDescMercancia);
 this.tramite6403Store.setEspeMercancia(DATOS.mercanciaFormulario.espeMercancia);

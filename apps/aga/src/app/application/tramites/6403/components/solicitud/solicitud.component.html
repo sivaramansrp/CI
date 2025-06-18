@@ -73,7 +73,7 @@
               <label class="form-label" for="patente">:</label>
             </div>
             <div>
-              <input id="patente" name="patente" type="patente" class="form-control" formControlName="patente"
+              <input id="patente" name="patente" type="text" class="form-control" formControlName="patente"
                 [ngClass]="isValid(datosPedimento,'patente') ? 'required' : ''"
                 (change)="setValoresStore(datosPedimento, 'patente', 'setPatente')" />
             </div>
@@ -128,7 +128,7 @@
           <div class="col-md-5">
             <div class="form-check mt-5">
               <input class="form-check-input" type="checkbox" id="checkProrroga" formControlName="checkProrroga"
-                [ngClass]="isValid(datosPedimento,'checkProrroga') ? 'required' : ''"
+                [ngClass]="isValid(datosPedimento,'checkProrroga') ? 'required' : ''" [disabled]="soloLectura"
                 (change)="cambiarCheckProrroga();setValoresStore(datosPedimento, 'checkProrroga', 'setCheckProrroga')">
               <label class="form-check-label" for="checkProrroga">Con prórroga</label>
             </div>
