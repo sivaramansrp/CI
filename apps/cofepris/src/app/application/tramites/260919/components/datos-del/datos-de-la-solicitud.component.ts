@@ -310,25 +310,7 @@ fechaPago: InputFecha = {
             this.inicializarEstadoFormulario();
           })
         )
-        .subscribe(
-          () => {
-            this.dataDeLaSolicitudForm.patchValue({
-              datosDelTramiteRealizar: {
-                tipoOperacion: this.dataDeLaSolicitudState.tipoOperacion || '',
-              },
-            });
-            this.datosDelTramiteRealizar.patchValue({
-              fechadepago: this.dataDeLaSolicitudState.fechadepago,
-                 });
-    
-            // this.clavaScianForm.patchValue({
-            //   claveScianG: {
-            //     claveScian: this.claveScianState.claveScian || '',
-            //     descripcionDelScian: this.claveScianState.descripcionDelScian || '',
-            //   },
-            // });
-          }
-        );
+        .subscribe();
         
         this.inicializarEstadoFormulario();
   }
