@@ -1127,5 +1127,23 @@
         "diasTranscurridos": "4",
         "departamento": "SE",
         "numeroDeProcedimiento": "80202"
+    },
+     {
+        "id": "260102",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "COFEPRIS",
+        "numeroDeProcedimiento": "260102"
+    },
+    {
+        "id": "260209",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "COFEPRIS",
+        "numeroDeProcedimiento": "260209"
     }
 ]
