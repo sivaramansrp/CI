@@ -37,3 +37,11 @@
 .collpase-button:disabled {
   opacity: 0.5;
 }
+
+::ng-deep {
+  .reexportacion {
+    .modal-footer {
+      justify-content: right;
+    }
+  }
+}

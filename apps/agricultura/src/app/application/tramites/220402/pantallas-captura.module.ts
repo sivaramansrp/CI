@@ -1,6 +1,6 @@
+import { AgregarTransporteComponent, NotificacionesComponent } from '@ng-mf/data-access-user';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { AgregarDestinatarioComponent } from './components/agregar-destinatario/agregar-destinatario.component';
-import { AgregarTransporteComponent } from '@ng-mf/data-access-user';
 import { AlertComponent } from '@ng-mf/data-access-user';
 import { AnexarDocumentosComponent } from '@ng-mf/data-access-user';
 import { BtnContinuarComponent } from '@ng-mf/data-access-user';
@@ -64,9 +64,10 @@ import { WizardComponent } from '@ng-mf/data-access-user';
     RepresentanteFiscalComponent,
     SelectPaisesComponent,
     CatalogoSelectComponent,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    NotificacionesComponent
   ],
-  providers:[ToastrService],
+  providers: [ToastrService],
   exports: [],
 })
-export class PantallasCapturaModule {}
+export class PantallasCapturaModule { }

@@ -22,7 +22,7 @@
           <div class="form-check">
             <input class="form-check-input me-2" type="radio" name="tipoDeCertificado"
               formControlName="tipoDeCertificado" value="Reexportación" id="Reexportación"
-              (change)="setValoresStore(datosDelTramiteRealizar,'tipoDeCertificado', 'setTipoDeCertificado')" />
+              (change)="setValoresStore(datosDelTramiteRealizar,'tipoDeCertificado', 'setTipoDeCertificado');tipoDeCertificadoCambio()" />
             <label class="form-check-label" for="no">Reexportación</label>
           </div>
         </div>
@@ -408,3 +408,11 @@
 
 
   </form>
+</div>
+@if (nuevaNotificacion) {
+<section>
+  <lib-notificaciones class="reexportacion" [notificacionInput]="nuevaNotificacion"
+    (confirmacionModal)="confirmacionModal($event)">
+  </lib-notificaciones>
+</section>
+}

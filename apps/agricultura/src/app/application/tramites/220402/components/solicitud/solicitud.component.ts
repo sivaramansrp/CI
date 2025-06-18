@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, FECHA_FINAL, FECHA_INICIO } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, FECHA_FINAL, FECHA_INICIO, Notificacion } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Solicitud220402State, Solicitud220402Store } from '../../estados/tramites/tramites220402.store';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -92,7 +92,10 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @default false
    */
   soloLectura: boolean = false;
-
+  /**
+   * Configuración de una nueva notificación.
+   */
+  public nuevaNotificacion!: Notificacion;
   /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios.
@@ -396,7 +399,57 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.datosMercancia.touched
     );
   }
+  /**
+   * Maneja el cambio de tipo de certificado.
+   * 
+   * Este método muestra un modal de confirmación al usuario, indicando que al cambiar el tipo de certificado
+   * se eliminarán las mercancías registradas. Solicita confirmación para proceder con el cambio.
+   */
+  tipoDeCertificadoCambio(): void {
+    this.abrirModal(
+      'Aceptar',
+      'Cancelar',
+      'Al cambiar de tipo certificado se eliminarán las mercancías registradas ¿Estás seguro de cambiar de certificado?'
+    );
+  }
 
+  /**
+   * Abre un modal con los parámetros proporcionados.
+   * 
+   * Este método configura y muestra un modal con el mensaje, botones y configuración especificados.
+   * 
+   * @param {string} txtBtnAceptar - Texto del botón de aceptación.
+   * @param {string} txtBtnCancelar - Texto del botón de cancelación.
+   * @param {string} mensaje - Mensaje que se mostrará en el modal.
+   */
+  public abrirModal(txtBtnAceptar = '', txtBtnCancelar = '', mensaje = ''): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: mensaje,
+      tamanioModal: 'modal-lg',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: txtBtnAceptar,
+      txtBtnCancelar: txtBtnCancelar,
+    };
+  }
+
+  /**
+   * Maneja la confirmación del modal.
+   * 
+   * Este método realiza acciones dependiendo de la respuesta del usuario en el modal de confirmación.
+   * Si el usuario no acepta, se limpia el valor del tipo de certificado en el formulario.
+   * 
+   * @param {boolean} aceptar - Indica si el usuario aceptó la acción en el modal.
+   */
+  confirmacionModal(aceptar: boolean): void {
+    if (!aceptar) {
+      this.FormSolicitud.get('datosDelTramiteRealizar.tipoDeCertificado')?.setValue('');
+    }
+  }
   /**
    * Este método se utiliza para destruir la suscripción.
    * @returns destroyNotifier$
