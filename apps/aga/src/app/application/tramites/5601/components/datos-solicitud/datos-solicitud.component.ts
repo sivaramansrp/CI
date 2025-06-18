@@ -1,4 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery,ConsultaioState } from '@ng-mf/data-access-user';
 import { FORMULARIO_DETALLES,FORMULARIO_LOGISTICA_OPERACIONES,MERCANCIA_DETALLES, UBICACION_MERCANCIA } from '../../constantes/tramite5601.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
@@ -77,6 +78,11 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   public formularioUbicacionMercancia = UBICACION_MERCANCIA;
 
+  /**
+   * Estado actual de la consulta IO.
+   */
+  public consultaState!: ConsultaioState;
+
   
 
   /**
@@ -86,7 +92,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * @param tramite5601Store Servicio para gestionar el estado del trámite 5601.
    * @param tramite5601Query Servicio para consultar el estado del trámite 5601.
    */
-  constructor(private fb: FormBuilder, private tramite5601Store: Tramite5601Store, private tramite5601Query: Tramite5601Query) {
+  constructor(private fb: FormBuilder, private tramite5601Store: Tramite5601Store, private tramite5601Query: Tramite5601Query, private consultaioQuery: ConsultaioQuery) {
     this.aduanas = seleccionarOpciones?.aduanas;
     this.seccionAduanera = seleccionarOpciones?.seccionAduanera;
     this.tipoOperacion = seleccionarOpciones?.tipoOperacion;
@@ -190,6 +196,16 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
             return campo;
         }
       });
+
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
+
   }
 
 
@@ -232,6 +248,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
       }
     }
   }
+
   
 
   /**
