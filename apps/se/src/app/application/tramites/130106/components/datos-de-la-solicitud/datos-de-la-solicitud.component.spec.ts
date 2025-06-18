@@ -1,3 +1,13 @@
+jest.mock('libs/shared/theme/assets/json/130106/datos-de-la-solicitud.json', () => ({
+  __esModule: true,
+  default: {
+    tramite: [{ id: 1, nombre: 'Trámite A' }],
+    regimen: [{ id: 2, nombre: 'Régimen B' }],
+    arancelaria: [{ id: 3, nombre: 'Arancel C' }],
+    umt: [{ id: 4, nombre: 'UMT D' }]
+  }
+}));
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
 import { DatosDeLaSolicitudComponent } from './datos-de-la-solicitud.component';
@@ -11,6 +21,8 @@ import { of } from 'rxjs';
 import { Tramite130106Query } from '../../../../estados/queries/tramite130106.query';
 import { Tramite130106Store } from '../../../../estados/tramites/tramite130106.store';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
+
 
 describe('DatosDeLaSolicitudComponent', () => {
   let component: DatosDeLaSolicitudComponent;
