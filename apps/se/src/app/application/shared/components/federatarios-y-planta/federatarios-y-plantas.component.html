@@ -2,12 +2,12 @@
   <ng-titulo titulo="Datos de los federatarios" />
   <form [formGroup]="federatariosFormGroup">
     <div class="row">
-      <formas-dinamicas [forma]="federatariosFormGroup"
+      <formas-dinamicas [forma]="federatariosFormGroup" [soloLectura]="esFormularioSoloLectura"
         [formularioDatos]="representanteLegalFormData" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
       <div class="row mt-5">
         <div class="col-12 container text-end mt-5">
-          <button class="btn btn-default me-2">Eliminar</button>
-          <button class="btn btn-primary" (click)="aggregarDatos()">
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+          <button class="btn btn-primary" (click)="aggregarDatos()" [disabled]="esFormularioSoloLectura">
             Agregar
           </button>
         </div>
@@ -21,7 +21,7 @@
       </div>
       <div class="row">
         <div class="col">
-          <app-tabla-dinamica [configuracionTabla]="federatariosConfig.TablaEncabezado"
+          <app-tabla-dinamica [configuracionTabla]="federatariosConfig.TablaEncabezado"   [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
             [tipoSeleccionTabla]="federatariosConfig.TablaSeleccion" [datos]="federatariosDatos"></app-tabla-dinamica>
         </div>
       </div>
@@ -33,12 +33,12 @@
       <ng-titulo titulo="Empresas extranjeras" />
       <form [formGroup]="expresasFormGroup">
         <div class="row">
-          <formas-dinamicas [forma]="expresasFormGroup"
+          <formas-dinamicas [forma]="expresasFormGroup" [soloLectura]="esFormularioSoloLectura"
             [formularioDatos]="expresasFormData"    (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
           <div class="row mt-5">
             <div class="col-12 container text-end mt-5">
-              <button class="btn btn-default me-2">Eliminar</button>
-              <button class="btn btn-primary" (click)="aggregarExpresasDatos()">
+              <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Eliminar</button>
+              <button class="btn btn-primary" (click)="aggregarExpresasDatos()" [disabled]="esFormularioSoloLectura">
                 Agregar
               </button>
             </div>
@@ -54,7 +54,7 @@
         </div>
         <div class="row">
           <div class="col">
-            <app-tabla-dinamica [configuracionTabla]="ExpresasConfig.TablaEncabezado"
+            <app-tabla-dinamica [configuracionTabla]="ExpresasConfig.TablaEncabezado"   [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"
               [tipoSeleccionTabla]="ExpresasConfig.TablaSeleccion" [datos]="expresasDatos"></app-tabla-dinamica>
           </div>
         </div>
@@ -73,14 +73,14 @@
         <div class="col">
           <div class="row">
             <div class="col-md-4">
-              <app-catalogo-select [catalogo]="estadoOptions" [label]="'Estado'" [required]="true"
+              <app-catalogo-select [catalogo]="estadoOptions" [label]="'Estado'" [required]="true" [isDisabled]="esFormularioSoloLectura"
                 name="estado"  formControlName="estadoDos" (change)="setValoresStore(plantasForm, 'estadoDos', 'setEstadoDos')"></app-catalogo-select>
             </div>
           </div>
           <div class="row">
             <div class="col-md-12">
               <div class="pull-right ms-2">
-                <button class="btn btn-primary">Buscar plantas IMMEX</button>
+                <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">Buscar plantas IMMEX</button>
               </div>
             </div>
           </div>
@@ -101,7 +101,7 @@
                       plantasDisponiblesConfig.TablaEncabezado
                     " [tipoSeleccionTabla]="
                       plantasDisponiblesConfig.TablaSeleccion
-                    " [datos]="plantasDisponiblesDatos"></app-tabla-dinamica>
+                    " [datos]="plantasDisponiblesDatos"   [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"></app-tabla-dinamica>
                 </div>
               </div>
               <div class="row">
@@ -112,7 +112,7 @@
               <div class="row">
                 <div class="col-md-12">
                   <div class="pull-right ms-2">
-                    <button class="btn btn-primary">Agregar plantas</button>
+                    <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">Agregar plantas</button>
                   </div>
                 </div>
               </div>
@@ -128,7 +128,7 @@
               <div class="col">
                 <app-tabla-dinamica [configuracionTabla]="plantasImmexConfig.TablaEncabezado"
                   [tipoSeleccionTabla]="plantasImmexConfig.TablaSeleccion"
-                  [datos]="plantasImmexDatos"></app-tabla-dinamica>
+                  [datos]="plantasImmexDatos"   [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false"></app-tabla-dinamica>
               </div>
             </div>
           </div>
@@ -136,47 +136,47 @@
             <div class="d-flex flex-row flex-wrap">
               <div class="p-2">
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#complementarPlanta"
-                  (click)="abrirDialogoComplementarPlanta()">
+                  (click)="abrirDialogoComplementarPlanta()" [disabled]="esFormularioSoloLectura">
                   Complementar planta
                 </button>
               </div>
               <div class="p-2">
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#montos"
-                  (click)="abrirDialogoMontos()">
+                  (click)="abrirDialogoMontos()" [disabled]="esFormularioSoloLectura">
                   Montos de inversión
                 </button>
               </div>
               <div class="p-2">
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#empleadosAcciones"
-                (click)="abrirDialogoempleadosAcciones()">
+                (click)="abrirDialogoempleadosAcciones()"[disabled]="esFormularioSoloLectura">
                   Empleados
                 </button>
               </div>
               <div class="p-2">
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#capacidadInstalada"
-                (click)="abrirDialogocapacidadInstalada()" >
+                (click)="abrirDialogocapacidadInstalada()" [disabled]="esFormularioSoloLectura">
                   Capacidad Instalada
                 </button>
               </div>
               <div class="p-2">
                 <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#cargaPorPrchivo"
-                (click)="abrirDialogocargaPorPrchivo()" >
+                (click)="abrirDialogocargaPorPrchivo()" [disabled]="esFormularioSoloLectura">
                   Carga por archivo
                 </button>
               </div>
               <div class="p-2">
-                <button class="btn btn-primary">Eliminar plantas</button>
+                <button class="btn btn-primary" [disabled]="esFormularioSoloLectura">Eliminar plantas</button>
               </div>
             </div>
           </div>
           <div class="row mt-5">
             <div class="col-md-4">
-              <app-catalogo-select [catalogo]="estadoOptions" [label]="'Representación federal*'" [required]="true"
+              <app-catalogo-select [catalogo]="estadoOptions" [label]="'Representación federal*'" [required]="true" [isDisabled]="esFormularioSoloLectura"
                 name="estado" formControlName="representacionFederal"
               (change)="setValoresStore(plantasForm, 'representacionFederal', 'setRepresentacionFederal')"></app-catalogo-select>
             </div>
             <div class="col-md-4">
-              <app-catalogo-select [catalogo]="estadoOptions" [label]="'Actividad productiva'" [required]="true" formControlName="actividadProductiva"
+              <app-catalogo-select [catalogo]="estadoOptions" [label]="'Actividad productiva'" [required]="true" formControlName="actividadProductiva" [isDisabled]="esFormularioSoloLectura"
                (change)="setValoresStore(plantasForm, 'actividadProductiva', 'setActividadProductiva')"></app-catalogo-select>
             </div>
           </div>

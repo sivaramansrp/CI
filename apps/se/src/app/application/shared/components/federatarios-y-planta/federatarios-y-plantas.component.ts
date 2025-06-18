@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, ViewChild } from '@angular/core';
-import { Input, Output } from '@angular/core';
+import { Input, Output, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -35,6 +35,7 @@ import { FederatoriosQuery } from '../../../estados/queries/federatarios.query';
 import { FederatoriosState, FederatoriosStore } from '../../../estados/tramites/federatarios.store';
 import { map, Subject, takeUntil } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * Componente para los federatarios y plantas
  * @export FederatariosYPlantasComponent
@@ -61,7 +62,7 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
   templateUrl: './federatarios-y-plantas.component.html',
   styleUrl: './federatarios-y-plantas.component.scss',
 })
-export class FederatariosYPlantasComponent {
+export class FederatariosYPlantasComponent implements OnInit {
 
 
   /**
@@ -205,6 +206,7 @@ export class FederatariosYPlantasComponent {
    * Estado de la solicitud 250101, que contiene los valores actuales de la solicitud.
    */
   public solicitudState!: FederatoriosState;
+ 
   /**
    * Formulario para los datos de federatarios
    * @property {FormGroup} federatariosFormGroup
@@ -214,6 +216,10 @@ export class FederatariosYPlantasComponent {
    * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+ 
+  /** Indica si el formulario debe mostrarse en modo solo lectura.  
+ *  Controla la habilitación o deshabilitación de los campos. */
+ esFormularioSoloLectura: boolean = false;
 
   public expresasFormGroup!: FormGroup;
 plantasForm!: FormGroup;
@@ -229,9 +235,65 @@ plantasForm!: FormGroup;
    * @param {Router} router - Servicio de Angular para la navegación.
    * @param {ActivatedRoute} activatedRoute - Servicio de Angular para obtener información sobre la ruta actual.
    */
-  constructor(private router: Router, private activatedRoute: ActivatedRoute ,private federatoriosQuery:FederatoriosQuery,private federatoriosStore:FederatoriosStore)
+  constructor(private router: Router, private activatedRoute: ActivatedRoute ,private federatoriosQuery:FederatoriosQuery,private federatoriosStore:FederatoriosStore,private consultaioQuery: ConsultaioQuery,)
    {
-     this.federatoriosQuery.selectSolicitud$
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+       
+          this.inicializarCertificadoFormulario();
+        })
+      )
+      .subscribe()
+  }
+/**
+   * Método que se ejecuta cuando el componente es inicializado.
+   * 
+   * Inicializa el formulario reactivo con los valores actuales de la solicitud.
+   */
+  ngOnInit(): void {
+   this.inicializarCertificadoFormulario();
+  }
+ /**
+   * Método para inicializar el formulario reactivo con los datos de la solicitud.
+   * 
+   * Este método configura los campos del formulario con los valores actuales del estado de la solicitud
+   * y aplica las validaciones necesarias. También deshabilita ciertos campos y establece valores predeterminados.
+   */
+  inicializarCertificadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+     this.inicializarFormulario()
+    }  
+  }
+    /**
+   * @comdoc
+   * Guarda los datos del formulario de combinación requerida.
+   * 
+   * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
+   * - Si el formulario es de solo lectura, lo deshabilita.
+   * - Si no es de solo lectura, lo habilita.
+   * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+       this.federatariosFormGroup.disable();
+       this.expresasFormGroup.disable();
+       this.plantasForm.disable();
+      } else {
+      this.federatariosFormGroup.enable();
+      this.expresasFormGroup.enable();
+       this.plantasForm.enable();
+      }
+  }
+   /** Inicializa los datos del formulario suscribiéndose al estado del trámite.  
+ *  Asigna el estado actual al modelo local del componente. */
+   inicializarFormulario(): void {
+      this.federatoriosQuery.selectSolicitud$
           .pipe(
             takeUntil(this.destroyNotifier$),
             map((seccionState) => {
@@ -241,8 +303,8 @@ plantasForm!: FormGroup;
           .subscribe();
     this.initFederatariosFormGroup();
     this.initExpresasFormGroup();
-  }
-
+    
+   }
   /**
    * Inicializa el formulario de federatarios con sus campos y validaciones
    * @method initFederatariosFormGroup
