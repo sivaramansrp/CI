@@ -13,8 +13,6 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
 
 import { PropietarioTipoPersona } from '../models/datos-de-la-solicitud.model';
 
-import { DatosDomicilioLegalState } from '../../../shared/estados/stores/datos-domicilio-legal.store';
-
 import { DatosDelSolicituteSeccionState, DatosDelSolicituteSeccionStateStore } from '../../../shared/estados/stores/datos-del-solicitute-seccion.store';
 
 /**
@@ -106,6 +104,11 @@ export class EstablecimientoService {
    this.tramiteStore.setRepresentanteApellidos(DATOS.apellidoMaterno,DATOS.apellidoPaterno);
   
 }
+/**
+ * 
+ * @param DATOS Datos del solicitante que se actualizarán en el estado del formulario.
+ * @description Actualiza el formulario con los datos proporcionados.
+ */
 actualizarFormulario(DATOS: DatosDelSolicituteSeccionState): void {
 this.tramiteStoreData.setRepresentanteRfc(DATOS.representanteRfc);
 this.tramiteStoreData.setRepresentanteNombre(DATOS.representanteNombre);
