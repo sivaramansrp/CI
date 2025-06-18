@@ -62,7 +62,15 @@ export class CapturarComponent implements OnInit, OnDestroy {
    * Estado actual de la solicitud del trámite.
    */
   public solicitudState!: Tramite40301State;
+  /**
+   * Estado de la consulta de datos.
+   */
   consultaDatos!: ConsultaioState;
+
+  /**
+   * Indica si el formulario es de solo lectura.
+   * Se utiliza para determinar si el formulario debe ser editable o no.
+   */
   soloLectura: boolean = false;
 
   /**
@@ -91,13 +99,12 @@ export class CapturarComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.consultaDatos = seccionState;
           this.soloLectura = this.consultaDatos.readonly;
-          // this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
 
     this.establecerSolicitudForm();
-    
+
     if(this.soloLectura) {
       this.solicitudForm.disable();
     }

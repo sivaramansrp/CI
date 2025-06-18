@@ -199,6 +199,15 @@ export class Tramite40301Store extends Store<Tramite40301State> {
     }));
   }
 
+  /**
+   * ## setRol
+   * Establece el rol en el estado.
+   * ### Parámetros
+   * - **rol**: `string`  
+   *   Nuevo rol.
+   * ### Funcionalidad
+   * Actualiza el estado manteniendo los demás campos intactos.
+   */
   public setRol(rol: string): void {
     this.update((state) => ({
       ...state,
@@ -206,6 +215,18 @@ export class Tramite40301Store extends Store<Tramite40301State> {
     }));
   }
 
+  /**
+   * ## setTipoAgente
+   * 
+   * Establece el tipo de agente en el estado.
+   * 
+   * ### Parámetros
+   * - **tipoAgente**: `string`  
+   *   Nuevo tipo de agente.
+   * 
+   * ### Funcionalidad
+   * Actualiza el estado manteniendo los demás campos intactos.
+   */
   public setTipoAgente(tipoAgente: string): void {
     this.update((state) => ({
       ...state,
