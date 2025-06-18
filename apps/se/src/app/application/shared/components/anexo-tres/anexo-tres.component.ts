@@ -17,7 +17,6 @@ import { Tramite80104Query } from '../../../estados/queries/tramite80104.query';
  * - templateUrl: Ruta del archivo de plantilla HTML asociado al componente.
  * - styleUrl: Ruta del archivo de estilos SCSS asociado al componente.
  */
-
 @Component({
   selector: 'app-anexo-tres',
   standalone: true,

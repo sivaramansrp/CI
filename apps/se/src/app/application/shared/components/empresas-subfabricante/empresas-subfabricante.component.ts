@@ -1,3 +1,7 @@
+/**
+ * Componente Angular para gestionar subcontratistas y plantas subfabricantes.
+ * Importa modelos, componentes compartidos y servicios necesarios.
+ */
 import {
   Catalogo,
   CatalogoSelectComponent,
@@ -27,7 +31,10 @@ import { Router } from '@angular/router';
 import {Subject,map,takeUntil } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../../tramites/80103/estados/tramite80101.store';
 import { Tramite80101Query } from '../../../tramites/80103/estados/tramite80101.query';
-
+/**
+ * Componente para mostrar y gestionar subfabricantes y sus plantas.
+ * Utiliza componentes compartidos y formularios reactivos.
+ */
 @Component({
   selector: 'empresass-subfabricante',
   standalone: true,
@@ -108,7 +115,10 @@ export class EmpresasSubfabricantesComponent implements OnInit {
    * @description Esta propiedad privada almacena el formulario de datos del subcontratista, que incluye campos como el RFC y estado del subcontratista.
    */
   private _formularioDatosSubcontratista!: FormGroup;
-
+/**
+   * Establece el estado del catálogo de las plantas subfabricantes.
+   * @param valor - Lista de estados del catálogo.
+   */
   @Input() tabIndex: number = 0;
 
   /**
@@ -200,12 +210,12 @@ export class EmpresasSubfabricantesComponent implements OnInit {
     return this._datosTablaSubfabricantesSeleccionadas;
   }
 
-  @Input()
-  /**
+ /**
    * Establece el formulario de datos del subcontratista.
    * @param valor - Formulario reactivo con los datos del subcontratista.
    */
-  set formularioDatosSubcontratista(valor: FormGroup) {
+  @Input()
+   set formularioDatosSubcontratista(valor: FormGroup) {
     this._formularioDatosSubcontratista.setValue(valor.value);
   }
 
@@ -256,7 +266,12 @@ export class EmpresasSubfabricantesComponent implements OnInit {
    * @description Este evento se emite cuando el usuario selecciona plantas para eliminar.
    */
   @Output() plantasPorEliminar = new EventEmitter<PlantasSubfabricante[]>();
-
+  /**
+   * Evento emitido cuando se seleccionan plantas para eliminar.
+   * @event plantasPorComplementar
+   * @type {EventEmitter<PlantasSubfabricante[]>}
+   * @description Este evento se emite cuando el usuario selecciona plantas para eliminar.
+   */
   @Output() plantasPorComplementar = new EventEmitter<PlantasSubfabricante[]>();
 
   /**

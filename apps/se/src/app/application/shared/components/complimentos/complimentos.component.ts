@@ -1,3 +1,7 @@
+/**
+ * Importaciones necesarias para el componente de empresas.
+ * Incluye servicios, modelos, componentes compartidos y decoradores de Angular.
+ */
 import {
   CATALOGOS_ID,
   Catalogo,
@@ -43,6 +47,11 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosCatalago } from '../../../tramites/80102/models/autorizacion-programa-nuevo.model';
 import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramites/components/select-paises/select-paises.component';
 
+/**
+ * Componente Complimentos.
+ * Responsable de mostrar y gestionar los datos relacionados a los complimentos.
+ * Utiliza módulos comunes, formularios reactivos y componentes compartidos.
+ */
 @Component({
   selector: 'app-complimentos',
   standalone: true,
@@ -58,6 +67,10 @@ import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramite
   templateUrl: './complimentos.component.html',
   styleUrl: './complimentos.component.scss',
 })
+/**
+ * Clase ComplimentosComponent.
+ * Gestiona la lógica del componente Complimentos, incluyendo inicialización y limpieza.
+ */
 export class ComplimentosComponent implements OnInit, OnDestroy {
 
   /**

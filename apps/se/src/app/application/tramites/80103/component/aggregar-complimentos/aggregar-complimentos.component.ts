@@ -30,7 +30,6 @@ import { DatosComplimentos } from '../../../../shared/models/complimentos.model'
 import { SociaoAccionistas } from '../../../../shared/models/complimentos.model';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
-
 /*
   * Componente para agregar cumplimentos en el trámite 80103.
   * 
@@ -40,7 +39,6 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
   * @export
   * @class AggregarComplimentosComponent
   */
-
 @Component({
   selector: 'app-aggregar-complimentos',
   standalone: true,
@@ -48,6 +46,8 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
   templateUrl: './aggregar-complimentos.component.html',
   styleUrl: './aggregar-complimentos.component.scss',
 })
+/** Componente encargado de agregar datos de complementos en el formulario.  
+ * Administra el estado y limpieza de recursos al destruirse. */
 export class AggregarComplimentosComponent implements OnDestroy {
   /**
    * Almacena los datos de los cumplimentos.
@@ -100,7 +100,8 @@ constructor(
                   })
       )
       .subscribe();
-    
+    // Observables que exponen los datos de las tablas de complementos y complementos extranjeros.  
+    // Se obtienen desde el store a través del query para su uso reactivo en la vista.
     this.tablaDatosComplimentos$ =
       this.tramiteQuery.selectTablaDatosComplimentos$;
     this.tablaDatosComplimentosExtranjera$ =
@@ -158,6 +159,11 @@ constructor(
   accionistasExtranjerosEliminado(datos: SociaoAccionistas[]): void {
     this.store.eliminarTablaDatosComplimentosExtranjera(datos);
   }
+   /**
+   * Método que se ejecuta cuando el componente es destruido.
+   * 
+   * Libera los recursos y completa la notificación de destrucción del componente.
+   */
   ngOnDestroy(): void {
   this.destroyNotifier$.next();
   this.destroyNotifier$.complete();

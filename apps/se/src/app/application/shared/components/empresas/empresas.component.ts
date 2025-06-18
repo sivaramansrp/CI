@@ -1,13 +1,16 @@
+/**
+ * Componente Angular para gestionar la información relacionada al trámite 80104.
+ * Importa módulos y dependencias necesarias para formularios reactivos, gestión de estado y suscripciones.
+ */
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy,OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud80104State, Tramite80104Store } from '../../../estados/tramites/tramite80104.store';
 import { Subject,map,takeUntil } from 'rxjs';
 import { AlertComponent } from 'ngx-bootstrap/alert';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DisponsibleFiscal } from '../../models/empresas.model';
 import { Tramite80104Query } from '../../../estados/queries/tramite80104.query';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-
 /**
  * Componente que maneja la visualización y gestión de empresas dentro del flujo de solicitud.
  * 
@@ -28,7 +31,10 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
   templateUrl: './empresas.component.html',
   styleUrl: './empresas.component.scss'
 })
-
+/**
+ * Componente encargado de gestionar la sección de empresas dentro del trámite.
+ * Implementa OnInit y OnDestroy para inicializar datos y limpiar suscripciones.
+ */
 export class EmpresasComponent implements OnInit, OnDestroy {
 
   /**

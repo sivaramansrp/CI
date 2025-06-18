@@ -1,3 +1,8 @@
+
+/* 
+ * Importa interfaces compartidas de catálogos y tablas de selección
+ * desde la librería de acceso a datos del usuario.
+ */
 import { Catalogo, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { FEDERATARIOS,FederatariosEncabezado,PLANTAS_DIPONIBLES,PLANTAS_IMMEX,PlantasDisponibles,PlantasImmex} from '../../../../shared/models/federatarios-y-plantas.model';
 import { CommonModule } from '@angular/common';
@@ -17,6 +22,8 @@ import { Tramite80101Store } from '../../estados/tramite80101.store';
   templateUrl: './federatarios-y-plantas-vista.component.html',
   styleUrl: './federatarios-y-plantas-vista.component.scss',
 })
+/** Componente que muestra la vista combinada de federatarios y plantas.  
+ * Maneja la visualización y gestión de datos relacionados desde el store. */
 export class FederatariosYPlantasVistaComponent {
   /**
    * Configuración de la tabla de federatarios
@@ -62,13 +69,16 @@ export class FederatariosYPlantasVistaComponent {
    * @property {PlantasImmex[]} plantasImmexTablaLista
    */
   public plantasImmexTablaLista: PlantasImmex[] = [];
+  /** Catálogo simulado de estados disponible para el formulario.  
+ * Contiene actualmente solo el estado de Jalisco como ejemplo. */
   public estadosCatalogos: Catalogo[] = [{ "id": 1, "descripcion": "JALISCO" }];
     /**
    * Lista de federatarios para mostrar en la tabla
    * @property {FederatariosEncabezado[]} federatariosTablaLista
    */
     public federatariosTablaLista$!: Observable<FederatariosEncabezado[]>;
-
+/** Inyecta el store y query del trámite 80101 para gestionar el estado.  
+ * Inicializa el observable para la lista de federatarios desde el query. */
   constructor(private store: Tramite80101Store, private query: Tramite80101Query) {
 
     this.federatariosTablaLista$ = this.query.selectDatosFederatarios$;

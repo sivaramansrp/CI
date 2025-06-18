@@ -65,6 +65,10 @@ import { FederatoriosQuery } from '../../../estados/queries/federatarios.query';
   templateUrl: './federatarios-y-plantas.component.html',
   styleUrl: './federatarios-y-plantas.component.scss',
 })
+/**
+ * Componente para gestionar federatarios y sus plantas asociadas.
+ * Inicializa los datos necesarios al iniciar el componente.
+ */
 export class FederatariosYPlantasComponent implements OnInit {
 
 
@@ -203,7 +207,6 @@ export class FederatariosYPlantasComponent implements OnInit {
    * Texto para mostrar en la alerta
    * @property {string} textodAlerta
    */
-
   public textodAlerta = TEXTO_DE_ALERTA;
 /**
    * Estado de la solicitud 250101, que contiene los valores actuales de la solicitud.
@@ -223,8 +226,15 @@ export class FederatariosYPlantasComponent implements OnInit {
   /** Indica si el formulario debe mostrarse en modo solo lectura.  
  *  Controla la habilitación o deshabilitación de los campos. */
  esFormularioSoloLectura: boolean = false;
-
+/** 
+ * Formularios reactivos para capturar información de empresas y plantas. 
+ * Se inicializan en el ciclo de vida del componente. 
+ */
   public expresasFormGroup!: FormGroup;
+  /** 
+ * Formularios reactivos para capturar información de empresas y plantas. 
+ * Se inicializan en el ciclo de vida del componente. 
+ */
 plantasForm!: FormGroup;
   /**
    * Emisor de eventos para los datos del formulario de federatarios.
