@@ -36,7 +36,6 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
 
   /**
    * Constructor del componente
-   * 
    * @param fb Constructor de formularios reactivos
    * @param tramite260906Store Store para gestionar estado del trámite
    * @param tramite260906Query Query para obtener estado de la solicitud
@@ -91,13 +90,12 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
 
   /**
    * Simula la obtención de nuevos valores y actualiza el formulario
-   * 
    * @remarks
    * Este método es de demostración y debería ser reemplazado con lógica real
    */
   obtenerValor(): void {
     this.representante.patchValue({
-      nombre: 'NuevoNombre',
+      nombre: 47875, // Nota: Esto debería ser una cadena, considera ajustar si es necesario.
       apellidoPaterno: 'Paterno',
       apellidoMaterno: 'Materno',
     });
@@ -105,7 +103,6 @@ export class RepresentanteLegalComponent implements OnInit, OnDestroy {
 
   /**
    * Establece valores en el store desde el formulario
-   * 
    * @param form Grupo de formulario que contiene el campo
    * @param campo Nombre del campo a actualizar
    * @param metodoNombre Nombre del método en el store que actualiza el valor

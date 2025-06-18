@@ -83,7 +83,9 @@ export class DatosEstablecimientoComponent implements OnInit, OnDestroy {
     private tramite260906Store: Tramite260906Store,
     private tramite260906Query: Tramite260906Query,
     private consultaioQuery: ConsultaioQuery
-  ) { }
+  ) {
+    // Inicialización adicional si es necesario
+  }
 
   /**
    * Método del ciclo de vida que se llama al inicializar el componente.

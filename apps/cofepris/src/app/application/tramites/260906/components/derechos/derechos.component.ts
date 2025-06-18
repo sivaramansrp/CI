@@ -67,7 +67,9 @@ export class DerechosComponent implements OnInit, OnDestroy {
     private sanitario260906Store: Sanitario260906Store,
     private permiso260906Query: Permiso260906Query,
     private consultaioQuery: ConsultaioQuery
-  ) { }
+  ) {
+    // Inicialización adicional si es necesario
+  }
 
   /**
    * Método de inicialización del componente
@@ -143,7 +145,6 @@ export class DerechosComponent implements OnInit, OnDestroy {
 
   /**
    * Maneja el cambio de fecha en el formulario
-   * 
    * @param fecha Nueva fecha seleccionada
    */
   onFechaCambiada(fecha: string): void {

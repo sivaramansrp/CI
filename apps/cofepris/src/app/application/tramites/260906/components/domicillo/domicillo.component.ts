@@ -500,7 +500,6 @@ export class DomicilloComponent implements OnInit, OnDestroy {
 
   /**
    * Actualiza valor de fecha en formulario de mercancías
-   * 
    * @param nuevo_valor Nueva fecha seleccionada
    */
   public cambioFechaFinal(nuevo_valor: string): void {
@@ -508,9 +507,24 @@ export class DomicilloComponent implements OnInit, OnDestroy {
     this.formMercancias.get('fechaCaducidad')?.markAsUntouched();
   }
 
+    /**
+  * Habilita todos los controles del formulario si están deshabilitados.
+  * @returns {void}
+  */
+  eliminarFormControls(): void {
+    this.abrirModal('¿Estás seguro que deseas eliminar los registros marcados?', true);
+  }
+
+  /**
+  * Habilita todos los controles del formulario si están deshabilitados.
+  * @returns {void}
+  */
+  eliminarMercancias(): void {
+    this.abrirModal('Selecciona un registro.', false);
+  }
+
   /**
    * Muestra modal de confirmación para eliminar registros
-   * 
    * @param mensaje Mensaje a mostrar en el modal
    * @param cancelar Indica si debe mostrar botón cancelar
    */
