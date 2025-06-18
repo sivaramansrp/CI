@@ -367,7 +367,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   @Output() updateDatosDelTramiteFormulario =
     new EventEmitter<DatosDelTramiteFormState>();
 
-  @Output() openModal = new EventEmitter<void>();
+  @Output() openModal = new EventEmitter<string>();
 
   /**
    * Evento emitido cuando se actualiza el formulario de justificación del trámite.
@@ -509,7 +509,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     //   relativeTo: this.activatedRoute,
     // });
 
-    this.openModal.emit();
+    this.openModal.emit('Datosmercancia');
   }
 
   /**

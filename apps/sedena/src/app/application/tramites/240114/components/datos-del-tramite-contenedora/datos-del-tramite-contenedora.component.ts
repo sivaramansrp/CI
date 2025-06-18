@@ -115,10 +115,12 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
     this.tramiteStore.updateDatosDelTramiteFormState(event);
   }
 
-  openModal(): void {
-    this.modalComponent.abrir(DatosMercanciaContenedoraComponent, {
-      cerrarModal: this.cerrarModal.bind(this),
-    });
+  openModal(event: string): void {
+    if (event === 'Datosmercancia') {
+      this.modalComponent.abrir(DatosMercanciaContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
+    }
   }
   cerrarModal(): void {
     this.modalComponent.cerrar();
