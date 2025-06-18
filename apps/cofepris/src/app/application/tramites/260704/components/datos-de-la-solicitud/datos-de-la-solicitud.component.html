@@ -4,7 +4,7 @@
       <label>Seleccione el tipo de operación que desea realizar*:</label>
     </div>
     <div class="row mt-5 radios">
-      <app-input-radio [radioOptions]="radioOpcions" [selectedValue]="valorSeleccionado" [isRequired]="true" [layout]="'horizontal'" formControlName="tipoOperacion" (change)="setValoresStore(validacionForm,'tipoOperacion', 'setTipoOperacion')"></app-input-radio>
+      <app-input-radio [radioOptions]="radioOpcions" [selectedValue]="valorSeleccionado" [isRequired]="true" [layout]="'horizontal'" [disabled]="soloLectura" formControlName="tipoOperacion" (change)="setValoresStore(validacionForm,'tipoOperacion', 'setTipoOperacion')"></app-input-radio>
     </div>
     <div class="row mt-5">
       <div class="col-md-6">
@@ -15,18 +15,18 @@
     <ng-titulo titulo="Datos del establecimiento" />
     <div>
       <div class="text-end" *ngIf="esTipoOperacionSeleccionado">
-        <button type="button" class="btn btn-primary" title="Selecciona para habilitar los campos del establecimiento" data-bs-toggle="modal" data-bs-target="#modalAlerta" (click)="seleccionarEstablecimiento()"> Seleccionar establecimiento </button>
+        <button type="button" class="btn btn-primary" title="Selecciona para habilitar los campos del establecimiento" data-bs-toggle="modal" data-bs-target="#modalAlerta" (click)="seleccionarEstablecimiento()" [disabled]="soloLectura"> Seleccionar establecimiento </button>
       </div> @if (nuevaNotificacion) { <section>
         <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)"></lib-notificaciones>
       </section> } <div class="row mt-5">
         <div class="col-md-8">
           <label for="razonSocial" class="form-label">Denominación o razón social*:</label>
-          <input type="text" class="form-control" size="68" formControlName="razonSocial" (change)="setValoresStore(validacionForm,'razonSocial', 'setRazonSocial')" />
+          <input type="text" class="form-control" size="68" formControlName="razonSocial" [disabled]="soloLectura" (change)="setValoresStore(validacionForm,'razonSocial', 'setRazonSocial')" />
         </div>
         <div class="col-md-4">
           <label for="correoElectronico" class="form-label">Correo electrónico: <span class="bi bi-question-circle-fill" title="ejemplo@dominio.com" data-bs-toggle="tooltip"></span>
           </label>
-          <input type="text" class="form-control" maxlength="320" formControlName="correoElectronico" (change)="setValoresStore(validacionForm,'correoElectronico', 'setCorreoElectronico')" />
+          <input type="text" class="form-control" maxlength="320" formControlName="correoElectronico" [disabled]="soloLectura" (change)="setValoresStore(validacionForm,'correoElectronico', 'setCorreoElectronico')" />
         </div>
       </div>
     </div>
@@ -36,14 +36,14 @@
     <div class="row">
       <div class="col-md-4">
         <label for="codigoPostal" class="form-label">Código postal*:</label>
-        <input type="text" name="codigoPostal" class="form-control" maxlength="12" formControlName="codigoPostal" (change)="setValoresStore(validacionMercanciaForm,'codigoPostal', 'setCodigoPostal')" />
+        <input type="text" name="codigoPostal" class="form-control" maxlength="12" [disabled]="soloLectura" formControlName="codigoPostal" (change)="setValoresStore(validacionMercanciaForm,'codigoPostal', 'setCodigoPostal')" />
       </div>
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Estado'" [required]="true" formControlName="estado" (change)="setValoresStore(validacionMercanciaForm,'estado', 'setEstado')"></app-catalogo-select>
+        <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Estado'" [required]="true" [isDisabled]="soloLectura" formControlName="estado" (change)="setValoresStore(validacionMercanciaForm,'estado', 'setEstado')"></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <label for="descripcionMunicipio" class="form-label">Municipio o alcaldía*:</label>
-        <input type="text" class="form-control" maxlength="120" formControlName="municipio" (change)="setValoresStore(validacionMercanciaForm,'municipio', 'setMunicipio')" />
+        <input type="text" class="form-control" maxlength="120" formControlName="municipio" [disabled]="soloLectura" (change)="setValoresStore(validacionMercanciaForm,'municipio', 'setMunicipio')" />
       </div>
     </div>
     <div class="row mt-5">
@@ -54,28 +54,28 @@
     <div class="row">
       <div class="col-md-4">
         <label for="informacionExtra" class="form-label">Localidad:</label>
-        <input type="text" class="form-control" formControlName="localidad" maxlength="120" (change)="setValoresStore(validacionMercanciaForm,'localidad', 'setLocalidad')" />
+        <input type="text" class="form-control" formControlName="localidad" maxlength="120" [disabled]="soloLectura" (change)="setValoresStore(validacionMercanciaForm,'localidad', 'setLocalidad')" />
       </div>
       <div class="col-md-4">
         <label for="descripcionColonia" class="form-label">Colonia:</label>
-        <input type="text" class="form-control" formControlName="colonia" maxlength="120" (change)="setValoresStore(validacionMercanciaForm,'colonia', 'setColonia')" />
+        <input type="text" class="form-control" formControlName="colonia" maxlength="120" [disabled]="soloLectura" (change)="setValoresStore(validacionMercanciaForm,'colonia', 'setColonia')" />
       </div>
     </div>
     <div class="row">
       <div class="col-md-8">
         <label for="calle" class="form-label">Calle*: <span class="bi bi-question-circle-fill" title="Domicilio, calle, n&uacute;mero interior, n&uacute;mero exterior, lote" data-bs-toggle="tooltip"></span>
         </label>
-        <input type="text" class="form-control" formControlName="calle" maxlength="90" (change)="setValoresStore(validacionMercanciaForm,'calle', 'setCalle')" />
+        <input type="text" class="form-control" formControlName="calle" maxlength="90" [disabled]="soloLectura" (change)="setValoresStore(validacionMercanciaForm,'calle', 'setCalle')" />
       </div>
     </div>
     <div class="row">
       <div class="col-md-1">
         <label for="lada" class="form-label">Lada:</label>
-        <input type="text" class="form-control" formControlName="lada" (change)="setValoresStore(validacionMercanciaForm,'lada', 'setLada')" />
+        <input type="text" class="form-control" formControlName="lada" [disabled]="soloLectura" (change)="setValoresStore(validacionMercanciaForm,'lada', 'setLada')" />
       </div>
       <div class="col-md-3">
         <label for="telefono" class="form-label">Teléfono*:</label>
-        <input type="text" class="form-control" formControlName="telefono" required="required" (change)="setValoresStore(validacionMercanciaForm,'telefono', 'setTelefono')" />
+        <input type="text" class="form-control" formControlName="telefono" required="required" [disabled]="soloLectura" (change)="setValoresStore(validacionMercanciaForm,'telefono', 'setTelefono')" />
       </div>
     </div>
   </ng-container>
@@ -83,14 +83,14 @@
     <div class="col-md-12 mt-5">
       <label class="form-label mb-5" for="">S.C.I.A.N.*:</label>
       <div >
-        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="encabezados" (listaDeFilaSeleccionada)="setTablaSeleccionFabricante($event)" [datos]="certificadoDisponsiblesTablaDatos" (click)="verificarSeleccionCheckbox($event)" (change)="setValoresStore(validacionScionForm,'scian', 'setScian')"></app-tabla-dinamica>
+        <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="encabezados" [disableSeleccionTablaCheckBox]="soloLectura? true : false" (listaDeFilaSeleccionada)="setTablaSeleccionFabricante($event)" [datos]="certificadoDisponsiblesTablaDatos" (click)="verificarSeleccionCheckbox($event)" (change)="setValoresStore(validacionScionForm,'scian', 'setScian')"></app-tabla-dinamica>
       </div>
      
     </div>
     <div class="row">
       <div class="col-md-12 text-end">
-        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminarScian" (click)="eliminarMercanciaGrid()"> Eliminar </button>
-        <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalClaveScian" (click)="agregarMercanciaGrid()"> Agregar </button>
+        <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#modalEliminarScian" (click)="eliminarMercanciaGrid()" [disabled]="soloLectura"> Eliminar </button>
+        <button type="button" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalClaveScian" (click)="agregarMercanciaGrid()"[disabled]="soloLectura"> Agregar </button>
       </div>
     </div>
   
@@ -107,9 +107,9 @@
           </div>
           <div class="modal-body">
             <div class="row">
-              <app-catalogo-select [catalogo]="catalogoClave.catalogos" [label]="'Clave S.C.I.A.N.'" [required]="true" formControlName="claveScian" (change)="setValoresStore(validacionScionForm,'claveScian', 'setClaveScian')"></app-catalogo-select>
+              <app-catalogo-select [catalogo]="catalogoClave.catalogos" [label]="'Clave S.C.I.A.N.'" [required]="true" [isDisabled]="soloLectura" formControlName="claveScian" (change)="setValoresStore(validacionScionForm,'claveScian', 'setClaveScian')"></app-catalogo-select>
               <div class="row">
-                <app-catalogo-select [catalogo]="catalogoClave.catalogos" [label]="'Descripción del S.C.I.A.N.'" [required]="false" formControlName="descripcionScian" (change)="setValoresStore(validacionScionForm,'descripcionScian', 'setDescripcionScian')"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="catalogoClave.catalogos" [label]="'Descripción del S.C.I.A.N.'" [required]="false" [isDisabled]="soloLectura" formControlName="descripcionScian" (change)="setValoresStore(validacionScionForm,'descripcionScian', 'setDescripcionScian')"></app-catalogo-select>
               </div>
             </div>
           </div>
@@ -117,9 +117,9 @@
             <div class="row">
               <div class="col-md-12">
                 <div class="pull-right">
-                  <button type="button" name="limpiarSCIAN" class="btn btn-danger"> Limpiar </button>
-                  <button type="button" name="cancelar" class="btn btn-default ms-2" data-bs-dismiss="modal" #closeModal> Cancelar </button>
-                  <button type="button" name="agregar" class="btn btn-primary ms-2"> Agregar </button>
+                  <button type="button" name="limpiarSCIAN" class="btn btn-danger" [disabled]="soloLectura"> Limpiar </button>
+                  <button type="button" name="cancelar" class="btn btn-default ms-2" data-bs-dismiss="modal" #closeModal [disabled]="soloLectura"> Cancelar </button>
+                  <button type="button" name="agregar" class="btn btn-primary ms-2" [disabled]="soloLectura"> Agregar </button>
                 </div>
               </div>
             </div>
@@ -132,21 +132,21 @@
     <div class="row mt-5">
       <div class="col-md-4 mt-4">
         <div class="form-check mt-3">
-          <lib-input-check [id]="'avisoDeFuncionamiento'" [label]="'Aviso de funcionamiento'" [required]="false" formControlName="avisoDeFuncionamiento" (change)="establecerAvisoDeFuncionamiento($event)"></lib-input-check>
+          <lib-input-check [id]="'avisoDeFuncionamiento'" [label]="'Aviso de funcionamiento'" [required]="true" [isDisabled]="soloLectura" formControlName="avisoDeFuncionamiento" (change)="establecerAvisoDeFuncionamiento($event)"></lib-input-check>
         </div>
       </div>
       <div class="col-md-4 mt-4">
         <label class="form-label" for="licenciaSanitaria">No. de licencia sanitaria <span *ngIf="esAvisoFuncionamientoSeleccionado" class="black-asterisk">*</span>: <span class="bi bi-question-circle-fill" title="Ni¿1⁄2mero de la autorizaciï¿1⁄2n indicado en el documento emitido por la autoridad sanitaria competente" data-bs-toggle="tooltip"></span>
         </label>
-        <input class="form-control" type="text" formControlName="licenciaSanitaria" (change)="establecerLicenciaSanitaria($event)" (change)="setValoresStore(validacionAduanaMercanciaForm,'licenciaSanitaria', 'setLicenciaSanitaria')" />
+        <input class="form-control" type="text" formControlName="licenciaSanitaria" [disabled]="soloLectura" (change)="establecerLicenciaSanitaria($event)" (change)="setValoresStore(validacionAduanaMercanciaForm,'licenciaSanitaria', 'setLicenciaSanitaria')" />
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-md-8">
-        <app-catalogo-select [catalogo]="catalogoClave.catalogos" [label]="'Régimen al que se destinarán la mercancías'" [required]="true" [tooltipQuestionCircle]="true" formControlName="regimen" (change)="setValoresStore(validacionAduanaMercanciaForm,'regimen', 'setRegimen')"></app-catalogo-select>
+        <app-catalogo-select [catalogo]="catalogoClave.catalogos" [label]="'Régimen al que se destinarán la mercancías'" [required]="true" [tooltipQuestionCircle]="true" [isDisabled]="soloLectura" formControlName="regimen" (change)="setValoresStore(validacionAduanaMercanciaForm,'regimen', 'setRegimen')"></app-catalogo-select>
       </div>
       <div class="col-md-4">
-        <app-catalogo-select [catalogo]="catalogoClave.catalogos" [label]="'Aduana'" [required]="true" formControlName="aduana" (change)="setValoresStore(validacionAduanaMercanciaForm,'aduana', 'setAduana')"></app-catalogo-select>
+        <app-catalogo-select [catalogo]="catalogoClave.catalogos" [label]="'Aduana'" [required]="true" [isDisabled]="soloLectura" formControlName="aduana" (change)="setValoresStore(validacionAduanaMercanciaForm,'aduana', 'setAduana')"></app-catalogo-select>
       </div>
     </div>
     <div class="row mt-5">
@@ -155,22 +155,22 @@
     <div class="row mt-5">
       <div class="col-md-4">
         <label>No. Programa IMMEX:</label>
-        <input type="text" class="form-control" formControlName="immex" (change)="setValoresStore(validacionAduanaMercanciaForm,'immex', 'setImmex')" />
+        <input type="text" class="form-control" formControlName="immex" [disabled]="soloLectura" (change)="setValoresStore(validacionAduanaMercanciaForm,'immex', 'setImmex')" />
       </div>
       <div class="col-md-2">
         <label>Año:</label>
-        <input type="text" class="form-control" formControlName="ano" (change)="setValoresStore(validacionAduanaMercanciaForm,'ano', 'setAno')" />
+        <input type="text" class="form-control" formControlName="ano" [disabled]="soloLectura" (change)="setValoresStore(validacionAduanaMercanciaForm,'ano', 'setAno')" />
       </div>
     </div>
   </ng-container>
   <ng-container formGroupName="validacionDatosMercanciaForm">
     <div class="col-md-12 mt-4">
       <label class="form-label mb-5" for="">mercancías*:</label>
-      <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="mercanciasDatos" [datos]="mercanciasConfiguracionTabla" (change)="setValoresStore(validacionDatosMercanciaForm,'mercancia', 'setMercancia')"></app-tabla-dinamica>
+      <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="mercanciasDatos" [datos]="mercanciasConfiguracionTabla" [disableSeleccionTablaCheckBox]="soloLectura? true : false" (change)="setValoresStore(validacionDatosMercanciaForm,'mercancia', 'setMercancia')"></app-tabla-dinamica>
     </div>
     <div class="row mt-5">
       <div class="col-md-12 mt-5 d-flex justify-content-end">
-        <button type="button" class="btn btn-primary ms-2 mb-5" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancia" (click)="agregarMercanciaGrid()"> Modificar </button>
+        <button type="button" class="btn btn-primary ms-2 mb-5" data-bs-toggle="modal" data-bs-target="#modalAgregarMercancia" [disabled]="soloLectura" (click)="agregarMercanciaGrid()"> Modificar </button>
       </div>
     </div>
     <div class="modal fade" id="modalAgregarMercancia" tabindex="-1" aria-labelledby="modalAgregarMercanciaLabel" aria-hidden="true">
@@ -182,42 +182,42 @@
           <div class="modal-body">
             <div class="row mt-5">
               <div class="col-md-8">
-                <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Clasificación del producto'" [required]="true" formControlName="clasificacionProducto" (change)="setValoresStore(validacionDatosMercanciaForm,'clasificacionProducto', 'setClasificacionProducto')"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Clasificación del producto'" [required]="true" [isDisabled]="soloLectura" formControlName="clasificacionProducto" (change)="setValoresStore(validacionDatosMercanciaForm,'clasificacionProducto', 'setClasificacionProducto')"></app-catalogo-select>
               </div>
             </div>
             <div class="row mt-5">
               <div class="col-md-8">
-                <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Especificar clasificación del producto'" [required]="true" formControlName="especificarClasificacionProducto" (change)="setValoresStore(validacionDatosMercanciaForm,'especificarClasificacionProducto', 'setEspecificarClasificacionProducto')"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Especificar clasificación del producto'" [required]="true" [isDisabled]="soloLectura" formControlName="especificarClasificacionProducto" (change)="setValoresStore(validacionDatosMercanciaForm,'especificarClasificacionProducto', 'setEspecificarClasificacionProducto')"></app-catalogo-select>
               </div>
             </div>
             <div class="row mt-5">
               <div class="col-md-8">
                 <label class="form-label" for="denominacionProducto">Denominación especifica del producto*:</label>
-                <input class="form-control" placeholder="" type="text" formControlName="denominacionProducto" (change)="setValoresStore(validacionDatosMercanciaForm,'denominacionProducto', 'setDenominacionProducto')" />
+                <input class="form-control" placeholder="" type="text" formControlName="denominacionProducto" [disabled]="soloLectura" (change)="setValoresStore(validacionDatosMercanciaForm,'denominacionProducto', 'setDenominacionProducto')" />
               </div>
             </div>
             <div class="row mt-5">
               <div class="col-md-8">
                 <label class="form-label">Marca*:</label>
-                <input class="form-control" placeholder="" type="text" formControlName="marca" (change)="setValoresStore(validacionDatosMercanciaForm,'marca', 'setMarca')" />
+                <input class="form-control" placeholder="" type="text" formControlName="marca" [disabled]="soloLectura" (change)="setValoresStore(validacionDatosMercanciaForm,'marca', 'setMarca')" />
               </div>
             </div>
             <div class="row mt-5">
               <div class="col-md-8">
-                <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Tipo de producto'" [required]="true" formControlName="tipoProducto" (change)="setValoresStore(validacionDatosMercanciaForm,'tipoProducto', 'setTipoProducto')"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'Tipo de producto'" [required]="true" [isDisabled]="soloLectura" formControlName="tipoProducto" (change)="setValoresStore(validacionDatosMercanciaForm,'tipoProducto', 'setTipoProducto')"></app-catalogo-select>
               </div>
             </div>
             <div class="row mt-5">
               <div class="col-md-8">
                 <label class="form-label">Especifique*:</label>
-                <input class="form-control" type="text" formControlName="especifique" (change)="setValoresStore(validacionDatosMercanciaForm,'especifique', 'setEspecifique')" />
+                <input class="form-control" type="text" formControlName="especifique" [disabled]="soloLectura" (change)="setValoresStore(validacionDatosMercanciaForm,'especifique', 'setEspecifique')" />
               </div>
             </div>
             <div class="row mt-5">
               <div class="col-md-8">
                 <label class="form-label">Fracción arancelaria*: <span class="bi bi-question-circle-fill" title="Fracción arancelaria" data-bs-toggle="tooltip"></span>
                 </label>
-                <input class="form-control" type="text" formControlName="fraccionArancelaria" (change)="setValoresStore(validacionDatosMercanciaForm,'fraccionArancelaria', 'setFraccionArancelaria')" />
+                <input class="form-control" type="text" formControlName="fraccionArancelaria" [disabled]="soloLectura" (change)="setValoresStore(validacionDatosMercanciaForm,'fraccionArancelaria', 'setFraccionArancelaria')" />
               </div>
             </div>
             <div class="row mt-5">
@@ -229,7 +229,7 @@
             <div class="row mt-5">
               <div class="col-md-4">
                 <label class="form-label">Cantidad UMT*:</label>
-                <input class="form-control" type="text" formControlName="cantidadUMT" (change)="setValoresStore(validacionDatosMercanciaForm,'cantidadUMT', 'setCantidadUMT')" />
+                <input class="form-control" type="text" formControlName="cantidadUMT" [disabled]="soloLectura" (change)="setValoresStore(validacionDatosMercanciaForm,'cantidadUMT', 'setCantidadUMT')" />
               </div>
               <div class="col-md-4">
                 <label class="form-label">UMT*: <span class="bi bi-question-circle-fill" title="UMT" data-bs-toggle="tooltip"></span>
@@ -240,10 +240,10 @@
             <div class="row mt-5">
               <div class="col-md-4">
                 <label class="form-label">Cantidad UMC*:</label>
-                <input class="form-control" type="text" formControlName="cantidadUMC" (change)="setValoresStore(validacionDatosMercanciaForm,'cantidadUMC', 'setCantidadUMC')" />
+                <input class="form-control" type="text" formControlName="cantidadUMC" [disabled]="soloLectura" (change)="setValoresStore(validacionDatosMercanciaForm,'cantidadUMC', 'setCantidadUMC')" />
               </div>
               <div class="col-md-4">
-                <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'UMC'" [tooltipQuestionCircle]="true" [required]="true" formControlName="umc" (change)="setValoresStore(validacionDatosMercanciaForm,'umc', 'setUMC')"></app-catalogo-select>
+                <app-catalogo-select [catalogo]="estadoCatalogo.catalogos" [label]="'UMC'" [tooltipQuestionCircle]="true" [required]="true" [isDisabled]="soloLectura" formControlName="umc" (change)="setValoresStore(validacionDatosMercanciaForm,'umc', 'setUMC')"></app-catalogo-select>
               </div>
             </div>
             <div class="col-md-12 mt-4">
@@ -251,7 +251,7 @@
                 <div class="panel panel-default">
                   <div class="panel-heading" (click)="paisOrigenColapsable()" tabindex="0">
                     <h4 class="panel-title">País de origen</h4>
-                    <button type="button" class="collpase-button collapsed"></button>
+                    <button type="button" class="collpase-button collapsed" [disabled]="soloLectura"></button>
                   </div> @if(paisOrigen){ <div class="panel-collapse collapse in" id="panel-01">
                     <div class="panel-body">
                       <crosslist [label]="paisOrigenCrossList.label" [fechas]="paisOrigenCrossList.fechas"></crosslist>
@@ -265,7 +265,7 @@
                 <div class="panel panel-default">
                   <div class="panel-heading" (click)="paisProcedencis_colapsable()" tabindex="0">
                     <h4 class="panel-title">País de procedencia</h4>
-                    <button type="button" class="collpase-button collapsed"></button>
+                    <button type="button" class="collpase-button collapsed" [disabled]="soloLectura"></button>
                   </div> @if(paisProcedencisColapsable){ <div class="panel-collapse collapse in" id="panel-01">
                     <div class="panel-body">
                       <crosslist [label]="paisProcedencisCrossList.label" [fechas]="paisProcedencisCrossList.fechas"></crosslist>
@@ -277,7 +277,7 @@
             <div class="row mt-5">
               <div class="col-md-8 mt-3">
                 <label class="form-label">Clave de los lotes*:</label>
-                <input class="form-control" type="text" formControlName="claveLote" (change)="setValoresStore(validacionDatosMercanciaForm,'claveLote', 'setClaveLote')" />
+                <input class="form-control" type="text" formControlName="claveLote" [disabled]="soloLectura" (change)="setValoresStore(validacionDatosMercanciaForm,'claveLote', 'setClaveLote')" />
               </div>
             </div>
             <div class="row mt-5">
@@ -294,13 +294,13 @@
               <label class="form-label" for="">Lista Claves de los lotes*:</label>
             </div>
             <div class="col-md-8 mt-3" style="margin-left: 155px">
-              <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="listaClave" [datos]="listaClaveTabla" (change)="setValoresStore(validacionDatosMercanciaForm,'listaClave', 'setListaClave')"></app-tabla-dinamica>
+              <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [configuracionTabla]="listaClave" [datos]="listaClaveTabla" [disableSeleccionTablaCheckBox]="soloLectura? true : false" (change)="setValoresStore(validacionDatosMercanciaForm,'listaClave', 'setListaClave')"></app-tabla-dinamica>
             </div>
             <div class="col-md-12 d-flex justify-content-end align-items-end">
               <div class="btn-group">
-                <button type="button" class="btn btn-default btn-space"> Modificar </button>
-                <button class="btn btn-danger ms-3" type="button"> Eliminar </button>
-                <button type="button" class="btn btn-primary ms-3"> Agregar </button>
+                <button type="button" class="btn btn-default btn-space" [disabled]="soloLectura"> Modificar </button>
+                <button class="btn btn-danger ms-3" type="button" [disabled]="soloLectura"> Eliminar </button>
+                <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura"> Agregar </button>
               </div>
             </div>
             <div class="col-md-12 mt-4">
@@ -308,7 +308,7 @@
                 <div class="panel panel-default">
                   <div class="panel-heading" (click)="usoEspecificoColapsable()" tabindex="0">
                     <h4 class="panel-title">Uso especifico</h4>
-                    <button type="button" class="collpase-button collapsed"></button>
+                    <button type="button" class="collpase-button collapsed" [disabled]="soloLectura"></button>
                   </div> @if(usoEspecifico){ <div class="panel-collapse collapse in" id="panel-01">
                     <div class="panel-body">
                       <crosslist [fechas]="usoEspecificoCrossList.fechas" [label]="usoEspecificoCrossList.label"></crosslist>
@@ -319,8 +319,8 @@
             </div>
             <div class="col-md-12 mb-5 d-flex justify-content-end align-items-end">
               <div class="btn-group">
-                <button class="btn btn-default ms-3" type="button"> Cancelar </button>
-                <button type="button" class="btn btn-primary ms-3" data-bs-dismiss="modal" (click)="agregarMercanias()"> Modificar </button>
+                <button class="btn btn-default ms-3" type="button" [disabled]="soloLectura"> Cancelar </button>
+                <button type="button" class="btn btn-primary ms-3" data-bs-dismiss="modal" (click)="agregarMercanias()" [disabled]="soloLectura"> Modificar </button>
               </div>
             </div>
           </div>
@@ -334,7 +334,7 @@
   <div class="alert alert-info">
     <label style="font-weight: normal">
       <div class="col-md-1 mt-5">
-        <input type="checkbox" class="mt-5" formControlName="manfestosYDeclaraciones" (change)="setValoresStore(datosDelEstablecimientoForm,'manfestosYDeclaraciones', 'setManfestosYDeclaraciones')" />
+        <input type="checkbox" class="mt-5" formControlName="manfestosYDeclaraciones" [disabled]="soloLectura" (change)="setValoresStore(datosDelEstablecimientoForm,'manfestosYDeclaraciones', 'setManfestosYDeclaraciones')" />
         <b> *</b>
       </div>
       <div class="col-md-11 mt-4">{{ AVISO_PRIVACIDAD.TEXTO_DE_ALERTA }}</div>
@@ -342,30 +342,30 @@
   </div>
   <div class="col-md-12 mt-4">
     <label class="form-label" for="">Los datos o anexos pueden contener información confidencial ¿Está de acuerdo en hacerlos públicos?*:</label>
-    <app-input-radio [radioOptions]="opcionesRadioHacerlos" [selectedValue]="hercelosSeleccionados" [layout]="'horizontal'" formControlName="hacerlosPublicos" (change)="setValoresStore(datosDelEstablecimientoForm,'hacerlosPublicos', 'setHacerlosPublicos')"></app-input-radio>
+    <app-input-radio [radioOptions]="opcionesRadioHacerlos" [selectedValue]="hercelosSeleccionados" [layout]="'horizontal'" formControlName="hacerlosPublicos" [disabled]="soloLectura" (change)="setValoresStore(datosDelEstablecimientoForm,'hacerlosPublicos', 'setHacerlosPublicos')"></app-input-radio>
   </div>
   <ng-titulo titulo="Representante legal" />
   <div class="row mt-5">
     <div class="col-md-4 mt-2">
       <label class="form-label" for="rfc">RFC*:</label>
-      <input class="form-control" type="text" formControlName="rfc" (change)="setValoresStore(datosDelEstablecimientoForm,'rfc', 'setRFC')" />
+      <input class="form-control" type="text" formControlName="rfc"[disabled]="soloLectura"  (change)="setValoresStore(datosDelEstablecimientoForm,'rfc', 'setRFC')" />
     </div>
     <div class="col-md-2 mt-5">
-      <button type="button" class="btn btn-primary">Buscar</button>
+      <button type="button" class="btn btn-primary" [disabled]="soloLectura">Buscar</button>
     </div>
   </div>
   <div class="row mt-5">
     <div class="col-md-4 mt-4">
       <label class="form-label" for="legalRazonSocial">Nombre o Razón Social*:</label>
-      <input class="form-control gris-color" type="text" readonly />
+      <input class="form-control gris-color" type="text" formControlName="nombreRazon" readonly />
     </div>
     <div class="col-md-4 mt-4">
       <label class="form-label" for="apellidoPaterno">Apellido paterno*:</label>
-      <input class="form-control gris-color" type="text" readonly />
+      <input class="form-control gris-color" type="text" formControlName="apellidoPaterno" readonly />
     </div>
     <div class="col-md-4 mt-4">
       <label class="form-label" for="apellidoMaterno">Apellido materno:</label>
-      <input class="form-control gris-color" type="text" readonly />
+      <input class="form-control gris-color" type="text" formControlName="apellidoMaterno" readonly />
     </div>
   </div>
 </form>

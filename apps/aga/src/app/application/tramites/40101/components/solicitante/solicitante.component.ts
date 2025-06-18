@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import mockData from '@libs/shared/theme/assets/json/40101/solicitante-mockdata.json';
-
 /**
  * Componente para gestionar el formulario del solicitante.
  */
@@ -21,10 +20,8 @@ export class SolicitanteComponent implements OnInit {
    * @param fb - Servicio FormBuilder para crear formularios reactivos.
    */
   // eslint-deshabilitar-la-siguiente-línea-sin-función-vacía
-  constructor(private fb: FormBuilder) {/**
-    * Constructor para inyectar las dependencias necesarias.
-    * @param fb - Servicio FormBuilder para crear formularios reactivos.
-    */}
+  // eslint-disable-next-line no-empty-function
+  constructor(private fb: FormBuilder) { }
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -65,7 +62,7 @@ export class SolicitanteComponent implements OnInit {
    * Este método asume que `mockData` contiene los campos necesarios
    * y que `solicitudForm` está correctamente inicializado.
    */
-  setFormValues():void {
+  setFormValues(): void {
     this.solicitudForm.get('rfc')?.setValue(mockData.rfc);
     this.solicitudForm.get('denominacion')?.setValue(mockData.denominacion);
     this.solicitudForm.get('actividadEconomica')?.setValue(mockData.actividadEconomica);
