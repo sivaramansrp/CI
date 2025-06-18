@@ -298,6 +298,7 @@
         [id]="'avisoCheckbox'"
         [required]="true"
         formControlName="avisoCheckbox"
+         [isDisabled]="esFormularioSoloLectura"
         (change)="toggleNoLicenciaSanitaria($event); enControlCambioFormulario('avisoCheckbox')"
       ></lib-input-check>
       </div>
