@@ -29,10 +29,10 @@ export class PermisoImmexDatosService {
   /**
    * @method getDatos
    * @description Obtiene los datos del permiso IMMEX desde el archivo JSON.
-   * @returns {Observable<any[]>} Observable que emite los datos del permiso IMMEX.
+   * @returns {Observable<unknown[]>} Observable que emite los datos del permiso IMMEX.
    */
-  getDatos(): Observable<any> {
-    return this.httpClient.get<any[]>(this.jsonUrl).pipe(
+  getDatos(): Observable<unknown> {
+    return this.httpClient.get<unknown[]>(this.jsonUrl).pipe(
     );
   }  
   /**
