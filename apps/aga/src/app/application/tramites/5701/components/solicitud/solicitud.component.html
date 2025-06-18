@@ -8,6 +8,9 @@
         formControlName="tipoSolicitud"
         [label]="'Tipo de solicitud'"
         [required]="true"
+        [primerOptionValue]="SIN_VALOR"
+        [hiddenPrimerOption]="false"
+        [disabledPrimerOption]="false"
         name="tipoSolicitud"
         (change)="tipoSolicitudSeleccion()"
       ></app-catalogo-select>
@@ -46,6 +49,9 @@
           [id]="'empresaApoderado'"
           [required]="true"
           name="empresaApoderado"
+          [primerOptionValue]="SIN_VALOR"
+          [hiddenPrimerOption]="false"
+          [disabledPrimerOption]="false"
         ></app-catalogo-select>
       </div>
 
@@ -58,6 +64,9 @@
           [id]="'empresasApoderado'"
           [required]="true"
           name="empresasApoderado"
+          [primerOptionValue]="SIN_VALOR"
+          [hiddenPrimerOption]="false"
+          [disabledPrimerOption]="false"
         ></app-catalogo-select>
         <span
           id="errorEmpresasApoderado"
@@ -469,9 +478,7 @@
             class="form-control"
             formControlName="folioDDEX"
             placeholder=""
-            (change)="
-              changeFolioDDEX()
-            "
+            (blur)="changeFolioDDEX()"
             [ngClass]="isValid(despacho, 'folioDDEX') ? 'required' : ''"
           />
 
@@ -507,6 +514,12 @@
             {{ aduana.descripcion }}
           </option>
         </select>
+        <div
+          *ngIf="isErrorNoMenosUno(despacho, 'idAduanaDespacho')"
+          class="mensaje-error"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
       <div class="col-md-4">
         <div>
@@ -557,6 +570,9 @@
           [label]="'Tipo despacho'"
           [required]="false"
           [isDisabled]="activarCatalogoDespacho"
+          [primerOptionValue]="SIN_VALOR"
+          [hiddenPrimerOption]="false"
+          [disabledPrimerOption]="false"
           (change)="changeTipoDespacho()"
         ></app-catalogo-select>
       </div>
@@ -568,6 +584,9 @@
           [label]="'Tipo de operación'"
           [required]="true"
           [isDisabled]="!activarCatalogoTipoOperacion"
+          [primerOptionValue]="SIN_VALOR"
+          [hiddenPrimerOption]="false"
+          [disabledPrimerOption]="false"
           (change)="
             setValoresStore(despacho, 'tipoOperacion', 'setTipoOperacion')
           "

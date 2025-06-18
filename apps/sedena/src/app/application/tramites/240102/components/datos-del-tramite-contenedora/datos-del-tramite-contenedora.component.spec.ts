@@ -1,3 +1,4 @@
+import { ActivatedRoute } from '@angular/router';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosDelTramiteContenedoraComponent } from './datos-del-tramite-contenedora.component';
 
@@ -8,6 +9,9 @@ describe('DatosDelTramiteContenedoraComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [DatosDelTramiteContenedoraComponent],
+      providers: [
+        { provide: ActivatedRoute, useValue: { snapshot: {}, params: {}, queryParams: {} } }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(DatosDelTramiteContenedoraComponent);

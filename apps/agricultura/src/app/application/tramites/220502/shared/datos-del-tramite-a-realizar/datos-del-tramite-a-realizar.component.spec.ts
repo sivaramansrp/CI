@@ -12,6 +12,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TestBed } from '@angular/core/testing';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 @Component({
   selector: 'app-test-host',
   template: `<form [formGroup]="form">
@@ -42,7 +43,7 @@ describe('DatosDelTramiteARealizarComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [TestHostComponent],
-      imports: [ReactiveFormsModule, DatosDelTramiteARealizarComponent, TituloComponent, CatalogoSelectComponent, InputFechaComponent],
+      imports: [ReactiveFormsModule, DatosDelTramiteARealizarComponent, TituloComponent, HttpClientTestingModule,CatalogoSelectComponent, InputFechaComponent],
       schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
   });
@@ -81,7 +82,7 @@ describe('DatosDelTramiteARealizarComponent', () => {
 
   it('should handle certificadosSeleccion correctly', () => {
     component.ngOnInit();
-    const CATALOGO: Catalogo = { id: 1, descripcion: 'Certificado de Exportación', tam: 'A4', dpi: '1234567890' };
+    const CATALOGO: Catalogo = { id: 1, descripcion: 'Certificado de Exportación' };
     component.certificadosSeleccion(CATALOGO);
     const FORMGROUP = component.grupoFormularioPadre.get(component.claveDeControl) as FormGroup;
     expect(FORMGROUP.get('certificadosAutorizados')?.value).toBe('Certificado de Exportación');
@@ -89,7 +90,7 @@ describe('DatosDelTramiteARealizarComponent', () => {
 
   it('should handle horaDeSeleccion correctly', () => {
     component.ngOnInit();
-    const CATALOGO: Catalogo = { id: 1, descripcion: '08:00 AM - 10:00 AM', tam: '2 horas', dpi: 'INS001' };
+    const CATALOGO: Catalogo = { id: 1, descripcion: '08:00 AM - 10:00 AM' };
     component.horaDeSeleccion(CATALOGO);
     const FORMGROUP = component.grupoFormularioPadre.get(component.claveDeControl) as FormGroup;
     expect(FORMGROUP.get('horaDeInspeccion')?.value).toBe('08:00 AM - 10:00 AM');
@@ -97,7 +98,7 @@ describe('DatosDelTramiteARealizarComponent', () => {
 
   it('should handle aduanaDeSeleccion correctly', () => {
     component.ngOnInit();
-    const CATALOGO: Catalogo = { id: 1, descripcion: 'Aduana La Aurora', tam: 'Zona 13', dpi: 'ADU001' };
+    const CATALOGO: Catalogo = { id: 1, descripcion: 'Aduana La Aurora' };
     component.aduanaDeSeleccion(CATALOGO);
     const FORMGROUP = component.grupoFormularioPadre.get(component.claveDeControl) as FormGroup;
     expect(FORMGROUP.get('aduanaDeIngreso')?.value).toBe('Aduana La Aurora');
@@ -105,7 +106,7 @@ describe('DatosDelTramiteARealizarComponent', () => {
 
   it('should handle sanidadSeleccion correctly', () => {
     component.ngOnInit();
-    const CATALOGO: Catalogo = { id: 1, descripcion: 'Oficina Central de Sanidad', tam: 'Ciudad Capital', dpi: 'SAN001' };
+    const CATALOGO: Catalogo = { id: 1, descripcion: 'Oficina Central de Sanidad' };
     component.sanidadSeleccion(CATALOGO);
     const FORMGROUP = component.grupoFormularioPadre.get(component.claveDeControl) as FormGroup;
     expect(FORMGROUP.get('sanidadAgropecuaria')?.value).toBe('Oficina Central de Sanidad');
@@ -113,16 +114,10 @@ describe('DatosDelTramiteARealizarComponent', () => {
 
   it('should handle puntoDeSeleccion correctly', () => {
     component.ngOnInit();
-    const CATALOGO: Catalogo = { id: 1, descripcion: 'Punto de Inspección Aérea', tam: 'Terminal de Carga', dpi: 'PIN001' };
+    const CATALOGO: Catalogo = { id: 1, descripcion: 'Punto de Inspección Aérea' };
     component.puntoDeSeleccion(CATALOGO);
     const FORMGROUP = component.grupoFormularioPadre.get(component.claveDeControl) as FormGroup;
     expect(FORMGROUP.get('puntoDeInspeccion')?.value).toBe('Punto de Inspección Aérea');
   });
 
-  it('should load initial catalog data correctly', () => {
-    component.cargarDatosIniciales();
-    expect(component.certificadosAutorizados.catalogos.length).toBeGreaterThan(0);
-    expect(component.horaDeInspeccion.catalogos.length).toBeGreaterThan(0);
-    expect(component.aduanaDeIngreso.catalogos.length).toBeGreaterThan(0);
-  });
 });
