@@ -2436,6 +2436,15 @@
     "diasTranscurridos": "4",
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260302"
+  },
+  {
+    "id": 40202,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2025-06-17",
+    "fechaActualizacion": "2025-06-17",
+    "diasTranscurridos": "4",
+    "departamento": "AGA",
+    "numeroDeProcedimiento": "40202"
   }
  
 ]

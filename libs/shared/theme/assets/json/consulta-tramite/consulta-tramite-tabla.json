@@ -1118,5 +1118,14 @@
         "diasTranscurridos": "4",
         "departamento": "SEMARNAT",
         "numeroDeProcedimiento": "230301"
+    },
+    {
+        "id": "40202",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2025-06-17",
+        "fechaActualizacion": "2025-06-17",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "40202"
     }
 ]
