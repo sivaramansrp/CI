@@ -5,8 +5,9 @@ import {
   Facturador,
   Proveedor,
 } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260102Query } from '../../estados/queries/tramite260102Query.query';
 import { Tramite260102Store } from '../../estados/stores/tramite260102Store.store';
@@ -56,16 +57,30 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   private destroy$ = new Subject<void>();
 
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  public esFormularioSoloLectura: boolean = false; 
+  /**
+* @property idProcedimiento
+* @description Identificador numérico del trámite o procedimiento en curso.
+* @type {number}
+* @readonly
+*/
+  public readonly idProcedimiento: number = 260102;
   /**
    * @constructor
    * Inyecta los servicios necesarios para consultar y actualizar el estado del trámite.
    *
    * @param tramiteStore - Store que gestiona el estado de los datos del trámite.
    * @param tramiteQuery - Servicio de consulta que expone observables para leer los datos del store.
+   * @param consultaQuery - Servicio de consulta para obtener datos adicionales relacionados con el trámite.
    */
   constructor(
     private tramiteStore: Tramite260102Store,
-    private tramiteQuery: Tramite260102Query
+    private tramiteQuery: Tramite260102Query,
+    private consultaQuery: ConsultaioQuery
   ) { }
 
   /**
@@ -97,6 +112,15 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.facturadorTablaDatos = data;
       });
+
+    this.consultaQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroy$),
+            map((seccionState) => {
+              this.esFormularioSoloLectura = seccionState.readonly;
+            })
+          )
+          .subscribe();
   }
 
   /**

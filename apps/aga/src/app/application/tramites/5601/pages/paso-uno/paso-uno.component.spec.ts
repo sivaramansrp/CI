@@ -9,7 +9,12 @@ describe('PasoUnoComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PasoUnoComponent],
-      schemas: [NO_ERRORS_SCHEMA]
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [],
+      imports: [
+        // Import HttpClientTestingModule to provide HttpClient and its dependencies
+        require('@angular/common/http/testing').HttpClientTestingModule
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
