@@ -386,7 +386,8 @@
               </h4>
               <button
                 type="button"
-                class="collpase-button collapsed"
+                class="collpase-button"
+                [ngClass]="colapsable ? 'collapsed' : ''"
                 title="Colapsable"
               ></button>
             </div>
