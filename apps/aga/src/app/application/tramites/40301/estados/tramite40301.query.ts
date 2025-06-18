@@ -1,16 +1,25 @@
-import { Solicitud40301State, Solicitud40301Store } from './tramite40301.store';
+import { Tramite40301State, Tramite40301Store } from './tramite40301.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
 /**
- * # Documentación - Solicitud40301Query
+ * # Documentación - Tramite40301Query
  *
  * ## Descripción
- * `Solicitud40301Query` es una clase que extiende `Query` de Akita y permite seleccionar observables específicos del estado `Solicitud40301State`.
+ * `Tramite40301Query` es una clase que extiende `Query` de Akita y permite seleccionar observables específicos del estado `Tramite40301State`.
  */
 @Injectable({ providedIn: 'root' })
-export class Solicitud40301Query extends Query<Solicitud40301State> {
+export class Tramite40301Query extends Query<Tramite40301State> {
   
+  /**
+   * Observable que selecciona el estado completo del trámite.
+   *
+   * Este observable emite el estado actual del trámite 40401.
+   */
+  selectSolicitud$ = this.select((state) => {
+    return state;
+  });
+
   /**
    * ## Propiedad: selectedDirectorGeneralNombre$
    * Observable que selecciona el nombre del director general del estado.
@@ -31,12 +40,12 @@ export class Solicitud40301Query extends Query<Solicitud40301State> {
 
   /**
    * ## Constructor
-   * Inicializa la clase con la tienda `Solicitud40301Store` para gestionar las consultas al estado.
+   * Inicializa la clase con la tienda `Tramite40301Store` para gestionar las consultas al estado.
    *
    * #### Parámetros
-   * - **store**: La tienda que contiene el estado `Solicitud40301State`.
+   * - **store**: La tienda que contiene el estado `Tramite40301State`.
    */
-  constructor(protected override store: Solicitud40301Store) {
+  constructor(protected override store: Tramite40301Store) {
     super(store);
   }
 }
