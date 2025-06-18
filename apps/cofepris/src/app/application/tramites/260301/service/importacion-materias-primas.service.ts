@@ -17,6 +17,13 @@ export class ImportacionMateriasPrimasService {
    */
   private jsonUrl = 'assets/json/260301/';
 
+  /**
+   * @constructor
+   * @param httpServicios Servicio HTTP inyectado para realizar peticiones a la API.
+   * @param store Almacén de estado específico para el trámite 260301.
+   * 
+   * Constructor necesario para inyectar el servicio HttpClient y el store del trámite.
+   */
   constructor(public httpServicios: HttpClient, private store: Tramite260301Store ) {
     // Constructor necesario para inyectar el servicio HttpClient
   }
