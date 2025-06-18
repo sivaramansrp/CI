@@ -478,7 +478,7 @@
             class="form-control"
             formControlName="folioDDEX"
             placeholder=""
-            (change)="changeFolioDDEX()"
+            (blur)="changeFolioDDEX()"
             [ngClass]="isValid(despacho, 'folioDDEX') ? 'required' : ''"
           />
 
@@ -514,6 +514,12 @@
             {{ aduana.descripcion }}
           </option>
         </select>
+        <div
+          *ngIf="isErrorNoMenosUno(despacho, 'idAduanaDespacho')"
+          class="mensaje-error"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
       <div class="col-md-4">
         <div>
