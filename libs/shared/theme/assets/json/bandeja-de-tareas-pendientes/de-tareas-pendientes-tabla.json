@@ -5366,16 +5366,6 @@
     "numeroDeProcedimiento": "90101",
     "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
   },
-  {
-    "folioTramite": "4321098746230987462310487",
-    "tipoDeTramite": "Expedición de Certificados de Cupo Licitación pública",
-    "nombreDeLaTarea": "Revisión de presupuesto",
-    "fechaDeAsignacion": "2023-10-09",
-    "estadoDeTramite": "Completado",
-    "departamento": "se",
-    "numeroDeProcedimiento": "90101",
-    "origin": "READ_PROCEDURE"
-},
 {
     "folioTramite": "1245983214785236478351234",
     "tipoDeTramite": "Expedición de Certificados de Cupo Licitación pública",
@@ -9757,16 +9747,6 @@
     "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
   },
   {
-    "folioTramite": "4321098746230987462110204",
-    "tipoDeTramite": "Expedición de Certificados de Cupo Licitación pública",
-    "nombreDeLaTarea": "Revisión de presupuesto",
-    "fechaDeAsignacion": "2023-10-09",
-    "estadoDeTramite": "Completado",
-    "departamento": "se",
-    "numeroDeProcedimiento": "110204",
-    "origin": "READ_PROCEDURE"
-  },
-  {
     "folioTramite": "0215523965732296454156770",
     "tipoDeTramite": "Solicitud de Proceso Interno",
     "nombreDeLaTarea": "Evaluar solicitud",
@@ -11095,16 +11075,6 @@
     "departamento": "agace",
     "numeroDeProcedimiento": "317",
     "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
-  },
-  {
-    "folioTramite": "099226136147361192232509",
-    "tipoDeTramite": "Registro de solicitud de servicio",
-    "nombreDeLaTarea": "Revisión de presupuesto",
-    "fechaDeAsignacion": "2023-10-09",
-    "estadoDeTramite": "Completado",
-    "departamento": "agace",
-    "numeroDeProcedimiento": "32509",
-    "origin": "READ_PROCEDURE"
   },
   {
     "folioTramite": "0215523965732296454156770",
@@ -14439,16 +14409,6 @@
     "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
   },
   {
-    "folioTramite": "099226136147361192260304",
-    "tipoDeTramite": "Registro de solicitud de servicio",
-    "nombreDeLaTarea": "Revisión de presupuesto",
-    "fechaDeAsignacion": "2023-10-09",
-    "estadoDeTramite": "Completado",
-    "departamento": "cofepris",
-    "numeroDeProcedimiento": "260304",
-    "origin": "READ_PROCEDURE"
-  },
-    {
     "folioTramite": "0215523965732296454156770",
     "tipoDeTramite": "Solicitud de Proceso Interno",
     "nombreDeLaTarea": "Evaluar solicitud",
@@ -15359,16 +15319,6 @@
     "departamento": "cofepris",
     "numeroDeProcedimiento": "260301",
     "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
-  },
-  {
-    "folioTramite": "099226136147361192260301",
-    "tipoDeTramite": "Registro de solicitud de servicio",
-    "nombreDeLaTarea": "Revisión de presupuesto",
-    "fechaDeAsignacion": "2023-10-09",
-    "estadoDeTramite": "Completado",
-    "departamento": "cofepris",
-    "numeroDeProcedimiento": "260301",
-    "origin": "READ_PROCEDURE"
   },
   {
     "folioTramite": "09762384509237564",
