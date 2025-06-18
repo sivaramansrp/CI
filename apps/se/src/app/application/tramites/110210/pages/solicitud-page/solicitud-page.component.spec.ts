@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { SolicitudPageComponent } from './solicitud-page.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
-
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 describe('SolicitudPageComponent', () => {
   let component: SolicitudPageComponent;
   let fixture: ComponentFixture<SolicitudPageComponent>;
@@ -10,6 +10,7 @@ describe('SolicitudPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [SolicitudPageComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
   });
 

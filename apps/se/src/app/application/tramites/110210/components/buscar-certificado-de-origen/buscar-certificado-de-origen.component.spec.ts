@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { BuscarCertificadoDeOrigenComponent } from './buscar-certificado-de-origen.component';
 
 describe('BuscarCertificadoDeOrigenComponent', () => {
@@ -13,6 +15,10 @@ describe('BuscarCertificadoDeOrigenComponent', () => {
         BuscarCertificadoDeOrigenComponent,
         ReactiveFormsModule,
         CommonModule,
+        HttpClientTestingModule,
+      ],
+      providers: [
+        provideHttpClientTesting()
       ],
     }).compileComponents();
   });
@@ -32,6 +38,7 @@ describe('BuscarCertificadoDeOrigenComponent', () => {
     expect(component.buscarCertificadoDeOrigenFrom.get('cveRegistroProductor')?.value).toBe('');
     expect(component.buscarCertificadoDeOrigenFrom.get('solicitud.idSolicitud')?.value).toBeNull();
     expect(component.buscarCertificadoDeOrigenFrom.get('solicitud.idSolicitudProductor')?.value).toBe('');
+    expect(component.paisBloque).toBeFalsy()
   });
 
   it('should return true if a control is invalid', () => {

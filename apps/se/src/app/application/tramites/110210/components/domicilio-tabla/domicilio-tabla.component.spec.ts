@@ -8,13 +8,13 @@ import { DomicilioTablaService } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
 
 describe('DomicilioTablaComponent', () => {
-  let component: DomicilioTablaComponent;
-  let fixture: ComponentFixture<DomicilioTablaComponent>;
+  let component: DomicilioTablaComponent<any>;
+  let fixture: ComponentFixture<DomicilioTablaComponent<any>>;
   let service: DomicilioTablaService;
 
   beforeEach(async () => {
     const SERVICE_MOCK = {
-      getData: jest.fn().mockReturnValue(of({ key: 'value' })),
+      getData: jest.fn().mockReturnValue(of([['value']])),
     };
 
     await TestBed.configureTestingModule({
@@ -28,6 +28,7 @@ describe('DomicilioTablaComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(DomicilioTablaComponent);
     component = fixture.componentInstance;
+    component.datosTabla = []; 
     fixture.detectChanges();
   });
 
@@ -43,7 +44,7 @@ describe('DomicilioTablaComponent', () => {
   it('should fetch data on init', () => {
     component.ngOnInit();
     expect(service.getData).toHaveBeenCalled();
-    expect(component.datosTabla).toEqual({ key: 'value' });
+    expect(component.datosTabla).toEqual([['value']]);
   });
 
   it('should complete destroyed$ subject on destroy', () => {

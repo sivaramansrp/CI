@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DuplicadoDeCertificadoComponent } from './duplicado-de-certificado.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('DuplicadoDeCertificadoComponent', () => {
   let component: DuplicadoDeCertificadoComponent;
@@ -8,6 +9,7 @@ describe('DuplicadoDeCertificadoComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [DuplicadoDeCertificadoComponent],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA],
     }).compileComponents();
   });
 

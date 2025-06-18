@@ -8,13 +8,13 @@ import { CertificadoDisponiblesService } from '@ng-mf/data-access-user';
 import { of } from 'rxjs';
 
 describe('CertificadoDisponiblesComponent', () => {
-  let component: CertificadoDisponiblesComponent;
-  let fixture: ComponentFixture<CertificadoDisponiblesComponent>;
+  let component: CertificadoDisponiblesComponent<any>;
+  let fixture: ComponentFixture<CertificadoDisponiblesComponent<any>>;
   let service: CertificadoDisponiblesService;
 
   beforeEach(async () => {
     const SERVICE_MOCK = {
-      getData: jest.fn().mockReturnValue(of({ key: 'value' })),
+      getData: jest.fn().mockReturnValue(of([{ key: 'value' }])),
     };
 
     await TestBed.configureTestingModule({
@@ -43,7 +43,7 @@ describe('CertificadoDisponiblesComponent', () => {
   it('should fetch data on init', () => {
     component.ngOnInit();
     expect(service.getData).toHaveBeenCalled();
-    expect(component.datosTabla).toEqual({ key: 'value' });
+    expect(component.datosTabla).toEqual([{ key: 'value' }]);
   });
 
   it('should complete destroyed$ subject on destroy', () => {

@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import mockData from 'libs/shared/theme/assets/json/110210/datos-del-certificado.json';
+import * as mockDataRaw from 'libs/shared/theme/assets/json/110210/datos-del-certificado.json';
+const mockData = (mockDataRaw as any).default || mockDataRaw;
 
 import { DatosDelCertificadoComponent } from './datos-del-certificado.component';
 
