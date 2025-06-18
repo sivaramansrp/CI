@@ -11,6 +11,30 @@ import { Subject } from 'rxjs';
  * Servicio que centraliza la comunicación entre componentes a través de mensajes observables.
  * También interactúa con el store para gestionar y actualizar los datos del formulario de desistimiento.
  */
+/**
+ * Servicio para la gestión y comunicación de mensajes entre componentes relacionados con trámites.
+ * 
+ * Este servicio proporciona mecanismos para emitir y suscribirse a mensajes generales, 
+ * controlar la visualización de la sección de devolución de facturas, manejar el estado 
+ * de los datos de permiso y actualizar el estado del formulario de desistimiento a través 
+ * de un store dedicado. Además, permite obtener datos simulados para el registro de toma 
+ * de muestras de mercancías mediante una solicitud HTTP a recursos locales.
+ * 
+ * @remarks
+ * Utiliza `BehaviorSubject` y `Subject` para la emisión de eventos y observables para la suscripción.
+ * Inyecta un store especializado para la gestión del estado del formulario de desistimiento.
+ * 
+ * @example
+ * ```typescript
+ * constructor(private mensajesService: ServicioDeMensajesService) {}
+ * 
+ * this.mensajesService.mensaje$.subscribe(valor => {
+ *   // Lógica para reaccionar ante cambios de mensaje
+ * });
+ * 
+ * this.mensajesService.enviarMensaje(true);
+ * ```
+ */
 @Injectable({
   providedIn: 'root'
 })
@@ -113,11 +137,10 @@ export class ServicioDeMensajesService {
     return this.http.get<PermisosDatos>('assets/json/140104/permisosCancelar.json');
   }
 
-  /**
- * Actualiza el estado del formulario con los datos proporcionados.
- * 
- * @param DATOS - Estado de la solicitud `Solicitud230401State` con la información 
- *                del tipo de solicitud a actualizar en el store.
+/**
+ * Actualiza el estado del formulario en el store de desistimiento con los datos proporcionados.
+ *
+ * @param DATOS - Un objeto parcial de tipo `CuposDisponiblesDatos` que contiene los datos a actualizar en el estado.
  */
 actualizarEstadoFormulario(DATOS: Partial<CuposDisponiblesDatos>): void {
   this.desistimientoStore.update((state) => ({
