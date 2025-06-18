@@ -8,6 +8,9 @@ import { Injectable } from '@angular/core';
  */
 export interface FederatoriosState {
  [key: string]: unknown;
+ estadoDos: string;
+  representacionFederal: string;
+  actividadProductiva: string;
   
 }
 
@@ -16,7 +19,11 @@ export interface FederatoriosState {
  * @returns {FederatoriosState} El estado inicial con valores vacíos para cada propiedad.
  */
 export function createInitialState(): FederatoriosState {
-    return {};
+    return {
+          estadoDos: '',
+    representacionFederal: '',
+    actividadProductiva: '',
+    };
 }
 
 /**
@@ -46,5 +53,24 @@ export class FederatoriosStore extends Store<FederatoriosState> {
       [fieldName]: value,
     }));
   }
+  public setEstadoDos(estadoDos: string): void {
+  this.update((state) => ({
+    ...state,
+    estadoDos,
+  }));
+}
+
+public setRepresentacionFederal(representacionFederal: string): void {
+  this.update((state) => ({
+    ...state,
+    representacionFederal,
+  }));
+}
+public setActividadProductiva(actividadProductiva: string): void {
+  this.update((state) => ({
+    ...state,
+    actividadProductiva,
+  }));
+}
 
 }

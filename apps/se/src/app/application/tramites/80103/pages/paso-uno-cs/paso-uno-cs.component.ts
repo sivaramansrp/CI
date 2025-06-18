@@ -159,6 +159,16 @@ export class PasoUnoCsComponent implements OnInit {
         this.Solocitud80103Service.actualizarEstadoFormulariosss(resp);
         }
       });
+        this.Solocitud80103Service
+      .getRegistroTomaMuestrasMercanciasDatassss().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.Solocitud80103Service.actualizarEstadoFormulariossss(resp);
+        }
+      });
   }
   
 }

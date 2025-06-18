@@ -2,14 +2,14 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 
 import { COMPLEMENTO_DE_PLANTA } from '../../constantes/complementar-planta.enum';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src'
+import { TablaSeleccion } from '@libs/shared/data-access-user/src'
+import { TituloComponent } from '@libs/shared/data-access-user/src'
 import { ComplementarQuery } from '../../../estados/queries/complementar.query';
 import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
 import { map, Subject, takeUntil } from 'rxjs';

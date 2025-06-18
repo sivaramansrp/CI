@@ -60,7 +60,8 @@
         </div>
       </div>
     </div>
-  
+    <form [formGroup]="plantasForm">
+      <div class="form">
   <div class="row">
     <div class="col">
       <div class="row">
@@ -73,7 +74,7 @@
           <div class="row">
             <div class="col-md-4">
               <app-catalogo-select [catalogo]="estadoOptions" [label]="'Estado'" [required]="true"
-                name="estado"></app-catalogo-select>
+                name="estado"  formControlName="estadoDos" (change)="setValoresStore(plantasForm, 'estadoDos', 'setEstadoDos')"></app-catalogo-select>
             </div>
           </div>
           <div class="row">
@@ -171,18 +172,23 @@
           <div class="row mt-5">
             <div class="col-md-4">
               <app-catalogo-select [catalogo]="estadoOptions" [label]="'Representación federal*'" [required]="true"
-                name="estado"></app-catalogo-select>
+                name="estado" formControlName="representacionFederal"
+              (change)="setValoresStore(plantasForm, 'representacionFederal', 'setRepresentacionFederal')"></app-catalogo-select>
             </div>
             <div class="col-md-4">
-              <app-catalogo-select [catalogo]="estadoOptions" [label]="'Actividad productiva'" [required]="true"
-                name="estado"></app-catalogo-select>
+              <app-catalogo-select [catalogo]="estadoOptions" [label]="'Actividad productiva'" [required]="true" formControlName="actividadProductiva"
+               (change)="setValoresStore(plantasForm, 'actividadProductiva', 'setActividadProductiva')"></app-catalogo-select>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-</div>
+    </div>
+      </div>
+    </form>
+    </div>
+
+
 <div class="modal fade" id="complementarPlanta" tabindex="-1" aria-labelledby="modalAgregarMercanciasLabel"
   aria-hidden="true">
   <div class="modal-dialog">

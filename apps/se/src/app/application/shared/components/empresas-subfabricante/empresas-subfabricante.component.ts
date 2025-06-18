@@ -5,7 +5,7 @@ import {
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
-} from '@ng-mf/data-access-user';
+} from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, OnInit } from '@angular/core';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import {
@@ -23,6 +23,9 @@ import { DetallesPlantasComponent } from '../detalles-plantas/detalles-plantas.c
 import { Modal } from 'bootstrap';
 import { Router } from '@angular/router';
 import { map, Subject, takeUntil } from 'rxjs';
+import { Tramite80101State, Tramite80101Store } from '../../../tramites/80103/estados/tramite80101.store';
+import { Tramite80101Query } from '../../../tramites/80103/estados/tramite80101.query';
+
 
 @Component({
   selector: 'empresass-subfabricante',
@@ -61,7 +64,10 @@ export class EmpresasSubfabricantesComponent implements OnInit {
    * @description Esta propiedad privada contiene un array de objetos `Catalogo`, que representan los diferentes estados disponibles.
    */
   private _estadoCatalogo: Catalogo[] = [];
-
+ /**
+   * Estado de la solicitud 221601, que contiene los valores actuales de la solicitud.
+   */
+  public solicitudState!: Tramite80101State;
   /**
    * Datos de las plantas subfabricantes disponibles. Esta propiedad almacena las plantas que están disponibles para el proceso.
    * @property {PlantasSubfabricante[]} _datosTablaSubfabricantesDisponibles
@@ -282,7 +288,8 @@ export class EmpresasSubfabricantesComponent implements OnInit {
    * Constructor para inicializar el formulario de datos del subcontratista.
    * @param fb - FormBuilder para la creación del formulario reactivo.
    */
-  constructor(private fb: FormBuilder, private router: Router,private consultaioQuery: ConsultaioQuery,  
+  constructor(private fb: FormBuilder, private router: Router,private consultaioQuery: ConsultaioQuery, public query: Tramite80101Query,
+      private store: Tramite80101Store 
   ) { 
        this.consultaioQuery.selectConsultaioState$
       .pipe(
@@ -340,9 +347,17 @@ export class EmpresasSubfabricantesComponent implements OnInit {
    * @description Este método configura el formulario de datos del subcontratista con los campos `rfc` y `estado`, ambos con validación requerida.
    */
   inicializarFormularioDatosSubcontratista(): void {
+      this.query.selectSolicitud$
+              .pipe(
+                takeUntil(this.destroyNotifier$),
+                map((seccionState) => {
+                  this.solicitudState = seccionState as Tramite80101State;
+                })
+              )
+              .subscribe();
     this._formularioDatosSubcontratista = this.fb.group({
-      rfc: ['', Validators.required],
-      estado: ['', Validators.required],
+      rfc: [this.solicitudState.empressaSubFabricantePlantas.datosSubcontratista.rfc, Validators.required],
+      estado: [this.solicitudState.empressaSubFabricantePlantas.datosSubcontratista.estado, Validators.required],     
     });
   }
 

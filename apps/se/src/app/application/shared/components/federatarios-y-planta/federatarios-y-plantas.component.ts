@@ -5,12 +5,12 @@ import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { ComplementarPlantaComponent } from '../complementar-planta/complementar-planta.component';
-import { InputFecha } from '@ng-mf/data-access-user';
-import { InputFechaComponent } from '@ng-mf/data-access-user';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { InputFecha } from '@libs/shared/data-access-user/src';
+import { InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { EXPRESAS_EXTRANJERAS, EmpresasEXtranjeras, ExpresasConfiguration, FederatariosEncabezado } from '../../models/federatarios-y-plantas.model';
 import { FederatariosYPlantasConfiguration } from '../../models/federatarios-y-plantas.model';
@@ -29,7 +29,7 @@ import { FormsModule } from '@angular/forms';
 import { Modal } from 'bootstrap';
 import { MontosDeInversionComponent } from '../montos-de-inversion/montos-de-inversion.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
 import { FederatoriosQuery } from '../../../estados/queries/federatarios.query';
 import { FederatoriosState, FederatoriosStore } from '../../../estados/tramites/federatarios.store';
@@ -216,7 +216,7 @@ export class FederatariosYPlantasComponent {
   private destroyNotifier$: Subject<void> = new Subject();
 
   public expresasFormGroup!: FormGroup;
-
+plantasForm!: FormGroup;
   /**
    * Emisor de eventos para los datos del formulario de federatarios.
    * @type {EventEmitter<FederatariosEncabezado>}
@@ -278,6 +278,11 @@ export class FederatariosYPlantasComponent {
       pais: new FormControl(this.solicitudState['pais'], Validators.required),
       direccion: new FormControl(this.solicitudState['direccion'], Validators.required),
     });
+     this.plantasForm = new FormGroup({
+    estadoDos: new FormControl(this.solicitudState['estadoDos'], Validators.required),
+    representacionFederal: new FormControl(this.solicitudState['representacionFederal'], Validators.required),
+    actividadProductiva: new FormControl(this.solicitudState['actividadProductiva'], Validators.required),
+  });
   }
   /**
    * Navega a la ruta de acciones
@@ -288,7 +293,17 @@ export class FederatariosYPlantasComponent {
       relativeTo: this.activatedRoute,
     });
   }
-
+  /**
+   * Método que actualiza el store con los valores del formulario.
+   * 
+   * @param form - Formulario reactivo con los datos actuales.
+   * @param campo - El campo que debe actualizarse en el store.
+   * @param metodoNombre - El nombre del método en el store que se debe invocar.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof FederatoriosStore): void {
+    const VALOR = form.get(campo)?.value;
+    (this.federatoriosStore[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
   /**
    * Agrega los datos del formulario de federatarios y los emite.
    * @returns {void}

@@ -6,6 +6,7 @@ import { Solicitud80104State, Tramite80104Store } from '../../../estados/tramite
 import { Tramite80101State, Tramite80101Store } from '../estados/tramite80101.store';
 import { ComplementosSeccionState, ComplementosSeccionStore } from '../../../estados/tramites/complementos-seccion.store';
 import { FederatoriosState, FederatoriosStore } from '../../../estados/tramites/federatarios.store';
+import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
 
 @Injectable({
   providedIn: 'root',
@@ -23,9 +24,9 @@ export class Solocitud80103Service {
 /** Constructor que inyecta servicios HTTP y el store del trámite 110203.  
  *  Utilizado para inicializar dependencias necesarias en el componente. */
   constructor(private http: HttpClient, private tramite80104Store: Tramite80104Store,private tramite80101Store:Tramite80101Store, private complementosSeccionStore: ComplementosSeccionStore,
-    private federatoriosStore: FederatoriosStore,
+    private federatoriosStore: FederatoriosStore, private complementarStore: ComplementarStore,
         ) {
-    // Lógica de inicialización si es necesario
+    // Lógica de inicialización si es necesario ComplementarStore
   }
 /** Actualiza el estado del formulario en el store con los datos proporcionados.  
  *  Establece el régimen seleccionado desde el objeto de estado.
@@ -87,8 +88,41 @@ actualizarEstadoFormulariosss(DATOS: FederatoriosState): void {
  Object.entries(DATOS).forEach(([key, value]) => {
     this.federatoriosStore.setDynamicFieldValue(key, value);
   });
-
-
+}
+actualizarEstadoFormulariossss(DATOS: ComplementarState): void {
+  this.complementarStore.setPermanecera(DATOS.permanecera);
+  this.complementarStore.setTipo(DATOS.tipo);
+  this.complementarStore.setFechaDeFirma(DATOS.fechaDeFirma);
+  this.complementarStore.setFetchaDeFinDeVigencia(DATOS.fetchaDeFinDeVigencia);
+  this.complementarStore.setTipos(DATOS.tipos);
+  this.complementarStore.setCantidad(DATOS.cantidad);
+  this.complementarStore.setDescripsion(DATOS.descripsion);
+  this.complementarStore.setMnx(DATOS.mnx);
+  this.complementarStore.setTotalDeEmpleados(DATOS.totalDeEmpleados);
+  this.complementarStore.setDirectos(DATOS.directos);
+  this.complementarStore.setIndirectos(DATOS.indirectos);
+  this.complementarStore.setDirecto(DATOS.directo);
+  this.complementarStore.setCedula(DATOS.cedula);
+  this.complementarStore.setFechaCedula(DATOS.fechaCedula);
+  this.complementarStore.setIndirectosDatos(DATOS.indirectosDatos);
+  this.complementarStore.setContrato(DATOS.contrato);
+  this.complementarStore.setObjeto(DATOS.objeto);
+  this.complementarStore.setFechaFirma(DATOS.fechaFirma);
+  this.complementarStore.setFechaFinVigencia(DATOS.fechaFinVigencia);
+  this.complementarStore.setRfcEmpresa(DATOS.rfcEmpresa);
+  this.complementarStore.setRazonSocial(DATOS.razonSocial);
+  this.complementarStore.setFraccionArancelariaProductoTerminado(DATOS.fraccionArancelariaProductoTerminado);
+  this.complementarStore.setUmt(DATOS.umt);
+  this.complementarStore.setDescripcionComercialProductoTerminado(DATOS.descripcionComercialProductoTerminado);
+  this.complementarStore.setTurnos(DATOS.turnos);
+  this.complementarStore.setHorasPorTurno(DATOS.horasPorTurno);
+  this.complementarStore.setCantidadEmpleados(DATOS.cantidadEmpleados);
+  this.complementarStore.setCantidadMaquinaria(DATOS.cantidadMaquinaria);
+  this.complementarStore.setDescripcionMaquinaria(DATOS.descripcionMaquinaria);
+  this.complementarStore.setCapacidadInstaladaMensual(DATOS.capacidadInstaladaMensual);
+  this.complementarStore.setCapacidadInstaladaAnual(DATOS.capacidadInstaladaAnual);
+  this.complementarStore.setCalculoCapacidadInstalada(DATOS.calculoCapacidadInstalada);
+  this.complementarStore.setCapacidadUtilizadaPct(DATOS.capacidadUtilizadaPct);
 }
 
 /** Obtiene los datos simulados del registro de toma de muestras de mercancías  
@@ -109,6 +143,9 @@ actualizarEstadoFormulariosss(DATOS: FederatoriosState): void {
   }
   getRegistroTomaMuestrasMercanciasDatasss(): Observable<FederatoriosState> {
     return this.http.get<FederatoriosState>('assets/json/80104/serviciosExtraordinarios.json');
+  }
+  getRegistroTomaMuestrasMercanciasDatassss(): Observable<ComplementarState> {
+    return this.http.get<ComplementarState>('assets/json/80104/serviciosExtraordinarios.json');
   }
 
 }
