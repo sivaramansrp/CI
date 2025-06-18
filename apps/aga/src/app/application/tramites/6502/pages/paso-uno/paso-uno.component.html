@@ -15,7 +15,9 @@
           <solicitante #Solicitante></solicitante>
         }
         @case (2) {
-          <app-aviso-de-cambio></app-aviso-de-cambio>
+          @if(esDatosRespuesta){
+            <app-aviso-de-cambio></app-aviso-de-cambio>
+          }
         }  
         }
       </ng-container>

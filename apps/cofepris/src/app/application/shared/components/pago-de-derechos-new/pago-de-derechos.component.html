@@ -21,7 +21,6 @@
                   $event
                 )
               "
-              [disabled]="isDisabled"
             />
           </div>
         </div>
@@ -43,8 +42,6 @@
                   $event
                 )
               "
-              [disabled]="isDisabled"
-
             />
             <div
               class="invalid-feedback"
@@ -93,7 +90,6 @@
               (input)="
                 capitalizarYGuardar('llaveDePago', 'setLlaveDePago', $event)
               "
-              [disabled]="isDisabled"
             />
           </div>
         </div>
@@ -115,7 +111,6 @@
               formControlName="impPago"
               maxlength="16"
               (change)="setValoresStore(formularioPagoDerechos, 'impPago')"
-              [disabled]="isDisabled"
             />
           </div>
         </div>

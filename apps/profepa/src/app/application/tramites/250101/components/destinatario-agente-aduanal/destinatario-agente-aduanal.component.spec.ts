@@ -4,6 +4,16 @@ import { of, Subject } from 'rxjs';
 import { DestinatarioAgenteAduanalComponent } from './destinatario-agente-aduanal.component';
 import { DestinatarioService } from '../../services/destinatario.service';
 import { Tramite250101Store } from '../../estados/tramite250101.store';
+import { Tramite250101Query } from '../../estados/tramite250101.query';
+
+class Tramite250101QueryMock {
+  destinatarioDenominacion$ = of([]);
+  destinatarioPais$ = of([]);
+  destinatarioEstado$ = of([]);
+  destinatarioCodigoPostal$ = of([]);
+  destinatarioDomicilio$ = of([]);
+  selectSolicitud$ = of({});
+}
 
 describe('DestinatarioAgenteAduanalComponent', () => {
   let component: DestinatarioAgenteAduanalComponent;
@@ -39,6 +49,7 @@ describe('DestinatarioAgenteAduanalComponent', () => {
       providers: [
         { provide: DestinatarioService, useValue: destinatarioServiceMock },
         { provide: Tramite250101Store, useValue: tramite250101StoreMock },
+        { provide: Tramite250101Query, useClass: Tramite250101QueryMock },
       ],
     }).compileComponents();
 
@@ -156,4 +167,33 @@ describe('DestinatarioAgenteAduanalComponent', () => {
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+    it('should disable the form if esFormularioSoloLectura is true', () => {
+      component.esFormularioSoloLectura = true;
+      component.formDestinatariosModal.enable();
+      component.inicializarEstadoFormulario();
+      expect(component.formDestinatariosModal.disabled).toBe(true);
+    });
+  
+    it('should enable the form if esFormularioSoloLectura is false', () => {
+      component.esFormularioSoloLectura = false;
+      component.formDestinatariosModal.disable(); 
+      component.inicializarEstadoFormulario();
+      expect(component.formDestinatariosModal.enabled).toBe(true);
+    });
+
+    
+    it('should disable the form if esFormularioSoloLectura is true', () => {
+      component.esFormularioSoloLectura = true;
+      component.formAgenteAduanal.enable(); 
+      component.inicializarEstadoFormulario();
+      expect(component.formAgenteAduanal.disabled).toBe(true);
+    });
+  
+    it('should enable the form if esFormularioSoloLectura is false', () => {
+      component.esFormularioSoloLectura = false;
+      component.formAgenteAduanal.disable();
+      component.inicializarEstadoFormulario();
+      expect(component.formAgenteAduanal.enabled).toBe(true);
+    });
 });

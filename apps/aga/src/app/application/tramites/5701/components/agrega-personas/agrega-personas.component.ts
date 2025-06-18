@@ -3,16 +3,8 @@ import {
   ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS,
   ERR_CAMPOS_OBLIGATORIOS,
   ERR_INPUT_BUSQUEDA_VACIO,
-  MSG_DATOS_GUARDADOS,
-  MSG_ELIMINA_ELEMENTO,
   MSJ_ERROR_GAFETE_EXISTE,
-  TITULO_MODAL,
-} from '../../../../core/enums/5701/tramite5701.enum';
-import {
-  CONFIGURACION_ENCABEZADO_TABLA_RESPONSABLES_DESPACHO,
-  MSG_SELECCIONA_REGISTRO,
-  TITULO_MODAL_AVISO,
-} from '../../../../core/enums/5701/responsables-despacho.enum';
+} from '../../../../core/enums/5701/mensajes-modal-5701.enum';
 import {
   Component,
   EventEmitter,
@@ -25,8 +17,13 @@ import {
 } from '@angular/core';
 import {
   ConfiguracionColumna,
+  MSG_DATOS_GUARDADOS,
+  MSG_ELIMINA_ELEMENTO,
+  MSG_SELECCIONA_REGISTRO,
   Notificacion,
   NotificacionesComponent,
+  SoloLetrasNumerosDirective,
+  TITULO_MODAL_AVISO,
   TablaDinamicaComponent,
   TablaSeleccion,
   UppercaseDirective,
@@ -44,6 +41,9 @@ import {
   Tramite5701Store,
 } from '../../../../core/estados/tramites/tramite5701.store';
 import { Subject, map, takeUntil, tap } from 'rxjs';
+import {
+  CONFIGURACION_ENCABEZADO_TABLA_RESPONSABLES_DESPACHO,
+} from '../../../../core/enums/5701/responsables-despacho.enum';
 import { CommonModule } from '@angular/common';
 import { ConsultaResponsableService } from '../../../../core/services/5701/consulta-responsable.service';
 import { ResponsablesDespacho } from '../../../../core/models/5701/tramite5701.model';
@@ -58,6 +58,7 @@ import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
     UppercaseDirective,
     NotificacionesComponent,
     TablaDinamicaComponent,
+    SoloLetrasNumerosDirective,
   ],
   templateUrl: './agrega-personas.component.html',
   styleUrl: './agrega-personas.component.scss',
@@ -174,8 +175,9 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
    * @returns {boolean | null} - Devuelve `true` si el campo es válido, `false` si no lo es,
    * o `null` si no se puede determinar la validez.
    */
-  isValid(field: string): boolean | null {
-    return this.validacionesService.isValid(this.personaForm, field);
+  isValid(field: string): boolean | null | undefined {
+    const CONTROL = this.personaForm.get(field);
+    return CONTROL ? Boolean(CONTROL.errors) && CONTROL.touched : null;
   }
 
   /**
@@ -205,7 +207,7 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
         tipoNotificacion: 'alert',
         categoria: '',
         modo: 'action',
-        titulo: TITULO_MODAL,
+        titulo: TITULO_MODAL_AVISO,
         mensaje: ERR_INPUT_BUSQUEDA_VACIO,
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
@@ -244,7 +246,7 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
               tipoNotificacion: 'alert',
               categoria: '',
               modo: 'action',
-              titulo: TITULO_MODAL,
+              titulo: TITULO_MODAL_AVISO,
               mensaje: ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS,
               cerrar: false,
               txtBtnAceptar: 'Cerrar',
@@ -301,7 +303,7 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
         tipoNotificacion: 'alert',
         categoria: '',
         modo: 'action',
-        titulo: TITULO_MODAL,
+        titulo: TITULO_MODAL_AVISO,
         mensaje: ERR_CAMPOS_OBLIGATORIOS,
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
@@ -309,22 +311,21 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
       };
 
       this.gafeteRespoDespacho.markAllAsTouched();
-      this.personaForm.markAllAsTouched();
-      this.habilitarCamposFormulario();
       return;
     }
 
-    if (this.personaForm.invalid) {
+    if (this.personaForm.invalid || this.personaForm.disabled) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: '',
         modo: 'action',
-        titulo: TITULO_MODAL,
+        titulo: TITULO_MODAL_AVISO,
         mensaje: ERR_CAMPOS_OBLIGATORIOS,
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
         txtBtnCancelar: '',
       };
+      this.personaForm.markAllAsTouched();
       return;
     }
 
@@ -333,7 +334,7 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
         tipoNotificacion: 'alert',
         categoria: '',
         modo: 'action',
-        titulo: TITULO_MODAL,
+        titulo: TITULO_MODAL_AVISO,
         mensaje: ADV_MAXIMO_PERSONAS,
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
@@ -362,7 +363,7 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
       tipoNotificacion: 'alert',
       categoria: '',
       modo: 'action',
-      titulo: TITULO_MODAL,
+      titulo: TITULO_MODAL_AVISO,
       mensaje: EXISTE_RESPONSABLE
         ? MSJ_ERROR_GAFETE_EXISTE
         : MSG_DATOS_GUARDADOS,
@@ -435,7 +436,7 @@ export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
       tipoNotificacion: 'alert',
       categoria: '',
       modo: 'action',
-      titulo: TITULO_MODAL,
+      titulo: TITULO_MODAL_AVISO,
       mensaje: MSG_ELIMINA_ELEMENTO,
       cerrar: false,
       txtBtnAceptar: 'Cerrar',

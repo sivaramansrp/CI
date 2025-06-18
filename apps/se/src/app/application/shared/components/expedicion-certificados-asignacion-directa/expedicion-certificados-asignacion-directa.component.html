@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-md-4">
                 <app-catalogo-select [catalogo]="aniosAutorizacion" formControlName="cveAniosAutorizacion"
-                    [label]="'Año del oficio de asignación'" [required]="true" name="cveAniosAutorizacion"
+                    [label]="'Año del oficio de asignación'" [required]="true" name="cveAniosAutorizacion" [isDisabled]="formularioDeshabilitado"
                     [placeholder]="'Selecciona un año'" (change)="aniosAutorizacionSeleccion()"></app-catalogo-select>
             </div>
             <div class="col-md-4">
@@ -24,7 +24,7 @@
         </div>
         <div class="row mt-3">
             <div class="col-md-8 text-end">
-                <button type="button" class="btn btn-primary" name="buscar"
+                <button type="button" class="btn btn-primary" name="buscar" [disabled]="formularioDeshabilitado"
                     (click)="buscar(asignacionOficioNumeroForm.get('cveAniosAutorizacion')?.getRawValue(), asignacionOficioNumeroForm.get('numFolioAsignacionAux')?.getRawValue())">Buscar</button>
             </div>
         </div>
@@ -96,12 +96,12 @@
         <div class="row">
             <div class="col-md-4">
                 <input-fecha [setFecha]="asignacionDatosForm.get('fechaInicio')?.value" [datos]="fechaInicioInput"
-                    [tooltipQuestionCircle]="true" (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
+                    [tooltipQuestionCircle]="true" [isDisabled]="formularioDeshabilitado" (valorCambiado)="cambioFechaInicio($event)"></input-fecha>
             </div>
             <div class="col-md-4">
                 <input-fecha [setFecha]="asignacionDatosForm.get('fechaFinVigenciaAprobada')?.value"
                     [datos]="fechaFinVigenciaAprobadaInput" [tooltipQuestionCircle]="true"
-                    (valorCambiado)="cambioFechaFinVigenciaAprobada($event)"></input-fecha>
+                    [isDisabled]="formularioDeshabilitado" (valorCambiado)="cambioFechaFinVigenciaAprobada($event)"></input-fecha>
             </div>
         </div>
     </div>
@@ -142,12 +142,12 @@
             </div>
             <div class="col-md-4">
                 <input-fecha [setFecha]="cupoDescripcionForm.get('fechaInicioVigencia')?.value"
-                    [datos]="fechaInicioVigenciaInput"
+                    [datos]="fechaInicioVigenciaInput" [isDisabled]="formularioDeshabilitado"
                     (valorCambiado)="cambioFechaInicioVigencia($event)"></input-fecha>
             </div>
             <div class="col-md-4">
                 <input-fecha [setFecha]="cupoDescripcionForm.get('fechaFinVigencia')?.value"
-                    [datos]="fechaFinVigenciaInput" (valorCambiado)="cambioFechaFinVigencia($event)"></input-fecha>
+                    [datos]="fechaFinVigenciaInput" [isDisabled]="formularioDeshabilitado" (valorCambiado)="cambioFechaFinVigencia($event)"></input-fecha>
             </div>
         </div>
         <div class="row mt-3">
@@ -227,7 +227,7 @@
 
         <div class="row">
             <div class="col-md-12 text-end mt-3">
-                <button type="button" class="btn btn-primary" name="agregarCertificado"
+                <button type="button" class="btn btn-primary" name="agregarCertificado" [disabled]="formularioDeshabilitado"
                     (click)="agregar(distribucionSaldoForm.get('montoExpedir')?.value)">Agregar</button>
             </div>
         </div>
@@ -236,12 +236,12 @@
         <div class="row mt-5">
             <div class="col-md-12">
                 <app-tabla-dinamica [configuracionTabla]="configuracionParaEncabezadoDeTabla" [datos]="cuerpoTabla"
-                    [tipoSeleccionTabla]="tipoSeleccionTabla" (listaDeFilaSeleccionada)="valorDeAlternancia($event)"></app-tabla-dinamica>
+                    [tipoSeleccionTabla]="tipoSeleccionTabla" [disableSeleccionTablaCheckBox]="formularioDeshabilitado" (listaDeFilaSeleccionada)="valorDeAlternancia($event)"></app-tabla-dinamica>
             </div>
         </div>
         <div class="row mt-2">
             <div class="col-md-12 text-end">
-                <button type="button" class="btn btn-danger" name="guardarCertificado" (click)="eliminar()">Eliminar
+                <button type="button" class="btn btn-danger" name="guardarCertificado" [disabled]="formularioDeshabilitado" (click)="eliminar()">Eliminar
                     seleccionado</button>
             </div>
         </div>
