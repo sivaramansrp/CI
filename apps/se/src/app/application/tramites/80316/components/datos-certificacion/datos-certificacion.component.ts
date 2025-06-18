@@ -73,6 +73,10 @@ export class DatosCertificacionComponent implements OnInit, OnDestroy {
     this.loadDatosCertificacion();
   }
 
+  /**
+   * Carga los datos de certificación desde el servicio y actualiza el formulario reactivo con los valores obtenidos.
+   * También actualiza el estado global a través del store.
+   */
   loadDatosCertificacion(): void {
     (this.solicitudService.getDatosCertificacion() as import('rxjs').Observable<DatosCertificacion>)
       .pipe(takeUntil(this.destroyNotifier$))
