@@ -9,6 +9,7 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { ALERT_INSUMOS } from '../../constantes/datos-domicilio-legal.enum';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDelEstablecimientoRFCComponent } from '../datos-del-establecimiento-rfc/datos-del-establecimiento-rfc.component';
 import { DatosSolicitudQuery } from '../../estados/queries/datos-de-la-solicitud-modificacion.query';
 import { EstablecimientoService } from '../../services/establecimiento.service';
@@ -51,42 +52,42 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
    * Indica si los insumos están habilitados o no.
    */
   @Input() insumos: boolean = false;
- 
+
   /**
    * @description
    * Formulario principal para capturar los datos de la solicitud.
    */
-  datosSolicitudform!: FormGroup;
+  public datosSolicitudform!: FormGroup;
 
   /**
    * @description
    * Formulario para capturar los manifiestos del representante.
    */
-  manifiestosRepresentanteForm!: FormGroup;
+  public manifiestosRepresentanteForm!: FormGroup;
 
   /**
    * @description
    * Formulario para capturar datos SCIAN.
    */
-  scianForm!: FormGroup;
+  public scianForm!: FormGroup;
 
   /**
    * @description
    * Datos SCIAN agregados por el usuario.
    */
-  personaparas: ScianModel[] = [];
+  public personaparas: ScianModel[] = [];
 
   /**
    * @description
    * Datos del catálogo SCIAN.
    */
-  scianJson: Catalogo[] = [];
+  public scianJson: Catalogo[] = [];
 
   /**
    * @description
    * Instancia del modal de Bootstrap.
    */
-  modalInstance!: Modal;
+  public modalInstance!: Modal;
 
   /**
    * @description
@@ -99,42 +100,42 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
    * @description
    * Textos de alerta utilizados en el componente.
    */
-  TEXTOS = ALERT;
+  public TEXTOS = ALERT;
   /**
    * @description
    * Mensaje de alerta para insumos.
    */
-  TEXTOS_INSUMOS = ALERT_INSUMOS;
+  public TEXTOS_INSUMOS = ALERT_INSUMOS;
 
   /**
    * @description
    * Clase CSS para las alertas.
    */
-  class = 'alert-warning';
+  public class = 'alert-warning';
 
   /**
    * @description
    * Configuración de columnas para la tabla de datos SCIAN.
    */
-  configuracionTabla: ConfiguracionColumna<ScianData>[] = SCIAN_DATA;
+  public configuracionTabla: ConfiguracionColumna<ScianData>[] = SCIAN_DATA;
 
   /**
    * @description
    * Configuración de selección de tabla.
    */
-  tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
+  public tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
    * @description
    * Datos cargados dinámicamente para la tabla SCIAN.
    */
-  datosData: ScianData[] = [];
+  public datosData: ScianData[] = [];
 
   /**
    * @description
    * Enum para la selección de tablas.
    */
-  tipoSeleccionTabla = TablaSeleccion;
+  public tipoSeleccionTabla = TablaSeleccion;
 
   /**
    * @description
@@ -146,7 +147,7 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
    * @description
    * Índice del elemento que se desea eliminar de la lista de pedimentos.
    */
-  elementoParaEliminar!: number;
+  public elementoParaEliminar!: number;
 
   /**
    * @description
@@ -158,49 +159,55 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
    * @description
    * Lista de pedimentos gestionados en el componente.
    */
-  pedimentos: Array<Pedimento> = [];
+  public pedimentos: Array<Pedimento> = [];
 
   /**
    * @description
    * Configuración de columnas de la tabla de mercancías.
    */
-  mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIAS_DATA;
+  public mercanciasTabla: ConfiguracionColumna<MercanciasInfo>[] = MERCANCIAS_DATA;
 
   /**
    * @description
    * Datos de la tabla de mercancías.
    */
-  mercanciasTablaDatos: MercanciasInfo[] = [];
+  public mercanciasTablaDatos: MercanciasInfo[] = [];
 
   /**
    * @description
    * Texto de los manifiestos.
    */
-  mensajeManifiestos: string = '';
+  public mensajeManifiestos: string = '';
 
   /**
    * @description
    * Lista de estados disponibles.
    */
-  estado: Catalogo[] = [];
+  public estado: Catalogo[] = [];
 
   /**
    * @description
    * Opciones genéricas para el formulario.
    */
-  datosGenericos: PropietarioTipoPersona[] = [];
+  public datosGenericos: PropietarioTipoPersona[] = [];
 
   /**
    * @description
    * Opciones para el radio de información confidencial.
    */
-  informacionConfidencialRadioOption: PropietarioTipoPersona[] = [];
+  public informacionConfidencialRadioOption: PropietarioTipoPersona[] = [];
 
   /**
    * @description
    * Estado actual de la solicitud.
    */
   public solicitudState!: DatosSolicitudState;
+
+  /**
+ * Indica si el formulario está en modo solo lectura.
+ * Cuando es `true`, los campos del formulario no se pueden editar.
+ */
+  public esFormularioSoloLectura: boolean = false;
 
   /**
 * Abre el modal de confirmación para eliminar un pedimento.
@@ -210,21 +217,21 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
 * 
 * @param i - Índice del pedimento que se desea eliminar. Por defecto, es 0.
 */
-abrirModal(i: number = 0): void {
-  this.nuevaNotificacion = {
-    tipoNotificacion: 'alert',
-    categoria: 'danger',
-    modo: 'action',
-    titulo: '',
-    mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
-    cerrar: false,
-    tiempoDeEspera: 2000,
-    txtBtnAceptar: 'Aceptar',
-    txtBtnCancelar: 'Cancelar',
-  };
+  abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: 'danger',
+      modo: 'action',
+      titulo: '',
+      mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
+      cerrar: false,
+      tiempoDeEspera: 2000,
+      txtBtnAceptar: 'Aceptar',
+      txtBtnCancelar: 'Cancelar',
+    };
 
-  this.elementoParaEliminar = i;
-}
+    this.elementoParaEliminar = i;
+  }
   /**
    * @description
    * Constructor del componente.
@@ -237,7 +244,8 @@ abrirModal(i: number = 0): void {
     private formBuilder: FormBuilder,
     private establecimientoService: EstablecimientoService,
     private datosSolicitudStore: DatosSolicitudStore,
-    private datosSolicitudQuery: DatosSolicitudQuery
+    private datosSolicitudQuery: DatosSolicitudQuery,
+    private consultaioQuery: ConsultaioQuery,
   ) {
     //Reservado para futuras inyecciones de dependencias o inicializaciones.
   }
@@ -247,11 +255,27 @@ abrirModal(i: number = 0): void {
    * Método del ciclo de vida `OnInit` que inicializa el componente.
    */
   ngOnInit(): void {
-    this.mensajeManifiestos = MANIFIESTOS_DECLARACION.MANIFIESTOS;
-    this.cargarEstado();
-    this.cargarScian();
-    this.establecerOpcionesGenericas();
-    this.manejarConfidencial();
+
+    /**
+    * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+    * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+    * - Llama a `configurarGrupoForm()` para aplicar configuraciones basadas en el estado recibido.
+    * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+    */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe()
+
+    /**
+     * Se suscribe al estado de `DatosSolicitud` para obtener información actualizada del estado de la solicitud.
+     * - Asigna el estado de la solicitud a la propiedad `solicitudState`.
+     * - La suscripción se cancela automáticamente cuando `destroy$` emite un valor (para evitar fugas de memoria).
+     */
 
     this.datosSolicitudQuery.selectSolicitud$
       .pipe(
@@ -262,6 +286,11 @@ abrirModal(i: number = 0): void {
       )
       .subscribe();
 
+    this.mensajeManifiestos = MANIFIESTOS_DECLARACION.MANIFIESTOS;
+    this.cargarEstado();
+    this.cargarScian();
+    this.establecerOpcionesGenericas();
+    this.manejarConfidencial();
     this.configurarGrupoForm();
   }
 
@@ -299,6 +328,16 @@ abrirModal(i: number = 0): void {
       scian: [this.solicitudState?.scian, Validators.required],
       descripcionScian: [this.solicitudState?.descripcionScian],
     });
+
+    if (this.datosSolicitudform && this.manifiestosRepresentanteForm && this.scianForm) {
+      this.datosSolicitudform.disable();
+      this.manifiestosRepresentanteForm.disable();
+      this.scianForm.disable();
+    } else {
+      this.datosSolicitudform.enable();
+      this.manifiestosRepresentanteForm.enable();
+      this.scianForm.enable();
+    }
   }
 
   /**
