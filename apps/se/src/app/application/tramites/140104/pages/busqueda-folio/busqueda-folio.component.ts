@@ -90,7 +90,7 @@ export class BusquedaFolioComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.this.establecerMontoACancelarForm();
+          this.establecerMontoACancelarForm();
         })
       )
       .subscribe();
