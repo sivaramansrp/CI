@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
+import { ImportacionRetornoSanitarioService } from '../../service/importacion-retorno-sanitario.service';
 import { Tramite260103Query } from '../../estados/tramite260103Query.query';
 import { Tramite260103Store } from '../../estados/tramite260103Store.store';
 
@@ -23,11 +25,30 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+ * Esta variable se utiliza para almacenar el índice del subtítulo.
+ */
+  public consultaState!: ConsultaioState;
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+
   constructor(
     private tramite260103Query:Tramite260103Query,
-    private tramite260103Store: Tramite260103Store
+    private tramite260103Store: Tramite260103Store,
+    private consultaQuery: ConsultaioQuery,
+    private importacionRetornoSanitarioService: ImportacionRetornoSanitarioService
   ) {
-    // Constructor necesario para inyectar el store del trámite
+   this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$)).subscribe((seccionState) => {
+        this.consultaState = seccionState;
+        if (this.consultaState && this.consultaState.procedureId === '260103' &&
+          this.consultaState.update) {
+          this.guardarDatosFormulario();
+        } else {
+          this.esDatosRespuesta = true;
+        }
+      });  
   }
 
   /**
@@ -43,6 +64,23 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
         .subscribe((tab) => {
           this.indice = tab;
         });
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.importacionRetornoSanitarioService
+      .getTramiteDatos().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.importacionRetornoSanitarioService.actualizarEstadoFormulario(resp);
+        }
+      });
   }
 
   /**
