@@ -110,25 +110,6 @@ export class DatosCertificacionComponent {
     }
   }
 
-  // /**
-  //  * Carga los datos de certificación desde el servicio y actualiza el formulario reactivo con los valores obtenidos.
-  //  * También actualiza el estado global a través del store.
-  //  */
-  // loadDatosCertificacion(): void {
-  //   (this.immerModificacionService.getDatosCertificacion() as import('rxjs').Observable<DatosCertificacion>)
-  //     .pipe(takeUntil(this.destroyNotifier$))
-  //     .subscribe((datos: DatosCertificacion) => {
-  //       (this.tramite80314Store.setDatosCertificacion as (valor: unknown) => void)(datos);
-  //       if (datos) {
-  //         this.certificionForm.patchValue({
-  //           certificion: datos.certificion,
-  //           fechaInicio: datos.fechaInicio,
-  //           fechaVigencia: datos.fechaVigencia
-  //         });
-  //       }
-  //     });
-  // }
-
   /**
    * Limpia las suscripciones activas al destruir el componente.
    */
