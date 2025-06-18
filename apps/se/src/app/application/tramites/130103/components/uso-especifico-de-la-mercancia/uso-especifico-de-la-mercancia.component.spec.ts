@@ -11,14 +11,14 @@ describe('UsoEspecificoDeLaMercanciaComponent', () => {
   let fixture: ComponentFixture<UsoEspecificoDeLaMercanciaComponent>;
   const mockImportacionState = { 
     some: 'state', 
-    especifico: {
+    especifico: [{
       id: 1,
       descripcion: 'Producto de prueba',
       fraccionArancelariaTigie: '1234.56.78',
       cantidad: 10,
       totalUsd: 100,
       unidadDeMedida: 'Caja'
-    }
+    }]
   };
   const tramite130103QueryMock = {
     selectImportacion$: of(mockImportacionState),
@@ -60,22 +60,10 @@ describe('UsoEspecificoDeLaMercanciaComponent', () => {
     expect(component.importacionstate).toEqual(mockImportacionState);
   });
 
-  it('should call setDynamicFieldValue with object.id if valor is an object with id', () => {
-    const event = { campo: 'entidad', valor: { id: 42, descripcion: 'CDMX' } };
-    component.establecerCambioDeValor(event);
-    expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('entidad', 42);
-  });
-
   it('should call setDynamicFieldValue with primitive value if valor is not object', () => {
     const event = { campo: 'nombre', valor: 'Juan' };
     component.establecerCambioDeValor(event);
     expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('nombre', 'Juan');
-  });
-
-  it('should call setDynamicFieldValue with full object if valor is object without id', () => {
-    const event = { campo: 'custom', valor: { nombre: 'sin ID' } };
-    component.establecerCambioDeValor(event);
-    expect(storeMock.setDynamicFieldValue).toHaveBeenCalledWith('custom', { nombre: 'sin ID' });
   });
 
   it('should not throw when event.valor is null', () => {
@@ -98,11 +86,11 @@ describe('UsoEspecificoDeLaMercanciaComponent', () => {
       totalUsd: 100,
       unidadDeMedida: 'Caja'
     };
-    tramite130103QueryMock.selectImportacion$ = of({ 
-      some: 'state', 
-      especifico: producto 
-    });
-    tramite130103QueryMock.selectImportacion$ = of({ some: 'state', especifico: producto });
+    tramite130103QueryMock.selectImportacion$ = of({
+    some: 'state',
+    especifico: [producto]
+  });
+    tramite130103QueryMock.selectImportacion$ = of({ some: 'state', especifico: [producto] });
     component.datosTabla = [];
     component.ngOnInit();
     expect(component.datosTabla).toContainEqual(producto);

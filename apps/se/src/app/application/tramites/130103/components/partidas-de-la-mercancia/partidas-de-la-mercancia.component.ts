@@ -399,6 +399,9 @@ export class PartidasDeLaMercanciaComponent
    * // Actualiza el estado dinámico del campo "cantidad" con el valor 100.
    */
   establecerCambioDeValor(event: { campo: string; valor: string }): void {
+    if (!event) {
+      return;
+    }
     this.tramite130103Store.setDynamicFieldValue(event.campo, event.valor);
   }
 

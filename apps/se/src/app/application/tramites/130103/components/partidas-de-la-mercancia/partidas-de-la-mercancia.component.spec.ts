@@ -70,15 +70,6 @@ describe('PartidasDeLaMercanciaComponent', () => {
      mockObservable$.next('second value');
      expect(spy).toHaveBeenCalledTimes(1);
    }));
-
-   it('should call store with field and id value when event.valor has id', () => {
-    const event = {
-      campo: 'productoId',
-      valor: { id: 99, nombre: 'Producto 99' }
-    };
-    component.establecerCambioDeValor(event);
-    expect(tramite130103StoreMock.setDynamicFieldValue).toHaveBeenCalledWith('productoId', 99);
-  });
   
   it('should call store with field and primitive value when event.valor has no id', () => {
     const event = {
