@@ -21,9 +21,21 @@ export interface ListaPasosWizard {
  * @property {Array} solicitante - Arreglo que contiene los datos de la solicitud
  * @property {Array} anexouno - Arreglo que contiene los datos de los anexos
  */
+/**
+ * Interfaz que representa los datos del formulario para la ampliación IMMEX de productos sensibles.
+ *
+ * @property fraccionArancelariaSensibles - Fracción arancelaria correspondiente a productos sensibles.
+ * @property fraccionArancelaria - Fracción arancelaria general.
+ * @property descripciondelproducto - Descripción del producto.
+ * @property tablaFraccionArancelaria - Lista de fracciones arancelarias asociadas.
+ * @property tablaFraccionDeImportacion - Lista de fracciones de importación asociadas.
+ */
 export interface ImmexAmplicationSensibleDatosDelFormulario {
-  solicitante: [];
-  anexouno: [];
+  fraccionArancelariaSensibles: string;
+    fraccionArancelaria: string;
+    descripciondelproducto: string;
+    tablaFraccionArancelaria: [];
+    tablaFraccionDeImportacion: [];
 }
 
 /**
