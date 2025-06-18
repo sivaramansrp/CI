@@ -31,6 +31,11 @@ import {Subject, map,takeUntil } from 'rxjs';
  * @class PasoUnoPagesComponent
  */
 export class PasoUnoPagesComponent implements OnInit {
+  /**
+   * 
+   * @param consultaQuery ConsultaioQuery para acceder al estado de la consulta.
+   * @param establecimientoService 
+   */
   constructor( private consultaQuery: ConsultaioQuery,
     private establecimientoService : EstablecimientoService
   ){
@@ -57,6 +62,9 @@ export class PasoUnoPagesComponent implements OnInit {
         }
     })).subscribe();
   }
+  /**
+   * Método para limpiar los datos del formulario y restablecer el estado del componente.
+   */
 guardarDatosFormulario(): void {
   this.establecimientoService
     .getPagoDerechos()

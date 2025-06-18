@@ -58,12 +58,27 @@ export class EstablecimientoService {
   getEstadodata(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/260401/scianda.json');
   }
+  /**
+   * 
+   * @returns {Observable<DatosDelSolicituteSeccionState>} Un observable con los datos del establecimiento.
+   * @description
+   */
   getPagoDerechos(): Observable<DatosDelSolicituteSeccionState> {
       return this.http.get<DatosDelSolicituteSeccionState>('assets/json/260909/serviciosExtraordinarios260909.json');
     }
+    /**
+     * 
+     * @returns {Observable<DatosDomicilioLegalStore>} Un observable con los datos del estado de derechos.
+     * @description
+     */
     getEstadoDerechos(): Observable<DatosDomicilioLegalStore> {
     return this.http.get<DatosDomicilioLegalStore>('assets/json/260909/serviciosExtraordinarios.json');
   }
+  /**
+   * 
+   * @param DATOS Datos del solicitante que se actualizarán en el estado del formulario.
+   * @description
+   */
   actualizarEstadoFormulario(DATOS: DatosDelSolicituteSeccionState): void {
   this.tramiteStore.setEstablecimientoCorreoElectronico(DATOS.establecimientoCorreoElectronico);
   this.tramiteStore.setEstablecimientoDomicilioCodigoPostal(DATOS.establecimientoDomicilioCodigoPostal);
