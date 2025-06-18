@@ -4,14 +4,15 @@
  * incluyendo catálogos, datos de representantes, manifiestos, y propietarios.
  */
 import { Asociados, Manifiestistos, MercanciasInfo, PropietarioRadio, PropietarioTipoPersona, Representante, ScianModel } from '../models/datos-de-la-solicitud.model';
+import { AvisocalidadStore, SolicitudState } from '../estados/stores/aviso-calidad.store';
 import { Catalogo, JSONResponse } from '@libs/shared/data-access-user/src';
+import { DatosDomicilioLegalState,DatosDomicilioLegalStore} from '../estados/stores/datos-domicilio-legal.store';
 import { DatosSolicitudState, DatosSolicitudStore } from '../estados/stores/datos-de-la-solicitud-modificacion.store';
 import { Observable ,map} from 'rxjs';
 import { PermisoImportacionBiologicaState, PermisoImportacionBiologicaStore } from '../estados/permiso-importacion-biologica.store';
 import { EstadoCombinado } from '../models/solicitud-datos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-
 /**
  * @class EstablecimientoService
  * @description
@@ -27,7 +28,9 @@ export class EstablecimientoService {
    */
   constructor(private http: HttpClient,
     private datosSolicitudStore: DatosSolicitudStore,
-    private permisoImportacionBiologicaStore: PermisoImportacionBiologicaStore
+    private permisoImportacionBiologicaStore: PermisoImportacionBiologicaStore,
+    private avisoCalidadStore: AvisocalidadStore,
+    private datosDomicilioLegalStore: DatosDomicilioLegalStore,
   ) {
     //constructor
   }
@@ -202,6 +205,9 @@ export class EstablecimientoService {
     actualizarEstadoFormulario(EstadoCombinado: EstadoCombinado): void { 
       const DATOS_SOLICITUD: DatosSolicitudState = EstadoCombinado.datosSolicitudState;
       const DATOS_PERMISO: PermisoImportacionBiologicaState = EstadoCombinado.permisoImportacionBiologicaState;
+      const DATOS_DOMICILIO_LEGAL: DatosDomicilioLegalState = EstadoCombinado.datosDomicilioLegalState;
+      const AVISO_CALIDAD: SolicitudState = EstadoCombinado.solicitudState;
+
       this.datosSolicitudStore.setGenericos( DATOS_SOLICITUD.genericos);
       this.datosSolicitudStore.setObservaciones( DATOS_SOLICITUD.observaciones);
       this.datosSolicitudStore.setEstablecimientoRazonSocial( DATOS_SOLICITUD.establecimientoRazonSocial);
@@ -232,6 +238,15 @@ export class EstablecimientoService {
       if (DATOS_PERMISO.setBanco !== null) {
         this.permisoImportacionBiologicaStore.setBanco(DATOS_PERMISO.setBanco);
       }
+
+      this.datosDomicilioLegalStore.setRfc(DATOS_DOMICILIO_LEGAL.rfc);
+      this.datosDomicilioLegalStore.setNombre(DATOS_DOMICILIO_LEGAL.nombre);  
+      this.datosDomicilioLegalStore.setApellidoPaterno(DATOS_DOMICILIO_LEGAL.apellidoPaterno);
+      this.datosDomicilioLegalStore.setApellidoMaterno(DATOS_DOMICILIO_LEGAL.apellidoMaterno);
+
+      this.avisoCalidadStore.setRfcDel(AVISO_CALIDAD.rfcDel);
+      this.avisoCalidadStore.setDenominacionRazonSocial(AVISO_CALIDAD.denominacionRazonSocial); 
+      this.avisoCalidadStore.setCorreoElectronico(AVISO_CALIDAD.correoElectronico);
       }
   
     /**
