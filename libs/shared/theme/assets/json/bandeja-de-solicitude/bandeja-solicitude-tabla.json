@@ -2438,13 +2438,22 @@
     "numeroDeProcedimiento": "260302"
   },
   {
+    "id": 260102,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260102"
+  },
+  {
     "id": 260209,
-   "tipoDeTramite": "Solicitudddd certificado CAM",
-   "fecha": "2022-10-05",
-   "fechaActualizacion": "2022-10-25",
-   "diasTranscurridos": "4",
-   "departamento": "COFEPRIS",
-   "numeroDeProcedimiento": "260209"
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260209"
   }
  
 ]
