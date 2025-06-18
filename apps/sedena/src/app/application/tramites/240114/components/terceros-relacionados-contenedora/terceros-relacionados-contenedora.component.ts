@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+
+import { Component, ViewChild } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { OnInit } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
@@ -8,6 +9,11 @@ import { TercerosRelacionadosComponent } from '../../../../shared/components/ter
 import { Tramite240114Query } from '../../estados/tramite240114Query.query';
 import { Tramite240114Store } from '../../estados/tramite240114Store.store';
 import { takeUntil } from 'rxjs';
+
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
+
+import { AgregarDestinatarioFinalContenedoraComponent } from '../../../240114/components/agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
+import { AgregarProveedorContenedoraComponent } from '../../../240114/components/agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 
 /**
  * @title Terceros Relacionados Contenedora
@@ -18,10 +24,12 @@ import { takeUntil } from 'rxjs';
 @Component({
   selector: 'app-terceros-relacionados-contenedora',
   standalone: true,
-  imports: [CommonModule, TercerosRelacionadosComponent],
+  imports: [CommonModule, TercerosRelacionadosComponent, ModalComponent],
   templateUrl: './terceros-relacionados-contenedora.component.html'
 })
 export class TercerosRelacionadosContenedoraComponent implements OnInit {
+
+  @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
    * @property {Subject<void>} destroy$
@@ -74,4 +82,21 @@ export class TercerosRelacionadosContenedoraComponent implements OnInit {
         this.proveedorTablaDatos = data;
       });
   }
+
+  openModal(event: string): void {
+      if (event === 'agregar-destino-final') {
+        this.modalComponent.abrir(AgregarDestinatarioFinalContenedoraComponent, {
+          cerrarModal: this.cerrarModal.bind(this),
+        });
+      }
+      else if (event==='agregar-proveedor'){
+        this.modalComponent.abrir(AgregarProveedorContenedoraComponent, {
+          cerrarModal: this.cerrarModal.bind(this),
+      });
+    }
+  
 }
+ cerrarModal(): void {
+      this.modalComponent.cerrar();
+    }
+  }

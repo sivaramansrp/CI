@@ -103,6 +103,8 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
 
   @Output() actualizaExistenteEnProveedorDatos= new EventEmitter<Proveedor[]>();
 
+  @Output() cancelarEventListener = new EventEmitter<boolean>();
+
   /**
    * @property proveedorTablaDatos
    * @description Datos de la tabla de proveedores.
@@ -467,8 +469,8 @@ ngAfterViewInit(): void {
    *
    * @returns {void} Este método no retorna ningún valor.
    */
-  cancelar(): void {
-    this.ubicaccion.back();
+   cancelar(): void {
+    this.cancelarEventListener.emit(true);
   }
   /**
    * * Método que se ejecuta cuando se selecciona un país en el formulario.

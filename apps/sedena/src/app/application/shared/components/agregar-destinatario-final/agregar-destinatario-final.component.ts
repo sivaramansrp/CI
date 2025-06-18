@@ -167,6 +167,8 @@ export class AgregarDestinatarioFinalComponent
     DestinoFinal[]
   >();
 
+
+  @Output() cancelarEventListener = new EventEmitter<boolean>();
   /**
    * Constante que almacena el valor de "Nacional" para su uso en el formulario.
    * @property {string} nacionalStr
@@ -468,7 +470,7 @@ export class AgregarDestinatarioFinalComponent
    * @returns {void} Este método no retorna ningún valor.
    */
   cancelar(): void {
-    this.ubicaccion.back();
+    this.cancelarEventListener.emit(true);
   }
 
   /**

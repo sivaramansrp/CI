@@ -87,6 +87,8 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    */
   @Output() updateProveedorTablaDatos = new EventEmitter<Proveedor[]>();
 
+  @Output() cancelarEventListener = new EventEmitter<boolean>();
+
     /**
    * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
    * Este input se utiliza para recibir la información necesaria desde el componente padre.
@@ -317,8 +319,8 @@ export class AgregarProveedorComponent implements OnDestroy, OnInit {
    *
    * @returns {void} Este método no retorna ningún valor.
    */
-  cancelar(): void {
-    this.ubicaccion.back();
+   cancelar(): void {
+    this.cancelarEventListener.emit(true);
   }
   /**
    * * Método que se ejecuta cuando se selecciona un país en el formulario.

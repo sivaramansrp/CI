@@ -420,6 +420,5 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
    */
   cancelar(): void {
     this.cancelarEventListener.emit(true);
-    this.ubicaccion.back();
   }
 }
