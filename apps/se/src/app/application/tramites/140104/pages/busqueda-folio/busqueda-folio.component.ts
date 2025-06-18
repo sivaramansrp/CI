@@ -10,9 +10,10 @@ import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { REG_X } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Subject } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
+import { map, takeUntil } from 'rxjs';
 
 /**
  * Componente para realizar la búsqueda de folios, visualización de datos de facturas

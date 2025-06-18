@@ -1,8 +1,8 @@
+import { CuposDisponiblesDatos } from '../models/cancelacion-de-certificados.model';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 import { Tramite140104State } from './tramite140104.store';
 import { Tramite140104Store } from './tramite140104.store';
-import { CuposDisponiblesDatos } from '../models/cancelacion-de-certificados.model';
 
 /**
  * Consulta (Query) para el manejo del estado relacionado con el trámite 140104.

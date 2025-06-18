@@ -7,6 +7,7 @@ import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CertificadosDisponibles } from '../../models/cancelacion-de-certificados.model';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { CuposDisponibles } from '../../models/cancelacion-de-certificados.model';
 import { FormBuilder} from '@angular/forms';
 import { FormControl } from '@angular/forms';
@@ -16,10 +17,10 @@ import { OnInit } from '@angular/core';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 import { Subject } from 'rxjs';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
-import { Validators } from '@angular/forms';
-import { map, takeUntil } from 'rxjs';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Tramite140104Query } from '../../estados/desistimiento-de-permiso.query';
+import { Validators } from '@angular/forms';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-cancelacion-de-certificados',

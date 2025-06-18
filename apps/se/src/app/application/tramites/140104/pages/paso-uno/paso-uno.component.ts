@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { map } from 'rxjs';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 import { Subject } from 'rxjs';
+import { map } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 /**
  * Componente `PasoUnoComponent` que representa el primer paso del flujo de solicitud.
