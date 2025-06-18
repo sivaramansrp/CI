@@ -141,22 +141,22 @@ export class BusquedaPermisosComponent implements OnDestroy {
     private consultaioQuery: ConsultaioQuery,
     private suspensionPermisoService: SuspensionPermisoService,
   ) {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destruirNotificador$),
-        map((seccionState) => {
-          this.formularioDeshabilitado = seccionState.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
-
     this.tramite140216Query.selectSeccionState$
       .pipe(
         takeUntil(this.destruirNotificador$),
         map((seccionState) => {
           this.busquedaPermisosState = seccionState;
           this.permisosVigentesTabla = seccionState.permisosVigentesTabla || [];
+        })
+      )
+      .subscribe();
+    
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.formularioDeshabilitado = seccionState.readonly;
+          this.inicializarEstadoFormulario();
         })
       )
       .subscribe();
@@ -207,9 +207,9 @@ export class BusquedaPermisosComponent implements OnDestroy {
    */
   inicializarEstadoFormulario(): void {
     if (this.formularioDeshabilitado) {
-      this.busquedaPermisosForm.disable();
+      this.busquedaPermisosForm?.disable();
     } else if (!this.formularioDeshabilitado) {
-      this.busquedaPermisosForm.enable();
+      this.busquedaPermisosForm?.enable();
     }
   }
 
