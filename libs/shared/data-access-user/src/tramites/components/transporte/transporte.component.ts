@@ -755,12 +755,9 @@ export class TransporteComponent implements OnInit, OnChanges {
 
     const FORMULARIO = this[FORMULARIO_NOMBRE] as FormGroup;
 
-    const VALORES =
-      TransporteComponent.tieneValoresValidos(FORMULARIO) &&
-      this.observaciones.value !== null &&
-      this.observaciones.value !== undefined;
+    const VALORES = TransporteComponent.tieneValoresValidos(FORMULARIO);
 
-    if (!VALORES) {
+    if (!VALORES && !this.observaciones.value) {
       this.cerrarModal();
       return;
     }
@@ -793,7 +790,9 @@ export class TransporteComponent implements OnInit, OnChanges {
         const TRANSPORTE: TransporteDespacho =
           this.ferroviarioForma.getRawValue();
         TRANSPORTE.tipo_equipo =
-          TRANSPORTE.tipo_equipo === SIN_VALOR_SELECT ? '' : TRANSPORTE.tipo_equipo;
+          TRANSPORTE.tipo_equipo === SIN_VALOR_SELECT
+            ? ''
+            : TRANSPORTE.tipo_equipo;
         TRANSPORTE.observaciones = this.observaciones.value;
         TRANSPORTE.seleccionado = false;
 
@@ -925,7 +924,9 @@ export class TransporteComponent implements OnInit, OnChanges {
                 txtBtnAceptar: 'Cerrar',
                 txtBtnCancelar: '',
               };
-              this.ferroviarioForma.get('tipo_equipo')?.setValue(SIN_VALOR_SELECT);
+              this.ferroviarioForma
+                .get('tipo_equipo')
+                ?.setValue(SIN_VALOR_SELECT);
               this.ferroviarioForma.get('iniciales_equipo')?.setValue('');
               this.ferroviarioForma.get('numero_equipo')?.setValue('');
             }
@@ -1127,7 +1128,8 @@ export class TransporteComponent implements OnInit, OnChanges {
           fecha_porte: this.carreteroForma.get('fecha_porte')?.value,
           marca_transporte: this.carreteroForma.get('marca_transporte')?.value,
           modelo_transporte:
-            this.carreteroForma.get('modelo_transporte')?.value === SIN_VALOR_SELECT
+            this.carreteroForma.get('modelo_transporte')?.value ===
+            SIN_VALOR_SELECT
               ? ''
               : this.carreteroForma.get('modelo_transporte')?.value,
           placas_transporte:
