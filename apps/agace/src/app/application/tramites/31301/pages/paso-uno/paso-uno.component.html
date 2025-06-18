@@ -62,19 +62,19 @@
     </ul>
 
     <ng-container>
-      @switch (indice) { @case (1) {
+      @switch (indice) { @case (1) { @if(esDatosRespuesta){
       <solicitante #Solicitante></solicitante>
-      } @case (2) {
+      } } @case (2) { @if(esDatosRespuesta){
       <app-datos-generales-de-la-solicitud
         (tipoDeEndosoChanges)="tipoDeEndosoChanges($event)"
       ></app-datos-generales-de-la-solicitud>
-      } @case (3) {
+      } } @case (3) { @if(esDatosRespuesta){
       <app-datos-por-garantia></app-datos-por-garantia>
-      } @case (4) {
+      } } @case (4) { @if(esDatosRespuesta){
       <app-modificacion-de-denominacion-o-razors-social></app-modificacion-de-denominacion-o-razors-social>
-      } @case (5) {
+      } } @case (5) { @if(esDatosRespuesta){
       <app-terceros-relacionados></app-terceros-relacionados>
-      } }
+      } } }
     </ng-container>
   </div>
 </div>

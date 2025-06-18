@@ -3,6 +3,7 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosPorGarantia } from '../../models/solicitud.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -72,6 +73,12 @@ export class DatosPorGarantiaComponent implements OnInit, OnDestroy {
   solicitud31301State: Solicitud31301State = {} as Solicitud31301State;
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor que inyecta servicios y realiza la carga inicial de datos.
    *
    * @param fb FormBuilder para crear formularios reactivos
@@ -83,8 +90,25 @@ export class DatosPorGarantiaComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     public solicitudService: SolicitudService,
     public solicitud31301Store: Solicitud31301Store,
-    public solicitud31301Query: Solicitud31301Query
+    public solicitud31301Query: Solicitud31301Query,
+    public consultaioQuery: ConsultaioQuery
   ) {
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     this.conseguirNombreInstitucionCatalogo();
     this.conseguirDatosPorGarantia();
   }
@@ -94,6 +118,36 @@ export class DatosPorGarantiaComponent implements OnInit, OnDestroy {
    * y se suscribe al estado para sincronizar los datos mostrados.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.polizaDeFianzaForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.polizaDeFianzaForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  inicializarFormulario(): void {
     this.polizaDeFianzaForm = this.fb.group({
       polizaDeFianzaActual: [this.solicitud31301State.polizaDeFianzaActual],
       numeroFolio: [
