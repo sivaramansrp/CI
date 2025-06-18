@@ -15362,5 +15362,14 @@
     "diasTranscurridos": "4",
     "departamento": "SEDENA",
     "numeroDeProcedimiento": "240112"
+  },
+  {
+    "id": "260301",
+    "tipoDeTramite": "Datos generales del trámite",
+    "fecha": "2024-11-01",
+    "fechaActualizacion": "2024-11-07",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260301"
   }
 ]
