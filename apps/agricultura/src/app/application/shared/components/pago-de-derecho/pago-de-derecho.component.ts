@@ -1,17 +1,18 @@
 import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, RespuestaCatalogos, TituloComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {FECHAPAGODATE, FECHA_DE_PAGO } from '../../constantes/pago-de-derechos.enum';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
+import { PagoDeDerechos } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
 import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-zoosanitario.model';
 
 @Component({
-  selector: 'app-pago-de-derechos',
+  selector: 'app-pago-de-derecho',
   standalone: true,
   imports: [
-       CommonModule,
+        CommonModule,
         TituloComponent,
         ReactiveFormsModule,
         InputFechaComponent,
@@ -22,7 +23,7 @@ import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-
   templateUrl: './pago-de-derecho.component.html',
   styleUrl: './pago-de-derecho.component.scss',
 })
-export class PagoDeDerechoComponent implements OnDestroy {
+export class PagoDeDerechoComponent implements OnDestroy,OnInit {
    /**
      * Configuración predeterminada para el campo de fecha de pago.
      */
@@ -73,7 +74,14 @@ export class PagoDeDerechoComponent implements OnDestroy {
      * Sujeto para manejar la destrucción de observables y evitar fugas de memoria.
      */
     private destroyNotifier$ = new Subject<void>();
-  
+    /**
+     * @desc Objeto que contiene la información relacionada con el pago de derechos.
+     * @type {PagoDeDerechos}
+     * @memberof PagoDeDerechoComponent
+     * @input
+     * @description [Compodoc] Propiedad de entrada que recibe los datos del pago de derechos para ser utilizados en el componente.
+     */
+    @Input() pagoDeDerechos: PagoDeDerechos = {} as PagoDeDerechos;
     /**
      * Constructor del componente. Inyecta los servicios y realiza una carga inicial de catálogos.
      * @param fb Constructor de formularios reactivos.
@@ -87,6 +95,17 @@ export class PagoDeDerechoComponent implements OnDestroy {
       private readonly httpServicios: HttpClient,
     ) {
       this.obtenerDetallesDeListaDeOpciones();
+    }
+    ngOnInit(): void {
+this.pagoForm.patchValue({
+        exentoPago: this.pagoDeDerechos.exentoPago,
+        justificacion: this.pagoDeDerechos.justificacion,
+        claveReferencia: this.pagoDeDerechos.claveReferencia, 
+        cadenaDependencia: this.pagoDeDerechos.cadenaDependencia,
+        banco: this.pagoDeDerechos.banco,
+        llavePago: this.pagoDeDerechos.llavePago,
+        importePago: this.pagoDeDerechos.importePago
+      });
     }
 
      obtenerDetallesDeListaDeOpciones(): void {
@@ -118,7 +137,7 @@ export class PagoDeDerechoComponent implements OnDestroy {
           });
       }
 
-        /**
+   /**
    * Limpia las suscripciones para evitar fugas de memoria al destruir el componente.
    */
   ngOnDestroy(): void {
