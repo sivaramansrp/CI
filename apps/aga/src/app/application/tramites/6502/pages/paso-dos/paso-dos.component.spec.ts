@@ -5,6 +5,9 @@ import { ServiciosPantallaService } from '@libs/shared/data-access-user/src/core
 import { TramiteStore } from '@libs/shared/data-access-user/src/core/estados/tramite.store';
 import { of, throwError } from 'rxjs';
 import { By } from '@angular/platform-browser';
+import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { ToastrService } from 'ngx-toastr';
 
 describe('PasoDosComponent', () => {
   let component: PasoDosComponent;
@@ -31,8 +34,10 @@ describe('PasoDosComponent', () => {
       providers: [
         { provide: Router, useValue: mockRouter },
         { provide: ServiciosPantallaService, useValue: mockServiciosService },
-        { provide: TramiteStore, useValue: mockTramiteStore }
-      ]
+        { provide: TramiteStore, useValue: mockTramiteStore },
+        { provide: ToastrService, useValue: { success: jest.fn(), error: jest.fn() } }
+      ],
+      imports: [FirmaElectronicaComponent,HttpClientTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoDosComponent);

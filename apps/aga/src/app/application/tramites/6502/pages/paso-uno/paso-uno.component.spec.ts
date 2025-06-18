@@ -2,6 +2,9 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
 import { SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 import { By } from '@angular/platform-browser';
+import { AvisoDeCambioComponent } from '../../components/aviso-de-cambio/aviso-de-cambio.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
@@ -15,9 +18,11 @@ describe('PasoUnoComponent', () => {
 
     TestBed.configureTestingModule({
       declarations: [PasoUnoComponent],
+      imports: [AvisoDeCambioComponent,HttpClientTestingModule],
       providers: [
         { provide: SolicitanteComponent, useValue: mockSolicitanteComponent }
-      ]
+      ],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
   }));
 

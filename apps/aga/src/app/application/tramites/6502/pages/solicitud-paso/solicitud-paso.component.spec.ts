@@ -1,8 +1,11 @@
-import { AccionBoton, WizardComponent } from '@libs/shared/data-access-user/src';
+import { AccionBoton, WizardComponent,BtnContinuarComponent } from '@libs/shared/data-access-user/src';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { SolicitudPasoComponent } from './solicitud-paso.component';
 import { PASOS } from "@libs/shared/data-access-user/src/core/enums/6502/modificacion.enum";
+import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
+import { PasoDosComponent } from '../paso-dos/paso-dos.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('SolicitudPasoComponent', () => {
   let component: SolicitudPasoComponent;
@@ -16,7 +19,14 @@ describe('SolicitudPasoComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      declarations: [SolicitudPasoComponent],
+      declarations: [SolicitudPasoComponent,
+        PasoUnoComponent,
+        PasoDosComponent
+      ],
+      imports: [WizardComponent,
+        BtnContinuarComponent,
+        HttpClientTestingModule
+      ],
       providers: [
         { provide: WizardComponent, useValue: mockWizardComponent }
       ]
