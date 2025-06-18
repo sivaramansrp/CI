@@ -4,11 +4,14 @@ import { of, Subject, takeUntil } from 'rxjs';
 import { Tramite130103Query } from '../../../../estados/queries/tramite130103.query';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Tramite130103Store } from '../../../../estados/tramites/tramite130103.store';
+import Modal from 'bootstrap/js/dist/modal';
 
 describe('PartidasDeLaMercanciaComponent', () => {
   let component: PartidasDeLaMercanciaComponent;
   let fixture: ComponentFixture<PartidasDeLaMercanciaComponent>;
-
+  jest.mock('bootstrap/js/dist/modal', () => ({
+    getOrCreateInstance: jest.fn()
+  }));
   const productoMock = { id: 1, nombre: 'Producto 1' };
   const importacionStateMock = {
     producto: productoMock
@@ -37,6 +40,16 @@ describe('PartidasDeLaMercanciaComponent', () => {
       readonly: false,
     } as any;
     component.datosTabla = [];
+
+    const modalEl = document.createElement('div');
+    modalEl.id = 'modalEditar';
+    modalEl.classList.add('modal');
+    document.body.appendChild(modalEl);
+  });
+
+  afterEach(() => {
+    const el = document.getElementById('modalEditar');
+    if (el) el.remove();
   });
 
   it('should create', () => {
@@ -108,5 +121,136 @@ describe('PartidasDeLaMercanciaComponent', () => {
   expect(component.forma.get('valor_total')?.disabled).toBe(true);
 });
 
-  
+it('should add a new product to datosTabla and reset form if ninoFormGroup is valid', () => {
+  const mockNinoFormGroup = new FormGroup({
+    partidas_cantidad: new FormControl(10),
+    partidas_descripcion: new FormControl('Desc'),
+    valor_partida_usd: new FormControl(500),
+    seleccion_fraccion: new FormControl(1)
+  });
+
+  (component as any).form = new FormGroup({
+    ninoFormGroup: mockNinoFormGroup
+  });
+
+  (component as any).seleccionFraccionOpciones = [{ id: 1, descripcion: 'FRACCION1' }];
+  component.datosTabla = [];
+  component.importacionstate = { unidad_de_medida: 'kg' };
+
+  component.agregar();
+
+  expect(component.datosTabla.length).toBe(1);
+  expect((component as any).tramite130103Store.setDynamicFieldValue).toHaveBeenCalledWith(
+    'partidas_tabla',
+    component.datosTabla
+  );
+});
+
+it('should return description of selected fracción arancelaria', () => {
+  component.ninoFormGroup.get('seleccion_fraccion')?.setValue('');
+  (component as any).seleccionFraccionOpciones = [
+    { id: 1, descripcion: 'FRACCION1' },
+    { id: 2, descripcion: 'FRACCION2' }
+  ];
+  const result = component.obtenerFraccionArancelaria();
+  expect(result).toBe('');
+});
+
+
+it('should call establecerCambioDeValor with correct campo and valor', () => {
+  const mockEvent = {
+    target: { value: 'NuevoValor' }
+  } as unknown as Event;
+
+  const spy = jest.spyOn(component, 'establecerCambioDeValor');
+
+  component.eventoDeCambioDeValor(mockEvent, 'campoPrueba');
+  expect(spy).toHaveBeenCalledWith({ campo: 'campoPrueba', valor: 'NuevoValor' });
+});
+
+it('should hide the modal when cerrar is called', () => {
+  const hideMock = jest.fn();
+  component['cargarArchivoInstance'] = { hide: hideMock } as any;
+  component.cerrar();
+  expect(hideMock).toHaveBeenCalled();
+});
+
+it('should show the modal when cargarArchivo is called', () => {
+  const showMock = jest.fn();
+  component['cargarArchivoInstance'] = { show: showMock } as any;
+  component.cargarArchivo();
+  expect(showMock).toHaveBeenCalled();
+});
+
+it('should remove selected partida from datosTabla', () => {
+  component.datosTabla = [
+    { id: 1, descripcion: 'Item 1' },
+    { id: 2, descripcion: 'Item 2' }
+  ];
+  component.partidasSeleccionadas = [{ id: 1 }] as any;
+  component.eliminar();
+  expect(component.datosTabla.length).toBe(1);
+  expect(component.datosTabla[0].id).toBe(2);
+  expect(tramite130103StoreMock.setDynamicFieldValue).toHaveBeenCalledWith('partidas_tabla', component.datosTabla);
+});
+
+it('should patch modificarPartidaForm when a row is selected', () => {
+  const selected = {
+    id: 1,
+    cantidad: 10,
+    descripcion: 'desc',
+    totalUsd: 100,
+    fraccionArancelariaTigie: 'FRA-1'
+  };
+
+  (component as any).form = new FormGroup({
+    modificarPartidaForm: new FormGroup({
+    modificar_cantidad: new FormControl(''),
+    modificar_descripcion: new FormControl(''),
+    valor_partidas_usd: new FormControl(''),
+    fraccion_partidas: new FormControl('')
+    })
+  });
+
+  component.onPartidasSeleccion([selected]);
+
+  expect(component.modificarPartidaForm.get('modificar_cantidad')?.value).toBe(10);
+  expect(component.modificarPartidaForm.get('modificar_descripcion')?.value).toBe('desc');
+  expect(component.modificarPartidaForm.get('valor_partidas_usd')?.value).toBe(100);
+  expect(component.modificarPartidaForm.get('fraccion_partidas')?.value).toBe('FRA-1');
+});
+
+it('should remove selected item from datosTabla and update store', () => {
+  const item1 = { id: 1 };
+  const item2 = { id: 2 };
+
+  component.datosTabla = [item1, item2];
+  component.partidasSeleccionadas = [item1];
+
+  const storeSpy = jest.spyOn(component['tramite130103Store'], 'setDynamicFieldValue');
+
+  component.eliminar();
+
+  expect(component.datosTabla).toEqual([item2]);
+  expect(storeSpy).toHaveBeenCalledWith('partidas_tabla', [item2]);
+});
+
+it('should call show on cargarArchivoInstance if exists', () => {
+  const showMock = jest.fn();
+  (component as any).cargarArchivoInstance = { show: showMock };
+  component.cargarArchivo();
+  expect(showMock).toHaveBeenCalled();
+});
+
+it('should call establecerCambioDeValor with campo and input value', () => {
+  const inputEvent = {
+    target: { value: 'nuevo valor' }
+  } as unknown as Event;
+
+  const spy = jest.spyOn(component, 'establecerCambioDeValor');
+  component.eventoDeCambioDeValor(inputEvent, 'campo_test');
+
+  expect(spy).toHaveBeenCalledWith({ campo: 'campo_test', valor: 'nuevo valor' });
+});
+
 });
