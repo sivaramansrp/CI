@@ -1,45 +1,46 @@
-// @import "bootstrap/scss/bootstrap";
+@import "bootstrap/scss/bootstrap";
 
-@import "_colores.scss";
-@import "_gobmx.scss";
-@import "_gobmxstyles.scss";
-@import "_fonts.scss";
-@import "_titulos.scss";
-@import "_gobmx.scss";
-@import "~@ng-select/ng-select/themes/default.theme.css";
+@import '_colores.scss';
+@import '_gobmx.scss';
+@import '_gobmxstyles.scss';
+@import '_fonts.scss';
+@import '_titulos.scss';
+@import '_gobmx.scss';
+@import '~@ng-select/ng-select/themes/default.theme.css';
+@import 'node_modules/@swimlane/ngx-datatable/themes/bootstrap.scss';
 
 .bi-c {
-    color: $color-primario;
+  color: $color-primario;
 
-    &:hover {
-        color: $color-danger;
-    }
+  &:hover {
+    color: $color-danger;
+  }
 }
 
 .required {
-    border: #fe4a47 1px solid;
+  border: #fe4a47 1px solid;
 }
 
 .modal-header {
-    justify-content: center;
+  justify-content: center;
 
-    .titulo {
-        font-weight: 400;
-        font-size: 32px;
-        font-family: Patria;
-        margin-top: 3rem;
-        margin-bottom: 3rem !important;
-    }
+  .titulo {
+    font-weight: 400;
+    font-size: 32px;
+    font-family: Patria;
+    margin-top: 3rem;
+    margin-bottom: 3rem !important;
+  }
 
-    &-gold {
-        color: $color-oro;
-    }
+  &-gold {
+    color: $color-oro;
+  }
 }
 
 .modal-body {
-    padding: 30px 30px 0px 30px;
+  padding: 30px 30px 0px 30px;
 }
 
 .modal-footer {
-    justify-content: center;
+  justify-content: center;
 }

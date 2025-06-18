@@ -8,9 +8,9 @@
 <div class="row">
   <div class="col-md-12">
     <div class="pull-right">
-      <button type="button" name="ModificarPME" class="btn btn-default"> Modificar </button>
-      <button type="button" name="EliminarPME" class="btn btn-danger ms-2"> Eliminar </button>
-      <button type="button" name="AgregarPME" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalAgregarPME"> Agregar </button>
+      <button type="button" name="ModificarPME" class="btn btn-default" [disabled]="soloLectura"> Modificar </button>
+      <button type="button" name="EliminarPME" class="btn btn-danger ms-2" [disabled]="soloLectura"> Eliminar </button>
+      <button type="button" name="AgregarPME" class="btn btn-primary ms-2" data-bs-toggle="modal" data-bs-target="#modalAgregarPME" [disabled]="soloLectura"> Agregar </button>
     </div>
   </div>
 </div>
@@ -92,9 +92,9 @@
             <p>* Campos obligatorios</p>
           </div>
           <div class="col-md-4 d-flex justify-content-end">
-            <button type="button" class="btn btn-primary" id="limpiarPME" name="limpiar" (click)="limpiarDatosPME()">Limpiar</button>
-            <button type="button" class="btn btn-default mx-2" id="cancelarPME" name="cancelar" data-bs-dismiss="modal" #closeModal>Cancelar</button>
-            <button type="button" class="btn btn-primary" id="guardarPME" name="guardar" (click)="agregarPME(personaMoralExtranjeraForm.getRawValue())">Guardar</button>
+            <button type="button" class="btn btn-primary" id="limpiarPME" name="limpiar" (click)="limpiarDatosPME()" [disabled]="soloLectura">Limpiar</button>
+            <button type="button" class="btn btn-default mx-2" id="cancelarPME" name="cancelar" data-bs-dismiss="modal" #closeModal [disabled]="soloLectura">Cancelar</button>
+            <button type="button" class="btn btn-primary" id="guardarPME" name="guardar" (click)="agregarPME(personaMoralExtranjeraForm.getRawValue())" [disabled]="soloLectura">Guardar</button>
           </div>
         </div>
       </div>

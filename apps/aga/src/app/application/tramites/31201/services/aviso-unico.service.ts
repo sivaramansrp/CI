@@ -1,4 +1,4 @@
-import { AvisoValor, PreOperativo } from '../models/aviso.model';
+import { AvisoValor, PreOperativo, RespuestaConsulta } from '../models/aviso.model';
 import { Observable, catchError, throwError } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -57,5 +57,16 @@ export class AvisoUnicoService {
    */
   obtenerRadio(): Observable<PreOperativo[]> {
     return this.http.get<PreOperativo[]>('assets/json/31201/tipoPersonaradio.json');
+  }
+
+  /**
+   * @method
+   * @name getDatosConsulta
+   * @description
+   * Obtiene los datos para la consulta del trámite desde un archivo JSON.
+   * @returns {Observable<RespuestaConsulta>} Observable con los datos de consulta.
+   */
+  getDatosConsulta(): Observable<RespuestaConsulta> {
+    return this.http.get<RespuestaConsulta>('assets/json/31201/consulta_31201.json');
   }
 }

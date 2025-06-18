@@ -93,99 +93,11 @@ export class Tramite31801Store extends Store<Renovacion31801State> {
         super(createInitialState());
     }
 
-    /**
-     * Actualiza el estado de la propiedad 'numeroOficio'.
-     * @param numeroOficio - Nuevo valor para 'numeroOficio'.
-     * @returns {void}
-     */
-    public setNumeroOficio(numeroOficio: string): void {
-        this.update((state) => ({
-            ...state,
-            numeroOficio,
-        }));
-    }
+    setTramite31801State(valores: Partial<Renovacion31801State>): void {
+        this.update((state => ({
+          ...state,
+          ...valores,
+        })));
+      }
 
-    /**
-     * Actualiza el estado de la propiedad 'fechaInicialInput'.
-     * @param fechaInicialInput - Nuevo valor para 'fechaInicialInput'.
-     * @returns {void}
-     */
-    public setFechaInicialInput(fechaInicialInput: string): void {
-        this.update((state) => ({
-            ...state,
-            fechaInicialInput,
-        }));
-    }
-
-    /**
-     * Actualiza el estado de la propiedad 'fechaFinalInput'.
-     * @param fechaFinalInput - Nuevo valor para 'fechaFinalInput'.
-     * @returns {void}
-     */
-    public setFechaFinalInput(fechaFinalInput: string): void {
-        this.update((state) => ({
-            ...state,
-            fechaFinalInput,
-        }));
-    }
-
-    /**
-     * Actualiza el estado de la propiedad 'fechaPago'.
-     * @param fechaPago - Nuevo valor para 'fechaPago'.
-     * @returns {void}
-     */
-    public setFechaPago(fechaPago: string): void {
-        this.update((state) => ({
-            ...state,
-            fechaPago,
-        }));
-    }
-
-    /**
-     * Actualiza el estado de la propiedad 'monedaNacional'.
-     * @param monedaNacional - Nuevo valor para 'monedaNacional'.
-     * @returns {void}
-     */
-    public setMonedaNacional(monedaNacional: number | null): void {
-        this.update((state) => ({
-            ...state,
-            monedaNacional,
-        }));
-    }
-
-    /**
-     * Actualiza el estado de la propiedad 'numeroOperacion'.
-     * @param numeroOperacion - Nuevo valor para 'numeroOperacion'.
-     * @returns {void}
-     */
-    public setNumeroOperacion(numeroOperacion: string): void {
-        this.update((state) => ({
-            ...state,
-            numeroOperacion,
-        }));
-    }
-
-    /**
-     * Actualiza el estado de la propiedad 'llavePago'.
-     * @param llavePago - Nuevo valor para 'llavePago'.
-     * @returns {void}
-     */
-    public setLlavePago(llavePago: string): void {
-        this.update((state) => ({
-            ...state,
-            llavePago,
-        }));
-    }
-
-    /**
-     * Actualiza el estado de la propiedad 'seleccionadaManifiesto'.
-     * @param seleccionadaManifiesto - Nuevo valor para 'seleccionadaManifiesto'.
-     * @returns {void}
-     */
-    public setSeleccionadaManifiesto(seleccionadaManifiesto: boolean[]): void {
-        this.update((state) => ({
-            ...state,
-            seleccionadaManifiesto,
-        }));
-    }
 }

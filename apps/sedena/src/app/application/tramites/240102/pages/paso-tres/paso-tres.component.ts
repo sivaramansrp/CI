@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FirmaElectronicaComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * @title Paso Tres
@@ -8,7 +9,8 @@ import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-paso-tres',
-
+  standalone: true,
+  imports: [FirmaElectronicaComponent],
   templateUrl: './paso-tres.component.html',
   styleUrl: './paso-tres.component.scss',
 })
