@@ -42,14 +42,13 @@ import { Subject ,map,takeUntil } from 'rxjs';
 
 import { EstablecimientoService } from '../../service/establecimiento.service';
 
-import { DatosDelSolicituteSeccionStateStore } from '../../estados/datos-del-solicitud-seccion.store';
-
 import { ManifiestosComponent } from '../../../../shared/components/manifiestos-declaraciones/manifiestos-declaraciones.component';
 import { RepresentanteLegalComponent } from '../../../../shared/components/representante-legal/representante-legal.component';
 
 import { CROSLISTA_DE_PAISES, FECHA_DE_PAGO, MERCANCIAS_DATA, SCIAN_TABLE_CONFIG } from '../../constantes/medicamentos-donacion.enum';
 import { DatosDelSeccionQuery } from '../../estados/datos-del-solicitud-seccion.query';
 import { ManifiestosRepresentanteSeccionComponent } from '../../../../shared/components/manifiestos-representante-seccion/manifiestos-representante-seccion.component';
+import { DatosDelSolicituteSeccionStateStoreI } from '../../estados/datos-del-solicitud-seccion.store';
 
 
 /**
@@ -495,7 +494,7 @@ export class DatosDelSolicitudModificacionComponent implements OnInit, OnDestroy
   constructor(
     private fb: FormBuilder,
     private establecimientoService: EstablecimientoService,
-    private domicilioEstablecimientoStore: DatosDelSolicituteSeccionStateStore,
+    private domicilioEstablecimientoStore: DatosDelSolicituteSeccionStateStoreI,
     private domicilioEstablecimientoQuery: DatosDelSeccionQuery,
     private consultaioQuery: ConsultaioQuery
   ) {
