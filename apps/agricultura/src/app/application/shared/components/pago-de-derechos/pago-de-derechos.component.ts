@@ -1,5 +1,5 @@
 import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, TituloComponent } from '@libs/shared/data-access-user/src';
-import { FECHAPAGODATE,FECHA_DE_PAGO } from '../../../tramites/220201/constantes/certificado-zoosanitario.enum';
+import {FECHAPAGODATE, FECHA_DE_PAGO } from '../../constantes/pago-de-derechos.enum';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CertificadoZoosanitarioServiceService } from '../../../tramites/220201/services/220201/certificado-zoosanitario.service';
 import { CommonModule } from '@angular/common';
