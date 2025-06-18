@@ -332,7 +332,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'expedicion-certificados-asignacion-directa-fisica',
+    path: 'cupos',
     loadChildren: () =>
       import('./tramites/120201/cupos.module').then((m) => m.CuposModule),
   },
@@ -461,7 +461,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'expedicion-certificados-asignacion-directa-moral',
+    path: 'expedicion-certificado-asignacion',
     loadChildren: () =>
       import('./tramites/120202/expedicion-certificado-asignacion.module').then(
         (m) => m.ExpedicionCertificadoAsignacionModule
