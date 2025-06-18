@@ -4647,7 +4647,27 @@
     "origin": "READ_PROCEDURE"
   },
   {
-    "folioTramite": "0201157325726982922220203",
+    "folioTramite": "1234563096655456789012395",
+    "tipoDeTramite": "Solicitud de Proceso Interno",
+    "nombreDeLaTarea": "Evaluar solicitud",
+    "fechaDeAsignacion": "2023-10-01",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "agricultura",
+    "numeroDeProcedimiento": "220202",
+    "origin": "FLUJO_FUNCIONARIO_EVALUAR"
+  },
+  {
+    "folioTramite": "987654326030257654321098769",
+    "tipoDeTramite": "Consulta de Proceso",
+    "nombreDeLaTarea": "confirmar notificación",
+    "fechaDeAsignacion": "2023-10-02",
+    "estadoDeTramite": "Pendiente",
+    "departamento": "agricultura",
+    "numeroDeProcedimiento": "220202",
+    "origin": "FLUJO_FUNCIONARIO_CONFIRMAR-NOTIFICACION"
+  },
+  {
+    "folioTramite": "12345672603023456789012345",
     "tipoDeTramite": "Registro de solicitud de servicio",
     "nombreDeLaTarea": "Atender requerimiento",
     "fechaDeAsignacion": "2023-10-03",
@@ -4685,6 +4705,16 @@
     "departamento": "agricultura",
     "numeroDeProcedimiento": "220202",
     "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
+  },
+  {
+    "folioTramite": "1111222603024994555566669",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Generar opinión",
+    "fechaDeAsignacion": "2023-10-07",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "agricultura",
+    "numeroDeProcedimiento": "220202",
+    "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
   },
   {
     "folioTramite": "0215523965732296454220203",
@@ -5295,6 +5325,16 @@
     "departamento": "se",
     "numeroDeProcedimiento": "80208",
     "origin": "FLUJO_FUNCIONARIO_VERIFICAR-REQUERIMIENTO-RESOLUCION"
+  },
+  {
+    "folioTramite": "1111222603024994555566669",
+    "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Generar opinión",
+    "fechaDeAsignacion": "2023-10-07",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "se",
+    "numeroDeProcedimiento": "80208",
+    "origin": "FLUJO_FUNCIONARIO_GENERAR_OPINION"
   },
   {
     "folioTramite": "1245983214785236478351234",
@@ -10544,16 +10584,6 @@
     "estadoDeTramite": "Completado",
     "departamento": "se",
     "numeroDeProcedimiento": "90302",
-    "origin": "READ_PROCEDURE"
-  },
-  {
-    "folioTramite": "1987680232109876",
-    "tipoDeTramite": "Registro de solicitud de servicio",
-    "nombreDeLaTarea": "Revisión de presupuesto",
-    "fechaDeAsignacion": "2023-10-09",
-    "estadoDeTramite": "Completado",
-    "departamento": "agricultura",
-    "numeroDeProcedimiento": "420102",
     "origin": "READ_PROCEDURE"
   },
   {
