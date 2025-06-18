@@ -41,7 +41,7 @@
           <div class="row">
             <div class="col-md-8"></div>
             <div class="col-md-4 d-flex justify-content-end">
-              <button type="button" class="btn btn-primary" (click)="abrirModal()" [disabled]="esFormularioSoloLectura ? true : false">
+              <button type="button" class="btn btn-primary" (click)="abrirModal()" [disabled]="esFormularioSoloLectura">
                 Seleccionar establecimiento
               </button>
             </div>
@@ -96,7 +96,7 @@
         <div class="col-md-4">
           <div class="form-group">
             <app-catalogo-select [catalogo]="estado" [label]="'Estado'" name="estado" [required]="true"
-              formControlName="establecimientoEstados" [isDisabled]="esFormularioSoloLectura ? true : false"
+              formControlName="establecimientoEstados" [isDisabled]="esFormularioSoloLectura"
               (change)="actualizarValoresStore(datosSolicitudform,'establecimientoEstados', 'setEstablecimientoEstados')">
             </app-catalogo-select>
           </div>
@@ -181,22 +181,22 @@
           <label class="form-label" for="scian">S.C.I.A.N.*:</label>
           <app-tabla-dinamica [configuracionTabla]="configuracionTabla" [datos]="datosData"
             [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX" formcontrolname="scian"
-            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false">
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
           </app-tabla-dinamica>
         </div>
       </div>
 
       <div class="d-flex justify-content-end">
-        <button type="button" class="btn btn-default btn-space me-2"  [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
+        <button type="button" class="btn btn-default btn-space me-2"  [disabled]="esFormularioSoloLectura">Eliminar</button>
         <button type="button" class="btn btn-primary btn-space" data-bs-toggle="modal" data-bs-target="#modalClave"
-          (click)="mostrarModeloClave()"  [disabled]="esFormularioSoloLectura ? true : false">
+          (click)="mostrarModeloClave()"  [disabled]="esFormularioSoloLectura">
           Agregar
         </button>
       </div>
       <div class="row align-item-center">
         <div class="col-md-4 mt-5">
           <lib-input-check [label]="'Aviso de funcionamiento'" [id]="'avisoCheckbox'" [required]="true"
-            formControlName="avisoCheckbox" [isDisabled]="esFormularioSoloLectura ? true : false"
+            formControlName="avisoCheckbox" [isDisabled]="esFormularioSoloLectura"
             (change)="actualizarValoresStore(datosSolicitudform,'avisoCheckbox', 'setAvisoCheckbox')"></lib-input-check>
         </div>
         <div class="col-md-4">
@@ -215,20 +215,20 @@
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="estado" [label]="'Régimen'" [required]="true" name="regimen"
             [tooltipQuestionCircle]="true" formControlName="regimen"
-            [isDisabled]="esFormularioSoloLectura ? true : false"
+            [isDisabled]="esFormularioSoloLectura"
             (change)="actualizarValoresStore(datosSolicitudform,'regimen', 'setRegimen')"></app-catalogo-select>
         </div>
         <div class="col-md-8">
           <app-catalogo-select [catalogo]="estado" [label]="'Aduanas de entradas'" [required]="true"
             name="aduanasEntradas" formControlName="aduanasEntradas"
-            [isDisabled]="esFormularioSoloLectura ? true : false"
+            [isDisabled]="esFormularioSoloLectura"
             (change)="actualizarValoresStore(datosSolicitudform,'aduanasEntradas', 'setAduanasEntradas')"></app-catalogo-select>
         </div>
       </div>
       <div class="row mt-5" *ngIf="!insumos">
         <div class="col-md-4 ms-auto">
           <lib-input-check [label]="'Aeropuerto Internacional Felipe Ángeles (AIFA)'" [id]="'aifaCheckbox'"
-            [required]="true" formControlName="aifaCheckbox" [isDisabled]="esFormularioSoloLectura ? true : false"
+            [required]="true" formControlName="aifaCheckbox" [isDisabled]="esFormularioSoloLectura"
             (change)="actualizarValoresStore(datosSolicitudform,'aifaCheckbox', 'setAifaCheckbox')"></lib-input-check>
         </div>
       </div>
@@ -240,11 +240,11 @@
       <div class="row mt-5">
         <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla"
           [datos]="mercanciasTablaDatos"
-          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura ? true : false"></app-tabla-dinamica>
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
         <div class="container text-end mt-5">
-          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura ? true : false">Modificar</button>
-          <button class="btn btn-default me-2"  [disabled]="esFormularioSoloLectura ? true : false">Eliminar</button>
-          <button class="btn btn-default me-2" *ngIf="insumos"  [disabled]="esFormularioSoloLectura ? true : false">Agregar</button>
+          <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura">Modificar</button>
+          <button class="btn btn-default me-2"  [disabled]="esFormularioSoloLectura">Eliminar</button>
+          <button class="btn btn-default me-2" *ngIf="insumos"  [disabled]="esFormularioSoloLectura">Agregar</button>
         </div>
       </div>
     </div>
@@ -296,7 +296,7 @@
             <div class="col-md-8">
               <app-catalogo-select [catalogo]="scianJson" [label]="'Clave S.C.I.A.N.*'"
                 [placeholder]="'Seleccione una valor'" formControlName="scian"
-                [isDisabled]="esFormularioSoloLectura ? true : false"
+                [isDisabled]="esFormularioSoloLectura"
                 (change)="actualizarValoresStore(scianForm,'scian', 'setScian')"></app-catalogo-select>
             </div>
           </div>
@@ -309,13 +309,13 @@
           </div>
         </div>
         <div class="modal-footer mt-5">
-          <button type="button" class="btn btn-primary" (click)="limpiarScianForm()" [disabled]="esFormularioSoloLectura ? true : false">
+          <button type="button" class="btn btn-primary" (click)="limpiarScianForm()" [disabled]="esFormularioSoloLectura">
             Limpiar
           </button>
-          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura ? true : false">
+          <button type="button" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">
             Cancelar
           </button>
-          <button type="button" class="btn btn-primary" (click)="guardarScian()" [disabled]="esFormularioSoloLectura ? true : false">
+          <button type="button" class="btn btn-primary" (click)="guardarScian()" [disabled]="esFormularioSoloLectura">
             Guardar
           </button>
         </div>
