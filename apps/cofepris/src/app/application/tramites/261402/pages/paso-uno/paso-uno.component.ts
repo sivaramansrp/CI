@@ -86,6 +86,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     private tramite261402Query: Tramite261402Query,
     private consultaQuery: ConsultaioQuery
   ) {
+    this.inicializarDatosSolicitud();
     this.consultaQuery.selectConsultaioState$
     .pipe(
       takeUntil(this.notificadorDestruccion$),
@@ -114,7 +115,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     } else {
       this.esDatosRespuesta = true;
     }
-    this.inicializarDatosSolicitud();
+    
   }
 
      /**
