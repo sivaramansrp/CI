@@ -140,7 +140,7 @@ export const MANDATORY_INSTRUCTION = 'Las tablas con asterisco son obligatorias 
 export const EXPEDICION_FACTURA_FECHA = {
     labelNombre: 'Fecha de pago',
     required: true,
-    habilitado: true,
+    habilitado: false,
 };
 
 /**

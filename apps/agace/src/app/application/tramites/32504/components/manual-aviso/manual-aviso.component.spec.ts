@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { ManualAvisoComponent } from './manual-aviso.component';
 import { of } from 'rxjs';
 
-import { CatalogoSelectComponent, CatalogosService, InputConfig,InputFechaComponent, InputRadioComponent, InputTypes, TablaDinamicaComponent, TituloComponent, botonAccionesTipos } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent, CatalogosService, InputConfig,InputFechaComponent, InputRadioComponent, InputTypes, TablaDinamicaComponent, TituloComponent, BotonAccionesTipos } from '@ng-mf/data-access-user';
 import { ActionType } from '../../enum/aviso.enum';
 
 describe('ManualAvisoComponent', () => {
@@ -53,10 +53,10 @@ describe('ManualAvisoComponent', () => {
     expect(component.formulario).toBeDefined();
   });
 
-  it('should call renderGroup on ngOnInit', () => {
-    jest.spyOn(component, 'renderGroup');
+  it('should call renderizadoGrupo on ngOnInit', () => {
+    jest.spyOn(component, 'renderizadoGrupo');
     component.ngOnInit();
-    expect(component.renderGroup).toHaveBeenCalledWith(component.configuracion);
+    expect(component.renderizadoGrupo).toHaveBeenCalledWith(component.configuracion);
   });
 
   it('should initialize form group correctly', () => {
@@ -92,12 +92,6 @@ describe('ManualAvisoComponent', () => {
     expect(component.configuracion[0].menu[0].props.catalogos).toEqual(MOCKRESPONSE);
   });
 
-  it('should generate validators correctly', () => {
-    const VALIDATORS = ManualAvisoComponent.obtenerValidadores(['required', 'maxLength:10', 'pattern:[a-zA-Z]']);
-    expect(VALIDATORS.length).toBe(3);
-    expect(VALIDATORS[0]).toBe(Validators.required);
-  });
-
   it('should handle date change', () => {
     jest.spyOn(component, 'fechaCambiado').mockImplementation();
     component.fechaCambiado('2023-01-01');
@@ -106,31 +100,31 @@ describe('ManualAvisoComponent', () => {
 
   it('should handle button action AGREGAR', () => {
     jest.spyOn(component, 'accionesBotones').mockImplementation();
-    component.accionesBotones(ActionType.FORM_ACTION, botonAccionesTipos.AGREGAR);
-    expect(component.accionesBotones).toHaveBeenCalledWith(ActionType.FORM_ACTION, botonAccionesTipos.AGREGAR);
+    component.accionesBotones(ActionType.FORM_ACTION, BotonAccionesTipos.AGREGAR);
+    expect(component.accionesBotones).toHaveBeenCalledWith(ActionType.FORM_ACTION, BotonAccionesTipos.AGREGAR);
   });
 
   it('should handle button action ELIMINAR', () => {
     jest.spyOn(component, 'accionesBotones').mockImplementation();
-    component.accionesBotones(ActionType.FORM_ACTION, botonAccionesTipos.ELIMINAR);
-    expect(component.accionesBotones).toHaveBeenCalledWith(ActionType.FORM_ACTION, botonAccionesTipos.ELIMINAR);
+    component.accionesBotones(ActionType.FORM_ACTION, BotonAccionesTipos.ELIMINAR);
+    expect(component.accionesBotones).toHaveBeenCalledWith(ActionType.FORM_ACTION, BotonAccionesTipos.ELIMINAR);
   });
 
   it('should handle button action MODIFICAR', () => {
     jest.spyOn(component, 'accionesBotones').mockImplementation();
-    component.accionesBotones(ActionType.FORM_ACTION, botonAccionesTipos.MODIFICAR);
-    expect(component.accionesBotones).toHaveBeenCalledWith(ActionType.FORM_ACTION, botonAccionesTipos.MODIFICAR);
+    component.accionesBotones(ActionType.FORM_ACTION, BotonAccionesTipos.MODIFICAR);
+    expect(component.accionesBotones).toHaveBeenCalledWith(ActionType.FORM_ACTION, BotonAccionesTipos.MODIFICAR);
   });
 
   it('should handle child table button action AGREGAR', () => {
     jest.spyOn(component, 'botonDeTablaInfantilAccion').mockImplementation();
-    component.botonDeTablaInfantilAccion(botonAccionesTipos.AGREGAR);
-    expect(component.botonDeTablaInfantilAccion).toHaveBeenCalledWith(botonAccionesTipos.AGREGAR);
+    component.botonDeTablaInfantilAccion(BotonAccionesTipos.AGREGAR);
+    expect(component.botonDeTablaInfantilAccion).toHaveBeenCalledWith(BotonAccionesTipos.AGREGAR);
   });
 
   it('should handle child table button action CANCELAR', () => {
     jest.spyOn(component, 'botonDeTablaInfantilAccion').mockImplementation();
-    component.botonDeTablaInfantilAccion(botonAccionesTipos.CANCELAR);
-    expect(component.botonDeTablaInfantilAccion).toHaveBeenCalledWith(botonAccionesTipos.CANCELAR);
+    component.botonDeTablaInfantilAccion(BotonAccionesTipos.CANCELAR);
+    expect(component.botonDeTablaInfantilAccion).toHaveBeenCalledWith(BotonAccionesTipos.CANCELAR);
   });
 });

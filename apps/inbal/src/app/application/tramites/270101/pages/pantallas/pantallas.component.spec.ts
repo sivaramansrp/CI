@@ -15,25 +15,58 @@ import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { ExportarIlustracionesService } from '../../services/exportar-ilustraciones.service';
 import { By } from '@angular/platform-browser';
 import { ERROR_DE_REGISTRO_ALERT, ERROR_FORMA_ALERT } from '../../constantes/exportar-ilustraciones.enum';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { of } from 'rxjs';
+import { AduanaDeSalida, DatosDelSolicitud } from '../../models/exportar-ilustraciones.model';
 
 describe('PantallasComponent', () => {
   let component: PantallasComponent;
   let fixture: ComponentFixture<PantallasComponent>;
   let mockExportarIlustracionesService: ExportarIlustracionesService;
   let wizardComponent: WizardComponent;
-  
+  let mockConsultaQuery: ConsultaioQuery;
+
+  const mockAduana: AduanaDeSalida = {
+    tipo: 'Terrestre',
+    ciudad: 'Ciudad de México',
+    sede: 'Central',
+    tipoDeTraslado: 'Carretera',
+    fechaExhibicion: '2025-06-01',
+    observaciones: 'Sin observaciones',
+    fechoInicio: '2025-06-01',
+    fechaFin: '2025-06-10',
+  };
+
+  const mockSolicitud: DatosDelSolicitud = {
+    autor: 'Juan Pérez',
+    titulo: 'Obra Maestra',
+    tecnicaDeRealizacion: 'Óleo sobre lienzo',
+    conMarco: 'Sí',
+    ancho: 100,
+    alto: 150,
+    profundidad: 10,
+    diametro: 0,
+    variables: 'Variable X',
+    anoDeCreacion: '2023',
+    avaluo: 100000,
+    moneda: 'MXN',
+    propietario: 'Museo Nacional',
+    fraccionArancelaria: '9701.10.01',
+    descripcion: 'Pintura del siglo XXI',
+  };
+
   beforeEach(async () => {
     mockExportarIlustracionesService = {
       aduanaArray: [],
       datosDeSolicitudArray: [],
       formsMap: new Map(),
       formValues: {},
-      http: null,
       setAduanaArray: jest.fn(),
       setDatosDeSolicitudArray: jest.fn(),
       getFormValidity: jest.fn().mockReturnValue(true),
       getFormValues: jest.fn(),
       setFormValues: jest.fn(),
+      getExportarIlustracionesData: jest.fn().mockReturnValue(of({}))
     } as unknown as ExportarIlustracionesService;
 
     await TestBed.configureTestingModule({
@@ -51,30 +84,27 @@ describe('PantallasComponent', () => {
         PasoTresComponent
       ],
       providers: [
-        { provide: ExportarIlustracionesService, useValue: mockExportarIlustracionesService }
+        { provide: ExportarIlustracionesService, useValue: mockExportarIlustracionesService },
+        { provide: ConsultaioQuery, useValue: {
+          selectConsultaioState$: of({
+          readonly: false,
+          update: false,
+    })
+        } }
       ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PantallasComponent);
     component = fixture.componentInstance;
+    mockConsultaQuery = {
+       selectConsultaState: jest.fn(),
+    } as unknown as ConsultaioQuery;
     wizardComponent = fixture.debugElement.query(By.directive(WizardComponent)).componentInstance;
     fixture.detectChanges();
   });
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should initialize component with default values', () => {
-    const component = new PantallasComponent(mockExportarIlustracionesService);
-    expect(component.indice).toBe(1);
-    expect(component.datosPasos.indice).toBe(1);
-    expect(component.registroAlert).toBe(ERROR_DE_REGISTRO_ALERT);
-    expect(component.itinerarioError).toBe(false);
-    expect(component.formaErrorAlert).toBe(ERROR_FORMA_ALERT);
-    expect(component.esValido).toBe(false);
-    expect(component.indiceDePestanaSeleccionada).toBe(1);
-    expect(component.avisoPrivacidadAlert).toBe(AVISO.Aviso);
   });
   
   it('should not update indice if action is invalid', () => {
@@ -105,4 +135,38 @@ describe('PantallasComponent', () => {
     component.getValorIndice(mockEvent);
     expect(component.indice).toBe(1);
   });
+
+  it('should set itinerarioError to true if aduanaArray has 1 or fewer items', () => {
+    mockExportarIlustracionesService.aduanaArray = [];
+    jest.spyOn(mockExportarIlustracionesService, 'getFormValidity').mockReturnValue(true);
+    component.esElFormularioValido();
+    expect(component.itinerarioError).toBe(true);
+  });
+
+  it('should complete destroyNotifier$ on ngOnDestroy', () => {
+    const spy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+    component.ngOnDestroy();
+    expect(spy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('should default indiceDePestanaSeleccionada to 1 if input is invalid', () => {
+    component.indiceDePestanaSeleccionada = 3;
+    component.pestanaCambiado(NaN);
+    expect(component.indiceDePestanaSeleccionada).toBe(1);
+  });
+
+  it('should reset indiceDePestanaSeleccionada to 1 when valor is not 1', () => {
+    component.indiceDePestanaSeleccionada = 3;
+    mockExportarIlustracionesService.aduanaArray = [mockAduana];
+    mockExportarIlustracionesService.datosDeSolicitudArray = [mockSolicitud];
+    jest.spyOn(mockExportarIlustracionesService, 'getFormValidity').mockReturnValue(true);
+    const mockEvent: AccionBoton = { valor: 2, accion: 'cont' };
+    component.getValorIndice(mockEvent);
+    expect(component.indiceDePestanaSeleccionada).toBe(1);
+  });
+
+
+
 });

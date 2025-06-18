@@ -7,6 +7,7 @@
               <textarea class="form-control" id="justificacion" rows="2" height="50"
               placeholder="" style="height: 100px" formControlName="justificacion"
               (change)="setValoresStore(datosSolicitudForma,'justificacion', 'setJustificacion')"
+              [disabled]="esFormularioSoloLectura"
               ></textarea>
             </div>
           </div>
@@ -22,10 +23,12 @@
                         formControlName="productorDeCafe"
                         [layout]="'horizontal'"
                         (change)="handleProductorDeCafeChange($event)"
-                        >
+                        (change)="setValoresStore(datosSolicitudForma,'productorDeCafe', 'setProductorDeCafe')"
+                        [disabled]="esFormularioSoloLectura">
                     </app-input-radio>
                     </div>
             </div>
+            
         <ng-titulo titulo="Productores de café"></ng-titulo>
         <div class="row">    
                 <div class="col-md-4">
@@ -34,6 +37,7 @@
                         <input formControlName="claveDelPadron" class="form-control" id="claveDelPadron" placeholder=""
                             type="text"
                             (change)="setValoresStore(datosSolicitudForma,'claveDelPadron', 'setClaveDelPadron')"
+                            [disabled]="esFormularioSoloLectura"
                           />
                     </div>
                 </div>
@@ -52,7 +56,7 @@
             <div class="col-md-12 mt-5">
                 <div class="d-flex justify-content-end">
                   <div class="btn-group">
-                    <button  class="btn btn-danger me-2" type="button" >
+                    <button  class="btn btn-danger me-2" type="button">
                         Borrar
                       </button>
                     <button  class="btn btn-primary me-2" type="submit">
@@ -131,7 +135,7 @@
               </div>
         </div>
           <!-- Nota Informativa -->
-  <div class="row" style="margin-top: 30px;">
+   <div class="row" style="margin-top: 30px;">
     <div class="col-md-12">
       <div class="alert alert-info">
         <label style="font-weight: normal; text-align: justify;">
@@ -139,53 +143,55 @@
         </label>			
       </div>
     </div>
-  </div>
+   </div>
 
-  <!-- Observaciones -->
-  <div class="row">
+   <!-- Observaciones -->
+   <div class="row">
     <div class="col-md-12">
         <div class="form-group">
           <label class="form-label" for="observaciones">Observaciones*:</label>
           <textarea class="form-control" id="observaciones" rows="2" height="50"
           placeholder="" style="height: 100px" formControlName="observaciones"
           (change)="setValoresStore(datosSolicitudForma,'observaciones', 'setObservaciones')"
+          [disabled]="esFormularioSoloLectura"
           ></textarea>
         </div>
       </div>
-  </div>
+   </div>
 
-  <!-- Requiere Inspección Inmediata -->
-  <div class="row">
+   <!-- Requiere Inspección Inmediata -->
+   <div class="row">
     <div class="col-md-12">
       <div class="form-group">
           <div class="form-check mt-3">
           <lib-input-check [id]="'requiereInspeccionInmediata'" [label]="'Autorizo que mi información pueda ser utilizada para promoción en publicaciones de carácter público'" [required]="false" formControlName="requiereInspeccionInmediata" 
           (change)="setValoresStore(datosSolicitudForma,'requiereInspeccionInmediata', 'setRequiereInspeccionInmediata')"
+          [isDisabled]="esFormularioSoloLectura ? true : false"
           ></lib-input-check>
         </div>
       </div>
     </div>
-  </div>
+   </div>
 
-  <!-- Declaraciones bajo protesta de decir verdad -->
-  <div class="row">
+   <!-- Declaraciones bajo protesta de decir verdad -->
+   <div class="row">
     <div class="col-md-12">
       <h3>Declaraciones bajo protesta de decir verdad</h3>
       <hr class="red" />
     </div>
-  </div>
-  <div class="row">
+   </div>
+   <div class="row">
     <div class="col-md-12">
       <div class="alert alert-info">
         <div class="form-check text-left">
             <lib-input-check [id]="'informacionConfidencial'" [label]="'Protesto decir verdad'" [required]="false" 
             formControlName="informacionConfidencial" 
             (change)="setValoresStore(datosSolicitudForma,'informacionConfidencial', 'setInformacionConfidencial')"
-
+            [isDisabled]="esFormularioSoloLectura ? true : false"
             ></lib-input-check>
           </div>
       </div>
     </div>
-  </div>
-    </form>
+   </div>
+ </form>
 </div>

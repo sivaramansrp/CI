@@ -1,11 +1,8 @@
-import { CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import {
-  Subject,
-  map,
-  takeUntil,
-} from 'rxjs';
+import { Subject,map,takeUntil } from 'rxjs';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { MaterialesPeligrososService } from '../../services/materiales-peligrosos.service';
 import { PagoDerechosState } from '../../models/materiales-peligrosos.model';
@@ -52,7 +49,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * dentro del flujo de trabajo del componente.
    */
   private seccion!: SeccionLibState;
-
+  /**
+* Indica si el formulario está en modo solo lectura.
+* Cuando es `true`, los campos del formulario no se pueden editar.
+*/
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor de la clase PagoDeDerechosComponent.
    * 
@@ -60,14 +61,12 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @param fb Constructor de formularios reactivos para la creación y gestión de formularios.
    * @param tramite230501Store Almacén para gestionar el estado relacionado con el trámite 230501.
    * @param tramite230501Query Consultas relacionadas con el estado del trámite 230501.
-   * @param seccionQuery Consultas relacionadas con las secciones de la aplicación.
-   * @param seccionStore Almacén para gestionar el estado de las secciones de la aplicación.
-   * 
+   * @param consultaQuery Consulta para obtener el estado de la sección de consulta.
    * @description Este constructor inicializa el componente y llama al servicio de materiales peligrosos
    * para inicializar el catálogo de pago de derechos.
    */
   constructor(public materialesPeligrososService: MaterialesPeligrososService, private fb: FormBuilder,
-    public tramite230501Store: Tramite230501Store, public tramite230501Query: Tramite230501Query
+    public tramite230501Store: Tramite230501Store, public tramite230501Query: Tramite230501Query, public consultaQuery: ConsultaioQuery
   ) {
     this.materialesPeligrososService.inicializaPagoDerechosCatalogo();
   }
@@ -85,9 +84,28 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
           this.pagoDerechosState = seccionState;
         })
       ).subscribe();
-    this.createPagoDerechos();
+
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
-  
+  /**
+* Evalúa si se debe inicializar o cargar datos en el formulario.
+*/
+  inicializarEstadoFormulario(): void {
+    if (!this.pagoDerechos) {
+      this.createPagoDerechos();
+    }
+    if (this.esFormularioSoloLectura) {
+      this.pagoDerechos.disable();
+    }
+  }
   /**
 * Establece el estado de validación del formulario de destinatario.
 * 
@@ -108,7 +126,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * - llavePago: Llave de pago, deshabilitado y con valor predeterminado.
    * - importePago: Importe del pago, deshabilitado y con valor predeterminado.
     */
-  createPagoDerechos(): void {
+  createPagoDerechos(): void {    
     this.pagoDerechos = this.fb.group({
       clave: [{ value: this.pagoDerechosState.clave, disabled: true }],
       dependencia: [{ value: this.pagoDerechosState.dependencia, disabled: true }],

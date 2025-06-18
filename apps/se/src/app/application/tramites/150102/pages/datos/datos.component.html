@@ -25,7 +25,7 @@
           tabindex="0"
           (keyup)="seleccionaTab(3)"
           (click)="seleccionaTab(3)"
-          [ngClass]="!estaHabilitado ? 'disabled-link':''"
+          [ngClass]="!estaHabilitado ? 'disabled-link' : ''"
           >Datos de reporte anual</a
         >
       </li>
@@ -33,11 +33,14 @@
     <ng-container>
       @switch (indice) { @case (1) {
       <solicitante #Solicitante></solicitante>
-      } @case (2) {
-      <app-programas-reporte-annual (filaDeInformeSeleccionada)="getFilaDeInformeSeleccionada($event)"> </app-programas-reporte-annual>
-      } @case (3) {
+      } @case (2) { @if(esDatosRespuesta){
+      <app-programas-reporte-annual
+        (filaDeInformeSeleccionada)="getFilaDeInformeSeleccionada($event)"
+      >
+      </app-programas-reporte-annual>
+      } } @case (3) { @if(esDatosRespuesta){
       <app-datos-de-reporte-annual> </app-datos-de-reporte-annual>
-      } }
+      } } }
     </ng-container>
   </div>
 </div>

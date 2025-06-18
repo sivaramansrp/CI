@@ -10,6 +10,7 @@ import {
   AfterViewInit,
   Component,
   ElementRef,
+  Input,
   OnDestroy,
   OnInit,
   QueryList,
@@ -30,7 +31,7 @@ import {
 
 import { Modal } from 'bootstrap';
 
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 
 import {
   Catalogo,
@@ -59,6 +60,7 @@ import { DatosDelSolicituteSeccionStateStore } from '../../estados/stores/datos-
 import { DatosDelSolicituteSeccionQuery } from '../../estados/queries/datos-del-solicitute-seccion.query';
 
 import { DATOS_DE_LA_PRODUCTO_MODEL } from '../../constantes/aviso-de-funcionamiento.enum';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * Componente `EstablecimientoComponent`
  * Componente que gestiona los datos del establecimiento.
@@ -200,6 +202,11 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
   public seleccionadasPaisDeOriginDatos: string[] = [];
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param fb FormBuilder para inicializar formularios reactivos.
    * @param establecimientoService Servicio para obtener datos relacionados con el establecimiento.
@@ -210,8 +217,19 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
     private fb: FormBuilder,
     private establecimientoService: EstablecimientoService,
     private establecimientoStore: DatosDelSolicituteSeccionStateStore,
-    private establecimientoQuery: DatosDelSolicituteSeccionQuery
-  ) {}
+    private establecimientoQuery: DatosDelSolicituteSeccionQuery,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
+  }
 
   /**
    * Ciclo de vida `AfterViewInit`.
@@ -249,7 +267,40 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
       almacenamientoEnvasePrimario: [''],
       presentacionaFrmaceutica: ['', Validators.required],
     });
+    this.estadoActualizacion();
+    this.inicializarEstadoFormulario();
+    this.establecimientoService.getDatosDelProducto().pipe(takeUntil(this.destroy$))
+      .subscribe((response: DatosDeLaProductoModel[]) => {
+        this.establecimientoData= response;
+     });
+  }
 
+    /**
+     * Inicializa el estado del formulario según el modo de solo lectura.
+     * Si el formulario está en modo solo lectura, lo deshabilita; de lo contrario, actualiza el estado.
+     */
+    inicializarEstadoFormulario(): void {
+      if (this.esFormularioSoloLectura) {
+        this.guardarDatosFormulario();
+      } 
+    }
+
+    /**
+     * Guarda el estado del formulario y lo deshabilita si está en modo solo lectura.
+     * Si no está en modo solo lectura, habilita el formulario.
+     */
+    guardarDatosFormulario(): void {
+      if (this.esFormularioSoloLectura) {
+        this.datosMercanciaForm?.disable();
+      } else {
+        this.datosMercanciaForm?.enable();
+      }
+    }
+
+  /**
+   * Actualiza el estado de los datos del establecimiento desde el store.
+   */
+  estadoActualizacion(): void {
     this.establecimientoQuery
       .select('establecimientoData')
       .pipe(takeUntil(this.destroy$))

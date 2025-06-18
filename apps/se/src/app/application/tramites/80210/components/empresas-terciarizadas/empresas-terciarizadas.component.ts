@@ -1,14 +1,15 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import {
   ConfiguracionColumna,
+  ConsultaioQuery,
   TablaSeleccion,
-} from '@libs/shared/data-access-user/src';
+} from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   FormularioDatos,
   Plantas,
 } from '../../modelos/registro-solicitud-immex.model';
-import { Subject, takeUntil, tap } from 'rxjs';
+import { Subject, map, takeUntil, tap } from 'rxjs';
 import {
   Tramite80210Store,
   Tramites80210State,
@@ -81,6 +82,12 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
    */
   destoryNotification$: Subject<void> = new Subject<void>();
 
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Constructor del componente.
    * 
@@ -94,13 +101,62 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
     @Inject(registroSolicitudImmexService)
     public registroSolicitudService: registroSolicitudImmexService,
     private tramite80210Store: Tramite80210Store,
-    private tramite80210Query: Tramite80210Query
-  ) {}
+    private tramite80210Query: Tramite80210Query,
+    private consultaQuery: ConsultaioQuery
+  ) {
+    this.createEmpresasForm();
+     /**
+ * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+    *
+    * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+    * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+    * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+    */
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destoryNotification$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
 
   /**
    * Método de inicialización del componente.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.  
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.empresasForm.get('rfc')?.enable();
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Inicializa el formulario de empresas terciarizadas.
+   *
+   * - Inicializa el estado global del trámite 80210.
+   * - Asigna el valor de `showPlantas` según el estado actual.
+   * - Solicita los estados disponibles a través del servicio.
+   * - Obtiene los datos del formulario y actualiza los valores del formulario reactivo.
+   * - Si se deben mostrar plantas, segrega los datos de plantas disponibles y seleccionadas.
+   * - Si no, limpia las listas de plantas.
+   * - Finalmente, crea la estructura del formulario reactivo.
+   *
+   * @returns {void}
+   */
+  inicializarFormulario(): void {
     this.initializeTramite80210State();
     this.showPlantas = this.tramites80210State.showPlantas;
     this.registroSolicitudService.obtenerEstados();
@@ -116,8 +172,18 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
           this.plantasSeleccionadas = [];
         }
       });
-    this.createEmpresasForm();
   }
+
+
+   /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    this.empresasForm.disable();
+  }
+
 
   /**
    * Crea el formulario reactivo para las empresas.
@@ -128,7 +194,7 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
       folio: [{ value: '', disabled: true }],
       ano: [{ value: '', disabled: true }],
       rfc: ['', [Validators.required]],
-      estado: ['', [Validators.required]],
+      estado: ['-1', [Validators.required]],
     });
   }
 
@@ -147,14 +213,23 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
    * Busca las empresas controladoras y actualiza el estado de las plantas.
    */
   buscarControladoras(): void {
-    if (this.empresasForm.valid) {
+    if (this.esFormularioValido()) {
       this.showPlantas = true;
-      this.tramite80210Store.setPlantasDisponibles([]);
+      this.tramite80210Store.establecerDatos({plantasDisponibles:[]});
       this.segregatePlantasDatos();
-      this.tramite80210Store.setShowPlantas(this.showPlantas);
+      this.tramite80210Store.establecerDatos({showPlantas:this.showPlantas});
       this.empresasForm.get('rfc')?.reset();
-      this.empresasForm.get('estado')?.reset();
+      this.empresasForm.get('estado')?.reset("-1");
     }
+  }
+
+    /**
+   * Verifica si el formulario de empresas es válido.
+   *
+   * @returns {boolean} Retorna `true` si el formulario es válido y el campo 'estado' tiene un valor distinto de '-1'; de lo contrario, retorna `false`.
+   */
+  esFormularioValido(): boolean {
+    return this.empresasForm.valid && this.empresasForm.get('estado')?.value !== '-1';
   }
 
   /**
@@ -181,7 +256,7 @@ export class EmpresasTerciarizadasComponent implements OnInit, OnDestroy {
         .pipe(
           takeUntil(this.destoryNotification$),
           tap((plantas) => {
-            this.tramite80210Store.setPlantasDisponibles(plantas?.datos);
+            this.tramite80210Store.establecerDatos({plantasDisponibles:plantas?.datos});
           })
         )
         .subscribe((plantas) => {
@@ -254,11 +329,11 @@ agregarPlantas(): void {
     const DISPONIBLES_PLANTAS_ID = this.plantasDisponibles.map(
       (planta) => planta
     );
-    this.tramite80210Store.setPlantasDisponibles(DISPONIBLES_PLANTAS_ID);
+    this.tramite80210Store.establecerDatos({plantasDisponibles:DISPONIBLES_PLANTAS_ID});
     const SELECCIONADA_PLANTAS_ID = this.plantasSeleccionadas.map(
       (planta) => planta
     );
-    this.tramite80210Store.setPlantasSeleccionada(SELECCIONADA_PLANTAS_ID);
+    this.tramite80210Store.establecerDatos({plantasSeleccionadas:SELECCIONADA_PLANTAS_ID});
 
   }
 
@@ -293,16 +368,6 @@ agregarPlantas(): void {
     this.listaFilaSeleccionada = [];
   }
 
-  /**
-   * Establece valores en el estado global desde el formulario.
-   * 
-   * @param campo - Nombre del campo en el formulario.
-   * @param metodoNombre - Método del estado global para actualizar el valor.
-   */
-  setValoresStore(campo: string, metodoNombre: keyof Tramite80210Store): void {
-    const VALOR = this.empresasForm.get(campo)?.value;
-    (this.tramite80210Store[metodoNombre] as (value: unknown) => void)(VALOR);
-  }
 
   /**
    * Método de limpieza al destruir el componente.

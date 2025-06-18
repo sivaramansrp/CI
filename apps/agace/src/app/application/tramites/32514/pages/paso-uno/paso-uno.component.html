@@ -8,6 +8,10 @@
         <a data-toggle="tab" (click)="seleccionaTab(2)" (keydown.enter)="seleccionaTab(2)" (keydown.space)="seleccionaTab(2)" role="button" tabindex="2">Tipo Aviso</a>
       </li>
     </ul>
-    <ng-container> @switch (indice) { @case (1) { <solicitante [tabindex]="1" #Solicitante></solicitante> } @case (2) { <app-aviso-retorno [tabIndex]="2"></app-aviso-retorno> } } </ng-container>
+    <ng-container> @switch (indice) { @case (1) { <solicitante [tabindex]="1" #Solicitante></solicitante> } @case (2) { 
+      @if(esDatosRespuesta){
+        <app-aviso-retorno [tabIndex]="2"></app-aviso-retorno>
+      }
+     } } </ng-container>
   </div>
 </div>

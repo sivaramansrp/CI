@@ -11,7 +11,7 @@ import {
   PagoDerechosFormState,
 } from '../../models/terceros-relacionados.model';
 import { BANCO } from '../../constantes/datos-solicitud.enum';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { FormBuilder } from '@angular/forms';
@@ -59,6 +59,11 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @type {number}
    */
   @Input() public idProcedimiento!: number;
+
+  /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
 
   /**
    * @property {EventEmitter<PagoDerechosFormState>} updatePagoDerechos
@@ -127,7 +132,8 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private datosSolicitudService: DatosSolicitudService
   ) {
-    // No se necesita lógica de inicialización adicional.
+    this.cargarDatos();
+    this.getBancoDatos();
   }
 
   /**
@@ -137,6 +143,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * con esos valores y suscribe a cambios para mantener el estado sincronizado.
    */
   ngOnInit(): void {
+    this.mostrarBanco = BANCO.includes(this.idProcedimiento) ? true : false;
     this.pagoDerechosForm = this.fb.group({
       claveReferencia: [
         this.pagoDerechoFormState?.claveReferencia || '',
@@ -170,15 +177,13 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
         ],
       ],
     });
-
     this.pagoDerechosForm.valueChanges.subscribe((valores) => {
       this.updatePagoDerechos.emit(valores);
     });
 
-    this.mostrarBanco = BANCO.includes(this.idProcedimiento) ? true : false;
-
-    this.cargarDatos();
-    this.getBancoDatos();
+    if (this.formularioDeshabilitado) {
+      this.pagoDerechosForm.disable();
+    }
   }
 
   /**
@@ -192,6 +197,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.estadosDatos = data;
+        this.pagoDerechosForm.patchValue({
+          estado: this.pagoDerechoFormState?.estado || '',
+        });
       });
   }
 
@@ -206,6 +214,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.unsubscribe$))
       .subscribe((data) => {
         this.bancoDatos = data;
+        this.pagoDerechosForm.patchValue({
+          banco: this.pagoDerechoFormState?.banco || '',
+        });
       });
   }
 

@@ -8,6 +8,8 @@
     [configuracionTabla]="configuracionTabla"
     [datos]="sanidadService.exportador"
     [tipoSeleccionTabla]="checkbox"
+           [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+
   ></app-tabla-dinamica>
   
   <nav aria-label="Page navigation example">
@@ -23,6 +25,8 @@
     [configuracionTabla]="configuracionTablaDatos"
     [datos]="sanidadService.destinatario"
     [tipoSeleccionTabla]="checkbox"
+           [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
+
   ></app-tabla-dinamica>
 
   <nav aria-label="Page navigation example">

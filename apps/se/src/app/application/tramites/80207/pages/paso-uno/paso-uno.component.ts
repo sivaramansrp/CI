@@ -1,5 +1,9 @@
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Subject,takeUntil } from 'rxjs';
 import { Component } from '@angular/core';
-
+import{ OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import{SubfabricanteService} from '../../servicios/servicios-subfabricante.service';
 
 /**
  * @fileoverview Componente para la gestión del paso uno.
@@ -16,14 +20,36 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
-  styleUrl: './paso-uno.component.scss'
+  styleUrl: './paso-uno.component.scss',
+  providers: [SubfabricanteService]
 })
-export class PasoUnoComponent {
+export class PasoUnoComponent implements OnInit, OnDestroy {
    /**
    * Índice del paso actual.
    * @property {number} indice
    */
   indice: number = 1;
+
+  /**
+   * Indica si los datos de respuesta están disponibles.
+   * Valor inicial: false.
+   */
+
+  public esDatosRespuesta: boolean = false;
+
+  /**
+   * Estado de la consulta actual.
+   * Este estado se obtiene a través de ConsultaioQuery.
+   */
+
+  public consultaState!: ConsultaioState;
+
+  /**
+   * Subject para notificar la destrucción del componente.
+   * Se utiliza para limpiar suscripciones y evitar fugas de memoria.
+   */
+
+  public destroyNotifier$: Subject<void> = new Subject();
 
    /**
    * Selecciona una pestaña del wizard.
@@ -33,4 +59,56 @@ export class PasoUnoComponent {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
+
+  /**
+   * Constructor del componente.
+   * Inicializa los servicios necesarios.
+   * @param {ConsultaioQuery} consultaQuery - Servicio para consultar el estado actual.
+   * @param {SubfabricanteService} subfabricanteService - Servicio para manejar datos de subfabricantes.
+   */
+  constructor(
+    private consultaQuery: ConsultaioQuery,
+    private subfabricanteService: SubfabricanteService,
+  ) {
+    // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
+  }
+
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Suscribe al estado de la consulta para actualizar los datos del formulario según sea necesario.
+   */
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$.subscribe((seccionState) => {
+      this.consultaState = seccionState;
+      if (this.consultaState.update) {
+        this.guardarDatosFormulario();
+      } else {
+        this.esDatosRespuesta = true;
+      }
+    });
+  }
+  /**
+   * Guarda los datos del formulario utilizando el servicio de ampliación de servicios.
+   */
+  guardarDatosFormulario(): void {
+    this.subfabricanteService
+    .getServiciosData().pipe(
+      takeUntil(this.destroyNotifier$)
+    )
+    .subscribe((resp) => {
+      if(resp) {
+       this.esDatosRespuesta = true;
+       this.subfabricanteService.actualizarEstadoFormulario(resp);
+
+      }
+    });
+    }
+   /**
+   * Método del ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia las suscripciones para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+  this.destroyNotifier$.next();
+  this.destroyNotifier$.complete();
+}
 }

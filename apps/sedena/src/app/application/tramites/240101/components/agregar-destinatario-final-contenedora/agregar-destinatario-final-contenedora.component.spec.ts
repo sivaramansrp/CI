@@ -4,6 +4,7 @@ import { Tramite240101Store } from '../../estados/tramite240101Store.store';
 import { AgregarDestinatarioFinalComponent } from '../../../../shared/components/agregar-destinatario-final/agregar-destinatario-final.component';
 import { CommonModule } from '@angular/common';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AgregarDestinatarioFinalContenedoraComponent', () => {
   let component: AgregarDestinatarioFinalContenedoraComponent;
@@ -11,8 +12,7 @@ describe('AgregarDestinatarioFinalContenedoraComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AgregarDestinatarioFinalContenedoraComponent],
-      imports: [CommonModule, AgregarDestinatarioFinalComponent]
+      imports: [CommonModule, AgregarDestinatarioFinalContenedoraComponent, AgregarDestinatarioFinalComponent, HttpClientTestingModule]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AgregarDestinatarioFinalContenedoraComponent);

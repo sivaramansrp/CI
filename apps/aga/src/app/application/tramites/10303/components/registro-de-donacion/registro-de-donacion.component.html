@@ -9,7 +9,8 @@
                 <div class="alert alert-info">
                     <input class="form-check-input" type="checkbox" [id]="'manifiesto-' + i"
                         [value]="manifiesto.declaracion.clave" [checked]="seleccionadaManifiesto.value[i]"
-                        class="required" (change)="onManifiestoCheckboxCambiar($event, i)" />
+                        class="required" (change)="onManifiestoCheckboxCambiar($event, i)"
+                        [disabled]="formularioDeshabilitado" />
                     <div class="manifiestoDescripcion">
                         <label>*{{manifiesto.declaracion.descripcion}}</label>
                     </div>
@@ -22,7 +23,7 @@
             <div class="col-md-8">
                 <div class="form-group">
                     <app-catalogo-select [catalogo]="aduana" [label]="'Aduana por la que ingresará la mercancía'"
-                        [required]="true" name="aduana" formControlName="aduana" [placeholder]="'Selecciona un valor'"
+                        [required]="true" name="aduana" formControlName="aduana" [isDisabled]="formularioDeshabilitado" [placeholder]="'Selecciona un valor'"
                         (change)="aduanaSeleccion()"></app-catalogo-select>
                 </div>
             </div>
@@ -38,7 +39,7 @@
             @for (basicoRequerimiento of basicoRequerimientos; let i = $index; track i) {
             <div class="col-md-12">
                 <input type="checkbox" class="form-check-input me-2"
-                    [checked]="seleccionadaBasicoRequerimiento.value[i]"
+                    [checked]="seleccionadaBasicoRequerimiento.value[i]" [disabled]="formularioDeshabilitado"
                     (change)="onBasicoRequirimentoCheckboxCambiar($event, i)" />
                 <span for="basicoRequerimiento" class="ms-2">{{ basicoRequerimiento.descripcion }}</span>
             </div>
@@ -49,19 +50,23 @@
     <!--Mercancías-->
     <ng-titulo titulo="Mercancías"></ng-titulo>
 
-    <ng-table [commonTableHeader]="mercanciaHeaderData" [commonTableBody]="mercanciaBodyData"></ng-table>
+    <ng-table [commonTableHeader]="mercanciaHeaderData" [commonTableBody]="mercanciaBodyData"
+        [disableSeleccionTablaCheckBox]="formularioDeshabilitado"></ng-table>
 
     <div class="row">
         <div class="col-md-12">
             <div class="pull-right">
-                <button type="button" name="modificarMercancias" class="btn btn-default">
+                <button type="button" name="modificarMercancias" class="btn btn-default"
+                    [disabled]="formularioDeshabilitado">
                     Modificar
                 </button>
-                <button type="button" name="eliminarMercancias" class="btn btn-danger ms-2">
+                <button type="button" name="eliminarMercancias" class="btn btn-danger ms-2"
+                    [disabled]="formularioDeshabilitado">
                     Eliminar
                 </button>
                 <button type="button" name="agregarMercancias" class="btn btn-primary ms-2" data-bs-toggle="modal"
-                    data-bs-target="#modalAgregarMercancias" (click)="abrirDialogoMercancias()">
+                    data-bs-target="#modalAgregarMercancias" [disabled]="formularioDeshabilitado"
+                    (click)="abrirDialogoMercancias()">
                     Agregar
                 </button>
             </div>
@@ -86,27 +91,32 @@
                         <div class="panel-body">
                             <!-- DATOS DEL DONANTE EXTRANJERO -->
                             <ng-container *ngIf="i === 0">
-                                <app-datos-donante-extranjero></app-datos-donante-extranjero>
+                                <app-datos-donante-extranjero
+                                    [formularioDeshabilitado]="formularioDeshabilitado"></app-datos-donante-extranjero>
                             </ng-container>
 
                             <!-- DATOS DEL DONATARIO -->
                             <ng-container *ngIf="i === 1">
-                                <app-datos-donatario></app-datos-donatario>
+                                <app-datos-donatario
+                                    [formularioDeshabilitado]="formularioDeshabilitado"></app-datos-donatario>
                             </ng-container>
 
                             <!-- DATOS DEL REPRESENTANTE LEGAL DEL DONATARIO -->
                             <ng-container *ngIf="i === 2">
-                                <app-datos-rep-legal-donatario></app-datos-rep-legal-donatario>
+                                <app-datos-rep-legal-donatario
+                                    [formularioDeshabilitado]="formularioDeshabilitado"></app-datos-rep-legal-donatario>
                             </ng-container>
 
                             <!-- DATOS DEL REPRESENTANTE LEGAL AUTORIZADO PARA RECIBIR LA DONACION -->
                             <ng-container *ngIf="i === 3">
-                                <app-datos-rep-legal-recibir-donacion></app-datos-rep-legal-recibir-donacion>
+                                <app-datos-rep-legal-recibir-donacion
+                                    [formularioDeshabilitado]="formularioDeshabilitado"></app-datos-rep-legal-recibir-donacion>
                             </ng-container>
 
                             <!-- DATOS DE LA PERSONA AUTORIZADA PARA OIR Y RECIBIR NOTIFICACIONES -->
                             <ng-container *ngIf="i === 4">
-                                <app-datos-persona-oir-recibir></app-datos-persona-oir-recibir>
+                                <app-datos-persona-oir-recibir
+                                    [formularioDeshabilitado]="formularioDeshabilitado"></app-datos-persona-oir-recibir>
                             </ng-container>
                         </div>
                     </div>

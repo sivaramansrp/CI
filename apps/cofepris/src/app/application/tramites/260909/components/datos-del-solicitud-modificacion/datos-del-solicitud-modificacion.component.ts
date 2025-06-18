@@ -29,6 +29,8 @@ import {
 
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 import { CommonModule } from '@angular/common';
 
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -36,17 +38,18 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { Modal } from 'bootstrap';
 
 import { MercanciasInfo,PropietarioTipoPersona,ScianModel} from '../../models/datos-de-la-solicitud.model';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject ,map,takeUntil } from 'rxjs';
 
 import { EstablecimientoService } from '../../service/establecimiento.service';
-
-import { DatosDelSolicituteSeccionStateStore } from '../../estados/datos-del-solicitud-seccion.store';
 
 import { ManifiestosComponent } from '../../../../shared/components/manifiestos-declaraciones/manifiestos-declaraciones.component';
 import { RepresentanteLegalComponent } from '../../../../shared/components/representante-legal/representante-legal.component';
 
 import { CROSLISTA_DE_PAISES, FECHA_DE_PAGO, MERCANCIAS_DATA, SCIAN_TABLE_CONFIG } from '../../constantes/medicamentos-donacion.enum';
 import { DatosDelSeccionQuery } from '../../estados/datos-del-solicitud-seccion.query';
+import { ManifiestosRepresentanteSeccionComponent } from '../../../../shared/components/manifiestos-representante-seccion/manifiestos-representante-seccion.component';
+
+import { DatosDelSolicituteSeccionStateStoreI } from '../../estados/datos-del-solicitud-seccion.store';
 
 
 /**
@@ -126,6 +129,7 @@ import { DatosDelSeccionQuery } from '../../estados/datos-del-solicitud-seccion.
     AlertComponent,
     InputCheckComponent,
     NotificacionesComponent,
+     ManifiestosRepresentanteSeccionComponent,
   ],
 
   templateUrl: './datos-del-solicitud-modificacion.component.html',
@@ -475,7 +479,12 @@ export class DatosDelSolicitudModificacionComponent implements OnInit, OnDestroy
    * Datos de la tabla de mercancías.
    */
   mercanciasTablaDatos: MercanciasInfo[] = [];
-
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los formularios estarán deshabilitados y no se podrán editar.
+   * Cuando es `false`, los formularios estarán habilitados para edición.
+   */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente.
    *
@@ -486,10 +495,18 @@ export class DatosDelSolicitudModificacionComponent implements OnInit, OnDestroy
   constructor(
     private fb: FormBuilder,
     private establecimientoService: EstablecimientoService,
-    private domicilioEstablecimientoStore: DatosDelSolicituteSeccionStateStore,
-    private domicilioEstablecimientoQuery: DatosDelSeccionQuery
+    private domicilioEstablecimientoStore: DatosDelSolicituteSeccionStateStoreI,
+    private domicilioEstablecimientoQuery: DatosDelSeccionQuery,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Constructor
+      this.consultaioQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroy$),
+            map((seccionState) => {
+              this.esFormularioSoloLectura = seccionState.readonly;
+            })
+          )
+          .subscribe()
   }
 
   
@@ -515,6 +532,12 @@ export class DatosDelSolicitudModificacionComponent implements OnInit, OnDestroy
     this.loadEstadoData();
     this.crearAgregarFormulario();
     this.estadoDelServicio();
+      if (this.esFormularioSoloLectura) {
+      this.formMercancias.disable();
+      this.domicilioEstablecimiento.disable();
+      this.solicitudEstablecimientoForm.disable();
+      this.scianForm.disable();
+    }
   }
 
   /**
@@ -682,11 +705,11 @@ export class DatosDelSolicitudModificacionComponent implements OnInit, OnDestroy
    * Carga los datos del catálogo de justificación.
    */
   enCambioDeControl(controlName: string): void {
-    const valorSeleccionado = this.domicilioEstablecimiento.get(controlName)?.value;
+    const VALOR_SELECCIONADO = this.domicilioEstablecimiento.get(controlName)?.value;
     this.domicilioEstablecimientoStore.update({
-    [controlName]: valorSeleccionado
+    [controlName]: VALOR_SELECCIONADO
   });
-  if (controlName === 'ideGenerica1' && valorSeleccionado === 'modificacion') {
+  if (controlName === 'ideGenerica1' && VALOR_SELECCIONADO === 'modificacion') {
     this.domicilioEstablecimiento.get('observaciones')?.enable();
   } else {
     this.domicilioEstablecimiento.get('observaciones')?.disable();
@@ -705,7 +728,7 @@ export class DatosDelSolicitudModificacionComponent implements OnInit, OnDestroy
 
     this.domicilioEstablecimientoStore.update(UPDATED_VALUE);
   }
-
+ 
   /**
    * Habilita o deshabilita el campo "No Licencia Sanitaria" según el estado del checkbox.
    * @param event Evento del checkbox.

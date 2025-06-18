@@ -147,3 +147,47 @@ export interface FormularioMercancia {
   fecha: string;
   numeroFactura: string;
 }
+/**
+ * @interface RespuestaConsulta
+ * @description Representa la respuesta de una consulta realizada en el trámite.
+ * 
+ * @property {boolean} success - Indica si la consulta fue exitosa.
+ * @property {ConsultaDatos} datos - Contiene los datos obtenidos de la consulta.
+ * @property {string} message - Mensaje asociado a la respuesta de la consulta.
+ */
+export interface RespuestaConsulta {
+  success: boolean;
+  datos: ConsultaDatos;
+  message: string;
+}
+/**
+ * @interface ConsultaDatos
+ * @description Representa los datos obtenidos de una consulta en el trámite.
+ * 
+ * @property {boolean} tercerOperador - Indica si existe un tercer operador involucrado.
+ * @property {GrupoOperador} grupoOperador - Información del grupo operador.
+ * @property {GrupoTratado} grupoTratado - Información del grupo tratado.
+ * @property {SeleccionadasTabla[]} mercanciaSeleccionadasTablaDatos - Lista de mercancías seleccionadas en la tabla de datos.
+ * @property {DisponiblesTabla[]} mercanciaDisponsiblesTablaDatos - Lista de mercancías disponibles en la tabla de datos.
+ * @property {string} observaciones - Observaciones relacionadas con la consulta.
+ * @property {string} idioma - Idioma utilizado en la consulta.
+ * @property {string} entidadFederativa - Entidad federativa asociada a la consulta.
+ * @property {string} representacionFederal - Representación federal asociada a la consulta.
+ * @property {GrupoReceptor} grupoReceptor - Información del grupo receptor.
+ * @property {GrupoDeDirecciones} grupoDeDirecciones - Información del grupo de direcciones.
+ * @property {GrupoRepresentativo} grupoRepresentativo - Información del grupo representativo.
+ */
+export interface ConsultaDatos {
+  tercerOperador: boolean;
+  grupoOperador: GrupoOperador;
+  grupoTratado: GrupoTratado;
+  mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[]
+  mercanciaDisponsiblesTablaDatos: DisponiblesTabla[];
+  observaciones: string;
+  idioma: string;
+  entidadFederativa: string;
+  representacionFederal: string;
+  grupoReceptor: GrupoReceptor;
+  grupoDeDirecciones: GrupoDeDirecciones;
+  grupoRepresentativo: GrupoRepresentativo;
+}

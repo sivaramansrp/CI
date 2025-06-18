@@ -1,8 +1,9 @@
 import { CAMPO_OBLIGATORIO_DERECHOS } from '../../constants/datos-solicitud.enum';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { EventEmitter } from '@angular/core';
 import { FECHA_DE_PAGO } from '../../models/pago-de-derechos.model';
@@ -16,10 +17,12 @@ import { OnInit } from '@angular/core';
 import { Output } from '@angular/core';
 import { PagoDerechosFormState } from '../../models/pago-de-derechos.model';
 import { REGEX_IMPORTE_PAGO } from '@ng-mf/data-access-user';
+import { REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Subject } from 'rxjs';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
+import { map } from 'rxjs/operators';
 import { takeUntil } from 'rxjs';
 
 /**
@@ -36,7 +39,6 @@ import { takeUntil } from 'rxjs';
     CatalogoSelectComponent,
     ReactiveFormsModule,
     InputFechaComponent,
-
     TituloComponent,
   ],
   templateUrl: './pago-de-derechos.component.html',
@@ -62,7 +64,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   @Output() public updatePagoDerechos: EventEmitter<PagoDerechosFormState> =
     new EventEmitter<PagoDerechosFormState>();
 
-    /**
+  /**
    * @property idProcedimiento
    * @description Identificador del procedimiento asociado a este componente.
    * @type {number}
@@ -70,12 +72,20 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   @Input() idProcedimiento!: number;
 
   /**
-   * @property {Subject<void>} unsubscribe$
+   * Indica si el formulario se encuentra en modo solo lectura.
+   * Cuando es verdadero, los campos del formulario no pueden ser editados.
+   * @property {boolean} esFormularioSoloLectura
+   * @default false
+   */
+  @Input() esFormularioSoloLectura: boolean = false;
+
+  /**
+   * @property {Subject<void>} destroyNotifier$
    * Subject utilizado para gestionar las desuscripciones automáticas y evitar fugas de memoria.
    * Se completa manualmente cuando el componente se destruye.
    * @private
    */
-  private unsubscribe$ = new Subject<void>();
+  private destroyNotifier$ = new Subject<void>();
 
   /**
    * @property {InputFecha} fechaInicioInput
@@ -109,23 +119,46 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    *
    * @param fb - FormBuilder para construir el formulario reactivo.
    * @param datosSolicitudService - Servicio para obtener catálogos desde el backend.
-   * @param tramiteStore - Store que administra el estado del trámite actual.
+   * @param {ConsultaioQuery} consultaioQuery - Servicio para consultar el estado de la aplicación.
    */
   constructor(
     private fb: FormBuilder,
-    private datosSolicitudService: DatosSolicitudService // eslint-disable-next-line no-empty-function
-  ) {}
+    private datosSolicitudService: DatosSolicitudService,
+    private consultaioQuery: ConsultaioQuery
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState: { readonly: boolean }) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.crearFormaulario();
+    }
+  }
 
   /**
-   * @method ngOnInit
-   * @description Hook que se ejecuta al inicializar el componente.
-   * Carga los datos iniciales desde el store, configura el formulario
-   * con esos valores y suscribe a cambios para mantener el estado sincronizado.
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
-  ngOnInit(): void {
+  guardarDatosFormulario(): void {
     this.crearFormaulario();
-    this.cargarDatos();
-    this.campoObligatorio = CAMPO_OBLIGATORIO_DERECHOS.includes(this.idProcedimiento)
+    if (this.esFormularioSoloLectura) {
+      this.pagoDerechosForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.pagoDerechosForm.enable();
+    }
   }
 
   /**
@@ -161,8 +194,23 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
     this.pagoDerechosForm.valueChanges.subscribe((valores) => {
       this.updatePagoDerechos.emit(valores);
     });
-
+  }
+  /**
+   * @method ngOnInit
+   * @description Hook que se ejecuta al inicializar el componente.
+   * Carga los datos iniciales desde el store, configura el formulario
+   * con esos valores y suscribe a cambios para mantener el estado sincronizado.
+   */
+  ngOnInit(): void {
+    this.crearFormaulario();
     this.cargarDatos();
+    this.campoObligatorio = CAMPO_OBLIGATORIO_DERECHOS.includes(
+      this.idProcedimiento
+    );
+
+    if (this.esFormularioSoloLectura) {
+      this.pagoDerechosForm.disable();
+    }
   }
 
   /**
@@ -173,7 +221,7 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
   cargarDatos(): void {
     this.datosSolicitudService
       .obtenerBancos()
-      .pipe(takeUntil(this.unsubscribe$))
+      .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((data) => {
         this.bancoDatos = data;
       });
@@ -184,7 +232,9 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @description Limpia todos los campos del formulario de pago de derechos.
    */
   onReset(): void {
-    this.pagoDerechosForm.reset();
+    if (this.pagoDerechosForm.invalid) {
+      this.pagoDerechosForm.markAllAsTouched();
+    }
   }
 
   /**
@@ -205,25 +255,27 @@ export class PagoDeDerechosComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
 
-    /**
- * @method onImportePagoInput
- * @description
- * Maneja el evento de entrada del campo "importePago" para asegurar que solo se permitan caracteres numéricos
- * y que la longitud máxima sea de 22 dígitos. Si el usuario ingresa un carácter no numérico, este será eliminado.
- * Además, si la longitud supera los 22 caracteres, el valor se recorta automáticamente.
- * El valor limpio se actualiza en el control reactivo sin emitir un nuevo evento de cambio.
- *
- * @param {Event} event - El evento de entrada generado por el campo de texto.
- * 
- * @returns {void} No retorna ningún valor.
- */
+  /**
+   * @method onImportePagoInput
+   * @description
+   * Maneja el evento de entrada del campo "importePago" para asegurar que solo se permitan caracteres numéricos
+   * y que la longitud máxima sea de 22 dígitos. Si el usuario ingresa un carácter no numérico, este será eliminado.
+   * Además, si la longitud supera los 22 caracteres, el valor se recorta automáticamente.
+   * El valor limpio se actualiza en el control reactivo sin emitir un nuevo evento de cambio.
+   *
+   * @param {Event} event - El evento de entrada generado por el campo de texto.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
   onImportePagoInput(event: Event): void {
     const INPUT = event.target as HTMLInputElement;
-    INPUT.value = INPUT.value.replace(/[^0-9]/g, '').slice(0, 22);
-    this.pagoDerechosForm.get('importePago')?.setValue(INPUT.value, { emitEvent: false });
+    INPUT.value = INPUT.value.replace(REGEX_NUMEROS, '').slice(0, 22);
+    this.pagoDerechosForm
+      .get('importePago')
+      ?.setValue(INPUT.value, { emitEvent: false });
   }
   ngOnDestroy(): void {
-    this.unsubscribe$.next();
-    this.unsubscribe$.complete();
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }

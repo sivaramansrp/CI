@@ -1,5 +1,5 @@
+import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
 import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
 
 import { CommonModule, Location } from '@angular/common';
@@ -12,6 +12,7 @@ import { ES_CURP } from '../../constants/datos-del-tramilte.enum';
 import { ES_NACIONAL } from '../../constants/datos-del-tramilte.enum';
 import { ES_RFC } from '../../constants/datos-del-tramilte.enum';
 import { NUMERO_TRAMITE } from '../../constants/datos-solicitud.enum';
+
 
 /**
  * @component AgregarProveedorComponent
@@ -32,7 +33,7 @@ import { NUMERO_TRAMITE } from '../../constants/datos-solicitud.enum';
   templateUrl: './agregar-proveedor-custom.component.html',
   styleUrl: './agregar-proveedor-custom.component.scss',
 })
-export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnChanges {
+export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnChanges,AfterViewInit {
   /**
     * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
     * Este input se utiliza para recibir la información necesaria desde el componente padre.
@@ -40,6 +41,19 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
     * @type {Proveedor | DestinoFinal | null | undefined}
     */
   @Input() formaDatos!: Proveedor | DestinoFinal | null | undefined;
+
+    /**
+   * Indica si el formulario debe mostrarse solo en modo de lectura.
+   *
+   * @type {boolean}
+   * @default false
+   * @see https://compodoc.app/
+   *
+   * @description
+   * Si es `true`, el formulario se mostrará en modo solo lectura y no permitirá modificaciones.
+   * Si es `false`, el formulario será editable.
+   */
+  @Input() esFormularioSoloLectura:boolean =false;
 
   /**
     * @property tipoPersona
@@ -253,6 +267,14 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
     this.mostrarCamposNoContribuyente =
       PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
   }
+ngAfterViewInit(): void {
+  if(this.esFormularioSoloLectura){
+    this.agregarProveedorForm.disable();
+  }
+  else{
+    this.agregarProveedorForm.enable();
+  }
+}
 
   /**
    * Crea el formulario reactivo `agregarDestinatarioFinal` utilizando `FormBuilder`.
@@ -487,6 +509,9 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
         this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
         break
       case NUMERO_TRAMITE.TRAMITE_240118:
+        this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
+        break
+         case NUMERO_TRAMITE.TRAMITE_240120:
         this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
         break
       case NUMERO_TRAMITE.TRAMITE_240121:

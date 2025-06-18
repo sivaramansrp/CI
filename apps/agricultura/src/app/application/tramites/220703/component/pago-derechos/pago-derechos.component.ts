@@ -38,6 +38,18 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
   tramiteState: TramiteState = {} as TramiteState;
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Indica si el campo debe ser deshabilitado.
+   * @property {boolean} campoDeshabilitar
+   */
+  campoDeshabilitar: boolean = false;
+
+  /**
    * Configuración para el campo de fecha de pago (versión estándar).
    * @type {InputFecha}
    */
@@ -76,6 +88,11 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
         this.tramiteState = datos;
         this.pagosDerechosForm.patchValue({
           fechaDePago: datos.fechaDePago,
+          claveDeReferencia: datos.claveDeReferencia,
+          cadenaDependencia: datos.cadenaDependencia,
+          banco: datos.banco,
+          llaveDePago:datos.llaveDePago,
+          importeDePago: datos.importeDePago,
         });
       })
     )
@@ -87,12 +104,12 @@ export class PagoDerechosComponent implements OnInit, OnDestroy {
    */
   iniciarFormulario(): void {
     this.pagosDerechosForm = this.fb.group({
-      claveDeReferencia: [{ value: '', disabled: true }, Validators.required],
-      cadenaDependencia: [{ value: '', disabled: true }, Validators.required],
-      banco: [{ value: '', disabled: true }, Validators.required],
-      llaveDePago: [{ value: '', disabled: true }, Validators.required],
+      claveDeReferencia: [{ value: this.tramiteState.claveDeReferencia, disabled: true }, Validators.required],
+      cadenaDependencia: [{ value: this.tramiteState.cadenaDependencia, disabled: true }, Validators.required],
+      banco: [{ value: this.tramiteState.banco, disabled: true }, Validators.required],
+      llaveDePago: [{ value: this.tramiteState.llaveDePago, disabled: true }, Validators.required],
       fechaDePago: [{ value: this.tramiteState.fechaDePago, disabled: true }, Validators.required],
-      importeDePago: [{ value: '', disabled: true }, Validators.required],
+      importeDePago: [{ value: this.tramiteState.importeDePago, disabled: true }, Validators.required],
     });
   }
 

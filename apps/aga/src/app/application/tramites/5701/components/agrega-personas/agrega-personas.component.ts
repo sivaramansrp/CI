@@ -3,21 +3,27 @@ import {
   ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS,
   ERR_CAMPOS_OBLIGATORIOS,
   ERR_INPUT_BUSQUEDA_VACIO,
-  MSG_DATOS_GUARDADOS,
-  MSG_ELIMINA_ELEMENTO,
   MSJ_ERROR_GAFETE_EXISTE,
-  TITULO_MODAL,
-} from '../../../../core/enums/5701/tramite5701.enum';
+} from '../../../../core/enums/5701/mensajes-modal-5701.enum';
 import {
-  CONFIGURACION_ENCABEZADO_TABLA_RESPONSABLES_DESPACHO,
-  MSG_SELECCIONA_REGISTRO,
-  TITULO_MODAL_AVISO,
-} from '../../../../core/enums/5701/responsables-despacho.enum';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 import {
   ConfiguracionColumna,
+  MSG_DATOS_GUARDADOS,
+  MSG_ELIMINA_ELEMENTO,
+  MSG_SELECCIONA_REGISTRO,
   Notificacion,
   NotificacionesComponent,
+  SoloLetrasNumerosDirective,
+  TITULO_MODAL_AVISO,
   TablaDinamicaComponent,
   TablaSeleccion,
   UppercaseDirective,
@@ -35,6 +41,9 @@ import {
   Tramite5701Store,
 } from '../../../../core/estados/tramites/tramite5701.store';
 import { Subject, map, takeUntil, tap } from 'rxjs';
+import {
+  CONFIGURACION_ENCABEZADO_TABLA_RESPONSABLES_DESPACHO,
+} from '../../../../core/enums/5701/responsables-despacho.enum';
 import { CommonModule } from '@angular/common';
 import { ConsultaResponsableService } from '../../../../core/services/5701/consulta-responsable.service';
 import { ResponsablesDespacho } from '../../../../core/models/5701/tramite5701.model';
@@ -49,11 +58,17 @@ import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
     UppercaseDirective,
     NotificacionesComponent,
     TablaDinamicaComponent,
+    SoloLetrasNumerosDirective,
   ],
   templateUrl: './agrega-personas.component.html',
   styleUrl: './agrega-personas.component.scss',
 })
-export class AgregaPersonasComponent implements OnInit, OnDestroy {
+export class AgregaPersonasComponent implements OnInit, OnChanges, OnDestroy {
+  @Input() personasResponsablesDespachoSeleccionados: ResponsablesDespacho[] =
+    [];
+
+  @Output() responsablesDespachoChange: EventEmitter<ResponsablesDespacho[]> =
+    new EventEmitter<ResponsablesDespacho[]>();
   /**
    * @description
    * Configuración de la tabla de responsables del despacho.
@@ -142,6 +157,17 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
     }
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (
+      changes['personasResponsablesDespachoSeleccionados'] &&
+      changes['personasResponsablesDespachoSeleccionados'].currentValue
+    ) {
+      this.personas = [
+        ...changes['personasResponsablesDespachoSeleccionados'].currentValue,
+      ];
+    }
+  }
+
   /**
    * Verifica si un campo específico en el formulario de persona es válido.
    *
@@ -149,8 +175,9 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
    * @returns {boolean | null} - Devuelve `true` si el campo es válido, `false` si no lo es,
    * o `null` si no se puede determinar la validez.
    */
-  isValid(field: string): boolean | null {
-    return this.validacionesService.isValid(this.personaForm, field);
+  isValid(field: string): boolean | null | undefined {
+    const CONTROL = this.personaForm.get(field);
+    return CONTROL ? Boolean(CONTROL.errors) && CONTROL.touched : null;
   }
 
   /**
@@ -180,7 +207,7 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
         tipoNotificacion: 'alert',
         categoria: '',
         modo: 'action',
-        titulo: TITULO_MODAL,
+        titulo: TITULO_MODAL_AVISO,
         mensaje: ERR_INPUT_BUSQUEDA_VACIO,
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
@@ -219,7 +246,7 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
               tipoNotificacion: 'alert',
               categoria: '',
               modo: 'action',
-              titulo: TITULO_MODAL,
+              titulo: TITULO_MODAL_AVISO,
               mensaje: ERR_BUSQUEDA_GAFETE_SIN_RESULTADOS,
               cerrar: false,
               txtBtnAceptar: 'Cerrar',
@@ -271,12 +298,12 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
     ]);
     this.gafeteRespoDespacho.updateValueAndValidity();
 
-    if (this.gafeteRespoDespacho.invalid || this.personaForm.invalid) {
+    if (this.gafeteRespoDespacho.invalid) {
       this.nuevaNotificacion = {
         tipoNotificacion: 'alert',
         categoria: '',
         modo: 'action',
-        titulo: TITULO_MODAL,
+        titulo: TITULO_MODAL_AVISO,
         mensaje: ERR_CAMPOS_OBLIGATORIOS,
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
@@ -284,8 +311,21 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
       };
 
       this.gafeteRespoDespacho.markAllAsTouched();
+      return;
+    }
+
+    if (this.personaForm.invalid || this.personaForm.disabled) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: TITULO_MODAL_AVISO,
+        mensaje: ERR_CAMPOS_OBLIGATORIOS,
+        cerrar: false,
+        txtBtnAceptar: 'Cerrar',
+        txtBtnCancelar: '',
+      };
       this.personaForm.markAllAsTouched();
-      this.habilitarCamposFormulario();
       return;
     }
 
@@ -294,7 +334,7 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
         tipoNotificacion: 'alert',
         categoria: '',
         modo: 'action',
-        titulo: TITULO_MODAL,
+        titulo: TITULO_MODAL_AVISO,
         mensaje: ADV_MAXIMO_PERSONAS,
         cerrar: false,
         txtBtnAceptar: 'Cerrar',
@@ -323,7 +363,7 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
       tipoNotificacion: 'alert',
       categoria: '',
       modo: 'action',
-      titulo: TITULO_MODAL,
+      titulo: TITULO_MODAL_AVISO,
       mensaje: EXISTE_RESPONSABLE
         ? MSJ_ERROR_GAFETE_EXISTE
         : MSG_DATOS_GUARDADOS,
@@ -334,7 +374,7 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
 
     if (responsable !== null && !EXISTE_RESPONSABLE) {
       this.personas.push(responsable);
-      this.tramite5701Store.setPersonasResponsablesDespacho(this.personas);
+      this.responsablesDespachoChange.emit(this.personas);
     }
 
     this.gafeteRespoDespacho.setValue('');
@@ -381,6 +421,7 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
         txtBtnAceptar: 'Cerrar',
         txtBtnCancelar: '',
       };
+      return;
     }
 
     this.personas = this.personas.filter(
@@ -395,13 +436,13 @@ export class AgregaPersonasComponent implements OnInit, OnDestroy {
       tipoNotificacion: 'alert',
       categoria: '',
       modo: 'action',
-      titulo: TITULO_MODAL,
+      titulo: TITULO_MODAL_AVISO,
       mensaje: MSG_ELIMINA_ELEMENTO,
       cerrar: false,
       txtBtnAceptar: 'Cerrar',
       txtBtnCancelar: '',
     };
-    this.tramite5701Store.setPersonasResponsablesDespacho(this.personas);
+    this.responsablesDespachoChange.emit(this.personas);
   }
 
   /**
