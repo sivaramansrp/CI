@@ -1,8 +1,7 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   ConsultaioQuery,
   ConsultaioState,
-  ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
 import {
   Solicitud32505State,
@@ -59,6 +58,8 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @param i - Nuevo índice seleccionado.
    */
   indice: number = 1;
+
+ 
 
   /**
    * Indica si el formulario está en modo solo lectura.
