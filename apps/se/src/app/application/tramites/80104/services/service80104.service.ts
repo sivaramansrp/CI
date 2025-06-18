@@ -3,11 +3,12 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { Solicitud80104State, Tramite80104Store } from '../../../estados/tramites/tramite80104.store';
-import { Tramite80101State, Tramite80101Store } from '../estados/tramite80101.store';
+import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
 import { ComplementosSeccionState, ComplementosSeccionStore } from '../../../estados/tramites/complementos-seccion.store';
 import { FederatoriosState, FederatoriosStore } from '../../../estados/tramites/federatarios.store';
-import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
+import { Solicitud80104State, Tramite80104Store } from '../../../estados/tramites/tramite80104.store';
+import { Tramite80101State, Tramite80101Store } from '../estados/tramite80101.store';
+
 @Injectable({
   providedIn: 'root',
 })

@@ -4,9 +4,10 @@ import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { Solicitud80104State, Tramite80104Store } from '../../../estados/tramites/tramite80104.store';
 import {Subject,map,takeUntil } from 'rxjs';
 import { ANEXO_TRES_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FraccionArancelariaDescripcion } from '../../models/empresas.model';
 import { Tramite80104Query } from '../../../estados/queries/tramite80104.query';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 /**
  * Decorador que define la configuración del componente AnexoTresComponent.
  * 

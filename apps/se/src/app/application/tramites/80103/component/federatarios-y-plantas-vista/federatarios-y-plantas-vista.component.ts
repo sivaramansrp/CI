@@ -1,27 +1,15 @@
+import { Catalogo, TablaSeleccion } from '@libs/shared/data-access-user/src';
+import { FEDERATARIOS,FederatariosEncabezado,PLANTAS_DIPONIBLES,PLANTAS_IMMEX,PlantasDisponibles,PlantasImmex} from '../../../../shared/models/federatarios-y-plantas.model';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
-import { Catalogo, TablaSeleccion } from '@libs/shared/data-access-user/src';
-
-import {
-  FEDERATARIOS,
-  FederatariosEncabezado,
-  PLANTAS_DIPONIBLES,
-  PLANTAS_IMMEX,
-  PlantasDisponibles,
-  PlantasImmex,
-} from '../../../../shared/models/federatarios-y-plantas.model';
-
+import { FederatariosYPlantasComponent } from '../../../../shared/components/federatarios-y-planta/federatarios-y-plantas.component';
 import { Observable } from 'rxjs';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
-
-import { FederatariosYPlantasComponent } from '../../../../shared/components/federatarios-y-planta/federatarios-y-plantas.component';
-
 /**
  * Componente para la vista de federatarios y plantas
  * @export FederatariosYPlantasVistaComponent
  * */
-
 @Component({
   selector: 'app-federatarios-y-plantas-vista',
   standalone: true,

@@ -39,9 +39,10 @@ import { Subject, Subscription, delay, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { ComplimentosService } from '../../services/complimentos.service';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosCatalago } from '../../../tramites/80102/models/autorizacion-programa-nuevo.model';
 import { SelectPaisesComponent } from '@libs/shared/data-access-user/src/tramites/components/select-paises/select-paises.component';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 @Component({
   selector: 'app-complimentos',
   standalone: true,

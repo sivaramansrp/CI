@@ -2,8 +2,9 @@
 /AnexoUnoSeccionComponent
 */
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { map, Subject, takeUntil } from 'rxjs';
+
 
 import {
   AlertComponent,
@@ -40,10 +41,10 @@ import {
   ProyectoImmex,
 } from '../../models/complimentos-seccion.model';
 
-import { ANEXO_UNO_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
 import { ComplementosSeccionState, ComplementosSeccionStore } from '../../../estados/tramites/complementos-seccion.store';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ANEXO_UNO_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
 import { ComplementosSeccionQuery } from '../../../estados/queries/complementos-seccion.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * compodoc
  * @class AnexoUnoSeccionComponent

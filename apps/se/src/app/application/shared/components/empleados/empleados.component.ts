@@ -1,10 +1,13 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 
+import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
+import { Subject,map,takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { ComplementarQuery } from '../../../estados/queries/complementar.query';
 import { DIRECTOS } from '../../constantes/empleados.enum';
 import { FECHA_DE_CEDULA } from '../../constantes/empleados.enum';
 import { FECHA_DE_FIRMA } from '../../constantes/empleados.enum';
@@ -14,9 +17,9 @@ import { Location } from '@angular/common';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
-import { ComplementarQuery } from '../../../estados/queries/complementar.query';
-import { map, Subject, takeUntil } from 'rxjs';
+
+
+
 
 /**
  * Componente para gestionar la información de empleados.

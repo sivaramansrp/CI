@@ -1,14 +1,13 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
 
 import { CatalogoSelectComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent,} from '@libs/shared/data-access-user/src';
-import { CAPACIDAD_INSTALADA } from '../../constantes/capacidad-instalada.enum';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {Subject,map,takeUntil } from 'rxjs';
+import { CAPACIDAD_INSTALADA } from '../../constantes/capacidad-instalada.enum';
 import { ComplementarQuery } from '../../../estados/queries/complementar.query';
-import { map, Subject, takeUntil } from 'rxjs';
-
 
 /**
  * Componente para la capacidad instalada

@@ -20,18 +20,16 @@
  * @templateUrl ./aggregar-complimentos.component.html
  * @styleUrl ./aggregar-complimentos.component.scss
  */
-
-import { map, Observable, Subject, takeUntil } from 'rxjs';
+import {Observable,Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplimentosComponent } from '../../../../shared/components/complimentos/complimentos.component';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { Component, OnDestroy } from '@angular/core';
 import { DatosComplimentos } from '../../../../shared/models/complimentos.model';
 import { SociaoAccionistas } from '../../../../shared/models/complimentos.model';
 import { Tramite80101Query } from '../../estados/tramite80101.query';
 import { Tramite80101Store } from '../../estados/tramite80101.store';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-/*
 
 /*
   * Componente para agregar cumplimentos en el trámite 80103.

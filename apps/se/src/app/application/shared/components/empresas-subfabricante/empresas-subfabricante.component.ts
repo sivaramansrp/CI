@@ -6,8 +6,9 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input,OnInit,Output,ViewChild} from '@angular/core';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+
 import {
   DatosSubcontratista,
   PlantasSubfabricante,
@@ -22,10 +23,10 @@ import { CommonModule } from '@angular/common';
 import { DetallesPlantasComponent } from '../detalles-plantas/detalles-plantas.component';
 import { Modal } from 'bootstrap';
 import { Router } from '@angular/router';
-import { map, Subject, takeUntil } from 'rxjs';
+
+import {Subject,map,takeUntil } from 'rxjs';
 import { Tramite80101State, Tramite80101Store } from '../../../tramites/80103/estados/tramite80101.store';
 import { Tramite80101Query } from '../../../tramites/80103/estados/tramite80101.query';
-
 
 @Component({
   selector: 'empresass-subfabricante',

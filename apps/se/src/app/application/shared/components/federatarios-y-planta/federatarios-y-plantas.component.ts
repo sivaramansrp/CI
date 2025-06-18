@@ -1,5 +1,5 @@
 import { Component, ElementRef, EventEmitter, ViewChild } from '@angular/core';
-import { Input, Output, OnInit } from '@angular/core';
+import { Input, OnInit,Output} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
@@ -31,11 +31,14 @@ import { MontosDeInversionComponent } from '../montos-de-inversion/montos-de-inv
 import { ReactiveFormsModule } from '@angular/forms';
 import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
-import { FederatoriosQuery } from '../../../estados/queries/federatarios.query';
+
+
 import { FederatoriosState, FederatoriosStore } from '../../../estados/tramites/federatarios.store';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject,map,takeUntil } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { FederatoriosQuery } from '../../../estados/queries/federatarios.query';
+
 /**
  * Componente para los federatarios y plantas
  * @export FederatariosYPlantasComponent

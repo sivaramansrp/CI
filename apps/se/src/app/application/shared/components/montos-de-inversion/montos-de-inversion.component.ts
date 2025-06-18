@@ -1,5 +1,8 @@
-import { CommonModule } from '@angular/common';
+import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
 import { Component, OnInit } from '@angular/core';
+import { Subject,map,takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ComplementarQuery } from '../../../estados/queries/complementar.query';
 
 import { COMPLEMENTO_DE_PLANTA } from '../../constantes/complementar-planta.enum';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
@@ -10,10 +13,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src'
 import { TablaSeleccion } from '@libs/shared/data-access-user/src'
 import { TituloComponent } from '@libs/shared/data-access-user/src'
-import { ComplementarQuery } from '../../../estados/queries/complementar.query';
-import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
-import { map, Subject, takeUntil } from 'rxjs';
-
 /**
  * Componente para gestionar los montos de inversión.
  * @class MontosDeInversionComponent

@@ -18,16 +18,14 @@
  *
  * @templateUrl ./paso-uno-cs.component.html
  */
-import { Component, OnInit } from '@angular/core';
 import { CONFIGURACION_DOS_DATOS, SECCIONES_TRAMITE_230401 } from '../../constantes/nuevo-programa.enum';
+import { Component, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
+import { Subject, takeUntil } from 'rxjs';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { FraccionArancelariaDescripcion } from '../../../../shared/models/empresas.model';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
-import { Subject, takeUntil } from 'rxjs';
-import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
 import { Solocitud80103Service } from '../../services/service80103service'
-
-
 /*
   * Componente para gestionar el primer paso del trámite 80103.
   * Este componente permite la visualización y selección de pestañas,
