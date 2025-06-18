@@ -14,7 +14,6 @@ import { ToastrService } from "ngx-toastr";
 
 @NgModule({
   declarations: [
-    SolicitantePageComponent
   ],
   imports: [
     CommonModule,
@@ -26,6 +25,7 @@ import { ToastrService } from "ngx-toastr";
     PasoUnoComponent,
     PasoTresComponent,
     PasoDosComponent,
+    SolicitantePageComponent,
     ToastrModule.forRoot()
   ],
   exports: [],
