@@ -458,7 +458,7 @@
     "id": 66,
     "tramite": 140105,
     "linkDashboard": "/se/desistimiento-de-permiso/solicitante",
-    "linkDepartment": "/se/desistimiento-de-permiso/solicitante",
+    "linkDepartment": "/pago/desistimiento-de-permiso/solicitante",
     "department": "se"
   },
   {
@@ -738,7 +738,7 @@
     "id": 106,
     "tramite": 140104,
     "linkDashboard": "/se/cancelacion-de-certificados-de-cupo/solicitante",
-    "linkDepartment": "/se/cancelacion-de-certificados-de-cupo/solicitante",
+    "linkDepartment": "/pago/cancelacion-de-certificados-de-cupo/solicitante",
     "department": "se"
   },
   {
