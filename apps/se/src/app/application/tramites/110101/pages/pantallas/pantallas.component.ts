@@ -90,7 +90,7 @@ export class PantallasComponent {
    * - `txtBtnSig`: Texto para el botón de navegación hacia adelante ('Continuar').  
    */
   datosPasos: DatosPasos = {
-    nroPasos: this.pasos.length, // Total de pasos en el asistente.
+    nroPasos: this.pantallasPasos.length, // Total de pasos en el asistente.
     indice: this.indice, // Paso actual del asistente.
     txtBtnAnt: 'Anterior', // Texto del botón de retroceso.
     txtBtnSig: 'Continuar', // Texto del botón de avance.
