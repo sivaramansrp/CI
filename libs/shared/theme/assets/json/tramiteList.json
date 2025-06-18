@@ -458,7 +458,7 @@
     "id": 66,
     "tramite": 140105,
     "linkDashboard": "/se/desistimiento-de-permiso/solicitante",
-    "linkDepartment": "/pago/desistimiento-de-permiso/solicitante",
+    "linkDepartment": "/se/desistimiento-de-permiso/solicitante",
     "department": "se"
   },
   {
