@@ -1,5 +1,5 @@
 
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CancelacionGarantiaService } from '../../services/cancelacion-garantia/cancelacion-garantia.service';
@@ -31,7 +31,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   * @description
   * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
   */
-  @Input() consultaState!: ConsultaioState;
+  public consultaState!: ConsultaioState;
 
   /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
   public esDatosRespuesta: boolean = false;
