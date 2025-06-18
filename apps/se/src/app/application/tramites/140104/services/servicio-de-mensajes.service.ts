@@ -2,6 +2,7 @@ import { BehaviorSubject } from 'rxjs';
 import { CuposDisponibles } from '../models/cancelacion-de-certificados.model';
 import { CuposDisponiblesDatos } from '../models/cancelacion-de-certificados.model';
 import { DesistimientoStore } from '../estados/desistimiento-de-permiso.store';
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Subject } from 'rxjs';
@@ -53,7 +54,7 @@ export class ServicioDeMensajesService {
    * 
    * @param desistimientoStore Store para gestionar los datos del formulario de desistimiento.
    */
-  constructor(private readonly desistimientoStore: DesistimientoStore) {
+  constructor(private readonly desistimientoStore: DesistimientoStore, private http: HttpClient) {
     // Constructor is used for dependency injection
   }
 
@@ -102,4 +103,17 @@ export class ServicioDeMensajesService {
   public obtenerDatos(): Observable<CuposDisponiblesDatos> {
     return this.desistimientoStore._select(state => state);
   }
+
+  /**
+ * Actualiza el estado del formulario con los datos proporcionados.
+ * 
+ * @param DATOS - Estado de la solicitud `Solicitud230401State` con la información 
+ *                del tipo de solicitud a actualizar en el store.
+ */
+actualizarEstadoFormulario(DATOS: Partial<PermisosDatos>): void {
+  this.desistimientoStore.update((state) => ({
+    ...state,
+    ...DATOS
+  }));
+}
 }
