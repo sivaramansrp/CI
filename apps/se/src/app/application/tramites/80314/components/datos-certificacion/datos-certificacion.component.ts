@@ -60,7 +60,7 @@ export class DatosCertificacionComponent {
    * Configura el formulario, carga los datos de modificación y los datos de la tabla.
    */
   ngOnInit() {
-    this.inicializarformulario();
+    this.inicializarFormulario();
      this.query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -85,7 +85,7 @@ export class DatosCertificacionComponent {
    /**
    * Inicializa el formulario reactivo.
    */
-  inicializarformulario(): void {
+  inicializarFormulario(): void {
     this.certificionForm = this.fb.group({
       certificion: [{ value: this.solicitudState?.certificion }],
       fechaInicio: [{ value: this.solicitudState?.fechaInicio }],
