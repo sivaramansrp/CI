@@ -2438,6 +2438,15 @@
     "numeroDeProcedimiento": "260302"
   },
   {
+    "id": 260102,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260102"
+  },
+  {
     "id": 140216,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2025-06-11",
