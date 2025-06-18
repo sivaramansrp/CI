@@ -9,6 +9,7 @@
       type="text"
       id="certificion"
       formControlName="certificion"
+      [disabled]="esFormularioSoloLectura"
     />
   </div>
   <div class="row">
@@ -21,6 +22,7 @@
         type="text"
         id="certificion"
         formControlName="fechaInicio"
+        [disabled]="esFormularioSoloLectura"
       />
     </div>
     <div class="col-md-4">
@@ -32,6 +34,7 @@
         type="text"
         id="certificion"
         formControlName="fechaVigencia"
+        [disabled]="esFormularioSoloLectura"
       />
     </div>
   </div>

@@ -4,6 +4,7 @@ import {
   TablaSeleccion,
 } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
   FormGroup,
@@ -39,7 +40,8 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     private solicitudService: ImmerModificacionService,
     private tramite80314Store: Tramite80314Store,
-    private tramite80314Query: Tramite80314Query
+    private tramite80314Query: Tramite80314Query,
+    private consultaioQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -79,11 +81,34 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    */
   datosTabla: DatosDelModificacion[] = [];
 
+    /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * Método que se ejecuta al inicializar el componente.
    * Configura el formulario, carga los datos de modificación y los datos de la tabla.
    */
   ngOnInit(): void {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     this.tramite80314Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -96,6 +121,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.inicializarFormulario();
+    this.inicializarEstadoFormulario();
     this.loadDatosModificacion();
     this.loadDatosTablaData();
 
@@ -106,6 +132,32 @@ export class ModificacionComponent implements OnInit, OnDestroy {
       catalogos: ACTIVIDAD_PRODUCTIVA
     };
   }
+
+  /**
+  * @method inicializarEstadoFormulario
+  * @description Inicializa el estado del formulario según el modo de solo lectura.
+  * 
+  * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
+  * En caso contrario, habilita los controles del formulario
+  * 
+  * @returns {void}
+  */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.modificacionForm?.disable();
+    } else {
+      this.modificacionForm?.enable();
+      const CAMPOS = [
+        'rfc',
+        'federal',
+        'tipo',
+        'programa',
+        'actividadProductivaActual'
+      ];
+      CAMPOS.forEach(campo => this.modificacionForm.get(campo)?.disable());
+    }
+  }
+
 
   /**
    * Método que se ejecuta cuando el componente es destruido.
@@ -125,10 +177,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
       federal: [this.derechoState?.datosModificacion?.federal, []],
       tipo: [this.derechoState?.datosModificacion?.tipo, []],
       programa: [this.derechoState?.datosModificacion?.programa, []],
-      actividadProductivaActual: [
-        this.derechoState?.datosModificacion?.actividadProductivaActual,
-        [],
-      ],
+      actividadProductivaActual: [this.derechoState?.datosModificacion?.actividadProductivaActual, []],
       actividadProductiva: [],
     });
   }

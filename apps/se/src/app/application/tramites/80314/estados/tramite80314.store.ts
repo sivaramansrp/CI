@@ -2,6 +2,7 @@ import { DatosModificacion, DomicilioInfo } from './models/plantas-consulta.mode
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { Injectable } from '@angular/core';
+import { DatosCertificacion } from '../models/datos-tramite.model';
 
 /**
  * Interfaz que define el estado de la entidad Tramite.
@@ -57,6 +58,26 @@ export interface TramiteState {
    * @memberof TramiteState
    */
   buscarDomicilios: DomicilioInfo[];
+
+   /**
+   * Lista de actividades productivas.
+   */
+  actividadProductiva: Catalogo[] | null;
+
+  /**
+   * Fecha de inicio del trámite.
+   */
+  fechaInicio: string;
+
+  /**
+   * Fecha de vigencia del trámite.
+   */
+  fechaVigencia: string;
+
+  /**
+   * Estado de certificación.
+   */
+  certificion: string;
 }
 
 /**
@@ -102,7 +123,11 @@ export const INITIAL_STATE: TramiteState = {
     entidadFederativa: false
   },
   domicilios:[],
-  buscarDomicilios: []
+  buscarDomicilios: [],
+  actividadProductiva: null,
+  fechaInicio: '',
+  fechaVigencia: '',
+  certificion: ''
 };
 
 /**
@@ -239,4 +264,66 @@ export class Tramite80314Store extends Store<TramiteState> {
       buscarDomicilios,
     }));
   }
+
+  /**
+   * Establece las actividades productivas en el estado.
+   *
+   * @param {Catalogo[]} actividadProductiva - Lista de actividades productivas.
+   */
+  public setActividadProductiva(actividadProductiva: Catalogo[] | null): void {
+    this.update((state) => ({
+      ...state,
+      actividadProductiva,
+    }));
+  }
+
+  /**
+   * Establece la fecha de inicio en el estado.
+   *
+   * @param {string} fechaInicio - Fecha de inicio.
+   */
+  public setFechaInicio(fechaInicio: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaInicio,
+    }));
+    console.log('Fecha de inicio establecida:', fechaInicio);
+  }
+
+  /**
+   * Establece la fecha de vigencia en el estado.
+   *
+   * @param {string} fechaVigencia - Fecha de vigencia.
+   */
+  public setFechaVigencia(fechaVigencia: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaVigencia,
+    }));
+  }
+
+  /**
+   * Establece el estado de certificación en el estado.
+   *
+   * @param {string} certificion - Estado de certificación.
+   */
+  public setCertificion(certificion: string): void {
+    this.update((state) => ({
+      ...state,
+      certificion,
+    }));
+  }
+
+  /**
+   * Establece los datos de certificación en el estado.
+   *
+   * @param {DatosCertificacion} datosCertificacion - Datos de certificación.
+   */
+  public setDatosCertificacion(datosCertificacion: DatosCertificacion): void {
+    this.update((state) => ({
+      ...state,
+      datosCertificacion,
+    }));
+  }
+
 }

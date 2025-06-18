@@ -1,6 +1,12 @@
+import { ConsultaioQuery, ConsultaioState, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { map, Subject, takeUntil } from 'rxjs';
 import { Component } from '@angular/core';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { DatosCertificacion } from '../../models/datos-tramite.model';
+import { ImmerModificacionService } from '../../service/immer-modificacion.service';
+import { TramiteState } from '../../estados/tramite80314.store';
+import { Tramite80314Store } from '../../estados/tramite80314.store';
+import { Tramite80314Query } from '../../estados/tramite80314.query';
 
 @Component({
   selector: 'app-datos-certificacion',
@@ -17,15 +23,118 @@ export class DatosCertificacionComponent {
   certificionForm!: FormGroup;
 
   /**
-   * Constructor de la clase.
-   * Inicializa el formulario reactivo `certificionForm` con el valor "Si" y deshabilitado.
+   * Estado actual de la solicitud.
+   */
+  public solicitudState!: TramiteState;
+
+  /**
+   * Notificador para limpiar suscripciones al destruir el componente.
+   */
+  private destroyNotifier$ = new Subject<void>();
+
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
+   * Constructor del componente `DatosCertificacionComponent`.
+   * Inicializa el formulario reactivo `certificionForm` con valores predeterminados y deshabilitados.
+   * 
    * @param {FormBuilder} fb - Instancia de `FormBuilder` utilizada para crear formularios reactivos.
    */
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: FormBuilder, public immerModificacionService: ImmerModificacionService, 
+      private tramite80314Store: Tramite80314Store, private consultaioQuery: ConsultaioQuery, private query: Tramite80314Query) {
+    }
+
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Configura el formulario, carga los datos de modificación y los datos de la tabla.
+   */
+  ngOnInit() {
+    this.inicializarformulario();
+     this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+    this.inicializarEstadoFormulario();
+  }
+
+   /**
+   * Inicializa el formulario reactivo.
+   */
+  inicializarformulario(): void {
     this.certificionForm = this.fb.group({
-      certificion: [{ value: 'Si', disabled: false }], // El campo de certificación con valor "Si" y deshabilitado.
-      fechaInicio: [{ value: '', disabled: false }],
-      fechaVigencia: [{ value: '', disabled: false }],
+      certificion: [{ value: this.solicitudState?.certificion }],
+      fechaInicio: [{ value: this.solicitudState?.fechaInicio }],
+      fechaVigencia: [{ value: this.solicitudState?.fechaVigencia }]
     });
   }
+
+  /**
+  * @method inicializarEstadoFormulario
+  * @description Inicializa el estado del formulario según el modo de solo lectura.
+  * 
+  * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
+  * En caso contrario, habilita los controles del formulario
+  * 
+  * @returns {void}
+  */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.certificionForm?.disable();
+    } else {
+      this.certificionForm?.enable();
+    }
+  }
+
+  // /**
+  //  * Carga los datos de certificación desde el servicio y actualiza el formulario reactivo con los valores obtenidos.
+  //  * También actualiza el estado global a través del store.
+  //  */
+  // loadDatosCertificacion(): void {
+  //   (this.immerModificacionService.getDatosCertificacion() as import('rxjs').Observable<DatosCertificacion>)
+  //     .pipe(takeUntil(this.destroyNotifier$))
+  //     .subscribe((datos: DatosCertificacion) => {
+  //       (this.tramite80314Store.setDatosCertificacion as (valor: unknown) => void)(datos);
+  //       if (datos) {
+  //         this.certificionForm.patchValue({
+  //           certificion: datos.certificion,
+  //           fechaInicio: datos.fechaInicio,
+  //           fechaVigencia: datos.fechaVigencia
+  //         });
+  //       }
+  //     });
+  // }
+
+  /**
+   * Limpia las suscripciones activas al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+  
 }
