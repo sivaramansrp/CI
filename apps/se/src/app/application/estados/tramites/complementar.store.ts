@@ -29,6 +29,18 @@ export interface ComplementarState {
   fechaFinVigencia: string;
   rfcEmpresa: string;
   razonSocial: string;
+   fraccionArancelariaProductoTerminado: string;
+  umt: string;
+  descripcionComercialProductoTerminado: string;
+  turnos: string;
+  horasPorTurno: string;
+  cantidadEmpleados: string;
+  cantidadMaquinaria: string;
+  descripcionMaquinaria: string;
+  capacidadInstaladaMensual: string;
+  capacidadInstaladaAnual: string;
+  calculoCapacidadInstalada: string;
+  capacidadUtilizadaPct: string;
   
 
 }
@@ -43,11 +55,11 @@ export function createInitialState(): ComplementarState {
     tipo: '',
     fechaDeFirma: '',
     fetchaDeFinDeVigencia: '',
-     tipos: '',
+    tipos: '',
     cantidad: '',
     descripsion: '',
     mnx: '',
-       totalDeEmpleados: '',
+    totalDeEmpleados: '',
     directos: '',
     indirectos: '',
     directo: '',
@@ -59,7 +71,19 @@ export function createInitialState(): ComplementarState {
     fechaFirma: '',
     fechaFinVigencia: '',
     rfcEmpresa: '',
-    razonSocial: ''
+    razonSocial: '',
+    fraccionArancelariaProductoTerminado: '',
+  umt: '',
+  descripcionComercialProductoTerminado: '',
+  turnos: '',
+  horasPorTurno: '',
+  cantidadEmpleados: '',
+  cantidadMaquinaria: '',
+  descripcionMaquinaria: '',
+  capacidadInstaladaMensual: '',
+  capacidadInstaladaAnual: '',
+  calculoCapacidadInstalada: '',
+  capacidadUtilizadaPct: '',
   };
 }
 /**
@@ -170,6 +194,89 @@ public setRfcEmpresa(rfcEmpresa: string): void {
 
 public setRazonSocial(razonSocial: string): void {
   this.update((state) => ({ ...state, razonSocial }));
+}
+public setFraccionArancelariaProductoTerminado(fraccionArancelariaProductoTerminado: string): void {
+  this.update((state) => ({
+    ...state,
+    fraccionArancelariaProductoTerminado,
+  }));
+}
+
+public setUmt(umt: string): void {
+  this.update((state) => ({
+    ...state,
+    umt,
+  }));
+}
+
+public setDescripcionComercialProductoTerminado(descripcionComercialProductoTerminado: string): void {
+  this.update((state) => ({
+    ...state,
+    descripcionComercialProductoTerminado,
+  }));
+}
+
+public setTurnos(turnos: string): void {
+  this.update((state) => ({
+    ...state,
+    turnos,
+  }));
+}
+
+public setHorasPorTurno(horasPorTurno: string): void {
+  this.update((state) => ({
+    ...state,
+    horasPorTurno,
+  }));
+}
+
+public setCantidadEmpleados(cantidadEmpleados: string): void {
+  this.update((state) => ({
+    ...state,
+    cantidadEmpleados,
+  }));
+}
+
+public setCantidadMaquinaria(cantidadMaquinaria: string): void {
+  this.update((state) => ({
+    ...state,
+    cantidadMaquinaria,
+  }));
+}
+
+public setDescripcionMaquinaria(descripcionMaquinaria: string): void {
+  this.update((state) => ({
+    ...state,
+    descripcionMaquinaria,
+  }));
+}
+
+public setCapacidadInstaladaMensual(capacidadInstaladaMensual: string): void {
+  this.update((state) => ({
+    ...state,
+    capacidadInstaladaMensual,
+  }));
+}
+
+public setCapacidadInstaladaAnual(capacidadInstaladaAnual: string): void {
+  this.update((state) => ({
+    ...state,
+    capacidadInstaladaAnual,
+  }));
+}
+
+public setCalculoCapacidadInstalada(calculoCapacidadInstalada: string): void {
+  this.update((state) => ({
+    ...state,
+    calculoCapacidadInstalada,
+  }));
+}
+
+public setCapacidadUtilizadaPct(capacidadUtilizadaPct: string): void {
+  this.update((state) => ({
+    ...state,
+    capacidadUtilizadaPct,
+  }));
 }
 
 

@@ -5,6 +5,7 @@
       <div class="form">
   <div class="row">
     <div class="col-md-4">
+       <div class="form-group">
       <app-catalogo-select
         [catalogo]="permaneceraMercanciaProgramaOptions"
         [label]="'Permanecerá mercancía al amparo del programa'"
@@ -13,8 +14,10 @@
         formControlName="permanecera" (change)="setValoresStore(complementarForm, 'permanecera', 'setPermanecera')"
       
       ></app-catalogo-select>
+      </div>
     </div>
     <div class="col-md-4">
+      <div class="form-group">
       <app-catalogo-select
         [catalogo]="documentoOptions"
         [label]="'Tipo de documento'"
@@ -22,6 +25,7 @@
         name="estado"
         formControlName="tipo" (change)="setValoresStore(complementarForm, 'tipo', 'setTipo')"
       ></app-catalogo-select>
+      </div>
     </div>
   </div>
   <div class="row">

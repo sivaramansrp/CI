@@ -250,8 +250,8 @@ export class FederatariosYPlantasComponent {
    */
   initFederatariosFormGroup(): void {
     this.federatariosFormGroup = new FormGroup({
-      nombre: new FormControl( this.solicitudState['fechaDelActa'], Validators.required),
-      fechaDelActa: new FormControl(this.solicitudState['fechaInicioInput']),
+      nombre: new FormControl( this.solicitudState['nombre'], Validators.required),
+      fechaDelActa: new FormControl(this.solicitudState['fechaDelActa']),
       primerApellido: new FormControl(this.solicitudState['primerApellido']),
       segundoApellido: new FormControl(this.solicitudState['segundoApellido']),
       numeroDeActa: new FormControl(this.solicitudState['numeroDeActa']),

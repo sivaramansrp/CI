@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input } from '@angular/core';
+import { Component, input, OnInit } from '@angular/core';
 
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
 import { InputFecha } from '@ng-mf/data-access-user';
@@ -35,7 +35,7 @@ import { map, Subject, takeUntil } from 'rxjs';
   templateUrl: './complementar-planta.component.html',
   styleUrl: './complementar-planta.component.scss',
 })
-export class ComplementarPlantaComponent {
+export class ComplementarPlantaComponent implements OnInit {
   
    complementarForm!: FormGroup;
    /**
@@ -44,7 +44,15 @@ export class ComplementarPlantaComponent {
    */
   constructor(private ubicaccion: Location, private fb: FormBuilder,private complementarStore: ComplementarStore,
     private complementarQuery: ComplementarQuery,) {
-    this.inicializarFormulario()
+        this.complementarQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState as ComplementarState;
+        })
+      )
+      .subscribe();
+    
   }
   /**
    * Configuración de la fecha de firma.
@@ -96,20 +104,14 @@ export class ComplementarPlantaComponent {
    * @property {Array} complementoDePlantaDatos
    */
   complementoDePlantaDatos = [];
+
    inicializarFormulario(): void {
-     this.complementarQuery.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState as ComplementarState;
-        })
-      )
-      .subscribe();
+   
       this.complementarForm = this.fb.group({
-      permanecera: ['', Validators.required],
-      tipo: ['', Validators.required],
-      fechaDeFirma: ['', Validators.required],
-      fetchaDeFinDeVigencia: ['', Validators.required],
+      permanecera: [this.solicitudState.permanecera],
+      tipo: [this.solicitudState.tipo, Validators.required],
+      fechaDeFirma: [this.solicitudState.fechaDeFirma, Validators.required],
+      fetchaDeFinDeVigencia: [this.solicitudState.fetchaDeFinDeVigencia, Validators.required],
     });
   }
  /**
@@ -132,14 +134,22 @@ export class ComplementarPlantaComponent {
     });
     this.complementarStore.setFetchaDeFinDeVigencia(nuevo_valor);
   }
-  /**
+  
+   /**
    * Vuelve a la ubicación anterior en el historial del navegador.
    * @returns {void}
    */
   regrasar(): void {
     this.ubicaccion.back();
   }
-
+/**
+   * Método que se ejecuta cuando el componente es inicializado.
+   * 
+   * Inicializa el formulario reactivo con los valores actuales de la solicitud.
+   */
+  ngOnInit(): void {
+    this.inicializarFormulario();
+  }
 /**
    * Método que actualiza el store con los valores del formulario.
    * 

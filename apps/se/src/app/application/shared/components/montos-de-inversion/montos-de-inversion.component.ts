@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { COMPLEMENTO_DE_PLANTA } from '../../constantes/complementar-planta.enum';
 import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
@@ -31,7 +31,7 @@ import { map, Subject, takeUntil } from 'rxjs';
   templateUrl: './montos-de-inversion.component.html',
   styleUrl: './montos-de-inversion.component.css',
 })
-export class MontosDeInversionComponent {
+export class MontosDeInversionComponent implements OnInit {
   /**
    * Formulario para gestionar los montos de inversión.
    * @property {FormGroup} montosDeInversionForm
@@ -82,7 +82,15 @@ export class MontosDeInversionComponent {
    */
   constructor(private fb: FormBuilder, private ubicaccion: Location,private complementarStore: ComplementarStore,
       private complementarQuery: ComplementarQuery) {
-    this.createMontosDeInversionForm();
+    
+  }
+   /**
+   * Método que se ejecuta cuando el componente es inicializado.
+   * 
+   * Inicializa el formulario reactivo con los valores actuales de la solicitud.
+   */
+  ngOnInit(): void {
+  this.createMontosDeInversionForm();
   }
 
   /**
@@ -101,10 +109,10 @@ export class MontosDeInversionComponent {
           )
           .subscribe();
     this.montosDeInversionForm = this.fb.group({
-      tipos: [''],
-      cantidad: [''],
-      descripsion: [''],
-      mnx: [''],
+      tipos: [this.solicitudState.tipos],
+      cantidad: [this.solicitudState.cantidad],
+      descripsion: [this.solicitudState.descripsion],
+      mnx: [this.solicitudState.mnx],
     });
   }
 /**

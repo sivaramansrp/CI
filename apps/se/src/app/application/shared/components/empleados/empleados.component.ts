@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -36,7 +36,7 @@ import { map, Subject, takeUntil } from 'rxjs';
   templateUrl: './empleados.component.html',
   styleUrl: './empleados.component.css',
 })
-export class EmpleadosComponent {
+export class EmpleadosComponent implements OnInit {
   /**
    * Formulario para gestionar la información de empleados.
    * @property {FormGroup} empleadosForm
@@ -105,9 +105,16 @@ export class EmpleadosComponent {
    */
   constructor(public fb: FormBuilder, private ubicaccion: Location,private complementarStore: ComplementarStore,
         private complementarQuery: ComplementarQuery) {
-    this.crearFormularioEmpleados();
+   
   }
-
+  /**
+   * Método que se ejecuta cuando el componente es inicializado.
+   * 
+   * Inicializa el formulario reactivo con los valores actuales de la solicitud.
+   */
+  ngOnInit(): void {
+   this.crearFormularioEmpleados();
+  }
   /**
    * Crea el formulario de empleados.
    * @method crearFormularioEmpleados
@@ -123,19 +130,19 @@ export class EmpleadosComponent {
               )
               .subscribe();
     this.empleadosForm = this.fb.group({
-      totalDeEmpleados: ['', Validators.required],
-  directos: ['' ],
-  indirectos: [ ''],
-  directo: ['' ],
-  cedula: ['' ],
-  fechaCedula: [ ''],
-  indirectosDatos: [ ''],
-  contrato: ['' ],
-  objeto: ['' ],
-  fechaFirma: [ ''],
-  fechaFinVigencia: [ ''],
-  rfcEmpresa: [ ''],
-  razonSocial: [ '']
+      totalDeEmpleados: [this.solicitudState.totalDeEmpleados, Validators.required],
+  directos: [this.solicitudState.directos],
+  indirectos: [this.solicitudState.indirectos],
+  directo: [this.solicitudState.directo],
+  cedula: [this.solicitudState.cedula],
+  fechaCedula: [this.solicitudState.fechaCedula],
+  indirectosDatos: [this.solicitudState.indirectosDatos],
+  contrato: [this.solicitudState.contrato],
+  objeto: [this.solicitudState.objeto],
+  fechaFirma: [ this.solicitudState.fechaFirma],
+  fechaFinVigencia: [this.solicitudState.fechaFinVigencia],
+  rfcEmpresa: [this.solicitudState.rfcEmpresa],
+  razonSocial: [this.solicitudState.razonSocial]
     });
   }
 
