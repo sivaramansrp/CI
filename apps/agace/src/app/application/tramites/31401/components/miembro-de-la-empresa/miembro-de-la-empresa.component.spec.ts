@@ -41,6 +41,9 @@ describe('MiembroDeLaEmpresaComponent', () => {
 
     fixture = TestBed.createComponent(MiembroDeLaEmpresaComponent);
     component = fixture.componentInstance;
+    component.consultaState = {
+      readonly: false,
+    } as any;
     // component.forma = new FormGroup({
     // ninoFormGroup: new FormGroup({}),
     // senalePreviamente: new FormControl({value: null, disabled: true}),

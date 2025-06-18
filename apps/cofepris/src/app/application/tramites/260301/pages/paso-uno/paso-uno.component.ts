@@ -1,12 +1,25 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user'
+import { ContenedorDeDatosSolicitudComponent } from '../../components/contenedor-de-datos-solicitud/contenedor-de-datos-solicitud.component';
+import { ImportacionMateriasPrimasService } from '../../service/importacion-materias-primas.service';
+import { PagoDeDerechosContenedoraComponent } from '../../components/pago-de-derechos-contenedora/pago-de-derechos-contenedora/pago-de-derechos-contenedora.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { TercerosRelacionadosVistaComponent } from '../../components/terceros-relacionados-vista/terceros-relacionados-vista.component';
 import { Tramite260301Query } from '../../estados/tramite260301Query.query';
 import { Tramite260301Store } from '../../estados/tramite260301Store.store';
+
+
+
 
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
   styleUrl: './paso-uno.component.css',
+  standalone: true,
+  imports: [SolicitanteComponent, ContenedorDeDatosSolicitudComponent, TercerosRelacionadosVistaComponent,PagoDeDerechosContenedoraComponent, ReactiveFormsModule, CommonModule ],
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
   /**
@@ -23,9 +36,29 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+   /**
+   * @descripcion
+   * Indica si el formulario debe estar deshabilitado (solo lectura).
+   * Cuando es verdadero, los controles del formulario estarán deshabilitados y no se podrán editar.
+   * @type {boolean}
+   */
+  formularioDeshabilitado: boolean = false;
+
+  /**
+   * @constructor
+   * @desc Constructor necesario para inyectar las dependencias requeridas por el componente.
+   * 
+   * @param tramite260301Query Consulta el estado y los datos relacionados con el trámite 260301.
+   * @param tramite260301Store Maneja el estado global del trámite 260301.
+   * @param consultaQuery Servicio para consultar información adicional relacionada.
+   * @param importacionMateriasPrimasService Servicio para gestionar la importación de materias primas.
+   *
+   */
   constructor(
     private tramite260301Query: Tramite260301Query,
-    private tramite260301Store: Tramite260301Store
+    private tramite260301Store: Tramite260301Store,
+    private consultaQuery: ConsultaioQuery,
+    private importacionMateriasPrimasService: ImportacionMateriasPrimasService
   ) {
     // Constructor necesario para inyectar el store del trámite
   }
@@ -43,6 +76,39 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
         .subscribe((tab) => {
           this.indice = tab;
         });
+
+      this.consultaQuery.selectConsultaioState$
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((seccionState) => {
+        if(seccionState.update){
+          this.formularioDeshabilitado = false;
+            this.guardarDatosFormulario();
+        }
+        if (seccionState.readonly) {
+          this.formularioDeshabilitado = true;
+        }
+      });
+  }
+
+  /**
+   * @descripcion
+   * Obtiene los datos de acuicultura y actualiza el estado del formulario.
+   * 
+   * @remarks
+   * Realiza una suscripción al observable que retorna los datos de acuicultura.
+   * Utiliza `takeUntil` para evitar fugas de memoria al destruir el componente.
+   * Si la respuesta es válida, actualiza el estado del formulario con los datos recibidos.
+   */
+  guardarDatosFormulario(): void {
+    this.importacionMateriasPrimasService
+      .getAcuiculturaData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if (resp) {
+          this.importacionMateriasPrimasService.actualizarEstadoFormulario(resp);
+        }
+      });
   }
 
   /**

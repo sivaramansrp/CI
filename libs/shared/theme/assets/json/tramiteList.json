@@ -186,7 +186,7 @@
     "tramite": 80202,
     "linkDashboard": "/se/immex-ampliacion-sensibles/solicitud",
     "linkDepartment": "/pago/immex-ampliacion-sensibles/solicitud",
-    "department": "agace"
+    "department": "se"
   },
   {
     "id": 28,
@@ -3117,7 +3117,7 @@
   {
     "id": 448,
     "tramite": 32516,
-    "linkDashboard": "/agace/acta-de-hechos/solicituds",
+    "linkDashboard": "/agace/acta-de-hechos/solicitud",
     "linkDepartment": "/pago/acta-de-hechos/solicitud",
     "department": "agace"
   },
