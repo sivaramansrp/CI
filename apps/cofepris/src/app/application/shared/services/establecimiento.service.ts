@@ -6,6 +6,7 @@
 import { Asociados, Manifiestistos, MercanciasInfo, PropietarioRadio, PropietarioTipoPersona, Representante, ScianModel } from '../models/datos-de-la-solicitud.model';
 import { AvisocalidadStore, SolicitudState } from '../estados/stores/aviso-calidad.store';
 import { Catalogo, JSONResponse } from '@libs/shared/data-access-user/src';
+import { DatosDeLaProductoModel, PropietarioModel} from '../models/datos-de-la-solicitud.model';
 import { DatosDomicilioLegalState,DatosDomicilioLegalStore} from '../estados/stores/datos-domicilio-legal.store';
 import { DatosSolicitudState, DatosSolicitudStore } from '../estados/stores/datos-de-la-solicitud-modificacion.store';
 import { Observable ,map} from 'rxjs';
@@ -13,6 +14,7 @@ import { PermisoImportacionBiologicaState, PermisoImportacionBiologicaStore } fr
 import { EstadoCombinado } from '../models/solicitud-datos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+
 /**
  * @class EstablecimientoService
  * @description
@@ -259,5 +261,31 @@ export class EstablecimientoService {
       return this.http.get<EstadoCombinado>('assets/json/cofepris/datosSolicitud.json');
     }
 
+  /**
+   * Obtiene los datos del propietario desde un archivo JSON local.
+   * @returns {Observable<PropietarioModel[]>} Un observable con la lista de propietarios.
+   */
+  getPropietario(): Observable<PropietarioModel[]> {
+    return this.http.get<PropietarioModel[]>('assets/json/260402/propietarioDatos.json');
+  }
+
+
+  /**
+   * Obtiene los datos del producto desde un archivo JSON local.
+   * @returns {Observable<DatosDeLaProductoModel[]>} Un observable con la lista de datos del producto.
+   */
+  getDatosDelProducto(): Observable<DatosDeLaProductoModel[]> {
+    return this.http.get<DatosDeLaProductoModel[]>('assets/json/260402/datosDelProducto.json');
+  }
+
+    /**
+     * Recupera los datos de SCIAN desde un archivo JSON local.
+     * @returns {Observable<ScianModel[]>} Un observable con los datos de SCIAN.
+     */
+    getScianDatos(): Observable<ScianModel[]> {
+      return this.http.get<ScianModel[]>('assets/json/260402/scianDatos.json');
+    }
+  
 }
+
 

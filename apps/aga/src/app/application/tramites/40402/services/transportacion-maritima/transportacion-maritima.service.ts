@@ -1,95 +1,110 @@
+import { RespuestaCaatTabla, RespuestaConsulta } from '../../models/transportacion-maritima.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { RespuestaCaatTabla } from '../../models/transportacion-maritima.model';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 import { RespuestaContribuyentePMNTabla } from '../../models/transportacion-maritima.model';
 import { RespuestaContribuyenteTabla } from '../../models/transportacion-maritima.model';
 
 /**
  * Servicio para la gestión de datos relacionados con la transportación marítima.
+ * 
+ * @class TransportacionMaritimaService
+ * @description
+ * Este servicio se encarga de realizar peticiones HTTP para obtener datos relacionados con la transportación marítima.
  */
 @Injectable({
   providedIn: 'root'
 })
-
-/**
- * Clase que representa el servicio de transportación marítima.
- * Este servicio se encarga de realizar peticiones HTTP para obtener datos relacionados con la transportación marítima.
- */
 export class TransportacionMaritimaService {
 
   /**
-   * Constructor del servicio TransportacionMaritimaService.
-   * @param http - Instancia de HttpClient para realizar peticiones HTTP.
-   * @description El constructor inyecta la dependencia HttpClient para realizar peticiones HTTP.
+   * Constructor del servicio.
+   * 
+   * @constructor
+   * @param {HttpClient} http Cliente HTTP para realizar peticiones
    */
   constructor(
     private http: HttpClient
-  ) {
-    // El constructor se utiliza para la inyección de dependencias
-  }
+  ) {}
 
   /**
-   * Obtiene el catálogo de paises.
-   * @returns Observable<RespuestaCatalogos>
-   * @description Este método realiza una petición HTTP GET a un archivo JSON local que contiene un catálogo de países.
+   * Obtiene el catálogo de países.
+   * 
+   * @method getPaisCatalogo
+   * @returns {Observable<RespuestaCatalogos>} Observable con datos de países
    */
   getPaisCatalogo(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>('assets/json/40201/pais-catalogo.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/40402/pais-catalogo.json');
   }
 
   /**
    * Obtiene el catálogo de estados.
-   * @returns Observable<RespuestaCatalogos>
-   * @description Este método realiza una petición HTTP GET a un archivo JSON local que contiene un catálogo de estados.
+   * 
+   * @method getEstadoCatalogo
+   * @returns {Observable<RespuestaCatalogos>} Observable con datos de estados
    */
   getEstadoCatalogo(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>('assets/json/40201/estado-catalogo.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/40402/estado-catalogo.json');
   }
 
   /**
    * Obtiene el catálogo de municipios.
-   * @returns Observable<RespuestaCatalogos>
-   * @description Este método realiza una petición HTTP GET a un archivo JSON local que contiene un catálogo de municipios.
+   * 
+   * @method getMunicipioCatalogo
+   * @returns {Observable<RespuestaCatalogos>} Observable con datos de municipios
    */
   getMunicipioCatalogo(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>('assets/json/40201/municipio-catalogo.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/40402/municipio-catalogo.json');
   }
 
   /**
    * Obtiene el catálogo de colonias.
-   * @returns Observable<RespuestaCatalogos>
-   * @description Este método realiza una petición HTTP GET a un archivo JSON local que contiene un catálogo de colonias.
+   * 
+   * @method getColoniaCatalogo
+   * @returns {Observable<RespuestaCatalogos>} Observable con datos de colonias
    */
   getColoniaCatalogo(): Observable<RespuestaCatalogos> {
-    return this.http.get<RespuestaCatalogos>('assets/json/40201/colonia-catalogo.json');
+    return this.http.get<RespuestaCatalogos>('assets/json/40402/colonia-catalogo.json');
   }
 
   /**
    * Obtiene el catálogo de empresas CAAT.
-   * @returns Observable<RespuestaCatalogos>
-   * @description Este método realiza una petición HTTP GET a un archivo JSON local que contiene un catálogo de empresas CAAT.
+   * 
+   * @method obtenerBuscarEmpresaCaat
+   * @returns {Observable<RespuestaCaatTabla>} Observable con datos de empresas CAAT
    */
   obtenerBuscarEmpresaCaat(): Observable<RespuestaCaatTabla> {
-    return this.http.get<RespuestaCaatTabla>('assets/json/40201/buscar-empresa-caat.json');
+    return this.http.get<RespuestaCaatTabla>('assets/json/40402/buscar-empresa-caat.json');
   }
 
   /**
-   * Obtiene el catálogo de contribuyentes.
-   * @returns Observable<RespuestaContribuyenteTabla>
-   * @description Este método realiza una petición HTTP GET a un archivo JSON local que contiene un catálogo de contribuyentes.
+   * Busca contribuyentes personas físicas nacionales.
+   * 
+   * @method buscarContribuyentePFN
+   * @returns {Observable<RespuestaContribuyenteTabla>} Observable con datos de contribuyentes
    */
   buscarContribuyentePFN(): Observable<RespuestaContribuyenteTabla> {
-    return this.http.get<RespuestaContribuyenteTabla>('assets/json/40201/buscar-contribuyente-pfn-datos.json');
+    return this.http.get<RespuestaContribuyenteTabla>('assets/json/40402/buscar-contribuyente-pfn-datos.json');
   }
 
   /**
-   * Obtiene el catálogo de contribuyentes.
-   * @returns Observable<RespuestaContribuyentePMNTabla>
-   * @description Este método realiza una petición HTTP GET a un archivo JSON local que contiene un catálogo de contribuyentes.
+   * Busca contribuyentes personas morales nacionales.
+   * 
+   * @method buscarContribuyentePMN
+   * @returns {Observable<RespuestaContribuyentePMNTabla>} Observable con datos de contribuyentes
    */
   buscarContribuyentePMN(): Observable<RespuestaContribuyentePMNTabla> {
-    return this.http.get<RespuestaContribuyentePMNTabla>('assets/json/40201/buscar-contribuyente-pmn-datos.json');
+    return this.http.get<RespuestaContribuyentePMNTabla>('assets/json/40402/buscar-contribuyente-pmn-datos.json');
+  }
+
+  /**
+   * Obtiene datos de consulta para el trámite.
+   * 
+   * @method getDatosConsulta
+   * @returns {Observable<RespuestaConsulta>} Observable con datos de consulta del trámite
+   */
+  getDatosConsulta(): Observable<RespuestaConsulta> {
+    return this.http.get<RespuestaConsulta>('assets/json/40402/consulta_40402.json');
   }
 }
