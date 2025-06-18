@@ -24,22 +24,22 @@
         
                 <solicitante #Solicitante></solicitante>
             }
-            @case (2) {        
+            @case (2) {  
+                 @if (esDatosRespuesta) {           
                 <app-datos-de-la-solicitud></app-datos-de-la-solicitud> 
-           
-            }
-          
-            @case (3) {    
+                       }}
+                      @case (3) {  
+                 @if (esDatosRespuesta) {       
                <app-movilizacion></app-movilizacion>    
-           
-            }
-            @case (4) {      
+                       }}
+            @case (4) {    
+                 @if (esDatosRespuesta) {       
                 <app-terceros></app-terceros>   
-           
-            }
-            @case (5) {         
+                       }}
+            @case (5) {     
+                 @if (esDatosRespuesta) {         
            <app-pago-de-derechos221602></app-pago-de-derechos221602>
-            }     
+            }  }   
                }
         </ng-container>
     </div>
