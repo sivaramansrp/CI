@@ -1,19 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core'; // Add this import
 
-import { AvisoSiglosComponent } from './pantallas.component';
+// Update the import to match the actual exported component name
+import { PantallasComponent } from './pantallas.component';
 
-describe('AvisoSiglosComponent', () => {
-  let component: AvisoSiglosComponent;
-  let fixture: ComponentFixture<AvisoSiglosComponent>;
+describe('PantallasComponent', () => {
+  let component: PantallasComponent;
+  let fixture: ComponentFixture<PantallasComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AvisoSiglosComponent],
-      imports: []
+      declarations: [PantallasComponent],
+      imports: [],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA], // Add this line
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AvisoSiglosComponent);
+    fixture = TestBed.createComponent(PantallasComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
