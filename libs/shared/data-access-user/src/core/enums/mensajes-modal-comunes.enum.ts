@@ -30,6 +30,11 @@ export const TEXTO_ACEPTAR = 'Aceptar';
 export const TEXTO_CANCELAR = 'Cancelar';
 
 /**
+ * @description Texto 'Cancelar' para el botón de cancelación en el modal de aviso
+ */
+export const TEXTO_CERRAR = 'Cerrar';
+
+/**
  * @description Mensaje de alerta al intentar eliminar un elemento de la tabla
  */
 export const MSG_ALERTA_ELIMINAR_ELEMENTO =

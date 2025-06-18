@@ -12,6 +12,7 @@ export interface ExportarIlustraciones130302State {
    * @property {string} saldoDisponible - Saldo disponible para el trámite.
    */
   saldoDisponible: string;
+  fechaPago: string;
 
   /**
    * @property {string} prorrogaDel - Fecha de inicio de la prórroga.
@@ -47,6 +48,7 @@ export interface ExportarIlustraciones130302State {
 export function createInitialState(): ExportarIlustraciones130302State {
   return {
     saldoDisponible: '',
+    fechaPago: '',
     prorrogaDel: '',
     prorrogaAl: '',
     motivoJustificacion: '',
@@ -149,6 +151,14 @@ export class Tramite130302Store extends Store<ExportarIlustraciones130302State> 
     this.update((state) => ({
       ...state,
       otrasDeclaraciones,
+    }));
+  }
+
+  
+public setfechaPago(fechaPago: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaPago,
     }));
   }
 }
