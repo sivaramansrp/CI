@@ -97,7 +97,7 @@ export const INFORMACION_DESCRIPCION_CUPO = [
     desactivado: true,
     soloLectura: false,
     validadores: [],
-    marcadorDePosicion: '',
+    marcadorDePosicion: 'PANTALONES Y FALDAS DE ALGODON 2',
     valorPredeterminado: '',
     marginTop: 0,
   },
