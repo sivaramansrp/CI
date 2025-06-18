@@ -113,6 +113,9 @@ export interface solicitud220401State {
   regimenMercancia:string;
   paisOrigen:string;
   exentoPago:string;
+  tratamiento:string;
+  presentacion:string;
+  marcaEmbarque:string;
   
   /** Tipo de transporte utilizado para la mercancía o animales. */
   tipoDeTransporte: string;
@@ -221,7 +224,10 @@ export function createInitialState(): solicitud220401State {
     regimenMercancia:'',
     paisOrigen:'',
     exentoPago:'',
-    tipoDeTransporte:''
+    tipoDeTransporte:'',
+    tratamiento:'',
+    presentacion:'',
+    marcaEmbarque:''
   };
   
 }
@@ -662,5 +668,25 @@ public setfuncionZootecnica(funcionZootecnica: string) {
       ...state,
       tipoDeTransporte,
     }));
+  }
+  public setTratamiento(tratamiento:string){
+    this.update((state)=>({
+      ...state,
+      tratamiento,
+    }))
+  }
+
+  public setPresentacion(presentacion:string){
+    this.update((state)=>({
+      ...state,
+      presentacion,
+    }))
+  }
+
+  public setMarcaEmbarque(marcaEmbarque:string){
+    this.update((state)=>({
+      ...state,
+      marcaEmbarque
+    }))
   }
 }

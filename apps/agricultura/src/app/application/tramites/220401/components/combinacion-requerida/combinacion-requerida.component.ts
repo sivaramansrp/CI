@@ -143,8 +143,6 @@ export class CombinacionRequeridaComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          this.esFormularioSoloLectura = true;
-          
         })
       )
       .subscribe()
