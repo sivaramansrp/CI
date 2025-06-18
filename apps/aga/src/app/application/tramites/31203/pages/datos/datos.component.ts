@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, FormularioDinamico, PERSONA_MORAL_NACIONAL, SolicitanteComponent, TIPO_PERSONA } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState, DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, FormularioDinamico, PERSONA_MORAL_NACIONAL, SolicitanteComponent, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { ReplaySubject, Subject, map, takeUntil } from 'rxjs';
 import { AvisoUnicoService } from '../../services/aviso-unico.service';
 
@@ -63,7 +63,8 @@ export class DatosComponent implements OnInit, OnDestroy, AfterViewInit {
       map((consultaState) => {
         this.consultaState = consultaState; // Asigna el estado de la consulta
       })
-    ).subscribe();
+    ).subscribe()
+    console.log('Estado de la consulta:', this.consultaState); // Imprime el estado de la consulta en la consola
     if (this.consultaState?.update) {
       this.guardarDatosFormulario(); // Si está en modo actualización, guarda los datos del formulario
     } else {
@@ -85,6 +86,7 @@ export class DatosComponent implements OnInit, OnDestroy, AfterViewInit {
         takeUntil(this.destroyNotifier$) // Se desuscribe al destruir el componente
       )
       .subscribe((resp) => {
+        console.log('Datos de respuesta del servidor:', resp); // Imprime los datos de respuesta en la consola
         if (resp) {
           this.esDatosRespuesta = true; // Marca que hay datos de respuesta
           this.service.actualizarEstadoFormulario(resp); // Actualiza el estado del formulario con la respuesta
