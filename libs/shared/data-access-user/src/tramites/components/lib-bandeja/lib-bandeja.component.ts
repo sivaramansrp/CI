@@ -167,7 +167,7 @@ export class LibBandejaComponent<T> implements OnInit {
       ROW_OBJETO.folioTramite,
       ROW_OBJETO.tipoDeTramite,
       ROW_OBJETO.estadoDeTramite,
-      !this.tieneBandeja ? false : true,
+      true,
       false,
       true
     );
