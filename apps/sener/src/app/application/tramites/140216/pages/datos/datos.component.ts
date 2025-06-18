@@ -42,6 +42,11 @@ export class DatosComponent implements OnInit, OnDestroy {
    */
   public consultaState!: ConsultaioState;
 
+  /** 
+   * Datos de respuesta del servidor utilizados para actualizar el formulario.
+   */
+  public esDatosRespuesta: boolean = false;
+
   /**
    * Subject para notificar la destrucción del componente.
    */
@@ -73,6 +78,8 @@ export class DatosComponent implements OnInit, OnDestroy {
 
     if (this.consultaState.update) {
       this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
     }
   }
 
@@ -89,6 +96,7 @@ export class DatosComponent implements OnInit, OnDestroy {
       )
       .subscribe((resp) => {
         if (resp) {
+          this.esDatosRespuesta = true;
           this.tramite140216Store.setConsultaSuspensionPermisoState(resp);
         }
       });
