@@ -928,5 +928,13 @@
     "fechInicioTramite": "2025-3-09 0035:05:00",
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260302"
+  },
+   {
+    "folioTramite": "0100001000326020305000664",
+    "tipoDeTramite": "Permiso sanitario de importación de medicamentos destinados a pruebas de laboratorio",
+    "dependencia": "COFEPRIS ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260916"
   }
 ]
