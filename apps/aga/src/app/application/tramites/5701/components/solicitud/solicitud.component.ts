@@ -420,6 +420,18 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   public activarCatalogoTipoOperacion: boolean = true;
 
+    /**
+   * @descripcion Checkbox para despacho lda
+   */
+  public activarRelacionSociedad: boolean = false;
+
+    /**
+   * @descripcion Checkbox para despacho lda
+   */
+  public activarEncargoConferido: boolean = false;
+
+
+
   //Estas variables se van a eliminar
   /**
    * Arrelgo de patentes de la empresa
@@ -999,8 +1011,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         descripcionTipoDespacho: [this.solicitudState?.descripcionTipoDespacho],
         tipoOperacion: [this.solicitudState?.tipoOperacion],
         patente: [{ value: this.solicitudState?.patente, disabled: true }],
-        relacionSociedad: [this.solicitudState?.relacionSociedad],
-        encargoConferido: [this.solicitudState?.encargoConferido],
+        relacionSociedad: [{value: this.solicitudState?.relacionSociedad, disabled: true}],
+        encargoConferido: [{value: this.solicitudState?.encargoConferido, disabled: true}],
         domicilioDespacho: [this.solicitudState?.domicilioDespacho],
         especifique: [this.solicitudState?.especifique],
       }),
@@ -2269,6 +2281,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             monto: responseLineaCapturaPagada.datos.pago_model.importe,
           };
 
+          console.log('Monto pagado Líneas', this.montoPagadoLineas);
+          
           if (this.montoPagadoLineas < MONTO_A_CUBRIR) {
             this.montoPagadoLineas +=
               responseLineaCapturaPagada.datos.pago_model.importe;

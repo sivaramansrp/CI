@@ -141,6 +141,11 @@ export class TransporteComponent implements OnInit, OnChanges {
   readonly LABEL_HORA_ARRIBO: string = LABEL_HORA_ARRIBO;
 
   /**
+   * @description Valor -1 en selects para indicar "Sin valor seleccionado".
+   */
+  readonly SIN_VALOR: number = Number(SIN_VALOR_SELECT);
+
+  /**
    * Formulario para el transporte carretero.
    */
   carreteroForma!: FormGroup;
