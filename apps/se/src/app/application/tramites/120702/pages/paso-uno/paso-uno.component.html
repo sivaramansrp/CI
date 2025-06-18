@@ -18,7 +18,7 @@
         <solicitante></solicitante>
         }
         @case (2) { @if(esDatosRespuesta) {
-        <app-expedicion-asignacion></app-expedicion-asignacion>
+        <app-expedicion-asignacion *ngIf="consultaState" [consultaState]="consultaState"></app-expedicion-asignacion>
         }
         }
         }

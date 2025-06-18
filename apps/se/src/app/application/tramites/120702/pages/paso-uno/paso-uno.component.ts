@@ -53,6 +53,11 @@ export class PasoUnoComponent implements OnInit, OnDestroy{
     this.indice = i;
   }
 
+  /**
+ * Constructor de la clase.
+ * Inyecta los servicios ExpedicionCertificadosFronteraService y ConsultaioQuery.
+ * La inicialización de datos no se realiza en el constructor, sino en métodos específicos según sea necesario.
+ */
   constructor(private expedicionService : ExpedicionCertificadosFronteraService, private consultaQuery: ConsultaioQuery)
   {
     // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.

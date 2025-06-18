@@ -5,7 +5,7 @@ import {
   TableComponent,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -23,11 +23,11 @@ import {
 import { Solicitud120702State, Tramite120702Store } from '../../estados/tramite120702.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import {ConsultaioState} from '@ng-mf/data-access-user';
 import { DescripcionCupoComponent } from '../descripcion-cupo/descripcion-cupo.component';
 import { ExpedicionCertificadosFronteraService } from '../../services/expedicion-certificados-frontera.service';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { Tramite120702Query } from '../../estados/tramite120702.query';
-
 /**
  * Componente responsable de la sección de asignación de expedición de certificados.
  * 
@@ -50,6 +50,13 @@ import { Tramite120702Query } from '../../estados/tramite120702.query';
   styleUrl: './expedicion-asignacion.component.scss',
 })
 export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
+
+  
+  /**
+   * Estado de la consulta recibido como entrada desde el componente padre.
+   */
+    @Input({required:true}) consultaState!: ConsultaioState;
+    
   /**
    * Formulario reactivo que contiene los campos del formulario de asignación.
    */
@@ -119,19 +126,6 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
    * Inicializa el componente y configura el formulario y los datos requeridos.
    */
   ngOnInit(): void {
-      // this.consultaioQuery.selectConsultaioState$
-      // .pipe(
-      //   takeUntil(this.destroy$),
-      //   map((seccionState) => {
-      //     this.esFormularioSoloLectura = seccionState.readonly;
-      //     if(!this.asignacionForm) {
-      //       this.establecerAsignacionFormGroup();
-      //     }
-      //     this.inicializarEstadoFormulario();
-      //   })
-      // )
-      // .subscribe();
-
     this.consultaioQuery.selectConsultaioState$
     .pipe(takeUntil(this.destroy$))
     .subscribe((seccionState) => {
@@ -162,10 +156,6 @@ export class ExpedicionAsignacionComponent implements OnInit, OnDestroy {
       .subscribe((data: MontoExpedirTablaDatos) => {
         this.montoTablaDatos = data.columns;
       });
-
-    // this.establecerAsignacionFormGroup();
-
-    // this.inicializarEstadoFormulario();
   }
 
  /**
