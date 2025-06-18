@@ -15063,15 +15063,5 @@
     "departamento": "cofepris",
     "numeroDeProcedimiento": "260103",
     "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
-  },
-  {
-    "folioTramite": "09958127394518026",
-    "tipoDeTramite": "Registro de solicitud de servicio",
-    "nombreDeLaTarea": "Revisión de presupuesto",
-    "fechaDeAsignacion": "2023-10-09",
-    "estadoDeTramite": "Completado",
-    "departamento": "cofepris",
-    "numeroDeProcedimiento": "260103",
-    "origin": "READ_PROCEDURE"
   }
 ]

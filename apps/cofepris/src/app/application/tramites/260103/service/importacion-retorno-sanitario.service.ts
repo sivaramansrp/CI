@@ -17,6 +17,11 @@ export class ImportacionRetornoSanitarioService {
    */
   private jsonUrl = 'assets/json/260103/';
 
+  /**
+   * Servicio para gestionar operaciones relacionadas con la importación y retorno sanitario.
+   * Proporciona métodos para obtener datos de facturadores y actualizar el estado del formulario
+   * en el store correspondiente.
+   */
   constructor(public httpServicios: HttpClient,private tramite260103Store: Tramite260103Store) {
     // Constructor necesario para inyectar el servicio HttpClient
   }

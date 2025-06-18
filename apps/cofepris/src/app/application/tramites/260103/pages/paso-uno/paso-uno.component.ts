@@ -5,6 +5,17 @@ import { ImportacionRetornoSanitarioService } from '../../service/importacion-re
 import { Tramite260103Query } from '../../estados/tramite260103Query.query';
 import { Tramite260103Store } from '../../estados/tramite260103Store.store';
 
+
+/**
+ * Componente PasoUnoComponent
+ * 
+ * Este componente gestiona el primer paso del trámite 260103, permitiendo la selección de pestañas,
+ * la carga de datos desde el servidor y la actualización del estado del formulario.
+ * Utiliza servicios y stores para manejar el estado y la lógica de negocio relacionada con el trámite.
+ *
+ * @author
+ * @version 1.0
+ */
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
@@ -34,8 +45,16 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   public esDatosRespuesta: boolean = false;
 
 
+  /**
+   * Constructor del componente PasoUnoComponent.
+   * 
+   * @param tramite260103Query Consulta el estado del trámite 260103.
+   * @param tramite260103Store Maneja el estado del store para el trámite 260103.
+   * @param consultaQuery Consulta el estado general del usuario.
+   * @param importacionRetornoSanitarioService Servicio para manejar datos de importación y retorno sanitario.
+   */
   constructor(
-    private tramite260103Query:Tramite260103Query,
+    private tramite260103Query: Tramite260103Query,
     private tramite260103Store: Tramite260103Store,
     private consultaQuery: ConsultaioQuery,
     private importacionRetornoSanitarioService: ImportacionRetornoSanitarioService
