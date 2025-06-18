@@ -13,7 +13,7 @@ export interface ValidacionLDAAutorizacionResponse {
 
 /**
  * @description Representa la estructura de una validación de autorización LDA.
- * 
+ *
  * @property aduana_despacho - Código de la aduana de despacho.
  * @property id_seccion_despacho - Identificador de la sección de despacho.
  * @property rfc_despacho_lda - RFC de despacho LDA.
@@ -38,7 +38,7 @@ export interface ValidacionLDAAutorizacion {
 
 /**
  * @description  de la solicitud para validar el RFC de autorización LDA.
- * 
+ *
  * @property rfc_lda - RFC de la autorización LDA.
  * @property rfc_solicitante - RFC del solicitante.
  * @property fecha_inicio - Fecha de inicio del periodo de validación.
@@ -52,3 +52,21 @@ export interface BodyValidarRFCAutorizacionLDA {
   fecha_fin: string;
   tipo_patente: string;
 }
+
+export interface BodyValidarRFCAutorizacionDDEX {
+  folio_ddex: string;
+  fecha_inicio: string;
+  fecha_final: string;
+  session: DatosRol;
+}
+
+export interface DatosRol {
+  tipo_patente: string;
+  rfc_solicitante: string;
+}
+
+export interface ValidacionDDEXAutorizacionResponse {
+  codigo: string;
+  mensaje: string;
+  datos: boolean;
+} 

@@ -33,6 +33,7 @@
               name="modificarMercancias"
               class="btn btn-default"
               (click)="modificarDestinatario()"
+              [disabled]="esFormularioSoloLectura"
             >
               Modificar
             </button>
@@ -41,6 +42,7 @@
               name="eliminarMercancias"
               class="btn btn-danger ms-2"
               (click)="eliminarDestinatario()"
+              [disabled]="esFormularioSoloLectura"
             >
               Eliminar
             </button>
@@ -52,6 +54,7 @@
           name="agregarMercancias"
           class="btn btn-primary ms-2"
           (click)="navigate(tipoTablaDatos.DESTINATARIO)"
+          [disabled]="esFormularioSoloLectura"
         >
           Agregar
         </button>
@@ -79,6 +82,7 @@
               name="modificarMercancias"
               class="btn btn-default"
               (click)="modificarOtros()"
+              [disabled]="esFormularioSoloLectura"
             >
               Modificar
             </button>
@@ -87,6 +91,7 @@
               name="eliminarMercancias"
               class="btn btn-danger ms-2"
               (click)="eliminarOtros()"
+              [disabled]="esFormularioSoloLectura"
             >
               Eliminar
             </button>
@@ -97,6 +102,7 @@
           name="agregarMercancias"
           class="btn btn-primary ms-2"
           (click)="navigateOtros()"
+          [disabled]="esFormularioSoloLectura"
         >
           Agregar
         </button>

@@ -110,12 +110,6 @@ export interface AvisoTablaDatos {
 }
 
 
-
-
-
-
-
-
 /**
  * Representa el formulario de un aviso.
  */
@@ -126,8 +120,6 @@ export interface AvisoFormulario {
   valorAnioProgramaImmex: string;
   tipoBusqueda: string;
   levantaActa: string;
-
-  
   tipoAviso: string;
   idTransaccion: string;
   motivoProrroga: string;
@@ -150,6 +142,36 @@ export interface AvisoFormulario {
 
 }
 
+/**
+ * @interface RespuestaConsulta
+ * @description Representa la respuesta de la API para una consulta.
+ * 
+ * @property {boolean} success - Indica si la operación fue exitosa.
+ * @property {ConsultaDatos} datos - Datos de la consulta.
+ * @property {string} message - Mensaje de la respuesta.
+ */
+export interface RespuestaConsulta {
+  success: boolean;
+  datos: ConsultaDatos;
+  message: string;
+}
+
+/**
+ * @interface RespuestaCatalogos
+ *  @description Representa la respuesta de una consulta a un catálogo.
+ *  @property {boolean} success - Indica si la consulta fue exitosa.
+ *  @property {CatalogoLista} datos - Datos del catálogo consultado.
+ *   @property {string} message - Mensaje de la respuesta.
+ */ 
+export interface ConsultaDatos {
+ valorProgramaImmex: string;
+ valorAnioProgramaImmex: string;
+  adace: string;
+  tipoAviso: string;
+  levantaActa: string;
+  tipoBusqueda: string;
+
+}
 
 
 
