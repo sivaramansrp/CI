@@ -1645,7 +1645,6 @@
     "departamento": "AGA",
     "numeroDeProcedimiento": "420101"
   },
-  ,
   {
     "id": 221602,
     "tipoDeTramite": "Solicitud de Permiso",
@@ -1663,5 +1662,14 @@
     "diasTranscurridos": "3",
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260905"
+  },
+  {
+    "id": 80316,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2023-10-01",
+    "fechaActualizacion": "2023-10-05",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "80316"
   }
 ]
