@@ -299,7 +299,6 @@ export class DatosDeLaSolicitudModificacionComponent implements OnInit, AfterVie
    * Configura los formularios reactivos del componente.
    */
   configurarGrupoForm(): void {
-    // Configuración del formulario principal de datos de la solicitud
     this.datosSolicitudform = this.formBuilder.group({
       genericos: [this.solicitudState?.genericos, [Validators.required]],
       observaciones: [this.solicitudState?.observaciones, [Validators.required]],

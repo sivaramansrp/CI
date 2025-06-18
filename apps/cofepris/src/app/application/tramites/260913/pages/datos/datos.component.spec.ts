@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DatosComponent } from './datos.component';
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { EstablecimientoService } from '../../../../shared/services/establecimiento.service';
-import { of, Subject } from 'rxjs';
+import { Subject,of } from 'rxjs';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
 
 describe('DatosComponent', () => {
