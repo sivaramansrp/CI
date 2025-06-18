@@ -2280,8 +2280,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             lineaCaptura: LINEA_PAGO,
             monto: responseLineaCapturaPagada.datos.pago_model.importe,
           };
-
-          console.log('Monto pagado Líneas', this.montoPagadoLineas);
           
           if (this.montoPagadoLineas < MONTO_A_CUBRIR) {
             this.montoPagadoLineas +=
