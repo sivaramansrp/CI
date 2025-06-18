@@ -94,6 +94,11 @@ export class PasoUnoComponent implements AfterViewInit, OnInit {
    */
   consultaDatos!: ConsultaioState;
 
+  /** 
+   * Indica si los datos son una respuesta de la consulta. 
+   */
+  public esDatosRespuesta: boolean = false;
+
   constructor(private consultaioQuery: ConsultaioQuery, private solicitudService: SolicitudService,
     public tramite80316Store: Tramite80316Store,
   ) {
@@ -111,6 +116,8 @@ export class PasoUnoComponent implements AfterViewInit, OnInit {
       .subscribe();
     if (this.consultaDatos.update) {
       this.fetchGetDatosConsulta();
+    } else {
+      this.esDatosRespuesta = true;
     }
   }
 
@@ -136,6 +143,7 @@ export class PasoUnoComponent implements AfterViewInit, OnInit {
       .getDatosConsulta()
       .pipe(takeUntil(this.destroyNotifier$)).subscribe((respuesta) => {
         if (respuesta.success) {
+          this.esDatosRespuesta = true;
           this.tramite80316Store.setActividadProductiva(respuesta.datos.actividadProductiva);
         }
       });

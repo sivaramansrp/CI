@@ -122,6 +122,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
       })
     ).subscribe();
     this.inicializarFormulario();
+    this.inicializarEstadoFormulario();
     this.loadDatosModificacion();
     this.inicializaCatalogos();
   }

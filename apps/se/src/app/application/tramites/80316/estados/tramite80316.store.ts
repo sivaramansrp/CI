@@ -1,4 +1,5 @@
 import {
+  DatosCertificacion,
   DatosModificacion,
   DatosSolicitante,
 } from '../models/datos-tramite.model';
@@ -71,6 +72,21 @@ export interface Solicitud80316State {
    * RFC del importador/exportador.
    */
   RFCImpExp: string;
+
+  /**
+   * Fecha de inicio del trámite.
+   */
+  fechaInicio: string;
+
+  /**
+   * Fecha de vigencia del trámite.
+   */
+  fechaVigencia: string;
+
+  /**
+   * Estado de certificación.
+   */
+  certificion: string;
 }
 
 /**
@@ -102,6 +118,9 @@ export function createInitialState(): Solicitud80316State {
     formaValida: {
       entidadFederativa: false,
     },
+    fechaInicio: '',
+    fechaVigencia: '',
+    certificion: ''
   };
 }
 
@@ -194,6 +213,18 @@ export class Tramite80316Store extends Store<Solicitud80316State> {
   }
 
   /**
+   * Establece los datos de certificación en el estado.
+   *
+   * @param {DatosCertificacion} datosCertificacion - Datos de certificación.
+   */
+  public setDatosCertificacion(datosCertificacion: DatosCertificacion): void {
+    this.update((state) => ({
+      ...state,
+      datosCertificacion,
+    }));
+  }
+
+  /**
    * Establece el tipo de búsqueda en el estado.
    *
    * @param {string} tipoBusqueda - Tipo de búsqueda.
@@ -226,6 +257,42 @@ export class Tramite80316Store extends Store<Solicitud80316State> {
     this.update((state) => ({
       ...state,
       RFCImpExp,
+    }));
+  }
+
+  /**
+   * Establece la fecha de inicio en el estado.
+   *
+   * @param {string} fechaInicio - Fecha de inicio.
+   */
+  public setFechaInicio(fechaInicio: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaInicio,
+    }));
+  }
+
+  /**
+   * Establece la fecha de vigencia en el estado.
+   *
+   * @param {string} fechaVigencia - Fecha de vigencia.
+   */
+  public setFechaVigencia(fechaVigencia: string): void {
+    this.update((state) => ({
+      ...state,
+      fechaVigencia,
+    }));
+  }
+
+  /**
+   * Establece el estado de certificación en el estado.
+   *
+   * @param {string} certificion - Estado de certificación.
+   */
+  public setCertificion(certificion: string): void {
+    this.update((state) => ({
+      ...state,
+      certificion,
     }));
   }
 
