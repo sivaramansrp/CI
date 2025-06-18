@@ -21,12 +21,16 @@
         <solicitante [tabindex]="1"></solicitante>
         }
         @case (2) {
-        <app-solicitud [tabindex]="2"></app-solicitud>
-        }
+        @if(esDatosRespuesta){
+         <app-solicitud [tabindex]="2"></app-solicitud>
+         }
+       }
         @case (3) {
+        @if(esDatosRespuesta){
           <app-certificado-kimberley></app-certificado-kimberley>
+          }
         }
-        }
+      }
       </ng-container>
     </div>
   </div>

@@ -184,3 +184,13 @@ export const RECINTO_FISCALIZADO = 'recintoFiscalizado';
  *@descrption Constante para el RFC del solicitante, este se va a eliminar, cuando se implemente el store del inicio de sesion 
  */
 export const RFC_SOLICITANTE = 'DODM930823EG4';
+
+/**
+ * @desccription Valor del select DDEX
+ */
+export const TIPO_DESPACHO_DDEX = 3;
+
+/**
+ * @description Valor select Tipo Operacion Exportacion
+ */
+export const TIPO_OPERACION_EXPORTACION = 2;

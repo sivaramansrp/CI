@@ -51,10 +51,15 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
 
 
   /**
-   * Initializes the component with required query and store for state management.
-   *
-   * @param Tramite260210Query Query to access procedure state.
-   * @param tramite260214Store Store to update procedure state.
+   * Constructor de la clase PasoUnoComponent.
+   * 
+   * @param tramite240101Query Servicio para consultar el estado del trámite 240101.
+   * @param tramite240101Store Almacén para gestionar el estado del trámite 240101.
+   * @param consultaQuery Servicio para consultar el estado de la sección actual.
+   * @param armasMunicionesService Servicio para operaciones relacionadas con la importación de armas y municiones.
+   * 
+   * Inicializa el componente y sus dependencias. Además, suscribe al observable del estado de consulta
+   * para mantener actualizado el estado local `consultaState` hasta que el componente sea destruido.
    */
   constructor(
     private tramite240101Query: Tramite240101Query,

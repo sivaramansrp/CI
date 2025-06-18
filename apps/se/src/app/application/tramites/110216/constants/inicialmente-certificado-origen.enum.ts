@@ -1,3 +1,5 @@
+import { DisponiblesTabla, HistoricoColumnas, SeleccionadasTabla } from "../models/certificado-origen.model";
+
 /**
  * Constante que define los pasos del wizard en el trámite.
  * 
@@ -72,3 +74,186 @@ export const FECHAFACTURA = {
   required: false,
   habilitado: true,
 };
+/**
+ * Configuración de encabezados para la tabla de mercancías disponibles.
+ * 
+ * Define los encabezados y claves utilizados para mostrar la información de las mercancías disponibles en la tabla.
+ */
+export const DISPONIBLES_ENCABEZADOS = [
+  {
+    /**
+     * Encabezado para la fracción arancelaria.
+     */
+    encabezado: 'Fracción arancelaria',
+    clave: (ele: DisponiblesTabla): string => ele.fraccionArancelaria,
+    orden: 1,
+  },
+  {
+    /**
+     * Encabezado para el nombre técnico.
+     */
+    encabezado: 'Nombre técnico',
+    clave: (ele: DisponiblesTabla): string => ele.nombreTecnico,
+    orden: 2,
+  },
+  {
+    /**
+     * Encabezado para el nombre comercial.
+     */
+    encabezado: 'Nombre comercial',
+    clave: (ele: DisponiblesTabla): string => ele.nombreComercial,
+    orden: 3,
+  },
+  {
+    /**
+     * Encabezado para el número de registro de productos.
+     */
+    encabezado: 'Número de registro de productos',
+    clave: (ele: DisponiblesTabla): string => ele.numeroRegistroProductos,
+    orden: 4,
+  },
+  {
+    /**
+     * Encabezado para la fecha de expedición.
+     */
+    encabezado: 'Fecha expedición',
+    clave: (ele: DisponiblesTabla): string => ele.fechaExpedicion,
+    orden: 5,
+  },
+  {
+    /**
+     * Encabezado para la fecha de vencimiento.
+     */
+    encabezado: 'Fecha vencimiento',
+    clave: (ele: DisponiblesTabla): string => ele.fechaVencimiento,
+    orden: 6,
+  },
+];
+
+/**
+ * Configuración de encabezados para la tabla de mercancías seleccionadas.
+ * 
+ * Define los encabezados y claves utilizados para mostrar la información de las mercancías seleccionadas en la tabla.
+ */
+export const SELECCIONADAS_ENCABEZADOS = [
+  {
+    /**
+     * Encabezado para la fracción arancelaria.
+     */
+    encabezado: 'Fracción arancelaria',
+    clave: (ele: SeleccionadasTabla): string => ele.fraccionArancelaria,
+    orden: 1,
+  },
+  {
+    /**
+     * Encabezado para la cantidad.
+     */
+    encabezado: 'Cantidad',
+    clave: (ele: SeleccionadasTabla): string => ele.cantidad,
+    orden: 2,
+  },
+  {
+    /**
+     * Encabezado para la unidad de medida.
+     */
+    encabezado: 'Unidad de medida',
+    clave: (ele: SeleccionadasTabla): string => ele.unidadMedida,
+    orden: 3,
+  },
+  {
+    /**
+     * Encabezado para el valor de la mercancía.
+     */
+    encabezado: 'Valor mercancía',
+    clave: (ele: SeleccionadasTabla): string => ele.valorMercancia,
+    orden: 4,
+  },
+  {
+    /**
+     * Encabezado para el tipo de factura.
+     */
+    encabezado: 'Tipo de factura',
+    clave: (ele: SeleccionadasTabla): string => ele.tipoFactura,
+    orden: 5,
+  },
+  {
+    /**
+     * Encabezado para el número de factura.
+     */
+    encabezado: 'Número factura',
+    clave: (ele: SeleccionadasTabla): string => ele.numFactura,
+    orden: 6,
+  },
+  {
+    /**
+     * Encabezado para el complemento de descripción.
+     */
+    encabezado: 'Complemento descripción',
+    clave: (ele: SeleccionadasTabla): string => ele.complementoDescripcion,
+    orden: 7,
+  },
+  {
+    /**
+     * Encabezado para la fecha de factura.
+     */
+    encabezado: 'Fecha factura',
+    clave: (ele: SeleccionadasTabla): string => ele.fechaFactura,
+    orden: 8,
+  },
+];
+
+/**
+ * Configuración de columnas para la tabla de productores históricos.
+ * 
+ * Define los encabezados y claves utilizados para mostrar la información de los productores históricos en la tabla.
+ */
+export const TABLE_COLUMNS = [
+  {
+    /**
+     * Encabezado para el nombre del productor.
+     */
+    encabezado: 'Nombre del productor',
+    clave: (elementos: HistoricoColumnas): string => elementos.nombreProductor,
+    orden: 1,
+  },
+  {
+    /**
+     * Encabezado para el número de registro fiscal.
+     */
+    encabezado: 'Número de registro fiscal',
+    clave: (elementos: HistoricoColumnas): string => elementos.numeroRegistroFiscal,
+    orden: 2,
+  },
+  {
+    /**
+     * Encabezado para la dirección.
+     */
+    encabezado: 'Dirección',
+    clave: (elementos: HistoricoColumnas): string => elementos.direccion,
+    orden: 3,
+  },
+  {
+    /**
+     * Encabezado para el correo electrónico.
+     */
+    encabezado: 'Correo Electrónico',
+    clave: (elementos: HistoricoColumnas): string => elementos.correoElectronico,
+    orden: 4,
+  },
+  {
+    /**
+     * Encabezado para el teléfono.
+     */
+    encabezado: 'Teléfono',
+    clave: (elementos: HistoricoColumnas): string => elementos.telefono,
+    orden: 5,
+  },
+  {
+    /**
+     * Encabezado para el fax.
+     */
+    encabezado: 'Fax',
+    clave: (elementos: HistoricoColumnas): string => elementos.fax,
+    orden: 6,
+  },
+];

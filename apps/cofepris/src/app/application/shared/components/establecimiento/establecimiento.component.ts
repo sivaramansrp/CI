@@ -267,7 +267,12 @@ export class EstablecimientoComponent implements OnInit, OnDestroy, AfterViewIni
       almacenamientoEnvasePrimario: [''],
       presentacionaFrmaceutica: ['', Validators.required],
     });
-this.inicializarEstadoFormulario();
+    this.estadoActualizacion();
+    this.inicializarEstadoFormulario();
+    this.establecimientoService.getDatosDelProducto().pipe(takeUntil(this.destroy$))
+      .subscribe((response: DatosDeLaProductoModel[]) => {
+        this.establecimientoData= response;
+     });
   }
 
     /**
@@ -277,9 +282,7 @@ this.inicializarEstadoFormulario();
     inicializarEstadoFormulario(): void {
       if (this.esFormularioSoloLectura) {
         this.guardarDatosFormulario();
-      } else {
-        this.estadoActualizacion();
-      }
+      } 
     }
 
     /**
@@ -287,7 +290,6 @@ this.inicializarEstadoFormulario();
      * Si no está en modo solo lectura, habilita el formulario.
      */
     guardarDatosFormulario(): void {
-      this.estadoActualizacion();
       if (this.esFormularioSoloLectura) {
         this.datosMercanciaForm?.disable();
       } else {

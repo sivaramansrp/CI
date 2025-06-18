@@ -262,4 +262,12 @@ export class Solicitud150101Store extends Store<Solicitud150101State> {
       porcentajeExportacion,
     }));
   }
+
+  /**
+   * Actualiza el estado de la solicitud anual con nuevos datos.
+   * @param nuevoDatos Nuevo estado de la solicitud anual.
+   */
+  public setRegistroSolicitudAnualState(nuevoDatos: Solicitud150101State): void {
+    this.update(nuevoDatos);
+  }
 }
