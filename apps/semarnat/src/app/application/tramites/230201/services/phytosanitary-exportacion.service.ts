@@ -1,9 +1,9 @@
 import { MetaInfo, Respuesta, RespuestaDetalle, RespuestaSolicitud } from '../models/datos-tramite.model';
+import { Solicitud230201State, Tramite230201Store } from '../estados/tramite230201.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { Tramite230201Store } from '../estados/tramite230201.store';
 
 @Injectable({
   providedIn: 'root'
@@ -137,5 +137,58 @@ export class PhytosanitaryExportacionService {
    */
   getEstado(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/230201/estado.json');
+  }
+
+  getSavedData(): Observable<Solicitud230201State> {
+    return this.http.get<Solicitud230201State>('assets/json/230201/savedData.json');
+  }
+
+  
+  actualizarEstadoFormulario(data: Solicitud230201State) {
+    // this.store.setAduana(data.aduana);
+    // this.store.setPaisDeProcedencia(data.paisDeProcedencia);
+    // this.store.setPais(data.pais ?? []);
+    // // this.store.setMetaInfo(data.metaInfo);
+    // this.store.setEntidades(data.entidades);
+    // this.store.setDescripcionProducto(data.descripcionProducto);
+    this.store.update((state) => {
+      return {
+        ...state,
+        aduana: data.aduana,
+        paisDeProcedencia: data.paisDeProcedencia,
+        pais: data.pais,
+        entidades: data.entidades,
+        descripcionProducto: data.descripcionProducto,
+        datosSolicitud: data.datosSolicitud,
+        datosDetalle: data.datosDetalle,
+        fraccionArancelaria: data.fraccionArancelaria,
+        descripcionFraccionArancelaria: data.descripcionFraccionArancelaria,
+        cantidad: data.cantidad,
+        cantidadLetra: data.cantidadLetra,
+        genero: data.genero,
+        especie: data.especie,
+        nombreComun: data.nombreComun,
+        unidadDeMedida: data.unidadDeMedida,
+        lungarDeEntrada: data.lungarDeEntrada,
+        destinoDeImportador: data.destinoDeImportador,
+        medioDeTransporte: data.medioDeTransporte,
+        numeroYDescripcion: data.numeroYDescripcion,
+        codigoPostal: data.codigoPostal,
+        estado: data.estado,
+        calle: data.calle,
+        numeroExterior: data.numeroExterior,
+        numeroInterior: data.numeroInterior,
+        colonia: data.colonia,
+        tercerosPopupState: data.tercerosPopupState,
+        destinatarios: data.destinatarios,
+        claveDeReferencia: data.claveDeReferencia,
+        cadenaPagoDependencia: data.cadenaPagoDependencia,
+        banco: data.banco,
+        llaveDePago: data.llaveDePago,
+        fecPago: data.fecPago,
+        impPago: data.impPago,
+        update: true
+      };
+    });
   }
 }
