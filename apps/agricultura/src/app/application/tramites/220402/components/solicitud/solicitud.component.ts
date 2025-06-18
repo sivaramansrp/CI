@@ -335,7 +335,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * @memberof SolicitudComponent
    */
   mercanciaAgregar(): void {
-    this.datosGeneralesArr.push(this.datosMercancia.get('datosGenerales')?.value);
+    this.datosGeneralesArr = [...this.datosGeneralesArr, this.datosMercancia.get('datosGenerales')?.value];
     this.mercanciaColapsable();
   }
 
