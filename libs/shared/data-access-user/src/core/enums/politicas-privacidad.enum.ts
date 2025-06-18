@@ -17,12 +17,16 @@ export const POLITICAS_PRIVACIDAD = (linkSeguro: string): string => {
 };
 
 /**
- * @description Enlace a la guía de Java para el uso de la Ventanilla Digital Mexicana de Comercio Exterior.
- */
-export const JAVA_LINK =
-  'https://www.ventanillaunica.gob.mx/cs/groups/public/documents/contenidovu/dwnt/mde0/~edisp/ucm014810.pdf ';
-
-/**
  * @description Enlace a la página del INAI (Instituto Nacional de Transparencia, Acceso a la Información y Protección de Datos Personales).
  */
 export const INAI_LINK = 'https://www.inai.org.mx/';
+
+/**
+ * @description Nombre terminos
+ */
+export const TERMINOS = 'terminos';
+
+/**
+ * @desccription URL de las políticas de privacidad y manejo de datos personales.
+ */
+export const POLITICAS_PRIVACIDAD_URL = 'assets/pdf/ucm014810.pdf';

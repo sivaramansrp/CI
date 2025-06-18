@@ -1,8 +1,9 @@
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {
   INAI_LINK,
-  JAVA_LINK,
   POLITICAS_PRIVACIDAD,
+  POLITICAS_PRIVACIDAD_URL,
+  TERMINOS,
 } from '../../../core/enums/politicas-privacidad.enum';
 import {
   Notificacion,
@@ -28,20 +29,10 @@ export class PiePaginaInformacionComponent {
   notificacion!: Notificacion;
 
   /**
-   * @description URL segura utilizada para acceder a recursos Java relacionados con el componente.
-   * Esta propiedad almacena una instancia de `SafeUrl` para evitar vulnerabilidades XSS
-   * al manejar enlaces externos o dinámicos en la aplicación.
-   */
-  urlJavaSeguro: SafeUrl;
-
-  /**
    * @param sanitizer Instancia de `DomSanitizer` que se utiliza para sanitizar URLs y evitar vulnerabilidades XSS.
    * @description Constructor del componente `PiePaginaInformacionComponent`.
    */
-  constructor(private sanitizer: DomSanitizer) {
-    const URL_JAVA = JAVA_LINK;
-    this.urlJavaSeguro = this.sanitizer.bypassSecurityTrustUrl(URL_JAVA);
-  }
+  constructor(private sanitizer: DomSanitizer) {}
 
   /**
    * @description Método que abre un modal de notificación con información sobre las políticas de privacidad.
@@ -58,7 +49,17 @@ export class PiePaginaInformacionComponent {
       txtBtnAceptar: TEXTO_CERRAR,
       txtBtnCancelar: '',
       tamanioModal: 'modal-lg',
-      alineacionBtonoCerrar: 'boton-final'
+      alineacionBtonoCerrar: 'boton-final',
     };
+  }
+
+  /**
+   * Método que se ejecuta al hacer clic en un enlace para ver el PDF.
+   *
+   * @param url - La URL del PDF a visualizar.
+   */
+  // eslint-disable-next-line class-methods-use-this
+  verPDF(): void {
+    window.open(POLITICAS_PRIVACIDAD_URL, '_blank');
   }
 }
