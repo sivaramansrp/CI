@@ -24,6 +24,7 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  ViewChild,
 } from '@angular/core';
 import {
   ConfiguracionColumna,
@@ -37,7 +38,8 @@ import {
 } from '@ng-mf/data-access-user';
 
 import {
-InputCheckComponent,InputRadioComponent
+  InputCheckComponent,
+  InputRadioComponent,
 } from '@libs/shared/data-access-user/src';
 
 import {
@@ -59,6 +61,8 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { DatosMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
+import { ModalComponent } from '../modal/modal.component';
 import { REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
 import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { map } from 'rxjs/operators';
@@ -80,11 +84,15 @@ import { map } from 'rxjs/operators';
     InputRadioComponent,
     InputCheckComponent,
     InputFechaComponent,
+    ModalComponent,
   ],
   templateUrl: './datos-del-tramite.component.html',
   styleUrl: './datos-del-tramite.component.scss',
 })
 export class DatosDelTramiteComponent implements OnInit, OnDestroy {
+  @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
+
+  showModal: boolean = false;
   /**
    * @property {number} idProcedimiento
    * Identificador único del procedimiento asociado a la solicitud.
@@ -396,7 +404,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private consultaioQuery: ConsultaioQuery
-  ) { }
+  ) {}
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.
    * Además, obtiene la información del catálogo de mercancía.
@@ -498,9 +506,10 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @returns {void}
    */
   irAAcciones(accionesPath: string): void {
-    this.router.navigate([accionesPath], {
-      relativeTo: this.activatedRoute,
-    });
+    // this.router.navigate([accionesPath], {
+    //   relativeTo: this.activatedRoute,
+    // });
+    this.modalComponent.abrir(DatosMercanciaComponent, { userId: 42 });
   }
 
   /**
