@@ -1,5 +1,5 @@
 import { ADUANA_CATALOGO, HEADERS_ACCESOS_TABLA, MOVIMIENTO_CATALOGO, ROL_CATALOGO, SISTEMA_CATALOGO } from '../constantes/tecnologicos.enum';
-import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { Catalogo, CatalogoSelectComponent, CatalogosSelect, ConfiguracionColumna, ConsultaioQuery, Notificacion, NotificacionesComponent, Pedimento, TablaDinamicaComponent, TablaSeleccion, TituloComponent, ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
@@ -89,6 +89,13 @@ export class GestionDeCuentasComponent implements OnInit, OnDestroy {
    *  Índice del pedimento marcado para eliminación.
    * */
   public elementoParaEliminar!: number;
+
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+  
   /**
    * Constructor del componente.
    * @param tecnologicos Servicio para obtener datos tecnológicos.
@@ -102,8 +109,25 @@ export class GestionDeCuentasComponent implements OnInit, OnDestroy {
     private store: Tramite324Store,
     private query: Tramite324Query,
     private fb: FormBuilder,
-    private validacionesService: ValidacionesFormularioService
-  ) { }
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
+  ) { 
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyed$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe()
+  }
 
   /**
    * Método del ciclo de vida que se ejecuta al inicializar el componente.
@@ -123,6 +147,7 @@ export class GestionDeCuentasComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyed$),
         map((seccionState) => {
           this.solicitudState = seccionState;
+          this.accesosTablaDatos = [...seccionState.AccesosDatos];
         })
       )
       .subscribe();
@@ -277,4 +302,3 @@ export class GestionDeCuentasComponent implements OnInit, OnDestroy {
     this.destroyed$.complete();
   }
 }
-
