@@ -210,6 +210,12 @@ export interface Solicitud260704State {
 
   /** Fecha de pago de la operación. */
   fechaPago: string;
+  /** Nombre o razón social del solicitante. */
+  nombreRazon : string;
+  /** Apellido paterno del solicitante. */
+  apellidoPaterno: string;
+  /** Apellido materno del solicitante. */
+  apellidoMaterno: string;
 }
 
 /**
@@ -219,200 +225,74 @@ export interface Solicitud260704State {
  */
 export function createInitialState(): Solicitud260704State {
   return {
-    /** Lista de datos de mercancías. */
     mercanciasDatos: [],
-
-    /** Lista de datos de destinatarios. */
     destinatarioDatos: [],
-
-    /** Tipo de operación (puede ser cadena o número). */
     tipoOperacion: '',
-
-    /** Justificación proporcionada por el usuario. */
     justificacion: '',
-
-    /** Nombre del establecimiento. */
     establecimiento: '',
-
-    /** Razón social del establecimiento. */
     razonSocial: '',
-
-    /** Correo electrónico del solicitante. */
     correoElectronico: '',
-
-    /** Código postal del establecimiento. */
     codigoPostal: '',
-
-    /** Estado (entidad federativa) del establecimiento. */
     estado: '',
-
-    /** Municipio del establecimiento. */
     municipio: '',
-
-    /** Localidad del establecimiento. */
     localidad: '',
-
-    /** Colonia del establecimiento. */
     colonia: '',
-
-    /** Calle del establecimiento. */
     calle: '',
-
-    /** Lada telefónica del establecimiento. */
     lada: '',
-
-    /** Teléfono del establecimiento. */
     telefono: '',
-
-    /** Indica si se utiliza SCIAN. */
     scian: false,
-
-    /** Indica si los datos SCIAN están disponibles. */
     scianDatos: false,
-
-    /** Clave SCIAN seleccionada. */
     claveScian: '',
-
-    /** Descripción de la clave SCIAN seleccionada. */
     descripcionScian: '',
-
-    /** Indica si se cuenta con aviso de funcionamiento. */
     avisoDeFuncionamiento: false,
-
-    /** Licencia sanitaria del establecimiento. */
     licenciaSanitaria: '',
-
-    /** Régimen del establecimiento. */
     regimen: '',
-
-    /** Aduana relacionada con la operación. */
     aduana: '',
-
-    /** Valor IMMEX relacionado con la operación. */
     immex: '',
-
-    /** Año relacionado con la operación. */
     ano: '',
-
-    /** Descripción de la mercancía. */
     mercancia: '',
-
-    /** Clasificación del producto. */
     clasificacionProducto: '',
-
-    /** Especificación de la clasificación del producto. */
     especificarClasificacionProducto: '',
-
-    /** Denominación del producto. */
     denominacionProducto: '',
-
-    /** Marca del producto. */
     marca: '',
-
-    /** Tipo de producto. */
     tipoProducto: '',
-
-    /** Especificación adicional del producto. */
     especifique: '',
-
-    /** Fracción arancelaria del producto. */
     fraccionArancelaria: '',
-
-    /** Descripción de la fracción arancelaria. */
     descripcionFraccionArancelaria: '',
-
-    /** Cantidad en la unidad de medida de tarifa (UMT). */
     cantidadUMT: '',
-
-    /** Unidad de medida de tarifa (UMT). */
     umt: '',
-
-    /** Cantidad en la unidad de medida de comercialización (UMC). */
     cantidadUMC: '',
-
-    /** Unidad de medida de comercialización (UMC). */
     umc: '',
-
-    /** Clave del lote relacionado con la mercancía. */
     claveLote: '',
-
-    /** Lista de claves relacionadas con la mercancía. */
     listaClave: '',
-
-    /** Indica si se incluyen manifiestos y declaraciones. */
     manfestosYDeclaraciones: false,
-
-    /** Indica si los datos deben hacerse públicos. */
     hacerlosPublicos: '',
-
-    /** RFC del solicitante o establecimiento. */
     rfc: '',
-
-    /** Clave de referencia de la operación. */
     claveDeReferencia: '',
-
-    /** Cadena de dependencia relacionada con la operación. */
     cadenaDependecia: '',
-
-    /** Banco relacionado con el pago. */
     banco: '',
-
-    /** Llave de pago de la operación. */
     liaveDePago: '',
-
-    /** Importe del pago realizado. */
     importeDePago: '',
-
-    /** Nombre del destinatario. */
     destinatario: '',
-
-    /** Nombre del fabricante. */
     fabricante: '',
-
-    /** Tipo de persona (física o moral). */
     tipoPersona: '',
-
-    /** Nombre del solicitante. */
     nombre: '',
-
-    /** Primer apellido del solicitante. */
     primerApellido: '',
-
-    /** Segundo apellido del solicitante. */
     segundoApellido: '',
-
-    /** Denominación del solicitante o establecimiento. */
     denominacion: '',
-
-    /** País relacionado con la operación. */
     pais: '',
-
-    /** Estado (entidad federativa) relacionado con la operación. */
     estados: '',
-
-    /** Código postal relacionado con la operación. */
     codigoDeZip: '',
-
-    /** Camino o dirección relacionada con la operación. */
     camino: '',
-
-    /** Número exterior del domicilio relacionado. */
     numeroExterior: '',
-
-    /** Número interior del domicilio relacionado. */
     numeroInterior: '',
-
-    /** Lada telefónica de terceros. */
     ladaDeTerceros: '',
-
-    /** Teléfono de terceros. */
     fon: '',
-
-    /** Correo electrónico de terceros. */
     email: '',
-
-    /** Fecha de pago de la operación. */
     fechaPago: '',
+    nombreRazon : '',
+    apellidoPaterno: '',
+    apellidoMaterno: '',
   };
 }
 
@@ -1158,6 +1038,38 @@ export class Tramite260704Store extends Store<Solicitud260704State> {
     this.update((state) => ({
       ...state,
       fechaPago,
+    }));
+  }
+/**
+   * Actualiza el nombre o razón social en el estado.
+   * @param nombreRazon Nombre o razón social a establecer.
+   */
+  setNombreRazon(nombreRazon: string): void {
+    this.update((state) => ({
+      ...state,
+      nombreRazon,
+    }));
+  }
+
+  /**
+   * Actualiza el apellido paterno en el estado.
+   * @param apellidoPaterno Apellido paterno a establecer.
+   */
+  setApellidoPaterno(apellidoPaterno: string): void {
+    this.update((state) => ({
+      ...state,
+      apellidoPaterno,
+    }));
+  }
+
+  /**
+   * Actualiza el apellido materno en el estado.
+   * @param apellidoMaterno Apellido materno a establecer.
+   */
+  setApellidoMaterno(apellidoMaterno: string): void {
+    this.update((state) => ({
+      ...state,
+      apellidoMaterno,
     }));
   }
 }

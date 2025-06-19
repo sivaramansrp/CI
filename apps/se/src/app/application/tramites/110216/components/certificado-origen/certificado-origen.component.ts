@@ -1,4 +1,6 @@
 import { AlertComponent, REGEX_PATRON_DECIMAL_2 } from "@libs/shared/data-access-user/src";
+import { ConsultaioQuery, ConsultaioState } from "@ng-mf/data-access-user";
+import { DISPONIBLES_ENCABEZADOS, FECHAFACTURA, SELECCIONADAS_ENCABEZADOS } from '../../constants/inicialmente-certificado-origen.enum';
 import { Catalogo } from "../../models/certificado-origen.model.js";
 import { CatalogoLista, } from "../../models/certificado-origen.model.js";
 import { CatalogoSelectComponent } from "@libs/shared/data-access-user/src";
@@ -8,7 +10,6 @@ import { Component } from "@angular/core";
 import { ConfiguracionColumna } from "@libs/shared/data-access-user/src";
 import { DisponiblesTabla } from "../../models/certificado-origen.model.js";
 import { ElementRef } from "@angular/core";
-import { FECHAFACTURA } from '../../constants/inicialmente-certificado-origen.enum';
 import { FECHAFINAL } from '../../constants/inicialmente-certificado-origen.enum';
 import { FECHAINICIAL } from '../../constants/inicialmente-certificado-origen.enum';
 import { FormBuilder } from "@angular/forms";
@@ -98,38 +99,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * 
    * Define los encabezados y las claves para mostrar los datos de las mercancías disponibles.
    */
-  public disponiblesEncabezados: ConfiguracionColumna<DisponiblesTabla>[] = [
-    {
-      encabezado: 'Fracción arancelaria',
-      clave: (ele: DisponiblesTabla) => ele.fraccionArancelaria,
-      orden: 1,
-    },
-    {
-      encabezado: 'Nombre técnico',
-      clave: (ele: DisponiblesTabla) => ele.nombreTecnico,
-      orden: 2,
-    },
-    {
-      encabezado: 'Nombre comercial',
-      clave: (ele: DisponiblesTabla) => ele.nombreComercial,
-      orden: 3,
-    },
-    {
-      encabezado: 'Número de registro de productos',
-      clave: (ele: DisponiblesTabla) => ele.numeroRegistroProductos,
-      orden: 4,
-    },
-    {
-      encabezado: 'Fecha expedición',
-      clave: (ele: DisponiblesTabla) => ele.fechaExpedicion,
-      orden: 5,
-    },
-    {
-      encabezado: 'Fecha vencimiento',
-      clave: (ele: DisponiblesTabla) => ele.fechaVencimiento,
-      orden: 6,
-    },
-  ];
+  public disponiblesEncabezados: ConfiguracionColumna<DisponiblesTabla>[] = DISPONIBLES_ENCABEZADOS;
 
   /**
    * Datos de la tabla de mercancías disponibles.
@@ -150,48 +120,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * 
    * Define los encabezados y las claves para mostrar los datos de las mercancías seleccionadas.
    */
-  public seleccionadasEncabezados: ConfiguracionColumna<SeleccionadasTabla>[] = [
-    {
-      encabezado: 'Fracción arancelaria',
-      clave: (ele: SeleccionadasTabla) => ele.fraccionArancelaria,
-      orden: 1,
-    },
-    {
-      encabezado: 'Cantidad',
-      clave: (ele: SeleccionadasTabla) => ele.cantidad,
-      orden: 2,
-    },
-    {
-      encabezado: 'Unidad de medida',
-      clave: (ele: SeleccionadasTabla) => ele.unidadMedida,
-      orden: 3,
-    },
-    {
-      encabezado: 'Valor mercancía',
-      clave: (ele: SeleccionadasTabla) => ele.valorMercancia,
-      orden: 4,
-    },
-    {
-      encabezado: 'Tipo de factura',
-      clave: (ele: SeleccionadasTabla) => ele.tipoFactura,
-      orden: 5,
-    },
-    {
-      encabezado: 'Número factura',
-      clave: (ele: SeleccionadasTabla) => ele.numFactura,
-      orden: 6,
-    },
-    {
-      encabezado: 'Complemento descripción',
-      clave: (ele: SeleccionadasTabla) => ele.complementoDescripcion,
-      orden: 7,
-    },
-    {
-      encabezado: 'Fecha factura',
-      clave: (ele: SeleccionadasTabla) => ele.fechaFactura,
-      orden: 8,
-    },
-  ];
+  public seleccionadasEncabezados: ConfiguracionColumna<SeleccionadasTabla>[] = SELECCIONADAS_ENCABEZADOS;
   /**
  * Datos de la tabla de mercancías seleccionadas.
  * 
@@ -303,7 +232,17 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * Contiene una lista de tipos de factura que el usuario puede seleccionar.
    */
   optionsTipoFactura!: Catalogo[];
-
+  /**
+     * @property {ConsultaioState} consultaDatos
+     * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+     */
+  consultaDatos!: ConsultaioState;
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
   /**
    * Constructor del componente CertificadoOrigenComponent.
    * 
@@ -320,8 +259,9 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
     private certificadosOrigenService: CertificadosOrigenService,
     public store: Tramite110216Store,
     public tramiteQuery: Tramite110216Query,
-    private validacionesService: ValidacionesFormularioService
-    // eslint-disable-next-line no-empty-function
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery,
+
   ) { }
 
   /**
@@ -338,11 +278,21 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+    this.mercanciaDisponsiblesTablaDatos = this.solicitudState.mercanciaDisponsiblesTablaDatos ?? [];
+    this.mercanciaSeleccionadasTablaDatos = this.solicitudState.mercanciaSeleccionadasTablaDatos ?? [];
     this.inicializarFormularioCertificado();
     this.inicializarFormularioMercancia();
     this.inicializarFormularioArchivo();
-    this.cargarMercanciasDisponibles();
-    this.cargarMercanciasSeleccionadas();
     this.cargarTratado();
     this.cargarPais();
   }
@@ -404,7 +354,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         razonSocial: [this.solicitudState?.grupoOperador?.razonSocial, []],
       }),
       grupoDeDomicilio: this.fb.group({
-        pais: [this.solicitudState?.grupoTratado?.pais, []],
+        pais: [this.solicitudState?.grupoDeDomicilio?.pais, []],
         ciudad: [this.solicitudState?.grupoDeDomicilio?.ciudad, []],
         calle: [this.solicitudState?.grupoDeDomicilio?.calle, []],
         numeroLetra: [this.solicitudState?.grupoDeDomicilio?.numeroLetra, []],
@@ -423,6 +373,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
         fechaInicial: [this.solicitudState?.grupoTratado?.fechaInicialInput, []],
       }),
     });
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -446,6 +397,31 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
       numeroFactura: [this.solicitudState?.formularioMercancia?.numeroFactura, []],
       tipoFactura: [this.solicitudState?.formularioMercancia?.tipoFactura, []],
     });
+    this.inicializarEstadoFormulario();
+  }
+  /**
+   * @method inicializarEstadoFormulario
+   * @description Inicializa el estado de los formularios según el modo de solo lectura.
+   * 
+   * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles de los formularios:
+   * - `formularioCertificado`
+   * - `formularioMercancia`
+   * - `formularioArchivo`
+   * 
+   * En caso contrario, habilita todos los controles de los formularios mencionados.
+   * 
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.formularioCertificado?.disable();
+      this.formularioMercancia?.disable();
+      this.formularioArchivo?.disable();
+    } else {
+      this.formularioCertificado?.enable();
+      this.formularioMercancia?.enable();
+      this.formularioArchivo?.enable();
+    }
   }
 
   /**
@@ -548,10 +524,12 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    * @param {DisponiblesTabla} evento - La fila seleccionada en la tabla de mercancías disponibles.
    */
   disponiblesSeleccionDeFilas(evento: DisponiblesTabla): void {
-    this.disponiblesSeleccionadasFila = evento;
-    if (this.modalBuscar) {
-      const MODAL_INSTANCE = new Modal(this.modalBuscar.nativeElement);
-      MODAL_INSTANCE.show();
+    if (!this.soloLectura) {
+      this.disponiblesSeleccionadasFila = evento;
+      if (this.modalBuscar) {
+        const MODAL_INSTANCE = new Modal(this.modalBuscar.nativeElement);
+        MODAL_INSTANCE.show();
+      }
     }
   }
   /**
@@ -609,6 +587,7 @@ export class CertificadoOrigenComponent implements OnInit, OnDestroy {
    */
   enviar(): void {
     this.cerrarModal();
+    this.cargarMercanciasSeleccionadas();
   }
 
   /**

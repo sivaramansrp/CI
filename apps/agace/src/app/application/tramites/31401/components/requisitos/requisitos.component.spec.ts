@@ -50,6 +50,9 @@ describe('RequisitosComponent', () => {
 
     fixture = TestBed.createComponent(RequisitosComponent);
     component = fixture.componentInstance;
+    component.consultaState = {
+      readonly: false,
+    } as any;
     fixture.detectChanges();
   });
 

@@ -1,5 +1,4 @@
-import { AgregarDatosProductorFormulario, FormularioMercancia, GrupoDeDomicilio, GrupoTratado } from '../../tramites/110217/models/certificado-origen.model';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { AgregarDatosProductorFormulario, DisponiblesTabla, FormularioMercancia, GrupoDeDomicilio, GrupoTratado, HistoricoColumnas, SeleccionadasTabla } from '../../tramites/110217/models/certificado-origen.model';
 import { GrupoDeDirecciones } from '../../tramites/110217/models/certificado-origen.model';
 import { GrupoDeTransporte } from '../../tramites/110217/models/certificado-origen.model';
 import { GrupoOperador } from '../../tramites/110217/models/certificado-origen.model';
@@ -23,17 +22,17 @@ export interface Tramite110217State {
   /**
    * Idioma seleccionado para el trámite.
    */
-  idioma: Catalogo | null;
+  idioma: string | null;
 
   /**
    * Entidad federativa seleccionada.
    */
-  entidadFederativa: Catalogo | null;
+  entidadFederativa: string | null;
 
   /**
    * Representación federal seleccionada.
    */
-  representacionFederal: Catalogo | null;
+  representacionFederal: string | null;
 
   /**
    * Indica si los datos del productor son confidenciales.
@@ -271,7 +270,7 @@ export class Tramite110217Store extends Store<Tramite110217State> {
    * 
    * @param {Catalogo} idioma - El idioma a establecer.
    */
-  public setIdioma(idioma: Catalogo): void {
+  public setIdioma(idioma: string): void {
     this.update((state) => ({
       ...state,
       idioma,
@@ -285,7 +284,7 @@ export class Tramite110217Store extends Store<Tramite110217State> {
    * 
    * @param {Catalogo} entidadFederativa - La entidad federativa a establecer.
    */
-  public setEntidadFederativa(entidadFederativa: Catalogo): void {
+  public setEntidadFederativa(entidadFederativa: string): void {
     this.update((state) => ({
       ...state,
       entidadFederativa,
@@ -299,7 +298,7 @@ export class Tramite110217Store extends Store<Tramite110217State> {
    * 
    * @param {Catalogo} representacionFederal - La representación federal a establecer.
    */
-  public setRepresentacionFederal(representacionFederal: Catalogo): void {
+  public setRepresentacionFederal(representacionFederal: string): void {
     this.update((state) => ({
       ...state,
       representacionFederal,
@@ -1209,6 +1208,115 @@ export class Tramite110217Store extends Store<Tramite110217State> {
     this.update((state) => ({
       ...state,
       formularioMercancia: { ...state.formularioMercancia, pais },
+    }));
+  }
+
+
+  /**
+   *  Actualiza el estado del trámite con los datos del formulario de mercancía.
+   *  Este método permite establecer los datos del formulario de mercancía en el estado del trámite.
+   *  @param {FormularioMercancia} formularioMercancia - Objeto que contiene los datos del formulario de mercancía.
+   */
+    public setGrupoOperador(grupoOperador: GrupoOperador): void {
+    this.update((state) => ({
+      ...state,
+      grupoOperador,
+    }));
+  }
+
+    /**
+   * Actualiza el grupo representativo en el estado del trámite.
+   *  Este método permite establecer los datos del grupo representativo en el estado del trámite.
+   * @param {GrupoRepresentativo} grupoRepresentativo - Objeto que contiene los datos del grupo representativo.
+   *  @returns {void}
+   */
+   public setGrupoRepresentativo(grupoRepresentativo: GrupoRepresentativo): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo,
+    }));
+  }
+
+  /**
+   * Actualiza el estado del trámite con los datos del formulario de mercancía.
+   *  Este método permite establecer los datos del formulario de mercancía en el estado del trámite.
+   * @param {FormularioMercancia} formularioMercancia - Objeto que contiene los datos del formulario de mercancía.
+   *  @returns {void}
+   */
+    public setMercanciaTablaDatos(mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaSeleccionadasTablaDatos,
+    }));
+  }
+
+  /**
+   * Actualiza la información de las mercancías disponibles en la tabla de datos.
+   *  Este método permite establecer los datos de las mercancías disponibles en la tabla de datos del trámite.
+   * @param {DisponiblesTabla[]} mercanciaDisponsiblesTablaDatos - Lista de mercancías disponibles en la tabla de datos.
+   *  @returns {void}
+   */
+    public setMercanciaDisponsiblesTablaDatos(mercanciaDisponsiblesTablaDatos: DisponiblesTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaDisponsiblesTablaDatos,
+    }));
+  }
+
+   /**
+   * Actualiza el grupo de transporte en el estado del trámite.
+   *  Este método permite establecer los datos del grupo de transporte del trámite.
+   * @param {GrupoDeTransporte} grupoDeTransporte - Objeto que contiene los datos del grupo de transporte.
+   *   @returns {void}
+   */
+  public setGrupoDeTransporte(grupoDeTransporte: GrupoDeTransporte): void {
+    this.update((state) => ({
+      ...state,
+      grupoDeTransporte,
+    }));
+  }
+  /**
+   * @method setProductoresExportador
+   * @description Actualiza la lista de productores asociados al exportador en el estado del trámite.
+   * 
+   * Este método permite establecer los datos de los productores asociados al exportador.
+   * 
+   * @param {HistoricoColumnas[]} productoresExportador - Lista de productores asociados al exportador.
+   * 
+   * @returns {void}
+   */
+  public setProductoresExportador(productoresExportador: HistoricoColumnas[]): void {
+    this.update((state) => ({
+      ...state,
+      productoresExportador,
+    }));
+  }
+    
+  /**
+   * Actualiza el estado del trámite con los datos del grupo receptor.
+   *  Este método permite establecer los datos del grupo receptor en el estado del trámite.
+   * @param {GrupoReceptor} grupoReceptor - Objeto que contiene los datos del grupo receptor.
+   *  @returns {void}
+   */
+    public setGrupoReceptor(grupoReceptor: GrupoReceptor): void {
+    this.update((state) => ({
+      ...state,
+      grupoReceptor,
+    }));
+  }
+
+   /**
+   * Actualiza la información del grupo de direcciones en el estado del trámite.
+   * 
+   * Este método permite establecer los datos del grupo de direcciones del receptor.
+   * 
+   * @param {GrupoDeDirecciones} grupoDeDirecciones - Objeto que contiene la información de las direcciones a actualizar.
+   * @returns {void}
+   */
+    public setGrupoDeDirecciones(grupoDeDirecciones: GrupoDeDirecciones): void {
+    this.update((state) => ({
+      ...state,
+      grupoDeDirecciones,
     }));
   }
 }
