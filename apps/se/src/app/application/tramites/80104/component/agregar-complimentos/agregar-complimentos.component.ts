@@ -28,8 +28,9 @@ import { ComplimentosComponent } from '../../../../shared/components/complimento
 import { Component, OnDestroy } from '@angular/core';
 import { DatosComplimentos } from '../../../../shared/models/complimentos.model';
 import { SociaoAccionistas } from '../../../../shared/models/complimentos.model';
-import { Tramite80101Query } from '../../estados/tramite80101.query';
-import { Tramite80101Store } from '../../estados/tramite80101.store';
+import { Tramite80101Query } from '../../../80103/estados/tramite80101.query';
+import { Tramite80101Store } from '../../../80103/estados/tramite80101.store';
+
 /*
   * Componente para agregar cumplimentos en el trámite 80103.
   * 
