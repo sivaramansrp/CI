@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {Subject,map, takeUntil } from 'rxjs';
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
@@ -28,7 +28,7 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
     PagoDeDerechoComponent
 ]
 })
-export class PagoDeDerechosComponent implements OnInit,AfterViewInit, OnDestroy {
+export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
  
 pagoData:PagoDeDerechos={} as PagoDeDerechos;
@@ -61,6 +61,7 @@ pagoData:PagoDeDerechos={} as PagoDeDerechos;
     private readonly certificadoZoosanitarioServices: CertificadoZoosanitarioServiceService,
     private readonly certificadoZoosanitarioQuery: ZoosanitarioQuery,
     private readonly consultaioQuery: ConsultaioQuery,
+    private readonly cdr: ChangeDetectorRef
   ) {
   }
 
@@ -76,29 +77,16 @@ pagoData:PagoDeDerechos={} as PagoDeDerechos;
          this.pagoData = datosDeLaSolicitud;
         }
       });
-    
-
-  }
-  /**
-   * @inheritdoc
-   * @description
-   * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
-   * 
-   * @remarks
-   * Suscribe al observable `selectConsultaioState$` para actualizar la propiedad `esFormularioSoloLectura`
-   * según el estado de la sección. La suscripción se cancela automáticamente cuando se emite un valor en `destroyNotifier$`.
-   * 
-   * @see https://angular.io/api/core/AfterViewInit
-   */
-  ngAfterViewInit(): void {
-      this.consultaioQuery.selectConsultaioState$
+    this.consultaioQuery.selectConsultaioState$
           .pipe(
             takeUntil(this.destroyNotifier$),
             map((seccionState) => {
               this.esFormularioSoloLectura = seccionState.readonly;
+               this.cdr.detectChanges();
             })
           )
           .subscribe();
+
   }
     /**
    * Envía los valores actuales del formulario al store compartido.

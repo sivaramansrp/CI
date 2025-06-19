@@ -91,7 +91,7 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
      * Cuando es verdadero, el formulario se presenta únicamente para visualización,
      * deshabilitando la edición de los campos.
      */
-    @Input() esFormularioSoloLectura:boolean =false;
+    @Input() esFormularioSoloLectura:boolean = false;
 
 
       /**
