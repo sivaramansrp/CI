@@ -140,7 +140,8 @@
               [isRequired]="true" 
               (valueChange)="setNacionalidad($event)" 
               formControlName="nacionalidad" 
-              >
+              (change)="setValoresStore(agregarDestinatario,'nacionalidad', 'setNacionalidad')"
+              [disabled]="esFormularioSoloLectura">
             </app-input-radio>
           
       </div>
@@ -151,7 +152,8 @@
           [isRequired]="true" 
           (valueChange)="setTipoPersona($event)" 
           formControlName="tipoPersona" 
-          (change)="setValoresStore(agregarDestinatario,'tipoPersona', 'setTipoPersona')">
+          (change)="setValoresStore(agregarDestinatario,'tipoPersona', 'setTipoPersona')"
+          [disabled]="esFormularioSoloLectura">
         </app-input-radio>
            </div>
         </div>
@@ -165,18 +167,21 @@
             <label class="form-label" for="nombre">Nombre(s)*:</label>
             <input class="form-control" id="nombre" type="number" formControlName="nombre"
             (change)="setValoresStore(agregarDestinatario,'nombre', 'setNombre')"
+            [disabled]="esFormularioSoloLectura"
                />
           </div>
           <div class="col-md-4 mb-3">
             <label class="form-label" for="primerApellido">Primer apellido*:</label>
             <input class="form-control" id="primerApellido" type="text" formControlName="primerApellido"
             (change)="setValoresStore(agregarDestinatario,'primerApellido', 'setPrimerApellido')"
+            [disabled]="esFormularioSoloLectura"
                />
           </div>
           <div class="col-md-4 mb-3">
             <label class="form-label" for="segundoApellido">Segundo apellido:</label>
             <input class="form-control" id="segundoApellido" type="text" formControlName="segundoApellido"
             (change)="setValoresStore(agregarDestinatario,'segundoApellido', 'setSegundoApellido')"
+            [disabled]="esFormularioSoloLectura"
                />
           </div>
         </div>
@@ -196,9 +201,10 @@
         @if (selectedTipoPersona === 'moral') {
         <div class="row">
           <div class="col-md-8 mb-3">
-            <label class="form-label" for="nombre">Denominación/razón social*:</label>
-            <input class="form-control" id="nombre" type="text" formControlName="nombre"
-            (change)="setValoresStore(agregarDestinatario,'nombre', 'setNombre')" 
+            <label class="form-label" for="denominacion">Denominación/razón social*:</label>
+            <input class="form-control" id="denominacion" type="text" formControlName="denominacion"
+            (change)="setValoresStore(agregarDestinatario,'denominacion', 'setDenominacion')" 
+            [disabled]="esFormularioSoloLectura"
                />
           </div>
         </div>
@@ -214,18 +220,21 @@
              [label]="'Pais'"
               [required]="true"
               (change)="setValoresStore(agregarDestinatario,'pais', 'setPais')"
+              [isDisabled]="esFormularioSoloLectura ? true : false"
               ></app-catalogo-select>
           </div>
           <div class="col-md-4 mb-3">
             <label class="form-label" for="estado">Estado*:</label>
             <input class="form-control" id="estado" type="text" formControlName="estado"
             (change)="setValoresStore(agregarDestinatario,'estado', 'setEstado')"
+            [disabled]="esFormularioSoloLectura"
                />
           </div>
           <div class="col-md-4 mb-3">
             <label class="form-label" for="codigopostal">Codigo postal o equivalente:</label>
             <input class="form-control" id="codigopostal" type="text" formControlName="codigopostal"
             (change)="setValoresStore(agregarDestinatario,'codigopostal', 'setCodigoPostal')" 
+            [disabled]="esFormularioSoloLectura"
                />
           </div>
         </div>
@@ -234,12 +243,14 @@
                 <label class="form-label" for="calle">Calle*:</label>
                 <input class="form-control" id="calle" type="text" formControlName="calle"
                 (change)="setValoresStore(agregarDestinatario,'calle', 'setCalle')" 
+                [disabled]="esFormularioSoloLectura"
                    />
             </div>
             <div class="col-md-4">
                 <label class="form-label" for="numeroexterior">Numero exterior*:</label>
                 <input class="form-control" id="numeroexterior" type="text" formControlName="numeroExterior"
                 (change)="setValoresStore(agregarDestinatario,'numeroExterior', 'setNumeroExterior')"  
+                [disabled]="esFormularioSoloLectura"
                    />
             </div>
         </div>    
@@ -248,18 +259,21 @@
                 <label class="form-label" for="numerointerior">Numero interior*:</label>
                 <input class="form-control" id="numerointerior" type="text" formControlName="numeroInterior"
                 (change)="setValoresStore(agregarDestinatario,'numeroInterior', 'setNumeroInterior')"
+                [disabled]="esFormularioSoloLectura"
                    />
             </div>
           <div class="col-md-1 mb-3">
             <label class="form-label" for="lada">Lada:</label>
             <input class="form-control" id="lada" type="number" formControlName="lada"
             (change)="setValoresStore(agregarDestinatario,'lada', 'setLada')" 
+            [disabled]="esFormularioSoloLectura"
                />
           </div>
           <div class="col-md-3 mb-3">
             <label class="form-label" for="telefono">Teléfono:</label>
             <input class="form-control" id="telefono" type="number" formControlName="telefono"
             (change)="setValoresStore(agregarDestinatario,'telefono', 'setTelefono')"
+            [disabled]="esFormularioSoloLectura"
              />
           </div>
           <div class="col-md-4 mb-3">
@@ -267,6 +281,7 @@
             <div class="input-group">
              <input class="form-control" id="correoElectronico" type="email" formControlName="correoElectronico"
              (change)="setValoresStore(agregarDestinatario,'correoElectronico', 'setCorreoElectronico')" 
+             [disabled]="esFormularioSoloLectura"
                />
             </div>
           </div>
