@@ -10,13 +10,15 @@
       </li>
     </ul>
     <ng-container>
-      @switch (indice) {
+    @switch (indice) {
       @case (1) {
       <solicitante [tabindex]="1"></solicitante>
       }
       @case (2) {
+        @if(esDatosRespuesta){
       <datos-del-tramite [tabindex]="2"></datos-del-tramite>
+        }
       }
-      }
+    }
     </ng-container>
 </div>

@@ -9,24 +9,24 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tab
 import { ComponentFixture } from '@angular/core/testing';
 
 describe('MercanciasComponent', () => {
-  let component: MercanciasComponent;
-  let fixture: ComponentFixture<MercanciasComponent>;
+  let COMPONENT: MercanciasComponent;
+  let FIXTURE: ComponentFixture<MercanciasComponent>;
   
   describe('MercanciasComponent', () => {
-    let component: MercanciasComponent;
-    let fixture: ComponentFixture<MercanciasComponent>; 
-    let mockDatosSolicitudService: { getMercanciasData: jest.Mock };
-    let mockDatosProcedureStore: { selectProrroga: jest.Mock };
-    let mockDatosProcedureQuery: { selectProrroga: jest.Mock };
+    let COMPONENT: MercanciasComponent;
+    let FIXTURE: ComponentFixture<MercanciasComponent>; 
+    let MOCK_DATOS_SOLICITUD_SERVICE: { getMercanciasData: jest.Mock };
+    let MOCK_DATOS_PROCEDURE_STORE: { selectProrroga: jest.Mock };
+    let MOCK_DATOS_PROCEDURE_QUERY: { selectProrroga: jest.Mock };
   
     beforeEach(async () => {
-      mockDatosSolicitudService = {
+      MOCK_DATOS_SOLICITUD_SERVICE = {
         getMercanciasData: jest.fn().mockReturnValue(of([])),
       };
-      mockDatosProcedureStore = {
+      MOCK_DATOS_PROCEDURE_STORE = {
         selectProrroga: jest.fn(),
       };
-      mockDatosProcedureQuery = {
+      MOCK_DATOS_PROCEDURE_QUERY = {
         selectProrroga: jest.fn().mockReturnValue(of({ aduanas: 'Test Aduana' })),
       };
   
@@ -34,140 +34,110 @@ describe('MercanciasComponent', () => {
         imports: [ReactiveFormsModule, MercanciasComponent],
         providers: [
           FormBuilder,
-          { provide: DatosSolicitudService, useValue: mockDatosSolicitudService },
-          { provide: DatosProcedureStore, useValue: mockDatosProcedureStore },
-          { provide: DatosProcedureQuery, useValue: mockDatosProcedureQuery },
+          { provide: DatosSolicitudService, useValue: MOCK_DATOS_SOLICITUD_SERVICE },
+          { provide: DatosProcedureStore, useValue: MOCK_DATOS_PROCEDURE_STORE },
+          { provide: DatosProcedureQuery, useValue: MOCK_DATOS_PROCEDURE_QUERY },
         ],
       }).compileComponents();
   
-      fixture = TestBed.createComponent(MercanciasComponent);
-      component = fixture.componentInstance;
-      fixture.detectChanges();
+      FIXTURE = TestBed.createComponent(MercanciasComponent);
+      COMPONENT = FIXTURE.componentInstance;
+      FIXTURE.detectChanges();
     });
   
-    // ...existing tests...
-  });  let mockDatosSolicitudService: {getMercanciasData:jest.Mock};
-  let mockDatosProcedureStore: {selectProrroga:jest.Mock};
-  let mockDatosProcedureQuery: {selectProrroga:jest.Mock};
+    it('should create the component', () => {
+      expect(COMPONENT).toBeTruthy();
+    });
 
-  beforeEach(async () => {
-    mockDatosSolicitudService = {
-      getMercanciasData: jest.fn().mockReturnValue(of([])),
-    };
-    mockDatosProcedureStore = {
-      selectProrroga: jest.fn(),
-    };
-    mockDatosProcedureQuery = {
-      selectProrroga: jest.fn().mockReturnValue(of({ aduanas: 'Test Aduana' })),
-    };
+    it('should initialize the form on ngOnInit', () => {
+      const CREAR_FORMULARIO_SPY = jest.spyOn(COMPONENT, 'crearFormulario');
+      COMPONENT.ngOnInit();
+      expect(CREAR_FORMULARIO_SPY).toHaveBeenCalled();
+      expect(COMPONENT.Aduana).toBeDefined();
+    });
 
-    await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, MercanciasComponent],
-      providers: [
-        FormBuilder,
-        { provide: DatosSolicitudService, useValue: mockDatosSolicitudService },
-        { provide: DatosProcedureStore, useValue: mockDatosProcedureStore },
-        { provide: DatosProcedureQuery, useValue: mockDatosProcedureQuery },
-      ],
-    }).compileComponents();
+    it('should call mercanciasData on ngOnInit', () => {
+      const MERCANCIAS_DATA_SPY = jest.spyOn(COMPONENT, 'mercanciasData');
+      COMPONENT.ngOnInit();
+      expect(MERCANCIAS_DATA_SPY).toHaveBeenCalled();
+    });
 
-    fixture = TestBed.createComponent(MercanciasComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    it('should set seccionState from query.selectProrroga$', () => {
+      COMPONENT.ngOnInit();
+    });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should call getMercanciasData and set Mercanciasdata', () => {
+      const MOCK_RESPONSE = [{ clasificacionDelProducto: 'Test' }];
+      MOCK_DATOS_SOLICITUD_SERVICE.getMercanciasData.mockReturnValue(of(MOCK_RESPONSE));
 
-  it('should initialize the form on ngOnInit', () => {
-    const crearFormularioSpy = jest.spyOn(component, 'crearFormulario');
-    component.ngOnInit();
-    expect(crearFormularioSpy).toHaveBeenCalled();
-    expect(component.Aduana).toBeDefined();
-  });
+      COMPONENT.mercanciasData();
+      expect(MOCK_DATOS_SOLICITUD_SERVICE.getMercanciasData).toHaveBeenCalled();
+      expect(COMPONENT.mercanciasDatas).toEqual(MOCK_RESPONSE);
+    });
 
-  it('should call mercanciasData on ngOnInit', () => {
-    const mercanciasDataSpy = jest.spyOn(component, 'mercanciasData');
-    component.ngOnInit();
-    expect(mercanciasDataSpy).toHaveBeenCalled();
-  });
+    it('should initialize the form in crearFormulario', () => {
+      COMPONENT.crearFormulario();
+      expect(COMPONENT.Aduana.value).toEqual({ Aduana: { aduanas: 'Test Aduana' } });
+    });
 
-  it('should set seccionState from query.selectProrroga$', () => {
-    component.ngOnInit();
-  });
+    it('should have the correct table configuration', () => {
+      expect(COMPONENT.configuracionTabla).toBeDefined();
+      expect(COMPONENT.configuracionTabla.length).toBe(7);
+      expect(COMPONENT.configuracionTabla[0].encabezado).toBe('Clasificación del producto ');
+    });
 
-  it('should call getMercanciasData and set Mercanciasdata', () => {
-    const mockResponse = [{ clasificacionDelProducto: 'Test' }];
-    mockDatosSolicitudService.getMercanciasData.mockReturnValue(of(mockResponse));
+    it('should destroy subscriptions on component destroy', () => {
+      const DESTROY_SPY = jest.spyOn(COMPONENT['destroy$'], 'next');
+      const COMPLETE_SPY = jest.spyOn(COMPONENT['destroy$'], 'complete');
 
-    component.mercanciasData();
-    expect(mockDatosSolicitudService.getMercanciasData).toHaveBeenCalled();
-    expect(component.mercanciasDatas).toEqual(mockResponse);
-  });
+      COMPONENT.ngOnDestroy();
 
-  it('should initialize the form in crearFormulario', () => {
-    component.crearFormulario();
-    expect(component.Aduana.value).toEqual({ Aduana: { aduanas: 'Test Aduana' } });
-  });
+      expect(DESTROY_SPY).toHaveBeenCalledWith();
+      expect(COMPLETE_SPY).toHaveBeenCalled();
+    });
 
-  it('should have the correct table configuration', () => {
-    expect(component.configuracionTabla).toBeDefined();
-    expect(component.configuracionTabla.length).toBe(7);
-    expect(component.configuracionTabla[0].encabezado).toBe('Clasificación del producto ');
-  });
+    it('should have the correct default values', () => {
+      expect(COMPONENT.TablaSeleccion).toBe(TablaSeleccion.CHECKBOX);
+      expect(COMPONENT.mercanciasDatas).toEqual([]);
+    });
 
-  it('should destroy subscriptions on component destroy', () => {
-    const destroySpy = jest.spyOn(component['destroy$'], 'next');
-    const completeSpy = jest.spyOn(component['destroy$'], 'complete');
+    it('should handle errors in getMercanciasData gracefully', () => {
+      const ERROR = new Error('Test error');
+      MOCK_DATOS_SOLICITUD_SERVICE.getMercanciasData.mockReturnValue(of(() => { throw ERROR; }));
 
-    component.ngOnDestroy();
+      expect(() => COMPONENT.mercanciasData()).not.toThrow();
+    });
 
-    expect(destroySpy).toHaveBeenCalledWith();
-    expect(completeSpy).toHaveBeenCalled();
-  });
+    it('should update seccionState correctly when query emits a new value', () => {
+      const NEW_VALUE = { aduanas: 'Updated Aduana' };
+      MOCK_DATOS_PROCEDURE_QUERY.selectProrroga.mockReturnValue(of(NEW_VALUE));
+      COMPONENT.ngOnInit();
+    });
 
-  it('should have the correct default values', () => {
-    expect(component.TablaSeleccion).toBe(TablaSeleccion.CHECKBOX);
-    expect(component.mercanciasDatas).toEqual([]);
-  });
+    it('should unsubscribe from observables on ngOnDestroy', () => {
+      const DESTROY_SPY = jest.spyOn(COMPONENT['destroy$'], 'next');
+      const COMPLETE_SPY = jest.spyOn(COMPONENT['destroy$'], 'complete');
+      COMPONENT.ngOnDestroy();
+      expect(DESTROY_SPY).toHaveBeenCalledWith();
+      expect(COMPLETE_SPY).toHaveBeenCalled();
+    });
 
-  it('should handle errors in getMercanciasData gracefully', () => {
-    const error = new Error('Test error');
-    mockDatosSolicitudService.getMercanciasData.mockReturnValue(of(() => { throw error; }));
+    it('should correctly initialize configuracionTabla', () => {
+      expect(COMPONENT.configuracionTabla).toBeDefined();
+      expect(COMPONENT.configuracionTabla.length).toBeGreaterThan(0);
+    });
 
-    expect(() => component.mercanciasData()).not.toThrow();
-  });
+    it('should validate form controls correctly', () => {
+      COMPONENT.crearFormulario(); 
+      const CONTROL = COMPONENT.Aduana.get('Aduana');
+      CONTROL?.setValue('Valid Aduana');
+      expect(CONTROL?.valid).toBeTruthy();
+    });
 
-  it('should update seccionState correctly when query emits a new value', () => {
-    const newValue = { aduanas: 'Updated Aduana' };
-    mockDatosProcedureQuery.selectProrroga.mockReturnValue(of(newValue));
-    component.ngOnInit();
-  });
-
-  it('should unsubscribe from observables on ngOnDestroy', () => {
-    const destroySpy = jest.spyOn(component['destroy$'], 'next');
-    const completeSpy = jest.spyOn(component['destroy$'], 'complete')
-    component.ngOnDestroy();
-    expect(destroySpy).toHaveBeenCalledWith();
-    expect(completeSpy).toHaveBeenCalled();
-  });
-
-  it('should correctly initialize configuracionTabla', () => {
-    expect(component.configuracionTabla).toBeDefined();
-    expect(component.configuracionTabla.length).toBeGreaterThan(0);
-  });
-
-  it('should validate form controls correctly', () => {
-    component.crearFormulario(); 
-    const control = component.Aduana.get('Aduana');
-    control?.setValue('Valid Aduana');
-    expect(control?.valid).toBeTruthy();
-  });
-
-  it('should handle empty response from getMercanciasData', () => {
-    mockDatosSolicitudService.getMercanciasData.mockReturnValue(of([]));
-    component.mercanciasData();
-    expect(component.mercanciasDatas).toEqual([]);
+    it('should handle empty response from getMercanciasData', () => {
+      MOCK_DATOS_SOLICITUD_SERVICE.getMercanciasData.mockReturnValue(of([]));
+      COMPONENT.mercanciasData();
+      expect(COMPONENT.mercanciasDatas).toEqual([]);
+    });
   });
 });

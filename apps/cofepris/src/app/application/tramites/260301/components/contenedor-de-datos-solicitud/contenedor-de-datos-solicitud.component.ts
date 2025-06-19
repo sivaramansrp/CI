@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
@@ -43,6 +43,15 @@ import { Tramite260301Query } from '../../estados/tramite260301Query.query';
   styleUrl: './contenedor-de-datos-solicitud.component.scss',
 })
 export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
+
+  /**
+   * @input
+   * @description
+   * Indica si el formulario debe estar deshabilitado. Cuando es `true`, los controles del formulario estarán inactivos y no permitirán la edición por parte del usuario.
+   * @type {boolean}
+   */
+   @Input() formularioDeshabilitado: boolean = false;
+
   /**
    * @property {Subject<void>} destroyNotifier$
    * @description

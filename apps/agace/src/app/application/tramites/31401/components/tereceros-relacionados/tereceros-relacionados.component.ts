@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 import {
   TablaDinamicaComponent,
@@ -7,6 +7,7 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { CancelacionGarantiaService } from '../../services/cancelacion-garantia/cancelacion-garantia.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { ENCABEZADO_DE_TERECEROS_TABLA } from '../../constantes/cancelacion-garantia.enum';
 import { TerecerosTabla } from '../../models/cancelacion-garantia.model';
 
@@ -40,6 +41,14 @@ import { TerecerosTabla } from '../../models/cancelacion-garantia.model';
 })
 
 export class TerecerosRelacionadosComponent implements OnInit, OnDestroy {
+  
+  /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
+
   /**
    * Tipo de selección para la tabla de insumos.
    * Por defecto, se utiliza la selección por checkbox.

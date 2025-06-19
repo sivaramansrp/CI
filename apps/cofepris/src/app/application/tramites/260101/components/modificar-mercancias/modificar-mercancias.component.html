@@ -12,6 +12,7 @@
         [required]="productosCatalogo.required"
         (selectionChange)="seleccionaProductos($event)"
         formControlName="clasificaionProductos"
+         [isDisabled]="esFormularioSoloLectura"
       >
       </app-catalogo-select>
     </div>
@@ -24,6 +25,8 @@
         [required]="especificarCatalogo.required"
         formControlName="especificarProducto"
         (selectionChange)="seleccionaEspecificar($event)"
+         [isDisabled]="esFormularioSoloLectura"
+         
       >
       </app-catalogo-select>
     </div>
@@ -60,6 +63,7 @@
         [required]="tipoProductoCatalogo.required"
         formControlName="tipoProducto"
         (selectionChange)="seleccionaTipoProducto($event)"
+         [isDisabled]="esFormularioSoloLectura"
       >
       </app-catalogo-select>
     </div>
@@ -133,6 +137,7 @@
         [required]="umcCatalogo.required"
         formControlName="umc"
         (selectionChange)="setUMC($event)"
+         [isDisabled]="esFormularioSoloLectura"
       >
       </app-catalogo-select>
     </div>

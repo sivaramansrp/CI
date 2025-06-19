@@ -1,5 +1,3 @@
-import { AlertComponent, AnexarDocumentosComponent, TituloComponent } from '@ng-mf/data-access-user';
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { TEXTOS } from '@ng-mf/data-access-user';
 
