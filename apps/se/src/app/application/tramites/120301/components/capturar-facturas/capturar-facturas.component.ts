@@ -166,6 +166,13 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
   /**
    * @constructor
    * @description Constructor del componente. Inicializa los servicios necesarios.
+   * @param {ElegibilidadTextilesService} ElegibilidadTextilesService - Service for handling textile eligibility logic.
+   * @param {HttpClient} httpServicios - Angular's HTTP client for making HTTP requests.
+   * @param {FormBuilder} fb - Angular's FormBuilder for creating and managing reactive forms.
+   * @param {ElegibilidadDeTextilesStore} ElegibilidadDeTextilesStore - Store for managing textile eligibility state.
+   * @param {ElegibilidadDeTextilesQuery} ElegibilidadDeTextilesQuery - Query for retrieving textile eligibility state.
+   * @param {SeccionLibStore} seccionStore - Store for managing section-related state.
+   * @param {SeccionLibQuery} seccionQuery - Query for retrieving section-related state.
    */
   constructor(
     private ElegibilidadTextilesService: ElegibilidadTextilesService,
@@ -311,9 +318,6 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
         next: (data) => {
           this.unidadDeMedida = data as Catalogo[];
         },
-        error: (error: HttpErrorResponse) => {
-          console.error('Error al obtener los datos:', error);
-        },
       });
   }
 
@@ -331,9 +335,6 @@ export class CapturarFacturasComponent implements OnInit, OnDestroy {
           if (response && Array.isArray(response)) {
             this.facturas = response as CapturarColumns[];
           }
-        },
-        error: (error) => {
-          console.error('Error al obtener los datos:', error);
         },
       });
   }

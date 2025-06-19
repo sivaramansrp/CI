@@ -250,9 +250,6 @@ export class HistoricoFabricantesComponent implements OnInit, OnDestroy {
         next: (response) => {
           this.fabricantesNacionales = response as HistoricoColumns[];
         },
-        error: (error) => {
-          console.error('Error al obtener los datos:', error);
-        },
       });
   }
 

@@ -27,7 +27,7 @@ import { takeUntil } from 'rxjs';
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
-   * @description Constructor del componente.
+   * @description ConstructomostrarOtraPestanar del componente.
    * Inicializa el componente y establece el índice de la pestaña seleccionada.
    */
   formularioDeshabilitado: boolean = false;
@@ -39,7 +39,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * @property {boolean} mostrarOtraPestana - Controla si se muestran las pestañas adicionales.
    */
-  mostrarOtraPestana: boolean = true;
+  mostrarOtraPestana: boolean = false;
 
   /**
    * @property {Subject<void>} destroyNotifier$ - Subject para notificar la destrucción del componente.

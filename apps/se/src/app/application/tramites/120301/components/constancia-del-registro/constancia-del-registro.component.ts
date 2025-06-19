@@ -441,6 +441,7 @@ export class ConstanciaDelRegistroComponent implements OnInit {
    */
   guardarEvaluate(): void {
     this.mostrarTabs.emit(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
   /**
@@ -470,9 +471,6 @@ export class ConstanciaDelRegistroComponent implements OnInit {
           this.ElegibilidadDeTextilesStore.setdatosTablaConstanciaDelRegistro(
             filteredData
           );
-        },
-        error: (error) => {
-          console.error('Error al obtener los datos:', error);
         },
       });
   }
