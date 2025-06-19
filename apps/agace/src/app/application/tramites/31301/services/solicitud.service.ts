@@ -138,12 +138,24 @@ export class SolicitudService {
     );
   }
 
+  /**
+   * @description
+   * Obtiene los datos del formulario de la solicitud 31301 desde un archivo JSON local.
+   *
+   * @returns Observable<Solicitud31301State> Un observable que emite el estado de la solicitud 31301.
+   */
   guardarDatosFormulario(): Observable<Solicitud31301State> {
     return this.http.get<Solicitud31301State>(
       'assets/json/31301/solicitud-31301-datos.json'
     );
   }
 
+  /**
+ * Actualiza el estado del formulario en el store con la información proporcionada.
+ *
+ * Objeto que contiene el estado actual de la solicitud,
+ * incluyendo el tipo de endoso que debe actualizarse en el store.
+ */
   actualizarEstadoFormulario(resp: Solicitud31301State): void {
     this.solicitud31301Store.actualizarTipoDeEndoso(resp.tipoDeEndoso);
     this.solicitud31301Store.actualizarTipoDeGarantia(resp.tipoDeGarantia);

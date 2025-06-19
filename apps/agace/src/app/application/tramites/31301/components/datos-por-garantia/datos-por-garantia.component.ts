@@ -147,6 +147,11 @@ export class DatosPorGarantiaComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Inicializa el formulario reactivo con los valores de razón social anteriores y actuales.
+   *
+   * Los campos del formulario están deshabilitados y tienen una validación de longitud máxima de 250 caracteres.
+   */
   inicializarFormulario(): void {
     this.polizaDeFianzaForm = this.fb.group({
       polizaDeFianzaActual: [this.solicitud31301State.polizaDeFianzaActual],

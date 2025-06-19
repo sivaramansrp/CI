@@ -79,25 +79,29 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   tipoSeleccionTabla = TablaSeleccion.CHECKBOX;
 
   /** Configuración de columnas para la tabla de subcontratistas */
-  configuracionColumnas: ConfiguracionColumna<SubContratistas>[] = SUB_CONTRATISTAS_CONFIGURACION;
+  configuracionColumnas: ConfiguracionColumna<SubContratistas>[] =
+    SUB_CONTRATISTAS_CONFIGURACION;
 
   /** Lista de subcontratistas */
   listaDeSubcontratistas: SubContratistas[] = [] as SubContratistas[];
 
   /** Configuración de columnas para la sección de socios IC */
-  seccionSociosICConfiguracionColumnas: ConfiguracionColumna<SeccionSociosIC>[] = SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS;
+  seccionSociosICConfiguracionColumnas: ConfiguracionColumna<SeccionSociosIC>[] =
+    SECCION_SOCIOSIC_CONFIGURACION_COLUMNAS;
 
   /** Lista de socios IC */
   listaSeccionSociosIC: SeccionSociosIC[] = [] as SeccionSociosIC[];
 
   /** Configuración de columnas para tipo de inversión */
-  tipoDeInversionConfiguracionColumnas: ConfiguracionColumna<TipoDeInversion>[] = TIPO_DE_INVERSION_CONFIGURACION_COLUMNAS;
+  tipoDeInversionConfiguracionColumnas: ConfiguracionColumna<TipoDeInversion>[] =
+    TIPO_DE_INVERSION_CONFIGURACION_COLUMNAS;
 
   /** Datos del tipo de inversión */
   tipoDeInversionDatos: TipoDeInversion[] = [] as TipoDeInversion[];
 
   /** Configuración de columnas para domicilios */
-  domiciliosConfiguracionColumnas: ConfiguracionColumna<Domicilios>[] = DOMICILIOS_CONFIGURACION_COLUMNAS;
+  domiciliosConfiguracionColumnas: ConfiguracionColumna<Domicilios>[] =
+    DOMICILIOS_CONFIGURACION_COLUMNAS;
 
   /** Datos de los domicilios */
   domiciliosDatos: Domicilios[] = [] as Domicilios[];
@@ -189,8 +193,13 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   }
 
-  inicializarFormulario(): void{
- // Inicialización del formulario con los valores actuales del estado
+  /**
+   * Inicializa el formulario reactivo con los valores de razón social anteriores y actuales.
+   *
+   * Los campos del formulario están deshabilitados y tienen una validación de longitud máxima de 250 caracteres.
+   */
+  inicializarFormulario(): void {
+    // Inicialización del formulario con los valores actuales del estado
     this.datosGeneralesForm = this.fb.group({
       tipoDeEndoso: [
         this.solicitud31301State.tipoDeEndoso,

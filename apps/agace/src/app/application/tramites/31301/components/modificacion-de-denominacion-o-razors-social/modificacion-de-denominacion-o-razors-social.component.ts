@@ -120,6 +120,14 @@ export class ModificacionDeDenominacionORazorsSocialComponent
     }
   }
 
+  /**
+   * Inicializa el formulario reactivo con los valores de razón social anteriores y actuales.
+   *
+   * También se suscribe al observable `selectSolicitud$` para mantener actualizado el formulario
+   * cuando cambie el estado en el store (`Solicitud31301State`).
+   *
+   * Los campos del formulario están deshabilitados y tienen una validación de longitud máxima de 250 caracteres.
+   */
   inicializarFormulario(): void {
     this.registroPolizaEndosoForm = this.fb.group({
       razonSocialAnterior: [
