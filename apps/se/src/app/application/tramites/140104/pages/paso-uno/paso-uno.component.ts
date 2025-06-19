@@ -109,18 +109,19 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
         if (resp) {
-          this.esDatosRespuesta = true;
-          const CUPOS_DISPONIBLES_DATOS = {
-            ...resp,
-            datos: (resp.datos || []).map((cancelacion: CuposDisponiblesCancelacion) => ({
-              ...cancelacion,
-              cupo: cancelacion.cupo ?? null,
-              nombre_de_producto: cancelacion.nombre_de_producto ?? '',
-              nombre_del_subproducto: cancelacion.nombre_del_subproducto ?? '',
-              mecanismo_de_asignación: cancelacion.mecanismo_de_asignación ?? '',
-              tipo_cupo: cancelacion.tipo_cupo ?? ''
-            }))
-          };
+          this.esDatosRespuesta = true;const DATOS = (resp.datos as CuposDisponiblesCancelacion[] || []).map(cancelacion => ({
+          ...cancelacion,
+          cupo: cancelacion.cupo ?? null,
+          nombre_de_producto: cancelacion.nombre_de_producto ?? '',
+          nombre_del_subproducto: cancelacion.nombre_del_subproducto ?? '',
+          mecanismo_de_asignación: cancelacion.mecanismo_de_asignación ?? '',
+          tipo_cupo: cancelacion.tipo_cupo ?? ''
+        }));
+
+        const CUPOS_DISPONIBLES_DATOS = {
+          ...resp,
+          DATOS
+        };
           this.servicioDeMensajesService.actualizarEstadoFormulario(CUPOS_DISPONIBLES_DATOS);
 
         }
