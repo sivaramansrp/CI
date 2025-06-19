@@ -4,7 +4,7 @@
  * @description Componente para el formulario de Uso Específico, permitiendo al usuario ingresar información sobre el uso específico de un producto, incluyendo la fracción arancelaria y una descripción.
  */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Catalogo } from 'libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 
 import { AbstractControl, FormBuilder, FormGroup, ValidationErrors } from '@angular/forms';
@@ -23,7 +23,7 @@ import { Tramite130102Query } from '../../../../estados/queries/tramite130102.qu
 import { Subject, map, takeUntil } from 'rxjs'; 
 import { FormularioRegistroService } from '../../services/octava-temporal.service';
 
-import { ConsultaioQuery, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
+import { ConsultaioQuery, ConsultaioState, TablaDinamicaComponent, TablaSeleccion } from '@ng-mf/data-access-user';
 import { FRACCIONES_ANARCIA_TABLA } from '../../constantes/octava-temporal.enum';
 import { FraccionArancelariaProsec } from '../../models/octava-temporal.model';
 
@@ -34,7 +34,7 @@ import { FraccionArancelariaProsec } from '../../models/octava-temporal.model';
   templateUrl: './uso-especifico.component.html',
   styleUrl: './uso-especifico.component.scss'
 })
-export class UsoEspicificoComponent implements OnInit {
+export class UsoEspicificoComponent implements OnInit, OnDestroy {
    /**
        * @property {TablaSeleccion} tablaSeleccion
        * @description Tabla de selección para la tabla de cupos.
@@ -74,16 +74,16 @@ export class UsoEspicificoComponent implements OnInit {
    * Observable utilizado para cancelar suscripciones al destruir el componente.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-/*
-   * Indica si el formulario es de solo lectura.
-   */
-   esFormularioSoloLectura: boolean = false;
+
+  /*
+  * @description Estado actual de la consulta, obtenido desde el store.
+  */
+  public consultaState!: ConsultaioState;
 
   /**
    * @constructor
    * @param {FormBuilder} formbuilt Servicio para construir el formulario.
    */
-  // eslint-disable-next-line no-empty-function
   constructor(private formbuilt: FormBuilder,
     private tramite130102Store: Tramite130102Store,
     private tramite130102Query: Tramite130102Query,
@@ -94,7 +94,7 @@ export class UsoEspicificoComponent implements OnInit {
          .pipe(
            takeUntil(this.destroyNotifier$),
            map((seccionState) => {
-             this.esFormularioSoloLectura = seccionState.readonly;
+             this.consultaState = seccionState;
             
              this.inicializarEstadoFormulario();
            })
@@ -108,11 +108,14 @@ export class UsoEspicificoComponent implements OnInit {
    * @memberof UsoEspicificoComponent
    */
   ngOnInit(): void {
-this.inicializarEstadoFormulario();
+    const USO_ESPECIFICO_TABLA = this.solicitudState?.['uso_especifico_tabla'];
+    if ((!Array.isArray(USO_ESPECIFICO_TABLA) || USO_ESPECIFICO_TABLA.length === 0) && this.consultaState.readonly) {
       this.formularioRegistroService.getFraccionesUsoEspecifico().subscribe(data => {
-      this.datosSocios = data;
-    });
-    this.formularioRegistroService.registrarFormulario('usoEspicificoForm', this.usoEspicificoForm);
+        this.datosSocios = data;
+      });
+      this.tramite130102Store.setDynamicFieldValue('uso_especifico_tabla', this.datosSocios);
+      this.formularioRegistroService.registrarFormulario('usoEspicificoForm', this.usoEspicificoForm);
+    }
   }
 
   /**
@@ -121,7 +124,7 @@ this.inicializarEstadoFormulario();
    * @memberof UsoEspicificoComponent
    */
   inicializarEstadoFormulario(): void {
-    if (this.esFormularioSoloLectura) {
+    if (this.consultaState.readonly) {
       this.guardarDatosFormulario();
     } else {
       this.inicializarFormulario();
@@ -134,9 +137,9 @@ this.inicializarEstadoFormulario();
     * */
    guardarDatosFormulario(): void {
       this.inicializarFormulario();
-      if (this.esFormularioSoloLectura) {
+      if (this.consultaState.readonly) {
         this.usoEspicificoForm.disable();
-      } else if (!this.esFormularioSoloLectura) {
+      } else if (!this.consultaState.readonly) {
         this.usoEspicificoForm.enable();
       } else {
         // No se requiere ninguna acción en el formulario
@@ -153,18 +156,39 @@ this.inicializarEstadoFormulario();
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {  
         this.solicitudState = seccionState;
+        if (
+              this.solicitudState &&
+              typeof this.solicitudState === 'object' &&
+              this.solicitudState !== null &&
+              'uso_especifico_tabla' in this.solicitudState
+            ) {
+              const PRODUCTO = this.solicitudState['uso_especifico_tabla'] as FraccionArancelariaProsec[];
+              PRODUCTO.forEach((productoItem: FraccionArancelariaProsec) => {
+                const IS_ALREADY_ADDED = this.datosSocios.some(
+                (item: FraccionArancelariaProsec) => item.fraccionArancelariaProsec === productoItem.fraccionArancelariaProsec
+              );
+  
+              if (!IS_ALREADY_ADDED) {
+                this.datosSocios.push(productoItem);
+              }
+              });
+            }
       })
     )
     .subscribe();
 
     this.usoEspicificoForm = this.formbuilt.group({
       fraccionArancelariaProsec: [ this.solicitudState?.fraccionArancelariaProsec, Validators.required],
-      descripción: ['',Validators.required,UsoEspicificoComponent.noLeadingSpacesValidator],
+      descripción: ['',[Validators.required,UsoEspicificoComponent.noLeadingSpacesValidator]],
 
     });
-       if (this.esFormularioSoloLectura) {
-    this.usoEspicificoForm.disable();
-  }
+    if (this.consultaState.readonly) {
+      this.usoEspicificoForm.disable();
+      this.obtenerRequisitosFraccionArancelariaEsquema();
+    }
+    if (this.consultaState.update) {
+      this.obtenerRequisitosFraccionArancelariaEsquema();
+    }
   }
     /**
    * Asigna un valor del formulario al store.
@@ -184,7 +208,9 @@ this.inicializarEstadoFormulario();
    * @memberof UsoEspicificoComponent
    */
   obtenerRequisitosFraccionArancelariaEsquema(): void {
-    this.usoEspicificoForm.get('descripción')?.setValue('Descripción fraccion PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizará la mercancía a importar) ');
+    const DESCRIPCION = 'Descripción fraccion PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizará la mercancía a importar)';
+    this.usoEspicificoForm.get('descripción')?.setValue(DESCRIPCION);
+    this.tramite130102Store.setDynamicFieldValue('descripción', DESCRIPCION);
   }
 
   /**
@@ -198,6 +224,71 @@ this.inicializarEstadoFormulario();
       return { leadingSpaces: true };
     }
     return null;
+  }
+
+  /**
+   * compo doc
+   * @method agregar
+   * @description
+   * Este método se utiliza para agregar una nueva entrada específica a la tabla dinámica.
+   * Verifica si el formulario `ninoFormGroup` es válido antes de crear un objeto con los datos
+   * específicos. Luego, agrega este objeto a la lista de datos de la tabla y actualiza el
+   * estado dinámico del trámite con la nueva entrada. Finalmente, reinicia el formulario.
+   *
+   * Funcionalidad:
+   * - Valida el formulario `ninoFormGroup` antes de procesar los datos.
+   * - Crea un objeto con los datos específicos, incluyendo la fracción arancelaria y la descripción.
+   * - Agrega la nueva entrada a la tabla dinámica y actualiza el estado dinámico del trámite.
+   * - Reinicia el formulario para permitir la entrada de nuevos datos.
+   *
+   * @example
+   * this.agregar();
+   * // Agrega una nueva entrada específica a la tabla dinámica y actualiza el estado del trámite.
+   */
+  public agregar(): void {
+    if (this.usoEspicificoForm.valid) {
+      const ESPECIFICO = {
+        fraccionArancelariaProsec: this.obtenerFraccionArancelariaProsec(),
+        descripción: this.usoEspicificoForm.get('descripción')?.value,
+      };
+      this.datosSocios?.push(ESPECIFICO);
+      this.tramite130102Store.setDynamicFieldValue('uso_especifico_tabla', this.datosSocios);
+      this.usoEspicificoForm.reset();
+    }
+  }
+
+  /**
+ * @method obtenerFraccionArancelariaProsec
+ * @description
+ * Obtiene la descripción de la fracción arancelaria seleccionada en el formulario dinámico.
+ * @returns {string} Descripción de la fracción arancelaria seleccionada o una cadena vacía si no existe.
+ */
+  public obtenerFraccionArancelariaProsec(): string {
+    const DESCRIPCION = this.catalogos.find((ele: Catalogo) => ele.id === Number(this.usoEspicificoForm.get('fraccionArancelariaProsec')?.value))?.descripcion;
+    return DESCRIPCION ?? '';
+  }
+
+  /**
+   * compo doc
+   * @method ngOnDestroy
+   * @description
+   * Este método es parte del ciclo de vida del componente y se ejecuta automáticamente
+   * cuando el componente está a punto de ser destruido. Se utiliza para limpiar las suscripciones
+   * activas y evitar fugas de memoria en la aplicación.
+   *
+   * Funcionalidad:
+   * - Notifica a través del `Subject` `destroyNotifier$` que el componente será destruido.
+   * - Completa el `Subject` para liberar los recursos asociados.
+   *
+   * @example
+   * ngOnDestroy(): void {
+   *   this.destroyNotifier$.next();
+   *   this.destroyNotifier$.complete();
+   * }
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 
 }

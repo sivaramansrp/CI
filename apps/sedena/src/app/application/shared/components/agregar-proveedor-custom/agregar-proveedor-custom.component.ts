@@ -1,18 +1,50 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output } from '@angular/core';
-import { Catalogo, CatalogoSelectComponent, InputRadioComponent, TipoPersona, TituloComponent } from '@ng-mf/data-access-user';
-import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  InputRadioComponent,
+  TipoPersona,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
+import {
+  DestinoFinal,
+  Proveedor,
+} from '../../models/terceros-relacionados.model';
 
 import { CommonModule, Location } from '@angular/common';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
-import { CAMPO_OBLIGATORIO_DESTINATARIO, MOSTRAR_ASTERISCO, MOSTRAR_INFORMACION, PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE, PROVEEDOR_TITULO_CUSTOM, TERCEROS_NACIONALIDAD_OPCIONES, TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO,TIPO_PERSONA_OPCIONES, TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE } from '../../constants/datos-solicitud.enum';
+import {
+  CAMPO_OBLIGATORIO_DESTINATARIO,
+  MOSTRAR_ASTERISCO,
+  MOSTRAR_INFORMACION,
+  PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE,
+  PROVEEDOR_TITULO_CUSTOM,
+  TERCEROS_NACIONALIDAD_OPCIONES,
+  TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO,
+  TIPO_PERSONA_OPCIONES,
+  TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE,
+} from '../../constants/datos-solicitud.enum';
 import { Subject, takeUntil } from 'rxjs';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 import { ES_CURP } from '../../constants/datos-del-tramilte.enum';
 import { ES_NACIONAL } from '../../constants/datos-del-tramilte.enum';
 import { ES_RFC } from '../../constants/datos-del-tramilte.enum';
 import { NUMERO_TRAMITE } from '../../constants/datos-solicitud.enum';
-
 
 /**
  * @component AgregarProveedorComponent
@@ -33,16 +65,18 @@ import { NUMERO_TRAMITE } from '../../constants/datos-solicitud.enum';
   templateUrl: './agregar-proveedor-custom.component.html',
   styleUrl: './agregar-proveedor-custom.component.scss',
 })
-export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnChanges,AfterViewInit {
+export class AgregarProveedorCustomComponent
+  implements OnDestroy, OnInit, OnChanges, AfterViewInit
+{
   /**
-    * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
-    * Este input se utiliza para recibir la información necesaria desde el componente padre.
-    *
-    * @type {Proveedor | DestinoFinal | null | undefined}
-    */
+   * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
+   * Este input se utiliza para recibir la información necesaria desde el componente padre.
+   *
+   * @type {Proveedor | DestinoFinal | null | undefined}
+   */
   @Input() formaDatos!: Proveedor | DestinoFinal | null | undefined;
 
-    /**
+  /**
    * Indica si el formulario debe mostrarse solo en modo de lectura.
    *
    * @type {boolean}
@@ -53,13 +87,13 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    * Si es `true`, el formulario se mostrará en modo solo lectura y no permitirá modificaciones.
    * Si es `false`, el formulario será editable.
    */
-  @Input() esFormularioSoloLectura:boolean =false;
+  @Input() esFormularioSoloLectura: boolean = false;
 
   /**
-    * @property tipoPersona
-    * @description Proporciona acceso al enum `TipoPersona` para su uso en la clase.
-    * @type {TipoPersona}
-    */
+   * @property tipoPersona
+   * @description Proporciona acceso al enum `TipoPersona` para su uso en la clase.
+   * @type {TipoPersona}
+   */
   public tipoPersona = TipoPersona;
   /**
    * @property {Subject<void>} unsubscribe$
@@ -101,7 +135,15 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    * @type {EventEmitter<Proveedor[]>}
    */
 
-  @Output() actualizaExistenteEnProveedorDatos= new EventEmitter<Proveedor[]>();
+  @Output() actualizaExistenteEnProveedorDatos = new EventEmitter<
+    Proveedor[]
+  >();
+
+  /**
+   * Evento que se emite cuando el usuario desea cancelar una acción.
+   * @property {EventEmitter<boolean>} cancelarEventListener
+   */
+  @Output() cancelarEventListener = new EventEmitter<boolean>();
 
   /**
    * @property proveedorTablaDatos
@@ -109,8 +151,7 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    * Se utiliza para mostrar la información de los proveedores en el componente.
    * @type {Proveedor[]}
    */
-  
-  
+
   @Input() proveedorTablaDatos: Proveedor[] = [];
   /**
    * @property isProveedorModificar
@@ -127,11 +168,7 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    * @type {string}
    */
 
-
-  titluoMensaje: string = 'Agregar Proveedor'
-
-  
-
+  titluoMensaje: string = 'Agregar Proveedor';
 
   /**
    * Opciones de radio para seleccionar el tipo de persona.
@@ -142,15 +179,15 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    * @description Opciones de tipo de persona para radio buttons, específicas para no contribuyentes.
    * @command Opciones utilizadas para determinar el tipo de persona en el formulario de proveedor.
    */
-  tipoPersonaRadioOpcionesNoContribuyente = TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE;
-
+  tipoPersonaRadioOpcionesNoContribuyente =
+    TIPO_PERSONA_OPCIONES_NO_CONTRIBUYENTE;
 
   /**
- * @property mostrarCamposNoContribuyente
- * @description Controla la visibilidad de los campos específicos para no contribuyentes.
- * @type {boolean}
- * @default false
- */
+   * @property mostrarCamposNoContribuyente
+   * @description Controla la visibilidad de los campos específicos para no contribuyentes.
+   * @type {boolean}
+   * @default false
+   */
   public mostrarCamposNoContribuyente: boolean = false;
 
   /*
@@ -158,7 +195,6 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
    */
 
   tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES;
-
 
   /**
    * @property idProcedimiento
@@ -194,19 +230,19 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
   public codigosPostalesDatos: Catalogo[] = [];
 
   /**
-  * @property esCURP
-  * @description Controla la visibilidad de los campos específicoS C.U.R.P.
-  * @type {boolean}
-  * @default false
-  */
+   * @property esCURP
+   * @description Controla la visibilidad de los campos específicoS C.U.R.P.
+   * @type {boolean}
+   * @default false
+   */
   public esCURP = false;
 
-    /**
-  * @property esNacional
-  * @description Controla la visibilidad de los campos específicoS C.U.R.P.
-  * @type {boolean}
-  * @default false
-  */
+  /**
+   * @property esNacional
+   * @description Controla la visibilidad de los campos específicoS C.U.R.P.
+   * @type {boolean}
+   * @default false
+   */
   public esNacional = false;
 
   /**
@@ -217,27 +253,27 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
   public esRFC = false;
 
   /**
- * @property campoObligatorioProveedor
- * @description Indica si ciertos campos del formulario son obligatorios según el procedimiento.
- * @type {boolean}
- * @default true
- */
+   * @property campoObligatorioProveedor
+   * @description Indica si ciertos campos del formulario son obligatorios según el procedimiento.
+   * @type {boolean}
+   * @default true
+   */
   public campoObligatorioProveedor = false;
 
   /**
- * @property mostrarAsterisco
- * @description Indica si ciertos campos del formulario son obligatorios según el procedimiento.
- * @type {boolean}
- * @default true
- */
+   * @property mostrarAsterisco
+   * @description Indica si ciertos campos del formulario son obligatorios según el procedimiento.
+   * @type {boolean}
+   * @default true
+   */
   public mostrarAsterisco = false;
 
-    /**
- * @property MOSTRAR_INFORMACION
- * @description Indica si ciertos campos del formulario son obligatorios según el procedimiento.
- * @type {boolean}
- * @default true
- */
+  /**
+   * @property MOSTRAR_INFORMACION
+   * @description Indica si ciertos campos del formulario son obligatorios según el procedimiento.
+   * @type {boolean}
+   * @default true
+   */
   public mostrarInformacion = false;
 
   /**
@@ -267,14 +303,13 @@ export class AgregarProveedorCustomComponent implements OnDestroy, OnInit, OnCha
     this.mostrarCamposNoContribuyente =
       PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE.includes(this.idProcedimiento);
   }
-ngAfterViewInit(): void {
-  if(this.esFormularioSoloLectura){
-    this.agregarProveedorForm.disable();
+  ngAfterViewInit(): void {
+    if (this.esFormularioSoloLectura) {
+      this.agregarProveedorForm.disable();
+    } else {
+      this.agregarProveedorForm.enable();
+    }
   }
-  else{
-    this.agregarProveedorForm.enable();
-  }
-}
 
   /**
    * Crea el formulario reactivo `agregarDestinatarioFinal` utilizando `FormBuilder`.
@@ -339,19 +374,25 @@ ngAfterViewInit(): void {
     this.esCURP = ES_CURP.includes(this.idProcedimiento);
     this.esNacional = ES_NACIONAL.includes(this.idProcedimiento);
     this.esRFC = ES_RFC.includes(this.idProcedimiento);
-    this.campoObligatorioProveedor = CAMPO_OBLIGATORIO_DESTINATARIO.includes(this.idProcedimiento)
-    this.mostrarAsterisco = MOSTRAR_ASTERISCO.includes(this.idProcedimiento)
-    this.mostrarInformacion = MOSTRAR_INFORMACION.includes(this.idProcedimiento)
-    this.isProveedorModificar= PROVEEDOR_TITULO_CUSTOM.includes(this.idProcedimiento);
-    if(this.isProveedorModificar) {
+    this.campoObligatorioProveedor = CAMPO_OBLIGATORIO_DESTINATARIO.includes(
+      this.idProcedimiento
+    );
+    this.mostrarAsterisco = MOSTRAR_ASTERISCO.includes(this.idProcedimiento);
+    this.mostrarInformacion = MOSTRAR_INFORMACION.includes(
+      this.idProcedimiento
+    );
+    this.isProveedorModificar = PROVEEDOR_TITULO_CUSTOM.includes(
+      this.idProcedimiento
+    );
+    if (this.isProveedorModificar) {
       this.titluoMensaje = 'Modificar Proveedor';
     }
     this.campoObligatorioChange();
     if (this.formaDatos) {
       this.agregarProveedorForm.patchValue(this.formaDatos);
-      this.agregarProveedorForm.enable(); 
+      this.agregarProveedorForm.enable();
     }
-    if(this.proveedorTablaDatos.length > 0) {
+    if (this.proveedorTablaDatos.length > 0) {
       this.agregarProveedorForm.patchValue(this.proveedorTablaDatos[0]);
       this.tipoPersonaCambioDeValor('Moral');
       this.terecerosNacionalidadCambioDeValor('Nacional');
@@ -413,11 +454,16 @@ ngAfterViewInit(): void {
     if (this.agregarProveedorForm.invalid) {
       this.agregarProveedorForm.markAllAsTouched();
       return;
-    }    
-    const DENOMINACIONRAZON_ONLY_FLAG = (this.agregarProveedorForm.value.tipoPersona === TipoPersona.MORAL) && (NUMERO_TRAMITE.TRAMITE_240117 === this.idProcedimiento);
+    }
+    const DENOMINACIONRAZON_ONLY_FLAG =
+      this.agregarProveedorForm.value.tipoPersona === TipoPersona.MORAL &&
+      NUMERO_TRAMITE.TRAMITE_240117 === this.idProcedimiento;
     const NUEVO_PROVEEDOR: Proveedor = {
-      nombreRazonSocial: DENOMINACIONRAZON_ONLY_FLAG ? `${this.agregarProveedorForm.value.denominacionRazon}`.trim() : `${this.agregarProveedorForm.value.nombres} ${this.agregarProveedorForm.value.primerApellido
-        } ${this.agregarProveedorForm.value.segundoApellido || ''} `.trim(),
+      nombreRazonSocial: DENOMINACIONRAZON_ONLY_FLAG
+        ? `${this.agregarProveedorForm.value.denominacionRazon}`.trim()
+        : `${this.agregarProveedorForm.value.nombres} ${
+            this.agregarProveedorForm.value.primerApellido
+          } ${this.agregarProveedorForm.value.segundoApellido || ''} `.trim(),
       rfc: '',
       curp: '',
       telefono:
@@ -437,13 +483,14 @@ ngAfterViewInit(): void {
     };
 
     this.proveedores.push(NUEVO_PROVEEDOR);
-    if(this.formaDatos) {
+    if (this.formaDatos) {
       if ('tableindex' in this.formaDatos) {
-        this.proveedores[0].tableIndex = (this.formaDatos as Proveedor).tableIndex;
+        this.proveedores[0].tableIndex = (
+          this.formaDatos as Proveedor
+        ).tableIndex;
       }
       this.actualizaExistenteEnProveedorDatos.emit(this.proveedores);
-    }
-    else{
+    } else {
       this.updateProveedorTablaDatos.emit(this.proveedores);
     }
     this.agregarProveedorForm.reset();
@@ -468,7 +515,7 @@ ngAfterViewInit(): void {
    * @returns {void} Este método no retorna ningún valor.
    */
   cancelar(): void {
-    this.ubicaccion.back();
+    this.cancelarEventListener.emit(true);
   }
   /**
    * * Método que se ejecuta cuando se selecciona un país en el formulario.
@@ -482,10 +529,10 @@ ngAfterViewInit(): void {
     });
   }
   /**
- * * Método que se ejecuta cuando se selecciona un país en el formulario.
- * * @param {string} event - El país seleccionado.
- * * @returns {void} No retorna ningún valor.
- */
+   * * Método que se ejecuta cuando se selecciona un país en el formulario.
+   * * @param {string} event - El país seleccionado.
+   * * @returns {void} No retorna ningún valor.
+   */
 
   terecerosNacionalidadCambioDeValor(event: string | number): void {
     this.agregarProveedorForm.patchValue({
@@ -503,42 +550,45 @@ ngAfterViewInit(): void {
   nacionalidadOpciones(): void {
     switch (this.idProcedimiento) {
       case NUMERO_TRAMITE.TRAMITE_240114:
-        this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
-        break
+        this.tercerosNacionalidadOpciones =
+          TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
+        break;
       case NUMERO_TRAMITE.TRAMITE_240117:
-        this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
-        break
+        this.tercerosNacionalidadOpciones =
+          TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
+        break;
       case NUMERO_TRAMITE.TRAMITE_240118:
-        this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
-        break
-         case NUMERO_TRAMITE.TRAMITE_240120:
-        this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
-        break
+        this.tercerosNacionalidadOpciones =
+          TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
+        break;
+      case NUMERO_TRAMITE.TRAMITE_240120:
+        this.tercerosNacionalidadOpciones =
+          TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
+        break;
       case NUMERO_TRAMITE.TRAMITE_240121:
       case NUMERO_TRAMITE.TRAMITE_240321:
         this.tercerosNacionalidadOpciones =
           TERCEROS_NACIONALIDAD_OPCIONES_EXTRANJERO;
         break;
-      
+
       default:
         this.tercerosNacionalidadOpciones = TERCEROS_NACIONALIDAD_OPCIONES;
-
     }
   }
 
   /**
-     * @method campoObligatorioChange
-     * @description Cambia las validaciones de los campos del formulario según el valor de `campoObligatorioProveedor`.
-     * Si `campoObligatorioProveedor` es verdadero, se eliminan las validaciones de la colonia y se agregan
-     * validaciones requeridas para la calle y el número exterior. Si es falso, se realiza lo contrario.
-     *
-     * @returns {void} Este método no retorna ningún valor.
-     */
+   * @method campoObligatorioChange
+   * @description Cambia las validaciones de los campos del formulario según el valor de `campoObligatorioProveedor`.
+   * Si `campoObligatorioProveedor` es verdadero, se eliminan las validaciones de la colonia y se agregan
+   * validaciones requeridas para la calle y el número exterior. Si es falso, se realiza lo contrario.
+   *
+   * @returns {void} Este método no retorna ningún valor.
+   */
   campoObligatorioChange(): void {
-    const NOMBRES = this.agregarProveedorForm.get('nombres')
-    const PRIMERAPELLIDO = this.agregarProveedorForm.get('primerApellido')
-    const MUNICIPIO = this.agregarProveedorForm.get('municipio')
-    const LOCALIDAD = this.agregarProveedorForm.get('localidad')
+    const NOMBRES = this.agregarProveedorForm.get('nombres');
+    const PRIMERAPELLIDO = this.agregarProveedorForm.get('primerApellido');
+    const MUNICIPIO = this.agregarProveedorForm.get('municipio');
+    const LOCALIDAD = this.agregarProveedorForm.get('localidad');
     const COLINIA = this.agregarProveedorForm.get('colonia');
     const CALLE = this.agregarProveedorForm.get('calle');
     const NUMEROEXTERIOR = this.agregarProveedorForm.get('numeroExterior');
@@ -581,7 +631,6 @@ ngAfterViewInit(): void {
     }
     CURP?.updateValueAndValidity();
   }
-
 
   /**
    * @method ngOnDestroy

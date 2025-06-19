@@ -1,5 +1,5 @@
+import { Chofer, ChoferesExtranjeros, DatosDelChoferNacional } from '../models/registro-muestras-mercancias.model';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
-import { Chofer } from '../models/registro-muestras-mercancias.model';
 import { Injectable } from '@angular/core';
 import { Store } from '@datorama/akita';
 import { StoreConfig } from '@datorama/akita';
@@ -8,49 +8,16 @@ import { StoreConfig } from '@datorama/akita';
  * Interfaz que define el estado de los choferes nacionales y extranjeros.
  */
 export interface Choferesnacionales40103State {
-  choferes: Chofer[];
-  choferesExtranjero: Chofer[];
-  vehiculos: string[];
-  unidadesDeArrastre: string[];
-  estado: Catalogo[];
-  seccion: boolean[];
-  formaValida: boolean[];
   nombre: string;
   primerApellido: string;
   segundoApellido: string;
-  datosDelChoferNacional: unknown[]; // Se reemplazó `any[]` con `unknown[]`
-  PagoDerechosLista: unknown[]; // Se reemplazó `any[]` con `unknown[]`
-  curp: string;
-  rfc: string;
-  // Form Controls
-  apellidoPaterno: string;
-  apellidoMaternoCHN: string;
-  gafete: string;
-  vigenciagafete: string;
-  calle: string;
-  numeroExterior: string;
-  numeroInterior: string;
-  ciudad: string;
-  localidad: string;
-  codigoPostal: string;
-  paisChn: string;
-  estadoControl: string;
-  numerodelsegurosocial: string;
-  entidadFederativaCHN: string;
-  delegacionCHN: string;
-  coloniaCHN: string;
-  paisOrigenCHN: string;
-  correo: string;
-  telefono: string;
-  apellidoMaternoCHE: string;
-  nacionalidadCHE: string;
-  nss: string;
-  ideFiscal: string;
-  paisCHE: string;
-  entidadFederativaCHE: string;
-  paisOrigenCHE: string;
-  apellidoPaternos: string;
-  nombres: string;
+  datosDelChoferNacionalAlta: DatosDelChoferNacional[]; 
+  datosDelChoferNacionalModification: DatosDelChoferNacional[];
+  datosDelChoferNacionalRetirada: DatosDelChoferNacional[]; 
+
+  datosDelChoferExtranjerosAlta: ChoferesExtranjeros[];
+  datosDelChoferExtranjerosModification: ChoferesExtranjeros[];
+  datosDelChoferExtranjerosRetirada: ChoferesExtranjeros[];
 }
 
 /**
@@ -58,50 +25,18 @@ export interface Choferesnacionales40103State {
  * @returns El estado inicial.
  */
 export function createChoferState(): Choferesnacionales40103State {
-  const STORED_DATA = localStorage.getItem('choferesList');
-  return {
-    choferes: STORED_DATA ? JSON.parse(STORED_DATA) : [],
-    choferesExtranjero: [],
-    vehiculos: [],
-    unidadesDeArrastre: [],
-    estado: [],
-    seccion: [],
-    formaValida: [],
+  return { 
     nombre: '',
     primerApellido: '',
     segundoApellido: '',
-    datosDelChoferNacional: [],
-    PagoDerechosLista:[],
-    curp: '',
-    rfc: '',
-    apellidoPaterno: '',
-    apellidoMaternoCHN: '',
-    gafete: '',
-    vigenciagafete: '',
-    calle: '',
-    numeroExterior: '',
-    numeroInterior: '',
-    ciudad: '',
-    localidad: '',
-    codigoPostal: '',
-    paisChn: '',
-    estadoControl: '',
-    numerodelsegurosocial: '',
-    entidadFederativaCHN: '',
-    delegacionCHN: '',
-    coloniaCHN: '',
-    paisOrigenCHN: '',
-    correo: '',
-    telefono: '',
-    apellidoMaternoCHE: '',
-    nacionalidadCHE: '',
-    nss: '',
-    ideFiscal: '',
-    paisCHE: '',
-    entidadFederativaCHE: '',
-    paisOrigenCHE: '',
-    apellidoPaternos: '',
-    nombres: '',
+
+    datosDelChoferNacionalAlta: [],
+    datosDelChoferNacionalModification: [],
+    datosDelChoferNacionalRetirada: [],
+    
+    datosDelChoferExtranjerosAlta: [],
+    datosDelChoferExtranjerosModification: [],
+    datosDelChoferExtranjerosRetirada: [],
   };
 }
 

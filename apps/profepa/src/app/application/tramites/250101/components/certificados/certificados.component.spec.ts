@@ -69,4 +69,16 @@ describe('CertificadosComponent', () => {
     expect(destroySpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+    it('should assign tablaCertificadosData from getCertificadosDeTabla', () => {
+    expect(component.tablaCertificadosData).toEqual(['col1', 'col2']);
+  });
+
+  it('should assign tablaCertificadosFilaDatos from getCertificadosFilaDeTabla', () => {
+    expect(component.tablaCertificadosFilaDatos).toEqual([{ row: 1 }]);
+  });
+
+  it('should assign tablaFitosanitoriosFilaDatos from getCertificadosFitoFilaDeTabla', () => {
+    expect(component.tablaFitosanitoriosFilaDatos).toEqual([{ fito: 2 }]);
+  });
 });

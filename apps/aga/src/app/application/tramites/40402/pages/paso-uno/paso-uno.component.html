@@ -16,9 +16,13 @@
         @case (1) { 
           <app-solicitante #Solicitante></app-solicitante> 
         } @case (2) { 
-          <app-datos-tramite></app-datos-tramite> 
+          @if (esDatosRespuesta) {
+            <app-datos-tramite></app-datos-tramite>
+          }
         } @case (3) {
-          <app-asignar-persona></app-asignar-persona> 
+          @if (esDatosRespuesta) {
+            <app-asignar-persona></app-asignar-persona>
+          }
         } 
       }
     </ng-container>

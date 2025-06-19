@@ -23,6 +23,7 @@ import {
 } from '../../estados/stores/tramite260102Store.store';
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { Subject } from 'rxjs';
 import { Tramite260102Query } from '../../estados/queries/tramite260102Query.query';
@@ -141,7 +142,11 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * @private
    */
   private seccion!: SeccionLibState;
-
+   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  public esFormularioSoloLectura: boolean = false; 
   /**
    * @constructor
    * @description Inyecta servicios para obtener y actualizar el estado del trámite
@@ -152,13 +157,15 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * @param {Tramite260102Store} tramite260102Store - Store que administra la lógica y manipulación del estado 260102.
    * @param {SeccionLibStore} seccionStore - Store para administrar el estado de la sección.
    * @param {SeccionLibQuery} seccionQuery - Query para consultar el estado de la sección.
+   * @param {ConsultaioQuery} consultaQuery - Query para consultar el estado de la consulta.
    */
   constructor(
     private tramite260102Query: Tramite260102Query,
     private tramite260102Store: Tramite260102Store,
     private seccionStore: SeccionLibStore,
-    private seccionQuery: SeccionLibQuery // eslint-disable-next-line no-empty-function
-  ) {}
+    private seccionQuery: SeccionLibQuery,
+    private consultaQuery: ConsultaioQuery
+  ) { }
 
   /**
    * @method ngOnInit
@@ -190,6 +197,15 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+       this.consultaQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.esFormularioSoloLectura = seccionState.readonly;
+            })
+          )
+          .subscribe();
   }
 
   /**

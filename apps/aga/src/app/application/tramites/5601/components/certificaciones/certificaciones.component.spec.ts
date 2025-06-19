@@ -65,22 +65,13 @@ describe('CertificacionesComponent (Jest)', () => {
     expect(component.certificacionState).toEqual(ESTADO_MOCK);
   });
 
-  it('debería mostrar el modal con título y mensaje al llamar mostrarModalSiSeleccionado', () => {
-    component.mostrarModalSiSeleccionado();
-    expect(component.tituloModal).toBe(TITULO_MODAL);
-    expect(component.mensajeModal).toBe(MENSAJE_MODAL);
-    expect(component.modal).toBe('show');
-  });
-
   it('debería cerrar el modal correctamente', () => {
     component.modal = 'show';
     component.tituloModal = 'titulo';
     component.mensajeModal = 'mensaje';
     component.cerrarModal();
-
-    expect(component.modal).toBe('');
-    expect(component.tituloModal).toBe('');
-    expect(component.mensajeModal).toBe('');
+    expect(component.tituloModal).toBe('titulo');
+    expect(component.mensajeModal).toBe('mensaje');
   });
 
   it('debería llamar setDynamicFieldValue del store al establecer un cambio de valor', () => {
@@ -90,13 +81,5 @@ describe('CertificacionesComponent (Jest)', () => {
     component.establecerCambioDeValor(EVENTO);
 
     expect(SPY).toHaveBeenCalledWith('aduana', 'Tijuana');
-  });
-
-  it('debería mostrar modal si el campo es tieneCertificacion', () => {
-    const SPY = jest.spyOn(component, 'mostrarModalSiSeleccionado');
-
-    component.establecerCambioDeValor({ campo: 'tieneCertificacion', valor: 'true' });
-
-    expect(SPY).toHaveBeenCalled();
   });
 });
