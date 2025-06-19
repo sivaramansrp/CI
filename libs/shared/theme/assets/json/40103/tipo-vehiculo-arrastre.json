@@ -1,10 +1,11 @@
-[
-    { "clave": "TR1", "descripcion": "Trailer" },
-    { "clave": "SR2", "descripcion": "Semi-Trailer" },
-    { "clave": "FL3", "descripcion": "Flatbed" },
-    { "clave": "CN4", "descripcion": "Container Carrier" },
-    { "clave": "TN5", "descripcion": "Tanker" },
-    { "clave": "DB6", "descripcion": "Double Trailer" },
-    { "clave": "FR7", "descripcion": "Fridge Trailer" }
+{
+  "datos": [
+    { "id": 1, "descripcion": "Trailer" },
+    { "id": 2, "descripcion": "Semi-Trailer" },
+    { "id": 3, "descripcion": "Flatbed" },
+    { "id": 4, "descripcion": "Container Carrier" },
+    { "id": 5, "descripcion": "Tanker" },
+    { "id": 6, "descripcion": "Double Trailer" },
+    { "id": 7, "descripcion": "Fridge Trailer" }
   ]
-  
+}

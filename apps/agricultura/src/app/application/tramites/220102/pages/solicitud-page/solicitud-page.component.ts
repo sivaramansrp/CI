@@ -27,7 +27,7 @@ import { PASOS } from '../../constantes/fitosanitario.enum';
 @Component({
   selector: 'app-solicitud-page',
   templateUrl: './solicitud-page.component.html',
-  styleUrl: './solicitud-page.component.css',
+  styleUrl: './solicitud-page.component.scss',
 })
 export class SolicitudPageComponent {
   /**
@@ -86,7 +86,7 @@ export class SolicitudPageComponent {
    *    - `valor`: Indica el número del paso al que se desea navegar.
    *    - `accion`: Indica si la acción es "cont" (continuar) o "atras" (retroceder).
    */
-  getValorIndice(e: AccionBoton) {
+  getValorIndice(e: AccionBoton):void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
       if (e.accion === 'cont') {

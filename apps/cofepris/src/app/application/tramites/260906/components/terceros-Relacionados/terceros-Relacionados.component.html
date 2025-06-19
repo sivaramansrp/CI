@@ -6,60 +6,60 @@
     <div class="mt-5">
       <h5>Fabricante:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData"></ng-table>
+        <ng-table [commonTableHeader]="fabricanteHeaderData" [commonTableBody]="fabricanteRowData" [disableSeleccionTablaCheckBox]="soloLectura"></ng-table>
       </div>
       <br />
       <div class="d-flex justify-content-end mt-3">
         <div *ngIf="showFabricanteButtons">
-          <button class="btn btn-danger" type="button">Eliminar</button>
-          <button class="btn btn-default" type="button">Modificar</button>
+          <button class="btn btn-danger" type="button" [disabled]="soloLectura">Eliminar</button>
+          <button class="btn btn-default" type="button" [disabled]="soloLectura">Modificar</button>
         </div>
-        <button type="button" class="btn btn-primary" (click)="toggleDivFabricante()"> Agregar </button>
+        <button type="button" class="btn btn-primary" (click)="toggleDivFabricante()" [disabled]="soloLectura"> Agregar </button>
       </div>
     </div>
     <!-- Destinatario tabla -->
     <div class="mt-5">
       <h5>Destinatario (destino final)*:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="destinatarioHeaderData" [commonTableBody]="destinatarioRowData"></ng-table>
+        <ng-table [commonTableHeader]="destinatarioHeaderData" [commonTableBody]="destinatarioRowData" [disableSeleccionTablaCheckBox]="soloLectura"></ng-table>
       </div>
       <br />
       <div class="d-flex justify-content-end mt-3">
         <div *ngIf="showDestinatarioButtons">
-          <button class="btn btn-danger" type="button">Eliminar</button>
-          <button class="btn btn-default" type="button">Modificar</button>
+          <button class="btn btn-danger" type="button" [disabled]="soloLectura">Eliminar</button>
+          <button class="btn btn-default" type="button" [disabled]="soloLectura">Modificar</button>
         </div>
-        <button type="button" class="btn btn-primary" (click)="toggleDivDestinatario()"> Agregar </button>
+        <button type="button" class="btn btn-primary" (click)="toggleDivDestinatario()" [disabled]="soloLectura"> Agregar </button>
       </div>
     </div>
     <!-- Proveedor tabla -->
     <div class="mt-5">
       <h5>Proveedor:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="proveedorHeaderData" [commonTableBody]="proveedorRowData"></ng-table>
+        <ng-table [commonTableHeader]="proveedorHeaderData" [commonTableBody]="proveedorRowData" [disableSeleccionTablaCheckBox]="soloLectura"></ng-table>
       </div>
       <br />
       <div class="d-flex justify-content-end mt-3">
         <div *ngIf="showProveedorButtons">
-          <button class="btn btn-danger" type="button">Eliminar</button>
-          <button class="btn btn-default" type="button">Modificar</button>
+          <button class="btn btn-danger" type="button" [disabled]="soloLectura">Eliminar</button>
+          <button class="btn btn-default" type="button" [disabled]="soloLectura">Modificar</button>
         </div>
-        <button type="button" class="btn btn-primary" (click)="toggleDivProveedor()"> Agregar </button>
+        <button type="button" class="btn btn-primary" (click)="toggleDivProveedor()" [disabled]="soloLectura"> Agregar </button>
       </div>
     </div>
     <!-- Facturador tabla -->
     <div class="mt-5">
       <h5>Facturador:</h5>
       <div class="table-responsive mt-5">
-        <ng-table [commonTableHeader]="facturadorHeaderData" [commonTableBody]="facturadorRowData"></ng-table>
+        <ng-table [commonTableHeader]="facturadorHeaderData" [commonTableBody]="facturadorRowData" [disableSeleccionTablaCheckBox]="soloLectura"></ng-table>
       </div>
       <br />
       <div class="d-flex justify-content-end mt-3">
         <div *ngIf="showFacturadorButtons">
-          <button class="btn btn-danger" type="button">Eliminar</button>
-          <button class="btn btn-default" type="button">Modificar</button>
+          <button class="btn btn-danger" type="button" [disabled]="soloLectura">Eliminar</button>
+          <button class="btn btn-default" type="button" [disabled]="soloLectura">Modificar</button>
         </div>
-        <button type="button" class="btn btn-primary" (click)="toggleDivFacturador()"> Agregar </button>
+        <button type="button" class="btn btn-primary" (click)="toggleDivFacturador()" [disabled]="soloLectura"> Agregar </button>
       </div>
     </div>
     <br />
@@ -290,9 +290,9 @@
           <!-- últimos tres botones -->
           <div class="row">
             <div class="col-md-12 d-flex justify-content-end gap-1">
-              <button type="button" class="btn btn-danger" (click)="toggleDivFabricante()"> Cancelar </button>
-              <button type="button" class="btn btn-default"> Limpiar </button>
-              <button type="button" class="btn btn-primary" (click)="submitFabricanteForm()"> Guardar </button>
+              <button type="button" class="btn btn-danger" (click)="toggleDivFabricante()" [disabled]="soloLectura"> Cancelar </button>
+              <button type="button" class="btn btn-default" [disabled]="soloLectura"> Limpiar </button>
+              <button type="button" class="btn btn-primary" (click)="submitFabricanteForm()" [disabled]="soloLectura"> Guardar </button>
             </div>
           </div>
         </div>
@@ -430,9 +430,9 @@
           <!-- últimos tres botones -->
           <div class="row">
             <div class="col-md-12 d-flex justify-content-end gap-1">
-              <button type="button" class="btn btn-danger" (click)="toggleDivDestinatario()"> Cancelar </button>
-              <button type="button" class="btn btn-default"> Limpiar </button>
-              <button type="button" class="btn btn-primary" (click)="submitDestinatarioForm()"> Guardar </button>
+              <button type="button" class="btn btn-danger" (click)="toggleDivDestinatario()" [disabled]="soloLectura"> Cancelar </button>
+              <button type="button" class="btn btn-default" [disabled]="soloLectura"> Limpiar </button>
+              <button type="button" class="btn btn-primary" (click)="submitDestinatarioForm()" [disabled]="soloLectura"> Guardar </button>
             </div>
           </div>
         </div>
@@ -562,9 +562,9 @@
         </div>
         <div class="row">
           <div class="col-md-12 d-flex justify-content-end gap-1">
-            <button type="button" class="btn btn-danger" (click)="toggleDivProveedor()"> Cancelar </button>
-            <button type="button" class="btn btn-default"> Limpiar </button>
-            <button type="button" class="btn btn-primary" (click)="submitProveedorForm()"> Guardar </button>
+            <button type="button" class="btn btn-danger" (click)="toggleDivProveedor()" [disabled]="soloLectura"> Cancelar </button>
+            <button type="button" class="btn btn-default" [disabled]="soloLectura"> Limpiar </button>
+            <button type="button" class="btn btn-primary" (click)="submitProveedorForm()" [disabled]="soloLectura"> Guardar </button>
           </div>
         </div>
       </div>
@@ -692,9 +692,9 @@
           </div>
           <div class="row">
             <div class="col-md-12 d-flex justify-content-end gap-1">
-              <button type="button" class="btn btn-danger" (click)="toggleDivFacturador()"> Cancelar </button>
-              <button type="button" class="btn btn-default"> Limpiar </button>
-              <button type="button" class="btn btn-primary" (click)="submitFacturadorForm()"> Guardar </button>
+              <button type="button" class="btn btn-danger" (click)="toggleDivFacturador()" [disabled]="soloLectura"> Cancelar </button>
+              <button type="button" class="btn btn-default" [disabled]="soloLectura"> Limpiar </button>
+              <button type="button" class="btn btn-primary" (click)="submitFacturadorForm()" [disabled]="soloLectura"> Guardar </button>
             </div>
           </div>
         </div>

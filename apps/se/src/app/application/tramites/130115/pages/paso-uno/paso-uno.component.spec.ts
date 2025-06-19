@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
 
 import { Component, NO_ERRORS_SCHEMA } from '@angular/core';
+import { HttpClientModule } from '@angular/common/http';
 
 /**
  * Mock component for 'solicitante' to avoid dependency errors
@@ -18,8 +19,9 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent, MockSolicitanteComponent], // Declare the mock
-      schemas: [NO_ERRORS_SCHEMA], // Ignore unknown elements
+      declarations: [PasoUnoComponent], 
+      schemas: [NO_ERRORS_SCHEMA],
+      imports: [HttpClientModule], 
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);

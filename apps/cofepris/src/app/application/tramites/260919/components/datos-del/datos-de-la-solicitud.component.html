@@ -15,6 +15,7 @@
             'setTipoOperacion'
           )
         "
+        [disabled]="esFormularioSoloLectura"
       ></app-input-radio>
       <div class="row">
         <div class="col-md-8">
@@ -35,6 +36,7 @@
                   'setJustification'
                 )
               "
+              [disabled]="esFormularioSoloLectura"
             ></textarea>
           </div>
         </div>
@@ -48,6 +50,7 @@
           id="btnEstablecimiento"
           title="Selecciona para habilitar los campos del establecimiento"
           (click)="seleccionarEstablecimiento()"
+          [disabled]="esFormularioSoloLectura"
         >
           Seleccionar establecimiento
         </button>
@@ -75,6 +78,7 @@
             (change)="
               setValoresStore(datosDelTramiteRealizar, 'rfcDel', 'setRfcDel')
             "
+            [disabled]="esFormularioSoloLectura"
           />
         </div>
         <div class="col-md-8">
@@ -93,6 +97,7 @@
                 'setDenominacion'
               )
             "
+            [disabled]="esFormularioSoloLectura"
           />
         </div>
       </div>
@@ -118,6 +123,7 @@
                 'setCorreoElectronico'
               )
             "
+            [disabled]="esFormularioSoloLectura"
           />
           <div
             *ngIf="
@@ -156,6 +162,7 @@
                 'setCodigoPostal'
               )
             "
+            [disabled]="esFormularioSoloLectura"
           />
           <div
             *ngIf="
@@ -187,6 +194,7 @@
                     'setEstado'
                   )
                 "
+                [isDisabled]="esFormularioSoloLectura ? true : false"
               ></app-catalogo-select>
             </div>
           </div>
@@ -207,6 +215,7 @@
                 'setMunicipoyalcaldia'
               )
             "
+            [disabled]="esFormularioSoloLectura"
           />
         </div>
       </div>
@@ -229,6 +238,7 @@
                 'setLocalidad'
               )
             "
+            [disabled]="esFormularioSoloLectura"
           />
           <div
             *ngIf="
@@ -264,6 +274,7 @@
             (change)="
               setValoresStore(datosDelTramiteRealizar, 'colonia', 'setColonia')
             "
+            [disabled]="esFormularioSoloLectura"
           />
         </div>
       </div>
@@ -278,6 +289,7 @@
             (change)="
               setValoresStore(datosDelTramiteRealizar, 'calle', 'setCalle')
             "
+            [disabled]="esFormularioSoloLectura"
           />
         </div>
       </div>
@@ -292,6 +304,7 @@
             (change)="
               setValoresStore(datosDelTramiteRealizar, 'lada', 'setLada')
             "
+            [disabled]="esFormularioSoloLectura"
           />
           <div
             *ngIf="
@@ -331,6 +344,7 @@
                 'setTelefono'
               )
             "
+            [disabled]="esFormularioSoloLectura"
           />
           <div
             *ngIf="
@@ -368,9 +382,9 @@
 <div class="col-md-12 d-flex justify-content-end">
     <div class="btn-group">
       <button class="btn btn-danger"
-        type="button" (click)="onDelete()">Eliminar</button>
+        type="button" (click)="onDelete()" [disabled]="esFormularioSoloLectura">Eliminar</button>
         <button class="btn btn-primary me-2"
-        type="submit" (click)="onAgregar()">Agregar</button>
+        type="submit" (click)="onAgregar()" [disabled]="esFormularioSoloLectura">Agregar</button>
     </div>
 </div>
 @if (nuevaNotificacion) {
@@ -393,7 +407,14 @@
                   [catalogo]="claveScianData.catalogos"
                   [label]="'Clave S.C.I.A.N'"
                   [required]="true"
-                  
+                  (change)="
+                  setValoresStore(
+                    clavaScianForm,
+                    'claveScian',
+                    'setClaveScian'
+                  )
+                "
+                [isDisabled]="esFormularioSoloLectura"
                 ></app-catalogo-select>
               </div>
            </div>
@@ -407,6 +428,14 @@
                   [catalogo]="descripcionDelScianData.catalogos"
                   [label]="'Descripcion del S.C.I.A.N'"
                   [required]="true"
+                  (change)="
+                  setValoresStore(
+                    clavaScianForm,
+                    'descripcionDelScian',
+                    'setDescripcionDelScian'
+                  )
+                "
+                [isDisabled]="esFormularioSoloLectura"
                 ></app-catalogo-select>
               </div>
            </div>
@@ -415,11 +444,11 @@
   <div class="col-md-12 d-flex justify-content-end">
       <div class="btn-group">
         <button class="btn btn-danger"
-          type="button" (click)="onCancelar()">Cancelar</button>
+          type="button" (click)="onCancelar()" [disabled]="esFormularioSoloLectura">Cancelar</button>
           <button class="btn btn-primary me-2"
-          type="button" (click)="onLimpiar()">Limpiar</button>
+          type="button" (click)="onLimpiar()" [disabled]="esFormularioSoloLectura">Limpiar</button>
           <button class="btn btn-primary me-2"
-          type="submit">Agregar</button>
+          type="submit" [disabled]="esFormularioSoloLectura">Agregar</button>
       </div>
     
   </div>
@@ -442,6 +471,7 @@
                 'setAvisoDeFuncionamiento'
               )
             "
+            [disabled]="esFormularioSoloLectura"
           ></lib-input-check>
         </div>
         <div class="col-md-4 mt-4">
@@ -466,6 +496,7 @@
                 'setLicenciaSanitaria'
               )
             "
+            [disabled]="esFormularioSoloLectura"
           />
         </div>
       </div>
@@ -484,6 +515,7 @@
                 'setRegimenalque'
               )
             "
+            [isDisabled]="esFormularioSoloLectura ? true : false"
           ></app-catalogo-select>
         </div>
         <div class="col-md-8">
@@ -493,10 +525,8 @@
             [catalogo]="aduanaData.catalogos"
             [label]="'Aduana de entradas*'"
             [required]="false"
-            (change)="
-              setValoresStore(datosDelTramiteRealizar, 'aduana', 'setAduana')
-            "
-          >
+            (change)="setValoresStore(datosDelTramiteRealizar, 'aduana', 'setAduana')"
+              [isDisabled]="esFormularioSoloLectura ? true : false">
           </app-catalogo-select>
         </div>
       </div>
@@ -525,6 +555,7 @@
                   [label]="'Clasificación del producto'" 
                   [required]="true"
                   (change)="setValoresStore(datosDelTramiteRealizar,'clasificaionProductos', 'setClasificaionProductos')"
+                  [isDisabled]="esFormularioSoloLectura ? true : false"
                   ></app-catalogo-select>
                 </div>
               </div>
@@ -536,35 +567,40 @@
                   [catalogo]="especificarData.catalogos" 
                   [label]="'Especificar clasificación del producto'"
                    [required]="true"
-                   (change)="setValoresStore(datosDelTramiteRealizar,'especificarProducto', 'setEspecificarProducto')"></app-catalogo-select>
+                   (change)="setValoresStore(datosDelTramiteRealizar,'especificarProducto', 'setEspecificarProducto')"
+                   [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                 </div>
               </div>
               <div class="row mt-5">
                 <div class="col-md-6">
                   <label class="form-label" for="denominacionProducto">Denominación especifica del producto*:</label>
                   <input class="form-control" formControlName="nombreProductoEspecifico" placeholder="" type="text"
-                  (change)="setValoresStore(datosDelTramiteRealizar,'nombreProductoEspecifico', 'setNombreProductoEspecifico')" />
+                  (change)="setValoresStore(datosDelTramiteRealizar,'nombreProductoEspecifico', 'setNombreProductoEspecifico')" 
+                  [disabled]="esFormularioSoloLectura"/>
                 </div>
               </div>
               <div class="row mt-5">
                 <div class="col-md-6">
                   <label class="form-label">Denominación distintiva*:</label>
                   <input class="form-control" formControlName="denominacionDistintiva" placeholder="" type="text"
-                  (change)="setValoresStore(datosDelTramiteRealizar,'denominacionDistintiva', 'setDenominacionDistintiva')"/>
+                  (change)="setValoresStore(datosDelTramiteRealizar,'denominacionDistintiva', 'setDenominacionDistintiva')"
+                  [disabled]="esFormularioSoloLectura"/>
                 </div>
               </div>
               <div class="row mt-5">
                 <div class="col-md-6">
                   <label class="form-label">Denominación común, nombre común o nombre científico*:</label>
                   <input class="form-control" formControlName="denominacionNombre" placeholder="" type="text"
-                  (change)="setValoresStore(datosDelTramiteRealizar,'denominacionNombre', 'setDenominacionNombre')"/>
+                  (change)="setValoresStore(datosDelTramiteRealizar,'denominacionNombre', 'setDenominacionNombre')"
+                  [disabled]="esFormularioSoloLectura"/>
                 </div>
               </div>
               <div class="row mt-5">
                 <div class="col-md-6">
                   <label class="form-label">Forma farmacéutica:</label>
                   <input class="form-control" formControlName="formaFarmaceutica" placeholder="" type="text"
-                  (change)="setValoresStore(datosDelTramiteRealizar,'formaFarmaceutica', 'setFormaFarmaceutica')"/>
+                  (change)="setValoresStore(datosDelTramiteRealizar,'formaFarmaceutica', 'setFormaFarmaceutica')"
+                  [disabled]="esFormularioSoloLectura"/>
                 </div>
               </div>
               <div class="row mt-5">
@@ -575,7 +611,8 @@
                   [catalogo]="estadoFisicoData.catalogos"
                    [label]="'Estado fisico'" 
                    [required]="true"
-                   (change)="setValoresStore(datosDelTramiteRealizar,'estadoFisico', 'setEstadoFisico')"></app-catalogo-select>
+                   (change)="setValoresStore(datosDelTramiteRealizar,'estadoFisico', 'setEstadoFisico')"
+                   [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                 </div>
               </div>
               <div class="row mt-5">
@@ -583,40 +620,46 @@
                   <label class="form-label">Fracción arancelaria*: <span class="bi bi-question-circle-fill" title="Fracción arancelaria" data-bs-toggle="tooltip"></span>
                   </label>
                   <input class="form-control" placeholder="" formControlName="fraccionArancelaria" type="text" 
-                  (change)="setValoresStore(datosDelTramiteRealizar,'fraccionArancelaria', 'setFraccionArancelaria')"/>
+                  (change)="setValoresStore(datosDelTramiteRealizar,'fraccionArancelaria', 'setFraccionArancelaria')"
+                  [disabled]="esFormularioSoloLectura"/>
                 </div>
               </div>
               <div class="row mt-5">
                 <div class="col-md-6">
                   <label class="form-label">Descripción de la fracción arancelaria*:</label>
                   <input class="form-control" placeholder="" type="text" formControlName="descripcionFraccionArancelaria" 
-                  (change)="setValoresStore(datosDelTramiteRealizar,'descripcionFraccionArancelaria', 'setDescripcionFraccionArancelaria')"/>
+                  (change)="setValoresStore(datosDelTramiteRealizar,'descripcionFraccionArancelaria', 'setDescripcionFraccionArancelaria')"
+                  [disabled]="esFormularioSoloLectura"/>
                 </div>
               </div>
               <div class="row mt-5">
                 <div class="col-md-3">
                   <label class="form-label">Cantidad UMC*:</label>
                   <input class="form-control" placeholder="" formControlName="cantidadUMC" type="text" 
-                  (change)="setValoresStore(datosDelTramiteRealizar,'cantidadUMC', 'setCantidadUMC')"/>
+                  (change)="setValoresStore(datosDelTramiteRealizar,'cantidadUMC', 'setCantidadUMC')"
+                  [disabled]="esFormularioSoloLectura"/>
                 </div>
                 <div class="col-md-3">
                   <label class="form-label">UMC*: <span class="bi bi-question-circle-fill" title="UMC" data-bs-toggle="tooltip"></span>
                   </label>
                   <input class="form-control" placeholder="" formControlName="umc" type="text" 
-                  (change)="setValoresStore(datosDelTramiteRealizar,'umc', 'setUMC')"/>
+                  (change)="setValoresStore(datosDelTramiteRealizar,'umc', 'setUMC')"
+                  [disabled]="esFormularioSoloLectura"/>
                 </div>
               </div>
               <div class="row mt-5">
                 <div class="col-md-3">
                   <label class="form-label">Cantidad UMT*:</label>
                   <input class="form-control" placeholder="" formControlName="cantidadUMT" type="text" 
-                  (change)="setValoresStore(datosDelTramiteRealizar,'cantidadUMT', 'setCantidadUMT')"/>
+                  (change)="setValoresStore(datosDelTramiteRealizar,'cantidadUMT', 'setCantidadUMT')"
+                  [disabled]="esFormularioSoloLectura"/>
                 </div>
                 <div class="col-md-3">
                   <label class="form-label">UMT*: <span class="bi bi-question-circle-fill" title="UMT" data-bs-toggle="tooltip"></span>
                   </label>
                   <input class="form-control" placeholder="" formControlName="umt" type="text"
-                  (change)="setValoresStore(datosDelTramiteRealizar,'umt', 'setUMT')" />
+                  (change)="setValoresStore(datosDelTramiteRealizar,'umt', 'setUMT')" 
+                  [disabled]="esFormularioSoloLectura"/>
                 </div>
               </div>
               <div class="row">
@@ -625,7 +668,8 @@
                    <label class="form-label" for="presentacionFarmaceutica">presentacion</label>
                    <textarea class="form-control" id="presentacionFarmaceutica" rows="2" height="50"
                    placeholder="" style="height: 100px" formControlName="presentacionFarmaceutica"
-                   (change)="setValoresStore(datosDelTramiteRealizar,'presentacionFarmaceutica','setPresentacionFarmaceutica')"></textarea>
+                   (change)="setValoresStore(datosDelTramiteRealizar,'presentacionFarmaceutica','setPresentacionFarmaceutica')"
+                   [disabled]="esFormularioSoloLectura"></textarea>
                  </div>
                </div>
            </div>
@@ -633,7 +677,8 @@
                 <div class="col-md-6">
                   <label class="form-label">Numero de registro sanitario:</label>
                   <input class="form-control" placeholder="" type="text" formControlName="numeroDeRegistroSanitario" 
-                  (change)="setValoresStore(datosDelTramiteRealizar,'numeroDeRegistroSanitario', 'setNumeroDeRegistroSanitario')"/>
+                  (change)="setValoresStore(datosDelTramiteRealizar,'numeroDeRegistroSanitario', 'setNumeroDeRegistroSanitario')"
+                  [disabled]="esFormularioSoloLectura"/>
                 </div>
               </div> 
               <!-- collapsed crosslist -->
@@ -676,7 +721,8 @@
                   [catalogo]="tipoProductoData.catalogos"
                    [label]="'Tipo de producto'" 
                    [required]="true"
-                   (change)="setValoresStore(datosDelTramiteRealizar,'tipoProducto', 'setTipoProducto')"></app-catalogo-select>
+                   (change)="setValoresStore(datosDelTramiteRealizar,'tipoProducto', 'setTipoProducto')"
+                   [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                 </div>
               </div> 
               <!-- udospecifico crosslist -->
@@ -699,12 +745,13 @@
                 [datos]="fechaPago"
                 [setFecha]="dataDeLaSolicitudForm.get('datosDelTramiteRealizar.fechadepago')?.value"
                 (valorCambiado)="seleccionarFechaInicio($event)"
-              ></input-fecha>
+                >
+              </input-fecha>
               </div>
               <div class="col-md-12 d-flex justify-content-end align-items-end">
                 <div class="btn-group">
-                  <button class="btn btn-default ms-3" type="button" data-bs-dismiss="modal" >Cancelar</button>
-                  <button class="btn btn-primary ms-3" type="button" data-bs-dismiss="modal" (click)="onSave()">Agregar</button>
+                  <button class="btn btn-default ms-3" type="button" data-bs-dismiss="modal" [disabled]="esFormularioSoloLectura">Cancelar</button>
+                  <button class="btn btn-primary ms-3" type="button" data-bs-dismiss="modal" (click)="onSave()"[disabled]="esFormularioSoloLectura">Agregar</button>
                 </div>
               </div>
             </div>
@@ -712,28 +759,28 @@
         </div>
    </div>
    <div class="col-md-12 d-flex justify-content-end">
-    <button type="button" class="btn btn-primary" name="eliminar" id="btneliminar"(click)=onEliminar()>Eliminar</button>
+    <button type="button" class="btn btn-primary" name="eliminar" id="btneliminar"(click)="onEliminar()" [disabled]="esFormularioSoloLectura">Eliminar</button>
     @if (nuevaNotificacion) {
       <section>
       <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
       </lib-notificaciones>
       </section>
       }
-    <button type="button" class="btn btn-primary" name="modificar" id="btnmodificar"  (click)="onModificar()" >Modificar</button>
+    <button type="button" class="btn btn-primary" name="modificar" id="btnmodificar"  (click)="onModificar()" [disabled]="esFormularioSoloLectura">Modificar</button>
     @if (nuevaNotificacion) {
       <section>
       <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
       </lib-notificaciones>
       </section>
       }
-    <button type="button" class="btn btn-primary" name="agregar" id="btnagregar" (click)="onAdd()">Agregar</button>
+    <button type="button" class="btn btn-primary" name="agregar" id="btnagregar" (click)="onAdd()" [disabled]="esFormularioSoloLectura">Agregar</button>
   </div>
 
       <ng-titulo titulo="Manifiestos y declaraciones" />
       <div class="alert alert-info">
         <label style="font-weight: normal">
           <div class="col-md-1 mt-5">
-            <input type="checkbox" class="mt-5" />
+            <input type="checkbox" class="mt-5" formControlName="cumplocon"/>
             <b> *</b>
           </div>
           <div class="col-md-11 mt-4">{{ TEXTOS.TEXTOS_MANIFIESTOS }}</div>
@@ -745,9 +792,14 @@
           acuerdo en hacerlos públicos?*:</label
         >
         <app-input-radio
+        formControlName="hacerlosRadioOptions"
           [radioOptions]="hacerlosRadioOptions"
           [selectedValue]="hercelosSeleccionados"
           [layout]="'horizontal'"
+          (change)="
+          setValoresStore(datosDelTramiteRealizar, 'hacerlosRadioOptions', 'setHacerlosRadioOptions')
+        "
+        [disabled]="esFormularioSoloLectura"
         ></app-input-radio>
       </div>
       <ng-container formGroupName="datosDelTramiteRealizar">
@@ -763,10 +815,11 @@
               (change)="
                 setValoresStore(datosDelTramiteRealizar, 'rfc', 'setRfc')
               "
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
           <div class="col-md-2 mt-4">
-            <button type="button" class="btn btn-primary" (click)="getSolicitudData()">Buscar</button>
+            <button type="button" class="btn btn-primary" (click)="getSolicitudData()" [disabled]="esFormularioSoloLectura">Buscar</button>
           </div>
         </div>
         <div class="row mt-5">
@@ -786,6 +839,7 @@
                   'setLegalRazonSocial'
                 )
               "
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
           <div class="col-md-4 mt-4">
@@ -804,6 +858,7 @@
                   'setApellidoPaterno'
                 )
               "
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
           <div class="col-md-4 mt-4">
@@ -823,6 +878,7 @@
                   'setApellidoMaterno'
                 )
               "
+              [disabled]="esFormularioSoloLectura"
             />
           </div>
         </div>

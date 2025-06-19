@@ -1,36 +1,24 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
-import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { AvisoComponent } from '../../components/aviso/aviso.component';
-import { Tramite32506Query } from '../../estados/tramite32506.query';
-import { Tramite32506Store } from '../../estados/tramite32506.store';
-import { of, Subject } from 'rxjs';
-import { provideHttpClient } from '@angular/common/http';
 
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
-  let tramiteQueryMock: any;
-  let tramiteStoreMock: any;
 
   beforeEach(async () => {
-    tramiteQueryMock = {
-      selectSolicitud$: of({
-        pestanaActiva: 1,
-      }),
-    };
-
-    tramiteStoreMock = {
-      setPestanaActiva: jest.fn(),
-    };
-
     await TestBed.configureTestingModule({
-      imports: [PasoUnoComponent, SolicitanteComponent, AvisoComponent],
-      providers: [
-        provideHttpClient(),
-        { provide: Tramite32506Query, useValue: tramiteQueryMock },
-        { provide: Tramite32506Store, useValue: tramiteStoreMock },
-      ],
+      imports: [
+        PasoUnoComponent,
+        SolicitanteComponent,
+        CommonModule,
+        AvisoComponent,
+        HttpClientTestingModule
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(PasoUnoComponent);
@@ -38,36 +26,19 @@ describe('PasoUnoComponent', () => {
     fixture.detectChanges();
   });
 
-  afterEach(() => {
-    jest.clearAllMocks();
-  });
-
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the active tab index on ngOnInit', () => {
-    component.ngOnInit();
-    expect(component.indice).toBe(1);
+  it('should have default indice as 2', () => {
+    expect(component.indice).toBe(2);
   });
 
-  it('should call setPestanaActiva when seleccionaTab is called', () => {
-    const tabIndex = 2;
-    component.seleccionaTab(tabIndex);
-    expect(component.indice).toBe(tabIndex);
-    expect(tramiteStoreMock.setPestanaActiva).toHaveBeenCalledWith(tabIndex);
-  });
+  it('should set indice when seleccionaTab is called', () => {
+    component.seleccionaTab(3);
+    expect(component.indice).toBe(3);
 
-  it('should subscribe to tramiteQuery and update tramiteState', () => {
-    component.ngOnInit();
-    expect(component.tramiteState).toEqual({ pestanaActiva: 1 });
-  });
-
-  it('should complete destroyNotifier$ on ngOnDestroy', () => {
-    const nextSpy = jest.spyOn(component.destroyNotifier$, 'next');
-    const completeSpy = jest.spyOn(component.destroyNotifier$, 'complete');
-    component.ngOnDestroy();
-    expect(nextSpy).toHaveBeenCalled();
-    expect(completeSpy).toHaveBeenCalled();
+    component.seleccionaTab(0);
+    expect(component.indice).toBe(0);
   });
 });

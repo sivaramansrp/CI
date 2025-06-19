@@ -1,7 +1,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { PERMISO_MAQUILA } from '../../constantes/actualizacion-importacion-sanitaria.enum';
 
-import { DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 /**
  * Representa una acción que se puede ejecutar mediante un botón.
  * 
@@ -18,7 +18,7 @@ interface AccionBoton {
  * Este componente se encarga de gestionar la funcionalidad del asistente (wizard) "Permiso Maquila".
  * Proporciona la lista de pasos del asistente y administra el índice del paso actual.
  */
-
+ 
 @Component({
   selector: 'app-actualizacion-importacion-sanitaria',
   templateUrl: './actualizacion-importacion-sanitaria.component.html',
@@ -36,7 +36,7 @@ export class ActualizacionImportacionSanitariaComponent {
   /**
    * Esta variable se utiliza para almacenar el índice del paso.
    */
-  indice = 1;
+  indice :number = 1;
 
 
   /**

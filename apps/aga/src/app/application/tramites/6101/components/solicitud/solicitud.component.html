@@ -7,6 +7,7 @@
       <div class="col-md-4">
         <app-catalogo-select
           formControlName="aduanaAux"
+          [isDisabled]="esFormularioSoloLectura"
           [catalogo]="opcionAduanaAux.catalogos"
           [label]="opcionAduanaAux.labelNombre"
           [required]="opcionAduanaAux.required"
@@ -17,6 +18,7 @@
       <div class="col-md-8"></div>
       <div class="col-md-4 mt-4">
         <app-catalogo-select
+          [isDisabled]="esFormularioSoloLectura"
           formControlName="juntaTecnicaDerivada"
           [catalogo]="opcionJuntaTecnicaDerivada.catalogos"
           [label]="opcionJuntaTecnicaDerivada.labelNombre"
