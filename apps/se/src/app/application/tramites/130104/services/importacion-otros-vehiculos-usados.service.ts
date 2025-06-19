@@ -1,13 +1,14 @@
 /**
  * ImportacionOtrosVehiculosUsadosService
  */
+import { Tramite130104State, Tramite130104Store } from '../../../estados/tramites/tramite130104.store';
 import { Catalogo } from '@ng-mf/data-access-user';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
 import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 
-import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
 /**
  * ImportacionOtrosVehiculosUsadosService
  **/
@@ -16,7 +17,7 @@ import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-
   providedIn: 'root',
 })
 export class ImportacionOtrosVehiculosUsadosService {
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private tramite130104Store:Tramite130104Store) {
     //
   }
   /**
@@ -77,9 +78,23 @@ export class ImportacionOtrosVehiculosUsadosService {
   /**
    * Obtiene los datos de la tabla de partidas de la mercancía desde un archivo JSON.
    */
-   getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
+  getTablaDatos(): Observable<PartidasDeLaMercanciaModelo[]> {
       return this.http.get<PartidasDeLaMercanciaModelo[]>(
             'assets/json/130104/partidas-de-la.json'
           );
     }
+  /**
+  * Actualiza el estado del formulario en el store.
+  * @param DATOS Estado actualizado del trámite.
+  */
+  actualizarEstadoFormulario(DATOS: Tramite130104State): void {
+      this.tramite130104Store.actualizarEstado(DATOS);
+  }
+  /**
+  * Obtiene los datos de la solicitud.
+  * @returns Observable con los datos de la solicitud.
+  */
+  getDatosDeLaSolicitud(): Observable<Tramite130104State> {
+      return this.http.get<Tramite130104State>('assets/json/130104/datos-de-la-solicitud.json');
+  }  
 }
