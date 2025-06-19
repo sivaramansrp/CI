@@ -1,10 +1,11 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { ENCABEZADO_DE_TABLA, REQUISITOS } from '../../constantes/cancelacion-garantia.enum';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InputRadioComponent, TablaDinamicaComponent, TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Subject, takeUntil } from 'rxjs';
 import { CancelacionGarantiaService } from '../../services/cancelacion-garantia/cancelacion-garantia.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { RequisitosTabla } from '../../models/cancelacion-garantia.model';
 
@@ -44,6 +45,14 @@ import { RequisitosTabla } from '../../models/cancelacion-garantia.model';
 })
 
 export class RequisitosComponent implements OnInit, OnDestroy {
+
+  /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
+
   /**
    * @property forma
    * @description
