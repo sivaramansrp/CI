@@ -119,7 +119,7 @@ export const CONFIGURACION_ENCABEZADO_TABLA_PAGOS: ConfiguracionColumna<LineaCap
      * - Orden: 1.
      */
     {
-      encabezado: 'Línea captura',
+      encabezado: 'Línea de captura',
       clave: (fila) => fila.lineaCaptura,
       orden: 1,
     },
