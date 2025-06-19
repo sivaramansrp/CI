@@ -2,12 +2,12 @@ import { Catalogo,CatalogoSelectComponent,InputFechaComponent,TituloComponent } 
 import { Component,OnDestroy,OnInit} from '@angular/core';
 import { FormBuilder,FormGroup,FormsModule,ReactiveFormsModule,Validators } from '@angular/forms';
 import { Subject,map,takeUntil } from 'rxjs';
+import { Tramite250101State, Tramite250101Store } from '../../estados/tramite250101.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { INPUT_FECHA_PAGO } from '../../constantes/flora-fauna.enum';
+import { Tramite250101Query } from '../../estados/tramite250101.query';
 import catalogoDatos from '@libs/shared/theme/assets/json/250101/banco.json';
 import pago from '@libs/shared/theme/assets/json/250101/pago-formdatos.json';
-
-import { Tramite250101State, Tramite250101Store } from '../../estados/tramite250101.store';
-import { Tramite250101Query } from '../../estados/tramite250101.query';
 /**
  * Componente encargado de gestionar el pago de derechos dentro del trámite 221602.
  * Permite al usuario ingresar los datos correspondientes al pago de derechos, como clave, dependencia, banco,
@@ -94,6 +94,12 @@ export class PagoDeDerechos250101Component implements OnInit, OnDestroy {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente. Inicializa las dependencias necesarias y prepara el formulario reactivo.
    * 
    * @param fb - FormBuilder utilizado para crear el formulario reactivo.
@@ -103,7 +109,8 @@ export class PagoDeDerechos250101Component implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite250101Store: Tramite250101Store,
-    private tramite250101Query: Tramite250101Query
+    private tramite250101Query: Tramite250101Query,
+    private consultaioQuery: ConsultaioQuery
   ) { // Constructor que inyecta las dependencias necesarias
     }
 
@@ -113,7 +120,46 @@ export class PagoDeDerechos250101Component implements OnInit, OnDestroy {
    * Inicializa el formulario reactivo con los valores actuales de la solicitud.
    */
   ngOnInit(): void {
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe((seccionState) => {
+      this.esFormularioSoloLectura = seccionState.readonly;
+      if(!this.pagoDerechosForm) {
+        this.inicializarFormulario();
+      }
+      this.inicializarEstadoFormulario();
+    });
+  }
+
+
+  /**
+   * Determina si se debe cargar un formulario nuevo o uno existente.  
+   * Ejecuta la lógica correspondiente según el estado del componente.
+   */
+  inicializarEstadoFormulario(): void {
+    if (!this.pagoDerechosForm) {return}
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+       this.pagoDerechosForm.enable();
+       this.pagoDerechosForm.get('clave')?.disable();
+       this.pagoDerechosForm.get('dependencia')?.disable();
+       this.pagoDerechosForm.get('importe')?.disable()
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+public guardarDatosFormulario(): void {
+    if (!this.pagoDerechosForm) {return}
     this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.pagoDerechosForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.pagoDerechosForm.enable();
+    } 
   }
 
   /**

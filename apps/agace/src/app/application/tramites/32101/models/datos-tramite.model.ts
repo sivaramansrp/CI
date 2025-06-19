@@ -1,3 +1,5 @@
+import { Catalogo } from "@libs/shared/data-access-user/src";
+
 /**
  * Representa una lista de trámites.
  * 
@@ -79,4 +81,49 @@ export interface DatosDeLaTabla {
   formaAdquisicion: string;
   valorEnPesos: number;
   comprobanteDePago: string;
+}
+
+export interface RespuestaConsulta {
+  /**
+   * Indica si la consulta fue exitosa.
+   * @type {boolean}
+   */
+  success: boolean;
+
+  /**
+   * Datos resultantes de la consulta.
+   * @type {ConsultaDatos}
+   */
+  datos: ConsultaDatos;
+
+  /**
+   * Mensaje de la respuesta.
+   * @type {string}
+   */
+  message: string;
+}
+
+export interface ConsultaDatos {
+  /**
+   * Información sobre exención de impuestos.
+   * @type {TecnicaForm}
+   */
+  solicitudFormulario: SolicitudState;
+}
+
+export interface SolicitudState {
+  tipoDeInversion?: Catalogo[];
+  valorEnPesos?: number;
+  descripcionGeneral?: string;
+  listaDeDocumentos?: string;
+  manifiesto1?: string;
+  manifiesto2?: string;
+  manifiesto3?: string;
+  claveDeReferencia?: number;
+  cadenaDeLaDependencia?: string;
+  numeroDeOperacion?: number;
+  banco?: Catalogo[] | null;
+  llaveDePago?: number;
+  fechaInicialInput?: string;
+  importeDePago?: number;
 }
