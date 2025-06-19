@@ -20,9 +20,10 @@
         @switch (indice) { @case (1) {
         <solicitante></solicitante>
         } @case (2) {
+           @if(esDatosRespuesta){
           <app-busqueda-folio *ngIf="mostrarBusqueda"></app-busqueda-folio>
         <app-cancelacion-de-certificados [class.hide]="mostrarBusqueda"></app-cancelacion-de-certificados>
-        } }
+        }} }
       </ng-container>
     </div>
   </div>

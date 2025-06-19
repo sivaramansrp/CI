@@ -9,13 +9,20 @@
 
 import { HttpClient } from '@angular/common/http';
 
-import { Component, Input } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
+
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 
 import {
   Catalogo,
@@ -24,20 +31,15 @@ import {
   SeccionLibStore,
 } from '@ng-mf/data-access-user';
 
-import { Subject } from 'rxjs';
-import { delay } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
-import { tap } from 'rxjs';
+import { REG_X } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
-import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
-import { TextilesState } from '../../estados/elegibilidad-de-textiles.store';
-
+import {
+  ElegibilidadDeTextilesStore,
+  TextilesState,
+} from '../../estados/elegibilidad-de-textiles.store';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
-
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 
-import { REG_X } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
 /**
  * @component ImportadorEnDestinoComponent

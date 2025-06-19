@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+
+import { Component, EventEmitter, Output } from '@angular/core';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { Tramite240114Store } from '../../estados/tramite240114Store.store';
-
 /**
  * @title Datos de la Mercancía Contenedora
  * @description Componente contenedor encargado de recibir los datos de mercancía y actualizar el estado global del trámite.
@@ -17,6 +17,8 @@ import { Tramite240114Store } from '../../estados/tramite240114Store.store';
   templateUrl: './datos-mercancia-contenedora.component.html',
 })
 export class DatosMercanciaContenedoraComponent {
+  @Output() cerrar = new EventEmitter<void>();
+
   /**
    * Constructor del componente.
    *
@@ -36,5 +38,6 @@ export class DatosMercanciaContenedoraComponent {
    */
   updateMercanciaDetalle(event: MercanciaDetalle[]): void {
     this.tramiteStore.updateMercanciaTablaDatos(event);
+    this.cerrar.emit();
   }
 }
