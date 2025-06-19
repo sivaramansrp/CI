@@ -36,8 +36,11 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   public consultaState!: ConsultaioState;
 
-    /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
-    public esDatosRespuesta: boolean = false;
+/**
+   * @description Constructor del componente.
+   * Inicializa el componente y establece el índice de la pestaña seleccionada.
+   */
+  formularioDeshabilitado: boolean = false;
 
    /**
    * A `Subject` used as a notifier to signal the destruction of the component.
@@ -86,10 +89,10 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
         map((seccionState) => {
           this.consultaState = seccionState;
           if (this.consultaState.update) {
-            this.esDatosRespuesta = false;
+            this.formularioDeshabilitado = false;
             this.guardarDatosFormulario();
           } else if (this.consultaState.readonly) {
-            this.esDatosRespuesta = true;
+            this.formularioDeshabilitado = true;
           }
         })
       )

@@ -1,4 +1,4 @@
-import { Component, OnDestroy,OnInit } from '@angular/core';
+import { Component, Input, OnDestroy,OnInit } from '@angular/core';
 import {
   Destinatario,
   Fabricante,
@@ -73,13 +73,13 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS; 
 
-   /**
-    * Observable que indica si el formulario está en modo solo lectura.
-    * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.
-    *
-    * @type {Observable<boolean>}
-    */
-   esFormularioSoloLectura!: Observable<boolean>;
+  /**
+   * @property {boolean} formularioDeshabilitado
+   * @description
+   * Indica si el formulario está deshabilitado. Por defecto es `false`.
+   */
+  @Input()
+  formularioDeshabilitado: boolean = false;
 
   /**
    * @constructor
@@ -125,16 +125,6 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
          .subscribe((data) => {
            this.facturadorTablaDatos = data;
          });
-
-         this.esFormularioSoloLectura = this.consultaQuery.selectConsultaioState$
-    .pipe(
-      map((seccionState) => {
-        if(!seccionState.create && seccionState.procedureId === '260201') {
-          return seccionState.readonly;
-        } 
-        return false;
-      })
-    );
   }
 
   /**
