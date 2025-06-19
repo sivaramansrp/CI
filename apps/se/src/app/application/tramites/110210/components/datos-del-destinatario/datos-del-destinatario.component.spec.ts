@@ -52,44 +52,43 @@ describe('DatosDelDestinatarioComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
+    it('debe crear el componente', () => {
+      expect(component).toBeTruthy();
+    });
+
+    it('debe inicializar los controles del formulario', () => {
+      expect(component.solicitudForm.contains('nombres')).toBe(true);
+      expect(component.solicitudForm.contains('primerApellido')).toBe(true);
+      expect(component.solicitudForm.contains('segundoApellido')).toBe(true);
+      expect(component.solicitudForm.contains('numeroRegistroFiscal')).toBe(true);
+      expect(component.solicitudForm.contains('razonSocial')).toBe(true);
+    });
+
+    it('debe establecer valores del store y sobrescribir con mockData', () => {
+      expect(component.solicitudForm.get('nombres')?.value).toBe('Juan'); 
+      expect(component.solicitudForm.get('primerApellido')?.value).toBe('Pérez');
+      expect(component.solicitudForm.get('segundoApellido')?.value).toBe('García');
+      expect(component.solicitudForm.get('numeroRegistroFiscal')?.value).toBe('RFC123456');
+      expect(component.solicitudForm.get('razonSocial')?.value).toBe('Empresa S.A. de C.V.');
+    });
+
+    it('debe establecer los valores del formulario desde mockData', () => {
+      component.setFormValues();
+      expect(component.solicitudForm.get('nombres')?.value).toBe(mockData.nombres);
+      expect(component.solicitudForm.get('primerApellido')?.value).toBe(mockData.primerApellido);
+      expect(component.solicitudForm.get('segundoApellido')?.value).toBe(mockData.segundoApellido);
+      expect(component.solicitudForm.get('numeroRegistroFiscal')?.value).toBe(mockData.numeroRegistroFiscal);
+      expect(component.solicitudForm.get('razonSocial')?.value).toBe(mockData.razonSocial);
+    });
+
+    it('debe actualizar el store con los valores actuales del formulario', () => {
+      component.setFormValues();
+      component['updateStore']();
+
+      expect(mockStore.setNombres).toHaveBeenCalledWith(mockData.nombres);
+      expect(mockStore.setPrimerApellido).toHaveBeenCalledWith(mockData.primerApellido);
+      expect(mockStore.setSegundoApellido).toHaveBeenCalledWith(mockData.segundoApellido);
+      expect(mockStore.setNumeroRegistroFiscal).toHaveBeenCalledWith(mockData.numeroRegistroFiscal);
+      expect(mockStore.setRazonSocial).toHaveBeenCalledWith(mockData.razonSocial);
+    });
   });
-
-  it('should initialize form controls', () => {
-    expect(component.solicitudForm.contains('nombres')).toBe(true);
-    expect(component.solicitudForm.contains('primerApellido')).toBe(true);
-    expect(component.solicitudForm.contains('segundoApellido')).toBe(true);
-    expect(component.solicitudForm.contains('numeroRegistroFiscal')).toBe(true);
-    expect(component.solicitudForm.contains('razonSocial')).toBe(true);
-  });
-
-it('should patch values from store and override with mockData', () => {
-  expect(component.solicitudForm.get('nombres')?.value).toBe('Juan'); 
-  expect(component.solicitudForm.get('primerApellido')?.value).toBe('Pérez');
-  expect(component.solicitudForm.get('segundoApellido')?.value).toBe('García');
-  expect(component.solicitudForm.get('numeroRegistroFiscal')?.value).toBe('RFC123456');
-  expect(component.solicitudForm.get('razonSocial')?.value).toBe('Empresa S.A. de C.V.');
-});
-
-
-  it('should set values from mockData', () => {
-    component.setFormValues();
-    expect(component.solicitudForm.get('nombres')?.value).toBe(mockData.nombres);
-    expect(component.solicitudForm.get('primerApellido')?.value).toBe(mockData.primerApellido);
-    expect(component.solicitudForm.get('segundoApellido')?.value).toBe(mockData.segundoApellido);
-    expect(component.solicitudForm.get('numeroRegistroFiscal')?.value).toBe(mockData.numeroRegistroFiscal);
-    expect(component.solicitudForm.get('razonSocial')?.value).toBe(mockData.razonSocial);
-  });
-
-  it('should update store with current form values', () => {
-    component.setFormValues();
-    component['updateStore']();
-
-    expect(mockStore.setNombres).toHaveBeenCalledWith(mockData.nombres);
-    expect(mockStore.setPrimerApellido).toHaveBeenCalledWith(mockData.primerApellido);
-    expect(mockStore.setSegundoApellido).toHaveBeenCalledWith(mockData.segundoApellido);
-    expect(mockStore.setNumeroRegistroFiscal).toHaveBeenCalledWith(mockData.numeroRegistroFiscal);
-    expect(mockStore.setRazonSocial).toHaveBeenCalledWith(mockData.razonSocial);
-  });
-});

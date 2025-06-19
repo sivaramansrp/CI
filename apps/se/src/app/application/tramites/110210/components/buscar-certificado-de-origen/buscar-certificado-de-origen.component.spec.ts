@@ -59,11 +59,11 @@ describe('BuscarCertificadoDeOrigenComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values from store', () => {
+  it('debe inicializar el formulario con los valores por defecto del store', () => {
     expect(component.buscarCertificadoDeOrigenFrom).toBeDefined();
     expect(component.buscarCertificadoDeOrigenFrom.get('cveRegistroProductor')?.value).toBe('123456789012');
     expect(component.buscarCertificadoDeOrigenFrom.get('solicitud.idSolicitud')?.value).toBeNull();
@@ -72,52 +72,52 @@ describe('BuscarCertificadoDeOrigenComponent', () => {
     expect(component.buscarCertificadoDeOrigenFrom.get('tratadoAcuerdoClave')?.value).toBe('');
   });
 
-  it('should return true if control is invalid', () => {
+  it('debe regresar true si el control es inválido', () => {
     const control = component.buscarCertificadoDeOrigenFrom.get('cveRegistroProductor');
     control?.markAsTouched();
     control?.setValue('');
     expect(component.esInvalido('cveRegistroProductor')).toBe(true);
   });
 
-  it('should return false if control is valid', () => {
+  it('debe regresar false si el control es válido', () => {
     const control = component.buscarCertificadoDeOrigenFrom.get('cveRegistroProductor');
     control?.markAsTouched();
     control?.setValue('validValue');
     expect(component.esInvalido('cveRegistroProductor')).toBe(false);
   });
 
-  it('should enable cveRegistroProductor if idSolicitud is null', () => {
+  it('debe habilitar cveRegistroProductor si idSolicitud es null', () => {
     component.buscarCertificadoDeOrigenFrom.get('solicitud.idSolicitud')?.setValue(null);
     component.actualizaGridComercializadoresProductos();
     expect(component.buscarCertificadoDeOrigenFrom.get('cveRegistroProductor')?.enabled).toBe(true);
   });
 
-  it('should disable cveRegistroProductor if idSolicitud is not null', () => {
+  it('debe deshabilitar cveRegistroProductor si idSolicitud no es null', () => {
     component.buscarCertificadoDeOrigenFrom.get('solicitud.idSolicitud')?.setValue(999);
     component.actualizaGridComercializadoresProductos();
     expect(component.buscarCertificadoDeOrigenFrom.get('cveRegistroProductor')?.disabled).toBe(true);
   });
 
-  it('should call setValoresStore with correct values', () => {
+  it('debe llamar setValoresStore con los valores correctos', () => {
     const form = component.buscarCertificadoDeOrigenFrom;
     form.get('cveRegistroProductor')?.setValue('XYZ123');
     component.setValoresStore(form, 'cveRegistroProductor', 'setCveRegistroProductor');
     expect(tramite110210StoreMock.setCveRegistroProductor).toHaveBeenCalledWith('XYZ123');
   });
 
-  it('should call getValoresStore and patch the form', () => {
+  it('debe llamar getValoresStore y actualizar el formulario', () => {
     const spy = jest.spyOn(component, 'getValoresStore');
     component.ngOnInit();
     expect(spy).toHaveBeenCalled();
   });
 
-  it('should fetch paisBloque and tratadoAcuerdo data on init', () => {
+  it('debe obtener datos de paisBloque y tratadoAcuerdo al inicializar', () => {
     component.ngOnInit();
     expect(serviceMock.getPaisBloque).toHaveBeenCalled();
     expect(serviceMock.getTratadoAcuerdo).toHaveBeenCalled();
   });
 
-  it('should unsubscribe from observables on destroy', () => {
+  it('debe desuscribirse de los observables al destruir el componente', () => {
     const destroyed$ = (component as any).destroyed$;
     const nextSpy = jest.spyOn(destroyed$, 'next');
     const completeSpy = jest.spyOn(destroyed$, 'complete');

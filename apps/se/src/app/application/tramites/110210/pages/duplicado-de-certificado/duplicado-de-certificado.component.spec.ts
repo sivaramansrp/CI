@@ -19,16 +19,16 @@ describe('DuplicadoDeCertificadoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should have the correct selector', () => {
+  it('debería tener el selector correcto', () => {
     const compiled = fixture.nativeElement;
     expect(compiled.querySelector('app-duplicado-de-certificado')).toBeDefined();
   });
 
-  it('should render the template', () => {
+  it('debería renderizar la plantilla', () => {
     const compiled = fixture.nativeElement;
     expect(compiled).toBeTruthy();
   });

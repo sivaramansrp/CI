@@ -32,22 +32,22 @@ describe('DomicilioTablaComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it('debería crearse', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize with default values', () => {
+  it('debería inicializarse con valores por defecto', () => {
     expect(component.configuracionTabla).toEqual(DOMICILIO_TABLA_COLUMNAS);
     expect(component.seleccionTabla).toEqual(TablaSeleccion.UNDEFINED);
   });
 
-  it('should fetch data on init', () => {
+  it('debería obtener datos al inicializar', () => {
     component.ngOnInit();
     expect(service.getData).toHaveBeenCalled();
     expect(component.datosTabla).toEqual([['value']]);
   });
 
-  it('should complete destroyed$ subject on destroy', () => {
+  it('debería completar el subject destroyed$ al destruirse', () => {
     const NEXT_SPY = jest.spyOn(component['destroyed$'], 'next');
     const COMPLETE_SPY = jest.spyOn(component['destroyed$'], 'complete');
     component.ngOnDestroy();

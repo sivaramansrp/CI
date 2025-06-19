@@ -65,18 +65,18 @@ describe('DomicilioDelDestinatarioComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debería crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form on ngOnInit and set values from mockData', () => {
+  it('debería inicializar el formulario en ngOnInit y establecer valores desde mockData', () => {
     expect(component.solicitudForm).toBeDefined();
     expect(component.solicitudForm.get('ciudad')?.value).toBe('Mock City');
     expect(component.solicitudForm.get('calle')?.value).toBe('Mock Street');
     expect(component.solicitudForm.get('numeroLetra')?.value).toBe('123C');
   });
 
-  it('should manually set form values using setFormValues()', () => {
+  it('debería establecer manualmente los valores del formulario usando setFormValues()', () => {
     component.setFormValues();
 
     expect(component.solicitudForm.get('ciudad')?.value).toBe('Mock City');
@@ -85,29 +85,29 @@ describe('DomicilioDelDestinatarioComponent', () => {
     expect(component.solicitudForm.get('correoElectronico')?.value).toBe('mock@example.com');
   });
 
-  it('should update the store with form values in updateStore()', () => {
+  it('debería actualizar el store con los valores del formulario en updateStore()', () => {
     component.solicitudForm.patchValue({
-      ciudad: 'Updated City',
-      calle: 'Updated Street',
+      ciudad: 'Ciudad Actualizada',
+      calle: 'Calle Actualizada',
       numeroLetra: '456B',
       telefono: '9876543210',
       fax: '0123456789',
-      correoElectronico: 'updated@example.com',
-      observaciones: 'Updated Observations',
+      correoElectronico: 'actualizado@example.com',
+      observaciones: 'Observaciones Actualizadas',
     });
 
     component.updateStore();
 
-    expect(tramite110210StoreMock.setCiudad).toHaveBeenCalledWith('Updated City');
-    expect(tramite110210StoreMock.setCalle).toHaveBeenCalledWith('Updated Street');
+    expect(tramite110210StoreMock.setCiudad).toHaveBeenCalledWith('Ciudad Actualizada');
+    expect(tramite110210StoreMock.setCalle).toHaveBeenCalledWith('Calle Actualizada');
     expect(tramite110210StoreMock.setNumeroLetra).toHaveBeenCalledWith('456B');
     expect(tramite110210StoreMock.setTelefono).toHaveBeenCalledWith('9876543210');
     expect(tramite110210StoreMock.setFax).toHaveBeenCalledWith('0123456789');
-    expect(tramite110210StoreMock.setCorreoElectronico).toHaveBeenCalledWith('updated@example.com');
-    expect(tramite110210StoreMock.setObservaciones).toHaveBeenCalledWith('Updated Observations');
+    expect(tramite110210StoreMock.setCorreoElectronico).toHaveBeenCalledWith('actualizado@example.com');
+    expect(tramite110210StoreMock.setObservaciones).toHaveBeenCalledWith('Observaciones Actualizadas');
   });
 
-  it('should unsubscribe from destroy$ on ngOnDestroy()', () => {
+  it('debería desuscribirse de destroy$ en ngOnDestroy()', () => {
     const destroySpy = jest.spyOn(component['destroy$'], 'next');
     const completeSpy = jest.spyOn(component['destroy$'], 'complete');
     component.ngOnDestroy();

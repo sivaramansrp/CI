@@ -3,6 +3,7 @@ import { SolicitudPageComponent } from './solicitud-page.component';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
 describe('SolicitudPageComponent', () => {
   let component: SolicitudPageComponent;
   let fixture: ComponentFixture<SolicitudPageComponent>;
@@ -18,7 +19,7 @@ describe('SolicitudPageComponent', () => {
     fixture = TestBed.createComponent(SolicitudPageComponent);
     component = fixture.componentInstance;
 
-    // Mock the WizardComponent
+    // Mock del WizardComponent
     component.wizardComponent = {
       siguiente: jest.fn(),
       atras: jest.fn(),
@@ -34,15 +35,15 @@ describe('SolicitudPageComponent', () => {
     } as unknown as WizardComponent;
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize pasos with PASOS', () => {
+  it('debe inicializar pasos con PASOS', () => {
     expect(component.pasos).toEqual(PASOS);
   });
 
-  it('should initialize datosPasos with correct values', () => {
+  it('debe inicializar datosPasos con los valores correctos', () => {
     expect(component.datosPasos).toEqual({
       nroPasos: PASOS.length,
       indice: component.indice,
@@ -51,29 +52,29 @@ describe('SolicitudPageComponent', () => {
     });
   });
 
-  it('should update the indice when seleccionaTab is called', () => {
+  it('debe actualizar el indice cuando se llama seleccionaTab', () => {
     component.seleccionaTab(3);
     expect(component.indice).toBe(3);
   });
 
-  it('should call wizardComponent.siguiente when getValorIndice is called with accion "cont"', () => {
+  it('debe llamar wizardComponent.siguiente cuando getValorIndice se llama con accion "cont"', () => {
     const accionBoton = { accion: 'cont', valor: 2 };
     component.getValorIndice(accionBoton);
     expect(component.indice).toBe(2);
     expect(component.wizardComponent.siguiente).toHaveBeenCalled();
   });
 
-  it('should call wizardComponent.atras when getValorIndice is called with accion other than "cont"', () => {
+  it('debe llamar wizardComponent.atras cuando getValorIndice se llama con una accion diferente de "cont"', () => {
     const accionBoton = { accion: 'prev', valor: 1 };
     component.getValorIndice(accionBoton);
     expect(component.indice).toBe(1);
     expect(component.wizardComponent.atras).toHaveBeenCalled();
   });
 
-  it('should not update indice or call wizardComponent methods if valor is out of range', () => {
+  it('no debe actualizar indice ni llamar métodos de wizardComponent si valor está fuera de rango', () => {
     const accionBoton = { accion: 'cont', valor: 6 };
     component.getValorIndice(accionBoton);
-    expect(component.indice).toBe(1); // Default value
+    expect(component.indice).toBe(1); // Valor por defecto
     expect(component.wizardComponent.siguiente).not.toHaveBeenCalled();
     expect(component.wizardComponent.atras).not.toHaveBeenCalled();
   });

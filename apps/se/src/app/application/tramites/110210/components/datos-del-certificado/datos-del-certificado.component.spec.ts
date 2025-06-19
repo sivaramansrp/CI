@@ -53,37 +53,36 @@ describe('DatosDelCertificadoComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create the component', () => {
+  it('debe crear el componente', () => {
     expect(component).toBeTruthy();
-  });
+    });
 
-  it('should initialize the form with correct controls', () => {
+    it('debe inicializar el formulario con los controles correctos', () => {
     expect(component.solicitudForm.contains('cveRegistroProductor')).toBe(true);
     expect(component.solicitudForm.contains('fichaExpedicion')).toBe(true);
     expect(component.solicitudForm.contains('fechaVecimiento')).toBe(true);
     expect(component.solicitudForm.contains('tratadoAcuerdoClave')).toBe(true);
     expect(component.solicitudForm.contains('paisBloqueClave')).toBe(true);
-  });
+    });
 
-it('should patch values from store then overwrite with mockData', () => {
-  expect(component.solicitudForm.get('cveRegistroProductor')?.value).toBe('MOCK123');
-  expect(component.solicitudForm.get('fichaExpedicion')?.value).toBe('EXP456');
-  expect(component.solicitudForm.get('fechaVecimiento')?.value).toBe('2025-12-31');
-  expect(component.solicitudForm.get('tratadoAcuerdoClave')?.value).toBe('TAC789');
-  expect(component.solicitudForm.get('paisBloqueClave')?.value).toBe('PB012');
-});
+    it('debe establecer valores del store y luego sobrescribir con mockData', () => {
+    expect(component.solicitudForm.get('cveRegistroProductor')?.value).toBe('MOCK123');
+    expect(component.solicitudForm.get('fichaExpedicion')?.value).toBe('EXP456');
+    expect(component.solicitudForm.get('fechaVecimiento')?.value).toBe('2025-12-31');
+    expect(component.solicitudForm.get('tratadoAcuerdoClave')?.value).toBe('TAC789');
+    expect(component.solicitudForm.get('paisBloqueClave')?.value).toBe('PB012');
+    });
 
-
-  it('should set form values from mockData', () => {
+    it('debe establecer los valores del formulario desde mockData', () => {
     component.setFormValues();
     expect(component.solicitudForm.get('cveRegistroProductor')?.value).toBe('MOCK123');
     expect(component.solicitudForm.get('fichaExpedicion')?.value).toBe('EXP456');
     expect(component.solicitudForm.get('fechaVecimiento')?.value).toBe('2025-12-31');
     expect(component.solicitudForm.get('tratadoAcuerdoClave')?.value).toBe('TAC789');
     expect(component.solicitudForm.get('paisBloqueClave')?.value).toBe('PB012');
-  });
+    });
 
-  it('should update store with form values', () => {
+    it('debe actualizar el store con los valores del formulario', () => {
     component.setFormValues();
     component['updateStore']();
 
@@ -92,5 +91,5 @@ it('should patch values from store then overwrite with mockData', () => {
     expect(mockStore.setFechaVecimiento).toHaveBeenCalledWith('2025-12-31');
     expect(mockStore.setTratadoAcuerdoClave).toHaveBeenCalledWith('TAC789');
     expect(mockStore.setPaisBloqueClave).toHaveBeenCalledWith('PB012');
+    });
   });
-});
