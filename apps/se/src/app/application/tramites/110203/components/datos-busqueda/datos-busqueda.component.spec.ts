@@ -6,6 +6,7 @@ import { Tramite110203Query } from '../../../../estados/queries/tramite110203.qu
 import { Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
 import { of } from 'rxjs';
 import datosBusquedaDropdown from '@libs/shared/theme/assets/json/110203/datos-busqueda.json';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('DatosBusquedaComponent', () => {
   let componente: DatosBusquedaComponent;
@@ -61,7 +62,7 @@ describe('DatosBusquedaComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [DatosBusquedaComponent],
+      imports: [DatosBusquedaComponent,HttpClientTestingModule],
       providers: [
         FormBuilder,
         { provide: Tramite110203Query, useValue: tramite110203QueryMock },
