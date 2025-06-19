@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PasoUnoComponent } from './paso-uno.component';
-
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import { SolicitanteComponent } from '@ng-mf/data-access-user';
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
@@ -14,7 +15,7 @@ describe('PasoUnoComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [PasoUnoComponent],
-      imports:[],
+      imports:[HttpClientTestingModule,SolicitanteComponent],
       providers: [
         { provide: 'SolicitanteService', useValue: mockSolicitanteService },
       ],
