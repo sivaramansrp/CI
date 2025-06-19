@@ -141,7 +141,7 @@ export function createInitialState(): Tramite6403State {
       tipoMercancia: ''
     }
   };
-  };
+  }
 /**
  * Store para gestionar el estado del trámite 6403.
  * 

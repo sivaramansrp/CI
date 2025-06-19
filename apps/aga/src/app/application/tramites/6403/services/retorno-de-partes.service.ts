@@ -1,8 +1,8 @@
-import { CatalogoLista, DatosSolicitante, SolicitudTablaDatos,RespuestaConsulta } from '../models/retorno-de-partes.model';
+import { CatalogoLista, DatosSolicitante, RespuestaConsulta,SolicitudTablaDatos } from '../models/retorno-de-partes.model';
+import { Tramite6403State,Tramite6403Store } from '../estados/tramite6403.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Tramite6403Store,Tramite6403State } from '../estados/tramite6403.store';
 /**
  * Servicio para gestionar las operaciones relacionadas con el aviso de traslado.
  * 
@@ -27,7 +27,7 @@ export class RetornoDePartesService {
      */
   actualizarEstadoFormulario(DATOS: Tramite6403State): void {
   // Guard clause to prevent errors if data is missing
-  if (!DATOS?.solicitudFormulario  || !DATOS?.mercanciaFormulario) {
+  if (!DATOS?.solicitudFormulario || !DATOS?.mercanciaFormulario) {
     // Optionally log or handle the missing data here
     return;
   }

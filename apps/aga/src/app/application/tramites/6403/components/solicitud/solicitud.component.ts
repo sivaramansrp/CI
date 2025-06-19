@@ -1,35 +1,24 @@
-
 import { Catalogo, CatalogoLista, SolicitudTabla, SolicitudTablaDatos } from "../../models/retorno-de-partes.model";
 import {
   CatalogoSelectComponent,
   InputFecha,
   InputFechaComponent,
+  Notificacion,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
   ValidacionesFormularioService
 } from "@libs/shared/data-access-user/src";
+import { Component, ElementRef, OnDestroy, OnInit,ViewChild} from "@angular/core";
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FECHA_CARTAPORTE, FECHA_DESTINO, FECHA_IMPORTACION, FECHA_VENCIMIENTO, TABLA_DE_DATOS, TEXTOS } from "../../constants/retorno-de-partes.enum";
+import { FormBuilder,FormGroup, ReactiveFormsModule, Validators} from "@angular/forms";
+import { ReplaySubject, map, takeUntil } from "rxjs";
+import { Tramite6403State,Tramite6403Store } from "../../estados/tramite6403.store";
 import { CommonModule } from "@angular/common";
-import { Component } from "@angular/core";
-import { ElementRef } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
-import { FormGroup } from "@angular/forms";
 import { Modal } from 'bootstrap';
-import { Notificacion } from '@libs/shared/data-access-user/src';
-import { OnDestroy } from "@angular/core";
-import { OnInit } from "@angular/core";
-import { ReactiveFormsModule } from "@angular/forms";
 import { RetornoDePartesService } from "../../services/retorno-de-partes.service";
-import { Subject } from "rxjs";
 import { Tramite6403Query } from "../../estados/tramite6403.query";
-import { Tramite6403State } from "../../estados/tramite6403.store";
-import { Tramite6403Store } from "../../estados/tramite6403.store";
-import { Validators } from "@angular/forms";
-import { ViewChild } from "@angular/core";
-import { map } from "rxjs";
-import { takeUntil ,ReplaySubject } from "rxjs";
 /**
  * Componente para gestionar el aviso de traslado.
  * 

@@ -1,15 +1,12 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { ReplaySubject, map, takeUntil } from 'rxjs';
+import { Tramite6403State ,Tramite6403Store} from '../../estados/tramite6403.store';
 import { CommonModule } from '@angular/common';
+import { RetornoDePartesService } from '../../services/retorno-de-partes.service';
 import { SolicitanteComponent } from '../../components/solicitante/solicitante.component';
 import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
-import { Subject } from 'rxjs';
 import { Tramite6403Query } from '../../estados/tramite6403.query';
-import { Tramite6403State } from '../../estados/tramite6403.store';
-import { Tramite6403Store } from '../../estados/tramite6403.store';
-import { map } from 'rxjs';
-import { takeUntil, ReplaySubject } from 'rxjs';
-import { RetornoDePartesService } from '../../services/retorno-de-partes.service';
 
 /**
  * Componente para gestionar el paso uno del trámite 6403.
@@ -72,7 +69,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     public store: Tramite6403Store,
     public tramiteQuery: Tramite6403Query,
     private consultaQuery: ConsultaioQuery,
-    private reterno: RetornoDePartesService) {
+    public reterno: RetornoDePartesService) {
     // El constructor se utiliza para la inyección de dependencias.
   }
 
