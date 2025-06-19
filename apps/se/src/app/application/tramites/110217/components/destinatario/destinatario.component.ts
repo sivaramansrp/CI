@@ -175,15 +175,6 @@ export class DestinatarioComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Maneja el envío del formulario.
-   * 
-   * Si el formulario es válido, se implementará la lógica para manejar el envío.
-   */
-  onSubmit(): void {
-   
-  }
-
-  /**
    * Valida un campo del formulario.
    * 
    * @param {FormGroup} form - El formulario reactivo.

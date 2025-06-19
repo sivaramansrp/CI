@@ -385,7 +385,7 @@ optionsTipoFactura!: Catalogo[];
    * Maneja el evento de clic para habilitar el formulario de edición.
    * @param row Fila seleccionada.
    */
-  manejarClic(row: unknown) {
+  manejarClic(row: unknown): void {
     this.esFormulario = true;
   }
   /**
@@ -498,7 +498,7 @@ optionsTipoFactura!: Catalogo[];
    * Si el valor está presente, establece `hayMercanciasDisponibles` en `true`; de lo contrario, lo establece en `false`.
    * Además, actualiza los catálogos necesarios llamando a los métodos `getTratado`, `getPais`, `getUMC`, `getUnidadMedida` y `getTipoFactura`.
    */
-  buscarMercancias() {
+  buscarMercancias():void {
     if (this.registroForm.get('validacionForm.tratado')?.value === 0) {
       this.hayMercanciasDisponibles = false;
     } else {
@@ -513,7 +513,7 @@ optionsTipoFactura!: Catalogo[];
   /**
    * Agrega una mercancía al formulario.
    */
-  agregar() {
+  agregar():void {
     this.getTratado();
     this.getPais();
     this.getUMC();
@@ -546,7 +546,7 @@ optionsTipoFactura!: Catalogo[];
   /**
    * Modifica una mercancía existente.
    */
-  modificar() {
+  modificar():void {
     this.esFormulario = true;
     this.esMercanciaEnEdicion = false;
 
@@ -568,14 +568,14 @@ optionsTipoFactura!: Catalogo[];
    * Activa el formulario para cargar un archivo.
    * Cambia el estado de la variable `cargarArchivo` a `true` para mostrar el formulario de carga de archivos.
    */
-  cargaArchivo() {
+  cargaArchivo():void {
     this.cargarArchivo = true;
   }
   /**
    * Muestra errores en el formulario y desactiva la carga de archivos.
    * Cambia el estado de las variables `mostrarErrores` a `true` y `cargarArchivo` a `false`.
    */
-  darError() {
+  darError():void {
     this.mostrarErrores = true;
     this.cargarArchivo = false;
   }
@@ -657,7 +657,7 @@ optionsTipoFactura!: Catalogo[];
    * Si no se selecciona ningún archivo, asigna el mensaje "No se eligió ningún archivo".
    * @param event Evento que contiene la información del archivo seleccionado.
    */
-  alSeleccionarArchivo(event: any) {
+  alSeleccionarArchivo(event: any):void {
     const FILE = event.target.files[0];
     this.nombreArchivo = FILE ? FILE.name : 'No se eligió ningún archivo';
   }

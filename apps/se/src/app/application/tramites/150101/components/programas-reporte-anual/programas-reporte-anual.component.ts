@@ -13,7 +13,6 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { ValidacionesFormularioService } from '@ng-mf/data-access-user';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 /**
  * @component

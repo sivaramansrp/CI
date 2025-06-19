@@ -16,6 +16,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { AUtorizacionProsecQuery } from '../../queries/autorizacion-prosec.query';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
@@ -25,7 +26,6 @@ import { ProsecService } from '../../services/prosec.service';
 import { SeccionLibQuery } from '@ng-mf/data-access-user';
 import { SeccionLibState } from '@ng-mf/data-access-user';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
-import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 import { TEXTO } from '../../constantes/prosec.module';
 import { TablaSeleccion } from '@ng-mf/data-access-user';
 

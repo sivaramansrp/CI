@@ -1,4 +1,3 @@
-import { ListaDeDatosFinal, Plantas, SectoresYMercancias, createDatosState } from '../models/prosec.module';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
@@ -42,7 +41,7 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
      * Updates the state with the information of sectors and goods.
      * @param sectoresYMercancias Data of sectors and goods.
      */
-    public setModalidad(modalidad: string) {
+    public setModalidad(modalidad: string):void {
         this.update((state) => ({
             ...state,
             modalidad, // Wraps the data in an array
@@ -53,49 +52,49 @@ export class AutorizacionProsecStore extends Store<ProsecState> {
      * Updates the state with the information of plants.
      * @param Plantas Data of plants.
      */
-    public setEstado(Estado: Catalogo[]) {
+    public setEstado(Estado: Catalogo[]):void {
         this.update((state) => ({
             ...state,
             Estado, // Wraps the data in an array
         }));
     }
 
-    public setRepresentacionFederal(RepresentacionFederal: Catalogo[]) {
+    public setRepresentacionFederal(RepresentacionFederal: Catalogo[]):void {
         this.update((state) => ({
             ...state,
             RepresentacionFederal,
         }));
     }
 
-    public setActividadProductiva(ActividadProductiva: Catalogo[]) {
+    public setActividadProductiva(ActividadProductiva: Catalogo[]):void {
         this.update((state) => ({
             ...state,
             ActividadProductiva,
         }));
     }
 
-    public setSector(Sector: Catalogo[]) {
+    public setSector(Sector: Catalogo[]):void {
         this.update((state) => ({
             ...state,
             Sector,
         }));
     }
 
-    public setFraccionArancelaria(Fraccion_arancelaria: string) {
+    public setFraccionArancelaria(Fraccion_arancelaria: string):void {
         this.update((state) => ({
             ...state,
             Fraccion_arancelaria,
         }));
     }
 
-    public setcontribuyentes(contribuyentes: string) {
+    public setcontribuyentes(contribuyentes: string):void {
         this.update((state) => ({
             ...state,
             contribuyentes,
         }));
     }
 
-    public setFormaValida(formaValida: Catalogo[]){
+    public setFormaValida(formaValida: Catalogo[]):void {
         this.update((state) => ({
             ...state,
             formaValida,

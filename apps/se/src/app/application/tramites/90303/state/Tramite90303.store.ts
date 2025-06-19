@@ -35,7 +35,7 @@ export class Tramite90303Store extends Store<Solicitud90303State> {
   /**
    * Limpia los datos de la solicitud
    */
-  public limpiarSolicitud() {
+  public limpiarSolicitud():void {
     this.reset();
   }
 }

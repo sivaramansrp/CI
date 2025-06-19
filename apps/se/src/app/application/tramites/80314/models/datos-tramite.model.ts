@@ -80,3 +80,9 @@ export interface DatosDeLaTabla {
   folioDePrograma: string;
   tipoDePrograma: string;
 }
+
+export interface RespuestTablaDatos {
+  code: number;
+  data: DatosDeLaTabla[];
+  message: string;
+}

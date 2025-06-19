@@ -1,6 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
-import { Injectable } from '@angular/core';
 import { ExpedirMonto } from '../../tramites/120202/models/expedicion-certificados-asignacion.model';
+import { Injectable } from '@angular/core';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 120202

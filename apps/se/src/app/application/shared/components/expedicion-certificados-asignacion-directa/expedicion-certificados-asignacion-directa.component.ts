@@ -380,7 +380,6 @@ export class ExpedicionCertificadosAsignacionDirectaComponent implements OnInit,
   buscar(cveAniosAutorizacion: string, numFolioAsignacionAux: string): void {
     if (cveAniosAutorizacion === '-1' || numFolioAsignacionAux.length <= 0 || numFolioAsignacionAux === null) {
       this.mostrarError.emit(true);
-      return;
     } else {
       this.mostrarError.emit(false);
       this.asignacionOficioNumeroForm.reset({ cveAniosAutorizacion: '-1', numFolioAsignacionAux: '' });

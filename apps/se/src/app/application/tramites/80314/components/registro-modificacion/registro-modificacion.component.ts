@@ -128,7 +128,7 @@ export class RegistroModificacionComponent implements OnInit, OnDestroy {
       .getTablaData('tablaLista')
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((resp) => {
-        this.datosDelContenedor = resp.data.map((item: any) => ({
+        this.datosDelContenedor = resp.data.map((item: DatosDeLaTabla) => ({
           id: item.id,
           folioDePrograma: item.folioDePrograma,
           tipoDePrograma: item.tipoDePrograma,

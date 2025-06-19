@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { map, takeUntil } from 'rxjs';
 import { Solicitud150101Query } from '../../estados/solicitud150101.query';
 import { Solicitud150101State } from '../../estados/solicitud150101.store';
 import { Solicitud150101Store } from '../../estados/solicitud150101.store';
 import { SolicitudService } from '../../services/registro-solicitud-anual.service';
 import { Subject } from 'rxjs';
-import { map, takeUntil } from 'rxjs';
 
 /**
  * @component
