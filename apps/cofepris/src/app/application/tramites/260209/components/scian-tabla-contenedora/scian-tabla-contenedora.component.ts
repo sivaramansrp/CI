@@ -6,6 +6,18 @@ import { TablaScianConfig } from '../../../../shared/models/datos-solicitud.mode
 import { Tramite260209Store } from '../../estados/tramite260209Store.store';
 
 
+/**
+ * Componente contenedor para la tabla SCIAN.
+ * 
+ * Este componente sirve como contenedor para el componente `ScianTablaComponent`,
+ * permitiendo su integración y reutilización dentro de otras vistas o módulos.
+ * 
+ * @selector app-scian-tabla-contenedora
+ * @standalone true
+ * @imports CommonModule, ScianTablaComponent
+ * @templateUrl ./scian-tabla-contenedora.component.html
+ * @styleUrl ./scian-tabla-contenedora.component.scss
+ */
 @Component({
   selector: 'app-scian-tabla-contenedora',
   standalone: true,
