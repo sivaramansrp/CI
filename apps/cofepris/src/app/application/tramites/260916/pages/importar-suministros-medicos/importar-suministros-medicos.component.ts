@@ -5,7 +5,7 @@
 import { Component, ViewChild } from '@angular/core';
 import { PERMISO_MAQUILA } from '../../constantes/importar-suministros-medicos.enum';
 
-import { DatosPasos, ListaPasosWizard, WizardComponent } from '@ng-mf/data-access-user';
+import { DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
 /**
  * Representa una acción que se puede ejecutar mediante un botón.
  * 
