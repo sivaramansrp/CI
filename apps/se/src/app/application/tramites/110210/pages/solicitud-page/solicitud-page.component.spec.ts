@@ -27,6 +27,13 @@ describe('SolicitudPageComponent', () => {
     fixture.detectChanges();
   });
 
+  beforeEach(() => {
+    component.wizardComponent = {
+      siguiente: jest.fn(),
+      atras: jest.fn(),
+    } as unknown as WizardComponent;
+  });
+
   it('should create the component', () => {
     expect(component).toBeTruthy();
   });
