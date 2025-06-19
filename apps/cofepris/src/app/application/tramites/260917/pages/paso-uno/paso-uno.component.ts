@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
-import { Subject, map, takeUntil } from 'rxjs';
+import { Component, OnInit } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ConsultaioState } from '@ng-mf/data-access-user';
+
+import { Subject, forkJoin, map, takeUntil } from 'rxjs';
 import { Solocitud260917Service } from '../../services/service260917.service';
 /**
  * Componente que representa el paso uno del formulario o flujo de trabajo.
@@ -9,7 +11,7 @@ import { Solocitud260917Service } from '../../services/service260917.service';
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
 })
-export class PasoUnoComponent {
+export class PasoUnoComponent implements OnInit {
 
    /**
    * Indica si se están mostrando los datos de respuesta.
@@ -66,18 +68,18 @@ export class PasoUnoComponent {
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
-  guardarDatosFormulario(): void {
-    this.solocitud260917Service
-      .getRegistroTomaMuestrasMercanciasData().pipe(
-        takeUntil(this.destroyNotifier$)
-      )
-      .subscribe((resp) => {
-        if(resp){
-        this.esDatosRespuesta = true;
-        this.solocitud260917Service.actualizarEstadoFormulario(resp);
-        }
-      });
-  }
+  // guardarDatosFormulario(): void {
+  //   this.solocitud260917Service
+  //     .getRegistroTomaMuestrasMercanciasData().pipe(
+  //       takeUntil(this.destroyNotifier$)
+  //     )
+  //     .subscribe((resp) => {
+  //       if(resp){
+  //       this.esDatosRespuesta = true;
+  //       this.solocitud260917Service.actualizarEstadoFormulario(resp);
+  //       }
+  //     });
+  // }
 
    /**
     * Selecciona una pestaña estableciendo su índice.
@@ -86,4 +88,26 @@ export class PasoUnoComponent {
    seleccionaTab(i: number): void {
      this.indice = i;
    }
+
+      /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+
+  guardarDatosFormulario(): void {
+    forkJoin({
+      registro: this.solocitud260917Service.getRegistroTomaMuestrasMercanciasData(),
+      permiso: this.solocitud260917Service.getPagoDerechos()
+    })
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe(({ registro, permiso }) => {
+        if (registro) {
+          this.esDatosRespuesta = true;
+          this.solocitud260917Service.actualizarEstadoFormulario(registro);
+        }
+        if (permiso) {
+          this.solocitud260917Service.actualizarPagoDerechosFormulario(permiso);
+        }
+      });
+  }
 }
