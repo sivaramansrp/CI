@@ -6,39 +6,46 @@
  * @import { Component } from '@angular/core';
  * @import { FormBuilder, FormGroup, Validators } from '@angular/forms';
  */
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ConstanciaTramiteConfiguracion } from '@libs/shared/data-access-user/src/core/models/shared/acuse-y-resoluciones-folio-tramite.model';
-import { OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+} from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { VALIDO } from '../../constantes/elegibilidad-de-textiles.enums';
-import { Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 
 import radioOptionsData from '@libs/shared/theme/assets/json/120301/mostrar.json';
+
+import { ConstanciaTramiteConfiguracion } from '@libs/shared/data-access-user/src/core/models/shared/acuse-y-resoluciones-folio-tramite.model';
 
 import {
   Catalogo,
   CatalogoSelectComponent,
   ConfiguracionColumna,
   InputRadioComponent,
+  SeccionLibQuery,
+  SeccionLibState,
+  SeccionLibStore,
   TablaDinamicaComponent,
+  TituloComponent,
 } from '@ng-mf/data-access-user';
-import { SeccionLibQuery } from '@ng-mf/data-access-user';
-import { SeccionLibState } from '@ng-mf/data-access-user';
-import { SeccionLibStore } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
 
-import { Subject } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+import { VALIDO } from '../../constantes/elegibilidad-de-textiles.enums';
 
-import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
-import { TextilesState } from '../../estados/elegibilidad-de-textiles.store';
+import {
+  ElegibilidadDeTextilesStore,
+  TextilesState,
+} from '../../estados/elegibilidad-de-textiles.store';
 
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
-
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 
 /**

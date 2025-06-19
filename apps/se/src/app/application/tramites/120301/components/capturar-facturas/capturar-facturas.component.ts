@@ -1,40 +1,43 @@
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+
 import { HttpClient } from '@angular/common/http';
-import { HttpErrorResponse } from '@angular/common/http';
 
-import { Component, Input } from '@angular/core';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
-import { Validators } from '@angular/forms';
-
-import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
-import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { InputFecha } from '@ng-mf/data-access-user';
-import { InputFechaComponent } from '@ng-mf/data-access-user';
-import { SeccionLibQuery } from '@ng-mf/data-access-user';
-import { SeccionLibState } from '@ng-mf/data-access-user';
-import { SeccionLibStore } from '@ng-mf/data-access-user';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-
-import { Subject } from 'rxjs';
-import { delay } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
-import { tap } from 'rxjs';
+import {
+  Catalogo,
+  CatalogoSelectComponent,
+  ConfiguracionColumna,
+  InputFecha,
+  InputFechaComponent,
+  SeccionLibQuery,
+  SeccionLibState,
+  SeccionLibStore,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
 
 import {
   EXPEDICION_FACTURA_FECHA,
   VALIDO,
 } from '../../constantes/elegibilidad-de-textiles.enums';
 
-import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
-import { TextilesState } from '../../estados/elegibilidad-de-textiles.store';
+import {
+  REGEX_PATRON_DECIMAL_2,
+  REGEX_SOLO_DIGITOS,
+} from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
+
+import {
+  ElegibilidadDeTextilesStore,
+  TextilesState,
+} from '../../estados/elegibilidad-de-textiles.store';
 
 import { CapturarColumns } from '../../models/elegibilidad-de-textiles.model';
 
@@ -42,8 +45,6 @@ import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-texti
 
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 
-import { REGEX_PATRON_DECIMAL_2 } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
-import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
 /**
  * @component CapturarFacturasComponent

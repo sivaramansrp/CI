@@ -1,43 +1,47 @@
-import {
-  CatalogosSelect,
-  ConfiguracionColumna,
-  SeccionLibQuery,
-  SeccionLibState,
-  SeccionLibStore,
-  TablaSeleccion,
-} from '@ng-mf/data-access-user';
+// Angular Core
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Input } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 
-import { FormBuilder } from '@angular/forms';
-import { FormGroup } from '@angular/forms';
-import { InputRadioComponent } from '@ng-mf/data-access-user';
-import { ReactiveFormsModule } from '@angular/forms';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
+
+import {
+  CatalogosSelect,
+  ConfiguracionColumna,
+  InputRadioComponent,
+  SeccionLibQuery,
+  SeccionLibState,
+  SeccionLibStore,
+  TablaDinamicaComponent,
+  TablaSeleccion,
+  TituloComponent,
+} from '@ng-mf/data-access-user';
 
 import radioOptionsData from '@libs/shared/theme/assets/json/120301/tipos-de-fabricante-exportador.json';
 import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json';
-
-import { Subject } from 'rxjs';
-import { delay } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
-import { tap } from 'rxjs';
 
 import {
   CATALOGOS,
   VALIDO,
 } from '../../constantes/elegibilidad-de-textiles.enums';
+
+import {
+  ElegibilidadDeTextilesStore,
+  TextilesState,
+} from '../../estados/elegibilidad-de-textiles.store';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
-import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 import { HistoricoColumns } from '../../models/elegibilidad-de-textiles.model';
-import { TextilesState } from '../../estados/elegibilidad-de-textiles.store';
+
 
 /**
  * @component HistoricoFabricantesComponent

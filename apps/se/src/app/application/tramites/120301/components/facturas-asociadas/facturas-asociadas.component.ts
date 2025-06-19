@@ -4,15 +4,20 @@
  * Incluye un formulario para capturar los datos de las facturas y tablas para mostrar las facturas disponibles y asociadas.
  */
 
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { Input } from '@angular/core';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+
 import {
-  AsociadasTableColumns,
-  CapturarColumns,
-} from '../../models/elegibilidad-de-textiles.model';
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import {
-  ElegibilidadDeTextilesStore,
-  TextilesState,
-} from '../../estados/elegibilidad-de-textiles.store';
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+
+import { Subject, delay, map, takeUntil, tap } from 'rxjs';
 
 import {
   ConfiguracionColumna,
@@ -21,20 +26,23 @@ import {
   SeccionLibStore,
   TablaDinamicaComponent,
   TablaSeleccion,
+  TituloComponent,
 } from '@ng-mf/data-access-user';
 
+import { VALIDO } from '../../constantes/elegibilidad-de-textiles.enums';
+
 import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
-} from '@angular/forms';
-import { Subject, delay, map, takeUntil, tap } from 'rxjs';
-import { CommonModule } from '@angular/common';
+  AsociadasTableColumns,
+  CapturarColumns,
+} from '../../models/elegibilidad-de-textiles.model';
+
+import {
+  ElegibilidadDeTextilesStore,
+  TextilesState,
+} from '../../estados/elegibilidad-de-textiles.store';
 import { ElegibilidadDeTextilesQuery } from '../../queries/elegibilidad-de-textiles.query';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
-import { TituloComponent } from '@ng-mf/data-access-user';
-import { VALIDO } from '../../constantes/elegibilidad-de-textiles.enums';
+
 
 @Component({
   selector: 'app-facturas-asociadas',

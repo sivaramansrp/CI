@@ -6,19 +6,24 @@
  * @import { Component } from '@angular/core';
  */
 
-import { Component } from '@angular/core';
-import { ConsultaioQuery } from '@ng-mf/data-access-user';
-import { ConsultaioState } from '@ng-mf/data-access-user';
-import { ConsultaioStore } from '@ng-mf/data-access-user';
-import { OnDestroy } from '@angular/core';
-import { OnInit } from '@angular/core';
+// Angular Core
+import {
+  Component,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
+
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+  ConsultaioStore,
+} from '@ng-mf/data-access-user';
+
 
 import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 
-import { Subject } from 'rxjs';
-import { map } from 'rxjs';
-import { takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-paso-uno',
