@@ -136,6 +136,7 @@
               [required]="true"
               formControlName="establecimientoEstados"
               (change)="enCambioDeControl('establecimientoEstados')"
+                 [isDisabled]="esFormularioSoloLectura"
             >
             </app-catalogo-select>
           </div>
@@ -269,6 +270,7 @@
           [datos]="personaparas"
           [tipoSeleccionTabla]="tipoSeleccionTabla.CHECKBOX"
           formcontrolname="scian"
+          [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
         >
         </app-tabla-dinamica>
       </div>
@@ -296,6 +298,7 @@
         [id]="'avisoCheckbox'"
         [required]="true"
         formControlName="avisoCheckbox"
+         [isDisabled]="esFormularioSoloLectura"
         (change)="toggleNoLicenciaSanitaria($event); enControlCambioFormulario('avisoCheckbox')"
       ></lib-input-check>
       </div>
@@ -331,6 +334,7 @@
           [tooltipQuestionCircle]="true"
           formControlName="regimen"
           (change)="enControlCambioFormulario('regimen')"
+             [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
       </div>
       <div class="col-md-8">
@@ -341,6 +345,7 @@
           name="aduanasEntradas"
           formControlName="aduanasEntradas"
           (change)="enControlCambioFormulario('aduanasEntradas')"
+             [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
       </div>
     </div>
@@ -354,6 +359,7 @@
         [tipoSeleccionTabla]="tablaSeleccionCheckbox"
         [configuracionTabla]="mercanciasTabla"
         [datos]="mercanciasTablaDatos"
+        [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"
       ></app-tabla-dinamica>
       <div class="container text-end mt-5">
         <button class="btn btn-default me-2">Eliminar</button>
@@ -367,9 +373,8 @@
         </button>
       </div>
     </div>
-
-    <app-manifiestos></app-manifiestos>
-    <app-representante-legal></app-representante-legal>
+<app-manifiestos-representante-seccion  
+   ></app-manifiestos-representante-seccion>
 
   </form>
 </div>
@@ -401,6 +406,7 @@ aria-hidden="true"
                 [placeholder]="'Seleccione una valor'"
                 formControlName="scian"
                 (change)="onContriloChange('scian')"
+                   [isDisabled]="esFormularioSoloLectura"
               ></app-catalogo-select>
             </div>
           </div>
@@ -468,6 +474,7 @@ aria-hidden="true"
               [label]="'Clasificación del producto'"
               [required]="true"
               name="clasificacion"
+                 [isDisabled]="esFormularioSoloLectura"
             ></app-catalogo-select>
           </div>
           <div class="form-group">
