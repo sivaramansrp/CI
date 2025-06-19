@@ -1,10 +1,7 @@
-/* eslint-disable sort-imports */
 import { Component, ViewChild } from '@angular/core';
-import { ListaPasosWizard } from '@ng-mf/data-access-user';
-import { PASOS } from '@ng-mf/data-access-user';
-import { WizardComponent } from '@ng-mf/data-access-user';
-import { DatosPasos } from '@ng-mf/data-access-user';
+import {DatosPasos, ListaPasosWizard, WizardComponent} from '@libs/shared/data-access-user/src'
 import { PANTAPASOS } from '../../services/pantallas-svc.enum';
+import { PASOS } from '@ng-mf/data-access-user';
 
 /**
  * **Interfaz que representa una acción de un botón en la interfaz**  
