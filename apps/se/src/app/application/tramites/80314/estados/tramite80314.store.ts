@@ -1,8 +1,8 @@
 import { DatosModificacion, DomicilioInfo } from './models/plantas-consulta.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Catalogo } from '@ng-mf/data-access-user';
-import { Injectable } from '@angular/core';
 import { DatosCertificacion } from '../models/datos-tramite.model';
+import { Injectable } from '@angular/core';
 
 /**
  * Interfaz que define el estado de la entidad Tramite.

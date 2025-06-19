@@ -1,12 +1,11 @@
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, TituloComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { map, Subject, takeUntil } from 'rxjs';
-import { Component } from '@angular/core';
-import { DatosCertificacion } from '../../models/datos-tramite.model';
+import { Subject, map, takeUntil } from 'rxjs';
 import { ImmerModificacionService } from '../../service/immer-modificacion.service';
-import { TramiteState } from '../../estados/tramite80314.store';
-import { Tramite80314Store } from '../../estados/tramite80314.store';
 import { Tramite80314Query } from '../../estados/tramite80314.query';
+import { Tramite80314Store } from '../../estados/tramite80314.store';
+import { TramiteState } from '../../estados/tramite80314.store';
 
 @Component({
   selector: 'app-datos-certificacion',
@@ -15,7 +14,7 @@ import { Tramite80314Query } from '../../estados/tramite80314.query';
   standalone: true,
   imports: [ReactiveFormsModule, TituloComponent],
 })
-export class DatosCertificacionComponent {
+export class DatosCertificacionComponent implements OnInit, OnDestroy {
   /**
    * Formulario reactivo para la certificación.
    * @type {FormGroup}

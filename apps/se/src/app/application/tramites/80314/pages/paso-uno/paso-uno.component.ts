@@ -1,6 +1,6 @@
-import { AfterViewInit, EventEmitter, Output } from '@angular/core';
+import { AfterViewInit, EventEmitter, OnInit, Output } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState, FormularioDinamico, SolicitanteComponent } from '@ng-mf/data-access-user';
-import { map, Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { AltaPlantaComponent } from "../../components/alta-planta/alta-planta.component";
 import { BitacoraComponent } from "../../components/bitacora/bitacora.component";
 import { CommonModule } from '@angular/common';
@@ -22,7 +22,7 @@ import { ViewChild } from '@angular/core';
   standalone: true,
   imports: [SolicitanteComponent, CommonModule, ModificacionComponent, AltaPlantaComponent, BitacoraComponent, ComplementariaImmexComponent]
 })
-export class PasoUnoComponent implements AfterViewInit {
+export class PasoUnoComponent implements AfterViewInit, OnInit {
   /**
     * Referencia al componente `SolicitanteComponent`.
     * 
