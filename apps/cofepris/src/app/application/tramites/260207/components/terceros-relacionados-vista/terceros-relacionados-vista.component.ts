@@ -6,8 +6,9 @@ import {
   Proveedor,
   TercerosRelacionadosDatos,
 } from '../../../../shared/models/terceros-relacionados.model';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite260207Query } from '../../estados/tramite260207Query.query';
 import { Tramite260207Store } from '../../estados/tramite260207Store.store';
@@ -51,12 +52,18 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   facturadorTablaDatos: Facturador[] = [];
 
-  /**
+   /**
    * @property {Subject<void>} destroy$
    * Subject para cancelar suscripciones y evitar fugas de memoria.
    * @private
    */
   private destroy$ = new Subject<void>();
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  public esFormularioSoloLectura: boolean = false; 
 
   /**
    * Observable de datos de terceros relacionados.
@@ -73,9 +80,17 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteStore: Tramite260207Store,
-    private tramiteQuery: Tramite260207Query
+    private tramiteQuery: Tramite260207Query,
+    private consultaQuery: ConsultaioQuery
   ) {
-    // Constructor vacío, se inyectan los servicios necesarios para el funcionamiento del componente.
+     this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe();
   }
 
   /**
