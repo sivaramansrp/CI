@@ -103,12 +103,8 @@ export class DatosMercanciaComponent implements OnInit, AfterViewInit {
   >();
 
   /**
-   * Evento que se emite cuando el usuario cancela la operación.
-   * Envía un valor booleano al componente padre para indicar la acción de cancelación.
-   *
-   * @type {EventEmitter<boolean>}
-   * @memberof DatosMercanciaComponent
-   * @output
+   * Evento que se emite cuando el usuario desea cancelar una acción.
+   * @property {EventEmitter<boolean>} cancelarEventListener
    */
   @Output() cancelarEventListener = new EventEmitter<boolean>();
 

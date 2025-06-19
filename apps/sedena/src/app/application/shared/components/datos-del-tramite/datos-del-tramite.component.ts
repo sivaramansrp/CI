@@ -367,6 +367,10 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
   @Output() updateDatosDelTramiteFormulario =
     new EventEmitter<DatosDelTramiteFormState>();
 
+  /**
+   * Evento que emite cuando se desea abrir un modal.
+   * @event openModal
+   * */
   @Output() openModal = new EventEmitter<string>();
 
   /**
@@ -504,11 +508,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @param {string} accionesPath - Ruta relativa hacia la sección de acciones.
    * @returns {void}
    */
-  irAAcciones(accionesPath: string): void {
-    // this.router.navigate([accionesPath], {
-    //   relativeTo: this.activatedRoute,
-    // });
-
+  irAAcciones(): void {
     this.openModal.emit('Datosmercancia');
   }
 

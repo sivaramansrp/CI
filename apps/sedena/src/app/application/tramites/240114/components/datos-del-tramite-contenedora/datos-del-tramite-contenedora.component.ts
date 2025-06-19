@@ -114,7 +114,16 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   updateDatosDelTramiteFormulario(event: DatosDelTramiteFormState): void {
     this.tramiteStore.updateDatosDelTramiteFormState(event);
   }
-
+  /**
+   * Abre el modal correspondiente según el nombre del evento recibido.
+   *
+   * Si el evento es `'Datosmercancia'`, se carga el componente `DatosMercanciaContenedoraComponent`
+   * dentro del modal y se le pasa una función de cierre como input.
+   *
+   * @method openModal
+   * @param {string} event - Nombre del evento que indica qué componente se debe mostrar en el modal.
+   * @returns {void}
+   */
   openModal(event: string): void {
     if (event === 'Datosmercancia') {
       this.modalComponent.abrir(DatosMercanciaContenedoraComponent, {
@@ -122,6 +131,13 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
       });
     }
   }
+
+  /**
+   * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
+   *
+   * @method cerrarModal
+   * @returns {void}
+   */
   cerrarModal(): void {
     this.modalComponent.cerrar();
   }

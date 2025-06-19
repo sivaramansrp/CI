@@ -167,6 +167,10 @@ export class AgregarDestinatarioFinalComponent
     DestinoFinal[]
   >();
 
+  /**
+   * Evento que se emite cuando el usuario desea cancelar una acción.
+   * @property {EventEmitter<boolean>} cancelarEventListener
+   */
 
   @Output() cancelarEventListener = new EventEmitter<boolean>();
   /**
