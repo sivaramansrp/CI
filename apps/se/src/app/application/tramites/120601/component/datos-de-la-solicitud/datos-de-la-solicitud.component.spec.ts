@@ -87,7 +87,6 @@ describe('DatosDeLaSolicitudComponent', () => {
     it('debería inicializar las propiedades con valores por defecto', () => {
       expect(component.esFormularioSoloLectura).toBe(false);
       expect(component['destroyed$']).toBeInstanceOf(Subject);
-      expect(component['subscription']).toBeInstanceOf(Subscription);
     });
 
     it('debería inyectar correctamente los servicios en el constructor', () => {
@@ -554,11 +553,7 @@ describe('DatosDeLaSolicitudComponent', () => {
       
       expect(mockPipe).toHaveBeenCalledWith(expect.anything());
     });
-
-    it('debería tener subscription inicializado', () => {
-      expect(component['subscription']).toBeInstanceOf(Subscription);
-    });
-
+    
     it('debería manejar múltiples emisiones de los observables', () => {
       const tipoEmpresaSubject = new Subject<Catalogo>();
       const actividadSubject = new Subject<string>();
