@@ -139,18 +139,19 @@ export class PhytosanitaryExportacionService {
     return this.http.get<RespuestaCatalogos>('assets/json/230201/estado.json');
   }
 
+  /**
+   * Obtiene el catálogo de destinatarios.
+   * @returns Un observable con la respuesta del catálogo de destinatarios.
+   */
   getSavedData(): Observable<Solicitud230201State> {
     return this.http.get<Solicitud230201State>('assets/json/230201/savedData.json');
   }
 
-  
-  actualizarEstadoFormulario(data: Solicitud230201State) {
-    // this.store.setAduana(data.aduana);
-    // this.store.setPaisDeProcedencia(data.paisDeProcedencia);
-    // this.store.setPais(data.pais ?? []);
-    // // this.store.setMetaInfo(data.metaInfo);
-    // this.store.setEntidades(data.entidades);
-    // this.store.setDescripcionProducto(data.descripcionProducto);
+  /**
+   * Actualiza el estado del formulario con los datos proporcionados.
+   * @param data Datos de tipo Solicitud230201State que se utilizarán para actualizar el estado del formulario.
+   */
+  actualizarEstadoFormulario(data: Solicitud230201State): void {
     this.store.update((state) => {
       return {
         ...state,
