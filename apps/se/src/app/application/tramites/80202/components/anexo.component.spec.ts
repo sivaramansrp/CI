@@ -11,8 +11,7 @@ describe('AnexoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AnexoComponent],
-      imports: [ReactiveFormsModule, TituloComponent, TablaDinamicaComponent],
+      imports: [AnexoComponent, ReactiveFormsModule, TituloComponent, TablaDinamicaComponent],
     }).compileComponents();
   });
 
