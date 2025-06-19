@@ -1,4 +1,3 @@
-import { AfterViewInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
@@ -13,9 +12,7 @@ import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
 import { Solicitud31301State } from '../../estados/solicitud31301.store';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Subject } from 'rxjs';
-import { TIPO_PERSONA } from '@libs/shared/data-access-user/src';
 import { TercerosRelacionadosComponent } from '../../components/terceros-relacionados/terceros-relacionados.component';
-import { ViewChild } from '@angular/core';
 import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
@@ -38,12 +35,7 @@ import { takeUntil } from 'rxjs';
   templateUrl: './paso-uno.component.html',
   styleUrls: ['./paso-uno.component.scss'],
 })
-export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
-  /**
-   * Referencia al componente SolicitanteComponent para acceder a sus métodos y propiedades.
-   */
-  @ViewChild(SolicitanteComponent) solicitante!: SolicitanteComponent;
-
+export class PasoUnoComponent implements OnInit, OnDestroy {
   /**
    * Notificador para destruir las suscripciones y evitar fugas de memoria.
    * Este `Subject` se utiliza para cancelar las suscripciones activas cuando
@@ -105,15 +97,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy, AfterViewInit {
           this.solicitudService.actualizarEstadoFormulario(resp);
         }
       });
-  }
-
-  /**
-   * Se ejecuta después de que la vista ha sido inicializada.
-   * Llama al método `obtenerTipoPersona` del componente SolicitanteComponent
-   * para establecer el tipo de persona como MORAL_NACIONAL.
-   */
-  ngAfterViewInit(): void {
-    this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
   }
 
   /**
