@@ -8,13 +8,16 @@
         formControlName="tipoSolicitud"
         [label]="'Tipo de solicitud'"
         [required]="true"
+        [primerOptionValue]="SIN_VALOR"
+        [hiddenPrimerOption]="false"
+        [disabledPrimerOption]="false"
         name="tipoSolicitud"
         (change)="tipoSolicitudSeleccion()"
       ></app-catalogo-select>
     </div>
   </div>
 
-  @if(tipoSolicitudSeleccionada) {
+  @if(tipoSolicitudSeleccionada > 0) {
   <ng-titulo titulo="Datos del importador/exportador" />
   <div formGroupName="datosImportadorExportador">
     @if (isApoderado && masDeUnaPatente) {
@@ -46,6 +49,9 @@
           [id]="'empresaApoderado'"
           [required]="true"
           name="empresaApoderado"
+          [primerOptionValue]="SIN_VALOR"
+          [hiddenPrimerOption]="false"
+          [disabledPrimerOption]="false"
         ></app-catalogo-select>
       </div>
 
@@ -58,6 +64,9 @@
           [id]="'empresasApoderado'"
           [required]="true"
           name="empresasApoderado"
+          [primerOptionValue]="SIN_VALOR"
+          [hiddenPrimerOption]="false"
+          [disabledPrimerOption]="false"
         ></app-catalogo-select>
         <span
           id="errorEmpresasApoderado"
@@ -94,7 +103,10 @@
             Este campo es obligatorio.
           </div>
 
-          <div *ngIf="isErrorPattern('RFCImpExp')" class="mensaje-error">
+          <div
+            *ngIf="isErrorPattern(datosImportadorExportador, 'RFCImpExp')"
+            class="mensaje-error"
+          >
             RFC no es válido.
           </div>
         </div>
@@ -129,7 +141,7 @@
               placeholder=""
               type="text"
               formControlName="desNumeroRegistro"
-              maxlength="30"
+              maxlength="25"
               [ngClass]="
                 isValid(datosImportadorExportador, 'desNumeroRegistro')
                   ? 'required'
@@ -143,12 +155,6 @@
                 )
               "
             />
-            <div
-              *ngIf="isErrorPattern('setDescripcionNumeroRegistro')"
-              class="mensaje-error"
-            >
-              Por favor, ingresa caracteres alfanuméricos.
-            </div>
           </div>
         </div>
       </div>
@@ -175,7 +181,7 @@
             [textoValor]="solicitudState.descripcionImmex"
             [idCheckbox]="'checkIMMEX'"
             [idInputTexto]="'desImmex'"
-            [label]="'Immex (Número/aaaa):'"
+            [label]="'IMMEX (Número/aaaa):'"
             [required]="false"
             [reverse]="true"
             [hidden]="false"
@@ -190,7 +196,7 @@
             [textoValor]="solicitudState.descripcionIndustrialAutomotriz"
             [idCheckbox]="'industriaAutomotriz'"
             [idInputTexto]="'desIndustrialAutomotriz'"
-            [label]="'Industria Automotriz:'"
+            [label]="'Industria automotriz:'"
             [required]="false"
             [reverse]="true"
             [hidden]="false"
@@ -286,7 +292,9 @@
               Este campo es obligatorio.
             </div>
             <div
-              *ngIf="isErrorPattern('idSocioComercial')"
+              *ngIf="
+                isErrorPattern(datosImportadorExportador, 'idSocioComercial')
+              "
               class="mensaje-error"
             >
               Por favor, ingresa caracteres alfanuméricos.
@@ -308,6 +316,7 @@
           name="fechaInicio"
           id="fechaInicio"
           formControlName="fechaInicio"
+          placeholder="dd/mm/yyyy"
           [ngClass]="isValid(datosServicio, 'fechaInicio') ? 'required' : ''"
           (change)="changeFechaInicio()"
           (keydown)="$event.preventDefault()"
@@ -377,7 +386,8 @@
               </h4>
               <button
                 type="button"
-                class="collpase-button collapsed"
+                class="collpase-button"
+                [ngClass]="colapsable ? 'collapsed' : ''"
                 title="Colapsable"
               ></button>
             </div>
@@ -409,8 +419,9 @@
             class="form-check-input"
             type="checkbox"
             id="lda"
-            (click)="showConfirmDialogLDA_DD($event, 'lda')"
+            (click)="showConfirmDialogLDA_DD('lda')"
             formControlName="lda"
+            maxlength="13"
           />
           <label class="form-check-label" for="lda">Despacho LDA</label>
         </div>
@@ -422,8 +433,9 @@
             class="form-check-input"
             type="checkbox"
             id="dd"
-            (click)="showConfirmDialogLDA_DD($event, 'dd')"
+            (click)="showConfirmDialogLDA_DD('dd')"
             formControlName="dd"
+            maxlength="13"
           />
           <label class="form-check-label" for="dd">Despacho DD</label>
         </div>
@@ -445,11 +457,16 @@
             class="form-control"
             formControlName="rfcDespachoLDA"
             placeholder=""
-            (change)="
-              setValoresStore(despacho, 'rfcDespachoLDA', 'setAutorizacionLDA')
-            "
+            (blur)="changeRfcAutorizacionLDA()"
+            maxlength="13"
             [ngClass]="isValid(despacho, 'rfcDespachoLDA') ? 'required' : ''"
           />
+          <div
+            *ngIf="isRequired(despacho, 'rfcDespachoLDA')"
+            class="mensaje-error"
+          >
+            Este campo es obligatorio.
+          </div>
         </div>
       </div>
       } @else if (despacho.get('dd')?.value) {
@@ -462,11 +479,20 @@
             class="form-control"
             formControlName="folioDDEX"
             placeholder=""
-            (change)="
-              setValoresStore(despacho, 'folioDDEX', 'setAutorizacionDDEX')
-            "
+            (blur)="changeFolioDDEX()"
             [ngClass]="isValid(despacho, 'folioDDEX') ? 'required' : ''"
           />
+
+          <div *ngIf="isRequired(despacho, 'folioDDEX')" class="mensaje-error">
+            Este campo es obligatorio.
+          </div>
+
+          <div
+            *ngIf="isErrorPattern(despacho, 'folioDDEX')"
+            class="mensaje-error"
+          >
+            Formato incorrecto.
+          </div>
         </div>
       </div>
       }
@@ -475,12 +501,10 @@
 
     <div class="row">
       <div class="col-md-4">
-        <div>
-          <label for="">Aduana:</label>
-          <span>*</span>
-        </div>
+        <label class="form-label" for="">Aduana:</label>
+        <span>*</span>
         <select
-          class="form-control"
+          class="form-control form-select"
           formControlName="idAduanaDespacho"
           (change)="changeAduana()"
         >
@@ -489,13 +513,17 @@
             {{ aduana.descripcion }}
           </option>
         </select>
+        <div
+          *ngIf="isErrorNoMenosUno(despacho, 'idAduanaDespacho')"
+          class="mensaje-error"
+        >
+          Este campo es obligatorio.
+        </div>
       </div>
       <div class="col-md-4">
-        <div>
-          <label for="">Sección aduanera:</label>
-        </div>
+        <label class="form-label" for="">Sección aduanera:</label>
         <select
-          class="form-control"
+          class="form-control form-select"
           formControlName="idSeccionDespacho"
           (change)="changeSeccionAduanera()"
           [required]="false"
@@ -513,11 +541,9 @@
     <div class="row">
       @if (!despachoSeleccionado) {
       <div class="col-md-4">
-        <div>
-          <label for="">Nombre del recinto:</label>
-        </div>
+        <label class="form-label" for="">Nombre del recinto:</label>
         <select
-          class="form-control"
+          class="form-control form-select"
           formControlName="nombreRecinto"
           (change)="changeRecinto()"
           [required]="false"
@@ -539,6 +565,9 @@
           [label]="'Tipo despacho'"
           [required]="false"
           [isDisabled]="activarCatalogoDespacho"
+          [primerOptionValue]="SIN_VALOR"
+          [hiddenPrimerOption]="false"
+          [disabledPrimerOption]="false"
           (change)="changeTipoDespacho()"
         ></app-catalogo-select>
       </div>
@@ -549,6 +578,10 @@
           formControlName="tipoOperacion"
           [label]="'Tipo de operación'"
           [required]="true"
+          [isDisabled]="!activarCatalogoTipoOperacion"
+          [primerOptionValue]="SIN_VALOR"
+          [hiddenPrimerOption]="false"
+          [disabledPrimerOption]="false"
           (change)="
             setValoresStore(despacho, 'tipoOperacion', 'setTipoOperacion')
           "
@@ -576,6 +609,7 @@
           [required]="false"
           [reverse]="true"
           formControlName="relacionSociedad"
+          [isDisabled]="!activarRelacionSociedad"
           (change)="
             setValoresStore(despacho, 'relacionSociedad', 'setRelacionSociedad')
           "
@@ -587,6 +621,7 @@
           [required]="false"
           [reverse]="true"
           formControlName="encargoConferido"
+          [isDisabled]="!activarEncargoConferido"
           (change)="
             setValoresStore(despacho, 'encargoConferido', 'setEncargoConferido')
           "

@@ -8,7 +8,7 @@
                     <app-catalogo-select [catalogo]="anoOficioDatos" [label]="'Año del oficio de asignación'"
                         [required]="true" placeholder="Selecciona un año" formControlName="anoDelOficio"
                         for="anoDelOficio" id="anoDelOficio" aria-label="Año del oficio de asignación"
-                        (change)="setValoresStore(asignacionForm,'anoDelOficio', 'setAnoDelOficio')"></app-catalogo-select>
+                        (change)="setValoresStore(asignacionForm,'anoDelOficio', 'setAnoDelOficio')" [isDisabled]="esFormularioSoloLectura ? true : false"></app-catalogo-select>
                 </div>
             </div>
             <div class="col-md-4 dropdown-field">
@@ -28,7 +28,7 @@
                 </div>
             </div>
             <div class="col-md-8 mt-5 d-flex justify-content-end">
-                <button type="button" class="btn btn-primary">Buscar</button>
+                <button type="button" class="btn btn-primary" [disabled]="esFormularioSoloLectura">Buscar</button>
             </div>
         </div>
 
@@ -105,7 +105,7 @@
         </div>
 
         <!-- 6.Descripción-del-cupo -->
-        <app-descripcion-cupo></app-descripcion-cupo>
+        <app-descripcion-cupo [consultaState]="consultaState"></app-descripcion-cupo>
 
         <!-- 7.Distribución-de-saldo -->
         <div class="distribucion-saldo mt-5">
@@ -134,7 +134,7 @@
                 </div>
             </div>
             <div class="col-md-12 mt-5 d-flex justify-content-end">
-                <button type="button" class="btn btn-primary" (click)="enviarMontoFormulario()">Agregar</button>
+                <button type="button" class="btn btn-primary" (click)="enviarMontoFormulario()" [disabled]="esFormularioSoloLectura">Agregar</button>
             </div>
         </div>
 
@@ -144,7 +144,7 @@
             </div>
         </div>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
-            <button type="button" class="btn btn-danger">Eliminar seleccionado</button>
+            <button type="button" class="btn btn-danger" [disabled]="esFormularioSoloLectura">Eliminar seleccionado</button>
         </div>
 
         <div class="col-md-4">

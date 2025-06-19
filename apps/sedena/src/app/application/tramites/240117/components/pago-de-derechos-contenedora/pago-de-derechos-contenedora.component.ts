@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { PagoDeDerechosComponent } from '../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
@@ -35,33 +35,39 @@ import { Tramite240117Store } from '../../estados/tramite240117Store.store';
   styleUrl: './pago-de-derechos-contenedora.component.css',
 })
 export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
-
+  /**
+   * @property esFormularioSoloLectura
+   * @description Indica si el formulario es de solo lectura.
+   * @type {boolean}
+   */
+  @Input()
+  esFormularioSoloLectura: boolean = false;
   /**
    * Observable para liberar suscripciones al destruir el componente.
    * @property {Subject<void>} unsubscribe$
    */
   private unsubscribe$ = new Subject<void>();
 
-   /**
-     * Estado actual del formulario de pago de derechos.
-     * @property {PagoDerechosFormState} pagoDerechoFormState
-     */
-    public pagoDerechoFormState!: PagoDerechosFormState;
-  
-    /**
-     * Constructor del componente.
-     *
-     * @method constructor
-     * @param {Tramite240117Query} tramiteQuery - Query para obtener el estado actual del pago de derechos.
-     * @param {Tramite240117Store} tramiteStore - Store que administra el estado del pago de derechos.
-     * @returns {void}
-     */
-    constructor(
-      private tramiteQuery: Tramite240117Query,
-      private tramiteStore: Tramite240117Store // eslint-disable-next-line no-empty-function
-    ) {}
+  /**
+   * Estado actual del formulario de pago de derechos.
+   * @property {PagoDerechosFormState} pagoDerechoFormState
+   */
+  public pagoDerechoFormState!: PagoDerechosFormState;
 
-    /**
+  /**
+   * Constructor del componente.
+   *
+   * @method constructor
+   * @param {Tramite240117Query} tramiteQuery - Query para obtener el estado actual del pago de derechos.
+   * @param {Tramite240117Store} tramiteStore - Store que administra el estado del pago de derechos.
+   * @returns {void}
+   */
+  constructor(
+    private tramiteQuery: Tramite240117Query,
+    private tramiteStore: Tramite240117Store
+  ) {}
+
+  /**
    * Hook del ciclo de vida que se ejecuta al inicializar el componente.
    * Suscribe a los observables del query para reflejar los datos en la vista.
    *
@@ -77,27 +83,25 @@ export class PagoDeDerechosContenedoraComponent implements OnInit, OnDestroy {
   }
 
   /**
-     * Hook del ciclo de vida que se ejecuta al destruir el componente.
-     * Libera las suscripciones para evitar fugas de memoria.
-     *
-     * @method ngOnDestroy
-     * @returns {void}
-     */
-    ngOnDestroy(): void {
-      this.unsubscribe$.next();
-      this.unsubscribe$.complete();
-    }
-  
-    /**
-     * Actualiza el estado del formulario de pago de derechos en el store.
-     *
-     * @method updatePagoDerechos
-     * @param {PagoDerechosFormState} event - Estado actualizado del formulario.
-     * @returns {void}
-     */
-    updatePagoDerechos(event: PagoDerechosFormState): void {
-      this.tramiteStore.updatePagoDerechosFormState(event);
-    }
+   * Hook del ciclo de vida que se ejecuta al destruir el componente.
+   * Libera las suscripciones para evitar fugas de memoria.
+   *
+   * @method ngOnDestroy
+   * @returns {void}
+   */
+  ngOnDestroy(): void {
+    this.unsubscribe$.next();
+    this.unsubscribe$.complete();
+  }
 
-
+  /**
+   * Actualiza el estado del formulario de pago de derechos en el store.
+   *
+   * @method updatePagoDerechos
+   * @param {PagoDerechosFormState} event - Estado actualizado del formulario.
+   * @returns {void}
+   */
+  updatePagoDerechos(event: PagoDerechosFormState): void {
+    this.tramiteStore.updatePagoDerechosFormState(event);
+  }
 }

@@ -1,33 +1,7 @@
 @import './../../../../../theme/assets/styles/colores';
 
-.footer {
-  color: $color-white;
-  background-color: $color-primario;
-  padding: 3rem 2rem 2rem;
-}
-
-h5,
-h6 {
-  font-weight: lighter !important;
-}
-
 p {
-  font-size: small;
-}
-
-.bi {
-  margin: 0 0.5rem;
-}
-ul {
-  margin: 0;
-  padding: 0;
-}
-
-li {
-  list-style: none;
-  font-size: small;
-  padding: 5px 0;
-  margin: 0;
+  font-size: x-small;
 }
 
 .informacion {
@@ -42,3 +16,10 @@ li {
   padding: 0;
   margin: 0;
 }
+
+.link {
+  color: blue !important;
+  text-decoration: underline !important;
+  cursor: pointer;
+}
+

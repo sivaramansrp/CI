@@ -1,6 +1,6 @@
 <div class="container">
   <ng-titulo titulo="Destino"/>
-  <form [formGroup]="DestinoForm">
+  <form [formGroup]="destinoForm">
     <div class="row">
       <div class="col-md-4">
         <label class="form-label" for="pais"
@@ -11,7 +11,7 @@
           class="form-control"
           id="pais"
           formControlName="pais"
-          (change)="setValoresStore(DestinoForm, 'pais', 'setPais')"
+          (change)="setValoresStore(destinoForm, 'pais', 'setPais')"
         />
       </div>
 
@@ -23,7 +23,7 @@
           class="form-control"
           id="codigo-postal"
           formControlName="codigoPostal"
-          (change)="setValoresStore(DestinoForm, 'codigoPostal', 'setCodigoPostal')"
+          (change)="setValoresStore(destinoForm, 'codigoPostal', 'setCodigoPostal')"
         />
       </div>
       <div class="col-md-4">
@@ -35,7 +35,7 @@
             class="form-control"
             id="estado"
             formControlName="estado"
-            (change)="setValoresStore(DestinoForm, 'estado', 'setEstado')"
+            (change)="setValoresStore(destinoForm, 'estado', 'setEstado')"
           />
         </div>
 
@@ -48,7 +48,7 @@
           class="form-control"
           id="municipio-o-alcadia"
           formControlName="municipioOAlcadia"
-          (change)="setValoresStore(DestinoForm, 'municipioOAlcadia', 'setMunicipioOAlcadia')"
+          (change)="setValoresStore(destinoForm, 'municipioOAlcadia', 'setMunicipioOAlcadia')"
         />
       </div>
 
@@ -60,7 +60,7 @@
           class="form-control"
           id="localidad"
           formControlName="localidad"
-          (change)="setValoresStore(DestinoForm, 'localidad', 'setLocalidad')"
+          (change)="setValoresStore(destinoForm, 'localidad', 'setLocalidad')"
         />
       </div>
       <div class="col-md-4">
@@ -72,7 +72,7 @@
             class="form-control"
             id="colonia"
             formControlName="colonia"
-            (change)="setValoresStore(DestinoForm, 'colonia', 'setColonia')"
+            (change)="setValoresStore(destinoForm, 'colonia', 'setColonia')"
           />
         </div>
          <div class="col-md-4">
@@ -82,9 +82,9 @@
           <input
             type="text"
             class="form-control"
-            id="umero-exterior"
+            id="numero-exterior"
             formControlName="numeroExterior"
-            (change)="setValoresStore(DestinoForm, 'numeroExterior', 'setNumeroExterior')"
+            (change)="setValoresStore(destinoForm, 'numeroExterior', 'setNumeroExterior')"
           />
         </div>  
         <div class="col-md-4">
@@ -96,7 +96,7 @@
             class="form-control"
             id="numero-interior"
             formControlName="numeroInterior"
-            (change)="setValoresStore(DestinoForm, 'numeroInterior', 'setNumeroInterior')"
+            (change)="setValoresStore(destinoForm, 'numeroInterior', 'setNumeroInterior')"
 
           />
         </div>
@@ -109,7 +109,7 @@
             class="form-control"
             id="calle"
             formControlName="calle"
-            (change)="setValoresStore(DestinoForm, 'calle', 'setCalle')"
+            (change)="setValoresStore(destinoForm, 'calle', 'setCalle')"
           />
         </div>         
     </div>

@@ -1,5 +1,5 @@
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { ID_PROCEDIMIENTO } from '../../../constants/medicamentos-contengan.enum';
 import { PagoDeDerechosComponent } from '../../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../../shared/models/terceros-relacionados.model';
@@ -20,6 +20,15 @@ import { Tramite260304Store } from '../../../estados/tramite260304Store.store';
   styleUrl: './pago-de-derechos-contenedora.component.scss',
 })
 export class PagoDeDerechosContenedoraComponent {
+
+  /**
+   * @input
+   * @description
+   * Indica si el formulario debe estar deshabilitado. Cuando es `true`, los controles del formulario estarán inactivos y no permitirán la edición por parte del usuario.
+   * @type {boolean}
+   */
+   @Input() formularioDeshabilitado: boolean = false;
+
   /**
    * @property {PagoDerechosFormState} pagoDerechos
    * @description

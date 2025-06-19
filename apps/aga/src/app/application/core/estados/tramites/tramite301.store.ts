@@ -1,7 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
-
 import { Injectable } from '@angular/core';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { PagoDeDerechosTabla } from '../../../tramites/301/models/301.models';
 
 /**
  * Creacion del estado inicial para la interfaz de tramite 301
@@ -91,6 +90,12 @@ export interface Solicitud301State {
    * @type {string}
    */
   registro: string;
+
+  /**
+     * pagoDerechosTabla
+     * @type {PagoDeDerechosTabla[]}
+     */
+    pagoDerechosTabla: PagoDeDerechosTabla[];
 }
 
 export function createInitialState(): Solicitud301State {
@@ -178,6 +183,13 @@ export function createInitialState(): Solicitud301State {
      * @type {string}
      */
     registro: '',
+
+    /**
+     * pagoDerechosTabla
+     * @type {PagoDeDerechosTabla[]}
+     */
+    pagoDerechosTabla: []
+
   };
 }
 
@@ -353,5 +365,16 @@ export class Tramite301Store extends Store<Solicitud301State> {
    */
   public limpiarSolicitud() {
     this.reset();
+  }
+
+  /**
+   * Guarda la línea en el estado.
+   * @param linea
+   */
+  public setPagoDerechosTabla(fieldName: string, value: PagoDeDerechosTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      [fieldName]: value,
+    }));
   }
 }

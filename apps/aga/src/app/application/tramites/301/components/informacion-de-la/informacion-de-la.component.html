@@ -22,20 +22,21 @@
       </div>
 
       <div class="col-md-8">
-        <label for="descripcionFraccion" class="form-label">Descripción:</label>
-        <input
-          id="descripcionFraccion"
-          type="text"
-          class="form-control"
-          formControlName="descripcionFraccion"
-          (change)="
-            setValoresStore(
-              informacionDeLaform,
-              'descripcionFraccion',
-              'setDescripcionFraccion'
-            )
-          "
-        />
+        @if (mostrarDescripcionFraccion) {
+          <label for="descripcionFraccion" class="form-label">Descripción:</label>
+          <textarea
+            id="descripcionFraccion"
+            class="form-control"
+            formControlName="descripcionFraccion"
+            (change)="
+              setValoresStore(
+                informacionDeLaform,
+                'descripcionFraccion',
+                'setDescripcionFraccion'
+              )
+            "
+          ></textarea>
+        }
       </div>
     </div>
 
@@ -56,31 +57,33 @@
       </div>
 
       <div class="col-md-8">
-        <label for="descripcionNico" class="form-label">Descripción:</label>
-        <input
-          id="descripcionNico"
-          type="text"
-          class="form-control"
-          formControlName="descripcionNico"
-          (change)="
-            setValoresStore(
-              informacionDeLaform,
-              'descripcionNico',
-              'setDescripcionNico'
-            )
-          "
-        />
+        @if (mostrarDescripcionNico) {
+          <label for="descripcionNico" class="form-label">Descripción:</label>
+          <textarea
+            id="descripcionNico"
+            class="form-control"
+            formControlName="descripcionNico"
+            (change)="
+              setValoresStore(
+                informacionDeLaform,
+                'descripcionNico',
+                'setDescripcionNico'
+              )
+            "
+          ></textarea>
+        }
       </div>
     </div>
 
     <div class="row mt-3">
       <div class="col-md-4">
         <label for="nombreQuimico" class="form-label">Nombre químico *:</label>
-        <input
+        <textarea
           id="nombreQuimico"
-          type="text"
           class="form-control"
           formControlName="nombreQuimico"
+          maxlength="256"
+          [ngClass]="{ 'required': esInvalido('nombreQuimico') }"
           (change)="
             setValoresStore(
               informacionDeLaform,
@@ -88,18 +91,22 @@
               'setNombreQuimico'
             )
           "
-        />
+        ></textarea>
+        @if (informacionDeLaform.get('nombreQuimico')?.hasError('required') && informacionDeLaform.get('nombreQuimico')?.touched) {
+          <div class="mensaje-error">Este campo es obligatorio.</div>
+        }
       </div>
 
       <div class="col-md-8">
         <label for="nombreComercial" class="form-label"
           >Nombre comercial *:</label
         >
-        <input
+        <textarea
           id="nombreComercial"
-          type="text"
           class="form-control"
           formControlName="nombreComercial"
+          maxlength="256"
+          [ngClass]="{ 'required': esInvalido('nombreComercial') }"
           (change)="
             setValoresStore(
               informacionDeLaform,
@@ -107,7 +114,10 @@
               'setNombreComercial'
             )
           "
-        />
+        ></textarea>
+        @if (informacionDeLaform.get('nombreComercial')?.hasError('required') && informacionDeLaform.get('nombreComercial')?.touched) {
+          <div class="mensaje-error">Este campo es obligatorio.</div>
+        }
       </div>
     </div>
 
@@ -116,15 +126,19 @@
         <label for="numeroCAS" class="form-label"
           >Número de Chemical Abstracts Substance (CAS) *:</label
         >
-        <input
+        <textarea
           id="numeroCAS"
-          type="text"
           class="form-control"
           formControlName="numeroCAS"
+          maxlength="120"
+          [ngClass]="{ 'required': esInvalido('numeroCAS') }"
           (change)="
             setValoresStore(informacionDeLaform, 'numeroCAS', 'setNumeroCAS')
           "
-        />
+        ></textarea>
+        @if (informacionDeLaform.get('numeroCAS')?.hasError('required') && informacionDeLaform.get('numeroCAS')?.touched) {
+          <div class="mensaje-error">Este campo es obligatorio.</div>
+        }
       </div>
 
       <div class="col-md-4">
@@ -158,6 +172,7 @@
           class="form-control"
           style="height: 50%; resize: none"
           formControlName="acondicionamiento"
+          [ngClass]="{ 'required': esInvalido('acondicionamiento') }"
           (change)="
             setValoresStore(
               informacionDeLaform,
@@ -166,6 +181,9 @@
             )
           "
         ></textarea>
+        @if (informacionDeLaform.get('acondicionamiento')?.hasError('required') && informacionDeLaform.get('acondicionamiento')?.touched) {
+          <div class="mensaje-error">Este campo es obligatorio.</div>
+        }
       </div>
     </div>
   </form>
