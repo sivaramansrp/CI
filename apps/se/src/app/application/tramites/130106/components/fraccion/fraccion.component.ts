@@ -31,23 +31,23 @@ export class FraccionComponent implements OnInit, OnDestroy {
 /**
    * Lista de fracciones obtenidas del archivo JSON.
    */  
-  public fraccion: Catalogo[] = fraccions.fraccion;
+  public fraccion: Catalogo[] = fraccions?.fraccion;
   /**
    * Lista de unidades de medida obtenidas del archivo JSON.
    */
-  public umt: Catalogo[] = fraccions.UMT;
+  public umt: Catalogo[] = fraccions?.UMT;
  /**
    * Lista de bloques obtenidos del archivo JSON.
    */
-   public bloque: Catalogo[] = fraccions.bloque;
+   public bloque: Catalogo[] = fraccions?.bloque;
   /**
    * Lista de entidades obtenidas del archivo JSON.
    */
-  public entidad: Catalogo[] = fraccions.entidad;
+  public entidad: Catalogo[] = fraccions?.entidad;
  /**
    * Lista de representaciones obtenidas del archivo JSON.
    */ 
-  public representacion: Catalogo[] = fraccions.representacion;
+  public representacion: Catalogo[] = fraccions?.representacion;
  /**
    * Estado de la solicitud 130106.
    */ 
