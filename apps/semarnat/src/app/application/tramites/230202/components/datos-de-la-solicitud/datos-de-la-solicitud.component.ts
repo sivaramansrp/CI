@@ -351,7 +351,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.solicitudForm = this.fb.group({
       reexportacionForm: this.fb.group({
         numeroDeCertificado: [
-          {value: this.solicitudState?.numeroDeCertificado, disabled: this.soloLectura  },
+          {value: this.solicitudState?.numeroDeCertificado, disabled: this.soloLectura },
           [Validators.required],
         ],
         aduana: [{value: this.solicitudState?.aduana, disabled: this.soloLectura}, [Validators.required]],
