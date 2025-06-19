@@ -133,7 +133,7 @@ describe('DatosBusquedaComponent', () => {
 
 
   it('debería llamar a actualizarStore cuando cambian los valores del formulario', (): void => {
-    const espiaActualizarStore = jest.spyOn(componente as any, 'actualizarStore');
+    const espiaActualizarStore = jest.spyOn(tramite110203StoreMock, 'setNumeroDeCertificado');
     componente.datosBusquedaFormulario.patchValue({ numeroDeCertificado: '99999' });
     expect(espiaActualizarStore).toHaveBeenCalled();
   });
