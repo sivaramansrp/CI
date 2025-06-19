@@ -1,3 +1,4 @@
+import { FraccionArancelariaProsec, OctavaTemporal } from '../../tramites/130102/models/octava-temporal.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
@@ -66,6 +67,12 @@ export interface Solicitud130102State {
   productos: string;
 
   solicitud :string; // Indica si la solicitud está activa o pendiente de revisión.
+
+  /** Lista de partidas temporales (octava regla) asociadas a la solicitud. */
+  partidas_tabla?: OctavaTemporal[];
+
+  /** Lista de usos específicos relacionados con fracciones arancelarias PROSEC. */
+  uso_especifico_tabla?: FraccionArancelariaProsec[];
 }
 /**
  * Crea y devuelve el estado inicial de la solicitud.
@@ -94,6 +101,9 @@ export function createInitialState(): Solicitud130102State {
     observaciones: '', // Sin observaciones iniciales.
     productos: '', // Sin productos asignados.
     solicitud : '', // Indica que la solicitud no está activa por defecto.
+    partidas_tabla: [], // Lista de partidas vacía por defecto.
+    uso_especifico_tabla: [], // Lista de usos específicos vacía por defecto.;
+
   };
 }
 
@@ -339,5 +349,28 @@ public setCriterioDictamen(criterioDictamen: string) {
    */
   public limpiarSolicitud() {
     this.reset();
+  }
+
+  /*
+    * Actualiza el estado de la solicitud.
+    * @param {string} solicitud - Nueva solicitud.
+    */
+  public setPartidasTabla(fieldName: string, value: OctavaTemporal[]) {
+    this.update((state) => ({
+      ...state,
+      [fieldName]: value,
+    }));
+  }
+
+  /**
+   * Set a value dynamically in the store by field name.
+   * @param fieldName The name of the field to update.
+   * @param value The value to set.
+   */
+  public setDynamicFieldValue(fieldName: string, value: unknown): void {
+    this.update((state) => ({
+      ...state,
+      [fieldName]: value,
+    }));
   }
 }
