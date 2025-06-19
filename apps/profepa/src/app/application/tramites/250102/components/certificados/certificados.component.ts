@@ -1,9 +1,11 @@
 import { CERTIFICADO_MODAL_TABLA, CONFIGURACION_COLUMNA, CertificadoModal, ClavesDePermisos } from '../../models/flora-fauna.models';
 import { Component, OnDestroy } from '@angular/core';
 import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ModalComponent } from '../modal/modal.component';
-import { Subject } from 'rxjs';
+
 
 /**
  * @description
@@ -24,6 +26,12 @@ import { Subject } from 'rxjs';
   styleUrl: './certificados.component.scss',
 })
 export class CertificadosComponent implements OnDestroy {
+  
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   */
+  esFormularioSoloLectura: boolean = false;
+
   /**
    * @description
    * Define el tipo de selección para la tabla dinámica.
@@ -76,6 +84,28 @@ export class CertificadosComponent implements OnDestroy {
    * Sujeto utilizado para gestionar la destrucción de suscripciones y evitar fugas de memoria.
    */
   private destroy$ = new Subject<void>();
+
+   /**
+     * Constructor.
+     * @param fb Construye formularios reactivos.
+     * @param tramite250102Store Almacén de estado del trámite.
+     * @param tramite250102Query Consulta el estado del trámite.
+     * @param destinatarioService Obtiene datos de países y entidades.
+     * @param consultaioQuery Consulta el estado del usuario.
+     */
+    constructor(
+      public consultaioQuery: ConsultaioQuery,
+    ) {
+      this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroy$),
+          map((seccionState) => {
+            this.esFormularioSoloLectura = seccionState.readonly;
+          })
+        )
+        .subscribe();
+    }
+  
 
   /**
    * @method cambiarCertificadosAutorizaciones

@@ -618,7 +618,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.store.setEstado(ESTADO);
   }
 
-  public getCrossListBtn(index: number) {
+  public getCrossListBtn(index: number): Array<{ btnNombre: string; class: string; funcion: () => void }> {
     return [
       {
         btnNombre: 'Agregar todos',
@@ -669,7 +669,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Agrega un nuevo detalle a la lista de detalles.
    * Obtiene los datos del servicio y los agrega a la lista local y al store.
    */
-  agregarDetalle() {
+  agregarDetalle(): void {
     this.phytosanitaryReexportacionService
       .agregarDetalle()
       .pipe(takeUntil(this.destroyNotifier$))
@@ -691,7 +691,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Obtiene los datos del servicio y los agrega a la lista local y al store.
    * También reinicia el formulario de la solicitud.
    */
-  agregarSolicitud() {
+  agregarSolicitud(): void {
     if (this.agregarMercanciasForm.valid) {
       this.phytosanitaryReexportacionService.agregarSolicitud().pipe(takeUntil(this.destroyNotifier$))
         .subscribe((respuesta) => {

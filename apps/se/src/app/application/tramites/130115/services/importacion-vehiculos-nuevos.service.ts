@@ -7,6 +7,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ProductoResponse } from '../../../shared/constantes/vehiculos-adaptados.enum';
 
+import { Tramite130115State, Tramite130115Store } from '../../../estados/tramites/tramite130115.store';
 import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-la-mercancia.model';
 /**
  * ImportacionVehiculosNuevosService
@@ -16,7 +17,7 @@ import { PartidasDeLaMercanciaModelo } from '../../../shared/models/partidas-de-
   providedIn: 'root',
 })
 export class ImportacionVehiculosNuevosService {
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,private tramite130115Store: Tramite130115Store) {
     //
   }
   /**
@@ -82,4 +83,18 @@ export class ImportacionVehiculosNuevosService {
             'assets/json/130115/partidas-de-la.json'
           );
     }
+       /**
+   * Actualiza el estado del formulario en el store.
+   * @param DATOS Estado actualizado del trámite.
+   */
+  actualizarEstadoFormulario(DATOS: Tramite130115State): void {
+      this.tramite130115Store.actualizarEstado(DATOS);
+  }
+  /**
+ * Obtiene los datos de la solicitud.
+ * @returns Observable con los datos de la solicitud.
+ */
+getDatosDeLaSolicitud(): Observable<Tramite130115State> {
+    return this.http.get<Tramite130115State>('assets/json/130115/datos-de-la-solicitud.json');
+}
 }

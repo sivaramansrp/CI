@@ -1,164 +1,143 @@
-import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core';
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatosDelTramiteComponent } from './datos-del-tramite.component';
-import { ImportadorExportadorService } from '../../services/importador-exportador.service';
-import { of as observableOf } from 'rxjs';
-import { SELECCION } from '../../constantes/importador-exportador.enum';
-import { Catalogo } from '@libs/shared/data-access-user/src';
-
-
-class MockImportadorExportadorService {
-  getAduanaIngresara = jest.fn().mockReturnValue(observableOf({ code: 200, data: [] }));
-  getAno = jest.fn().mockReturnValue(observableOf({ code: 200, data: [] }));
-  getCondicion = jest.fn().mockReturnValue(observableOf({ code: 200, data: [] }));
-  getPais = jest.fn().mockReturnValue(observableOf({ code: 200, data: [] }));
-}
+import { FormBuilder } from '@angular/forms';
+import { of, Subject } from 'rxjs';
 
 describe('DatosDelTramiteComponent', () => {
   let component: DatosDelTramiteComponent;
-  let fixture: ComponentFixture<DatosDelTramiteComponent>;
-  let importadorExportadorService: MockImportadorExportadorService;
-
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [FormsModule, ReactiveFormsModule, DatosDelTramiteComponent],
-      declarations: [],
-      schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
-      providers: [
-        { provide: ImportadorExportadorService, useClass: MockImportadorExportadorService }
-      ]
-    }).compileComponents();
-  });
+  let mockConsultaioQuery: any;
+  let mockImportadorExportadorService: any;
+  let mockStore: any;
+  let mockQuery: any;
+  let mockValidacionesService: any;
 
   beforeEach(() => {
-    
-    fixture = TestBed.createComponent(DatosDelTramiteComponent);
-    component = fixture.componentInstance;
-    importadorExportadorService = TestBed.inject(ImportadorExportadorService) as unknown as MockImportadorExportadorService;
-    fixture.detectChanges();
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: false })
+    };
+    mockImportadorExportadorService = {
+      getAno: jest.fn().mockReturnValue(of({ code: 200, data: ['2024', '2025'] })),
+      getCondicion: jest.fn().mockReturnValue(of({ code: 200, data: ['Nueva', 'Usada'] })),
+      getPais: jest.fn().mockReturnValue(of({ code: 200, data: ['México', 'USA'] })),
+      getAduanaIngresara: jest.fn().mockReturnValue(of({ code: 200, data: ['Aduana1', 'Aduana2'] }))
+    };
+    mockStore = {
+      setAno: jest.fn(),
+      setCondicion: jest.fn(),
+      setPais: jest.fn(),
+      setAduana: jest.fn(),
+      setFechasSeleccionadas: jest.fn(),
+      setValorSeleccionado: jest.fn(),
+      setIsPopupOpen: jest.fn(),
+      setIsPopupClose: jest.fn(),
+      setShowTabla: jest.fn()
+    };
+    mockQuery = {
+      selectSolicitud$: of({}),
+      selectFechasSeleccionadas$: of([]),
+      selectAduana$: of([]),
+      selectAno$: of([]),
+      selectCondicion$: of([]),
+      selectPais$: of([])
+    };
+    mockValidacionesService = {
+      isValid: jest.fn().mockReturnValue(true)
+    };
+
+    component = new DatosDelTramiteComponent(
+      mockConsultaioQuery,
+      mockImportadorExportadorService,
+      mockStore,
+      mockQuery,
+      new FormBuilder(),
+      mockValidacionesService
+    );
   });
 
-
-  beforeEach(() => {
-    
-    component.selectRangoDias = []; 
-    component.fechasSeleccionadas = [];
-    component.fechasSeleccionadas = [{ id: 1, descripcion: 'date1' }, { id: 2, descripcion: 'date2' }, { id: 3, descripcion: 'date3' }] as Catalogo[];
-    component.fechasDatos = [];
-    component.fecha = { value: [] } as any;
-  });
-
-
-  it('should create', () => {
+  it('should create the component', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should run #ngOnInit()', () => {
-    jest.spyOn(component, 'getAduanaIngresara');
-    jest.spyOn(component, 'getAno');
-    jest.spyOn(component, 'getCondicion');
-    jest.spyOn(component, 'getPais');
-    component.ngOnInit();
-    expect(component.getAduanaIngresara).toHaveBeenCalled();
-    expect(component.getAno).toHaveBeenCalled();
-    expect(component.getCondicion).toHaveBeenCalled();
-    expect(component.getPais).toHaveBeenCalled();
-  });
-  
-
-  it('should copy selectRangoDias into fechasSeleccionadas and clear fechasDatos when tipo is SELECT_ALL', () => {
-   
-    component.selectRangoDias = [];
-    component.fechasDatos = []; 
-   
-    component.agregar(SELECCION.SELECT_ALL);
-   
-    expect(component.fechasSeleccionadas).toEqual([{ id: 1, descripcion: 'date1' }, { id: 2, descripcion: 'date2' }, { id: 3, descripcion: 'date3' }]);
-    // expect(component.fechasDatos).toEqual([]);
+  it('should mark all controls as touched if form is invalid', () => {
+    component.tramiteForm = new FormBuilder().group({
+      test: ['']
+    });
+    jest.spyOn(component.tramiteForm, 'invalid', 'get').mockReturnValue(true);
+    const spy = jest.spyOn(component.tramiteForm, 'markAllAsTouched');
+    component.validarDestinatarioFormulario();
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should move one date from fechasDatos to fechasSeleccionadas when tipo is not SELECT_ALL', () => {
-    
+  it('should call setFechasSeleccionadas when agregar is called', () => {
+    component.fechasDatos = [{ id: 1 }, { id: 2 }] as any;
+    component.fechasSeleccionadas = [];
+    component.fecha.setValue(1);
+    component.agregar('');
+    expect(mockStore.setFechasSeleccionadas).toHaveBeenCalled();
+  });
+
+  it('should call setFechasSeleccionadas when quitar is called', () => {
+    component.fechasSeleccionadas = [{ id: 1 }] as any;
     component.fechasDatos = [];
-    component.fechasSeleccionadas = [];
-   
-    component.fecha = { value: ['1'] } as any;
-   
-    component.agregar('nonSelectAllType');
-   
-    expect(component.fechasSeleccionadas).toEqual(['b']);
-    
-    expect(component.fechasDatos).toEqual(['a', 'c']);
-  });
-
-  it('should move all dates when tipo is SELECT_ALL', () => {
-  
-    component.quitar(SELECCION.SELECT_ALL);
-   
-    expect(component.fechasDatos).toEqual([{ id: 1, descripcion: 'date1' }, { id: 2, descripcion: 'date2' }, { id: 3, descripcion: 'date3' }]);
-  });
-
-  it('should move a single date when tipo is not SELECT_ALL', () => {
-  
-    component.fechasSeleccionadas = [];
-    component.fechasDatos = [];
-   
-    component.fechaSeleccionada = { value: ['1'] } as any;
-    
-    component.quitar();
-    
-    expect(component.fechasDatos).toEqual(['date2']);
-    
-    expect(component.fechasSeleccionadas).toEqual(['date1', 'date3']);
-  });
-
-  it('should run #quitar() without "t"', () => {
-    component.fechasSeleccionadas = [];
-    component.fechaSeleccionada.setValue([0]);
+    component.fechaSeleccionada.setValue(1);
     component.quitar('');
-    expect(component.fechasDatos).toContain('2021-01-01');
-   
+    expect(mockStore.setFechasSeleccionadas).toHaveBeenCalled();
   });
 
-  it('should run #cambiarRadio()', () => {
+  it('should call setValorSeleccionado when cambiarRadio is called', () => {
     component.cambiarRadio('sí');
-    expect(component.valorSeleccionado).toBe('sí');
+    expect(mockStore.setValorSeleccionado).toHaveBeenCalledWith('sí');
   });
 
-  it('should run #getAduanaIngresara()', () => {
-    component.getAduanaIngresara();
-    expect(importadorExportadorService.getAduanaIngresara).toHaveBeenCalled();
-  });
-
-  it('should run #getAno()', () => {
+  it('should call setAno when getAno is called and response is 200', () => {
     component.getAno();
-    expect(importadorExportadorService.getAno).toHaveBeenCalled();
+    expect(mockStore.setAno).toHaveBeenCalled();
   });
 
-  it('should run #getCondicion()', () => {
+  it('should call setCondicion when getCondicion is called and response is 200', () => {
     component.getCondicion();
-    expect(importadorExportadorService.getCondicion).toHaveBeenCalled();
+    expect(mockStore.setCondicion).toHaveBeenCalled();
   });
 
-  it('should run #getPais()', () => {
+  it('should call setPais when getPais is called and response is 200', () => {
     component.getPais();
-    expect(importadorExportadorService.getPais).toHaveBeenCalled();
+    expect(mockStore.setPais).toHaveBeenCalled();
   });
 
-  it('should run #openPopup()', () => {
-    component.openPopup();
-    expect(component.isPopupOpen).toBe(true);
+  it('should call setAduana when getAduanaIngresara is called and response is 200', () => {
+    component.getAduanaIngresara();
+    expect(mockStore.setAduana).toHaveBeenCalled();
   });
 
-  it('should run #closePopup()', () => {
-    component.closePopup();
-    expect(component.isPopupOpen).toBe(false);
-    expect(component.isPopupClose).toBe(false);
+  it('should disable tramiteForm if esFormularioSoloLectura is true in guardarDatosDelFormulario', () => {
+    component.tramiteForm = new FormBuilder().group({
+      test: ['']
+    });
+    component.esFormularioSoloLectura = true;
+    const spy = jest.spyOn(component.tramiteForm, 'disable');
+    component.guardarDatosDelFormulario();
+    expect(spy).toHaveBeenCalled();
   });
 
-  it('should run #nextTabla()', () => {
-    component.nextTabla();
-    expect(component.showTabla).toBe(false);
+  it('should enable tramiteForm if esFormularioSoloLectura is false in guardarDatosDelFormulario', () => {
+    component.tramiteForm = new FormBuilder().group({
+      test: ['']
+    });
+    component.esFormularioSoloLectura = false;
+    const spy = jest.spyOn(component.tramiteForm, 'enable');
+    component.guardarDatosDelFormulario();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  it('should unsubscribe all subscriptions on ngOnDestroy', () => {
+    const sub1 = { unsubscribe: jest.fn() };
+    const sub2 = { unsubscribe: jest.fn() };
+    component.getAduanaIngresaraSubscription = sub1 as any;
+    component.getAnoSubscription = sub1 as any;
+    component.getPaisSubscription = sub1 as any;
+    component.getCondicionSubscription = sub1 as any;
+    component['subscriptions'] = [sub2 as any];
+    component.ngOnDestroy();
+    expect(sub1.unsubscribe).toHaveBeenCalled();
+    expect(sub2.unsubscribe).toHaveBeenCalled();
   });
 });

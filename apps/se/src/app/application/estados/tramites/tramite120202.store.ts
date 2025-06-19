@@ -176,7 +176,7 @@ export interface ExpedicionCertificadosAsignacion120202State {
  */
 export function createInitialState(): ExpedicionCertificadosAsignacion120202State {
     return {
-        cveAniosAutorizacion: '',
+        cveAniosAutorizacion: '-1',
         numFolioAsignacionAux: '',
 
         estado: '',
@@ -528,5 +528,13 @@ export class Tramite120202Store extends Store<ExpedicionCertificadosAsignacion12
             ...state,
             mostrarDetalle,
         }));
+    }
+
+    /**
+     * Actualiza el estado de la consulta de persona física.
+     * @param nuevoDatos - Nuevo estado de la consulta de persona física.
+     */
+    public setConsultaPersonaFisicaState(nuevoDatos: ExpedicionCertificadosAsignacion120202State): void {
+        this.update(nuevoDatos);
     }
 }

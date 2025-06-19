@@ -1,13 +1,11 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Subject, map, takeUntil } from 'rxjs';
-import mediocatalogo from '@libs/shared/theme/assets/json/110203/mediocatalogo.json';
-import {Placeholders } from '@libs/shared/data-access-user/src/core/models/110203/tecnicos.model';
 import { Solicitud110203State, Tramite110203Store } from '../../../../estados/tramites/tramite110203.store';
-import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
-
+import { Subject, map, takeUntil } from 'rxjs';
+import {Placeholders } from '@libs/shared/data-access-user/src/core/models/110203/tecnicos.model';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
-
+import { Tramite110203Query } from '../../../../estados/queries/tramite110203.query';
+import mediocatalogo from '@libs/shared/theme/assets/json/110203/mediocatalogo.json';
 /**
  * Componente que gestiona la visualización y actualización de los datos relacionados con el destinatario para el trámite 110203.
  * Este componente permite la edición de los datos personales del destinatario, como nombre, dirección, correo y teléfono,
@@ -30,7 +28,6 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
   templateUrl: './destinatario-110203.component.html',
   styleUrl: './destinatario-110203.component.scss'
 })
-
 /**
  * Componente que maneja la visualización y actualización de los datos relacionados con el destinatario
  * para el trámite 110203. Utiliza un formulario reactivo para capturar y persistir la información del destinatario
@@ -73,6 +70,10 @@ export class Destinatario110203Component implements OnInit, OnDestroy {
    * - telefono
    */
   destinatarioForm!: FormGroup;
+  /**
+ * Establece los valores de los placeholders utilizados en el formulario.
+ * El valor se obtiene desde el catálogo de medios.
+ */
   placeholder :Placeholders=mediocatalogo.placeholder;
   /**
    * Estado de la solicitud 110203, que contiene los valores actuales de los campos relacionados con el destinatario.

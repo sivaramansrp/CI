@@ -716,7 +716,7 @@ export const CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_OTRO: ConfiguracionColumn
      * - Orden: 3.
      */
     {
-      encabezado: 'Datos de transporte',
+      encabezado: 'Datos del transporte',
       clave: (fila) => fila.datos_transporte,
       orden: 3,
     },
@@ -737,3 +737,8 @@ export const CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_OTRO: ConfiguracionColumn
  * @description Constante para cuando se va a modificar un elemento de la tabla transporte.
  */
 export const MODIFICAR_ITEM_TRANSPORTE = 'modificar';
+
+/**
+ * @description Sin valor para el tipo de transporte.
+ */ 
+export const SIN_VALOR_SELECT = '-1';

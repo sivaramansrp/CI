@@ -1,10 +1,11 @@
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { Component, OnDestroy, OnInit, TemplateRef } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, TemplateRef } from '@angular/core';
 import { ConfiguracionColumna, EMPRESAS_TABLA, EmpresasDelGrupo, InputCheckComponent, InputRadioComponent, REGEX_RFC, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud31603IvaeiepsState, Tramite31603IvaeiepsStore } from '../../estados/stores/tramite31603ivaeieps.store';
 import { Subject,map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import { IvaeiepsDosComponent } from '../ivaeieps-dos/ivaeieps-dos.component';
 import { PERMISO_A_DESISTIR } from '../../constantes/ivaeieps.enum';
@@ -21,6 +22,7 @@ import radio_si_no from '@libs/shared/theme/assets/json/31601/radio_si_no.json';
 @Component({
   selector: 'app-ivaeieps',
   standalone: true,
+  providers: [BsModalService],
   imports: [
       CommonModule,
       FormasDinamicasComponent,
@@ -104,6 +106,12 @@ export class IvaeiepsComponent implements OnInit,OnDestroy {
     * for the IVA and IEPS process in the application.
     */
    public solicitudState!: Solicitud31603IvaeiepsState;
+  /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   * Cuando se establece en `true`, todos los campos del formulario son no editables y el usuario no puede modificar ningún valor.
+   * Cuando se establece en `false`, el formulario es completamente editable.
+   */
+  public esFormularioSoloLectura: boolean = false;
  
  
    /**
@@ -119,10 +127,14 @@ export class IvaeiepsComponent implements OnInit,OnDestroy {
      private fb: FormBuilder,
      private comercioExteriorSvc: RegistrosDeComercioExteriorService,
      private modalService: BsModalService,
+     @Inject(BsModalService)
      private tramite31603Store: Tramite31603IvaeiepsStore,
-     private tramite31603Query: Tramite31603IvaeiepsQuery
+     private tramite31603Query: Tramite31603IvaeiepsQuery,
+     private consultaQuery: ConsultaioQuery
    ) {
-     //
+      this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+      })).subscribe();
    }
  
    /**
@@ -143,6 +155,7 @@ export class IvaeiepsComponent implements OnInit,OnDestroy {
      this.crearIvaEiepsForm();
      this.getEmpresasDelGrupoDatos();
      this.crearIvaForm();
+     this.inicializarEstadoFormulario();
    }
  
    /**
@@ -202,6 +215,21 @@ export class IvaeiepsComponent implements OnInit,OnDestroy {
    public cambioDeValorIndique(value: string | number): void {
      this.predeterminadoSeleccionar = value;
    }
+
+  /**
+   * Inicializa el formulario para el componente de IVA/IEPS.
+   *
+   * Este método se suscribe al observable `selectSolicitud$` del servicio `tramite31602Query`,
+   * actualizando la propiedad local `solicitudState` con el estado más reciente de la sección hasta que el componente sea destruido.
+   * También crea e inicializa los formularios de IVA/IEPS y de IVA llamando a sus respectivos métodos.
+   */
+  public inicializarFormulario(): void {
+    this.tramite31603Query.selectSolicitud$.pipe(takeUntil(this.destroyNotifier$),map((seccionState) => {
+        this.solicitudState = seccionState;
+    })).subscribe();
+    this.crearIvaEiepsForm();
+    this.crearIvaForm();
+  }
  
    /**
     * Recupera los datos de las empresas del grupo y los asigna a la propiedad `empresasDelGrupoDatos`.
@@ -242,6 +270,39 @@ export class IvaeiepsComponent implements OnInit,OnDestroy {
      const VALOR = form.get(campo)?.value;
      (this.tramite31603Store[metodoNombre] as (value: unknown) => void)(VALOR);
    }
+
+     /**
+   * Inicializa el formulario y alterna su estado habilitado o deshabilitado según la bandera de solo lectura.
+   *
+   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura`), tanto `ivaEiepsFormGroup` como `ivaForm`
+   * se deshabilitan para evitar la interacción del usuario. De lo contrario, ambos formularios se habilitan para permitir la edición.
+   */
+  public guardarFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.ivaEiepsFormGroup.disable();
+        this.ivaForm.disable();
+      } else {
+        this.ivaEiepsFormGroup.enable();
+        this.ivaForm.enable();
+      }
+  }
+
+  /**
+   * Inicializa el estado del formulario según su modo de solo lectura.
+   * 
+   * - Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es true), guarda el formulario llamando a `guardarFormulario()`.
+   * - De lo contrario, inicializa el formulario llamando a `inicializarFormulario()`.
+   * - Finalmente, asigna la propiedad `predeterminadoSeleccionar` al valor actual del control 'indiqueIva' de `ivaEiepsFormGroup`.
+   */
+  public inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+    this.predeterminadoSeleccionar = this.ivaEiepsFormGroup.get('indiqueIva')?.value;
+  }
  
    /**
     * Gancho del ciclo de vida que se llama cuando el componente es destruido.

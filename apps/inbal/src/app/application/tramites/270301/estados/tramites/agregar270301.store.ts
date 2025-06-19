@@ -7,6 +7,7 @@
 
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { TablaDatos } from '../../models/aviso-siglos.models';
 
 /**
  * @interface solicitud270301State
@@ -43,6 +44,14 @@ export interface Solicitud270301State {
 
   /** Aduana de entrada seleccionada. */
   aduanaEntrada: string;
+
+   /**
+     * Arreglo que contiene los datos de las obras de arte.
+     * Cada obra de arte está representada por un objeto del tipo TablaDatos.
+     * 
+     * @property {TablaDatos[]} ObraDeArte
+     */
+    ObraDeArte: TablaDatos[];
 }
 
 /**
@@ -63,6 +72,10 @@ export function createInitialState(): Solicitud270301State {
     destinofinal: '',
     periodoEstancia: '',
     aduanaEntrada: '',
+    /**
+     * Arreglo que contiene los datos de las obras de arte. Inicialmente está vacío.
+     */
+    ObraDeArte: [],
   };
 }
 
@@ -209,6 +222,19 @@ export class Agregar270301Store extends Store<Solicitud270301State> {
     this.update((state) => ({
       ...state,
       aduanaEntrada,
+    }));
+  }
+
+  /**
+   * @method setObraDeArte
+   * @description
+   * Actualiza el estado con los datos de la obra de arte seleccionada.
+   * @param {TableData[]} obraDeArte - Lista de obras de arte.
+   */
+  public setObraDeArte(obraDeArte: TablaDatos[]): void {
+    this.update((state) => ({
+      ...state,
+      ObraDeArte: obraDeArte,
     }));
   }
 }

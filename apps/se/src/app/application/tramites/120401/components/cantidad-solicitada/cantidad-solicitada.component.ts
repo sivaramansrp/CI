@@ -5,15 +5,15 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { Subject, map, takeUntil } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Subject } from 'rxjs';
 
+import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
 import { Observable } from 'rxjs';
-import { TituloComponent } from '@ng-mf/data-access-user';
 import { Validators } from '@angular/forms';
 
 import { Tramite120401Query } from '../../estados/queries/tramite120401.query';
@@ -43,9 +43,14 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
   private destroyed$ = new Subject<void>();
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+  /**
    * Observable que emite la cantidad solicitada asociada al trámite 120401.
    * Puede emitir un valor de tipo `string` o `null` si no hay una cantidad disponible.
-   * 
+   *
    * @observable
    */
   cantidadSolicitada$: Observable<string | null> =
@@ -58,9 +63,10 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite120401Store: Tramite120401Store,
-    private tramite120401Query: Tramite120401Query
+    private tramite120401Query: Tramite120401Query,
+    private consultaQuery: ConsultaioQuery
   ) {
-    // Constructor
+   
   }
 
   /**
@@ -74,6 +80,28 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
         this.form.get('cantidadSolicitada')?.setValue(cantidadSolicitada);
       }
     });
+
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (!this.form) {
+      this.crearFormulario();
+    }
+    if (this.esFormularioSoloLectura) {
+      this.form.disable();
+    }
   }
 
   /**
@@ -113,7 +141,7 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
       this.form.markAllAsTouched();
     }
   }
-  
+
   /**
    * Obtiene el valor seleccionado del campo de cantidad solicitada y lo establece en el store.
    */
@@ -121,6 +149,4 @@ export class CantidadSolicitadaComponent implements OnInit, OnDestroy {
     const CANTIDAD_SOLICITADA = this.form.get('cantidadSolicitada')?.value;
     this.tramite120401Store.setCantidadSolicitada(CANTIDAD_SOLICITADA);
   }
-
-
 }

@@ -1,5 +1,5 @@
 import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
@@ -8,7 +8,7 @@ import { DatosDeMercancias } from '../../models/solicitud-pantallas.model';
 import { FormControl } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Input } from '@angular/core';
-import { InputRadioComponent } from 'libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component';
+import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enums/solicitud-pantallas.enum';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
