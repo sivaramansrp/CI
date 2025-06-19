@@ -8,6 +8,7 @@ import { AvisoOpcionesDeRadio } from '../../models/aviso-catalogo.model';
 import { CommonModule } from '@angular/common';
 import { DatoSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
 import { DatoSolicitudStore } from '../../estados/tramites/dato-solicitud.store';
+import { DatosResiduosPeligrososComponent } from '../datos-residuos-peligrosos/datos-residuos-peligrosos.component';
 import { EstadoDatoSolicitud } from '../../models/datos-solicitud.model';
 import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
 import { Modal } from 'bootstrap';
@@ -41,7 +42,8 @@ const RADIO_OPCIONES = rawData as SolicitudJson;
     TituloComponent,
     ReactiveFormsModule,
     TableComponent,
-    InputRadioComponent
+    InputRadioComponent,
+    DatosResiduosPeligrososComponent
   ],
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.scss'
