@@ -1322,6 +1322,49 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       'descripcionTipoSolicitud',
       'setDescripcionTipoSolicitud'
     );
+
+    const FORMA_MODIFICADA = Object.keys(this.FormSolicitud.controls).some(
+      (key) => {
+        if (key !== 'tipoSolicitud' && key !== 'descripcionTipoSolicitud') {
+          return (
+            this.FormSolicitud.controls[key].dirty ||
+            this.FormSolicitud.controls[key].touched
+          );
+        }
+        return false;
+      }
+    );
+
+    if (FORMA_MODIFICADA) {
+      this.fechaIntervaloValidator();
+      if (this.datosServicio.hasError('endDateBeforeStartDate')) {
+        this.limpiarFechasHoras();
+        return;
+      }
+
+      const MSJ_ERROR_FECHA =
+        this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL
+          ? MSJ_ERROR_FECHA_DIA
+          : this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.SEMANAL
+          ? MSJ_ERROR_FECHA_SEMANA
+          : MSJ_ERROR_FECHA_MES;
+
+      if (this.datosServicio.hasError('invalidIntervalo')) {
+        this.limpiarFechasHoras();
+        this.nuevaNotificacion = {
+          tipoNotificacion: 'alert',
+          categoria: 'danger',
+          modo: 'action',
+          titulo: 'Avisos',
+          mensaje: MSJ_ERROR_FECHA,
+          cerrar: false,
+          txtBtnAceptar: 'Aceptar',
+          txtBtnCancelar: '',
+        };
+        this.mostrarRangoFechas = false;
+        this.colapsable = false;
+      }
+    }
   }
 
   /**
