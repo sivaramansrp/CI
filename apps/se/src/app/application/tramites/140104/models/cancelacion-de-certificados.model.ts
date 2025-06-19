@@ -113,6 +113,13 @@ export interface PermisosDatos {
     motivoCancelacion?: string;
 }
 
+/**
+ * Representa la interfaz para los cupos disponibles en la cancelación de certificados.
+ * Extiende las interfaces `CuposDisponibles` y `Cancelacion`, combinando sus propiedades.
+ *
+ * @see CuposDisponibles
+ * @see Cancelacion
+ */
 export interface CuposDisponiblesCancelacion extends CuposDisponibles, Cancelacion {}
 
 /**
