@@ -1,78 +1,81 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { PAGO_DE_DERECHOS, PASOS } from '../../constantes/aviso-retorno.enum';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user'
+import { map, takeUntil } from 'rxjs';
 import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
-import { map, Subject, takeUntil } from 'rxjs';
-
+import { Subject } from 'rxjs';
 
 /**
- * Componente que representa la sección de aviso de reciclaje.
- * 
- * Este componente permite la navegación entre los pasos de un wizard y maneja la lógica relacionada con el
- * pago de derechos y la visualización de pasos.
- * 
- * - selector: Etiqueta personalizada para utilizar este componente en otras plantillas.
- * - templateUrl: Archivo de plantilla HTML que contiene el diseño visual del componente.
+ * Componente que gestiona el proceso de aviso de retorno mediante un sistema de pasos (wizard).
+ * Controla la navegación entre diferentes pasos del proceso y maneja la lógica relacionada con:
+ * - Consulta de estados
+ * - Carga inicial de datos
+ * - Navegación entre pasos
+ * - Gestión de suscripciones
  */
 @Component({
   selector: 'app-aviso-retorno',
   templateUrl: './aviso-retorno.component.html',
 })
-export class AvisoRetornoComponent implements OnInit {
-
+export class AvisoRetornoComponent implements OnInit, OnDestroy {
   /**
-   * Lista de pasos del wizard.
-   * 
+   * Lista de pasos configurados para el wizard.
    * @type {ListaPasosWizard[]}
-   * @property pasos
-   * Arreglo que contiene los pasos del wizard, que se definen en la constante `PASOS`.
    */
   pasos: ListaPasosWizard[] = PASOS;
 
   /**
-   * Componente del wizard.
-   * 
+   * Referencia al componente wizard para controlar la navegación entre pasos.
    * @type {WizardComponent}
-   * @property wizardComponent
-   * Referencia al componente del wizard que maneja la lógica de navegación entre los pasos.
    */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
   /**
-   * Clase CSS utilizada para mostrar una alerta de tipo informativo.
-   * 
+   * Clase CSS para estilizar alertas informativas.
    * @type {string}
    */
   public infoAlert = 'alert-info';
 
   /**
-   * Textos utilizados relacionados con el pago de derechos.
-   * 
+   * Textos estáticos relacionados con el pago de derechos.
    * @type {typeof PAGO_DE_DERECHOS}
    */
   TEXTOS = PAGO_DE_DERECHOS;
 
   /**
-   * Índice de la pestaña seleccionada en el wizard.
-   * 
+   * Índice del paso actual en el wizard.
    * @type {number}
-   * @property indice
-   * Valor numérico que representa el índice de la pestaña actual en el wizard (por defecto en 1).
    */
   indice: number = 1;
+
   /**
-   * Subject utilizado para notificar y limpiar las suscripciones al destruir el componente.
+   * Subject para gestionar la destrucción de suscripciones.
+   * @type {Subject<void>}
    */
   private destroy$ = new Subject<void>();
 
-  /** Subject para notificar la destrucción del componente. */
+  /**
+   * Estado actual de la consulta (lectura/edición).
+   * @type {ConsultaioState}
+   */
   public consultaState!: ConsultaioState;
 
   /**
-   * Constructor del componente.
-   * @param consultaQuery Servicio para consultar el estado de la consulta.
-   * @param avisoDeReciclajeServiceService Servicio para manejar los datos del aviso de reciclaje.
+   * Datos de configuración para el componente de pasos.
+   * @type {DatosPasos}
+   */
+  datosPasos: DatosPasos = {
+    nroPasos: this.pasos.length,
+    indice: this.indice,
+    txtBtnAnt: 'Anterior',
+    txtBtnSig: 'Continuar'
+  };
+
+  /**
+   * Constructor para inyección de dependencias.
+   * @param consultaQuery Query para estado de consulta
+   * @param mercanciasDesmontadasOSinMontarService Servicio para operaciones de mercancías
    */
   constructor(
     private consultaQuery: ConsultaioQuery,
@@ -80,38 +83,41 @@ export class AvisoRetornoComponent implements OnInit {
   ) { }
 
   /**
-   * Método que se ejecuta al inicializar el componente.
-   * Se suscribe al estado de la consulta y actualiza la propiedad consultaState.
-   * Si el estado indica actualización, carga los datos del formulario.
+   * Inicialización del componente:
+   * - Configura suscripción al estado de consulta
+   * - Carga datos iniciales si es necesario
    */
   ngOnInit(): void {
+    this.configurarSuscripcionEstadoConsulta();
+  }
+
+  /**
+   * Configura la suscripción al estado de consulta:
+   * - Actualiza el estado local
+   * - Carga datos si está en modo actualización
+   */
+  private configurarSuscripcionEstadoConsulta(): void {
     this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroy$),
         map((seccionState) => {
-          // Actualiza el estado de la consulta
           this.consultaState = seccionState;
+          if (seccionState.update) {
+            this.guardarDatosFormulario();
+          }
         })
       )
       .subscribe();
-
-    // Si el estado indica actualización, carga los datos del formulario.
-    if (this.consultaState.update) {
-      this.guardarDatosFormulario();
-    }
   }
 
   /**
-   * Método para guardar los datos del formulario.
-   * Obtiene los datos iniciales de la solicitud y actualiza el estado del formulario si la respuesta es válida.
+   * Obtiene y guarda los datos iniciales del formulario desde el servicio.
    */
   guardarDatosFormulario(): void {
     this.mercanciasDesmontadasOSinMontarService
-      .obtenerDatosSolicitudInicial().pipe(
-        takeUntil(this.destroy$)
-      )
+      .obtenerDatosSolicitudInicial()
+      .pipe(takeUntil(this.destroy$))
       .subscribe((resp) => {
-        // Si la respuesta existe, actualiza el estado del formulario
         if (resp) {
           this.mercanciasDesmontadasOSinMontarService.actualizarEstadoFormulario(resp);
         }
@@ -119,36 +125,35 @@ export class AvisoRetornoComponent implements OnInit {
   }
 
   /**
-   * Datos necesarios para gestionar los pasos del wizard.
-   * 
-   * @type {DatosPasos}
-   * @property datosPasos
-   * Objeto que contiene los datos relacionados con la navegación del wizard.
-   */
-  datosPasos: DatosPasos = {
-    nroPasos: this.pasos.length, // Número de pasos del wizard
-    indice: this.indice, // Índice actual de la pestaña
-    txtBtnAnt: 'Anterior', // Texto del botón "Anterior"
-    txtBtnSig: 'Continuar', // Texto del botón "Continuar"
-  };
-
-  /**
-   * Actualiza el valor del índice y navega entre los pasos del wizard según la acción del botón.
-   * 
-   * @param e Objeto que contiene la acción y el valor del botón presionado.
-   * @returns {void}
+   * Maneja la navegación entre pasos del wizard.
+   * @param e Objeto con información de la acción del botón
    */
   public getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 5) {
       this.indice = e.valor;
-      if (e.accion === 'cont') {
-        // Si la acción es 'cont', se avanza al siguiente paso
-        this.wizardComponent?.siguiente();
-      } else {
-        // Si la acción no es 'cont', retrocedemos al paso anterior
-        this.wizardComponent.atras();
-      }
+      this.actualizarNavegacionWizard(e.accion);
     }
   }
 
+  /**
+   * Ejecuta la acción de navegación en el wizard según el botón presionado.
+   * @param accion Tipo de acción ('cont' para continuar, otros para retroceder)
+   */
+  private actualizarNavegacionWizard(accion: string): void {
+    if (accion === 'cont') {
+      this.wizardComponent?.siguiente();
+    } else {
+      this.wizardComponent?.atras();
+    }
+  }
+
+  /**
+   * Limpieza al destruir el componente:
+   * - Completa el subject de destrucción
+   * - Cancela suscripciones activas
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
 }
