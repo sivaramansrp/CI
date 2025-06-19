@@ -1,7 +1,8 @@
+import { Injectable, inject } from '@angular/core';
 import {Observable, catchError, throwError } from 'rxjs';
+import { APPINJECT } from '../../../../app.inject'
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
-import { APPINJECT } from 'apps/aga/src/app/app.inject';
+
 
 /**
  * Representa la estructura de una respuesta JSON.

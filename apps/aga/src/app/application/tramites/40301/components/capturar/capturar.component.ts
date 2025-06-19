@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
-import { CATALOGOS_40301_ID } from '../../enum/caat-naviero.enum';
 import { CaatNaviroMetaInfo } from '../../modelos/caat-naviero.modalidad.model';
 import { CapturarService } from '../../services/capturar.service';
 import { Catalogo } from '@libs/shared/data-access-user/src';
@@ -104,7 +103,7 @@ export class CapturarComponent implements OnInit, OnDestroy {
    */
   public readMetaInfo(): void {
     // Obtener el título desde el servicio
-    this.capturarService.obtenerMetaInfo(CATALOGOS_40301_ID.OBTENER_META_INFO)
+    this.capturarService.obtenerMetaInfo()
       .pipe(
         takeUntil(this.destruirNotificador$),
         map((info: CaatNaviroMetaInfo) => {
@@ -125,7 +124,7 @@ export class CapturarComponent implements OnInit, OnDestroy {
       .subscribe();
 
     this.capturarService
-      .getCatalogo(CATALOGOS_40301_ID.AGENT_CATALOG)
+      .getCatalogo()
       .pipe(
         takeUntil(this.destruirNotificador$),
         map((agentCatalog: Catalogo[]) => {
