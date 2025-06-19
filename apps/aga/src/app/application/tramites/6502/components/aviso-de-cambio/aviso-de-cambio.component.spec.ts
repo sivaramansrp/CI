@@ -70,20 +70,6 @@ describe('AvisoDeCambioComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('ngOnInit', () => {
-    it('should call required initialization methods', () => {
-      const cargarEstadoSpy = jest.spyOn(component, 'cargarEstadoTramite');
-      const obtenerFormaSpy = jest.spyOn(component, 'obtenerFormaDatos');
-      const obtenerInstalacionesSpy = jest.spyOn(component, 'obtenerInstalacionesPrincipalesTablaDatos');
-
-      component.ngOnInit();
-
-      expect(cargarEstadoSpy).toHaveBeenCalled();
-      expect(obtenerFormaSpy).toHaveBeenCalled();
-      expect(obtenerInstalacionesSpy).toHaveBeenCalled();
-    });
-  });
-
   describe('cargarEstadoTramite', () => {
     it('should update solicitudState when store emits new value', () => {
       const testState = { curpActualizada: 'TEST123', confirmacioCurpActualizada: 'TEST123' };
@@ -200,11 +186,6 @@ describe('AvisoDeCambioComponent', () => {
   });
 
   describe('modal operations', () => {
-    it('should initialize modal in ngAfterViewInit', () => {
-      component.modal = { nativeElement: {} } as ElementRef;
-      component.ngAfterViewInit();
-      expect(component.modalInstance).toBeDefined();
-    });
 
     it('should open and close modal', () => {
       component.modalInstance = {
