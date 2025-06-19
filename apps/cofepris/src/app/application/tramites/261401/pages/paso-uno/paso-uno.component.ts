@@ -88,6 +88,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     private tramite261401Query: Tramite261401Query,
     private consultaQuery: ConsultaioQuery
   ) {
+    this.inicializarDatosSolicitud();
       this.consultaQuery.selectConsultaioState$
     .pipe(
       takeUntil(this.notificadorDestruccion$),
@@ -116,7 +117,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     } else {
       this.esDatosRespuesta = true;
     }
-    this.inicializarDatosSolicitud();
+    
   }
     /**
   * Obtiene los datos de la solicitud desde un servicio y actualiza el estado del formulario.  
