@@ -23,28 +23,27 @@ import {
   styleUrl: './paso-uno.component.scss',
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
-    /**
-   * The index of the currently selected tab.
+  /**
+   * Índice de la pestaña actualmente seleccionada.
    * 
    * @type {number | undefined}
    * @default 1
    */
   indice: number | undefined = 1;
 
-   /**
-   * Esta variable se utiliza para almacenar el índice del subtítulo.
+  /**
+   * Almacena el estado de la consulta actual.
    */
   public consultaState!: ConsultaioState;
 
-/**
-   * @description Constructor del componente.
-   * Inicializa el componente y establece el índice de la pestaña seleccionada.
+  /**
+   * Indica si el formulario está deshabilitado.
    */
   formularioDeshabilitado: boolean = false;
 
-   /**
-   * A `Subject` used as a notifier to signal the destruction of the component.
-   * This is typically used to unsubscribe from observables to prevent memory leaks.
+  /**
+   * Subject utilizado para notificar la destrucción del componente.
+   * Se usa para cancelar suscripciones y evitar fugas de memoria.
    * 
    * @private
    * @type {Subject<void>}
@@ -52,30 +51,26 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   private destroyNotifier$: Subject<void> = new Subject();
 
   /**
-   * Constructor de la clase PasoUnoComponent.
+   * Constructor del componente PasoUnoComponent.
    * 
-   * Este constructor inyecta las dependencias necesarias para el funcionamiento del componente.
+   * Inyecta los servicios necesarios para la gestión del estado y consultas del trámite.
    * 
-   * @param tramite260201Query - Servicio que proporciona acceso a las consultas relacionadas con el flujo del trámite.
-   * @param tramite260201Store - Servicio que gestiona el estado del flujo del trámite.
+   * @param tramite260201Query Servicio para consultar el estado del trámite.
+   * @param tramite260201Store Servicio para actualizar el estado del trámite.
+   * @param consultaQuery Servicio para consultar el estado de la consulta.
+   * @param http Cliente HTTP para realizar peticiones.
    */
   constructor(
     private tramite260201Query: Tramite260201Query,
-        private tramite260201Store: Tramite260201Store,
+    private tramite260201Store: Tramite260201Store,
     private consultaQuery: ConsultaioQuery,
     private readonly http: HttpClient
-  ) {
-    // El constructor necesita inyectar las dependencias.
-  }
+  ) {}
 
   /**
-   * @override
-   * @method ngOnInit
-   * @description Este método se ejecuta al inicializar el componente. Se suscribe al observable `getTabSeleccionado$` 
-   * del servicio `tramite260201Query` para obtener el índice de la pestaña seleccionada y lo asigna a la propiedad `indice`.
-   * También utiliza el operador `takeUntil` para gestionar la suscripción y evitar fugas de memoria, 
-   * deteniéndola cuando se emite un valor en el observable `destroyNotifier$`.
-   * @returns {void}
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Se suscribe a los observables para obtener el índice de la pestaña seleccionada y el estado de la consulta.
+   * Gestiona la habilitación/deshabilitación del formulario y la carga de datos según el estado.
    */
   ngOnInit(): void {
     this.tramite260201Query.getTabSeleccionado$
@@ -83,7 +78,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       .subscribe((tab) => {
         this.indice = tab;
       });
-      this.consultaQuery.selectConsultaioState$
+    this.consultaQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -102,30 +97,25 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   /**
    * Selecciona una pestaña específica en el flujo del trámite.
    *
-   * @param i - El índice de la pestaña que se desea seleccionar.
+   * @param i Índice de la pestaña a seleccionar.
    */
   seleccionaTab(i: number): void {
     this.tramite260201Store.updateTabSeleccionado(i);
   }
 
   /**
-   * Método del ciclo de vida de Angular que se llama justo antes de que el componente sea destruido.
-   *
-   * Este método emite un valor a través del observable `destroyNotifier$` para notificar a los suscriptores
-   * que el componente está siendo destruido, y luego completa el observable para liberar recursos.
-   *
-   * @returns {void} No retorna ningún valor.
+   * Método del ciclo de vida de Angular que se llama antes de destruir el componente.
+   * Emite una notificación para cancelar las suscripciones y libera recursos.
    */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
 
-  /**More actions
+  /**
    * Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.
    *
-   * @returns Observable con los datos del estado de la solicitud `Tramite260202State`,
-   *          cargados desde el archivo JSON especificado en la ruta de `assets`.
+   * @returns Observable con los datos del estado del trámite cargados desde el archivo JSON.
    */
   getRegistroTomaMuestrasMercanciasData(): Observable<Tramite260201State> {
     return this.http.get<Tramite260201State>(
@@ -134,8 +124,8 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   }
 
   /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.More actions
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Posteriormente, actualiza el formulario con los valores del store.
    */
   guardarDatosFormulario(): void {
     this.getRegistroTomaMuestrasMercanciasData()
@@ -150,8 +140,7 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
   /**
    * Actualiza el estado del formulario con los datos proporcionados.
    *
-   * @param DATOS - Estado de la solicitud `Solicitud230401State` con la información
-   *                del tipo de solicitud a actualizar en el store.
+   * @param DATOS Estado del trámite con la información a actualizar en el store.
    */
   actualizarEstadoFormulario(DATOS: Tramite260201State): void {
     this.tramite260201Store.update((state) => ({

@@ -1,5 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+
+import {
+  Component,
+  Input
+} from '@angular/core';
+
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ID_PROCEDIMIENTO } from '../../../constants/psicotropicos-poretorno.enum';
 import { Observable } from 'rxjs';
