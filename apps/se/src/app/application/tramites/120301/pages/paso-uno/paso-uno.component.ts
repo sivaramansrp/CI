@@ -5,8 +5,6 @@
  *
  * @import { Component } from '@angular/core';
  */
-
-// Angular Core
 import {
   Component,
   OnDestroy,
