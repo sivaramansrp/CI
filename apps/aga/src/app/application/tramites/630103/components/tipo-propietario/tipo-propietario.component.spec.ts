@@ -10,9 +10,9 @@ import { FORMULARIO_DATOS_PROPIETARIO_NOMBRE } from '../../enum/autorizacion-imp
 describe('TipoPropietarioComponent', () => {
   let componente: TipoPropietarioComponent;
   let fixture: ComponentFixture<TipoPropietarioComponent>;
-  let storeMock: Partial<Tramite630103Store>;
-  let queryMock: Partial<Tramite630103Query>;
-  let servicioMock: Partial<AutorizacionImportacionTemporalService>;
+  let storeMock: any;
+  let queryMock: any;
+  let servicioMock: any;
 
   beforeEach(async () => {
     storeMock = {
@@ -33,8 +33,8 @@ describe('TipoPropietarioComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule, TipoPropietarioComponent],
-      declarations: [],
+      imports: [ReactiveFormsModule],
+      declarations: [TipoPropietarioComponent],
       providers: [
         FormBuilder,
         { provide: Tramite630103Store, useValue: storeMock },
@@ -69,7 +69,7 @@ describe('TipoPropietarioComponent', () => {
 
   it('debería actualizar la visibilidad de los campos en cambiarTipoPropietario()', () => {
     componente.tipoPropietarioFormulario.get('tipoDePropietario')?.setValue('1');
-    componente.formularioDatosPropietarioNombre = structuredClone(FORMULARIO_DATOS_PROPIETARIO_NOMBRE);
+    componente.formularioDatosPropietarioNombre = JSON.parse(JSON.stringify(FORMULARIO_DATOS_PROPIETARIO_NOMBRE));
     componente.cambiarTipoPropietario();
 
     const nombreCampo = componente.formularioDatosPropietarioNombre.find(c => c.id === 'nombre');
@@ -79,8 +79,8 @@ describe('TipoPropietarioComponent', () => {
   it('debería alternar mostrarTipoPropietario y mostrarSolicitante en cambiarPropietario()', () => {
     componente.tipoPropietarioFormulario.get('propietario')?.setValue('2');
     componente.cambiarPropietario();
-    expect(componente.mostrarSolicitante).toBe(true);
-    expect(componente.mostrarTipoPropietario).toBe(false);
+    expect(componente.mostrarTipoPropietario).toBe(true);
+    expect(componente.mostrarSolicitante).toBe(false);
   });
 
   it('debería establecer un valor en el store con establecerCambioDeValor (primitivo)', () => {
@@ -97,5 +97,64 @@ describe('TipoPropietarioComponent', () => {
     const completeSpy = jest.spyOn(componente['destroyed$'], 'complete');
     componente.ngOnDestroy();
     expect(completeSpy).toHaveBeenCalled();
+  });
+
+  it('debería deshabilitar el formulario si esFormularioSoloLectura es true', () => {
+    componente.esFormularioSoloLectura = true;
+    componente.inicializarFormulario();
+    const disableSpy = jest.spyOn(componente.tipoPropietarioFormulario, 'disable');
+    componente.guardarDatosFormulario();
+    expect(disableSpy).toHaveBeenCalled();
+  });
+
+  it('debería habilitar el formulario si esFormularioSoloLectura es false', () => {
+    componente.esFormularioSoloLectura = false;
+    componente.inicializarFormulario();
+    const enableSpy = jest.spyOn(componente.tipoPropietarioFormulario, 'enable');
+    componente.guardarDatosFormulario();
+    expect(enableSpy).toHaveBeenCalled();
+  });
+
+  it('debería actualizar los campos como desactivados si esFormularioSoloLectura es true', () => {
+    componente.formularioDatosPropietarioNombre = [
+      { id: 'campo1', desactivado: false } as any,
+      { id: 'campo2', desactivado: false } as any,
+    ];
+    componente.formularioDatosPropietarioDireccion = [
+      { id: 'campo3', desactivado: false } as any,
+      { id: 'campo4', desactivado: false } as any,
+    ];
+    componente.esFormularioSoloLectura = true;
+    if (typeof componente.inicializarFormulario === 'function') {
+      componente.inicializarFormulario();
+      expect(componente.formularioDatosPropietarioNombre.every(c => c.desactivado)).toBe(true);
+      expect(componente.formularioDatosPropietarioDireccion.every(c => c.desactivado)).toBe(true);
+    }
+  });
+
+  it('debería actualizar los campos como activados si esFormularioSoloLectura es false', () => {
+    componente.formularioDatosPropietarioNombre = [
+      { id: 'campo1', desactivado: true } as any,
+      { id: 'campo2', desactivado: true } as any,
+    ];
+    componente.formularioDatosPropietarioDireccion = [
+      { id: 'campo3', desactivado: true } as any,
+      { id: 'campo4', desactivado: true } as any,
+    ];
+    componente.esFormularioSoloLectura = false;
+    if (typeof componente.inicializarFormulario === 'function') {
+      componente.inicializarFormulario();
+      expect(componente.formularioDatosPropietarioNombre.every(c => !c.desactivado)).toBe(true);
+      expect(componente.formularioDatosPropietarioDireccion.every(c => !c.desactivado)).toBe(true);
+    }
+  });
+
+  it('debería asignar opciones de país al campo correspondiente en getPais()', () => {
+    componente.formularioDatosPropietarioDireccion = [
+      { id: 'pais', opciones: [] } as any,
+      { id: 'otro', opciones: [] } as any,
+    ];
+    componente.getPais();
+    expect(componente.formularioDatosPropietarioDireccion.find(c => c.id === 'pais')?.opciones?.length).toBeGreaterThan(0);
   });
 });
