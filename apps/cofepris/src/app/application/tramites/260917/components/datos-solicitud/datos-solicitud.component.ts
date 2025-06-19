@@ -51,7 +51,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    * Cuando es `true`, los formularios estarán deshabilitados y no se podrán editar.
    * Cuando es `false`, los formularios estarán habilitados para edición.
    */
-  esFormularioSoloLectura: boolean = false;
+  public esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente DomicilloDelComponent.

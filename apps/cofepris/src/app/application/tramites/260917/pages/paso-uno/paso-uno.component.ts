@@ -64,23 +64,6 @@ export class PasoUnoComponent implements OnInit {
     })).subscribe();
   }
 
-    /**
-   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
-   * Luego reinicializa el formulario con los valores actualizados desde el store.
-   */
-  // guardarDatosFormulario(): void {
-  //   this.solocitud260917Service
-  //     .getRegistroTomaMuestrasMercanciasData().pipe(
-  //       takeUntil(this.destroyNotifier$)
-  //     )
-  //     .subscribe((resp) => {
-  //       if(resp){
-  //       this.esDatosRespuesta = true;
-  //       this.solocitud260917Service.actualizarEstadoFormulario(resp);
-  //       }
-  //     });
-  // }
-
    /**
     * Selecciona una pestaña estableciendo su índice.
     * @param i El índice de la pestaña a seleccionar.

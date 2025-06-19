@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { Input } from '@angular/core';
 import { OnInit } from '@angular/core';
 
@@ -55,7 +55,7 @@ import { map, Subject, takeUntil } from 'rxjs';
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.css',
 })
-export class TercerosRelacionadosComponent implements OnInit {
+export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   /**
    * @property {number} idProcedimiento
    * Identificador único del procedimiento asociado a la solicitud.
@@ -542,5 +542,14 @@ export class TercerosRelacionadosComponent implements OnInit {
     );
 
     this.facturadorEliminar.emit(this.facturadorTablaDatos);
+  }
+
+  /**
+   * Ciclo de vida `OnDestroy`.
+   * Limpia las suscripciones para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
