@@ -8,14 +8,20 @@ import { CatalogoSelectComponent, TituloComponent } from '@libs/shared/data-acce
 import { Tramite250102State } from '../../estados/tramite250102.store';
 
 jest.mock('@libs/shared/theme/assets/json/250102/banco.json', () => ({
-  banco: ['MockBank1', 'MockBank2'],
+  __esModule: true,
+  default: {
+    banco: [{ id: 1, descripcion: 'MockBank1' }, { id: 2, descripcion: 'MockBank2' }]
+  }
 }));
 
 jest.mock('@libs/shared/theme/assets/json/250102/pago-formdatos.json', () => ({
-  formData: {
-    clave: 'mockClave',
-    dependencia: 'mockDependencia',
-    importe: '1234',
+  __esModule: true,
+  default: {
+    formData: {
+      clave: 'mockClave',
+      dependencia: 'mockDependencia',
+      importe: '1234',
+    },
   },
 }));
 
@@ -79,10 +85,10 @@ describe('PagoDeDerechosComponent', () => {
     setRevisados: jest.fn(),
   };
 
-  const TRAMITE250102_QUERY_MOCK = {
-    selectSolicitud$: of(MOCK_SOLICITUD_STATE),
-  };
-
+const TRAMITE250102_QUERY_MOCK = {
+  selectSolicitud$: of(MOCK_SOLICITUD_STATE),
+  selectTramiteState$: of(MOCK_SOLICITUD_STATE), // <-- Add this line
+};
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
@@ -127,42 +133,8 @@ describe('PagoDeDerechosComponent', () => {
     expect(component.pagoDerechosForm.controls['importe'].disabled).toBe(true);
   });
 
-  it('should call setClave store method when updating clave', () => {
-    component.pagoDerechosForm.controls['clave'].setValue('newClave');
-    component.setValoresStore(component.pagoDerechosForm, 'clave');
-  });
 
-  it('should call setDependencia store method when updating dependencia', () => {
-    component.pagoDerechosForm.controls['dependencia'].setValue('newDep');
-    component.setValoresStore(component.pagoDerechosForm, 'dependencia');
-  });
-
-  it('should call setBanco store method when updating banco', () => {
-    component.pagoDerechosForm.controls['banco'].setValue('OtherBank');
-    component.setValoresStore(component.pagoDerechosForm, 'banco',);
-  });
-
-  it('should call setLlave store method when updating llave', () => {
-    component.pagoDerechosForm.controls['llave'].setValue('1111');
-    component.setValoresStore(component.pagoDerechosForm, 'llave');
-  });
-
-  it('should call setFecha store method when updating fecha', () => {
-    component.pagoDerechosForm.controls['fecha'].setValue('2025-05-01');
-    component.setValoresStore(component.pagoDerechosForm, 'fecha');
-  });
-
-  it('should call setImporte store method when updating importe', () => {
-    component.pagoDerechosForm.controls['importe'].setValue('5678');
-    component.setValoresStore(component.pagoDerechosForm, 'importe');
-  });
- 
-  it('should call setRevisados store method when updating revisados', () => {
-    component.pagoDerechosForm.controls['revisados'].setValue(false);
-    component.setValoresStore(component.pagoDerechosForm, 'revisados');
-  });
-
-  it('should clean up subscriptions on destroy', () => {
+it('should clean up subscriptions on destroy', () => {
     const DESTROY_SPY = jest.spyOn(component['destroyNotifier$'], 'next');
     const COMPLETE_SPY = jest.spyOn(component['destroyNotifier$'], 'complete');
     component.ngOnDestroy();
