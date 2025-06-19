@@ -1,14 +1,26 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { DestinoFinal, Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Subject, takeUntil } from 'rxjs';
+import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
 import { Tramite240112Query } from '../../estados/tramite240112Query.query';
 
 @Component({
   selector: 'app-terceros-relacionados-contenedora',
   templateUrl: './terceros-relacionados-contenedora.component.html',
   styleUrl: './terceros-relacionados-contenedora.component.scss',
+  standalone: true,
+  imports: [ TercerosRelacionadosComponent]
 })
 export class TercerosRelacionadosContenedoraComponent implements OnInit,OnDestroy {
+
+  /**
+   * @input
+   * @description
+   * Indica si el formulario debe estar deshabilitado. Cuando es `true`, los controles del formulario estarán inactivos y no permitirán la edición por parte del usuario.
+   * @type {boolean}
+   */
+   @Input() formularioDeshabilitado: boolean = false;
+   
   /**
      * Observable para limpiar las suscripciones activas al destruir el componente.
      * @property {Subject<void>} destroy$

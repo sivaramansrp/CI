@@ -78,15 +78,15 @@ describe('DatosDonatarioComponent', () => {
     expect(component.datosDonatarioForm.value).toEqual({
       rfcDonatario: 'RFC123',
       nombreDonatario: 'Donatario Ejemplo',
-      calleDonatario: null,
-      numExteriorDonatario: null,
-      numInteriorDonatario: null,
-      cvePaisDonatario: null,
-      codigoPostalDonatario: null,
-      estadoDonatario: null,
-      coloniaDonatario: null,
-      correoElectronicoDonatario: null,
-      telefonoDonatario: null
+      calleDonatario: undefined,
+      numExteriorDonatario: undefined,
+      numInteriorDonatario: undefined,
+      cvePaisDonatario: undefined,
+      codigoPostalDonatario: undefined,
+      estadoDonatario: undefined,
+      coloniaDonatario: undefined,
+      correoElectronicoDonatario: undefined,
+      telefonoDonatario: undefined
     });
   });
 

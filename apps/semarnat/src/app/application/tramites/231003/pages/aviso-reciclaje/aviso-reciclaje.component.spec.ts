@@ -2,6 +2,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { AvisoReciclajeComponent } from './aviso-reciclaje.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { WizardComponent, AccionBoton } from '@libs/shared/data-access-user/src';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AvisoReciclajeComponent', () => {
   let component: AvisoReciclajeComponent;
@@ -12,6 +13,10 @@ describe('AvisoReciclajeComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [AvisoReciclajeComponent],
       schemas: [CUSTOM_ELEMENTS_SCHEMA], // Ignores <app-wizard> or similar in HTML
+      imports: [
+        // Import HttpClientTestingModule to provide HttpClient and _HttpClient
+        HttpClientTestingModule
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(AvisoReciclajeComponent);

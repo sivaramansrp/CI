@@ -190,22 +190,4 @@ export class Tramite130115Store extends Store<Tramite130115State> {
       ...valores,
     }));
   }
-
-  /**
-   * Establece el valor de `mostrarTabla` en el estado.
-   * Valor booleano para mostrar u ocultar la tabla.
-   */
-  public setMostrarTabla(mostrar: boolean): void {
-    this.update({ mostrarTabla: mostrar });
-  }
-
-  /**
-   * Almacena los valores de las filas seleccionadas en el estado.
-   * Lista de filas seleccionadas.
-   */
-  public storeTableValues(fila: PartidasDeLaMercanciaModelo[]): void {
-    this.update({
-      filaSeleccionada: fila,
-    });
-  }
 }

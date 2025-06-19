@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDelTramiteComponent } from '../../../../shared/components/datos-del-tramite/datos-del-tramite.component';
 import { DatosDelTramiteFormState } from '../../../../shared/models/datos-del-tramite.model';
 import { ID_PROCEDIMIENTO } from '../../constants/importacion-armas-municiones.enum';
@@ -7,6 +8,7 @@ import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.mo
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
+import { map } from 'rxjs';
 import { takeUntil } from 'rxjs';
 
 import { Tramite240105Query } from '../../estados/tramite240105Query.query';
@@ -52,16 +54,27 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
   /**
+   * Indica si el formulario debe mostrarse en modo solo lectura.
+   *
+   * @type {boolean}
+   * @memberof DatosDelTramiteContenedoraComponent
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    *
    * @method constructor
    * @param {Tramite240105Query} tramiteQuery - Query de Akita para obtener el estado actual del trámite.
    * @param {Tramite240105Store} tramiteStore - Store de Akita para actualizar el estado del trámite.
+   * @param {ConsultaioQuery} consultaQuery - Query para obtener el estado de la consulta de usuario.
    * @returns {void}
    */
   constructor(
     private tramiteQuery: Tramite240105Query,
-    private tramiteStore: Tramite240105Store
+    private tramiteStore: Tramite240105Store,
+    private consultaQuery: ConsultaioQuery,
   ) // eslint-disable-next-line no-empty-function
   {}
 
@@ -84,6 +97,15 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
       .subscribe((data) => {
         this.datosDelTramiteFormState = data;
       });
+
+    this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroy$),
+      map((seccionState) => {
+        this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe();
   }
 
   /**

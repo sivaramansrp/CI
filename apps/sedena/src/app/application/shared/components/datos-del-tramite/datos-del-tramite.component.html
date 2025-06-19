@@ -10,6 +10,7 @@
           rows="3"
           formControlName="justificacion"
           style="height: 90px"
+          [disabled]="esFormularioSoloLectura"
         ></textarea>
         <div class="error-message">
           <small class="text-danger" *ngIf="formDeJustificacion.get('justificacion')?.touched && formDeJustificacion.get('justificacion')?.hasError('required')">
@@ -175,7 +176,7 @@
           name="modificarMercancias"
           class="btn btn-default"
           (click)="modificarDestinatario()"
-          [disabled]="mercanciaTablaSeleccionada.length !== 1"
+          [disabled]="mercanciaTablaSeleccionada.length !== 1 || esFormularioSoloLectura"
         >
           Modificar
         </button> 
@@ -184,7 +185,7 @@
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
           (click)="eliminarDestinatarioFinal()"
-          [disabled]="mercanciaTablaSeleccionada.length !== 1"
+          [disabled]="mercanciaTablaSeleccionada.length !== 1 || esFormularioSoloLectura"
         >
           Eliminar
         </button>
@@ -193,6 +194,7 @@
               type="button"
               name="agregarClave"
               class="btn btn-primary ms-2"
+              [disabled]="esFormularioSoloLectura"
               (click)="irAAcciones('../agregar-datos-mercancia')"
             >
               Agregar

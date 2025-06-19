@@ -1,8 +1,8 @@
+import { RespuestaConsulta, RespuestaMercancia } from '../models/exencion-impuestos.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
-import { RespuestaMercancia } from '../models/exencion-impuestos.model';
 import { Tramite10302Store } from '../estados/tramite10302.store';
 
 /**
@@ -76,5 +76,17 @@ export class ExencionImpuestosService {
    */
   agregarMercancias(): Observable<RespuestaMercancia> {
     return this.http.get<RespuestaMercancia>('assets/json/10302/mercanciaDatos.json');
+  }
+
+  /**
+   * @method getDatosConsulta
+   * @description Obtiene los datos de consulta desde un archivo JSON local.
+   * 
+   * Este método realiza una solicitud HTTP GET para obtener los datos de consulta simulados desde el archivo `consultaDatos.json`.
+   * 
+   * @returns {Observable<RespuestaConsulta>} Un observable que emite la respuesta de los datos de consulta.
+   */
+  getDatosConsulta(): Observable<RespuestaConsulta> {
+    return this.http.get<RespuestaConsulta>(`assets/json/10302/consultaDatos.json`);
   }
 }

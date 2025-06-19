@@ -8,7 +8,6 @@ import { PasoUnoComponent } from '../paso-uno/paso-uno.component';
 import { PasoTresComponent } from '../paso-tres/paso-tres.component';
 import { provideHttpClient } from '@angular/common/http';
 import { provideToastr, ToastrService } from 'ngx-toastr';
-import { PasoCuatroComponent } from "../paso-cuatro/paso-cuatro.component";
 import { PasoDosComponent } from "../paso-dos/paso-dos.component";
 
 describe('SolicitantePageComponent', () => {
@@ -29,7 +28,7 @@ describe('SolicitantePageComponent', () => {
     };
 
     await TestBed.configureTestingModule({
-      imports: [WizardComponent, BtnContinuarComponent, PasoUnoComponent, PasoTresComponent, AlertComponent,PasoDosComponent,PasoCuatroComponent],
+      imports: [WizardComponent, BtnContinuarComponent, PasoUnoComponent, PasoTresComponent, AlertComponent, PasoDosComponent],
       declarations: [SolicitantePageComponent],
       providers: [
         ToastrService,
@@ -112,12 +111,6 @@ describe('SolicitantePageComponent', () => {
     component.indice = 3;
     fixture.detectChanges();
     const pasoTresElement = fixture.debugElement.nativeElement.querySelector('app-paso-tres');
-    expect(pasoTresElement).toBeTruthy();
-  });
-  it('should render app-paso-cuatro when indice is 4', () => {
-    component.indice = 4;
-    fixture.detectChanges();
-    const pasoTresElement = fixture.debugElement.nativeElement.querySelector('app-paso-cuatro');
     expect(pasoTresElement).toBeTruthy();
   });
 

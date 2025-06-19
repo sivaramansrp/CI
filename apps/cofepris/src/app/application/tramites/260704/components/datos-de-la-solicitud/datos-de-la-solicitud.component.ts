@@ -1,8 +1,7 @@
+import { AVISO_PRIVACIDAD, CATALOGO_CLAVE, ENCABEZADOS_SCIAN, ESTADO_CATALOGO, LISTA_CLAVE, MERCANCIAS_DATOS, OPCIONES_RADIO_HACERLOS, RADIO_OPCIONS } from '../../constantes/consulta.enum';
 import {
   Catalogo,
   CatalogoSelectComponent,
-  CatalogosSelect,
-  ConfiguracionColumna,
   InputCheckComponent,
   InputFecha,
   Pedimento,
@@ -12,11 +11,11 @@ import {
 } from '@libs/shared/data-access-user/src';
 import { ColumnasTabla, CrossList, FECHA_FINAL, FECHA_INICIAL, ListaClave, Mercancia } from '../../models/consulta.model';
 import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { CrosslistComponent, InputFechaComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReplaySubject, map, takeUntil } from 'rxjs';
 import { Solicitud260704State, Tramite260704Store } from '../../estados/Tramite260704.store';
-import { AVISO_PRIVACIDAD, CATALOGO_CLAVE, ENCABEZADOS_SCIAN, ESTADO_CATALOGO, LISTA_CLAVE, MERCANCIAS_DATOS, OPCIONES_RADIO_HACERLOS, RADIO_OPCIONS } from '../../constantes/consulta.enum';
 import { CommonModule } from '@angular/common';
 import { ConsultaService } from '../../service/consulta.service';
 import { Modal } from 'bootstrap';
@@ -46,9 +45,21 @@ import { Tramite260704Query } from '../../estados/Tramite260704.query';
   styleUrls: ['./datos-de-la-solicitud.component.css'],
 })
 export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
+  setFecha: string = '';
+  /**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
+
   // Notificación utilizada para mostrar mensajes o alertas en la interfaz.
   public nuevaNotificacion!: Notificacion;
 
+  // Notificación utilizada para mostrar mensajes o alertas en la interfaz.
   public nuevaNotificacion2!: Notificacion;
 
   // Índice del pedimento marcado para eliminación.
@@ -258,8 +269,18 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private query: Tramite260704Query,
     public fb: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // Constructor vacío, no requiere inicialización adicional.
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -280,8 +301,31 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.obtenerTablaMercancias();
     this.obtenerDatosClave();
     this.obtenerTablaListaClave();
+    this.inicializarEstadoFormulario();
   }
-
+/**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.donanteDomicilio();
+    }
+  }
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.donanteDomicilio();
+    if (this.soloLectura) {
+      this.datosDelEstablecimientoForm.disable();
+    } else {
+      this.datosDelEstablecimientoForm.enable();
+    }
+  }
   /**
    * Obtiene los datos de la tabla SCIAN mediante el servicio de consulta.
    */
@@ -702,6 +746,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       manfestosYDeclaraciones: [this.solicitudState?.manfestosYDeclaraciones, [Validators.required]],
       hacerlosPublicos: [this.solicitudState?.hacerlosPublicos, [Validators.required]],
       rfc: [this.solicitudState?.rfc, [Validators.required]],
+      nombreRazon: [this.solicitudState?.nombreRazon, [Validators.required]],
+      apellidoPaterno: [this.solicitudState?.apellidoPaterno, [Validators.required]],
+      apellidoMaterno: [this.solicitudState?.apellidoMaterno, [Validators.required]],
     });
   }
 
@@ -712,7 +759,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     }
   
 
-  if(this.tieneFilaSeleccionadaFabricante  && this.esCheckboxSeleccionado === true) {
+  if(this.tieneFilaSeleccionadaFabricante && this.esCheckboxSeleccionado === true) {
     this.certificadoDisponsiblesTablaDatos.pop();
   }
 }

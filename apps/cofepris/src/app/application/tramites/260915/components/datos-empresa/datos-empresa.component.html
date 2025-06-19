@@ -7,7 +7,7 @@
             <p class="panel-title espacio-extra">
               Opciones de pre-llenado de Solicitud
             </p>
-            <button type="button" class="collpase-button collapsed"></button>
+            <button type="button" class="collpase-button collapsed" [disabled]="esFormularioSoloLectura"></button>
           </div>
           @if(colapsable){
           <div class="panel-collapse collapse in" id="panel-01">
@@ -17,7 +17,7 @@
                 <div class="col-md-6"></div>
                 <div class="col-md-6 text-end">
                   <div class="btn-group">
-                    <button class="btn btn-primary me-2" type="button">
+                    <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura">
                       Copiar datos en una Nueva Solicitud
                     </button>
                   </div>

@@ -7,6 +7,7 @@ import { By } from '@angular/platform-browser';
 import { Observable, of as observableOf, throwError } from 'rxjs';
 import { Component } from '@angular/core';
 import { PasoUnoComponent } from './paso-uno.component';
+
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
   @Input() myCustom;
@@ -28,8 +29,8 @@ class SafeHtmlPipe implements PipeTransform {
 }
 
 describe('PasoUnoComponent', () => {
-  let fixture;
-  let component;
+  let fixture: ComponentFixture<PasoUnoComponent>;
+  let component: PasoUnoComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
@@ -55,20 +56,24 @@ describe('PasoUnoComponent', () => {
     fixture.destroy();
   });
 
+  /**
+   * Verifica que el componente se haya creado correctamente.
+   */
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
+  /**
+   * Verifica que el método `ngAfterViewInit` funcione correctamente.
+   */
   it('should run #ngAfterViewInit()', async () => {
-
     component.ngAfterViewInit();
-
   });
 
+  /**
+   * Verifica que el método `seleccionaTab` funcione correctamente.
+   */
   it('should run #seleccionaTab()', async () => {
-
     component.seleccionaTab({});
-
   });
-
 });
