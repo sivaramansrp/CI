@@ -2546,5 +2546,14 @@
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260919"
 
-}
+},
+  {
+    "id": 120202,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2025-06-10",
+    "fechaActualizacion": "2025-06-17",
+    "diasTranscurridos": "4",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "120202"
+  }
 ]
