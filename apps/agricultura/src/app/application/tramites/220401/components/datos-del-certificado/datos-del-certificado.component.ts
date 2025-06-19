@@ -48,16 +48,16 @@ import unidadRadioFields from '@libs/shared/theme/assets/json/220401/unidad.json
   ],
 })
 export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
-
+ 
   /** Formulario principal para la solicitud. */
-  solicitudForm!: FormGroup;
-  /** Opciones de radio importadas desde JSON. */
+  solicitudForm!:FormGroup;
+ /** Opciones de radio importadas desde JSON. */
   radioOptions = radioOptionsData; // Use imported JSON data
   /**
    * Valor seleccionado en el componente de radio.
    */
   selectedValue: string = 'Producto..';
-  /** Valor seleccionado en el componente de radio. */
+ /** Valor seleccionado en el componente de radio. */
   defaultSelect: string | number = 'oficina central';
   /** Notificador para destruir las suscripciones al salir del componente. */
   private destroyNotifier$: Subject<void> = new Subject();
@@ -88,30 +88,32 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
 
   constructor(private fb: FormBuilder,
     private agregar220401Store: Agregar220401Store,
-    private agregarQuery: AgregarQuery,
+    private agregarQuery: AgregarQuery, 
     private _pantallas220401Service: Pantallas220401Service,
-    private consultaioQuery: ConsultaioQuery,
-
-  ) {
-    this.consultaioQuery.selectConsultaioState$
+    private consultaioQuery: ConsultaioQuery,  
+   
+) {
+  this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
-          if (seccionState.readonly || seccionState.update) {
-            this.inicializarFormulario();
-            this.setCatalogosDatos();
+          if(seccionState.readonly || seccionState.update){
+             this.inicializarFormulario();
+             this.setCatalogosDatos();
+
           }
         })
       )
-      .subscribe();
-  }
-  /**
-     * Inicialización del componente.
-     */
+      .subscribe()
+}
+/**
+   * Inicialización del componente.
+   */
   ngOnInit(): void {
-    this.inicializarCertificadoFormulario();
-  }
+this.inicializarCertificadoFormulario();
+
+      }
 
   /**
    * Inicializa el formulario del certificado según el modo de la vista.
@@ -125,26 +127,26 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
       this.guardarDatosFormulario();
     } else {
       this.inicializarFormulario();
-    }
-
+    }  
+    
   }
 
-  /**
-   * Inicializa el formulario y ajusta su estado (habilitado o deshabilitado) según el modo de solo lectura.
-   * 
-   * - Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es verdadero), deshabilita los formularios `datosdelForm` y `formGroup1`.
-   * - Si no está en modo solo lectura, habilita ambos formularios.
-   * - Si ninguna de las condiciones anteriores se cumple, no realiza ninguna acción adicional.
-   */
-  guardarDatosFormulario(): void {
-    this.inicializarFormulario();
-    if (this.esFormularioSoloLectura) {
-      this.datosdelForm.disable();
-      this.formGroup1.disable();
-    } else {
-      this.datosdelForm.enable();
-      this.formGroup1.enable();
-    }
+    /**
+     * Inicializa el formulario y ajusta su estado (habilitado o deshabilitado) según el modo de solo lectura.
+     * 
+     * - Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es verdadero), deshabilita los formularios `datosdelForm` y `formGroup1`.
+     * - Si no está en modo solo lectura, habilita ambos formularios.
+     * - Si ninguna de las condiciones anteriores se cumple, no realiza ninguna acción adicional.
+     */
+    guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.datosdelForm.disable();
+        this.formGroup1.disable();
+      } else {
+        this.datosdelForm.enable();
+        this.formGroup1.enable();
+      } 
   }
 
   /**
@@ -158,7 +160,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    * - Sincroniza los valores de los controles de `formGroup1` con el estado almacenado en el servicio `_pantallas220401Service`.
    * - Actualiza el formulario `datosdelForm` con los datos actuales de la solicitud.
    */
-  inicializarFormulario(): void {
+  inicializarFormulario():void{
     this.datosdelForm = this.fb.group({
       tipoCertificado: ['', Validators.required],
       message: [{ value: '', disabled: true }],
@@ -167,17 +169,17 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
     this.formGroup1 = this.fb.group({});
     /** Suscripción para obtener el estado de la solicitud. */
     this.agregarQuery.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      )
-      .subscribe();
-    this.formGroup1 = this.fb.group({
-      osia: [this.solicitudState?.osia]
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+        this.solicitudState = seccionState;
+      })
+    )
+    .subscribe();
+    this.formGroup1= this.fb.group({
+      osia:[this.solicitudState?.osia]
     });
-
+    
     this.catalogConfigs.forEach((config) => {
       this.formGroup1.addControl(
         config.controlName,
@@ -196,11 +198,11 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
       });
     });
 
-    this.datosdelForm = this.fb.group({
-      datoscertificado: [this.solicitudState?.datoscertificado],
-      certificada: [this.solicitudState?.certificada],
-      tratamiento: [this.solicitudState?.tratamiento],
-    })
+      this.datosdelForm= this.fb.group({
+        datoscertificado:[this.solicitudState?.datoscertificado],
+        certificada: [this.solicitudState?.certificada],
+        tratamiento:[this.solicitudState?.tratamiento],
+      })
   }
 
   /**
@@ -221,31 +223,31 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
     });
   }
 
-  /**
-* Maneja los cambios en el valor seleccionado.
-*/
-
-  onValueChange(value: string | number): void {
-    this.selectedValue = value.toString();
-  }
-
-  /**
-   * Carga los datos de delegaciones desde el servicio y actualiza la configuración de catálogos.
+      /**
+   * Maneja los cambios en el valor seleccionado.
    */
-  loaddataDelegacionesData(): void {
-    this._pantallas220401Service.getDelegacionesData().subscribe((data) => {
+  
+   onValueChange(value: string | number):void {
+        this.selectedValue = value.toString();
+      }
+  
+    /**
+     * Carga los datos de delegaciones desde el servicio y actualiza la configuración de catálogos.
+     */
+    loaddataDelegacionesData(): void {
+      this._pantallas220401Service.getDelegacionesData().subscribe((data) => {
       this.delegacionesJson = data;
       this.updateCatalogConfigs();
-    });
-  }
-  /**
-   * Actualiza la configuración de los catálogos con los datos de delegaciones actuales.
-   */
-  updateCatalogConfigs(): void {
-    this.catalogConfigs.forEach((config) => {
+      });
+    }
+    /**
+     * Actualiza la configuración de los catálogos con los datos de delegaciones actuales.
+     */
+    updateCatalogConfigs(): void {
+      this.catalogConfigs.forEach((config) => {
       config.catalogo = this.delegacionesJson;
-    });
-  }
+      });
+    }
 
   /**
    * Arreglo que almacena las delegaciones obtenidas para los catálogos.
@@ -253,7 +255,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    */
   delegacionesJson: CatalogoResponse[] = [];
 
-
+  
   /**
    * Formulario reactivo adicional utilizado para gestionar controles dinámicos relacionados con delegaciones.
    * Se inicializa en el método `inicializarFormulario` y se utiliza para almacenar y manipular los valores
@@ -305,7 +307,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
       primerOpcion: '',
     },
   ];
-
+  
   /**
    * Obtiene los valores seleccionados de las delegaciones a partir de la configuración del catálogo
    * y actualiza el estado correspondiente en el servicio _pantallas220401Service.
@@ -315,7 +317,7 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
    *
    * @comdoc
    */
-  getDelegaciones(): void {
+  getDelegaciones():void {
     const SELECTED_DELEGCIONES = this.catalogConfigs.map((config) => ({
       controlName: config.controlName,
       value: this.formGroup1.get(config.controlName)?.value,
@@ -333,31 +335,31 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
-
+  
   }
 
-
-
-  /**
-   * @comdoc
-   * Columnas de la tabla de mercancías.
-   */
-  tableColumns = [
-    'No. partida',
-    'Fracción arancelaria',
-    'Descripción de la fracción',
-    'Unidad de medida de tarifa (UMT)',
-    'Cantidad (UMT)',
-    'Unidad de medida de comercialización (UMC)',
-    'Cantidad (UMC)',
-  ];
-
-  /**
-   * @comdoc
-   * Datos de ejemplo para la tabla de mercancías.
-   */
-  mercanciasData = [
-    {
+   
+    
+    /**
+     * @comdoc
+     * Columnas de la tabla de mercancías.
+     */
+    tableColumns = [
+      'No. partida',
+      'Fracción arancelaria',
+      'Descripción de la fracción',
+      'Unidad de medida de tarifa (UMT)',
+      'Cantidad (UMT)',
+      'Unidad de medida de comercialización (UMC)',
+      'Cantidad (UMC)',
+    ];
+  
+    /**
+     * @comdoc
+     * Datos de ejemplo para la tabla de mercancías.
+     */
+    mercanciasData = [
+      {
       tbodyData: [
         'Establecimiento 1',
         '123-456-7890',
@@ -367,21 +369,21 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
         'Certificado 001',
         'Domicilio 1',
       ],
-    },
-  ];
-  /**
-   * Establece un valor en el store usando el formulario, el nombre del campo y el método correspondiente.
-   * 
-   * @param form Formulario reactivo del que se obtiene el valor.
-   * @param campo Nombre del campo dentro del formulario.
-   * @param metodoNombre Nombre del método del store a invocar.
-   */
-  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Agregar220401Store): void {
-    const VALOR = form.get(campo)?.value;
-    (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
-  }
-
-
+      },
+    ];
+    /**
+     * Establece un valor en el store usando el formulario, el nombre del campo y el método correspondiente.
+     * 
+     * @param form Formulario reactivo del que se obtiene el valor.
+     * @param campo Nombre del campo dentro del formulario.
+     * @param metodoNombre Nombre del método del store a invocar.
+     */
+    setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Agregar220401Store): void {
+      const VALOR = form.get(campo)?.value;
+      (this.agregar220401Store[metodoNombre] as (value: string) => void)(VALOR);
+    }
+    
+ 
   /**
    * @comdoc
    * Devuelve un arreglo de opciones de catálogo para los selectores de delegaciones.
