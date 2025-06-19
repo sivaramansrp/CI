@@ -8,6 +8,8 @@ import {
   TablaSeleccion,
   TituloComponent,
 } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+
 import { Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { DESTINARIO_INFO, DESTINATARIO_TABLA_CONFIGURACION, DestinatarioConfiguracionItem, NACIONALIDAD_OPCIONES, TIPO_PERSONA_OPCIONES } from '../../../230201/enum/destinatario-tabla.enum';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -143,6 +145,21 @@ export class TercerosComponent implements OnInit, OnDestroy {
    */
   metaInfo: MetaInfo = DESTINARIO_INFO;
 
+
+  /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
+
+
   /**
    * Constructor del componente TercerosComponent.
    * Inicializa los servicios y dependencias necesarias para gestionar el estado
@@ -152,6 +169,7 @@ export class TercerosComponent implements OnInit, OnDestroy {
     private phytosanitaryReexportacionService: PhytosanitaryExportacionService,
     private tramite230201Store: Tramite230201Store,
     private tramite230201Query: Tramite230201Query,
+    private consultaioQuery: ConsultaioQuery,
     private modalService: BsModalService,
     private formBuilder: FormBuilder
   ) {}
@@ -173,6 +191,37 @@ export class TercerosComponent implements OnInit, OnDestroy {
 
     this.crearFormularioDestinatario();
     this.cargarDatos();
+
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.notificadorDestruccion$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.updateEstadoFormulario();
+        })
+      )
+      .subscribe();
+
+    this.updateEstadoFormulario();
+  }
+
+
+  /**
+   * Actualiza el estado de los formularios del componente según el modo de solo lectura.
+   *
+   * Si la propiedad `soloLectura` es verdadera, deshabilita todos los formularios asociados
+   * (`solicitudForm`, `agregarMercanciasForm`, `exportacionForm`, y `datosMercancia`).
+   * Si es falsa, habilita dichos formularios para permitir la edición.
+   */
+  updateEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.formularioDestinatario?.disable();
+      this.agregarMercanciasForm?.disable();
+    } else {
+      this.formularioDestinatario?.enable();
+      this.agregarMercanciasForm?.enable();
+    }
   }
 
   /**
