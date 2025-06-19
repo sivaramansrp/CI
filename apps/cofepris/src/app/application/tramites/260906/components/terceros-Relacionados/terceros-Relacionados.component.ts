@@ -1,12 +1,16 @@
 import { AbstractControl, FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, InputRadioComponent, REGEX_CURP, REGEX_RFC_FISICA, REGEX_RFC_MORAL, REGEX_TELEFONO, TituloComponent } from '@libs/shared/data-access-user/src';
 import { CODIGOPOSTALSELECTDATA, COLONIASELECTDATA, LOCALIDADSELECTDATA, MUNICIPIOSELECTDATA, PAISSELECTDATA, TERCEROS_RELACIONADOS_TABLE_HEADER_DATA } from '@libs/shared/data-access-user/src/core/enums/260906/permiso.enum';
+import { Component, OnDestroy } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Sanitario260906Store, Solicitud260906State } from '../../../../estados/tramites/sanitario260906.store';
+import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
 import { ModalComponent } from '../model/modal.component';
 import { OnInit } from '@angular/core';
-import { Sanitario260906Store } from '../../../../estados/tramites/sanitario260906.store';
+import { Permiso260906Query } from '../../../../estados/queries/permiso260906.query';
 import { SanitarioService } from '../../services/sanitario.service';
+import { Subject } from 'rxjs';
 import { TablaDatos } from '@libs/shared/data-access-user/src/core/models/260906/detos.model';
 import { TableComponent } from '@ng-mf/data-access-user';
 import nacionalidadRedio from '@libs/shared/theme/assets/json/260906/nacionalidadRedio.json';
@@ -32,7 +36,7 @@ const TERCEROS_TEXTO_DE_ALERTA =
   styleUrl: './terceros-Relacionados.component.scss',
 
 })
-export class TercerosRelacionadoesComponent implements OnInit {
+export class TercerosRelacionadoesComponent implements OnInit, OnDestroy {
 
   /**
    * Indicador de visibilidad para la sección de la tabla.
@@ -193,6 +197,12 @@ export class TercerosRelacionadoesComponent implements OnInit {
    * @description Se utiliza para validar y procesar los datos del proveedor.
    */
   agregarProveedorFormGroup!: FormGroup;
+  /**
+   * Notificador para destruir observables y evitar memory leaks.
+   * @private
+   * @type {Subject<void>}
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
 
   /**
    * Formulario reactivo para agregar un facturador.
@@ -201,7 +211,20 @@ export class TercerosRelacionadoesComponent implements OnInit {
    * @description Se utiliza para validar y procesar los datos del facturador.
    */
   agregarFacturadorFormGroup!: FormGroup;
+  /**
+   * Estado actual de la consulta obtenido desde el servicio.
+   */
+  consultaDatos!: ConsultaioState;
 
+  /**
+   * Indica si el formulario está en modo de solo lectura.
+   */
+  soloLectura: boolean = false;
+  /**
+    * Estado de la solicitud.
+    * @type {Solicitud260906State}
+    */
+  public solicitudState!: Solicitud260906State;
   /**
    * Constructor del componente.
    * Inyecta el FormBuilder, el store del trámite y el servicio de terceros.
@@ -213,7 +236,10 @@ export class TercerosRelacionadoesComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private Sanitario260906Store: Sanitario260906Store,
-    private service: SanitarioService
+    private service: SanitarioService,
+    private consultaioQuery: ConsultaioQuery,
+    private permiso260906Query: Permiso260906Query
+
   ) {
     // Inicializa el store del trámite 260906.
   }
@@ -223,6 +249,16 @@ export class TercerosRelacionadoesComponent implements OnInit {
    * Obtiene los datos para los selectores desde el servicio y inicializa los formularios.
    */
   ngOnInit(): void {
+
+    this.permiso260906Query
+      .selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     /**
      * Obtiene los datos para los selectores desde el servicio de terceros.
      * Actualiza la propiedad `dropdownData` con los datos obtenidos.
@@ -238,6 +274,16 @@ export class TercerosRelacionadoesComponent implements OnInit {
     this.initializeAgregarDestinatarioFormGroup();
     this.initializeAgregarProveedorFormGroup();
     this.initializeAgregarFacturadorFormGroup();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -374,7 +420,7 @@ export class TercerosRelacionadoesComponent implements OnInit {
     this.agregarFabricanteFormGroup.get('rfc')?.disable();
     this.agregarFabricanteFormGroup.get('curp')?.disable();
     this.agregarFabricanteFormGroup.get('denominacionRazonSocial')?.disable();
-
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -467,7 +513,7 @@ export class TercerosRelacionadoesComponent implements OnInit {
     this.agregarDestinatarioFormGroup.get('rfc')?.disable();
     this.agregarDestinatarioFormGroup.get('curp')?.disable();
     this.agregarDestinatarioFormGroup.get('denominacionRazonSocial')?.disable();
-
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -549,7 +595,7 @@ export class TercerosRelacionadoesComponent implements OnInit {
     this.agregarProveedorFormGroup.get('segundoApellido')?.disable();
     this.agregarProveedorFormGroup.get('primerApellido')?.disable();
     this.agregarProveedorFormGroup.get('denominacionRazonSocial')?.disable();
-
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -635,7 +681,7 @@ export class TercerosRelacionadoesComponent implements OnInit {
     this.agregarFacturadorFormGroup.get('segundoApellido')?.disable();
     this.agregarFacturadorFormGroup.get('primerApellido')?.disable();
     this.agregarFacturadorFormGroup.get('denominacionRazonSocial')?.disable();
-
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -1252,14 +1298,14 @@ export class TercerosRelacionadoesComponent implements OnInit {
     const VALOR_SELECCIONADO = value as string;
     this.inputChecked(VALOR_SELECCIONADO);
     // Habilita campos al cambiar el tipo de persona
-    if (form == 1) {
+    if (form === 1) {
       this.agregarFacturadorFormGroup.get('nombre')?.enable();
       this.agregarFacturadorFormGroup.get('primerApellido')?.enable();
       this.agregarFacturadorFormGroup.get('segundoApellido')?.enable();
       this.agregarFacturadorFormGroup
         .get('denominacionRazonSocial')
         ?.enable();
-    } else if (form == 2) {
+    } else if (form === 2) {
       this.agregarFabricanteFormGroup.get('rfc')?.enable();
       this.agregarFabricanteFormGroup.get('curp')?.enable();
       this.agregarFabricanteFormGroup
@@ -1301,6 +1347,38 @@ export class TercerosRelacionadoesComponent implements OnInit {
   static telefonoValidator(control: AbstractControl): ValidationErrors | null {
     const PATTERN = REGEX_TELEFONO;
     return PATTERN.test(control.value) ? null : { invalidTelefono: true };
+  }
+
+  /**
+ * Método del ciclo de vida de Angular que se llama cuando el componente se destruye.
+ * Este método completa el observable `destroyNotifier$` para cancelar las suscripciones activas.
+ * @returns {void}
+ */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+
+  /**
+* Inicializa el estado del formulario según el modo de solo lectura.
+* @private
+*/
+  private inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.agregarFabricanteFormGroup?.disable();
+      this.agregarDestinatarioFormGroup?.disable();
+      this.agregarProveedorFormGroup?.disable();
+      this.agregarFacturadorFormGroup?.disable();
+      this.fabricanteRowData = this.solicitudState?.Fabricante || [];
+      this.destinatarioRowData = this.solicitudState?.Destinatario || [];
+      this.proveedorRowData = this.solicitudState?.Proveedor || [];
+      this.facturadorRowData = this.solicitudState?.Facturador || [];
+    } else {
+      this.agregarFabricanteFormGroup?.enable();
+      this.agregarDestinatarioFormGroup?.enable();
+      this.agregarProveedorFormGroup?.enable();
+      this.agregarFacturadorFormGroup?.enable();
+    }
   }
 }
 

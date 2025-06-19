@@ -9,6 +9,7 @@ import { Subject,map,takeUntil } from 'rxjs';
 import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { DATOS_SOLICITUD ,Mercancia } from '@libs/shared/data-access-user/src/core/models/221602/mercancia.model';
 import { CONFIGURATION_TABLA_MERCANCIAS} from '@libs/shared/data-access-user/src/core/models/221602/mercancia.model';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { Solicitud221602State, Tramite221602Store } from '../../../../estados/tramites/tramite221602.store';
 import { Tramite221602Query } from '../../../../estados/queries/tramite221602.query';
@@ -127,7 +128,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Configuración de las columnas para la tabla dinámica que muestra las mercancías.
    */
   configuracionTabla: ConfiguracionColumna<Mercancia>[] = CONFIGURATION_TABLA_MERCANCIAS;
-
+   /** Indica si el formulario debe mostrarse en modo solo lectura.  
+ *  Controla la habilitación o deshabilitación de los campos. */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor del componente. Inicializa el formulario reactivo y configura las dependencias necesarias.
    * 
@@ -138,25 +141,65 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite221602Store: Tramite221602Store,
-    private tramite221602Query: Tramite221602Query
-  ) {
-    // Constructor que inyecta las dependencias necesarias
-   }
-
+    private tramite221602Query: Tramite221602Query,
+     private consultaioQuery: ConsultaioQuery,
+        ) { 
+       this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        
+          this.inicializarCertificadoFormulario();
+        })
+      )
+      .subscribe();
+    }
+     /**
+   * Método que se ejecuta cuando el componente es inicializado.
+   * 
+   * Inicializa el formulario reactivo con los valores actuales de la solicitud.
+   */
+  ngOnInit(): void {
+    this.inicializarCertificadoFormulario();
+  }
+   /**
+   * Método para inicializar el formulario reactivo con los datos de la solicitud.
+   * 
+   * Este método configura los campos del formulario con los valores actuales del estado de la solicitud
+   * y aplica las validaciones necesarias. También deshabilita ciertos campos y establece valores predeterminados.
+   */
+  inicializarCertificadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+     this.inicializarFormulario();
+    }  
+  }
+  /**
+   * @comdoc
+   * Guarda los datos del formulario de combinación requerida.
+   * 
+   * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
+   * - Si el formulario es de solo lectura, lo deshabilita.
+   * - Si no es de solo lectura, lo habilita.
+   * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.TramitesForm.disable();
+   
+      } else {
+        this.TramitesForm.enable();
+      
+      }
+  }
   /**
    * Método que abre o cierra el contenido de la solicitud.
    */
   public toggleContent(): void {
     this.showContent = !this.showContent;
-  }
-
-  /**
-   * Método que se ejecuta cuando el componente es inicializado.
-   * 
-   * Inicializa el formulario reactivo y carga los datos necesarios para la solicitud.
-   */
-  ngOnInit(): void {
-    this.inicializarFormulario();
   }
 
   /**

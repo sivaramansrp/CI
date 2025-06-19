@@ -21,10 +21,10 @@ import { DatosSolicitudService } from '../../../../shared/services/datos-solicit
 import { Destinatario } from '../../models/terceros-relacionados-destino.model';
 import { TercerosRelacionadosDestinoService } from '../../services/tereceros-relacionados-destino.service';
 
+import { PERSONA_OPCIONES_DE_BOTON_DE_RADIO } from '../../../../shared/constantes/tereceros-relacionados-fab-seccion.enum';
 import { TituloComponent } from '@ng-mf/data-access-user';
 import { Tramite260104Query } from '../../estados/queries/tramite260104.query';
 import { Tramite260104Store } from '../../estados/stores/tramite260104.store';
-import { PERSONA_OPCIONES_DE_BOTON_DE_RADIO } from '../../../../shared/constantes/tereceros-relacionados-fab-seccion.enum';
 
 /**
  * Componente para modificar los datos del destinatario final en el trámite 260104.

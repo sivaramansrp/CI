@@ -3,6 +3,7 @@ import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
@@ -74,6 +75,15 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
   indice: number = 1;
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /** Observable utilizado para la destrucción de suscripciones */
+  private destroyed$ = new Subject<void>();
+
+  /**
    * Constructor que inicializa los servicios y estados necesarios.
    * @param autoridadService Servicio de autoridad para interactuar con la API.
    * @param fb FormBuilder utilizado para construir formularios reactivos.
@@ -84,17 +94,80 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
     private autoridadService: AutoridadService,
     private fb: FormBuilder,
     public tramite32401Store: Tramite32401Store,
-    private tramite32401Query: Tramite32401Query
+    private tramite32401Query: Tramite32401Query,
+    public consultaioQuery: ConsultaioQuery
   ) {
     // Constructor vacío, se puede agregar lógica adicional si es necesario.
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
-   * Método del ciclo de vida que se ejecuta al inicializar el componente.
-   * Configura los formularios y observa cambios en el estado.
+   * @description Método que se ejecuta al inicializar el componente.
+   * Configura el formulario reactivo y sincroniza datos con el estado actual.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
+  }
+
+  /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
     this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.capturarRequirementoForm.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.capturarRequirementoForm.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+  
+  /**
+   * Inicializa el formulario reactivo con los campos requeridos.
+   */
+  inicializarFormulario(): void {
+    this.capturarRequirementoForm = this.fb.group({
+      motivoCancelacion: [
+        {
+          value: this.solicitud32401State?.motivoCancelacion,
+          disabled: this.esFormularioSoloLectura,
+        },
+        Validators.required,
+      ],
+      tipoDeRequerimiento: [
+        this.solicitud32401State?.tipoDeRequerimiento,
+        Validators.required,
+      ],
+    });
     this.buscarAduanaLista();
     this.tramite32401Query.selectSolicitud$
       .pipe(
@@ -108,22 +181,6 @@ export class CapturarRequerimientoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-  }
-
-  /**
-   * Inicializa el formulario reactivo con los campos requeridos.
-   */
-  inicializarFormulario(): void {
-    this.capturarRequirementoForm = this.fb.group({
-      motivoCancelacion: [
-        this.solicitud32401State?.motivoCancelacion,
-        Validators.required,
-      ],
-      tipoDeRequerimiento: [
-        this.solicitud32401State?.tipoDeRequerimiento,
-        Validators.required,
-      ],
-    });
   }
 
   /**

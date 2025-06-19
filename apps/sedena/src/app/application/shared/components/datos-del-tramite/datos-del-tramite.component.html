@@ -10,9 +10,16 @@
           rows="3"
           formControlName="justificacion"
           style="height: 90px"
+          [disabled]="esFormularioSoloLectura"
         ></textarea>
         <div class="error-message">
-          <small class="text-danger" *ngIf="formDeJustificacion.get('justificacion')?.touched && formDeJustificacion.get('justificacion')?.hasError('required')">
+          <small
+            class="text-danger"
+            *ngIf="
+              formDeJustificacion.get('justificacion')?.touched &&
+              formDeJustificacion.get('justificacion')?.hasError('required')
+            "
+          >
             Este campo es obligatorio.
           </small>
         </div>
@@ -29,10 +36,9 @@
       titulo="Aduana de entrada
       "
     ></ng-titulo>
-  </div>} @if(esAdunaTexto){
-    <div class="row mt-5 titulo">
-      Aduana
-    </div>
+  </div>
+  } @if(esAdunaTexto){
+  <div class="row mt-5 titulo">Aduana</div>
   }
 
   <div class="row mt-3">
@@ -41,10 +47,13 @@
       [label]="aduanasDisponiblesLabel"
       [fechasSeleccionadas]="seleccionarAduanasDisponiblesDatos"
       [botones]="aduanasBotones"
-      (fechasSeleccionadasChange)=
-      "aduanasDisponiblesSeleccionadasChange($event)"
-      [isDisabled]="esFormularioSoloLectura">
-    ></crosslist>
+      (fechasSeleccionadasChange)="
+        aduanasDisponiblesSeleccionadasChange($event)
+      "
+      [isDisabled]="esFormularioSoloLectura"
+    >
+      ></crosslist
+    >
   </div>
   <div class="row mt-5">
     <form [formGroup]="form" class="container">
@@ -64,12 +73,24 @@
             [disabled]="esFormularioSoloLectura"
           />
           <div class="error-message">
-            <small class="text-danger" *ngIf="form.get('permisoGeneral')?.touched && form.get('permisoGeneral')?.hasError('required')">
+            <small
+              class="text-danger"
+              *ngIf="
+                form.get('permisoGeneral')?.touched &&
+                form.get('permisoGeneral')?.hasError('required')
+              "
+            >
               Este campo es obligatorio.
             </small>
-            <small class="text-danger" *ngIf="form.get('permisoGeneral')?.touched && form.get('permisoGeneral')?.hasError('maxlength')">
+            <small
+              class="text-danger"
+              *ngIf="
+                form.get('permisoGeneral')?.touched &&
+                form.get('permisoGeneral')?.hasError('maxlength')
+              "
+            >
               Máximo 22 caracteres permitidos.
-            </small>            
+            </small>
           </div>
         </div>
         }
@@ -79,7 +100,8 @@
               paisEtiqueta.get(idProcedimiento)
                 ? paisEtiqueta.get(idProcedimiento)
                 : 'País de'
-            }} :</label
+            }}
+            :</label
           >
           <input
             type="text"
@@ -103,17 +125,22 @@
             [isDisabled]="esFormularioSoloLectura"
           ></input-fecha>
           <div class="error-message">
-            <small class="text-danger" *ngIf="form.get('fechaPago')?.touched && form.get('fechaPago')?.hasError('required')">
+            <small
+              class="text-danger"
+              *ngIf="
+                form.get('fechaPago')?.touched &&
+                form.get('fechaPago')?.hasError('required')
+              "
+            >
               Este campo es obligatorio.
-            </small>            
+            </small>
           </div>
         </div>
       </div>
-      }
-      @if(fetchaSalida){
-        <div class="row mb-3">
-          <!-- Fecha única de salida de la mercancía -->
-      <div class="col-md-5">
+      } @if(fetchaSalida){
+      <div class="row mb-3">
+        <!-- Fecha única de salida de la mercancía -->
+        <div class="col-md-5">
           <input-fecha
             [datos]="fechaSalidaInput"
             name="fechaSalida"
@@ -122,22 +149,28 @@
             [isDisabled]="esFormularioSoloLectura"
           ></input-fecha>
           <div class="error-message">
-            <small class="text-danger" *ngIf="form.get('fechaSalida')?.touched && form.get('fechaSalida')?.hasError('required')">
+            <small
+              class="text-danger"
+              *ngIf="
+                form.get('fechaSalida')?.touched &&
+                form.get('fechaSalida')?.hasError('required')
+              "
+            >
               Este campo es obligatorio.
-            </small>            
+            </small>
           </div>
-         </div>
         </div>
-        }
+      </div>
+      }
       <div class="mb-3">
         <label for="usoFinal" class="form-label">
           Uso final de la mercancía*:
-                    <span
-          class="bi bi-question-circle-fill fs-4 m-1"
-          title="Uso final de la mercancía"
-          ata-bs-toggle="tooltip"
-        >
-        </span>
+          <span
+            class="bi bi-question-circle-fill fs-4 m-1"
+            title="Uso final de la mercancía"
+            ata-bs-toggle="tooltip"
+          >
+          </span>
         </label>
         <textarea
           id="usoFinal"
@@ -149,9 +182,15 @@
           [disabled]="esFormularioSoloLectura"
         ></textarea>
         <div class="error-message">
-          <small class="text-danger" *ngIf="form?.get('usoFinal')?.touched && form?.get('usoFinal')?.hasError('required')">
+          <small
+            class="text-danger"
+            *ngIf="
+              form?.get('usoFinal')?.touched &&
+              form?.get('usoFinal')?.hasError('required')
+            "
+          >
             Este campo es obligatorio.
-          </small>          
+          </small>
         </div>
       </div>
     </form>
@@ -169,34 +208,39 @@
   <div class="row mt-3">
     <div class="col-md-12">
       <div class="pull-right ml-2">
-@if(this.datosMercanciaTabla.length > 0){
-          <button
+        @if(this.datosMercanciaTabla.length > 0){
+        <button
           type="button"
           name="modificarMercancias"
           class="btn btn-default"
           (click)="modificarDestinatario()"
-          [disabled]="mercanciaTablaSeleccionada.length !== 1"
+          [disabled]="
+            mercanciaTablaSeleccionada.length !== 1 || esFormularioSoloLectura
+          "
         >
           Modificar
-        </button> 
-          <button
+        </button>
+        <button
           type="button"
           name="eliminarMercancias"
           class="btn btn-danger ms-2"
           (click)="eliminarDestinatarioFinal()"
-          [disabled]="mercanciaTablaSeleccionada.length !== 1"
+          [disabled]="
+            mercanciaTablaSeleccionada.length !== 1 || esFormularioSoloLectura
+          "
         >
           Eliminar
         </button>
-      }
-            <button
-              type="button"
-              name="agregarClave"
-              class="btn btn-primary ms-2"
-              (click)="irAAcciones('../agregar-datos-mercancia')"
-            >
-              Agregar
-            </button>
+        }
+        <button
+          type="button"
+          name="agregarClave"
+          class="btn btn-primary ms-2"
+          [disabled]="esFormularioSoloLectura"
+          (click)="irAAcciones()"
+        >
+          Agregar
+        </button>
       </div>
     </div>
   </div>
@@ -241,7 +285,13 @@
           [isDisabled]="esFormularioSoloLectura"
         ></lib-input-check>
         <div class="error-message">
-          <small class="text-danger" *ngIf="form.get('anoEnCurso')?.touched && form.get('anoEnCurso')?.hasError('required')">
+          <small
+            class="text-danger"
+            *ngIf="
+              form.get('anoEnCurso')?.touched &&
+              form.get('anoEnCurso')?.hasError('required')
+            "
+          >
             Este campo es obligatorio.
           </small>
         </div>
@@ -266,9 +316,15 @@
               />
               <span> *</span>
               <div class="error-message">
-                <small class="text-danger" *ngIf="form.get('informacionConfidencial')?.touched && form.get('informacionConfidencial')?.hasError('required')">
+                <small
+                  class="text-danger"
+                  *ngIf="
+                    form.get('informacionConfidencial')?.touched &&
+                    form.get('informacionConfidencial')?.hasError('required')
+                  "
+                >
                   Este campo es obligatorio.
-                </small>                
+                </small>
               </div>
             </div>
             <label

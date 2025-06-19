@@ -1,9 +1,7 @@
 
+import { Elemento, Monumentos } from '../../tramites/280101/constantes/permiso-de-exportacion.enum'; // Importa las interfaces Elemento y Monumentos.
 import { Store, StoreConfig } from '@datorama/akita'; // Importa las clases Store y StoreConfig de Akita para manejar el estado.
 import { Injectable } from '@angular/core'; // Importa el decorador Injectable para inyección de dependencias.
-import { Elemento, Monumentos } from '../../tramites/280101/constantes/permiso-de-exportacion.enum'; // Importa las interfaces Elemento y Monumentos.
-
-
 
 /**
  * Representa un catálogo con un identificador único y una descripción.
@@ -20,27 +18,109 @@ export interface Catalogo {
   descripcion: string;
 }
 
-
-
+/**
+ * Estado de la solicitud para el trámite 280101.
+ * 
+ * @property modalidadOpcion - Opción seleccionada para la modalidad del trámite.
+ * @property exposicionOpcion - Opción seleccionada para la exposición.
+ * @property nombre - Nombre del solicitante o entidad.
+ * @property cantMonumentos - Cantidad de monumentos involucrados.
+ * @property aduana - Aduana relacionada con el trámite.
+ * @property descripcionClobGenerica - Descripción general del trámite.
+ * @property aduanaEntrada - Aduana de entrada de los bienes.
+ * @property elementoTablaDatos - Lista de elementos asociados al trámite.
+ * @property monumentoTablaDatos - Lista de monumentos involucrados.
+ * @property pais - País relacionado con la solicitud.
+ * @property municipioOAlcadia - Municipio o alcaldía correspondiente.
+ * @property localidad - Localidad relacionada con la solicitud.
+ * @property codigoPostal - Código postal de la dirección.
+ * @property estado - Identificador del estado.
+ * @property colonia - Identificador de la colonia.
+ * @property calle - Nombre de la calle.
+ * @property numeroExterior - Número exterior de la dirección.
+ * @property numeroInterior - Número interior de la dirección.
+ */
 export interface Solicitud280101State {
+   /** Opción seleccionada para la modalidad del trámite.
+  * @type {string}
+  */
   modalidadOpcion: string; 
+  /** Opción seleccionada para la exposición.
+   * @type {string}
+   * @default "false"
+   * Representa si la exposición está habilitada o no.
+   */
   exposicionOpcion: string; 
+  /** Nombre del solicitante o entidad.
+   * @type {string}
+   */
   nombre: string; 
+  /** Cantidad de monumentos involucrados.
+   * @type {string}
+   */
   cantMonumentos: string; 
-  aduana: Catalogo[] | null; 
+  /** Aduana relacionada con el trámite.
+   * @type {string}
+   */
+  aduana: string; 
+  /**
+   * Descripción general del trámite.
+   * @type {string}
+   */
   descripcionClobGenerica: string;
-  aduanaEntrada: Catalogo[] | null; 
+  /** Aduana de entrada de los bienes.
+   * @type {string}
+   */
+  aduanaEntrada: string; 
+  /** Lista de elementos asociados al trámite.
+   * @type {Elemento[]}
+   */
   elementoTablaDatos: Elemento[];
+  /** Lista de monumentos involucrados.
+   * @type {Monumentos[]}
+   */
   monumentoTablaDatos: Monumentos[]; 
-  pais: Catalogo[] | null; 
+  /** País relacionado con la solicitud.
+   * @type {string}
+   */
+  pais: string; 
+  /** Municipio o alcaldía correspondiente.
+   * @type {string}
+   */
   municipioOAlcadia: string; 
+  /** Localidad relacionada con la solicitud.
+   * @type {string}
+   */
   localidad: string; 
+  /** Código postal de la dirección.
+   * @type {number}
+   * @default 0
+   */
   codigoPostal: number;
+  /** Identificador del estado.
+   * @type {number}
+   * @default 0
+   */
   estado: number; 
+  /** Identificador de la colonia.
+   * @type {number}
+   * @default 0
+   */
   colonia: number; 
-  calle: string; 
-  numeroExterior: number; 
-  numeroInterior: number; 
+  /** Nombre de la calle.
+   * @type {string}
+   */
+  calle: string;
+  /** Número exterior de la dirección.
+   * @type {number}
+   * @default 0
+   */
+  numeroExterior: number;
+  /** Número interior de la dirección.
+   * @type {number}
+   * @default 0
+   */
+  numeroInterior: number;
 }
 
 /**
@@ -74,12 +154,12 @@ export function createInitialState(): Solicitud280101State {
     exposicionOpcion: "false", 
     cantMonumentos: '', 
     nombre: '', 
-    aduana: null, 
-    aduanaEntrada: null, 
+    aduana: '', 
+    aduanaEntrada: '', 
     descripcionClobGenerica: '', 
     elementoTablaDatos: [], 
     monumentoTablaDatos: [], 
-    pais: null, 
+    pais: '', 
     codigoPostal: 0, 
     estado: 0,
     municipioOAlcadia: '',
@@ -135,7 +215,7 @@ export class Tramite280101Store extends Store<Solicitud280101State> {
    * Actualiza el catálogo de aduanas en el estado.
    * @param aduana Lista de aduanas.
    */
-  public setAduana(aduana: Catalogo[]): void {
+  public setAduana(aduana: string): void {
     this.update((state) => ({
       ...state,
       aduana: aduana,
@@ -157,7 +237,7 @@ export class Tramite280101Store extends Store<Solicitud280101State> {
    * Actualiza el catálogo de países en el estado.
    * @param pais Lista de países.
    */
-  public setPais(pais: Catalogo[]): void {
+  public setPais(pais: string): void {
     this.update((state) => ({
       ...state,
       pais: pais,
@@ -212,7 +292,7 @@ export class Tramite280101Store extends Store<Solicitud280101State> {
    * Actualiza el catálogo de aduanas de entrada en el estado.
    * @param aduanaEntrada Lista de aduanas de entrada.
    */
-  public setAduanaEntrada(aduanaEntrada: Catalogo[]): void {
+  public setAduanaEntrada(aduanaEntrada: string): void {
     this.update((state) => ({
       ...state,
       aduanaEntrada: aduanaEntrada,

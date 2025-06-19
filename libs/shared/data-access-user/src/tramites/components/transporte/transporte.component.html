@@ -6,6 +6,9 @@
       [label]="'Tipo de transporte'"
       [required]="false"
       (change)="onChangeTipoTransporte()"
+      [primerOptionValue]="SIN_VALOR"
+      [hiddenPrimerOption]="false"
+      [disabledPrimerOption]="false"
     ></app-catalogo-select>
   </div>
 </div>
@@ -53,7 +56,6 @@
   class="modal modal-lg fade"
   #agregarTransporte
   id="agregarTransporte"
-  tabindex="-1"
   tabindex="-1"
   aria-labelledby="modalAgregarTransporte"
   aria-hidden="true"
@@ -121,7 +123,9 @@
         <button
           type="button"
           class="btn btn-primary"
-          (click)="accionModificar ? modificarTransporte() : agregarTipoTransporte()"
+          (click)="
+            accionModificar ? modificarTransporte() : agregarTipoTransporte()
+          "
         >
           {{ accionModificar ? 'Modificar' : 'Agregar' }}
         </button>
@@ -169,6 +173,7 @@
         id="fecha_porte"
         formControlName="fecha_porte"
         maxlength="10"
+        (keydown)="$event.preventDefault()"
       />
     </div>
     <div class="col-md-6">
@@ -469,7 +474,9 @@
         name="fecha_arribo_aereo"
         id="fecha_arribo_aereo"
         formControlName="fecha_arribo_aereo"
+        placeholder="dd/mm/yyyy"
         maxlength="15"
+        (keydown)="$event.preventDefault()"
       />
     </div>
 

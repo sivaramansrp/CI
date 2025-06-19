@@ -36,15 +36,8 @@ import { TercerosRelacionadosContenedoraComponent } from './components/terceros-
 @NgModule({
   declarations: [
     SolicitudPageComponent,
-    PasoUnoComponent,
     PasoDosComponent,
     PasoTresComponent,
-    PagoDeDerechocComponent,
-    TercerosRelacionadosContenedoraComponent,
-    DatosDelTramiteContenedoraComponent,
-    DatosMercanciaContenedoraComponent,
-    AgregarProveedorContenedoraComponent,
-    AgregarDestinatarioFinalContenedoraComponent
 
   ],
   imports: [
@@ -61,9 +54,16 @@ import { TercerosRelacionadosContenedoraComponent } from './components/terceros-
     SharedModule,
     TercerosRelacionadosComponent,
     FirmaElectronicaComponent,
-     AlertComponent,
-        TituloComponent,
-        AnexarDocumentosComponent,
+    AlertComponent,
+    TituloComponent,
+    AnexarDocumentosComponent,
+    PasoUnoComponent,
+    PagoDeDerechocComponent,
+    TercerosRelacionadosContenedoraComponent,
+    DatosDelTramiteContenedoraComponent,
+    DatosMercanciaContenedoraComponent,
+    AgregarProveedorContenedoraComponent,
+    AgregarDestinatarioFinalContenedoraComponent
   ],
 })
 export class AgregarDestinatarioModule {}

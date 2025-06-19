@@ -1,3 +1,4 @@
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA } from '../../../constants/transportacion-maritima.enum';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
@@ -44,10 +45,11 @@ import { takeUntil } from 'rxjs';
   styleUrl: './persona-fisica.component.css',
 })
 export class PersonaFisicaComponent implements OnInit, OnDestroy {
-    /**
+  /**
    * Configuración de la tabla de selección.
    */
-    TablaSeleccion = TablaSeleccion;
+  TablaSeleccion = TablaSeleccion;
+  
   /**
    * Formulario reactivo para gestionar la información de personas físicas extranjeras.
    */
@@ -59,7 +61,7 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
   pais!: Catalogo[];
 
   /**
-   * Configuración para el persona moral nacional encabezado de la tabla.
+   * Configuración para el encabezado de tabla de personas físicas extranjeras.
    */
   configuracionParaPFEEncabezadoDeTabla = CONFIGURACION_PARA_PFE_ENCABEZADO_DE_TABLA;
 
@@ -90,23 +92,46 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
   private destruirNotificador$: Subject<void> = new Subject();
 
   /**
+   * @property {ConsultaioState} consultaDatos
+   * @description
+   * Datos de consulta del trámite almacenados en el estado global.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} esDatosRespuesta
+   * @description
+   * Bandera que indica si los datos ya fueron obtenidos y se deben mostrar directamente.
+   */
+  public esDatosRespuesta: boolean = false;
+
+  /**
+   * Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  soloLectura: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios reactivos.
    * @param tramite40402Store Store para gestionar el estado del trámite 40402.
    * @param tramite40402Query Query para consultar el estado del trámite 40402.
-   * @param transportacionMaritimaService Servicio para obtener los catálogos y datos relacionados con los transportacion marítima.
+   * @param transportacionMaritimaService Servicio para obtener catálogos de transporte marítimo.
+   * @param consultaioQuery Query para consultar datos globales
    */
   constructor(
     private fb: FormBuilder,
     private tramite40402Store: Tramite40402Store,
     private tramite40402Query: Tramite40402Query,
     private transportacionMaritimaService: TransportacionMaritimaService,
-  ) { 
+    private consultaioQuery: ConsultaioQuery
+  ) {
     // El constructor se utiliza para la inyección de dependencias
   }
 
   /**
-   * Se ejecuta al inicializar el componente.
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * @returns {void}
    */
   ngOnInit(): void {
     this.inicializaCatalogos();
@@ -121,15 +146,25 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
-    // Inicializar el formulario principal
     this.crearAgregarPFEForm();
-
     this.paisSeleccion();
+
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
    * Crea el formulario reactivo para agregar o editar personas físicas extranjeras.
    * @description Este método inicializa el formulario con los valores del estado de la solicitud.
+   * @returns {void}
    */
   crearAgregarPFEForm(): void {
     this.personaFisicaExtranjeraForm = this.fb.group({
@@ -214,10 +249,12 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
         ]
       ],
     });
+    this.inicializarEstadoFormulario();
   }
 
   /**
    * Inicializa los catálogos necesarios para el formulario.
+   * @returns {void}
    */
   inicializaCatalogos(): void {
     const PAIS$ = this.transportacionMaritimaService
@@ -238,6 +275,7 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
   /**
    * Selecciona el país de la persona física extranjera y lo guarda en el store.
    * @description Este método se ejecuta cuando se selecciona un país en el formulario.
+   * @returns {void}
    */
   paisSeleccion(): void {
     const PAIS = this.personaFisicaExtranjeraForm.get('paisPFE')?.value;
@@ -246,8 +284,8 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
 
   /**
    * Agrega una nueva persona física extranjera a la tabla.
-   * @description Este método se ejecuta cuando se hace clic en el botón "Agregar" en el formulario.
-   * @param personaFisicaExtranjeraFormDatos - Los datos de la persona física extranjera a agregar.
+   * @description Este método se ejecuta al hacer clic en el botón "Agregar".
+   * @param personaFisicaExtranjeraFormDatos - Datos del formulario a agregar
    * @returns {void}
    */
   agregarPFE(personaFisicaExtranjeraFormDatos: PersonaFisicaExtranjeraForm): void {
@@ -271,7 +309,7 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
 
   /**
    * Actualiza el estado del formulario en el store.
-   * @description Este método se ejecuta cuando se cambian los valores en el formulario.
+   * @description Sincroniza los valores del formulario con el estado global.
    * @returns {void}
    */
   actualizarFormularioState(): void {
@@ -291,7 +329,6 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
 
   /**
    * Limpia los datos del formulario de persona física extranjera.
-   * @description Este método se ejecuta cuando se hace clic en el botón "Limpiar" en el formulario.
    * @returns {void}
    */
   limpiarDatosPFE(): void {
@@ -300,8 +337,7 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Cierra el modal.
-   * 
+   * Cierra el modal mediante programación.
    * @returns {void}
    */
   cerrarModal(): void {
@@ -311,11 +347,10 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Establece los valores en el store de tramite40402.
-   *
-   * @param {FormGroup} form - El formulario del cual se obtiene el valor.
-   * @param {string} campo - El nombre del campo del formulario cuyo valor se va a obtener.
-   * @param {string} metodoNombre - El nombre del método en el store que se va a invocar con el valor del campo.
+   * Establece valores en el store del trámite.
+   * @param form - Instancia del FormGroup
+   * @param campo - Nombre del campo en el formulario
+   * @param metodoNombre - Nombre del método en el store a invocar
    * @returns {void}
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite40402Store): void {
@@ -324,11 +359,24 @@ export class PersonaFisicaComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Se ejecuta al destruir el componente.
-   * Emite un valor y completa el subject `destruirNotificador$` para cancelar las suscripciones.
+   * Método del ciclo de vida que se ejecuta al destruir el componente.
+   * @description Cancela todas las suscripciones activas.
+   * @returns {void}
    */
   ngOnDestroy(): void {
     this.destruirNotificador$.next();
     this.destruirNotificador$.complete();
+  }
+
+  /**
+   * Inicializa el estado del formulario (habilitado/deshabilitado) basado en el modo de solo lectura.
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.soloLectura) {
+      this.personaFisicaExtranjeraForm?.disable();
+    } else {
+      this.personaFisicaExtranjeraForm?.enable();
+    }
   }
 }

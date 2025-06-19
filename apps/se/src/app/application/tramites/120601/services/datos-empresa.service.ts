@@ -1,13 +1,18 @@
-import { DatosSociosTable, RepresentacionFederal } from '../modelos/datos-empresa.model';
+import { DatosEmpresa, DatosSociosTable, RepresentacionFederal } from '../modelos/datos-empresa.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { Tramite120601Query } from '../estados/tramite-120601.query';
+import { Tramite120601Store } from '../estados/tramite-120601.store';
 
+/**
+ * Servicio para manejar los datos de la empresa en el trámite 120601.
+ * Este servicio se encarga de obtener datos simulados desde archivos JSON
+ * */
 @Injectable({
   providedIn: 'root'
 })  
-
 export class DatosEmpresaService {
 
   /**
@@ -22,7 +27,8 @@ export class DatosEmpresaService {
    * 
    * @param {HttpClient} http - Cliente HTTP para realizar solicitudes.
    */
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient ,private tramite120601Store: Tramite120601Store,
+    private tramite120601Query: Tramite120601Query) {
     // No se necesita lógica de inicialización adicional.
   }
 
@@ -62,5 +68,39 @@ export class DatosEmpresaService {
     return this.http.get<RepresentacionFederal[]>(`${this.assetsJsonUrl}representacionFederal-table.json`);
   }
 
+  /**
+   * Actualiza el estado del formulario con los datos proporcionados.
+   * 
+   * @param {DatosEmpresa} datos - Datos de la empresa a actualizar.
+   */
+  actualizarEstadoFormulario(datos: DatosEmpresa): void {
+    if (datos.FormSolicitud?.datosImportadorExportador) {
+      this.tramite120601Store.setNacionalidad(datos.FormSolicitud.datosImportadorExportador.nacionalidad);
+      this.tramite120601Store.setPersona(datos.FormSolicitud.datosImportadorExportador.persona);
+      this.tramite120601Store.setCadenaDependencia(datos.FormSolicitud.datosImportadorExportador.cadenaDependencia);
+    }
+
+    if (datos.solicitudForm?.tipoDeEmpresa) {
+      this.tramite120601Store.setTipoDeEmpresa(String(datos.solicitudForm.tipoDeEmpresa.id));
+    }
+
+    if (datos.solicitudForm){
+      this.tramite120601Store.setActividadEconomicaClave(datos.solicitudForm.actividadEconomicaClave);
+    }
+
+    if (datos.representacionFederal) {
+      this.tramite120601Store.setEstado(String(datos.representacionFederal.estado.id));
+      this.tramite120601Store.setRepresentacion(String(datos.representacionFederal.representacion.id));
+    }
+  }
+
+  /**
+   * Obtiene los datos de la empresa desde un archivo JSON.
+   * 
+   * @returns {Observable<DatosEmpresa>} Observable que emite los datos de la empresa.
+   */
+  getRegistroTomaMuestrasMercanciasData(): Observable<DatosEmpresa> {
+    return this.http.get<DatosEmpresa>(`${this.assetsJsonUrl}datosEmpresa.json`);
+  }
 
 }

@@ -102,6 +102,7 @@
           [required]="true"
           [disabled]="true"
           (change)="cambiaPais()"
+          [isDisabled]="esFormularioSoloLectura ? true : false"
         ></app-catalogo-select>
         <div *ngIf="agregarDestinatarioFinal.get('pais')?.errors?.['required'] && (agregarDestinatarioFinal.get('pais')?.touched || agregarDestinatarioFinal.get('pais')?.dirty)">
           <small class="text-danger">El campo Fracción es obligatorio.</small>
@@ -114,6 +115,7 @@
           [label]="'Estado/localidad'"
           [required]="true"
           (change)="cambiaEstado()"
+          [isDisabled]="esFormularioSoloLectura ? true : false"
         ></app-catalogo-select>
         <div *ngIf="agregarDestinatarioFinal.get('estado')?.errors?.['required'] && (agregarDestinatarioFinal.get('estado')?.touched || agregarDestinatarioFinal.get('estado')?.dirty)">
           <small class="text-danger">El campo Fracción es obligatorio.</small>
@@ -126,6 +128,7 @@
           [label]="'Municipio/alcaldía'"
           [required]="true"
           (change)="cambiaMunicipio()"
+          [isDisabled]="esFormularioSoloLectura ? true : false"
         ></app-catalogo-select>
         <div *ngIf="agregarDestinatarioFinal.get('municipio')?.errors?.['required'] && (agregarDestinatarioFinal.get('municipio')?.touched || agregarDestinatarioFinal.get('municipio')?.dirty)">
           <small class="text-danger">El campo Fracción es obligatorio.</small>
@@ -141,6 +144,7 @@
           [label]="'Localidad'"
           [required]="true"
           (change)="cambiaLocalidad()"
+          [isDisabled]="esFormularioSoloLectura ? true : false"
         ></app-catalogo-select>
         <div *ngIf="agregarDestinatarioFinal.get('localidad')?.errors?.['required'] && (agregarDestinatarioFinal.get('localidad')?.touched || agregarDestinatarioFinal.get('localidad')?.dirty)">
           <small class="text-danger">El campo Fracción es obligatorio.</small>
@@ -153,6 +157,7 @@
           [label]="'Código postal o equivalente'"
           [required]="true"
           (change)="cambiaCodigoPostal()"
+          [isDisabled]="esFormularioSoloLectura ? true : false"
         ></app-catalogo-select>
         <div *ngIf="agregarDestinatarioFinal.get('codigoPostal')?.errors?.['required'] && (agregarDestinatarioFinal.get('codigoPostal')?.touched || agregarDestinatarioFinal.get('codigoPostal')?.dirty)">
           <small class="text-danger">El campo Fracción es obligatorio.</small>
@@ -165,6 +170,7 @@
           [label]="'Colonia'"
           [required]="false"
           (change)="cambiaColonia()"
+          [isDisabled]="esFormularioSoloLectura ? true : false"
           
         ></app-catalogo-select>
         <div *ngIf="agregarDestinatarioFinal.get('colonia')?.errors?.['required'] && (agregarDestinatarioFinal.get('colonia')?.touched || agregarDestinatarioFinal.get('colonia')?.dirty)">
@@ -252,6 +258,7 @@
             name="eliminarMercancias"
             class="btn btn-danger ms-2"
             (click)="limpiarFormulario()"
+            [disabled]="esFormularioSoloLectura ? true : false"
           >
             Limpar
           </button>
@@ -260,6 +267,7 @@
             name="agregarMercancias"
             class="btn btn-primary ms-2"
             (click)="guardarDestinatario()"
+            [disabled]="esFormularioSoloLectura ? true : false"
           >
             Guardar
           </button>

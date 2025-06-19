@@ -4,38 +4,38 @@
     <div class="row mt-5">
       <div class="col-md-4">
         <label>Número de certificado de origen*:</label>
-        <input type="text" required="true" class="form-control" formControlName="numeroCertificado"
+        <input type="text" required="true" class="form-control" formControlName="numeroCertificado" [disabled]="soloLectura"
           (change)=" setValoresStore(validacionForm,'numeroCertificado','setNumeroCertificado' )" />
       </div>
       <div class="col-md-3 mt-5 d-flex justify-content-end buscar">
-        <button type="button" class="btn btn-primary ms-3" (click)="alBuscarClic()"> Buscar Certificado </button>
+        <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura" (click)="alBuscarClic()"> Buscar Certificado </button>
       </div>
     </div>
     <ng-titulo titulo="" />
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="paisCatalogo.catalogos" [label]="'País / Bloque'" [required]="false" id="pais"
-          formControlName="pais" (change)="setValoresStore(validacionForm, 'pais', 'setPais')"></app-catalogo-select>
+          formControlName="pais" [isDisabled]="soloLectura" (change)="setValoresStore(validacionForm, 'pais', 'setPais')"></app-catalogo-select>
       </div>
     </div>
     <div class="row">
       <div class="col-md-4">
         <app-catalogo-select [catalogo]="tratadoCatalogo.catalogos" [label]="'Tratado/Acuerdo'" [required]="false"
-          id="tratado" formControlName="tratado"
+          id="tratado" formControlName="tratado" [isDisabled]="soloLectura"
           (change)="setValoresStore(validacionForm, 'tratado', 'setTratado')"></app-catalogo-select>
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-md-4">
         <input-fecha [setFecha]="cancelacionForm.get('validacionForm.fechaInicial')?.value" [datos]="fechaInicialInput"
-          (valorCambiado)="cambioFechaInicial($event)"></input-fecha>
+          (valorCambiado)="cambioFechaInicial($event)" [isDisabled]="soloLectura"></input-fecha>
       </div>
       <div class="col-md-4">
         <input-fecha [setFecha]="cancelacionForm.get('validacionForm.fechaFinal')?.value" [datos]="fechaFinalInput"
-          (valorCambiado)="cambioFechaFinal($event)"></input-fecha>
+          (valorCambiado)="cambioFechaFinal($event)" [isDisabled]="soloLectura"></input-fecha>
       </div>
       <div class="col-md-3 mt-5 d-flex justify-content-end buscars">
-        <button type="button" class="btn btn-primary ms-3"> Buscar Certificado </button>
+        <button type="button" class="btn btn-primary ms-3" [disabled]="soloLectura"> Buscar Certificado </button>
       </div>
     </div>
     <ng-container *ngIf="estaBuscando">
@@ -44,7 +44,7 @@
       </div>
       <div class="table-container mt-5">
         <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion.UNDEFINED" [configuracionTabla]="headers"
-          [datos]="certificadoDisponsiblesTablaDatos"></app-tabla-dinamica>
+          [datos]="certificadoDisponsiblesTablaDatos" [disableSeleccionTablaCheckBox]="soloLectura? true : false" ></app-tabla-dinamica>
       </div>
     </ng-container>
   </ng-container>

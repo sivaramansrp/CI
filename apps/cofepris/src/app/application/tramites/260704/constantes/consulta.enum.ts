@@ -1,5 +1,6 @@
-import { CatalogosSelect, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { Asociados, ColumnasTabla, Destinatario, Fabricante, ListaClave, Mercancia } from '../models/consulta.model';
+import { CatalogosSelect, ConfiguracionColumna } from '@libs/shared/data-access-user/src';
+
 /**
  * Constante que contiene textos relacionados con el aviso de privacidad y alertas.
  */

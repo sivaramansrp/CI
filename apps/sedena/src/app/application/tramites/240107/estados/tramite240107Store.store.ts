@@ -18,12 +18,12 @@ import { StoreConfig } from '@datorama/akita';
  * @property {DatosDelTramiteFormState} datosDelTramite - Información general del formulario de datos del trámite.
  */
 export interface Tramite240107State {
-  tabSeleccionado?: number;
+  datosDelTramite: DatosDelTramiteFormState;
+  pagoDerechos: PagoDerechosFormState;
   destinatarioFinalTablaDatos: DestinoFinal[];
   proveedorTablaDatos: Proveedor[];
-  pagoDerechos: PagoDerechosFormState;
   merccancialTablaDatos: MercanciaDetalle[];
-  datosDelTramite: DatosDelTramiteFormState;
+  tabSeleccionado?: number;
 }
 
 /**
