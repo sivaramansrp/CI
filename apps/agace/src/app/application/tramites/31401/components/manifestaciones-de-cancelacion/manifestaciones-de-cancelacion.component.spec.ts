@@ -13,6 +13,9 @@ describe('ManifestacionesDeCancelacionComponent', () => {
 
     fixture = TestBed.createComponent(ManifestacionesDeCancelacionComponent);
     component = fixture.componentInstance;
+    component.consultaState = {
+      readonly: false,
+    } as any;
     fixture.detectChanges();
   });
 

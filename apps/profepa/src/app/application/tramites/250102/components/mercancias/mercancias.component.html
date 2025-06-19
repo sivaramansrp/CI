@@ -5,7 +5,8 @@
         <app-tabla-expandible [datos]="producto" [configuracionTabla]="configuracionTabla"
             [configuracionTablaAnidada]="configuracionMercanciasTabla" [obtenerDatosAnidados]="obtenerDatosAnidados"
             [tipoSeleccionTabla]="TablaSeleccion.CHECKBOX" [tableId]="'products-table'"
-            (filaSeleccionada)="alSeleccionarProducto($event)">
+            (filaSeleccionada)="alSeleccionarProducto($event)"
+            [disableSeleccionTablaCheckBox]="esFormularioSoloLectura">
         </app-tabla-expandible>
     </div>
 

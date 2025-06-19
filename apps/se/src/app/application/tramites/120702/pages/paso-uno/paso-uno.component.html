@@ -17,8 +17,9 @@
         @case (1) {
         <solicitante></solicitante>
         }
-        @case (2) {
-        <app-expedicion-asignacion></app-expedicion-asignacion>
+        @case (2) { @if(esDatosRespuesta) {
+        <app-expedicion-asignacion *ngIf="consultaState" [consultaState]="consultaState"></app-expedicion-asignacion>
+        }
         }
         }
       </ng-container>
