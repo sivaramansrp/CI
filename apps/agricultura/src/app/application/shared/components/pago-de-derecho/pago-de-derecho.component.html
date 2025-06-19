@@ -12,6 +12,7 @@
                [isRequired]="true"
                [layout]="'horizontal'"
                formControlName="exentoPago"
+               (change)="actualizarPago()"
                ></app-input-radio>
             </div>
          </div>
@@ -23,6 +24,7 @@
             [required]="true"
             [isDisabled]="esFormularioSoloLectura"
             name="justificacion"
+            (change)="actualizarPago()"
             ></app-catalogo-select>
          </div>
          <div class="col-md-8"></div>
@@ -38,6 +40,7 @@
                   type="text"
                   name="claveReferencia"
                   formControlName="claveReferencia"
+                  (change)="actualizarPago()"
                   />
             </div>
          </div>
@@ -54,6 +57,7 @@
                   libUppercase
                   name="cadenaDependencia"
                   formControlName="cadenaDependencia"
+                  (change)="actualizarPago()"
                   />
             </div>
          </div>
@@ -65,6 +69,7 @@
             [required]="true"
             [isDisabled]="true"
             name="banco"
+            (change)="actualizarPago()"
             ></app-catalogo-select>
          </div>
          <div class="col-md-4">
@@ -80,6 +85,7 @@
                   libUppercase
                   name="llavePago"
                   formControlName="llavePago"
+                  (change)="actualizarPago()"
                   />
             </div>
          </div>
@@ -89,6 +95,7 @@
                [datos]="fechaInicioInput"
                name="fechaPago"
                [setFecha]="fechaPagoDate" 
+               (change)="actualizarPago()"
                ></input-fecha>
             </div>
          </div>
@@ -104,6 +111,7 @@
                   type="text"
                   name="importePago"
                   formControlName="importePago"
+                  (change)="actualizarPago()"
                   />
             </div>
          </div>
