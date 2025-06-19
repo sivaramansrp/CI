@@ -1,0 +1,117 @@
+<div class="container">
+    <form [formGroup]="pagoForm">
+      <div class="row">
+        <ng-titulo titulo="Pago de derechos" />
+        <div class="row mt-2">
+          <div class="col-md-12">
+            <label for="certficacion_a">Exento de pago</label>
+          </div>
+          <div class="col-md-4">
+            <app-input-radio
+              [radioOptions]="radioOptions"
+              [isRequired]="true"
+              [layout]="'horizontal'"
+              formControlName="exentoPago"
+
+            ></app-input-radio>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <app-catalogo-select
+            [catalogo]="justificacionSelector"
+            formControlName="justificacion"
+            [label]="'Justificación'"
+            [required]="true"
+        [isDisabled]="esFormularioSoloLectura"
+            name="justificacion"
+          ></app-catalogo-select>
+        </div>
+        <div class="col-md-8"></div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="nombreImportExport"
+              >Clave de referencia*</label
+            >
+            <input
+              class="form-control"
+              id="nombreImportExport"
+              placeholder=""
+              type="text"
+              name="claveReferencia"
+              formControlName="claveReferencia"
+            />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="nombreImportExport"
+              >Cadena de la dependencia*</label
+            >
+            <input
+              class="form-control"
+              id="nombreImportExport"
+              placeholder=""
+              type="text"
+              libUppercase
+              name="cadenaDependencia"
+              formControlName="cadenaDependencia"
+            />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <app-catalogo-select
+            [catalogo]="bancoSelector"
+            formControlName="banco"
+            [label]="'Banco'"
+            [required]="true"
+             [isDisabled]="true"
+            name="banco"
+
+          ></app-catalogo-select>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="nombreImportExport"
+              >Llave de pago</label
+            >
+            <input
+              class="form-control"
+              id="nombreImportExport"
+              placeholder=""
+              type="text"
+              libUppercase
+              name="llavePago"
+              formControlName="llavePago"
+  
+            />
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+                <input-fecha
+            [datos]="fechaInicioInput"
+
+            name="fechaPago"
+            [setFecha]="fechaPagoDate" 
+          ></input-fecha>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="form-group">
+            <label class="form-label" for="nombreImportExport"
+              >Importe de pago*:</label
+            >
+            <input
+              class="form-control"
+              id="nombreImportExport"
+              placeholder=""
+              type="text"
+              name="importePago"
+              formControlName="importePago"
+  
+            />
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
