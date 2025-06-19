@@ -1,6 +1,10 @@
 import { AccionBoton, DatosPasos, ListaPasosWizard, WizardComponent } from '@libs/shared/data-access-user/src';
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PAGO_DE_DERECHOS, PASOS } from '../../constantes/aviso-retorno.enum';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user'
+import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
+import { map, Subject, takeUntil } from 'rxjs';
+
 
 /**
  * Componente que representa la sección de aviso de reciclaje.
@@ -15,7 +19,7 @@ import { PAGO_DE_DERECHOS, PASOS } from '../../constantes/aviso-retorno.enum';
   selector: 'app-aviso-retorno',
   templateUrl: './aviso-retorno.component.html',
 })
-export class AvisoRetornoComponent {
+export class AvisoRetornoComponent implements OnInit {
 
   /**
    * Lista de pasos del wizard.
@@ -57,6 +61,62 @@ export class AvisoRetornoComponent {
    * Valor numérico que representa el índice de la pestaña actual en el wizard (por defecto en 1).
    */
   indice: number = 1;
+  /**
+   * Subject utilizado para notificar y limpiar las suscripciones al destruir el componente.
+   */
+  private destroy$ = new Subject<void>();
+
+  /** Subject para notificar la destrucción del componente. */
+  public consultaState!: ConsultaioState;
+
+  /**
+   * Constructor del componente.
+   * @param consultaQuery Servicio para consultar el estado de la consulta.
+   * @param avisoDeReciclajeServiceService Servicio para manejar los datos del aviso de reciclaje.
+   */
+  constructor(
+    private consultaQuery: ConsultaioQuery,
+    private mercanciasDesmontadasOSinMontarService: MercanciasDesmontadasOSinMontarService
+  ) { }
+
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   * Se suscribe al estado de la consulta y actualiza la propiedad consultaState.
+   * Si el estado indica actualización, carga los datos del formulario.
+   */
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          // Actualiza el estado de la consulta
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
+
+    // Si el estado indica actualización, carga los datos del formulario.
+    if (this.consultaState.update) {
+      this.guardarDatosFormulario();
+    }
+  }
+
+  /**
+   * Método para guardar los datos del formulario.
+   * Obtiene los datos iniciales de la solicitud y actualiza el estado del formulario si la respuesta es válida.
+   */
+  guardarDatosFormulario(): void {
+    this.mercanciasDesmontadasOSinMontarService
+      .obtenerDatosSolicitudInicial().pipe(
+        takeUntil(this.destroy$)
+      )
+      .subscribe((resp) => {
+        // Si la respuesta existe, actualiza el estado del formulario
+        if (resp) {
+          this.mercanciasDesmontadasOSinMontarService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
 
   /**
    * Datos necesarios para gestionar los pasos del wizard.
@@ -90,4 +150,5 @@ export class AvisoRetornoComponent {
       }
     }
   }
+
 }

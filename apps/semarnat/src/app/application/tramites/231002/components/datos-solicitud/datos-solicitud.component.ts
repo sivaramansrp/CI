@@ -2,17 +2,17 @@ import { CatalogoSelectComponent, InputRadioComponent, REGEX_POSTAL, TableCompon
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { RadioOpcion, SolicitudJson } from '@libs/shared/data-access-user/src/core/models/231002/solicitud.model';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Subject, takeUntil } from 'rxjs';
 import { AvisoOpcionesDeRadio } from '../../models/aviso-catalogo.model';
 import { CommonModule } from '@angular/common';
 import { DatoSolicitudQuery } from '../../estados/queries/dato-solicitud.query';
 import { DatoSolicitudStore } from '../../estados/tramites/dato-solicitud.store';
-import { DatosResiduosPeligrososComponent } from '../datos-residuos-peligrosos/datos-residuos-peligrosos.component';
 import { EstadoDatoSolicitud } from '../../models/datos-solicitud.model';
 import { MercanciasDesmontadasOSinMontarService } from '../../services/mercancias-desmontadas-o-sin-montar.service';
 import { Modal } from 'bootstrap';
 import { TEXTOS } from '../../constantes/aviso-retorno.enum';
 import rawData from '@libs/shared/theme/assets/json/231002/solicitud.json';
+import { ConsultaioQuery,ConsultaioState} from '@ng-mf/data-access-user'
 
 /**
  * Constante que contiene las opciones de radio y demás datos del archivo JSON.
@@ -31,8 +31,7 @@ const RADIO_OPCIONES = rawData as SolicitudJson;
     TituloComponent,
     ReactiveFormsModule,
     TableComponent,
-    InputRadioComponent,
-    DatosResiduosPeligrososComponent
+    InputRadioComponent
   ],
   templateUrl: './datos-solicitud.component.html',
   styleUrl: './datos-solicitud.component.scss'
@@ -73,7 +72,15 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
 
   /** Datos del JSON usados en etiquetas */
   etiquetasForm = RADIO_OPCIONES;
-
+  /**
+   * Estado de la consulta actual, utilizado para controlar el modo de solo lectura y otros estados.
+   */
+  public consultaState!: ConsultaioState;
+  public esFormularioSoloLectura: boolean = false;
+  /**
+   * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
+   */
+  private destroy$ = new Subject<void>();
   /**
    * Constructor que inyecta dependencias necesarias.
    */
@@ -81,6 +88,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     public fb: FormBuilder,
     private datoSolicitudStore: DatoSolicitudStore,
     private datoSolicitudQuery: DatoSolicitudQuery,
+    private consultaQuery: ConsultaioQuery,
     public mercanciasDesmontadasOSinMontarService: MercanciasDesmontadasOSinMontarService
   ) {
     this.obtenerAvisoOpcionesDeRadio();
@@ -96,6 +104,20 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
     this.inicializarFormularioEmpresaTransportista();
     this.inicializarFormularioPrecaucionesManejo();
     this.recuperarValoresDesdeStore();
+    this.consultaQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroy$),
+      map((seccionState) => {
+        this.consultaState = seccionState;
+        this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe();
+
+  // Si el estado indica actualización, carga los datos del formulario.
+  if (this.esFormularioSoloLectura) {
+    this.deshabilitarFormularios();
+  }
   }
 
   /**
@@ -103,7 +125,7 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
    */
   private inicializarSolicitudForm(): void {
     this.solicitudForm = this.fb.group({
-      ideGenerica1: ['', Validators.required],
+      ideGenerica1: ['primera_vez', Validators.required],
       numeroRegistroAmbiental: ['', Validators.required],
       descripcionGenerica1: ['', Validators.required],
       numeroProgramaImmex: ['', Validators.required],
@@ -283,5 +305,23 @@ export class DatosSolicitudComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyed$.next();
     this.destroyed$.complete();
+  }
+
+  deshabilitarFormularios(): void {
+    if (this.consultaState?.readonly) {
+      // Deshabilita los formularios si el estado es solo lectura
+      this.solicitudForm.disable();
+      this.formularioEmpresaReciclaje.disable();
+      this.formularioLugarReciclaje.disable();
+      this.formularioEmpresaTransportista.disable();
+      this.formularioPrecaucionesManejo.disable();
+    } else {
+      // Habilita los formularios si el estado permite edición
+      this.solicitudForm.enable();
+      this.formularioEmpresaReciclaje.enable();
+      this.formularioLugarReciclaje.enable();
+      this.formularioEmpresaTransportista.enable();
+      this.formularioPrecaucionesManejo.enable();
+    }
   }
 }

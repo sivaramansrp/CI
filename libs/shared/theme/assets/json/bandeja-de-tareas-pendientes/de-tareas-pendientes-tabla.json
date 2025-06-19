@@ -8219,6 +8219,16 @@
   {
     "folioTramite": "0215523965732296454156770",
     "tipoDeTramite": "Registro de solicitud de servicio",
+    "nombreDeLaTarea": "Generar opinión",
+    "fechaDeAsignacion": "2023-10-07",
+    "estadoDeTramite": "En Proceso",
+    "departamento": "semarnat",
+    "numeroDeProcedimiento": "231002",
+    "origin": "FLUJO_FUNCIONARIO_GENERAR_ OPINION"
+  },
+  {
+    "folioTramite": "0215523965732296454156770",
+    "tipoDeTramite": "Registro de solicitud de servicio",
     "nombreDeLaTarea": "Revisión de presupuesto",
     "fechaDeAsignacion": "2023-10-01",
     "estadoDeTramite": "En Proceso",
