@@ -1,10 +1,10 @@
 import { ModuleFederationConfig } from '@nx/webpack';
 
-const config: ModuleFederationConfig = {
+const CONFIG: ModuleFederationConfig = {
   name: 'inah',
   exposes: {
     './Routes': 'apps/inah/src/app/remote-entry/entry.routes.ts',
   },
 };
 
-export default config;
+export default CONFIG;

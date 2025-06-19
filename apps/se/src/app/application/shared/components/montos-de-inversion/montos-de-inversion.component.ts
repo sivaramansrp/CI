@@ -1,16 +1,18 @@
+import { ComplementarState, ComplementarStore } from '../../../estados/tramites/complementar.store';
+import { Component, OnInit } from '@angular/core';
+import { Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ComplementarQuery } from '../../../estados/queries/complementar.query';
 
-import { COMPLEMENTO_DE_PLANTA } from '../../constantes/complementar-planta.enum';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CATALOGO_TIPO,COMPLEMENTO_DE_PLANTA} from '../../constantes/complementar-planta.enum';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
 import { Location } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
-
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src'
+import { TablaSeleccion } from '@libs/shared/data-access-user/src'
+import { TituloComponent } from '@libs/shared/data-access-user/src'
 /**
  * Componente para gestionar los montos de inversión.
  * @class MontosDeInversionComponent
@@ -28,7 +30,7 @@ import { TituloComponent } from '@ng-mf/data-access-user';
   templateUrl: './montos-de-inversion.component.html',
   styleUrl: './montos-de-inversion.component.css',
 })
-export class MontosDeInversionComponent {
+export class MontosDeInversionComponent implements OnInit {
   /**
    * Formulario para gestionar los montos de inversión.
    * @property {FormGroup} montosDeInversionForm
@@ -39,7 +41,7 @@ export class MontosDeInversionComponent {
    * Opciones disponibles para el tipo de inversión.
    * @property {Array} tipoOptions
    */
-  tipoOptions = [];
+  tipoOptions = CATALOGO_TIPO;
 
   /**
    * Lista de montos de inversión.
@@ -64,14 +66,30 @@ export class MontosDeInversionComponent {
    * @property {Array} montosDeInversionDatos
    */
   montosDeInversionDatos = [];
-
+ /**
+   * Estado de la solicitud 221601, que contiene los valores actuales de la solicitud.
+   */
+  public solicitudState!: ComplementarState;
+  /**
+   * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
   /**
    * Constructor del componente.
    * @constructor
    * @param {FormBuilder} fb - Servicio para construcción de formularios
    */
-  constructor(private fb: FormBuilder, private ubicaccion: Location) {
-    this.createMontosDeInversionForm();
+  constructor(private fb: FormBuilder, private ubicaccion: Location,private complementarStore: ComplementarStore,
+      private complementarQuery: ComplementarQuery) {
+    
+  }
+   /**
+   * Método que se ejecuta cuando el componente es inicializado.
+   * 
+   * Inicializa el formulario reactivo con los valores actuales de la solicitud.
+   */
+  ngOnInit(): void {
+  this.createMontosDeInversionForm();
   }
 
   /**
@@ -80,14 +98,33 @@ export class MontosDeInversionComponent {
    * @returns {void}
    */
   createMontosDeInversionForm(): void {
+    
+         this.complementarQuery.selectSolicitud$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.solicitudState = seccionState as ComplementarState;
+            })
+          )
+          .subscribe();
     this.montosDeInversionForm = this.fb.group({
-      tipo: [''],
-      cantidad: [''],
-      descripsion: [''],
-      mnx: [''],
+      tipos: [this.solicitudState.tipos],
+      cantidad: [this.solicitudState.cantidad],
+      descripsion: [this.solicitudState.descripsion],
+      mnx: [this.solicitudState.mnx],
     });
   }
-
+/**
+   * Método que actualiza el store con los valores del formulario.
+   * 
+   * @param form - Formulario reactivo con los datos actuales.
+   * @param campo - El campo que debe actualizarse en el store.
+   * @param metodoNombre - El nombre del método en el store que se debe invocar.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof ComplementarStore): void {
+    const VALOR = form.get(campo)?.value;
+    (this.complementarStore[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
   /**
    * Vuelve a la ubicación anterior en el historial del navegador.
    * @returns {void}

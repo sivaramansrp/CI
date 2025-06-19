@@ -1,5 +1,7 @@
 <div class="container">
   <ng-titulo titulo="Capacidad Instalada"></ng-titulo>
+    <form [formGroup]="capacidadForm">
+      <div class="form"> 
   <div class="row">
     <div class="col-md-4">
       <app-catalogo-select
@@ -7,6 +9,8 @@
         [label]="'Fracción arancelaria de producto terminado'"
         [required]="true"
         name="fraccionArancelariaProductoTerminado"
+        formControlName="fraccionArancelariaProductoTerminado"
+        (change)="setValoresStore(capacidadForm, 'fraccionArancelariaProductoTerminado', 'setFraccionArancelariaProductoTerminado')"
       ></app-catalogo-select>
     </div>
     <div class="col-md-4">
@@ -16,6 +20,7 @@
         id="umt"
         formControlName="umt"
         type="text"
+         (change)="setValoresStore(capacidadForm, 'umt', 'setUmt')"
       />
     </div>
   </div>
@@ -28,8 +33,9 @@
         rows="2"
         class="form-control h-100"
         id="descripcionComercialProductoTerminado "
-        formControlName="descripcionComercialProductoTerminado "
+        formControlName="descripcionComercialProductoTerminado"
         placeholder=""
+        (change)="setValoresStore(capacidadForm, 'descripcionComercialProductoTerminado', 'setDescripcionComercialProductoTerminado')"
       ></textarea>
     </div>
   </div>
@@ -41,6 +47,7 @@
         id="turnos"
         formControlName="turnos"
         type="text"
+         (change)="setValoresStore(capacidadForm, 'turnos', 'setTurnos')"
       />
     </div>
     <div class="col-md-4">
@@ -50,6 +57,7 @@
         id="horasPorTurno"
         formControlName="horasPorTurno"
         type="text"
+         (change)="setValoresStore(capacidadForm, 'horasPorTurno', 'setHorasPorTurno')"
       />
     </div>
   </div>
@@ -63,6 +71,7 @@
         id="cantidadEmpleados "
         formControlName="cantidadEmpleados"
         type="text"
+          (change)="setValoresStore(capacidadForm, 'cantidadEmpleados', 'setCantidadEmpleados')"
       />
     </div>
     <div class="col-md-4">
@@ -74,6 +83,7 @@
         id="cantidadMaquinaria"
         formControlName="cantidadMaquinaria"
         type="text"
+        (change)="setValoresStore(capacidadForm, 'cantidadMaquinaria', 'setCantidadMaquinaria')"
       />
     </div>
   </div>
@@ -86,8 +96,9 @@
         rows="2"
         class="form-control h-100"
         id="descripcionMaquinaria "
-        formControlName="descripcionMaquinaria "
+        formControlName="descripcionMaquinaria"
         placeholder=""
+        (change)="setValoresStore(capacidadForm, 'descripcionMaquinaria', 'setDescripcionMaquinaria')"
       ></textarea>
     </div>
   </div>
@@ -101,6 +112,7 @@
         id="capacidadInstaladaMensual"
         formControlName="capacidadInstaladaMensual"
         type="text"
+        (change)="setValoresStore(capacidadForm, 'capacidadInstaladaMensual', 'setCapacidadInstaladaMensual')"
       />
     </div>
     <div class="col-md-4">
@@ -112,6 +124,7 @@
         id="capacidadInstaladaAnual"
         formControlName="capacidadInstaladaAnual"
         type="text"
+         (change)="setValoresStore(capacidadForm, 'capacidadInstaladaAnual', 'setCapacidadInstaladaAnual')"
       />
     </div>
   </div>
@@ -125,6 +138,7 @@
         id="calculoCapacidadInstalada"
         formControlName="calculoCapacidadInstalada"
         type="text"
+        (change)="setValoresStore(capacidadForm, 'calculoCapacidadInstalada', 'setCalculoCapacidadInstalada')"
       />
     </div>
     <div class="col-md-4">
@@ -136,6 +150,7 @@
         id="capacidadUtilizadaPct"
         formControlName="capacidadUtilizadaPct"
         type="text"
+        (change)="setValoresStore(capacidadForm, 'capacidadUtilizadaPct', 'setCapacidadUtilizadaPct')"
       />
       <p>((horasTurno * turnos)* empleados/capacidadEfectiva)</p>
     </div>
@@ -164,4 +179,6 @@
       </button>
     </div>
   </div>
+      </div>
+    </form>
 </div>
