@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 import { AvisoSiglosComponent } from './aviso-siglos.component';
 
@@ -9,7 +10,8 @@ describe('AvisoSiglosComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [AvisoSiglosComponent],
-      imports: []
+      imports: [],
+      schemas: [CUSTOM_ELEMENTS_SCHEMA]
     })
     .compileComponents();
 
