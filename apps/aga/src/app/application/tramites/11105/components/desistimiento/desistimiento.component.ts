@@ -5,11 +5,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import {ReplaySubject, map,takeUntil } from 'rxjs';
+import {ReplaySubject, Subject, map,takeUntil } from 'rxjs';
+import { Solicitud11105State, Solicitud11105Store } from '../../estados/solicitud11105.store';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ConsultaioState } from '@libs/shared/data-access-user/src';
 import { DESISTIMIENTO } from '../../constants/retirad-de-la-autorizacion-de-donaciones.enum';
+import { Solicitud11105Query } from '../../estados/solicitud11105.query';
 import {TituloComponent } from '@libs/shared/data-access-user/src';
 
 
@@ -24,8 +26,7 @@ import {TituloComponent } from '@libs/shared/data-access-user/src';
   styleUrl: './desistimiento.component.scss',
 })
 export class DesistimientoComponent implements OnInit {
-
-/**
+  /**
    * Subject para destruir notificador.
    */
   consultaDatos!: ConsultaioState;
@@ -35,10 +36,10 @@ export class DesistimientoComponent implements OnInit {
    */
   soloLectura: boolean = false;
 
-    /**
-     * Subject para manejar la destrucción del componente.
-     */
-    private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+  /**
+   * Subject para manejar la destrucción del componente.
+   */
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
 
   /**
    * Evento de salida que emite un valor de tipo cadena.
@@ -52,11 +53,26 @@ export class DesistimientoComponent implements OnInit {
   desisitimientoForm!: FormGroup;
 
   /**
+   * Sujeto utilizado como notificador para la destrucción del componente.
+   * Se emite un valor cuando el componente se destruye, permitiendo cancelar
+   * suscripciones o liberar recursos asociados.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Estado actual de la solicitud.
+   */
+  public solicitudState!: Solicitud11105State;
+
+  /**
    * Constructor de la clase.
    * @param formBuilder Servicio FormBuilder para construir formularios reactivos.
    */
-  constructor(public formBuilder: FormBuilder,
-     private consultaioQuery: ConsultaioQuery
+  constructor(
+    public formBuilder: FormBuilder,
+    private consultaioQuery: ConsultaioQuery,
+    private store: Solicitud11105Store,
+    private query: Solicitud11105Query
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -65,35 +81,45 @@ export class DesistimientoComponent implements OnInit {
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    */
   ngOnInit(): void {
+    this.query.seleccionarSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+        })
+      )
+      .subscribe();
     this.initializeFormalario();
 
-      this.consultaioQuery.selectConsultaioState$
-          .pipe(
-            takeUntil(this.destroyed$),
-            map((seccionState) => {
-              this.consultaDatos = seccionState;
-              this.soloLectura = this.consultaDatos.readonly;
-              this.destinarioFormulario();
-            })
-          )
-          .subscribe();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.destinarioFormulario();
+        })
+      )
+      .subscribe();
   }
 
-   initializeFormalario() :void{
+  initializeFormalario(): void {
     this.desisitimientoForm = this.formBuilder.group({
-      folioOriginal: [{ value: '', disabled: true }],
-      justificacionDelDesistimiento: [{ value: '' }, Validators.maxLength(200)],
+      folioOriginal: [this.solicitudState?.folioOriginal,
+      ],
+      justificacionDelDesistimiento: [ this.solicitudState?.justificacionDelDesistimiento,
+        Validators.maxLength(200),
+      ],
     });
     this.destinarioFormulario();
-    this.setFormValues();
   }
 
-     /**
+  /**
    * Configura el formulario del destinatario según el estado de la solicitud.
    *  Si el formulario está en modo solo lectura, deshabilita los campos del formulario.
    *  @returns {void}
    */
-    destinarioFormulario(): void {
+  destinarioFormulario(): void {
     if (this.soloLectura) {
       this.desisitimientoForm.disable();
     } else {
@@ -101,14 +127,28 @@ export class DesistimientoComponent implements OnInit {
     }
   }
 
+  
   /**
-   * Establece los valores iniciales del formulario.
+   * Actualiza un valor en el estado global utilizando el almacén.
+   * @param form Formulario reactivo.
+   * @param campo Nombre del campo a actualizar.
+   * @param metodoNombre Nombre del método del almacén para actualizar el estado.
    */
-  setFormValues(): void {
-    this.desisitimientoForm.get(DESISTIMIENTO.FOLIO_ORIGINAL)?.setValue('');
-    this.desisitimientoForm
-      .get(DESISTIMIENTO.JUSTIFICACION_DEL_DESISTIMIENTO)
-      ?.setValue('');
+  setValoresStore(
+    form: FormGroup,
+    campo: string,
+    metodoNombre: keyof Solicitud11105Store
+  ): void {
+    const VALOR = form.get(campo)?.value;
+    (this.store[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
+
+  /**
+   *  @method get adaceForm
+   * @description
+   */
+  get folioOriginal(): FormGroup {
+    return this.desisitimientoForm.get('folioOriginal') as FormGroup;
   }
 
   /**

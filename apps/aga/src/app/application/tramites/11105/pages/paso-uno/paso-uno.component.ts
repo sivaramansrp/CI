@@ -1,22 +1,12 @@
-import {
-  BtnContinuarComponent,
-  ConsultaioQuery,
-  ConsultaioState,
-  DatosPasos,
-  FormularioDinamico,
-  ListaPasosWizard,
-  SolicitanteComponent,
-  ValidacionesFormularioService,
-  WizardComponent,
-} from '@ng-mf/data-access-user';
-import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
+import { BtnContinuarComponent,ConsultaioQuery,ConsultaioState,DatosPasos,FormularioDinamico,ListaPasosWizard,SolicitanteComponent,ValidacionesFormularioService,WizardComponent } from '@ng-mf/data-access-user';
+import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosGeneralesDeLaSolicitudComponent } from '../../components/datos-generales-de-la-solicitud/datos-generales-de-la-solicitud.component';
 import { DesistimientoComponent } from '../../components/desistimiento/desistimiento.component';
 import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/11105/pasos.enum';
 import { RetiradaDeLaAutorizacionDeDonacionesService } from '../../services/retirad-de-la-autorizacion-de-donaciones.service';
-import { takeUntil } from 'rxjs';
 
 interface AccionBoton {
   /**
@@ -112,6 +102,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     txtBtnSig: 'Continuar',
   };
 
+  /**
+   * Sujeto utilizado como notificador para la destrucción del componente.
+   * Se emite un valor cuando el componente se destruye, permitiendo cancelar
+   * suscripciones o liberar recursos asociados.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
 
   /**
    * Constructor del componente.
@@ -146,11 +143,11 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       .subscribe();
    
     if (this.consultaDatos.update) {
-      this.fetchGetDatosConsulta();
+      // this.fetchGetDatosConsulta();
     } else {
       this.esDatosRespuesta = true;
     }
-    this.indice = this.tramiteState.pestanaActiva;
+    // this.indice = this.tramiteState.pestanaActiva;
   }
 
   /**
@@ -181,5 +178,13 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         this.wizardComponent.atras();
       }
     }
+  }
+
+    /**
+   * Método que se ejecuta al destruir el componente.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
