@@ -150,6 +150,7 @@ import {
   MSJ_ERROR_LINEA_CAPTURA,
   MSJ_ERROR_LINEA_CAPTURA_NO_VALIDA,
   MSJ_ERROR_RFC_AUTORIZACION_LDA,
+  MSJ_LINEA_CAPTURA_DUPLICADA,
   MSJ_LINEA_CAPTURA_NO_PAGADA,
   MSJ_LINEA_CAPTURA_USADA,
 } from '../../../../core/enums/5701/mensajes-modal-5701.enum';
@@ -2228,6 +2229,22 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         txtBtnAceptar: 'Aceptar',
         txtBtnCancelar: '',
       };
+      return;
+    }
+
+    if (this.datosTablaPagos.some((pago) => pago.lineaCaptura === LINEA_PAGO)) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: TITULO_MODAL_AVISO,
+        mensaje: MSJ_LINEA_CAPTURA_DUPLICADA,
+        cerrar: false,
+        txtBtnAceptar: TEXTO_ACEPTAR,
+        txtBtnCancelar: '',
+      };
+      this.pagoCaptura.get('lineaCaptura')?.reset();
+      this.pagoCaptura.get('monto')?.reset();
       return;
     }
 
