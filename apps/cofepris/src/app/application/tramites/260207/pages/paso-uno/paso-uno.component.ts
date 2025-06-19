@@ -1,7 +1,22 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import {
+  Component,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+
+import {
+  ConsultaioQuery,
+  ConsultaioState
+} from '@ng-mf/data-access-user';
+
 import { ImportacionDestinadosDonacioService } from '../../services/importacion-destinados-donacio.service';
-import { Subject, map, takeUntil } from 'rxjs';
+
+import {
+  Subject,
+  map,
+  takeUntil
+} from 'rxjs';
+
 import { Tramite260207Query } from '../../estados/tramite260207Query.query';
 import { Tramite260207Store } from '../../estados/tramite260207Store.store';
 
