@@ -1,4 +1,3 @@
-import { Personas } from '@ng-mf/data-access-user';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 

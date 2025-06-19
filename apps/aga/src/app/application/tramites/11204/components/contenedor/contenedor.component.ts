@@ -327,7 +327,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     }
   }
 
-  onChange(controlName: string, event: any): void {
+  onChange(controlName: string, event: Event): void {
     const VALUE = event.target.value;
    
     if (controlName === 'inicialesContenedor') {

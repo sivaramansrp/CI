@@ -1,5 +1,5 @@
 import { API_GET_EMPRESA, TIPO_PATENTE_QUERY } from '../../../constantes/5701/api-constants';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { Observable, catchError, map, throwError } from 'rxjs';
 import { CLAVE_PATENTE_QUERY, ENVIRONMENT } from '@libs/shared/data-access-user/src';
 import { EmpresaResponse } from '../../models/5701/empresa.model';
 import { HttpClient } from '@angular/common/http';

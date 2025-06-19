@@ -1,7 +1,7 @@
 
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { AccionesTabla, ACUSE_SERVICIOS_EXTRAORDINARIOS, AcuseComponent, TITULO_ACUSE, TXT_ALERTA_ACUSE } from '@libs/shared/data-access-user/src';
+import { ACUSE_SERVICIOS_EXTRAORDINARIOS, AccionesTabla, AcuseComponent, TITULO_ACUSE, TXT_ALERTA_ACUSE } from '@libs/shared/data-access-user/src';
 
 @Component({
   templateUrl: './acuse-page.component.html',
