@@ -47,7 +47,7 @@
                     <div class="form-group">
                         <app-catalogo-select [catalogo]="bancocatalogo" formControlName="banco" [label]="'Banco'"
                             [required]="true" name="banco"
-                            (change)="setValoresStore(pagoDerechosForm, 'banco')"></app-catalogo-select>
+                            (change)="setValoresStore(pagoDerechosForm, 'banco')" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
                     </div>
                 </div>
             </div>
@@ -111,8 +111,8 @@
 
         <div class="col-md-12 mt-5 d-flex justify-content-end">
 
-            <button type="button" class="btn btn-danger ms-3">Borrar datos del pago</button>
-            <button type="button" class="btn btn-primary ms-3">Guardar pago</button>
+            <button type="button" class="btn btn-danger ms-3" [disabled]="esFormularioSoloLectura">Borrar datos del pago</button>
+            <button type="button" class="btn btn-primary ms-3" [disabled]="esFormularioSoloLectura">Guardar pago</button>
         </div>
 
         <div class="mb-3">

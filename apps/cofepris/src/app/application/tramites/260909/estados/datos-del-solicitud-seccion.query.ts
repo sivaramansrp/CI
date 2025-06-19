@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
 
-import { DatosDelSolicituteSeccionState, DatosDelSolicituteSeccionStateStore } from './datos-del-solicitud-seccion.store';
+import { DatosDelSolicituteSeccionStateInterface, DatosDelSolicituteSeccionStateStoreI } from './datos-del-solicitud-seccion.store';
 
 /**
  * Clase `DatosDelSolicituteSeccionQuery`
@@ -12,7 +12,7 @@ import { DatosDelSolicituteSeccionState, DatosDelSolicituteSeccionStateStore } f
  * Proporciona observables para acceder a propiedades específicas del estado.
  */
 @Injectable({ providedIn: 'root' })
-export class DatosDelSeccionQuery extends Query<DatosDelSolicituteSeccionState> {
+export class DatosDelSeccionQuery extends Query<DatosDelSolicituteSeccionStateInterface> {
 
   establecimientoCorreoElectronico$ = this.select('establecimientoCorreoElectronico');
   establecimientoDomicilioCodigoPostal$ = this.select('establecimientoDomicilioCodigoPostal');
@@ -36,7 +36,7 @@ export class DatosDelSeccionQuery extends Query<DatosDelSolicituteSeccionState> 
   aduanasEntradas = this.select('aduanasEntradas');  
   descripcionScian = this.select('descripcionScian');
 
-  constructor(protected override store: DatosDelSolicituteSeccionStateStore) {
+  constructor(protected override store: DatosDelSolicituteSeccionStateStoreI) {
     super(store);
   }
 }

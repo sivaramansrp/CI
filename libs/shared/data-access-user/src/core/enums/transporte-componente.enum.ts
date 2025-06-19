@@ -716,7 +716,7 @@ export const CONFIGURACION_ENCABEZADO_TABLA_TRANSPORTE_OTRO: ConfiguracionColumn
      * - Orden: 3.
      */
     {
-      encabezado: 'Datos de transporte',
+      encabezado: 'Datos del transporte',
       clave: (fila) => fila.datos_transporte,
       orden: 3,
     },

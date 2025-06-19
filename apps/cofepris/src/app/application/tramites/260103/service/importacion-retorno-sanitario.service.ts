@@ -1,9 +1,9 @@
 
+import { Facturador } from '../models/importicon-retorno.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-
-import { Facturador } from '../models/importicon-retorno.model';
+import { Tramite260103Store } from '../estados/tramite260103Store.store';
 
 @Injectable({
   providedIn: 'root',
@@ -17,7 +17,12 @@ export class ImportacionRetornoSanitarioService {
    */
   private jsonUrl = 'assets/json/260103/';
 
-  constructor(public httpServicios: HttpClient) {
+  /**
+   * Servicio para gestionar operaciones relacionadas con la importación y retorno sanitario.
+   * Proporciona métodos para obtener datos de facturadores y actualizar el estado del formulario
+   * en el store correspondiente.
+   */
+  constructor(public httpServicios: HttpClient,private tramite260103Store: Tramite260103Store) {
     // Constructor necesario para inyectar el servicio HttpClient
   }
 
@@ -33,4 +38,25 @@ export class ImportacionRetornoSanitarioService {
       this.jsonUrl + 'buscar-otros.json'
     );
   }
+  /**
+   * Actualiza el estado del formulario en el store a partir de los datos proporcionados.
+   * @param datos Estado actual del formulario de trámite 260203.
+   */
+  actualizarEstadoFormulario(datos: Tramite260103Store): void {
+    this.tramite260103Store.update((state) => {
+      return {
+        ...state, ...datos
+      }
+    });
+  }
+
+  /**
+   * Obtiene los datos del trámite 260203 desde un archivo JSON local.
+   *
+   * @returns {Observable<Tramite260203State>} Un observable que emite el estado del trámite 260203.
+   */
+  getTramiteDatos(): Observable<Tramite260103Store> {
+    return this.httpServicios.get<Tramite260103Store>('assets/json/260103/respuestaDeActualizacionDe.json');
+  }
+
 }

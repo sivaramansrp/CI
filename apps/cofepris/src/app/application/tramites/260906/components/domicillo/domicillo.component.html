@@ -8,7 +8,7 @@
       </div>
     </div>
     <div class="col-md-4">
-      <app-catalogo-select [catalogo]="estado" formControlName="estado" [label]="'Estado'" [required]="true" name="estado" (change)="setValoresStore(domicilio,'estado', 'setEstado')"></app-catalogo-select>
+      <app-catalogo-select [catalogo]="estado" formControlName="estado" [label]="'Estado'" [required]="true" name="estado" (change)="setValoresStore(domicilio,'estado', 'setEstado')" [isDisabled]="soloLectura"></app-catalogo-select>
     </div>
     <div class="col-md-4">
       <div class="form-group">
@@ -61,10 +61,10 @@
     </div>
   </div>
   <div class="row">
-    <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla" [datos]="nicoTablaDatos"></app-tabla-dinamica>
+    <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="nicoTabla" [datos]="nicoTablaDatos" [disableSeleccionTablaCheckBox]="soloLectura"></app-tabla-dinamica>
     <div class="container text-end mt-5">
-      <button class="btn btn-default me-2" (click)="eliminarFormControls()">Eliminar</button>
-      <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent">Agregar</button>
+      <button class="btn btn-default me-2" (click)="eliminarFormControls()" [disabled]="soloLectura">Eliminar</button>
+      <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgent" [disabled]="soloLectura">Agregar</button>
     </div>
   </div>
   <div class="row align-item-center">
@@ -86,10 +86,10 @@
   </div>
   <div class="row">
     <div class="col-md-4">
-      <app-catalogo-select [tooltipQuestionCircle]="true" [catalogo]="estado" formControlName="regimen" [label]="'Régimen'" [required]="true" name="regimen" (change)="setValoresStore(domicilio,'regimen', 'setRegimen')"></app-catalogo-select>
+      <app-catalogo-select [tooltipQuestionCircle]="true" [catalogo]="estado" formControlName="regimen" [label]="'Régimen'" [required]="true" name="regimen" (change)="setValoresStore(domicilio,'regimen', 'setRegimen')" [isDisabled]="soloLectura"></app-catalogo-select>
     </div>
     <div class="col-md-8">
-      <app-catalogo-select [catalogo]="estado" formControlName="aduanasEntradas" [label]="'Aduanas de entradas'" [required]="true" name="aduanasEntradas" (change)="setValoresStore(domicilio,'aduanasEntradas', 'setAduanasEntradas')"></app-catalogo-select>
+      <app-catalogo-select [catalogo]="estado" formControlName="aduanasEntradas" [label]="'Aduanas de entradas'" [required]="true" name="aduanasEntradas" (change)="setValoresStore(domicilio,'aduanasEntradas', 'setAduanasEntradas')" [isDisabled]="soloLectura"></app-catalogo-select>
     </div>
   </div>
   <div class="row">
@@ -113,12 +113,12 @@
     </div>
   </div>
   <div class="row mt-5">
-    <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla" [datos]="mercanciasTablaDatos"></app-tabla-dinamica>
+    <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox" [configuracionTabla]="mercanciasTabla" [datos]="mercanciasTablaDatos" [disableSeleccionTablaCheckBox]="soloLectura"></app-tabla-dinamica>
     <div class="col-md-12">
       <div class="container text-end mt-5">
-        <button class="btn btn-default me-2" (click)="eliminarMercancias()">Eliminar</button>
-        <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias">Modificar</button>
-        <button class="btn btn-default me-2">Agregar</button>
+        <button class="btn btn-default me-2" (click)="eliminarMercancias()" [disabled]="soloLectura">Eliminar</button>
+        <button class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#modalAddAgentMercancias" [disabled]="soloLectura">Modificar</button>
+        <button class="btn btn-default me-2" [disabled]="soloLectura">Agregar</button>
       </div>
     </div>
   </div>
@@ -132,17 +132,17 @@
       <div class="modal-body">
         <form [formGroup]="formAgente">
           <div class="form-group">
-            <app-catalogo-select [catalogo]="estado" formControlName="claveScianModal" [label]="'Clave S.C.I.A.N.'" [required]="true" name="claveScianModal" (change)="setValoresStore(formAgente,'claveScianModal', 'setClaveScianModal')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="estado" formControlName="claveScianModal" [label]="'Clave S.C.I.A.N.'" [required]="true" name="claveScianModal" (change)="setValoresStore(formAgente,'claveScianModal', 'setClaveScianModal')" [isDisabled]="soloLectura"></app-catalogo-select>
           </div>
           <div class="form-group">
-            <app-catalogo-select [catalogo]="estado" formControlName="claveDescripcionModal" [label]="'Descripción del S.C.I.A.N.'" [required]="false" name="claveDescripcionModal" (change)="setValoresStore(formAgente,'claveDescripcionModal', 'setClaveDescripcionModal')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="estado" formControlName="claveDescripcionModal" [label]="'Descripción del S.C.I.A.N.'" [required]="false" name="claveDescripcionModal" (change)="setValoresStore(formAgente,'claveDescripcionModal', 'setClaveDescripcionModal')" [isDisabled]="soloLectura"></app-catalogo-select>
           </div>
         </form>
       </div>
       <div class="modal-footer custom-footer">
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">Limpiar</button>
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Agregar</button>
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal" [disabled]="soloLectura">Limpiar</button>
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal" [disabled]="soloLectura">Cancelar</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="soloLectura">Agregar</button>
       </div>
     </div>
   </div>
@@ -156,10 +156,10 @@
       <div class="modal-body modal-height">
         <form [formGroup]="formMercancias">
           <div class="form-group">
-            <app-catalogo-select [catalogo]="estado" formControlName="clasificacion" [label]="'Clasificación del producto'" [required]="true" name="clasificacion" (change)="setValoresStore(formMercancias,'clasificacion', 'setClasificacion')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="estado" formControlName="clasificacion" [label]="'Clasificación del producto'" [required]="true" name="clasificacion" (change)="setValoresStore(formMercancias,'clasificacion', 'setClasificacion')" [isDisabled]="soloLectura"></app-catalogo-select>
           </div>
           <div class="form-group">
-            <app-catalogo-select [catalogo]="estado" formControlName="especificarClasificacionProducto" [label]="'Especificar clasificación del producto'" [required]="true" name="especificarClasificacionProducto" (change)="setValoresStore(formMercancias,'especificarClasificacionProducto', 'setEspecificarClasificacionProducto')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="estado" formControlName="especificarClasificacionProducto" [label]="'Especificar clasificación del producto'" [required]="true" name="especificarClasificacionProducto" (change)="setValoresStore(formMercancias,'especificarClasificacionProducto', 'setEspecificarClasificacionProducto')" [isDisabled]="soloLectura"></app-catalogo-select>
           </div>
           <div class="form-group">
             <label for="denominacionEspecifica">Denominación específica del producto*:</label>
@@ -175,13 +175,13 @@
             <input type="text" id="denominacionComun" formControlName="denominacionComun" class="form-control" (change)="setValoresStore(formMercancias,'denominacionComun', 'setDenominacionComun')">
           </div>
           <div class="form-group">
-            <app-catalogo-select [catalogo]="estado" formControlName="tipoDeProducto" [label]="'Tipo de producto'" [required]="true" name="tipoDeProducto" (change)="setValoresStore(formMercancias,'tipoDeProducto', 'setTipoDeProducto')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="estado" formControlName="tipoDeProducto" [label]="'Tipo de producto'" [required]="true" name="tipoDeProducto" (change)="setValoresStore(formMercancias,'tipoDeProducto', 'setTipoDeProducto')" [isDisabled]="soloLectura"></app-catalogo-select>
           </div>
           <div class="form-group">
-            <app-catalogo-select [catalogo]="formaFarmaceutica" formControlName="formaFarmaceutica" [label]="'Forma farmacéutica'" [required]="true" name="formaFarmaceutica" (change)="setValoresStore(formMercancias,'formaFarmaceutica', 'setFormaFarmaceutica')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="formaFarmaceutica" formControlName="formaFarmaceutica" [label]="'Forma farmacéutica'" [required]="true" name="formaFarmaceutica" (change)="setValoresStore(formMercancias,'formaFarmaceutica', 'setFormaFarmaceutica')" [isDisabled]="soloLectura"></app-catalogo-select>
           </div>
           <div class="form-group">
-            <app-catalogo-select [catalogo]="estado" formControlName="estadoFisico" [label]="'Estado físico'" [required]="true" name="estadoFisico" (change)="setValoresStore(formMercancias,'estadoFisico', 'setEstadoFisico')"></app-catalogo-select>
+            <app-catalogo-select [catalogo]="estado" formControlName="estadoFisico" [label]="'Estado físico'" [required]="true" name="estadoFisico" (change)="setValoresStore(formMercancias,'estadoFisico', 'setEstadoFisico')" [isDisabled]="soloLectura"></app-catalogo-select>
           </div>
           <div class="form-group">
             <label for="fraccionArancelaria">Fracción arancelaria*:</label>
@@ -206,7 +206,7 @@
             <input type="text" id="cantidadUMC" formControlName="cantidadUMC" class="form-control" (change)="setValoresStore(formMercancias,'cantidadUMC', 'setCantidadUMC')">
           </div>
           <div class="form-group">
-            <app-catalogo-select [tooltipQuestionCircle]="true" [catalogo]="estado" formControlName="UMC" [label]="'UMC'" [required]="true" name="UMC" (change)="setValoresStore(formMercancias,'UMC', 'setUMC')"></app-catalogo-select>
+            <app-catalogo-select [tooltipQuestionCircle]="true" [catalogo]="estado" formControlName="UMC" [label]="'UMC'" [required]="true" name="UMC" (change)="setValoresStore(formMercancias,'UMC', 'setUMC')" [isDisabled]="soloLectura"></app-catalogo-select>
           </div>
           <div class="form-group">
             <label for="presentacion">Presentación farmacéutica o tipo de envase*:</label>
@@ -224,7 +224,7 @@
               <div class="panel panel-default">
                 <div class="panel-heading" (click)="mostrar_colapsable()" tabindex="0">
                   <p class="panel-title">País de orígen</p>
-                  <button type="button" class="collpase-button collapsed"></button>
+                  <button type="button" class="collpase-button collapsed" [disabled]="soloLectura"></button>
                 </div> 
                 @if(colapsable){ 
                   <div class="panel-collapse collapse in" id="panel-01">
@@ -241,7 +241,7 @@
               <div class="panel panel-default">
                 <div class="panel-heading" (click)="mostrar_colapsableDos()" tabindex="0">
                   <p class="panel-title">País de procedencia</p>
-                  <button type="button" class="collpase-button collapsed"></button>
+                  <button type="button" class="collpase-button collapsed" [disabled]="soloLectura"></button>
                 </div> 
                 @if(colapsableDos){ 
                   <div class="panel-collapse collapse in" id="panel-01">
@@ -258,7 +258,7 @@
               <div class="panel panel-default">
                 <div class="panel-heading" (click)="mostrar_colapsableTres()" tabindex="0">
                   <p class="panel-title">Uso específico</p>
-                  <button type="button" class="collpase-button collapsed"></button>
+                  <button type="button" class="collpase-button collapsed" [disabled]="soloLectura"></button>
                 </div> 
                 @if(colapsableTres){ 
                   <div class="panel-collapse collapse in" id="panel-01">
@@ -273,9 +273,9 @@
         </form>
       </div>
       <div class="modal-footer custom-footer">
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">Limpiar</button>
-        <button type="button" class="btn btn-default" data-bs-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Agregar</button>
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal" [disabled]="soloLectura">Limpiar</button>
+        <button type="button" class="btn btn-default" data-bs-dismiss="modal" [disabled]="soloLectura">Cancelar</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" [disabled]="soloLectura">Agregar</button>
       </div>
     </div>
   </div>
