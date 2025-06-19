@@ -24,6 +24,16 @@ export interface CuposDisponiblesDatos {
 
 /**
  * Representa los datos de un certificado disponible para cancelación.
+ *
+ * @property folio_del_oficio_de_certificado - Folio del oficio correspondiente al certificado.
+ * @property nombre_denominacion_o_razon_social - Nombre, denominación o razón social del titular del certificado.
+ * @property estado - Estado actual del certificado (por ejemplo, activo, cancelado).
+ * @property fabricante - Nombre del fabricante relacionado con el certificado.
+ * @property importador - Nombre del importador asociado al certificado.
+ * @property unidad_primaria - Unidad primaria utilizada en el certificado.
+ * @property monto_expedido - Monto total expedido en el certificado.
+ * @property monto_a_cancelar - Monto del certificado que se desea cancelar.
+ * @property monto_utilizado - Monto del certificado que ya ha sido utilizado.
  */
 export interface CertificadosDisponibles {
     /** Folio del oficio del certificado */
@@ -109,8 +119,7 @@ export interface Cancelacion {
  * @property {string} [motivoCancelacion] - Motivo opcional de la cancelación.
  */
 export interface PermisosDatos {
-    datos: Cancelacion[];
-    motivoCancelacion?: string;
+    datos: CuposDisponiblesCancelacion[];
 }
 
 /**
