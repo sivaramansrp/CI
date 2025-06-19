@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ID_PROCEDIMIENTO } from '../../../constants/psicotropicos-poretorno.enum';
 import { Observable } from 'rxjs';
@@ -22,13 +22,13 @@ import { map } from 'rxjs';
   styleUrl: './pago-de-derechos-contenedora.component.scss',
 })
 export class PagoDeDerechosContenedoraComponent {
-   /**
-  * Observable que indica si el formulario está en modo solo lectura.
-  * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.
-  *
-  * @type {Observable<boolean>}
-  */
-  esFormularioSoloLectura!: Observable<boolean>;
+     /**
+   * @property {boolean} formularioDeshabilitado
+   * @description
+   * Indica si el formulario está deshabilitado. Por defecto es `false`.
+   */
+  @Input()
+  formularioDeshabilitado: boolean = false;
 
   /**
    * @property {PagoDerechosFormState} pagoDerechos
@@ -50,15 +50,6 @@ export class PagoDeDerechosContenedoraComponent {
    */
   constructor(public tramiteStore: Tramite260201Store, private consultaQuery: ConsultaioQuery ) {
     this.pagoDerechos = this.tramiteStore.getValue().pagoDerechos;
-     this.esFormularioSoloLectura = this.consultaQuery.selectConsultaioState$
-       .pipe(
-         map((seccionState) => {
-           if(!seccionState.create && seccionState.procedureId === '260201') {
-             return seccionState.readonly;
-           } 
-           return false;
-         })
-       );
   }
 
   /**
