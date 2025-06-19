@@ -540,6 +540,7 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof Tramite31601Store): void {
     const VALOR = form.get(campo)?.value;
+    console.log(`Valor a guardar en el store: ${VALOR}`, `Campo: ${campo}`, `Método: ${metodoNombre}`);
     (this.tramite31601Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
