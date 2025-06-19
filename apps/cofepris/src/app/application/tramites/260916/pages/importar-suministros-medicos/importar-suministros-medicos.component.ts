@@ -1,3 +1,7 @@
+/**
+ * @file
+ * Este archivo define el componente `ImportarSuministrosMedicosComponent` que gestiona el asistente
+ */
 import { Component, ViewChild } from '@angular/core';
 import { PERMISO_MAQUILA } from '../../constantes/importar-suministros-medicos.enum';
 
@@ -23,6 +27,10 @@ interface AccionBoton {
   selector: 'app-importar-suministros-medicos',
   templateUrl: './importar-suministros-medicos.component.html',
 })
+/**
+ * @class ImportarSuministrosMedicosComponent
+ * @description
+ */
 export class ImportarSuministrosMedicosComponent {
   /**
    * Referencia al componente del asistente (wizard) para controlar sus acciones.
