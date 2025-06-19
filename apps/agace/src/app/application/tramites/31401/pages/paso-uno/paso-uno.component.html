@@ -21,22 +21,28 @@
                     <solicitante></solicitante>
                 }              
                 @case (2) {
-                    <tipo-de-garantia></tipo-de-garantia>
-                    <modalidad-de-la-garantia></modalidad-de-la-garantia>
-                    <tipo-sector></tipo-sector>
-                    <manifiesto-bajo-protesta></manifiesto-bajo-protesta>
-                    <requisitos></requisitos>
-                    <clientes-y-provedores></clientes-y-provedores>
-                    <control-de-inventarios></control-de-inventarios>
-                    <miembros-de-la-empresa></miembros-de-la-empresa>
-                    <miembro-de-la-empresa></miembro-de-la-empresa>
-                    <regimen-aduanero></regimen-aduanero>
-                    <infraestructura></infraestructura>
-                    <manifestaciones-de-cancelacion></manifestaciones-de-cancelacion>
+                    @if (esDatosRespuesta) {
+                        <tipo-de-garantia></tipo-de-garantia>
+                        <modalidad-de-la-garantia></modalidad-de-la-garantia>
+                        <tipo-sector></tipo-sector>
+                        <manifiesto-bajo-protesta></manifiesto-bajo-protesta>
+                        <requisitos [consultaState]="consultaState"></requisitos>
+                        <clientes-y-provedores></clientes-y-provedores>
+                        <control-de-inventarios></control-de-inventarios>
+                        <miembros-de-la-empresa></miembros-de-la-empresa>
+                        <miembro-de-la-empresa [consultaState]="consultaState"></miembro-de-la-empresa>
+                        <regimen-aduanero></regimen-aduanero>
+                        <infraestructura></infraestructura>
+                        <manifestaciones-de-cancelacion [consultaState]="consultaState"></manifestaciones-de-cancelacion>
+                    }
                 } @case (3) {
-                    <datos-por-garantia></datos-por-garantia>
+                    @if (esDatosRespuesta) {
+                        <datos-por-garantia [consultaState]="consultaState"></datos-por-garantia>
+                    }
                 } @case (4) {
-                    <tereceros-relacionados></tereceros-relacionados>
+                    @if (esDatosRespuesta) {
+                        <tereceros-relacionados [consultaState]="consultaState"></tereceros-relacionados>
+                    }
                 }
             }
         </ng-container>
