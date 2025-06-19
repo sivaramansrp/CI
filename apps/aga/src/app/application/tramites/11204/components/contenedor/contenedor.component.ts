@@ -1,11 +1,11 @@
-import { Aduanas, DatosDelContenedor, datosDelCsvArchivo } from '../../models/datos-tramite.model';
-import { AlertComponent, Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, REGEX_NUMEROS, REGEX_REEMPLAZAR, TablaDinamicaComponent, TEXTOS, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { Aduanas, DatosDelContenedor, DatosDelCsvArchivo } from '../../models/datos-tramite.model';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
-import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, InputFecha, InputFechaComponent, REGEX_NUMEROS, REGEX_REEMPLAZAR, TEXTOS, TablaDinamicaComponent, TituloComponent, ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
 import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { FECHA_INGRESO, VIGENCIA } from '../../enums/datos-tramite.enum';
-import { map, Subject, takeUntil } from 'rxjs';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosTramiteService } from '../../services/datos-tramite.service';
 import { Modal } from 'bootstrap';
@@ -28,7 +28,6 @@ import moment from 'moment';
     CommonModule,
     TituloComponent,
     CatalogoSelectComponent,
-    AlertComponent,
     TablaDinamicaComponent,
     InputFechaComponent
   ],
@@ -173,7 +172,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Configuración de las columnas de la tabla.
    */
-  public csvTabla: ConfiguracionColumna<datosDelCsvArchivo>[] = [
+  public csvTabla: ConfiguracionColumna<DatosDelCsvArchivo>[] = [
     { encabezado: '', clave: (articulo) => articulo.id, orden: 1 },
     { encabezado: 'Iniciales del equipo', clave: (articulo) => articulo.inicialesEquipo, orden: 1 },
     { encabezado: 'Número de equipo', clave: (articulo) => articulo.numeroEquipo, orden: 2 },
@@ -194,7 +193,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
  /**
    * Datos del contenedor.
    */
- public datosDelCsvArchivo: datosDelCsvArchivo[] = [];
+ public datosDelCsvArchivo: DatosDelCsvArchivo[] = [];
 
   /**
    * Referencia al modal.
@@ -329,29 +328,29 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   }
 
   onChange(controlName: string, event: any): void {
-    const value = event.target.value;
+    const VALUE = event.target.value;
    
     if (controlName === 'inicialesContenedor') {
-      const sanitized = value.replace(REGEX_REEMPLAZAR,'').toUpperCase();
-      this.solicitudForm.get(controlName)?.setValue(sanitized);
+      const SANITIZED = VALUE.replace(REGEX_REEMPLAZAR,'').toUpperCase();
+      this.solicitudForm.get(controlName)?.setValue(SANITIZED);
       this.setValoresStore(this.solicitudForm, controlName, 'setInicialesContenedor');
     } else if (controlName === 'numeroContenedor') {
-      const sanitized = value.replace(REGEX_REEMPLAZAR, '');
-      this.solicitudForm.get(controlName)?.setValue(sanitized);
+      const SANITIZED = VALUE.replace(REGEX_REEMPLAZAR, '');
+      this.solicitudForm.get(controlName)?.setValue(SANITIZED);
       this.setValoresStore(this.solicitudForm, controlName, 'setNumeroContenedor');
     } else if (controlName === 'digitoDeControl') {
-      const sanitized = value.replace(REGEX_NUMEROS, '');
-      this.solicitudForm.get(controlName)?.setValue(sanitized);
+      const SANITIZED = VALUE.replace(REGEX_NUMEROS, '');
+      this.solicitudForm.get(controlName)?.setValue(SANITIZED);
       this.setValoresStore(this.solicitudForm, controlName, 'setDigitoDeControl');
     } else if (controlName === 'tipoBusqueda') {
       this.setValoresStore(this.solicitudForm, controlName, 'setTipoBusqueda');
       this.mostrarCampos();
     } else if (controlName === 'aduana') {
       this.setValoresStore(this.solicitudForm, controlName, 'setAduana');
-      const currentDate = moment().format('YYYY-MM-DD');
-      this.solicitudForm.get('fechaIngreso')?.setValue(currentDate);
+      const CURRENT_DATE = moment().format('YYYY-MM-DD');
+      this.solicitudForm.get('fechaIngreso')?.setValue(CURRENT_DATE);
       this.setValoresStore(this.solicitudForm, 'fechaIngreso', 'setFechaIngreso');
-      this.solicitudForm.get('vigencia')?.setValue(currentDate);
+      this.solicitudForm.get('vigencia')?.setValue(CURRENT_DATE);
       this.setValoresStore(this.solicitudForm, 'vigencia', 'setVigencia');
     }
   }
@@ -521,7 +520,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
         if (respuesta?.success) {
           respuesta.datos.id = this.datosDelCsvArchivo.length + 1;
           this.datosDelCsvArchivo.push(respuesta.datos);
-          (this.Tramite11204Store.setDelCsv as (valor: datosDelCsvArchivo[]) => void)(this.datosDelCsvArchivo);
+          (this.Tramite11204Store.setDelCsv as (valor: DatosDelCsvArchivo[]) => void)(this.datosDelCsvArchivo);
         }
       }
     );

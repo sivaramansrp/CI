@@ -48,7 +48,7 @@ export class DonacionesExtranjerasService {
    * @param catalogo - Parámetro que indica el catálogo de aduanas.
    * @returns Observable con la respuesta de las aduanas.
    */
-  getAduana(catalogo: string): Observable<RespuestaCatalogos> {
+  getAduana(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/10303/aduana.json');
   }
 
@@ -58,7 +58,7 @@ export class DonacionesExtranjerasService {
    * @param catalogo - Parámetro que indica el catálogo de destino de donación.
    * @returns Observable con la respuesta del destino de donación.
    */
-  getDestinoDonacion(catalogo: string): Observable<RespuestaCatalogos> {
+  getDestinoDonacion(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/10303/destino-donacion.json');
   }
 
@@ -68,7 +68,7 @@ export class DonacionesExtranjerasService {
    * @param catalogo - Parámetro que indica el catálogo de tipo de mercancía.
    * @returns Observable con la respuesta del tipo de mercancía.
    */
-  getTipoDeMercancia(catalogo: string): Observable<RespuestaCatalogos> {
+  getTipoDeMercancia(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/10303/tipo-de-mercancia.json');
   }
 
@@ -78,7 +78,7 @@ export class DonacionesExtranjerasService {
    * @param catalogo - Parámetro que indica el catálogo de unidad de medida.
    * @returns Observable con la respuesta de la unidad de medida.
    */
-  getUnidadMedida(catalogo: string): Observable<RespuestaCatalogos> {
+  getUnidadMedida(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/10303/umc.json');
   }
 
@@ -88,7 +88,7 @@ export class DonacionesExtranjerasService {
    * @param catalogo - Parámetro que indica el catálogo de unidad de medida de tráfico.
    * @returns Observable con la respuesta de la unidad de medida de tráfico.
    */
-  getUmt(catalogo: string): Observable<RespuestaCatalogos> {
+  getUmt(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/10303/umt.json');
   }
 
@@ -98,7 +98,7 @@ export class DonacionesExtranjerasService {
    * @param catalogo - Parámetro que indica el catálogo de procedencia de otro tipo de mercancía.
    * @returns Observable con la respuesta de la procedencia de otro tipo de mercancía.
    */
-  getProcedenciaOtro(catalogo: string): Observable<RespuestaCatalogos> {
+  getProcedenciaOtro(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/10303/procedencia-otro.json');
   }
 
@@ -108,7 +108,7 @@ export class DonacionesExtranjerasService {
    * @param catalogo - Parámetro que indica el catálogo de condición de la mercancía.
    * @returns Observable con la respuesta de la condición de la mercancía.
    */
-  getCondicionMercancia(catalogo: string): Observable<RespuestaCatalogos> {
+  getCondicionMercancia(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/10303/condicion-mercancia.json');
   }
 
@@ -118,7 +118,7 @@ export class DonacionesExtranjerasService {
    * @param catalogo - Parámetro que indica el catálogo de país de origen del medicamento.
    * @returns Observable con la respuesta del país de origen del medicamento.
    */
-  getPaisOrigenMedicamento(catalogo: string): Observable<RespuestaCatalogos> {
+  getPaisOrigenMedicamento(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/10303/pais-origen-medicamento.json');
   }
 
@@ -128,7 +128,7 @@ export class DonacionesExtranjerasService {
    * @param catalogo - Parámetro que indica el catálogo de país de procedencia del medicamento.
    * @returns Observable con la respuesta del país de procedencia del medicamento.
    */
-  getPaisProcedenciaMedicamento(catalogo: string): Observable<RespuestaCatalogos> {
+  getPaisProcedenciaMedicamento(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/10303/pais-procedencia-medicamento.json');
   }
   
@@ -138,7 +138,7 @@ export class DonacionesExtranjerasService {
    * @param catalogo - Parámetro que indica el catálogo de países.
    * @returns Observable con la respuesta de los países.
    */
-  getPaises(catalogo: string): Observable<RespuestaCatalogos> {
+  getPaises(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/10303/paises.json');
   }
 
@@ -148,7 +148,7 @@ export class DonacionesExtranjerasService {
    * @param catalogo - Parámetro que indica el catálogo de documentos de residencia.
    * @returns Observable con la respuesta de los documentos de residencia.
    */
-  getDocumentoResidencia(catalogo: string): Observable<RespuestaCatalogos> {
+  getDocumentoResidencia(): Observable<RespuestaCatalogos> {
     return this.http.get<RespuestaCatalogos>('assets/json/10303/documento-residencia.json');
   }
 
@@ -158,7 +158,7 @@ export class DonacionesExtranjerasService {
    * @param rfc - RFC del contribuyente a buscar.
    * @returns Observable con la respuesta del contribuyente.
    */
-  buscarContribuyente(rfc: string): Observable<ContribuyenteRespuesta> {
+  buscarContribuyente(): Observable<ContribuyenteRespuesta> {
     return this.http.get<ContribuyenteRespuesta>('assets/json/10303/donatario-datos.json');
   }
 

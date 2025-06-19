@@ -90,7 +90,7 @@ export interface DatosDelContenedor {
  * Interfaz que representa los datos de un csv.
  * Utilizamos esta interfaz para definir la estructura de los datos detallados de un contenedor.
  */
-export interface datosDelCsvArchivo {
+export interface DatosDelCsvArchivo {
   /**
    * Identificador del contenedor.
    */

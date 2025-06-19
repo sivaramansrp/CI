@@ -278,6 +278,3 @@ export class GestionDeCuentasComponent implements OnInit, OnDestroy {
   }
 }
 
-function abrirModal(i: any, arg1: number) {
-  throw new Error('Function not implemented.');
-}

@@ -202,7 +202,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   /**
    * Define los datos que se mostrarán en la tabla dinámica.
    */
-  datosTabla: any[] = [];
+  datosTabla: unknown[] = [];
 
   /**
    * Obtener el valor de la instrucción e inicializar la variable.
