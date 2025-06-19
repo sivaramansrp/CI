@@ -15,6 +15,7 @@ import { MANIFIESTO_ACEPTACION_HTML } from '../../constantes/renuncia-de-permiso
 import { Tramite140218Query } from '../../estados/query/tramite140218.query';
 import { Tramite140218Store } from '../../estados/store/tramite140218.store';
 
+
 /**
  * @class RenunciaDeDerechosComponent
  * @description Componente para gestionar la funcionalidad de renuncia de derechos en el trámite 140218.
@@ -103,6 +104,7 @@ export class RenunciaDeDerechosComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState as DatosSolicitudState;
+          
         })
       )
       .subscribe();
@@ -122,7 +124,7 @@ export class RenunciaDeDerechosComponent implements OnInit, OnDestroy {
       acotacion: [{ value:'', disabled: true }],
       permisoDesde: [{ value: '', disabled: true }],
       permisoHasty: [{ value: '', disabled: true }],
-      motivoRenuncia: [''] // este sí es editable
+      motivoRenuncia: [this.solicitudState.motivoRenuncia || ''] // este sí es editable
     });
     this.setRenunciaDerechosForm();
 
