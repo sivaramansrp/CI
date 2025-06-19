@@ -15,6 +15,7 @@
               [required]="true"
               (change)="aduanaSeleccion()"
               name="aduana"
+              [isDisabled]="isAdunaDisabled"
             >
             </app-catalogo-select>
           </div>
@@ -59,6 +60,7 @@
           </div>
           <div class="table-container" style="margin-top: 20px">
             <ng-table
+            [isDisabled]="true"
               [commonTableHeader]="mercanciaHeaderData"
               [commonTableBody]="mercanciaBodyData"
             ></ng-table>
@@ -152,6 +154,7 @@
               formControlName="pais"
               (change)="paisSeleccion()"
               name="pais"
+              [isDisabled]="isPaisDisabled"
             ></app-catalogo-select>
           </div>
           <div class="col-md-4">

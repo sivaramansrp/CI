@@ -15,12 +15,16 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+
 import {
+  ConsultaioQuery,
+  ConsultaioState,
   REGEX_POSTAL,
   REGEX_TELEFONO_DIGITOS,
   TableBodyData,
   ValidacionesFormularioService,
-} from '@libs/shared/data-access-user/src';
+} from '@ng-mf/data-access-user';
+
 import { Subject,Subscription, map, merge, takeUntil } from 'rxjs';
 import { AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/aviso-privacidad.enum';
 import { DatosDelMercancia } from '../../models/modificacion-donaciones-immex.model';
@@ -71,7 +75,20 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   TEXTOS = AVISO.Aviso;
 
-  infoAlert: string = 'info-alert';
+/**
+ * Indica si el campo de país está deshabilitado en el formulario.
+ */
+isPaisDisabled: boolean = true;
+
+/**
+ * Indica si el campo de aduana está deshabilitado en el formulario.
+ */
+isAdunaDisabled: boolean = true;
+
+/**
+ * Clase CSS utilizada para mostrar mensajes de alerta informativos en la interfaz.
+ */
+infoAlert: string = 'info-alert';
   /**
    * Formulario principal del trámite.
    */
@@ -174,22 +191,39 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    */
   public datosDelMercancia: DatosDelMercancia[] = [];
 
+    /**
+  * Subject para destruir notificador.
+  */
+  consultaDatos!: ConsultaioState;
+
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor de la clase DatosDelTramiteComponent.
    * 
-   * @param modificacionDonacionesImmexService Servicio para manejar las modificaciones de donaciones IMMEX.
+   * @param service11102 Servicio para manejar las modificaciones de donaciones IMMEX.
    * @param store Almacén de estado específico para el trámite 11102.
    * @param query Consulta para obtener datos del estado del trámite 11102.
    * @param formBuilder Constructor de formularios reactivos.
    * @param validacionesService Servicio para realizar validaciones personalizadas en formularios.
    */
   constructor(
-    private modificacionDonacionesImmexService: ModificacionDonacionesImmexService,
+    private consultaioQuery: ConsultaioQuery,
+    private service11102: ModificacionDonacionesImmexService,
     private store: Tramite11102Store,
     private query: Tramite11102Query,
     public formBuilder: FormBuilder,
     private validacionesService: ValidacionesFormularioService
-  ) {}
+  ){ this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
+  }
 
   /**
    * Método de inicialización del componente.
@@ -209,17 +243,28 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     this.obtenerMercancia();
   }
 
+    /**
+ * Inicializa el estado del formulario según si es de solo lectura o no.
+ * Si es de solo lectura, guarda los datos del formulario; de lo contrario, inicializa el formulario con los datos del donante y domicilio.
+ */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosDelFormulario();
+    } else {
+      this.datosDeAvisoForm()
+    }
+  }
   /**
    * Inicializa los catálogos necesarios para el formulario.
    */
   private inicializaCatalogos(): void {
-    const ADUANA$ = this.modificacionDonacionesImmexService.getAduana().pipe(
+    const ADUANA$ = this.service11102.getAduana().pipe(
       map((resp) => {
         this.aduana = resp.data;
       })
     );
 
-    const TIPO_DE_MERCANCIA$ = this.modificacionDonacionesImmexService
+    const TIPO_DE_MERCANCIA$ = this.service11102
       .getTipoDeMercancia()
       .pipe(
         map((resp) => {
@@ -227,7 +272,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         })
       );
 
-    const CONDICION_MERCANCIA$ = this.modificacionDonacionesImmexService
+    const CONDICION_MERCANCIA$ = this.service11102
       .getCondicionMercancia()
       .pipe(
         map((resp) => {
@@ -235,7 +280,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         })
       );
 
-    const UNIDAD_MEDIDA$ = this.modificacionDonacionesImmexService
+    const UNIDAD_MEDIDA$ = this.service11102
       .getUnidadMedida()
       .pipe(
         map((resp) => {
@@ -243,13 +288,13 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         })
       );
 
-    const ANO$ = this.modificacionDonacionesImmexService.getAno().pipe(
+    const ANO$ = this.service11102.getAno().pipe(
       map((resp) => {
         this.ano = resp.data;
       })
     );
 
-    const PAIS$ = this.modificacionDonacionesImmexService.getPais().pipe(
+    const PAIS$ = this.service11102.getPais().pipe(
       map((resp) => {
         this.pais = resp.data;
       })
@@ -365,6 +410,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         serie: [this.solicitudState?.ano],
       }),
     });
+    this.inicializarEstadoFormulario();
   }
 
   /**
@@ -516,6 +562,47 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
       this.getMercanciaTableData?.mercanciaTable?.tableBody;
   }
 
+  /**
+ * Habilita o deshabilita el formulario según el modo de solo lectura.
+ * 
+ * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es `true`), 
+ * deshabilita todos los controles del formulario para evitar modificaciones.
+ * Si no está en modo solo lectura, habilita todos los controles del formulario para permitir la edición.
+ */
+guardarDatosDelFormulario(): void {
+  if (this.esFormularioSoloLectura) {
+    this.tramiteForm.disable();
+  } else {
+    this.tramiteForm.enable();
+  }
+}
+
+datosDeAvisoForm(): void {
+  if (this.esFormularioSoloLectura && this.tramiteForm && this.agregarMercanciasForm) {
+    this.tramiteForm.get('modificacionDonacionesImmex.aduana')?.disable()
+    this.tramiteForm.get('modificacionDonacionesImmex.pais')?.disable()
+    this.tramiteForm.get('modificacionDonacionesImmex.rfc')?.disable()
+    this.tramiteForm.get('modificacionDonacionesImmex.pnumeroProgramaImmex')?.disable()
+    this.tramiteForm.get('modificacionDonacionesImmex.correoElectronicoOpcional')?.disable()
+    this.tramiteForm.get('modificacionDonacionesImmex.telefonoOpcional')?.disable()
+    this.tramiteForm.get('modificacionDonacionesImmex.calle')?.disable()
+    this.tramiteForm.get('modificacionDonacionesImmex.numeroExterior')?.disable()
+    this.tramiteForm.get('modificacionDonacionesImmex.numeroInterior')?.disable()
+    this.tramiteForm.get('modificacionDonacionesImmex.correoElectronico')?.disable()
+    this.tramiteForm.get('modificacionDonacionesImmex.telefono')?.disable()
+    this.tramiteForm.get('modificacionDonacionesImmex.estado')?.disable()
+    this.tramiteForm.get('modificacionDonacionesImmex.codigoPostal')?.disable()
+    this.tramiteForm.get('modificacionDonacionesImmex.colonia')?.disable()
+    this.agregarMercanciasForm.get('modificacionDonacionesImmex.datosMercancia.tipoDeMercancia')?.disable()
+    this.agregarMercanciasForm.get('modificacionDonacionesImmex.datosMercancia.cantidad')?.disable()
+    this.agregarMercanciasForm.get('modificacionDonacionesImmex.datosMercancia.unidadMedida')?.disable()
+    this.agregarMercanciasForm.get('modificacionDonacionesImmex.datosMercancia.ano')?.disable()
+    this.agregarMercanciasForm.get('modificacionDonacionesImmex.datosMercancia.modelo')?.disable()
+    this.agregarMercanciasForm.get('modificacionDonacionesImmex.datosMercancia.marca')?.disable()
+    this.agregarMercanciasForm.get('modificacionDonacionesImmex.datosMercancia.serie')?.disable()
+    this.agregarMercanciasForm.get('modificacionDonacionesImmex.datosMercancia.condicionMercancia')?.disable()
+  }
+}
   /**
    * Método que se ejecuta al destruir el componente.
    * Se utiliza para limpiar las suscripciones.
