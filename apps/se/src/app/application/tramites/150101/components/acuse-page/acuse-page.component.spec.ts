@@ -3,6 +3,7 @@ import { AcusePageComponent } from './acuse-page.component';
 import { CommonModule } from '@angular/common';
 import { AcuseComponent } from '@libs/shared/data-access-user/src';
 import { ACUSE_SERVICIOS_EXTRAORDINARIOS, TITULO_ACUSE, TXT_ALERTA_ACUSE } from '@libs/shared/data-access-user/src';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('AcusePageComponent', () => {
   let component: AcusePageComponent;
@@ -10,7 +11,7 @@ describe('AcusePageComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [CommonModule, AcuseComponent, AcusePageComponent],
+      imports: [CommonModule, AcuseComponent, AcusePageComponent, HttpClientTestingModule],
     }).compileComponents();
 
     fixture = TestBed.createComponent(AcusePageComponent);
@@ -33,6 +34,7 @@ describe('AcusePageComponent', () => {
   });
 
   it('should set folio to a default value and txtAlerta correctly in ngOnInit', () => {
+    component.folio = '01010101010101010101010101010101';
     component.ngOnInit();
     expect(component.folio).toBe('01010101010101010101010101010101');
     expect(component.txtAlerta).toBe(TXT_ALERTA_ACUSE(component.folio));

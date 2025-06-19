@@ -168,3 +168,37 @@ export interface FormularioMercancia {
   fecha: string;
   numeroFactura: string;
 }
+/**
+ * Representa la respuesta de una consulta.
+ * 
+ * Contiene información sobre el éxito de la operación, los datos obtenidos y un mensaje relacionado.
+ */
+export interface RespuestaConsulta {
+  success: boolean;
+  datos: ConsultaDatos;
+  message: string;
+}
+/**
+ * Representa los datos obtenidos de una consulta.
+ * 
+ * Contiene información detallada sobre operadores, tratados, domicilios, mercancías, y otros datos relacionados.
+ */
+export interface ConsultaDatos {
+  tercerOperador: boolean;
+  grupoOperador: GrupoOperador;
+  grupoTratado: GrupoTratado;
+  grupoDeDomicilio: GrupoDeDomicilio;
+  mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[]
+  mercanciaDisponsiblesTablaDatos: DisponiblesTabla[];
+  observaciones: string;
+  idioma: string;
+  entidadFederativa: string;
+  representacionFederal: string;
+  grupoReceptor: GrupoReceptor;
+  grupoDeDirecciones: GrupoDeDirecciones;
+  grupoRepresentativo: GrupoRepresentativo;
+  grupoDeTransporte: GrupoDeTransporte;
+  datosConfidencialesProductor: boolean;
+  productorMismoExportador: boolean;
+  productoresExportador: HistoricoColumnas[];
+}

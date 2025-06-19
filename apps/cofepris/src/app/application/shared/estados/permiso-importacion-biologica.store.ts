@@ -94,7 +94,7 @@ export class PermisoImportacionBiologicaStore extends Store<PermisoImportacionBi
    * 
    * Actualiza el estado de la tienda con el nuevo valor de `setBanco`.
    */
-  public setBanco(setBanco: CatalogoResponse): void {
+  public setBanco(setBanco: CatalogoResponse | null): void {
     this.update((state) => ({
       ...state,
       setBanco,

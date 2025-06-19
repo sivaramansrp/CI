@@ -8,7 +8,8 @@
              [required]="false" 
              name="Estado"
             formControlName="estado" 
-            (change)="setValoresStore(formularioEmpresa,'estado', 'setEstado')">
+            (change)="setValoresStore(formularioEmpresa,'estado', 'setEstado')"
+            [isDisabled]="esFormularioSoloLectura ? true : false">
             </app-catalogo-select>
         </div>
         <div class="col-md-3">
@@ -18,7 +19,9 @@
             [required]="true"
             name="Representación federal" 
             formControlName="representacionFederal" 
-            (change)="setValoresStore(formularioEmpresa,'representacionFederal', 'setRepresentacionFederal')">
+            (change)="setValoresStore(formularioEmpresa,'representacionFederal', 'setRepresentacionFederal')"
+            [isDisabled]="esFormularioSoloLectura ? true : false"
+            >
             </app-catalogo-select>
         </div>
     </div>
@@ -26,7 +29,8 @@
         <section>
         <lib-notificaciones 
         [notificacionInput]="nuevaNotificacion" 
-        (confirmacionModal)="eliminarPedimento($event)">
+        (confirmacionModal)="eliminarPedimento($event)"
+        >
         </lib-notificaciones>
         </section>
         }
@@ -47,6 +51,7 @@
                 [required]="true" 
                 formControlName="tipoEmpresa"
                 (change)="setValoresStore(formularioEmpresa,'tipoEmpresa', 'setTipoEmpresa')"
+                [isDisabled]="esFormularioSoloLectura ? true : false"
             ></app-catalogo-select>
 
         </div>
@@ -61,12 +66,14 @@
             <input type="text" id="actividad-economica-preponderante" class="form-control"
                 name="actividadEconomicaPreponderante" formControlName="actividadEconomicaPreponderante"
                 (change)="setValoresStore(formularioEmpresa,'actividadEconomicaPreponderante', 'setActividadEconomicaPreponderante')"
+                [disabled]="esFormularioSoloLectura"
                 >
         </div>
         <div class="col-md-12">
             <label for="descripcion" class="form-label">Descripción de la Actividad Económica del SAT:</label>
             <textarea id="descripcion" class="form-control" formControlName="descripcion" [readonly]="true"
             (change)="setValoresStore(formularioEmpresa,'descripcion', 'setDescripcion')"
+            [disabled]="esFormularioSoloLectura"
             ></textarea>
         </div>
     </div>
@@ -139,6 +146,7 @@
                 formControlName="nacionalidad"
                 (valueChange)="setSelectedNacionalidad($event.toString())" 
                 (change)="setValoresStore(formularioEmpresa,'nacionalidad', 'setNacionalidad')"
+                [disabled]="esFormularioSoloLectura"
                 >
             </app-input-radio>
         </div>
@@ -152,6 +160,7 @@
               formControlName="tipoDePersona"
               (valueChange)="setSelectedTipoDePersona($event.toString())" 
               (change)="setValoresStore(formularioEmpresa,'tipoDePersona', 'setTipoDePersona')"
+              [disabled]="esFormularioSoloLectura"
               >
             </app-input-radio>
         </div>
@@ -164,12 +173,14 @@
             <input type="text" id="registroFederal" class="form-control" formControlName="registroFederal"
             (change)="setValoresStore(formularioEmpresa,'registroFederal', 'setRegistroFederal')"
             (blur)="checkRFCValidation()"
+            [disabled]="esFormularioSoloLectura"
                >
         </div>
     </div>
   }
   <section *ngIf="nuevaNotificacion">
-    <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)">
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion" (confirmacionModal)="eliminarPedimento($event)"
+    >
     </lib-notificaciones>
     </section>
   
@@ -181,13 +192,15 @@
             <label for="nombre" class="form-label">Nombre:</label>
             <input type="text" id="nombre" class="form-control" formControlName="nombre"
             (change)="setValoresStore(formularioEmpresa,'nombre', 'setNombre')"
-               >
+            [disabled]="esFormularioSoloLectura"
+            >
         </div>
         <div class="col-md-6">
             <label for="apellidoPaterno" class="form-label">Apellido paterno*:</label>
             <input type="text" id="apellidoPaterno" class="form-control" formControlName="apellidoPaterno" maxlength="200"
             (change)="setValoresStore(formularioEmpresa,'apellidoPaterno', 'setApellidoPaterno')"
-               >
+            [disabled]="esFormularioSoloLectura"
+            >
         </div>
      </div>
     }
@@ -196,7 +209,8 @@
             <label for="taxId" class="form-label">TAX ID*:</label>
             <input type="text" id="taxId" class="form-control" formControlName="taxId" maxlength="12"
             (change)="setValoresStore(formularioEmpresa,'taxId', 'setTaxId')"
-               >
+            [disabled]="esFormularioSoloLectura"
+            >
         </div>
      </div>
      <div class="row" >
@@ -205,7 +219,7 @@
             <label for="razonSocial" class="form-label">Denominación o razón social:</label>
             <input type="text" id="razonSocial" class="form-control" formControlName="razonSocial"
             (change)="setValoresStore(formularioEmpresa,'razonSocial', 'setRazonSocial')"
-
+            [disabled]="esFormularioSoloLectura"
             >
         </div>
       </div>
@@ -218,6 +232,7 @@
               name="País"
               formControlName="datosPais"
               (change)="setValoresStore(formularioEmpresa,'datosPais', 'setDatosPais')"
+              [isDisabled]="esFormularioSoloLectura ? true : false"
               >
             </app-catalogo-select>
 
@@ -227,13 +242,14 @@
             <label for="Código postal" class="form-label">Código postal:</label>
             <input type="text" id="Código postal" class="form-control" formControlName="datosCodigoPostal" maxlength="12"
             (change)="setValoresStore(formularioEmpresa,'datosCodigoPostal', 'setDatosCodigoPostal')"
-
+            [disabled]="esFormularioSoloLectura"
              >
         </div>
         <div class="col-md-6">
             <label for="Estado" class="form-label">Estado*:</label>
             <input type="text" id="Estado" class="form-control" formControlName="datosEstado"
             (change)="setValoresStore(formularioEmpresa,'datosEstado', 'setDatosEstado')"
+      [disabled]="esFormularioSoloLectura"
 
            >
         </div>
@@ -241,19 +257,21 @@
             <label for="Correo electrónico" class="form-label">Correo electrónico*:</label>
             <input type="text" id="Correo electrónico" class="form-control" formControlName="correoElectronico"
             (change)="setValoresStore(formularioEmpresa,'correoElectronico', 'setCorreoElectronico')"
+            [disabled]="esFormularioSoloLectura"
          >
         </div>
         <div class="col-md-6" *ngIf="selectedNacionalidad === nacionalidadMexicanaNo && selectedTipoPersona === tipoPersonaFisica">
             <label for="taxId" class="form-label">TAX ID*:</label>
             <input type="text" id="taxId" class="form-control" formControlName="taxId" maxlength="12"
-                (change)="setValoresStore(formularioEmpresa,'taxId', 'setTaxId')">
+                (change)="setValoresStore(formularioEmpresa,'taxId', 'setTaxId')"
+                [disabled]="esFormularioSoloLectura">
         </div>
       </div> 
     </div>
    }
 </ng-container>
     <div class="col-md-12 d-flex justify-content-end mt-2 mb-4">
-        <button type="button" class="btn btn-primary" (click)="onAgregar()">Agregar</button>
+        <button type="button" class="btn btn-primary" (click)="onAgregar()" [disabled]="esFormularioSoloLectura">Agregar</button>
     </div>
 
     <h6 class="margin-header">Socios y Accionistas</h6>
@@ -267,7 +285,7 @@
    </app-tabla-dinamica>
 
     <div class=" text-end">
-        <button type="button" class="btn btn-primary" (click)="onDelete()">Eliminar</button>
+        <button type="button" class="btn btn-primary" (click)="onDelete()" [disabled]="esFormularioSoloLectura">Eliminar</button>
     </div>
 
     <h6 class="margin-header">Socios y Accionistas Extranjeros</h6>
@@ -281,6 +299,6 @@
         ></app-tabla-dinamica>
 
     <div class="text-end mt-5">
-        <button type="button" class="btn btn-primary" (click)="onEliminar()">Eliminar</button>
+        <button type="button" class="btn btn-primary" (click)="onEliminar()" [disabled]="esFormularioSoloLectura">Eliminar</button>
     </div>
 </div>

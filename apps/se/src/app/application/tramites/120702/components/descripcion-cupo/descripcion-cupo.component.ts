@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import {
   Solicitud120702State,
@@ -6,12 +6,12 @@ import {
 } from '../../estados/tramite120702.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import {ConsultaioState} from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
 import {
   INFORMACION_DESCRIPCION_CUPO,
 } from '../../constantes/expedicion-certificados-frontera.enum';
 import { Tramite120702Query } from '../../estados/tramite120702.query';
-
 /**
  * Componente encargado de mostrar y administrar el formulario de descripción del cupo
  * dentro del trámite 120702.
@@ -27,6 +27,12 @@ import { Tramite120702Query } from '../../estados/tramite120702.query';
   styleUrl: './descripcion-cupo.component.scss',
 })
 export class DescripcionCupoComponent implements OnInit, OnDestroy {
+  
+ /**
+  * Estado de la consulta recibido como entrada desde el componente padre.
+  */
+  @Input({required:true}) consultaState!: ConsultaioState;
+    
   /**
    * Formulario principal del componente.
    * Contiene un subgrupo llamado `ninoFormGroup` donde se almacena la forma dinámica.
