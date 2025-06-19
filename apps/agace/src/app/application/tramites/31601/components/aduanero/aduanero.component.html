@@ -263,10 +263,11 @@
           Este campo es obligatorio.
         </div>
       </div>
-      <div class="alert alert-danger mt-3 mb-5">
+      <div *ngIf="showsenale">
+        <div class="alert alert-danger mt-3 mb-5">
         <h6 class="mb-0">
           <strong>Nota:</strong> En el caso de la Modalidad de IVA e IEPS,
-          tendrá que contar con al meanos 10 trabajadores registrados.
+          tendrá que contar con al menos 10 trabajadores registrados.
         </h6>
       </div>
       <label class="fw-bold mb-5" for="">
@@ -276,35 +277,46 @@
 
       <div class="row mb-5">
         <div class="col-md-1"></div>
-        <div class="col-md-5">
-          <div class="form-group">
-            <label for="empPropios" class="form-label"
-              >Número de empleados</label
-            >
-            <input
-              type="text"
-              class="form-control"
-              id="empPropios"
-              name="empPropios"
-              maxlength="8"
-              formControlName="empPropios"
-              (change)="setValoresStore(preOperativeForm,'empPropios', 'setEmpPropios')"
-            />
+        <div class="col-md-10">
+          <div class="row">
+             <div class="col-md-6">
+                <div class="form-group">
+                  <label for="empPropios" class="form-label">Número de empleados</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="empPropios"
+                    name="empPropios"
+                    maxlength="8"
+                    formControlName="empPropios"
+                    (change)="setValoresStore(preOperativeForm,'empPropios', 'setEmpPropios')"
+                  />
+                </div>
+             </div>
+             <div class="col-md-6">
+                <app-catalogo-select
+                  [label]="'Bimestre'"
+                  [placeholder]="'Seleccione un valor'"
+                  [catalogo]="comboBimestresIDC"
+                  formControlName="bimestre"
+                  [isDisabled]="esFormularioSoloLectura ? true : false"
+                  (change)="setValoresStore(preOperativeForm,'bimestre', 'setBimestre')"
+                >
+                </app-catalogo-select>
+             </div>
           </div>
-        </div>
-        <div class="col-md-5">
-          <app-catalogo-select
-            [label]="'Bimestre'"
-            [placeholder]="'Seleccione un valor'"
-            [catalogo]="comboBimestresIDC"
-            formControlName="bimestre"
-            [isDisabled]="esFormularioSoloLectura ? true : false"
-            (change)="setValoresStore(preOperativeForm,'bimestre', 'setBimestre')"
-          >
-          </app-catalogo-select>
+          <div *ngIf="
+            (preOperativeForm.get('empPropios')?.invalid && preOperativeForm.get('empPropios')?.touched) ||
+            (preOperativeForm.get('bimestre')?.invalid && preOperativeForm.get('bimestre')?.touched)" class="text-danger">
+            Se debe agregar los datos del número de empleados propios del último bimestre
+          </div>
         </div>
         <div class="col-md-1"></div>
       </div>
+      
+      </div>
+     
+       
       <div class="mt-4 mb-5">
         <section class="body-text fw-bold mb-2">
           <span class="text-danger">*</span> Señale si al momento de ingresar su solicitud la empresa solicitante cuenta con trabajadores subcontratados en los términos y condiciones que establecen los artículos 15- A al 15-D de la Ley Federal de Trabajo
@@ -332,7 +344,8 @@
         </div>
       </div>
 
-      <label for="mecioneLabel" class="mb-5">
+     <div *ngIf="showSubcontratacionTable">
+       <label for="mecioneLabel" class="mb-5">
         <span class="require">* </span>
         Mencione el nombre, RFC y número de empleados que le proveen las
         empresas que le prestan el servicio de subcontratación
@@ -374,6 +387,7 @@
           Agregar
         </button>
       </div>
+     </div>
       <div class="mt-4 form-group">
         <section class="body-text fw-bold mb-2">
           <span class="text-danger">*</span> Indique si se encuentra en el listado de empresas publicadas por el SAT en términos de los artículos 69 o 69-B Bis, noveno párrafo, con excepción de lo dispuesto en el 69 fracción VI y 69-B, cuarto párrafo, del Código Fiscal Federal.

@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConsultaioQuery, TituloComponent } from '@ng-mf/data-access-user';
 import {
   FormBuilder,
@@ -163,7 +163,6 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
   * Cuando es `true`, los campos del formulario no se pueden editar.
   */
   esFormularioSoloLectura: boolean = false; 
-
   /**
  * Constructor de la clase DatosPorRegimenComponent.
  * 
@@ -524,7 +523,41 @@ export class DatosPorRegimenComponent implements OnInit,OnDestroy {
       START_INDEX + this.itemsPerPage
     );
   }
+   /**
+   * Indica si se debe mostrar la sección de "Importación temporal bajo la modalidad del programa IMMEX (sensibles)".
+   * Se muestra si el checkbox correspondiente a régimen_0 está seleccionado.
+   * @returns {boolean}
+   */
+  public get showIMMEXSensiblesSection(): boolean {
+    return Boolean(this.solicitudState?.regimen_0);
+  }
 
+  /**
+   * Indica si se debe mostrar la sección de "Depósito fiscal para someterse al proceso de ensamble y fabricación de vehículos".
+   * Se muestra si el checkbox correspondiente a régimen_1 está seleccionado.
+   * @returns {boolean}
+   */
+  public get showDepositoFiscalSection(): boolean {
+    return Boolean(this.solicitudState?.regimen_1);
+  }
+
+  /**
+   * Indica si se debe mostrar la sección de "Elaboración, transformación o reparación en recinto fiscalizado".
+   * Se muestra si el checkbox correspondiente a régimen_2 está seleccionado.
+   * @returns {boolean}
+   */
+  public get showRecintoFiscalizadoSection(): boolean {
+    return Boolean(this.solicitudState?.regimen_2);
+  }
+
+  /**
+   * Indica si se debe mostrar la sección de "Recinto fiscalizado estratégico".
+   * Se muestra si el checkbox correspondiente a régimen_3 está seleccionado.
+   * @returns {boolean}
+   */
+  public get showRecintoEstrategicoSection(): boolean {
+    return Boolean(this.solicitudState?.regimen_3);
+  }
   /**
    * @method onPageChange
    * Número de la nueva página seleccionada.

@@ -333,8 +333,16 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
         preOperativo: [this.solicitudState?.preOperativo, Validators.required],
         indiqueSi: [this.solicitudState?.indiqueSi, Validators.required],
         senale: [this.solicitudState?.senale, Validators.required],
-        empPropios:[this.solicitudState?.empPropios],
-        bimestre:[this.solicitudState?.bimestre],
+        empPropios: [
+          this.solicitudState?.empPropios,
+          [
+            Validators.required,
+            Validators.min(1),
+            Validators.max(99999999),
+            Validators.maxLength(8),
+          ],
+        ],
+        bimestre: [this.solicitudState?.bimestre, Validators.required],
         senaleSi: [this.solicitudState?.senaleSi, Validators.required],
         seMomento: [this.solicitudState?.seMomento, Validators.required],
         cumplir: [this.solicitudState?.cumplir, Validators.required],
@@ -440,6 +448,28 @@ export class AduaneroComponent implements OnInit, AfterViewInit, OnDestroy {
         this.instalacionesModal.nativeElement
       );
     }
+  }
+
+    /**
+   * Indica si se debe mostrar la tabla de subcontratación.
+   * 
+   * Retorna true si la opción seleccionada en el radio 'senaleSi' es 'Si'.
+   * Esto permite mostrar u ocultar dinámicamente la sección relacionada
+   * con trabajadores subcontratados en el formulario.
+   */
+  get showSubcontratacionTable(): boolean {
+    return this.preOperativeForm?.get('senaleSi')?.value === 'Si';
+  }
+
+  /**
+   * Indica si se debe mostrar la sección relacionada con el campo 'senale'.
+   * 
+   * Retorna true si la opción seleccionada en el radio 'senale' es 'Si'.
+   * Esto permite mostrar u ocultar dinámicamente la sección correspondiente
+   * en el formulario.
+   */
+  get showsenale(): boolean {
+    return this.preOperativeForm?.get('senale')?.value === 'Si';
   }
 
   /**
