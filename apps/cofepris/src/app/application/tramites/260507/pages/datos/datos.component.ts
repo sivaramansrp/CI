@@ -1,9 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, map, takeUntil } from 'rxjs';
+import { DatosDomicilioLegalService } from '../../../../shared/services/datos-domicilio-legal.service';
 import { FormularioDinamico } from '@ng-mf/data-access-user';
-// import { ImportacionPlafestService } from '../../services/importacion-plafest.service';
-
 
 
 /**
@@ -76,8 +75,8 @@ export class DatosComponent implements OnInit, OnDestroy {
  * @memberof PasoUnoComponent
  */
   constructor(
-    private solocitud260507Service: Solocitud260507Service,
-    private consultaQuery: ConsultaioQuery
+    private consultaQuery: ConsultaioQuery,
+     private datosDomicilioLegalService: DatosDomicilioLegalService,
   ) { }
 
   /**
@@ -105,14 +104,14 @@ export class DatosComponent implements OnInit, OnDestroy {
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
   guardarDatosFormulario(): void {
-    this.solocitud260507Service
+    this.datosDomicilioLegalService
       .getRegistroTomaMuestrasMercanciasData().pipe(
         takeUntil(this.destroyNotifier$)
       )
       .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
-          this.solocitud260507Service.actualizarEstadoFormulario(resp);
+          this.datosDomicilioLegalService.actualizarEstadoFormulario(resp);
         }
       });
   }
