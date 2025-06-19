@@ -1336,6 +1336,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     );
 
     if (FORMA_MODIFICADA) {
+      this.fechasSeleccionadas.clear();
+      this.pedimento.clear();
+
+      this.tramite5701Store.setTransporte([]);
+      this.tramite5701Store.setTransporteArriboDatos([]);
+
       this.fechaIntervaloValidator();
       if (this.datosServicio.hasError('endDateBeforeStartDate')) {
         this.limpiarFechasHoras();
@@ -3156,6 +3162,10 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       .subscribe();
   }
 
+  /**
+   * @description Detecta el cambio en el campo folio DDEX y actualiza el store correspondiente.
+   * @returns {void} No retorna ningún valor.
+   */
   changeFolioDDEX(): void {
     const FOLIO_DDEX = this.despacho.get('folioDDEX');
     this.setValoresStore(this.despacho, 'folioDDEX', 'setAutorizacionDDEX');
