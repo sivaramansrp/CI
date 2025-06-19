@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
 import { PermisosVigentesRespuesta, PersonasNotificarRespuesta, TitularDetalleRespuesta } from '../../models/suspension-permiso.model';
+import { BusquedaPermisos140216State } from '../../estados/tramites/tramite140216.store';
 
 /**
  * Servicio para gestionar la suspensión de permisos.
@@ -58,5 +59,13 @@ export class SuspensionPermisoService {
    */
   obtenerPersonasNotificar(): Observable<PersonasNotificarRespuesta> {
     return this.http.get<PersonasNotificarRespuesta>('assets/json/140216/personas-notificar.json');
+  }
+
+  /**
+   * Obtiene los datos de la consulta de suspensión de permiso.
+   * @returns Observable con el estado de la consulta de suspensión de permiso.
+   */
+  getConsultaSuspensionPermisoDatos(): Observable<BusquedaPermisos140216State> {
+    return this.http.get<BusquedaPermisos140216State>('assets/json/140216/consulta-suspension-permiso.json');
   }
 }

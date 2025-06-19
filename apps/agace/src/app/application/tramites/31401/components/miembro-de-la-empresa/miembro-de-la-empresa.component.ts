@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import {
   ENCABEZADO_DE_TABLA_MIEMBRO,
   ENCABEZADO_DE_TABLA_TIPO_INVERSION,
@@ -18,8 +18,8 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import { CancelacionGarantiaService } from '../../services/cancelacion-garantia/cancelacion-garantia.service';
 import { CommonModule } from '@angular/common';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-
 /**
  * @Component
  * @selector miembro-de-la-empresa
@@ -56,6 +56,13 @@ import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tram
   styleUrl: './miembro-de-la-empresa.component.scss',
 })
 export class MiembroDeLaEmpresaComponent implements OnInit, OnDestroy {
+  /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
+
   /**
    * Tipo de selección para la tabla de insumos.
    * Por defecto, se utiliza la selección por checkbox.
