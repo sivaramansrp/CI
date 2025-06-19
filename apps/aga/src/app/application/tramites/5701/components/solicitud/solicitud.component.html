@@ -815,6 +815,7 @@
           formControlName="monto"
           maxlength="12"
           (change)="setValoresStore(pagoCaptura, 'monto', 'setMonto')"
+          libSoloNumeros
         />
       </div>
     </div>
@@ -865,6 +866,7 @@
   </div>
   }
 </form>
+
 
 @if(nuevaNotificacion) {
 <section>

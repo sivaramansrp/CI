@@ -99,6 +99,7 @@ import {
   takeUntil,
   tap,
   throwError,
+  timer,
 } from 'rxjs';
 import {
   Solicitud5701State,
@@ -154,6 +155,7 @@ import {
 } from '../../../../core/enums/5701/mensajes-modal-5701.enum';
 import { SIN_VALOR_SELECT } from '@libs/shared/data-access-user/src/core/enums/transporte-componente.enum';
 import { ValidaDespachoService } from '../../../../core/services/5701/valida-despacho.service';
+import { set } from 'date-fns';
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
@@ -420,17 +422,15 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   public activarCatalogoTipoOperacion: boolean = true;
 
-    /**
+  /**
    * @descripcion Checkbox para despacho lda
    */
   public activarRelacionSociedad: boolean = false;
 
-    /**
+  /**
    * @descripcion Checkbox para despacho lda
    */
   public activarEncargoConferido: boolean = false;
-
-
 
   //Estas variables se van a eliminar
   /**
@@ -1011,8 +1011,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         descripcionTipoDespacho: [this.solicitudState?.descripcionTipoDespacho],
         tipoOperacion: [this.solicitudState?.tipoOperacion],
         patente: [{ value: this.solicitudState?.patente, disabled: true }],
-        relacionSociedad: [{value: this.solicitudState?.relacionSociedad, disabled: true}],
-        encargoConferido: [{value: this.solicitudState?.encargoConferido, disabled: true}],
+        relacionSociedad: [
+          { value: this.solicitudState?.relacionSociedad, disabled: true },
+        ],
+        encargoConferido: [
+          { value: this.solicitudState?.encargoConferido, disabled: true },
+        ],
         domicilioDespacho: [this.solicitudState?.domicilioDespacho],
         especifique: [this.solicitudState?.especifique],
       }),
@@ -2269,9 +2273,12 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             return;
           }
 
+          const FECHAS = this.fechasSeleccionadas.length;
+
           const DIAS_SERVICIO =
-            this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL
-              ? UN_DIA
+            this.tipoSolicitudSeleccionada === TIPO_SOLICITUD.INDIVIDUAL ||
+            FECHAS === 0
+              ? 1
               : this.fechasSeleccionadas.length;
 
           const MONTO_A_CUBRIR = DIAS_SERVICIO * this.montoPorDia;
@@ -2280,7 +2287,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             lineaCaptura: LINEA_PAGO,
             monto: responseLineaCapturaPagada.datos.pago_model.importe,
           };
-          
+
           if (this.montoPagadoLineas < MONTO_A_CUBRIR) {
             this.montoPagadoLineas +=
               responseLineaCapturaPagada.datos.pago_model.importe;
@@ -2404,6 +2411,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
       case 'linea_captura':
         if (confirmar) {
+          this.limpiarNotificacion();
           this.datosTablaPagos = this.datosTablaPagos.filter(
             (item) =>
               !this.lineaCapturaSeleccionados.some(
@@ -2413,30 +2421,33 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
           );
           this.lineaCapturaSeleccionados = [];
 
+          timer(500)
+            .pipe(
+              tap(() => {
+                this.nuevaNotificacion = {
+                  tipoNotificacion: 'alert',
+                  categoria: '',
+                  modo: 'action',
+                  titulo: TITULO_MODAL_AVISO,
+                  mensaje: MSG_ELIMINA_ELEMENTO,
+                  cerrar: false,
+                  txtBtnAceptar: 'Cerrar',
+                  txtBtnCancelar: '',
+                };
+              }),
+              takeUntil(this.destroyNotifier$)
+            )
+            .subscribe();
+
           this.tramite5701Store.setLineasCaptura(this.datosTablaPagos);
           this.montoPagadoLineas = this.datosTablaPagos.reduce(
             (total, item) => total + item.monto,
             0
           );
 
-          this.nuevaNotificacion = {
-            tipoNotificacion: 'alert',
-            categoria: '',
-            modo: 'action',
-            titulo: TITULO_MODAL_AVISO,
-            mensaje: MSG_ELIMINA_ELEMENTO,
-            cerrar: false,
-            txtBtnAceptar: 'Cerrar',
-            txtBtnCancelar: '',
-          };
-
           this.procesoModal = '';
         }
-
-        this.limpiarNotificacion();
-
         break;
-
       default:
         break;
     }
