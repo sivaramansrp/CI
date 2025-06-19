@@ -41,6 +41,7 @@
         formControlName="banco"
         [required]="bancoCatalogo.required"
         (selectionChange)="setBanco($event)"
+         [isDisabled]="esFormularioSoloLectura"
       >
       </app-catalogo-select>
     </div>
