@@ -1145,5 +1145,61 @@
         "diasTranscurridos": "4",
         "departamento": "COFEPRIS",
         "numeroDeProcedimiento": "260209"
+    },
+    {
+        "id": "570101",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "570101"
+    },
+    {
+        "id": "140105",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "140105"
+    },
+    {
+        "id": "220404",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "agricultura",
+        "numeroDeProcedimiento": "220404"
+    },
+    {
+        "id": "120401",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "120401"
+    },
+    {
+        "id": "260103",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "COFEPRIS",
+        "numeroDeProcedimiento": "260103"
+    },
+     {
+        "id": "240106",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SEDENA",
+        "numeroDeProcedimiento": "240106"
     }
+    
+
 ]
