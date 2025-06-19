@@ -13,6 +13,9 @@ describe('DatosPorGarantiaComponent', () => {
 
     fixture = TestBed.createComponent(DatosPorGarantiaComponent);
     component = fixture.componentInstance;
+    component.consultaState = {
+      readonly: false,
+    } as any;
     fixture.detectChanges();
   });
 

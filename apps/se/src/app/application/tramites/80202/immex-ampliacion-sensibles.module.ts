@@ -20,6 +20,7 @@ import { WizardComponent } from '@ng-mf/data-access-user';
 
 // Application imports
 import { AnexoComponent } from './components/anexo.component';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ImmexAmpliacionSensiblesRoutingModule } from './immex-ampliacion-sensibles-routing.module';
 import { PasoDosComponent } from './pages/paso-dos/paso-dos.component';
 import { PasoTresComponent } from './pages/paso-tres/paso-tres.component';
@@ -28,16 +29,16 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
 
 @NgModule({
   declarations: [
-    AnexoComponent,
     PasoDosComponent,
     PasoTresComponent,
-    PasoUnoComponent,
     SolicitudPageComponent,
   ],
   imports: [
     AlertComponent,
     BtnContinuarComponent,
     CommonModule,
+    AnexoComponent,
+    PasoUnoComponent,
     FirmaElectronicaComponent,
     ImmexAmpliacionSensiblesRoutingModule,
     ReactiveFormsModule,
@@ -47,5 +48,6 @@ import { SolicitudPageComponent } from './pages/solicitud-page/solicitud-page.co
     WizardComponent,
     forwardRef(() => AnexarDocumentosComponent),
   ],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
 export class ImmexAmpliacionSensiblesModule {}

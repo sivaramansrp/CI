@@ -22,8 +22,9 @@ import {
   MENSAJE_SIN_FILA_SELECCIONADA,
   TIPO_ACTUALIZACION,
 } from '../../../../shared/constantes/datos-solicitud.enum';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Otros } from '../../models/exporticon-estupefacientes.model';
 import { Tramite260302Query } from '../../estados/tramite260302Query.query';
 import { Tramite260302Store } from '../../estados/tramite260302Store.store';
@@ -48,6 +49,15 @@ import { Tramite260302Store } from '../../estados/tramite260302Store.store';
   styleUrl: './terceros-relacionados-vista.component.scss',
 })
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
+
+   /**
+   * que indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.
+   *
+   * @type {boolean}
+   */
+   esFormularioSoloLectura!: boolean;
+
   /**
    * @property {number} idProcedimiento
    * Identificador único del procedimiento asociado a la solicitud.
@@ -155,9 +165,19 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
     private tramiteQuery: Tramite260302Query,
     private router: Router,
     private activatedROute: ActivatedRoute,
-    private tramiteStore: Tramite260302Store
+    private tramiteStore: Tramite260302Store,
+    private consultaQuery: ConsultaioQuery
+
   ) {
-    //
+    this.consultaQuery.selectConsultaioState$
+               .pipe(
+                 takeUntil(this.destroy$),
+               )
+               .subscribe((seccionState) => {
+                 if(!seccionState.create && seccionState.procedureId === '260302') {
+                   this.esFormularioSoloLectura = seccionState.readonly;
+                 } 
+               });
   }
 
   /**

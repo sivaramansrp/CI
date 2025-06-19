@@ -21,6 +21,7 @@
           [label]="'Aduana'"
           [required]="true"
           formControlName="tipoAduana"
+          [isDisabled]="esFormularioSoloLectura"
           (change)="setValoresStore(tipoMovimientoForm, 'tipoAduana')"
         ></app-catalogo-select>
       </div>
@@ -33,6 +34,7 @@
           [label]="'Inspectoría de PROFEPA'"
           [required]="true"
           formControlName="tipoInspectoria"
+          [isDisabled]="esFormularioSoloLectura"
           (change)="setValoresStore(tipoMovimientoForm, 'tipoInspectoria')"
         ></app-catalogo-select>
       </div>
@@ -45,6 +47,7 @@
           [label]="'Municipio o alcaldía de la PROFEPA en el estado de'"
           [required]="true"
           formControlName="tipoMunicipio"
+          [isDisabled]="esFormularioSoloLectura"
           (change)="setValoresStore(tipoMovimientoForm, 'tipoMunicipio')"
         ></app-catalogo-select>
       </div>

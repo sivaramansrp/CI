@@ -1,0 +1,44 @@
+{
+     "datosSolicitudState": {
+          "genericos": "prorroga",
+          "observaciones": "observaciones",
+          "establecimientoRazonSocial": "RazonSocial",
+          "establecimientoCorreoElectronico": "CorreoElectronico",
+          "establecimientoDomicilioCodigoPostal": "DomicilioCodigoPostal",
+          "establecimientoEstados": 1,
+          "descripcionMunicipio": "municipio",
+          "localidad": "localidad",
+          "establishomentoColonias": "colonia",
+          "calle": "calle",
+          "lada": "01",
+          "telefono": "1234567890",
+          "avisoCheckbox": true,
+          "noLicenciaSanitaria": "licencia",
+          "regimen": 1,
+          "aduanasEntradas": 1,
+          "aifaCheckbox": true,
+          "manifests": true,
+          "informacionConfidencialRadio": "No",
+          "scian": "scian",
+          "descripcionScian": "descripcion_scian"
+     },
+     "permisoImportacionBiologicaState": {
+          "setClaveDeReferncia": "clave_referencia",
+          "setCadenaDeLaDependencia": "cadena_dependencia",
+          "setBanco": "1",
+          "setLlaveDePago": "1234567890",
+          "setFechaDePago": "2025-06-01",
+          "setImporteDePago": "1000.00"
+     },
+     "datosDomicilioLegalState": {
+          "rfc": "RFC123456789",
+          "nombre": "Nombre del Establecimiento",
+          "apellidoPaterno": "Apellido Paterno",
+          "apellidoMaterno": "Apellido Materno"
+     },
+     "solicitudState": {
+          "rfcDel": "RFC Del",
+          "denominacionRazonSocial": "Denominación o Razón Social",
+          "correoElectronico": "Correo Electrónico"
+     }
+}
