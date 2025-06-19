@@ -1,12 +1,13 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { ConfiguracionColumna, TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { Asociados } from '../../models/datos-de-la-solicitud.model';
 import { EstablecimientoService } from '../../services/establecimiento.service';
 
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, map, takeUntil } from 'rxjs';
 import { TRAMITES_ASOCIADOS } from '../../constantes/aviso-de-funcionamiento.enum';
 
 /**
@@ -24,7 +25,11 @@ import { TRAMITES_ASOCIADOS } from '../../constantes/aviso-de-funcionamiento.enu
   styleUrl: './tramites-asociados-seccion.component.scss',
 })
 export class TramitesAsociadosSeccionComponent implements OnInit, OnDestroy {
-
+ /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  public esFormularioSoloLectura: boolean = false;
   // Subject utilizado para manejar la destrucción de suscripciones y evitar fugas de memoria.
   private destroy$: Subject<void> = new Subject();
 
@@ -32,8 +37,18 @@ export class TramitesAsociadosSeccionComponent implements OnInit, OnDestroy {
    * Constructor del componente.
    * establecimientoService Servicio para interactuar con los datos de trámites asociados.
    */
-  constructor(private establecimientoService: EstablecimientoService) {
-    //constructor
+  constructor(private establecimientoService: EstablecimientoService,
+    private consultaioQuery: ConsultaioQuery,
+  ) {
+    this.consultaioQuery.selectConsultaioState$
+         .pipe(
+           takeUntil(this.destroy$),
+           map((seccionState) => {
+             this.esFormularioSoloLectura = seccionState.readonly;
+         
+           })
+         )
+         .subscribe();
   }
 
   /**

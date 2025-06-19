@@ -461,7 +461,7 @@ const ROUTES: Routes = [
       ),
   },
   {
-    path: 'expedicion-certificados-asignacion-directa',
+    path: 'expedicion-certificado-asignacion',
     loadChildren: () =>
       import('./tramites/120202/expedicion-certificado-asignacion.module').then(
         (m) => m.ExpedicionCertificadoAsignacionModule
@@ -705,6 +705,11 @@ const ROUTES: Routes = [
     path: 'detalle-v-dictamen',
     loadComponent: () =>
       import('./detalle-v-dictamen/detalle-v-dictamen.component').then((m) => m.DetalleVDictamenComponent),
+  },
+  {
+    path: 'datos-generales-tramite',
+    loadComponent: () =>
+      import('./datos-generales-tramite/datos-generales-tramite.component').then((m) => m.DatosGeneralesTramiteComponent),
   },
 ];
 

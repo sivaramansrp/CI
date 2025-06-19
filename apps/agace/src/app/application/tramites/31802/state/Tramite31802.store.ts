@@ -74,7 +74,7 @@ export class Tramite31802Store extends Store<Solicitud31802State> {
    * Actualiza el número de operación en el estado.
    * @param numeroOperacion Número de operación de tipo `string`.
    */
-  public setNumeroOperacion(numeroOperacion: number) {
+  public setNumeroOperacion(numeroOperacion: number):void {
     this.update((state) => ({ ...state, numeroOperacion }));
   }
 
@@ -82,7 +82,7 @@ export class Tramite31802Store extends Store<Solicitud31802State> {
    * Actualiza la llave en el estado.
    * @param llave Llave única de tipo `string`.
    */
-  public setLlave(llave: string) {
+  public setLlave(llave: string):void {
     this.update((state) => ({ ...state, llave }));
   }
 
@@ -90,7 +90,7 @@ export class Tramite31802Store extends Store<Solicitud31802State> {
    * Actualiza el primer manifiesto en el estado.
    * @param manifiesto1 Primer manifiesto de tipo `string`.
    */
-  public setManifiesto1(manifiesto1: string) {
+  public setManifiesto1(manifiesto1: string):void {
     this.update((state) => ({ ...state, manifiesto1 }));
   }
 
@@ -98,21 +98,21 @@ export class Tramite31802Store extends Store<Solicitud31802State> {
    * Actualiza el segundo manifiesto en el estado.
    * @param manifiesto2 Segundo manifiesto de tipo `string`.
    */
-  public setManifiesto2(manifiesto2: string) {
+  public setManifiesto2(manifiesto2: string):void {
     this.update((state) => ({ ...state, manifiesto2 }));
   }
   /**
  * Actualiza el segundo manifiesto en el estado.
  * @param manifiesto3 Segundo manifiesto de tipo `string`.
  */
-  public setManifiesto3(manifiesto3: string) {
+  public setManifiesto3(manifiesto3: string):void {
     this.update((state) => ({ ...state, manifiesto3 }));
   }
   /**
    * Actualiza la fecha de pago en el estado.
    * @param fechaPago Fecha de pago de tipo `string`.
    */
-  public setFechaPago(fechaPago: string) {
+  public setFechaPago(fechaPago: string):void {
     this.update((state) => ({ ...state, fechaPago }));
   }
   /**
@@ -139,13 +139,13 @@ export class Tramite31802Store extends Store<Solicitud31802State> {
  * Actualiza la moneda nacional en el estado.
  * @param monedaNacional Moneda nacional de tipo `string`.
  */
-  public setMonedaNacional(monedaNacional: string) {
+  public setMonedaNacional(monedaNacional: string):void {
     this.update((state) => ({ ...state, monedaNacional }));
   }
   /**
    * Restaura el estado al valor inicial.
    */
-  public limpiarSolicitud() {
+  public limpiarSolicitud():void {
     this.reset();
   }
 }

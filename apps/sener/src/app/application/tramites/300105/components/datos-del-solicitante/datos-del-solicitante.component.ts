@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Inject, OnDestroy, OnInit, Output } from '@angular/core';
+import { ConsultaioQuery, REG_X } from '@ng-mf/data-access-user';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import {
@@ -9,7 +10,6 @@ import { AutorizacionDeRayosXService } from '../../services/autorizacion-de-rayo
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/shared/catalogos.model';
 import { CatalogosSelect } from '@libs/shared/data-access-user/src/core/models/shared/components.model';
 import { OPCIONES_DE_BOTON_DE_RADIO } from '../../enum/botons.enum';
-import { REG_X } from '@libs/shared/data-access-user/src';
 import { Tramite300105Query } from '../../estados/tramite300105.query';
 
 /**
@@ -48,6 +48,13 @@ export class DatosDelSolicitanteComponent implements OnInit, OnDestroy {
   * Almacena el valor seleccionado del tipo de operación. 
   */
   VALOR_SELECCIONADO: string = '';
+
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false; 
+
   /**
    * Constructor del componente.
    */
@@ -56,9 +63,24 @@ export class DatosDelSolicitanteComponent implements OnInit, OnDestroy {
     private tramite300105Store: Tramite300105Store,
     private tramite300105Query: Tramite300105Query,
     @Inject(AutorizacionDeRayosXService)
-    private autorizacionDeRayosXService: AutorizacionDeRayosXService
+    private autorizacionDeRayosXService: AutorizacionDeRayosXService,
+    private consultaioQuery: ConsultaioQuery
   ) {
-    // No se realiza ninguna acción aquí.
+    /**
+     * Se suscribe al estado de `Consultaio` para obtener información actualizada del estado del formulario.
+     *
+     * - Asigna el valor de solo lectura (`readonly`) a la propiedad `esFormularioSoloLectura`.
+     * - Llama a `inicializarEstadoFormulario()` para aplicar configuraciones basadas en el estado recibido.
+     * - La suscripción se cancela automáticamente cuando `destroyNotifier$` emite un valor (para evitar fugas de memoria).
+     */
+    this.consultaioQuery.selectConsultaioState$
+    .pipe(
+      takeUntil(this.destroyNotifier$),
+      map((seccionState) => {
+       this.esFormularioSoloLectura = seccionState.readonly;
+      })
+    )
+    .subscribe()
   }
 
   /**
@@ -132,6 +154,12 @@ export class DatosDelSolicitanteComponent implements OnInit, OnDestroy {
     });
     if (this.solicitudState?.tipoOperacion) {
       this.obtenerTipoOperacionSeleccionado();
+    }
+
+    if(this.esFormularioSoloLectura){
+      this.formSolicitud.disable();
+    } else {
+      this.formSolicitud.enable();
     }
   }
 
