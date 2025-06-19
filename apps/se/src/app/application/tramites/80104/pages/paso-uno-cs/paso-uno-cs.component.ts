@@ -19,13 +19,17 @@
  * @templateUrl ./paso-uno-cs.component.html
  */
 
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { CONFIGURACION_DOS_DATOS, SECCIONES_TRAMITE_230401 } from '../../constantes/nuevo-programa.enum';
 import { ConfiguracionColumna } from '@libs/shared/data-access-user/src';
 import { FraccionArancelariaDescripcion } from '../../../../shared/models/empresas.model';
 import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/seccion.store';
+import { Solocitud80104Service } from '../../services/service80104.service'
 
+
+import { ConsultaioQuery, ConsultaioState} from '@ng-mf/data-access-user';
+import { Subject, takeUntil } from 'rxjs';
 /*
   * Componente para gestionar el primer paso del trámite 80103.
   * Este componente permite la visualización y selección de pestañas,
@@ -45,7 +49,16 @@ import { SeccionLibStore } from '@libs/shared/data-access-user/src/core/estados/
  * Este componente gestiona la visualización y selección de pestañas,
  * así como la configuración de las secciones correspondientes.
  */
-export class PasoUnoCsComponent {
+export class PasoUnoCsComponent implements OnInit {
+  /** Bandera que indica si los datos de respuesta están disponibles o han sido cargados.  
+ *  Se utiliza para controlar la lógica de visualización o validación en el componente. */
+   public esDatosRespuesta: boolean = false;
+   /** Almacena el estado actual de la consulta relacionada con el trámite.  
+ *  Contiene información necesaria para mostrar o procesar datos en el componente. */
+   public consultaState!:ConsultaioState;
+   /** Notificador utilizado para cancelar suscripciones al destruir el componente.  
+ *  Ayuda a prevenir fugas de memoria en flujos observables. */
+   private destroyNotifier$: Subject<void> = new Subject();
   /*
   * Almacena la configuración de las pestañas del primer paso.
   */
@@ -54,16 +67,16 @@ export class PasoUnoCsComponent {
   * Almacena la configuración de las pestañas del primer paso.
   */
    indice: number = 1;
-
 /**
  * 
  * @param seccionStore 
  */
-  constructor(private seccionStore: SeccionLibStore){
+  constructor(private seccionStore: SeccionLibStore,
+    private Solocitud80104Service: Solocitud80104Service,
+    private consultaQuery: ConsultaioQuery
+  ){
     this.asignarSecciones();
   }
-
-
   /**
    * Selecciona una pestaña específica.
    * @param i - El índice de la pestaña a seleccionar.
@@ -71,7 +84,6 @@ export class PasoUnoCsComponent {
   seleccionaTab(i: number): void {
     this.indice = i;
   }
-
   /**
   * Método para asignar las secciones existentes al stored
   */
@@ -89,6 +101,73 @@ export class PasoUnoCsComponent {
     this.seccionStore.establecerSeccion(SECCIONES);
     this.seccionStore.establecerFormaValida(FORMA_VALIDA);
   }
-
-  
+ /** Inicializa el componente suscribiéndose al estado de consulta.  a
+ *  Ejecuta lógica según si se requiere actualización o solo visualización. */
+      ngOnInit(): void {
+     this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$))
+        .subscribe((seccionState) => {
+          this.consultaState = seccionState
+          if (this.consultaState.update) {
+             this.guardarDatosFormulario();
+             } else {
+              this.esDatosRespuesta = true;
+            }
+        });        
+  }
+/** Obtiene los datos del formulario desde un JSON simulado y actualiza el store.  
+ *  Marca la bandera de respuesta si la información es válida. */
+     guardarDatosFormulario(): void {
+    this.Solocitud80104Service
+      .getRegistroTomaMuestrasMercanciasData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.Solocitud80104Service.actualizarEstadoFormulario(resp);
+        }
+      });
+          this.Solocitud80104Service
+      .getRegistroTomaMuestrasMercanciasDatas().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.Solocitud80104Service.actualizarEstadoFormularios(resp);
+        }
+      });
+          this.Solocitud80104Service
+      .getRegistroComplementosData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.Solocitud80104Service.actualizarComplementos(resp);
+        }
+      });
+      this.Solocitud80104Service
+      .getRegistroFederatoriosData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.Solocitud80104Service.actualizarFederatorios(resp);
+        }
+      });
+        this.Solocitud80104Service
+      .getRegistroComplementarData().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.Solocitud80104Service.actualizarComplementar(resp);
+        }
+      });
+  }
 }
