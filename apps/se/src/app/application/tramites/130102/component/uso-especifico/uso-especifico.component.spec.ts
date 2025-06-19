@@ -156,7 +156,6 @@ describe('UsoEspicificoComponent', () => {
   it('should initialize the form with controls', () => {
     fixture = TestBed.createComponent(UsoEspicificoComponent);
     component = fixture.componentInstance;
-    component.esFormularioSoloLectura = false;
     component.inicializarFormulario();
     expect(component.usoEspicificoForm.contains('fraccionArancelariaProsec')).toBe(true);
     expect(component.usoEspicificoForm.contains('descripción')).toBe(true);

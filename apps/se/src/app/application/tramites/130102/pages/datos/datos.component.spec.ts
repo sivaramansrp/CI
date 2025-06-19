@@ -4,6 +4,7 @@ import { DatosComponent } from './datos.component';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SolicitanteOctavaTemporalComponent } from '../../component/solicitante-octava-temporal/solicitante-octava-temporal.component';
 import { Solicitante130102Component } from '../solicitante/solicitante.component';
+import { of } from 'rxjs';
 
 describe('DatosComponent', () => {
   let component: DatosComponent;
@@ -28,13 +29,6 @@ describe('DatosComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should call guardarDatosFormulario if consultaState.update is true', () => {
-    const guardarDatosFormularioSpy = jest.spyOn(component, 'guardarDatosFormulario');
-    component.consultaState = { update: true } as any;
-    component.ngOnInit();
-    expect(guardarDatosFormularioSpy).toHaveBeenCalled();
-  });
-
   it('should set esDatosRespuesta to true if consultaState.update is false', () => {
     component.consultaState = { update: false } as any;
     component.ngOnInit();
@@ -53,5 +47,31 @@ describe('DatosComponent', () => {
     component.seleccionaTab(3);
     expect(component.indice).toBe(3);
   });
+
+  it('should call actualizarEstadoFormulario if getSolicitudData returns data', () => {
+    const mockFormularioRegistroService = TestBed.inject<any>(component['formularioRegistroService'].constructor);
+    const mockData = { foo: 'bar' };
+    jest.spyOn(mockFormularioRegistroService, 'getSolicitudData').mockReturnValue(of(mockData));
+    const actualizarSpy = jest.spyOn(mockFormularioRegistroService, 'actualizarEstadoFormulario');
+    component.guardarDatosFormulario();
+    expect(actualizarSpy).toHaveBeenCalledWith(mockData);
+    expect(component.esDatosRespuesta).toBe(true);
+  });
+
+  it('should set esDatosRespuesta to true if consultaState is undefined or missing update', () => {
+    const mockConsultaioQuery = TestBed.inject<any>(component['consultaQuery'].constructor);
+    mockConsultaioQuery.selectConsultaioState$ = of({});
+    fixture = TestBed.createComponent(DatosComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+    expect(component.esDatosRespuesta).toBe(true);
+  });
+
+  it('should default indice to 1 and update correctly with seleccionaTab', () => {
+    expect(component.indice).toBe(1);
+    component.seleccionaTab(5);
+    expect(component.indice).toBe(5);
+  });
+
 
 });

@@ -117,6 +117,14 @@ export class PartidasDeLaComponent implements OnInit, AfterViewInit, OnDestroy {
    */
   @ViewChild('modalEditarRef') modalEditarRef!: ElementRef;
 
+  /**
+   * @property modalEditar
+   * @type {Modal}
+   * @private
+   * @description
+   * Referencia al modal utilizado para editar registros o información en la interfaz.
+   * Permite controlar la apertura y cierre del modal de edición desde el componente.
+   */
   private modalEditar!: Modal;
 
   /*

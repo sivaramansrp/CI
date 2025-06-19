@@ -1,6 +1,6 @@
+import { FraccionArancelariaProsec, OctavaTemporal } from '../../tramites/130102/models/octava-temporal.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { FraccionArancelariaProsec, OctavaTemporal } from '../../tramites/130102/models/octava-temporal.model';
 
 /**
  * Interfaz que define el estado de la solicitud 130102.
@@ -68,8 +68,10 @@ export interface Solicitud130102State {
 
   solicitud :string; // Indica si la solicitud está activa o pendiente de revisión.
 
+  /** Lista de partidas temporales (octava regla) asociadas a la solicitud. */
   partidas_tabla?: OctavaTemporal[];
 
+  /** Lista de usos específicos relacionados con fracciones arancelarias PROSEC. */
   uso_especifico_tabla?: FraccionArancelariaProsec[];
 }
 /**
@@ -99,6 +101,9 @@ export function createInitialState(): Solicitud130102State {
     observaciones: '', // Sin observaciones iniciales.
     productos: '', // Sin productos asignados.
     solicitud : '', // Indica que la solicitud no está activa por defecto.
+    partidas_tabla: [], // Lista de partidas vacía por defecto.
+    uso_especifico_tabla: [], // Lista de usos específicos vacía por defecto.;
+
   };
 }
 
