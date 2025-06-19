@@ -45,7 +45,7 @@ export interface Tramite6403State {
    * marca, modelo, número de serie, número de parte, y tipo de mercancía.
    */
   mercanciaFormulario: MercanciaFormulario;
-
+  
 }
 /**
  * Estado inicial del trámite 6403.
@@ -59,7 +59,7 @@ export interface Tramite6403State {
  */
 export function createInitialState(): Tramite6403State {
   return {
-    pasoActivo: 1,
+   pasoActivo: 1,
     pestanaActiva: 1,
     solicitudFormulario: {
       cveAduana: '',
@@ -141,7 +141,7 @@ export function createInitialState(): Tramite6403State {
       tipoMercancia: ''
     }
   };
-}
+  };
 /**
  * Store para gestionar el estado del trámite 6403.
  * 

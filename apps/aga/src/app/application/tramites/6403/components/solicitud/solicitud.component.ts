@@ -276,15 +276,12 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   guardarDatosFormulario(): void {
     this.inicializarFormulario();
     if (this.soloLectura) {
-      this.solicitudFormulario.disable();
-    } else {
-      this.solicitudFormulario.enable();
-    }
-    if (this.soloLectura) {
-      this.mercanciaFormulario.disable();
-    } else {
-      this.mercanciaFormulario.enable();
-    }
+  this.solicitudFormulario.disable();
+  this.mercanciaFormulario.disable();
+} else {
+  this.solicitudFormulario.enable();
+  this.mercanciaFormulario.enable();
+}
   }
 
   /**
@@ -514,9 +511,9 @@ export class SolicitudComponent implements OnInit, OnDestroy {
   inicializarFormulario(): void {
     this.solicitudFormulario = this.fb.group({
       datosAduana: this.fb.group({
-        cveAduana: [this.tramiteState?.solicitudFormulario?.cveAduana, [Validators.required]],
-        cveSeccionAduanal: [this.tramiteState?.solicitudFormulario?.cveSeccionAduanal, [Validators.required]],
-        cveRecintoFiscalizado: [this.tramiteState?.solicitudFormulario?.cveRecintoFiscalizado, [Validators.required]],
+        cveAduana: [this.tramiteState?.solicitudFormulario?.cveAduana,{ value: '', disabled: this.soloLectura }, [Validators.required]],
+        cveSeccionAduanal: [this.tramiteState?.solicitudFormulario?.cveSeccionAduanal,{ value: '', disabled: this.soloLectura }, [Validators.required]],
+        cveRecintoFiscalizado: [this.tramiteState?.solicitudFormulario?.cveRecintoFiscalizado,{ value: '', disabled: this.soloLectura }, [Validators.required]],
       }),
       datosPedimento: this.fb.group({
         cveTipoDocumento: [this.tramiteState?.solicitudFormulario?.cveTipoDocumento, [Validators.required]],

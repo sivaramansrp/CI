@@ -99,7 +99,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         this.consultaState = seccionState;
       })
     ).subscribe();
-    if (this.consultaState.update) {
+    if (!this.consultaState.update) {
       this.guardarDatosFormularios();
     } else {
       this.esDatosRespuesta = true;
