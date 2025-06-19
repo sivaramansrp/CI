@@ -276,6 +276,8 @@ fechaPago: InputFecha = {
   habilitado: true,
 };
 
+private modalElement: HTMLElement | null = null;
+
   /** Inicialización del componente */
   ngOnInit(): void {
     this.solicitud260919Query.selectSolicitud$
@@ -725,13 +727,16 @@ fechaPago: InputFecha = {
     });
   }
   /** Método para abrir el modal de agregar mercancía */
-  onAdd(): void {
-    const MODAL_ELEMENT = document.getElementById('modalAgregarMercancia');
-    if (MODAL_ELEMENT) {
-      const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
-      MODAL_INSTANCE.show();
-    }
+ 
+onAdd(): void {
+  if (!this.modalElement) {
+    this.modalElement = document.getElementById('modalAgregarMercancia');
   }
+  if (this.modalElement) {
+    const MODAL_INSTANCE = new Modal(this.modalElement);
+    MODAL_INSTANCE.show();
+  }
+}
   /** Método para obtener la clave y descripción del SCIAN */
   getClaveDescripcionDelData(): void {
     this.importarDeRemediosHerbals
