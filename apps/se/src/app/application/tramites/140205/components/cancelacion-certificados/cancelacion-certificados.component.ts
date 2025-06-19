@@ -6,32 +6,40 @@ import {
   Validators,
 } from '@angular/forms';
 import {
+  Tramite140205State,
+  Tramite140205Store,
+} from '../../../../estados/tramites/tramite140205.store';
+import { map, takeUntil } from 'rxjs';
+import { ReplaySubject } from 'rxjs';
+
+import {
   CatalogoSelectComponent,
+  ConsultaioQuery,
+  ConsultaioState,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
-import {
-  Tramite140205State,
-  Tramite140205Store,
-} from '../../../../estados/tramites/tramite140205.store';
+import { Subject } from 'rxjs';
+
 import { CancelacionCertificadosService } from '../../services/cancelacionCertificados.service';
 import { Tramite140205Query } from '../../../../estados/queries/tramite140205.query';
-import { map, Subject, takeUntil } from 'rxjs';
+
 import {
   Catalogo,
   CatalogoLista,
   CuposTabla,
   CuposTablaDatos,
-  disponsiblesTabla,
+  DisponsiblesTabla,
 } from '../../model/cancelaciones-certificado.model';
+
 import { CommonModule } from '@angular/common';
+
 import {
   TABLA_DE_DATOS_CUPOS,
   TABLA_DE_DATOS_DISPONIBLES,
 } from '../../constants/cancelaciones.enum';
-
 
 /**
  * @component
@@ -60,6 +68,19 @@ import {
   ],
 })
 export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
+  /**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
+
+  
+  private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
   /**
    * @property {FormGroup} solicitudForm
    * @description Formulario reactivo para gestionar los datos de la solicitud.
@@ -134,10 +155,10 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
   tablaDatos: {
     encabezadas: {
       encabezado: string;
-      clave: (ele: disponsiblesTabla) => string;
+      clave: (ele: DisponsiblesTabla) => string;
       orden: number;
     }[];
-    datos: disponsiblesTabla[];
+    datos: DisponsiblesTabla[];
   } = TABLA_DE_DATOS_DISPONIBLES;
 
   /**
@@ -154,7 +175,8 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
     private store: Tramite140205Store,
     private query: Tramite140205Query,
     private cancelacionCertificadosService: CancelacionCertificadosService,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -178,6 +200,32 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
     this.cargarNombreProducto();
     this.cargarNombreSubproducto();
     this.cargarFederal();
+
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.inicializarFormulario();
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Destruye el componente y libera recursos.
+   *
+   * Este método se llama cuando el componente se destruye, asegurando que no queden suscripciones activas.
+   */
+  inicializarFormulario(): void {
+    if (this.soloLectura) {
+      this.solicitudForm.disable();
+  //  this.filaDisposible([]);
+      this.cargarCuposTabla();
+    } else {
+      this.solicitudForm.enable();
+    }
   }
   /**
    * @method grupoCupo
@@ -261,6 +309,7 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
         ],
       }),
     });
+    this.inicializarFormulario();
   }
   /**
    * @property {TablaSeleccion} tablaSeleccion
@@ -279,16 +328,16 @@ export class CancelacionCertificadosComponent implements OnInit, OnDestroy {
   /**
    * @method filaDisposible
    * @description Método que se ejecuta al seleccionar una fila en la tabla de disponibles.
-   * @param {disponsiblesTabla[]} evento - Evento que contiene la lista de filas seleccionadas.
+   * @param {DisponsiblesTabla[]} evento - Evento que contiene la lista de filas seleccionadas.
    */
-  filaDisposible(evento: disponsiblesTabla[]): void {
+  filaDisposible(evento: DisponsiblesTabla[]): void {
     this.filaDisposibleLista = evento;
   }
   /**
    * @property {CuposTabla[]} filaSeleccionadaLista
    * @description Lista de filas seleccionadas en la tabla de cupos.
    */
-  filaDisposibleLista: disponsiblesTabla[] = [];
+  filaDisposibleLista: DisponsiblesTabla[] = [];
 
   /**
    * @property {disponsiblesTabla[]} filaDisposibleLista
