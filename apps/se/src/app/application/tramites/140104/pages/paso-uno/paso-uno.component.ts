@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { CuposDisponiblesCancelacion } from '../../models/cancelacion-de-certificados.model';
 import { SeccionLibStore } from '@ng-mf/data-access-user';
 import { ServicioDeMensajesService } from '../../services/servicio-de-mensajes.service';
 import { Subject } from 'rxjs';
@@ -109,9 +110,9 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
       .subscribe((resp) => {
         if (resp) {
           this.esDatosRespuesta = true;
-          const cuposDisponiblesDatos = {
+          const CUPOS_DISPONIBLES_DATOS = {
             ...resp,
-            datos: (resp.datos || []).map((cancelacion: any) => ({
+            datos: (resp.datos || []).map((cancelacion: CuposDisponiblesCancelacion) => ({
               ...cancelacion,
               cupo: cancelacion.cupo ?? null,
               nombre_de_producto: cancelacion.nombre_de_producto ?? '',
@@ -120,7 +121,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
               tipo_cupo: cancelacion.tipo_cupo ?? ''
             }))
           };
-          this.servicioDeMensajesService.actualizarEstadoFormulario(cuposDisponiblesDatos);
+          this.servicioDeMensajesService.actualizarEstadoFormulario(CUPOS_DISPONIBLES_DATOS);
 
         }
       });

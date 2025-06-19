@@ -1,7 +1,7 @@
 import { CuposDisponiblesDatos } from '../models/cancelacion-de-certificados.model';
+import { DesistimientoStore } from './desistimiento-de-permiso.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { DesistimientoStore } from './desistimiento-de-permiso.store';
 
 /**
  * Consulta (Query) para el manejo del estado relacionado con el trámite 140104.

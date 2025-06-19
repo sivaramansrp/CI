@@ -1,10 +1,11 @@
 import { BehaviorSubject } from 'rxjs';
-import { CuposDisponibles, PermisosDatos } from '../models/cancelacion-de-certificados.model';
+import { CuposDisponibles } from '../models/cancelacion-de-certificados.model';
 import { CuposDisponiblesDatos } from '../models/cancelacion-de-certificados.model';
 import { DesistimientoStore } from '../estados/desistimiento-de-permiso.store';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { PermisosDatos } from '../models/cancelacion-de-certificados.model';
 import { Subject } from 'rxjs';
 
 /**

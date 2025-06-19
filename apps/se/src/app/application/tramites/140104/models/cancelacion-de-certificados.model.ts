@@ -77,6 +77,19 @@ export interface FacturasSeleccionadasParaDevolver {
     saldo_a_devolver: string;
 }
 
+/**
+ * Representa la información necesaria para la cancelación de certificados.
+ *
+ * @property folioTramite - Folio del trámite asociado a la cancelación.
+ * @property tipoDeSolicitud - Tipo de solicitud realizada para la cancelación.
+ * @property regimen - Régimen aduanero relacionado con la mercancía.
+ * @property cdr - Código de documento relacionado (CDR).
+ * @property condicionDeLaMercancia - Condición en la que se encuentra la mercancía.
+ * @property fraccionArancelaria - Fracción arancelaria de la mercancía.
+ * @property umt - Unidad de medida de la transacción.
+ * @property cantidad - Cantidad de mercancía involucrada.
+ * @property usd - Valor en dólares estadounidenses (USD) de la mercancía.
+ */
 export interface Cancelacion {
     folioTramite: string;
     tipoDeSolicitud: string;
@@ -89,10 +102,18 @@ export interface Cancelacion {
     usd: string;
 }
 
+/**
+ * Representa los permisos y datos asociados a la cancelación de certificados.
+ *
+ * @property {Cancelacion[]} datos - Lista de objetos de cancelación relacionados.
+ * @property {string} [motivoCancelacion] - Motivo opcional de la cancelación.
+ */
 export interface PermisosDatos {
     datos: Cancelacion[];
     motivoCancelacion?: string;
 }
+
+export interface CuposDisponiblesCancelacion extends CuposDisponibles, Cancelacion {}
 
 /**
  * Función para crear el estado inicial de los datos de permiso.
