@@ -10,7 +10,9 @@
         <ng-container>
             @switch (indice) {
             @case (1) {
+            @if (esDatosRespuesta) {
             <app-busqueda-permisos [tabindex]="1" #busquedaPermisosComponent></app-busqueda-permisos>
+            }
             }
             }
         </ng-container>
