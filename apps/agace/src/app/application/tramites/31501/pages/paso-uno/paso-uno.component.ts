@@ -323,7 +323,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   valorDeAlternancia(row: any): void {
     const CURRENT_URL = this.router.url;
-    if (row.folioTramite) {
+    if (row?.row?.folioTramite) {
       if(CURRENT_URL.includes('agace')){
         this.router.navigate(['/agace/autoridad/requiremento'], {
           state: { data: row },

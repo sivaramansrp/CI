@@ -1,4 +1,19 @@
 import {
+  Catalogo,
+  MSG_ELIMINA_ELEMENTO,
+  MSG_SELECCIONA_REGISTRO,
+  Notificacion,
+  NotificacionesComponent,
+  SoloNumerosDirective,
+  TEXTO_CERRAR,
+  TipoPedimentoService,
+} from '@ng-mf/data-access-user';
+import {
+  ColumnMode,
+  NgxDatatableModule,
+  SelectionType,
+} from '@swimlane/ngx-datatable';
+import {
   Component,
   EventEmitter,
   Input,
@@ -15,21 +30,21 @@ import {
   Pedimento,
 } from '../../../../core/models/5701/tramite5701.model';
 import {
-  ERR_VALIDACION_PEDIMENTO,
-  MSG_NRO_PEDIMENTO,
-} from '../../../../core/enums/5701/mensajes-modal-5701.enum';
-import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+
 import {
-  MSG_ELIMINA_ELEMENTO,
-  Notificacion,
-  NotificacionesComponent,
-  SoloNumerosDirective,
-} from '@ng-mf/data-access-user';
+  MSG_NRO_PEDIMENTO,
+  MSG_NRO_PEDIMENTO_LLENAR_DATOS,
+  MSG_PEDIMENTO_EXISTE_PREVIO,
+  MSG_PEDIMENTO_EXISTE_YA_PAGADO,
+  MSG_PEDIMENTO_NO_VALIDO,
+  MSG_PEDIMENTO_YA_CAPTURADO,
+} from '../../../../core/enums/5701/mensajes-modal-5701.enum';
+
 import {
   Solicitud5701State,
   Tramite5701Store,
@@ -38,9 +53,9 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { BodyEstadoPedimento } from '../../../../core/models/5701/pedimento.model';
 import { CommonModule } from '@angular/common';
 import { EstadoPedimentoService } from '../../../../core/services/5701/pedimento/estado-pedimento.service';
+import { TITULO_MODAL_AVISO } from '@libs/shared/data-access-user/src/tramites/constantes/terceros.enums';
 import { ToastrService } from 'ngx-toastr';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
-
 @Component({
   selector: 'c-pedimento',
   standalone: true,
@@ -49,6 +64,7 @@ import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
     CommonModule,
     forwardRef(() => SoloNumerosDirective),
     NotificacionesComponent,
+    NgxDatatableModule,
   ],
   templateUrl: './pedimento.component.html',
   styleUrl: './pedimento.component.scss',
@@ -103,21 +119,6 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
   pedimentoForm: FormControl = new FormControl('', [Validators.maxLength(7)]);
 
   /**
-   * @description Array con los encabezados de la tabla de pedimentos.
-   * Se utiliza para mostrar los encabezados de las columnas en la tabla de pedimentos.
-   */
-  hTabla: Array<string> = [
-    'Patente',
-    'Pedimento',
-    'Aduana',
-    'Tipo de pedimento',
-    'Número(s)',
-    'Comprobante Valor',
-    'Pedimento Validado',
-    'Accion',
-  ];
-
-  /**
    * @description Array con los datos de los pedimentos.
    * Se utiliza para almacenar los pedimentos ingresados por el usuario.
    */
@@ -128,18 +129,71 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    */
   public nuevaNotificacion!: Notificacion;
 
+  /**
+   * @description Tipos de pedimento disponibles.
+   */
+  tiposPedimento: Catalogo[] = [];
+
+  /**
+   * @description Lista de pedimentos seleccionados en la tabla.
+   * Se utiliza para almacenar los pedimentos que han sido seleccionados por el usuario en la tabla.
+   */
+  selected: Pedimento[] = [];
+
+  /**
+   * @description Tipo de selección para la tabla de pedimentos.
+   * Se utiliza para definir el tipo de selección en la tabla de pedimentos.
+   */
+  SelectionType = SelectionType;
+
+  /**
+   * @description Objeto para manejar la edición de celdas en la tabla de pedimentos.
+   * Se utiliza para determinar si una celda está en modo de edición.
+   */
+  editar: { [key: string]: boolean } = {};
+
+  /**
+   * @description Modo de visualización de columnas en la tabla de pedimentos.
+   * Se utiliza para definir el modo de visualización de las columnas en la tabla de pedimentos.
+   */
+  ColumnMode = ColumnMode;
+
+  mensajes = {
+    emptyMessage: 'No hay datos disponibles',
+  };
   constructor(
     private tramite5701Query: Tramite5701Query,
     private tramite5701Store: Tramite5701Store,
-    private estadoPedimentoService: EstadoPedimentoService
+    private estadoPedimentoService: EstadoPedimentoService,
+    private tipoPedimentoService: TipoPedimentoService
   ) {}
 
   ngOnInit(): void {
+    this.getTiposPedimento();
     this.tramite5701Query.selectSolicitud$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((solicitudState) => {
           this.solicitudState = solicitudState;
+        })
+      )
+      .subscribe();
+  }
+
+  /**
+   * Obtiene los tipos de pedimento disponibles y los almacena en una variable.
+   */
+  getTiposPedimento(): void {
+    this.tipoPedimentoService
+      .getListaTipoPedimento()
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((response) => {
+          if (response.datos.length > 0) {
+            this.tiposPedimento = response.datos;
+          } else {
+            this.tiposPedimento = [];
+          }
         })
       )
       .subscribe();
@@ -215,12 +269,46 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
             titulo: 'Avisos',
             mensaje: MSG_NRO_PEDIMENTO,
             cerrar: false,
-            txtBtnAceptar: 'Aceptar',
+            txtBtnAceptar: 'Cerrar',
             txtBtnCancelar: '',
           };
           break;
 
         default: {
+          const PEDIMENTOS_VALIDOS = this.pedimentos.every(
+            (item) => item.tipoPedimento !== 0 && item.numero !== ''
+          );
+          const PEDIMENTO_EXISTE = this.pedimentos.some(
+            (item) => item.pedimento === NUMERO_PEDIMENTO
+          );
+
+          if (this.pedimentos.length > 0 && !PEDIMENTOS_VALIDOS) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: TITULO_MODAL_AVISO,
+              mensaje: MSG_NRO_PEDIMENTO_LLENAR_DATOS,
+              cerrar: false,
+              txtBtnAceptar: TEXTO_CERRAR,
+              txtBtnCancelar: '',
+            };
+            return;
+          }
+
+          if (this.pedimentos.length > 0 && PEDIMENTO_EXISTE) {
+            this.nuevaNotificacion = {
+              tipoNotificacion: 'alert',
+              categoria: 'danger',
+              modo: 'action',
+              titulo: TITULO_MODAL_AVISO,
+              mensaje: MSG_PEDIMENTO_YA_CAPTURADO,
+              cerrar: false,
+              txtBtnAceptar: TEXTO_CERRAR,
+              txtBtnCancelar: '',
+            };
+          }
+
           const BODY: BodyEstadoPedimento = {
             aduana: parseInt(this.solicitudState.idAduanaDespacho, 10),
             patente: 23424,
@@ -248,6 +336,18 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
                         comprobanteValor: '',
                         pedimentoValidado: response.datos.pedimento_valido,
                       };
+
+                      this.nuevaNotificacion = {
+                        tipoNotificacion: 'alert',
+                        categoria: 'success',
+                        modo: 'action',
+                        titulo: TITULO_MODAL_AVISO,
+                        mensaje: MSG_PEDIMENTO_NO_VALIDO,
+                        cerrar: false,
+                        txtBtnAceptar: TEXTO_CERRAR,
+                        txtBtnCancelar: '',
+                      };
+
                       this.pedimentos.push(PEDIMENTO);
                       this.pedimentoForm.reset();
                       this.datosTablaPedimento.emit(this.pedimentos);
@@ -259,7 +359,7 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
                       categoria: 'danger',
                       modo: 'action',
                       titulo: 'Avisos',
-                      mensaje: ERR_VALIDACION_PEDIMENTO,
+                      mensaje: MSG_PEDIMENTO_NO_VALIDO,
                       cerrar: false,
                       txtBtnAceptar: 'Aceptar',
                       txtBtnCancelar: '',
@@ -284,19 +384,37 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
    * Después de eliminar el elemento, se actualiza el título y mensaje del modal,
    * y se abre el modal para mostrar un aviso al usuario.
    */
-  abrirModalEliminar(i: number = 0): void {
-    this.pedimentos.splice(i, 1);
-    this.datosTablaPedimento.emit(this.pedimentos);
+  abrirModalEliminar(): void {
+    if (this.selected.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: 'danger',
+        modo: 'action',
+        titulo: TITULO_MODAL_AVISO,
+        mensaje: MSG_SELECCIONA_REGISTRO,
+        cerrar: false,
+        txtBtnAceptar: TEXTO_CERRAR,
+        txtBtnCancelar: '',
+      };
+      return;
+    }
+
+    this.pedimentos = this.pedimentos.filter(
+      (pedimento) => !this.selected.includes(pedimento)
+    );
+
     this.nuevaNotificacion = {
       tipoNotificacion: 'alert',
-      categoria: 'danger',
+      categoria: '',
       modo: 'action',
-      titulo: 'Avisos',
+      titulo: TITULO_MODAL_AVISO,
       mensaje: MSG_ELIMINA_ELEMENTO,
       cerrar: false,
       txtBtnAceptar: 'Cerrar',
       txtBtnCancelar: '',
     };
+
+    this.datosTablaPedimento.emit(this.pedimentos);
   }
 
   /**
@@ -323,5 +441,89 @@ export class PedimentoComponent implements OnInit, OnChanges, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  //Metodos para el checkbox
+  /**
+   * Método que se ejecuta cuando se selecciona un pedimento en la tabla.
+   * Actualiza la lista de pedimentos seleccionados.
+   * @param { selected } - Objeto que contiene los pedimentos seleccionados.
+   * @returns {void}
+   */
+  onSelect({ selected }: { selected: Pedimento[] }): void {
+    this.selected.splice(0, this.selected.length);
+    this.selected.push(...selected);
+  }
+
+  /**
+   * Método para actualizar el valor de una celda en la tabla de pedimentos.
+   * Este método se ejecuta cuando se edita una celda en la tabla.
+   * @param {Event} event - El evento que se dispara al editar la celda.
+   * @param { string } cell - El nombre de la celda que se está editando.
+   * @param { number } rowIndex - El índice de la fila que contiene la celda que se está editando.
+   * @returns {void}
+   */
+  actualizarValor(event: Event, cell: string, rowIndex: number): void {
+    const TARGET = event.target as HTMLInputElement;
+    this.editar[`${rowIndex}-${cell}`] = false;
+
+    if (cell === 'descTipoPedimento' || cell === 'numero') {
+      this.pedimentos[rowIndex][cell] = TARGET.value;
+      if (cell === 'descTipoPedimento') {
+        const TIPO_PEDIMENTO = this.tiposPedimento.find(
+          (tipo) => tipo.descripcion === TARGET.value
+        );
+
+        if (TIPO_PEDIMENTO) {
+          this.pedimentos[rowIndex].tipoPedimento = TIPO_PEDIMENTO.id;
+          this.pedimentos[rowIndex].numero = '';
+
+          if (TIPO_PEDIMENTO.id) {
+            if (TIPO_PEDIMENTO.id !== 4) {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'alert',
+                categoria: 'success',
+                modo: 'action',
+                titulo: TITULO_MODAL_AVISO,
+                mensaje: MSG_PEDIMENTO_EXISTE_YA_PAGADO,
+                cerrar: false,
+                txtBtnAceptar: TEXTO_CERRAR,
+                txtBtnCancelar: '',
+              };
+            } else {
+              this.nuevaNotificacion = {
+                tipoNotificacion: 'alert',
+                categoria: 'danger',
+                modo: 'action',
+                titulo: TITULO_MODAL_AVISO,
+                mensaje: MSG_PEDIMENTO_EXISTE_PREVIO,
+                cerrar: false,
+                txtBtnAceptar: TEXTO_CERRAR,
+                txtBtnCancelar: '',
+              };
+            }
+          }
+        }
+      }
+    }
+
+    this.pedimentos = [...this.pedimentos];
+  }
+
+  /**
+   * @description Método para editar una celda en la tabla de pedimentos.
+   * @param rowIndex - El índice de la fila que contiene el pedimento a editar.
+   * @returns {void}
+   */
+  editarCelda(rowIndex: number): void {
+    if (
+      this.pedimentos[rowIndex].tipoPedimento === 0 ||
+      this.pedimentos[rowIndex].tipoPedimento === 4
+    ) {
+      this.editar[rowIndex + '-numero'] = false;
+      return;
+    }
+
+    this.editar[rowIndex + '-numero'] = true;
   }
 }

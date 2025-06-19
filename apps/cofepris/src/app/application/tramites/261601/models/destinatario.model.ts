@@ -5,7 +5,7 @@ export interface TramitesAsociados {
   /**
    * Razón social legal del destinatario.
    */
-  nombreORazónSocial: string;
+  legalRazonSocial: string;
 
   /**
    * Apellido paterno del destinatario.

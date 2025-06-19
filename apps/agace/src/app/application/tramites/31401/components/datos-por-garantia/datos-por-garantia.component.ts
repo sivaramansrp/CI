@@ -1,9 +1,9 @@
+import { Component, Input } from '@angular/core';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ConsultaioState } from '@ng-mf/data-access-user';
 import { DATOS_POR_GARANTIA } from '../../constantes/cancelacion-garantia.enum';
 import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tramites/components/formas-dinamicas/formas-dinamicas/formas-dinamicas.component';
-
 /**
   * @Component
   * @selector datos-por-garantia
@@ -38,6 +38,14 @@ import { FormasDinamicasComponent } from '@libs/shared/data-access-user/src/tram
 })
 
 export class DatosPorGarantiaComponent {
+
+  /**
+  * @property consultaState
+  * @description
+  * Estado actual de la consulta gestionado por el store `ConsultaioQuery`.
+  */
+  @Input() consultaState!: ConsultaioState;
+    
   /**
      * @property forma
      * @description

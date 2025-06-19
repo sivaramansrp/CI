@@ -1,13 +1,15 @@
-/* eslint-disable no-empty-function */
+
+import {
+  Chofer40101Store,
+  Choferesnacionales40101State,
+} from '../../estado/chofer40101.store';
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Chofer40101Query } from '../../estado/chofer40101.query';
 import { DatosPasos } from '@ng-mf/data-access-user';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { SECCIONES_TRAMITE_40101 } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
-import { Tramite40101Query } from '../../estado/tramite40101.query';
-import { Tramite40101State } from '../../estado/tramite40101.store';
-import { Tramite40101Store } from '../../estado/tramite40101.store';
 import { WizardComponent } from '@ng-mf/data-access-user';
 import { map } from 'rxjs/operators';
 import { takeUntil } from 'rxjs/operators';
@@ -23,13 +25,48 @@ interface AccionBoton {
   styleUrl: './solicitante-page.component.scss',
 })
 export class SolicitantePageComponent implements OnInit, OnDestroy {
+  /**
+   * Lista de pasos del wizard que se mostrarán en la página.
+   *
+   * @type {Array<ListaPasosWizard>}
+   */
   pasos: Array<ListaPasosWizard> = PASOS.slice(0, 2);
+
+  /**
+   * Índice actual del paso en el wizard.
+   *
+   * @type {number}
+   */
   indice: number = 1;
-  public seccion!: Tramite40101State;
+
+  /**
+   * Estado de la sección actual del trámite.
+   *
+   * @type {Choferesnacionales40101State}
+   */
+  public seccion!: Choferesnacionales40101State;
+
+  /**
+   * Observable utilizado para manejar la limpieza de recursos al destruir el componente.
+   *
+   * @type {Subject<void>}
+   */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+   * Referencia al componente hijo `WizardComponent` dentro de la plantilla.
+   * Permite acceder a las propiedades y métodos públicos del componente hijo.
+   *
+   * @type {WizardComponent}
+   */
   @ViewChild(WizardComponent) wizardComponent!: WizardComponent;
 
+  /**
+   * Datos relacionados con los pasos del wizard, como el número de pasos, el índice actual,
+   * y los textos de los botones de navegación.
+   *
+   * @type {DatosPasos}
+   */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
     indice: this.indice,
@@ -37,11 +74,23 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
     txtBtnSig: 'Continuar',
   };
 
+  /**
+   * Constructor del componente. Inicializa las dependencias necesarias.
+   *
+   * @param {Chofer40101Query} chofer40101Query - Servicio para consultar el estado del store.
+   * @param {Chofer40101Store} chofer40101Store - Servicio para manejar el estado del store.
+   */
   constructor(
-    private tramite40101Query: Tramite40101Query,
-    private tramite40101Store: Tramite40101Store
+    private chofer40101Query: Chofer40101Query,
+    private chofer40101Store: Chofer40101Store
   ) {}
 
+  /**
+   * Método de ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Configura los pasos del wizard y suscribe al estado de la sección.
+   *
+   * @returns {void}
+   */
   ngOnInit(): void {
     this.pasos = PASOS.slice(0, 2).map((paso) => {
       if (paso.indice === 2 && paso.titulo === 'Anexar necesarios') {
@@ -50,7 +99,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       return paso;
     });
 
-    this.tramite40101Query.selectSeccionState$
+    this.chofer40101Query.selectSeccionState$
       .pipe(
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
@@ -61,23 +110,35 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
 
     this.asignarSecciones();
   }
-   /**
-   * Selecciona una pestaña del wizard.
-   * @param i - Índice de la pestaña a seleccionar.
-   */
-   seleccionaTab(i: number): void {
-    this.indice = i;
-  }
 
+  /**
+   * Método de ciclo de vida de Angular que se ejecuta al destruir el componente.
+   * Limpia los recursos y completa los observables.
+   *
+   * @returns {void}
+   */
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
 
+  /**
+   * Cambia el índice actual del wizard al valor proporcionado.
+   *
+   * @param {number} i - Índice del paso seleccionado.
+   * @returns {void}
+   */
   seleccionadosTodos(i: number): void {
     this.indice = i;
   }
 
+  /**
+   * Cambia el índice actual del wizard basado en la acción del botón.
+   * Navega hacia adelante o hacia atrás en el wizard.
+   *
+   * @param {AccionBoton} e - Objeto que contiene la acción y el valor del índice.
+   * @returns {void}
+   */
   getValorIndice(e: AccionBoton): void {
     if (e.valor > 0 && e.valor < 6) {
       this.indice = e.valor;
@@ -90,7 +151,10 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Método para asignar las secciones existentes al store
+   * Método privado para asignar las secciones existentes al store.
+   * Configura las secciones y las formas válidas en el estado del store.
+   *
+   * @returns {void}
    */
   private asignarSecciones(): void {
     const SECCIONES: boolean[] = [];
@@ -103,7 +167,7 @@ export class SolicitantePageComponent implements OnInit, OnDestroy {
       FORMA_VALIDA.push(false);
     }
 
-    this.tramite40101Store.establecerSeccion(SECCIONES);
-    this.tramite40101Store.establecerFormaValida(FORMA_VALIDA);
+    this.chofer40101Store.establecerSeccion(SECCIONES);
+    this.chofer40101Store.establecerFormaValida(FORMA_VALIDA);
   }
 }
