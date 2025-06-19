@@ -10,6 +10,7 @@ import { Component } from '@angular/core';
 import { PasoUnoComponent } from './paso-uno.component';
 import { Tramite260103Query } from '../../estados/tramite260103Query.query';
 import { Tramite260103Store } from '../../estados/tramite260103Store.store';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 @Injectable()
 class MockTramite260103Query {}
@@ -24,7 +25,7 @@ describe('PasoUnoComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ FormsModule, ReactiveFormsModule ],
+      imports: [ FormsModule, ReactiveFormsModule ,HttpClientTestingModule],
       declarations: [
         PasoUnoComponent
       ],
