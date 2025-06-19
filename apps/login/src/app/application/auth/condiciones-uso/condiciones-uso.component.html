@@ -1,0 +1,30 @@
+<div class="container mt-5 border rounded p-4 shadow bg-white">
+    <h5 class="text-primary">Condiciones de uso</h5>
+    <p><strong>Ventanilla Digital Mexicana de Comercio Exterior</strong></p>
+
+    <form [formGroup]="form">
+        <div class="form-check mb-3">
+            <input class="form-check-input" type="checkbox" id="condicionesCheck" formControlName="aceptado">
+            <label class="form-check-label" for="condicionesCheck">
+                Manifiesto que la documentación que proporciono relacionada con mi patrimonio, hechos y actos de
+                carácter económico,
+                contable, jurídico, administrativo y aquella cuya difusión esté prohibida por una cláusula o convenio de
+                confidencialidad,
+                tiene el carácter de confidencial en términos de lo dispuesto en los artículos 18 y 19 de la Ley Federal
+                de Transparencia
+                y Acceso a la Información Pública Gubernamental.
+            </label>
+        </div>
+
+        <div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-primary" (click)="aceptar()">Acepto</button>
+            <button type="button" class="btn btn-secondary" (click)="noAceptar()">No Acepto</button>
+        </div>
+    </form>
+</div>
+@if (nuevaNotificacion) {
+<section>
+    <lib-notificaciones [notificacionInput]="nuevaNotificacion">
+    </lib-notificaciones>
+</section>
+}

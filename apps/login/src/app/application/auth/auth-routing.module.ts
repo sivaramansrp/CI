@@ -1,6 +1,7 @@
 import { RouterModule, Routes } from '@angular/router';
 import { AuthPageComponent } from './auth-page/auth-page.component';
 import { CambioContrasenaComponent } from './cambio-contrasena/cambio-contrasena.component';
+import { CondicionesUsoComponent } from './condiciones-uso/condiciones-uso.component';
 import { ConsultaCapturistaPrivadoComponent } from './consulta-capturista-privado/consulta-capturista-privado.component';
 import { ConsultaPersonaNotificacionesComponent } from './consulta-persona-notificaciones/consulta-persona-notificaciones.component';
 import { FirmaPageComponent } from '@libs/shared/data-access-user/src';
@@ -44,8 +45,12 @@ export const ROUTES_AUTH: Routes = [
     component: ModificarCorreoElectronicoComponent
   },
   {
-    path:'menu-usuario',
+    path: 'menu-usuario',
     component: MenuUsuarioComponent
+  },
+  {
+    path: 'condiciones-uso',
+    component: CondicionesUsoComponent
   },
 
 ];
