@@ -21,7 +21,9 @@ import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { Subject } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Tramite260201Query } from '../../estados/tramite260201Query.query';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 
 /**
  * @component
@@ -148,9 +150,20 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * @param {Tramite260201Query} tramite260201Query - Consulta para acceder al estado del trámite.
    * @param {Tramite260201Store} tramite260201Store - Tienda para actualizar el estado del trámite.
    */
+
+    /**
+   * Observable que indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.
+   *
+   * @type {Observable<boolean>}
+   */
+  esFormularioSoloLectura!: Observable<boolean>;
+
+
   constructor(
     private tramite260201Query: Tramite260201Query,
-    private tramite260201Store: Tramite260201Store
+    private tramite260201Store: Tramite260201Store,
+    private consultaQuery: ConsultaioQuery
   ) {
     // Constructor vacío, se inyectan las dependencias para su uso en el componente.
   }
@@ -174,6 +187,16 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
+      this.esFormularioSoloLectura = this.consultaQuery.selectConsultaioState$
+    .pipe(
+      map((seccionState) => {
+        if(!seccionState.create && seccionState.procedureId === '260201') {
+          return seccionState.readonly;
+        } 
+        return false;
+      })
+    );
   }
 
   /**

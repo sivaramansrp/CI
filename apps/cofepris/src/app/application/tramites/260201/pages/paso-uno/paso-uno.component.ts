@@ -1,12 +1,17 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Subject, takeUntil } from 'rxjs';
+import { map, Observable, Subject, takeUntil } from 'rxjs';
+import {
+  ConsultaioQuery,
+  ConsultaioState,
+} from '@libs/shared/data-access-user/src';
 import { Tramite260201Query } from '../../estados/tramite260201Query.query';
-import { Tramite260201Store } from '../../estados/tramite260201Store.store';
+import { Tramite260201State, Tramite260201Store } from '../../estados/tramite260201Store.store';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
-  styleUrl: './paso-uno.component.css',
+  styleUrl: './paso-uno.component.scss',
 })
 export class PasoUnoComponent implements OnDestroy, OnInit {
     /**
@@ -16,6 +21,14 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    * @default 1
    */
   indice: number | undefined = 1;
+
+   /**
+   * Esta variable se utiliza para almacenar el índice del subtítulo.
+   */
+  public consultaState!: ConsultaioState;
+
+    /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+    public esDatosRespuesta: boolean = false;
 
    /**
    * A `Subject` used as a notifier to signal the destruction of the component.
@@ -36,7 +49,9 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   constructor(
     private tramite260201Query: Tramite260201Query,
-    private tramite260201Store: Tramite260201Store
+        private tramite260201Store: Tramite260201Store,
+    private consultaQuery: ConsultaioQuery,
+    private readonly http: HttpClient
   ) {
     // El constructor necesita inyectar las dependencias.
   }
@@ -56,6 +71,20 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
       .subscribe((tab) => {
         this.indice = tab;
       });
+      this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+          if (this.consultaState.update) {
+            this.esDatosRespuesta = false;
+            this.guardarDatosFormulario();
+          } else if (this.consultaState.readonly) {
+            this.esDatosRespuesta = true;
+          }
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -79,4 +108,44 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
   }
+
+  /**More actions
+   * Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.
+   *
+   * @returns Observable con los datos del estado de la solicitud `Tramite260202State`,
+   *          cargados desde el archivo JSON especificado en la ruta de `assets`.
+   */
+  getRegistroTomaMuestrasMercanciasData(): Observable<Tramite260201State> {
+    return this.http.get<Tramite260201State>(
+      'assets/json/260201/respuestaDeActualizacionDe.json'
+    );
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.More actions
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.getRegistroTomaMuestrasMercanciasData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        if (resp) {
+          this.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
+
+  /**
+   * Actualiza el estado del formulario con los datos proporcionados.
+   *
+   * @param DATOS - Estado de la solicitud `Solicitud230401State` con la información
+   *                del tipo de solicitud a actualizar en el store.
+   */
+  actualizarEstadoFormulario(DATOS: Tramite260201State): void {
+    this.tramite260201Store.update((state) => ({
+      ...state,
+      ...DATOS,
+    }));
+  }
+
 }

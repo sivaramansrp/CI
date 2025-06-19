@@ -5,7 +5,8 @@ import {
   Facturador,
   Proveedor,
 } from '../../../../shared/models/terceros-relacionados.model';
-import { Subject, takeUntil } from 'rxjs';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { Observable, Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ELEMENTOS_REQUERIDOS } from '../../constants/psicotropicos-poretorno.enum';
 import { TercerosRelacionadosComponent } from '../../../../shared/components/terceros-relacionados/terceros-relacionados.component';
@@ -24,7 +25,7 @@ import { Tramite260201Store } from '../../estados/tramite260201Store.store';
   standalone: true,
   imports: [CommonModule, TercerosRelacionadosComponent],
   templateUrl: './terceros-relacionados-vista.component.html',
-  styleUrl: './terceros-relacionados-vista.component.css',
+  styleUrl: './terceros-relacionados-vista.component.scss',
 })
 export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
   /**
@@ -65,6 +66,14 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS; 
 
+   /**
+    * Observable que indica si el formulario está en modo solo lectura.
+    * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.
+    *
+    * @type {Observable<boolean>}
+    */
+   esFormularioSoloLectura!: Observable<boolean>;
+
   /**
    * @constructor
    * Inyecta los servicios necesarios para consultar y actualizar el estado del trámite.
@@ -74,7 +83,8 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramiteStore: Tramite260201Store,
-    private tramiteQuery: Tramite260201Query
+    private tramiteQuery: Tramite260201Query,
+    private consultaQuery: ConsultaioQuery
   ) {
     // Constructor vacío, se inyectan los servicios necesarios para el funcionamiento del componente.
   }
@@ -108,6 +118,16 @@ export class TercerosRelacionadosVistaComponent implements OnInit, OnDestroy {
          .subscribe((data) => {
            this.facturadorTablaDatos = data;
          });
+
+         this.esFormularioSoloLectura = this.consultaQuery.selectConsultaioState$
+    .pipe(
+      map((seccionState) => {
+        if(!seccionState.create && seccionState.procedureId === '260201') {
+          return seccionState.readonly;
+        } 
+        return false;
+      })
+    );
   }
 
   /**
