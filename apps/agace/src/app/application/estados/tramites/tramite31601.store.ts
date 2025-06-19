@@ -1,5 +1,6 @@
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
+import { EnlaceConfiguracionItem } from '../../tramites/31601/enum/enlance-tabla.enum';
 
 
 /**
@@ -457,6 +458,8 @@ export interface Solicitud31601State {
      * El valor de tipoDocumento.
      */
     tipoDocumento: string;
+
+    enlaceDatos: EnlaceConfiguracionItem[];
     
 }
 /**
@@ -928,6 +931,9 @@ export function createInitialState(): Solicitud31601State {
          * El valor de tipoDocumento.
          */
         tipoDocumento: '',
+
+        enlaceDatos: [],
+
     };
 }
 
@@ -946,6 +952,13 @@ export function createInitialState(): Solicitud31601State {
 @StoreConfig({ name: 'tramite31601', resettable: true })
 
 export class Tramite31601Store extends Store<Solicitud31601State>{
+
+  setEnlaceTablaDatos(datosTablaEnlace: EnlaceConfiguracionItem[]):void {
+   this.update((state) => ({
+    ...state,
+    enlaceDatos: datosTablaEnlace,
+   }));
+  }
     /**
      * Crea una instancia de Tramite31601Store.
      * Inicializa la tienda con el estado inicial.

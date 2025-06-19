@@ -1,10 +1,16 @@
 <ng-titulo titulo="Enlace Operativo" />
 <div class="row">
   <div class="col-md-12">
-    <ng-table
+    <app-tabla-dinamica
+      [configuracionTabla]="configuracionTablaEnlace"
+      [datos]="datosTablaEnlace"
+      [tipoSeleccionTabla]="tipoSeleccionTabla"
+      (listaDeFilaSeleccionada)="manejarFilaSeleccionada($event)"
+    ></app-tabla-dinamica>
+    <!-- <ng-table
       [commonTableHeader]="enlaceHeaderData"
       [commonTableBody]="enlanceBodyData"
-    ></ng-table>
+    ></ng-table> -->
     <nav aria-label="Page navigation example">
       <ul class="pagination justify-content-center">
         <li class="page-item"><a class="page-link" href="#">Anterior</a></li>
@@ -21,14 +27,87 @@
         data-bs-toggle="modal"
         data-bs-target="#modalAgregar"
         (click)="abrirModal()"
-        disabled="esFormularioSoloLectura ? true : false"
       >
         Agregar
       </button>
-      <button type="button" class="btn btn-default me-3" disabled="esFormularioSoloLectura ? true : false">Modificar</button>
-      <button type="button" class="btn btn-danger" disabled="esFormularioSoloLectura ? true : false">Eliminar</button>
+      <button
+        type="button"
+        class="btn btn-default me-3"
+        [disabled]="!enableModficarBoton"
+        (click)="modificarItemEnlace()"
+      >
+        Modificar
+      </button>
+      <button
+        type="button"
+        class="btn btn-danger"
+        [disabled]="!enableEliminarBoton"
+        (click)="confirmEliminarEnlaceItem()"
+      >
+        Eliminar
+      </button>
     </div>
   </div>
+
+   <div
+      class="modal"
+      tabindex="-1"
+      role="dialog"
+      [ngClass]="{ show: multipleSeleccionPopupAbierto }"
+      [ngStyle]="{ display: multipleSeleccionPopupAbierto ? 'block' : 'none' }"
+    >
+      <div class="modal-dialog" role="document">
+        <div
+          class="modal-content">
+          <div class="modal-div"></div>
+          <div class="modal-body">
+            <p>Selecciona sólo un registro para modificar. </p>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="cerrarMultipleSeleccionPopup()"
+            >
+              Aceptar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-backdrop fade show" *ngIf="multipleSeleccionPopupAbierto"></div>
+
+    <div
+      class="modal"
+      tabindex="-1"
+      role="dialog"
+      [ngClass]="{ show: confirmEliminarPopupAbierto }"
+      [ngStyle]="{ display: confirmEliminarPopupAbierto ? 'block' : 'none' }"
+    >
+      <div class="modal-dialog" role="document">
+        <div
+          class="modal-content">
+          <div class="modal-div"></div>
+          <div class="modal-body">
+            <p>¿Estás seguro que deseas eliminar los registros marcados? </p>
+          </div>
+          <div class="modal-footer">
+            <button type="button"
+            class="btn btn-primary"
+            (click)="cerrarEliminarConfirmationPopup()">Cancelar</button>
+            <button
+              type="button"
+              class="btn btn-primary"
+              (click)="eliminarEnlaceItem()"
+            >
+              Aceptar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-backdrop fade show" *ngIf="confirmEliminarPopupAbierto"></div>
+    
 </div>
 
 <div class="container mt-4">
@@ -55,7 +134,13 @@
                     id="resigtroReprestantante"
                     formControlName="resigtroReprestantante"
                     type="text"
-                    (change)="setValoresStore(represtantante,'resigtroReprestantante', 'setResigtroReprestantante')"
+                    (change)="
+                      setValoresStore(
+                        represtantante,
+                        'resigtroReprestantante',
+                        'setResigtroReprestantante'
+                      )
+                    "
                   />
                 </div>
               </div>
@@ -69,27 +154,47 @@
                     id="rfcReprestantante"
                     formControlName="rfcReprestantante"
                     type="text"
-                    (change)="setValoresStore(represtantante,'rfcReprestantante', 'setRfcReprestantante')"
+                    (change)="
+                      setValoresStore(
+                        represtantante,
+                        'rfcReprestantante',
+                        'setRfcReprestantante'
+                      )
+                    "
                   />
                 </div>
               </div>
 
               <div class="col-md-4 d-flex align-items-center">
                 <div class="btn-group">
-                  <button class="btn btn-default" type="button" disabled="esFormularioSoloLectura ? true : false">Buscar</button>
+                  <button
+                    class="btn btn-default"
+                    type="button"
+                    disabled="esFormularioSoloLectura ? true : false"
+                  >
+                    Buscar
+                  </button>
                 </div>
               </div>
             </div>
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
-                  <label class="form-label" for="nombreReprestante">Nombre:</label>
+                  <label class="form-label" for="nombreReprestante"
+                    >Nombre:</label
+                  >
                   <input
                     class="form-control"
                     id="nombreReprestante"
                     formControlName="nombreReprestante"
                     type="text"
-                    (change)="setValoresStore(represtantante,'nombreReprestante', 'setNombreReprestante')"
+                    (change)="
+                      setValoresStore(
+                        represtantante,
+                        'nombreReprestante',
+                        'setNombreReprestante'
+                      )
+                    "
                   />
                 </div>
               </div>
@@ -103,7 +208,13 @@
                     id="apellidoPaterno"
                     formControlName="apellidoPaterno"
                     type="text"
-                    (change)="setValoresStore(represtantante,'apellidoPaterno', 'setApellidoPaterno')"
+                    (change)="
+                      setValoresStore(
+                        represtantante,
+                        'apellidoPaterno',
+                        'setApellidoPaterno'
+                      )
+                    "
                   />
                 </div>
               </div>
@@ -117,7 +228,13 @@
                     id="apellidoMaterno"
                     formControlName="apellidoMaterno"
                     type="text"
-                    (change)="setValoresStore(represtantante,'apellidoMaterno', 'setApellidoMaterno')"
+                    (change)="
+                      setValoresStore(
+                        represtantante,
+                        'apellidoMaterno',
+                        'setApellidoMaterno'
+                      )
+                    "
                   />
                 </div>
               </div>
@@ -133,7 +250,9 @@
                     id="cuidad"
                     formControlName="cuidad"
                     type="text"
-                    (change)="setValoresStore(represtantante,'cuidad', 'setCuidad')"
+                    (change)="
+                      setValoresStore(represtantante, 'cuidad', 'setCuidad')
+                    "
                   />
                 </div>
               </div>
@@ -145,7 +264,9 @@
                     id="cargo"
                     formControlName="cargo"
                     type="text"
-                    (change)="setValoresStore(represtantante,'cargo', 'setCargo')"
+                    (change)="
+                      setValoresStore(represtantante, 'cargo', 'setCargo')
+                    "
                   />
                 </div>
               </div>
@@ -153,13 +274,21 @@
             <div class="row">
               <div class="col-md-4">
                 <div class="form-group">
-                  <label class="form-label" for="telefonoReprestantante">Teléfono:</label>
+                  <label class="form-label" for="telefonoReprestantante"
+                    >Teléfono:</label
+                  >
                   <input
                     class="form-control"
                     id="telefonoReprestantante"
                     formControlName="telefonoReprestantante"
                     type="text"
-                    (change)="setValoresStore(represtantante,'telefonoReprestantante', 'setTelefonoReprestantante')"
+                    (change)="
+                      setValoresStore(
+                        represtantante,
+                        'telefonoReprestantante',
+                        'setTelefonoReprestantante'
+                      )
+                    "
                   />
                 </div>
               </div>
@@ -173,7 +302,13 @@
                     id="correoReprestantante"
                     formControlName="correoReprestantante"
                     type="text"
-                    (change)="setValoresStore(represtantante,'correoReprestantante', 'setCorreoReprestantante')"
+                    (change)="
+                      setValoresStore(
+                        represtantante,
+                        'correoReprestantante',
+                        'setCorreoReprestantante'
+                      )
+                    "
                   />
                 </div>
               </div>
@@ -187,7 +322,13 @@
                       value=""
                       id="suplente"
                       formControlName="suplente"
-                      (change)="setValoresStore(represtantante,'suplente', 'setSuplente')"
+                      (change)="
+                        setValoresStore(
+                          represtantante,
+                          'suplente',
+                          'setSuplente'
+                        )
+                      "
                     />
                   </div>
                 </div>
@@ -196,18 +337,25 @@
           </form>
         </div>
         <div class="modal-footer custom-footer justify-content-center">
-          <button type="button" class="btn btn-primary" disabled="esFormularioSoloLectura ? true : false">Agregar</button>
           <button
+            type="button"
+            class="btn btn-primary"
+            (click)="saveDatos()"
+            [disabled]="represtantante.get('resigtroReprestantante')?.value === ''"
+          >
+            Agregar
+          </button>
+            <button
             type="button"
             class="btn btn-default"
             data-bs-dismiss="modal"
             #closeModal
-            disabled="esFormularioSoloLectura ? true : false"
-          >
-            Cerrar
-          </button>
+            (click)="closeModal.click()"
+            >
+            Cancelar
+            </button>
         </div>
-      </div>
+      </div> 
     </div>
   </div>
 </div>
