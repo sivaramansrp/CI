@@ -90,6 +90,12 @@ export class AvisoComponent implements OnInit, OnDestroy {
    */
   soloLectura: boolean = false;
 
+  /**
+   * @property {ReplaySubject<boolean>} destroyed$
+   *  @description Sujeto que emite un valor cuando el componente se destruye.
+   * Se utiliza para limpiar las suscripciones y evitar fugas de memoria.
+   *  @type {ReplaySubject<boolean>}
+   */
   private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
  
 
@@ -291,6 +297,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
       )
       .subscribe();
 
+    console.log("in avio state check:",this.solicitudState);
     this.crearFormSolicitud();
     this.cargarPais();
     this.cargarAnio();
@@ -314,26 +321,6 @@ export class AvisoComponent implements OnInit, OnDestroy {
       .subscribe();
 
    
-  }
-
-  /**
-   * Destruye el componente y libera recursos.
-   *
-   * Este método se llama cuando el componente se destruye, asegurando que no queden suscripciones activas.
-   */
-  inicializarFormulario(): void {
-    
-    if (this.soloLectura) {
-      this.aviosForm.disable();
-      this.datosDelAvisoVisible = true;
-      this.cargarAvisoTabla();
-    } else {
-      this.aviosForm.enable();
-    }
-
-    //  if (this.aviosForm && this.aviosForm.get('adaceForm.adace')) {
-    //   this.aviosForm.get('adaceForm.adace')?.disable({ emitEvent: false });
-    // }
   }
 
   /**
@@ -477,17 +464,17 @@ export class AvisoComponent implements OnInit, OnDestroy {
     this.aviosForm = this.fb.group({
       adaceForm: this.fb.group({
         adace: [
-          { value: this.solicitudState?.adace, disabled: true },
+          { value: this.solicitudState.adace, disabled: true },
           [Validators.required],
         ],
-        pais: [{value:this.solicitudState?.pais, disable:this.soloLectura },[Validators.required]],
-        anio: [this.solicitudState?.anio, [Validators.required]],
-        tipoBusqueda: [this.solicitudState?.tipoBusqueda, Validators.required],
+        pais: [{value:this.solicitudState.pais, disable:this.soloLectura },[Validators.required]],
+        anio: [this.solicitudState.anio, [Validators.required]],
+        tipoBusqueda: [this.solicitudState?.tipoBusqueda, [Validators.required]],
         tipoBusquedaAviso: [
           this.solicitudState?.tipoBusquedaAviso,
           Validators.required,
         ],
-        folioTipo: [this.solicitudState?.folioTipo, Validators.required],
+        folioTipo: [this.solicitudState?.folioTipo, [Validators.required]],
         numeroSerie: [
          {value:this.solicitudState?.numeroSerie,disable:this.soloLectura},
           [Validators.required, Validators.pattern(ALPHANUMERIC_PATTERN)],
@@ -561,11 +548,34 @@ export class AvisoComponent implements OnInit, OnDestroy {
         valorVenta: [this.solicitudState?.valorVenta, [Validators.required]],
       }),
     }); 
+ console.log("in avio state check:",this.solicitudState.anio);
     this.inicializarFormulario();
     
     this.mostrarCampos();
     this.mostrarCamposAviso();
     
+  }
+
+  
+
+  /**
+   * Destruye el componente y libera recursos.
+   *
+   * Este método se llama cuando el componente se destruye, asegurando que no queden suscripciones activas.
+   */
+  inicializarFormulario(): void {
+    
+    if (this.soloLectura) {
+      this.datosDelAvisoVisible = true;
+      this.aviosForm.disable();
+      this.cargarAvisoTabla();
+    } else {
+      this.aviosForm.enable();
+    }
+
+    //  if (this.aviosForm && this.aviosForm.get('adaceForm.adace')) {
+    //   this.aviosForm.get('adaceForm.adace')?.disable({ emitEvent: false });
+    // }
   }
 
   /**

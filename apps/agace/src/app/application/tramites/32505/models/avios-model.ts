@@ -137,6 +137,7 @@ export interface RespuestaConsulta {
  */ 
 export interface ConsultaDatos {
   adace: string;
- pais: string;
- anio: string;
+  pais: string;
+  anio: string;
+
 }
