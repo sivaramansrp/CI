@@ -74,4 +74,20 @@ describe('ManifiestoComponent', () => {
     expect(destroyedSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+  it('debería deshabilitar el formulario si esFormularioSoloLectura es true', () => {
+    componente.esFormularioSoloLectura = true;
+    componente.inizializarFormulario();
+    const disableSpy = jest.spyOn(componente.manifiestoFormulario, 'disable');
+    componente.guardarDatosFormulario();
+    expect(disableSpy).toHaveBeenCalled();
+  });
+
+  it('debería habilitar el formulario si esFormularioSoloLectura es false', () => {
+    componente.esFormularioSoloLectura = false;
+    componente.inizializarFormulario();
+    const enableSpy = jest.spyOn(componente.manifiestoFormulario, 'enable');
+    componente.guardarDatosFormulario();
+    expect(enableSpy).toHaveBeenCalled();
+  });
 });
