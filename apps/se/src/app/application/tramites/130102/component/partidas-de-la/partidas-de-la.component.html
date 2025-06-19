@@ -119,8 +119,8 @@
                 <div class="col-md-8"></div>
                 <div class="col-md-4 text-end">
                     <div class="btn-group">
-                        <button class="btn btn-primary me-2" type="button" (click)="cargarArchivo()">Cargar archivo</button>
-                        <button class="btn btn-danger" type="button" (click)="validarYEnviarFormulario()">Agregar</button>
+                        <button class="btn btn-primary me-2" type="button" (click)="cargarArchivo()" [disabled]="esFormularioSoloLectura">Cargar archivo</button>
+                        <button class="btn btn-danger" type="button" (click)="validarYEnviarFormulario()" [disabled]="esFormularioSoloLectura">Agregar</button>
                     </div>
                 </div>
             </div>
@@ -168,8 +168,8 @@
                     <div class="col-md-6 col-sm-6"></div>
                     <div class="col-md-6 col-sm-6 text-end">
                         <div class="btn-group">
-                            <button class="btn btn-primary me-2" type="button" (click)="eliminar()">Elimina Partida</button>
-                            <button class="btn btn-danger" type="button" (click)="abrirModalEditar()">Mofificar partida mercancia</button>
+                            <button class="btn btn-primary me-2" type="button" (click)="eliminar()" [disabled]="esFormularioSoloLectura">Elimina Partida</button>
+                            <button class="btn btn-danger" type="button" (click)="abrirModalEditar()" [disabled]="esFormularioSoloLectura">Mofificar partida mercancia</button>
                         </div>
                     </div>
                 </div>
