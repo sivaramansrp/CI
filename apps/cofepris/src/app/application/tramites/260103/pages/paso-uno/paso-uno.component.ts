@@ -1,8 +1,21 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject, takeUntil } from 'rxjs';
+import { ImportacionRetornoSanitarioService } from '../../service/importacion-retorno-sanitario.service';
 import { Tramite260103Query } from '../../estados/tramite260103Query.query';
 import { Tramite260103Store } from '../../estados/tramite260103Store.store';
 
+
+/**
+ * Componente PasoUnoComponent
+ * 
+ * Este componente gestiona el primer paso del trámite 260103, permitiendo la selección de pestañas,
+ * la carga de datos desde el servidor y la actualización del estado del formulario.
+ * Utiliza servicios y stores para manejar el estado y la lógica de negocio relacionada con el trámite.
+ *
+ * @author
+ * @version 1.0
+ */
 @Component({
   selector: 'app-paso-uno',
   templateUrl: './paso-uno.component.html',
@@ -23,11 +36,38 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
+  /**
+ * Esta variable se utiliza para almacenar el índice del subtítulo.
+ */
+  public consultaState!: ConsultaioState;
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+
+  /**
+   * Constructor del componente PasoUnoComponent.
+   * 
+   * @param tramite260103Query Consulta el estado del trámite 260103.
+   * @param tramite260103Store Maneja el estado del store para el trámite 260103.
+   * @param consultaQuery Consulta el estado general del usuario.
+   * @param importacionRetornoSanitarioService Servicio para manejar datos de importación y retorno sanitario.
+   */
   constructor(
-    private tramite260103Query:Tramite260103Query,
-    private tramite260103Store: Tramite260103Store
+    private tramite260103Query: Tramite260103Query,
+    private tramite260103Store: Tramite260103Store,
+    private consultaQuery: ConsultaioQuery,
+    private importacionRetornoSanitarioService: ImportacionRetornoSanitarioService
   ) {
-    // Constructor necesario para inyectar el store del trámite
+   this.consultaQuery.selectConsultaioState$.pipe(takeUntil(this.destroyNotifier$)).subscribe((seccionState) => {
+        this.consultaState = seccionState;
+        if (this.consultaState && this.consultaState.procedureId === '260103' &&
+          this.consultaState.update) {
+          this.guardarDatosFormulario();
+        } else {
+          this.esDatosRespuesta = true;
+        }
+      });  
   }
 
   /**
@@ -43,6 +83,23 @@ export class PasoUnoComponent implements OnDestroy, OnInit {
         .subscribe((tab) => {
           this.indice = tab;
         });
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.importacionRetornoSanitarioService
+      .getTramiteDatos().pipe(
+        takeUntil(this.destroyNotifier$)
+      )
+      .subscribe((resp) => {
+        if(resp){
+        this.esDatosRespuesta = true;
+        this.importacionRetornoSanitarioService.actualizarEstadoFormulario(resp);
+        }
+      });
   }
 
   /**

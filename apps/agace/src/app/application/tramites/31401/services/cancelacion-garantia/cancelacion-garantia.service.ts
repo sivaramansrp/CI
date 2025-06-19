@@ -1,3 +1,4 @@
+import { CancelacionGarantia270101State, Tramite31401Store } from '../../../../estados/tramites/tramite31401.store';
 import { MiembroTabla, RequisitosTabla, TerecerosTabla, TipoInversionTabla } from '../../models/cancelacion-garantia.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -31,7 +32,7 @@ export class CancelacionGarantiaService {
    * Inicializa el servicio con una instancia de HttpClient para realizar solicitudes HTTP.
    * @param {HttpClient} http - Cliente HTTP para realizar las solicitudes.
    */
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private tramite31401Store: Tramite31401Store) {
     //
   }
 
@@ -181,5 +182,35 @@ export class CancelacionGarantiaService {
     return this.http.get<{label: string, value: number}[]>(
       'assets/json/31401/regimen-adunaera.json'
     );
+  }
+
+  /**
+   * Obtiene los datos de cancelación de garantía desde un archivo JSON local.
+   * @returns {Observable<CancelacionGarantia270101State>} Observable con el estado de la cancelación de garantía.
+   * @example
+   * this.getCancelacionGarantiaData().subscribe(data => { ... });
+   */
+  getCancelacionGarantiaData(): Observable<CancelacionGarantia270101State> {
+    return this.http.get<CancelacionGarantia270101State>('assets/json/31401/cancelacion-garantia.json');
+  }
+
+  /**
+ * @method actualizarEstadoFormulario
+ * @description
+ * Actualiza el valor de un campo específico en el store `tramite31401Store` de manera dinámica.
+ * 
+ * Detalles:
+ * - Utiliza el método `setDynamicFieldValue` del store para modificar el valor del campo indicado.
+ * - Permite mantener sincronizado el estado global del trámite con los cambios realizados en el formulario.
+ * 
+ * @param {string} campo - Nombre del campo que se desea actualizar en el store.
+ * @param {unknown} valor - Valor que se asignará al campo especificado.
+ * 
+ * @example
+ * this.actualizarEstadoFormulario('pais', 'México');
+ * // Actualiza el campo 'pais' en el store con el valor 'México'.
+ */
+  actualizarEstadoFormulario(campo: string, valor: unknown): void {
+    this.tramite31401Store.setDynamicFieldValue(campo, valor);
   }
 }

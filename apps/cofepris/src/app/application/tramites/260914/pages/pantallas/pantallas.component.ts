@@ -1,10 +1,10 @@
 import { CompleteForm, PagoDeDerechos, SolicitanteData, Tramite } from '../../models/mod-permiso.model';
 import { Component, ViewChild } from '@angular/core';
-import { DatosPasos, ListaPasosWizard } from '@libs/shared/data-access-user/src';
-import { AccionBoton } from '@libs/shared/data-access-user/src/core/models/260604/aviso-exportacion.model';
+import { DatosPasos, ListaPasosWizard, WizardComponent} from '@libs/shared/data-access-user/src';
+import { AccionBoton } from '@ng-mf/data-access-user';
 import { DatosComponent } from '../datos/datos.component';
-import { PANTA_PASOS } from '@libs/shared/data-access-user/src/core/enums/260604/aviso-exportacion.enum';
-import { WizardComponent } from '@ng-mf/data-access-user';
+import { PANTA_PASOS } from '@ng-mf/data-access-user';
+
 
 /**
  * @description
@@ -96,8 +96,10 @@ export class PantallasComponent {
     } else {
       console.error('PasoUnoPagesComponent no está inicializado.');
     }
-    if (e.valor > 0 && e.valor < 5) {
+  if (e && e.valor > 0 && e.valor <= this.pantallasPasos.length) {
       this.indice = e.valor;
+      this.datosPasos.indice = e.valor;
+ 
       if (e.accion === 'cont') {
         this.wizardComponent.siguiente();
       } else {

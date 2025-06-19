@@ -6,7 +6,7 @@
         <div class="row">
             <div class="col-md-12">
                 <app-input-radio [radioOptions]="opcionDeBotonDeRadio" [isRequired]="true" [layout]="'vertical'"
-                    formControlName="tipoDeEmpresaOpcion"
+                    formControlName="tipoDeEmpresaOpcion" [disabled]="formularioDeshabilitado"
                     (change)="setValoresStore(tipoDeEmpresa,'tipoDeEmpresaOpcion', 'setTipoDeEmpresaOpcion')"
                     (valueChange)="enCambioDeValor($event)"></app-input-radio>
             </div>
@@ -40,7 +40,8 @@
         </div>
         <div class="col-md-offset-7 col-md-1 mt-5">
             <button type="button" id="buscaCandidato1" name="buscaCandidato1" class="btn btn-primary pull-right"
-                data-bs-toggle="modal" data-bs-target="#modal-alerta" (click)="buscarEmpresa(1)">Buscar</button>
+                data-bs-toggle="modal" data-bs-target="#modal-alerta" [disabled]="formularioDeshabilitado"
+                (click)="buscarEmpresa(1)">Buscar</button>
         </div>
 
         @if (nuevaAlertaNotificacion) {
@@ -73,7 +74,7 @@
             </div>
             <div class="col-md-offset-7 col-md-1 mt-5">
                 <button type="button" id="buscaCandidato2" name="buscaCandidato2" class="btn btn-primary pull-right"
-                    (click)="buscarEmpresa(2)">Buscar</button>
+                    [disabled]="formularioDeshabilitado" (click)="buscarEmpresa(2)">Buscar</button>
             </div>
         </div>
     </div>
@@ -85,6 +86,7 @@
     <div class="row mt-5">
         <div class="col-md-12">
             <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox"
+                [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
                 [configuracionTabla]="caatRegistradoEmpresaEncabezadoDeTabla" [datos]="caatRegistradoEmpresaTabla">
             </app-tabla-dinamica>
         </div>
@@ -93,7 +95,8 @@
     <div class="row top-buffer">
         <div class="col-md-12">
             <button type="button" id="guardarBuscado2" name="guardarBuscado2" class="btn btn-primary pull-right"
-                data-bs-toggle="modal" (click)="agregarSeleccionado(caatRegistradoEmpresaTabla)">Agregar
+                data-bs-toggle="modal" [disabled]="formularioDeshabilitado"
+                (click)="agregarSeleccionado(caatRegistradoEmpresaTabla)">Agregar
             </button>
         </div>
     </div>
@@ -113,6 +116,7 @@
     <div class="row mt-5">
         <div class="col-md-12">
             <app-tabla-dinamica [tipoSeleccionTabla]="tablaSeleccionCheckbox"
+                [disableSeleccionTablaCheckBox]="formularioDeshabilitado"
                 [configuracionTabla]="candidatoModificarCaatEncabezadoDeTabla" [datos]="candidatoModificarCaatTabla">
             </app-tabla-dinamica>
         </div>
@@ -173,7 +177,7 @@
                             <div class="col-md-4">
                                 <app-catalogo-select [catalogo]="pais" [id]="'paisPFE'" formControlName="paisPFE"
                                     [label]="'País'" name="cvePais" (change)="paisSeleccion()"
-                                    [required]="true"></app-catalogo-select>
+                                    [isDisabled]="formularioDeshabilitado" [required]="true"></app-catalogo-select>
                             </div>
                             <div class="col-md-4 pt-7">
                                 <label for="codigoPostal">Código postal*:</label>
@@ -226,8 +230,9 @@
                     </div>
                     <div class="col-md-4 d-flex justify-content-end">
                         <button type="button" class="btn btn-default mx-2" id="cancelarPFE" name="cancelar"
-                            data-bs-dismiss="modal" #closeModal>Cancelar</button>
+                            data-bs-dismiss="modal" [disabled]="formularioDeshabilitado" #closeModal>Cancelar</button>
                         <button type="button" class="btn btn-primary" id="guardarPFE" name="guardar"
+                            [disabled]="formularioDeshabilitado"
                             (click)="agregarPFE(personaFisicaExtranjeraForm.getRawValue())">Guardar</button>
                     </div>
                 </div>
