@@ -141,6 +141,18 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
         importePago: this.pagoDeDerechos.importePago || ''
       });
     }
+    /**
+     * @inheritdoc
+     * @description
+     * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
+     * 
+     * @remarks
+     * Este método habilita o deshabilita el formulario `pagoForm` dependiendo del valor de `esFormularioSoloLectura`.
+     * 
+     * @see https://angular.io/guide/lifecycle-hooks
+     * 
+     * @memberof PagoDeDerechoComponent
+     */
     ngAfterViewInit(): void {
       if(this.esFormularioSoloLectura){
         this.pagoForm.disable();
