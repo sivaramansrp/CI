@@ -292,8 +292,8 @@ export class FraccionComponent implements OnInit, OnDestroy {
     const FORMDATA = this.fraccionForm.value; // Obtiene los datos del formulario
     const NEWPARTIDA: Partidas = {
       cantidad: FORMDATA.cantidad, // Asigna la cantidad
-      unidad: fraccions.UMT.find(item => item.id === Number(FORMDATA.umt))?.descripcion, // Asigna la unidad
-      fraccion: fraccions.fraccion.find(item => item.id === Number(FORMDATA.fraccion))?.descripcion, // Asigna la fracción arancelaria
+      unidad: fraccions?.UMT.find(item => item.id === Number(FORMDATA?.umt))?.descripcion, // Asigna la unidad
+      fraccion: fraccions?.fraccion.find(item => item.id === Number(FORMDATA?.fraccion))?.descripcion, // Asigna la fracción arancelaria
       descripcion: FORMDATA.descripcion, // Asigna la descripción
       precio: 1.000, // Precio fijo
       total: FORMDATA.cantidad // Total calculado con la cantidad
