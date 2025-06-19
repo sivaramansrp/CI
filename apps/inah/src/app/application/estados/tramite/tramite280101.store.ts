@@ -1,7 +1,7 @@
 
+import { Elemento, Monumentos } from '../../tramites/280101/constantes/permiso-de-exportacion.enum'; // Importa las interfaces Elemento y Monumentos.
 import { Store, StoreConfig } from '@datorama/akita'; // Importa las clases Store y StoreConfig de Akita para manejar el estado.
 import { Injectable } from '@angular/core'; // Importa el decorador Injectable para inyección de dependencias.
-import { Elemento, Monumentos } from '../../tramites/280101/constantes/permiso-de-exportacion.enum'; // Importa las interfaces Elemento y Monumentos.
 
 /**
  * Representa un catálogo con un identificador único y una descripción.

@@ -51,6 +51,7 @@ import {
 } from '../../estados/tramites260919.store';
 import { Solicitud260919Query } from '../../estados/tramites260919.query';
 
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CommonModule } from '@angular/common';
 import { ImportarDeRemediosHerbalsService } from '../../services/importar-de-remedios-herbals.service';
@@ -58,13 +59,15 @@ import { InputCheckComponent } from '@libs/shared/data-access-user/src';
 import { ReactiveFormsModule } from '@angular/forms';
 import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
+
 import { Modal } from 'bootstrap';
+
 import { CrossList, MercanciasInfo } from '../../models/mercancia.model';
+
 import {
-  REGEX_SOLO_DIGITOS,
   REGEX_NO_ESPACIOS_AL_INICIO_NI_AL_FINAL,
   REGEX_RFC,
-  REGEX_REEMPLAZAR,
+  REGEX_SOLO_DIGITOS,
 } from '@libs/shared/data-access-user/src/tramites/constantes/regex.constants';
 
 /**
@@ -107,6 +110,9 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
   /** Formulario para la clave SCIAN */
   clavaScianForm!: FormGroup;
 
+  /** Estado actual relacionado con la clave SCIAN */
+claveScianState!: Solicitud260919State;
+
   /** Indica si se muestra el formulario de clave SCIAN */
   public showClavaScianForm: boolean = false;
   /** Habilita o deshabilita el estado */
@@ -122,7 +128,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
   public mercanciasConfiguracionTabla: FilaData2[] = [];
 
   /** Referencia al modal de alerta */
-  @ViewChild('modalAlerta') modalElement!: ElementRef;
+  @ViewChild('modalAlerta') MODAL_ELEMENT!: ElementRef;
 
   /** Fecha inicial seleccionada */
   fechaInicialSeleccionada: string = '';
@@ -188,6 +194,15 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
 
   /** Configuración del crosslist para el uso específico */
   usoEspecificoCrossList: CrossList = {} as CrossList;
+  
+    /** Estado de la consulta que se obtiene del store. */
+    public consultaState!: ConsultaioState;
+  
+    /** Consulta de estado para la solicitud */
+    consultaDatos!: ConsultaioState;
+    
+/** Indica si el formulario es de solo lectura */
+esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -202,7 +217,8 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
     private importarDeRemediosHerbals: ImportarDeRemediosHerbalsService,
     private cdr: ChangeDetectorRef,
     private solicitud260919Store: Solicitud260919Store,
-    private solicitud260919Query: Solicitud260919Query
+    private solicitud260919Query: Solicitud260919Query,
+     private consultaioQuery: ConsultaioQuery
   ) {}
 
   /** Configuración de columnas para la tabla de solicitud */
@@ -225,7 +241,9 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
    * Apellido materno del solicitante.
    */
   apellidoMaterno: string = '';
-  indiceFilaSeleccionada: number | null = null;
+
+  /** Índice de la fila seleccionada en la tabla */
+indiceFilaSeleccionada: number | null = null;
 
   /** Configuración para el campo de selección de clasificación del producto */
   public delProducto = CLASIFICACION_PRODUCTO_DATA;
@@ -243,16 +261,22 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
 
   /** Conjunto de filas seleccionadas */
   filasSeleccionadas: Set<number> = new Set();
-  public nuevaNotificacion: Notificacion | null = null;
 
-  elementoParaEliminar!: number;
-  pedimentos: Array<Pedimento> = [];
+/** Notificación nueva que se mostrará en el componente */
+public nuevaNotificacion: Notificacion | null = null;
+/** Elemento que se marcará para eliminar */
+elementoParaEliminar!: number;
 
-  fechaPago: InputFecha = {
-    labelNombre: 'Fecha de pago',
-    required: false,
-    habilitado: true,
-  };
+/** Lista de pedimentos asociados */
+pedimentos: Array<Pedimento> = [];
+/** Configuración de la fecha de pago, incluyendo el nombre del campo, si es requerido y si está habilitado */
+fechaPago: InputFecha = {
+  labelNombre: 'Fecha de caducidad',
+  required: false,
+  habilitado: true,
+};
+
+private modalElement: HTMLElement | null = null;
 
   /** Inicialización del componente */
   ngOnInit(): void {
@@ -264,6 +288,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+
 
     this.createForm();
     this.getEstadosData();
@@ -277,7 +302,24 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
     this.getClasificacionDelProductoData();
     this.getEspificarData();
     this.getEstadoFisicoData();
+
+     this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyed$),
+          map((seccionState) => {
+            this.consultaDatos = seccionState;
+            this.esFormularioSoloLectura = this.consultaDatos.readonly;
+            this.inicializarEstadoFormulario();
+          })
+        )
+        .subscribe();
+        
+        this.inicializarEstadoFormulario();
   }
+/**
+ * Método para eliminar los pedimentos seleccionados.
+ * @param borrar - Indica si se deben eliminar los pedimentos seleccionados.
+ */
   eliminarPedimento(borrar: boolean): void {
     if (borrar) {
       // Filtrar las filas seleccionadas
@@ -292,6 +334,12 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
       this.nuevaNotificacion = null;
     }
   }
+
+  /** 
+ * Método para abrir un modal.
+ * @param i - Índice del elemento relacionado con el modal (por defecto 0).
+ * @param isSeleccionarEstablecimiento - Indica si el modal es para seleccionar un establecimiento.
+ */
   abrirModal(
     i: number = 0,
     isSeleccionarEstablecimiento: boolean = false
@@ -345,7 +393,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
     this.dataDeLaSolicitudForm = this.fb.group({
       datosDelTramiteRealizar: this.fb.group({
         tipoOperacion: [
-          { value: this.dataDeLaSolicitudState.tipoOperacion || '' },
+          { value: this.dataDeLaSolicitudState.tipoOperacion || '',disabled: false },
         ],
         justification: [
           {
@@ -490,14 +538,20 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
         this.dataDeLaSolicitudState?.numeroDeRegistroSanitario,
         Validators.maxLength(200),
       ],
-      fechaDePago: [this.dataDeLaSolicitudState?.fechaDePago],
+      fechadepago: [this.dataDeLaSolicitudState?.fechadepago || '',],
+      cumplocon: [this.dataDeLaSolicitudState?.cumplocon],
+      hacerlosRadioOptions:[this.dataDeLaSolicitudState?.hacerlosRadioOptions]
     });
   }
+  /** 
+ * Método para crear el formulario de clave SCIAN.
+ * Inicializa el formulario reactivo con validaciones para los campos claveScian y descripcionDelScian.
+ */
   createclaveScianForm(): void {
     this.clavaScianForm = this.fb.group({
       claveScianG: this.fb.group({
-        claveScian: ['', Validators.required],
-        descripcionDelScian: ['', Validators.required],
+        claveScian: [ '', Validators.required],
+        descripcionDelScian: [ '', Validators.required],
       }),
     });
   }
@@ -508,10 +562,18 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
       'datosDelTramiteRealizar'
     ) as FormGroup;
   }
-  seleccionarFechaInicio(evento: string): void {
-    this.solicitud260919Store.setFechadePago(evento);
+ 
+  /** 
+ * Método para seleccionar la fecha de inicio.
+ * Actualiza el valor del campo "fechadepago" en el formulario y lo establece en el store.
+ * @param nuevo_valor - Nuevo valor de la fecha de inicio.
+ */
+  seleccionarFechaInicio(nuevo_valor: string): void {
+    this.datosDelTramiteRealizar.patchValue({
+      fechadepago: nuevo_valor,
+         });
+    this.solicitud260919Store.setFechadePago(nuevo_valor);
   }
-
   /**
    * Método para alternar el estado del control de licencia sanitaria.
    * Si el aviso de funcionamiento está activado, deshabilita el control de licencia sanitaria.
@@ -665,13 +727,16 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
     });
   }
   /** Método para abrir el modal de agregar mercancía */
-  onAdd(): void {
-    const MODAL_ELEMENT = document.getElementById('modalAgregarMercancia');
-    if (MODAL_ELEMENT) {
-      const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
-      MODAL_INSTANCE.show();
-    }
+ 
+onAdd(): void {
+  if (!this.modalElement) {
+    this.modalElement = document.getElementById('modalAgregarMercancia');
   }
+  if (this.modalElement) {
+    const MODAL_INSTANCE = new Modal(this.modalElement);
+    MODAL_INSTANCE.show();
+  }
+}
   /** Método para obtener la clave y descripción del SCIAN */
   getClaveDescripcionDelData(): void {
     this.importarDeRemediosHerbals
@@ -741,16 +806,16 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
   /** Método para manejar la eliminación de filas seleccionadas */
   onDelete(): void {
     if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
-      const modalElement = document.getElementById('seleccionaRegistroModal');
-      if (modalElement) {
-        const modal = new Modal(modalElement);
-        modal.show();
+      const MODAL_ELEMENT = document.getElementById('seleccionaRegistroModal');
+      if (MODAL_ELEMENT) {
+        const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
+        MODAL_INSTANCE.show();
       }
     } else {
-      const modalElement = document.getElementById('confirmarEliminarModal');
-      if (modalElement) {
-        const modal = new Modal(modalElement);
-        modal.show();
+      const MODAL_ELEMENT = document.getElementById('confirmarEliminarModal');
+      if (MODAL_ELEMENT) {
+        const MODAL_INSTANCE = new Modal(MODAL_ELEMENT);
+        MODAL_INSTANCE.show();
       }
     }
     this.clavaScianForm.reset();
@@ -829,7 +894,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
     FORM_DATA.formaFarmaceutica = FORM_DATA.formaFarmaceutica || '';
     FORM_DATA.numeroDeRegistroSanitario =
       FORM_DATA.numeroDeRegistroSanitario || '';
-    FORM_DATA.fechaDePago = FORM_DATA.fechaDePago || '';
+    FORM_DATA.fechadepago = FORM_DATA.fechadepago || '';
 
     if (this.indiceFilaSeleccionada !== null) {
       this.mercanciasData[this.indiceFilaSeleccionada] = {
@@ -899,7 +964,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
       numeroDeRegistoSanitario: SELECTED_ROW.numeroDeRegistoSanitario,
       formaFarmaceutica: SELECTED_ROW.formaFarmaceutica,
       numeroDeRegistroSanitario: SELECTED_ROW.numeroDeRegistoSanitario,
-      fechaDePago: SELECTED_ROW.fechaDeCaducidad,
+      fechadepago: SELECTED_ROW.fechaDeCaducidad,
     });
     const MODAL_ELEMENT = document.getElementById('modalAgregarMercancia');
     if (MODAL_ELEMENT) {
@@ -941,6 +1006,18 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
     this.filasSeleccionadas.clear();
   }
 
+inicializarEstadoFormulario(): void {
+  if (this.esFormularioSoloLectura) {
+    this.dataDeLaSolicitudForm?.disable();
+    this.clavaScianForm?.disable();
+    this.datosDelTramiteRealizar.disable();
+  }
+  else {
+    this.dataDeLaSolicitudForm?.enable();
+    this.clavaScianForm?.enable();
+    this.datosDelTramiteRealizar.enable();
+  }
+}
   /**
    * Método para establecer valores en el store de la solicitud.
    * Obtiene el valor de un campo del formulario y lo asigna al método correspondiente en el store.
