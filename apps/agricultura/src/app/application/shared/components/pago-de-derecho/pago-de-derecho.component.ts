@@ -97,14 +97,14 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit {
       this.obtenerDetallesDeListaDeOpciones();
     }
     ngOnInit(): void {
-this.pagoForm.patchValue({
-        exentoPago: this.pagoDeDerechos.exentoPago,
-        justificacion: this.pagoDeDerechos.justificacion,
-        claveReferencia: this.pagoDeDerechos.claveReferencia, 
-        cadenaDependencia: this.pagoDeDerechos.cadenaDependencia,
-        banco: this.pagoDeDerechos.banco,
-        llavePago: this.pagoDeDerechos.llavePago,
-        importePago: this.pagoDeDerechos.importePago
+    this.pagoForm.patchValue({
+        exentoPago: this.pagoDeDerechos.exentoPago || 'si',
+        justificacion: this.pagoDeDerechos.justificacion || '',
+        claveReferencia: this.pagoDeDerechos.claveReferencia || '', 
+        cadenaDependencia: this.pagoDeDerechos.cadenaDependencia || '',
+        banco: this.pagoDeDerechos.banco || '',
+        llavePago: this.pagoDeDerechos.llavePago || '',
+        importePago: this.pagoDeDerechos.importePago || ''
       });
     }
 
