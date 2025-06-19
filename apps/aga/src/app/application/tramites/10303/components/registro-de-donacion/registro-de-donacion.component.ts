@@ -545,6 +545,7 @@ export class RegistroDeDonacionComponent implements OnInit, OnDestroy {
    */
   tipoDeMercanciaSeleccion(): void {
     const TIPO_DE_MERCANCIA = this.agregarMercanciasForm.get('datosMercancia.tipoDeMercancia')?.value;
+    console.log('Tipo de mercancía seleccionado:', TIPO_DE_MERCANCIA);
     this.tramite10303Store.setTipoDeMercancia(TIPO_DE_MERCANCIA);
   }
 
