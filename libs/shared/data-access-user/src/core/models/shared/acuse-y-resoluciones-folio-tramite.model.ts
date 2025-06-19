@@ -10,6 +10,7 @@
  */
 export interface AcuseYResolucionesFolioTramite {
   folioTramite: string;
+  numeroDeProcedimiento: string;
   tipoDeTramite: string;
   dependencia: string;
   fechInicioTramite: string;
