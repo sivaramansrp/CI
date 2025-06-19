@@ -1,7 +1,7 @@
-import { Injectable, inject } from '@angular/core';
 import {Observable, catchError, throwError } from 'rxjs';
-import { APPINJECT } from '../../../../app.inject'
+import { ENVIRONMENT } from '../../../../environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 
 
 /**
@@ -27,14 +27,10 @@ export interface JSONResponse {
 
 export class ServiciosExtraordinariosService {
   /**
-   * AppConfig es una inyección de dependencias que proporciona la configuración de la aplicación.
-   */
-  private readonly appConfig = inject(APPINJECT);
-  /**
    * La URL del servidor JSON auxiliar utilizado para manejar servicios extraordinarios.
    * Este valor se obtiene de la configuración del entorno.
    */
-  urlServer = this.appConfig.URL_SERVER_JSON_AUXILIAR;
+  urlServer = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
   constructor(private http: HttpClient) {
     // El constructor está intencionalmente vacío para la inyección de dependencias
