@@ -287,7 +287,6 @@ export class Tramite80314Store extends Store<TramiteState> {
       ...state,
       fechaInicio,
     }));
-    console.log('Fecha de inicio establecida:', fechaInicio);
   }
 
   /**

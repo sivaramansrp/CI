@@ -60,15 +60,6 @@ export class DatosCertificacionComponent {
    * Configura el formulario, carga los datos de modificación y los datos de la tabla.
    */
   ngOnInit() {
-    this.inicializarFormulario();
-     this.query.selectSolicitud$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState) => {
-          this.solicitudState = seccionState;
-        })
-      )
-      .subscribe();
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -79,6 +70,15 @@ export class DatosCertificacionComponent {
         })
       )
       .subscribe();
+    this.query.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState;
+          this.inicializarFormulario();
+        })
+      )
+    .subscribe();
     this.inicializarEstadoFormulario();
   }
 
@@ -87,9 +87,9 @@ export class DatosCertificacionComponent {
    */
   inicializarFormulario(): void {
     this.certificionForm = this.fb.group({
-      certificion: [{ value: this.solicitudState?.certificion }],
-      fechaInicio: [{ value: this.solicitudState?.fechaInicio }],
-      fechaVigencia: [{ value: this.solicitudState?.fechaVigencia }]
+      certificion: [{ value: this.solicitudState?.certificion, disabled: this.esFormularioSoloLectura }],
+      fechaInicio: [{ value: this.solicitudState?.fechaInicio, disabled: this.esFormularioSoloLectura }],
+      fechaVigencia: [{ value: this.solicitudState?.fechaVigencia, disabled: this.esFormularioSoloLectura }],
     });
   }
 

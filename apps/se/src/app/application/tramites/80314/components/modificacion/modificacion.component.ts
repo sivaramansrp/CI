@@ -22,6 +22,7 @@ import { CommonModule } from '@angular/common';
 import { DatosDelModificacion } from '../../estados/models/datos-tramite.model';
 import { ImmerModificacionService } from '../../service/immer-modificacion.service';
 import { Tramite80314Query } from '../../../../estados/queries/tramite80314.query';
+import { disableDebugTools } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-modificacion',
@@ -121,8 +122,8 @@ export class ModificacionComponent implements OnInit, OnDestroy {
       )
       .subscribe();
     this.inicializarFormulario();
-    this.inicializarEstadoFormulario();
     this.loadDatosModificacion();
+    this.inicializarEstadoFormulario();
     this.loadDatosTablaData();
 
     this.actividadProductiva = {
@@ -178,7 +179,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
       tipo: [this.derechoState?.datosModificacion?.tipo, []],
       programa: [this.derechoState?.datosModificacion?.programa, []],
       actividadProductivaActual: [this.derechoState?.datosModificacion?.actividadProductivaActual, []],
-      actividadProductiva: [],
+      actividadProductiva: [this.derechoState?.datosModificacion?.actividadProductiva, []],
     });
   }
 
