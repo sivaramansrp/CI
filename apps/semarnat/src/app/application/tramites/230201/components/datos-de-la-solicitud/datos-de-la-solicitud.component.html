@@ -71,14 +71,14 @@
           </div>
         </div>
         <div class="col-md-12 mt-5 d-flex justify-content-end">
-          <button type="button" class="btn btn-default" [disabled]="soloLectura" (click)="modificar()">Modificar</button>
-          <button type="button" class="btn btn-danger ms-3" [disabled]="soloLectura" (click)="eliminar()">Eliminar</button>
+          <button type="button" class="btn btn-default"  (click)="modificar()">Modificar</button>
+          <button type="button" class="btn btn-danger ms-3"  (click)="eliminar()">Eliminar</button>
           <button
             type="button"
             class="btn btn-primary ms-3"
             data-bs-toggle="modal"
             data-bs-target="#modalAgregarMercancias"
-            [disabled]="soloLectura"
+            
           >
             Agregar
           </button>
@@ -107,7 +107,7 @@
               formControlName="lungarDeEntrada"
               id="lungarDeEntrada"
               [required]="true"
-              [disabled]="soloLectura"
+              
               (change)="setValoresStore(exportacionForm, 'lungarDeEntrada', 'setLungarDeEntrada')"
             />
           </div>
@@ -120,7 +120,7 @@
               formControlName="destinoDeImportador"
               id="destinoDeImportador"
               [required]="true"
-              [disabled]="soloLectura"
+              
             />
           </div>
         </div>
@@ -147,7 +147,7 @@
               formControlName="numeroYDescripcion"
               id="numeroYDescripcion"
               [required]="true"
-              [disabled]="soloLectura"
+              
               (change)="setValoresStore(exportacionForm, 'numeroYDescripcion', 'setNumeroYDescripcion')"
             />
           </div>
@@ -163,7 +163,7 @@
               formControlName="codigoPostal"
               id="codigoPostal"
               [required]="true"
-              [disabled]="soloLectura"
+              
               (change)="setValoresStore(exportacionForm, 'codigoPostal', 'setCodigoPostal')"
             />
           </div>
@@ -188,7 +188,7 @@
               formControlName="calle"
               id="calle"
               [required]="true"
-              [disabled]="soloLectura"
+              
               (change)="setValoresStore(exportacionForm, 'calle', 'setCalle')"
             />
           </div>
@@ -203,7 +203,7 @@
               formControlName="colonia"
               id="colonia"
               [required]="true"
-              [disabled]="soloLectura"
+              
               (change)="setValoresStore(exportacionForm, 'colonia', 'setColonia')"
             />
           </div>
@@ -216,7 +216,7 @@
               formControlName="numeroExterior"
               id="numeroExterior"
               [required]="true"
-              [disabled]="soloLectura"
+              
               (change)="setValoresStore(exportacionForm, 'numeroExterior', 'setNumeroExterior')"
             />
           </div>
@@ -229,7 +229,7 @@
               formControlName="numeroInterior"
               id="numeroInterior"
               [required]="true"
-              [disabled]="soloLectura"
+              
               (change)="setValoresStore(exportacionForm, 'numeroInterior', 'setNumeroInterior')"
             />
           </div>
@@ -275,7 +275,7 @@
                   formControlName="descripcionfraccionArancelaria"
                   id="descripcionfraccionArancelaria"
                   [required]="true"
-                  [disabled]="soloLectura"
+                  
                   (change)="
                     setValoresStore(
                       datosMercancia,
@@ -296,7 +296,7 @@
                   formControlName="cantidad"
                   id="cantidad"
                   [required]="true"
-                  [disabled]="soloLectura"
+                  
                   (change)="setValoresStore(datosMercancia, 'cantidad', 'setCantidad')"
                 />
               </div>
@@ -360,7 +360,7 @@
               <button
                 type="button"
                 class="btn btn-default"
-                [disabled]="soloLectura"
+                
                 (click)="eliminarDetalle()"
               >
                 Eliminar detalle
@@ -368,7 +368,7 @@
               <button
                 type="button"
                 class="btn btn-primary"
-                [disabled]="soloLectura"
+                
                 (click)="agregarDetalle()"
               >
                 Agregar dettalle
@@ -387,13 +387,13 @@
               ></app-tabla-dinamica>
             </div>
             <div class="col-md-12 mt-5 d-flex justify-content-end">
-              <button type="button" [disabled]="soloLectura" class="btn btn-default">Limpiar</button>
-              <button type="button" [disabled]="soloLectura" class="btn btn-danger ms-3" data-bs-dismiss="modal" #closeModal>
+              <button type="button"  class="btn btn-default">Limpiar</button>
+              <button type="button"  class="btn btn-danger ms-3" data-bs-dismiss="modal" #closeModal>
                 Cancelar
               </button>
               <button
                 type="button"
-                [disabled]="soloLectura"
+                
                 class="btn btn-primary ms-3"
                 (click)="agregarSolicitud()"
               >

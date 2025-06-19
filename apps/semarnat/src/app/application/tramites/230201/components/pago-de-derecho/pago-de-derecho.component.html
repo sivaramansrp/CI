@@ -9,7 +9,6 @@
               <label class="form-label" for="claveDeReferencia">Clave de referencia*:</label>
               <input class="form-control" id="claveDeReferencia" 
                 formControlName="claveDeReferencia" type="text"
-                [disabled]="soloLectura"
                 [ngClass]="isValid(pagodeDerechos,'claveDeReferencia') ? 'required' : ''"
                 (change)="setValoresStore(pagodeDerechos,'claveDeReferencia', 'setClaveDeReferencia')" />
             </div>
@@ -20,7 +19,7 @@
               <input class="form-control" id="cadenaPagoDependencia" formControlName="cadenaPagoDependencia" type="text"
                 [ngClass]="isValid(pagodeDerechos,'cadenaPagoDependencia') ? 'required' : ''"
                 (change)="setValoresStore(pagodeDerechos,'cadenaPagoDependencia', 'setCadenaPagoDependencia')"
-                appUppercase [disabled]="soloLectura" />
+                appUppercase />
             </div>
           </div>
           <div class="col-md-4">
@@ -40,7 +39,7 @@
               <label class="form-label" for="llaveDePago">Llave de pago*:</label>
               <input class="form-control" id="llaveDePago" formControlName="llaveDePago" type="text"
                 [ngClass]="isValid(pagodeDerechos,'llaveDePago') ? 'required' : ''"
-                (change)="setValoresStore(pagodeDerechos,'llaveDePago', 'setllaveDePago')" [disabled]="soloLectura" />
+                (change)="setValoresStore(pagodeDerechos,'llaveDePago', 'setllaveDePago')" />
             </div>
           </div>
 
@@ -48,7 +47,7 @@
             <div class="form-group">
               <label class="form-label" for="fecPago">Fecha de pago*:</label>
               <input class="form-control" id="fecPago" 
-                formControlName="fecPago" type="date" [disabled]="soloLectura"
+                formControlName="fecPago" type="date"
                 [ngClass]="isValid(pagodeDerechos,'fecPago') ? 'required' : ''"
                 (change)="setValoresStore(pagodeDerechos,'fecPago', 'setFecPago')" />
             </div>
@@ -58,7 +57,7 @@
             <div class="form-group">
               <label class="form-label" for="impPago">Importe de pago*:</label>
               <input class="form-control" id="impPago" 
-                formControlName="impPago" type="text" [disabled]="soloLectura"
+                formControlName="impPago" type="text"
                 [ngClass]="isValid(pagodeDerechos,'impPago') ? 'required' : ''"
                 (change)="setValoresStore(pagodeDerechos,'impPago', 'setImpPago')" appUppercase />
             </div>
