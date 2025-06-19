@@ -47,7 +47,6 @@ export interface Solicitante {
  * @property {boolean} dataDeLaSolicitud - Indica si los datos de la solicitud están completos y válidos.
  */
 export interface ValidarEnvio {
-  pagoDeformaValida: boolean;
   dataParaMovilizacion: boolean;
   dataDeLaSolicitud: boolean;
 }
@@ -201,7 +200,6 @@ export function createDatosState(params: Partial<CapturarSolicitud> = {}): Captu
       fechaPago:''
     },
     validarEnvio: params.validarEnvio || {
-      pagoDeformaValida: false,
       dataParaMovilizacion: false,
       dataDeLaSolicitud: false,
     },
