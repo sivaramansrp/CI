@@ -12,7 +12,7 @@
                [isRequired]="true"
                [layout]="'horizontal'"
                formControlName="exentoPago"
-               (change)="actualizarPago()"
+               (change)="radioChange()"
                ></app-input-radio>
             </div>
          </div>
@@ -22,7 +22,7 @@
             formControlName="justificacion"
             [label]="'Justificación'"
             [required]="true"
-            [isDisabled]="esFormularioSoloLectura"
+            [isDisabled]="pagoForm.get('exentoPago')?.value === 'no' || esFormularioSoloLectura"
             name="justificacion"
             (change)="actualizarPago()"
             ></app-catalogo-select>
@@ -67,7 +67,7 @@
             formControlName="banco"
             [label]="'Banco'"
             [required]="true"
-            [isDisabled]="true"
+            [isDisabled]="pagoForm.get('exentoPago')?.value === 'si' || esFormularioSoloLectura"
             name="banco"
             (change)="actualizarPago()"
             ></app-catalogo-select>
@@ -75,7 +75,7 @@
          <div class="col-md-4">
             <div class="form-group">
                <label class="form-label" for="nombreImportExport"
-                  >Llave de pago</label
+                  >Llave de pago *:</label
                   >
                <input
                   class="form-control"
@@ -94,8 +94,10 @@
                <input-fecha
                [datos]="fechaInicioInput"
                name="fechaPago"
-               [setFecha]="fechaPagoDate" 
                (change)="actualizarPago()"
+               formControlName="fechaPago"
+               [isDisabled]="true"
+               
                ></input-fecha>
             </div>
          </div>

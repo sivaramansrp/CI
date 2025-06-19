@@ -10,16 +10,5 @@
 export const FECHA_DE_PAGO = {
   labelNombre: 'Fecha de pago',
   required: true,
-  habilitado: false,
+  habilitado: true,
 };
-
-/**
- * @description Fecha límite para el pago de derechos.
- * @type {string}
- * @example
- * FECHAPAGODATE // '15/03/2025'
- *
- * @compodoc
- * @es Fecha límite establecida para realizar el pago de derechos en el sistema.
- */
-export const FECHAPAGODATE ='15/03/2025'

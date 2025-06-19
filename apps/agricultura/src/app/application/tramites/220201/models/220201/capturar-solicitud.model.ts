@@ -158,6 +158,7 @@ export interface PagoDeDerechos {
   banco: string;
   llavePago: string;
   importePago: string;
+  fechaPago:string;
 }
 
 /**
@@ -196,7 +197,8 @@ export function createDatosState(params: Partial<CapturarSolicitud> = {}): Captu
       cadenaDependencia: '',
       banco: '',
       llavePago: '',
-      importePago: ''
+      importePago: '',
+      fechaPago:''
     },
     validarEnvio: params.validarEnvio || {
       pagoDeformaValida: false,

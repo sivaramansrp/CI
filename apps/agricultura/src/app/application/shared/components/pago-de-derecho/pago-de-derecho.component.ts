@@ -1,10 +1,10 @@
 import { AfterViewInit, Component, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { Catalogo, CatalogoSelectComponent, InputFecha, InputFechaComponent, InputRadioComponent, RespuestaCatalogos, TituloComponent } from '@libs/shared/data-access-user/src';
-import {FECHAPAGODATE, FECHA_DE_PAGO } from '../../constantes/pago-de-derechos.enum';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { EventEmitter } from '@angular/core';
+import { FECHA_DE_PAGO } from '../../constantes/pago-de-derechos.enum';
 import { HttpClient } from '@angular/common/http';
 import { PagoDeDerechos } from '../../../tramites/220201/models/220201/capturar-solicitud.model';
 import { RadioOpcion } from '../../../tramites/220201/models/220201/certificado-zoosanitario.model';
@@ -36,10 +36,7 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
     justificacionSelector: Catalogo[] = [];
   
   
-    /**
-     * Fecha de pago predeterminada que se puede actualizar.
-     */
-    fechaPagoDate: string = FECHAPAGODATE;
+    
   
     /**
      * Lista de opciones para el selector de banco.
@@ -50,13 +47,14 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
      * Formulario reactivo que gestiona los campos del pago de derechos.
      */
     pagoForm: FormGroup = this.fb.group({
-      exentoPago: [{ value: 'si', disabled: false }, Validators.required],
-      justificacion: [{ value: '', disabled: false }, Validators.required],
-      claveReferencia: [{ value: '', disabled: true }],
-      cadenaDependencia: [{ value: '', disabled: true }],
-      banco: [{ value: '', disabled: true }],
-      llavePago: [{ value: '', disabled: true }],
-      importePago: [{ value: '', disabled: true }]
+      exentoPago: [""],
+      justificacion: [""],
+      claveReferencia: [""],
+      cadenaDependencia: [""],
+      banco: [""],
+      llavePago: [""],
+      importePago: [""],
+      fechaPago:[""]
     });
   
     /**
@@ -138,8 +136,10 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
         cadenaDependencia: this.pagoDeDerechos.cadenaDependencia || '',
         banco: this.pagoDeDerechos.banco || '',
         llavePago: this.pagoDeDerechos.llavePago || '',
-        importePago: this.pagoDeDerechos.importePago || ''
+        importePago: this.pagoDeDerechos.importePago || '',
+        fechaPago:this.pagoDeDerechos.fechaPago|| ''
       });
+    
     }
     /**
      * @inheritdoc
@@ -159,6 +159,7 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
       }
       else{
         this.pagoForm.enable();
+          this.radioChange();
       }
     }
 
@@ -190,6 +191,31 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
             this.justificacionSelector = DATOS as Catalogo[];
           });
       }
+      
+      radioChange(): void {
+       if(!this.esFormularioSoloLectura && this.pagoForm.value.exentoPago === 'si') {
+          this.pagoForm.get('justificacion')?.enable();
+          this.pagoForm.get('claveReferencia')?.disable();
+          this.pagoForm.get('cadenaDependencia')?.disable();
+          this.pagoForm.get('banco')?.disable();
+          this.pagoForm.get('llavePago')?.disable();
+          this.pagoForm.get('importePago')?.disable();
+               this.pagoForm.get('fechaPago')?.enable();
+        }
+        else if(!this.esFormularioSoloLectura && this.pagoForm.value.exentoPago === 'no') {
+          this.fechaInicioInput.required=true;
+          this.fechaInicioInput.habilitado=false;
+          this.pagoForm.get('justificacion')?.disable();
+          this.pagoForm.get('claveReferencia')?.disable();
+          this.pagoForm.get('cadenaDependencia')?.disable();
+          const BANCO_CONTROL = this.pagoForm.get('banco');
+          BANCO_CONTROL?.setValidators([Validators.required]);
+          BANCO_CONTROL?.enable();
+          this.pagoForm.get('llavePago')?.enable();
+          this.pagoForm.get('importePago')?.disable();
+          this.pagoForm.get('fechaPago')?.enable();
+       }
+        }
 
   /**
    * @desc Actualiza el objeto de pago de derechos y emite el evento correspondiente.
