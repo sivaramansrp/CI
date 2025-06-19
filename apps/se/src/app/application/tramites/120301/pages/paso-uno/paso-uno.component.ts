@@ -17,7 +17,6 @@ import {
   ConsultaioStore,
 } from '@ng-mf/data-access-user';
 
-
 import { ElegibilidadDeTextilesStore } from '../../estados/elegibilidad-de-textiles.store';
 import { ElegibilidadTextilesService } from '../../services/elegibilidad-textiles/elegibilidad-textiles.service';
 
