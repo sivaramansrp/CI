@@ -1,8 +1,11 @@
-{"datos": {
+{
+  "success": true,
+  "message": "",
+  "datos": {
     "solicitudFormulario": {
-      "cveAduana": "Aduana 2",
-      "cveSeccionAduanal": "Aduanera 2",
-      "cveRecintoFiscalizado": "Recinto fiscalizado 1",
+      "cveAduana": "1",
+      "cveSeccionAduanal": "1",
+      "cveRecintoFiscalizado": "1",
       "cveTipoDocumento": "Pedimento",
       "estadoTipoDocumento": "Activo",
       "aduana": "Aduana Nacional",
@@ -15,11 +18,11 @@
       "fechaImportacionTemporal": "2024-06-01",
       "fechaVencimiento": "2025-06-01",
       "descMercancia": "Productos electrónicos diversos",
-      "marca": "Marca X",
+      "marca": "Marca Y",
       "modelo": "Modelo Y",
       "numeroSerie": "SN123456",
       "tipo": "Tipo Z",
-      "cveMedioTrasporte": "AEREO",
+      "cveMedioTrasporte": "Carretero",
       "guiaMaster": "GM123",
       "guiaBl": "",
       "numeroBl": "",
@@ -35,7 +38,7 @@
       "tranporteMarca": "Marca T",
       "tranporteModelo": "Modelo T",
       "tranportePlaca": "PLACA123",
-      "observaciones": "Sin observaciones",
+      "observaciones": "ficcion",
       "conDestino": "Si",
       "cveTipoDestino": "Retorno",
       "cveTipoDocumentoReemplazada": "Pedimento",
@@ -57,13 +60,13 @@
       "tipoMercancia": "Electrónica"
     },
     "mercanciaFormulario": {
-       "modalDescMercancia": "ficcion",
-      "espeMercancia":  "ficcion",
-      "marcaMercancia":  "ficcion",
-      "modeloMercancia":  "ficcion",
-      "numSerieMercancia":  "ficcion",
-      "numParteMercancia":  "ficcion",
-      "tipoMercancia":  "ficcion"
+      "modalDescMercancia": "ficcion",
+      "espeMercancia": "ficcion",
+      "marcaMercancia": "ficcion",
+      "modeloMercancia": "ficcion",
+      "numSerieMercancia": "ficcion",
+      "numParteMercancia": "ficcion",
+      "tipoMercancia": "ficcion"
     }
   }
 }

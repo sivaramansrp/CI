@@ -1,4 +1,4 @@
-import { CatalogoLista, DatosSolicitante, SolicitudTablaDatos } from '../models/retorno-de-partes.model';
+import { CatalogoLista, DatosSolicitante, SolicitudTablaDatos,RespuestaConsulta } from '../models/retorno-de-partes.model';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -95,8 +95,8 @@ export class RetornoDePartesService {
      * Obtiene los datos del registro de toma de muestras de mercancías desde un archivo JSON.
      * @returns Observable con los datos del formulario.
      */
-  getRegistroTomaMuestrasMercanciasData(): Observable<Tramite6403State> {
-    return this.http.get<Tramite6403State>('assets/json/6403/registro_toma_muestras_mercancias.json');
+  getRegistroTomaMuestrasMercanciasData(): Observable<RespuestaConsulta> {
+    return this.http.get<RespuestaConsulta>('assets/json/6403/registro_toma_muestras_mercancias.json');
   }
   /**
    * Obtiene los datos del solicitante.

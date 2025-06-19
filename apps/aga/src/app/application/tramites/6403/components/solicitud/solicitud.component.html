@@ -5,18 +5,18 @@
       <div class="row">
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="aduanas" [label]="'Aduana'" [required]="true" id="cveAduana"
-            formControlName="cveAduana" [ngClass]="isValid(datosAduana,'cveAduana') ? 'required' : ''"
+            formControlName="cveAduana" [ngClass]="isValid(datosAduana,'cveAduana') ? 'required' : ''" [isDisabled]="soloLectura"
             (change)="setValoresStore(datosAduana, 'cveAduana', 'setCveAduana')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="aduaneras" [label]="'Sección aduanera'" [required]="true" 
-            id="cveSeccionAduanal" formControlName="cveSeccionAduanal"
+            id="cveSeccionAduanal" formControlName="cveSeccionAduanal" [isDisabled]="soloLectura"
             [ngClass]="isValid(datosAduana,'cveSeccionAduanal') ? 'required' : ''"
             (change)="setValoresStore(datosAduana, 'cveSeccionAduanal', 'setCveSeccionAduanal')"></app-catalogo-select>
         </div>
         <div class="col-md-4">
           <app-catalogo-select [catalogo]="recintoFiscalizado" [label]="'Recinto fiscalizado'" [required]="true"
-            id="cveRecintoFiscalizado" formControlName="cveRecintoFiscalizado" 
+            id="cveRecintoFiscalizado" formControlName="cveRecintoFiscalizado" [isDisabled]="soloLectura"
             [ngClass]="isValid(datosAduana,'cveRecintoFiscalizado') ? 'required' : ''"
             (change)="setValoresStore(datosAduana, 'cveRecintoFiscalizado', 'setCveRecintoFiscalizado')"></app-catalogo-select>
         </div>
