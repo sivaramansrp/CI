@@ -132,7 +132,7 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
      */
     ngOnInit(): void {
     this.pagoForm.patchValue({
-        exentoPago: this.pagoDeDerechos.exentoPago || 'si',
+        exentoPago: this.pagoDeDerechos.exentoPago || 'no',
         justificacion: this.pagoDeDerechos.justificacion || '',
         claveReferencia: this.pagoDeDerechos.claveReferencia || '', 
         cadenaDependencia: this.pagoDeDerechos.cadenaDependencia || '',
