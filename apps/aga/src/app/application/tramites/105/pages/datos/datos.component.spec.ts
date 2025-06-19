@@ -3,7 +3,7 @@ import { DatosComponent } from './datos.component';
 import { SolicitanteComponent } from 'libs/shared/data-access-user/src/tramites/components/solicitante/solicitante.component';
 import { TIPO_PERSONA } from 'libs/shared/data-access-user/src/tramites/constantes/constantes';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 describe('DatosComponent', () => {
   let component: DatosComponent;
   let fixture: ComponentFixture<DatosComponent>;
@@ -13,22 +13,22 @@ describe('DatosComponent', () => {
     obtenerTipoPersona: jest.fn(),
   };
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [DatosComponent],
-      schemas: [NO_ERRORS_SCHEMA], // Ignore unknown elements in the template
-    }).compileComponents();
+ beforeEach(async () => {
+  await TestBed.configureTestingModule({
+    imports: [HttpClientTestingModule], // <-- Agrega esta línea
+    declarations: [DatosComponent],
+    schemas: [NO_ERRORS_SCHEMA],
+  }).compileComponents();
 
-    fixture = TestBed.createComponent(DatosComponent);
-    component = fixture.componentInstance;
+  fixture = TestBed.createComponent(DatosComponent);
+  component = fixture.componentInstance;
 
-    // Mock the @ViewChild property `solicitante`
-    Object.defineProperty(component, 'solicitante', {
-      value: solicitanteMock,
-    });
-
-    fixture.detectChanges();
+  Object.defineProperty(component, 'solicitante', {
+    value: solicitanteMock,
   });
+
+  fixture.detectChanges();
+});
 
   it('should create the component', () => {
     expect(component).toBeTruthy();

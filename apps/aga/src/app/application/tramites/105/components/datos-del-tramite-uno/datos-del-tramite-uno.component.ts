@@ -1,5 +1,6 @@
 import { AlertComponent, Catalogo, ConsultaioQuery, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { FRACCIONES_TABLEDOS_TABLE_BODY_DATA, OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/datos-del-tramite.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud105State, Tramite105Store, } from '../../estados/tramite105.store';
 import { Subject, Subscription, map, takeUntil } from 'rxjs';
@@ -8,7 +9,6 @@ import { CommonModule } from '@angular/common';
 import { InputCheckComponent } from '@libs/shared/data-access-user/src/tramites/components/input-check/input-check.component';
 import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { InvoCarService } from '../../services/invocar.service';
-import { FRACCIONES_TABLEDOS_TABLE_BODY_DATA, OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/datos-del-tramite.enum';
 import { Tramite105Query } from '../../estados/tramite105.query';
 import mercanciaTable from 'libs/shared/theme/assets/json/105/mercancia-table.json';
 interface TableBodyData {
