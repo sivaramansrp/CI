@@ -30,15 +30,7 @@ import { ZoosanitarioQuery } from '../../queries/220201/zoosanitario.query';
 export class PagoDeDerechosComponent implements OnInit, OnDestroy {
 
  
-pagoData:PagoDeDerechos={
-  exentoPago: 'no',
-  justificacion: '1',
-  claveReferencia: 'REF12345678',
-  cadenaDependencia: 'DEP0987654321XYZ',
-  banco: '1',
-  llavePago: 'LLAVE-456-XYZ',
-  importePago: '1500.00'
-}
+pagoData:PagoDeDerechos={} as PagoDeDerechos;
   /**
    * Sujeto para manejar la destrucción de observables y evitar fugas de memoria.
    */
