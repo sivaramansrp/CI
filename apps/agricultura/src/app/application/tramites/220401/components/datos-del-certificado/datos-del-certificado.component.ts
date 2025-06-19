@@ -99,7 +99,9 @@ export class DatosDelCertificadoComponent implements OnInit, OnDestroy {
         map((seccionState) => {
           this.esFormularioSoloLectura = seccionState.readonly;
           if(seccionState.readonly || seccionState.update){
-             this.setCatalogosDatos()
+             this.inicializarFormulario();
+             this.setCatalogosDatos();
+
           }
         })
       )
