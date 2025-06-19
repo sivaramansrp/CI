@@ -224,25 +224,46 @@ export interface DatosForma {
     numeroDeGuia?: string;
     regimen: string;
     numeroDeCarro?: string;
-    tipoDeRequisito: string;
+    tipoDeRequisito?: string;
     requisito?: string;
     numeroCertificadoInternacional?: string;
-    fraccionArancelaria: string;
+    fraccionArancelaria?: string;
     descripcionFraccion?: string;
-    nico: string;
+    nico?: string;
     descripcionNico?: string;
     descripcion?: string;
-    cantidadUMT: string | number;
-    umt: string;
-    cantidadUMC: string | number;
-    umc: string;
-    uso: string;
-    tipoDeProducto: string;
+    cantidadUMT?: string | number;
+    umt?: string;
+    cantidadUMC?: string | number;
+    umc?: string;
+    uso?: string;
+    tipoDeProducto?: string;
 }
+
 /**
- * @interface FilaSolicitud
- * @description 
- * Interfaz que representa una fila de la tabla de solicitudes.
+ * Representa una fila de solicitud para trámites fitosanitarios.
+ * Contiene información detallada sobre el producto, requisitos, certificados,
+ * cantidades y procedencia, utilizada en la gestión de solicitudes.
+ *
+ * @property {string} noPartida - Número de partida.
+ * @property {string} tipoRequisito - Tipo de requisito solicitado.
+ * @property {string} requisito - Descripción del requisito.
+ * @property {string} numeroCertificadoInternacional - Número del certificado internacional.
+ * @property {string} fraccionArancelaria - Fracción arancelaria del producto.
+ * @property {string} descripcionFraccion - Descripción de la fracción arancelaria.
+ * @property {string} nico - Código NICO.
+ * @property {string} descripcionNico - Descripción del NICO.
+ * @property {string} descripcion - Descripción general del producto.
+ * @property {string} umt - Unidad de medida de trámite (UMT).
+ * @property {string | number} cantidadUMT - Cantidad en UMT.
+ * @property {string} umc - Unidad de medida de comercialización (UMC).
+ * @property {string | number} cantidadUMC - Cantidad en UMC.
+ * @property {string} uso - Uso previsto del producto.
+ * @property {string} tipoDeProducto - Tipo de producto.
+ * @property {string} numeroDeLote - Número de lote del producto.
+ * @property {string} paisDeOrigen - País de origen del producto.
+ * @property {string} paisDeProcedencia - País de procedencia del producto.
+ * @property {string} certificadoInternacionalElectronico - Certificado internacional electrónico asociado.
  */
 export interface FilaSolicitud {
     noPartida: string;
@@ -252,6 +273,35 @@ export interface FilaSolicitud {
     fraccionArancelaria: string;
     descripcionFraccion: string;
     nico: string;
+    descripcionNico: string;
+    descripcion: string;
+    umt: string;
+    cantidadUMT: string | number;
+    umc: string; // Unidad de medida de comercialización (UMC)
+    cantidadUMC: string | number;
+    uso: string;
+    tipoDeProducto: string;
+    numeroDeLote: string;
+    paisDeOrigen: string;
+    paisDeProcedencia: string;
+    certificadoInternacionalElectronico: string;
+}
+
+/**
+ * @interface SolicitudFilaTabla
+ * @description
+ * Modelo para una fila de la tabla con información de fecha de creación, mercancía, cantidad y proveedor.
+ *
+ * @property {string} fechaCreacion - Fecha en la que se creó el registro.
+ * @property {string} mercancia - Nombre de la mercancía.
+ * @property {number} cantidad - Cantidad de la mercancía.
+ * @property {string} proveedor - Nombre del proveedor.
+ */
+export interface SolicitudFilaTabla {
+    fechaCreacion: string;
+    mercancia: string;
+    cantidad: number;
+    proveedor: string;
 }
 
 /**

@@ -82,6 +82,12 @@ export class CatalogoSelectComponent
   @Input() tooltipQuestionCircle: boolean = false;
 
   /**
+   * @description Texto que se muestra en el tooltip del círculo de pregunta.
+   * Este texto proporciona información adicional sobre el select cuando el usuario pasa el cursor sobre el círculo de pregunta.
+   */
+  @Input() tooltipQuestionCircleText: string = '';
+
+  /**
    * Evento emitido cuando cambia la selección en el catálogo.
    * Emite un objeto de tipo `Catalogo` que representa el elemento seleccionado.
    */
