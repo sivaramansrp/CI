@@ -2565,6 +2565,15 @@
     "departamento": "AGA",
     "numeroDeProcedimiento": "40202"
   },
+  {
+    "id": 140216,
+    "tipoDeTramite": "Solicitud de Permiso",
+    "fecha": "2025-06-11",
+    "fechaActualizacion": "2025-06-18",
+    "diasTranscurridos": "4",
+    "departamento": "SENER",
+    "numeroDeProcedimiento": "140216"
+  },
    {   
     "id": 260916,
      "fecha": "2023-10-01",
