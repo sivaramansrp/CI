@@ -176,6 +176,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   @Input() folioSolicitud!: string;
 
   /**
+   * @description Bandera para indicar si se está editando una solicitud existente.
+   */
+  @Input() editarSolicitud: boolean = false;
+
+  /**
    * Catalogo tipos de solicitud disponibles.
    */
   tiposSolicitud!: Catalogo[];
@@ -439,6 +444,16 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   radioPatentes = patentes.patentes;
   rfcs = rfcs.rfcs;
+
+  /**
+   * @description Bandera para indicar si la hora de inicio del servicio no ha sido marcada.
+   */
+  horaInicioUnmarked: boolean = false;
+
+  /**
+   * @description Bandera para indicar si la hora de fin del servicio no ha sido marcada.
+   */
+  horaFinUnmarked: boolean = false;
 
   constructor(
     private seccionQuery: SeccionLibQuery,
@@ -1307,22 +1322,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       'descripcionTipoSolicitud',
       'setDescripcionTipoSolicitud'
     );
-
-    const FORMA_MODIFICADA = Object.keys(this.FormSolicitud.controls).some(
-      (key) => {
-        if (key !== 'tipoSolicitud' && key !== 'descripcionTipoSolicitud') {
-          return (
-            this.FormSolicitud.controls[key].dirty ||
-            this.FormSolicitud.controls[key].touched
-          );
-        }
-        return false;
-      }
-    );
-
-    if (FORMA_MODIFICADA) {
-      this.limpiarFormulario();
-    }
   }
 
   /**
@@ -1604,6 +1603,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
   limpiarFechasHoras(): void {
     this.datosServicio.get('horaInicio')?.setValue('');
     this.datosServicio.get('horaInicio')?.markAsUntouched();
+    this.horaFinUnmarked = true;
+    this.horaInicioUnmarked = true;
     this.datosServicio.get('fechaInicio')?.setValue('');
     this.datosServicio.get('fechaInicio')?.markAsUntouched();
     this.datosServicio.get('horaFinal')?.setValue('');
@@ -2528,6 +2529,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
             txtBtnAceptar: 'Sí',
             txtBtnCancelar: 'No',
           };
+          this.procesoModal = 'lda_dd';
+
           return;
         }
 
@@ -2575,7 +2578,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       this.despacho.get('folioDDEX')?.clearValidators();
       this.despacho.get('folioDDEX')?.updateValueAndValidity();
 
-      this.despacho.get('tipoOperacion')?.setValue(SIN_VALORES);
       this.despacho.get('tipoDespacho')?.setValue(SIN_VALORES);
 
       this.desactivarSelects(true);
@@ -2588,7 +2590,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
         this.despacho.get('dd')?.reset();
         this.despacho.get('dd')?.disable();
 
-        this.selectCatalogoDespacho = this.despachoLdaCatalogo;
+        this.selectCatalogoDespacho = this.despachoLdaCatalogo.slice(0, -1);
         this.despacho
           .get('rfcDespachoLDA')
           ?.setValidators([Validators.required]);
@@ -2631,12 +2633,13 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     this.despacho.get('idSeccionDespacho')?.setValue(SIN_VALORES);
     this.despacho.get('seccionAduanera')?.setValue('');
     this.despacho.get('nombreRecinto')?.setValue(SIN_VALORES);
-    this.despacho.get('tipoOperacion')?.setValue(SIN_VALORES);
     this.despacho.get('relacionSociedad')?.setValue(false);
     this.despacho.get('encargoConferido')?.setValue(false);
     this.despacho.get('domicilioDespacho')?.setValue('');
     this.despacho.get('tipoDespacho')?.setValue(SIN_VALORES);
     this.despacho.get('tipoDespachoDescripcion')?.setValue('');
+
+    this.despacho.get('idAduanaDespacho')?.markAsUntouched();
 
     this.setValoresStore(
       this.despacho,
@@ -2655,7 +2658,6 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
       'setSeccionAduanera'
     );
     this.setValoresStore(this.despacho, 'nombreRecinto', 'setNombreRecinto');
-    this.setValoresStore(this.despacho, 'tipoOperacion', 'setTipoOperacion');
     this.setValoresStore(
       this.despacho,
       this.idNameAutorizacion,

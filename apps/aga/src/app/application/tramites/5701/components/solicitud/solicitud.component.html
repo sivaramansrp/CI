@@ -335,6 +335,7 @@
           [label]="'Hora inicio'"
           [required]="true"
           [inputId]="'horaInicio'"
+          [unmarked]="horaInicioUnmarked"
           (change)="
             setValoresStore(datosServicio, 'horaInicio', 'setHoraInicio')
           "
@@ -369,6 +370,7 @@
           [label]="'Hora Final'"
           [required]="true"
           [inputId]="'horaFinal'"
+          [unmarked]="horaFinUnmarked"
           (change)="changeHoraFinal()"
         ></input-hora>
       </div>
@@ -867,6 +869,13 @@
   }
 </form>
 
+<div class="row mt-5" *ngIf="editarSolicitud">
+  <div class="col-md12">
+    <button type="button" class="btn btn-danger">
+      Eliminar Solicitud Pendiente
+    </button>
+  </div>
+</div>
 
 @if(nuevaNotificacion) {
 <section>
