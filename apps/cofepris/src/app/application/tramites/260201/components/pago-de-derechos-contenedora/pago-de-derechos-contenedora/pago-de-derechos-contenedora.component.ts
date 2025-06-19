@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { ID_PROCEDIMIENTO } from '../../../constants/psicotropicos-poretorno.enum';
+import { Observable } from 'rxjs';
 import { PagoDeDerechosComponent } from '../../../../../shared/components/pago-de-derechos/pago-de-derechos.component';
 import { PagoDerechosFormState } from '../../../../../shared/models/terceros-relacionados.model';
 import { Tramite260201Store } from '../../../estados/tramite260201Store.store';
-import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
-import { Observable, map } from 'rxjs';
+import { map } from 'rxjs';
 
 /**
  * @component PagoDeDerechosContenedoraComponent
@@ -47,7 +48,7 @@ export class PagoDeDerechosContenedoraComponent {
    * Inicializa la propiedad `pagoDerechos` con el valor actual del store.
    * @param tramiteStore - Store que administra el estado del trámite 260201.
    */
-  constructor(public tramiteStore: Tramite260201Store,  private consultaQuery: ConsultaioQuery ) {
+  constructor(public tramiteStore: Tramite260201Store, private consultaQuery: ConsultaioQuery ) {
     this.pagoDerechos = this.tramiteStore.getValue().pagoDerechos;
      this.esFormularioSoloLectura = this.consultaQuery.selectConsultaioState$
        .pipe(

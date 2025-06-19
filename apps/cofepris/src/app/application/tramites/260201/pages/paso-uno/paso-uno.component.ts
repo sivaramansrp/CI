@@ -1,12 +1,21 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { map, Observable, Subject, takeUntil } from 'rxjs';
 import {
   ConsultaioQuery,
   ConsultaioState,
 } from '@libs/shared/data-access-user/src';
-import { Tramite260201Query } from '../../estados/tramite260201Query.query';
-import { Tramite260201State, Tramite260201Store } from '../../estados/tramite260201Store.store';
+import {
+  Observable, 
+  Subject,
+  map,
+  takeUntil
+} from 'rxjs';
 import { HttpClient } from '@angular/common/http';
+import { Tramite260201Query } from '../../estados/tramite260201Query.query';
+
+import {
+  Tramite260201State,
+  Tramite260201Store
+} from '../../estados/tramite260201Store.store';
 
 @Component({
   selector: 'app-paso-uno',

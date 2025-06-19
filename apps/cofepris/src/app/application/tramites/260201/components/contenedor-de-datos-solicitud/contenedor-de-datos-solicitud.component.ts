@@ -19,11 +19,11 @@ import {
 } from '../../estados/tramite260201Store.store';
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
-import { Subject } from 'rxjs';
-import { Observable } from 'rxjs';
-import { Tramite260201Query } from '../../estados/tramite260201Query.query';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
+import { Observable } from 'rxjs';
+import { Subject } from 'rxjs';
+import { Tramite260201Query } from '../../estados/tramite260201Query.query';
 
 /**
  * @component
