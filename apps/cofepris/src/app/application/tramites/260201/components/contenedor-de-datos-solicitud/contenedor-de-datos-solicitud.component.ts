@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component,  Input, OnDestroy, OnInit } from '@angular/core';
 import {
   DatosDeTablaSeleccionados,
   DatosSolicitudFormState,
@@ -143,6 +143,14 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS; 
 
   /**
+   * @property {boolean} formularioDeshabilitado
+   * @description
+   * Indica si el formulario está deshabilitado. Por defecto es `false`.
+   */
+  @Input()
+  formularioDeshabilitado: boolean = false;
+
+  /**
    * @constructor
    * @description
    * Inicializa el componente con las dependencias necesarias.
@@ -150,15 +158,6 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * @param {Tramite260201Query} tramite260201Query - Consulta para acceder al estado del trámite.
    * @param {Tramite260201Store} tramite260201Store - Tienda para actualizar el estado del trámite.
    */
-
-    /**
-   * Observable que indica si el formulario está en modo solo lectura.
-   * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.
-   *
-   * @type {Observable<boolean>}
-   */
-  esFormularioSoloLectura!: Observable<boolean>;
-
 
   constructor(
     private tramite260201Query: Tramite260201Query,
@@ -187,16 +186,6 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
-      this.esFormularioSoloLectura = this.consultaQuery.selectConsultaioState$
-    .pipe(
-      map((seccionState) => {
-        if(!seccionState.create && seccionState.procedureId === '260201') {
-          return seccionState.readonly;
-        } 
-        return false;
-      })
-    );
   }
 
   /**
