@@ -805,4 +805,49 @@ export class Tramite80101Store extends Store<Tramite80101State> {
       tablaDatosFederatarios: [...state.tablaDatosFederatarios, formaFederatarios],
     }));
   }
+    /**
+   * Agrega un nuevo conjunto de datos a la tabla de complementos en el estado.
+   * 
+   * @param datos - Objeto que contiene la información de socios o accionistas que se agregará.
+   *                Se genera un identificador único (UUID) para cada entrada.
+   * 
+   * @remarks
+   * Este método actualiza el estado actual añadiendo un nuevo elemento a la lista
+   * `tablaDatosComplimentos`. Utiliza `crypto.randomUUID()` para generar un identificador único.
+   */
+  agregarTablaDatosComplimentos(datos: SociaoAccionistas): void {
+    this.update((state) => {
+      const DATOS = {
+        ...datos,
+        id: crypto.randomUUID().toString(),
+      };
+      return {
+        ...state,
+        tablaDatosComplimentos: [...state.tablaDatosComplimentos, DATOS],
+      };
+    });
+  }
+/**
+   * Agrega un nuevo registro a la tabla de datos de complementos extranjera.
+   * 
+   * @param datos - Objeto que contiene la información del socio o accionista que se agregará.
+   *                Este objeto se extiende con un identificador único generado automáticamente.
+   * 
+   * @remarks
+   * Este método actualiza el estado de la tienda añadiendo un nuevo elemento al arreglo
+   * `tablaDatosComplimentosExtranjera`. El identificador único se genera utilizando 
+   * `crypto.randomUUID()`.
+   */
+  agregarTablaDatosComplimentosExtranjera(datos: SociaoAccionistas): void {
+    this.update((state) => {
+      const DATOS = {
+        ...datos,
+        id: crypto.randomUUID().toString(),
+      };
+      return {
+        ...state,
+        tablaDatosComplimentosExtranjera: [...state.tablaDatosComplimentosExtranjera, DATOS],
+      };
+    });
+  }
 }

@@ -102,6 +102,10 @@ export class ComplementarStore extends Store<ComplementarState> {
   constructor() {
     super(createInitialState());
   }
+/**
+ * Establece si el contrato permanecerá vigente.
+ * Este valor se guarda en el estado para su uso posterior en validaciones o envíos.
+ */
 public setPermanecera(permanecera: string): void {
   this.update((state) => ({
     ...state,
@@ -109,6 +113,10 @@ public setPermanecera(permanecera: string): void {
   }));
 }
 
+/**
+ * Establece el tipo de registro o contrato según lo definido por el usuario.
+ * Este campo puede ser utilizado para distinguir entre diferentes modalidades.
+ */
 public setTipo(tipo: string): void {
   this.update((state) => ({
     ...state,
@@ -116,6 +124,10 @@ public setTipo(tipo: string): void {
   }));
 }
 
+/**
+ * Establece la fecha en la que se firmó el documento.
+ * Este dato es importante para validar la vigencia del contrato.
+ */
 public setFechaDeFirma(fechaDeFirma: string): void {
   this.update((state) => ({
     ...state,
@@ -123,78 +135,157 @@ public setFechaDeFirma(fechaDeFirma: string): void {
   }));
 }
 
+/**
+ * Establece la fecha en la que finaliza la vigencia del contrato.
+ * Este valor se usa para calcular si el contrato sigue activo.
+ */
 public setFetchaDeFinDeVigencia(fetchaDeFinDeVigencia: string): void {
   this.update((state) => ({
     ...state,
     fetchaDeFinDeVigencia,
   }));
 }
+
+/**
+ * Establece los tipos disponibles o seleccionados en el formulario.
+ * Puede representar una lista de categorías aplicables a la empresa o servicio.
+ */
 public setTipos(tipos: string): void {
-    this.update((state) => ({ ...state, tipos }));
-  }
+  this.update((state) => ({ ...state, tipos }));
+}
 
-  public setCantidad(cantidad: string): void {
-    this.update((state) => ({ ...state, cantidad }));
-  }
+/**
+ * Establece la cantidad numérica relacionada con el registro.
+ * Este valor puede hacer referencia a volúmenes, unidades o montos específicos.
+ */
+public setCantidad(cantidad: string): void {
+  this.update((state) => ({ ...state, cantidad }));
+}
 
-  public setDescripsion(descripsion: string): void {
-    this.update((state) => ({ ...state, descripsion }));
-  }
+/**
+ * Establece la descripción del objeto o actividad relacionada.
+ * Esta información se utiliza para detallar el propósito del trámite.
+ */
+public setDescripsion(descripsion: string): void {
+  this.update((state) => ({ ...state, descripsion }));
+}
 
-  public setMnx(mnx: string): void {
-    this.update((state) => ({ ...state, mnx }));
-  }
+/**
+ * Establece el valor monetario en pesos mexicanos (MNX).
+ * Se puede usar para registrar montos económicos relacionados con la operación.
+ */
+public setMnx(mnx: string): void {
+  this.update((state) => ({ ...state, mnx }));
+}
+
+/**
+ * Establece el total de empleados registrados en la empresa.
+ * Este dato es útil para análisis de capacidad o cumplimiento legal.
+ */
 public setTotalDeEmpleados(totalDeEmpleados: string): void {
   this.update((state) => ({ ...state, totalDeEmpleados }));
 }
 
+/**
+ * Establece la cantidad de empleados directos contratados.
+ * Es útil para diferenciar entre personal directo e indirecto en reportes.
+ */
 public setDirectos(directos: string): void {
   this.update((state) => ({ ...state, directos }));
 }
 
+/**
+ * Establece la cantidad de empleados indirectos asociados.
+ * Se considera importante para determinar el total de fuerza laboral.
+ */
 public setIndirectos(indirectos: string): void {
   this.update((state) => ({ ...state, indirectos }));
 }
 
+/**
+ * Establece el número total de empleados directos (valor alternativo).
+ * Puede ser usado en otras secciones del formulario que requieren ese dato específico.
+ */
 public setDirecto(directo: string): void {
   this.update((state) => ({ ...state, directo }));
 }
 
+/**
+ * Establece el número de cédula fiscal u oficial.
+ * Este dato se requiere para validaciones de identidad o cumplimiento normativo.
+ */
 public setCedula(cedula: string): void {
   this.update((state) => ({ ...state, cedula }));
 }
 
+/**
+ * Establece la fecha de emisión de la cédula.
+ * Ayuda a validar la vigencia del documento presentado.
+ */
 public setFechaCedula(fechaCedula: string): void {
   this.update((state) => ({ ...state, fechaCedula }));
 }
 
+/**
+ * Establece información adicional sobre empleados indirectos.
+ * Se puede usar para detallar funciones o ubicaciones asignadas.
+ */
 public setIndirectosDatos(indirectosDatos: string): void {
   this.update((state) => ({ ...state, indirectosDatos }));
 }
 
+/**
+ * Establece el número o código del contrato.
+ * Es necesario para la identificación y seguimiento del acuerdo.
+ */
 public setContrato(contrato: string): void {
   this.update((state) => ({ ...state, contrato }));
 }
 
+/**
+ * Establece el objeto del contrato, es decir, el propósito o alcance.
+ * Es crucial para especificar qué cubre el acuerdo firmado.
+ */
 public setObjeto(objeto: string): void {
   this.update((state) => ({ ...state, objeto }));
 }
 
+/**
+ * Establece la fecha en que se firmó el contrato.
+ * Este campo se usa para calcular la duración del acuerdo.
+ */
 public setFechaFirma(fechaFirma: string): void {
   this.update((state) => ({ ...state, fechaFirma }));
 }
 
+/**
+ * Establece la fecha en que termina la vigencia del contrato.
+ * Permite controlar el vencimiento y renovación de compromisos legales.
+ */
 public setFechaFinVigencia(fechaFinVigencia: string): void {
   this.update((state) => ({ ...state, fechaFinVigencia }));
 }
 
+/**
+ * Establece el RFC de la empresa participante.
+ * Este identificador fiscal es obligatorio para trámites legales y fiscales.
+ */
 public setRfcEmpresa(rfcEmpresa: string): void {
   this.update((state) => ({ ...state, rfcEmpresa }));
 }
 
+/**
+ * Establece la razón social de la empresa registrada.
+ * Es el nombre legal bajo el cual opera la empresa.
+ */
 public setRazonSocial(razonSocial: string): void {
   this.update((state) => ({ ...state, razonSocial }));
 }
+
+/**
+ * Establece la fracción arancelaria del producto terminado.
+ * Es importante para clasificaciones aduaneras y permisos de exportación/importación.
+ */
 public setFraccionArancelariaProductoTerminado(fraccionArancelariaProductoTerminado: string): void {
   this.update((state) => ({
     ...state,
@@ -202,6 +293,10 @@ public setFraccionArancelariaProductoTerminado(fraccionArancelariaProductoTermin
   }));
 }
 
+/**
+ * Establece la unidad de medida de trabajo (UMT) para el producto.
+ * Este valor es utilizado para calcular volúmenes de producción o exportación.
+ */
 public setUmt(umt: string): void {
   this.update((state) => ({
     ...state,
@@ -209,6 +304,10 @@ public setUmt(umt: string): void {
   }));
 }
 
+/**
+ * Establece la descripción comercial del producto terminado.
+ * Esta descripción se muestra en reportes, facturas o trámites oficiales.
+ */
 public setDescripcionComercialProductoTerminado(descripcionComercialProductoTerminado: string): void {
   this.update((state) => ({
     ...state,
@@ -216,6 +315,10 @@ public setDescripcionComercialProductoTerminado(descripcionComercialProductoTerm
   }));
 }
 
+/**
+ * Establece el número de turnos de producción que maneja la planta.
+ * Se utiliza para calcular la capacidad operativa de la empresa.
+ */
 public setTurnos(turnos: string): void {
   this.update((state) => ({
     ...state,
@@ -223,6 +326,10 @@ public setTurnos(turnos: string): void {
   }));
 }
 
+/**
+ * Establece las horas que conforman cada turno de trabajo.
+ * Este dato es esencial para determinar tiempos productivos diarios.
+ */
 public setHorasPorTurno(horasPorTurno: string): void {
   this.update((state) => ({
     ...state,
@@ -230,6 +337,10 @@ public setHorasPorTurno(horasPorTurno: string): void {
   }));
 }
 
+/**
+ * Establece la cantidad total de empleados en la operación.
+ * Se usa para informes de recursos humanos o productividad.
+ */
 public setCantidadEmpleados(cantidadEmpleados: string): void {
   this.update((state) => ({
     ...state,
@@ -237,6 +348,10 @@ public setCantidadEmpleados(cantidadEmpleados: string): void {
   }));
 }
 
+/**
+ * Establece el número total de máquinas en operación.
+ * Es útil para evaluaciones de capacidad técnica o mantenimiento.
+ */
 public setCantidadMaquinaria(cantidadMaquinaria: string): void {
   this.update((state) => ({
     ...state,
@@ -244,6 +359,10 @@ public setCantidadMaquinaria(cantidadMaquinaria: string): void {
   }));
 }
 
+/**
+ * Establece la descripción general de la maquinaria utilizada.
+ * Este dato ayuda a detallar el equipamiento disponible en planta.
+ */
 public setDescripcionMaquinaria(descripcionMaquinaria: string): void {
   this.update((state) => ({
     ...state,
@@ -251,6 +370,10 @@ public setDescripcionMaquinaria(descripcionMaquinaria: string): void {
   }));
 }
 
+/**
+ * Establece la capacidad instalada mensual de producción.
+ * Se calcula con base en turnos, horas, maquinaria y otros recursos.
+ */
 public setCapacidadInstaladaMensual(capacidadInstaladaMensual: string): void {
   this.update((state) => ({
     ...state,
@@ -258,6 +381,10 @@ public setCapacidadInstaladaMensual(capacidadInstaladaMensual: string): void {
   }));
 }
 
+/**
+ * Establece la capacidad instalada anual de producción.
+ * Se usa para proyecciones de producción a largo plazo.
+ */
 public setCapacidadInstaladaAnual(capacidadInstaladaAnual: string): void {
   this.update((state) => ({
     ...state,
@@ -265,6 +392,10 @@ public setCapacidadInstaladaAnual(capacidadInstaladaAnual: string): void {
   }));
 }
 
+/**
+ * Establece el método o fórmula para calcular la capacidad instalada.
+ * Este valor puede variar según el tipo de industria o producción.
+ */
 public setCalculoCapacidadInstalada(calculoCapacidadInstalada: string): void {
   this.update((state) => ({
     ...state,
@@ -272,12 +403,17 @@ public setCalculoCapacidadInstalada(calculoCapacidadInstalada: string): void {
   }));
 }
 
+/**
+ * Establece el porcentaje de capacidad utilizada.
+ * Se compara con la capacidad total para evaluar eficiencia operativa.
+ */
 public setCapacidadUtilizadaPct(capacidadUtilizadaPct: string): void {
   this.update((state) => ({
     ...state,
     capacidadUtilizadaPct,
   }));
 }
+
 
 
 }

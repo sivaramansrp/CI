@@ -1,9 +1,10 @@
-
+import { FederatoriosState, FederatoriosStore} from '../tramites/federatarios.store';
 import { Injectable } from '@angular/core';
 import { Query } from '@datorama/akita';
-import { FederatoriosState, FederatoriosStore} from '../tramites/federatarios.store';
-
-
+/**
+ * Clase que extiende de Query para manejar el estado de Federatorios.
+ * Proporciona métodos para seleccionar y observar cambios en el estado.
+ */
 @Injectable({ providedIn: 'root' })
 export class FederatoriosQuery extends Query<FederatoriosState> {
   /**

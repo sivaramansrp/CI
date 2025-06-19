@@ -12,7 +12,7 @@ import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 
-import { COMPLEMENTO_DE_PLANTA } from '../../constantes/complementar-planta.enum';
+import { CATALOGO_TIPO,COMPLEMENTO_DE_PLANTA } from '../../constantes/complementar-planta.enum';
 import { ComplementarQuery } from '../../../estados/queries/complementar.query';
 import { FECHA_DE_FIN_DE_VIGENCIA } from '../../constantes/complementar-planta.enum';
 import { FECHA_DE_FIRMA } from '../../constantes/complementar-planta.enum';
@@ -70,14 +70,14 @@ export class ComplementarPlantaComponent implements OnInit {
    * Opciones disponibles para mercancía programa.
    * @property {Array} permaneceraMercanciaProgramaOptions
    */
-   permaneceraMercanciaProgramaOptions =[{ "id": 1, "descripcion": "GUADALAJARA" }];
+   permaneceraMercanciaProgramaOptions =CATALOGO_TIPO;
 
 
   /**
    * Opciones disponibles para documentos.
    * @property {Array} documentoOptions
    */
-  documentoOptions =[{ "id": 1, "descripcion": "GUADALAJARA" }];
+  documentoOptions =CATALOGO_TIPO;
 
 
   /**

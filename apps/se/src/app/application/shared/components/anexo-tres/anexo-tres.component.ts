@@ -72,8 +72,10 @@ export class AnexoTresComponent implements OnInit, OnDestroy {
  *  Controla la habilitación o deshabilitación de los campos. */
   esFormularioSoloLectura: boolean = false;
   /**
-   * Constructor que inyecta servicios de formularios y de estado (store y query).
-   */
+ * Constructor del componente.
+ * Inicializa los servicios y realiza una suscripción al estado de `ConsultaioQuery` para determinar si el formulario debe ser de solo lectura.
+ * Al detectar cambios en el estado, también inicializa el formulario de certificado.
+ */
   constructor(
     private fb: FormBuilder,
     private tramite80104Store: Tramite80104Store,

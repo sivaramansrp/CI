@@ -4,7 +4,7 @@ import { Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ComplementarQuery } from '../../../estados/queries/complementar.query';
 
-import { COMPLEMENTO_DE_PLANTA } from '../../constantes/complementar-planta.enum';
+import { CATALOGO_TIPO,COMPLEMENTO_DE_PLANTA} from '../../constantes/complementar-planta.enum';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
@@ -41,7 +41,7 @@ export class MontosDeInversionComponent implements OnInit {
    * Opciones disponibles para el tipo de inversión.
    * @property {Array} tipoOptions
    */
-  tipoOptions = [{ "id": 1, "descripcion": "JALISCO" }];
+  tipoOptions = CATALOGO_TIPO;
 
   /**
    * Lista de montos de inversión.

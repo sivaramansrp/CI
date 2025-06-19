@@ -53,19 +53,32 @@ export class FederatoriosStore extends Store<FederatoriosState> {
       [fieldName]: value,
     }));
   }
-  public setEstadoDos(estadoDos: string): void {
+ /**
+ * Establece el segundo estado relacionado con el trámite o registro.
+ * Este valor puede representar una ubicación adicional o un estado complementario del proceso.
+ */
+public setEstadoDos(estadoDos: string): void {
   this.update((state) => ({
     ...state,
     estadoDos,
   }));
 }
 
+/**
+ * Establece si existe representación federal en la operación.
+ * Este dato es útil para determinar si la entidad tiene vínculos con autoridades federales.
+ */
 public setRepresentacionFederal(representacionFederal: string): void {
   this.update((state) => ({
     ...state,
     representacionFederal,
   }));
 }
+
+/**
+ * Establece la actividad productiva principal de la empresa.
+ * Esta información describe el tipo de producción o servicios que ofrece la organización.
+ */
 public setActividadProductiva(actividadProductiva: string): void {
   this.update((state) => ({
     ...state,

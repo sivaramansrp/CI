@@ -7,7 +7,8 @@ import { ComplementarState, ComplementarStore } from '../../../estados/tramites/
 import { ComplementosSeccionState, ComplementosSeccionStore } from '../../../estados/tramites/complementos-seccion.store';
 import { FederatoriosState, FederatoriosStore } from '../../../estados/tramites/federatarios.store';
 import { Solicitud80104State, Tramite80104Store } from '../../../estados/tramites/tramite80104.store';
-import { Tramite80101State, Tramite80101Store } from '../estados/tramite80101.store';
+import { Tramite80101State, Tramite80101Store } from '../../80103/estados/tramite80101.store';
+
 
 @Injectable({
   providedIn: 'root',
@@ -44,6 +45,13 @@ actualizarEstadoFormulario(DATOS: Solicitud80104State): void {
   this.tramite80104Store.setAnexoDos(DATOS.anexoDos);
   this.tramite80104Store.setAnexoTres(DATOS.anexoTres);
   }
+   /**
+ * Actualiza todos los estados del store `Tramite80101Store` con los valores proporcionados.
+ * Este método se utiliza generalmente para restaurar el estado previamente guardado del formulario.
+ * Se asignan múltiples campos uno por uno al store para reflejar completamente el estado actual.
+ *
+ * @param {Tramite80101State} DATOS - Objeto que contiene todos los datos necesarios para actualizar el estado del formulario.
+ */
 actualizarEstadoFormularios(DATOS: Tramite80101State): void {
    this.tramite80101Store.setInfoRegistro(DATOS.infoRegistro);
   this.tramite80101Store.setAduanaDeIngreso(DATOS.aduanaDeIngreso);
@@ -79,18 +87,38 @@ this.tramite80101Store.setPlantasPorCompletar(DATOS.empressaSubFabricantePlantas
 this.tramite80101Store.eliminarTablaDatosComplimentos(DATOS.tablaDatosComplimentos);
 this.tramite80101Store.eliminarTablaDatosComplimentosExtranjera(DATOS.tablaDatosComplimentosExtranjera);
   }
-
+/**
+ * Actualiza dinámicamente los campos del estado `ComplementosSeccionStore` con los valores proporcionados.
+ * Recorre todas las entradas del objeto `DATOS` y asigna cada valor al campo correspondiente en el store.
+ * Este método es útil cuando se necesita una actualización flexible sin métodos específicos por campo.
+ *
+ * @param {ComplementosSeccionState} DATOS - Objeto con los valores a actualizar en el estado de complementos.
+ */
 
 actualizarComplementos(DATOS: ComplementosSeccionState): void {
   Object.entries(DATOS).forEach(([key, value]) => {
     this.complementosSeccionStore.setDynamicFieldValue(key, value);
   });
 }
+/**
+ * Actualiza dinámicamente los campos del estado `FederatoriosStore` con los datos proporcionados.
+ * Recorre cada entrada del objeto `DATOS` y asigna su valor correspondiente en el store utilizando claves dinámicas.
+ * Este método permite una actualización general sin necesidad de definir un método específico por cada campo.
+ *
+ * @param {FederatoriosState} DATOS - Objeto con los valores del estado federatorio a actualizar.
+ */
 actualizarFederatorios(DATOS: FederatoriosState): void {
  Object.entries(DATOS).forEach(([key, value]) => {
     this.federatoriosStore.setDynamicFieldValue(key, value);
   });
 }
+/**
+ * Actualiza los valores del estado `ComplementarStore` con los datos proporcionados.
+ * Asigna uno por uno los campos almacenados en el objeto `DATOS` para restaurar o sincronizar el estado del formulario complementar.
+ * Este método se utiliza cuando los datos deben ser cargados desde una fuente persistente como backend o localStorage.
+ *
+ * @param {ComplementarState} DATOS - Objeto con los valores que se desean establecer en el estado `ComplementarStore`.
+ */
 actualizarComplementar(DATOS: ComplementarState): void {
   this.complementarStore.setPermanecera(DATOS.permanecera);
   this.complementarStore.setTipo(DATOS.tipo);
