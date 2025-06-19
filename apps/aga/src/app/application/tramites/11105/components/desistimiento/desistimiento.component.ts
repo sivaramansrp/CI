@@ -5,9 +5,13 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import {ReplaySubject, map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioState } from '@libs/shared/data-access-user/src';
 import { DESISTIMIENTO } from '../../constants/retirad-de-la-autorizacion-de-donaciones.enum';
-import { TituloComponent } from '@libs/shared/data-access-user/src';
+import {TituloComponent } from '@libs/shared/data-access-user/src';
+
 
 /**
  * Componente para gestionar el formulario de desistimiento.
@@ -20,6 +24,22 @@ import { TituloComponent } from '@libs/shared/data-access-user/src';
   styleUrl: './desistimiento.component.scss',
 })
 export class DesistimientoComponent implements OnInit {
+
+/**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
+
+    /**
+     * Subject para manejar la destrucción del componente.
+     */
+    private destroyed$: ReplaySubject<boolean> = new ReplaySubject(1);
+
   /**
    * Evento de salida que emite un valor de tipo cadena.
    * Este evento se utiliza para notificar cuando se debe continuar con una acción específica.
@@ -35,7 +55,9 @@ export class DesistimientoComponent implements OnInit {
    * Constructor de la clase.
    * @param formBuilder Servicio FormBuilder para construir formularios reactivos.
    */
-  constructor(public formBuilder: FormBuilder) {
+  constructor(public formBuilder: FormBuilder,
+     private consultaioQuery: ConsultaioQuery
+  ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
 
@@ -43,11 +65,40 @@ export class DesistimientoComponent implements OnInit {
    * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
    */
   ngOnInit(): void {
+    this.initializeFormalario();
+
+      this.consultaioQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroyed$),
+            map((seccionState) => {
+              this.consultaDatos = seccionState;
+              this.soloLectura = this.consultaDatos.readonly;
+              this.destinarioFormulario();
+            })
+          )
+          .subscribe();
+  }
+
+   initializeFormalario() :void{
     this.desisitimientoForm = this.formBuilder.group({
       folioOriginal: [{ value: '', disabled: true }],
       justificacionDelDesistimiento: [{ value: '' }, Validators.maxLength(200)],
     });
+    this.destinarioFormulario();
     this.setFormValues();
+  }
+
+     /**
+   * Configura el formulario del destinatario según el estado de la solicitud.
+   *  Si el formulario está en modo solo lectura, deshabilita los campos del formulario.
+   *  @returns {void}
+   */
+    destinarioFormulario(): void {
+    if (this.soloLectura) {
+      this.desisitimientoForm.disable();
+    } else {
+      this.desisitimientoForm.enable();
+    }
   }
 
   /**

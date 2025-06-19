@@ -2,6 +2,8 @@ import {
   CatalogoSelectComponent,
   CatalogosSelect,
   ConfiguracionColumna,
+  ConsultaioQuery,
+  ConsultaioState,
   InputRadioComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
@@ -22,7 +24,7 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ReplaySubject, takeUntil } from 'rxjs';
+import {ReplaySubject, map,takeUntil } from 'rxjs';
 import { Catalogo } from '@libs/shared/data-access-user/src/core/models/40102/transportista-terrestre.model';
 import { CommonModule } from '@angular/common';
 import { DATOS_GENERERALES_DE_LA_SOLICICTUD } from '../../constants/retirad-de-la-autorizacion-de-donaciones.enum';
@@ -54,7 +56,18 @@ const TERCEROS_TEXTO_DE_ADJUNTAR =
   ],
 })
 export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
-  
+ 
+/**
+   * Subject para destruir notificador.
+   */
+  consultaDatos!: ConsultaioState;
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  soloLectura: boolean = false;
+
+ 
   /**
    * Evento de salida que emite un valor de tipo cadena.
    * Este evento se utiliza para notificar cuando se debe continuar con una acción específica.
@@ -197,7 +210,8 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
   constructor(
     private retiradaDeLaAutorizacionDeDonacionesService: RetiradaDeLaAutorizacionDeDonacionesService,
     public formBuilder: FormBuilder,
-    private validacionesService: ValidacionesFormularioService
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
   ) {
     // El constructor se utiliza para la inyección de dependencias.
   }
@@ -210,6 +224,31 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
     this.buscarAduanaDatos();
     this.buscarpropositoDeLaMercanciaDatos();
     this.buscarDetallesDelMercanciaDatos();
+
+    
+     this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.soloLectura = this.consultaDatos.readonly;
+          this.domecilioFormulario();
+        })
+      )
+      .subscribe();
+  }
+
+    /**
+   * Configura el formulario del destinatario según el estado de la solicitud.
+   *  Si el formulario está en modo solo lectura, deshabilita los campos del formulario.
+   *  @returns {void}
+   */
+    domecilioFormulario(): void {
+    if (this.soloLectura) {
+      this.tramiteForm.disable();
+    } else {
+      this.tramiteForm.enable();
+    }
   }
 
   /**
@@ -365,6 +404,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
         opcion: [{ value: 'false' }, Validators.maxLength(50)],
       }),
     });
+     this.domecilioFormulario();
   }
 
   /**

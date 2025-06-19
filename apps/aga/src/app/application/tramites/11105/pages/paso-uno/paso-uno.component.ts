@@ -1,17 +1,22 @@
 import {
   BtnContinuarComponent,
+  ConsultaioQuery,
+  ConsultaioState,
   DatosPasos,
   FormularioDinamico,
   ListaPasosWizard,
   SolicitanteComponent,
+  ValidacionesFormularioService,
   WizardComponent,
 } from '@ng-mf/data-access-user';
 import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DatosGeneralesDeLaSolicitudComponent } from '../../components/datos-generales-de-la-solicitud/datos-generales-de-la-solicitud.component';
 import { DesistimientoComponent } from '../../components/desistimiento/desistimiento.component';
 import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/11105/pasos.enum';
+import { RetiradaDeLaAutorizacionDeDonacionesService } from '../../services/retirad-de-la-autorizacion-de-donaciones.service';
+import { takeUntil } from 'rxjs';
 
 interface AccionBoton {
   /**
@@ -42,7 +47,21 @@ interface AccionBoton {
     BtnContinuarComponent,
   ],
 })
-export class PasoUnoComponent {
+export class PasoUnoComponent implements OnInit, OnDestroy {
+
+    /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esDatosRespuesta: boolean = false;
+
+  
   /**
    * Evento que se emite al continuar con el flujo del trámite.
    */
@@ -92,6 +111,47 @@ export class PasoUnoComponent {
     txtBtnAnt: 'Anterior',
     txtBtnSig: 'Continuar',
   };
+
+
+  /**
+   * Constructor del componente.
+   *
+   * @param {Tramite110217Store} store - Store para gestionar el estado del trámite.
+   * @param {Tramite110217Query} tramiteQuery - Query para obtener el estado del trámite.
+   */
+  constructor(
+    private retiradaDeLaAutorizacionDeDonacionesService: RetiradaDeLaAutorizacionDeDonacionesService,
+    public formBuilder: FormBuilder,
+    private validacionesService: ValidacionesFormularioService,
+    private consultaioQuery: ConsultaioQuery
+  ) {}
+
+
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   *
+   * Este método suscribe al estado del trámite y establece la pestaña activa
+   * según el estado almacenado.
+   */
+  ngOnInit(): void {
+   
+
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+        })
+      )
+      .subscribe();
+   
+    if (this.consultaDatos.update) {
+      this.fetchGetDatosConsulta();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+    this.indice = this.tramiteState.pestanaActiva;
+  }
 
   /**
    * Selecciona la pestaña indicada por el índice.
