@@ -22,7 +22,7 @@ export class ImportadorExportadorService {
    * Obtiene el catálogo de aduanas por las que ingresará la mercancía.
    * @returns Observable con la respuesta del catálogo de aduanas.
    */
-  getAduanaIngresara(): void {
+  getAduanaIngresara() {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/10301/aduanaIngresara.json'
     ).pipe(
@@ -34,7 +34,7 @@ export class ImportadorExportadorService {
    * Obtiene el catálogo de años.
    * @returns Observable con la respuesta del catálogo de años.
    */
-  getAno(): void {
+  getAno() {
     return this.http.get<RespuestaCatalogos>('assets/json/10301/ano.json').pipe(
       tap(response => this.store.setAno(response.data))
     );
@@ -44,7 +44,7 @@ export class ImportadorExportadorService {
    * Obtiene el catálogo de condiciones.
    * @returns Observable con la respuesta del catálogo de condiciones.
    */
-  getCondicion(): void {
+  getCondicion() {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/10301/condicion.json'
     ).pipe(
@@ -56,7 +56,7 @@ export class ImportadorExportadorService {
    * Obtiene el catálogo de países.
    * @returns Observable con la respuesta del catálogo de países.
    */
-  getPais(): void {
+  getPais() {
     return this.http.get<RespuestaCatalogos>('assets/json/10301/pais.json').pipe(
       tap(response => this.store.setPais(response.data))
     );
@@ -66,7 +66,7 @@ export class ImportadorExportadorService {
    * Obtiene el catálogo de tipos de documentos.
    * @returns Observable con la respuesta del catálogo de tipos de documentos.
    */
-  getTipoDocumento(): void {
+  getTipoDocumento() {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/10301/tipodocumento.json'
     ).pipe(
@@ -74,7 +74,7 @@ export class ImportadorExportadorService {
     );
   }
 
-  getFechasSeleccionadas(): void{
+  getFechasSeleccionadas(){
     return this.http.get<RespuestaCatalogos>(
       'assets/json/10301/fechasSeleccionadas.json'
     ).pipe(
@@ -82,7 +82,7 @@ export class ImportadorExportadorService {
     );
   }
 
-  getDocumentos(): void {
+  getDocumentos() {
     return this.http.get<RespuestaCatalogos>(
       'assets/json/10301/documentos.json'
     )
