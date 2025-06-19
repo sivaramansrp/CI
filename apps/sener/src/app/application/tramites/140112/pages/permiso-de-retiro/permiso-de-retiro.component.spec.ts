@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PermisoDeRetiroComponent } from './permiso-de-retiro.component';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('PermisoDeRetiroComponent', () => {
   let component: PermisoDeRetiroComponent;
@@ -8,7 +9,9 @@ describe('PermisoDeRetiroComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PermisoDeRetiroComponent]
+      declarations: [],
+      imports: [PermisoDeRetiroComponent],
+      providers: [provideHttpClient()]
     })
     .compileComponents();
     

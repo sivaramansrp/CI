@@ -2,13 +2,17 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { PasoUnoComponent } from './paso-uno.component';
 
+import { provideHttpClient } from '@angular/common/http';
+
 describe('PasoUnoComponent', () => {
   let component: PasoUnoComponent;
   let fixture: ComponentFixture<PasoUnoComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [PasoUnoComponent]
+      declarations: [],
+      imports: [PasoUnoComponent],
+      providers: [provideHttpClient()]
     })
     .compileComponents();
     

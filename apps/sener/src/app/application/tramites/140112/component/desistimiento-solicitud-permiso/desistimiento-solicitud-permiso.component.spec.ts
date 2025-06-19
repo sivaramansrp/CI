@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DesistimientoSolicitudPermisoComponent } from './desistimiento-solicitud-permiso.component';
 import { NO_ERRORS_SCHEMA } from '@angular/core';
+import { provideHttpClient } from '@angular/common/http';
 
 describe('DesistimientoSolicitudPermisoComponent', () => {
   let component: DesistimientoSolicitudPermisoComponent;
@@ -8,8 +9,10 @@ describe('DesistimientoSolicitudPermisoComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [DesistimientoSolicitudPermisoComponent],
-      schemas: [NO_ERRORS_SCHEMA]
+      declarations: [],
+      imports: [DesistimientoSolicitudPermisoComponent],
+      schemas: [NO_ERRORS_SCHEMA],
+      providers: [provideHttpClient()]
     })
     .compileComponents();
   });
