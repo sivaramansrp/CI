@@ -183,6 +183,7 @@
                   ></app-tabla-dinamica> 
           </div>
         </div>
+        @if(!esFormularioSoloLectura){
         <div class="row my-5">
           <div class="col-md-12 d-flex justify-content-end">
             <button type="button" class="btn btn-default" [disabled]="!notificationCheck">Modificar</button>
@@ -190,6 +191,7 @@
             <button type="button" class="btn btn-primary ms-3" [disabled]="!notificationCheck">Agregar</button>
           </div>
         </div>
+      }
       </div>
     </form>
       <div>`
