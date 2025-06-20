@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Catalogo, ConfiguracionColumna, ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Contenedor11202State, Contenedor11202Store } from '../../../../core/estados/tramites/contenedor11202.store';
