@@ -154,7 +154,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
       tipo: [this.derechoState?.tipo],
       programa: [this.derechoState?.programa],
       actividadActual: [this.derechoState?.actividadActual],
-      actividadProductiva: [this.derechoState?.actividadProductiva, Validators.required],
+      actividadProductiva: [this.derechoState?.actividadProductiva, Validators.required]
     });
   }
 
