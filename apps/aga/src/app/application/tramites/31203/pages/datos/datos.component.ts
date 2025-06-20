@@ -57,6 +57,14 @@ export class DatosComponent implements OnInit, OnDestroy, AfterViewInit {
    */
   indice: number = 1;
 
+  /**
+ * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+ *
+ * - Se suscribe al observable `selectConsultaioState$` para obtener el estado de la consulta y lo asigna a `consultaState`.
+ * - Utiliza `takeUntil` para cancelar la suscripción automáticamente cuando el componente se destruye, evitando fugas de memoria.
+ * - Si el estado indica que está en modo actualización (`update`), llama a `guardarDatosFormulario()` para cargar los datos.
+ * - Si no está en modo actualización, activa el modo de solo lectura para mostrar los datos de respuesta.
+ */
     ngOnInit(): void {
     this.consultaQuery.selectConsultaioState$.pipe(
       takeUntil(this.destroyNotifier$), // Se desuscribe al destruir el componente
@@ -64,7 +72,6 @@ export class DatosComponent implements OnInit, OnDestroy, AfterViewInit {
         this.consultaState = consultaState; // Asigna el estado de la consulta
       })
     ).subscribe()
-    console.log('Estado de la consulta:', this.consultaState); // Imprime el estado de la consulta en la consola
     if (this.consultaState?.update) {
       this.guardarDatosFormulario(); // Si está en modo actualización, guarda los datos del formulario
     } else {
@@ -86,7 +93,6 @@ export class DatosComponent implements OnInit, OnDestroy, AfterViewInit {
         takeUntil(this.destroyNotifier$) // Se desuscribe al destruir el componente
       )
       .subscribe((resp) => {
-        console.log('Datos de respuesta del servidor:', resp); // Imprime los datos de respuesta en la consola
         if (resp) {
           this.esDatosRespuesta = true; // Marca que hay datos de respuesta
           this.service.actualizarEstadoFormulario(resp); // Actualiza el estado del formulario con la respuesta
