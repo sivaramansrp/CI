@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioQuery, ConsultaioState, TituloComponent } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
+
 import {
   FormBuilder,
   FormGroup,

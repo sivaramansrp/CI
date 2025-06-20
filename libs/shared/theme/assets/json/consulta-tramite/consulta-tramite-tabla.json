@@ -2274,6 +2274,15 @@
         "numeroDeProcedimiento": "120403"
     },
     {
+        "id": "231002",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SEMARNAT",
+        "numeroDeProcedimiento": "231002"
+    },
+    {
     "id": "140205",
     "tipoDeTramite": "Datos generales del trámite",
     "fecha": "2025-06-17",

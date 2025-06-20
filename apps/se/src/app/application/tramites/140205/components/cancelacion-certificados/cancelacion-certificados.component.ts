@@ -14,13 +14,12 @@ import { ReplaySubject } from 'rxjs';
 
 import {
   CatalogoSelectComponent,
-  ConsultaioQuery,
-  ConsultaioState,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
 import { Subject } from 'rxjs';
 
 import { CancelacionCertificadosService } from '../../services/cancelacionCertificados.service';
