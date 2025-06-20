@@ -9,7 +9,7 @@ import { CommonModule } from '@angular/common';
 
 import { CertificadoZoosanitarioServiceService } from '../../services/220201/certificado-zoosanitario.service';
 
-import { ApiSolicitud, DatosDeLaSolicitud, PagoDeDerechos, ValidarEnvio } from '../../models/220201/capturar-solicitud.model';
+import { CapturarSolicitud } from '../../models/220201/capturar-solicitud.model';
 import { DatosDeLaSolicitudComponent } from '../../components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { DatosParaMovilizacionNacionalComponent } from '../../components/datos-para-movilizacion-nacional/datos-para-movilizacion-nacional.component';
 import { PagoDeDerechosComponent } from '../../components/pago-de-derechos/pago-de-derechos.component';
@@ -74,7 +74,7 @@ if(seccionState.update){
      this.certificadoZoosanitarioServices.guardarDatosFormulario()
           .pipe(takeUntil(this.destroyNotifier$))
           .subscribe((data) => {
-   this.certificadoZoosanitarioServices.storeDatosFormulario(data as ApiSolicitud);
+   this.certificadoZoosanitarioServices.storeDatosFormulario(data as CapturarSolicitud);
           }, (error) => {
             console.error(error);
           });

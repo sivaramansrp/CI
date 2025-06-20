@@ -1,5 +1,4 @@
 import {
-  ApiSolicitud,
   CapturarSolicitud,
   DatosDeLaSolicitud,
   DatosParaMovilizacionNacional,
@@ -80,6 +79,8 @@ export class CertificadoZoosanitarioServiceService {
   updateTercerosRelacionados(tercerosRelacionados: PersonaTerceros[]): void {
     this.zoosanitarioStore.actualizarTercerosRelacionados(tercerosRelacionados);
   }
+
+  
 
   /**
    * Actualiza los estados de validación del formulario en el store.
@@ -197,8 +198,8 @@ export class CertificadoZoosanitarioServiceService {
      * 
      * @memberof CertificadoZoosanitarioService
      */
-    public guardarDatosFormulario(): Observable<ApiSolicitud> {
-      return this.http.get<ApiSolicitud>('assets/json/220201/capturarSolicitud.json');
+    public guardarDatosFormulario(): Observable<CapturarSolicitud> {
+      return this.http.get<CapturarSolicitud>('assets/json/220201/capturarSolicitud.json');
     }
     /**
      * @method storeDatosFormulario
@@ -210,10 +211,11 @@ export class CertificadoZoosanitarioServiceService {
      * 
      * @memberof CertificadoZoosanitarioService
      */
-    public storeDatosFormulario(datos: ApiSolicitud): void {
-    this.updatePagoDeDerechos(datos?.pagoDeDerechos || {} as PagoDeDerechos);
+    public storeDatosFormulario(datos: CapturarSolicitud): void {
+   this.updatePagoDeDerechos(datos?.pagoDeDerechos || {} as PagoDeDerechos);
    this.updateDatosDeLaSolicitud(datos?.datosDeLaSolicitud || {} as DatosDeLaSolicitud);
    this.updateDatosParaMovilizacionNacional(datos?.datosParaMovilizacionNacional || {} as DatosDeLaSolicitud);
-   this.updateTercerosRelacionados(datos?.tercerosRelacionados || {} as ValidarEnvio);
+   this.updateTercerosRelacionados(datos?.tercerosRelacionados || {} as PersonaTerceros[] );
+   this.updateValidarEnvio(datos?.validarEnvio || {} as ValidarEnvio);
     }
 }
