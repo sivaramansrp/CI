@@ -159,36 +159,6 @@ export interface Solicitud11102State {
   datosDelMercancia: [];
 }
 
-export interface ModificacionDonacionesImmexResponse {
-  modificacionDonacionesImmex: {
-    organismoPublico: string;
-    aduana: { id: number; descripcion: string }[];
-    pais: { id: number; descripcion: string }[];
-    rfc: string;
-    numeroProgramaImmex: string;
-    razonSocial: string;
-    correoElectronicoOpcional: string;
-    telefonoOpcional: string;
-    calle: string;
-    numeroExterior: string;
-    numeroInterior: string;
-    telefono: string;
-    correoElectronico: string;
-    codigoPostal: string;
-    estado: string;
-    colonia: string;
-    datosMercancia: {
-      tipoDeMercancia: string;
-      cantidad: string;
-      unidadMedida: string;
-      ano: string;
-      modelo: string;
-      marca: string;
-      serie: string;
-      condicionMercancia: string;
-    };
-  };
-}
 /**
  * Función que crea el estado inicial de la solicitud 11102.
  * @returns Estado inicial de la solicitud.

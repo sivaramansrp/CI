@@ -2463,14 +2463,5 @@
     "diasTranscurridos": "4",
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260301"
-  },
-  {
-    "id": 11102,
-    "tipoDeTramite": "Solicitud de cs Permiso",
-    "fecha": "2023-10-01",
-    "fechaActualizacion": "2023-10-05",
-    "diasTranscurridos": "4",
-    "departamento": "AGA",
-    "numeroDeProcedimiento": "11102"
   }
 ]
