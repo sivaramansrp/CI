@@ -69,7 +69,6 @@ import {
   TIPO_DESPACHO_DDEX,
   TIPO_OPERACION_EXPORTACION,
   TRANSPORTE,
-  UN_DIA,
   VEHICULO,
 } from '../../../../core/enums/5701/tramite5701.enum';
 import {
@@ -156,7 +155,6 @@ import {
 } from '../../../../core/enums/5701/mensajes-modal-5701.enum';
 import { SIN_VALOR_SELECT } from '@libs/shared/data-access-user/src/core/enums/transporte-componente.enum';
 import { ValidaDespachoService } from '../../../../core/services/5701/valida-despacho.service';
-import { set } from 'date-fns';
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',

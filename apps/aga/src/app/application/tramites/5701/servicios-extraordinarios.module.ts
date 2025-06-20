@@ -4,7 +4,6 @@ import {
   CatalogosService,
   InputRadioComponent,
   NotificacionesComponent,
-  SoloLetrasNumerosDirective,
   SoloNumerosDirective,
   TablaDinamicaComponent,
   TransporteComponent,
