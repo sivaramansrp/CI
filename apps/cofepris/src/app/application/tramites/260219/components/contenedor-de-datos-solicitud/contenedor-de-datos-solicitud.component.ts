@@ -18,6 +18,7 @@ import {
 } from '../../estados/tramite260219Store.store';
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { ELEMENTOS_REQUERIDOS } from '../../constants/remedios-herbolarios.enum';
 import { ID_PROCEDIMIENTO } from '../../constants/remedios-herbolarios.enum';
@@ -51,6 +52,14 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    * Observable utilizado para notificar la destrucción del componente y liberar recursos.
    */
   private destroyNotifier$: Subject<void> = new Subject();
+
+   /**
+   * que indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, el formulario no permite modificaciones por parte del usuario.
+   *
+   * @type {boolean}
+   */
+   esFormularioSoloLectura!: boolean;
 
   /**
    * @property {Tramite260219State} tramiteState
@@ -150,7 +159,8 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
   constructor(
     private tramite260219Query: Tramite260219Query,
-    private tramite260219Store: Tramite260219Store
+    private tramite260219Store: Tramite260219Store,
+    private consultaQuery: ConsultaioQuery
   ) {
         // No se necesita lógica de inicialización adicional.
   }
@@ -174,6 +184,15 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
+      this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+      )
+      .subscribe((seccionState) => {
+        if(!seccionState.create && seccionState.procedureId === '260219') {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        } 
+      });
   }
 
   /**

@@ -34,6 +34,12 @@ import { Tramite260103Query } from '../../estados/tramite260103Query.query';
 })
 export class ImporticonMercanciaSanitarioComponent implements OnInit, OnDestroy {
 
+   /**
+   * @property {number} idProcedimiento
+   * Identificador del procedimiento actual.
+   */
+  public readonly idProcedimiento:number = 260103;
+
   /**
    * @property {Subject<void>} destroyNotifier$
    * Subject utilizado para limpiar las suscripciones activas al destruir el componente.

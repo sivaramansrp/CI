@@ -1,6 +1,5 @@
-/*
-* VistaUnoComponent
-*/
+// Importaciones necesarias para el manejo de rutas, componentes, constantes y modelos  
+// utilizados en la gestión de anexos del programa industrial.
 import { ANEXO_IMPORTACION_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ANEXO_I_SERVICIO } from '../../../../shared/constantes/anexo-dos-y-tres.enum';
 import { ActivatedRoute } from '@angular/router';
@@ -29,7 +28,6 @@ import { takeUntil } from 'rxjs';
   * @implements {OnInit}
   * @implements {OnDestroy}
   */
-
 @Component({
   selector: 'app-anexo-vista-uno',
   standalone: true,
@@ -88,14 +86,14 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
    * @param {Tramite80101Store} store - Almacén de estado para gestionar los datos del trámite.
    * @param {Tramite80101Query} query - Consulta para obtener los datos del trámite.
    */
-
   constructor(private router: Router, private activatedRoute: ActivatedRoute,
     private store: Tramite80101Store,
     private query: Tramite80101Query) { }
-/*
-* Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
-*/
+// Inicializa las suscripciones para importar y exportar datos del Anexo Uno y Dos.  
+// Actualiza las listas locales si los datos recibidos contienen elementos.
   ngOnInit(): void {
+     // Se suscribe a los cambios en la lista del Anexo Dos desde el store.  
+    // Actualiza la variable local si la lista contiene elementos.
     this.query.selectImportarTablsDatos$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((importarTablsDatos) => {
@@ -103,7 +101,8 @@ export class AnexoVistaUnoComponent implements OnInit, OnDestroy {
           this.anexoUnoTablaLista = importarTablsDatos;
         }
       });
-
+// Se suscribe a los cambios en la lista del Anexo Tres desde el store.  
+// Actualiza la variable local si la lista contiene elementos.
     this.query.selectExportarTablsDatos$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((exportarTablsDatos) => {

@@ -1,5 +1,5 @@
 import { Catalogo } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from 'libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
 import { CatalogosSelect } from '@ng-mf/data-access-user';
 import { ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';

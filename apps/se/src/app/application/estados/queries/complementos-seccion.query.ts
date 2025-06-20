@@ -21,7 +21,12 @@ export class ComplementosSeccionQuery extends Query<ComplementosSeccionState> {
   selectExportarIlustraciones$ = this.select((state) => {
     return state;
   });
-
+    /**
+   * Selecciona el estado completo de la solicitud
+   */
+  selectSolicitud$ = this.select((state) => {
+    return state;
+  });
    
   /**
    *  * compodoc
