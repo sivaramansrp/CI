@@ -217,6 +217,17 @@ export class PagoDeDerechoComponent implements OnDestroy,OnInit,AfterViewInit {
        }
         }
 
+          /**
+   * @method onFechaCambiada
+   * @description Actualiza la fecha de pago en el formulario.
+   *
+   * @param {string} fecha - Fecha seleccionada en el componente `InputFecha`.
+   */
+  onFechaCambiada(fecha: string): void {
+    this.pagoForm.patchValue({ fechaPago: fecha });
+    this.actualizarPago();
+  }
+
   /**
    * @desc Actualiza el objeto de pago de derechos y emite el evento correspondiente.
    * @memberof PagoDeDerechoComponent

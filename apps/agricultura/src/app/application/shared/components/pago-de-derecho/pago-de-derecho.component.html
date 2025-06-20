@@ -95,9 +95,8 @@
                [datos]="fechaInicioInput"
                name="fechaPago"
                (change)="actualizarPago()"
-               formControlName="fechaPago"
+               (valorCambiado)="onFechaCambiada($event)"
                [isDisabled]="true"
-               
                ></input-fecha>
             </div>
          </div>
