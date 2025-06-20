@@ -18,6 +18,7 @@ import {
 } from '../../estados/tramite260210Store.store';
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { ID_PROCEDIMIENTO } from '../../constants/medicos-uso.enum';
 import { Subject } from 'rxjs';
@@ -135,6 +136,12 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   public readonly idProcedimiento = ID_PROCEDIMIENTO;
 
   /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  public esFormularioSoloLectura: boolean = false; 
+
+  /**
    * @constructor
    * @description Initializes dependencies and services used within this component.
    *
@@ -145,8 +152,17 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
    */
   constructor(
     private Tramite260210Query: Tramite260210Query,
-    private tramite260214Store: Tramite260214Store
-  ) {}
+    private tramite260214Store: Tramite260214Store, private consultaQuery: ConsultaioQuery
+      ) {
+        this.consultaQuery.selectConsultaioState$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.esFormularioSoloLectura = seccionState.readonly;
+            })
+          )
+          .subscribe();
+        }
 
   /**
    * @method ngOnInit

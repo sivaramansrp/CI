@@ -1,5 +1,11 @@
 import * as moment from 'moment';
-import { Component, EventEmitter, HostListener, Input, OnChanges, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  HostListener,
+  Input,
+  OnInit, Output
+} from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MESES, SEMANA } from '../../../core/enums/constantes-alertas.enum';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
@@ -9,50 +15,90 @@ import { InputFecha } from '../../../core/models/shared/components.model';
 @Component({
   selector: 'input-fecha',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    BsDatepickerModule,
-  ],
+  imports: [CommonModule, ReactiveFormsModule, BsDatepickerModule],
   templateUrl: './input-fecha.component.html',
   styleUrl: './input-fecha.component.scss',
 })
-export class InputFechaComponent implements OnChanges {
+export class InputFechaComponent implements OnInit {
+  /**
+   * Emite el valor seleccionado cuando cambia.
+   */
   @Output() valorCambiado: EventEmitter<string> = new EventEmitter();
+
+  /**
+   * Fecha establecida desde el componente padre.
+   */
   @Input() setFecha!: string;
+
+  /**
+   * Datos requeridos para inicializar el componente.
+   */
   @Input({ required: true }) datos!: InputFecha;
+
+  /**
+   * Indica si se debe mostrar el ícono de ayuda (círculo con signo de interrogación).
+   */
   @Input() tooltipQuestionCircle: boolean = false;
+
+  /**
+   * Arreglo con los nombres de los meses.
+   */
   meses = MESES;
+
+  /**
+   * Arreglo con los días de la semana.
+   */
   semana = SEMANA;
 
+  /**
+   * Lista de años disponibles para selección.
+   */
   anios: number[] = [];
+
+  /**
+   * Arreglo de meses disponibles con nombre, valor numérico y semana de inicio.
+   */
   mountSelect!: { name: string; value: number; indexWeek: number }[];
+
+  /**
+   * Controla si se debe mostrar o no el contenido del componente.
+   */
   mostrar: boolean = false;
+
+  /**
+   * Formulario reactivo del componente.
+   */
   Formulario!: FormGroup;
 
-  constructor(
-    private fb: FormBuilder
-  ) {
+  /**
+   * Indica si se debe mostrar un ícono decorativo.
+   */
+  @Input() icono: boolean = true;
+  /**
+   * Bandera para indicar si el control debe estar deshabilitado.
+   */
+  @Input() isDisabled!: boolean;
+
+  constructor(private fb: FormBuilder) {
     moment.locale('es');
     this.generaanios();
     const FECHA_ACTUAL = moment().format('DD/MM/YYYY');
     const FECHA = FECHA_ACTUAL.split('/');
-    const OBJECT_DATE = moment.utc(`${FECHA[2]}-${FECHA[1]}-${FECHA[0]}`);
+    const OBJECT_DATE = moment(`${FECHA[2]}-${FECHA[1]}-${FECHA[0]}`);
     this.generarFormulario(OBJECT_DATE);
   }
 
-  ngOnChanges():void {
-    if (this.setFecha !== '' && this.setFecha !== null) {
+  ngOnInit(): void {
+    if (this.setFecha) {
       const FECHA = this.setFecha.split('/');
-      const OBJECT_DATE = moment.utc(`${FECHA[2]}-${FECHA[1]}-${FECHA[0]}`);
+      const OBJECT_DATE = moment(`${FECHA[2]}-${FECHA[1]}-${FECHA[0]}`);
       this.generarFormulario(OBJECT_DATE);
       this.Formulario.controls['fechaString'].enable();
       this.Formulario.get('fechaString')?.setValue(
-        moment.utc(OBJECT_DATE).format('DD/MM/YYYY'),
+        moment(OBJECT_DATE).format('DD/MM/YYYY')
       );
       this.Formulario.controls['fechaString'].disable();
-    }
-    else{
+    } else {
       this.Formulario.controls['fechaString'].enable();
       this.Formulario.get('fechaString')?.setValue('');
       this.Formulario.controls['fechaString'].disable();
@@ -74,37 +120,41 @@ export class InputFechaComponent implements OnChanges {
     this.Formulario.controls['fechaString'].disable();
     this.getDayFromDate(
       this.Formulario.get('mes')?.value,
-      this.Formulario.get('anio')?.value,
+      this.Formulario.get('anio')?.value
     );
   }
 
   cambioAnio(event: Event): void {
     this.Formulario.get('anio')?.setValue(
-      (event.target as HTMLInputElement).value,
+      (event.target as HTMLInputElement).value
     );
-    const OBJECT_DATE = moment.utc(
-      `${this.Formulario.get('anio')?.value}-${this.Formulario.get('mes')?.value.toString().padStart(2, '0')}-01`,
+    const OBJECT_DATE = moment(
+      `${this.Formulario.get('anio')?.value}-${this.Formulario.get('mes')
+        ?.value.toString()
+        .padStart(2, '0')}-01`
     );
     this.Formulario.get('fechaSeleccionada')?.setValue(OBJECT_DATE);
 
     this.getDayFromDate(
       this.Formulario.get('mes')?.value,
-      this.Formulario.get('anio')?.value,
+      this.Formulario.get('anio')?.value
     );
   }
 
   cambioMes(event: Event): void {
     this.Formulario.get('mes')?.setValue(
-      (event.target as HTMLInputElement).value,
+      (event.target as HTMLInputElement).value
     );
-    const OBJECT_DATE = moment.utc(
-      `${this.Formulario.get('anio')?.value}-${this.Formulario.get('mes')?.value.toString().padStart(2, '0')}-01`,
+    const OBJECT_DATE = moment(
+      `${this.Formulario.get('anio')?.value}-${this.Formulario.get('mes')
+        ?.value.toString()
+        .padStart(2, '0')}-01`
     );
     this.Formulario.get('fechaSeleccionada')?.setValue(OBJECT_DATE);
 
     this.getDayFromDate(
       this.Formulario.get('mes')?.value,
-      this.Formulario.get('anio')?.value,
+      this.Formulario.get('anio')?.value
     );
   }
 
@@ -120,8 +170,8 @@ export class InputFechaComponent implements OnChanges {
   }
 
   getDayFromDate(mount: number, year: number): void {
-    const START_DATE = moment.utc(
-      `${year}-${mount.toString().padStart(2, '0')}-01`,
+    const START_DATE = moment(
+      `${year}-${mount.toString().padStart(2, '0')}-01`
     );
     const END_DATE = START_DATE.clone().endOf('month');
     const DIFF_DAYS = END_DATE.diff(START_DATE, 'days', true);
@@ -131,7 +181,7 @@ export class InputFechaComponent implements OnChanges {
       const IN = parseInt(a) + 1;
       const DIA_FORMATO = IN > 9 ? IN : '0' + IN;
       const DAY_OBJECT = moment(
-        `${year}-${mount.toString().padStart(2, '0')}-${DIA_FORMATO}`,
+        `${year}-${mount.toString().padStart(2, '0')}-${DIA_FORMATO}`
       );
       return {
         name: DAY_OBJECT.format('dddd'),
@@ -149,14 +199,16 @@ export class InputFechaComponent implements OnChanges {
         .subtract(1, 'month');
       this.Formulario.get('mes')?.setValue(PREV_DATE.format('M'));
       this.Formulario.get('anio')?.setValue(PREV_DATE.format('YYYY'));
-      const OBJECT_DATE = moment.utc(
-        `${this.Formulario.get('anio')?.value}-${this.Formulario.get('mes')?.value.toString().padStart(2, '0')}-01`,
+      const OBJECT_DATE = moment(
+        `${this.Formulario.get('anio')?.value}-${this.Formulario.get('mes')
+          ?.value.toString()
+          .padStart(2, '0')}-01`
       );
       this.Formulario.get('fechaSeleccionada')?.setValue(OBJECT_DATE);
 
       this.getDayFromDate(
         this.Formulario.get('mes')?.value,
-        this.Formulario.get('anio')?.value,
+        this.Formulario.get('anio')?.value
       );
     } else {
       const NEXT_DATE = this.Formulario.get('fechaSeleccionada')
@@ -164,17 +216,20 @@ export class InputFechaComponent implements OnChanges {
         .add(1, 'month');
       this.Formulario.get('mes')?.setValue(NEXT_DATE.format('M'));
       this.Formulario.get('anio')?.setValue(NEXT_DATE.format('YYYY'));
-      const OBJECT_DATE = moment.utc(
-        `${this.Formulario.get('anio')?.value}-${this.Formulario.get('mes')?.value.toString().padStart(2, '0')}-01`,
+      const OBJECT_DATE = moment(
+        `${this.Formulario.get('anio')?.value}-${this.Formulario.get('mes')
+          ?.value.toString()
+          .padStart(2, '0')}-01`
       );
       this.Formulario.get('fechaSeleccionada')?.setValue(OBJECT_DATE);
 
       this.getDayFromDate(
         this.Formulario.get('mes')?.value,
-        this.Formulario.get('anio')?.value,
+        this.Formulario.get('anio')?.value
       );
     }
   }
+
 
   clickDay(day: { name: string; value: number; indexWeek: number }): void {
     const MOUNT_YEAR =
@@ -185,7 +240,7 @@ export class InputFechaComponent implements OnChanges {
     this.Formulario.get('dia')?.setValue(day.value);
     this.Formulario.controls['fechaString'].enable();
     this.Formulario.get('fechaString')?.setValue(
-      moment.utc(OBJECT_DATE).format('DD/MM/YYYY'),
+      moment(OBJECT_DATE).format('DD/MM/YYYY')
     );
     this.Formulario.controls['fechaString'].disable();
     this.Formulario.get('fechaSeleccionada')?.setValue(OBJECT_DATE);
@@ -201,23 +256,23 @@ export class InputFechaComponent implements OnChanges {
   }
 
   /**
-  * @method onDocumentClick
-  * @description
-  * Este método escucha eventos de clic en el documento para determinar si el usuario hizo clic fuera del calendario. 
-  * Si el clic ocurre fuera del calendario, se oculta el componente del calendario.
-  * 
-  * Funcionalidad:
-  * - Verifica si el calendario está visible (`mostrar`).
-  * - Comprueba si el clic ocurrió fuera del elemento del calendario.
-  * - Si el clic es externo, cambia la propiedad `mostrar` a `false` para ocultar el calendario.
-  * 
-  * @param {Event} event - Evento de clic en el documento.
-  * 
-  * @example
-  * // Si el usuario hace clic fuera del calendario:
-  * this.onDocumentClick(event);
-  * // El calendario se oculta.
-  */
+   * @method onDocumentClick
+   * @description
+   * Este método escucha eventos de clic en el documento para determinar si el usuario hizo clic fuera del calendario.
+   * Si el clic ocurre fuera del calendario, se oculta el componente del calendario.
+   *
+   * Funcionalidad:
+   * - Verifica si el calendario está visible (`mostrar`).
+   * - Comprueba si el clic ocurrió fuera del elemento del calendario.
+   * - Si el clic es externo, cambia la propiedad `mostrar` a `false` para ocultar el calendario.
+   *
+   * @param {Event} event - Evento de clic en el documento.
+   *
+   * @example
+   * // Si el usuario hace clic fuera del calendario:
+   * this.onDocumentClick(event);
+   * // El calendario se oculta.
+   */
   @HostListener('document:mousedown', ['$event'])
   onDocumentClick(event: Event): void {
     if (!this.mostrar) {
@@ -230,6 +285,4 @@ export class InputFechaComponent implements OnChanges {
       this.mostrar = false;
     }
   }
-
-
 }

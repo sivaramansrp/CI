@@ -9,9 +9,11 @@ import { CatalogosService } from '../../servicios/catalogos.service';
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
 import { DatosSolicitudFormaInt } from '../../modelos/datos-de-interfaz.model';
 import { FormBuilder } from '@angular/forms';
 import { FormGroup } from '@angular/forms';
+import { Input } from '@angular/core';
 import { InputRadioComponent } from '@libs/shared/data-access-user/src';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -63,6 +65,12 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 * @type {DatosSolicitudFormaInt}
 */
   solicitudState!: DatosSolicitudFormaInt;
+
+/**
+ * Indica si el formulario debe mostrarse solo en modo de lectura.
+ * @type {boolean}
+ */
+  @Input() esFormularioSoloLectura!: boolean;
 
   /**
  * Opciones para el componente de radio buttons.
@@ -226,11 +234,19 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
 
   bodegasSeleccionadas: BodegasInfo[] = [];
 
-   /**
-   * Constructor de la clase.
-   * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
-   * @param {ProductoTablaServicios} productoTablaServicios - Servicio para obtener los datos de las tablas.
-   */
+  /**
+  * Constructor de la clase.
+  * @param {FormBuilder} fb - Servicio para construir formularios reactivos.
+  * @param {ProductoTablaServicios} productoTablaServicios - Servicio para obtener los datos de las tablas.
+  * @param {Router} router - Servicio para la navegación entre rutas.
+  * @param {TramiteStoreQuery} tramiteStoreQuery - Consulta Akita para manejar y obtener el estado del trámite.
+  * @param {TramiteStore} tramiteStore - Almacén Akita para gestionar el estado del trámite.
+  * @param {SeccionLibQuery} seccionQuery - Consulta Akita para manejar y obtener el estado de una sección.
+  * @param {SeccionLibStore} seccionStore - Almacén Akita para gestionar el estado de una sección.
+  * @param {CatalogosService} catalogosService - Servicio para interactuar con los catálogos de datos.
+  * @param {ActivatedRoute} activatedRoute - Servicio para acceder a información sobre la ruta activa.
+  * @param {ConsultaioQuery} consultaioQuery - Consulta Akita para manejar y actualizar el estado de una sección.
+  */
   constructor(
     private fb: FormBuilder,
     private productoTablaServicios: ProductoTablaServicios,
@@ -240,10 +256,72 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
     private catalogosService: CatalogosService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    // Se puede agregar aquí la lógica del constructor si es necesario
+      this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe()
    }
+    /**
+   * Evalúa si se debe inicializar o cargar datos en el formulario.  
+   * Además, obtiene la información del catálogo de mercancía.
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+      this.inicializarFormulario();
+    }
+  }
+
+    /**
+     * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+     * Luego reinicializa el formulario con los valores actualizados desde el store.
+     */
+  guardarDatosFormulario(): void {
+    this.inicializarFormulario();
+    if (this.esFormularioSoloLectura) {
+      this.datosSolicitudForma.disable();
+    } else if (!this.esFormularioSoloLectura) {
+      this.datosSolicitudForma.enable();
+    } else {
+      // No se requiere ninguna acción en el formulario
+    }
+  }
+
+    inicializarFormulario(): void {
+    this.tramiteStoreQuery.selectSolicitudTramite$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState.SolicitudState;
+        })
+      )
+      .subscribe()
+
+  /**
+   * Inicializa el formulario reactivo con los campos requeridos.
+   * Configura validaciones y deshabilita ciertos campos según sea necesario.
+   * 
+   * @method iniciarFormulario
+   * @returns {void}
+   */
+
+      this.datosSolicitudForma = this.fb.group({
+        exentoDePago: [this.valorSeleccionado, Validators.required],
+        claveDelPadron: [this.valorSeleccionado, Validators.required],
+        observaciones: ['', Validators.required],
+        requiereInspeccionInmediata: ['', Validators.required],
+        informacionConfidencial: ['', Validators.required],
+      });
+  }
 
   /**
    * Redirige a la página de bodegas.
@@ -296,6 +374,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
    * Configura el formulario reactivo y carga los datos iniciales.
    */
   ngOnInit(): void {
+    this.inicializarEstadoFormulario();
     this.tramiteStoreQuery.selectSolicitudTramite$.pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
@@ -303,16 +382,14 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
       })
     ).subscribe();
 
-    this.iniciarFormulario();
     this.radioOpcion = this.catalogosService.RadioOpcion;
 
     const EXENTO_DE_PAGO_SUBSCRIPTION = this.datosSolicitudForma.get('exentoDePago')?.valueChanges.subscribe((value) => {
-      if (value === 'false') {
+      if (value === 'false' || this.esFormularioSoloLectura === true) {
         this.datosSolicitudForma.get('claveDelPadron')?.disable();
         this.datosSolicitudForma.patchValue({
           claveDelPadron: '',
         });
-
       } else {
         this.datosSolicitudForma.get('claveDelPadron')?.enable();
       }
@@ -371,19 +448,6 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
         )
         .subscribe();
     }
-
-    /**
-     * Inicializa el formulario reactivo.
-     */
-    iniciarFormulario(): void {
-      this.datosSolicitudForma = this.fb.group({
-        exentoDePago: [this.valorSeleccionado, Validators.required],
-        claveDelPadron: [{ value: '', disabled: this.valorSeleccionado === 'false' }, Validators.required],
-        observaciones: ['', Validators.required],
-        requiereInspeccionInmediata: [false, Validators.required],
-        informacionConfidencial: ['', Validators.required],
-      });
-    } 
 
   /**
    * Método para buscar y cargar los datos de las tablas.
@@ -469,12 +533,7 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
               }
               })
             ).subscribe();
-          } else {
-            console.error("La respuesta de la API no tiene el formato esperado: ", response);
-          }
-        },
-        error: (error) => {
-          console.error("Error al obtener datos: ", error);
+          } 
         }
       });
   }

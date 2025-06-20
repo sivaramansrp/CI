@@ -1,7 +1,7 @@
 <form [formGroup]="forma">
     <div class="row">
         <formas-dinamicas formularioTitulo="País(es) procedencia" [forma]="ninoFormGroup" [formularioDatos]="paisProcedenciaFormData"
-        [estado]="importacionstate" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
+        [estado]="importacionstate" [soloLectura]="consultaState.readonly" (emitirCambioDeValor)="establecerCambioDeValor($event)"></formas-dinamicas>
     </div>
     <div class="row mt-5">
         <crosslist
@@ -10,6 +10,7 @@
             [fechas]="seleccionarOrigenDelPais"
             [label]="paisDeProcedenciaLabel"
             [botonField]="paisDeProcedenciaBotones"
+            [isDisabled]="consultaState.readonly"
         ></crosslist>
     </div>
     <div class="row mt-5">

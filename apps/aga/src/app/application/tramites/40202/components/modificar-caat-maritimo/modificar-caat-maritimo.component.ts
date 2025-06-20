@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -8,6 +8,7 @@ import { CAATRegistradoEmpresaForm, CandidatoModificarCaatForm, PersonaFisicaExt
 import { CAAT_CANDIDATO_MODIFICAR_ENCABEZADO_DE_TABLA, CAAT_REGISTRADO_EMPRESA_ENCABEZADO_DE_TABLA, OPCIONES_DE_BOTON_DE_RADIO, TEXTOS } from '../../constantes/modificacion-transportacion-maritima.enum';
 import { Catalogo, CatalogoSelectComponent, InputRadioComponent, Notificacion, NotificacionesComponent, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Tramite40202Store, TransportacionMaritima40202State } from '../../../../core/estados/tramites/tramite40202.store';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ModificacionTransportacionMaritimaService } from '../../services/modificacion-transportacion-maritima/modificacion-transportacion-maritima.service';
 import { Tramite40202Query } from '../../../../core/queries/tramite40202.query';
 
@@ -30,7 +31,7 @@ import { Tramite40202Query } from '../../../../core/queries/tramite40202.query';
   templateUrl: './modificar-caat-maritimo.component.html',
   styleUrl: './modificar-caat-maritimo.component.scss',
 })
-export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
+export class ModificarCaatMaritimoComponent implements OnDestroy {
   /**
    * Formulario reactivo para buscar empresas CAAT.
    */
@@ -132,26 +133,36 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
   public nuevaAlertaSeleccionNotificacion!: Notificacion;
 
   /**
+   * @property {boolean} formularioDeshabilitado
+   * @description Indica si el formulario está deshabilitado (solo lectura).
+   */
+  formularioDeshabilitado: boolean = false;
+
+  /**
    * Constructor del componente.
    * @param fb FormBuilder para crear formularios reactivos.
    * @param tramite40202Store Store para gestionar el estado del trámite 40202.
    * @param tramite40202Query Query para consultar el estado del trámite 40202.
+   * @param consultaioQuery - Query para consultar el estado de la consulta.
    * @param transportacionMaritimaService Servicio para obtener los catálogos y datos relacionados con los transportacion marítima.
    */
   constructor(
     private fb: FormBuilder,
     private tramite40202Store: Tramite40202Store,
     private tramite40202Query: Tramite40202Query,
+    private consultaioQuery: ConsultaioQuery,
     private modificacionTransportacionMaritimaService: ModificacionTransportacionMaritimaService,
   ) {
-    // El constructor se utiliza para la inyección de dependencias
-  }
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destruirNotificador$),
+        map((seccionState) => {
+          this.formularioDeshabilitado = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
 
-  /**
-   * Inicializa el componente.
-   * Suscribe a los cambios en el estado de la sección y crea el formulario reactivo.
-   */
-  ngOnInit(): void {
     this.inicializaCatalogos();
 
     this.tramite40202Query.selectSeccionState$
@@ -302,7 +313,27 @@ export class ModificarCaatMaritimoComponent implements OnInit, OnDestroy {
         ]
       ],
     });
+
+    this.inicializarEstadoFormulario();
   }
+
+  /**
+   * @method inicializarEstadoFormulario
+   * @description Inicializa el estado del formulario `personaFisicaExtranjeraForm & buscarEmpresaForm` basado en si el formulario está deshabilitado o no.
+   * Si el formulario está deshabilitado, se deshabilita el campo `personaFisicaExtranjeraForm & buscarEmpresaForm`.
+   * Si no está deshabilitado, se habilita el campo `personaFisicaExtranjeraForm & buscarEmpresaForm`.
+   * @returns {void}
+   */
+  inicializarEstadoFormulario(): void {
+    if (this.formularioDeshabilitado) {
+      this.buscarEmpresaForm.disable();
+      this.personaFisicaExtranjeraForm.disable();
+    } else if (!this.formularioDeshabilitado) {
+      this.buscarEmpresaForm.enable();
+      this.personaFisicaExtranjeraForm.enable();
+    }
+  }
+
 
   /**
    * Obtiene el formulario de tipo de empresa.

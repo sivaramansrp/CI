@@ -90,12 +90,12 @@ export interface Listaclaves {
 export const NICO_TABLA = [
     {
       encabezado: 'Clave S.C.I.A.N.',
-      clave: (ele: ScianModel) => ele.clave,
+      clave: (ele: ScianModel): string => ele.clave,
       orden: 1,
     },
     {
       encabezado: 'Descripción del S.C.I.A.N.',
-      clave: (ele: ScianModel) => ele.descripcion,
+      clave: (ele: ScianModel): string => ele.descripcion,
       orden: 2,
     },
 ];
@@ -103,102 +103,102 @@ export const NICO_TABLA = [
 export const MERCANCIAS_DATA = [
     {
       encabezado: 'Clasificación del producto',
-      clave: (ele: MercanciasInfo) => ele.clasificacion,
+      clave: (ele: MercanciasInfo): string => ele.clasificacion,
       orden: 1,
     },
     {
       encabezado: 'Especificar clasificación del producto',
-      clave: (ele: MercanciasInfo) => ele.especificar,
+      clave: (ele: MercanciasInfo): string => ele.especificar,
       orden: 2,
     },
     {
       encabezado: 'Denominación específica del producto',
-      clave: (ele: MercanciasInfo) => ele.denominacionEspecifica,
+      clave: (ele: MercanciasInfo): string => ele.denominacionEspecifica,
       orden: 3,
     },
     {
       encabezado: 'Denominación distintiva',
-      clave: (ele: MercanciasInfo) => ele.denominacionDistintiva,
+      clave: (ele: MercanciasInfo): string => ele.denominacionDistintiva,
       orden: 4,
     },
     {
       encabezado: 'Denominación común, nombre común o nombre científico',
-      clave: (ele: MercanciasInfo) => ele.denominacionComun,
+      clave: (ele: MercanciasInfo): string => ele.denominacionComun,
       orden: 5,
     },
     {
       encabezado: 'Forma farmacéutica',
-      clave: (ele: MercanciasInfo) => ele.formaFarmaceutica,
+      clave: (ele: MercanciasInfo): string => ele.formaFarmaceutica,
       orden: 6,
     },
     {
       encabezado: 'Estado físico',
-      clave: (ele: MercanciasInfo) => ele.estadoFisico,
+      clave: (ele: MercanciasInfo): string => ele.estadoFisico,
       orden: 7,
     },
     {
       encabezado: 'Fracción arancelaria',
-      clave: (ele: MercanciasInfo) => ele.fraccionArancelaria,
+      clave: (ele: MercanciasInfo): string => ele.fraccionArancelaria,
       orden: 8,
     },
     {
       encabezado: 'Descripción de la fracción',
-      clave: (ele: MercanciasInfo) => ele.descripcionFraccion,
+      clave: (ele: MercanciasInfo): string => ele.descripcionFraccion,
       orden: 9,
     },
     {
       encabezado: 'Unidad de medida de comercialización (UMC)',
-      clave: (ele: MercanciasInfo) => ele.unidad,
+      clave: (ele: MercanciasInfo): string => ele.unidad,
       orden: 10,
     },
     {
       encabezado: 'Cantidad UMC',
-      clave: (ele: MercanciasInfo) => ele.cantidadUMC,
+      clave: (ele: MercanciasInfo): string => ele.cantidadUMC,
       orden: 11,
     },
     {
       encabezado: 'Unidad de medida de tarifa (UMT)',
-      clave: (ele: MercanciasInfo) => ele.unidadUMT,
+      clave: (ele: MercanciasInfo): string => ele.unidadUMT,
       orden: 12,
     },
     {
       encabezado: 'Cantidad UMT',
-      clave: (ele: MercanciasInfo) => ele.cantidadUMT,
+      clave: (ele: MercanciasInfo): string => ele.cantidadUMT,
       orden: 13,
     },
     {
       encabezado: 'Presentación',
-      clave: (ele: MercanciasInfo) => ele.presentacion,
+      clave: (ele: MercanciasInfo): string => ele.presentacion,
       orden: 14,
     },
     {
       encabezado: 'Número de registro sanitario',
-      clave: (ele: MercanciasInfo) => ele.numeroRegistro,
+      clave: (ele: MercanciasInfo): string => ele.numeroRegistro,
       orden: 15,
     },
     {
       encabezado: 'País de orígen',
-      clave: (ele: MercanciasInfo) => ele.paisDeOrigen,
+      clave: (ele: MercanciasInfo): string => ele.paisDeOrigen,
       orden: 16,
     },
     {
       encabezado: 'País de procedencia',
-      clave: (ele: MercanciasInfo) => ele.paisDeProcedencia,
+      clave: (ele: MercanciasInfo): string => ele.paisDeProcedencia,
       orden: 17,
     },
     {
       encabezado: 'Tipo producto',
-      clave: (ele: MercanciasInfo) => ele.tipoProducto,
+      clave: (ele: MercanciasInfo): string => ele.tipoProducto,
       orden: 18,
     },
     {
       encabezado: 'Uso específico',
-      clave: (ele: MercanciasInfo) => ele.usoEspecifico,
+      clave: (ele: MercanciasInfo): string => ele.usoEspecifico,
       orden: 19,
     },
     {
       encabezado: 'Fecha de caducidad',
-      clave: (ele: MercanciasInfo) => ele.fechaCaducidad,
+      clave: (ele: MercanciasInfo): string => ele.fechaCaducidad,
       orden: 20,
     },
   ];
@@ -206,17 +206,17 @@ export const MERCANCIAS_DATA = [
   export const LISTACLAVESDELOSLOTES = [
     {
       encabezado: 'Clave de los lotes',
-      clave: (ele: Listaclaves) => ele.clave,
+      clave: (ele: Listaclaves): string => ele.clave,
       orden: 1,
     },
     {
       encabezado: 'Fecha de fabricación',
-      clave: (ele: Listaclaves) => ele.fecha,
+      clave: (ele: Listaclaves): string => ele.fecha,
       orden: 2,
     },
     {
       encabezado: 'Fecha de caducidad',
-      clave: (ele: Listaclaves) => ele.fechaDeCaducidad,
+      clave: (ele: Listaclaves): string => ele.fechaDeCaducidad,
       orden: 3,
     }
   ];

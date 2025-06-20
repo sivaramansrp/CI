@@ -18,6 +18,7 @@ import {
 } from '../../estados/tramite260209Store.store';
 import { map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DatosDeLaSolicitudComponent } from '../../../../shared/components/datos-de-la-solicitud/datos-de-la-solicitud.component';
 import { ELEMENTOS_REQUERIDOS} from '../../constants/destinados-donacio.enum';
 import { ID_PROCEDIMIENTO } from '../../constants/destinados-donacio.enum';
@@ -142,17 +143,32 @@ export class ContenedorDeDatosSolicitudComponent implements OnInit, OnDestroy {
   public readonly elementosRequeridos = ELEMENTOS_REQUERIDOS;
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+   public esFormularioSoloLectura: boolean = false; 
+
+  /**
    * @constructor
    * @description
    * Inicializa el componente con las dependencias necesarias.
    * @param {Tramite260209Query} tramite260209Query - Consulta para acceder al estado del trámite.
    * @param {Tramite260209Store} tramite260209Store - Tienda para actualizar el estado del trámite.
+   * @param {ConsultaioQuery} consultaQuery - Consulta para acceder a datos de consulta.
    */
   constructor(
     private tramite260209Query: Tramite260209Query,
-    private tramite260209Store: Tramite260209Store
+    private tramite260209Store: Tramite260209Store,
+    private consultaQuery: ConsultaioQuery
   ) {
-        // No se necesita lógica de inicialización adicional.
+      this.consultaQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroyNotifier$),
+          map((seccionState) => {
+            this.esFormularioSoloLectura = seccionState.readonly;
+          })
+        )
+        .subscribe();
   }
 
   /**

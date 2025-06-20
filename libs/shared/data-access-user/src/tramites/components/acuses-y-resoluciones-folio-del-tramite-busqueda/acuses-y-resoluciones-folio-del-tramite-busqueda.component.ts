@@ -1,5 +1,4 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
-import { ConsultaioStore } from '../../../core/estados/consulta.store';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ReplaySubject, takeUntil } from 'rxjs';
 import { Router, RouterModule } from '@angular/router';
@@ -7,8 +6,10 @@ import { AcuseYResolucionesFolioTramite } from '../../../core/models/shared/acus
 import { AcuseYResolucionesFolioTramiteService } from '../../../core/services/shared/acuses-y-resolucions-folio-tramite/acuses-y-resoluciones-folio-tramite.service';
 import { CommonModule } from '@angular/common';
 import { ConfiguracionColumna } from '../../../core/models/shared/configuracion-columna.model';
+import { ConsultaioStore } from '../../../core/estados/consulta.store';
 import { InputFecha } from '../../../core/models/shared/components.model';
 import { InputFechaComponent } from '../input-fecha/input-fecha.component';
+import { TablaAcciones } from '../../../core/enums/tabla-seleccion.enum';
 import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.component';
 import { ToastrService } from 'ngx-toastr';
 import { TramiteDetails } from '../../../core/models/tramiteDetails';
@@ -94,7 +95,8 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
    * Ruta para la navegación.
    */
   public ruta: string = '';
-
+  /* Acciones disponibles en la tabla (editar, etc.) */
+  public tablaAcciones: TablaAcciones[] = [TablaAcciones.EDITAR];
   /**
    * Constructor de la clase.
    * @param formBuilder Servicio para construir formularios reactivos.
@@ -158,6 +160,11 @@ export class AcusesYResolucionesFolioDelTramiteBusquedaComponent
       encabezado: 'Folio trámite',
       clave: (artículo) => artículo.folioTramite,
       orden: 1,
+    },
+    {
+      encabezado: 'Número de procedimiento',
+      clave: (artículo) => artículo.numeroDeProcedimiento,
+      orden: 0
     },
     {
       encabezado: 'Tipo de trámite',

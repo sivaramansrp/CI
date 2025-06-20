@@ -1,15 +1,23 @@
-import { COLONIA_FIELD_FLAG, NUMERO_TRAMITE, PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE } from '../../constants/datos-solicitud.enum';
-import { STR_NACIONAL,DESTINATARIO_TITULO_CUSTOM } from '../../constants/datos-solicitud.enum';
+import {
+  COLONIA_FIELD_FLAG,
+  NUMERO_TRAMITE,
+  PROCEDIMIENTOS_PARA_NO_CONTRIBUYENTE,
+} from '../../constants/datos-solicitud.enum';
+import { STR_NACIONAL } from '../../constants/datos-solicitud.enum';
 import { TERCEROS_NACIONALIDAD_OPCIONES } from '../../constants/datos-solicitud.enum';
 import { TIPO_PERSONA_OPCIONES } from '../../constants/datos-solicitud.enum';
 
-import { DestinoFinal, Proveedor } from '../../models/terceros-relacionados.model';
+import {
+  DestinoFinal,
+  Proveedor,
+} from '../../models/terceros-relacionados.model';
+import { DESTINATARIO_TITULO_CUSTOM } from '../../constants/datos-solicitud.enum';
 import { DatosSolicitudService } from '../../services/datos-solicitud.service';
 
 import { CommonModule } from '@angular/common';
 import { Location } from '@angular/common';
 
-import { Component } from '@angular/core';
+import { AfterViewInit, Component } from '@angular/core';
 import { EventEmitter } from '@angular/core';
 import { Input } from '@angular/core';
 import { OnChanges } from '@angular/core';
@@ -45,7 +53,8 @@ import { takeUntil } from 'rxjs';
   styleUrl: './agregar-destinatario-custom.component.scss',
 })
 export class AgregarDestinatarioCustomComponent
-  implements OnDestroy, OnInit, OnChanges {
+  implements OnDestroy, OnInit, OnChanges, AfterViewInit
+{
   /**
    * Subject utilizado para gestionar la desuscripción de observables.
    * Se completa en `ngOnDestroy()` para prevenir fugas de memoria.
@@ -114,14 +123,13 @@ export class AgregarDestinatarioCustomComponent
    * @type {string}
    */
 
- destinatarioTituloModificar = DESTINATARIO_TITULO_CUSTOM;
+  destinatarioTituloModificar = DESTINATARIO_TITULO_CUSTOM;
   /**
    * @property isDestinatarioModificar
    * @description Indica si el destinatario está en modo de modificación.
    * @type {boolean}
    */
   isDestinatarioModificar: boolean = false;
-
 
   /**
    * @property idProcedimiento
@@ -130,13 +138,21 @@ export class AgregarDestinatarioCustomComponent
    */
   @Input() idProcedimiento!: number;
 
-/**
+  /**
    * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
    * Este input se utiliza para recibir la información necesaria desde el componente padre.
    *
    * @type {DestinoFinal | Proveedor | null | undefined}
    */
-@Input() formaDatos!: DestinoFinal | Proveedor | null | undefined;
+  @Input() formaDatos!: DestinoFinal | Proveedor | null | undefined;
+
+  /**
+   * Datos del formulario que pueden ser de tipo `DestinoFinal`, `Proveedor`, `null` o `undefined`.
+   * Este input se utiliza para recibir la información necesaria desde el componente padre.
+   *
+   * @type {boolean}
+   */
+  @Input() esFormularioSoloLectura: boolean = false;
   /**
    * @property mostrarCamposNoContribuyente
    * @description Controla la visibilidad de los campos específicos para no contribuyentes.
@@ -145,15 +161,13 @@ export class AgregarDestinatarioCustomComponent
    */
   public mostrarCamposNoContribuyente: boolean = false;
 
-
-    /**
+  /**
    * @property mostrarCamposNoContribuyente
    * @description Controla la visibilidad de los campos específicos para no contribuyentes.
    * @type {boolean}
    * @default false
    */
-    public colonia_visibilidad: boolean = false;
-
+  public colonia_visibilidad: boolean = false;
 
   /**
    * Emite la lista de destinatarios actualizada para ser consumida por otros componentes.
@@ -170,7 +184,15 @@ export class AgregarDestinatarioCustomComponent
    * @type {EventEmitter<Destinatario[]>}
    */
 
-   @Output() actualizaExistenteEnDestinatarioDatos= new EventEmitter<DestinoFinal[]>();
+  @Output() actualizaExistenteEnDestinatarioDatos = new EventEmitter<
+    DestinoFinal[]
+  >();
+
+  /**
+   * Evento que se emite cuando el usuario desea cancelar una acción.
+   * @property {EventEmitter<boolean>} cancelarEventListener
+   */
+  @Output() cancelarEventListener = new EventEmitter<boolean>();
 
   /**
    * Constante que almacena el valor de "Nacional" para su uso en el formulario.
@@ -184,7 +206,6 @@ export class AgregarDestinatarioCustomComponent
    * Opciones de radio para seleccionar el tipo de persona.
    */
   tipoPersonaRadioOpciones = TIPO_PERSONA_OPCIONES;
-
 
   @Input() destinatarioFinalTablaDatos: DestinoFinal[] = [];
 
@@ -226,10 +247,17 @@ export class AgregarDestinatarioCustomComponent
    * y navega hacia atrás en el historial.
    */
   guardarDestinatario(): void {
-    const DENOMINACIONRAZON_ONLY_FLAG = (this.agregarDestinatarioFinal.value.tipoPersona === TipoPersona.MORAL) && (NUMERO_TRAMITE.TRAMITE_240117 === this.idProcedimiento);
+    const DENOMINACIONRAZON_ONLY_FLAG =
+      this.agregarDestinatarioFinal.value.tipoPersona === TipoPersona.MORAL &&
+      NUMERO_TRAMITE.TRAMITE_240117 === this.idProcedimiento;
     const NUEVO_DESTINATARIO: DestinoFinal = {
-      nombreRazonSocial: DENOMINACIONRAZON_ONLY_FLAG ? `${this.agregarDestinatarioFinal.value.denominacionRazon}`.trim() : `${this.agregarDestinatarioFinal.value.nombres} ${this.agregarDestinatarioFinal.value.primerApellido
-        } ${this.agregarDestinatarioFinal.value.segundoApellido || ''} `.trim(),
+      nombreRazonSocial: DENOMINACIONRAZON_ONLY_FLAG
+        ? `${this.agregarDestinatarioFinal.value.denominacionRazon}`.trim()
+        : `${this.agregarDestinatarioFinal.value.nombres} ${
+            this.agregarDestinatarioFinal.value.primerApellido
+          } ${
+            this.agregarDestinatarioFinal.value.segundoApellido || ''
+          } `.trim(),
       rfc: this.agregarDestinatarioFinal.value.rfc,
       curp: '',
       telefono:
@@ -245,14 +273,23 @@ export class AgregarDestinatarioCustomComponent
       entidadFederativa: '',
       estadoLocalidad: this.agregarDestinatarioFinal.value.estado,
       codigoPostal: this.agregarDestinatarioFinal.value.codigoPostal,
+      tipoPersona: this.agregarDestinatarioFinal.value.tipoPersona,
+      denominacionRazon: this.agregarDestinatarioFinal.value.denominacionRazon,
+      nombres: this.agregarDestinatarioFinal.value.nombres,
+      primerApellido: this.agregarDestinatarioFinal.value.primerApellido,
+      segundoApellido: this.agregarDestinatarioFinal.value.segundoApellido,
+      estado: this.agregarDestinatarioFinal.value.estado,
     };
-
     this.destinatarios.push(NUEVO_DESTINATARIO);
-    if(this.destinatarioFinalTablaDatos.length > 0) {
+    if (this.formaDatos) {
+      if ('tableindex' in this.formaDatos) {
+        this.destinatarios[0].tableindex = (
+          this.formaDatos as DestinoFinal
+        ).tableindex;
+      }
       this.actualizaExistenteEnDestinatarioDatos.emit(this.destinatarios);
-    }
-    else{
-    this.updateDestinatarioFinalTablaDatos.emit(this.destinatarios);
+    } else {
+      this.updateDestinatarioFinalTablaDatos.emit(this.destinatarios);
     }
     this.agregarDestinatarioFinal.reset();
     this.ubicaccion.back();
@@ -263,19 +300,42 @@ export class AgregarDestinatarioCustomComponent
    * Llama al método `cargarDatos()`.
    */
   ngOnInit(): void {
-    this.colonia_visibilidad = COLONIA_FIELD_FLAG.includes(this.idProcedimiento);
-    this.isDestinatarioModificar= DESTINATARIO_TITULO_CUSTOM.includes(this.idProcedimiento);
+    this.colonia_visibilidad = COLONIA_FIELD_FLAG.includes(
+      this.idProcedimiento
+    );
+    this.isDestinatarioModificar = DESTINATARIO_TITULO_CUSTOM.includes(
+      this.idProcedimiento
+    );
     this.crearFormaulario();
     this.cargarDatos();
-    if(this.formaDatos) {
+    if (this.formaDatos) {
       this.agregarDestinatarioFinal.patchValue(this.formaDatos);
+      this.agregarDestinatarioFinal.enable();
     }
-    if(this.destinatarioFinalTablaDatos.length > 0) {
-      this.agregarDestinatarioFinal.patchValue(this.destinatarioFinalTablaDatos[0]);
+    if (this.destinatarioFinalTablaDatos.length > 0) {
+      this.agregarDestinatarioFinal.patchValue(
+        this.destinatarioFinalTablaDatos[0]
+      );
       this.tipoPersonaCambioDeValor('Fisica');
     }
-
-   
+  }
+  /**
+   * @inheritdoc
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
+   *
+   * @remarks
+   * Este método verifica si el formulario está en modo solo lectura (`esFormularioSoloLectura`).
+   * Si es así, deshabilita el control `agregarDestinatarioFinal`; de lo contrario, lo habilita.
+   *
+   * @see https://angular.io/api/core/AfterViewInit
+   */
+  ngAfterViewInit(): void {
+    if (this.esFormularioSoloLectura) {
+      this.agregarDestinatarioFinal.disable();
+    } else {
+      this.agregarDestinatarioFinal.enable();
+    }
   }
 
   /**
@@ -294,29 +354,29 @@ export class AgregarDestinatarioCustomComponent
           Validators.maxLength(13),
         ],
       ],
-      nombres: ['', Validators.required],
-      denominacionRazon: ['', Validators.required],
-      primerApellido: ['', Validators.required],
-      segundoApellido: [''],
+      nombres: ['', [Validators.required, Validators.maxLength(200)]],
+      denominacionRazon: ['', [Validators.required, Validators.maxLength(254)]],
+      primerApellido: ['', [Validators.required, Validators.maxLength(200)]],
+      segundoApellido: ['', Validators.maxLength(200)],
       pais: ['', Validators.required],
-      estado: ['', Validators.required],
+      estado: ['', [Validators.required, Validators.maxLength(120)]],
       municipio: ['', Validators.required],
       localidad: ['', Validators.required],
-      codigoPostal: ['', Validators.required],
+      codigoPostal: ['', [Validators.required, Validators.maxLength(12)]],
       colonia: ['', Validators.required],
-      calle: ['', Validators.required],
-      numeroExterior: ['', Validators.required],
-      numeroInterior: [''],
-      lada: [''],
-      telefono: [''],
-      correoElectronico: ['', [Validators.email]],
-      nacionalidad: [],
+      calle: ['', [Validators.required, Validators.maxLength(300)]],
+      numeroExterior: ['', [Validators.required, Validators.maxLength(55)]],
+      numeroInterior: ['', Validators.maxLength(55)],
+      lada: ['', Validators.maxLength(5)],
+      telefono: ['', Validators.maxLength(24)],
+      correoElectronico: ['', [Validators.email, Validators.maxLength(320)]],
+      nacionalidad: ['', Validators.required],
     });
-    
+
     this.agregarDestinatarioFinal.disable();
     this.agregarDestinatarioFinal.get('tipoPersona')?.enable();
     this.agregarDestinatarioFinal.get('nacionalidad')?.enable();
-    if(this.formaDatos) {
+    if (this.formaDatos) {
       this.agregarDestinatarioFinal.patchValue(this.formaDatos);
     }
   }
@@ -378,6 +438,8 @@ export class AgregarDestinatarioCustomComponent
    */
   limpiarFormulario(): void {
     this.agregarDestinatarioFinal.reset();
+    this.agregarDestinatarioFinal.disable();
+    this.agregarDestinatarioFinal.get('tipoPersona')?.enable();
   }
   /**
    * @method cancelar
@@ -386,7 +448,7 @@ export class AgregarDestinatarioCustomComponent
    * @returns {void} Este método no retorna ningún valor.
    */
   cancelar(): void {
-    this.ubicaccion.back();
+    this.cancelarEventListener.emit(true);
   }
 
   /**

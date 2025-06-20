@@ -1,3 +1,4 @@
+import { FraccionArancelariaProsec, OctavaTemporal } from '../../tramites/130102/models/octava-temporal.model';
 import { Store, StoreConfig } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 
@@ -7,6 +8,7 @@ import { Injectable } from '@angular/core';
  */
 export interface Solicitud130102State {
   
+  criterioDictamen : string; // Criterio de dictamen para la solicitud, puede ser un código o descripción.
   /** Código que identifica la fracción arancelaria específica del producto. */
   fraccion: string;
 
@@ -63,6 +65,14 @@ export interface Solicitud130102State {
 
   /** Lista detallada de los productos incluidos en la solicitud, separados por un delimitador si es necesario. */
   productos: string;
+
+  solicitud :string; // Indica si la solicitud está activa o pendiente de revisión.
+
+  /** Lista de partidas temporales (octava regla) asociadas a la solicitud. */
+  partidas_tabla?: OctavaTemporal[];
+
+  /** Lista de usos específicos relacionados con fracciones arancelarias PROSEC. */
+  uso_especifico_tabla?: FraccionArancelariaProsec[];
 }
 /**
  * Crea y devuelve el estado inicial de la solicitud.
@@ -70,6 +80,7 @@ export interface Solicitud130102State {
  */
 export function createInitialState(): Solicitud130102State {
   return {
+    criterioDictamen: '', // Criterio de dictamen vacío por defecto.
     fraccion: '', // Valor inicial vacío.
     descripcion: '', // Descripción vacía por defecto.
     fraccionArancelaria: '', // Sin fracción arancelaria inicial.
@@ -89,6 +100,10 @@ export function createInitialState(): Solicitud130102State {
     descripcionJustificacion: '', // Justificación vacía.
     observaciones: '', // Sin observaciones iniciales.
     productos: '', // Sin productos asignados.
+    solicitud : '', // Indica que la solicitud no está activa por defecto.
+    partidas_tabla: [], // Lista de partidas vacía por defecto.
+    uso_especifico_tabla: [], // Lista de usos específicos vacía por defecto.;
+
   };
 }
 
@@ -104,7 +119,12 @@ export class Tramite130102Store extends Store<Solicitud130102State> {
   constructor() {
     super(createInitialState()); // Inicializa el estado con los valores por defecto.
   }
-
+public setCriterioDictamen(criterioDictamen: string) {
+    this.update((state) => ({
+      ...state,
+      criterioDictamen,
+    }));
+  }
   /**
    * Actualiza el valor de la fracción arancelaria.
    * @param {string} fraccion - Nueva fracción arancelaria.
@@ -313,11 +333,44 @@ export class Tramite130102Store extends Store<Solicitud130102State> {
       productos,
     }));
   }
+  /*
+    * Actualiza el estado de la solicitud.
+    * @param {string} solicitud - Nueva solicitud.
+    */
+  public setSolicitude(solicitud: string) {
+ this.update((state) => ({
+      ...state,
+      solicitud,
+    }));
+  }
 
   /**
    * Limpia todos los datos de la solicitud, restaurándolos a su estado inicial.
    */
   public limpiarSolicitud() {
     this.reset();
+  }
+
+  /*
+    * Actualiza el estado de la solicitud.
+    * @param {string} solicitud - Nueva solicitud.
+    */
+  public setPartidasTabla(fieldName: string, value: OctavaTemporal[]) {
+    this.update((state) => ({
+      ...state,
+      [fieldName]: value,
+    }));
+  }
+
+  /**
+   * Set a value dynamically in the store by field name.
+   * @param fieldName The name of the field to update.
+   * @param value The value to set.
+   */
+  public setDynamicFieldValue(fieldName: string, value: unknown): void {
+    this.update((state) => ({
+      ...state,
+      [fieldName]: value,
+    }));
   }
 }

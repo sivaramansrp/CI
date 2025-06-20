@@ -74,6 +74,16 @@ export interface DatosDelContenedor {
    * Vigencia del equipo.
    */
   vigencia: string;
+
+  /**
+   * Estado actual del equipo o contenedor.
+   */
+  estado: string;
+
+  /**
+   * Indica si el equipo o contenedor existe en el sistema.
+   */
+  existe: string;
 }
 
 /**
@@ -120,6 +130,17 @@ export interface datosDelCsvArchivo {
    * Vigencia del equipo.
    */
   vigencia: string;
+
+  
+  /**
+   * Estado actual del equipo o contenedor.
+   */
+  estado: string;
+
+  /**
+   * Indica si el equipo o contenedor existe en el sistema.
+   */
+  existe: string;
 }
 
 /**
@@ -199,4 +220,25 @@ export interface RespuestaAduanas {
    * Mensaje de la respuesta.
    */
   message: string;
+}
+
+export interface RespuestaConsulta {
+  success: boolean;
+  datos: ConsultaDatos;
+  message: string;
+}
+
+export interface ConsultaDatos {
+  tipoBusqueda: string;
+  aduana: string;
+  fechaIngreso: string;
+  vigencia: string;
+  inicialesContenedor: string;
+  numeroContenedor: string;
+  digitoDeControl: string;
+  contenedores: string;
+  aduanaMenuDesplegable: string;
+  estado: string;
+  existe: string;
+  datosDelContenedor: DatosDelContenedor[];
 }

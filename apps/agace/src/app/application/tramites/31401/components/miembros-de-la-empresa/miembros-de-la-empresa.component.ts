@@ -43,6 +43,7 @@ export class MiembrosDeLaEmpresaComponent implements OnInit, OnDestroy {
    */
   public miembrosForm: FormGroup = new FormGroup({
     senaleSocios: new FormControl({ value: 1, disabled: true }),
+    opinionPositiva: new FormControl({ value: 'Opinión positiva vigente del cumplimiento de obligaciones fiscales de la solicitante, los socios, accionistas, representante legal con facultad para actos de administración o de dominio, administrador único o miembros del consejo de administración, según sea el caso.', disabled: true })
   });
 
   /**

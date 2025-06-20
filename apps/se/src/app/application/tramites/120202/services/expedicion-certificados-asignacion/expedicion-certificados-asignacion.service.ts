@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
+import { ExpedicionCertificadosAsignacion120202State } from '../../../../estados/tramites/tramite120202.store';
 import { NumeroOficioAsignacionDetalleRespquesta } from '../../models/expedicion-certificados-asignacion.model';
 import { RespuestaCatalogos } from '@libs/shared/data-access-user/src';
 
@@ -46,5 +47,14 @@ export class ExpedicionCertificadosAsignacionService {
    */
   getNumeroOficioAsignacionDetalle(): Observable<NumeroOficioAsignacionDetalleRespquesta> {
     return this.http.get<NumeroOficioAsignacionDetalleRespquesta>('assets/json/120202/numero-oficio-asignacion-detalle.json');
+  }
+
+  /**
+   * Obtiene los datos de consulta para persona física.
+   * @returns Un observable que emite el estado de la consulta para persona física.
+   * @description Este método realiza una petición HTTP GET para obtener los datos de consulta para persona física desde un archivo JSON local.
+   */
+  getConsultaPersonaMoralDatos(): Observable<ExpedicionCertificadosAsignacion120202State> {
+    return this.http.get<ExpedicionCertificadosAsignacion120202State>('assets/json/120202/consulta-persona-moral.json');
   }
 }

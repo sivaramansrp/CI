@@ -8,6 +8,7 @@
           <app-input-radio
             [radioOptions]="producto"
             [isRequired]="true"
+            [selectedValue]="defaultSelect"
             formControlName="productos"
             (change)="setValoresStore(formDelLa,'productos','setProducto')"
             [layout]="'vertical'"
@@ -54,6 +55,7 @@
         (change)="fetchFraccion();setValoresStore(formDelLa,'fraccionArancelaria', 'setFraccionArancelaria')"
         [placeholder]="'Seleccione un documento'"
         formControlName="fraccionArancelaria"
+        [isDisabled]="esFormularioSoloLectura ? true : false"
       ></app-catalogo-select>
       @if (formDelLa.controls['fraccionArancelaria'].invalid && formDelLa.controls['fraccionArancelaria'].touched) {
         <div class="text-danger">
@@ -73,6 +75,7 @@
           (change)="fetchUnidad(); setValoresStore(formDelLa,'unidadMedida', 'setUnidadMedida') "
          [placeholder]="'Seleccione una unidad de medida'"
          formControlName="unidadMedida"
+            [isDisabled]="esFormularioSoloLectura ? true : false"
         ></app-catalogo-select>
         @if (formDelLa.controls['unidadMedida'].invalid && formDelLa.controls['unidadMedida'].touched) {
           <div class="text-danger">
@@ -102,8 +105,11 @@
             @if (formDelLa.controls['cantidad'].errors?.['required']) {
               <small>Este campo es obligatorio.</small>
             }
-            @if (formDelLa.controls['cantidad'].errors?.['pattern']) {
+            @if (formDelLa.controls['cantidad'].errors?.['soloNumeros']) {
               <small>Solo se permiten números.</small>
+            }
+            @if (formDelLa.controls['cantidad'].errors?.['onceTresDigits']) {
+              <small>Este campo permite 11 enteros y tres decimales.</small>
             }
             @if (formDelLa.controls['cantidad'].errors?.['min']) {
               <small>Debe ser mayor que 0.</small>
@@ -137,8 +143,11 @@
             @if (formDelLa.controls['valorFacturaUSD'].errors?.['required']) {
               <small>Este campo es obligatorio.</small>
             }
-            @if (formDelLa.controls['valorFacturaUSD'].errors?.['pattern']) {
+            @if (formDelLa.controls['valorFacturaUSD'].errors?.['decimalesDosLugares']) {
               <small>Ingrese un valor numérico válido (ej. 100.50).</small>
+            }
+            @if (formDelLa.controls['valorFacturaUSD'].errors?.['onceDosDigits']) {
+              <small>Este campo permite 11 enteros y dos decimales.</small>
             }
             @if (formDelLa.controls['valorFacturaUSD'].errors?.['min']) {
               <small>Debe ser mayor que 0.</small>

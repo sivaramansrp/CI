@@ -67,13 +67,14 @@ import {
   PropietarioTipoPersona,
   ScianModel,
 } from '../../models/datos-de-la-solicitud.model';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject ,map, takeUntil } from 'rxjs';
 import { ScianData } from '../../../shared/models/datos-modificacion.model';
 
-import { SCIAN_DATA } from '../../constantes/datos-scian.enum';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 
 import { EstablecimientoService } from '../../services/establecimiento.service';
 import { ManifiestosRepresentanteSeccionComponent } from '../manifiestos-representante-seccion/manifiestos-representante-seccion.component';
+
 import { NUEVA_NOTIFICACION, PAIS_DE_PROCEDENCIA_LABEL } from '../../constantes/datos-domicilio-legal.enum';
 /*
  ** component
@@ -143,7 +144,7 @@ export class DatosDelSolicitudModificacionComponent
    * Esta propiedad almacena los datos de la notificación que se mostrará al usuario.
    * Se utiliza para configurar el tipo, categoría, mensaje y otros detalles de la notificación.
    */
-  public nuevaNotificacion: Notificacion = NUEVA_NOTIFICACION;
+  public nuevaNotificacion!: Notificacion ;
 
   /**
    * Índice del elemento que se desea eliminar.
@@ -170,6 +171,17 @@ export class DatosDelSolicitudModificacionComponent
    * @param i - Índice del pedimento que se desea eliminar. Por defecto, es 0.
    */
   abrirModal(i: number = 0): void {
+    this.nuevaNotificacion = {
+    tipoNotificacion: 'alert',
+    categoria: 'danger',
+    modo: 'action',
+    titulo: '',
+    mensaje: 'Por el momento no hay comunicación con el Sistema de COFEPRIS, favor de capturar su establecimiento.',
+    cerrar: false,
+    tiempoDeEspera: 2000,
+    txtBtnAceptar: 'Aceptar',
+    txtBtnCancelar: 'Cancelar',
+  };
     this.elementoParaEliminar = i;
   }
 
@@ -493,6 +505,12 @@ export class DatosDelSolicitudModificacionComponent
    * Datos de la tabla de mercancías.
    */
   mercanciasTablaDatos: MercanciasInfo[] = [];
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los formularios estarán deshabilitados y no se podrán editar.
+   * Cuando es `false`, los formularios estarán habilitados para edición.
+   */
+  esFormularioSoloLectura: boolean = false;
 
   /**
    * Constructor del componente.
@@ -505,9 +523,17 @@ export class DatosDelSolicitudModificacionComponent
     private fb: FormBuilder,
     private establecimientoService: EstablecimientoService,
     private domicilioEstablecimientoStore: DatosDelSolicituteSeccionStateStore,
-    private domicilioEstablecimientoQuery: DatosDelSolicituteSeccionQuery
+    private domicilioEstablecimientoQuery: DatosDelSolicituteSeccionQuery,
+     private consultaioQuery: ConsultaioQuery
   ) {
-    // Constructor
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroy$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        })
+      )
+      .subscribe()
   }
 
   /**
@@ -525,6 +551,26 @@ export class DatosDelSolicitudModificacionComponent
       this.eliminarNumeroYFechaControls();
     }
     this.obtenerScianTablaDatos();
+    this.cargarDatosDesdeApi()
+    if (this.esFormularioSoloLectura) {
+      this.domicilioEstablecimiento.disable();
+      this.solicitudEstablecimientoForm.disable();
+    }
+  }
+
+  /**
+   * @method cargarDatosDesdeApi
+   * @description
+   * Este método obtiene los datos de mercancías desde el servicio `EstablecimientoService`
+   * y los agrega al arreglo `mercanciasTablaDatos`.
+   */
+  cargarDatosDesdeApi() {
+    this.establecimientoService.getMercancias().pipe(takeUntil(this.destroy$))
+      .subscribe((response: MercanciasInfo[]) => {
+        response?.forEach((resp: MercanciasInfo) => {
+          this.mercanciasTablaDatos.push(resp)
+        })
+      });
   }
 
   /**
@@ -596,7 +642,7 @@ export class DatosDelSolicitudModificacionComponent
    */
   crearAgregarFormulario(): void {
     this.domicilioEstablecimiento = this.fb.group({
-      ideGenerica1: ['', Validators.required],
+      ideGenerica: ['', Validators.required],
       observaciones: [{ value: '', disabled: true }, [Validators.required, Validators.maxLength(2000)]],
       establecimientoRFCResponsableSanitario: ['', [Validators.required,Validators.pattern(REGEX_RFC_FISICA)]],
       establecimientoRazonSocial:['', Validators.required],
@@ -607,9 +653,8 @@ export class DatosDelSolicitudModificacionComponent
       establishomentoColonias: [''],
       calle: ['', Validators.required],
       lada: ['', [Validators.maxLength(5), Validators.pattern(REGEX_SOLO_DIGITOS)]],
-      telefono: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS)],Validators.maxLength(30)],
-      establecimientoDomicilioCodigoPostal :['', [Validators.required,Validators.maxLength(12)]],
-      scian: this.fb.array([]),
+      telefono: ['', [Validators.required, Validators.pattern(REGEX_SOLO_DIGITOS),Validators.maxLength(30)]],
+      establecimientoDomicilioCodigoPostal :['', [Validators.required,Validators.maxLength(12)]]
     });
     this.scianForm = this.fb.group({
       scian: ['', Validators.required],
@@ -641,13 +686,14 @@ export class DatosDelSolicitudModificacionComponent
       UMC: ['', Validators.required],
       presentacion: ['', Validators.required],
     });
+
   }
   /**
    * Deshabilita el campo "observaciones" del formulario de domicilio
    */
   establecerDeshabilitado(): void {
     this.domicilioEstablecimiento
-      .get('ideGenerica1')
+      .get('ideGenerica')
       ?.valueChanges.subscribe((value) => {
         if (value === 'modificacion') {
           this.domicilioEstablecimiento.get('observaciones')?.enable();

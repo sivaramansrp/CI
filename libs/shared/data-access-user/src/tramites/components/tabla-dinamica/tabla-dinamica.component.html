@@ -8,9 +8,17 @@
         <th></th>
         } @else if(tipoSeleccionTabla === TablaSeleccion.CHECKBOX) {
         <th>
-          <input class="cursor-pointer" type="checkbox" name="filaSeleccionada"
-            (change)="seleccionarDeseleccionarTodos($event)" aria-label="Seleccionar/Deseleccionar todo"
-            [checked]="datos.length? (filasSeleccionadas.length === datos.length): false " />
+          <input
+            class="cursor-pointer"
+            type="checkbox"
+            name="filaSeleccionada"
+            (change)="seleccionarDeseleccionarTodos($event)"
+            aria-label="Seleccionar/Deseleccionar todo"
+            [checked]="
+              datos.length ? filasSeleccionadas.length === datos.length : false
+            "
+            [disabled]="disableSeleccionTablaCheckBox"
+          />
         </th>
         }
         <!-- Crear el encabezado de manera dinámica -->
@@ -23,6 +31,12 @@
       </tr>
     </thead>
     <tbody>
+      <tr *ngIf="!datos.length">
+        <td [attr.colspan]="obtenerConfiguracionOrdenada().length + (acciones.length ? 1 : 0) + (tipoSeleccionTabla ? 1 : 0)"
+          style="text-align: center;">
+          SIN DATOS
+        </td>
+      </tr>
       <!-- Crear las filas de manera dinámica -->
       <tr
         *ngFor="let fila of datos; let i = index"
@@ -40,9 +54,10 @@
             (change)="seleccionarFila(i, fila)"
             [checked]="idFilaSeleccionada === i"
             aria-label="Seleccionar"
+            [disabled]="disableSeleccionTablaRadio"
           />
         </td>
- 
+
         } @else if(tipoSeleccionTabla === TablaSeleccion.CHECKBOX) {
         <td>
           <input
@@ -53,9 +68,10 @@
             (change)="cambiarEstadoCheckbox($event, i)"
             [checked]="filasSeleccionadas.includes(i)"
             aria-label="Seleccionar"
+            [disabled]="disableSeleccionTablaCheckBox"
           />
         </td>
- 
+
         } @else if(tipoSeleccionTabla === TablaSeleccion.BUTTON) {
         <td>
           <button
@@ -64,18 +80,19 @@
             type="button"
             name="filaSeleccionada"
             [value]="i"
-            (click)="cambiarValor(fila)"
+            (click)="cambiarValor({ row: fila, column: '' })"
             aria-label="Seleccionar"
+            [disabled]="desactivarButton"
           >
             {{ obtenerTextoBoton(fila) }}
           </button>
         </td>
         }
- 
+
         <!-- Renderizar cada columna de manera dinámica utilizando la función 'clave' -->
         <td
           *ngFor="let col of obtenerConfiguracionOrdenada()"
-          (click)="col.hiperenlace ? cambiarValor(fila) : null"
+          (click)="col.hiperenlace ? cambiarValor({ row: fila, column: '' }) : null"
           [ngClass]="{ 'cursor-pointer': col.hiperenlace }"
         >
           {{ col.clave(fila) || ' ' }}
@@ -114,4 +131,4 @@
     </tbody>
   </table>
 </div>
- 
+

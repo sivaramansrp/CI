@@ -197,3 +197,23 @@ export interface MercanciaTablaLista {
    */
   datos: MercanciaTablaDatos[];
 }
+/**
+ * Representa la respuesta de una consulta.
+ * 
+ * Contiene información sobre el éxito de la operación, los datos obtenidos y un mensaje relacionado.
+ */
+export interface RespuestaConsulta {
+  success: boolean;
+  datos: ConsultaDatos;
+  message: string;
+}
+/**
+ * Representa los datos obtenidos de una consulta.
+ * 
+ * Contiene información sobre la solicitud, la mercancía y los datos de la tabla de mercancías.
+ */
+export interface ConsultaDatos {
+  datosSolicitud: DatosSolicitud;
+  mercancia: Mercancia;
+  mercanciaTablaDatos: MercanciaTablaDatos[];
+}

@@ -1,16 +1,16 @@
 import { Component, ElementRef, EventEmitter, ViewChild } from '@angular/core';
-import { Input, Output } from '@angular/core';
+import { Input, OnInit,Output} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { AlertComponent } from '@ng-mf/data-access-user';
-import { CatalogoSelectComponent } from '@ng-mf/data-access-user';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { ComplementarPlantaComponent } from '../complementar-planta/complementar-planta.component';
-import { InputFecha } from '@ng-mf/data-access-user';
-import { InputFechaComponent } from '@ng-mf/data-access-user';
-import { TablaDinamicaComponent } from '@ng-mf/data-access-user';
-import { TituloComponent } from '@ng-mf/data-access-user';
+import { InputFecha } from '@libs/shared/data-access-user/src';
+import { InputFechaComponent } from '@libs/shared/data-access-user/src';
+import { TablaDinamicaComponent } from '@libs/shared/data-access-user/src';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 import { EXPRESAS_EXTRANJERAS, EmpresasEXtranjeras, ExpresasConfiguration, FederatariosEncabezado } from '../../models/federatarios-y-plantas.model';
 import { FederatariosYPlantasConfiguration } from '../../models/federatarios-y-plantas.model';
@@ -29,8 +29,16 @@ import { FormsModule } from '@angular/forms';
 import { Modal } from 'bootstrap';
 import { MontosDeInversionComponent } from '../montos-de-inversion/montos-de-inversion.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { TablaSeleccion } from '@ng-mf/data-access-user';
+import { TablaSeleccion } from '@libs/shared/data-access-user/src';
 import { Validators } from '@angular/forms';
+
+
+import { FederatoriosState, FederatoriosStore } from '../../../estados/tramites/federatarios.store';
+import { Subject,map,takeUntil } from 'rxjs';
+import { Catalogo } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { FederatoriosQuery } from '../../../estados/queries/federatarios.query';
+
 /**
  * Componente para los federatarios y plantas
  * @export FederatariosYPlantasComponent
@@ -57,7 +65,11 @@ import { Validators } from '@angular/forms';
   templateUrl: './federatarios-y-plantas.component.html',
   styleUrl: './federatarios-y-plantas.component.scss',
 })
-export class FederatariosYPlantasComponent {
+/**
+ * Componente para gestionar federatarios y sus plantas asociadas.
+ * Inicializa los datos necesarios al iniciar el componente.
+ */
+export class FederatariosYPlantasComponent implements OnInit {
 
 
   /**
@@ -189,22 +201,41 @@ export class FederatariosYPlantasComponent {
    * Opciones de estados disponibles
    * @property {[]} estadoOptions
    */
-  estadoOptions: [] = [];
+    @Input() estadoOptions!:Catalogo[];
 
   /**
    * Texto para mostrar en la alerta
    * @property {string} textodAlerta
    */
   public textodAlerta = TEXTO_DE_ALERTA;
-
+/**
+   * Estado de la solicitud 250101, que contiene los valores actuales de la solicitud.
+   */
+  public solicitudState!: FederatoriosState;
+ 
   /**
    * Formulario para los datos de federatarios
    * @property {FormGroup} federatariosFormGroup
    */
   public federatariosFormGroup!: FormGroup;
-
+/**
+   * Subject utilizado para gestionar la destrucción del componente y evitar memory leaks.
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+ 
+  /** Indica si el formulario debe mostrarse en modo solo lectura.  
+ *  Controla la habilitación o deshabilitación de los campos. */
+ esFormularioSoloLectura: boolean = false;
+/** 
+ * Formularios reactivos para capturar información de empresas y plantas. 
+ * Se inicializan en el ciclo de vida del componente. 
+ */
   public expresasFormGroup!: FormGroup;
-
+  /** 
+ * Formularios reactivos para capturar información de empresas y plantas. 
+ * Se inicializan en el ciclo de vida del componente. 
+ */
+plantasForm!: FormGroup;
   /**
    * Emisor de eventos para los datos del formulario de federatarios.
    * @type {EventEmitter<FederatariosEncabezado>}
@@ -217,11 +248,76 @@ export class FederatariosYPlantasComponent {
    * @param {Router} router - Servicio de Angular para la navegación.
    * @param {ActivatedRoute} activatedRoute - Servicio de Angular para obtener información sobre la ruta actual.
    */
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute ,private federatoriosQuery:FederatoriosQuery,private federatoriosStore:FederatoriosStore,private consultaioQuery: ConsultaioQuery,)
+   {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+       
+          this.inicializarCertificadoFormulario();
+        })
+      )
+      .subscribe()
+  }
+/**
+   * Método que se ejecuta cuando el componente es inicializado.
+   * 
+   * Inicializa el formulario reactivo con los valores actuales de la solicitud.
+   */
+  ngOnInit(): void {
+   this.inicializarCertificadoFormulario();
+  }
+ /**
+   * Método para inicializar el formulario reactivo con los datos de la solicitud.
+   * 
+   * Este método configura los campos del formulario con los valores actuales del estado de la solicitud
+   * y aplica las validaciones necesarias. También deshabilita ciertos campos y establece valores predeterminados.
+   */
+  inicializarCertificadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+     this.inicializarFormulario()
+    }  
+  }
+    /**
+   * @comdoc
+   * Guarda los datos del formulario de combinación requerida.
+   * 
+   * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
+   * - Si el formulario es de solo lectura, lo deshabilita.
+   * - Si no es de solo lectura, lo habilita.
+   * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+       this.federatariosFormGroup.disable();
+       this.expresasFormGroup.disable();
+       this.plantasForm.disable();
+      } else {
+      this.federatariosFormGroup.enable();
+      this.expresasFormGroup.enable();
+       this.plantasForm.enable();
+      }
+  }
+   /** Inicializa los datos del formulario suscribiéndose al estado del trámite.  
+ *  Asigna el estado actual al modelo local del componente. */
+   inicializarFormulario(): void {
+      this.federatoriosQuery.selectSolicitud$
+          .pipe(
+            takeUntil(this.destroyNotifier$),
+            map((seccionState) => {
+              this.solicitudState = seccionState as FederatoriosState;
+            })
+          )
+          .subscribe();
     this.initFederatariosFormGroup();
     this.initExpresasFormGroup();
-  }
-
+    
+   }
   /**
    * Inicializa el formulario de federatarios con sus campos y validaciones
    * @method initFederatariosFormGroup
@@ -229,14 +325,14 @@ export class FederatariosYPlantasComponent {
    */
   initFederatariosFormGroup(): void {
     this.federatariosFormGroup = new FormGroup({
-      nombre: new FormControl('', Validators.required),
-      fechaInicioInput: new FormControl(''),
-      primerApellido: new FormControl(''),
-      segundoApellido: new FormControl(''),
-      numeroDeActa: new FormControl(''),
-      numeroDeNotaria: new FormControl(''),
-      estado: new FormControl(''),
-      estadoOptions: new FormControl(''),
+      nombre: new FormControl( this.solicitudState['nombre'], Validators.required),
+      fechaDelActa: new FormControl(this.solicitudState['fechaDelActa']),
+      primerApellido: new FormControl(this.solicitudState['primerApellido']),
+      segundoApellido: new FormControl(this.solicitudState['segundoApellido']),
+      numeroDeActa: new FormControl(this.solicitudState['numeroDeActa']),
+      numeroDeNotaria: new FormControl(this.solicitudState['numeroDeNotaria']),
+      estado: new FormControl(this.solicitudState['estado']),
+      estadoOptions: new FormControl(this.solicitudState['estadoOptions']),
     });
   }
 
@@ -252,11 +348,16 @@ export class FederatariosYPlantasComponent {
    */
   initExpresasFormGroup(): void {
     this.expresasFormGroup = new FormGroup({
-      taxId: new FormControl('', Validators.required),
-      nombreDelEmpresa: new FormControl('', Validators.required),
-      pais: new FormControl('', Validators.required),
-      direccion: new FormControl('', Validators.required),
+      taxId: new FormControl(this.solicitudState['taxId'], Validators.required),
+      nombreDelEmpresa: new FormControl(this.solicitudState['nombreDelEmpresa'], Validators.required),
+      pais: new FormControl(this.solicitudState['pais'], Validators.required),
+      direccion: new FormControl(this.solicitudState['direccion'], Validators.required),
     });
+     this.plantasForm = new FormGroup({
+    estadoDos: new FormControl(this.solicitudState['estadoDos'], Validators.required),
+    representacionFederal: new FormControl(this.solicitudState['representacionFederal'], Validators.required),
+    actividadProductiva: new FormControl(this.solicitudState['actividadProductiva'], Validators.required),
+  });
   }
   /**
    * Navega a la ruta de acciones
@@ -267,7 +368,17 @@ export class FederatariosYPlantasComponent {
       relativeTo: this.activatedRoute,
     });
   }
-
+  /**
+   * Método que actualiza el store con los valores del formulario.
+   * 
+   * @param form - Formulario reactivo con los datos actuales.
+   * @param campo - El campo que debe actualizarse en el store.
+   * @param metodoNombre - El nombre del método en el store que se debe invocar.
+   */
+  setValoresStore(form: FormGroup, campo: string, metodoNombre: keyof FederatoriosStore): void {
+    const VALOR = form.get(campo)?.value;
+    (this.federatoriosStore[metodoNombre] as (value: unknown) => void)(VALOR);
+  }
   /**
    * Agrega los datos del formulario de federatarios y los emite.
    * @returns {void}
@@ -367,6 +478,27 @@ export class FederatariosYPlantasComponent {
    */
   aggregarExpresasDatos(): void {
     this.expresasDatos.push(this.expresasFormGroup.value);
+  }
+    /**
+  * compo doc
+  * @method establecerCambioDeValor
+  * @description
+  * Este método se utiliza para manejar los cambios en los valores de un formulario dinámico.
+  * Recibe un evento que contiene el nombre del campo y su nuevo valor, y actualiza el estado
+  * dinámico del formulario en el store correspondiente.
+  * 
+  * @param event - Un objeto que contiene el campo que ha cambiado y su nuevo valor.
+  * El objeto tiene la estructura: `{ campo: string; valor: any }`.
+  * 
+  * @example
+  * establecerCambioDeValor({ campo: 'nombre', valor: 'Juan' });
+  * // Actualiza el campo 'nombre' con el valor 'Juan' en el store dinámico.
+  */
+  establecerCambioDeValor(event: { campo: string; valor: object | string }): void {
+    if (event) {
+      this.federatoriosStore.setDynamicFieldValue(event.campo, event.valor);
+      
+    }
   }
 
 }

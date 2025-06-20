@@ -13,7 +13,7 @@ export const ENVIRONMENT = {
     "login": "http://localhost:4201",
     "agace": "http://localhost:4209",
     "aga": "http://localhost:4202",
-    "agriculture": "http://localhost:4204",
+    "agricultura": "http://localhost:4204",
     "se": "http://localhost:4205",
     "semarnat": "http://localhost:4206",
     "funcionario": "http://localhost:4210",

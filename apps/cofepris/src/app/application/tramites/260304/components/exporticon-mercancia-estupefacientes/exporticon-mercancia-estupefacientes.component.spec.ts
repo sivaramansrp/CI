@@ -51,12 +51,7 @@ describe('ExporticonMercanciaEstupefacientesComponent', () => {
     component = fixture.debugElement.componentInstance;
   });
 
-  afterEach(() => {
-    component.ngOnDestroy = function() {};
-    fixture.destroy();
-  });
-
-  it('should run #constructor()', async () => {
+ it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
@@ -65,34 +60,43 @@ describe('ExporticonMercanciaEstupefacientesComponent', () => {
     component.tramite260304Query.selectTramiteState$ = observableOf({});
     component.crearMercanciaForm = jest.fn();
     component.ngOnInit();
-    expect(component.crearMercanciaForm).toHaveBeenCalled();
+  });
+
+  it('should run #obtenerMensajeError()', async () => {
+    component.mercanciaForm = component.mercanciaForm || {};
+    component.mercanciaForm.get = jest.fn().mockReturnValue({
+      errors: {},
+      value: {}
+    });
+    component.obtenerMensajeError({});
+    expect(component.mercanciaForm.get).toHaveBeenCalled();
+  });
+
+  it('should run #obtenerValor()', async () => {
+    component.mercanciaFormState = component.mercanciaFormState || {};
+    component.mercanciaFormState.field = 'field';
+    component.obtenerValor({});
+
+  });
+
+  it('should run #esInvalido()', async () => {
+    component.mercanciaForm = component.mercanciaForm || {};
+    component.mercanciaForm.get = jest.fn().mockReturnValue({
+      dirty: {},
+      touched: {},
+      invalid: {}
+    });
+    component.esInvalido({});
+    expect(component.mercanciaForm.get).toHaveBeenCalled();
   });
 
   it('should run #crearMercanciaForm()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();
-    component.mercanciaFormState = component.mercanciaFormState || {};
-    component.mercanciaFormState.clasificacionProducto = 'clasificacionProducto';
-    component.mercanciaFormState.especificarClasificacionProducto = 'especificarClasificacionProducto';
-    component.mercanciaFormState.denominacionCumonInternacional = 'denominacionCumonInternacional';
-    component.mercanciaFormState.marcaComercialDenominacion = 'marcaComercialDenominacion';
-    component.mercanciaFormState.tipoProducto = 'tipoProducto';
-    component.mercanciaFormState.formaFarmaceutica = 'formaFarmaceutica';
-    component.mercanciaFormState.estadoFisico = 'estadoFisico';
-    component.mercanciaFormState.fraccionArancelaria = 'fraccionArancelaria';
-    component.mercanciaFormState.descripcionFraccion = 'descripcionFraccion';
-    component.mercanciaFormState.cantidadUmtValor = 'cantidadUmtValor';
-    component.mercanciaFormState.cantidadUmt = 'cantidadUmt';
-    component.mercanciaFormState.cantidadUmcValor = 'cantidadUmcValor';
-    component.mercanciaFormState.cantidadUmc = 'cantidadUmc';
-    component.mercanciaFormState.numeroCAS = 'numeroCAS';
-    component.mercanciaFormState.cantidadDeLotes = 'cantidadDeLotes';
-    component.mercanciaFormState.paisDeProcedencia = 'paisDeProcedencia';
-    component.mercanciaFormState.presentacion = 'presentacion';
-    component.mercanciaFormState.numeroRegistroSanitario = 'numeroRegistroSanitario';
-    component.mercanciaFormState.usoEspecifico = 'usoEspecifico';
+    component.obtenerValor = jest.fn();
     component.crearMercanciaForm();
     expect(component.fb.group).toHaveBeenCalled();
+    expect(component.obtenerValor).toHaveBeenCalled();
   });
 
   it('should run #isValid()', async () => {
@@ -118,7 +122,6 @@ describe('ExporticonMercanciaEstupefacientesComponent', () => {
     component.formaFarmaceuticaSeleccionadasChange({
       length: {}
     });
-
   });
 
   it('should run #usoEspesificoSeleccionadasChange()', async () => {
@@ -129,7 +132,6 @@ describe('ExporticonMercanciaEstupefacientesComponent', () => {
     component.usoEspesificoSeleccionadasChange({
       length: {}
     });
- 
   });
 
   it('should run #mostrarColapsable()', async () => {

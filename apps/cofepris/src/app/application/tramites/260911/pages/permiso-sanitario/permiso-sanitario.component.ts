@@ -5,6 +5,7 @@ import { FormGroup } from '@angular/forms';
 import { ListaPasosWizard } from '@ng-mf/data-access-user';
 import { PASOS } from '@ng-mf/data-access-user';
 import { WizardComponent } from '@ng-mf/data-access-user';
+
 /**
  * Interfaz que representa la acción de un botón.
  */
@@ -21,6 +22,8 @@ interface AccionBoton {
 
 /**
  * Componente que representa los pasos de datos en un proceso de múltiples pasos.
+ * Gestiona el flujo de un asistente (wizard) para el trámite de permiso sanitario,
+ * incluyendo la navegación entre pasos, manejo de mensajes y datos asociados.
  */
 @Component({
   /**
@@ -37,28 +40,34 @@ export class PermisoSanitarioComponent {
    * Variable para almacenar mensajes de información o error.
    */
   message: string | undefined;
- /**
-   * Método para manejar mensajes de error.
+
+  /**
+   * Maneja mensajes de error.
    * Asigna el mensaje de error a la variable `message` y lanza una excepción.
    * @param errorMessage El mensaje de error que se desea mostrar.
    */
- errorMessage(errorMessage: string): void {
-  this.message = errorMessage;
-  throw new Error('Method not implemented.');
-}
+  errorMessage(errorMessage: string): void {
+    this.message = errorMessage;
+    throw new Error('Method not implemented.');
+  }
 
-/**
- * Método estático para manejar el evento de envío.
- * Actualmente no implementado.
- */
-static onSubmit(): void {
-  throw new Error('Method not implemented.');
-}
+  /**
+   * Método estático para manejar el evento de envío.
+   * Actualmente no implementado.
+   * @throws Error siempre que se llama, ya que no está implementado.
+   */
+  static onSubmit(): void {
+    throw new Error('Method not implemented.');
+  }
+
+  /**
+   * Formulario reactivo asociado al componente.
+   */
+  form: FormGroup | undefined;
 
   /**
    * Lista de pasos en el asistente.
    */
-  form: FormGroup | undefined;
   pasos: ListaPasosWizard[] = PASOS;
 
   /**
@@ -77,7 +86,7 @@ static onSubmit(): void {
   indice: number = 1;
 
   /**
-   * Datos para los pasos en el asistente.
+   * Datos para los pasos en el asistente, incluyendo número de pasos, índice y textos de botones.
    */
   datosPasos: DatosPasos = {
     nroPasos: this.pasos.length,
@@ -86,11 +95,14 @@ static onSubmit(): void {
     txtBtnSig: 'Continuar',
   };
 
-  // contiene el aviso de privacidad y lo asigna al valor correspondiente
+  /**
+   * Contiene el aviso de privacidad y lo asigna al valor correspondiente.
+   */
   AVISO_DE_PRIVACIDAD = AVISO.Aviso;
 
   /**
    * Actualiza el valor del índice según el evento del botón de acción.
+   * Navega al siguiente o anterior paso en el asistente según la acción recibida.
    * @param e El evento del botón de acción que contiene la acción y el valor.
    */
   public getValorIndice(e: AccionBoton): void {

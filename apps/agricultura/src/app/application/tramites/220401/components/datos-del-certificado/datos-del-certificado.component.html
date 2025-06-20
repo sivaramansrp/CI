@@ -1,0 +1,69 @@
+<div class="container">
+  <form [formGroup]="datosdelForm">
+
+    <ng-titulo titulo="Datos del trámite a realizar" />
+    <div class="row">
+      <div class="col-md-12">
+        <label for="Tipo_de_Certificado">Tipo de Certificado</label>
+        <span class="require">*</span>
+      </div>
+    </div>
+    <app-input-radio [radioOptions]="radioOptions" [isRequired]="true" [selectedValue]="selectedValue"
+      (change)="setValoresStore(datosdelForm,'certificada', 'setCertificada')" [layout]="'vertical'"
+      formControlName="certificada"></app-input-radio>
+    <div class="row mt-4">
+      <div class="col-md-12">
+        <label for="message" class="form-label">Tratamiento :</label>
+        <textarea id="message" formControlName="tratamiento" class="form-control mb-5" placeholder=""
+          readonly="true"></textarea>
+      </div>
+    </div>
+  </form>
+
+  <form [formGroup]="formGroup1">
+    <ng-titulo titulo="Unidad expedidora"></ng-titulo>
+
+    <app-input-radio class="fw-semibold" [radioOptions]="radioBoton" [selectedValue]="defaultSelect" [isRequired]="true"
+      formControlName="osia" (valueChange)="onValueChange($event)" [layout]="'horizontal'"
+      (change)="setValoresStore(formGroup1,'osia', 'setosia')"></app-input-radio>
+
+    <div *ngIf="defaultSelect === 'oficina central'">
+      <div class="row">
+
+        <div class="col-md-4" *ngFor="let config of catalogConfigs">
+          <app-catalogo-select [required]="config.required" [catalogo]="config.catalogo" [label]="config.label"
+            [formControlName]="config.controlName" [isDisabled]="esFormularioSoloLectura"
+            (change)="getDelegaciones()"></app-catalogo-select>
+        </div>
+      </div>
+    </div>
+  </form>
+
+
+
+  <ng-titulo titulo="Datos Generales de la mercancia Animal"></ng-titulo>
+  <h6>Mercancias</h6>
+
+  <ng-table [disableSeleccionTablaCheckBox]="esFormularioSoloLectura? true : false" [commonTableHeader]="tableColumns"
+    [commonTableBody]="mercanciasData"></ng-table>
+  <div class="text-end">
+    <button class="btn btn-primary me-2" type="button" [disabled]="esFormularioSoloLectura? true : false">
+      Carga por archivo
+    </button>
+    <button class="btn btn-primary" type="button" [disabled]="esFormularioSoloLectura? true : false">
+      Agregar
+    </button>
+  </div>
+  <form [formGroup]="datosdelForm">
+    <div class="mb-5">
+      <label for="message" class="form-label">Tratamiento:</label>
+      <textarea class="form-control" rows="5" formControlName="datoscertificado"
+        (change)="setValoresStore(datosdelForm,'datoscertificado','setdatoscertificado')"></textarea>
+    </div>
+    <div class="container text-end mt-5">
+      <button class="btn btn-default me-2" [disabled]="esFormularioSoloLectura? true : false">Guardar</button>
+      <button class="btn btn-primary" [disabled]="esFormularioSoloLectura? true : false">Continuar</button>
+    </div>
+  </form>
+  
+</div>

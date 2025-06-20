@@ -1,5 +1,5 @@
+import { Catalogo, ConsultaioQuery } from '@ng-mf/data-access-user';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Catalogo } from '@ng-mf/data-access-user';
 import { REGEX_NUMERO_DECIMAL_ENTERO } from '@ng-mf/data-access-user';
 import { REG_X } from '@ng-mf/data-access-user';
 
@@ -8,14 +8,14 @@ import { REGEX_SOLO_NUMEROS } from '@ng-mf/data-access-user';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
+import { Tramite130113State, Tramite130113Store } from '../../estados/tramites/tramites130113.store';
 import { ConfiguracionColumna } from '@ng-mf/data-access-user';
-import { ImportacionEquipoAnticontaminanteService } from '../../services/importacion-equipo-anticontaminante-.service';
+import { ImportacionEquipoAnticontaminanteService } from '../../services/importacion-equipo-anticontaminante.service';
 import { PartidasDeLaMercanciaModelo } from '../../../../shared/models/partidas-de-la-mercancia.model';
 import PartidasdelaTable from '@libs/shared/theme/assets/json/130113/partidas-de-la.json';
 import { ProductoOpción } from '../../../../shared/constantes/vehiculos-adaptados.enum';
 import { TEXTOS } from '../../../../shared/constantes/representacion-federal.enum';
 import { Tramite130113Query } from '../../estados/queries/tramite130113.query';
-import { Tramite130113Store } from '../../estados/tramites/tramites130113.store';
 
 import { TablaSeleccion } from '@libs/shared/data-access-user/src/core/enums/tabla-seleccion.enum';
 import fractionValues from '@libs/shared/theme/assets/json/130113/fraccion_arancelaria.json';
@@ -186,6 +186,17 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    * {any}
    */
   TEXTOS = TEXTOS;
+   /**
+     * Indica si el formulario está en modo solo lectura.
+     * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  esFormularioSoloLectura: boolean = false;
+   /**
+    * Estado interno de la sección actual del trámite 130110.
+    * Utilizado para gestionar y almacenar la información relacionada con esta sección.
+    * Propiedad privada.
+   */
+    private seccionState!: Tramite130113State;
   /**
    * Constructor del componente.
    *{FormBuilder} fb - Servicio para la creación de formularios reactivos.
@@ -198,14 +209,23 @@ export class SolicitudComponent implements OnInit, OnDestroy {
     private tramite130113Store: Tramite130113Store,
     private tramite130113Query: Tramite130113Query,
     private importacionEquipoAnticontaminanteService: ImportacionEquipoAnticontaminanteService,
+     private consultaioQuery: ConsultaioQuery
   ) {
-    //constructor
+    this.inicializarFormularios();
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyed$),
+        map((seccionState)=>{
+          this.esFormularioSoloLectura = seccionState.readonly; 
+          
+        })
+      )
+      .subscribe()
   }
   /**
    *  Ciclo de vida de Angular: inicializa formularios, suscripciones y opciones al cargar el componente.
    */
   ngOnInit(): void {
-    this.inicializarFormularios();
     this.configuracionFormularioSuscripciones();
     this.opcionesDeBusqueda();
     this.formularioTotalCount();
@@ -223,19 +243,48 @@ export class SolicitudComponent implements OnInit, OnDestroy {
 
    
   }
+/**
+     * Evalúa si se debe inicializar o cargar datos en el formulario.
+     */
+    inicializarEstadoFormulario(): void {
+      if (this.esFormularioSoloLectura) {
+        this.guardarDatosFormulario(); // Llama al método para cargar los datos del formulario
+      } else {
+        this.inicializarFormularios();
+      }
+    }
 
+    /**
+ * Se suscribe a los cambios del estado de la solicitud en el store de Tramite130111.
+ * Cada vez que el estado cambia, actualiza la propiedad interna `seccionState` con los nuevos datos.
+ * Esta suscripción se cancela automáticamente al destruir el componente para evitar fugas de memoria.
+ */
+  suscribirseAEstadoDeSolicitud(): void {
+      this.tramite130113Query.selectSolicitud$?.pipe(takeUntil(this.destroyed$))
+      .subscribe((data: Tramite130113State) => {
+        this.seccionState = data;
+      });
+  }
+     /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+    guardarDatosFormulario(): void {
+      this.inicializarFormularios();
+    }
   /**
    *  Inicializa los formularios reactivos `formDelTramite` y `mercanciaForm`.
    */
   inicializarFormularios(): void {
+    this.suscribirseAEstadoDeSolicitud();
     this.formDelTramite = this.fb.group({
       solicitud: ['', Validators.required],
-      regimen: ['', Validators.required],
-      clasificacion: ['', Validators.required],
+      regimen: [{value:this.seccionState?.regimen,disabled: true}, Validators.required],
+      clasificacion: [{value:this.seccionState?.clasificacion,disabled: true}, Validators.required],
     });
 
     this.mercanciaForm = this.fb.group({
-      producto: ['Nuevo'],
+      producto: [],
       descripcion: [
         '',
         [
@@ -392,10 +441,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (data) => {
           this.opcionesSolicitud = data.options;
-          this.tramite130113Store.actualizarEstado({
-            solicitud: data.options[0]?.value || '',
-            defaultSelect: data.defaultSelect || 'Inicial',
-          });
+         
         },
         error: (error) =>
           console.error('Error loading solicitude options:', error),
@@ -425,7 +471,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       ? [filasSeleccionadas[0]]
       : [];
     if (this.filaSeleccionada) {
-      this.tramite130113Store.storeTableValues(this.filaSeleccionada);
+      this.tramite130113Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
     }
   }
 
@@ -439,6 +485,7 @@ export class SolicitudComponent implements OnInit, OnDestroy {
       this.partidasDelaMercanciaForm.markAllAsTouched();
     } else {
       this.mostrarTabla = true;
+      this.tramite130113Store.actualizarEstado({mostrarTabla:true});
     }
   }
  
@@ -448,8 +495,8 @@ export class SolicitudComponent implements OnInit, OnDestroy {
    */
   navegarParaModificarPartida(): void {
     if (this.filaSeleccionada) {
-      this.tramite130113Store.setMostrarTabla(true);
-      this.tramite130113Store.storeTableValues(this.filaSeleccionada);
+      this.tramite130113Store.actualizarEstado({mostrarTabla:true});
+      this.tramite130113Store.actualizarEstado({filaSeleccionada:this.filaSeleccionada});
     }
   }
   /**

@@ -87,4 +87,73 @@ describe('BandejaDeSolicitudesComponent (Jest)', () => {
     expect(nextSpy).toHaveBeenCalled();
     expect(completeSpy).toHaveBeenCalled();
   });
+
+  it('should not modify other properties of selectedDepartamentoObj', () => {
+    const initialObj = {
+      tieneDepartamento: true,
+      numeroDeProcedimiento: '1',
+      nombreDelDepartamento: 'Depto'
+    };
+    component.selectedDepartamentoObj = { ...initialObj };
+    const evento = { campo: 'numeroDeProcedimiento', valor: '1' };
+    component.procedureNumero(evento);
+    expect(component.selectedDepartamentoObj.tieneDepartamento).toBe(true);
+    expect(component.selectedDepartamentoObj.nombreDelDepartamento).toBe('Depto');
+    expect(component.selectedDepartamentoObj.numeroDeProcedimiento).toBe('1');
+  });
+
+  it('should not modify other properties of selectedDepartamentoObj', () => {
+    const initialObj = {
+      tieneDepartamento: true,
+      numeroDeProcedimiento: '1',
+      nombreDelDepartamento: 'Depto'
+    };
+    component.selectedDepartamentoObj = { ...initialObj };
+    const evento = { campo: 'numeroDeProcedimiento', valor: '1' };
+    component.procedureNumero(evento);
+    expect(component.selectedDepartamentoObj.tieneDepartamento).toBe(true);
+    expect(component.selectedDepartamentoObj.nombreDelDepartamento).toBe('Depto');
+    expect(component.selectedDepartamentoObj.numeroDeProcedimiento).toBe('1');
+  });
+
+  describe('bandejaConfiguracionTabla', () => {
+    it('should have 7 columns with correct headers and order', () => {
+      expect(component.bandejaConfiguracionTabla.length).toBe(7);
+
+      const headers = component.bandejaConfiguracionTabla.map(col => col.encabezado);
+      expect(headers).toEqual([
+        'Id solicitud',
+        'Tipo de trámite',
+        'Fecha creación',
+        'Fecha actualización',
+        'Dias transcurridos',
+        'Departamento',
+        'Número de procedimiento'
+      ]);
+
+      const orders = component.bandejaConfiguracionTabla.map(col => col.orden);
+      expect(orders).toEqual([1, 2, 3, 4, 5, 6, 7]);
+    });
+
+    it('should extract correct values using clave functions', () => {
+      const testRow = {
+        id: 42,
+        tipoDeTramite: 'Alta',
+        fecha: '2024-06-01',
+        fechaActualizacion: '2024-06-02',
+        diasTranscurridos: '1',
+        departamento: 'TI',
+        numeroDeProcedimiento: '2'
+      };
+
+      expect(component.bandejaConfiguracionTabla[0].clave(testRow)).toBe(42);
+      expect(component.bandejaConfiguracionTabla[1].clave(testRow)).toBe('Alta');
+      expect(component.bandejaConfiguracionTabla[2].clave(testRow)).toBe('2024-06-01');
+      expect(component.bandejaConfiguracionTabla[3].clave(testRow)).toBe('2024-06-02');
+      expect(component.bandejaConfiguracionTabla[4].clave(testRow)).toBe('1');
+      expect(component.bandejaConfiguracionTabla[5].clave(testRow)).toBe('TI');
+      expect(component.bandejaConfiguracionTabla[6].clave(testRow)).toBe('2');
+    });
+  });
+
 });

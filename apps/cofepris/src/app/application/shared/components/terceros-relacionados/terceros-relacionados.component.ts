@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, Output } from '@angular/core';
 import { Input } from '@angular/core';
 import { OnInit } from '@angular/core';
 
@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 
 import {
   AlertComponent,
+  ConsultaioQuery,
   Notificacion,
   NotificacionesComponent,
 } from '@ng-mf/data-access-user';
@@ -32,6 +33,8 @@ import { Facturador } from '../../models/terceros-relacionados.model';
 import { MENSAJE_TABLA_OBLIGATORIA } from '../../models/terceros-relacionados.model';
 import { PROVEEDOR_ENCABEZADO_DE_TABLA } from '../../models/terceros-relacionados.model';
 import { Proveedor } from '../../models/terceros-relacionados.model';
+import { TercerosRelacionadosFebService } from '../../services/tereceros-relacionados-feb.service';
+import { map, Subject, takeUntil } from 'rxjs';
 
 /**
  * @component TercerosRelacionadosComponent
@@ -52,7 +55,7 @@ import { Proveedor } from '../../models/terceros-relacionados.model';
   templateUrl: './terceros-relacionados.component.html',
   styleUrl: './terceros-relacionados.component.css',
 })
-export class TercerosRelacionadosComponent implements OnInit {
+export class TercerosRelacionadosComponent implements OnInit, OnDestroy {
   /**
    * @property {number} idProcedimiento
    * Identificador único del procedimiento asociado a la solicitud.
@@ -61,6 +64,12 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @decorador @Input
    */
   @Input() public idProcedimiento!: number;
+
+  /**
+   * @property {boolean} formularioDeshabilitado - Indica si el formulario está deshabilitado.
+   */
+  @Input() formularioDeshabilitado: boolean = false;
+
   /**
    * @property {string} infoAlert
    * Tipo de alerta visual mostrada en la interfaz.
@@ -229,7 +238,7 @@ export class TercerosRelacionadosComponent implements OnInit {
    * @param tramiteStore - Store que administra los datos del trámite.
    * @param tramiteQuery - Servicio para consultar los datos del trámite.
    */
-  constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+  constructor(private router: Router, private activatedRoute: ActivatedRoute,private tercerosService: TercerosRelacionadosFebService,private consultaioQuery: ConsultaioQuery,) {
     this.seleccionarFilaNotificacion = {
       tipoNotificacion: 'alert',
       categoria: 'danger',
@@ -241,6 +250,14 @@ export class TercerosRelacionadosComponent implements OnInit {
       txtBtnAceptar: 'Aceptar',
       txtBtnCancelar: '',
     };
+     this.consultaioQuery.selectConsultaioState$
+        .pipe(
+          takeUntil(this.destroy$),
+          map((seccionState)=>{
+            this.formularioDeshabilitado = seccionState.readonly; 
+          })
+        )
+        .subscribe()
   }
 
   /**
@@ -300,6 +317,11 @@ export class TercerosRelacionadosComponent implements OnInit {
    */
   public mostrarAlerta: boolean = false;
 
+     /**
+    * Subject utilizado para destruir las suscripciones y evitar fugas de memoria.
+    */
+      private destroy$ = new Subject<void>();
+
   /**
    * @method irAAcciones
    * @description Navega a la ruta relativa proporcionada desde el contexto actual.
@@ -323,6 +345,31 @@ export class TercerosRelacionadosComponent implements OnInit {
     this.habilitarProveedor = OCULTAR_PROVEEDOR.includes(this.idProcedimiento)
       ? false
       : true;
+
+
+     this.tercerosService.getFabricanteTablaDatos()
+        .pipe(takeUntil(this.destroy$))
+            .subscribe((response: Destinatario[]) => {
+          this.fabricanteTablaDatos= response;
+           });
+
+     this.tercerosService.getFabricanteTablaDatos()
+       .pipe(takeUntil(this.destroy$))
+         .subscribe((response: Destinatario[]) => {
+           this.destinatarioFinalTablaDatos= response;
+         });
+
+    this.tercerosService.getFabricanteTablaDatos()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((response: Proveedor[]) => {
+       this.proveedorTablaDatos= response;
+ });
+
+    this.tercerosService.getFabricanteTablaDatos()
+      .pipe(takeUntil(this.destroy$))
+         .subscribe((response: Facturador[]) => {
+           this.facturadorTablaDatos= response;
+           });
   }
 
   /**
@@ -495,5 +542,14 @@ export class TercerosRelacionadosComponent implements OnInit {
     );
 
     this.facturadorEliminar.emit(this.facturadorTablaDatos);
+  }
+
+  /**
+   * Ciclo de vida `OnDestroy`.
+   * Limpia las suscripciones para evitar fugas de memoria.
+   */
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

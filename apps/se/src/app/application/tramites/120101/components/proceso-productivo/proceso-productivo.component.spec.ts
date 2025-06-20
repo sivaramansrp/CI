@@ -42,6 +42,9 @@ describe('ProcesoProductivoComponent', () => {
     component = fixture.componentInstance;
     eliminarControlesDinamicosSpy = jest.spyOn(component, 'eliminarControlesDinamicos');
     establecerValorDeFormularioSpy = jest.spyOn(component, 'establecerValorDeFormulario');
+    component.consultaState = {
+      readonly: false,
+    } as any;
     fixture.detectChanges();
   });
 

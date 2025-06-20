@@ -54,6 +54,12 @@ export class TablaExpandibleComponent<T, TN> {
   @Input() tableId!: string;
 
   /**
+   * Este input permite deshabilitar la selección de filas mediante checkboxes en la tabla.
+   * Si se establece en `true`, los checkboxes de selección estarán deshabilitados.
+   */
+  @Input() disableSeleccionTablaCheckBox: boolean = false;
+
+  /**
    * Valor de selección de entrada
    */
   private _seleccionEntrada!: number;
@@ -81,7 +87,7 @@ export class TablaExpandibleComponent<T, TN> {
   /**
    * Evento emitido cuando se alterna un valor
    */
-  @Output() alternarValor: EventEmitter<{ row: T; column: string }> = new EventEmitter();
+  @Output() alternarValor: EventEmitter<T> = new EventEmitter();
 
   /**
    * ID de la fila seleccionada
@@ -171,7 +177,7 @@ export class TablaExpandibleComponent<T, TN> {
   /**
    * Alterna un valor en una fila
    */
-  cambiarValor(fila: any): void {
+  cambiarValor(fila: T): void {
     this.alternarValor.emit(fila);
   }
 

@@ -1,0 +1,110 @@
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { ConsultaioState } from '@libs/shared/data-access-user/src';
+import { DatosDeLaSolicitud } from '../../models/solicitud-pantallas.model';
+import { DatosDelTramiteARealizarComponent } from '../../shared/datos-del-tramite-a-realizar/datos-del-tramite-a-realizar.component';
+import { OnDestroy } from '@angular/core';
+import { OnInit } from '@angular/core';
+import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+import { SolicitudComponent } from '../../components/solicitud/solicitud.component';
+import { SolicitudPantallasService } from '../../services/solicitud-pantallas.service';
+import { Subject } from 'rxjs';
+import { map } from 'rxjs';
+import { takeUntil } from 'rxjs';
+/** Componente para gestionar el primer paso del trámite */
+@Component({
+  selector: 'app-paso-uno',
+  templateUrl: './paso-uno.component.html',
+  styleUrl: './paso-uno.component.scss',
+  imports: [
+    SolicitudComponent,
+    CatalogoSelectComponent,
+    CommonModule,
+    SolicitanteComponent,
+    DatosDelTramiteARealizarComponent
+  ],
+  standalone: true,
+})
+/** Componente para gestionar el primer paso del trámite */
+export class PasoUnoComponent implements OnInit, OnDestroy {
+  /** Realiza un seguimiento del índice de la pestaña seleccionada actualmente */
+  indice: number = 1;
+
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
+  /** Subject para notificar la destrucción del componente. */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /** Estado de la consulta que se obtiene del store. */
+  public consultaState!: ConsultaioState;
+
+  /**
+   * Constructor del componente PasoUnoComponent.
+   */
+  constructor(
+    private consultaQuery: ConsultaioQuery,
+    private solicitudPantallasService: SolicitudPantallasService
+  ) {
+    // Constructor vacío: La inicialización se realizará en métodos específicos según sea necesario.
+  }
+
+  /**
+   * Método que se ejecuta al inicializar el componente.
+   */
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
+    if (this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
+  }
+
+  /**
+   * Actualiza el índice de la pestaña seleccionada.
+   * @param i - The index of the selected tab
+   */
+  seleccionaTab(i: number): void {
+    this.indice = i;
+  }
+
+  /**
+   * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
+   * Luego reinicializa el formulario con los valores actualizados desde el store.
+   */
+  guardarDatosFormulario(): void {
+    this.solicitudPantallasService
+      .getDatosDeLaSolicitud()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp: DatosDeLaSolicitud) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.solicitudPantallasService.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
+
+  /**
+   * Método que se ejecuta cuando el componente se destruye.
+   */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
+  }
+}

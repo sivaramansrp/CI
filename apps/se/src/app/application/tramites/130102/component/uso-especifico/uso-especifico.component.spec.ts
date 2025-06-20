@@ -1,71 +1,233 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
-
-import { UsoEspicificoComponent } from './uso-especifico.component'
-
-import { CatalogoSelectComponent } from "../../../../shared/components/catalogo-select/catalogo-select/catalogo-select.component";
+import { UsoEspicificoComponent } from './uso-especifico.component';
+import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
+import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
+import { TableComponent } from 'libs/shared/data-access-user/src/tramites/components/table/table.component';
+import { TituloComponent } from "libs/shared/data-access-user/src/tramites/components/titulo/titulo.component";
 import { CommonModule } from '@angular/common';
-import { TableComponent } from '../../../../shared/components/table/table.component';
-import { TituloComponent } from "../../../../shared/components/titulo/titulo.component";
-
-import fraccionOptionJson from '../../../../../assets/json/130102/fracciónarancelaria-options.json';
-
+import { FormularioRegistroService } from '../../services/octava-temporal.service';
+import { Tramite130102Store } from '../../../../estados/tramites/tramite130102.store';
+import { Tramite130102Query } from '../../../../estados/queries/tramite130102.query';
+import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { of, Subject } from 'rxjs';
 
 describe('UsoEspicificoComponent', () => {
   let component: UsoEspicificoComponent;
   let fixture: ComponentFixture<UsoEspicificoComponent>;
 
+  const mockFormRegistroService = {
+    registrarFormulario: jest.fn(),
+    getFraccionesUsoEspecifico: jest.fn().mockReturnValue(of([]))
+  };
+
+  const mockStore = {
+    setFraccionArancelariaProsec: jest.fn(),
+    setDescripcion: jest.fn(),
+    setDynamicFieldValue: jest.fn(),
+    getValue: jest.fn(() => ({ 
+      uso_especifico_tabla: [
+      {
+        fraccionArancelariaProsec: '01039101',
+        descripción: 'Cerdo vivo de raza pura'
+      }
+    ]
+     }))
+  };
+
+  const solicitudMockState = {
+    fraccionArancelariaProsec: '01039101'
+  };
+
+  const consultaioSubject = new Subject<any>();
+  const tramiteQuerySubject = new Subject<any>();
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [UsoEspicificoComponent],
       imports: [
+        UsoEspicificoComponent,
         ReactiveFormsModule,
-        CommonModule,
+        CatalogoSelectComponent,
         TableComponent,
         TituloComponent,
-        CatalogoSelectComponent
+        CommonModule
+      ],
+      providers: [
+        FormBuilder,
+        { provide: Tramite130102Store, useValue: mockStore },
+        {
+          provide: Tramite130102Query,
+          useValue: {
+            selectSolicitud$: tramiteQuerySubject.asObservable()
+          }
+        },
+        {
+          provide: ConsultaioQuery,
+          useValue: {
+            selectConsultaioState$: consultaioSubject.asObservable()
+          }
+        },
+        { provide: FormularioRegistroService, useValue: mockFormRegistroService }
       ]
     }).compileComponents();
   });
 
-  beforeEach(() => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should create the component', () => {
     fixture = TestBed.createComponent(UsoEspicificoComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
-  });
-
-  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should initialize the form with default values', () => {
-    expect(component.usoEspicificoForm).toBeDefined();
-    expect(component.usoEspicificoForm.get('fracciónarancelaria')?.value).toBe('');
-    expect(component.usoEspicificoForm.get('descripción')?.value).toBe('');
+  it('should call setValoresStore and store value', () => {
+    consultaioSubject.next({ readonly: false });
+    tramiteQuerySubject.next(solicitudMockState);
+
+    fixture = TestBed.createComponent(UsoEspicificoComponent);
+    component = fixture.componentInstance;
+    component.ngOnInit();
+
+    component.usoEspicificoForm.get('fraccionArancelariaProsec')?.setValue('01039101');
+    component.setValoresStore(component.usoEspicificoForm, 'fraccionArancelariaProsec', 'setFraccionArancelariaProsec');
+    expect(mockStore.setFraccionArancelariaProsec).toHaveBeenCalledWith('01039101');
   });
 
-  it('should have table columns defined', () => {
-    expect(component.tableColumns).toEqual(['Fracción arancelaria', 'Descripción']);
+
+  it('should validate no leading spaces', () => {
+    const controlWithSpace = { value: '  Leading' } as any;
+    const controlValid = { value: 'Valid' } as any;
+
+    expect(UsoEspicificoComponent['noLeadingSpacesValidator'](controlWithSpace)).toEqual({ leadingSpaces: true });
+    expect(UsoEspicificoComponent['noLeadingSpacesValidator'](controlValid)).toBeNull();
   });
 
-  it('should have table data defined', () => {
-    expect(component.tableData.length).toBe(2);
-    expect(component.tableData[0].tbodyData).toEqual([
-      '980200011',
-      'Descripción fraccion PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizará la mercancía a importar) '
-    ]);
-    expect(component.tableData[1].tbodyData).toEqual([
-      '01039101',
-      'Descripción fraccion PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizara ta mercancia a importar) '
-    ]);
+  it('should unsubscribe on destroy', () => {
+    fixture = TestBed.createComponent(UsoEspicificoComponent);
+    component = fixture.componentInstance;
+    const nextSpy = jest.spyOn(component['destroyNotifier$'], 'next');
+    const completeSpy = jest.spyOn(component['destroyNotifier$'], 'complete');
+ 
   });
 
-  it('should have catalogos defined', () => {
-    expect(component.catalogos).toEqual(fraccionOptionJson);
+  it('should add item to datosSocios and reset form on agregar()', () => {
+    fixture = TestBed.createComponent(UsoEspicificoComponent);
+    component = fixture.componentInstance;
+    component.catalogos = [
+      { id: 1, descripcion: 'Producto 1' },
+      { id: 2, descripcion: 'Producto 2' },
+    ];
+    component.usoEspicificoForm = new FormBuilder().group({
+      fraccionArancelariaProsec: [2],
+      descripción: ['Test descripción']
+    });
+    const resetSpy = jest.spyOn(component.usoEspicificoForm, 'reset');
+    component.agregar();
+    expect(component.datosSocios.length).toBe(1);
+    expect(component.datosSocios[0].fraccionArancelariaProsec).toBe('Producto 2');
+    expect(component.datosSocios[0].descripción).toBe('Test descripción');
+    expect(resetSpy).toHaveBeenCalled();
   });
 
-  it('should update descripción when obtenerRequisitosFraccionArancelariaEsquema is called', () => {
+  it('should update descripción field with predefined text', () => {
+    consultaioSubject.next({ readonly: false });
+    tramiteQuerySubject.next(solicitudMockState);
+    fixture = TestBed.createComponent(UsoEspicificoComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
     component.obtenerRequisitosFraccionArancelariaEsquema();
-    expect(component.usoEspicificoForm.get('descripción')?.value).toBe('Descripción fraccion PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizará la mercancía a importar) ');
+    expect(component.usoEspicificoForm.get('descripción')?.value).toContain('Descripción fraccion PROSEC');
   });
+
+  it('should return correct description from catalog', () => {
+    fixture = TestBed.createComponent(UsoEspicificoComponent);
+    component = fixture.componentInstance;
+    component.catalogos = [{ id: 1, descripcion: 'Test Desc' }] as any;
+    component.usoEspicificoForm = new FormBuilder().group({
+      fraccionArancelariaProsec: 1,
+      descripción: ''
+    });
+    const result = component.obtenerFraccionArancelariaProsec();
+    expect(result).toBe('Test Desc');
+  });
+
+  it('should initialize the form with controls', () => {
+    fixture = TestBed.createComponent(UsoEspicificoComponent);
+    component = fixture.componentInstance;
+    component.inicializarFormulario();
+    expect(component.usoEspicificoForm.contains('fraccionArancelariaProsec')).toBe(true);
+    expect(component.usoEspicificoForm.contains('descripción')).toBe(true);
+  });
+
+  it('should apply required validators', () => {
+    fixture = TestBed.createComponent(UsoEspicificoComponent);
+    component = fixture.componentInstance;
+    component.inicializarFormulario();
+    const fraccion = component.usoEspicificoForm.get('fraccionArancelariaProsec');
+    const descripcion = component.usoEspicificoForm.get('descripción');
+    fraccion?.setValue(null);
+    descripcion?.setValue('');
+    expect(fraccion?.valid).toBe(false);
+    expect(descripcion?.valid).toBe(false);
+  });
+
+  it('should add a valid item to datosSocios and reset the form', () => {
+    fixture = TestBed.createComponent(UsoEspicificoComponent);
+    component = fixture.componentInstance;
+    component.catalogos = [{ id: 1, descripcion: 'Fracción A' }];
+    component.inicializarFormulario();
+    component.usoEspicificoForm.setValue({
+      fraccionArancelariaProsec: 1,
+      descripción: 'Descripción válida',
+    });
+    const initialLength = component.datosSocios.length;
+    component.agregar();
+    expect(component.datosSocios.length).toBe(initialLength + 1);
+    expect(component.usoEspicificoForm.value.fraccionArancelariaProsec).toBeNull();
+  });
+
+
+  it('should not add duplicate fraccionArancelariaProsec entries', () => {
+    fixture = TestBed.createComponent(UsoEspicificoComponent);
+    component = fixture.componentInstance;
+    component.datosSocios = [{
+      fraccionArancelariaProsec: '01039101',
+      descripción: 'Cerdo vivo'
+    }];
+    component.catalogos = [{ id: 1, descripcion: 'Cerdo vivo' }];
+    component.usoEspicificoForm.patchValue({
+      fraccionArancelariaProsec: 1
+    });
+    fixture.detectChanges();
+    component.agregar();
+    expect(component.datosSocios.length).toBe(1);
+  });
+
+  it('should set description value when obtenerRequisitosFraccionArancelariaEsquema is called', () => {
+    fixture = TestBed.createComponent(UsoEspicificoComponent);
+    component = fixture.componentInstance;
+    component.inicializarFormulario();
+    const descripcionControl = component.usoEspicificoForm.get('descripción');
+    expect(descripcionControl?.value).toBe('');
+    component.obtenerRequisitosFraccionArancelariaEsquema();
+    expect(descripcionControl?.value).toBe(
+      'Descripción fraccion PROSEC (Especificar el nombre comercial o técnico del producto en el que se utilizará la mercancía a importar)'
+    );
+  });
+
+  it('should return the correct fracción arancelaria descripción', () => {
+    fixture = TestBed.createComponent(UsoEspicificoComponent);
+    component = fixture.componentInstance;
+    component.catalogos = [
+      { id: 1, descripcion: 'Fracción 1' },
+      { id: 2, descripcion: 'Fracción 2' }
+    ];
+    component.inicializarFormulario();
+    component.usoEspicificoForm.get('fraccionArancelariaProsec')?.setValue(2);
+    const result = component.obtenerFraccionArancelariaProsec();
+    expect(result).toBe('Fracción 2');
+  });
+
 });

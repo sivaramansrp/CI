@@ -6,28 +6,46 @@
       <!-- Clave de referencia -->
       <div class="col-md-8">
         <label for="claveReferencia" class="form-label"
-          >Clave de referencia<span *ngIf="campoObligatorio">*</span>:</label
+          >Clave de referencia<span *ngIf="campoObligatorio"> *</span> :</label
         >
+        
         <input
           type="text"
           id="claveReferencia"
           class="form-control"
           formControlName="claveReferencia"
+          maxlength="50"
+          [disabled]="esFormularioSoloLectura"
         />
+        <div class="error-message">
+          <small *ngIf="pagoDerechosForm.get('claveReferencia')?.touched && pagoDerechosForm.get('claveReferencia')?.hasError('required')" class="text-danger">
+            Este campo es obligatorio.
+          </small>
+        </div>
       </div>
     </div>
     <div class="row g-3">
       <!-- Cadena de la dependencia -->
       <div class="col-md-8">
         <label for="cadenaDependencia" class="form-label"
-          >Cadena de la dependencia<span *ngIf="campoObligatorio">*</span>:</label
+          >Cadena de la dependencia<span *ngIf="campoObligatorio"> *</span> :</label
         >
         <input
           type="text"
           id="cadenaDependencia"
           class="form-control"
           formControlName="cadenaDependencia"
+          maxlength="50"
+          [disabled]="esFormularioSoloLectura"
         />
+        <div class="error-message">
+          <small *ngIf="pagoDerechosForm.get('cadenaDependencia')?.touched && pagoDerechosForm.get('cadenaDependencia')?.hasError('required')" class="text-danger">
+            Este campo es obligatorio.
+          </small> 
+          <small *ngIf="pagoDerechosForm.get('cadenaDependencia')?.touched && pagoDerechosForm.get('cadenaDependencia')?.hasError('pattern')" class="text-danger">
+            El formato de la cadena de la dependencia es incorrecto.
+          </small>
+        </div>       
       </div>
 
       <!-- Estado (using <app-catalogo-select>) -->
@@ -35,22 +53,38 @@
         <app-catalogo-select
           [catalogo]="bancoDatos"
           formControlName="banco"
-          [label]="'Banco*'"
+          [label]="'Banco'"
           [required]="true"
+          [isDisabled]="esFormularioSoloLectura"
         ></app-catalogo-select>
+        <div class="error-message">
+          <small *ngIf="pagoDerechosForm.get('banco')?.touched && pagoDerechosForm.get('banco')?.hasError('required')" class="text-danger">
+            Este campo es obligatorio.
+          </small>
+        </div>       
       </div>
     </div>
 
     <div class="row g-3 mt-2">
       <!-- Llave de pago -->
       <div class="col-md-4">
-        <label for="llavePago" class="form-label">Llave de pago<span *ngIf="campoObligatorio">*</span>:</label>
+        <label for="llavePago" class="form-label">Llave de pago<span *ngIf="campoObligatorio"> *</span> :</label>
         <input
           type="text"
           id="llavePago"
           class="form-control"
           formControlName="llavePago"
+          maxlength="30"
+          [disabled]="esFormularioSoloLectura"
         />
+        <div class="error-message">
+          <small *ngIf="pagoDerechosForm.get('llavePago')?.touched && pagoDerechosForm.get('llavePago')?.hasError('required')" class="text-danger">
+            Este campo es obligatorio.
+          </small> 
+          <small *ngIf="pagoDerechosForm.get('llavePago')?.touched && pagoDerechosForm.get('llavePago')?.hasError('pattern')" class="text-danger">
+            El formato de la llave de pago es incorrecto.
+          </small>
+        </div>      
       </div>
 
       <!-- Fecha de pago -->
@@ -60,18 +94,35 @@
           name="fechaPago"
           (valorCambiado)="onFechaCambiada($event)"
           [setFecha]="pagoDerechosForm.get('fechaPago')?.value"
+          [isDisabled]="esFormularioSoloLectura"
         ></input-fecha>
+        <div class="error-message">
+          <small *ngIf="pagoDerechosForm.get('fechaPago')?.touched && pagoDerechosForm.get('fechaPago')?.hasError('required')" class="text-danger">
+            Este campo es obligatorio.
+          </small> 
+          <small *ngIf="pagoDerechosForm.get('fechaPago')?.touched && pagoDerechosForm.get('fechaPago')?.hasError('pattern')" class="text-danger">
+            El formato de fecha es incorrecto.
+          </small>
+        </div>       
       </div>
 
       <!-- Importe de pago -->
       <div class="col-md-4">
-        <label for="importePago" class="form-label">Importe de pago<span *ngIf="campoObligatorio">*</span>:</label>
+        <label for="importePago" class="form-label">Importe de pago<span *ngIf="campoObligatorio"> *</span> :</label>
         <input
           type="text"
           id="importePago"
           class="form-control"
           formControlName="importePago"
+          maxlength="16"
+          (input)="onImportePagoInput($event)"
+          [disabled]="esFormularioSoloLectura"
         />
+        <div class="error-message">
+          <small *ngIf="pagoDerechosForm.get('importePago')?.touched && pagoDerechosForm.get('importePago')?.hasError('required')" class="text-danger">
+            Por favor, escribe un valor menor o igual a 10000000000000000.
+          </small> 
+        </div>       
       </div>
     </div>
 

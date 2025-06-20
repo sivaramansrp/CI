@@ -1,10 +1,11 @@
 import { AfterViewInit, Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { INSTALACIONES_PRINCIPALES_TABLA, InstalacionesPrincipalesTablaInfo, formaDatosInfo } from '@libs/shared/data-access-user/src/core/models/6502/dato-comunes.model';
+import { FormaDatosInfo, INSTALACIONES_PRINCIPALES_TABLA, InstalacionesPrincipalesTablaInfo } from '@libs/shared/data-access-user/src/core/models/6502/dato-comunes.model';
 import { Solicitud6502State, Tramite6502Store } from '../../../../core/estados/tramites/tramite6502.store';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import Modal from 'bootstrap/js/dist/modal';
 import { RegistroPoblacionalService } from '../../service/registro-poblacional.service';
 import { Tramite6502Query } from '../../../../core/queries/tramite6502.query';
@@ -47,6 +48,11 @@ export class AvisoDeCambioComponent implements OnDestroy, OnInit, AfterViewInit 
   public tablaSeleccionCheckbox: TablaSeleccion = TablaSeleccion.CHECKBOX;
 
   /**
+   * Determina si el formulario debe estar en modo solo lectura.
+   */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
    * Instancia del modal de Bootstrap
    */
   public modalInstance!: modal;
@@ -87,9 +93,17 @@ export class AvisoDeCambioComponent implements OnDestroy, OnInit, AfterViewInit 
     private service: RegistroPoblacionalService,
     private tramite6502Store: Tramite6502Store,
     private tramite6502Query: Tramite6502Query,
+    private consultaioQuery: ConsultaioQuery,
   ) {
-    // Inicialización de dependencias
-    // No se requiere lógica adicional en este caso
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
   }
 
   /**
@@ -110,16 +124,34 @@ export class AvisoDeCambioComponent implements OnDestroy, OnInit, AfterViewInit 
   /**
    * Datos del formulario principal
    */
-  public formaDatos: formaDatosInfo[] = [];
+  public formaDatos: FormaDatosInfo[] = [];
 
   /**
    * Inicialización del componente
    */
   ngOnInit(): void {
-    this.cargarEstadoTramite();
     this.obtenerFormaDatos();
     this.obtenerInstalacionesPrincipalesTablaDatos();
   }
+
+   /**
+   * Inicializa el formulario con datos del store y aplica validaciones.
+   * También aplica configuración de solo lectura si es necesario.
+   * @method inicializarEstadoFormulario
+   */
+   inicializarEstadoFormulario(): void {
+      this.cargarEstadoTramite();
+      this.crearFormulario();
+      if (this.esFormularioSoloLectura) {
+        Object.keys(this.modalForma.controls).forEach((key) => {
+          this.modalForma.get(key)?.disable();
+        });
+      } else {
+        Object.keys(this.modalForma.controls).forEach((key) => {
+          this.modalForma.get(key)?.enable();
+        });
+      }
+   }
 
   /**
    * Carga el estado actual del trámite desde el store

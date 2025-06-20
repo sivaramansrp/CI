@@ -9,7 +9,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
-import { TableData} from '../../../core/models/shared/components.model';
+import { TableBodyData, TableData } from '../../../core/models/shared/components.model';
 
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -36,13 +36,18 @@ export class TableComponent implements OnInit, OnChanges {
    * @description
    * commonTableBody se utiliza para obtener datos del cuerpo de la tabla de la componente
    */
-  @Input() commonTableBody: any = [];
-
+  @Input() commonTableBody: TableBodyData[] = [];
   /**
   * @description
   * Si no se pasa ningún valor desde el componente padre, tomará el valor predeterminado como verdadero
   */
   @Output() seleccionCambio = new EventEmitter<boolean>();
+
+  /**
+   * @description
+   * Si es verdadero, deshabilita el checkbox de selección de la tabla.
+   */
+  @Input() disableSeleccionTablaCheckBox: boolean = false;
   /**
    * @description
    * tableData se utiliza para obtener datos de la tabla de la componente
@@ -90,7 +95,7 @@ export class TableComponent implements OnInit, OnChanges {
    * @param data - Arreglo de elementos a los que se desea asegurar la propiedad `selected`.
    * @returns Un nuevo arreglo con los elementos actualizados.
    */
-  private agregarSeleccion(data: any[]): any[] {
+  private agregarSeleccion(data: TableBodyData[]): TableBodyData[] {
     if (!this.tableData) {
       this.tableData = { tableHeader: [], tableBody: [] };
     }

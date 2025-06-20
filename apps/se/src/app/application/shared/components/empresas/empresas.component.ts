@@ -1,12 +1,16 @@
+/**
+ * Componente Angular para gestionar la información relacionada al trámite 80104.
+ * Importa módulos y dependencias necesarias para formularios reactivos, gestión de estado y suscripciones.
+ */
 import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy,OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud80104State, Tramite80104Store } from '../../../estados/tramites/tramite80104.store';
 import { Subject,map,takeUntil } from 'rxjs';
 import { AlertComponent } from 'ngx-bootstrap/alert';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { DisponsibleFiscal } from '../../models/empresas.model';
 import { Tramite80104Query } from '../../../estados/queries/tramite80104.query';
-
 /**
  * Componente que maneja la visualización y gestión de empresas dentro del flujo de solicitud.
  * 
@@ -27,7 +31,10 @@ import { Tramite80104Query } from '../../../estados/queries/tramite80104.query';
   templateUrl: './empresas.component.html',
   styleUrl: './empresas.component.scss'
 })
-
+/**
+ * Componente encargado de gestionar la sección de empresas dentro del trámite.
+ * Implementa OnInit y OnDestroy para inicializar datos y limpiar suscripciones.
+ */
 export class EmpresasComponent implements OnInit, OnDestroy {
 
   /**
@@ -84,7 +91,9 @@ export class EmpresasComponent implements OnInit, OnDestroy {
    * Notificador para destruir el observable de la suscripción.
    */
   private destroyNotifier$: Subject<void> = new Subject();
-
+  /** Indica si el formulario debe mostrarse en modo solo lectura.  
+ *  Controla la habilitación o deshabilitación de los campos. */
+  esFormularioSoloLectura: boolean = false;
   /**
    * Constructor que inyecta los servicios necesarios para la creación del componente.
    *
@@ -95,17 +104,61 @@ export class EmpresasComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private tramite80104Store: Tramite80104Store,
-    private tramite80104Query: Tramite80104Query
-  ) {}
-
-  /**
-   * Método de inicialización del componente.
-   * Se ejecuta cuando el componente se carga.
+    private tramite80104Query: Tramite80104Query,
+     private consultaioQuery: ConsultaioQuery,
+        ) { 
+       this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        
+          this.inicializarCertificadoFormulario();
+        })
+      )
+      .subscribe();
+    }
+     /**
+   * Método que se ejecuta cuando el componente es inicializado.
+   * 
+   * Inicializa el formulario reactivo con los valores actuales de la solicitud.
    */
   ngOnInit(): void {
-    this.inicializarFormulario();
+    this.inicializarCertificadoFormulario();
   }
-
+   /**
+   * Método para inicializar el formulario reactivo con los datos de la solicitud.
+   * 
+   * Este método configura los campos del formulario con los valores actuales del estado de la solicitud
+   * y aplica las validaciones necesarias. También deshabilita ciertos campos y establece valores predeterminados.
+   */
+  inicializarCertificadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+     this.inicializarFormulario();
+    }  
+  }
+  /**
+   * @comdoc
+   * Guarda los datos del formulario de combinación requerida.
+   * 
+   * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
+   * - Si el formulario es de solo lectura, lo deshabilita.
+   * - Si no es de solo lectura, lo habilita.
+   * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
+   */
+  guardarDatosFormulario(): void {
+      this.inicializarFormulario();
+      if (this.esFormularioSoloLectura) {
+        this.empresasForm.disable();
+   
+      } else {
+        this.empresasForm.enable();
+      
+      }
+  }
+ 
   /**
    * Inicializa el formulario reactivo para capturar los datos de las empresas.
    * También obtiene el estado actual de la solicitud y la lista de empresas disponibles y seleccionadas.

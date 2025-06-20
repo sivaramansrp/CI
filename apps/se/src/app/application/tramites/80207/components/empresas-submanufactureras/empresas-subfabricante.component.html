@@ -89,8 +89,8 @@
           [catalogo]="estadoCatalogo"
           [label]="'Estado'"
           [required]="true"
-          [isDisabled]="false"
           name="estado"
+          [isDisabled]="campoDeshabilitar"
           formControlName="estado"
           (selectionChange)="enEstadoSeleccionado($event)"
         ></app-catalogo-select>

@@ -1,4 +1,12 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  EventEmitter,
+  Input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -9,6 +17,7 @@ import {
 import {
   MSG_CAMPOS_VACIOS,
   MSG_ELIMINA_PERSONA,
+  MSG_SELECCIONA_REGISTRO,
   MSG_SUCCESS,
   MSG_TERCERO_EXISTE,
   TITULO_MODAL_AVISO,
@@ -22,14 +31,17 @@ import {
   TercerosState,
   TercerosStore,
 } from '../../../core/estados/terceros.store';
+import { CONFIGURACION_ENCABEZADO_TABLA_TERCEROS } from '../../../core/enums/terceros.enum';
 import { CONSTANTES } from '../../../core/enums/constantes-alertas.enum';
 import { CommonModule } from '@angular/common';
 import { PersonaTerceros } from '../../../core/models/shared/datos-generales.model';
+import { TablaDinamicaComponent } from '../tabla-dinamica/tabla-dinamica.component';
+import { TablaSeleccion } from '../../../core/enums/110208/modificacion.enum';
 import { TercerosQuery } from '../../../core/queries/terceros.query';
+import { TituloComponent } from '../titulo/titulo.component';
 import { UppercaseDirective } from '../../directives/Uppercase/uppercase.directive';
 import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
-
-import { TituloComponent } from '../titulo/titulo.component';
+import { MSG_ELIMINA_ELEMENTO, TEXTO_CERRAR } from '../../../core/enums/mensajes-modal-comunes.enum';
 
 @Component({
   selector: 'lib-terceros',
@@ -42,16 +54,47 @@ import { TituloComponent } from '../titulo/titulo.component';
     TituloComponent,
     UppercaseDirective,
     NotificacionesComponent,
+    TablaDinamicaComponent,
   ],
   styleUrl: './terceros.component.scss',
 })
-export class TercerosComponent implements OnInit, OnDestroy {
+export class TercerosComponent implements OnInit, OnDestroy, AfterViewInit {
+  /**
+   * @description
+   * Tabindex para el componente.
+   *
+   * @type {number}
+   * @memberof TercerosComponent
+   * @input
+   * @required
+   */
   @Input({ required: true }) tabindex!: number;
 
   /**
-   * @description
-   * Formulario reactivo para la captura de datos de terceros.
+   * @description Indica si el formulario debe mostrarse en modo solo lectura.
+   * @param esFormularioSoloLectura Si es `true`, el formulario se presenta únicamente para visualización y no permite edición. Si es `false`, el formulario es editable.
    */
+  @Input({ required: false }) esFormularioSoloLectura: boolean = false;
+  /**
+   * @desc Lista de personas asociadas como terceros.
+   * @type {PersonaTerceros[]}
+   * @input
+   * @optional
+   *
+   * @description [Compodoc] Arreglo de objetos de tipo PersonaTerceros que representa las personas agregadas como terceros en el trámite. Este input es opcional.
+   */
+  @Input({ required: false }) personas: PersonaTerceros[] = [];
+  /**
+   * @description
+   * Evento emitido cuando la lista de personas (terceros) cambia.
+   *
+   * @type {EventEmitter<PersonaTerceros[]>}
+   * @memberof TercerosComponent
+   * @event personasChange
+   * @see PersonaTerceros
+   */
+  @Output() personasChange = new EventEmitter<PersonaTerceros[]>();
+
   public FormPersona: FormGroup = this.fb.group({
     nombre: ['', [Validators.required]],
     correo: [
@@ -59,12 +102,6 @@ export class TercerosComponent implements OnInit, OnDestroy {
       [Validators.required, Validators.pattern(CONSTANTES.EXP_CORREO)],
     ],
   });
-
-  /**
-   * @description
-   * Arreglo que almacena los datos de las personas relacionadas.
-   */
-  personas: PersonaTerceros[] = [];
 
   /**
    * @description
@@ -84,6 +121,24 @@ export class TercerosComponent implements OnInit, OnDestroy {
    */
   public nuevaNotificacion!: Notificacion;
 
+  /**
+   * @description
+   * Configuración de la tabla de terceros.
+   */
+  tablaSeleccion = TablaSeleccion;
+
+  /**
+   * @description
+   * Encabezado de la tabla de terceros.
+   */
+  encabezadoDeTablaTerceros = CONFIGURACION_ENCABEZADO_TABLA_TERCEROS;
+
+  /**
+   * @description
+   * Arreglo para almacenar los terceros seleccionados.
+   */
+  tercerosSeleccionados: PersonaTerceros[] = [];
+
   constructor(
     private fb: FormBuilder,
     private tercerosStore: TercerosStore,
@@ -100,12 +155,27 @@ export class TercerosComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-
     if (this.tercerosState.terceros.length > 0) {
       this.personas = this.tercerosState.terceros;
     }
   }
 
+  /**
+   * @inheritdoc
+   *
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta después de que la vista del componente ha sido inicializada.
+   *
+   * Si el formulario está en modo solo lectura (`esFormularioSoloLectura` es verdadero), deshabilita el formulario `FormPersona` para evitar modificaciones.
+   * En caso contrario, habilita el formulario para permitir la edición.
+   */
+  ngAfterViewInit(): void {
+    if (this.esFormularioSoloLectura) {
+      this.FormPersona.disable();
+    } else {
+      this.FormPersona.enable();
+    }
+  }
   /**
    * Agrega una persona al arreglo `personas` si el formulario es válido y hay menos de 5 personas.
    * Resetea el formulario después de agregar.
@@ -163,29 +233,10 @@ export class TercerosComponent implements OnInit, OnDestroy {
 
     if (!EXISTE_TERCERO) {
       this.personas.push(DATOS);
+      this.personasChange.emit(this.personas);
       this.tercerosStore.setTerceros(this.personas);
       this.FormPersona.reset();
-    }    
-  }
-
-  /**
-   * Elimina una persona de la lista en el índice especificado.
-   * @param i - Índice de la persona a eliminar.
-   * @returns void
-   */
-  eliminar(i: number): void {
-    this.personas.splice(i, 1);
-    this.tercerosStore.setTerceros(this.personas);
-    this.nuevaNotificacion = {
-      tipoNotificacion: 'alert',
-      categoria: '',
-      modo: 'action',
-      titulo: TITULO_MODAL_AVISO,
-      mensaje: MSG_ELIMINA_PERSONA,
-      cerrar: false,
-      txtBtnAceptar: 'Cerrar',
-      txtBtnCancelar: '',
-    };
+    }
   }
 
   /**
@@ -213,5 +264,45 @@ export class TercerosComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.destroyNotifier$.next();
     this.destroyNotifier$.complete();
+  }
+
+  /**
+   * Elimina los terceros seleccionados del arreglo `personas`.
+   * Si no hay terceros seleccionados, muestra una notificación de aviso.
+   * @returns {void}
+   */
+  eliminarTerceros(): void {
+    if (this.tercerosSeleccionados.length === 0) {
+      this.nuevaNotificacion = {
+        tipoNotificacion: 'alert',
+        categoria: '',
+        modo: 'action',
+        titulo: TITULO_MODAL_AVISO,
+        mensaje: MSG_SELECCIONA_REGISTRO,
+        cerrar: false,
+        txtBtnAceptar: TEXTO_CERRAR,
+        txtBtnCancelar: '',
+      };
+    }
+
+    this.personas = this.personas.filter(
+      (persona) =>
+        !this.tercerosSeleccionados.some(
+          (seleccionado) => seleccionado.correo === persona.correo
+        )
+    );
+
+    this.nuevaNotificacion = {
+      tipoNotificacion: 'alert',
+      categoria: '',
+      modo: 'action',
+      titulo: TITULO_MODAL_AVISO,
+      mensaje: MSG_ELIMINA_ELEMENTO,
+      cerrar: false,
+      txtBtnAceptar: TEXTO_CERRAR,
+      txtBtnCancelar: '',
+    }
+    this.personasChange.emit(this.personas);
+    this.tercerosStore.setTerceros(this.personas);
   }
 }
