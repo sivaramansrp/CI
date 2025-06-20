@@ -61,6 +61,9 @@ export class AvisoRetornoComponent implements OnInit, OnDestroy {
    */
   public consultaState!: ConsultaioState;
 
+  /** Datos de respuesta del servidor utilizados para actualizar el formulario. */
+  public esDatosRespuesta: boolean = false;
+
   /**
    * Datos de configuración para el componente de pasos.
    * @type {DatosPasos}
@@ -107,6 +110,8 @@ export class AvisoRetornoComponent implements OnInit, OnDestroy {
       .subscribe();
       if (this.consultaState?.update) {
         this.guardarDatosFormulario();
+      } else {
+        this.esDatosRespuesta = true;
       }
   }
 
@@ -119,6 +124,7 @@ export class AvisoRetornoComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe((resp) => {
         if (resp) {
+          this.esDatosRespuesta = true;
           this.mercanciasDesmontadasOSinMontarService.actualizarEstadoFormulario(resp);
         }
       });
