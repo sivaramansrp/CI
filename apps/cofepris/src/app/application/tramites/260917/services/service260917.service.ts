@@ -17,6 +17,9 @@ export class Solocitud260917Service {
    * AppConfig es una inyección de dependencias que proporciona la configuración de la aplicación.
    */
   urlServer = ENVIRONMENT.URL_SERVER;
+  /**
+   * urlServerCatalogos es la URL base para los catálogos auxiliares, obtenida de la configuración del entorno.
+   */
   urlServerCatalogos = ENVIRONMENT.URL_SERVER_JSON_AUXILIAR;
 
   constructor(private http: HttpClient, private tramite301Store: Tramite260917Store,private pagoDerechosStore: PagoDerechosStore) {
@@ -79,8 +82,6 @@ actualizarPagoDerechosFormulario(DATOS: pagoDerechosState): void {
   getRegistroTomaMuestrasMercanciasData(): Observable<Solicitud260917State> {
     return this.http.get<Solicitud260917State>('assets/json/260917/serviciosExtraordinarios.json');
   }
-
-  
     /**
      * Recupera los datos de SCIAN desde un archivo JSON local.
      * @returns {Observable<ScianModel[]>} Un observable con los datos de SCIAN.
@@ -88,7 +89,12 @@ actualizarPagoDerechosFormulario(DATOS: pagoDerechosState): void {
     getScianDatos(): Observable<ScianModel[]> {
       return this.http.get<ScianModel[]>('assets/json/260917/scianDatos.json');
     }
-      getMercanciasDatos(): Observable<MercanciasInfo[]> {
+
+    /**
+     * Recupera los datos de mercancías desde un archivo JSON local.
+     * @returns {Observable<MercanciasInfo[]>} Un observable con los datos de mercancías.
+     */
+    getMercanciasDatos(): Observable<MercanciasInfo[]> {
       return this.http.get<MercanciasInfo[]>('assets/json/260917/mercanciasInfo.json');
     }
 
