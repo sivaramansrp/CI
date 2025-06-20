@@ -33,7 +33,7 @@ export class FitosanitarioQuery extends Query<ListaDeDatosFinal> {
    *
    * @readonly
    * @type {Observable<any>}
-   * @memberof ZoosanitarioQuery
+   * @memberof FitosanitarioQuery
    */
   seleccionarPagoDerechos$ = this.select(estado => estado.pago);
 }
