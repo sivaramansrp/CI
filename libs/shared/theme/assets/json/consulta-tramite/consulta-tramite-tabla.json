@@ -1524,9 +1524,15 @@
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
         "numeroDeProcedimiento": "240106"
+    },
+    {
+        "id": "90304",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2023-11-01",
+        "fechaActualizacion": "2023-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "90304"
     }
-
-    
-    
 
 ]
