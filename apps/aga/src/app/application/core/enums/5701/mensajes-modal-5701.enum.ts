@@ -77,11 +77,34 @@ export const MSG_PEDIMENTO_VALIDO =
   'El pedimento es válido, favor de capturar los datos de pedimento faltantes.';
 
 /**
- * @description Mensaje de error cuando el pedimento no se puede validar.
+ * @description Mensaje pedimento no válido
  */
-export const ERR_VALIDACION_PEDIMENTO =
+export const MSG_PEDIMENTO_NO_VALIDO =
   'No se pudo validar el pedimento, favor de capturar los datos de pedimento faltante y anexar documento.';
 
+/**
+ * @description Pedimento ya capturado
+ */
+export const MSG_PEDIMENTO_YA_CAPTURADO =
+  'El Número de pedimento ya se encuentra registrado, intente de nuevo.';
+
+/**
+ * @descrption Valida si el pedimento existe y esta pagado
+ *
+ */
+export const MSG_PEDIMENTO_EXISTE_YA_PAGADO =
+  'Error, verificar que exista y este pagado ';
+
+/**
+ * @descrption Valida si el pedimento exista como previo
+ *
+ */
+export const MSG_PEDIMENTO_EXISTE_PREVIO =
+  'Error, verificar que exista como previo';
+
+
+
+  
 // #Secion Linea de captura
 /**
  * @description Mensaje de error cuando no se han llenado los campos obligatorios.
@@ -135,33 +158,39 @@ export const MSG_ERROR_NO_INFORMACION = 'No se encontró información';
 export const MSJ_ERROR_ID_SOCIO_COMERCIAL =
   'No se ha encontrado ningún registro de socio comercial con el identificador proporcionado, por favor verifica.';
 
-  // # Sección despacho
-  /**
-   * @description Mensaje borrar campos "recintos" y "especifique"
-   */
-export const MSG_BORRAR_CAMPOS_RECINTOS = 'Los datos capturados en "nombre del recinto" y "especifique" serán borrados, está de acuerdo (SI/NO)';
+// # Sección despacho
+/**
+ * @description Mensaje borrar campos "recintos" y "especifique"
+ */
+export const MSG_BORRAR_CAMPOS_RECINTOS =
+  'Los datos capturados en "nombre del recinto" y "especifique" serán borrados, está de acuerdo (SI/NO)';
 
 /**
  * @description Mensaje de error cuando no se han seleccionado las fechas inicial y final.
  */
-export const MSJ_ERROR_FECHAS_NO_SELECCIONADAS = 'Debe registrar la fecha inicial y la fecha final';
+export const MSJ_ERROR_FECHAS_NO_SELECCIONADAS =
+  'Debe registrar la fecha inicial y la fecha final';
 
 /**
  * @description Mensaje de error cuando no se ha seleccionado la fecha final.
  */
-export const MSJ_ERROR_FECHA_FINAL_NO_SELECCIONADA = 'Debe registrar la fecha final';
+export const MSJ_ERROR_FECHA_FINAL_NO_SELECCIONADA =
+  'Debe registrar la fecha final';
 
 /**
  * @description Mensaje de error cuando no se ha seleccionado la fecha inicial.
  */
-export const MSJ_ERROR_FECHA_INICIAL_NO_SELECCIONADA = 'Debe registrar la fecha inicial';
+export const MSJ_ERROR_FECHA_INICIAL_NO_SELECCIONADA =
+  'Debe registrar la fecha inicial';
 
 /**
  * @description Mensaje error del RFC no autorizado para operar en LDA.
  */
-export const MSJ_ERROR_RFC_AUTORIZACION_LDA = 'No está autorizado para operar en LDA, favor de verificar.';
+export const MSJ_ERROR_RFC_AUTORIZACION_LDA =
+  'No está autorizado para operar en LDA, favor de verificar.';
 
 /**
  * @description Mensaje error del RFC no autorizado para operar en DDEX.
  */
-export const MSJ_ERROR_FOLIO_DDEX = 'EL RFC no está autorizado para realizr DD, favor de verificar.';
+export const MSJ_ERROR_FOLIO_DDEX =
+  'EL RFC no está autorizado para realizr DD, favor de verificar.';

@@ -48,6 +48,14 @@ export class PasoDosComponent implements OnInit, OnDestroy {
     // Necesito inyectar los servicios a través del constructor, de modo que el constructor esté vacío.
   }
 
+  /**
+   * @inheritdoc
+   * @description
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Llama al método `getTiposDocumentos` para obtener los tipos de documentos necesarios.
+   *
+   * @memberof PasoDosComponent
+   */
   ngOnInit(): void {
     this.getTiposDocumentos();
   }

@@ -47,16 +47,24 @@
       </li>
     </ul>
     <ng-container>
-      @switch (indice) { @case (1) {
-      <solicitante [tabindex]="1"></solicitante>
-      } @case (2) {
-
-      <app-datos-del-tramite-contenedora></app-datos-del-tramite-contenedora>
-      } @case (3) {
-      <app-terceros-relacionados-contenedora></app-terceros-relacionados-contenedora>
-      } @case(4){
-      <app-pago-de-derechos-contenedora></app-pago-de-derechos-contenedora>
-      } }
+      @switch (indice) { 
+        @case (1) {
+          @if(esDatosRespuesta) {
+            <solicitante [tabindex]="1"></solicitante>
+          }
+          } @case (2) {
+            @if(esDatosRespuesta) {
+              <app-datos-del-tramite-contenedora></app-datos-del-tramite-contenedora>
+            }
+          } @case (3) {
+            @if(esDatosRespuesta) {
+              <app-terceros-relacionados-contenedora></app-terceros-relacionados-contenedora>
+            }
+          } @case(4){
+            @if(esDatosRespuesta) {
+              <app-pago-de-derechos-contenedora></app-pago-de-derechos-contenedora>
+            }
+          } }
     </ng-container>
   </div>
 </div>

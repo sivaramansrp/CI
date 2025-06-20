@@ -24,19 +24,23 @@ import {
   OnDestroy,
   OnInit,
   Output,
+  ViewChild,
 } from '@angular/core';
 import {
   ConfiguracionColumna,
   CrossListLable,
   CrosslistComponent,
-  InputCheckComponent,
   InputFecha,
   InputFechaComponent,
-  InputRadioComponent,
   TablaDinamicaComponent,
   TablaSeleccion,
   TituloComponent,
 } from '@ng-mf/data-access-user';
+
+import {
+  InputCheckComponent,
+  InputRadioComponent,
+} from '@libs/shared/data-access-user/src';
 
 import {
   DatosDelTramiteFormState,
@@ -57,9 +61,11 @@ import {
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ConsultaioQuery } from '@libs/shared/data-access-user/src';
+import { DatosMercanciaComponent } from '../datos-mercancia/datos-mercancia.component';
 import { REGEX_NUMEROS } from '@libs/shared/data-access-user/src';
 import { REGEX_SOLO_DIGITOS } from '@libs/shared/data-access-user/src';
 import { map } from 'rxjs/operators';
+import { DatosMercanciaContenedoraComponent } from '../../../tramites/240118/components/datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 /**
  * @title Datos del Trámite
  * @description Componente que gestiona el formulario de datos del trámite como permisos, uso final y selección de aduanas.
@@ -83,6 +89,7 @@ import { map } from 'rxjs/operators';
   styleUrl: './datos-del-tramite.component.scss',
 })
 export class DatosDelTramiteComponent implements OnInit, OnDestroy {
+  showModal: boolean = false;
   /**
    * @property {number} idProcedimiento
    * Identificador único del procedimiento asociado a la solicitud.
@@ -361,6 +368,12 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     new EventEmitter<DatosDelTramiteFormState>();
 
   /**
+   * Evento que emite cuando se desea abrir un modal.
+   * @event openModal
+   * */
+  @Output() openModal = new EventEmitter<string>();
+
+  /**
    * Evento emitido cuando se actualiza el formulario de justificación del trámite.
    * @event updateJustificacionFormulario
    */
@@ -379,32 +392,22 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     funcion?: () => void;
   }[];
 
-/**
- * Constructor del componente `DatosDelTramiteComponent`.
- * Inicializa los servicios necesarios para la creación de formularios reactivos, navegación relativa,
- * y consulta de estado de la aplicación.
- *
- * @param {FormBuilder} fb - Servicio para crear formularios reactivos.
- * @param {ActivatedRoute} activatedRoute - Ruta activa utilizada para navegación relativa.
- * @param {Router} router - Servicio de enrutamiento para manejar la navegación entre vistas.
- * @param {ConsultaioQuery} consultaioQuery - Servicio para consultar el estado de la aplicación.
- */
+  /**
+   * Constructor del componente `DatosDelTramiteComponent`.
+   * Inicializa los servicios necesarios para la creación de formularios reactivos, navegación relativa,
+   * y consulta de estado de la aplicación.
+   *
+   * @param {FormBuilder} fb - Servicio para crear formularios reactivos.
+   * @param {ActivatedRoute} activatedRoute - Ruta activa utilizada para navegación relativa.
+   * @param {Router} router - Servicio de enrutamiento para manejar la navegación entre vistas.
+   * @param {ConsultaioQuery} consultaioQuery - Servicio para consultar el estado de la aplicación.
+   */
   constructor(
     private fb: FormBuilder,
     private activatedRoute: ActivatedRoute,
     private router: Router,
     private consultaioQuery: ConsultaioQuery
-  ) {
-    this.consultaioQuery.selectConsultaioState$
-      .pipe(
-        takeUntil(this.destroyNotifier$),
-        map((seccionState: { readonly: boolean }) => {
-          this.esFormularioSoloLectura = seccionState.readonly;
-          this.inicializarEstadoFormulario();
-        })
-      )
-      .subscribe();
-  }
+  ) {}
   /**
    * Evalúa si se debe inicializar o cargar datos en el formulario.
    * Además, obtiene la información del catálogo de mercancía.
@@ -417,7 +420,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     }
   }
 
-    /**
+  /**
    * Carga datos desde un archivo JSON y actualiza el store con la información obtenida.
    * Luego reinicializa el formulario con los valores actualizados desde el store.
    */
@@ -459,16 +462,16 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
         Validators.required,
       ],
       unoSemestre: [
-        this.datosDelTramiteFormState.unoSemestre ?? null,
+        this.datosDelTramiteFormState?.unoSemestre ?? null,
         Validators.required,
       ],
       dosSemestre: [
-        this.datosDelTramiteFormState.dosSemestre ?? null,
+        this.datosDelTramiteFormState?.dosSemestre ?? null,
         Validators.required,
       ],
-      anoEnCurso: [this.datosDelTramiteFormState.anoEnCurso ?? false],
+      anoEnCurso: [this.datosDelTramiteFormState?.anoEnCurso ?? false],
       informacionConfidencial: [
-        this.datosDelTramiteFormState.informacionConfidencial ?? false,
+        this.datosDelTramiteFormState?.informacionConfidencial ?? false,
       ],
     });
   }
@@ -505,10 +508,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
    * @param {string} accionesPath - Ruta relativa hacia la sección de acciones.
    * @returns {void}
    */
-  irAAcciones(accionesPath: string): void {
-    this.router.navigate([accionesPath], {
-      relativeTo: this.activatedRoute,
-    });
+  irAAcciones(): void {
+    this.openModal.emit('Datosmercancia');
   }
 
   /**
@@ -588,8 +589,8 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     this.crearFormaulario();
     this.manifiestosTexto = MANIFIESTOS_DECLARACION.MANIFIESTOS;
     this.form.patchValue({
-      permisoGeneral: this.datosDelTramiteFormState.permisoGeneral,
-      usoFinal: this.datosDelTramiteFormState.usoFinal,
+      permisoGeneral: this.datosDelTramiteFormState?.permisoGeneral,
+      usoFinal: this.datosDelTramiteFormState?.usoFinal,
     });
     if (this.esFormularioSoloLectura) {
       this.form.disable();
@@ -604,7 +605,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
 
     if (this.esJustificacion) {
       this.formDeJustificacion.patchValue({
-        justificacion: this.justificacionTramiteFormState.justificacion,
+        justificacion: this.justificacionTramiteFormState?.justificacion,
       });
       if (this.esFormularioSoloLectura) {
         this.formDeJustificacion.disable();
@@ -617,7 +618,7 @@ export class DatosDelTramiteComponent implements OnInit, OnDestroy {
     }
 
     this.seleccionarAduanasDisponiblesDatos =
-      this.datosDelTramiteFormState.aduanasSeleccionadas;
+      this.datosDelTramiteFormState?.aduanasSeleccionadas;
 
     this.form.valueChanges
       .pipe(takeUntil(this.destroyNotifier$))

@@ -8,10 +8,12 @@ import { CertificadosFilaTableDatos, CertificadosFitoFilaTableDatos, Certificado
 import { Component, OnDestroy, OnInit } from '@angular/core';// Importa decoradores y ciclos de vida de Angular
 import { CertificadosService } from '../../services/certificados.service';// Servicio para obtener datos relacionados con los certificados.
 import { CommonModule } from '@angular/common';// Importa directivas comunes de Angular como ngIf y ngFor
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 import { ModalComponent } from '../modal/modal.component'; // Componente para mostrar modales.
 import { Subject } from 'rxjs'; // Utilidad de RxJS para manejar observables y suscripciones.
 import { TableComponent } from '@libs/shared/data-access-user/src'; // Importa componente compartido para la tabla.
 import { TituloComponent } from '@libs/shared/data-access-user/src'; // Importa componente compartido para el título.
+import { takeUntil } from 'rxjs/operators';
 
 /**
  * @component CertificadosComponent
@@ -38,71 +40,82 @@ export class CertificadosComponent implements OnInit, OnDestroy {
    * @description
    * Indica si la tabla principal debe mostrarse o no.
    */
-  showTableDiv = true;
+public showTableDiv = true;
 
   /**
    * @property showFitosanitariosModal
    * @description
    * Indica si el modal de certificados fitosanitarios debe mostrarse o no.
    */
-  showFitosanitariosModal = false;
+public showFitosanitariosModal = false;
 
   /**
    * @property showAutorizacionesModal
    * @description
    * Indica si el modal de autorizaciones debe mostrarse o no.
    */
-  showAutorizacionesModal = false;
+public showAutorizacionesModal = false;
 
   /**
    * @property tablaCertificadosData
    * @description
    * Datos relacionados con la tabla de certificados.
    */
-  tablaCertificadosData: string[] = [];
+public tablaCertificadosData: string[] = [];
 
   /**
    * @property tablaFitosanitoriosData
    * @description
    * Datos relacionados con la tabla de certificados fitosanitarios.
    */
-  tablaFitosanitoriosData: string[] = [];
+public tablaFitosanitoriosData: string[] = [];
 
   /**
    * @property tablaPermisoCertificadosData
    * @description
    * Datos relacionados con la tabla de permisos de certificados.
    */
-  tablaPermisoCertificadosData: string[] = [];
+public tablaPermisoCertificadosData: string[] = [];
 
  /**
    * @property tablaCertificadosFilaDatos
    * @description
    * Datos relacionados con la tabla de permisos de certificados fila.
    */
-  tablaCertificadosFilaDatos: TablaDatos[]=[];
+public tablaCertificadosFilaDatos: TablaDatos[]=[];
   /**
    * @property   tablaFitosanitoriosFilaDatos
 
    * @description
    * Datos relacionados con la tabla de permisos de certificados fito sanitorios fila.
    */
-  tablaFitosanitoriosFilaDatos: TablaDatos[]=[];
+ public tablaFitosanitoriosFilaDatos: TablaDatos[]=[];
     /**
    * @property   tablaPermisoCertificadosFilaDatos
 
    * @description
    * Datos relacionados con la tabla de permisos de certificados fito permiso certificados fila.
    */
-  tablaPermisoCertificadosFilaDatos: TablaDatos[]=[];
+ public tablaPermisoCertificadosFilaDatos: TablaDatos[]=[];
 
+  /**
+  * Indica si el formulario está en modo solo lectura.
+  * Cuando es `true`, los campos del formulario no se pueden editar.
+  */
+  public esFormularioSoloLectura: boolean = false;
+
+  /**
+ * Notificador para destruir suscripciones al destruir el componente.
+ * Utiliza un Subject para emitir una señal de finalización.
+ */
+   private destroyNotifier$: Subject<void> = new Subject();
   /**
    * @constructor
    * @description
    * Constructor del componente. Inicializa los servicios necesarios.
    * @param certificadosService - Servicio para obtener datos relacionados con los certificados.
    */
-  constructor(private certificadosService: CertificadosService) {
+  constructor(private certificadosService: CertificadosService,private consultaioQuery: ConsultaioQuery) {
     // Constructor vacío.
   }
 
@@ -113,6 +126,12 @@ export class CertificadosComponent implements OnInit, OnDestroy {
    * Obtiene datos de los servicios y los asigna a las propiedades correspondientes.
    */
   ngOnInit(): void {
+  this.consultaioQuery.selectConsultaioState$
+    .pipe(takeUntil(this.destroyNotifier$))
+    .subscribe(state => {
+      this.esFormularioSoloLectura = Boolean(state.readonly);
+    });
+
     this.certificadosService
       .getFitosanitoriosEncabezadoDeTabla()
       .subscribe((data: CertificadosTablaDatos) => {
@@ -134,19 +153,19 @@ export class CertificadosComponent implements OnInit, OnDestroy {
       this.certificadosService
       .getCertificadosFilaDeTabla()
       .subscribe((data: CertificadosFilaTableDatos) => {
-        this.tablaCertificadosFilaDatos.push(data.data); // Asigna los datos de la tabla de certificados fila.
+        this.tablaCertificadosFilaDatos = [data.data]; // Asigna los datos de la tabla de certificados fila.
       });
 
       this.certificadosService
       .getCertificadosFitoFilaDeTabla()
       .subscribe((data: CertificadosFitoFilaTableDatos) => {
-        this.tablaFitosanitoriosFilaDatos.push(data.data); // Asigna los datos de la tabla de certificados fito fila.
+        this.tablaFitosanitoriosFilaDatos = [data.data]; // Asigna los datos de la tabla de certificados fito fila.
       });
 
       this.certificadosService
       .getPermisoCertificadosFilaDeTabla()
       .subscribe((data: PermisosCertificadosFitoFilaTableDatos) => {
-        this.tablaPermisoCertificadosFilaDatos.push(data.data); // Asigna los datos de la tabla de permiso certificados fila.
+        this.tablaPermisoCertificadosFilaDatos= [data.data]; // Asigna los datos de la tabla de permiso certificados fila.
       });
   }
 
@@ -155,7 +174,7 @@ export class CertificadosComponent implements OnInit, OnDestroy {
    * @description
    * Alterna la visibilidad de la tabla principal y el modal de certificados fitosanitarios.
    */
-  cambiarCertificadosFitosanitarios(): void {
+ public cambiarCertificadosFitosanitarios(): void {
     this.showTableDiv = !this.showTableDiv;
     this.showFitosanitariosModal = !this.showFitosanitariosModal;
   }
@@ -165,7 +184,7 @@ export class CertificadosComponent implements OnInit, OnDestroy {
    * @description
    * Alterna la visibilidad de la tabla principal y el modal de autorizaciones.
    */
-  cambiarCertificadosAutorizaciones(): void {
+ public cambiarCertificadosAutorizaciones(): void {
     this.showTableDiv = !this.showTableDiv;
     this.showAutorizacionesModal = !this.showAutorizacionesModal;
   }

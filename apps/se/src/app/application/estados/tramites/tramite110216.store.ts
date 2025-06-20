@@ -1,5 +1,4 @@
-import { AgregarDatosProductorFormulario, FormularioMercancia, GrupoDeDomicilio, GrupoTratado } from '../../tramites/110216/models/certificado-origen.model';
-import { Catalogo } from '@libs/shared/data-access-user/src';
+import { AgregarDatosProductorFormulario, DisponiblesTabla, FormularioMercancia, GrupoDeDomicilio, GrupoTratado, HistoricoColumnas, SeleccionadasTabla } from '../../tramites/110216/models/certificado-origen.model';
 import { GrupoDeDirecciones } from '../../tramites/110216/models/certificado-origen.model';
 import { GrupoDeTransporte } from '../../tramites/110216/models/certificado-origen.model';
 import { GrupoOperador } from '../../tramites/110216/models/certificado-origen.model';
@@ -23,17 +22,16 @@ export interface Tramite110216State {
   /**
    * Idioma seleccionado para el trámite.
    */
-  idioma: Catalogo | null;
-
+  idioma: string | null;
   /**
    * Entidad federativa seleccionada.
    */
-  entidadFederativa: Catalogo | null;
+  entidadFederativa: string | null;
 
   /**
    * Representación federal seleccionada.
    */
-  representacionFederal: Catalogo | null;
+  representacionFederal: string | null;
 
   /**
    * Indica si los datos del productor son confidenciales.
@@ -104,6 +102,25 @@ export interface Tramite110216State {
    * Información del formulario de mercancía.
    */
   formularioMercancia: FormularioMercancia;
+  /**
+   * @property {HistoricoColumnas[]} productoresExportador
+   * @description Lista de productores asociados al exportador.
+   */
+  productoresExportador: HistoricoColumnas[];
+  /**
+     * @property {SeleccionadasTabla[]} mercanciaSeleccionadasTablaDatos
+     * @description Lista de mercancías seleccionadas para ser mostradas en la tabla de datos.
+     * 
+     * Contiene los datos de las mercancías que han sido seleccionadas por el usuario durante el trámite.
+     */
+  mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[];
+  /**
+   * @property {DisponiblesTabla[]} mercanciaDisponsiblesTablaDatos
+   * @description Lista de mercancías disponibles para ser mostradas en la tabla de datos.
+   * 
+   * Contiene los datos de las mercancías que están disponibles para ser seleccionadas por el usuario durante el trámite.
+   */
+  mercanciaDisponsiblesTablaDatos: DisponiblesTabla[];
 }
 
 /**
@@ -199,7 +216,10 @@ export function createInitialState(): Tramite110216State {
       tipoFactura: '',
       fecha: '',
       numeroFactura: '',
-    }
+    },
+    productoresExportador: [],
+    mercanciaSeleccionadasTablaDatos: [],
+    mercanciaDisponsiblesTablaDatos: [],
   };
 }
 /**
@@ -271,7 +291,7 @@ export class Tramite110216Store extends Store<Tramite110216State> {
    * 
    * @param {Catalogo} idioma - El idioma a establecer.
    */
-  public setIdioma(idioma: Catalogo): void {
+  public setIdioma(idioma: string): void {
     this.update((state) => ({
       ...state,
       idioma,
@@ -285,7 +305,7 @@ export class Tramite110216Store extends Store<Tramite110216State> {
    * 
    * @param {Catalogo} entidadFederativa - La entidad federativa a establecer.
    */
-  public setEntidadFederativa(entidadFederativa: Catalogo): void {
+  public setEntidadFederativa(entidadFederativa: string): void {
     this.update((state) => ({
       ...state,
       entidadFederativa,
@@ -299,7 +319,7 @@ export class Tramite110216Store extends Store<Tramite110216State> {
    * 
    * @param {Catalogo} representacionFederal - La representación federal a establecer.
    */
-  public setRepresentacionFederal(representacionFederal: Catalogo): void {
+  public setRepresentacionFederal(representacionFederal: string): void {
     this.update((state) => ({
       ...state,
       representacionFederal,
@@ -1209,6 +1229,131 @@ export class Tramite110216Store extends Store<Tramite110216State> {
     this.update((state) => ({
       ...state,
       formularioMercancia: { ...state.formularioMercancia, pais },
+    }));
+  }
+  /**
+   * @method setGrupoReceptor
+   * @description Actualiza la información del receptor en el estado del trámite.
+   * 
+   * Este método permite establecer los datos del receptor en el grupo receptor del estado.
+   * 
+   * @param {GrupoReceptor} grupoReceptor - Objeto que contiene la información del receptor a actualizar.
+   * 
+   * @returns {void}
+   */
+  public setGrupoReceptor(grupoReceptor: GrupoReceptor): void {
+    this.update((state) => ({
+      ...state,
+      grupoReceptor,
+    }));
+  }
+  /**
+  * @method setGrupoDeDirecciones
+  * @description Actualiza la información de las direcciones del receptor en el estado del trámite.
+  * 
+  * Este método permite establecer los datos del grupo de direcciones en el estado del trámite.
+  * 
+  * @param {GrupoDeDirecciones} grupoDeDirecciones - Objeto que contiene la información de las direcciones a actualizar.
+  * 
+  * @returns {void}
+  */
+  public setGrupoDeDirecciones(grupoDeDirecciones: GrupoDeDirecciones): void {
+    this.update((state) => ({
+      ...state,
+      grupoDeDirecciones,
+    }));
+  }
+  /**
+   * @method setGrupoRepresentativo
+   * @description Actualiza la información representativa del trámite en el estado.
+   * 
+   * Este método permite establecer los datos del grupo representativo en el estado del trámite.
+   * 
+   * @param {GrupoRepresentativo} grupoRepresentativo - Objeto que contiene la información representativa a actualizar.
+   * 
+   * @returns {void}
+   */
+  public setGrupoRepresentativo(grupoRepresentativo: GrupoRepresentativo): void {
+    this.update((state) => ({
+      ...state,
+      grupoRepresentativo,
+    }));
+  }
+  /**
+   * Actualiza la información del transporte utilizado en el estado del trámite.
+   * 
+   * Este método permite establecer los datos del grupo de transporte en el estado del trámite.
+   * 
+   * @param {GrupoDeTransporte} grupoDeTransporte - Objeto que contiene la información del transporte a actualizar.
+   */
+  public setGrupoDeTransporte(grupoDeTransporte: GrupoDeTransporte): void {
+    this.update((state) => ({
+      ...state,
+      grupoDeTransporte,
+    }));
+  }
+  /**
+   * @method setProductoresExportador
+   * @description Actualiza la lista de productores asociados al exportador en el estado del trámite.
+   * 
+   * Este método permite establecer los datos de los productores asociados al exportador.
+   * 
+   * @param {HistoricoColumnas[]} productoresExportador - Lista de productores asociados al exportador.
+   * 
+   * @returns {void}
+   */
+  public setProductoresExportador(productoresExportador: HistoricoColumnas[]): void {
+    this.update((state) => ({
+      ...state,
+      productoresExportador,
+    }));
+  }
+  /**
+     * @method setGrupoOperador
+     * @description Actualiza la información del operador en el estado del trámite.
+     * 
+     * Este método permite establecer los datos del operador en el grupo operador del estado.
+     * 
+     * @param {GrupoOperador} grupoOperador - Objeto que contiene la información del operador a actualizar.
+     * 
+     * @returns {void}
+     */
+  public setGrupoOperador(grupoOperador: GrupoOperador): void {
+    this.update((state) => ({
+      ...state,
+      grupoOperador,
+    }));
+  }
+  /**
+   * @method setMercanciaTablaDatos
+   * @description Actualiza la lista de mercancías seleccionadas en la tabla de datos del estado del trámite.
+   * 
+   * Este método permite establecer las mercancías seleccionadas por el usuario en la tabla de datos.
+   * 
+   * @param {SeleccionadasTabla[]} mercanciaSeleccionadasTablaDatos - Lista de mercancías seleccionadas a actualizar en el estado.
+   * 
+   * @returns {void}
+   */
+  public setMercanciaTablaDatos(mercanciaSeleccionadasTablaDatos: SeleccionadasTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaSeleccionadasTablaDatos,
+    }));
+  }
+  /**
+   * @method setMercanciaDisponsiblesTablaDatos
+   * @description Actualiza la lista de mercancías disponibles en la tabla de datos del estado del trámite.
+   * 
+   * Este método permite establecer las mercancías disponibles para ser seleccionadas por el usuario en la tabla de datos.
+   * 
+   * @param {DisponiblesTabla[]} mercanciaDisponsiblesTablaDatos - Lista de mercancías disponibles a actualizar en el estado.
+   * 
+   * @returns {void}
+   */
+  public setMercanciaDisponsiblesTablaDatos(mercanciaDisponsiblesTablaDatos: DisponiblesTabla[]): void {
+    this.update((state) => ({
+      ...state,
+      mercanciaDisponsiblesTablaDatos,
     }));
   }
 }

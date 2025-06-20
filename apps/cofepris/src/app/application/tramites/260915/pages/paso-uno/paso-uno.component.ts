@@ -1,7 +1,12 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import { DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL, PERSONA_MORAL_NACIONAL } from '@libs/shared/data-access-user/src/tramites/constantes/solicitante-constantes.enum';
 import { FormularioDinamico, TIPO_PERSONA } from '@ng-mf/data-access-user';
 import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
+
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+
+import { Subject, map, takeUntil } from 'rxjs';
+import { Solocitud260915Service } from '../../services/service260915.service';
 
 
 /**
@@ -17,16 +22,76 @@ import { SolicitanteComponent } from '@libs/shared/data-access-user/src';
   styles: ``,
   
 })
-export class PasoUnoComponent implements AfterViewInit {
+export class PasoUnoComponent implements AfterViewInit, OnInit {
+
+ /**
+   * Indica si se han recibido correctamente los datos desde el servidor.
+   */
+  public esDatosRespuesta: boolean = false;
+
+  /**
+   * Subject utilizado para cancelar suscripciones y evitar fugas de memoria al destruir el componente.
+   * Se emite un valor y se completa cuando el componente se destruye.
+   * @private
+   */
+  private destroyNotifier$: Subject<void> = new Subject();
+
+  /**
+   * Estado actual de la consulta obtenido desde el store.
+   */
+  public consultaState!: ConsultaioState;
 
   /**
    * Constructor del componente.
-   *
-   * Se utiliza para la inyección de dependencias.
+   * @param consultaQuery Consulta de estado de solo lectura.
+   * @param solocitud260915Service Servicio para obtener y actualizar datos del formulario.
    */
-  constructor() {
-    // Constructor vacío, no requiere inicialización adicional.
+  constructor(
+    private consultaQuery: ConsultaioQuery,
+    private solocitud260915Service: Solocitud260915Service,
+  ) {}
+
+    /**
+   * Hook del ciclo de vida de Angular.
+   * Se ejecuta al inicializar el componente y se suscribe al estado del store.
+   * Si el estado indica actualización, solicita los datos del formulario.
+   */
+  ngOnInit(): void {
+    this.consultaQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaState = seccionState;
+        })
+      )
+      .subscribe();
+
+    if (this.consultaState.update) {
+      this.guardarDatosFormulario();
+    } else {
+      this.esDatosRespuesta = true;
+    }
   }
+
+  /**
+   * Solicita los datos del[] formulario al servicio y actualiza el store si la respuesta es válida.
+   * Marca la bandera de datos recibidos si la respuesta es exitosa.
+   */
+  guardarDatosFormulario(): void {
+    this.solocitud260915Service
+      .getRegistroTomaMuestrasMercanciasData()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((resp) => {
+        if (resp) {
+          this.esDatosRespuesta = true;
+          this.solocitud260915Service.actualizarEstadoFormulario(resp);
+        }
+      });
+  }
+
+
+
+
 
   /**
    * Referencia al componente de Solicitante.

@@ -53,6 +53,8 @@ export function createInitialState(): Tramite240106State {
       usoFinal: '',
       aduanasSeleccionadas: [],
       paisDestino: '',
+      dosSemestre: '',
+      unoSemestre: '',
     },
     modificarDestinarioDatos: null,
     modificarProveedorDatos: null
