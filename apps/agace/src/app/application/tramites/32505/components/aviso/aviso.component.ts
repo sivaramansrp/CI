@@ -15,12 +15,12 @@ import {
   BotonAccionesTipos,
   Catalogo,
   CatalogoSelectComponent,
-  ConsultaioQuery,
-  ConsultaioState,
   TablaDinamicaComponent,
   TablaSeleccion,
   ValidacionesFormularioService,
 } from '@libs/shared/data-access-user/src';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+
 import {
   Component,
   ElementRef,
@@ -456,8 +456,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
   /**
    * @method crearFormSolicitud
    * @description Crea el formulario principal de la solicitud.
-   * nombre: [{value :this.solicitudState?.grupoOperador?.nombre,disable:this.soloLectura}, 
-   * Validators.required, Validators.maxLength(50)],
+   * 
    */
   crearFormSolicitud(): void {
     this.aviosForm = this.fb.group({
@@ -571,10 +570,7 @@ export class AvisoComponent implements OnInit, OnDestroy {
     } else {
       this.aviosForm.enable();
     }
-
-    //  if (this.aviosForm && this.aviosForm.get('adaceForm.adace')) {
-    //   this.aviosForm.get('adaceForm.adace')?.disable({ emitEvent: false });
-    // }
+   
   }
 
   /**
