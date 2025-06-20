@@ -93,7 +93,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
           this.soloLectura = this.consultaDatos.readonly;
         })
       )
-      .subscribe()
+      .subscribe();
     this.obtenerEmpresasListaDatos();
     this.crearModificacionForm();
     this.obtenerModificacionDatos();
