@@ -236,9 +236,9 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
       .subscribe(tipo => {
         this.limpiarMensajeAlerta();
         this.reiniciarCamposTipoPersona(tipo);
-        
-        if (this.esNacionalidadMexicana() && this.formularioRecuperar.get('tipoDocumento')?.value === 'RFC') {
-          this.actualizarValidacionesPorTipoDoc('RFC');
+
+        if (this.esNacionalidadMexicana() && this.formularioRecuperar.get('tipoDocumento')?.value === TipoIdentificacion.RFC) {
+          this.actualizarValidacionesPorTipoDoc(TipoIdentificacion.RFC);
         } else if (!this.esNacionalidadMexicana()) {
           this.actualizarValidacionesExtranjero(tipo);
         }
@@ -256,7 +256,7 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
             )
             .subscribe(() => {
                 if (this.esNacionalidadMexicana() && 
-                    this.formularioRecuperar.get('tipoDocumento')?.value === TIPO_IDENTIFICACION.RFC && 
+                    this.formularioRecuperar.get('tipoDocumento')?.value === this.TIPO_IDENTIFICACION.RFC && 
                     this.formularioRecuperar.get('personaTipo')?.value === TipoPersona.MORAL) {
                     this.esValidoRfcPersonaMoralNacional();
                     this.formularioRecuperar.updateValueAndValidity();
@@ -275,7 +275,7 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
             )
             .subscribe(() => {
                 if (this.esNacionalidadMexicana() && 
-                    this.formularioRecuperar.get('tipoDocumento')?.value === TIPO_IDENTIFICACION.RFC && 
+                    this.formularioRecuperar.get('tipoDocumento')?.value === this.TIPO_IDENTIFICACION.RFC && 
                     this.formularioRecuperar.get('personaTipo')?.value === TipoPersona.FISICA) {                    
                     this.formularioRecuperar.updateValueAndValidity();
                     this.cdr.detectChanges();
@@ -424,7 +424,7 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
    * @param tipoDoc - Tipo de documento (RFC/CURP)
    * @private
    */
-    private actualizarValidacionesPorTipoDoc(tipoDoc: TIPO_IDENTIFICACION.RFC | TIPO_IDENTIFICACION.CURP | null): void {
+    private actualizarValidacionesPorTipoDoc(tipoDoc: TipoIdentificacion.RFC | TipoIdentificacion.CURP | null): void {
         if (!tipoDoc) {return;}
 
         const REQUIRED_VALIDATOR = [Validators.required, Validators.minLength(1)];
@@ -434,7 +434,7 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
         if (this.esNacionalidadMexicana()) {
             // ES MEXICANO
             // 2. Validar tipo de identificación
-            if (tipoDoc === TIPO_IDENTIFICACION.RFC) {
+            if (tipoDoc === this.TIPO_IDENTIFICACION.RFC) {
                 // Es RFC - Habilitar selección de tipo de persona
                 this.formularioRecuperar.get('personaTipo')?.enable();
                 
@@ -463,7 +463,7 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
                     this.formularioRecuperar.get('razonSocial')?.setValidators(REQUIRED_VALIDATOR);
                     this.formularioRecuperar.get('razonSocial')?.updateValueAndValidity({ emitEvent: false });
                 }
-            } else if (tipoDoc === TIPO_IDENTIFICACION.CURP) {
+            } else if (tipoDoc === this.TIPO_IDENTIFICACION.CURP) {
                 // Es CURP - Deshabilitar tipo de persona
                 this.formularioRecuperar.get('personaTipo')?.disable();
                 this.formularioRecuperar.get('personaTipo')?.setValue(null, { emitEvent: false });
@@ -582,12 +582,12 @@ public nuevaAlertaNotificacion: Notificacion | null = null;
       }
       
       // Flujo CURP
-      if (FORM_VALUE.tipoDocumento === TIPO_IDENTIFICACION.CURP) {
+      if (FORM_VALUE.tipoDocumento === this.TIPO_IDENTIFICACION.CURP) {
         return this.esValidoCurpNacional();
       }
 
       // Flujo RFC Moral
-      if (FORM_VALUE.tipoDocumento === TIPO_IDENTIFICACION.RFC && FORM_VALUE.personaTipo === TipoPersona.MORAL) {
+      if (FORM_VALUE.tipoDocumento === this.TIPO_IDENTIFICACION.RFC && FORM_VALUE.personaTipo === TipoPersona.MORAL) {
         return this.esValidoRfcPersonaMoralNacional();
       }
     }

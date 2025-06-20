@@ -13,9 +13,9 @@ import { AutorizacionImportacionTemporalService } from '../../services/autorizac
 describe('DatosDeLaSolicitudComponent', () => {
   let component: DatosDeLaSolicitudComponent;
   let fixture: ComponentFixture<DatosDeLaSolicitudComponent>;
-  let mockTramite630103Store: jest.Mocked<Tramite630103Store>;
-  let mockTramite630103Query: Partial<Tramite630103Query>;
-  let mockAutorizacionImportacionTemporalService: jest.Mocked<AutorizacionImportacionTemporalService>;
+  let mockTramite630103Store: any;
+  let mockTramite630103Query: any;
+  let mockAutorizacionImportacionTemporalService: any;
   let destroyed$: Subject<void>;
 
   const mockAduanaDeIngreso = [
@@ -34,11 +34,9 @@ describe('DatosDeLaSolicitudComponent', () => {
   };
 
   beforeEach(async () => {
-    jest.clearAllMocks();
-
     mockTramite630103Store = {
       setTramite630103State: jest.fn(),
-    } as unknown as jest.Mocked<Tramite630103Store>;
+    };
 
     mockTramite630103Query = {
       selectTramite630103State$: of(mockState),
@@ -47,7 +45,7 @@ describe('DatosDeLaSolicitudComponent', () => {
     mockAutorizacionImportacionTemporalService = {
       getAduanaDeIngreso: jest.fn().mockReturnValue(of(mockAduanaDeIngreso)),
       getSeccionAduanera: jest.fn().mockReturnValue(of(mockSeccionAduanera)),
-    } as unknown as jest.Mocked<AutorizacionImportacionTemporalService>;
+    };
 
     destroyed$ = new Subject<void>();
 
@@ -56,7 +54,7 @@ describe('DatosDeLaSolicitudComponent', () => {
         CommonModule,
         ReactiveFormsModule,
         FormasDinamicasComponent,
-        DatosDeLaSolicitudComponent // Add the standalone component here
+        DatosDeLaSolicitudComponent
       ],
       providers: [
         FormBuilder,
@@ -81,81 +79,56 @@ describe('DatosDeLaSolicitudComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  describe('ngOnInit', () => {
-    it('debería inicializar el componente correctamente', () => {
-      const getValorStoreSpy = jest.spyOn(component, 'getValorStore');
-      const inizializarFormularioSpy = jest.spyOn(component, 'inizializarFormulario');
-      const getAduanaDeIngresoSpy = jest.spyOn(component, 'getAduanaDeIngreso');
-      const getSeccionAduaneraSpy = jest.spyOn(component, 'getSeccionAduanera');
-
-      component.ngOnInit();
-
-      expect(getValorStoreSpy).toHaveBeenCalled();
-      expect(inizializarFormularioSpy).toHaveBeenCalled();
-      expect(getAduanaDeIngresoSpy).toHaveBeenCalled();
-      expect(getSeccionAduaneraSpy).toHaveBeenCalled();
-    });
+  it('debería deshabilitar el formulario si esSoloLectura es true', () => {
+    component.esSoloLectura = true;
+    const disableSpy = jest.spyOn(component.datosImportacionTemporalFormulario, 'disable');
+    component.guardarDatosFormulario();
+    expect(disableSpy).toHaveBeenCalled();
   });
 
-  describe('inizializarFormulario', () => {
-    it('debería inicializar el formulario correctamente', () => {
-      component.inizializarFormulario();
-      expect(component.datosImportacionTemporalFormulario).toBeDefined();
-    });
+  it('debería habilitar el formulario si esSoloLectura es false', () => {
+    component.esSoloLectura = false;
+    const enableSpy = jest.spyOn(component.datosImportacionTemporalFormulario, 'enable');
+    component.guardarDatosFormulario();
+    expect(enableSpy).toHaveBeenCalled();
   });
 
-  describe('getAduanaDeIngreso', () => {
-    it('debería obtener las aduanas y actualizar formularioDatosSolicitud', () => {
-      component.formularioDatosSolicitud = [{ id: 'cveAduana', opciones: [] } as any];
-
-      component.getAduanaDeIngreso();
-
-      expect(mockAutorizacionImportacionTemporalService.getAduanaDeIngreso).toHaveBeenCalled();
-      expect(component.formularioDatosSolicitud[0].opciones).toEqual(mockAduanaDeIngreso);
-    });
+  it('debería obtener el estado actual del store', () => {
+    component.getValorStore();
+    expect(component.estadoSeleccionado).toEqual(mockState);
   });
 
-  describe('getSeccionAduanera', () => {
-    it('debería obtener las secciones aduaneras y actualizar formularioDatosSolicitud', () => {
-      component.formularioDatosSolicitud = [{ id: 'cveSeccionAduanera', opciones: [] } as any];
-
-      component.getSeccionAduanera();
-
-      expect(mockAutorizacionImportacionTemporalService.getSeccionAduanera).toHaveBeenCalled();
-      expect(component.formularioDatosSolicitud[0].opciones).toEqual(mockSeccionAduanera);
-    });
+  it('debería actualizar el store cuando establecerCambioDeValor es llamado con objeto con id', () => {
+    const event = { campo: 'testField', valor: { id: '123', name: 'Test' } };
+    component.establecerCambioDeValor(event);
+    expect(mockTramite630103Store.setTramite630103State).toHaveBeenCalledWith('testField', '123');
   });
 
-  describe('getValorStore', () => {
-    it('debería actualizar estadoSeleccionado con datos del store', () => {
-      component.getValorStore();
-      expect(component.estadoSeleccionado).toEqual(mockState);
-    });
+  it('debería actualizar el store cuando establecerCambioDeValor es llamado con valor directo', () => {
+    const event = { campo: 'testField', valor: 'testValue' };
+    component.establecerCambioDeValor(event);
+    expect(mockTramite630103Store.setTramite630103State).toHaveBeenCalledWith('testField', 'testValue');
   });
 
-  describe('establecerCambioDeValor', () => {
-    it('debería establecer el estado con valor de objeto cuando el valor del evento tiene id', () => {
-      const event = { campo: 'testField', valor: { id: '123', name: 'Test' } };
-      component.establecerCambioDeValor(event);
-      expect(mockTramite630103Store.setTramite630103State).toHaveBeenCalledWith('testField', '123');
-    });
-
-    it('debería establecer el estado con valor directo cuando el valor del evento no tiene id', () => {
-      const event = { campo: 'testField', valor: 'testValue' };
-      component.establecerCambioDeValor(event);
-      expect(mockTramite630103Store.setTramite630103State).toHaveBeenCalledWith('testField', 'testValue');
-    });
+  it('debería obtener las aduanas y actualizar formularioDatosSolicitud', () => {
+    component.formularioDatosSolicitud = [{ id: 'cveAduana', opciones: [] } as any];
+    component.getAduanaDeIngreso();
+    expect(mockAutorizacionImportacionTemporalService.getAduanaDeIngreso).toHaveBeenCalled();
+    expect(component.formularioDatosSolicitud[0].opciones).toEqual(mockAduanaDeIngreso);
   });
 
-  describe('ngOnDestroy', () => {
-    it('debería completar el subject destroyed$', () => {
-      const nextSpy = jest.spyOn((component as any).destroyed$, 'next');
-      const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
+  it('debería obtener las secciones aduaneras y actualizar formularioDatosSolicitud', () => {
+    component.formularioDatosSolicitud = [{ id: 'cveSeccionAduanera', opciones: [] } as any];
+    component.getSeccionAduanera();
+    expect(mockAutorizacionImportacionTemporalService.getSeccionAduanera).toHaveBeenCalled();
+    expect(component.formularioDatosSolicitud[0].opciones).toEqual(mockSeccionAduanera);
+  });
 
-      component.ngOnDestroy();
-
-      expect(nextSpy).toHaveBeenCalled();
-      expect(completeSpy).toHaveBeenCalled();
-    });
+  it('debería limpiar las suscripciones al destruir el componente', () => {
+    const destroyedSpy = jest.spyOn((component as any).destroyed$, 'next');
+    const completeSpy = jest.spyOn((component as any).destroyed$, 'complete');
+    component.ngOnDestroy();
+    expect(destroyedSpy).toHaveBeenCalled();
+    expect(completeSpy).toHaveBeenCalled();
   });
 });
