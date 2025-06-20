@@ -1,4 +1,5 @@
 import { RouterModule, Routes } from '@angular/router';
+import { AceptaAccionesUsoComponent } from './acepta-acciones-uso/acepta-acciones-uso.component';
 import { AuthPageComponent } from './auth-page/auth-page.component';
 import { CambioContrasenaComponent } from './cambio-contrasena/cambio-contrasena.component';
 import { CondicionesUsoComponent } from './condiciones-uso/condiciones-uso.component';
@@ -51,6 +52,10 @@ export const ROUTES_AUTH: Routes = [
   {
     path: 'condiciones-uso',
     component: CondicionesUsoComponent
+  },
+  {
+    path: 'acepta-condiciones',
+    component: AceptaAccionesUsoComponent
   },
 
 ];
