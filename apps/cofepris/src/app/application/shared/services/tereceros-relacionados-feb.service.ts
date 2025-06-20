@@ -6,6 +6,7 @@ import { Observable } from "rxjs";
 
 
 import { DestinatarioModel, FacricanteModel, FacturadorModel, ProveedorModel } from "../models/terceros-fabricante-relocionados.model";
+import { Destinatario } from "../models/terceros-relacionados.model";
 
 @Injectable({
   providedIn: 'root',
@@ -143,4 +144,14 @@ export class TercerosRelacionadosFebService {
   getOtrosTabla(): Observable<Otros[]> {
     return this.http.get<Otros[]>('assets/json/260905/otros.json');
   }
+
+    /**
+     * Obtiene los datos de la tabla de fabricantes como destinatarios desde un archivo JSON local.
+     *
+     * @returns {Observable<Destinatario[]>} Observable que emite un arreglo de objetos `Destinatario`.
+     * @description Este método realiza una petición HTTP para obtener los datos de la tabla de fabricantes como destinatarios.
+     */
+    getFabricanteTablaDatos(): Observable<Destinatario[]> {
+      return this.http.get<Destinatario[]>('assets/json/260905/fabricante.json');
+    }
 }

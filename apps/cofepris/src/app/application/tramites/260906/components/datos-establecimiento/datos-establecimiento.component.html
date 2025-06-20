@@ -5,7 +5,7 @@
         <div class="panel panel-default">
           <div class="panel-heading" (click)="mostrar_colapsable()" tabindex="0">
             <p class="panel-title"> Opciones de pre-llenado de Solicitud </p>
-            <button type="button" class="collpase-button collapsed"></button>
+            <button type="button" class="collpase-button collapsed" [disabled]="soloLectura"></button>
           </div> 
           @if(colapsable){ 
             <div class="panel-collapse collapse in" id="panel-01">
@@ -31,7 +31,7 @@
     <div class="row">
       <div class="col-md-8"></div>
       <div class="col-md-4 d-flex justify-content-end">
-        <button type="button" class="btn btn-primary" (click)="toggleFormControls()"> Seleccionar establecimiento </button>
+        <button type="button" class="btn btn-primary" (click)="toggleFormControls()" [disabled]="soloLectura"> Seleccionar establecimiento </button>
       </div>
     </div>
     <div class="row">
@@ -58,9 +58,9 @@
       </div>
     </div>
   </form>
-  <app-domicillo></app-domicillo>
-  <app-manifiestos></app-manifiestos>
-  <app-representante-legal></app-representante-legal>
+  <app-domicillo [soloLectura]="soloLectura"></app-domicillo>
+  <app-manifiestos [soloLectura]="soloLectura"></app-manifiestos>
+  <app-representante-legal [soloLectura]="soloLectura"></app-representante-legal>
 </div>
 @if (nuevaNotificacion) {
   <section>

@@ -7,6 +7,12 @@ import { Query } from '@datorama/akita';
  * Clase que extiende de Query para manejar el estado de Tramite80101.
  */
 export class Tramite80101Query extends Query<Tramite80101State> {
+    /**
+   * Selecciona el estado completo de la solicitud
+   */
+  selectSolicitud$ = this.select((state) => {
+    return state;
+  });
   /**
    * Selecciona la información de registro del estado.
    */

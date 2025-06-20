@@ -1,3 +1,4 @@
+import { AccesosTabla } from '../models/tecnologicos.model';
 import { Catalogo } from '@libs/shared/data-access-user/src';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
@@ -47,5 +48,13 @@ export class TecnologicosService {
    */
   obtenerDatosTipoMovimiento(): Observable<Catalogo[]> {
     return this.http.get<Catalogo[]>('assets/json/324/tipo-movimiento.json');
+  }
+
+  /**
+   * Obtiene el estado de la petición tecnológica.
+   * @returns Un observable con la lista de accesos tecnológicos.
+   */
+  obtenerTecnologicos(): Observable<AccesosTabla[]> {
+    return this.http.get<AccesosTabla[]>('assets/json/324/tecnologicos.json');
   }
 }
