@@ -1,4 +1,4 @@
-import { Catalogo, CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
+import { CatalogoSelectComponent, ConfiguracionColumna, TablaDinamicaComponent, TablaSeleccion, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { DatosDeLaSolicitud, Sensible } from '../../models/datos-de-la-solicitue.model';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -14,40 +14,107 @@ import { Subject } from 'rxjs';
   styleUrl: './animales-vivo-detalles.component.scss',
 })
 export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
+
+  /**
+   * Representa el formulario reactivo utilizado para gestionar los datos de la mercancía
+   * en el componente de detalles de animales vivos.
+   * 
+   * @type {FormGroup}
+   */
   mercanciaForm!: FormGroup;
+
+  /**
+   * Representa el formulario reactivo utilizado para gestionar los detalles específicos
+   * de los animales vivos, como número de lote, color de pelaje, edad, etc.
+   * 
+   * @type {FormGroup}
+   */
   detalleForm!: FormGroup;
+
+  /**
+   * Datos de la solicitud que se recibirán como entrada en el componente.
+   * 
+   * @type {DatosDeLaSolicitud}
+   */
   @Input() catalogosDatos!: DatosDeLaSolicitud;
+
+  /**
+   * Lista de datos sensibles que se mostrarán en la tabla de detalles de animales vivos.
+   * 
+   * @type {Sensible[]}
+   */
   @Input() sensiblesTablaDatos: Sensible[] = [];
 
-  // tipoRequisitoList: Catalogo[] = [];
-  // requisitoList: Catalogo[] = [];
-  // fraccionArancelariaList: Catalogo[] = [];
-  // nicoList: Catalogo[] = [];
-  // umtList: Catalogo[] = [];
-  // umcList: Catalogo[] = [];
-  // especieList: Catalogo[] = [];
-  // usoList: Catalogo[] = [];
-  // paisOrigenList: Catalogo[] = [];
-  // paisDeProcedenciaList: Catalogo[] = [];
-  // sexoList: Catalogo[] = [];
-
+  /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es true, los campos del formulario no serán editables por el usuario.
+   * 
+   * @type {boolean}
+   */
   esSoloLectura: boolean = true;
 
+  /**
+   * Sujeto para manejar la destrucción de observables y evitar fugas de memoria.
+   * 
+   * @type {Subject<void>}
+   * @private
+   */
   private destroy$ = new Subject<void>();
 
+  /**
+   * Configuración de las columnas de la tabla que muestra los datos sensibles.
+   * Utiliza una constante predefinida para definir la estructura de la tabla.
+   * 
+   * @type {ConfiguracionColumna<Sensible>[]}
+   */
   public configuracionSensiblesTabla: ConfiguracionColumna<Sensible>[] = CONFIGURACION_SENSIBLES;
 
+  /**
+   * Define el tipo de selección de la tabla, en este caso, se utiliza un checkbox para seleccionar filas.
+   * 
+   * @type {TablaSeleccion}
+   */
   public tablaSeleccion = TablaSeleccion.CHECKBOX;
 
+  /**
+   * Almacena los datos sensibles seleccionados en la tabla.
+   * Esta propiedad se utiliza para realizar operaciones como eliminar o procesar los datos seleccionados.
+   * 
+   * @type {Sensible[]}
+   */
   public sensiblesTablaSeleccionada: Sensible[] = [];
 
+  /**
+   * Constructor del componente.
+   * 
+   * @param fb FormBuilder para crear formularios reactivos.
+   */
   constructor(private fb: FormBuilder) {
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
+   * Aquí se crea el formulario reactivo y se configuran los campos necesarios.
+   */
   ngOnInit(): void {
     this.crearFormulario();
   }
 
+
+  /**
+   * Crea e inicializa los formularios reactivos `mercanciaForm` y `detalleForm` 
+   * utilizando FormBuilder. Cada formulario contiene los campos necesarios para 
+   * capturar la información relacionada con los detalles de animales vivos y 
+   * mercancía, aplicando las validaciones requeridas en cada campo según corresponda.
+   *
+   * - `mercanciaForm`: Incluye campos como tipo de requisito, requisito, número de certificado,
+   *   fracción arancelaria, descripción, cantidad, unidad de medida, especie, uso, país de origen y procedencia, entre otros.
+   * - `detalleForm`: Incluye campos para detalles específicos del animal como número de lote, color de pelaje,
+   *   edad, fase de desarrollo, función zootécnica, nombre de la mercancía, número de identificación, raza,
+   *   nombre científico y sexo (este último es obligatorio).
+   *
+   * @returns {void} No retorna ningún valor. Inicializa los formularios como propiedades del componente.
+   */
   crearFormulario(): void {
     this.mercanciaForm = this.fb.group({
       tipoRequisito: ['', Validators.required],
@@ -83,11 +150,13 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
     });
   }
 
-  guardarEnStore(): void {
-    const VALORES = this.mercanciaForm.value;
-
-  }
-
+  /**
+   * Agrega un nuevo detalle a la lista `sensiblesTablaDatos` utilizando los valores actuales del formulario `detalleForm`.
+   * Cada campo del formulario se asigna a la propiedad correspondiente del nuevo objeto.
+   * Después de agregar el detalle, el formulario se reinicia para permitir la entrada de nuevos datos.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
   agregarDetalle(): void {
     this.sensiblesTablaDatos.push({
       NumeroLote: this.detalleForm.value.numeroLote,
@@ -104,16 +173,37 @@ export class AnimalesVivoDetallesComponent implements OnInit, OnDestroy {
     this.detalleForm.reset();
   }
 
+  /**
+   * Elimina los elementos seleccionados de la tabla de datos sensibles.
+   * 
+   * Esta función filtra los elementos de `sensiblesTablaDatos` eliminando aquellos que están presentes
+   * en `sensiblesTablaSeleccionada`. Después de la eliminación, limpia la selección estableciendo 
+   * `sensiblesTablaSeleccionada` como un arreglo vacío.
+   *
+   * @returns {void} No retorna ningún valor.
+   */
   eliminarDetalle(): void {
     this.sensiblesTablaDatos = this.sensiblesTablaDatos.filter((item) => !this.sensiblesTablaSeleccionada.includes(item));
     this.sensiblesTablaSeleccionada = [];
   }
 
+  /**
+   * Limpia los datos relacionados con los animales vivos.
+   * 
+   * Este método vacía el arreglo `sensiblesTablaDatos` y reinicia el formulario `mercanciaForm`,
+   * dejando ambos en su estado inicial. Útil para restablecer el formulario y los datos de la tabla
+   * cuando se requiere comenzar una nueva operación o descartar los cambios actuales.
+   */
   limpiarAnimalesVivo(): void {
     this.sensiblesTablaDatos = [];
     this.mercanciaForm.reset();
   }
 
+  /**
+   * Método del ciclo de vida de Angular que se llama justo antes de destruir el componente.
+   * Emite una señal a través del observable `destroy$` para notificar a los suscriptores que deben limpiar recursos y cancelar suscripciones.
+   * Posteriormente, completa el observable para evitar fugas de memoria.
+   */
   ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
