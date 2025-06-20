@@ -102,12 +102,12 @@ export class AvisoRetornoComponent implements OnInit, OnDestroy {
         takeUntil(this.destroy$),
         map((seccionState) => {
           this.consultaState = seccionState;
-          if (seccionState.update) {
-            this.guardarDatosFormulario();
-          }
         })
       )
       .subscribe();
+      if (this.consultaState?.update) {
+        this.guardarDatosFormulario();
+      }
   }
 
   /**
