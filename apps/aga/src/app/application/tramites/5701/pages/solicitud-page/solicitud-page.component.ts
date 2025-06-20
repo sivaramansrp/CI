@@ -208,8 +208,6 @@ export class SolicitudPageComponent implements OnInit {
         .pipe(
           takeUntil(this.destroyNotifier$),
           tap((respuesta) => {
-            console.log('Respuesta de la solicitud:', respuesta);
-
             if (!respuesta) {
               this.nuevaNotificacion = {
                 tipoNotificacion: 'toastr',

@@ -27,6 +27,11 @@ export const MSJ_ERROR_FECHA_SEMANA =
 export const MSJ_ERROR_FECHA_DIA =
   'La fecha no es válida para la solicitud seleccionada.';
 
+  /**
+   * @description Mensaje de error cuando la fecha final es menor que la fecha inicial.
+   */
+export const MSJ_ERROR_FECHA_FINAL_MENOR_INICIAL = 'Fecha inválida. La fecha final no puede ser menor a la fecha de incio.';
+
 // #Mensajes del modal para el componente Persona Responsable del Despacho
 /**
  * @description Mensaje de error cuando se hace una busqueda con un gafete que no existe.
