@@ -402,6 +402,7 @@ export class DatosGeneralesDeLaSolicitudComponent implements OnInit, OnDestroy {
         ],
         opcion: [{ value: this.solicitudState?.opcion }, Validators.maxLength(50)],
     });
+     this.domecilioFormulario();
   }
 
   /**

@@ -1,5 +1,22 @@
-import { BtnContinuarComponent,ConsultaioQuery,ConsultaioState,DatosPasos,FormularioDinamico,ListaPasosWizard,SolicitanteComponent,ValidacionesFormularioService,WizardComponent } from '@ng-mf/data-access-user';
-import { Component, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import {
+  BtnContinuarComponent,
+  ConsultaioQuery,
+  ConsultaioState,
+  DatosPasos,
+  FormularioDinamico,
+  ListaPasosWizard,
+  SolicitanteComponent,
+  ValidacionesFormularioService,
+  WizardComponent,
+} from '@ng-mf/data-access-user';
+import {
+  Component,
+  EventEmitter,
+  OnDestroy,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Subject, map, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -7,6 +24,8 @@ import { DatosGeneralesDeLaSolicitudComponent } from '../../components/datos-gen
 import { DesistimientoComponent } from '../../components/desistimiento/desistimiento.component';
 import { PASOS } from '@libs/shared/data-access-user/src/tramites/constantes/11105/pasos.enum';
 import { RetiradaDeLaAutorizacionDeDonacionesService } from '../../services/retirad-de-la-autorizacion-de-donaciones.service';
+import { Solicitud11105Query } from '../../estados/solicitud11105.query';
+import { Solicitud11105Store } from '../../estados/solicitud11105.store';
 
 interface AccionBoton {
   /**
@@ -38,8 +57,7 @@ interface AccionBoton {
   ],
 })
 export class PasoUnoComponent implements OnInit, OnDestroy {
-
-    /**
+  /**
    * @property {ConsultaioState} consultaDatos
    * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
    */
@@ -51,7 +69,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   esDatosRespuesta: boolean = false;
 
-  
   /**
    * Evento que se emite al continuar con el flujo del trámite.
    */
@@ -109,7 +126,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    */
   private destroyNotifier$: Subject<void> = new Subject();
 
-
   /**
    * Constructor del componente.
    *
@@ -120,9 +136,10 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     private retiradaDeLaAutorizacionDeDonacionesService: RetiradaDeLaAutorizacionDeDonacionesService,
     public formBuilder: FormBuilder,
     private validacionesService: ValidacionesFormularioService,
-    private consultaioQuery: ConsultaioQuery
+    private consultaioQuery: ConsultaioQuery,
+    private store: Solicitud11105Store,
+    private query: Solicitud11105Query
   ) {}
-
 
   /**
    * Método que se ejecuta al inicializar el componente.
@@ -131,8 +148,6 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
    * según el estado almacenado.
    */
   ngOnInit(): void {
-   
-
     this.consultaioQuery.selectConsultaioState$
       .pipe(
         takeUntil(this.destroyNotifier$),
@@ -141,13 +156,56 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
         })
       )
       .subscribe();
-   
+    
     if (this.consultaDatos.update) {
-      // this.fetchGetDatosConsulta();
+      this.fetchGetDatosConsulta();
     } else {
       this.esDatosRespuesta = true;
     }
     // this.indice = this.tramiteState.pestanaActiva;
+  }
+
+  /**
+   * Método para obtener los datos de consulta del servicio.
+   *  Este método realiza una llamada al servicio `CertificadosOrigenService`
+   *  para obtener los datos necesarios para la consulta del certificado de origen.
+   *  @returns {void}
+   *  @memberof PasoUnoComponent
+   * */
+  public fetchGetDatosConsulta(): void {
+    this.retiradaDeLaAutorizacionDeDonacionesService
+      .getDatosConsulta()
+      .pipe(takeUntil(this.destroyNotifier$))
+      .subscribe((respuesta) => {
+        if (respuesta.success) {
+          this.esDatosRespuesta = true;
+          this.store.setAduana(respuesta.datos.aduana);
+          this.store.setNombre(respuesta.datos.nombre);
+          this.store.setTipoMercancia(respuesta.datos.tipoMercancia);
+          this.store.setUsoEspecifico(respuesta.datos.usoEspecifico);
+          this.store.setCondicion(respuesta.datos.condicion);
+          this.store.setMarca(respuesta.datos.marca);
+          this.store.setAno(respuesta.datos.ano);
+          this.store.setModelo(respuesta.datos.modelo);
+          this.store.setSerie(respuesta.datos.serie);
+          this.store.setManifesto(respuesta.datos.manifesto);
+          this.store.setCalle(respuesta.datos.calle);
+          this.store.setNumeroExterior(respuesta.datos.numeroExterior);
+          this.store.setNumeroInterior(respuesta.datos.numeroInterior);
+          this.store.setTelefono(respuesta.datos.telefono);
+          this.store.setCorreoElectronico(respuesta.datos.correoElectronico);
+          this.store.setPais(respuesta.datos.pais);
+          this.store.setCodigoPostal(respuesta.datos.codigoPostal);
+          this.store.setEstado(respuesta.datos.estado);
+          this.store.setColonia(respuesta.datos.colonia);
+          this.store.setOpcion(respuesta.datos.opcion);
+          this.store.setFolioOriginal(respuesta.datos.folioOriginal);
+          this.store.setJustificacionDelDesistimiento(
+            respuesta.datos.justificacionDelDesistimiento
+          );
+          this.store.setOpcion(respuesta.datos.opcion);
+        }
+      });
   }
 
   /**
@@ -180,7 +238,7 @@ export class PasoUnoComponent implements OnInit, OnDestroy {
     }
   }
 
-    /**
+  /**
    * Método que se ejecuta al destruir el componente.
    */
   ngOnDestroy(): void {
