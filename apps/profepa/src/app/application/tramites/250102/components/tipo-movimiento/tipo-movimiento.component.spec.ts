@@ -6,6 +6,7 @@ import { Tramite250102Query } from '../../estados/tramite250102.query';
 import { TipoMovimientoService } from '../../services/tipo-movimiento.service';
 import { MOVIMIENTO_OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/flora-fauna.enum';
 import { of } from 'rxjs';
+import { provideHttpClient } from '@angular/common/http';
 
 const mockStore = {
   establecerDatos: jest.fn(),
@@ -35,6 +36,7 @@ describe('TipoMovimientoComponent', () => {
     await TestBed.configureTestingModule({
       imports: [TipoMovimientoComponent, ReactiveFormsModule],
       providers: [
+         provideHttpClient(),
         FormBuilder,
         { provide: Tramite250102Store, useValue: mockStore },
         { provide: Tramite250102Query, useValue: mockQuery },

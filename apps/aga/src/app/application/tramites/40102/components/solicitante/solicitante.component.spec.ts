@@ -9,6 +9,7 @@ import {
   Directive,
   Input,
   Output,
+  NgModule,
 } from '@angular/core';
 import {
   FormsModule,
@@ -22,6 +23,7 @@ import { Observable, of as observableOf, throwError } from 'rxjs';
 
 import { Component } from '@angular/core';
 import { SolicitanteComponent } from './solicitante.component';
+import { TituloComponent } from '@libs/shared/data-access-user/src';
 
 @Directive({ selector: '[myCustom]' })
 class MyCustomDirective {
@@ -49,19 +51,26 @@ class SafeHtmlPipe implements PipeTransform {
   }
 }
 
+@NgModule({
+  declarations: [
+    SolicitanteComponent,
+    TranslatePipe,
+    PhoneNumberPipe,
+    SafeHtmlPipe,
+    MyCustomDirective,
+  ],
+  imports: [FormsModule, ReactiveFormsModule, TituloComponent],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
+})
+class TestModule {}
+
 describe('SolicitanteComponent', () => {
   let fixture: ComponentFixture<SolicitanteComponent>;
   let component: SolicitanteComponent;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [SolicitanteComponent, FormsModule, ReactiveFormsModule],
-      declarations: [
-        TranslatePipe,
-        PhoneNumberPipe,
-        SafeHtmlPipe,
-        MyCustomDirective,
-      ],
+      imports: [TestModule], // Importa el módulo de prueba
       schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
       providers: [FormBuilder],
     }).compileComponents();
@@ -85,10 +94,16 @@ describe('SolicitanteComponent', () => {
     }
   });
 
+  /**
+   * Verifica que el componente se haya creado correctamente.
+   */
   it('should run #constructor()', async () => {
     expect(component).toBeTruthy();
   });
 
+  /**
+   * Verifica que el método `ngOnInit` funcione correctamente.
+   */
   it('should run #ngOnInit()', async () => {
     component.fb = component.fb || {};
     component.fb.group = jest.fn();

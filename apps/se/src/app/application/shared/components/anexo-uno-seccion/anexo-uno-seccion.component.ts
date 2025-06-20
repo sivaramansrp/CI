@@ -2,8 +2,9 @@
 /AnexoUnoSeccionComponent
 */
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subject,map,takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { Subject } from 'rxjs';
+
 
 import {
   AlertComponent,
@@ -40,10 +41,10 @@ import {
   ProyectoImmex,
 } from '../../models/complimentos-seccion.model';
 
+import { ComplementosSeccionState, ComplementosSeccionStore } from '../../../estados/tramites/complementos-seccion.store';
 import { ANEXO_UNO_ALERTA } from '../../constantes/anexo-dos-y-tres.enum';
-import { ComplementosSeccionStore } from '../../../estados/tramites/complementos-seccion.store';
-
 import { ComplementosSeccionQuery } from '../../../estados/queries/complementos-seccion.query';
+import { ConsultaioQuery } from '@ng-mf/data-access-user';
 /**
  * compodoc
  * @class AnexoUnoSeccionComponent
@@ -113,7 +114,9 @@ public anexoUnoFormGroup!: FormGroup;
  * Formulario reactivo utilizado para capturar datos de proveedores y clientes.
  */
 public formularioProveedorCliente!: FormGroup;
-
+  /** Indica si el formulario debe mostrarse en modo solo lectura.  
+ *  Controla la habilitación o deshabilitación de los campos. */
+  esFormularioSoloLectura: boolean = false;
 /**
  * 
  * @constructor
@@ -122,17 +125,66 @@ public formularioProveedorCliente!: FormGroup;
  */
 constructor(private fb: FormBuilder,
   private complementosSeccionStore: ComplementosSeccionStore,
-      private complementosSeccionQuery: ComplementosSeccionQuery
-) {}
+      private complementosSeccionQuery: ComplementosSeccionQuery,
+        private consultaioQuery: ConsultaioQuery
+){ 
+       this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.esFormularioSoloLectura = seccionState.readonly;
+        
+          this.inicializarCertificadoFormulario();
+        })
+      )
+      .subscribe();
+    }
+/**
+   * Método que se ejecuta cuando el componente es inicializado.
+   * 
+   * Inicializa el formulario reactivo con los valores actuales de la solicitud.
+   */
+  ngOnInit(): void {
+    this.inicializarCertificadoFormulario();
+  }
  /**
-  * 
- * @method ngOnInit
- * @description Método del ciclo de vida de Angular que se ejecuta al inicializar el componente.
- * Se utiliza para crear los formularios necesarios para la sección del Anexo Uno.
- */
-ngOnInit(): void {
-  this.crearFormularioAnexoUno();
-}
+   * Método para inicializar el formulario reactivo con los datos de la solicitud.
+   * 
+   * Este método configura los campos del formulario con los valores actuales del estado de la solicitud
+   * y aplica las validaciones necesarias. También deshabilita ciertos campos y establece valores predeterminados.
+   */
+  inicializarCertificadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.guardarDatosFormulario();
+    } else {
+     this.crearFormularioAnexoUno();
+    }  
+  }
+    /**
+   * @comdoc
+   * Guarda los datos del formulario de combinación requerida.
+   * 
+   * Inicializa el formulario y ajusta su estado de habilitación según si es de solo lectura.
+   * - Si el formulario es de solo lectura, lo deshabilita.
+   * - Si no es de solo lectura, lo habilita.
+   * - Si no aplica ninguna de las condiciones anteriores, no realiza ninguna acción adicional.
+   */
+  guardarDatosFormulario(): void {
+      this.crearFormularioAnexoUno();
+      if (this.esFormularioSoloLectura) {
+        this.anexoUnoFormGroup.disable();
+        this.formularioProveedorCliente.disable(); 
+        this.proyectoForm.disable(); 
+        this.anexoDosFormGroup.disable();   
+         this.complimentarForm.disable();      
+      } else {
+        this.anexoUnoFormGroup.enable();  
+        this.formularioProveedorCliente.enable();
+        this.proyectoForm.enable();
+        this.anexoDosFormGroup.enable();     
+        this.complimentarForm.enable(); 
+      }
+  }
 /**
  * @method actualizarControl
  * @description Actualiza dinámicamente el valor de un control en un formulario específico y lo sincroniza con la tienda o servicio correspondiente.
@@ -366,6 +418,11 @@ public paisDestinoCatalog = PAIS_DESTINO_CATALOG;
  */
 public tipoDeDocumenteCatalog = ANEXO_I_SERVICIO_CATALOGO;
 
+  /**
+   * Estado de la solicitud 250101, que contiene los valores actuales de la solicitud.
+   */
+  public solicitudState!: ComplementosSeccionState;
+
 
   /**
    * Crea y configura los formularios reactivos utilizados en el componente.
@@ -379,35 +436,43 @@ public tipoDeDocumenteCatalog = ANEXO_I_SERVICIO_CATALOGO;
    * Cada formulario incluye validaciones específicas según los requisitos de los campos.
    */
   crearFormularioAnexoUno(): void {
+    this.complementosSeccionQuery.selectSolicitud$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.solicitudState = seccionState as ComplementosSeccionState;
+        })
+      )
+      .subscribe();
     this.anexoUnoFormGroup = this.fb.group({
-      fraccionArancelaria: [''],
-      descripcion: [''],
+      fraccionArancelaria: [this.solicitudState['fraccionArancelaria']],
+      descripcion: [this.solicitudState['descripcion']],
     });
     this.formularioProveedorCliente = this.fb.group({
-      descripcionComercial: ['', Validators.required],
-      paisDestino: ['', Validators.required],
-      rfc: ['', Validators.required],
-      razonSocialCliente: ['', Validators.required],
+      descripcionComercial: [this.solicitudState['descripcionComercial'], Validators.required],
+      paisDestino: [this.solicitudState['paisDestino'], Validators.required],
+      rfc: [this.solicitudState['rfc'], Validators.required],
+      razonSocialCliente: [this.solicitudState['razonSocialCliente'], Validators.required],
     });
     this.proyectoForm = this.fb.group({
-      descripcion: ['', Validators.required],
-      tipoDeDocumente: ['', Validators.required],
-      fechaDeFirma: ['', Validators.required],
-      fechaDeVigencia: ['', Validators.required],
+      textDescripcion: [this.solicitudState['textDescripcion'], Validators.required],
+      tipoDeDocumente: [this.solicitudState['tipoDeDocumente'], Validators.required],
+      fechaDeFirma: [this.solicitudState['fechaDeFirma'], Validators.required],
+      fechaDeVigencia: [this.solicitudState['fechaDeVigencia'], Validators.required],
       rfcTaxId: [0, Validators.required],
-      razonSocial: ['', Validators.required],
+      razonSocial: [this.solicitudState['razonSocial'], Validators.required],
     });
     this.anexoDosFormGroup = this.fb.group({
-      fraccionArancelaria: [''],
-      descripcion: [''],
+      fraccionArancelarias: [this.solicitudState['fraccionArancelarias']],
+      anexoDosDescripcion: [this.solicitudState['anexoDosDescripcion']],
     });
     this.complimentarForm = this.fb.group({
-      catagoria: ['', Validators.required],
-      descripcion: ['', Validators.required],
-      monedaNacionalMensual: ['', Validators.required],
-      monedaNacionalDeDosPeriodos: ['', Validators.required],
-      volumenMensual: ['', Validators.required],
-      twoPeriodVolume: ['', Validators.required],
+      catagoria: [this.solicitudState['catagoria'], Validators.required],
+      complimentarDescripcion: [this.solicitudState['complimentarDescripcion'], Validators.required],
+      monedaNacionalMensual: [this.solicitudState['monedaNacionalMensual'], Validators.required],
+      monedaNacionalDeDosPeriodos: [this.solicitudState['monedaNacionalDeDosPeriodos'], Validators.required],
+      volumenMensual: [this.solicitudState['volumenMensual'], Validators.required],
+      twoPeriodVolume: [this.solicitudState['twoPeriodVolume'], Validators.required],
     });
   }
 }

@@ -8,7 +8,8 @@
           type="text"
           class="form-control"
           id="nombre"
-          formControlName="nombre"     
+          formControlName="nombre"
+          (change)="setValoresStore(directorGeneralForm,'nombre', 'setNombres')"
         />
       </div>
       <div class="col-md-4 mb-3">
@@ -18,6 +19,7 @@
           class="form-control"
           id="primerApellido"
           formControlName="primerApellido"
+          (change)="setValoresStore(directorGeneralForm,'primerApellido', 'setPrimerApellido')"
         />
       </div>
       <div class="col-md-4 mb-3">
@@ -29,6 +31,7 @@
           class="form-control"
           id="segundoApellido"
           formControlName="segundoApellido"
+          (change)="setValoresStore(directorGeneralForm,'segundoApellido', 'setSegundoApellido')"
         />
       </div>
     </div>
