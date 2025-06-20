@@ -26,4 +26,14 @@ export class FitosanitarioQuery extends Query<ListaDeDatosFinal> {
     constructor(protected override store: FitosanitarioStore) {
         super(store);
     }
+
+    
+  /**
+   * Selector para obtener los datos de pago de derechos.
+   *
+   * @readonly
+   * @type {Observable<any>}
+   * @memberof ZoosanitarioQuery
+   */
+  seleccionarPagoDerechos$ = this.select(estado => estado.pago);
 }

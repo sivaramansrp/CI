@@ -7,7 +7,7 @@ import {
 
     Movilizacion,
 
-    PagoForm,
+    PagoDeDerechos,
 
     createDatosState,
 } from '../models/220202/fitosanitario.model';
@@ -53,7 +53,7 @@ export class FitosanitarioStore extends Store<ListaDeDatosFinal> {
      * Actualiza el estado con la información de pago.
      * @param pago Datos de pago.
      */
-    public actualizarPago(pago: PagoForm): void {
+    public actualizarPago(pago: PagoDeDerechos): void {
         this.update(state => ({
             ...state,
             pago, // Envuelve los datos en un array

@@ -98,7 +98,7 @@ export interface ListaDeDatosFinal {
     /**
      * Información del formulario de pago.
      */
-    pago: PagoForm;
+    pago: PagoDeDerechos;
 
     /**
      * Datos finales preparados para enviar.
@@ -288,6 +288,29 @@ export interface FilaSolicitud {
 }
 
 /**
+ * @interface PagoDeDerechos
+ * @description Modelo para capturar la información correspondiente al pago de derechos.
+ *
+ * @property {string} exentoPago - Indica si el pago está exento (Sí/No).
+ * @property {string} justificacion - Justificación del motivo de exención (si aplica).
+ * @property {string} claveReferencia - Clave de referencia para el pago.
+ * @property {string} cadenaDependencia - Cadena generada por la dependencia para pago.
+ * @property {string} banco - Nombre del banco donde se realiza el pago.
+ * @property {string} llavePago - Llave única para realizar el pago.
+ * @property {string} importePago - Monto del pago.
+ */
+export interface PagoDeDerechos {
+  exentoPago: string;
+  justificacion: string;
+  claveReferencia: string;
+  cadenaDependencia: string;
+  banco: string;
+  llavePago: string;
+  importePago: string;
+  fechaPago:string;
+}
+
+/**
  * @interface SolicitudFilaTabla
  * @description
  * Modelo para una fila de la tabla con información de fecha de creación, mercancía, cantidad y proveedor.
@@ -378,16 +401,14 @@ export function createDatosState(params: Partial<ListaDeDatosFinal> = {}): Lista
             medioTransporte: getDefaultValue(params.movilizacion?.medioTransporte, ''),
         },
         pago: {
-            exentoPago: getDefaultValue(params.pago?.exentoPago, ''),
-            justificacion: getDefaultValue(params.pago?.justificacion, ''),
-            claveReferencia: getDefaultValue(params.pago?.claveReferencia, ''),
-            cadenaDependencia: getDefaultValue(params.pago?.cadenaDependencia, ''),
-            banco: getDefaultValue(params.pago?.banco, ''),
-            llavePago: getDefaultValue(params.pago?.llavePago, ''),
-            importePago: getDefaultValue(params.pago?.importePago, ''),
-            fechaDePago: getDefaultValue(params.pago?.fechaDePago, ''),
-            fechaInicioInput: getDefaultValue(params.pago?.fechaInicioInput, ''),
-            fechaPago: getDefaultValue(params.pago?.fechaPago, '')
+        exentoPago: getDefaultValue(params.pago?.exentoPago, ''),
+        justificacion: getDefaultValue(params.pago?.justificacion, ''),
+        claveReferencia: getDefaultValue(params.pago?.claveReferencia, ''),
+        cadenaDependencia: getDefaultValue(params.pago?.cadenaDependencia, ''),
+        banco: getDefaultValue(params.pago?.banco, ''),
+        llavePago: getDefaultValue(params.pago?.llavePago, ''),
+        importePago: getDefaultValue(params.pago?.importePago, ''),
+        fechaPago: getDefaultValue(params.pago?.fechaPago, ''),
         },
         finalEnviar: {
             datosFormaValidacion: finalEnviar(params.finalEnviar?.datosFormaValidacion as boolean, false),
