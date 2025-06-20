@@ -1,22 +1,44 @@
+// mock solicitante.json
+jest.mock('@libs/shared/theme/assets/json/110101/solicitante-mockdata.json', () => ({
+  __esModule: true,
+  default: {
+    rfc: 'AAL0409235E6',
+    denominacion: 'AGRICOLA ALPE S DE RL DE CV',
+    actividadEconomica: 'Siembra, cultivo y cosecha de papa',
+    correoElectronico: 'vucem2.5@hotmail.com'
+  }
+}));
+
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import mockData from 'libs/shared/theme/assets/json/110101/solicitante-mockdata.json';
-
+import mockData from '@libs/shared/theme/assets/json/110101/solicitante-mockdata.json';
 import { Tramite110101Store } from '../../estados/tramites/solicitante110101.store';
-
 import { SolicitanteComponent } from './solicitante.component';
-
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { of } from 'rxjs';
 
-fdescribe('SolicitanteComponent', () => {
+describe('SolicitanteComponent', () => {
   let component: SolicitanteComponent;
   let fixture: ComponentFixture<SolicitanteComponent>;
+  let mockStore: Partial<Record<keyof Tramite110101Store, jest.Mock>>;
 
   beforeEach(async () => {
+    mockStore = {
+      setRfc: jest.fn(),
+      setDenominacion: jest.fn(),
+      setActividadEconomica: jest.fn(),
+      setCorreoElectronico: jest.fn(),
+      _select: jest.fn().mockReturnValue(of({})), // Mock _select to return an observable
+      // Add any additional observable properties expected by the component
+    };
+
     await TestBed.configureTestingModule({
-      imports: [SolicitanteComponent, ReactiveFormsModule], 
-      providers: [FormBuilder],
-    })
-    .compileComponents();
+      imports: [SolicitanteComponent, ReactiveFormsModule],
+      providers: [
+        FormBuilder,
+        { provide: Tramite110101Store, useValue: mockStore },
+      ],
+    }).compileComponents();
+
     fixture = TestBed.createComponent(SolicitanteComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -59,13 +81,12 @@ fdescribe('SolicitanteComponent', () => {
       actividadEconomica: 'Test Actividad',
       correoElectronico: 'test@example.com',
     });
-  
+
     component['updateStore']();
-  
-    const store = TestBed.inject(Tramite110101Store);
-    expect(store.setRfc).toHaveBeenCalledWith('TEST123456789');
-    expect(store.setDenominacion).toHaveBeenCalledWith('Test Denominacion');
-    expect(store.setActividadEconomica).toHaveBeenCalledWith('Test Actividad');
-    expect(store.setCorreoElectronico).toHaveBeenCalledWith('test@example.com');
+
+    expect(mockStore.setRfc).toHaveBeenCalledWith('TEST123456789');
+    expect(mockStore.setDenominacion).toHaveBeenCalledWith('Test Denominacion');
+    expect(mockStore.setActividadEconomica).toHaveBeenCalledWith('Test Actividad');
+    expect(mockStore.setCorreoElectronico).toHaveBeenCalledWith('test@example.com');
   });
 });
