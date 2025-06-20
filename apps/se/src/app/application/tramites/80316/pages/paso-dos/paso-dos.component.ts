@@ -7,7 +7,7 @@ import {
   TEXTOS,
   TituloComponent,
 } from '@ng-mf/data-access-user';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnDestroy, OnInit, Output } from '@angular/core';
 import { Subject, takeUntil } from 'rxjs';
 
 /**
@@ -47,6 +47,9 @@ export class PasoDosComponent implements OnInit, OnDestroy {
 
   /** Observable para manejar la destrucción de suscripciones */
   private destroy$: Subject<void> = new Subject<void>();
+
+  @Output() reenviarEvento = new EventEmitter<void>();
+  @Output() regresarSeccionCargarDocumentoEvento = new EventEmitter<void>()
 
   /**
    * Constructor del componente.
