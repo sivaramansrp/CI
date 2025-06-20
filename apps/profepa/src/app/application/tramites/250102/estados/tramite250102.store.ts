@@ -4,11 +4,13 @@ import { CatalogoResponse } from '@libs/shared/data-access-user/src';
 import { Injectable } from '@angular/core';
 
 /**
- * Estado del trámite con clave 250102. Contiene toda la información capturada
- * durante el proceso del trámite, incluyendo datos del destinatario, agente aduanal,
- * mercancía, y aspectos administrativos.
+ * Interfaz que define la estructura del estado para el trámite 250102.
+ * Contiene toda la información capturada durante el proceso del trámite,
+ * incluyendo datos del destinatario, agente aduanal, mercancía y aspectos administrativos.
+ * @interface
  */
 export interface Tramite250102State {
+  /** Tipo de movimiento seleccionado. */
   tipoMovimiento : string;
   /** Tipo de aduana seleccionada. */
   tipoAduana: CatalogoResponse | null;
@@ -26,6 +28,7 @@ export interface Tramite250102State {
   destinatarioCodigoPostal: string;
   /** Domicilio completo del destinatario. */
   destinatarioDomicilio: string;
+  /** Ciudad del destinatario. */
   destinariociudad: string;
   /** Nombre del agente aduanal. */
   agenteAduanalNombre: string;
@@ -87,12 +90,11 @@ export interface Tramite250102State {
   origen: string;
   /** Lugar de procedencia del producto. */
   procedencia: string;
-    /** Lista de productos agregados */
-    productos: Producto[];
-    /** Detalles de cada producto, almacenados como entradas de mapa */
-    detalles: [number, Detalle[]][];
+  /** Lista de productos agregados */
+  productos: Producto[];
+  /** Detalles de cada producto, almacenados como entradas de mapa */
+  detalles: [number, Detalle[]][];
 }
-
 
 /**
  * Crea y retorna el estado inicial para el trámite 250102.
@@ -122,7 +124,7 @@ export function createInitialState(): Tramite250102State {
     destinatarioCodigoPostal: '',
     /** Domicilio del destinatario (vacío). */
     destinatarioDomicilio: '',
-
+    /** Ciudad del destinatario (vacía). */
     destinariociudad: '',
     /** Nombre del agente aduanal (vacío). */
     agenteAduanalNombre: '',
@@ -184,27 +186,37 @@ export function createInitialState(): Tramite250102State {
     origen: '',
     /** Lugar de procedencia (vacío). */
     procedencia: '',
-     /** Lista vacía para los productos */
-     productos: [],
-     /** Lista vacía para los detalles de productos */
-     detalles: [],
+    /** Lista vacía para los productos */
+    productos: [],
+    /** Lista vacía para los detalles de productos */
+    detalles: [],
   };
 }
 
+/**
+ * Store de Akita para el estado del trámite 250102.
+ * Permite gestionar y actualizar el estado global del trámite durante todo el flujo.
+ * 
+ * @export
+ * @class Tramite250102Store
+ * @extends {Store<Tramite250102State>}
+ */
 @Injectable({
   providedIn: 'root',
 })
 @StoreConfig({ name: 'tramite250102', resettable: true })
 export class Tramite250102Store extends Store<Tramite250102State> {
+  /**
+   * Inicializa el store con el estado inicial del trámite.
+   */
   constructor() {
     super(createInitialState());
   }
 
   /**
- * @method establecerDatos
- * @description Actualiza el estado con los datos proporcionados.
- * @param datos Datos parciales para actualizar el estado del trámite.
- */
+   * Actualiza el estado con los datos proporcionados.
+   * @param {Partial<Tramite250102State>} datos - Datos parciales para actualizar el estado del trámite.
+   */
   public establecerDatos(datos: Partial<Tramite250102State>): void {
     this.update((state) => ({
       ...state,
@@ -213,31 +225,25 @@ export class Tramite250102Store extends Store<Tramite250102State> {
   }
 
   /**
- * @method establecerDestinatario
- * @description Establece la información de destinatarios en el estado del trámite.
- * @param destinatarioRowData Lista de datos de destinatarios que serán almacenados.
- */
+   * Establece la información de destinatarios en el estado del trámite.
+   * @param {TablaDatos[]} destinatarioRowData - Lista de datos de destinatarios que serán almacenados.
+   */
   public establecerDestinatario(destinatarioRowData: TablaDatos[]): void {
-      this.update((state) => ({ ...state, destinatarioRowData }));
-    }
+    this.update((state) => ({ ...state, destinatarioRowData }));
+  }
 
-    /**
- * @method establecerAgenteAduanal
- * @description Establece la información de agentes aduanales en el estado del trámite.
- * @param agenteAduanalRowData Lista de datos de agentes aduanales que serán almacenados.
- */
+  /**
+   * Establece la información de agentes aduanales en el estado del trámite.
+   * @param {TablaDatos[]} agenteAduanalRowData - Lista de datos de agentes aduanales que serán almacenados.
+   */
   public establecerAgenteAduanal(agenteAduanalRowData: TablaDatos[]): void {
     this.update((state) => ({ ...state, agenteAduanalRowData }));
   }
 
-/**
- * Restaura el estado inicial del store.
- */
-public resetStore(): void {
-  this.reset();
+  /**
+   * Restaura el estado inicial del store.
+   */
+  public resetStore(): void {
+    this.reset();
+  }
 }
-
-}
-
-
-

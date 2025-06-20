@@ -1,6 +1,6 @@
 import { AnexarDocumentosComponent, FirmaElectronicaComponent, TituloComponent, WizardComponent } from '@libs/shared/data-access-user/src';
-import { AvisoMercanciaDonadaRoutingModule } from './aviso-mercancia-donada-routing.module';
 import { CUSTOM_ELEMENTS_SCHEMA, NgModule } from '@angular/core';
+import { AvisoMercanciaDonadaRoutingModule } from './aviso-mercancia-donada-routing.module';
 import { BtnContinuarComponent } from '@libs/shared/data-access-user/src/tramites/components/btn-continuar/btn-continuar.component';
 import { CommonModule } from '@angular/common';
 // import { DonacionFranjaFronterizaRoutingModule } from './donación-franja-fronteriza-routing.module';

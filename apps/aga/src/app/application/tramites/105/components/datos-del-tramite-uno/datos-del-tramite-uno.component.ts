@@ -1,4 +1,4 @@
-import { AlertComponent, Catalogo, ConsultaioQuery, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
+import { Catalogo, ConsultaioQuery, TableComponent, TituloComponent } from '@ng-mf/data-access-user';
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FRACCIONES_TABLEDOS_TABLE_BODY_DATA, OPCIONES_DE_BOTON_DE_RADIO } from '../../constantes/datos-del-tramite.enum';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -10,14 +10,14 @@ import { InputCheckComponent } from '@libs/shared/data-access-user/src/tramites/
 import { InputRadioComponent } from "@libs/shared/data-access-user/src/tramites/components/input-radio/input-radio.component";
 import { InvoCarService } from '../../services/invocar.service';
 import { Tramite105Query } from '../../estados/tramite105.query';
-import mercanciaTable from 'libs/shared/theme/assets/json/105/mercancia-table.json';
+import mercanciaTable from '@libs/shared/theme/assets/json/105/mercancia-table.json';
 interface TableBodyData {
   tbodyData: string[];
 }
 @Component({
   selector: 'app-datos-del-tramite-uno',
   standalone: true,
-  imports: [CommonModule, AlertComponent,
+  imports: [CommonModule,
     InputRadioComponent,
     TableComponent,
     TituloComponent, CatalogoSelectComponent, ReactiveFormsModule, InputCheckComponent],

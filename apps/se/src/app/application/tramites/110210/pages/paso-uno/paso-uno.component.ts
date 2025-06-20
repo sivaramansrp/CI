@@ -54,7 +54,9 @@ export class PasoUnoComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.persona = PERSONA_MORAL_NACIONAL;
     this.domicilioFiscal = DOMICILIO_FISCAL_PERSONA_MORAL_O_FISICA_NACIONAL;
+     if (this.solicitante?.obtenerTipoPersona) {
     this.solicitante.obtenerTipoPersona(TIPO_PERSONA.MORAL_NACIONAL);
+  }
   }
 
   /**
