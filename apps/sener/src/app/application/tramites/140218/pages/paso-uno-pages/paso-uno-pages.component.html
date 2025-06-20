@@ -17,7 +17,9 @@
       
       </div>
       <div [ngStyle]="{ display: indice === 2 ? 'block' : 'none' }">
+        @if(esDatosRespuesta){
           <app-renuncia-de-derechos [soloLectura]="esFormularioSoloLectura"></app-renuncia-de-derechos>
+        }
       </div>
     </div>
   </div>
