@@ -138,6 +138,15 @@
         "numeroDeProcedimiento": "40101"
     },
     {
+        "id": "40301",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "AGA",
+        "numeroDeProcedimiento": "40301"
+    },
+    {
         "id": "230101",
         "tipoDeTramite": "Datos generales del trámite",
         "fecha": "2024-11-01",
