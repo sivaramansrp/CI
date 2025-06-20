@@ -1,10 +1,11 @@
 import { Catalogo, CatalogoSelectComponent, TablaDinamicaComponent, TituloComponent } from '@libs/shared/data-access-user/src';
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ConsultaioQuery, ConsultaioState } from '@ng-mf/data-access-user';
+import { DatosDelModificacion, DatosModificacion } from '../../models/datos-tramite.model';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Solicitud80316State, Tramite80316Store } from '../../estados/tramite80316.store';
 import { Subject, map, merge, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
-import { DatosDelModificacion } from '../../models/datos-tramite.model';
 import { SolicitudService } from '../../services/solicitud.service';
 import { Tramite80316Query } from '../../estados/tramite80316.query';
 
@@ -40,7 +41,8 @@ export class ModificacionComponent implements OnInit, OnDestroy {
     private fb: FormBuilder,
     public solicitudService: SolicitudService,
     private tramite80316Store: Tramite80316Store,
-    private tramite80316Query: Tramite80316Query
+    private tramite80316Query: Tramite80316Query,
+    private consultaioQuery: ConsultaioQuery
   ) {}
 
   /**
@@ -83,10 +85,33 @@ export class ModificacionComponent implements OnInit, OnDestroy {
   actividadProductiva!: Catalogo[];
 
   /**
+   * @property {ConsultaioState} consultaDatos
+   * @description Estado actual de la consulta, que contiene información relacionada con el trámite y el solicitante.
+   */
+  consultaDatos!: ConsultaioState;
+
+  /**
+   * @property {boolean} soloLectura
+   * @description Indica si el formulario o los campos están en modo de solo lectura.
+   * @default false
+   */
+  esFormularioSoloLectura: boolean = false;
+
+  /**
    * Método que se ejecuta al inicializar el componente.
    * Configura el formulario, carga los datos de modificación y los datos de la tabla.
    */
   ngOnInit(): void {
+    this.consultaioQuery.selectConsultaioState$
+      .pipe(
+        takeUntil(this.destroyNotifier$),
+        map((seccionState) => {
+          this.consultaDatos = seccionState;
+          this.esFormularioSoloLectura = this.consultaDatos.readonly;
+          this.inicializarEstadoFormulario();
+        })
+      )
+      .subscribe();
     this.tramite80316Query.selectSolicitud$.pipe(
       takeUntil(this.destroyNotifier$),
       map((seccionState) => {
@@ -97,8 +122,26 @@ export class ModificacionComponent implements OnInit, OnDestroy {
       })
     ).subscribe();
     this.inicializarFormulario();
+    this.inicializarEstadoFormulario();
     this.loadDatosModificacion();
     this.inicializaCatalogos();
+  }
+
+  /**
+  * @method inicializarEstadoFormulario
+  * @description Inicializa el estado del formulario según el modo de solo lectura.
+  * 
+  * Si la propiedad `soloLectura` es verdadera, deshabilita todos los controles del formulario.
+  * En caso contrario, habilita los controles del formulario
+  * 
+  * @returns {void}
+  */
+  inicializarEstadoFormulario(): void {
+    if (this.esFormularioSoloLectura) {
+      this.modificacionForm?.disable();
+    } else {
+      this.modificacionForm?.enable();
+    }
   }
 
   /**
@@ -111,7 +154,7 @@ export class ModificacionComponent implements OnInit, OnDestroy {
       tipo: [this.derechoState?.tipo],
       programa: [this.derechoState?.programa],
       actividadActual: [this.derechoState?.actividadActual],
-      actividadProductiva: [this.derechoState?.actividadProductiva, Validators.required],
+      actividadProductiva: [this.derechoState?.actividadProductiva, Validators.required]
     });
   }
 
@@ -120,10 +163,20 @@ export class ModificacionComponent implements OnInit, OnDestroy {
    * Actualiza el estado del trámite y los valores del formulario.
    */
   loadDatosModificacion(): void {
-    this.solicitudService.getDatosModificacion().pipe(
+    (this.solicitudService.getDatosModificacion() as import('rxjs').Observable<DatosModificacion>).pipe(
       takeUntil(this.destroyNotifier$)
-    ).subscribe((datos) => {
+    ).subscribe((datos: DatosModificacion) => {
       (this.tramite80316Store.setDatosModificacion as (valor: unknown) => void)(datos);
+      if (datos) {
+        this.modificacionForm.patchValue({
+          rfc: datos.rfc,
+          federal: datos.federal,
+          tipo: datos.tipo,
+          programa: datos.programa,
+          actividadActual: datos.actividadActual,
+          actividadProductiva: datos.actividadProductiva,
+        });
+      }
     });
   }
 
