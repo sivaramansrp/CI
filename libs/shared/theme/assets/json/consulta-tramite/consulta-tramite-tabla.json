@@ -2155,6 +2155,15 @@
         "diasTranscurridos": "4",
         "departamento": "SEDENA",
         "numeroDeProcedimiento": "240305"
+    },
+    {
+        "id": "80314",
+        "tipoDeTramite": "Datos generales del trámite",
+        "fecha": "2024-11-01",
+        "fechaActualizacion": "2024-11-07",
+        "diasTranscurridos": "4",
+        "departamento": "SE",
+        "numeroDeProcedimiento": "80314"
     }
 
 ]
