@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { CadenaOriginalRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/cadena-original-request.model';
-import { FirmaElectronicaService } from '@libs/shared/data-access-user/src/core/services/shared/firma-electronica/firma-electronica.service';
 import { base64ToHex, encodeToISO88591Hex } from '@libs/shared/data-access-user/src/core/utils/utilerias';
-import { TramiteFolioService, TramiteFolioStore } from '@ng-mf/data-access-user';
 import { catchError, map, switchMap, tap, throwError } from 'rxjs';
-import { Tramite5701Store } from '../../../../core/estados/tramites/tramite5701.store';
+import { CadenaOriginalRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/cadena-original-request.model';
+// eslint-disable-next-line sort-imports
+import { TramiteFolioService, TramiteFolioStore } from '@ng-mf/data-access-user';
+
 import { BaseResponse } from '../../../../core/models/5701/base-response.model';
-import { FirmarRequest } from '../../../../core/models/5701/firmar-request-model';
+import { FirmaElectronicaService } from '@libs/shared/data-access-user/src/core/services/shared/firma-electronica/firma-electronica.service';
+
+import { FirmarRequest } from '@libs/shared/data-access-user/src/core/models/shared/firma-electronica/request/firmar-request.model';
+import { Router } from '@angular/router';
 import { Tramite5701Query } from '../../../../core/queries/tramite5701.query';
-import { DocumentosService } from '../../../../core/services/5701/documentos/documentos.service';
+import { Tramite5701Store } from '../../../../core/estados/tramites/tramite5701.store';
 
 
 
@@ -19,12 +21,39 @@ import { DocumentosService } from '../../../../core/services/5701/documentos/doc
   styleUrl: './paso-tres.component.scss',
 })
 export class PasoTresComponent implements OnInit {
+
   /**
-   * @description URL de la aplicación, se utiliza para redirigir al usuario al acuse del trámite.
-   */
+ * URL del servicio o endpoint al que se realizará la solicitud relacionada con la firma.
+ * Puede ser utilizado para enviar la firma generada o para obtener la cadena original.
+ */
   url: string = '';
+
+  /**
+   * Objeto con los datos del trámite necesarios para generar la cadena original.
+   * Este objeto debe cumplir con la interfaz `CadenaOriginalRequest` e incluir información como folio, datos del usuario, etc.
+   */
   datosTramite!: CadenaOriginalRequest;
+
+  /**
+   * Cadena original generada a partir de los datos del trámite.
+   * Esta cadena será firmada con el certificado digital y la llave privada proporcionados.
+   */
   cadenaOriginal?: string;
+
+  /**
+   * Folio del trámite que se está procesando.
+   * Este folio es único para cada trámite y se utiliza para identificarlo en el sistema.
+   */
+  folio!: string;
+
+  /**
+   * Objeto que contiene los datos reales de la firma electrónica generada después del proceso de firma.
+   * Incluye:
+   * - firma: Cadena de la firma generada (en base64).
+   * - certSerialNumber: Número de serie del certificado digital.
+   * - rfc: RFC extraído del certificado.
+   * - fechaFin: Fecha de vencimiento del certificado.
+   */
   datosFirmaReales?: {
     firma: string;
     certSerialNumber: string;
@@ -42,7 +71,6 @@ export class PasoTresComponent implements OnInit {
     private router: Router,
     private tramiteFolioServices: TramiteFolioService,
     private tramiteStore: TramiteFolioStore,
-    private firmaService: DocumentosService,
     private firma: FirmaElectronicaService,
     private tramite5701Query: Tramite5701Query,
     private tramite5701Store: Tramite5701Store
@@ -56,8 +84,9 @@ export class PasoTresComponent implements OnInit {
     const URL_ACTUAL = this.router.url;
     const URL_SEPARADA = URL_ACTUAL.split('/');
     this.url = URL_SEPARADA.slice(0, 3).join('/');
-     this.onObtenerCadenaOriginal();
+    this.onObtenerCadenaOriginal();
   }
+
 
   onObtenerCadenaOriginal(): void {
     this.datosTramite = {
@@ -115,7 +144,7 @@ export class PasoTresComponent implements OnInit {
     this.obtieneFirma(datos.firma);
   }
 
-  
+
   /**
    * Maneja el evento para obtener la firma y realiza acciones adicionales.
    * @param ev - La cadena de texto que representa la firma obtenida.
@@ -126,20 +155,20 @@ export class PasoTresComponent implements OnInit {
       return;
     }
 
-    /** Funcines de conversión usadas de la utilería */
-    const cadenaHex = encodeToISO88591Hex(this.cadenaOriginal);
-    const firmaHex = base64ToHex(firma);
-
+    // Utilerías de conversión
+    const CADENAHEX = encodeToISO88591Hex(this.cadenaOriginal);
+    const FIRMAHEX = base64ToHex(firma);
 
     const ID_SOLICITUD = this.tramite5701Query.getValue().idSolicitud;
+
     const PAYLOAD: FirmarRequest = {
       id_solicitud: Number(ID_SOLICITUD),
-      cadena_original: cadenaHex,
+      cadena_original: CADENAHEX,
       cert_serial_number: this.datosFirmaReales.certSerialNumber,
       clave_usuario: this.datosFirmaReales.rfc,
       fecha_firma: new Date().toISOString(),
       clave_rol: 'Solicitante',
-      sello: firmaHex,
+      sello: FIRMAHEX,
       fecha_fin_vigencia: this.datosFirmaReales.fechaFin,
       documentos_requeridos: [
         {
@@ -152,27 +181,20 @@ export class PasoTresComponent implements OnInit {
       ],
     };
 
-    this.firmaService
+    this.firma
       .enviarFirma(PAYLOAD)
       .pipe(
         tap((response: BaseResponse<string>) => {
           if (response.datos) {
-            this.tramite5701Store.setFolioFirma(response.datos);
+            this.folio = response.datos;
           }
         }),
         switchMap(() => this.tramiteFolioServices.obtenerTramite(19)),
-        switchMap((tramite) => {
-          this.tramiteStore.establecerTramite(tramite.data, firma);
-          return this.tramiteFolioServices.generarFolio().pipe(
-            map((tramiteConFolio) => {
-              const NUM_ALEATORIO = Math.floor(Math.random() * 90) + 10;
-              return `${tramiteConFolio.datos}${NUM_ALEATORIO}`;
-            })
-          );
-        }),
-        tap((folioCompleto) => {
-          this.tramiteStore.establecerTramite(folioCompleto, firma);
-          this.router.navigate([`${this.url}/acuse`], { queryParams: { solicitud: ID_SOLICITUD } });
+        tap((tramite) => {
+          // Guardamos el trámite y el folio real
+          this.tramiteStore.establecerTramite(tramite.data, firma, ID_SOLICITUD!);
+          this.tramiteStore.establecerTramite(this.folio, firma, ID_SOLICITUD!);
+          this.router.navigate([`${this.url}/acuse`]);
         }),
         catchError((error) => {
           console.error('Error en el proceso de firma:', error);

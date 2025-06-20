@@ -1,10 +1,11 @@
-import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { ENVIRONMENT } from '@libs/shared/data-access-user/src/enviroments/enviroment';
-import { Observable } from 'rxjs';
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BaseResponse } from '../../../models/shared/base-response.model';
 import { CadenaOriginalRequest } from '../../../models/shared/firma-electronica/request/cadena-original-request.model';
+import { ENVIRONMENT } from '../../../../enviroments/enviroment';
 import { FirmarRequest } from '../../../models/shared/firma-electronica/request/firmar-request.model';
+import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { WindowKey } from '../../../models/shared/window-key';
 
 @Injectable({
@@ -24,8 +25,11 @@ export class FirmaElectronicaService {
   }
 
   /**
-   * Envía la firma electrónica al backend.
-   */
+ * Envía una solicitud de firma para un trámite específico.
+ *
+ * @param body Objeto de tipo `FirmarRequest` que contiene los datos necesarios para firmar el trámite.
+ * @returns Un `Observable` de tipo `BaseResponse` que contiene el resultado de la operación.
+ */
   enviarFirma(body: FirmarRequest): Observable<BaseResponse> {
     return this.http.post<BaseResponse>(`${this.urlServer}/api/tramite/firmar`, body);
   }
@@ -41,6 +45,7 @@ export class FirmaElectronicaService {
    * 
    * @returns Un objeto con la firma generada, el certificado en formato hexadecimal, el número de serie y el RFC.
    */
+  // eslint-disable-next-line class-methods-use-this
   async firmarCadena(
     cerInput: HTMLInputElement,
     keyInput: HTMLInputElement,
@@ -51,33 +56,33 @@ export class FirmaElectronicaService {
     try {
       const PKI = window['PKI' as WindowKey];
 
-      if (!PKI?.SAT?.FielUtil) throw new Error('La librería FielUtil no está disponible');
-      if (!cerInput.files?.length || !keyInput.files?.length) throw new Error('No se seleccionaron archivos válidos');
-      if (!passwordInput.value) throw new Error('La contraseña no puede estar vacía');
+      if (!PKI?.SAT?.FielUtil) { throw new Error('La librería FielUtil no está disponible'); }
+      if (!cerInput.files?.length || !keyInput.files?.length) { throw new Error('No se seleccionaron archivos válidos'); }
+      if (!passwordInput.value) { throw new Error('La contraseña no puede estar vacía'); }
 
-      const compatibilidad = PKI.SAT.FielUtil.validaNavegador(cerInput);
-      if (compatibilidad !== true) throw new Error(PKI.SAT.FielUtil.obtenMensajeError(compatibilidad));
+      const COMPATIBILIDAD = PKI.SAT.FielUtil.validaNavegador(cerInput);
+      if (COMPATIBILIDAD !== true) { throw new Error(PKI.SAT.FielUtil.obtenMensajeError(COMPATIBILIDAD)); }
 
-      const cadenaAFirmar = soloValidar ? ' ' : (cadenaOriginal || '');
+      const CADENAAFIRMAR = soloValidar ? ' ' : (cadenaOriginal || '');
 
       return await new Promise((resolve, reject) => {
         PKI.SAT.FielUtil.validaFielyFirmaCadena(
           cerInput,
           keyInput,
           passwordInput,
-          () => cadenaAFirmar,
+          () => CADENAAFIRMAR,
           (error_code: any, certificado: any, firma: any) => {
             if (error_code === 0) {
               try {
-                const cert = new PKI.SAT.Certificado(certificado);
+                const CERT = new PKI.SAT.Certificado(certificado);
                 //this.validarVigenciaCertificado(cert);
 
                 resolve({
                   firma: soloValidar ? undefined : firma,
                   certificado: certificado.hex,
-                  serialNumber: cert.getNumeroSerie().replace(/ /g, ''),
-                  rfc: cert.getRFC().replace(/ /g, ''),
-                  fechaFin: cert.getFechaFin().toISOString()
+                  serialNumber: CERT.getNumeroSerie().replace(/ /g, ''),
+                  rfc: CERT.getRFC().replace(/ /g, ''),
+                  fechaFin: CERT.getFechaFin().toISOString()
                 });
               } catch (error) {
                 reject(error);
@@ -86,7 +91,7 @@ export class FirmaElectronicaService {
               reject(new Error(PKI.SAT.FielUtil.obtenMensajeError(error_code)));
             }
           },
-          cadenaAFirmar
+          CADENAAFIRMAR
         );
       });
     } catch (error) {
@@ -100,12 +105,13 @@ export class FirmaElectronicaService {
    * @param cert El certificado a validar.
    * @throws Error si el certificado no está vigente.
    */
+  // eslint-disable-next-line class-methods-use-this
   private validarVigenciaCertificado(cert: any): void {
-    const hoy = new Date();
-    const inicio = new Date(cert.getFechaInicio());
-    const fin = new Date(cert.getFechaFin());
+    const HOY = new Date();
+    const INICIO = new Date(cert.getFechaInicio());
+    const FIN = new Date(cert.getFechaFin());
 
-    if (hoy < inicio || hoy > fin) {
+    if (HOY < INICIO || HOY > FIN) {
       throw new Error('El certificado no está vigente. Verifica la vigencia del .cer');
     }
   }

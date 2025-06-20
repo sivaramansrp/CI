@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
+import { CommonModule } from '@angular/common';
 import { FirmaElectronicaService } from '../../../core/services/shared/firma-electronica/firma-electronica.service';
-import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 import { LOGIN } from '../../constantes/constantes';
+import { ToastrService } from 'ngx-toastr';
+import { ValidacionesFormularioService } from '../../../core/services/shared/validaciones-formulario/validaciones-formulario.service';
 
 @Component({
   selector: 'firma-electronica',
@@ -14,10 +14,39 @@ import { LOGIN } from '../../constantes/constantes';
   styleUrl: './firma-electronica.component.scss',
 })
 export class FirmaElectronicaComponent {
+  /**
+  * Tipo de firma que se va a utilizar en el componente.
+  * Este valor es obligatorio y se utiliza para definir el comportamiento o formato
+  */
   @Input({ required: true }) tipo: string = '';
+
+  /**
+   * Cadena original que será firmada por el componente.
+   * Esta cadena puede contener datos en texto plano o en formato específico que se firmarán electrónicamente.
+   */
   @Input() cadenaOriginal?: string;
+
+  /**
+   * Evento que emite un valor booleano indicando si el formulario o el proceso de firma es válido.
+   * 
+   * true  -> La firma es válida y completa.  
+   * false -> Hay errores o el proceso de firma no es válido.
+   */
   @Output() valido = new EventEmitter<boolean>();
+
+  /**
+   * Evento que emite el valor de la firma electrónica generada (en formato base64).
+   * Este valor puede ser enviado al backend o utilizado en otros componentes.
+   */
   @Output() firma = new EventEmitter<string>();
+
+  /**
+   * Evento que emite un objeto con los datos completos de la firma electrónica:
+   * - firma: Cadena de la firma generada (en base64).
+   * - certSerialNumber: Número de serie del certificado digital.
+   * - rfc: RFC extraído del certificado.
+   * - fechaFin: Fecha de vencimiento del certificado.
+   */
   @Output() datosFirma = new EventEmitter<{
     firma: string;
     certSerialNumber: string;
@@ -25,14 +54,43 @@ export class FirmaElectronicaComponent {
     fechaFin: string;
   }>();
 
+  /**
+   * Archivo de certificado (.cer) cargado por el usuario.
+   * Este archivo contiene el certificado digital público que se usará para la firma.
+   */
   certFileObj?: File;
+
+  /**
+   * Archivo de llave privada (.key) cargado por el usuario.
+   * Este archivo contiene la clave privada asociada al certificado, necesaria para generar la firma.
+   */
   keyFileObj?: File;
+
+  /**
+   * Bandera que indica si el componente se encuentra en un estado de carga o procesamiento.
+   * Se puede usar para mostrar un spinner o deshabilitar botones mientras se realiza la firma.
+   */
   isLoading = false;
+
+  /**
+   * Referencia al elemento del DOM del input de tipo archivo para el certificado (.cer).
+   * Se puede usar para acceder directamente al control desde el código (por ejemplo, para limpiar o validar).
+   */
   cerInputElement?: HTMLInputElement;
+
+  /**
+   * Referencia al elemento del DOM del input de tipo archivo para la llave privada (.key).
+   * Permite manipular el input directamente, como reiniciarlo o validar su estado.
+   */
   keyInputElement?: HTMLInputElement;
+
+  /**
+   * Referencia al elemento del DOM del input para la contraseña de la llave privada.
+   * La contraseña es requerida para desbloquear la llave y poder firmar.
+   */
   passwordInputElement?: HTMLInputElement;
 
-
+  /** Formulario reactivo */
   FormCertificado = this.fb.group({
     password: ['', [Validators.required]],
   });
@@ -67,25 +125,25 @@ export class FirmaElectronicaComponent {
    * @returns {boolean | null} : Regresa un booleano si el campo es invalido o no o puede regresar null si no se ha tocado el campo.
    */
   handleFile(type: string, event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files?.length) {
-      const file = input.files[0];
+    const INPUT = event.target as HTMLInputElement;
+    if (INPUT.files?.length) {
+      const FILE = INPUT.files[0];
 
       // Validar extensión y tipo MIME
       if (type === 'cer') {
-        if (!file.name.endsWith('.cer') && !file.type.includes('application/x-x509-ca-cert')) {
+        if (!FILE.name.endsWith('.cer') && !FILE.type.includes('application/x-x509-ca-cert')) {
           this.toastrService.error('El archivo debe ser un certificado (.cer)');
           return;
         }
-        this.certFileObj = file;
-        this.cerInputElement = input;
+        this.certFileObj = FILE;
+        this.cerInputElement = INPUT;
       } else if (type === 'key') {
-        if (!file.name.endsWith('.key') && !file.type.includes('application/x-pem-file')) {
+        if (!FILE.name.endsWith('.key') && !FILE.type.includes('application/x-pem-file')) {
           this.toastrService.error('El archivo debe ser una llave privada (.key)');
           return;
         }
-        this.keyFileObj = file;
-        this.keyInputElement = input;
+        this.keyFileObj = FILE;
+        this.keyInputElement = INPUT;
       }
     }
   }
@@ -111,30 +169,30 @@ export class FirmaElectronicaComponent {
     this.isLoading = true;
 
     try {
-      const esLogin = this.tipo === 'login';
-      const resultado = await this.firmaService.firmarCadena(
+      const ESLOGIN = this.tipo === 'login';
+      const RESULTADO = await this.firmaService.firmarCadena(
         this.cerInputElement,
         this.keyInputElement,
         this.passwordInputElement,
-        esLogin ? undefined : this.cadenaOriginal,
-        esLogin
+        ESLOGIN ? undefined : this.cadenaOriginal,
+        ESLOGIN
       );
 
-      if (esLogin) {
+      if (ESLOGIN) {
         // Caso login: solo validación
         this.valido.emit(true);
       } else {
         // Caso firma: emitir datos completos
-        if (!resultado.firma) {
+        if (!RESULTADO.firma) {
           throw new Error('No se generó la firma electrónica');
         }
 
         this.valido.emit(true);
         this.datosFirma.emit({
-          firma: resultado.firma,
-          certSerialNumber: resultado.certificado,
-          rfc: resultado.rfc,
-          fechaFin: resultado.fechaFin,
+          firma: RESULTADO.firma,
+          certSerialNumber: RESULTADO.certificado,
+          rfc: RESULTADO.rfc,
+          fechaFin: RESULTADO.fechaFin,
         });
         this.toastrService.success('Firma electrónica generada correctamente');
       }
