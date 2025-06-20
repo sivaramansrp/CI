@@ -69,6 +69,7 @@ import {
   TIPO_DESPACHO_DDEX,
   TIPO_OPERACION_EXPORTACION,
   TRANSPORTE,
+  URL_GENERAR_LINEA_CAPTURA,
   VEHICULO,
 } from '../../../../core/enums/5701/tramite5701.enum';
 import {
@@ -155,6 +156,7 @@ import {
 } from '../../../../core/enums/5701/mensajes-modal-5701.enum';
 import { SIN_VALOR_SELECT } from '@libs/shared/data-access-user/src/core/enums/transporte-componente.enum';
 import { ValidaDespachoService } from '../../../../core/services/5701/valida-despacho.service';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 @Component({
   selector: 'app-solicitud',
   templateUrl: './solicitud.component.html',
@@ -453,6 +455,11 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
    */
   horaFinUnmarked: boolean = false;
 
+  /**
+   * @description Url para generar la línea de captura.
+   */
+  linkGeneraLineaCapturaSeguro!: SafeUrl;
+
   constructor(
     private seccionQuery: SeccionLibQuery,
     private seccionStore: SeccionLibStore,
@@ -484,7 +491,8 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
     private readonly validaLineaCapturaService: ValidaLineaCapturaService,
     private readonly parametroMontoService: ParametroMontoService,
     private cdRef: ChangeDetectorRef,
-    private validaDespachosService: ValidaDespachoService
+    private validaDespachosService: ValidaDespachoService,
+    private domSanitizer: DomSanitizer,
   ) {}
 
   ngOnInit(): void {
@@ -528,6 +536,7 @@ export class SolicitudComponent implements OnInit, OnChanges, OnDestroy {
 
     this.calcularMontoTotal();
     this.verificarDatosExistentesStore();
+    this.linkGeneraLineaCapturaSeguro = this.domSanitizer.bypassSecurityTrustUrl(URL_GENERAR_LINEA_CAPTURA);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
