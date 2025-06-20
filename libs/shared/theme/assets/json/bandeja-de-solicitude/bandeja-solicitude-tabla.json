@@ -2728,6 +2728,15 @@
     "numeroDeProcedimiento": "231002"
   },
   {
+     "id": 260507,
+    "tipoDeTramite": "Solicitud Procedure 260507",
+    "fecha": "2024-11-01",
+    "fechaActualizacion": "2024-11-07",
+    "diasTranscurridos": "4",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260507"
+  },
+  {
     "id": 80314,
     "tipoDeTramite": "Solicitud de Permiso",
     "fecha": "2023-10-01",
@@ -2736,5 +2745,4 @@
     "departamento": "SE",
     "numeroDeProcedimiento": "80314"
   }
- 
 ]
