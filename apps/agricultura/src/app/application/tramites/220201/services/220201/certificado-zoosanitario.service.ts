@@ -19,8 +19,8 @@ import { HttpClient } from '@angular/common/http';
 /**
  * Servicio para la gestión de solicitudes del certificado zoosanitario.
  * Este servicio permite actualizar y obtener información relacionada con el proceso de captura
- * de la solicitud, incluyendo datos del solicitante, movilización, terceros relacionados, pagos, y validaciones.
- * 
+ * de la solicitud, incluyendo datos del solicitante, movilización, terceros relacionados, pagos y validaciones.
+ *
  * @export
  * @class CertificadoZoosanitarioServiceService
  */
@@ -33,6 +33,8 @@ export class CertificadoZoosanitarioServiceService {
    *
    * @param {ZoosanitarioStore} zoosanitarioStore Store para el estado zoosanitario.
    * @param {SeccionLibStore} seccionStore Store para el estado de secciones y validez de formularios.
+   * @param {HttpClient} http Cliente HTTP para peticiones.
+   * @memberof CertificadoZoosanitarioServiceService
    */
   constructor(
     private readonly zoosanitarioStore: ZoosanitarioStore,
@@ -42,7 +44,7 @@ export class CertificadoZoosanitarioServiceService {
 
   /**
    * Actualiza los datos del solicitante en el store.
-   *
+   * @method updateSolicitante
    * @param {Solicitante} solicitante Datos del solicitante.
    * @memberof CertificadoZoosanitarioServiceService
    */
@@ -52,7 +54,7 @@ export class CertificadoZoosanitarioServiceService {
 
   /**
    * Actualiza los datos de la solicitud en el store.
-   *
+   * @method updateDatosDeLaSolicitud
    * @param {DatosDeLaSolicitud} datosDeLaSolicitud Datos generales de la solicitud.
    * @memberof CertificadoZoosanitarioServiceService
    */
@@ -62,7 +64,7 @@ export class CertificadoZoosanitarioServiceService {
 
   /**
    * Actualiza los datos para la movilización nacional en el store.
-   *
+   * @method updateDatosParaMovilizacionNacional
    * @param {DatosParaMovilizacionNacional} datosParaMovilizacionNacional Datos de movilización.
    * @memberof CertificadoZoosanitarioServiceService
    */
@@ -72,7 +74,7 @@ export class CertificadoZoosanitarioServiceService {
 
   /**
    * Actualiza la lista de terceros relacionados con la solicitud.
-   *
+   * @method updateTercerosRelacionados
    * @param {PersonaTerceros[]} tercerosRelacionados Lista de terceros.
    * @memberof CertificadoZoosanitarioServiceService
    */
@@ -80,11 +82,9 @@ export class CertificadoZoosanitarioServiceService {
     this.zoosanitarioStore.actualizarTercerosRelacionados(tercerosRelacionados);
   }
 
-  
-
   /**
    * Actualiza los estados de validación del formulario en el store.
-   *
+   * @method updateValidarEnvio
    * @param {ValidarEnvio} validarEnvio Objeto con estados de validación por sección.
    * @memberof CertificadoZoosanitarioServiceService
    */
@@ -94,7 +94,7 @@ export class CertificadoZoosanitarioServiceService {
 
   /**
    * Actualiza los datos relacionados con el pago de derechos.
-   *
+   * @method updatePagoDeDerechos
    * @param {PagoDeDerechos} pagoDeDerechos Datos del pago.
    * @memberof CertificadoZoosanitarioServiceService
    */
@@ -104,7 +104,7 @@ export class CertificadoZoosanitarioServiceService {
 
   /**
    * Limpia toda la información del formulario almacenada en el store.
-   *
+   * @method limpiarFormulario
    * @memberof CertificadoZoosanitarioServiceService
    */
   limpiarFormulario(): void {
@@ -113,7 +113,7 @@ export class CertificadoZoosanitarioServiceService {
 
   /**
    * Obtiene los datos de la solicitud.
-   *
+   * @method getDatosDeLaSolicitud
    * @returns {Observable<DatosDeLaSolicitud>} Observable con los datos de la solicitud.
    * @memberof CertificadoZoosanitarioServiceService
    */
@@ -123,7 +123,7 @@ export class CertificadoZoosanitarioServiceService {
 
   /**
    * Obtiene los datos para movilización nacional.
-   *
+   * @method getDatosParaMovilizacionNacional
    * @returns {Observable<DatosParaMovilizacionNacional>} Observable con los datos de movilización.
    * @memberof CertificadoZoosanitarioServiceService
    */
@@ -133,7 +133,7 @@ export class CertificadoZoosanitarioServiceService {
 
   /**
    * Obtiene los datos del pago de derechos.
-   *
+   * @method getPagoDeDerechos
    * @returns {Observable<PagoDeDerechos>} Observable con los datos del pago.
    * @memberof CertificadoZoosanitarioServiceService
    */
@@ -143,7 +143,7 @@ export class CertificadoZoosanitarioServiceService {
 
   /**
    * Obtiene el estado de validación de envío de formularios.
-   *
+   * @method getValidarEnvio
    * @returns {Observable<ValidarEnvio>} Observable con el estado de validación.
    * @memberof CertificadoZoosanitarioServiceService
    */
@@ -153,7 +153,7 @@ export class CertificadoZoosanitarioServiceService {
 
   /**
    * Obtiene todos los datos actuales del formulario.
-   *
+   * @method getFormData
    * @returns {Observable<CapturarSolicitud>} Observable con toda la información de la solicitud.
    * @memberof CertificadoZoosanitarioServiceService
    */
@@ -163,7 +163,7 @@ export class CertificadoZoosanitarioServiceService {
 
   /**
    * Actualiza el estado de validez de los formularios y sincroniza con el store de secciones.
-   *
+   * @method actualizarFormaValida
    * @param {{ [key: string]: boolean }} updatedFormaValida Mapa de secciones con su validez.
    * @memberof CertificadoZoosanitarioServiceService
    */
@@ -177,7 +177,7 @@ export class CertificadoZoosanitarioServiceService {
 
   /**
    * Verifica si todas las secciones del formulario son válidas.
-   *
+   * @method obtenerTodosLosStatus
    * @returns {Observable<boolean>} Observable que emite `true` si todos los formularios son válidos.
    * @memberof CertificadoZoosanitarioServiceService
    */
@@ -188,34 +188,28 @@ export class CertificadoZoosanitarioServiceService {
       )
     );
   }
-   /**
-     * @method guardarDatosFormulario
-     * @description Almacena los datos del formulario en el estado correspondiente.
-     * Actualiza los datos de pago de derechos, datos de la solicitud, datos para movilización nacional y terceros relacionados,
-     * utilizando la información proporcionada en el objeto `datos`.
-     * 
-     * @param {ApiSolicitud} datos - Objeto que contiene la información de la solicitud a almacenar.
-     * 
-     * @memberof CertificadoZoosanitarioService
-     */
-    public guardarDatosFormulario(): Observable<CapturarSolicitud> {
-      return this.http.get<CapturarSolicitud>('assets/json/220201/capturarSolicitud.json');
-    }
-    /**
-     * @method storeDatosFormulario
-     * @description Almacena los datos del formulario en el estado correspondiente.
-     * Actualiza los datos de pago de derechos, datos de la solicitud, datos para movilización nacional y terceros relacionados,
-     * utilizando la información proporcionada en el objeto `datos`.
-     * 
-     * @param {ApiSolicitud} datos - Objeto que contiene la información de la solicitud a almacenar.
-     * 
-     * @memberof CertificadoZoosanitarioService
-     */
-    public storeDatosFormulario(datos: CapturarSolicitud): void {
-   this.updatePagoDeDerechos(datos?.pagoDeDerechos || {} as PagoDeDerechos);
-   this.updateDatosDeLaSolicitud(datos?.datosDeLaSolicitud || {} as DatosDeLaSolicitud);
-   this.updateDatosParaMovilizacionNacional(datos?.datosParaMovilizacionNacional || {} as DatosDeLaSolicitud);
-   this.updateTercerosRelacionados(datos?.tercerosRelacionados || {} as PersonaTerceros[] );
-   this.updateValidarEnvio(datos?.validarEnvio || {} as ValidarEnvio);
-    }
+
+  /**
+   * Obtiene los datos del formulario desde un archivo JSON.
+   * @method guardarDatosFormulario
+   * @returns {Observable<CapturarSolicitud>} Observable con los datos del formulario.
+   * @memberof CertificadoZoosanitarioServiceService
+   */
+  public guardarDatosFormulario(): Observable<CapturarSolicitud> {
+    return this.http.get<CapturarSolicitud>('assets/json/220201/capturarSolicitud.json');
+  }
+
+  /**
+   * Almacena los datos del formulario en el estado correspondiente.
+   * @method storeDatosFormulario
+   * @param {CapturarSolicitud} datos Objeto que contiene la información de la solicitud a almacenar.
+   * @memberof CertificadoZoosanitarioServiceService
+   */
+  public storeDatosFormulario(datos: CapturarSolicitud): void {
+    this.updatePagoDeDerechos(datos?.pagoDeDerechos || {} as PagoDeDerechos);
+    this.updateDatosDeLaSolicitud(datos?.datosDeLaSolicitud || {} as DatosDeLaSolicitud);
+    this.updateDatosParaMovilizacionNacional(datos?.datosParaMovilizacionNacional || {} as DatosDeLaSolicitud);
+    this.updateTercerosRelacionados(datos?.tercerosRelacionados || {} as PersonaTerceros[] );
+    this.updateValidarEnvio(datos?.validarEnvio || {} as ValidarEnvio);
+  }
 }
