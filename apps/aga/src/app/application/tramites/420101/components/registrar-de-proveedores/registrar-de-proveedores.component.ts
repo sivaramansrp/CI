@@ -115,7 +115,10 @@ export class RegistrarDeProveedoresComponent implements OnInit, OnDestroy {
       this.tramite420101Query.selectTramiteState$
       .pipe(takeUntil(this.destroyNotifier$))
       .subscribe((state: Tramite420101State) => {
-        this.datosTabla = state.datosTabla;
+        this.datosTabla = (state.datosTabla as DatosDelRegistrarManual[]).map(item => ({
+          ...item,
+          id: item.id !== undefined ? item.id : 0
+        })) as DatosDelRegistrar[];
       });
     }
   }
