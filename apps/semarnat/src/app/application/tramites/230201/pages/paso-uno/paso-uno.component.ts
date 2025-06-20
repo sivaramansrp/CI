@@ -98,7 +98,6 @@ export class PasoUnoComponent implements AfterViewInit, OnInit, OnDestroy {
     ).subscribe();
     if (this.consultaDatos.update) {
       this.guardarDatosFormulario();
-      this.esDatosRespuesta = true;
     } else {
       this.esDatosRespuesta = true;
     }
