@@ -191,8 +191,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
   ];
 
   /** Fila seleccionada */
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  selectedRow: any;
+  selectedRow: FilaData | FilaData2 | null = null;
 
   /** Configuración de datos del estado */
   public estadoData = ESTADO_DATA;
@@ -472,12 +471,10 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
    * Busca el elemento del modal en el DOM, lo oculta y limpia cualquier notificación activa.
    */
   closeModal(): void {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const modalElement = document.getElementById('modalAgregarMercancia');
-    if (modalElement) {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const modal = new Modal(modalElement);
-      modal.hide();
+    const MODAL_ELEMENT = document.getElementById('modalAgregarMercancia');
+    if (MODAL_ELEMENT) {
+      const MODAL = new Modal(MODAL_ELEMENT);
+      MODAL.hide();
       this.clearNotificacion(); // Limpia la notificación cuando el modal se cierra programáticamente
     }
   }
@@ -577,11 +574,10 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (respuesta: MercanciaCrossList[]) => {
           if (respuesta.length > 0) {
-            // eslint-disable-next-line @typescript-eslint/naming-convention
-            const firstItem = respuesta[0];
-            this.paisOrigenCrossList = firstItem.paisOrigenCrossList;
-            this.paisProcedencisCrossList = firstItem.paisProcedencisCrossList;
-            this.usoEspecificoCrossList = firstItem.usoEspecificoCrossList;
+            const FIRST_ITEM = respuesta[0];
+            this.paisOrigenCrossList = FIRST_ITEM.paisOrigenCrossList;
+            this.paisProcedencisCrossList = FIRST_ITEM.paisProcedencisCrossList;
+            this.usoEspecificoCrossList = FIRST_ITEM.usoEspecificoCrossList;
           } else {
             /* vacío */
           }
@@ -735,20 +731,19 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
   /** Maneja el evento de envío del formulario */
 
   onSubmit(): void {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const formData = { ...this.clavaScianForm.value };
-    formData.claveScianG.claveScian =
+    const FORM_DATA = { ...this.clavaScianForm.value };
+    FORM_DATA.claveScianG.claveScian =
       this.claveScianData.catalogos.find(
         (item: Catalogo) =>
-          String(item.id) === String(formData.claveScianG.claveScian)
+          String(item.id) === String(FORM_DATA.claveScianG.claveScian)
       )?.descripcion || 'Not Found';
 
-    formData.claveScianG.descripcionDelScian =
+    FORM_DATA.claveScianG.descripcionDelScian =
       this.descripcionDelScianData.catalogos.find(
         (item: Catalogo) =>
-          String(item.id) === String(formData.claveScianG.descripcionDelScian)
+          String(item.id) === String(FORM_DATA.claveScianG.descripcionDelScian)
       )?.descripcion || 'Not Found';
-    this.tableData.push(formData);
+    this.tableData.push(FORM_DATA);
     this.showClavaScianForm = false;
     this.clavaScianForm.reset();
   }
@@ -785,20 +780,16 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
   /** Elimina las filas seleccionadas */
   onEliminar(): void {
     if (!this.filasSeleccionadas || this.filasSeleccionadas.size === 0) {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const modalElement = document.getElementById('seleccionaRegistroModal');
-      if (modalElement) {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        const modal = new Modal(modalElement);
-        modal.show();
+      const MODAL_ELEMENT = document.getElementById('seleccionaRegistroModal');
+      if (MODAL_ELEMENT) {
+        const MODAL = new Modal(MODAL_ELEMENT);
+        MODAL.show();
       }
     } else {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const modalElement = document.getElementById('confirmarEliminarModal');
-      if (modalElement) {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        const modal = new Modal(modalElement);
-        modal.show();
+      const MODAL_ELEMENT = document.getElementById('confirmarEliminarModal');
+      if (MODAL_ELEMENT) {
+        const MODAL = new Modal(MODAL_ELEMENT);
+        MODAL.show();
       }
     }
     this.clavaScianForm.reset();
@@ -837,9 +828,8 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
     }
 
     this.tableData = this.tableData.filter((row) => {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const rowId = row.id || (row.claveScianG && row.claveScianG.claveScian);
-      return !this.filasSeleccionadas.has(Number(rowId));
+      const ROW_ID = row.id || (row.claveScianG && row.claveScianG.claveScian);
+      return !this.filasSeleccionadas.has(Number(ROW_ID));
     });
     this.filasSeleccionadas.clear();
   }
@@ -865,16 +855,14 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
    * @param event Evento que contiene el valor ingresado en el campo.
    */
   onClaveDeLosLotesChange(event: Event): void {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const target = event.target as HTMLInputElement; // Cast EventTarget to HTMLInputElement
+    const TARGET = event.target as HTMLInputElement; // Cast EventTarget to HTMLInputElement
 
-    if (target && this.ediciondeindicedefila !== null) {
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const value = target.value;
+    if (TARGET && this.ediciondeindicedefila !== null) {
+      const VALUE = TARGET.value;
 
       this.listaClaveTabla[this.ediciondeindicedefila] = {
         ...this.listaClaveTabla[this.ediciondeindicedefila],
-        claveDeLosLotes: value,
+        claveDeLosLotes: VALUE,
       };
     } else {
       /* empty */
@@ -906,29 +894,25 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
   /** Agrega una nueva fila a la lista de claves */
 
   onAgregarListaClave(): void {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const claveDeLosLotes =
+    const CLAVE_DE_LOS_LOTES =
       this.dataDeLaSolicitudForm.get('claveDeLosLotes')?.value;
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const fechaDeFabricacion =
+    const FECHA_DE_FABRICACION =
       this.dataDeLaSolicitudForm.get('fechaDeFabricacion')?.value;
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const fechaDeCaducidad =
+    const FECHA_DE_CADUCIDAD =
       this.dataDeLaSolicitudForm.get('fechaDeCaducidad')?.value;
 
-    if (!claveDeLosLotes && fechaDeFabricacion && fechaDeCaducidad) {
+    if (!CLAVE_DE_LOS_LOTES && FECHA_DE_FABRICACION && FECHA_DE_CADUCIDAD) {
       console.error('All fields are required to add a row.');
       return;
     }
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const newRow = {
+    const NEW_ROW = {
       id: this.listaClaveTabla.length + 1,
-      claveDeLosLotes,
-      fechaDeFabricacion,
-      fechaDeCaducidad,
+      claveDeLosLotes: CLAVE_DE_LOS_LOTES,
+      fechaDeFabricacion: FECHA_DE_FABRICACION,
+      fechaDeCaducidad: FECHA_DE_CADUCIDAD,
     };
 
-    this.listaClaveTabla.push(newRow);
+    this.listaClaveTabla.push(NEW_ROW);
     this.dataDeLaSolicitudForm.reset();
   }
 
@@ -939,26 +923,23 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
       return;
     }
 
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const indiceFilaSeleccionada = Array.from(this.filasSeleccionadas)[0];
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const rowIndex = this.listaClaveTabla.findIndex(
-      (row) => Number(row.claveDeLosLotes) === indiceFilaSeleccionada
+    const INDICE_FILA_SELECCIONADA = Array.from(this.filasSeleccionadas)[0];
+    const ROW_INDEX = this.listaClaveTabla.findIndex(
+      (row) => Number(row.claveDeLosLotes) === INDICE_FILA_SELECCIONADA
     );
 
-    if (rowIndex === -1) {
+    if (ROW_INDEX === -1) {
       return;
     }
 
-    this.ediciondeindicedefila = rowIndex; // Set the index of the row being edited
+    this.ediciondeindicedefila = ROW_INDEX; // Set the index of the row being edited
 
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    const selectedRow = this.listaClaveTabla[rowIndex];
+    const SELECTED_ROW = this.listaClaveTabla[ROW_INDEX];
 
     this.dataDeLaSolicitudForm.patchValue({
-      claveDeLosLotes: selectedRow.claveDeLosLotes || '',
-      fechaDeFabricacion: selectedRow.fechaDeFabricacion || '',
-      fechaDeCaducidad: selectedRow.fechaDeCaducidad || '',
+      claveDeLosLotes: SELECTED_ROW.claveDeLosLotes || '',
+      fechaDeFabricacion: SELECTED_ROW.fechaDeFabricacion || '',
+      fechaDeCaducidad: SELECTED_ROW.fechaDeCaducidad || '',
     });
   }
   /** Obtiene el formulario de datos del trámite a realizar */
@@ -976,8 +957,7 @@ export class DatosdelasolicitudComponent implements OnInit, OnDestroy {
     metodoNombre: keyof Solicitud260702Store
   ): void {
     const VALOR = form.get(campo)?.value;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (this.solicitud260702Store[metodoNombre] as (value: any) => void)(VALOR);
+    (this.solicitud260702Store[metodoNombre] as (value: unknown) => void)(VALOR);
   }
 
   /** Destrucción del componente */
