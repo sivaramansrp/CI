@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SolicitanteOctavaTemporalComponent } from './solicitante-octava-temporal.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 
 describe('DetosGenDelComponent', () => {
   let component: SolicitanteOctavaTemporalComponent;
@@ -8,7 +9,7 @@ describe('DetosGenDelComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [SolicitanteOctavaTemporalComponent]
+      imports: [SolicitanteOctavaTemporalComponent, HttpClientTestingModule]
     })
     .compileComponents();
     

@@ -3,6 +3,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { DatosCertificacionComponent } from './datos-certificacion.component';
 import { FormBuilder } from '@angular/forms';
 import { TestBed } from '@angular/core/testing';
+import { provideHttpClient } from '@angular/common/http';
 
 
 describe('DatosCertificacionComponent', () => {
@@ -15,7 +16,7 @@ describe('DatosCertificacionComponent', () => {
       declarations: [ ],
       schemas: [ CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA ],
       providers: [
-        FormBuilder
+        FormBuilder, provideHttpClient()
       ]
     }).overrideComponent(DatosCertificacionComponent, {
 

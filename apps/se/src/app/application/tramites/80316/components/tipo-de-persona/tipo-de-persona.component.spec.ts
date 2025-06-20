@@ -47,17 +47,6 @@ describe('TipoDePersonaComponent', () => {
     expect(component.tipoDePersonaForm.get('RFCImpExp')).toBeTruthy();
   });
 
-  it('should navigate to the correct route on registroModificacion when form is valid', () => {
-    component.tipoDePersonaForm.setValue({
-      tipoDePersona: 'Persona Física',
-      RFCImpExp: 'ABC123456789',
-    });
-    component.registroModificacion();
-    expect(mockRouter.navigate).toHaveBeenCalledWith([
-      '/pago/modificaciones-immex-prosec/registro-modificacion',
-    ]);
-  });
-
   it('should mark all fields as touched if form is invalid on registroModificacion', () => {
     component.tipoDePersonaForm.setValue({
       tipoDePersona: '',

@@ -9,9 +9,8 @@
         </li>
       </ul>
       <ng-container> @switch (indice) {
-         @case (1) { <solicitante [tabindex]="1" #Solicitante></solicitante>
-        } 
-        @case (2) { <app-gestion-de-cuentas [tabIndex]="2"></app-gestion-de-cuentas> } }
+        @case (1) { <solicitante [tabindex]="1" #Solicitante></solicitante> }
+        @case (2) { @if(esDatosRespuesta){ <app-gestion-de-cuentas [tabIndex]="2"></app-gestion-de-cuentas>} } }
       </ng-container>
     </div>
   </div>
