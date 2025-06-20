@@ -11,6 +11,7 @@
           id="totalDeEmpleados"
           formControlName="totalDeEmpleados"
           type="text"
+             (change)="setValoresStore(empleadosForm, 'totalDeEmpleados', 'setTotalDeEmpleados')"
         />
       </div>
     </div>
@@ -24,6 +25,7 @@
             value=""
             name="directos"
             formControlName="directos"
+              (change)="setValoresStore(empleadosForm, 'directos', 'setDirectos')"
           />
           <label class="form-check-label" for="regimen_0"> Directos </label>
         </div>
@@ -35,6 +37,7 @@
             value=""
             name="indirectos"
             formControlName="indirectos"
+             (change)="setValoresStore(empleadosForm, 'indirectos', 'setIndirectos')"
           />
           <label class="form-check-label" for="indirectos"> Indirectos </label>
         </div>
@@ -48,9 +51,10 @@
         <label class="form-label" for="directos">Directos:</label>
         <input
           class="form-control min-hgt"
-          id="directos"
-          formControlName="directos"
+          id="directo"
+          formControlName="directo"
           type="text"
+           (change)="setValoresStore(empleadosForm, 'directo', 'setDirecto')"
         />
       </div>
     </div>
@@ -61,11 +65,14 @@
           [label]="'Cédulas de determinación de cuotas'"
           [required]="true"
           name="cedulasOptions"
+          formControlName="cedula"
+        (change)="setValoresStore(empleadosForm, 'cedula', 'setCedula')"
         ></app-catalogo-select>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <input-fecha [datos]="fetchaDeCedula"></input-fecha>
+          <input-fecha [datos]="fetchaDeCedula"  [setFecha]="empleadosForm.get('fechaCedula')?.value"
+          (valorCambiado)="cambiofetchaDeCedula($event)"></input-fecha>
         </div>
       </div>
     </div>
@@ -77,20 +84,22 @@
         <label class="form-label" for="directos">Indirectos:</label>
         <input
           class="form-control min-hgt"
-          id="directos"
-          formControlName="directos"
+          id="indirectosDatos"
+          formControlName="indirectosDatos"
           type="text"
+           (change)="setValoresStore(empleadosForm, 'indirectosDatos', 'setIndirectosDatos')"
         />
       </div>
       <div class="col-md-4">
-        <label class="form-label" for="directos"
+        <label class="form-label" for="contrato"
           >Contrato de prestación de servicios:</label
         >
         <input
           class="form-control min-hgt"
-          id="directos"
-          formControlName="directos"
+          id="contrato"
+          formControlName="contrato"
           type="text"
+          (change)="setValoresStore(empleadosForm, 'contrato', 'setContrato')"
         />
       </div>
       <div class="col-md-4">
@@ -99,47 +108,50 @@
         >
         <input
           class="form-control min-hgt"
-          id="directos"
-          formControlName="directos"
+          id="objeto"
+          formControlName="objeto"
           type="text"
+             (change)="setValoresStore(empleadosForm, 'objeto', 'setObjeto')"
         />
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-md-4">
         <div class="form-group">
-          <input-fecha [datos]="fetchaDeFirma"></input-fecha>
+          <input-fecha [datos]="fetchaDeFirma"  [setFecha]="empleadosForm.get('fechaFirma')?.value"
+          (valorCambiado)="cambiofetchaDeFirma($event)"></input-fecha>
         </div>
       </div>
       <div class="col-md-4">
         <div class="form-group">
-          <input-fecha [datos]="fetchaFinVigencia"></input-fecha>
+          <input-fecha [datos]="fetchaFinVigencia" [setFecha]="empleadosForm.get('fechaFinVigencia')?.value"
+          (valorCambiado)="cambiofechaFinVigencia($event)"></input-fecha>
         </div>
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-md-4">
-        <label class="form-label" for="directos"
+        <label class="form-label" for="rfcEmpresa"
           >RFC de la empresa prestadora de servicios:</label
         >
         <input
           class="form-control min-hgt"
-          id="directos"
-          formControlName="directos"
-          type="text"
+          id="rfcEmpresa"
+          formControlName="rfcEmpresa"
+          type="text"  (change)="setValoresStore(empleadosForm, 'rfcEmpresa', 'setRfcEmpresa')"
         />
       </div>
     </div>
     <div class="row mt-5">
       <div class="col-md-8">
-        <label class="form-label" for="directos"
+        <label class="form-label" for="razonSocial"
           >Razón social de la empresa prestadora de servicios:</label
         >
         <input
           class="form-control min-hgt"
-          id="directos"
+          id="razonSocial"
           formControlName="razonSocial"
-          type="text"
+          type="text" (change)="setValoresStore(empleadosForm, 'razonSocial', 'setRazonSocial')"
         />
       </div>
     </div>

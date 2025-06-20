@@ -1,4 +1,8 @@
-/** Constante que representa las etapas del proceso de flora y fauna. */
+/**
+ * Constante que representa las etapas del proceso de flora y fauna.
+ * Cada objeto define el índice, título y estado de avance de cada paso.
+ * @constant
+ */
 export const FLORA_FAUNA = [
   {
     /** Índice del paso dentro del flujo. */
@@ -11,30 +15,23 @@ export const FLORA_FAUNA = [
     completado: true,
   },
   {
-    /** Índice del paso dentro del flujo. */
     indice: 2,
-    /** Título descriptivo del paso. */
     titulo: 'Anexar requisitos',
-    /** Indica si este paso está actualmente activo. */
     activo: false,
-    /** Indica si este paso ya fue completado. */
     completado: false,
   },
   {
-    /** Índice del paso dentro del flujo. */
     indice: 3,
-    /** Título descriptivo del paso. */
     titulo: 'Firmar solicitud',
-    /** Indica si este paso está actualmente activo. */
     activo: false,
-    /** Indica si este paso ya fue completado. */
     completado: false,
   },
 ];
 
-/** 
+/**
  * Lista de opciones para el botón de radio que representa el tipo de movimiento.
  * Cada objeto contiene una etiqueta descriptiva y un valor asociado.
+ * @constant
  */
 export const MOVIMIENTO_OPCIONES_DE_BOTON_DE_RADIO = [
   {
@@ -44,15 +41,11 @@ export const MOVIMIENTO_OPCIONES_DE_BOTON_DE_RADIO = [
     value: '1',
   },
   {
-    /** Etiqueta mostrada para la opción 'Exportación'. */
     label: 'Exportación',
-    /** Valor interno asociado a la opción 'Exportación'. */
     value: '2',
   },
   {
-    /** Etiqueta mostrada para la opción 'Reexportación'. */
     label: 'Reexportación',
-    /** Valor interno asociado a la opción 'Reexportación'. */
     value: '3',
   },
 ];
@@ -60,6 +53,7 @@ export const MOVIMIENTO_OPCIONES_DE_BOTON_DE_RADIO = [
 /**
  * Lista de opciones para el botón de radio que representa el tipo de destinatario.
  * Cada objeto define una etiqueta visible y su valor correspondiente.
+ * @constant
  */
 export const DESTINATARIO_OPCIONES_DE_BOTON_DE_RADIO = [
   {
@@ -69,13 +63,16 @@ export const DESTINATARIO_OPCIONES_DE_BOTON_DE_RADIO = [
     value: '1',
   },
   {
-    /** Etiqueta mostrada para la opción 'Extranjero'. */
     label: 'Extranjero',
-    /** Valor interno asociado a la opción 'Extranjero'. */
     value: '2',
   }
 ];
 
+/**
+ * Configuración para el campo de fecha de pago.
+ * Define la etiqueta, si es requerido y si está habilitado.
+ * @constant
+ */
 export const INPUT_FECHA_PAGO = {
   /**
    * Propiedad labelNombre
@@ -95,6 +92,12 @@ export const INPUT_FECHA_PAGO = {
    */
   habilitado: true,
 };
+
+/**
+ * Configuración para el campo de fecha.
+ * Define la etiqueta, si es requerido y si está habilitado.
+ * @constant
+ */
 export const INPUT_FECHA = {
   /**
    * Propiedad labelNombre
@@ -115,5 +118,9 @@ export const INPUT_FECHA = {
   habilitado: true,
 };
 
+/**
+ * Mensaje de alerta mostrado al registrar una solicitud de flora y fauna.
+ * Informa que el número asignado es temporal y no tiene validez legal.
+ * @constant
+ */
 export const FLORA_FAUNA_ALERT = 'La solicitud ha quedado registrada con el número temporal 202772451. Éste no tiene validez legal y sirve solamente para efectos de identificar tu solicitud. Un folio oficial le será asignado a la solicitud al momento en que ésta sea firmada';
-

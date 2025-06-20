@@ -427,6 +427,19 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
       },
     ],
   },
+   {
+    tramite: 140104,
+    listaComponentes: [
+      {
+        id: 'solicitud',
+        componentPath: () =>
+          import(
+            '../../tramites/140104/pages/paso-uno/paso-uno.component'
+          ).then((m) => m.PasoUnoComponent),
+        componentName: 'PasoUnoComponent',
+      },
+    ],
+  },
   {
     tramite: 140105,
     listaComponentes: [
@@ -951,6 +964,60 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
     ],
   },
   {
+    tramite: 110205,
+    listaComponentes: [
+      {
+        id: 'solicitud',
+        componentPath: () =>
+          import('../../tramites/110205/page/paso-uno/paso-uno.component').then(
+            (m) => m.PasoUnoComponent
+          ),
+        componentName: 'PasoUnoComponent',
+      }]
+  },
+  {
+   tramite: 130104,
+    listaComponentes: [{
+      id: 'solicitud',
+      componentPath: () => import('../../tramites/130104/pages/paso-uno/paso-uno.component').then(m => m.PasoUnoComponent),
+      componentName: 'PasoUnoComponent',
+    }]
+ },
+{
+   tramite: 130105,
+    listaComponentes: [{
+      id: 'solicitud',
+      componentPath: () => import('../../tramites/130105/pages/paso-uno/paso-uno.component').then(m => m.PasoUnoComponent),
+      componentName: 'PasoUnoComponent',
+    }]
+ },
+    {
+    tramite: 80103,
+    listaComponentes: [
+      {
+        id: 'solicitud',
+        componentPath: () =>
+          import(
+            '../../tramites/80103/pages/paso-uno-cs/paso-uno-cs.component'
+          ).then((m) => m.PasoUnoCsComponent),
+        componentName: 'DatosComponent',
+      },
+    ],
+  },
+   {
+    tramite: 80104,
+    listaComponentes: [
+      {
+        id: 'solicitud',
+        componentPath: () =>
+          import(
+            '../../tramites/80104/pages/paso-uno-cs/paso-uno-cs.component'
+          ).then((m) => m.PasoUnoCsComponent),
+        componentName: 'DatosComponent',
+      },
+    ],
+  },
+  {
     tramite: 140205,
     listaComponentes: [
       {
@@ -962,5 +1029,5 @@ export const LISTA_TRIMITES: AccuseComponentes[] = [
         componentName: 'PasoUnoComponent',
       },
     ]
-  }
+  },
 ];
