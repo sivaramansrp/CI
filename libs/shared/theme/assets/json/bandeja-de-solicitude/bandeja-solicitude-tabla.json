@@ -2692,6 +2692,15 @@
     "numeroDeProcedimiento": "260917"
   },
   {
+  "id": 31101,
+  "tipoDeTramite": "Solicitudddd certificado CAM",
+  "fecha": "2022-10-05",
+  "fechaActualizacion": "2022-10-25",
+  "diasTranscurridos": "4",
+  "departamento": "AGACE",
+  "numeroDeProcedimiento": "31101"
+  },
+  {
     "id": 130401,
     "tipoDeTramite": "Solicitud de cs Permiso",
     "fecha": "2023-10-01",
