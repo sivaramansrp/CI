@@ -327,8 +327,12 @@ export class ContenedorComponent implements OnInit, OnDestroy {
     }
   }
 
-  onChange(controlName: string, event: any): void {
-    const VALUE = event.target.value;
+  onChange(controlName: string, event: Event): void {
+    const TARGET = event.target as HTMLInputElement | null;    
+    if (!TARGET) {
+      return;
+    }
+    const VALUE = TARGET.value;
    
     if (controlName === 'inicialesContenedor') {
       const SANITIZED = VALUE.replace(REGEX_REEMPLAZAR,'').toUpperCase();
@@ -361,7 +365,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
   loadDatosTablaData(): void {
     this.datosTramiteService.getDatosTableData().pipe(takeUntil(this.destroyNotifier$)).subscribe(
       (data) => {
-        this.contenedores.catalogos = data.data.map((contenedor: any) => ({
+        this.contenedores.catalogos = data.data.map((contenedor: Catalogo) => ({
           id: contenedor.id,
           descripcion: contenedor.descripcion || ''
         }));

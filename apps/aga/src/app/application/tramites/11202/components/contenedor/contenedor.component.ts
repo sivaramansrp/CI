@@ -126,7 +126,7 @@ export class ContenedorComponent implements OnInit, OnDestroy {
    * @property {any[]} contenedores
    * Stores the container data
    * */
-  contenedores: any[] = [];
+  contenedores: GridContenedores[] = [];
 
   /**
    * @property {string} archivoSeleccionado
