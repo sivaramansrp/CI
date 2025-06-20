@@ -1,7 +1,7 @@
 /*
 * RepresentacionComponent es un componente que maneja la selección de entidades federativas y representaciones federales.
 */
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -36,7 +36,7 @@ import { Catalogo, TituloComponent } from '@libs/shared/data-access-user/src';
   ],
   templateUrl: './representacion.component.html',
 })
-export class RepresentacionComponent implements OnInit {
+export class RepresentacionComponent implements OnInit, OnDestroy {
   /**
    * Configuración del formulario de representación.
    * @type {FormGroup}
@@ -214,5 +214,14 @@ inicializarEstadoFormulario(): void {
    */
   fetchRepresentacionFederal(r: Catalogo): void {
     this.seleccionadaRepresentacionFederal = r;
+  }
+
+  /**
+ * Método del ciclo de vida que se ejecuta al destruir el componente.
+ * Emite y completa el observable para evitar fugas de memoria.
+ */
+  ngOnDestroy(): void {
+    this.destroyNotifier$.next();
+    this.destroyNotifier$.complete();
   }
 }
