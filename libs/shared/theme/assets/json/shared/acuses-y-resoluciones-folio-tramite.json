@@ -648,7 +648,7 @@
     "numeroDeProcedimiento": "260204"
   },
   {
-    "folioTramite": "0100001000320251005000002",
+    "folioTramite": "0100001000320251005260202",
     "tipoDeTramite": "Autorización de mercancia donado que se introduzca a Territorio Nacional",
     "dependencia": "COFEPRIS ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
     "fechInicioTramite": "2025-3-09 0035:05:00",
@@ -968,5 +968,29 @@
     "fechInicioTramite": "2025-3-09 0035:05:00",
     "departamento": "COFEPRIS",
     "numeroDeProcedimiento": "260914"
+  },
+   {
+    "folioTramite": "0100001000320251005000664",
+    "tipoDeTramite": "Permiso sanitario de importación de medicamentos destinados a pruebas de laboratorio",
+    "dependencia": "COFEPRIS ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "COFEPRIS",
+    "numeroDeProcedimiento": "260916"
+  },
+  {
+"folioTramite": "1234567890123451005220203",
+    "tipoDeTramite": "Registro de solicitud de modificación programa IMMEX (Modificación Alta a domicilio de una planta, bodega o almacén)",
+    "dependencia": "SE ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "80103"
+  },
+  {
+    "folioTramite": "1234567890123451005220203",
+    "tipoDeTramite": "Registro de solicitud de modificación programa IMMEX (Modificación Alta a domicilio de una planta, bodega o almacén)",
+    "dependencia": "SE ADMINITRACION DE APOYO JURIDICO ADUANA 5 ",
+    "fechInicioTramite": "2025-3-09 0035:05:00",
+    "departamento": "SE",
+    "numeroDeProcedimiento": "80104"
   }
 ]

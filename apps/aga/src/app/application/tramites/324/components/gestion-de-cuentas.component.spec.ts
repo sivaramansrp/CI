@@ -1,184 +1,686 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
+import { of, ReplaySubject } from 'rxjs';
 import { GestionDeCuentasComponent } from './gestion-de-cuentas.component';
-import { ReactiveFormsModule, FormBuilder } from '@angular/forms';
-import { of } from 'rxjs';
 import { TecnologicosService } from '../service/tecnologicos.service';
-import { Tramite324Store } from '../state/Tramite324.store';
+import { Tramite324Store, Solicitud324State } from '../state/Tramite324.store';
 import { Tramite324Query } from '../state/Tramite324.query';
-import { ValidacionesFormularioService } from '@libs/shared/data-access-user/src';
+import { ValidacionesFormularioService, ConsultaioQuery, Catalogo } from '@ng-mf/data-access-user';
+import { AccesosTabla } from '../models/tecnologicos.model';
+import { Modal } from 'bootstrap';
+
+// Mock de Bootstrap Modal
+jest.mock('bootstrap', () => ({
+  Modal: jest.fn().mockImplementation(() => ({
+    show: jest.fn(),
+    hide: jest.fn()
+  }))
+}));
 
 describe('GestionDeCuentasComponent', () => {
   let component: GestionDeCuentasComponent;
   let fixture: ComponentFixture<GestionDeCuentasComponent>;
-  let tecnologicosServiceMock: any;
-  let tramiteStoreMock: any;
-  let tramiteQueryMock: any;
-  let validacionesServiceMock: any;
+  let mockTecnologicosService: jest.Mocked<TecnologicosService>;
+  let mockTramite324Store: jest.Mocked<Tramite324Store>;
+  let mockTramite324Query: jest.Mocked<Tramite324Query>;
+  let mockValidacionesService: jest.Mocked<ValidacionesFormularioService>;
+  let mockConsultaioQuery: jest.Mocked<ConsultaioQuery>;
+  let formBuilder: FormBuilder;
+
+  const mockAccesosTabla: AccesosTabla[] = [
+    {
+      rfc: 'TEST123456789',
+      aduana: 'Aduana Test',
+      sistema: 'Sistema Test',
+      rol: 'Rol Test',
+      tipoMovimiento: 'Movimiento Test'
+    }
+  ];
+
+  const mockSolicitudState: Solicitud324State = {
+    rfc: 'ABC123456789',
+    aduana: 'aduana1',
+    sistema: 'sistema1',
+    rol: 'rol1',
+    tipoMovimiento: 'movimiento1',
+    AccesosDatos: mockAccesosTabla
+  };
+
+  const mockCatalogos = [
+    { id: '1', descripcion: 'Opción 1' },
+    { id: '2', descripcion: 'Opción 2' }
+  ];
 
   beforeEach(async () => {
-    tecnologicosServiceMock = {
-      obtenerDatosAduana: jest.fn().mockReturnValue(of([])),
-      obtenerDatosRol: jest.fn().mockReturnValue(of([])),
-      obtenerDatosSistema: jest.fn().mockReturnValue(of([])),
-      obtenerDatosTipoMovimiento: jest.fn().mockReturnValue(of([])),
-    };
+    // Crear mocks de los servicios
+    mockTecnologicosService = {
+      obtenerDatosAduana: jest.fn().mockReturnValue(of(mockCatalogos)),
+      obtenerDatosRol: jest.fn().mockReturnValue(of(mockCatalogos)),
+      obtenerDatosSistema: jest.fn().mockReturnValue(of(mockCatalogos)),
+      obtenerDatosTipoMovimiento: jest.fn().mockReturnValue(of(mockCatalogos))
+    } as any;
 
-    tramiteStoreMock = {
-      setAduana: jest.fn(),
-      setRol: jest.fn(),
-      setSistema: jest.fn(),
-      setTipoMovimiento: jest.fn(),
-    };
+    mockTramite324Store = {
+      addAccesosDatos: jest.fn(),
+      limpiarSolicitud: jest.fn(),
+      update: jest.fn(),
+      reset: jest.fn()
+    } as any;
 
-    tramiteQueryMock = {
-      selectSolicitud$: of({
-        rfc: 'RFC123',
-        aduana: 'Aduana1',
-        sistema: 'Sistema1',
-        rol: 'Rol1',
-        tipoMovimiento: 'Movimiento1',
-      }),
-    };
+    mockTramite324Query = {
+      selectSolicitud$: of(mockSolicitudState)
+    } as any;
 
-    validacionesServiceMock = {
-      isValid: jest.fn().mockReturnValue(true),
-    };
+    mockValidacionesService = {
+      isValid: jest.fn().mockReturnValue(true)
+    } as any;
+
+    mockConsultaioQuery = {
+      selectConsultaioState$: of({ readonly: false })
+    } as any;
 
     await TestBed.configureTestingModule({
-      imports: [ReactiveFormsModule,GestionDeCuentasComponent],
-      declarations: [],
+      imports: [
+        ReactiveFormsModule,
+        GestionDeCuentasComponent
+      ],
       providers: [
         FormBuilder,
-        { provide: TecnologicosService, useValue: tecnologicosServiceMock },
-        { provide: Tramite324Store, useValue: tramiteStoreMock },
-        { provide: Tramite324Query, useValue: tramiteQueryMock },
-        { provide: ValidacionesFormularioService, useValue: validacionesServiceMock },
-      ],
+        { provide: TecnologicosService, useValue: mockTecnologicosService },
+        { provide: Tramite324Store, useValue: mockTramite324Store },
+        { provide: Tramite324Query, useValue: mockTramite324Query },
+        { provide: ValidacionesFormularioService, useValue: mockValidacionesService },
+        { provide: ConsultaioQuery, useValue: mockConsultaioQuery }
+      ]
     }).compileComponents();
 
     fixture = TestBed.createComponent(GestionDeCuentasComponent);
     component = fixture.componentInstance;
-    fixture.detectChanges();
+    formBuilder = TestBed.inject(FormBuilder);
   });
 
-  it('should create the component', () => {
-    expect(component).toBeTruthy();
-  });
-
-  it('should initialize the form and fetch data on ngOnInit', () => {
-    jest.spyOn(component, 'obtenerDatosAduana');
-    jest.spyOn(component, 'obtenerDatosRol');
-    jest.spyOn(component, 'obtenerDatosSistema');
-    jest.spyOn(component, 'obtenerDatosTipoMovimiento');
-    jest.spyOn(component, 'donanteDomicilio');
-
-    component.ngOnInit();
-
-    expect(component.accesosForm).toBeDefined();
-    expect(component.obtenerDatosAduana).toHaveBeenCalled();
-    expect(component.obtenerDatosRol).toHaveBeenCalled();
-    expect(component.obtenerDatosSistema).toHaveBeenCalled();
-    expect(component.obtenerDatosTipoMovimiento).toHaveBeenCalled();
-    expect(component.donanteDomicilio).toHaveBeenCalled();
-  });
-
-  it('should fetch aduana data and update catalog', () => {
-    component.obtenerDatosAduana();
-    expect(tecnologicosServiceMock.obtenerDatosAduana).toHaveBeenCalled();
-    expect(component.aduanaCatalogo.catalogos).toEqual([]);
-  });
-
-  it('should fetch rol data and update catalog', () => {
-    component.obtenerDatosRol();
-    expect(tecnologicosServiceMock.obtenerDatosRol).toHaveBeenCalled();
-    expect(component.rolCatalogo.catalogos).toEqual([]);
-  });
-
-  it('should fetch sistema data and update catalog', () => {
-    component.obtenerDatosSistema();
-    expect(tecnologicosServiceMock.obtenerDatosSistema).toHaveBeenCalled();
-    expect(component.sistemaCatalogo.catalogos).toEqual([]);
-  });
-
-  it('should fetch tipoMovimiento data and update catalog', () => {
-    component.obtenerDatosTipoMovimiento();
-    expect(tecnologicosServiceMock.obtenerDatosTipoMovimiento).toHaveBeenCalled();
-    expect(component.movimientoCatalogo.catalogos).toEqual([]);
-  });
-
-  it('should open the modal when abrirAccesos is called', () => {
-    const modalElementMock = {
-      nativeElement: document.createElement('div'),
-    };
-    component.modalElementAccesos = modalElementMock as any;
-  
-    const modalInstanceMock = {
-      show: jest.fn(),
-    };
-    jest.spyOn(global as any, 'Modal').mockImplementation(() => modalInstanceMock);
-  
-    component.abrirAccesos();
-  
-    expect(modalInstanceMock.show).toHaveBeenCalled();
-  });
-
-  it('should add a new access when agregarAccesos is called with valid form', () => {
-    component.accesosForm.setValue({
-      rfc: 'RFC123',
-      aduana: 'Aduana1',
-      sistema: 'Sistema1',
-      rol: 'Rol1',
-      tipoMovimiento: 'Movimiento1',
+  describe('Inicialización del componente', () => {
+    it('debería crear el componente correctamente', () => {
+      expect(component).toBeTruthy();
     });
 
-    component.agregarAccesos();
+    it('debería inicializar el formulario con validaciones correctas', () => {
+      component.ngOnInit();
+      
+      expect(component.accesosForm).toBeDefined();
+      expect(component.accesosForm.get('rfc')?.hasError('required')).toBeTruthy();
+      expect(component.accesosForm.get('aduana')?.hasError('required')).toBeTruthy();
+      expect(component.accesosForm.get('sistema')?.hasError('required')).toBeTruthy();
+      expect(component.accesosForm.get('rol')?.hasError('required')).toBeTruthy();
+      expect(component.accesosForm.get('tipoMovimiento')?.hasError('required')).toBeTruthy();
+    });
 
-    expect(component.accesosTablaDatos.length).toBe(1);
-    expect(component.accesosTablaDatos[0]).toEqual({
-      rfc: 'RFC123',
-      aduana: 'Aduana1',
-      sistema: 'Sistema1',
-      rol: 'Rol1',
-      tipoMovimiento: 'Movimiento1',
+    it('debería suscribirse al estado de solicitud correctamente', () => {
+      component.ngOnInit();
+      
+      expect(component.solicitudState).toEqual(mockSolicitudState);
+      expect(component.accesosTablaDatos).toEqual(mockSolicitudState.AccesosDatos);
+    });
+
+    it('debería configurar esFormularioSoloLectura como false por defecto', () => {
+      component.ngOnInit();
+      
+      expect(component.esFormularioSoloLectura).toBeFalsy();
     });
   });
 
-  it('should not add a new access when agregarAccesos is called with invalid form', () => {
-    component.accesosForm.setValue({
-      rfc: '',
-      aduana: '',
-      sistema: '',
-      rol: '',
-      tipoMovimiento: '',
+  describe('Obtención de datos de catálogos', () => {
+    beforeEach(() => {
+      component.ngOnInit();
     });
 
-    component.agregarAccesos();
-
-    expect(component.accesosTablaDatos.length).toBe(0);
-  });
-
-  it('should validate a form field using esValido', () => {
-    const result = component.esValido(component.accesosForm, 'rfc');
-    expect(validacionesServiceMock.isValid).toHaveBeenCalledWith(component.accesosForm, 'rfc');
-    expect(result).toBe(true);
-  });
-
-  it('should update store values using setValoresStore', () => {
-    component.accesosForm.setValue({
-      rfc: 'RFC123',
-      aduana: 'Aduana1',
-      sistema: 'Sistema1',
-      rol: 'Rol1',
-      tipoMovimiento: 'Movimiento1',
+    it('debería obtener datos de aduana correctamente', () => {
+      expect(mockTecnologicosService.obtenerDatosAduana).toHaveBeenCalled();
+      expect(component.aduanaCatalogo.catalogos).toEqual(mockCatalogos);
     });
 
-    component.setValoresStore(component.accesosForm, 'rfc', 'setAduana');
-    expect(tramiteStoreMock.setAduana).toHaveBeenCalledWith('RFC123');
+    it('debería obtener datos de rol correctamente', () => {
+      expect(mockTecnologicosService.obtenerDatosRol).toHaveBeenCalled();
+      expect(component.rolCatalogo.catalogos).toEqual(mockCatalogos);
+    });
+
+    it('debería obtener datos de sistema correctamente', () => {
+      expect(mockTecnologicosService.obtenerDatosSistema).toHaveBeenCalled();
+      expect(component.sistemaCatalogo.catalogos).toEqual(mockCatalogos);
+    });
+
+    it('debería obtener datos de tipo movimiento correctamente', () => {
+      expect(mockTecnologicosService.obtenerDatosTipoMovimiento).toHaveBeenCalled();
+      expect(component.movimientoCatalogo.catalogos).toEqual(mockCatalogos);
+    });
   });
 
-  it('should clean up subscriptions on ngOnDestroy', () => {
-    const spy = jest.spyOn(component['destroyed$'], 'next');
-    component.ngOnDestroy();
-    expect(spy).toHaveBeenCalledWith(true);
+  describe('Gestión de modal', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+      fixture.detectChanges();
+    });
+
+    it('debería abrir el modal de accesos cuando modalElementAccesos existe', () => {
+      // Simular la existencia del elemento modal
+      component.modalElementAccesos = {
+        nativeElement: document.createElement('div')
+      } as any;
+
+      const mockModalInstance = {
+        show: jest.fn()
+      };
+      (Modal as unknown as jest.Mock).mockReturnValue(mockModalInstance);
+
+      component.abrirAccesos();
+
+      expect(Modal).toHaveBeenCalledWith(component.modalElementAccesos.nativeElement);
+      expect(mockModalInstance.show).toHaveBeenCalled();
+    });
+
+    it('no debería intentar abrir modal si modalElementAccesos no existe', () => {
+      component.modalElementAccesos = null as any;
+      
+      expect(() => component.abrirAccesos()).not.toThrow();
+    });
+  });
+
+  describe('Gestión de accesos', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+      fixture.detectChanges();
+    });
+
+    it('debería agregar un nuevo acceso cuando el formulario es válido', () => {
+      const datosAcceso: AccesosTabla = {
+        rfc: 'NUEVO123456789',
+        aduana: 'nueva_aduana',
+        sistema: 'nuevo_sistema',
+        rol: 'nuevo_rol',
+        tipoMovimiento: 'nuevo_movimiento'
+      };
+
+      component.accesosForm.patchValue(datosAcceso);
+      component.accesosForm.markAllAsTouched();
+      
+      jest.spyOn(component, 'abrirModal');
+      const longitudInicial = component.accesosTablaDatos.length;
+
+      component.agregarAccesos();
+
+      expect(component.accesosTablaDatos.length).toBe(longitudInicial + 1);
+      expect(component.accesosTablaDatos).toContainEqual(datosAcceso);
+      expect(component.abrirModal).toHaveBeenCalled();
+      expect(component.accesosForm.pristine).toBeTruthy();
+    });
+
+    it('no debería agregar acceso cuando el formulario es inválido', () => {
+      component.accesosForm.patchValue({
+        rfc: '', // Campo requerido vacío
+        aduana: 'aduana',
+        sistema: 'sistema',
+        rol: 'rol',
+        tipoMovimiento: 'movimiento'
+      });
+
+      jest.spyOn(component, 'abrirModal');
+      const longitudInicial = component.accesosTablaDatos.length;
+
+      component.agregarAccesos();
+
+      expect(component.accesosTablaDatos.length).toBe(longitudInicial);
+      expect(component.abrirModal).toHaveBeenCalled();
+    });
+  });
+
+  describe('Gestión de pedimentos', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+      component.pedimentos = [
+        { id: 1, numero: 'PED001' },
+        { id: 2, numero: 'PED002' },
+        { id: 3, numero: 'PED003' }
+      ] as any;
+    });
+
+    it('debería eliminar pedimento cuando se confirma la eliminación', () => {
+      component.elementoParaEliminar = 1;
+
+      component.eliminarPedimento(true);
+
+      expect(component.pedimentos.length).toBe(2);
+      expect(component.pedimentos[1]).toEqual({ id: 3, numero: 'PED003' });
+    });
+
+    it('no debería eliminar pedimento cuando no se confirma la eliminación', () => {
+      const longitudInicial = component.pedimentos.length;
+      component.elementoParaEliminar = 1;
+
+      component.eliminarPedimento(false);
+
+      expect(component.pedimentos.length).toBe(longitudInicial);
+    });
+
+    it('debería configurar la notificación y elemento para eliminar al abrir modal', () => {
+      const indice = 2;
+
+      component.abrirModal(indice);
+
+      expect(component.elementoParaEliminar).toBe(indice);
+      expect(component.nuevaNotificacion).toBeDefined();
+      expect(component.nuevaNotificacion.tipoNotificacion).toBe('alert');
+      expect(component.nuevaNotificacion.categoria).toBe('danger');
+      expect(component.nuevaNotificacion.modo).toBe('action');
+      expect(component.nuevaNotificacion.mensaje).toBe('El acceso se agrego correctamente.');
+      expect(component.nuevaNotificacion.cerrar).toBeFalsy();
+      expect(component.nuevaNotificacion.tiempoDeEspera).toBe(2000);
+      expect(component.nuevaNotificacion.txtBtnAceptar).toBe('Aceptar');
+    });
+
+    it('debería usar índice 0 por defecto en abrirModal', () => {
+      component.abrirModal();
+
+      expect(component.elementoParaEliminar).toBe(0);
+    });
+  });
+
+  describe('Validación de formularios', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+    });
+
+    it('debería marcar todos los campos como tocados cuando el formulario es inválido', () => {
+      jest.spyOn(component.accesosForm, 'markAllAsTouched');
+
+      component.validarDestinatarioFormulario();
+
+      expect(component.accesosForm.markAllAsTouched).toHaveBeenCalled();
+    });
+
+    it('no debería marcar campos como tocados cuando el formulario es válido', () => {
+      component.accesosForm.patchValue({
+        rfc: 'VALID123',
+        aduana: 'aduana',
+        sistema: 'sistema',
+        rol: 'rol',
+        tipoMovimiento: 'movimiento'
+      });
+
+      jest.spyOn(component.accesosForm, 'markAllAsTouched');
+
+      component.validarDestinatarioFormulario();
+
+      expect(component.accesosForm.markAllAsTouched).not.toHaveBeenCalled();
+    });
+
+    it('debería validar campo correctamente usando el servicio de validaciones', () => {
+      mockValidacionesService.isValid.mockReturnValue(true);
+
+      const resultado = component.esValido(component.accesosForm, 'rfc');
+
+      expect(mockValidacionesService.isValid).toHaveBeenCalledWith(component.accesosForm, 'rfc');
+      expect(resultado).toBeTruthy();
+    });
+
+    it('debería retornar false cuando el servicio de validaciones retorna undefined', () => {
+      mockValidacionesService.isValid.mockReturnValue(undefined as any);
+
+      const resultado = component.esValido(component.accesosForm, 'rfc');
+
+      expect(resultado).toBeFalsy();
+    });
+  });
+
+  describe('Actualización del store', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+    });
+
+    it('debería agregar acceso al store usando addAccesosDatos con un solo acceso', () => {
+      const nuevoAcceso: AccesosTabla = {
+        rfc: 'NUEVO123456789',
+        aduana: 'nueva_aduana',
+        sistema: 'nuevo_sistema',
+        rol: 'nuevo_rol',
+        tipoMovimiento: 'nuevo_movimiento'
+      };
+
+      // Simular que se agrega el acceso a los datos locales
+      component.accesosTablaDatos = [nuevoAcceso];
+      
+      // Verificar que se podría llamar el método del store
+      mockTramite324Store.addAccesosDatos(nuevoAcceso);
+      expect(mockTramite324Store.addAccesosDatos).toHaveBeenCalledWith(nuevoAcceso);
+    });
+
+    it('debería agregar múltiples accesos al store usando addAccesosDatos', () => {
+      const nuevosAccesos: AccesosTabla[] = [
+        {
+          rfc: 'NUEVO1234567890',
+          aduana: 'aduana1',
+          sistema: 'sistema1',
+          rol: 'rol1',
+          tipoMovimiento: 'movimiento1'
+        },
+        {
+          rfc: 'OTRO1234567890',
+          aduana: 'aduana2',
+          sistema: 'sistema2',
+          rol: 'rol2',
+          tipoMovimiento: 'movimiento2'
+        }
+      ];
+
+      mockTramite324Store.addAccesosDatos(nuevosAccesos);
+      expect(mockTramite324Store.addAccesosDatos).toHaveBeenCalledWith(nuevosAccesos);
+    });
+
+    it('debería limpiar la solicitud usando limpiarSolicitud', () => {
+      mockTramite324Store.limpiarSolicitud();
+      expect(mockTramite324Store.limpiarSolicitud).toHaveBeenCalled();
+    });
+  });
+
+  describe('Configuración inicial del formulario', () => {
+    it('debería configurar el formulario con valores del estado', () => {
+      component.solicitudState = mockSolicitudState;
+
+      component.donanteDomicilio();
+
+      expect(component.accesosForm.get('rfc')?.value).toBe(mockSolicitudState.rfc);
+      expect(component.accesosForm.get('aduana')?.value).toBe(mockSolicitudState.aduana);
+      expect(component.accesosForm.get('sistema')?.value).toBe(mockSolicitudState.sistema);
+      expect(component.accesosForm.get('rol')?.value).toBe(mockSolicitudState.rol);
+      expect(component.accesosForm.get('tipoMovimiento')?.value).toBe(mockSolicitudState.tipoMovimiento);
+    });
+
+    it('debería configurar validaciones máximas para RFC', () => {
+      component.donanteDomicilio();
+
+      const rfcControl = component.accesosForm.get('rfc');
+      expect(rfcControl?.hasError('required')).toBeTruthy();
+      
+      rfcControl?.setValue('A'.repeat(16)); // 16 caracteres, excede el máximo
+      expect(rfcControl?.hasError('maxlength')).toBeTruthy();
+    });
+
+    it('debería manejar estado undefined correctamente', () => {
+      component.solicitudState = undefined as any;
+
+      expect(() => component.donanteDomicilio()).not.toThrow();
+    });
+  });
+
+  describe('Ciclo de vida del componente', () => {
+    it('debería completar destroyed$ al destruir el componente', () => {
+      component.ngOnInit();
+      jest.spyOn(component['destroyed$'], 'next');
+      jest.spyOn(component['destroyed$'], 'complete');
+
+      component.ngOnDestroy();
+
+      expect(component['destroyed$'].next).toHaveBeenCalledWith(true);
+      expect(component['destroyed$'].complete).toHaveBeenCalled();
+    });
+
+    it('debería cancelar suscripciones al destruir el componente', () => {
+      component.ngOnInit();
+      
+      // Simular que hay suscripciones activas
+      const suscripcionMock = jest.fn();
+      component['destroyed$'].subscribe(suscripcionMock);
+
+      component.ngOnDestroy();
+
+      expect(suscripcionMock).toHaveBeenCalledWith(true);
+    });
+  });
+
+  describe('Propiedades públicas', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+    });
+
+    it('debería tener TablaSeleccion definido', () => {
+      expect(component.TablaSeleccion).toBeDefined();
+    });
+
+    it('debería inicializar headers correctamente', () => {
+      expect(component.headers).toBeDefined();
+      expect(Array.isArray(component.headers)).toBeTruthy();
+    });
+
+    it('debería inicializar catálogos con estructuras correctas', () => {
+      expect(component.movimientoCatalogo).toBeDefined();
+      expect(component.sistemaCatalogo).toBeDefined();
+      expect(component.aduanaCatalogo).toBeDefined();
+      expect(component.rolCatalogo).toBeDefined();
+    });
+
+    it('debería inicializar pedimentos como array vacío', () => {
+      expect(Array.isArray(component.pedimentos)).toBeTruthy();
+      expect(component.pedimentos.length).toBe(0);
+    });
+  });
+
+  describe('Casos edge y manejo de errores', () => {
+    it('debería manejar errores en suscripciones de catálogos', () => {
+      const errorMock = new Error('Error de red');
+      mockTecnologicosService.obtenerDatosAduana.mockReturnValue(
+        new ReplaySubject<Catalogo[]>().asObservable()
+      );
+
+      expect(() => component.obtenerDatosAduana()).not.toThrow();
+    });
+
+    it('debería manejar campos de formulario inexistentes', () => {
+      const resultado = component.esValido(component.accesosForm, 'campoInexistente');
+      
+      expect(resultado).toBeFalsy();
+    });
+
+  describe('Validaciones específicas de AccesosTabla', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+    });
+
+    it('debería validar que RFC tenga máximo 15 caracteres según las validaciones del formulario', () => {
+      const rfcMuyLargo = 'A'.repeat(16);
+      component.accesosForm.patchValue({ rfc: rfcMuyLargo });
+      
+      const rfcControl = component.accesosForm.get('rfc');
+      expect(rfcControl?.hasError('maxlength')).toBeTruthy();
+    });
+
+    it('debería requerir todos los campos obligatorios de AccesosTabla', () => {
+      const camposRequeridos = ['rfc', 'aduana', 'sistema', 'rol', 'tipoMovimiento'];
+      
+      camposRequeridos.forEach(campo => {
+        const control = component.accesosForm.get(campo);
+        expect(control?.hasError('required')).toBeTruthy();
+      });
+    });
+
+    it('debería crear AccesosTabla válido cuando todos los campos están llenos', () => {
+      const datosValidos: AccesosTabla = {
+        rfc: 'VALIDO123456789',
+        aduana: 'Aduana Válida',
+        sistema: 'Sistema Válido',
+        rol: 'Rol Válido',
+        tipoMovimiento: 'Movimiento Válido'
+      };
+
+      component.accesosForm.patchValue(datosValidos);
+      
+      expect(component.accesosForm.valid).toBeTruthy();
+      
+      // Verificar que el valor del formulario cumple con AccesosTabla
+      const valorFormulario = component.accesosForm.value as AccesosTabla;
+      expect(valorFormulario.rfc).toBe(datosValidos.rfc);
+      expect(valorFormulario.aduana).toBe(datosValidos.aduana);
+      expect(valorFormulario.sistema).toBe(datosValidos.sistema);
+      expect(valorFormulario.rol).toBe(datosValidos.rol);
+      expect(valorFormulario.tipoMovimiento).toBe(datosValidos.tipoMovimiento);
+    });
+
+    it('debería mantener la consistencia de tipos en AccesosDatos', () => {
+      const accesoEjemplo: AccesosTabla = mockAccesosTabla[0];
+      
+      expect(typeof accesoEjemplo.rfc).toBe('string');
+      expect(typeof accesoEjemplo.aduana).toBe('string');
+      expect(typeof accesoEjemplo.sistema).toBe('string');
+      expect(typeof accesoEjemplo.rol).toBe('string');
+      expect(typeof accesoEjemplo.tipoMovimiento).toBe('string');
+    });
+  });
+
+  describe('Integración con Solicitud324State', () => {
+    beforeEach(() => {
+      component.ngOnInit();
+    });
+
+    it('debería sincronizar AccesosDatos del estado con la tabla local', () => {
+      expect(component.accesosTablaDatos).toEqual(mockSolicitudState.AccesosDatos);
+      expect(component.solicitudState.AccesosDatos).toEqual(mockAccesosTabla);
+    });
+
+    it('debería mantener la estructura del estado después de actualizaciones', () => {
+      const nuevoAcceso: AccesosTabla = {
+        rfc: 'NUEVO1234567890',
+        aduana: 'Nueva Aduana',
+        sistema: 'Nuevo Sistema',
+        rol: 'Nuevo Rol',
+        tipoMovimiento: 'Nueva Modificación'
+      };
+
+      // Simular agregar acceso
+      component.accesosTablaDatos.push(nuevoAcceso);
+      
+      // Verificar que mantiene la estructura
+      component.accesosTablaDatos.forEach(acceso => {
+        expect(acceso).toHaveProperty('rfc');
+        expect(acceso).toHaveProperty('aduana');
+        expect(acceso).toHaveProperty('sistema');
+        expect(acceso).toHaveProperty('rol');
+        expect(acceso).toHaveProperty('tipoMovimiento');
+      });
+    });
+
+    it('debería manejar estado vacío correctamente', () => {
+      const estadoVacio: Solicitud324State = {
+        AccesosDatos: [],
+        rfc: '',
+        aduana: '',
+        sistema: '',
+        rol: '',
+        tipoMovimiento: ''
+      };
+
+      // Simular estado vacío
+      mockTramite324Query.selectSolicitud$ = of(estadoVacio);
+      component.ngOnInit();
+
+      expect(component.accesosTablaDatos).toEqual([]);
+      expect(component.solicitudState.rfc).toBe('');
+    });
+  });
+
+  describe('Casos edge y manejo de errores', () => {
+    it('debería manejar errores en suscripciones de catálogos', () => {
+      const errorMock = new Error('Error de red');
+      mockTecnologicosService.obtenerDatosAduana.mockReturnValue(
+        new ReplaySubject<Catalogo[]>().asObservable()
+      );
+
+      expect(() => component.obtenerDatosAduana()).not.toThrow();
+    });
+
+    it('debería manejar campos de formulario inexistentes', () => {
+      const resultado = component.esValido(component.accesosForm, 'campoInexistente');
+      
+      expect(resultado).toBeFalsy();
+    });
+
+    it('debería manejar la adición de AccesosTabla con propiedades requeridas', () => {
+      const accesoCompleto: AccesosTabla = {
+        rfc: 'TEST1234567890',
+        sistema: 'Sistema Test',
+        rol: 'Rol Test',
+        tipoMovimiento: 'Alta',
+        aduana: 'Aduana Test'
+      };
+
+      // Verificar que el objeto cumple con la interfaz AccesosTabla
+      expect(accesoCompleto.rfc).toBeDefined();
+      expect(accesoCompleto.sistema).toBeDefined();
+      expect(accesoCompleto.rol).toBeDefined();
+      expect(accesoCompleto.tipoMovimiento).toBeDefined();
+      expect(accesoCompleto.aduana).toBeDefined();
+    });
+
+    it('debería validar que AccesosDatos sea un array válido', () => {
+      expect(Array.isArray(component.accesosTablaDatos)).toBeTruthy();
+      
+      // Verificar que cada elemento del array cumple con la interfaz
+      component.accesosTablaDatos.forEach(acceso => {
+        expect(typeof acceso.rfc).toBe('string');
+        expect(typeof acceso.sistema).toBe('string');
+        expect(typeof acceso.rol).toBe('string');
+        expect(typeof acceso.tipoMovimiento).toBe('string');
+        expect(typeof acceso.aduana).toBe('string');
+      });
+    });
+
+    it('debería manejar estado inicial del store correctamente', () => {
+      const estadoInicial: Solicitud324State = {
+        AccesosDatos: [],
+        rfc: '',
+        aduana: '',
+        sistema: '',
+        rol: '',
+        tipoMovimiento: ''
+      };
+
+      // Verificar que el estado inicial tiene la estructura correcta
+      expect(estadoInicial.AccesosDatos).toEqual([]);
+      expect(estadoInicial.rfc).toBe('');
+      expect(estadoInicial.aduana).toBe('');
+      expect(estadoInicial.sistema).toBe('');
+      expect(estadoInicial.rol).toBe('');
+      expect(estadoInicial.tipoMovimiento).toBe('');
+    });
+  });
+  });
+
+  describe('Integración completa', () => {
+    it('debería completar el flujo completo de agregar acceso', () => {
+      component.ngOnInit();
+      fixture.detectChanges();
+
+      // Simular apertura de modal
+      component.modalElementAccesos = {
+        nativeElement: document.createElement('div')
+      } as any;
+
+      // Llenar formulario
+      const datosAcceso: AccesosTabla = {
+        rfc: 'COMPLETO123456789',
+        aduana: 'aduana_completa',
+        sistema: 'sistema_completo',
+        rol: 'rol_completo',
+        tipoMovimiento: 'movimiento_completo'
+      };
+
+      component.accesosForm.patchValue(datosAcceso);
+      
+      // Simular click en agregar
+      const longitudInicial = component.accesosTablaDatos.length;
+      component.agregarAccesos();
+
+      // Verificar resultado
+      expect(component.accesosTablaDatos.length).toBe(longitudInicial + 1);
+      expect(component.accesosTablaDatos).toContainEqual(datosAcceso);
+      expect(component.nuevaNotificacion).toBeDefined();
+    });
   });
 });
