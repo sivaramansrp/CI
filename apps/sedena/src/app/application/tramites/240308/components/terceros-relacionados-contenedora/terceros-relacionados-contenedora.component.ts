@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+
+import { Component, ViewChild } from '@angular/core';
 import { DestinoFinal } from '../../../../shared/models/terceros-relacionados.model';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
@@ -11,6 +12,10 @@ import { Tramite240308Store } from '../../estados/tramite240308Store.store';
 import { takeUntil } from 'rxjs';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
+
+import { AgregarDestinatarioFinalContenedoraComponent } from '../agregar-destinatario-final-contenedora/agregar-destinatario-final-contenedora.component';
+import { AgregarProveedorContenedoraComponent } from '../agregar-proveedor-contenedora/agregar-proveedor-contenedora.component';
 
 /**
  * @title Terceros Relacionados Contenedora
@@ -21,13 +26,15 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-terceros-relacionados-contenedora',
   standalone: true,
-  imports: [CommonModule, TercerosRelacionadosComponent],
+  imports: [CommonModule, TercerosRelacionadosComponent, ModalComponent],
   templateUrl: './terceros-relacionados-contenedora.component.html',
   styleUrl: './terceros-relacionados-contenedora.component.scss',
 })
 export class TercerosRelacionadosContenedoraComponent
   implements OnInit, OnDestroy
 {
+
+  @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
   /**
    * Observable para limpiar las suscripciones activas al destruir el componente.
    * @property {Subject<void>} destroy$
@@ -96,5 +103,36 @@ export class TercerosRelacionadosContenedoraComponent
   ngOnDestroy(): void {
     this.unsubscribe$.next();
     this.unsubscribe$.complete();
+  }
+
+  /**
+   * Abre el modal correspondiente según el nombre del evento recibido.
+   *
+   * Si el evento es `'Datosmercancia'`, se carga el componente `DatosMercanciaContenedoraComponent`
+   * dentro del modal y se le pasa una función de cierre como input.
+   *
+   * @method openModal
+   * @param {string} event - Nombre del evento que indica qué componente se debe mostrar en el modal.
+   * @returns {void}
+   */
+  openModal(event: string): void {
+    if (event === 'agregar-destino-final') {
+      this.modalComponent.abrir(AgregarDestinatarioFinalContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
+    } else if (event === 'agregar-proveedor') {
+      this.modalComponent.abrir(AgregarProveedorContenedoraComponent, {
+        cerrarModal: this.cerrarModal.bind(this),
+      });
+    }
+  }
+  /**
+   * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
+   *
+   * @method cerrarModal
+   * @returns {void}
+   */
+  cerrarModal(): void {
+    this.modalComponent.cerrar();
   }
 }

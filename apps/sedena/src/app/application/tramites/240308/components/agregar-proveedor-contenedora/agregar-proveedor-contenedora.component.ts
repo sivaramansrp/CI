@@ -1,6 +1,7 @@
 import { AgregarProveedorComponent } from '../../../../shared/components/agregar-proveedor/agregar-proveedor.component';
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Proveedor } from '../../../../shared/models/terceros-relacionados.model';
 import { Tramite240308Store } from '../../estados/tramite240308Store.store';
 
@@ -12,6 +13,12 @@ import { Tramite240308Store } from '../../estados/tramite240308Store.store';
   styleUrl: './agregar-proveedor-contenedora.component.scss',
 })
 export class AgregarProveedorContenedoraComponent {
+  /**
+   * Evento que se emite para cerrar el modal de agregar proveedor.
+   * @property {EventEmitter<void>} cerrar
+   */
+  @Output() cerrar = new EventEmitter<void>();
+
   /**
    * @constructor
    * @description Constructor que inyecta el store `Tramite260214Store` para gestionar el estado del trámite.

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+
+import { Component, EventEmitter, Output } from '@angular/core';
 import { DatosMercanciaComponent } from '../../../../shared/components/datos-mercancia/datos-mercancia.component';
 import { MercanciaDetalle } from '../../../../shared/models/datos-del-tramite.model';
 import { Tramite240308Store } from '../../estados/tramite240308Store.store';
@@ -18,6 +19,11 @@ import { Tramite240308Store } from '../../estados/tramite240308Store.store';
   styleUrl: './datos-mercancia-contenedora.component.scss',
 })
 export class DatosMercanciaContenedoraComponent {
+  /**
+   * Evento que se emite para cerrar el modal de datos de mercancía.
+   * @property {EventEmitter<void>} cerrar
+   */
+  @Output() cerrar = new EventEmitter<void>();
   /**
    * Constructor del componente.
    *

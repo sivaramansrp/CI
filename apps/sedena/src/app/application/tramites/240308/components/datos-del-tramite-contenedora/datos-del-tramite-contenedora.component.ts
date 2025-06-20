@@ -15,6 +15,9 @@ import { construirAduanasBotones } from '../../constants/solicitude-de-artificio
 import { takeUntil } from 'rxjs';
 
 import { ConsultaioQuery } from '@ng-mf/data-access-user';
+import { ModalComponent } from '../../../../shared/components/modal/modal.component';
+
+import { DatosMercanciaContenedoraComponent } from '../datos-mercancia-contenedora/datos-mercancia-contenedora.component';
 
 /**
  * @title Datos del Trámite Contenedora
@@ -25,11 +28,17 @@ import { ConsultaioQuery } from '@ng-mf/data-access-user';
 @Component({
   selector: 'app-datos-del-tramite-contenedora',
   standalone: true,
-  imports: [CommonModule, DatosDelTramiteComponent],
+  imports: [CommonModule, DatosDelTramiteComponent, ModalComponent],
   templateUrl: './datos-del-tramite-contenedora.component.html',
   styleUrl: './datos-del-tramite-contenedora.component.scss',
 })
 export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
+
+  /** * Componente modal para mostrar información adicional.
+   * Se utiliza para abrir el componente de datos de mercancía.
+   * @property {ModalComponent} modalComponent
+   */
+    @ViewChild('modal', { static: false }) modalComponent!: ModalComponent;
 
   esSoloLectura!: boolean;
   /**
@@ -159,4 +168,31 @@ export class DatosDelTramiteContenedoraComponent implements OnInit, OnDestroy {
   updateJustificacionFormulario(event: JustificacionTramiteFormState): void {
     this.tramiteStore.updateJustificacionFormulario(event);
   }
+    /**
+     * Abre el modal correspondiente según el nombre del evento recibido.
+     *
+     * Si el evento es `'Datosmercancia'`, se carga el componente `DatosMercanciaContenedoraComponent`
+     * dentro del modal y se le pasa una función de cierre como input.
+     *
+     * @method openModal
+     * @param {string} event - Nombre del evento que indica qué componente se debe mostrar en el modal.
+     * @returns {void}
+     */
+    openModal(event: string): void {
+      if (event === 'Datosmercancia') {
+        this.modalComponent.abrir(DatosMercanciaContenedoraComponent, {
+          cerrarModal: this.cerrarModal.bind(this),
+        });
+      }
+    }
+  
+    /**
+     * Cierra el modal dinámico actualmente abierto utilizando el método del componente modal.
+     *
+     * @method cerrarModal
+     * @returns {void}
+     */
+    cerrarModal(): void {
+      this.modalComponent.cerrar();
+    }
 }
