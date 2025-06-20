@@ -12,8 +12,7 @@ describe('CargarArchivosComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CommonModule, AlertComponent, TituloComponent],
-      declarations: [CargarArchivosComponent],
+      imports: [CommonModule, AlertComponent, TituloComponent,CargarArchivosComponent],
     }).compileComponents();
   });
 

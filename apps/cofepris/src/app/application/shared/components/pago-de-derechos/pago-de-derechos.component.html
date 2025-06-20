@@ -15,6 +15,13 @@
           formControlName="claveReferencia"
           maxlength="9"
            [ngClass]="esInvalido('claveReferencia') ? 'required' : ''"
+           (change)="
+                  setValoresStore(
+                    pagoDerechosForm,
+                    'claveReferencia',
+                    'setClaveReferencia'
+                  )
+                "
         />
         <div *ngIf="esInvalido('claveReferencia')" class="text-danger">
           <small *ngIf="pagoDerechosForm.controls['claveReferencia'].errors?.['required']">
@@ -35,6 +42,13 @@
           formControlName="cadenaDependencia"
           maxlength="14"
           [ngClass]="esInvalido('cadenaDependencia') ? 'required' : ''"
+          (change)="
+                  setValoresStore(
+                    pagoDerechosForm,
+                    'cadenaDependencia',
+                    'setCadenaDependencia'
+                  )
+                "
         />
         <div *ngIf="esInvalido('cadenaDependencia')" class="text-danger">
           <small *ngIf="pagoDerechosForm.controls['claveReferencia'].errors?.['required']">
@@ -51,6 +65,13 @@
             [label]="'Banco'"
             [required]="false"
             [isDisabled]="formularioDeshabilitado"
+            (change)="
+                    setValoresStore(
+                      pagoDerechosForm,
+                      'banco',
+                      'setBanco'
+                    )
+                  "
           ></app-catalogo-select>
         </div>
       } @else {
@@ -62,6 +83,13 @@
           [label]="'Estado/localidad'"
           [required]="true"
           [isDisabled]="formularioDeshabilitado"
+          (change)="
+                    setValoresStore(
+                      pagoDerechosForm,
+                      'estado',
+                      'setEstado'
+                    )
+                  "
         ></app-catalogo-select>
       </div>
       }
@@ -79,6 +107,13 @@
           formControlName="llavePago"
           maxlength="30"
           [ngClass]="esInvalido('llavePago') ? 'required' : ''"
+           (change)="
+                  setValoresStore(
+                    pagoDerechosForm,
+                    'llavePago',
+                    'setllavePago'
+                  )
+                "
         />
         <div *ngIf="esInvalido('llavePago')" class="text-danger">
           <small *ngIf="pagoDerechosForm.controls['llavePago'].errors?.['required']">
@@ -116,6 +151,13 @@
           formControlName="importePago"
           maxlength="16"
           [ngClass]="esInvalido('importePago') ? 'required' : ''"
+          (change)="
+                  setValoresStore(
+                    pagoDerechosForm,
+                    'importePago',
+                    'setImportePago'
+                  )
+                "
         />
         <div *ngIf="esInvalido('importePago')" class="text-danger">
           <small *ngIf="pagoDerechosForm.controls['importePago'].errors?.['required']">
@@ -136,6 +178,7 @@
             name="agregarMercancias"
             class="btn btn-primary ms-2"
             (click)="alReiniciar()"
+            [disabled]="formularioDeshabilitado ? true : false"
           >
             Borrar datos del pago
           </button>

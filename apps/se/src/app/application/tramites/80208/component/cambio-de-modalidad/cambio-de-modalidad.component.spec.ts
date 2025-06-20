@@ -78,9 +78,9 @@ describe('CambioDeModalidadComponent', () => {
     expect(component.cambioDeModalidad.find).toHaveBeenCalled();
   });
 
-  it('should run #onDropdownSelect()', () => {
+  it('should run #seleccionarDesplegable()', () => {
     component.toggleServiciosImmx = jest.fn();
-    component.onDropdownSelect({ id: {} });
+    component.seleccionarDesplegable({ id: {} });
     expect(component.toggleServiciosImmx).toHaveBeenCalled();
   });
 

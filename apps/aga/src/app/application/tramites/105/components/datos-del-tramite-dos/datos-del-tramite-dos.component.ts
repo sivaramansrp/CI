@@ -16,9 +16,10 @@ import { Subject, map, takeUntil } from 'rxjs';
 import { CatalogoSelectComponent } from '@libs/shared/data-access-user/src/tramites/components/catalogo-select/catalogo-select.component';
 import { CommonModule } from '@angular/common';
 import { InvoCarService } from '../../services/invocar.service';
-import { Tramite105Query } from '../../estados/tramite105.query';
-import mercanciaTable from 'libs/shared/theme/assets/json/105/mercancia-table.json';
 import { MERCANCIA_TABLEDOS_TABLE_BODY_DATA } from '../../constantes/datos-del-tramite.enum';
+import { Tramite105Query } from '../../estados/tramite105.query';
+import mercanciaTable from '@libs/shared/theme/assets/json/105/mercancia-table.json';
+
 /**
  * Interfaz que representa los datos del cuerpo de la tabla de mercancías.
  * 

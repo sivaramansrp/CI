@@ -1,6 +1,6 @@
 <ng-titulo titulo="Mercancias*:"></ng-titulo>
 <app-tabla-dinamica [tipoSeleccionTabla]="TablaSeleccion" [datos]="mercanciasDatas"
-  [configuracionTabla]="configuracionTabla"></app-tabla-dinamica>
+  [configuracionTabla]="configuracionTabla" [disableSeleccionTablaCheckBox]="esFormularioSoloLectura"></app-tabla-dinamica>
 <ng-container>
   <div class="row mt-5">
     <label>Mercancías seleccionadas</label>
@@ -15,7 +15,7 @@
 <div formGroupName="Aduana">
   <div class="row">
     <div class="col-md-4">
-      <app-catalogo-select formControlName="Aduana" [label]="'Aduana'"></app-catalogo-select>
+      <app-catalogo-select formControlName="Aduana" [label]="'Aduana'" [isDisabled]="esFormularioSoloLectura"></app-catalogo-select>
     </div>
   </div>
 </div>

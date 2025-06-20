@@ -6,11 +6,7 @@ import { Injectable } from '@angular/core';
  * @returns Solicitud290201
  */
 export interface Solicitud290201State {
-  /**
-   * Propiedad de índice que permite agregar dinámicamente
-   * claves y valores al estado de la interfaz.
-   */
-  [x: string]: any;
+
   /**
    * Forma del café seleccionada.
    */
