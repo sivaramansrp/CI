@@ -67,9 +67,9 @@ export class PagoDeDerechosComponent implements OnChanges {
       if (changes['isDisabled']) {
         if (this.isDisabled) {
         this.formularioPagoDerechos.disable();
-    }else if (!this.isDisabled) {
-       this.formularioPagoDerechos.enable();
-    }
+        }else{
+          this.formularioPagoDerechos.enable();
+        }
       }
     }
   /**

@@ -149,11 +149,9 @@ export class DatosDeLaSolicitudComponent implements OnInit, OnDestroy {
     if (this.esFormularioSoloLectura) {
       this.formulario.disable();
      
-    } else if (!this.esFormularioSoloLectura) {
+    } else{
       this.formulario.enable();
      
-    } else {
-      // No se requiere ninguna acción en el formulario
-    }
+    } 
 }
 }
