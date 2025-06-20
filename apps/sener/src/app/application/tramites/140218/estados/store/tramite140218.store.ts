@@ -8,7 +8,6 @@ import { Injectable } from '@angular/core';
  * @param regimen - El nuevo valor de régimen que se asignará al estado.
  */
 export interface DatosSolicitudState {
-  motivoRenuncia?: string;
   [key: string]: any;
 }
 
@@ -19,9 +18,7 @@ export interface DatosSolicitudState {
  * @returns El estado inicial de DatosSolicitudState con valores vacíos.
  */
 export function createInitialState(): DatosSolicitudState {
-  return {
-     motivoRenuncia: ''
-  };
+  return {};
 }
 
 @Injectable({

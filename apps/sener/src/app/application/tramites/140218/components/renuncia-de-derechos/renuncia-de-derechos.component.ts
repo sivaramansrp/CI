@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { map, takeUntil } from 'rxjs';
@@ -70,6 +70,15 @@ export class RenunciaDeDerechosComponent implements OnInit, OnDestroy {
   public solicitudState!: DatosSolicitudState;
 
   /**
+   * Indica si el formulario está en modo solo lectura.
+   * Cuando es `true`, los campos del formulario no se pueden editar.
+   * 
+   * @type {boolean}
+   * @memberof DatosDelTramiteComponent
+   */
+  @Input() public soloLectura: boolean = false;
+
+  /**
    * Constructor de la clase RenunciaDeDerechosComponent.
    * 
    * @param formBuilder - Servicio para construir y gestionar formularios reactivos.
@@ -82,6 +91,7 @@ export class RenunciaDeDerechosComponent implements OnInit, OnDestroy {
     private tramite140218Query: Tramite140218Query
   ) {
     //Reservado para futuras inyecciones de dependencias o inicializaciones.
+    this.crearAgregarFormulario();
   }
 
   /**
@@ -104,7 +114,10 @@ export class RenunciaDeDerechosComponent implements OnInit, OnDestroy {
         takeUntil(this.destroyNotifier$),
         map((seccionState) => {
           this.solicitudState = seccionState as DatosSolicitudState;
-          
+           if (this.renunciaDerechosForm) {
+         this.renunciaDerechosForm.get('motivoRenuncia')?.setValue(this.solicitudState['motivoRenuncia']);
+         this.renunciaDerechosForm.get('manifesto')?.setValue(this.solicitudState['manifesto'])
+        } 
         })
       )
       .subscribe();
@@ -124,12 +137,18 @@ export class RenunciaDeDerechosComponent implements OnInit, OnDestroy {
       acotacion: [{ value:'', disabled: true }],
       permisoDesde: [{ value: '', disabled: true }],
       permisoHasty: [{ value: '', disabled: true }],
-      motivoRenuncia: [this.solicitudState.motivoRenuncia || ''] // este sí es editable
+      motivoRenuncia: [this.solicitudState['motivoRenuncia']], // este sí es editable
+      manifesto:[this.solicitudState['manifesto']]
+      
     });
     this.setRenunciaDerechosForm();
 
     // Actualizar el estado del almacén con los datos del formulario
     this.updateStoreWithFormData();
+
+     if(this.soloLectura){
+        this.renunciaDerechosForm.disable();
+      }
   }
 
 
@@ -161,6 +180,8 @@ export class RenunciaDeDerechosComponent implements OnInit, OnDestroy {
     this.renunciaDerechosForm.get('descripcionNico')?.setValue(renuncia.formData.descripcionNico);
     this.renunciaDerechosForm.get('acotacion')?.setValue(renuncia.formData.acotacion);
     this.renunciaDerechosForm.get('permisoDesde')?.setValue(renuncia.formData.permisoDesde);
+    this.renunciaDerechosForm.get('motivoRenuncia')?.setValue(this.solicitudState['motivoRenuncia'])
+    
   }
 
   /**
